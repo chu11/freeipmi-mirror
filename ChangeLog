@@ -1,3 +1,10 @@
+2004-10-13  Ian Zimmerman  <itz@californiadigital.com>
+
+	* doc/examples/Makefile.am (Examplesdir): use $(docdir)/examples
+	for installation.
+
+	* doc/Makefile.am: export docdir variable.
+
 2004-10-11  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_pre_interrupt_timeout_str):

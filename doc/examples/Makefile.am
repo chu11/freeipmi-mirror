@@ -1,7 +1,8 @@
 # libfreeipi Examples
 LIBFREEIPMI_EXAMPLES = hello-sensors.c
 
-Examplesdir     = $(datadir)/doc/$(PACKAGE)/examples
+docdir   = $(datadir)/doc/$(PACKAGE)
+Examplesdir     = $(docdir)/examples
 Examples_DATA   = $(LIBFREEIPMI_EXAMPLES)
 
 install-data-local:

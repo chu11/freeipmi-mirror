@@ -13,6 +13,8 @@ dist_man_MANS = fish.1 bmc-config.1 bmc-info.1 fish.1 sel.1 sensors.1 \
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 
+export docdir
+
 doc_DATA = $(EXTRA_DIST) freeipmi.texi authors.texi gpl.texi version.texi fdl.texi \
 	   permissions.texi
 
