@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.23 2004-12-05 08:06:24 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.24 2004-12-08 00:57:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,6 +93,11 @@
      *d = val; \
   } while (0) 
 
+#define _REG_SPACE_VALID(x) \
+        (((x) == IPMI_KCS_REG_SPACE_1BYTE_BOUND \
+         || (x) == IPMI_KCS_REG_SPACE_4BYTE_BOUND \
+         || (x) == IPMI_KCS_REG_SPACE_16BYTE_BOUND) ? 1 : 0)
+
 struct cmdline_info
 {
   int set;
@@ -104,6 +109,8 @@ struct cmdline_info
   int daemon;
   int io_port;
   u_int32_t io_port_val;
+  int reg_space;
+  u_int8_t reg_space_val;
   char *logfile;
   int no_logging;
   int timer_use;
@@ -266,7 +273,7 @@ _get_port(u_int32_t *port, u_int8_t *reg_space)
   if (cinfo.io_port)
     {
       *port      = cinfo.io_port_val;
-      *reg_space = IPMI_KCS_REG_SPACE_DEFAULT;
+      *reg_space = cinfo.reg_space_val;
       return (0);
     }
 
@@ -808,8 +815,15 @@ _usage(void)
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
 	  "  -o INT     --io-port=INT                Base address for KCS SMS I/O\n"
+          "  -R INT     --reg-space=INT              Base address register spacing\n"
+          "             %d = 1 byte\n"
+          "             %d = 4 bytes\n"
+          "             %d = 16 bytes\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
-          "  -n         --no-logging                 Turn off all syslogging\n");
+          "  -n         --no-logging                 Turn off all syslogging\n",
+          IPMI_KCS_REG_SPACE_1BYTE_BOUND,
+          IPMI_KCS_REG_SPACE_4BYTE_BOUND,
+          IPMI_KCS_REG_SPACE_16BYTE_BOUND);
 #ifndef NDEBUG
   fprintf(stderr,
 	  "  -D         --debug                      Turn on debugging\n");
@@ -930,6 +944,7 @@ _cmdline_parse(int argc, char **argv)
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
     {"io-port",               1, NULL, 'o'},
+    {"reg-space",             1, NULL, 'R'},
     {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
@@ -958,7 +973,7 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvo:f:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
+  strcpy(options, "hvo:R:f:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
@@ -1009,6 +1024,12 @@ _cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg))
               || cinfo.io_port_val <= 0)
             _err_exit("io-port value invalid");
+          break;
+        case 'R':
+          cinfo.reg_space_val = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg))
+              || !_REG_SPACE_VALID(cinfo.reg_space_val))
+            _err_exit("reg-space value invalid");
           break;
         case 'f':
           cinfo.logfile = optarg;
