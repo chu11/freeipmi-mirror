@@ -68,8 +68,7 @@ check_user_password (int user_id, char *password)
   else 
     memcpy (password_data, password, IPMI_USER_PASSWORD_MAX_LENGTH);
   
-  status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
-				       user_id, 
+  status = ipmi_kcs_set_user_password (user_id, 
 				       IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
 				       password_data, 
 				       obj_data_rs);

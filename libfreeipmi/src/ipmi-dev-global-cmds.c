@@ -140,7 +140,7 @@ fill_cmd_get_dev_id (fiid_obj_t obj_cmd)
 }  
 
 int8_t
-ipmi_kcs_get_dev_id (u_int16_t sms_io_base, fiid_obj_t obj_hdr_rs, fiid_obj_t obj_cmd_rs)
+ipmi_kcs_get_dev_id (fiid_obj_t obj_hdr_rs, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd = NULL;
   u_int32_t obj_cmd_len;
@@ -152,7 +152,7 @@ ipmi_kcs_get_dev_id (u_int16_t sms_io_base, fiid_obj_t obj_hdr_rs, fiid_obj_t ob
   ERR (obj_cmd);
 
   ERR (fill_cmd_get_dev_id (obj_cmd) == 0);
-  ERR (ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  ERR (ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 		     obj_cmd, tmpl_cmd_get_dev_id_rq, 
 		     obj_cmd_rs, tmpl_cmd_get_dev_id_rs) == 0);
   return (0);

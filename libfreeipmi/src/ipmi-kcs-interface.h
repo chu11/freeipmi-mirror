@@ -20,7 +20,7 @@
 */
 
 #ifndef _IPMI_KCS_INTERFACE_H
-#define	_IPMI_KCS_INTERFACE_H	1
+#define _IPMI_KCS_INTERFACE_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -46,11 +46,20 @@ extern "C" {
 #define IPMI_KCS_SMS_IO_BASE_SR870BN4   0x08A2 
 #define IPMI_KCS_SMS_IO_BASE_CDC6440    0x08A2
 
+#define IPMI_KCS_REG_SPACE_1BYTE_BOUND    0x00
+#define IPMI_KCS_REG_SPACE_32BIT_BOUND    0x01
+#define IPMI_KCS_REG_SPACE_16BYTE_BOUND   0x02
+#define IPMI_KCS_REG_SPACE_RESERVED_BOUND 0x03
+#define IPMI_KCS_REG_SPACE_DEFAULT        IPMI_KCS_REG_SPACE_1BYTE_BOUND  
+
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
 #define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
-#define IPMI_KCS_REG_CMD(sms_io_base)      (sms_io_base+1)
-#define IPMI_KCS_REG_STATUS(sms_io_base)   (sms_io_base+1)
+#define IPMI_KCS_REG_CMD(sms_io_base, reg_space)     \
+       (sms_io_base + reg_space)
+#define IPMI_KCS_REG_STATUS(sms_io_base, reg_space)  \
+       (sms_io_base + reg_space)
+
 
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
@@ -96,36 +105,40 @@ extern "C" {
 extern fiid_template_t tmpl_hdr_kcs;
 
 /* Never call these functions directly, unless you are a FreeIPMI hacker */
-int8_t ipmi_kcs_get_status (u_int16_t sms_io_base);
-void ipmi_kcs_wait_for_ibf_clear (u_int16_t sms_io_base);
-void ipmi_kcs_wait_for_obf_set (u_int16_t sms_io_base);
-int8_t ipmi_kcs_read_byte (u_int16_t sms_io_base);
-void ipmi_kcs_read_next (u_int16_t sms_io_base) ;
-void ipmi_kcs_start_write (u_int16_t sms_io_base);
-void ipmi_kcs_write_byte (u_int16_t sms_io_base, u_int8_t byte);
-void ipmi_kcs_end_write (u_int16_t sms_io_base);
-void ipmi_kcs_get_abort (u_int16_t sms_io_base);
-int8_t ipmi_kcs_test_if_state (u_int16_t sms_io_base, u_int8_t status);
-void ipmi_kcs_clear_obf (u_int16_t sms_io_base);
+int ipmi_kcs_reg_space (u_int8_t reg_space_boundary);
+int8_t ipmi_kcs_get_status ();
+void ipmi_kcs_wait_for_ibf_clear ();
+void ipmi_kcs_wait_for_obf_set ();
+int8_t ipmi_kcs_read_byte ();
+void ipmi_kcs_read_next () ;
+void ipmi_kcs_start_write ();
+void ipmi_kcs_write_byte (u_int8_t byte);
+void ipmi_kcs_end_write ();
+void ipmi_kcs_get_abort ();
+int8_t ipmi_kcs_test_if_state (u_int8_t status);
+void ipmi_kcs_clear_obf ();
+
+/* High level calls */
+int ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space_boundary, unsigned long sleep_usecs);
+
+ssize_t ipmi_kcs_read (u_int8_t *bytes, u_int32_t bytes_len);
+ssize_t ipmi_kcs_write (u_int8_t *bytes, u_int32_t bytes_len);
 
 /* BMC treats "write followed by a read" as one transaction. It is
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
-ssize_t ipmi_kcs_read (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t bytes_len);
-ssize_t ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t bytes_len);
-
+int8_t ipmi_kcs_cmd (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
+int8_t ipmi_kcs_cmd_interruptible (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
+int8_t ipmi_kcs_cmd_raw (u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
+int8_t ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
 
 int8_t fill_hdr_ipmi_kcs (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_hdr);
 int8_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *pkt, u_int32_t pkt_len);
 int8_t unassemble_ipmi_kcs_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd);
 u_int64_t ipmi_kcs_get_poll_count (void);
 int ipmi_kcs_get_mutex_semid (void);
-int ipmi_kcs_io_init (u_int16_t sms_io_base, unsigned long sleep_usecs);
-int8_t ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
-int8_t ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
+
 
 #ifdef __cplusplus
 }

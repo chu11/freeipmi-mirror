@@ -456,29 +456,22 @@ fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t us
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
    */
-  if ((username) && (strlen (username) > IPMI_SESSION_MAX_USERNAME_LEN))
+  if (username)
     {
-      errno = EINVAL;
-      return (-1);
-    }
-  if ((username) && (username_len > IPMI_SESSION_MAX_USERNAME_LEN))
-  {
-    errno = EINVAL;
-    return (-1);
-  }
+      if ((strlen (username) > IPMI_SESSION_MAX_USERNAME_LEN) ||
+	  (username_len > IPMI_SESSION_MAX_USERNAME_LEN))
+	{
+	  errno = EINVAL;
+	  return (-1);
+	}
 
+      fiid_obj_set_data (obj_cmd, tmpl_cmd_get_session_challenge_rq, "username", username);
+    }
+  
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, "cmd", 
 		IPMI_CMD_GET_SESSION_CHALLENGE);
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, "auth_type",
 		auth_type);
-  if (username)
-    {
-      int32_t indx = 0;
-      indx = fiid_obj_field_start_bytes (tmpl_cmd_get_session_challenge_rq, "username");
-      if (indx < 0)
-        return (-1);
-      strncpy (obj_cmd + indx, username, IPMI_SESSION_MAX_USERNAME_LEN);
-    }
   return (0);
 }
 
@@ -526,14 +519,7 @@ fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, "max_priv_level", 
 		max_priv_level);
   if (challenge_str)
-    {
-      int32_t indx = 0;
-      indx = fiid_obj_field_start_bytes (tmpl_cmd_activate_session_rq, 
-					 "challenge_str");
-      if (indx < 0)
-        return (-1);
-      memcpy (obj_cmd + indx, challenge_str, challenge_str_len);
-    }
+    fiid_obj_set_data (obj_cmd, tmpl_cmd_activate_session_rq, "challenge_str", challenge_str);
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, "initial_outbound_seq_num", 
 		initial_outbound_seq_num);
   return (0);
@@ -630,12 +616,9 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
   *session_id = temp_session_id;
-  {
-    u_int32_t indx = 0;
-    indx = fiid_obj_field_start_bytes (tmpl_cmd_get_session_challenge_rs, 
-				       "challenge_str");
-    memcpy (challenge_str, obj_cmd_rs + indx, IPMI_CHALLENGE_STR_MAX);
-  }
+
+  fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, "challenge_str", challenge_str);
+
   ipmi_xfree (obj_cmd_rs);
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
@@ -772,8 +755,7 @@ fill_kcs_set_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_channel_access (u_int16_t sms_io_base, 
-			     u_int8_t channel_number, 
+ipmi_kcs_set_channel_access (u_int8_t channel_number, 
 			     u_int8_t ipmi_messaging_access_mode, 
 			     u_int8_t user_level_authentication, 
 			     u_int8_t per_message_authentication, 
@@ -796,7 +778,7 @@ ipmi_kcs_set_channel_access (u_int16_t sms_io_base,
 			       channel_access_set_flag, 
 			       channel_privilege_level_limit, 
 			       channel_privilege_level_limit_set_flag);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_channel_access_rq, 
 			 obj_data_rs, tmpl_set_channel_access_rs);
   free (obj_data_rq);
@@ -827,8 +809,7 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_user_name (u_int16_t sms_io_base, 
-			u_int8_t user_id, 
+ipmi_kcs_set_user_name (u_int8_t user_id, 
 			char *user_name, 
 			fiid_obj_t obj_data_rs)
 {
@@ -837,7 +818,7 @@ ipmi_kcs_set_user_name (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_set_user_name_rq);
   fill_kcs_set_user_name (obj_data_rq, user_id, user_name);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_user_name_rq, 
 			 obj_data_rs, tmpl_set_user_name_rs);
   free (obj_data_rq);
@@ -861,8 +842,7 @@ fill_kcs_get_user_name (fiid_obj_t obj_data_rq, u_int8_t user_id)
 }
 
 int8_t 
-ipmi_kcs_get_user_name (u_int16_t sms_io_base, 
-			u_int8_t user_id, 
+ipmi_kcs_get_user_name (u_int8_t user_id, 
 			fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -870,7 +850,7 @@ ipmi_kcs_get_user_name (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_user_name_rq);
   fill_kcs_get_user_name (obj_data_rq, user_id);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_name_rq, 
 			 obj_data_rs, tmpl_get_user_name_rs);
   free (obj_data_rq);
@@ -907,8 +887,7 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_user_password (u_int16_t sms_io_base, 
-			    u_int8_t user_id, 
+ipmi_kcs_set_user_password (u_int8_t user_id, 
 			    u_int8_t operation, 
 			    char *user_password, 
 			    fiid_obj_t obj_data_rs)
@@ -918,7 +897,7 @@ ipmi_kcs_set_user_password (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_set_user_password_rq);
   fill_kcs_set_user_password (obj_data_rq, user_id, operation, user_password);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_user_password_rq, 
 			 obj_data_rs, tmpl_set_user_password_rs);
   free (obj_data_rq);
@@ -984,8 +963,7 @@ fill_kcs_set_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_set_user_access (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_kcs_set_user_access (u_int8_t channel_number,
 			  u_int8_t user_id,
 			  u_int8_t restrict_to_callback,
 			  u_int8_t enable_link_auth,
@@ -1006,7 +984,7 @@ ipmi_kcs_set_user_access (u_int16_t sms_io_base,
 			    enable_ipmi_msgs,
 			    user_privilege_level_limit,
 			    user_session_number_limit);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_user_access_rq, 
 			 obj_data_rs, tmpl_set_user_access_rs);
   free (obj_data_rq);
@@ -1037,8 +1015,7 @@ fill_kcs_get_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_get_user_access (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_kcs_get_user_access (u_int8_t channel_number,
 			  u_int8_t user_id,
 			  fiid_obj_t obj_data_rs)
 {
@@ -1047,7 +1024,7 @@ ipmi_kcs_get_user_access (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_user_access_rq);
   fill_kcs_get_user_access (obj_data_rq, channel_number, user_id);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_access_rq, 
 			 obj_data_rs, tmpl_get_user_access_rs);
   free (obj_data_rq);
@@ -1079,8 +1056,7 @@ fill_kcs_get_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_get_channel_access (u_int16_t sms_io_base,
-			     u_int8_t channel_number,
+ipmi_kcs_get_channel_access (u_int8_t channel_number,
 			     u_int8_t channel_access_set_flag,
 			     fiid_obj_t obj_data_rs)
 {
@@ -1089,7 +1065,7 @@ ipmi_kcs_get_channel_access (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_channel_access_rq);
   fill_kcs_get_channel_access (obj_data_rq, channel_number, channel_access_set_flag);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_access_rq, 
 			 obj_data_rs, tmpl_get_channel_access_rs);
   free (obj_data_rq);
@@ -1113,8 +1089,7 @@ fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, u_int8_t channel_number)
 }
 
 int8_t 
-ipmi_kcs_get_channel_info (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_kcs_get_channel_info (u_int8_t channel_number,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -1122,7 +1097,7 @@ ipmi_kcs_get_channel_info (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_channel_info_rq);
   fill_kcs_get_channel_info (obj_data_rq, channel_number);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_info_rq, 
 			 obj_data_rs, tmpl_get_channel_info_rs);
   free (obj_data_rq);

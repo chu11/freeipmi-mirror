@@ -52,17 +52,15 @@ extern fiid_template_t tmpl_delete_sel_entry_rs;
 extern fiid_template_t tmpl_clear_sel_rq;
 extern fiid_template_t tmpl_clear_sel_rs;
 
-int8_t ipmi_kcs_get_sel_info (u_int16_t sms_io_base, fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_sel_alloc_info (u_int16_t sms_io_base, fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_reserve_sel (u_int16_t sms_io_base, fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_sel_entry (u_int16_t sms_io_base, u_int16_t record_id, fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_get_sel_info (fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_reserve_sel (fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_get_sel_entry (u_int16_t record_id, fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_delete_sel_entry (u_int16_t sms_io_base, 
-				  u_int16_t reservation_id, 
+int8_t ipmi_kcs_delete_sel_entry (u_int16_t reservation_id, 
 				  u_int16_t record_id, 
 				  fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_clear_sel (u_int16_t sms_io_base, 
-			   u_int16_t reservation_id, 
+int8_t ipmi_kcs_clear_sel (u_int16_t reservation_id, 
 			   u_int8_t opcode, 
 			   fiid_obj_t obj_data_rs);
 

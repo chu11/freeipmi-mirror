@@ -66,8 +66,8 @@ extern fiid_template_t tmpl_oem_event_data;
 
 int ipmi_get_sel_record_type (u_int8_t record_type);
 
-int ipmi_sel_get_first_entry (u_int16_t sms_io_base, sel_descriptor_t *seld, u_int8_t *record_data);
-int ipmi_sel_get_next_entry (u_int16_t sms_io_base, sel_descriptor_t *seld, u_int8_t *record_data);
+int ipmi_sel_get_first_entry (sel_descriptor_t *seld, u_int8_t *record_data);
+int ipmi_sel_get_next_entry (sel_descriptor_t *seld, u_int8_t *record_data);
 
 #ifdef __cplusplus
 }

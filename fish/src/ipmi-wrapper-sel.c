@@ -50,7 +50,7 @@ get_sel_info (sel_info_t* pinfo)
   u_int64_t val;
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_info_rs));
-  status = ipmi_kcs_get_sel_info (fi_get_sms_io_base (), obj_data_rs);
+  status = ipmi_kcs_get_sel_info (obj_data_rs);
   
   if (status != 0)
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.20 2004-12-02 22:56:21 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.21 2004-12-05 02:34:48 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -280,7 +280,7 @@ _init_ipmi(void)
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-  if ((ret = ipmi_kcs_io_init(port, IPMI_KCS_SLEEP_USECS)) < 0)
+  if ((ret = ipmi_kcs_io_init(port, IPMI_KCS_REG_SPACE_DEFAULT, IPMI_KCS_SLEEP_USECS)) < 0)
     _bmclog("ipmi_kcs_io_init: %s", strerror(errno));
 
   return ret;
@@ -366,7 +366,6 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
      fiid_obj_t cmd_rq, fiid_template_t tmpl_rq,
      fiid_obj_t cmd_rs, fiid_template_t tmpl_rs)
 {
-  u_int32_t port = _get_port();
   u_int64_t comp_code;
   int retry_count = 0;
 
@@ -385,7 +384,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
 
   while (1)
     {
-      if (ipmi_kcs_cmd_interruptible(port, IPMI_BMC_IPMB_LUN_BMC,
+      if (ipmi_kcs_cmd_interruptible(IPMI_BMC_IPMB_LUN_BMC,
                                      netfn, cmd_rq, 
                                      tmpl_rq, cmd_rs, tmpl_rs) < 0)
         {

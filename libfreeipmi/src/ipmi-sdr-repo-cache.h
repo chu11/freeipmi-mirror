@@ -37,9 +37,9 @@ typedef struct sdr_repo_cache
   u_int32_t total_records;
 } sdr_repo_cache_t;
 
-int ipmi_sdr_repo_info_write (u_int16_t sms_io_base, FILE *fp);
-int ipmi_sdr_records_write (u_int16_t sms_io_base, FILE *fp);
-int ipmi_sdr_cache_create (u_int16_t sms_io_base, char *sdr_cache_file);
+int ipmi_sdr_repo_info_write (FILE *fp);
+int ipmi_sdr_records_write (FILE *fp);
+int ipmi_sdr_cache_create (char *sdr_cache_file);
 int ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file);
 int ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache);
 int ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_id);

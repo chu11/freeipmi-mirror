@@ -89,8 +89,7 @@ kcs_bmc_lan_set_arp_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_lan_set_arp (fi_get_sms_io_base (), 
-			     get_lan_channel_number (), 
+  status = ipmi_lan_set_arp (get_lan_channel_number (), 
 			     bmc_generated_gratuitous_arps_flag, 
 			     bmc_generated_arp_responses_flag, 
 			     obj_data_rs);
@@ -139,8 +138,7 @@ kcs_lan_set_gratuitous_arp_interval_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_lan_set_gratuitous_arp_interval (fi_get_sms_io_base (), 
-						 get_lan_channel_number (), 
+  status = ipmi_lan_set_gratuitous_arp_interval (get_lan_channel_number (), 
 						 gratuitous_arp_interval, 
 						 obj_data_rs);
   
@@ -320,8 +318,7 @@ kcs_lan_set_auth_type_enables_commit (FILE *fp)
 /*     } */
   
   
-  status = ipmi_lan_set_auth_type_enables (fi_get_sms_io_base (), 
-					   get_lan_channel_number (), 
+  status = ipmi_lan_set_auth_type_enables (get_lan_channel_number (), 
 					   max_privilege_auth_type_callback_level,
 					   max_privilege_auth_type_user_level,
 					   max_privilege_auth_type_operator_level,
@@ -375,8 +372,7 @@ kcs_lan_set_ip_addr_source_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_lan_set_ip_addr_source (fi_get_sms_io_base (), 
-					get_lan_channel_number (), 
+  status = ipmi_lan_set_ip_addr_source (get_lan_channel_number (), 
 					ip_addr_source,
 					obj_data_rs);
   
@@ -443,8 +439,7 @@ kcs_lan_set_ip_addr_commit (FILE *fp)
   ip_address = bits_merge (ip_address, 16, 24, b3);
   ip_address = bits_merge (ip_address, 24, 32, b4);
   
-  status = ipmi_lan_set_ip_addr (fi_get_sms_io_base (), 
-				 get_lan_channel_number (), 
+  status = ipmi_lan_set_ip_addr (get_lan_channel_number (), 
 				 ip_address, 
 				 obj_data_rs);
   
@@ -513,8 +508,7 @@ kcs_lan_set_gw1_ip_addr_commit (FILE *fp)
   ip_address = bits_merge (ip_address, 16, 24, b3);
   ip_address = bits_merge (ip_address, 24, 32, b4);
   
-  status = ipmi_lan_set_gw1_ip_addr (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_set_gw1_ip_addr (get_lan_channel_number (), 
 				     ip_address,
 				     obj_data_rs);
   
@@ -583,8 +577,7 @@ kcs_lan_set_gw2_ip_addr_commit (FILE *fp)
   ip_address = bits_merge (ip_address, 16, 24, b3);
   ip_address = bits_merge (ip_address, 24, 32, b4);
   
-  status = ipmi_lan_set_gw2_ip_addr (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_set_gw2_ip_addr (get_lan_channel_number (), 
 				     ip_address,
 				     obj_data_rs);
   
@@ -652,8 +645,7 @@ kcs_lan_set_subnet_mask_commit (FILE *fp)
   subnet_mask = bits_merge (subnet_mask, 16, 24, b3);
   subnet_mask = bits_merge (subnet_mask, 24, 32, b4);
   
-  status = ipmi_lan_set_subnet_mask (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_set_subnet_mask (get_lan_channel_number (), 
 				     subnet_mask, 
 				     obj_data_rs);
   
@@ -722,8 +714,7 @@ kcs_lan_set_mac_addr_commit (FILE *fp)
   mac_address = bits_merge (mac_address, 32, 40, b5);
   mac_address = bits_merge (mac_address, 40, 48, b6);
   
-  status = ipmi_lan_set_mac_addr (fi_get_sms_io_base (), 
-				  get_lan_channel_number (), 
+  status = ipmi_lan_set_mac_addr (get_lan_channel_number (), 
 				  mac_address, 
 				  obj_data_rs);
   
@@ -792,8 +783,7 @@ kcs_lan_set_gw1_mac_addr_commit (FILE *fp)
   mac_address = bits_merge (mac_address, 32, 40, b5);
   mac_address = bits_merge (mac_address, 40, 48, b6);
   
-  status = ipmi_lan_set_gw1_mac_addr (fi_get_sms_io_base (), 
-				      get_lan_channel_number (), 
+  status = ipmi_lan_set_gw1_mac_addr (get_lan_channel_number (), 
 				      mac_address, 
 				      obj_data_rs);
   
@@ -862,8 +852,7 @@ kcs_lan_set_gw2_mac_addr_commit (FILE *fp)
   mac_address = bits_merge (mac_address, 32, 40, b5);
   mac_address = bits_merge (mac_address, 40, 48, b6);
   
-  status = ipmi_lan_set_gw2_mac_addr (fi_get_sms_io_base (), 
-				      get_lan_channel_number (), 
+  status = ipmi_lan_set_gw2_mac_addr (get_lan_channel_number (), 
 				      mac_address, 
 				      obj_data_rs);
   
@@ -950,8 +939,7 @@ set_user_name_commit (FILE *fp)
       else 
 	memcpy (username_data, username, IPMI_USER_NAME_MAX_LENGTH);
       
-      status = ipmi_kcs_set_user_name (fi_get_sms_io_base (), 
-				       user_id, 
+      status = ipmi_kcs_set_user_name (user_id, 
 				       username_data, 
 				       obj_data_rs);
       
@@ -1007,8 +995,7 @@ set_user_password_commit (FILE *fp)
       password = value_string;
       free (line);
       
-      status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
-					   user_id, 
+      status = ipmi_kcs_set_user_password (user_id, 
 					   IPMI_PASSWORD_OPERATION_ENABLE_USER, 
 					   password_data, 
 					   obj_data_rs);
@@ -1040,8 +1027,7 @@ set_user_password_commit (FILE *fp)
 	}
       free (value_string);
       
-      status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
-					   user_id, 
+      status = ipmi_kcs_set_user_password (user_id, 
 					   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
 					   password_data, 
 					   obj_data_rs);
@@ -1131,8 +1117,7 @@ set_user_access_commit (FILE *fp)
       free (line);
       free (value_string);
       
-      status = ipmi_kcs_set_user_access (fi_get_sms_io_base (), 
-					 get_lan_channel_number (), 
+      status = ipmi_kcs_set_user_access (get_lan_channel_number (), 
 					 user_id, 
 					 restrict_to_callback,
 					 enable_link_auth,
@@ -1238,8 +1223,7 @@ set_channel_access_commit (FILE *fp)
       free (line);
       free (value_string);
   
-      status = ipmi_kcs_set_channel_access (fi_get_sms_io_base (), 
-					    get_lan_channel_number (), 
+      status = ipmi_kcs_set_channel_access (get_lan_channel_number (), 
 					    ipmi_messaging_access_mode, 
 					    user_level_authentication, 
 					    per_message_authentication, 
@@ -1331,8 +1315,7 @@ set_serial_connmode_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_set_serial_connmode (fi_get_sms_io_base (), 
-				     get_serial_channel_number (), 
+  status = ipmi_set_serial_connmode (get_serial_channel_number (), 
 				     basic_mode_enable,
 				     ppp_mode_enable,
 				     terminal_mode_enable,
@@ -1385,8 +1368,7 @@ set_serial_page_blackout_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_set_serial_page_blackout_interval (fi_get_sms_io_base (), 
-						   get_serial_channel_number (), 
+  status = ipmi_set_serial_page_blackout_interval (get_serial_channel_number (), 
 						   page_blackout_interval,
 						   obj_data_rs);
   
@@ -1436,8 +1418,7 @@ set_serial_retry_time_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_set_serial_retry_time (fi_get_sms_io_base (), 
-				       get_serial_channel_number (), 
+  status = ipmi_set_serial_retry_time (get_serial_channel_number (), 
 				       retry_time,
 				       obj_data_rs);
   
@@ -1513,8 +1494,7 @@ set_serial_comm_bits_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_set_serial_comm_bits (fi_get_sms_io_base (), 
-				      get_serial_channel_number (), 
+  status = ipmi_set_serial_comm_bits (get_serial_channel_number (), 
 				      dtr_hangup,
 				      flow_control,
 				      bit_rate,
@@ -1566,8 +1546,7 @@ set_power_restore_policy_commit (FILE *fp)
   free (line);
   free (value_string);
   
-  status = ipmi_set_power_restore_policy (fi_get_sms_io_base (), 
-					  power_restore_policy,
+  status = ipmi_set_power_restore_policy (power_restore_policy,
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)

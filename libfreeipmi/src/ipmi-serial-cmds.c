@@ -233,8 +233,7 @@ fill_set_serial_connmode (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_connmode (u_int16_t sms_io_base, 
-			  u_int8_t channel_number, 
+ipmi_set_serial_connmode (u_int8_t channel_number, 
 			  u_int8_t basic_mode_enable,
 			  u_int8_t ppp_mode_enable,
 			  u_int8_t terminal_mode_enable,
@@ -251,7 +250,7 @@ ipmi_set_serial_connmode (u_int16_t sms_io_base,
 			    ppp_mode_enable, 
 			    terminal_mode_enable, 
 			    direct);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_serial_conf_param_connmode_rq, 
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
@@ -287,8 +286,7 @@ fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_page_blackout_interval (u_int16_t sms_io_base, 
-					u_int8_t channel_number, 
+ipmi_set_serial_page_blackout_interval (u_int8_t channel_number, 
 					u_int8_t page_blackout_interval, 
 					fiid_obj_t obj_data_rs)
 {
@@ -299,7 +297,7 @@ ipmi_set_serial_page_blackout_interval (u_int16_t sms_io_base,
   fill_set_serial_page_blackout_interval (obj_data_rq, 
 					  channel_number, 
 					  page_blackout_interval);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_serial_conf_param_pageblackout_rq, 
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
@@ -335,8 +333,7 @@ fill_set_serial_retry_time (fiid_obj_t obj_data_rq,
 }	    
 
 int8_t 
-ipmi_set_serial_retry_time (u_int16_t sms_io_base, 
-			    u_int8_t channel_number, 
+ipmi_set_serial_retry_time (u_int8_t channel_number, 
 			    u_int8_t retry_time, 
 			    fiid_obj_t obj_data_rs)
 {
@@ -347,7 +344,7 @@ ipmi_set_serial_retry_time (u_int16_t sms_io_base,
   fill_set_serial_retry_time (obj_data_rq, 
 			      channel_number, 
 			      retry_time);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_serial_conf_param_retry_rq, 
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
@@ -395,8 +392,7 @@ fill_set_serial_comm_bits (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_comm_bits (u_int16_t sms_io_base, 
-			   u_int8_t channel_number, 
+ipmi_set_serial_comm_bits (u_int8_t channel_number, 
                            u_int8_t dtr_hangup,
                            u_int8_t flow_control,
                            u_int8_t bit_rate,
@@ -411,7 +407,7 @@ ipmi_set_serial_comm_bits (u_int16_t sms_io_base,
 			     dtr_hangup,
 			     flow_control,
 			     bit_rate);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_serial_conf_param_commbits_rq, 
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
@@ -460,8 +456,7 @@ fill_get_serial_conf_param (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_get_serial_connmode (u_int16_t sms_io_base,
-                          u_int8_t channel_number,
+ipmi_get_serial_connmode (u_int8_t channel_number,
                           u_int8_t parameter_type,
                           u_int8_t set_selector,
                           u_int8_t block_selector,
@@ -477,7 +472,7 @@ ipmi_get_serial_connmode (u_int16_t sms_io_base,
 			      parameter_type, 
 			      set_selector, 
 			      block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
 			 obj_data_rs, tmpl_get_serial_conf_param_connmode_rs);
   free (obj_data_rq);
@@ -485,8 +480,7 @@ ipmi_get_serial_connmode (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_get_serial_page_blackout (u_int16_t sms_io_base,
-			       u_int8_t channel_number,
+ipmi_get_serial_page_blackout (u_int8_t channel_number,
 			       u_int8_t parameter_type,
 			       u_int8_t set_selector,
 			       u_int8_t block_selector,
@@ -502,7 +496,7 @@ ipmi_get_serial_page_blackout (u_int16_t sms_io_base,
 			      parameter_type, 
 			      set_selector, 
 			      block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
 			 obj_data_rs, tmpl_get_serial_conf_param_pageblackout_rs);
   free (obj_data_rq);
@@ -510,8 +504,7 @@ ipmi_get_serial_page_blackout (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_get_serial_retry_time (u_int16_t sms_io_base,
-			    u_int8_t channel_number,
+ipmi_get_serial_retry_time (u_int8_t channel_number,
 			    u_int8_t parameter_type,
 			    u_int8_t set_selector,
 			    u_int8_t block_selector,
@@ -527,7 +520,7 @@ ipmi_get_serial_retry_time (u_int16_t sms_io_base,
 			      parameter_type, 
 			      set_selector, 
 			      block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
 			 obj_data_rs, tmpl_get_serial_conf_param_retry_rs);
   free (obj_data_rq);
@@ -535,8 +528,7 @@ ipmi_get_serial_retry_time (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_get_serial_comm_bits (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_get_serial_comm_bits (u_int8_t channel_number,
 			   u_int8_t parameter_type,
 			   u_int8_t set_selector,
 			   u_int8_t block_selector,
@@ -552,7 +544,7 @@ ipmi_get_serial_comm_bits (u_int16_t sms_io_base,
 			      parameter_type, 
 			      set_selector, 
 			      block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
 			 obj_data_rs, tmpl_get_serial_conf_param_commbits_rs);
   free (obj_data_rq);

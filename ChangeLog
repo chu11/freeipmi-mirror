@@ -1,3 +1,40 @@
+2004-12-04  Anand Babu  <ab@gnu.org.in>
+	* CVS: tagged before commit checkpoint-pre-kcs-api-change.
+
+	* configure.ac: Next version number would be 0.2.0. But lot more
+	work to be done before that.
+	
+	* libfreeipmi/src/ipmi-kcs-interface.c: kcs init function accepts
+	reg_space argument. All functions uses the sms_io_base KCS port
+	address set through kcs init function. This has resulted in API
+	changes across the freeipmi source. List of modified files are
+	bmc-watchdog/src/bmc-watchdog.c fish/src/bmc-conf-checkout.c
+	fish/src/bmc-conf-commit.c fish/src/bmc-conf-utils.c
+	fish/src/bmc-conf2.c fish/src/fish.c fish/src/ipmi-wrapper-sel.c
+	fish/src/ipmi-wrapper-sensor.c fish/src/ipmi-wrapper.c
+	fish/src/scm-procedures.c libfreeipmi/src/ipmi-chassis-cmds.c
+	libfreeipmi/src/ipmi-chassis-cmds.h
+	libfreeipmi/src/ipmi-dev-global-cmds.c
+	libfreeipmi/src/ipmi-dev-global-cmds.h
+	libfreeipmi/src/ipmi-lan-cmds.c libfreeipmi/src/ipmi-lan-cmds.h
+	libfreeipmi/src/ipmi-pef-cmds.c
+	libfreeipmi/src/ipmi-sdr-repo-cache.c
+	libfreeipmi/src/ipmi-sdr-repo-cache.h
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	libfreeipmi/src/ipmi-sdr-repo-cmds.h
+	libfreeipmi/src/ipmi-sel-cmds.c libfreeipmi/src/ipmi-sel-cmds.h
+	libfreeipmi/src/ipmi-sel-record-types.c
+	libfreeipmi/src/ipmi-sel-record-types.h
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	libfreeipmi/src/ipmi-sensor-cmds.h
+	libfreeipmi/src/ipmi-serial-cmds.c
+	libfreeipmi/src/ipmi-serial-cmds.h
+	libfreeipmi/src/ipmi-sol-cmds.c.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c: Now uses
+	fiid_obj_get/set and some code cleanup.
+	
+
 2004-12-02  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_cmdline_parse): Fix error

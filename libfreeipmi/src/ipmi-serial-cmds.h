@@ -35,54 +35,46 @@ extern fiid_template_t tmpl_get_serial_conf_param_pageblackout_rs;
 extern fiid_template_t tmpl_get_serial_conf_param_retry_rs;
 extern fiid_template_t tmpl_get_serial_conf_param_commbits_rs;
 
-int8_t ipmi_set_serial_connmode (u_int16_t sms_io_base, 
-				 u_int8_t channel_number, 
+int8_t ipmi_set_serial_connmode (u_int8_t channel_number, 
 				 u_int8_t basic_mode_enable,
 				 u_int8_t ppp_mode_enable,
 				 u_int8_t terminal_mode_enable,
 				 u_int8_t direct,
 				 fiid_obj_t obj_data_rs);
 
-int8_t ipmi_set_serial_page_blackout_interval (u_int16_t sms_io_base, 
-                                               u_int8_t channel_number, 
+int8_t ipmi_set_serial_page_blackout_interval (u_int8_t channel_number, 
                                                u_int8_t page_blackout_interval, 
                                                fiid_obj_t obj_data_rs);
 
-int8_t ipmi_set_serial_retry_time (u_int16_t sms_io_base, 
-                                   u_int8_t channel_number, 
+int8_t ipmi_set_serial_retry_time (u_int8_t channel_number, 
                                    u_int8_t retry_time, 
                                    fiid_obj_t obj_data_rs);
 
-int8_t ipmi_set_serial_comm_bits (u_int16_t sms_io_base, 
-                                  u_int8_t channel_number, 
+int8_t ipmi_set_serial_comm_bits (u_int8_t channel_number, 
                                   u_int8_t dtr_hangup,
                                   u_int8_t flow_control,
                                   u_int8_t bit_rate,
                                   fiid_obj_t obj_data_rs);
 
-int8_t ipmi_get_serial_connmode (u_int16_t sms_io_base,
-                                 u_int8_t channel_number,
+int8_t ipmi_get_serial_connmode (u_int8_t channel_number,
                                  u_int8_t parameter_type,
                                  u_int8_t set_selector,
                                  u_int8_t block_selector,
                                  fiid_obj_t obj_data_rs);
 
-int8_t ipmi_get_serial_page_blackout (u_int16_t sms_io_base,
-                                      u_int8_t channel_number,
+int8_t ipmi_get_serial_page_blackout (u_int8_t channel_number,
                                       u_int8_t parameter_type,
                                       u_int8_t set_selector,
                                       u_int8_t block_selector,
                                       fiid_obj_t obj_data_rs);
 
-int8_t ipmi_get_serial_retry_time (u_int16_t sms_io_base,
-                                   u_int8_t channel_number,
+int8_t ipmi_get_serial_retry_time (u_int8_t channel_number,
                                    u_int8_t parameter_type,
                                    u_int8_t set_selector,
                                    u_int8_t block_selector,
                                    fiid_obj_t obj_data_rs);
 
-int8_t ipmi_get_serial_comm_bits (u_int16_t sms_io_base,
-                                  u_int8_t channel_number,
+int8_t ipmi_get_serial_comm_bits (u_int8_t channel_number,
                                   u_int8_t parameter_type,
                                   u_int8_t set_selector,
                                   u_int8_t block_selector,

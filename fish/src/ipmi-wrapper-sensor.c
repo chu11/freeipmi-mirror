@@ -237,8 +237,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 					 is_signed,
 					 val);
   
-  status = ipmi_kcs_get_sensor_thresholds (fi_get_sms_io_base (), 
-					   sensor_number, 
+  status = ipmi_kcs_get_sensor_thresholds (sensor_number, 
 					   data_rs);
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
     {
@@ -282,8 +281,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
     printf ("%c", sdr_repo_cache->cache_curr[i]);
   printf (" (%s): ", ipmi_get_sensor_group (sensor_type));
   
-  status = ipmi_kcs_get_threshold_reading (fi_get_sms_io_base (), 
-					   sensor_number, 
+  status = ipmi_kcs_get_threshold_reading (sensor_number, 
 					   data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -514,8 +512,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
     printf ("%c", sdr_repo_cache->cache_curr[i]);
   printf (" (%s): ", ipmi_get_sensor_group (sensor_type));
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -632,8 +629,7 @@ display_current_generic_discrete_sensor_compact_record (sdr_repo_cache_t *sdr_re
     printf ("%c", sdr_repo_cache->cache_curr[i]);
   printf (" (%s): ", ipmi_get_sensor_group (sensor_type));
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -744,8 +740,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
     printf ("%c", sdr_repo_cache->cache_curr[i]);
   printf (" (%s): ", ipmi_get_sensor_group (sensor_type));
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -869,8 +864,7 @@ display_current_discrete_sensor_compact_record (sdr_repo_cache_t *sdr_repo_cache
     printf ("%c", sdr_repo_cache->cache_curr[i]);
   printf (" (%s): ", ipmi_get_sensor_group (sensor_type));
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1235,8 +1229,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
     fiid_obj_t obj_data_rs;
       
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sensor_thresholds_rs));
-    status = ipmi_kcs_get_sensor_thresholds (fi_get_sms_io_base (), 
-					     sensor_number, 
+    status = ipmi_kcs_get_sensor_thresholds (sensor_number, 
 					     obj_data_rs);
     if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
     {
@@ -1463,8 +1456,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
-  status = ipmi_kcs_get_threshold_reading (fi_get_sms_io_base (), 
-					   sensor_number, 
+  status = ipmi_kcs_get_threshold_reading (sensor_number, 
 					   data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1817,8 +1809,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
   
   printf ("Sensor reading: N/A\n");
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1938,8 +1929,7 @@ display_verbose_current_generic_discrete_sensor_compact_record (sdr_repo_cache_t
 		&val);
   printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -2222,8 +2212,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
   
   printf ("Sensor reading: N/A\n");
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -2340,8 +2329,7 @@ display_verbose_current_discrete_sensor_compact_record (sdr_repo_cache_t *sdr_re
 		&val);
   printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
   
-  status = ipmi_kcs_get_discrete_reading (fi_get_sms_io_base (), 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  data_rs);
   
   if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)

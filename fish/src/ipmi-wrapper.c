@@ -35,6 +35,7 @@ char *alloca ();
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #ifdef __FreeBSD__
 #include <sys/types.h>
 #endif
@@ -273,9 +274,7 @@ get_channel_info_list ()
   
   for (i = 0, ci = 0; i < 8; i++)
     {
-      if (ipmi_kcs_get_channel_info (fi_get_sms_io_base (),
-				     i,
-				     data_rs) != 0)
+      if (ipmi_kcs_get_channel_info (i, data_rs) != 0)
 	continue;
       
       if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
@@ -339,7 +338,7 @@ get_lan_channel_number ()
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
   cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
   
-  if (ipmi_kcs_get_dev_id (fi_get_sms_io_base (), obj_hdr_rs, obj_cmd_rs) != 0)
+  if (ipmi_kcs_get_dev_id (obj_hdr_rs, obj_cmd_rs) != 0)
     return (-1);
   
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
@@ -592,7 +591,8 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
 	  {
 	    /* I am assuming all Intel products will decode alike.
                                  -- Anand Babu <ab@gnu.org.in>  */
-/* 	  case IPMI_PROD_ID_SR870BN4: */
+	  case IPMI_PROD_ID_SR870BN4:
+	  default:
 	    {
 	      u_int64_t bc_maj, bc_min, pia_maj, pia_min;
 	      FIID_OBJ_GET (cmd_rs,

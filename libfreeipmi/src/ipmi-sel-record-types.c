@@ -124,8 +124,7 @@ ipmi_get_sel_record_type (u_int8_t record_type)
 }
 
 int 
-ipmi_sel_get_first_entry (u_int16_t sms_io_base, 
-			  sel_descriptor_t *seld, 
+ipmi_sel_get_first_entry (sel_descriptor_t *seld, 
 			  u_int8_t *record_data)
 {
   fiid_obj_t obj_data_rs;
@@ -133,8 +132,7 @@ ipmi_sel_get_first_entry (u_int16_t sms_io_base,
   u_int64_t val;
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_entry_rs));
-  status = ipmi_kcs_get_sel_entry (sms_io_base, 
-				   IPMI_SEL_FIRST_ENTRY, 
+  status = ipmi_kcs_get_sel_entry (IPMI_SEL_FIRST_ENTRY, 
 				   obj_data_rs);
   
   if (status != 0)
@@ -176,8 +174,7 @@ ipmi_sel_get_first_entry (u_int16_t sms_io_base,
 }
 
 int 
-ipmi_sel_get_next_entry (u_int16_t sms_io_base, 
-			 sel_descriptor_t *seld, 
+ipmi_sel_get_next_entry (sel_descriptor_t *seld, 
 			 u_int8_t *record_data)
 {
   fiid_obj_t obj_data_rs;
@@ -188,8 +185,7 @@ ipmi_sel_get_next_entry (u_int16_t sms_io_base,
     return -1;
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_entry_rs));
-  status = ipmi_kcs_get_sel_entry (sms_io_base, 
-				   seld->next_record_id, 
+  status = ipmi_kcs_get_sel_entry (seld->next_record_id, 
 				   obj_data_rs);
   
   if (status != 0)

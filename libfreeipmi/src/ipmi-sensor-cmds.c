@@ -754,8 +754,7 @@ fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 }
 
 int8_t 
-ipmi_kcs_get_threshold_reading (u_int16_t sms_io_base, 
-				u_int8_t sensor_number, 
+ipmi_kcs_get_threshold_reading (u_int8_t sensor_number, 
 				fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -763,7 +762,7 @@ ipmi_kcs_get_threshold_reading (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_threshold_reading_rq);
   fill_kcs_get_threshold_reading (obj_data_rq, sensor_number);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_threshold_reading_rq, 
 			 obj_data_rs, tmpl_get_sensor_threshold_reading_rs);
   free (obj_data_rq);
@@ -787,8 +786,7 @@ fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 }
 
 int8_t 
-ipmi_kcs_get_discrete_reading (u_int16_t sms_io_base, 
-			       u_int8_t sensor_number, 
+ipmi_kcs_get_discrete_reading (u_int8_t sensor_number, 
 			       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -796,7 +794,7 @@ ipmi_kcs_get_discrete_reading (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_discrete_reading_rq);
   fill_kcs_get_discrete_reading (obj_data_rq, sensor_number);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_discrete_reading_rq, 
 			 obj_data_rs, tmpl_get_sensor_discrete_reading_rs);
   free (obj_data_rq);
@@ -820,8 +818,7 @@ fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 }
 
 int8_t 
-ipmi_kcs_get_sensor_thresholds (u_int16_t sms_io_base, 
-				u_int8_t sensor_number, 
+ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number, 
 				fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -829,7 +826,7 @@ ipmi_kcs_get_sensor_thresholds (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_thresholds_rq);
   fill_kcs_get_sensor_thresholds (obj_data_rq, sensor_number);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_thresholds_rq, 
 			 obj_data_rs, tmpl_get_sensor_thresholds_rs);
   free (obj_data_rq);

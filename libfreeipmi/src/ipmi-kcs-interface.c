@@ -77,9 +77,11 @@ memset (void *s, int c, size_t n)
 #define _OUTB(data, port)  outb (data, port)
 #endif
 
-static u_int64_t kcs_poll_count;
+static u_int64_t     kcs_poll_count;
+static u_int16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+static int           kcs_reg_space   = IPMI_KCS_REG_SPACE_DEFAULT;
 static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS;
-static int kcs_mutex_semid;
+static int           kcs_mutex_semid;
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_ksc_dev_io_fd = -1;
@@ -105,22 +107,47 @@ ipmi_kcs_get_mutex_semid (void)
 }
 
 int
-ipmi_kcs_io_init (u_int16_t sms_io_base, unsigned long sleep_usecs)
+ipmi_kcs_reg_space (u_int8_t reg_space_boundary)
 {
+  switch (reg_space_boundary)
+    {
+    case IPMI_KCS_REG_SPACE_1BYTE_BOUND:
+      return (0x01);
+    case IPMI_KCS_REG_SPACE_32BIT_BOUND:
+      return (0x04);
+    case IPMI_KCS_REG_SPACE_16BYTE_BOUND:
+      return (0x10);
+    case IPMI_KCS_REG_SPACE_RESERVED_BOUND:
+    default:
+      errno = EINVAL;
+      return (-1);
+    }
+}
+
+int
+ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space_boundary, \
+		  unsigned long sleep_usecs)
+{
+  if (sms_io_base < 1)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  kcs_sms_io_base = sms_io_base;
+  ERR ((kcs_reg_space   = ipmi_kcs_reg_space (reg_space_boundary)) != -1);
   kcs_sleep_usecs = sleep_usecs;
-  
-  kcs_mutex_semid = ipmi_mutex_init (IPMI_KCS_IPCKEY ());
-  ERR (kcs_mutex_semid != -1);
+  ERR ((kcs_mutex_semid = ipmi_mutex_init (IPMI_KCS_IPCKEY ())) != -1);
 
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
   /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
-  return (i386_set_ioperm(sms_io_base, 0x02, 0x01));
+  return (i386_set_ioperm (kcs_sms_io_base, 0x02, 0x01));
 #else
   /* Opening /dev/io raises IOPL bits for current process. */
   /* XXX This fd will remain open until exit as there is no
    * uninitialization routine. */
-  ipmi_ksc_dev_io_fd = open("/dev/io", O_RDONLY);
+  ipmi_ksc_dev_io_fd = open ("/dev/io", O_RDONLY);
   return (ipmi_ksc_dev_io_fd == -1 ? -1 : 0);
 #endif
 #else
@@ -136,7 +163,7 @@ fill_hdr_ipmi_kcs (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_hdr)
       (obj_hdr == NULL))
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, "lun", lun);
@@ -151,14 +178,14 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t t
   if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
   obj_hdr_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
   obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
   if (pkt_len < (obj_hdr_len + obj_cmd_len))
     {
       errno = EMSGSIZE;
-      return -1;
+      return (-1);
     }
   
   memset (pkt, 0, obj_hdr_len + obj_cmd_len);
@@ -175,7 +202,7 @@ unassemble_ipmi_kcs_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_obj_t obj_hdr, f
   if (pkt == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
 
   indx = 0;
@@ -196,7 +223,7 @@ unassemble_ipmi_kcs_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_obj_t obj_hdr, f
       else
 	{
 	  errno = EINVAL;
-	  return -1;
+	  return (-1);
  	}
     }
 
@@ -204,9 +231,9 @@ unassemble_ipmi_kcs_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_obj_t obj_hdr, f
 }
 
 int8_t
-ipmi_kcs_get_status (u_int16_t sms_io_base)
+ipmi_kcs_get_status ()
 {
-  return _INB (IPMI_KCS_REG_STATUS (sms_io_base));
+  return _INB (IPMI_KCS_REG_STATUS (kcs_sms_io_base, kcs_reg_space));
 }
 
 /*
@@ -214,9 +241,9 @@ ipmi_kcs_get_status (u_int16_t sms_io_base)
  * read the command. 
  */
 void
-ipmi_kcs_wait_for_ibf_clear (u_int16_t sms_io_base)
+ipmi_kcs_wait_for_ibf_clear ()
 {
-  while (ipmi_kcs_get_status (sms_io_base) & IPMI_KCS_STATUS_REG_IBF)
+  while (ipmi_kcs_get_status () & IPMI_KCS_STATUS_REG_IBF)
     {
       usleep (kcs_sleep_usecs);
       kcs_poll_count++;
@@ -229,9 +256,9 @@ ipmi_kcs_wait_for_ibf_clear (u_int16_t sms_io_base)
  */
 
 void
-ipmi_kcs_wait_for_obf_set (u_int16_t sms_io_base)
+ipmi_kcs_wait_for_obf_set ()
 {
-  while (!(ipmi_kcs_get_status (sms_io_base) & IPMI_KCS_STATUS_REG_OBF))
+  while (!(ipmi_kcs_get_status () & IPMI_KCS_STATUS_REG_OBF))
     {
       usleep (kcs_sleep_usecs);
       kcs_poll_count++;
@@ -242,59 +269,59 @@ ipmi_kcs_wait_for_obf_set (u_int16_t sms_io_base)
  * Read byte from outbound data port. 
  */
 int8_t
-ipmi_kcs_read_byte (u_int16_t sms_io_base)
+ipmi_kcs_read_byte ()
 {
-  return _INB (IPMI_KCS_REG_DATAOUT (sms_io_base));
+  return _INB (IPMI_KCS_REG_DATAOUT (kcs_sms_io_base));
 }
 
 /*
  * Bump channel into sending next byte.
  */
 void
-ipmi_kcs_read_next (u_int16_t sms_io_base) 
+ipmi_kcs_read_next () 
 {
-  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (sms_io_base));
+  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (kcs_sms_io_base));
 }
 /*
  * Set up channel for writing.
  */
 void
-ipmi_kcs_start_write (u_int16_t sms_io_base)
+ipmi_kcs_start_write ()
 {
-  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (sms_io_base));
+  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (kcs_sms_io_base, kcs_reg_space));
 }
 
 /*
  * Write byte to inound data port.
  */
 void
-ipmi_kcs_write_byte (u_int16_t sms_io_base, u_int8_t byte)
+ipmi_kcs_write_byte (u_int8_t byte)
 {
-  _OUTB (byte, IPMI_KCS_REG_DATAIN (sms_io_base));
+  _OUTB (byte, IPMI_KCS_REG_DATAIN (kcs_sms_io_base));
 }
 
 /* 
  * Set up channel to end write.
  */
 void
-ipmi_kcs_end_write (u_int16_t sms_io_base)
+ipmi_kcs_end_write ()
 {
-  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (sms_io_base));
+  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (kcs_sms_io_base, kcs_reg_space));
 }
 
 /* 
  * Send Abort current processing command.
  */
 void
-ipmi_kcs_get_abort (u_int16_t sms_io_base)
+ipmi_kcs_get_abort ()
 {
-  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (sms_io_base));
+  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (kcs_sms_io_base, kcs_reg_space));
 }
 
 int8_t
-ipmi_kcs_test_if_state (u_int16_t sms_io_base, u_int8_t status)
+ipmi_kcs_test_if_state (u_int8_t status)
 {
-  if ((ipmi_kcs_get_status (sms_io_base) & IPMI_KCS_STATUS_REG_STATE) == 
+  if ((ipmi_kcs_get_status () & IPMI_KCS_STATUS_REG_STATE) == 
       (status & IPMI_KCS_STATUS_REG_STATE))
     return 1;
   else
@@ -305,11 +332,11 @@ ipmi_kcs_test_if_state (u_int16_t sms_io_base, u_int8_t status)
  * Read dummy byte to clear OBF if set.
  */
 void
-ipmi_kcs_clear_obf (u_int16_t sms_io_base)
+ipmi_kcs_clear_obf ()
 {
-  if (ipmi_kcs_get_status (sms_io_base) & IPMI_KCS_STATUS_REG_OBF) 
+  if (ipmi_kcs_get_status () & IPMI_KCS_STATUS_REG_OBF) 
     {
-      ipmi_kcs_read_byte (sms_io_base);
+      ipmi_kcs_read_byte ();
     }
 }
 
@@ -317,7 +344,7 @@ ipmi_kcs_clear_obf (u_int16_t sms_io_base)
  * Main read loop.
  */
 ssize_t
-ipmi_kcs_read (u_int16_t sms_io_base, u_int8_t* bytes, u_int32_t bytes_len)
+ipmi_kcs_read (u_int8_t* bytes, u_int32_t bytes_len)
 {
   u_int8_t *p = bytes;
   int len = 0;
@@ -329,26 +356,26 @@ ipmi_kcs_read (u_int16_t sms_io_base, u_int8_t* bytes, u_int32_t bytes_len)
       goto finish;
     }
 
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_READ)) 
+  ipmi_kcs_wait_for_ibf_clear ();
+  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) 
     {
       errno = EBUSY;
       len = -1;
       goto finish;
     }
-  while (ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_READ) && len < bytes_len)
+  while (ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ) && len < bytes_len)
     {
-      ipmi_kcs_wait_for_obf_set (sms_io_base);
-      *(p++) = ipmi_kcs_read_byte (sms_io_base);
+      ipmi_kcs_wait_for_obf_set ();
+      *(p++) = ipmi_kcs_read_byte ();
       len++;
-      ipmi_kcs_read_next (sms_io_base);
-      ipmi_kcs_wait_for_ibf_clear (sms_io_base);
+      ipmi_kcs_read_next ();
+      ipmi_kcs_wait_for_ibf_clear ();
     }
-  if (ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_IDLE))
+  if (ipmi_kcs_test_if_state (IPMI_KCS_STATE_IDLE))
     {
       /* Clean up */
-      ipmi_kcs_wait_for_obf_set (sms_io_base);
-      ipmi_kcs_read_byte (sms_io_base); /* toss it, ACK */
+      ipmi_kcs_wait_for_obf_set ();
+      ipmi_kcs_read_byte (); /* toss it, ACK */
       goto finish;
     }
   else
@@ -369,7 +396,7 @@ ipmi_kcs_read (u_int16_t sms_io_base, u_int8_t* bytes, u_int32_t bytes_len)
  * Standard write loop. 
  */
 ssize_t
-ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
+ipmi_kcs_write (u_int8_t *bytes, u_int32_t  bytes_len)
 {
   u_int8_t *buf=bytes;
   u_int32_t bytes_count = 0;
@@ -385,47 +412,47 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
       goto failure;
     }
 
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  ipmi_kcs_clear_obf (sms_io_base);
-  ipmi_kcs_start_write (sms_io_base);
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+  ipmi_kcs_wait_for_ibf_clear ();
+  ipmi_kcs_clear_obf ();
+  ipmi_kcs_start_write ();
+  ipmi_kcs_wait_for_ibf_clear ();
+  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
     {
       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
     }
-  ipmi_kcs_clear_obf (sms_io_base);
+  ipmi_kcs_clear_obf ();
 
   /* note we have to save last byte. */
   /* for (buf=data; data+len-1 < buf; buf++) */
   for (; bytes_len > 1; bytes_len--)
     {
-      ipmi_kcs_write_byte (sms_io_base, *buf);
-      ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-      if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+      ipmi_kcs_write_byte (*buf);
+      ipmi_kcs_wait_for_ibf_clear ();
+      if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
         {
           IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 	  errno = EBUSY;
           bytes_count = -1;
 	  goto failure;
         }
-      ipmi_kcs_clear_obf (sms_io_base);
+      ipmi_kcs_clear_obf ();
       buf++;
       bytes_count++;
     }
-  ipmi_kcs_end_write (sms_io_base);
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+  ipmi_kcs_end_write ();
+  ipmi_kcs_wait_for_ibf_clear ();
+  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
     {
       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
     }
-  ipmi_kcs_clear_obf (sms_io_base);
-  ipmi_kcs_write_byte (sms_io_base, *buf);
+  ipmi_kcs_clear_obf ();
+  ipmi_kcs_write_byte (*buf);
   bytes_count++;
   /*    if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
 	printf ("Not in READ state after writing last byte?\n");
@@ -442,7 +469,7 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
     want to try again some time later.
  */
 ssize_t
-ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
+ipmi_kcs_write_interruptible (u_int8_t *bytes, u_int32_t  bytes_len)
 {
   u_int8_t *buf=bytes;
   u_int32_t bytes_count = 0;
@@ -450,7 +477,7 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
 
   ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
   if (ret == -1 && errno == EAGAIN)
-    return -1;
+    return (-1);
   ERR ((!(ret == -1 && errno != EAGAIN)));
 
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Entered Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
@@ -463,47 +490,47 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
       goto failure;
     }
 
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  ipmi_kcs_clear_obf (sms_io_base);
-  ipmi_kcs_start_write (sms_io_base);
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+  ipmi_kcs_wait_for_ibf_clear ();
+  ipmi_kcs_clear_obf ();
+  ipmi_kcs_start_write ();
+  ipmi_kcs_wait_for_ibf_clear ();
+  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
     {
       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
     }
-  ipmi_kcs_clear_obf (sms_io_base);
+  ipmi_kcs_clear_obf ();
 
   /* note we have to save last byte. */
   /* for (buf=data; data+len-1 < buf; buf++) */
   for (; bytes_len > 1; bytes_len--)
     {
-      ipmi_kcs_write_byte (sms_io_base, *buf);
-      ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-      if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+      ipmi_kcs_write_byte (*buf);
+      ipmi_kcs_wait_for_ibf_clear ();
+      if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
         {
           IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 	  errno = EBUSY;
           bytes_count = -1;
 	  goto failure;
         }
-      ipmi_kcs_clear_obf (sms_io_base);
+      ipmi_kcs_clear_obf ();
       buf++;
       bytes_count++;
     }
-  ipmi_kcs_end_write (sms_io_base);
-  ipmi_kcs_wait_for_ibf_clear (sms_io_base);
-  if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
+  ipmi_kcs_end_write ();
+  ipmi_kcs_wait_for_ibf_clear ();
+  if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_WRITE))
     {
       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
     }
-  ipmi_kcs_clear_obf (sms_io_base);
-  ipmi_kcs_write_byte (sms_io_base, *buf);
+  ipmi_kcs_clear_obf ();
+  ipmi_kcs_write_byte (*buf);
   bytes_count++;
   /*    if (!ipmi_kcs_test_if_state (IPMI_KCS_STATE_READ)) {
 	printf ("Not in READ state after writing last byte?\n");
@@ -516,9 +543,9 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
 }
 
 int8_t
-ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
+ipmi_kcs_cmd (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
 {
-  if (!(sms_io_base && obj_cmd_rq && tmpl_cmd_rq && obj_cmd_rs && tmpl_cmd_rs))
+  if (!(obj_cmd_rq && tmpl_cmd_rq && obj_cmd_rs && tmpl_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
@@ -544,7 +571,7 @@ ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_c
     ERR (assemble_ipmi_kcs_pkt (obj_hdr_rq, obj_cmd_rq, 
 				  tmpl_cmd_rq, bytes, bytes_len) > 0);
 
-    ERR (ipmi_kcs_write (sms_io_base, bytes, bytes_len) != -1);
+    ERR (ipmi_kcs_write (bytes, bytes_len) != -1);
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
@@ -564,7 +591,7 @@ ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_c
     memset (bytes, 0, bytes_len);
     ERR (bytes);
     
-    ERR (ipmi_kcs_read (sms_io_base, bytes, bytes_len) != -1);
+    ERR (ipmi_kcs_read (bytes, bytes_len) != -1);
 
     ERR (unassemble_ipmi_kcs_pkt (bytes, bytes_len,
 				  obj_hdr_rs, obj_cmd_rs, 
@@ -575,11 +602,11 @@ ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_c
 
 
 int8_t
-ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
+ipmi_kcs_cmd_interruptible (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
 {
   int ret;
 
-  if (!(sms_io_base && obj_cmd_rq && tmpl_cmd_rq && obj_cmd_rs && tmpl_cmd_rs))
+  if (!(obj_cmd_rq && tmpl_cmd_rq && obj_cmd_rs && tmpl_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
@@ -605,9 +632,9 @@ ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fi
     ERR (assemble_ipmi_kcs_pkt (obj_hdr_rq, obj_cmd_rq, 
 				  tmpl_cmd_rq, bytes, bytes_len) > 0);
 
-    ret = ipmi_kcs_write_interruptible (sms_io_base, bytes, bytes_len);
+    ret = ipmi_kcs_write_interruptible (bytes, bytes_len);
     if (ret == -1 && errno == EAGAIN)
-      return -1;
+      return (-1);
     ERR ((!(ret == -1 && errno != EAGAIN)));
   }
   { /* Response Block */
@@ -628,7 +655,7 @@ ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fi
     memset (bytes, 0, bytes_len);
     ERR (bytes);
     
-    ERR (ipmi_kcs_read (sms_io_base, bytes, bytes_len) != -1);
+    ERR (ipmi_kcs_read (bytes, bytes_len) != -1);
 
     ERR (unassemble_ipmi_kcs_pkt (bytes, bytes_len,
 				  obj_hdr_rs, obj_cmd_rs, 
@@ -638,9 +665,9 @@ ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fi
 }
 
 int8_t
-ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
+ipmi_kcs_cmd_raw (u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
 {
-  if (!(sms_io_base && buf_rq && buf_rq_len > 0 
+  if (!(buf_rq && buf_rq_len > 0 
         && buf_rs && buf_rs_len && *buf_rs_len > 0))
     {
       errno = EINVAL;
@@ -662,7 +689,7 @@ ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *bu
     ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
     memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
 
-    ERR (ipmi_kcs_write (sms_io_base, bytes, bytes_len) != -1);
+    ERR (ipmi_kcs_write (bytes, bytes_len) != -1);
   }
   { /* Response Block */
     u_int8_t *bytes = NULL; 
@@ -676,7 +703,7 @@ ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *bu
     memset (bytes, 0, bytes_len);
     ERR (bytes);
     
-    ERR ((bytes_read = ipmi_kcs_read (sms_io_base, bytes, bytes_len)) != -1);
+    ERR ((bytes_read = ipmi_kcs_read (bytes, bytes_len)) != -1);
     if (bytes_read > obj_hdr_rs_len)
       {
         u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
@@ -694,12 +721,11 @@ ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *bu
 }
 
 int8_t
-ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
+ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
 {
   int ret;
 
-  if (!(sms_io_base && buf_rq && buf_rq_len > 0 
-        && buf_rs && buf_rs_len && *buf_rs_len > 0))
+  if (!(buf_rq && buf_rq_len > 0 && buf_rs && buf_rs_len && *buf_rs_len > 0))
     {
       errno = EINVAL;
       return (-1);
@@ -720,9 +746,9 @@ ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn
     ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
     memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
 
-    ret = ipmi_kcs_write_interruptible (sms_io_base, bytes, bytes_len);
+    ret = ipmi_kcs_write_interruptible (bytes, bytes_len);
     if (ret == -1 && errno == EAGAIN)
-      return -1;
+      return (-1);
     ERR ((!(ret == -1 && errno != EAGAIN)));
   }
   { /* Response Block */
@@ -737,7 +763,7 @@ ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn
     memset (bytes, 0, bytes_len);
     ERR (bytes);
     
-    ERR ((bytes_read = ipmi_kcs_read (sms_io_base, bytes, bytes_len)) != -1);
+    ERR ((bytes_read = ipmi_kcs_read (bytes, bytes_len)) != -1);
     if (bytes_read > obj_hdr_rs_len)
       {
         u_int32_t rs_len = bytes_read - obj_hdr_rs_len;

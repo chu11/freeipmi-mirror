@@ -71,7 +71,7 @@ memset (void *s, int c, size_t n)
 #include "freeipmi.h"
 
 int 
-ipmi_sdr_repo_info_write (u_int16_t sms_io_base, FILE *fp)
+ipmi_sdr_repo_info_write (FILE *fp)
 {
   u_int8_t *data_rs = NULL;
   u_int64_t val;
@@ -84,7 +84,7 @@ ipmi_sdr_repo_info_write (u_int16_t sms_io_base, FILE *fp)
 
   data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
   
-  if (ipmi_kcs_get_repo_info (sms_io_base, data_rs) != 0)
+  if (ipmi_kcs_get_repo_info (data_rs) != 0)
     return (-1);
   
   fiid_obj_get (data_rs, 
@@ -103,7 +103,7 @@ ipmi_sdr_repo_info_write (u_int16_t sms_io_base, FILE *fp)
 }
 
 int 
-ipmi_sdr_records_write (u_int16_t sms_io_base, FILE *fp)
+ipmi_sdr_records_write (FILE *fp)
 {
   u_int16_t record_id;
   u_int8_t data_rs[4] = {0, 0, 0, 0};
@@ -123,7 +123,7 @@ ipmi_sdr_records_write (u_int16_t sms_io_base, FILE *fp)
   while (record_id != 0xFFFF)
     {
       // printf ("writing %d\n", record_id);
-      if (ipmi_kcs_get_sensor_record_header (sms_io_base, record_id, 
+      if (ipmi_kcs_get_sensor_record_header (record_id, 
 					     data_rs, record_header) != 0)
 	return (-1);
       
@@ -143,8 +143,7 @@ ipmi_sdr_records_write (u_int16_t sms_io_base, FILE *fp)
       record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
       
       sensor_record = alloca (record_length);
-      if (ipmi_kcs_get_sdr (sms_io_base, 
-			    record_id, 
+      if (ipmi_kcs_get_sdr (record_id, 
 			    record_length, 
 			    sensor_record, 
 			    &comp_code) != 0)
@@ -181,7 +180,7 @@ ipmi_sdr_records_write (u_int16_t sms_io_base, FILE *fp)
 }
 
 int 
-ipmi_sdr_cache_create (u_int16_t sms_io_base, char *sdr_cache_file)
+ipmi_sdr_cache_create (char *sdr_cache_file)
 {
   FILE *cache_fp;
   
@@ -194,13 +193,13 @@ ipmi_sdr_cache_create (u_int16_t sms_io_base, char *sdr_cache_file)
   if ((cache_fp = fopen (sdr_cache_file, "w")) == NULL)
     return (-1);
   
-  if (ipmi_sdr_repo_info_write (sms_io_base, cache_fp) != 0)
+  if (ipmi_sdr_repo_info_write (cache_fp) != 0)
     {
       fclose (cache_fp);
       return (-1);
     }
   
-  if (ipmi_sdr_records_write (sms_io_base, cache_fp) != 0)
+  if (ipmi_sdr_records_write (cache_fp) != 0)
     {
       fclose (cache_fp);
       return (-1);

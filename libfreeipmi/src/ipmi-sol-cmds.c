@@ -120,7 +120,7 @@ ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base,
   fill_sol_conf_sol_enable_disable (obj_data_rq, 
 				    channel_number, 
 				    sol_payload);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_sol_conf_param_sol_enable_rq, 
 			 obj_data_rs, tmpl_set_sol_conf_param_sol_enable_rs);
   free (obj_data_rq);
@@ -208,7 +208,7 @@ ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_sol_conf_param_rq, 
 			 obj_data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
   free (obj_data_rq);

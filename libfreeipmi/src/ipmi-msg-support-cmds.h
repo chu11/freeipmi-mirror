@@ -299,8 +299,7 @@ extern fiid_template_t tmpl_get_user_access_rs;
 extern fiid_template_t tmpl_get_channel_info_rq;
 extern fiid_template_t tmpl_get_channel_info_rs;
 
-int8_t ipmi_kcs_set_channel_access (u_int16_t sms_io_base, 
-				    u_int8_t channel_number, 
+int8_t ipmi_kcs_set_channel_access (u_int8_t channel_number, 
 				    u_int8_t ipmi_messaging_access_mode, 
 				    u_int8_t user_level_authentication, 
 				    u_int8_t per_message_authentication, 
@@ -310,23 +309,19 @@ int8_t ipmi_kcs_set_channel_access (u_int16_t sms_io_base,
 				    u_int8_t channel_privilege_level_limit, 
 				    fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_set_user_name (u_int16_t sms_io_base, 
-			       u_int8_t user_id, 
+int8_t ipmi_kcs_set_user_name (u_int8_t user_id, 
 			       char *user_name, 
 			       fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_get_user_name (u_int16_t sms_io_base, 
-			       u_int8_t user_id, 
+int8_t ipmi_kcs_get_user_name (u_int8_t user_id, 
 			       fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_set_user_password (u_int16_t sms_io_base, 
-				   u_int8_t user_id, 
+int8_t ipmi_kcs_set_user_password (u_int8_t user_id, 
 				   u_int8_t operation, 
 				   char *password, 
 				   fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_set_user_access (u_int16_t sms_io_base,
-				 u_int8_t channel_number,
+int8_t ipmi_kcs_set_user_access (u_int8_t channel_number,
 				 u_int8_t user_id,
 				 u_int8_t restrict_to_callback,
 				 u_int8_t enable_link_auth,
@@ -335,18 +330,15 @@ int8_t ipmi_kcs_set_user_access (u_int16_t sms_io_base,
 				 u_int8_t user_session_number_limit, 
 				 fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_get_user_access (u_int16_t sms_io_base,
-				 u_int8_t channel_number,
+int8_t ipmi_kcs_get_user_access (u_int8_t channel_number,
 				 u_int8_t user_id,
 				 fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_get_channel_access (u_int16_t sms_io_base,
-				    u_int8_t channel_number,
+int8_t ipmi_kcs_get_channel_access (u_int8_t channel_number,
 				    u_int8_t channel_access,
 				    fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_get_channel_info (u_int16_t sms_io_base,
-				  u_int8_t channel_number,
+int8_t ipmi_kcs_get_channel_info (u_int8_t channel_number,
 				  fiid_obj_t obj_data_rs);
 
 int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t cmd);

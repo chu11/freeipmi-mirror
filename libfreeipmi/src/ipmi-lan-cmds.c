@@ -408,8 +408,7 @@ fill_lan_set_arp (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_arp (u_int16_t sms_io_base, 
-		  u_int8_t channel_number, 
+ipmi_lan_set_arp (u_int8_t channel_number, 
 		  u_int8_t bmc_generated_gratuitous_arps_flag, 
 		  u_int8_t bmc_generated_arp_responses_flag, 
 		  fiid_obj_t obj_data_rs)
@@ -422,7 +421,7 @@ ipmi_lan_set_arp (u_int16_t sms_io_base,
 		    channel_number, 
 		    bmc_generated_gratuitous_arps_flag, 
 		    bmc_generated_arp_responses_flag);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -458,8 +457,7 @@ fill_lan_set_gratuitous_arp_interval (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_gratuitous_arp_interval (u_int16_t sms_io_base, 
-				      u_int8_t channel_number, 
+ipmi_lan_set_gratuitous_arp_interval (u_int8_t channel_number, 
 				      u_int8_t gratuitous_arp_interval, 
 				      fiid_obj_t obj_data_rs)
 {
@@ -470,7 +468,7 @@ ipmi_lan_set_gratuitous_arp_interval (u_int16_t sms_io_base,
   fill_lan_set_gratuitous_arp_interval (obj_data_rq, 
 					channel_number, 
 					gratuitous_arp_interval);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_gratuitous_arp_interval_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -530,8 +528,7 @@ fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_auth_type_enables (u_int16_t sms_io_base, 
-				u_int8_t channel_number, 
+ipmi_lan_set_auth_type_enables (u_int8_t channel_number, 
 				u_int8_t max_privilege_auth_type_callback_level, 
 				u_int8_t max_privilege_auth_type_user_level, 
 				u_int8_t max_privilege_auth_type_operator_level, 
@@ -550,7 +547,7 @@ ipmi_lan_set_auth_type_enables (u_int16_t sms_io_base,
 				  max_privilege_auth_type_operator_level, 
 				  max_privilege_auth_type_admin_level, 
 				  max_privilege_auth_type_oem_level);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_auth_type_enables_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -586,8 +583,7 @@ fill_lan_set_ip_addr_source (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_ip_addr_source (u_int16_t sms_io_base,
-			     u_int8_t channel_number,
+ipmi_lan_set_ip_addr_source (u_int8_t channel_number,
 			     u_int8_t ip_addr_source,
 			     fiid_obj_t obj_data_rs)
 {
@@ -598,7 +594,7 @@ ipmi_lan_set_ip_addr_source (u_int16_t sms_io_base,
   fill_lan_set_ip_addr_source (obj_data_rq, 
 			       channel_number, 
 			       ip_addr_source);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_ip_addr_source_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -635,8 +631,7 @@ fill_lan_set_ip_addr (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_ip_addr (u_int16_t sms_io_base,
-		      u_int8_t channel_number,
+ipmi_lan_set_ip_addr (u_int8_t channel_number,
 		      u_int32_t ip_addr,
 		      fiid_obj_t obj_data_rs)
 {
@@ -648,7 +643,7 @@ ipmi_lan_set_ip_addr (u_int16_t sms_io_base,
 			IPMI_LAN_PARAM_IP_ADDR, 
 			channel_number, 
 			ip_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_ip_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -656,8 +651,7 @@ ipmi_lan_set_ip_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_set_gw1_ip_addr (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_set_gw1_ip_addr (u_int8_t channel_number,
 			  u_int32_t ip_addr,
 			  fiid_obj_t obj_data_rs)
 {
@@ -669,7 +663,7 @@ ipmi_lan_set_gw1_ip_addr (u_int16_t sms_io_base,
 			IPMI_LAN_PARAM_DEFAULT_GATEWAY_IP_ADDR, 
 			channel_number, 
 			ip_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_ip_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -677,8 +671,7 @@ ipmi_lan_set_gw1_ip_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_set_gw2_ip_addr (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_set_gw2_ip_addr (u_int8_t channel_number,
 			  u_int32_t ip_addr,
 			  fiid_obj_t obj_data_rs)
 {
@@ -690,7 +683,7 @@ ipmi_lan_set_gw2_ip_addr (u_int16_t sms_io_base,
 			IPMI_LAN_PARAM_BACKUP_GATEWAY_IP_ADDR, 
 			channel_number, 
 			ip_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_ip_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -726,8 +719,7 @@ fill_lan_set_subnet_mask (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_subnet_mask (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_set_subnet_mask (u_int8_t channel_number,
 			  u_int32_t subnet_mask,
 			  fiid_obj_t obj_data_rs)
 {
@@ -738,7 +730,7 @@ ipmi_lan_set_subnet_mask (u_int16_t sms_io_base,
   fill_lan_set_subnet_mask (obj_data_rq, 
 			    channel_number, 
 			    subnet_mask);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_subnet_mask_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -775,8 +767,7 @@ fill_lan_set_mac_addr (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_mac_addr (u_int16_t sms_io_base,
-		       u_int8_t channel_number,
+ipmi_lan_set_mac_addr (u_int8_t channel_number,
 		       u_int64_t mac_addr,
 		       fiid_obj_t obj_data_rs)
 {
@@ -788,7 +779,7 @@ ipmi_lan_set_mac_addr (u_int16_t sms_io_base,
 			 IPMI_LAN_PARAM_MAC_ADDR, 
 			 channel_number, 
 			 mac_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_mac_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -796,8 +787,7 @@ ipmi_lan_set_mac_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_set_gw1_mac_addr (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_lan_set_gw1_mac_addr (u_int8_t channel_number,
 			   u_int64_t mac_addr,
 			   fiid_obj_t obj_data_rs)
 {
@@ -809,7 +799,7 @@ ipmi_lan_set_gw1_mac_addr (u_int16_t sms_io_base,
 			 IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDR, 
 			 channel_number, 
 			 mac_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_mac_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -817,8 +807,7 @@ ipmi_lan_set_gw1_mac_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_set_gw2_mac_addr (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_lan_set_gw2_mac_addr (u_int8_t channel_number,
 			   u_int64_t mac_addr,
 			   fiid_obj_t obj_data_rs)
 {
@@ -830,7 +819,7 @@ ipmi_lan_set_gw2_mac_addr (u_int16_t sms_io_base,
 			 IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDR, 
 			 channel_number, 
 			 mac_addr);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_mac_addr_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
@@ -879,8 +868,7 @@ fill_get_lan_conf_param (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_get_arp (u_int16_t sms_io_base, 
-		  u_int8_t channel_number, 
+ipmi_lan_get_arp (u_int8_t channel_number, 
 		  u_int8_t parameter_type, 
 		  u_int8_t set_selector, 
 		  u_int8_t block_selector, 
@@ -896,7 +884,7 @@ ipmi_lan_get_arp (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_bmc_generated_arp_control_rs);
   free (obj_data_rq);
@@ -904,8 +892,7 @@ ipmi_lan_get_arp (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_gratuitous_arp_interval (u_int16_t sms_io_base, 
-				      u_int8_t channel_number, 
+ipmi_lan_get_gratuitous_arp_interval (u_int8_t channel_number, 
 				      u_int8_t parameter_type, 
 				      u_int8_t set_selector, 
 				      u_int8_t block_selector, 
@@ -921,7 +908,7 @@ ipmi_lan_get_gratuitous_arp_interval (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_gratuitous_arp_interval_rs);
   free (obj_data_rq);
@@ -929,8 +916,7 @@ ipmi_lan_get_gratuitous_arp_interval (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_auth_type_enables (u_int16_t sms_io_base, 
-				u_int8_t channel_number, 
+ipmi_lan_get_auth_type_enables (u_int8_t channel_number, 
 				u_int8_t parameter_type, 
 				u_int8_t set_selector, 
 				u_int8_t block_selector, 
@@ -946,7 +932,7 @@ ipmi_lan_get_auth_type_enables (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_auth_type_enables_rs);
   free (obj_data_rq);
@@ -954,8 +940,7 @@ ipmi_lan_get_auth_type_enables (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_ip_addr_source (u_int16_t sms_io_base, 
-			     u_int8_t channel_number, 
+ipmi_lan_get_ip_addr_source (u_int8_t channel_number, 
 			     u_int8_t parameter_type, 
 			     u_int8_t set_selector, 
 			     u_int8_t block_selector, 
@@ -971,7 +956,7 @@ ipmi_lan_get_ip_addr_source (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_ip_addr_source_rs);
   free (obj_data_rq);
@@ -979,8 +964,7 @@ ipmi_lan_get_ip_addr_source (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_ip_addr (u_int16_t sms_io_base,
-		      u_int8_t channel_number,
+ipmi_lan_get_ip_addr (u_int8_t channel_number,
 		      u_int8_t parameter_type,
 		      u_int8_t set_selector,
 		      u_int8_t block_selector,
@@ -996,7 +980,7 @@ ipmi_lan_get_ip_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_ip_addr_rs);
   free (obj_data_rq);
@@ -1004,8 +988,7 @@ ipmi_lan_get_ip_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_gw1_ip_addr (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_get_gw1_ip_addr (u_int8_t channel_number,
 			  u_int8_t parameter_type,
 			  u_int8_t set_selector,
 			  u_int8_t block_selector,
@@ -1021,7 +1004,7 @@ ipmi_lan_get_gw1_ip_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   free (obj_data_rq);
@@ -1029,8 +1012,7 @@ ipmi_lan_get_gw1_ip_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_gw2_ip_addr (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_get_gw2_ip_addr (u_int8_t channel_number,
 			  u_int8_t parameter_type,
 			  u_int8_t set_selector,
 			  u_int8_t block_selector,
@@ -1046,7 +1028,7 @@ ipmi_lan_get_gw2_ip_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   free (obj_data_rq);
@@ -1054,8 +1036,7 @@ ipmi_lan_get_gw2_ip_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_subnet_mask (u_int16_t sms_io_base,
-			  u_int8_t channel_number,
+ipmi_lan_get_subnet_mask (u_int8_t channel_number,
 			  u_int8_t parameter_type,
 			  u_int8_t set_selector,
 			  u_int8_t block_selector,
@@ -1071,7 +1052,7 @@ ipmi_lan_get_subnet_mask (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_subnet_mask_rs);
   free (obj_data_rq);
@@ -1079,8 +1060,7 @@ ipmi_lan_get_subnet_mask (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_mac_addr (u_int16_t sms_io_base,
-		       u_int8_t channel_number,
+ipmi_lan_get_mac_addr (u_int8_t channel_number,
 		       u_int8_t parameter_type,
 		       u_int8_t set_selector,
 		       u_int8_t block_selector,
@@ -1096,7 +1076,7 @@ ipmi_lan_get_mac_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   free (obj_data_rq);
@@ -1104,8 +1084,7 @@ ipmi_lan_get_mac_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_gw1_mac_addr (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_lan_get_gw1_mac_addr (u_int8_t channel_number,
 			   u_int8_t parameter_type,
 			   u_int8_t set_selector,
 			   u_int8_t block_selector,
@@ -1121,7 +1100,7 @@ ipmi_lan_get_gw1_mac_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   free (obj_data_rq);
@@ -1129,8 +1108,7 @@ ipmi_lan_get_gw1_mac_addr (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_lan_get_gw2_mac_addr (u_int16_t sms_io_base,
-			   u_int8_t channel_number,
+ipmi_lan_get_gw2_mac_addr (u_int8_t channel_number,
 			   u_int8_t parameter_type,
 			   u_int8_t set_selector,
 			   u_int8_t block_selector,
@@ -1146,7 +1124,7 @@ ipmi_lan_get_gw2_mac_addr (u_int16_t sms_io_base,
 			   parameter_type, 
 			   set_selector, 
 			   block_selector);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
 			 obj_data_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   free (obj_data_rq);
@@ -1183,8 +1161,7 @@ fill_suspend_bmc_arps (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_suspend_bmc_arps (u_int16_t sms_io_base, 
-		       u_int8_t channel_number, 
+ipmi_suspend_bmc_arps (u_int8_t channel_number, 
 		       u_int8_t gratuitous_arp_suspend, 
 		       u_int8_t arp_response_suspend, 
 		       fiid_obj_t obj_data_rs)
@@ -1197,7 +1174,7 @@ ipmi_suspend_bmc_arps (u_int16_t sms_io_base,
 			 channel_number, 
 			 gratuitous_arp_suspend, 
 			 arp_response_suspend);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_suspend_bmc_arps_rq, 
 			 obj_data_rs, tmpl_suspend_bmc_arps_rs);
   free (obj_data_rq);

@@ -234,10 +234,9 @@ ex_kcs_get_dev_id_display (void)
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
   cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
   
-  if (ipmi_kcs_get_dev_id (fi_get_sms_io_base (), obj_hdr_rs, obj_cmd_rs) != 0)
+  if (ipmi_kcs_get_dev_id (obj_hdr_rs, obj_cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_kcs_get_dev_id (%Xh, %p, %p)\n", 
-	       IPMI_KCS_SMS_IO_BASE_SR870BN4, obj_hdr_rs, obj_cmd_rs);
+      fprintf (stderr, "ipmi_kcs_get_dev_id (%p, %p)\n", obj_hdr_rs, obj_cmd_rs);
       return (SCM_BOOL_F);
     }
 /*   fiid_obj_dump (1, obj_hdr_rs, tmpl_hdr_kcs); */
@@ -409,7 +408,7 @@ ex_sensors_cache_create (SCM scm_cache_filename)
   
   cache_filename = gh_scm2newstr (scm_cache_filename, NULL);
   
-  retval = ipmi_sdr_cache_create (fi_get_sms_io_base (), cache_filename);
+  retval = ipmi_sdr_cache_create (cache_filename);
   
   free (cache_filename);
   
@@ -612,7 +611,7 @@ ex_sdr_get_repo_info ()
   
   /* get_repo_info */
   data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
-  if (ipmi_kcs_get_repo_info (fi_get_sms_io_base(), data_rs) != 0)
+  if (ipmi_kcs_get_repo_info (data_rs) != 0)
     return SCM_EOL;
   
   fiid_obj_get (data_rs, 
@@ -696,7 +695,7 @@ ex_sel_get_first_entry_raw ()
   u_int8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+  if (ipmi_sel_get_first_entry (get_seld (), record_data) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -711,7 +710,7 @@ ex_sel_get_next_entry_raw ()
   u_int8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+  if (ipmi_sel_get_next_entry (get_seld (), record_data) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -726,7 +725,7 @@ ex_sel_get_first_entry_hex ()
   u_int8_t record_data [SEL_RECORD_SIZE];
   u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
   
-  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+  if (ipmi_sel_get_first_entry (get_seld (), record_data) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -747,7 +746,7 @@ ex_sel_get_next_entry_hex ()
   u_int8_t record_data [SEL_RECORD_SIZE];
   u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
   
-  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+  if (ipmi_sel_get_next_entry (get_seld (), record_data) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -829,7 +828,7 @@ ex_sel_get_first_entry ()
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
+  if (ipmi_sel_get_first_entry (get_seld (), record_data) != 0)
     {
       /* fprintf (stderr, "ipmi_sel_get_first_entry failed\n"); */
       return SCM_EOL;
@@ -871,7 +870,7 @@ ex_sel_get_next_entry ()
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
+  if (ipmi_sel_get_next_entry (get_seld (), record_data) != 0)
     {
       /* fprintf (stderr, "ipmi_sel_get_next_entry failed\n"); */
       return SCM_EOL;
@@ -919,8 +918,7 @@ ex_sel_delete_entry (SCM scm_record_id)
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (fi_get_sms_io_base (), 
-				   obj_data_rs);
+    status = ipmi_kcs_reserve_sel (obj_data_rs);
     if (status != 0)
       {
 	fprintf (stderr, 
@@ -947,8 +945,7 @@ ex_sel_delete_entry (SCM scm_record_id)
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_delete_sel_entry_rs));
-    status = ipmi_kcs_delete_sel_entry (fi_get_sms_io_base (), 
-					reservation_id, 
+    status = ipmi_kcs_delete_sel_entry (reservation_id, 
 					record_id, 
 					obj_data_rs);
     if (status != 0)
@@ -998,8 +995,7 @@ ex_sel_clear ()
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (fi_get_sms_io_base (), 
-				   obj_data_rs);
+    status = ipmi_kcs_reserve_sel (obj_data_rs);
     if (status != 0)
       {
 	fprintf (stderr, 
@@ -1026,8 +1022,7 @@ ex_sel_clear ()
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_clear_sel_rs));
-    status = ipmi_kcs_clear_sel (fi_get_sms_io_base (), 
-				 reservation_id, 
+    status = ipmi_kcs_clear_sel (reservation_id, 
 				 IPMI_SEL_INITIATE_ERASE, 
 				 obj_data_rs);
     if (status != 0)
@@ -1061,8 +1056,7 @@ ex_sel_get_clear_status ()
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (fi_get_sms_io_base (), 
-				   obj_data_rs);
+    status = ipmi_kcs_reserve_sel (obj_data_rs);
     if (status != 0)
       {
 	fprintf (stderr, 
@@ -1089,8 +1083,7 @@ ex_sel_get_clear_status ()
   
   {
     obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_clear_sel_rs));
-    status = ipmi_kcs_clear_sel (fi_get_sms_io_base (), 
-				 reservation_id, 
+    status = ipmi_kcs_clear_sel (reservation_id, 
 				 IPMI_SEL_GET_ERASURE_STATUS, 
 				 obj_data_rs);
     if (status != 0)

@@ -40,8 +40,7 @@ kcs_bmc_lan_get_arp_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_bmc_generated_arp_control_rs));
   
-  status = ipmi_lan_get_arp (fi_get_sms_io_base (), 
-			     get_lan_channel_number (), 
+  status = ipmi_lan_get_arp (get_lan_channel_number (), 
 			     IPMI_LAN_CONF_GET_PARAMETER, 
 			     SET_SELECTOR, 
 			     BLOCK_SELECTOR, 
@@ -99,8 +98,7 @@ kcs_lan_get_gratuitous_arp_interval_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gratuitous_arp_interval_rs));
   
-  status = ipmi_lan_get_gratuitous_arp_interval (fi_get_sms_io_base (), 
-						 get_lan_channel_number (), 
+  status = ipmi_lan_get_gratuitous_arp_interval (get_lan_channel_number (), 
 						 IPMI_LAN_CONF_GET_PARAMETER, 
 						 SET_SELECTOR, 
 						 BLOCK_SELECTOR, 
@@ -148,8 +146,7 @@ kcs_lan_get_auth_type_enables_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_auth_type_enables_rs));
   
-  status = ipmi_lan_get_auth_type_enables (fi_get_sms_io_base (), 
-					   get_lan_channel_number (), 
+  status = ipmi_lan_get_auth_type_enables (get_lan_channel_number (), 
 					   IPMI_LAN_CONF_GET_PARAMETER, 
 					   SET_SELECTOR, 
 					   BLOCK_SELECTOR, 
@@ -436,8 +433,7 @@ kcs_lan_get_ip_addr_source_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_source_rs));
   
-  status = ipmi_lan_get_ip_addr_source (fi_get_sms_io_base (), 
-					get_lan_channel_number (), 
+  status = ipmi_lan_get_ip_addr_source (get_lan_channel_number (), 
 					IPMI_LAN_CONF_GET_PARAMETER, 
 					SET_SELECTOR, 
 					BLOCK_SELECTOR, 
@@ -485,8 +481,7 @@ kcs_lan_get_ip_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_rs));
   
-  status = ipmi_lan_get_ip_addr (fi_get_sms_io_base (), 
-				 get_lan_channel_number (), 
+  status = ipmi_lan_get_ip_addr (get_lan_channel_number (), 
 				 IPMI_LAN_CONF_GET_PARAMETER, 
 				 SET_SELECTOR, 
 				 BLOCK_SELECTOR, 
@@ -529,8 +524,7 @@ kcs_lan_get_gw1_ip_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
   
-  status = ipmi_lan_get_gw1_ip_addr (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_get_gw1_ip_addr (get_lan_channel_number (), 
 				     IPMI_LAN_CONF_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
@@ -573,8 +567,7 @@ kcs_lan_get_gw2_ip_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
   
-  status = ipmi_lan_get_gw2_ip_addr (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_get_gw2_ip_addr (get_lan_channel_number (), 
 				     IPMI_LAN_CONF_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
@@ -617,8 +610,7 @@ kcs_lan_get_subnet_mask_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_subnet_mask_rs));
   
-  status = ipmi_lan_get_subnet_mask (fi_get_sms_io_base (), 
-				     get_lan_channel_number (), 
+  status = ipmi_lan_get_subnet_mask (get_lan_channel_number (), 
 				     IPMI_LAN_CONF_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
@@ -661,8 +653,7 @@ kcs_lan_get_mac_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   
-  status = ipmi_lan_get_mac_addr (fi_get_sms_io_base (), 
-				  get_lan_channel_number (), 
+  status = ipmi_lan_get_mac_addr (get_lan_channel_number (), 
 				  IPMI_LAN_CONF_GET_PARAMETER, 
 				  SET_SELECTOR, 
 				  BLOCK_SELECTOR, 
@@ -707,8 +698,7 @@ kcs_lan_get_gw1_mac_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   
-  status = ipmi_lan_get_gw1_mac_addr (fi_get_sms_io_base (), 
-				      get_lan_channel_number (), 
+  status = ipmi_lan_get_gw1_mac_addr (get_lan_channel_number (), 
 				      IPMI_LAN_CONF_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
@@ -753,8 +743,7 @@ kcs_lan_get_gw2_mac_addr_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   
-  status = ipmi_lan_get_gw2_mac_addr (fi_get_sms_io_base (), 
-				      get_lan_channel_number (), 
+  status = ipmi_lan_get_gw2_mac_addr (get_lan_channel_number (), 
 				      IPMI_LAN_CONF_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
@@ -803,8 +792,7 @@ get_user_name_checkout (FILE *fp)
     {
       obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_user_name_rs));
       
-      status = ipmi_kcs_get_user_name (fi_get_sms_io_base (), 
-				       user_id, 
+      status = ipmi_kcs_get_user_name (user_id, 
 				       obj_data_rs);
       
       if (user_id == 1)
@@ -875,8 +863,7 @@ get_user_access_checkout (FILE *fp)
     {
       obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_user_access_rs));
       
-      status = ipmi_kcs_get_user_access (fi_get_sms_io_base (), 
-					 get_lan_channel_number (), 
+      status = ipmi_kcs_get_user_access (get_lan_channel_number (), 
 					 user_id, 
 					 obj_data_rs);
       
@@ -952,8 +939,7 @@ get_channel_access_checkout (FILE *fp)
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_channel_access_rs));
   
   fprintf (fp, "###   channel access: Non-volatile\n");
-  status = ipmi_kcs_get_channel_access (fi_get_sms_io_base (), 
-					get_lan_channel_number (), 
+  status = ipmi_kcs_get_channel_access (get_lan_channel_number (), 
 					IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE, 
 					obj_data_rs);
   
@@ -1028,8 +1014,7 @@ get_channel_access_checkout (FILE *fp)
 	   (u_int8_t) val);
   
   fprintf (fp, "###   channel access: Volatile\n");
-  status = ipmi_kcs_get_channel_access (fi_get_sms_io_base (), 
-					get_lan_channel_number (), 
+  status = ipmi_kcs_get_channel_access (get_lan_channel_number (), 
 					IPMI_CHANNEL_ACCESS_GET_VOLATILE, 
 					obj_data_rs);
   
@@ -1116,8 +1101,7 @@ get_serial_connmode_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_connmode_rs));
   
-  status = ipmi_get_serial_connmode (fi_get_sms_io_base (), 
-				     get_serial_channel_number (), 
+  status = ipmi_get_serial_connmode (get_serial_channel_number (), 
 				     IPMI_SERIAL_CONF_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
@@ -1197,8 +1181,7 @@ get_serial_page_blackout_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_pageblackout_rs));
   
-  status = ipmi_get_serial_page_blackout (fi_get_sms_io_base (), 
-					  get_serial_channel_number (), 
+  status = ipmi_get_serial_page_blackout (get_serial_channel_number (), 
 					  IPMI_SERIAL_CONF_GET_PARAMETER, 
 					  SET_SELECTOR, 
 					  BLOCK_SELECTOR, 
@@ -1246,8 +1229,7 @@ get_serial_retry_time_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_retry_rs));
   
-  status = ipmi_get_serial_retry_time (fi_get_sms_io_base (), 
-				       get_serial_channel_number (), 
+  status = ipmi_get_serial_retry_time (get_serial_channel_number (), 
 				       IPMI_SERIAL_CONF_GET_PARAMETER, 
 				       SET_SELECTOR, 
 				       BLOCK_SELECTOR, 
@@ -1295,8 +1277,7 @@ get_serial_comm_bits_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_commbits_rs));
   
-  status = ipmi_get_serial_comm_bits (fi_get_sms_io_base (), 
-				      get_serial_channel_number (), 
+  status = ipmi_get_serial_comm_bits (get_serial_channel_number (), 
 				      IPMI_SERIAL_CONF_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
@@ -1366,8 +1347,7 @@ get_chassis_status_checkout (FILE *fp)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_cmd_get_chassis_status_rs));
   
-  status = ipmi_get_chassis_status (fi_get_sms_io_base (), 
-				    obj_data_rs);
+  status = ipmi_get_chassis_status (obj_data_rs);
   
   if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
     {

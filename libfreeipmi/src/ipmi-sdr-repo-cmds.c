@@ -155,14 +155,14 @@ fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_repo_info (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
+ipmi_kcs_get_repo_info (fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sdr_repo_info_rq);
   fill_kcs_get_repo_info (obj_data_rq);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sdr_repo_info_rq, 
 			 obj_data_rs, tmpl_get_sdr_repo_info_rs);
   free (obj_data_rq);
@@ -180,14 +180,14 @@ fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_repo_alloc_info (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
+ipmi_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sdr_repo_alloc_info_rq);
   fill_kcs_get_repo_alloc_info (obj_data_rq);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sdr_repo_alloc_info_rq, 
 			 obj_data_rs, tmpl_get_sdr_repo_alloc_info_rs);
   free (obj_data_rq);
@@ -205,14 +205,14 @@ fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_reserve_repo (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
+ipmi_kcs_reserve_repo (fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
   obj_data_rq = fiid_obj_alloc (tmpl_reserve_sdr_repo_rq);
   fill_kcs_reserve_repo (obj_data_rq);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_reserve_sdr_repo_rq, 
 			 obj_data_rs, tmpl_reserve_sdr_repo_rs);
   free (obj_data_rq);
@@ -250,8 +250,7 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, u_int16_t record_id)
 }
 
 int8_t 
-ipmi_kcs_get_sensor_record_header (u_int16_t sms_io_base, 
-				   u_int16_t record_id, 
+ipmi_kcs_get_sensor_record_header (u_int16_t record_id, 
 				   fiid_obj_t obj_data_rs, 
 				   u_int8_t *sensor_record_header)
 {
@@ -271,7 +270,7 @@ ipmi_kcs_get_sensor_record_header (u_int16_t sms_io_base,
   
   obj_data_rq = fiid_obj_alloc (tmpl_get_sdr_rq);
   fill_kcs_get_sensor_record_header (obj_data_rq, record_id);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sdr_rq, 
 			 obj_var_len_data_rs, tmpl_var_len_get_sdr_rs);
   free (obj_data_rq);
@@ -325,8 +324,7 @@ fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_get_sdr_chunk (u_int16_t sms_io_base, 
-			u_int16_t reservation_id, 
+ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id, 
 			u_int16_t record_id, 
 			u_int8_t record_offset, 
 			u_int8_t bytes_read, 
@@ -348,7 +346,7 @@ ipmi_kcs_get_sdr_chunk (u_int16_t sms_io_base,
   obj_data_rq = fiid_obj_alloc (tmpl_get_sdr_rq);
   fill_kcs_get_sdr_chunk (obj_data_rq, reservation_id, 
 			  record_id, record_offset, bytes_read);
-  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sdr_rq, 
 			 obj_var_len_data_rs, tmpl_var_len_get_sdr_rs);
   free (obj_data_rq);
@@ -368,8 +366,7 @@ ipmi_kcs_get_sdr_chunk (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_kcs_get_sdr (u_int16_t sms_io_base, 
-		  u_int16_t record_id, 
+ipmi_kcs_get_sdr (u_int16_t record_id, 
 		  u_int8_t record_length, 
 		  u_int8_t *sensor_record, 
 		  u_int8_t *comp_code)
@@ -388,7 +385,7 @@ ipmi_kcs_get_sdr (u_int16_t sms_io_base,
   if (record_length > 16)
     {
       *comp_code = 0x0;
-      if (ipmi_kcs_reserve_repo (sms_io_base, data_rs) != 0)
+      if (ipmi_kcs_reserve_repo (data_rs) != 0)
 	return -1;
       
       fiid_obj_get (data_rs,  
@@ -418,8 +415,7 @@ ipmi_kcs_get_sdr (u_int16_t sms_io_base,
       
       *comp_code = 0x0;
       memset (record_data, 0, 16);
-      if (ipmi_kcs_get_sdr_chunk (sms_io_base, 
-				  reservation_id, 
+      if (ipmi_kcs_get_sdr_chunk (reservation_id, 
 				  record_id, 
 				  record_offset, 
 				  bytes_read, 
