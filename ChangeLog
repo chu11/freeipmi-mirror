@@ -1,3 +1,9 @@
+2005-03-11  Anand Babu  <ab@gnu.org.in>
+
+	* fish/extensions/bc-section.scm (checkout-section-values,
+	diff-section-values): Closed [bugs #12279] error on
+	checkout. bmc-config now throws more appropriate error message.
+
 2005-03-01  Anand Babu  <ab@gnu.org.in>
 
 	* configure.ac: Added check for guile version. Minimum tested

@@ -205,9 +205,9 @@
 					    key 
 					    key-desc-list)))
 	(if (boolean? value)
-	    (display (string-append "Error in checkout of key <" 
+	    (display (string-append "This BMC does not support option [" 
 				    key 
-				    ">\n") (current-error-port))
+				    "].\n") (current-error-port))
 	    (display (string-append "\t## " 
 				    (get-doc-string key key-desc-list)
 				    "\n"
@@ -242,9 +242,9 @@
 						     key-desc-list))
 	     (diff-proc      (get-diff-proc key key-desc-list)))
 	(if (boolean? bmc-value)
-	    (display (string-append "Error in checkout of key <" 
+	    (display (string-append "This BMC does not support option [" 
 				    key 
-				    ">\n") (current-error-port))
+				    "].\n") (current-error-port))
 	    (if (not (diff-proc section-name value bmc-value))
 		(begin 
 		  (display (string-append "USER:" key "=" value "\n"))
