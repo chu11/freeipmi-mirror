@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.1 2004-10-14 23:53:07 itz Exp $
+\."$Id: bmc-watchdog.8.in,v 1.2 2004-10-25 22:31:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,9 +117,11 @@ line, only the specific options for that command will be listed.
 Output the program version.
 .TP
 .B  -o INT, --io-port=INT
-Identify the System Base Address for KCS SMS/IO.  By default, 0xCA2
-is used.  Port 0x8A2 is also common.  If the io-port number is
-prefixed with a "0x", it is assumed to be a base 16 integer.
+Identify the System Base Address for KCS SMS/IO.  If not specified, 
+.B bmc-watchdog 
+will attempt to probe for the system's default io-port.  If the probe
+fails, the IPMI defined default will be used.  If the io-port number
+is prefixed with a "0x", it is assumed to be a base 16 integer.
 Otherwise, it is assumed to be a base 10 integer.
 .TP
 .B  -f STRING, --logfile=STRING

@@ -2,6 +2,9 @@
 
 	* freeipmi.spec.in: Additional file packaging changes based on
 	recent changes to doc installation.
+
+	* bmc-watchdog/bmc-watchdog.8.in: Modified for changes made by Ian
+	to _get_port().
 	
 2004-10-25  Ian Zimmerman  <itz@californiadigital.com>
 
