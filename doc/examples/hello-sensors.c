@@ -1,6 +1,9 @@
 #include <freeipmi/freeipmi.h>
 #include <string.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #ifdef __ia64__
 #define SMS_IO_BASE IPMI_KCS_SMS_IO_BASE_SR870BN4
@@ -268,7 +271,6 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   
   status = ipmi_kcs_get_threshold_reading (SMS_IO_BASE, 
 					   sensor_number, 
-					   obj_hdr_rs, 
 					   obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -615,7 +617,6 @@ display_verbose_current_digital_discrete_sensor_full_record (sdr_repo_cache_t *s
   
   status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
 					  sensor_number, 
-					  obj_hdr_rs, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -747,7 +748,6 @@ display_verbose_current_digital_discrete_sensor_compact_record (sdr_repo_cache_t
   
   status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
 					  sensor_number, 
-					  obj_hdr_rs, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1035,7 +1035,6 @@ display_verbose_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
   
   status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
 					  sensor_number, 
-					  obj_hdr_rs, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1164,7 +1163,6 @@ display_verbose_current_discrete_sensor_compact_record (sdr_repo_cache_t *sdr_re
   
   status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
 					  sensor_number, 
-					  obj_hdr_rs, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1399,11 +1397,13 @@ display_very_verbose_current_sensor (sdr_repo_cache_t *sdr_repo_cache)
 	  display_verbose_current_threshold_sensor_full_record (sdr_repo_cache);
 	  fflush (stdout);
 	  break;
-	case IPMI_SENSOR_CLASS_DIGITAL_DISCRETE:
+/* 	case IPMI_SENSOR_CLASS_DIGITAL_DISCRETE: */
+	case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
 	  display_verbose_current_digital_discrete_sensor_full_record (sdr_repo_cache);
 	  fflush (stdout);
 	  break;
-	case IPMI_SENSOR_CLASS_DISCRETE:
+/* 	case IPMI_SENSOR_CLASS_DISCRETE: */
+	case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
 	  display_verbose_current_discrete_sensor_full_record (sdr_repo_cache);
 	  fflush (stdout);
 	  break;
@@ -1417,11 +1417,13 @@ display_very_verbose_current_sensor (sdr_repo_cache_t *sdr_repo_cache)
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       switch (ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache))
 	{
-	case IPMI_SENSOR_CLASS_DIGITAL_DISCRETE:
+/* 	case IPMI_SENSOR_CLASS_DIGITAL_DISCRETE: */
+	case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
 	  display_verbose_current_digital_discrete_sensor_compact_record (sdr_repo_cache);
 	  fflush (stdout);
 	  break;
-	case IPMI_SENSOR_CLASS_DISCRETE:
+/* 	case IPMI_SENSOR_CLASS_DISCRETE: */
+	case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
 	  display_verbose_current_discrete_sensor_compact_record (sdr_repo_cache);
 	  fflush (stdout);
 	  break;
@@ -1488,10 +1490,10 @@ main ()
       exit (-1);
     }
   
-  sdr_repo_cache.filename = cache_filename;
+/*   sdr_repo_cache.fd = open (cache_filename, O_RDONLY); */
   
   /* load SDR cache */
-  if (ipmi_sdr_repo_cache_load (&sdr_repo_cache))
+  if (ipmi_sdr_repo_cache_load (&sdr_repo_cache, cache_filename))
     {
       fprintf (stderr, "error: ipmi_sdr_repo_cache_load failed\n");
       exit (-1);
