@@ -1,3 +1,7 @@
+2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
+
+	* doc/sel.1: added examples
+
 2004-08-20  Anand Babu  <ab@gnu.org.in>
 
 	* fish/extensions/sel.scm (sel-main): fixed bug in parsing
