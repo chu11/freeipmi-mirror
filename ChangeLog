@@ -20,6 +20,7 @@
 	-1.
 	* doc/Makefile.am: new entries to handle additional documentation
 	and PDF creation.
+	* TODO: cleanup and reformating.
 	* configure.ac: now becomes 0.1.0.
 	
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>

@@ -3,117 +3,88 @@ AB's TODO list
 libfreeipmi:
 ------------
 [HIGH PRIORITY]
-  * FreeIPMI Hackers Guide.
-  * FreeIPMI FAQ.
-  * Event Messaging and PEF Subsystem.
-  * sel: better decoding of error messages. More info below...
-    1. SELVIEW prints out description of post error which is valuable
-    for debug while FreeIPMI SEL Viewer does not.
-      *SELVIEW : System Firmware Error (POST Error). POST Code: 8140 -
-                 Processor 01: failed FRB level 3 timer.
-      *Free IPMI SEL viewer :   System Firmware Error (POST Error)
-    2. SELVIEW prints out description of processor error while
-    FreeIPMI SEL Viewer prints out. 
-      *SELVIEW :  Correctable error in Processor CPU2 - J7M1D
-      *FreeIPMI SEL viewer :   Processor #0:IERR:SMI Handler
-    Thanks to Robin and Brian Rice for the above info.
+  * Nil
 
 [MEDIUM PRIORITY]
-  * All commands (with few exceptions like lan-set-ipaddr) should have
-    both LAN and KCS APIs.
-  * Rest of other notable IPMI commands.
+  * Missing IPMI commands.
   * Modify system boot priority table.
 
 [LOW PRIORITY]
   * FRU Commands (SDR Repo does a similar job).
-  * Set Asset Tag
   * Command to Switch MUX between BMC and ttyS1
 
 Al's TODO list
 ==============
-
-General
-
-Cleanup use of autoconf defs.  i.e. use "/* HAVE_FOO_H */" and etc.
-
-Libfreeipmi
-
-- IPMI 1.5 Errata - Get Chassis Status 
-- Consider encapsulating length, ids, types in fiid_obj_t
-  and fiid_template_t down the road.
-- ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
-  seeking.  Will probably require a "load and create" wrapper
-  function of some sort.
-- Feature to allow atomicity of multiple IPMI commands in a row.
-  - May or may not be possible.  Think about it.
+libfreeipmi:
+------------
+  * IPMI 1.5 Errata - Get Chassis Status 
+  * Consider encapsulating length, ids, types in fiid_obj_t
+    and fiid_template_t down the road.
+  * ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
+    seeking.  Will probably require a "load and create" wrapper
+    function of some sort.
+  * Feature to allow atomicity of multiple IPMI commands in a row.
+    May or may not be possible.  Think about it.
   
-Fish
+fish:
+-----
+  * Create makefile wrappers to allow fish to work locally in
+    build directory rather that requiring installation.
 
-- Create makefile wrappers to allow fish to work locally in
-  build directory rather that requiring installation.
+bmc-watchdog:
+-------------
+  * Add probing for proper base address
+  * Require Timer use to be SMS/OS?
+  * Make get_lan_channel_number() non-hardcoded.
+  * Ignore pre-timeout interval length comparison to initial countdown
+    if pre-timeout interval is none
 
-Bmc-watchdog
+ipmipower:
+----------
+  * Research and implement better packet analysis algorithms.
+  * Output warning/error/message/something in autoconf if ipmipower
+    cannot be compiled with locked pages??
+  * There are probably port issues with mmap/mlock.
+  * Re-implement BMC workaround to use ports less wastefully.
+  * Buffer recently malloced space to avoid constant re-mallocing.
+  * Add readline or similar functionality in interactive mode.
 
-- Add probing for proper base address
-- Require Timer use to be SMS/OS?
-- Make get_lan_channel_number() non-hardcoded.
-- Ignore pre-timeout interval length comparison to initial countdown
-if pre-timeout interval is none
+ipmiping/rmcpping:
+------------------
+  * Make starting sequence number random to reduce probability of
+    "confused" BMC known issue?
+  * Randomizing port on client can also fix the issue??
 
-Ipmipower
-
-- Research and implement better packet analysis algorithms.
-- Output warning/error/message/something in autoconf if ipmipower
-  cannot be compiled with locked pages??
-- There are probably port issues with mmap/mlock.
-- Re-implement BMC workaround to use ports less wastefully.
-- Buffer recently malloced space to avoid constant re-mallocing.
-- Add readline or similar functionality in interactive mode.
-
-Ipmiping/Rmcpping
-
-- Make starting sequence number random to reduce probability of
-"confused" BMC known issue?
-- Randomizing port on client can also fix the issue??
-
-General
+General:
+--------
+  * Testsuite for Freeipmi and IPMI conformance test.
+  * Need to test following corner cases:
+    - 16 byte passwords
+    - passwords with spaces
+  * New tools?
+    - SEL collector/logger thingie for clusters
+    - tool/script to detect busted BMC/IORiser
+    - bmc-config wrapper script to handle common stuff
+     - i.e. if you enable a user, automatically turn on
+      IPMI lan and IPMI serial, passwd/md2 authentication, etc.
 
 Autoconf issues:
-- socklet_t, doesn't exist on all OSes.
-- stdarg.h, other OSes use varargs.h
-- bittypes.h and inttypes.h for u_int32_t, etc.
-- default io-port config option?
-
-Testsuite for Freeipmi and IPMI conformance test.
-
-Need to test following corner cases:
-- 16 byte passwords
-- passwords with spaces
-
-New tools?
-- SEL collector/logger thingie for clusters
-- tool/script to detect busted BMC/IORiser
-- bmc-config wrapper script to handle common stuff
-  - i.e. if you enable a user, automatically turn on
-         IPMI lan and IPMI serial, passwd/md2 authentication,
-         etc.
+----------------
+  * Cleanup use of autoconf defs.  i.e. use "/* HAVE_FOO_H */" and
+   etc.
+  * socklet_t, doesn't exist on all OSes.
+  * stdarg.h, other OSes use varargs.h
+  * bittypes.h and inttypes.h for u_int32_t, etc.
+  * default io-port config option?
          
-
 Bala's TODO List:
 =================
-*/* 2004-02-16 15:25 bala: dual fiid for ipmi_kcs_lan_set_auth_type_enables
-*/* 2004-08-18 07:37 bala: sensors will be simplified with Scheme
-*/* 2004-08-18 07:37 bala: SDR Validation code
-*/* 2004-08-18 07:37 bala: sensor min/max reading, normal min/max,
-nominal reading, event/reading type code should be moved to Very
-Verbose in sensors.
 
 Ian's TODO List:
 ================
-Convert fish to the (now preferred) scm_ interface completely.
+  * Convert fish to the (now preferred) scm_ interface completely.
+  * Event Messaging and PEF Subsystem.
 
 Later on:
 =========
-
-Host monitoring support
-- Ganglia?
+  * Host monitoring support: Ganglia integration.
