@@ -1,7 +1,7 @@
 \input texinfo @c -*-texinfo-*-
 @c This file uses the @command command introduced in Texinfo 4.0.
 @c %**start of header
-@setfilename freeipmi-ug.info
+@setfilename freeipmi.info
 @settitle The GNU FreeIPMI User's Guide
 @finalout
 @c %**end of header
@@ -10,7 +10,7 @@
 
 @dircategory Platform Management
 @direntry
-* FreeIPMI UG: (freeipmi-ug).  GNU FreeIPMI User's Guide 
+* GNU FreeIPMI: (freeipmi).  GNU FreeIPMI User's Guide 
 @end direntry
 
 @ifinfo
