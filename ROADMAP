@@ -1,0 +1,39 @@
+Roadmap to 1.0.0
+================
+ AB:
+   Unified Driver Model.
+   SMBus/SSIF.
+   SOL daemon (sold) for IPMI-2.0 (and Tyan Prop IPMI-1.5).
+   Hackers Guide.
+
+ ITZ:
+   PEF
+   IPMI-locate
+     High level calls (abstraction)
+     ACPI-locate - Control methods
+     ACPI-locate - SPMI through ACPI descriptor table
+     (Find the status of dev-acpi project and let me know if it needs 
+     more help.)
+
+ Al:
+   SNMP support.
+   Web Interface: Ganglia addon???
+   SuperMicro Support.
+
+ Bala:
+   Fish:
+    * command bindings
+    * Sensors rewrite
+    * Scheme primitives revisit
+    * bmc-config
+      * --auto and --expert modes
+      * code cleanup
+   FRU.
+   Dynamic channel probing.
+   Adopt the the unified driver model for all IPMI sub-systems.
+
+
+
+ 
+ 
+  

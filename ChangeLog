@@ -1,3 +1,10 @@
+2004-11-28  Anand Babu  <ab@gnu.org.in>
+
+	* fish/src/ipmi-wrapper.c (display_get_dev_id): bmc-info should
+	now decode auxillary-firmware-revision for all Intel products.
+
+	* ROADMAP: added new file.
+
 2004-11-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Add information about gethostbyname()

@@ -455,7 +455,9 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
       case IPMI_MANF_ID_INTEL: 
 	switch (prod_id)
 	  {
-	  case IPMI_PROD_ID_SR870BN4:
+	    /* I am assuming all Intel products will decode alike.
+                                 -- Anand Babu <ab@gnu.org.in>  */
+/* 	  case IPMI_PROD_ID_SR870BN4: */
 	    {
 	      u_int64_t bc_maj, bc_min, pia_maj, pia_min;
 	      FIID_OBJ_GET (cmd_rs,
