@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.7 2004-07-07 21:35:09 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.8 2004-07-07 21:48:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -902,6 +902,7 @@ _cmdline_parse(int argc, char **argv)
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
     {"io-port",               1, NULL, 'o'},
+    {"logfile",               1, NULL, 'f'},
     {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
     {"stop-timer",            1, NULL, 'm'},
@@ -929,7 +930,7 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvo:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
+  strcpy(options, "hvo:f:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
@@ -982,6 +983,9 @@ _cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg))
               || cinfo.io_port_val <= 0)
             _err_exit("io-port value invalid");
+          break;
+        case 'f':
+          cinfo.logfile = optarg;
           break;
         case 'n':
           cinfo.no_logging++;
