@@ -269,8 +269,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 	  normal_max, 
 	  ipmi_sensor_units[base_unit]);
   
-  status = ipmi_kcs_get_threshold_reading (SMS_IO_BASE, 
-					   sensor_number, 
+  status = ipmi_kcs_get_threshold_reading (sensor_number, 
 					   obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -615,8 +614,7 @@ display_verbose_current_digital_discrete_sensor_full_record (sdr_repo_cache_t *s
   
   printf ("Sensor reading: N/A\n");
   
-  status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -746,8 +744,7 @@ display_verbose_current_digital_discrete_sensor_compact_record (sdr_repo_cache_t
 		&val);
   printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
   
-  status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1033,8 +1030,7 @@ display_verbose_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
   
   printf ("Sensor reading: N/A\n");
   
-  status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1161,8 +1157,7 @@ display_verbose_current_discrete_sensor_compact_record (sdr_repo_cache_t *sdr_re
 		&val);
   printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
   
-  status = ipmi_kcs_get_discrete_reading (SMS_IO_BASE, 
-					  sensor_number, 
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
 					  obj_data_rs);
   
   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
@@ -1475,7 +1470,7 @@ main ()
   int rec_id;
   
   /* init kcs */
-  if (ipmi_kcs_io_init (SMS_IO_BASE, IPMI_KCS_SLEEP_USECS) != 0)
+  if (ipmi_kcs_io_init (SMS_IO_BASE, IPMI_KCS_REG_SPACE_DEFAULT, IPMI_KCS_SLEEP_USECS) != 0)
     {
       perror ("ipmi_kcs_io_init");
       exit (-1);
@@ -1483,7 +1478,7 @@ main ()
   
   /* creating SDR cache */
   printf ("creating SDR cache file %s\n", cache_filename);
-  retval = ipmi_sdr_cache_create (SMS_IO_BASE, cache_filename);
+  retval = ipmi_sdr_cache_create (cache_filename);
   if (retval)
     {
       fprintf (stderr, "error: ipmi_sdr_cache_create failed\n");
