@@ -694,6 +694,7 @@ ipmi_lan_cmd (u_int32_t sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, 
     memset (pkt, 0, _pkt_len);
     ERR (pkt);
     
+    fromlen = sizeof(struct sockaddr_in);
     pkt_len = ipmi_lan_recvfrom (sockfd, pkt, _pkt_len, 0, (struct sockaddr *)&from, 
 				&fromlen);
     ERR (pkt_len != -1);

@@ -1,3 +1,9 @@
+2004-10-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd): Fixed
+	initialization bug found by Andrew Cress
+	<andrew.r.cress@intel.com>.
+	
 2004-10-28  Anand Babu  <ab@gnu.org.in>
 
 	* bmc-watchdog/src/bmc-watchdog.c fish/src/fi-commands.c
