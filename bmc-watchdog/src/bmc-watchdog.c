@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.19 2004-11-22 19:18:00 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.20 2004-12-02 22:56:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1007,21 +1007,21 @@ _cmdline_parse(int argc, char **argv)
           cinfo.timer_use_val = (u_int8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_WATCHDOG_TIMER_USE_VALID(cinfo.timer_use_val))
-            _err_exit("pre timeout interrupt value invalid");
+            _err_exit("timer user invalid");
           break;
         case 'm':
           cinfo.stop_timer++;
           cinfo.stop_timer_val = (u_int8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_WATCHDOG_STOP_TIMER_VALID(cinfo.stop_timer_val))
-            _err_exit("pre timeout interrupt value invalid");
+            _err_exit("stop timer value invalid");
           break;
         case 'l':
           cinfo.log++;
           cinfo.log_val = (u_int8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_WATCHDOG_LOG_VALID(cinfo.log_val))
-            _err_exit("pre timeout interrupt value invalid");
+            _err_exit("log value invalid");
           break;
         case 'a':
           cinfo.timeout_action++;
@@ -1266,7 +1266,7 @@ _timer_use_str(u_int8_t timer_use)
   else if (timer_use == IPMI_WATCHDOG_TIMER_USE_OEM)
     return "OEM";
   else
-    return "Internal Error, Unknown Timer Use Value";
+    return "Reserved";
 
   return NULL;			/* NOT_REACHED */
 }

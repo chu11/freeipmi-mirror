@@ -312,8 +312,10 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   else 
     printf ("N/A ");
   
-/*   printf ("(low=%.2f/", normal_min); */
-  printf ("(low=%.2f/", lower_critical_threshold);
+  if (readable_lower_critical_threshold)
+    printf ("(low=%.2f/", lower_critical_threshold);
+  else
+    printf ("(low=Undefined/");
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_full_sensor_record, 
@@ -328,8 +330,10 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    is_signed, 
 				    val));
   
-/*   printf ("high=%.2f) ", normal_max); */
-  printf ("high=%.2f) ", upper_critical_threshold);
+  if (readable_upper_critical_threshold)
+    printf ("high=%.2f) ", upper_critical_threshold);
+  else
+    printf ("high=Undefined) ");
   
   if (status == 0)
     {

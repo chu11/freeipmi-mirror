@@ -1,3 +1,20 @@
+2004-12-02  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmdline_parse): Fix error
+	message for invalid timer use, stop timer, or log values.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_timer_user_str): Return
+	'Reserved' instead of error message when value does not match a
+	known value.
+
+	* fish/src/ipmi-wrapper-sensor.c
+	(display_current_threshold_sensor_full_record): Don't output
+	lower/upper critical threshold by default, output depending on its
+	readability.
+
+	* freeipmi.spec.in: Fixed info file corner case discovered by John
+	Goebel <jgoebel at gmail.com>.
+	
 2004-12-01  A Balamurugan  <bala.a@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-sensor-event-messages.[ch]: new files.
@@ -19,7 +36,6 @@
 	* libfreeipmi/src/ipmi-sel-record-types.c: rewritten all fiid
 	templates.
 	
-
 2004-11-28  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/ipmi-wrapper.c (get_lan_channel_number): now using
@@ -183,7 +199,7 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd): Fixed
 	initialization bug found by Andrew Cress
-	<andrew.r.cress@intel.com>.
+	<andrew.r.cress at intel.com>.
 	
 2004-10-28  Anand Babu  <ab@gnu.org.in>
 

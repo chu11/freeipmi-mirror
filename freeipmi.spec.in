@@ -53,9 +53,22 @@ make
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install
+rm -f %{buildroot}%{_infodir}/dir
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+if [ -x /sbin/install-info ]; then
+   /sbin/install-info %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+fi
+
+%preun
+if [ $1 = 0 ]; then
+   if [ -x /sbin/install-info ]; then
+      /sbin/install-info --delete %{_infodir}/freeipmi.info.gz %{_infodir}/dir
+   fi
+fi
 
 %post utils
 %if %{?_with_bmc_watchdog_start:1}%{!?_with_bmc_watchdog_start:0}
