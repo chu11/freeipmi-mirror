@@ -1,3 +1,7 @@
+2004-10-11  Anand Babu  <ab@gnu.org.in>
+
+       * CVS tagged as release-0_1_0-tag.
+
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c: fixed compiler warnings
