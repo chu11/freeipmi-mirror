@@ -18,6 +18,16 @@
 
 	* doc/Makefile.am: Added bmc-watchdog.8.
 
+	Added Suspend BMC Arps command
+
+	* libfreeipmi/src/ipmi-watchdog.h,
+	libfreeipmi/src/ipmi-watchdog.c: Added
+	tmpl_cmd_suspend_bmc_arps_rq tmpl_cmd_suspend_bmc_arps_rs
+	templates.
+
+	* libfreeipmi/src/ipmi-watchdog.h, libfreeipmi/src/ipmi-watchdog.c
+	(fill_cmd_suspend_bmc_arps): New function.
+
 2004-05-06  Ian Zimmerman  <itz@californiadigital.com>
 
 	* fish/src/fish.c (inner_main): make sure command line overrides
