@@ -71,7 +71,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -107,7 +107,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   double sensor_reading = 0.0;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -150,7 +150,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 							   m,
 							   b,
 							   linear,
-							   is_signed,
+							   analog_data_format,
 							   val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -162,7 +162,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 							   m,
 							   b,
 							   linear,
-							   is_signed,
+							   analog_data_format,
 							   val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -174,7 +174,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 						       m,
 						       b,
 						       linear,
-						       is_signed,
+						       analog_data_format,
 						       val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -186,7 +186,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 						       m,
 						       b,
 						       linear,
-						       is_signed,
+						       analog_data_format,
 						       val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -198,7 +198,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 							      m,
 							      b,
 							      linear,
-							      is_signed,
+							      analog_data_format,
 							      val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -210,7 +210,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 							      m,
 							      b,
 							      linear,
-							      is_signed,
+							      analog_data_format,
 							      val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -222,7 +222,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 					 m,
 					 b,
 					 linear,
-					 is_signed,
+					 analog_data_format,
 					 val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -234,7 +234,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 					 m,
 					 b,
 					 linear,
-					 is_signed,
+					 analog_data_format,
 					 val);
   
   status = ipmi_kcs_get_sensor_thresholds (sensor_number, 
@@ -302,7 +302,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 						 m, 
 						 b, 
 						 linear, 
-						 is_signed, 
+						 analog_data_format, 
 						 (u_int8_t) val);
       printf ("%.2f %s ", sensor_reading, 
 	      ipmi_sensor_units_short[base_unit]);
@@ -325,7 +325,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    m, 
 				    b, 
 				    linear, 
-				    is_signed, 
+				    analog_data_format, 
 				    val));
   
   if (readable_upper_critical_threshold)
@@ -431,7 +431,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -449,7 +449,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
   char *status_message = NULL;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -492,7 +492,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
 					 m,
 					 b,
 					 linear,
-					 is_signed,
+					 analog_data_format,
 					 val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -504,7 +504,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
 					 m,
 					 b,
 					 linear,
-					 is_signed,
+					 analog_data_format,
 					 val);
   
   printf ("%d: ", sdr_repo_cache->cache_curr_rec_id);
@@ -536,7 +536,7 @@ display_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_
 				    m, 
 				    b, 
 				    linear, 
-				    is_signed, 
+				    analog_data_format, 
 				    val));
   
   printf ("high=%.2f) ", upper_critical_threshold);
@@ -687,7 +687,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -701,7 +701,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   u_int8_t record_length;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -762,7 +762,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val));
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -775,7 +775,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    m, 
 				    b, 
 				    linear, 
-				    is_signed, 
+				    analog_data_format, 
 				    val));
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -788,7 +788,7 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val));
   
   if (status == 0)
@@ -1085,7 +1085,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -1119,7 +1119,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   u_int8_t alert_flag = 0;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1162,7 +1162,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 							   m,
 							   b,
 							   linear,
-							   is_signed,
+							   analog_data_format,
 							   val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1174,7 +1174,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 							   m,
 							   b,
 							   linear,
-							   is_signed,
+							   analog_data_format,
 							   val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1186,7 +1186,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 						       m,
 						       b,
 						       linear,
-						       is_signed,
+						       analog_data_format,
 						       val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1198,7 +1198,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 						       m,
 						       b,
 						       linear,
-						       is_signed,
+						       analog_data_format,
 						       val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1210,7 +1210,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 							      m,
 							      b,
 							      linear,
-							      is_signed,
+							      analog_data_format,
 							      val);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1222,7 +1222,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 							      m,
 							      b,
 							      linear,
-							      is_signed,
+							      analog_data_format,
 							      val);
   
   {
@@ -1296,7 +1296,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val), 
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1313,7 +1313,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val), 
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1330,7 +1330,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val),
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1347,7 +1347,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val),
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1364,7 +1364,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val),
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1381,7 +1381,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 					m,
 					b,
 					linear,
-					is_signed,
+					analog_data_format,
 					val),
 	      ipmi_sensor_units[base_unit]);
     }
@@ -1396,7 +1396,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1410,7 +1410,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1424,7 +1424,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1438,7 +1438,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1452,7 +1452,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1477,7 +1477,7 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 						 m, 
 						 b, 
 						 linear, 
-						 is_signed, 
+						 analog_data_format, 
 						 (u_int8_t) val);
       printf ("Sensor reading: %.2f %s\n", 
 	      sensor_reading, 
@@ -1588,7 +1588,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -1604,7 +1604,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
   char *status_message = NULL;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -1663,7 +1663,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1677,7 +1677,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1691,7 +1691,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1705,7 +1705,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1719,7 +1719,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1733,7 +1733,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1747,7 +1747,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1761,7 +1761,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -1775,7 +1775,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1789,7 +1789,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1803,7 +1803,7 @@ display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -1991,7 +1991,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t base_unit;
   
@@ -2007,7 +2007,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
   char *status_message = NULL;
   
   ipmi_sensor_get_decode_params (sdr_repo_cache->cache_curr, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
@@ -2066,7 +2066,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -2080,7 +2080,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -2094,7 +2094,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2108,7 +2108,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2122,7 +2122,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2136,7 +2136,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2150,7 +2150,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2164,7 +2164,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val),
 	  ipmi_sensor_units[base_unit]);
   
@@ -2178,7 +2178,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -2192,7 +2192,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   
@@ -2206,7 +2206,7 @@ display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_r
 				    m,
 				    b,
 				    linear,
-				    is_signed,
+				    analog_data_format,
 				    val), 
 	  ipmi_sensor_units[base_unit]);
   

@@ -54,7 +54,7 @@ ipmi_sensor_decode_value (char r_exponent,
 			  short m, 
 			  short b, 
 			  char linear, 
-			  u_int8_t is_signed, 
+			  u_int8_t analog_data_format, 
 			  u_int8_t raw_data)
 {
   double dval = 0.0;
@@ -67,10 +67,28 @@ ipmi_sensor_decode_value (char r_exponent,
 /*   printf ("is_signed: %d\n", is_signed); */
 /*   printf ("raw_data: %d\n", raw_data); */
   
-  if (is_signed)
-    dval = (double) ((char) raw_data);
-  else 
+  if (analog_data_format == 0x00)
     dval = (double) raw_data;
+  else if (analog_data_format == 0x01)
+    {
+      if (raw_data & 0x80)
+        raw_data++;
+      dval = (double) ((char) raw_data);
+    }
+  else if (analog_data_format == 0x02)
+    dval = (double) ((char) raw_data);
+  else
+    {
+#if defined (IPMI_SYSLOG)
+      sprintf (errstr, "cmd[%d].comp_code[%d]: %s", obj_cmd[0],
+               IPMI_COMP_CODE (obj_cmd), _str);
+      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), 
+              "ipmi_sensor_decode_value: Invalid numeric data format 0x%X",
+              analog_data_format);
+      return (0.0);
+#endif /* IPMI_SYSLOG */
+    }
+    
   dval *= (double) m;
   dval += (b * pow (10, b_exponent));
   dval *= pow (10, r_exponent);
@@ -148,7 +166,7 @@ ipmi_sensor_get_decode_params_old (u_int8_t *sensor_record,
 
 void 
 ipmi_sensor_get_decode_params (u_int8_t *sensor_record, 
-			       u_int8_t *is_signed, 
+			       u_int8_t *analog_data_format, 
 			       char *r_exponent, 
 			       char *b_exponent, 
 			       char *linear, 
@@ -162,11 +180,6 @@ ipmi_sensor_get_decode_params (u_int8_t *sensor_record,
   
   u_int64_t b_ls;
   u_int64_t b_ms;
-  
-  if ((sensor_record[20] & 0xC0) == 0)
-    *is_signed = 0;
-  else 
-    *is_signed = 1;
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
@@ -210,6 +223,11 @@ ipmi_sensor_get_decode_params (u_int8_t *sensor_record,
   if (*b & 0x200)
     *b |= 0xFE00;
   
+  fiid_obj_get (sensor_record,
+                tmpl_sdr_full_sensor_record,
+                "sensor_unit_analog_data_format",
+                &val);
+  *analog_data_format = (u_int8_t) val;
+
   return;
 }
-
