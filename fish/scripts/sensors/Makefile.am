@@ -1,4 +1,4 @@
-EXTENSIONS = sensors
+EXTENSIONS = ipmi-sensors
 
 Extensionsdir = $(sbindir)
 

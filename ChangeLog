@@ -1,7 +1,11 @@
 2005-03-01  Anand Babu  <ab@gnu.org.in>
 
-	* configure.ac: Added check for guile version. Minimum tested required
-	version is 1.6.4.
+	* configure.ac: Added check for guile version. Minimum tested
+	required version is 1.6.4.
+
+	* bmc-watchdog/Makefile.am: Replaced "mkinstalldir" with
+	"install-sh -d". "mkinstalldir" script is obsolete and
+	non-portable.
 
 2005-02-23  Anand Babu  <ab@gnu.org.in>
 

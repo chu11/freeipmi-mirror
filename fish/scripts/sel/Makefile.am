@@ -1,4 +1,4 @@
-EXTENSIONS = sel
+EXTENSIONS = ipmi-sel
 
 Extensionsdir = $(sbindir)
 

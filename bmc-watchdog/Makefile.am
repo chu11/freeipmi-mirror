@@ -19,4 +19,4 @@ EXTRA_DIST = $(DEFINITSCRIPT)
 
 install-data-hook:
 	chmod 755 $(DESTDIR)/$(DEFINITSCRIPTdir)/$(DEFINITSCRIPT)
-	$(top_srcdir)/mkinstalldirs -m 755 $(DESTDIR)$(BMCWATCHDOGLOGdir)
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)$(BMCWATCHDOGLOGdir)
