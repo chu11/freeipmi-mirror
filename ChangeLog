@@ -1,5 +1,9 @@
 2004-08-17  Ian Zimmerman  <itz@californiadigital.com>
 
+	* fish/extensions/sel.scm (sel-display-help): add --hex-dump
+	option to usage messages.
+	(sel-main): actually implement --hex-dump
+
 	* fish/src/extension.c (install_new_procedures): 
 	install ex_sel_*_{raw,hex}.
 
