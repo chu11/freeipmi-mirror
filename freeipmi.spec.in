@@ -130,7 +130,7 @@ fi
 %doc %{_datadir}/doc/%{name}/ipmi-over-ts2000.texi
 %doc %{_infodir}/freeipmi.info*
 %{_libdir}/*so*
-%{_localstatedir}/lib/*
+/var/lib/*
  
 %files devel
 %defattr(-,root,root)
@@ -178,6 +178,6 @@ fi
 %{_mandir}/man8/ipmiping.8*
 %{_mandir}/man8/ipmipower.8*
 %{_mandir}/man8/rmcpping.8*
-%{_localstatedir}/log/*
+/var/log/*
 
 %changelog
