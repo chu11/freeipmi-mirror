@@ -80,8 +80,6 @@ ipmi_sensor_decode_value (char r_exponent,
   else
     {
 #if defined (IPMI_SYSLOG)
-      sprintf (errstr, "cmd[%d].comp_code[%d]: %s", obj_cmd[0],
-               IPMI_COMP_CODE (obj_cmd), _str);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), 
               "ipmi_sensor_decode_value: Invalid numeric data format 0x%X",
               analog_data_format);
