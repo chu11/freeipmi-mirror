@@ -9,14 +9,22 @@ Name: %{name}
 Version: %{version}
 Release: %{release}
 License: GPL
-Group: Application/Misc
+Group: Development/System
 Source: %{name}-%{version}.tar.gz
 BuildRoot: /var/tmp/%{name}-%{version}
-Summary: FreeIPMI provides in-band and out-of-band IPMI tools.
+Summary: FreeIPMI
 %description
 The FreeIPMI project provides "Remote-Console" (out-of-band) and
 "System Management Software" (in-band) based on Intelligent
 Platform Management Interface (IPMI v1.5) specification.
+
+%package devel
+Summary: Development package for FreeIPMI
+Group: Development/System
+Requires: freeipmi = %{version}-%{release}
+%description devel
+Development package for FreeIPMI.  This package includes the FreeIPMI
+header files and static libraries.
 
 %package fish
 Summary: FreeIPMI Shell
@@ -98,12 +106,17 @@ fi
 %doc /usr/share/doc/freeipmi/NEWS
 %doc /usr/share/doc/freeipmi/README
 %doc /usr/share/doc/freeipmi/TODO
+/usr/lib/*so*
+/var
+ 
+%files devel
+%defattr(-,root,root)
 %doc /usr/share/doc/freeipmi/examples/Makefile
 %doc /usr/share/doc/freeipmi/examples/hello-sensors.c
 %doc /usr/share/info/freeipmi-hg.info*
+/usr/lib/*.a
+/usr/lib/*.la
 /usr/include
-/usr/lib
-/var
 
 %files fish
 %defattr(-,root,root)
