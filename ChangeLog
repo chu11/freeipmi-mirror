@@ -1,3 +1,13 @@
+2004-08-10  Ian Zimmerman  <itz@californiadigital.com>
+
+	* fish/src/scm-procedures.c (ex_sel_display_first_entry):
+	use SEL_RECORD_SIZE constant instead of hardcoding.
+	(hex_dump_record_data): new function.
+	
+	* fish/src/ipmi-wrapper-sel.h: #define SEL_RECORD_SIZE
+
+	* TODO: Add gh -> scm conversion task.
+
 2004-08-16  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: code cleanups
