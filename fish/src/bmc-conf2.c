@@ -1741,3 +1741,28 @@ get_bmc_power_restore_policy (u_int8_t *power_restore_policy)
 {
   return get_bmc_chassis_status (power_restore_policy);
 }
+
+/***********************************************************/
+u_int8_t 
+check_bmc_user_password (u_int8_t userid, u_int8_t *password)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_set_user_password_rs));
+  status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
+				       userid, 
+				       IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
+				       password, 
+				       obj_data_rs);
+  
+  if (status == 0)
+    {
+      if (IPMI_COMP_CODE (obj_data_rs) == IPMI_COMMAND_SUCCESS)
+	return 1; /* true */
+      
+      if (IPMI_COMP_CODE (obj_data_rs) == IPMI_PASSWORD_OPERATION_TEST_FAILED)
+	return 0; /* false */
+    }
+  return status;
+}

@@ -63,12 +63,23 @@
   (fi-get-bmc-lan-conf-backup-gateway-mac-address)) 
 
 (define lan-conf-keys-validator 
-  '(("ip_address_source" 
+  '(
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ("ip_address_source" 
      valid-ip-address-source? 
      get-ip-address-source 
      commit-ip-address-source 
      checkout-ip-address-source 
      get-ip-address-source-value-string
+     same-string-ci?
      "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others")
     ("ip_address" 
      valid-ip-address? 
@@ -76,6 +87,7 @@
      commit-ip-address 
      checkout-ip-address 
      get-string
+     same-string-ci?
      "Give valid IP Address")
     ("mac_address" 
      valid-mac-address? 
@@ -83,6 +95,7 @@
      commit-mac-address 
      checkout-mac-address 
      get-string
+     same-string-ci?
      "Give valid MAC Address")
     ("subnet_mask" 
      valid-ip-address? 
@@ -90,6 +103,7 @@
      commit-subnet-mask 
      checkout-subnet-mask 
      get-string
+     same-string-ci?
      "Give valid Subnet mask")
     ("default_gateway_ip_address" 
      valid-ip-address? 
@@ -97,6 +111,7 @@
      commit-default-gateway-ip-address 
      checkout-default-gateway-ip-address 
      get-string
+     same-string-ci?
      "Give valid IP Address")
     ("default_gateway_mac_address" 
      valid-mac-address? 
@@ -104,6 +119,7 @@
      commit-default-gateway-mac-address 
      checkout-default-gateway-mac-address 
      get-string
+     same-string-ci?
      "Give valid MAC Address")
     ("backup_gateway_ip_address" 
      valid-ip-address? 
@@ -111,6 +127,7 @@
      commit-backup-gateway-ip-address 
      checkout-backup-gateway-ip-address 
      get-string
+     same-string-ci?
      "Give valid IP Address")
     ("backup_gateway_mac_address" 
      valid-mac-address? 
@@ -118,6 +135,16 @@
      commit-backup-gateway-mac-address 
      checkout-backup-gateway-mac-address 
      get-string
+     same-string-ci?
      "Give valid MAC Address")
-))
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ))
 

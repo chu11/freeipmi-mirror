@@ -151,15 +151,21 @@
 	  (primitive-eval (cadr (cddddr (car key-def))))
 	  (get-value-convertor-proc key (cdr key-def)))))
 
+(define (get-diff-proc key key-def)
+  (if (null? key-def)
+      #f
+      (if (string-ci=? (string-downcase key) (caar key-def))
+	  (primitive-eval (caddr (cddddr (car key-def))))
+	  (get-diff-proc key (cdr key-def)))))
+
 (define (get-doc-string key key-def)
   (if (null? key-def)
       #f
       (if (string-ci=? (string-downcase key) (caar key-def))
-	  (caddr (cddddr (car key-def)))
+	  (cadddr (cddddr (car key-def)))
 	  (get-doc-string key (cdr key-def)))))
 
-(define (get-string str)
-  str)
+(define (get-string str) str)
 
 (define (get-boolean str)
   (string-ci=? str "yes"))
@@ -222,4 +228,10 @@
 	(append section-data
 		(list (string-append (cadr section-name-key-list) " " value))))
       #f))
+
+(define (same-string? section-name string1 string2)
+  (string=? string1 string2))
+
+(define (same-string-ci? section-name string1 string2)
+  (string-ci=? string1 string2))
 

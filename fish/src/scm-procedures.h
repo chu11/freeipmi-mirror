@@ -196,4 +196,7 @@ SCM ex_get_bmc_serial_conf_call_retry_time ();
 SCM ex_get_bmc_serial_conf_ipmi_msg_comm_settings ();
 SCM ex_get_bmc_power_restore_policy ();
 
+/***********************************************************/
+SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
+
 #endif

@@ -129,12 +129,23 @@
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define lan-serial-channel-keys-validator 
-  '(("volatile_access_mode" 
+  '(
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ("volatile_access_mode" 
      valid-channel-access-mode? 
      get-channel-access-mode 
      commit-volatile-access-mode 
      checkout-volatile-access-mode 
      get-channel-access-mode-value-string
+     same-string-ci?
      "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared")
     ("volatile_enable_user_level_auth" 
      valid-boolean? 
@@ -142,6 +153,7 @@
      commit-volatile-enable-user-level-auth 
      checkout-volatile-enable-user-level-auth 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("volatile_enable_per_message_auth" 
      valid-boolean? 
@@ -149,6 +161,7 @@
      commit-volatile-enable-per-message-auth 
      checkout-volatile-enable-per-message-auth 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("volatile_enable_pef_alerting" 
      valid-boolean? 
@@ -156,6 +169,7 @@
      commit-volatile-enable-pef-alerting 
      checkout-volatile-enable-pef-alerting 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("volatile_channel_privilege_limit"	
      valid-privilege-limit? 
@@ -163,6 +177,7 @@
      commit-volatile-channel-privilege-limit 
      checkout-volatile-channel-privilege-limit 
      get-privilege-limit-value-string
+     same-string-ci?
      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ("non_volatile_access_mode" 
      valid-channel-access-mode? 
@@ -170,6 +185,7 @@
      commit-non-volatile-access-mode 
      checkout-non-volatile-access-mode 
      get-channel-access-mode-value-string
+     same-string-ci?
      "Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared")
     ("non_volatile_enable_user_level_auth" 
      valid-boolean? 
@@ -177,6 +193,7 @@
      commit-non-volatile-enable-user-level-auth 
      checkout-non-volatile-enable-user-level-auth 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("non_volatile_enable_per_message_auth" 
      valid-boolean? 
@@ -184,6 +201,7 @@
      commit-non-volatile-enable-per-message-auth 
      checkout-non-volatile-enable-per-message-auth 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("non_volatile_enable_pef_alerting" 
      valid-boolean? 
@@ -191,6 +209,7 @@
      commit-non-volatile-enable-pef-alerting 
      checkout-non-volatile-enable-pef-alerting 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("non_volatile_channel_privilege_limit" 
      valid-privilege-limit? 
@@ -198,8 +217,16 @@
      commit-non-volatile-channel-privilege-limit 
      checkout-non-volatile-channel-privilege-limit 
      get-privilege-limit-value-string
+     same-string-ci?
      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ;; You can add more in the form of 
-    ;; (KEYSTRING VALIDATION-PROC CONVERTION-PROC BMC-COMMIT-PROC)
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
     ))
 

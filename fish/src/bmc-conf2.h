@@ -193,4 +193,6 @@ u_int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup,
 
 u_int8_t get_bmc_power_restore_policy (u_int8_t *power_restore_policy);
 
+/***********************************************************/
+u_int8_t check_bmc_user_password (u_int8_t userid, u_int8_t *password);
 #endif

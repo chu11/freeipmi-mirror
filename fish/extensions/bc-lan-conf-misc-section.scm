@@ -25,12 +25,23 @@
   (fi-get-bmc-lan-conf-gratuitous-arp)) 
 
 (define lan-conf-misc-keys-validator 
-  '(("enable_gratuitous_arps" 
+  '(
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ("enable_gratuitous_arps" 
      valid-boolean? 
      get-boolean 
      commit-enable-gratuitous-arps 
      checkout-enable-gratuitous-arps 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("enable_arp_response" 
      valid-boolean? 
@@ -38,6 +49,7 @@
      commit-enable-arp-response 
      checkout-enable-arp-response 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("gratuitous_arp_interval" 
      valid-integer? 
@@ -45,5 +57,15 @@
      commit-gratuitous-arp-interval 
      checkout-gratuitous-arp-interval 
      any->string
+     same-string-ci?
      "Give valid number")
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
 ))

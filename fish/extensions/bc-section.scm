@@ -218,19 +218,20 @@
       (let* ((line           (car section-data))
 	     (key            (car (string-tokenize line)))
 	     (value          (if (= (length (string-tokenize line)) 1)
-				 "(null)" 
+				 "" 
 				 (cadr (string-tokenize line))))
 	     (bmc-value      (checkout-section-value section-name 
 						     key 
-						     key-desc-list)))
+						     key-desc-list))
+	     (diff-proc      (get-diff-proc key key-desc-list)))
 	(if (boolean? bmc-value)
 	    (display (string-append "Error in checkout of key <" 
 				    key 
 				    ">\n") (current-error-port))
-	    (if (not (string=? value bmc-value))
+	    (if (not (diff-proc section-name value bmc-value))
 		(begin 
-		  (display (string-append "USER:" key " " value "\n"))
-		  (display (string-append "BMC :" key " " bmc-value "\n")))))
+		  (display (string-append "USER:" key "=" value "\n"))
+		  (display (string-append "BMC :" key "=" bmc-value " differs\n")))))
 	(diff-section-values section-name (cdr section-data) key-desc-list))))
 
 (define (diff-section section-data)

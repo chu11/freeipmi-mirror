@@ -67,6 +67,17 @@
 
 (define (checkout-password section-name) (list ""))
 
+(define (diff-password section-name user-password bmc-password)
+  (cond 
+   ((string-ci=? section-name "user1")
+    (fi-check-bmc-user-password 1 user-password))
+   ((string-ci=? section-name "user2")
+    (fi-check-bmc-user-password 2 user-password))
+   ((string-ci=? section-name "user3")
+    (fi-check-bmc-user-password 3 user-password))
+   ((string-ci=? section-name "user4")
+    (fi-check-bmc-user-password 4 user-password))))
+
 (define (commit-lan-enable-ipmi-msgs section-name enable-ipmi-msgs)
   (if (list? enable-ipmi-msgs)
       #t 
@@ -288,12 +299,23 @@
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define user-keys-validator 
-  '(("username" 
+  '(
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ("username" 
      valid-username-password? 
      get-string 
      commit-username 
      checkout-username 
      get-string
+     same-string?
      "Give username")
     ("enable_user" 
      valid-boolean? 
@@ -301,6 +323,7 @@
      commit-enable-user 
      checkout-enable-user 
      get-boolean-string
+     same-string?
      "Possible values: Yes/No")
     ("clear_password" 
      valid-boolean? 
@@ -308,6 +331,7 @@
      commit-clear-password 
      checkout-clear-password 
      get-boolean-string
+     same-string?
      "Possible values: Yes/No")
     ("password" 
      valid-username-password? 
@@ -315,6 +339,7 @@
      commit-password 
      checkout-password 
      get-string
+     diff-password
      "Give password or leave it blank to clear password")
     ("lan_enable_ipmi_msgs" 
      valid-boolean? 
@@ -322,6 +347,7 @@
      commit-lan-enable-ipmi-msgs 
      checkout-lan-enable-ipmi-msgs 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("lan_enable_link_auth" 
      valid-boolean? 
@@ -329,6 +355,7 @@
      commit-lan-enable-link-auth 
      checkout-lan-enable-link-auth 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("lan_enable_restrict_to_callback" 
      valid-boolean? 
@@ -336,6 +363,7 @@
      commit-lan-enable-restrict-to-callback 
      checkout-lan-enable-restrict-to-callback 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("lan_privilege_limit" 
      valid-privilege-limit? 
@@ -343,6 +371,7 @@
      commit-lan-privilege-limit 
      checkout-lan-privilege-limit 
      get-privilege-limit-value-string 
+     same-string-ci?
      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ("lan_session_limit" 
      valid-integer? 
@@ -350,6 +379,7 @@
      commit-lan-session-limit 
      checkout-lan-session-limit 
      any->string 
+     same-string-ci?
      "Give valid number")
     ("serial_enable_ipmi_msgs" 
      valid-boolean? 
@@ -357,6 +387,7 @@
      commit-serial-enable-ipmi-msgs 
      checkout-serial-enable-ipmi-msgs 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("serial_enable_link_auth" 
      valid-boolean? 
@@ -364,6 +395,7 @@
      commit-serial-enable-link-auth 
      checkout-serial-enable-link-auth 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("serial_enable_restrict_to_callback" 
      valid-boolean? 
@@ -371,6 +403,7 @@
      commit-serial-enable-restrict-to-callback 
      checkout-serial-enable-restrict-to-callback 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("serial_privilege_limit" 
      valid-privilege-limit? 
@@ -378,6 +411,7 @@
      commit-serial-privilege-limit 
      checkout-serial-privilege-limit 
      get-privilege-limit-value-string
+     same-string-ci?
      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ("serial_session_limit" 
      valid-integer? 
@@ -385,8 +419,15 @@
      commit-serial-session-limit 
      checkout-serial-session-limit 
      any->string 
+     same-string-ci?
      "Give valid number")
     ;; You can add more in the form of 
-    ;; (KEYSTRING VALIDATION-PROC CONVERTION-PROC BMC-COMMIT-PROC)
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
     ))
-

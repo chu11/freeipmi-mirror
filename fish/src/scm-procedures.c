@@ -2394,3 +2394,21 @@ ex_get_bmc_power_restore_policy ()
   return (retval ? SCM_BOOL_F : return_list);
 }
 
+/***********************************************************/
+SCM 
+ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
+{
+  u_int8_t userid;
+  u_int8_t *password = NULL;
+  int retval;
+  
+  userid = gh_scm2long (scm_userid);
+  password = gh_scm2newstr (scm_password, NULL);
+  
+  retval = check_bmc_user_password (userid, password);
+  
+  free (password);
+  
+  return (retval ? SCM_BOOL_T : SCM_BOOL_F);
+}
+

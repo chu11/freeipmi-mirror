@@ -636,6 +636,11 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-get-bmc-power-restore-policy)
   */
+  
+  gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-check-bmc-user-password USERID PASSWORD)
+  */
 }
 
 // guile initialization area

@@ -78,12 +78,23 @@
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define serial-conf-keys-validator 
-  '(("enable_basic_mode" 
+  '(
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ("enable_basic_mode" 
      valid-boolean? 
      get-boolean 
      commit-enable-basic-mode 
      checkout-enable-basic-mode 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("enable_ppp_mode" 
      valid-boolean? 
@@ -91,6 +102,7 @@
      commit-enable-ppp-mode 
      checkout-enable-ppp-mode 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("enable_terminal_mode" 
      valid-boolean? 
@@ -98,6 +110,7 @@
      commit-enable-terminal-mode 
      checkout-enable-terminal-mode 
      get-boolean-string 
+     same-string-ci?
      "Possible values: Yes/No")
     ("connect_mode" 
      valid-connect-mode? 
@@ -105,6 +118,7 @@
      commit-connect-mode 
      checkout-connect-mode 
      get-connect-mode-value-string 
+     same-string-ci?
      "Possible Values: Modem_Connect/Direct_Connect")
     ("page_blackout_interval" 
      valid-integer? 
@@ -112,6 +126,7 @@
      commit-page-blackout-interval 
      checkout-page-blackout-interval 
      any->string
+     same-string-ci?
      "Give valid number")
     ("call_retry_time" 
      valid-integer? 
@@ -119,6 +134,7 @@
      commit-call-retry-time 
      checkout-call-retry-time 
      any->string
+     same-string-ci?
      "Give valid number")
     ("enable_dtr_hangup" 
      valid-boolean? 
@@ -126,6 +142,7 @@
      commit-enable-dtr-hangup 
      checkout-enable-dtr-hangup 
      get-boolean-string
+     same-string-ci?
      "Possible values: Yes/No")
     ("flow_control" 
      valid-flow-control? 
@@ -133,6 +150,7 @@
      commit-flow-control 
      checkout-flow-control 
      get-flow-control-value-string
+     same-string-ci?
      "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF")
     ("bit_rate" 
      valid-bit-rate? 
@@ -140,4 +158,15 @@
      commit-bit-rate 
      checkout-bit-rate 
      get-bit-rate-value-string
-     "Possible values: 9600/19200/38400/57600/115200")))
+     same-string-ci?
+     "Possible values: 9600/19200/38400/57600/115200")
+    ;; You can add more in the form of 
+    ;; (KEYSTRING 
+    ;;  VALIDATION-PROC 
+    ;;  CONVERTION-PROC 
+    ;;  BMC-COMMIT-PROC 
+    ;;  BMC-CHECKOUT-PROC 
+    ;;  VALUE-CONVERTION-PROC 
+    ;;  DIFF-PROC 
+    ;;  DOC-STRING)
+    ))
