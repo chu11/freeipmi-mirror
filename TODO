@@ -26,6 +26,7 @@ libfreeipmi:
   * Feature to allow atomicity of multiple IPMI commands in a row.
     May or may not be possible.  Think about it.
   * ipmi_lan_cmd() problem with return code.
+  * open_lan_session - modify to use best secure connection available
   
 fish:
 -----
