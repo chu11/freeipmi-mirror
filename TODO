@@ -60,6 +60,7 @@ General:
   * New tools?
     - SEL collector/logger thingie for clusters
     - tool/script to detect busted BMC/IORiser
+  * config file for KCS port, register spacing, etc.
 
 Autoconf issues:
 ----------------
