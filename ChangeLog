@@ -1,3 +1,9 @@
+2004-07-09  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Renamed with_bmc_watchdog_setup conditional
+	with_bmc_watchdog_start.  Added with_bmc_watchdog_condrestart
+	conditional.
+	
 2004-07-09  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_sendto): Fix buffer

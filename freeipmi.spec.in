@@ -58,7 +58,7 @@ mkdir -p $RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %post utils
-%if %{?_with_bmc_watchdog_setup:1}%{!?_with_bmc_watchdog_setup:0}
+%if %{?_with_bmc_watchdog_start:1}%{!?_with_bmc_watchdog_start:0}
 #
 # Start bmc-watchdog, but not by default
 #
@@ -70,6 +70,16 @@ if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
     else
        /etc/rc.d/init.d/bmc-watchdog start
     fi
+fi
+%endif
+%if %{?_with_bmc_watchdog_condrestart:1}%{!?_with_bmc_watchdog_condrestart:0}
+#
+# Start bmc-watchdog if it already running
+#
+if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+    [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
+    [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
+    /etc/rc.d/init.d/bmc-watchdog condrestart
 fi
 %endif
 %if %{?_with_powerman_restart:1}%{!?_with_powerman_restart:0}
