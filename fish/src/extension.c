@@ -287,18 +287,6 @@ install_new_procedures (void)
      (display (fi-kcs-get-poll-count))
   */
   
-  gh_new_procedure ("fi-sel-display-first-entry", 
-		    ex_sel_display_first_entry, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sel-display-first-entry))
-  */
-  
-  gh_new_procedure ("fi-sel-display-next-entry", 
-		    ex_sel_display_next_entry, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sel-display-next-entry))
-  */
-  
   gh_new_procedure ("fi-sel-get-first-entry", 
 		    ex_sel_get_first_entry, 0, 0, 0);
   /* example scheme expression

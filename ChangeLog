@@ -1,3 +1,25 @@
+2004-12-01  A Balamurugan  <bala.a@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.[ch]: new files.
+
+	* fish/extensions/sel.scm: updated.
+
+	* fish/src/extension.c: removed fi-sel-display-first-entry and
+	fi-sel-display-next-entry.
+
+	* fish/src/ipmi-wrapper-sel.[ch]: rewritten.
+
+	* fish/src/scm-procedures.c: updated ex_sel_get_first_entry() and
+	ex_sel_get_next_entry().
+
+	* libfreeipmi/src/Makefile.am: updated.
+
+	* libfreeipmi/src/freeipmi.h: updated.
+
+	* libfreeipmi/src/ipmi-sel-record-types.c: rewritten all fiid
+	templates.
+	
+
 2004-11-28  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/ipmi-wrapper.c (get_lan_channel_number): now using

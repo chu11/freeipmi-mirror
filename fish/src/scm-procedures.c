@@ -690,38 +690,6 @@ ex_kcs_get_poll_count ()
   return (kcs_poll_count);
 }
 
-SCM 
-ex_sel_display_first_entry ()
-{
-  u_int8_t record_data[SEL_RECORD_SIZE];
-  
-  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
-    {
-/*       fprintf (stderr, "ipmi_sel_get_first_entry failed\n"); */
-      return SCM_BOOL_F;
-    }
-  
-  if (display_sel_record (record_data) == 0)
-    return SCM_BOOL_T;
-  return SCM_BOOL_F;
-}
-
-SCM 
-ex_sel_display_next_entry ()
-{
-  u_int8_t record_data[SEL_RECORD_SIZE];
-  
-  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
-    {
-/*       fprintf (stderr, "ipmi_sel_get_next_entry failed\n"); */
-      return SCM_BOOL_F;
-    }
-  
-  if (display_sel_record (record_data) == 0)
-    return SCM_BOOL_T;
-  return SCM_BOOL_F;
-}
-
 SCM
 ex_sel_get_first_entry_raw ()
 {
@@ -863,7 +831,7 @@ ex_sel_get_first_entry ()
   
   if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
     {
-/*       fprintf (stderr, "ipmi_sel_get_first_entry failed\n"); */
+      /* fprintf (stderr, "ipmi_sel_get_first_entry failed\n"); */
       return SCM_EOL;
     }
   
@@ -872,21 +840,26 @@ ex_sel_get_first_entry ()
   
   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_ulong2scm (sel_rec.timestamp), 
+			       gh_list (gh_str02scm (sel_rec.timestamp), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.sensor_desc), 
+			       gh_list (gh_str02scm (sel_rec.sensor_info), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_desc), 
+			       gh_list (gh_str02scm (sel_rec.event_message), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.generator_id), 
+			       gh_list (gh_str02scm (sel_rec.event_data2_message), 
+					SCM_UNDEFINED));
+  scm_sel_record = gh_append2 (scm_sel_record, 
+			       gh_list (gh_str02scm (sel_rec.event_data3_message), 
 					SCM_UNDEFINED));
   
-  free (sel_rec.sensor_desc);
-  free (sel_rec.event_desc);
-  free (sel_rec.generator_id);
+  if (sel_rec.timestamp) free (sel_rec.timestamp);
+  if (sel_rec.sensor_info) free (sel_rec.sensor_info);
+  if (sel_rec.event_message) free (sel_rec.event_message);
+  if (sel_rec.event_data2_message) free (sel_rec.event_data2_message);
+  if (sel_rec.event_data3_message) free (sel_rec.event_data3_message);
   
   return scm_sel_record;
 }
@@ -900,7 +873,7 @@ ex_sel_get_next_entry ()
   
   if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
     {
-/*       fprintf (stderr, "ipmi_sel_get_next_entry failed\n"); */
+      /* fprintf (stderr, "ipmi_sel_get_next_entry failed\n"); */
       return SCM_EOL;
     }
   
@@ -909,21 +882,26 @@ ex_sel_get_next_entry ()
   
   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_ulong2scm (sel_rec.timestamp), 
+			       gh_list (gh_str02scm (sel_rec.timestamp), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.sensor_desc), 
+			       gh_list (gh_str02scm (sel_rec.sensor_info), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_desc), 
+			       gh_list (gh_str02scm (sel_rec.event_message), 
 					SCM_UNDEFINED));
   scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.generator_id), 
+			       gh_list (gh_str02scm (sel_rec.event_data2_message), 
+					SCM_UNDEFINED));
+  scm_sel_record = gh_append2 (scm_sel_record, 
+			       gh_list (gh_str02scm (sel_rec.event_data3_message), 
 					SCM_UNDEFINED));
   
-  free (sel_rec.sensor_desc);
-  free (sel_rec.event_desc);
-  free (sel_rec.generator_id);
+  if (sel_rec.timestamp) free (sel_rec.timestamp);
+  if (sel_rec.sensor_info) free (sel_rec.sensor_info);
+  if (sel_rec.event_message) free (sel_rec.event_message);
+  if (sel_rec.event_data2_message) free (sel_rec.event_data2_message);
+  if (sel_rec.event_data3_message) free (sel_rec.event_data3_message);
   
   return scm_sel_record;
 }

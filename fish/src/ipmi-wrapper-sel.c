@@ -103,7 +103,7 @@ get_seld ()
 }
 
 int 
-display_sel_threshold_system_event_record (u_int8_t *record_data)
+get_sel_system_event_record (u_int8_t *record_data, struct sel_record *sel_record)
 {
   u_int16_t record_id;
   u_int32_t timestamp;
@@ -114,15 +114,11 @@ display_sel_threshold_system_event_record (u_int8_t *record_data)
   u_int8_t sensor_number;
   u_int8_t event_type_code;
   u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
   u_int8_t event_reading_code_offset;
-  u_int8_t trigger_threshold_value_flag;
-  u_int8_t trigger_reading_flag;
-  u_int8_t trigger_reading;
-  u_int8_t trigger_threshold_value;
+  u_int8_t event_data2_flag;
+  u_int8_t event_data3_flag;
+  u_int8_t event_data2;
+  u_int8_t event_data3;
   
   u_int64_t val;
   
@@ -181,44 +177,37 @@ display_sel_threshold_system_event_record (u_int8_t *record_data)
 		&val);
   assertion_deassertion_event = val;
   
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
 		"event_reading_code_offset", 
 		&val);
   event_reading_code_offset = val;
   
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_threshold_value_flag", 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data2_flag", 
 		&val);
-  trigger_threshold_value_flag = val;
+  event_data2_flag = val;
   
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_reading_flag", 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data3_flag", 
 		&val);
-  trigger_reading_flag = val;
+  event_data3_flag = val;
   
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_reading", 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data2", 
 		&val);
-  trigger_reading = val;
+  event_data2 = val;
   
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_threshold_value", 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data3", 
 		&val);
-  trigger_threshold_value = val;
+  event_data3 = val;
   
-  printf ("%d: ", record_id);
-  
+  sel_record->record_id = record_id;
   {
     char buffer[256];
     time_t time;
@@ -226,567 +215,131 @@ display_sel_threshold_system_event_record (u_int8_t *record_data)
     time = timestamp;
     strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
     
-    printf ("%s: ", buffer);
+    sel_record->timestamp = strdup (buffer);
   }
-  
-  printf ("%s #%d: ", ipmi_get_sensor_group (sensor_type), sensor_number);
-  
-  printf ("%s: ", ipmi_sensor_type_threshold_desc[event_reading_code_offset]);
-  
-  printf ("%s", ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-  
-/*   switch (trigger_reading_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_TRIGGER_READING: */
-/*       printf ("trigger event reading: %d, ", trigger_reading); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d, ", trigger_reading); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("sensor specific event code: %d, ", trigger_reading); */
-/*       break; */
-/*     } */
-  
-/*   switch (trigger_threshold_value_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_TRIGGER_THRESHOLD_VALUE: */
-/*       printf ("trigger threshold reading: %d", trigger_threshold_value); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", trigger_threshold_value); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("sensor specific event code: %d", trigger_threshold_value); */
-/*       break; */
-/*     } */
-  printf ("\n");
+  sel_record->sensor_info = NULL;
+  asprintf (&(sel_record->sensor_info), 
+	    "%s #%d", 
+	    ipmi_get_sensor_group (sensor_type), sensor_number);
+  sel_record->event_message = ipmi_get_event_message (sensor_type, 
+						      event_reading_code_offset);
+  switch (ipmi_sensor_classify (event_type_code))
+    {
+    case IPMI_SENSOR_CLASS_THRESHOLD:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_READING:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "OEM code = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "OEM code = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+/* 	  case IPMI_SEL_PREV_STATE_SEVERITY: */
+/* 	    asprintf (&(sel_record->event_data2_message),  */
+/* 		      "Previous state and/or severity = %02Xh",  */
+/* 		      event_data2); */
+/* 	    break; */
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message),
+		      "OEM code = %02Xh",
+		      event_data2);
+	    break;
+	  case IPMI_SEL_PREV_STATE_SEVERITY:
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message),
+		      "OEM code = %02Xh",
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_OEM:
+      {
+	asprintf (&(sel_record->event_data2_message), 
+		  "Event Data2 = %02Xh", 
+		  event_data2);
+	asprintf (&(sel_record->event_data3_message), 
+		  "Event Data3 = %02Xh", 
+		  event_data3);
+	break;
+      }
+    default:
+      sel_record->event_data2_message = NULL;
+      sel_record->event_data3_message = NULL;
+    }
   
   return 0;
 }
 
 int 
-display_sel_generic_discrete_system_event_record (u_int8_t *record_data)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t prev_discrete_event_state;
-  u_int8_t severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  time_t time;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state", 
-		&val);
-  prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"severity_event_reading_code", 
-		&val);
-  severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  time = timestamp;
-  printf ("%d: ", record_id);
-  {
-    char buffer[256];
-    time_t time;
-    
-    time = timestamp;
-    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
-    
-    printf ("%s: ", buffer);
-  }
-  printf ("%s #%d: ", ipmi_get_sensor_group (sensor_type), sensor_number);
-  
-  printf ("%s: ", 
-	  ipmi_event_reading_type_code_desc_ptr[event_type_code][event_reading_code_offset]);
-  
-  printf ("%s", ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-
-/*   switch (prev_discrete_event_state_severity_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_PREV_STATE_SEVERITY: */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     } */
-  
-/*   switch (oem_code_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     } */
-  printf ("\n");
-  
-  return 0;
-}
-
-int 
-display_sel_discrete_system_event_record (u_int8_t *record_data)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t prev_discrete_event_state;
-  u_int8_t severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  time_t time;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state", 
-		&val);
-  prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"severity_event_reading_code", 
-		&val);
-  severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  time = timestamp;
-  printf ("%d: ", record_id);
-  {
-    char buffer[256];
-    time_t time;
-    
-    time = timestamp;
-    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
-    
-    printf ("%s: ", buffer);
-  }
-  printf ("%s #%d: ", ipmi_get_sensor_group (sensor_type), sensor_number);
-  
-  {
-    struct ipmi_discrete_desc *discrete_sensor_desc;
-    discrete_sensor_desc = (struct ipmi_discrete_desc *) 
-      ipmi_sensor_type_desc_ptr[sensor_type];
-    printf ("%s: ", 
-	    discrete_sensor_desc[event_reading_code_offset].message);
-  }
-  
-  printf ("%s", ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-  
-/*   switch (prev_discrete_event_state_severity_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_PREV_STATE_SEVERITY: */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     } */
-  
-/*   switch (oem_code_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     } */
-  printf ("\n");
-  
-  return 0;
-}
-
-int 
-display_sel_oem_system_event_record (u_int8_t *record_data)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t oem_code_bits_prev_discrete_event_state;
-  u_int8_t oem_code_severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  time_t time;
-  
-  
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_bits_prev_discrete_event_state", 
-		&val);
-  oem_code_bits_prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_severity_event_reading_code", 
-		&val);
-  oem_code_severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  time = timestamp;
-  printf ("%d: ", record_id);
-  {
-    char buffer[256];
-    time_t time;
-    
-    time = timestamp;
-    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
-    
-    printf ("%s: ", buffer);
-  }
-  printf ("%s #%d: ", ipmi_get_sensor_group (sensor_type), sensor_number);
-  printf ("\n");
-  
-  return 0;
-}
-
-int 
-display_sel_timestamped_oem_record (u_int8_t *record_data)
+get_sel_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_record)
 {
   u_int16_t record_id;
   u_int32_t timestamp;
   u_int32_t manufacturer_id;
   u_int64_t oem_defined;
   u_int64_t val;
-  time_t time;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
@@ -812,8 +365,7 @@ display_sel_timestamped_oem_record (u_int8_t *record_data)
 		&val);
   oem_defined = val;
   
-  time = timestamp;
-  printf ("%d: ", record_id);
+  sel_record->record_id = record_id;
   {
     char buffer[256];
     time_t time;
@@ -821,21 +373,31 @@ display_sel_timestamped_oem_record (u_int8_t *record_data)
     time = timestamp;
     strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
     
-    printf ("%s: ", buffer);
+    sel_record->timestamp = strdup (buffer);
   }
-  printf ("%X: " F_X64 "\n", manufacturer_id, oem_defined);
+  asprintf (&(sel_record->sensor_info), 
+	    "Manufacturer ID %02Xh", 
+	    manufacturer_id);
+  asprintf (&(sel_record->event_message), 
+	    "OEM Defined = " F_X64 "h", 
+	    oem_defined);
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
   
   return 0;
 }
 
 int 
-display_sel_non_timestamped_oem_record (u_int8_t *record_data)
+get_sel_non_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_record)
 {
   u_int16_t record_id;
   u_int8_t *oem_defined;
   int8_t oem_defined_index;
   u_int64_t val;
   int i;
+  char *str = NULL;
+  char *tmp_str = NULL;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_non_timestamped_oem_record, 
@@ -849,789 +411,35 @@ display_sel_non_timestamped_oem_record (u_int8_t *record_data)
     return 1;
   oem_defined = record_data + oem_defined_index;
   
-  printf ("%d: ", record_id);
+  sel_record->record_id = record_id;
+  sel_record->timestamp = NULL;
+  sel_record->sensor_info = NULL;
+  sel_record->event_message = NULL;
+  
   for (i = 0; 
        i < (fiid_obj_len_bytes (tmpl_sel_non_timestamped_oem_record) - 
 	    oem_defined_index); 
        i++)
-    printf ("%02X ", oem_defined[i]);
-  printf ("\n");
-  return 0;
-}
-
-int 
-display_sel_record (u_int8_t *record_data)
-{
-  u_int8_t record_type;
-  u_int8_t event_type_code;
-  u_int64_t val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_record_header, 
-		"record_type", 
-		&val);
-  record_type = val;
-  
-  switch (ipmi_get_sel_record_type (record_type))
     {
-    case IPMI_SEL_SYSTEM_EVENT_RECORD:
-      fiid_obj_get (record_data, 
-		    tmpl_sel_system_event_record, 
-		    "event_type_code", 
-		    &val);
-      event_type_code = val;
-      /* 	  printf ("event_type_code: %02X\n", event_type_code); */
-      switch (ipmi_sensor_classify (event_type_code))
+      tmp_str = str;
+      if (str)
 	{
-	case IPMI_SENSOR_CLASS_THRESHOLD:
-	  return display_sel_threshold_system_event_record (record_data);
-	case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-	  return display_sel_generic_discrete_system_event_record (record_data);
-	case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-	  return display_sel_discrete_system_event_record (record_data);
-	case IPMI_SENSOR_CLASS_OEM:
-	  return display_sel_oem_system_event_record (record_data);
+	  str = NULL;
+	  asprintf (&str, "%s %02X", tmp_str, oem_defined[i]);
+	  free (tmp_str);
 	}
-      break;
-    case IPMI_SEL_TIMESTAMPED_OEM_RECORD:
-      return display_sel_timestamped_oem_record (record_data);
-    case IPMI_SEL_NON_TIMESTAMPED_OEM_RECORD:
-      return display_sel_non_timestamped_oem_record (record_data);
+      else
+	asprintf (&str, "%02X", oem_defined[i]);
     }
-  return -1;
-}
-
-int 
-get_sel_threshold_system_event_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
   
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t trigger_threshold_value_flag;
-  u_int8_t trigger_reading_flag;
-  u_int8_t trigger_reading;
-  u_int8_t trigger_threshold_value;
-  
-  u_int64_t val;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_threshold_value_flag", 
-		&val);
-  trigger_threshold_value_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_reading_flag", 
-		&val);
-  trigger_reading_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_reading", 
-		&val);
-  trigger_reading = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_threshold_event_data, 
-		"trigger_threshold_value", 
-		&val);
-  trigger_threshold_value = val;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = timestamp;
-  asprintf (&(sel_rec->sensor_desc), 
-	    "%s #%d", 
-	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  asprintf (&(sel_rec->event_desc), 
-	    "%s", 
-	    ipmi_sensor_type_threshold_desc[event_reading_code_offset]);
-  asprintf (&(sel_rec->generator_id), 
-	    "%s", 
-	    ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-  
-/*   switch (trigger_reading_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_TRIGGER_READING: */
-/*       printf ("trigger event reading: %d, ", trigger_reading); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d, ", trigger_reading); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("sensor specific event code: %d, ", trigger_reading); */
-/*       break; */
-/*     } */
-  
-/*   switch (trigger_threshold_value_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_TRIGGER_THRESHOLD_VALUE: */
-/*       printf ("trigger threshold reading: %d", trigger_threshold_value); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", trigger_threshold_value); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("sensor specific event code: %d", trigger_threshold_value); */
-/*       break; */
-/*     } */
-  
-  return 0;
-}
-
-int 
-get_sel_generic_discrete_system_event_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t prev_discrete_event_state;
-  u_int8_t severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state", 
-		&val);
-  prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"severity_event_reading_code", 
-		&val);
-  severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = timestamp;
-  asprintf (&(sel_rec->sensor_desc), 
-	    "%s #%d", 
-	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  asprintf (&(sel_rec->event_desc), 
-	    "%s", 
-	    ipmi_event_reading_type_code_desc_ptr[event_type_code][event_reading_code_offset]);
-  asprintf (&(sel_rec->generator_id), 
-	    "%s", 
-	    ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-
-/*   switch (prev_discrete_event_state_severity_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_PREV_STATE_SEVERITY: */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     } */
-  
-/*   switch (oem_code_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     } */
-  
-  return 0;
-}
-
-int 
-get_sel_discrete_system_event_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t prev_discrete_event_state;
-  u_int8_t severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"prev_discrete_event_state", 
-		&val);
-  prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"severity_event_reading_code", 
-		&val);
-  severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_discrete_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = timestamp;
-  asprintf (&(sel_rec->sensor_desc), 
-	    "%s #%d", 
-	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  {
-    struct ipmi_discrete_desc *discrete_sensor_desc;
-    discrete_sensor_desc = (struct ipmi_discrete_desc *) 
-      ipmi_sensor_type_desc_ptr[sensor_type];
-    asprintf (&(sel_rec->event_desc), 
-	      "%s", 
-	      discrete_sensor_desc[event_reading_code_offset].message);
-  }
-  asprintf (&(sel_rec->generator_id), 
-	    "%s", 
-	    ipmi_system_software_type_desc[ipmi_get_system_software_type (ipmb_slave_addr_sys_soft_id)]);
-  
-/*   switch (prev_discrete_event_state_severity_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_PREV_STATE_SEVERITY: */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("previous discrete event state: %d, ", prev_discrete_event_state); */
-/*       printf ("severity event reading code: %d, ", severity_event_reading_code); */
-/*       break; */
-/*     } */
-  
-/*   switch (oem_code_flag) */
-/*     { */
-/*     case IPMI_SEL_UNSPECIFIED_BYTE: */
-/*       break; */
-/*     case IPMI_SEL_OEM_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE: */
-/*       /\* i think this should not happend *\/ */
-/*       printf ("oem code: %d", oem_code); */
-/*       break; */
-/*     } */
-  
-  return 0;
-}
-
-int 
-get_sel_oem_system_event_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  
-  u_int8_t *event_data;
-  int8_t event_data_index;
-  
-  u_int8_t event_reading_code_offset;
-  u_int8_t oem_code_flag;
-  u_int8_t prev_discrete_event_state_severity_flag;
-  u_int8_t oem_code_bits_prev_discrete_event_state;
-  u_int8_t oem_code_severity_event_reading_code;
-  u_int8_t oem_code;
-  
-  u_int64_t val;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
-		&val);
-  ipmb_slave_addr_sys_soft_id_flag = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
-		&val);
-  ipmb_slave_addr_sys_soft_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"channel_number", 
-		&val);
-  channel_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_type", 
-		&val);
-  sensor_type = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"sensor_number", 
-		&val);
-  sensor_number = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"event_type_code", 
-		&val);
-  event_type_code = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
-		&val);
-  assertion_deassertion_event = val;
-  
-  event_data_index = fiid_obj_field_start_bytes (tmpl_sel_system_event_record, 
-						 "event_data");
-  if (event_data_index == -1)
-    return 1;
-  event_data = record_data + event_data_index;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"event_reading_code_offset", 
-		&val);
-  event_reading_code_offset = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_flag", 
-		&val);
-  oem_code_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"prev_discrete_event_state_severity_flag", 
-		&val);
-  prev_discrete_event_state_severity_flag = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_bits_prev_discrete_event_state", 
-		&val);
-  oem_code_bits_prev_discrete_event_state = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code_severity_event_reading_code", 
-		&val);
-  oem_code_severity_event_reading_code = val;
-  
-  fiid_obj_get (event_data, 
-		tmpl_oem_event_data, 
-		"oem_code", 
-		&val);
-  oem_code = val;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = timestamp;
-  asprintf (&(sel_rec->sensor_desc), 
-	    "%s #%d", 
-	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  asprintf (&(sel_rec->event_desc), "%s", "N/A");
-  asprintf (&(sel_rec->generator_id), "%s", "N/A");
-  
-  return 0;
-}
-
-int 
-get_sel_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int32_t manufacturer_id;
-  u_int64_t oem_defined;
-  u_int64_t val;
-  
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_timestamped_oem_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_timestamped_oem_record, 
-		"timestamp", 
-		&val);
-  timestamp = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_timestamped_oem_record, 
-		"manufacturer_id", 
-		&val);
-  manufacturer_id = val;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_timestamped_oem_record, 
-		"oem_defined", 
-		&val);
-  oem_defined = val;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = timestamp;
-  asprintf (&(sel_rec->sensor_desc), "%s", "N/A");
-  asprintf (&(sel_rec->event_desc), 
-	    "Manufacturer ID: %X, OEM defined: " F_X64, 
-	    manufacturer_id, oem_defined);
-  asprintf (&(sel_rec->generator_id), "%s", "N/A");
-  
-  return 0;
-}
-
-int 
-get_sel_non_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_rec)
-{
-  u_int16_t record_id;
-  u_int8_t *oem_defined;
-  int8_t oem_defined_index;
-  u_int64_t val;
-  int i;
-  
-  fiid_obj_get (record_data, 
-		tmpl_sel_non_timestamped_oem_record, 
-		"record_id", 
-		&val);
-  record_id = val;
-  
-  oem_defined_index = fiid_obj_field_start_bytes (tmpl_sel_non_timestamped_oem_record, 
-						  "oem_defined");
-  if (oem_defined_index == -1)
-    return 1;
-  oem_defined = record_data + oem_defined_index;
-  
-  sel_rec->record_id = record_id;
-  sel_rec->timestamp = 0;
-  asprintf (&(sel_rec->sensor_desc), "%s", "N/A");
-  {
-    int len = 0;
-    char *oem_defined_string = NULL;
-    char element[4];
-    
-    len = (fiid_obj_len_bytes (tmpl_sel_non_timestamped_oem_record) - 
-	   oem_defined_index);
-    oem_defined_string = alloca (sizeof (char) * ((len * 3) + 1));
-    oem_defined_string[0] = '\0';
-    for (i = 0; i < len; i++)
-      {
-	snprintf (element, 4, "%02X ", oem_defined[i]);
-	strcat (oem_defined_string, element);
-      }
-    
-    asprintf (&(sel_rec->event_desc), "OEM defined: %s", oem_defined_string);
-  }
-  asprintf (&(sel_rec->generator_id), "%s", "N/A");
+  if (str)
+    {
+      asprintf (&(sel_record->event_message), "OEM defined = %s", str);
+      free (str);
+    }
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
   
   return 0;
 }
@@ -1640,41 +448,23 @@ int
 get_sel_record (u_int8_t *record_data, struct sel_record *sel_rec)
 {
   u_int8_t record_type;
-  u_int8_t event_type_code;
   u_int64_t val;
   
-  fiid_obj_get (record_data, 
-		tmpl_sel_record_header, 
-		"record_type", 
+  fiid_obj_get (record_data,
+		tmpl_sel_record_header,
+		"record_type",
 		&val);
   record_type = val;
   
   switch (ipmi_get_sel_record_type (record_type))
     {
     case IPMI_SEL_SYSTEM_EVENT_RECORD:
-      fiid_obj_get (record_data, 
-		    tmpl_sel_system_event_record, 
-		    "event_type_code", 
-		    &val);
-      event_type_code = val;
-      /* 	  printf ("event_type_code: %02X\n", event_type_code); */
-      switch (ipmi_sensor_classify (event_type_code))
-	{
-	case IPMI_SENSOR_CLASS_THRESHOLD:
-	  return get_sel_threshold_system_event_record (record_data, sel_rec);
-	case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-	  return get_sel_generic_discrete_system_event_record (record_data, sel_rec);
-	case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-	  return get_sel_discrete_system_event_record (record_data, sel_rec);
-	case IPMI_SENSOR_CLASS_OEM:
-	  return get_sel_oem_system_event_record (record_data, sel_rec);
-	}
-      break;
+      return get_sel_system_event_record (record_data, sel_rec);
     case IPMI_SEL_TIMESTAMPED_OEM_RECORD:
       return get_sel_timestamped_oem_record (record_data, sel_rec);
     case IPMI_SEL_NON_TIMESTAMPED_OEM_RECORD:
       return get_sel_non_timestamped_oem_record (record_data, sel_rec);
     }
+  
   return -1;
 }
-

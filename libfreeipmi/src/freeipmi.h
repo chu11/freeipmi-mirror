@@ -90,6 +90,7 @@ extern "C" {
 #include "ipmi-ping.h"
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
+#include "ipmi-sensor-event-messages.h"
 
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
@@ -188,6 +189,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-ping.h>
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
+#include <freeipmi/ipmi-sensor-event-messages.h>
 #endif
 
 #ifdef __cplusplus

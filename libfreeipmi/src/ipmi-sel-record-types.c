@@ -74,7 +74,17 @@ fiid_template_t tmpl_sel_system_event_record =
     {7, "event_type_code"}, 
     {1, "assertion_deassertion_event"}, 
     
-    {24, "event_data"}, 
+    //Event Data 1
+    {4, "event_reading_code_offset"}, 
+    {2, "event_data3_flag"}, 
+    {2, "event_data2_flag"}, 
+    
+    //Event Data 2
+    {8, "event_data2"}, 
+    
+    //Event Data 3
+    {8, "event_data3"}, 
+    
     {0, ""}
   };
 
@@ -96,58 +106,6 @@ fiid_template_t tmpl_sel_non_timestamped_oem_record =
     {104, "oem_defined"}, 
     {0, ""}
   };
-
-
-fiid_template_t tmpl_threshold_event_data = 
-  {
-    //Event Data 1
-    {4, "event_reading_code_offset"}, 
-    {2, "trigger_threshold_value_flag"}, 
-    {2, "trigger_reading_flag"}, 
-    
-    //Event Data 2
-    {8, "trigger_reading"}, 
-    
-    //Event Data 3
-    {8, "trigger_threshold_value"}, 
-    
-    {0, ""}
-  };
-
-fiid_template_t tmpl_discrete_event_data = 
-  {
-    //Event Data 1
-    {4, "event_reading_code_offset"}, 
-    {2, "oem_code_flag"}, 
-    {2, "prev_discrete_event_state_severity_flag"}, 
-    
-    //Event Data 2
-    {4, "prev_discrete_event_state"}, 
-    {4, "severity_event_reading_code"}, 
-    
-    //Event Data 3
-    {8, "oem_code"}, 
-    
-    {0, ""}
-  };
-
-fiid_template_t tmpl_oem_event_data = 
-  {
-    //Event Data 1
-    {4, "event_reading_code_offset"}, 
-    {2, "oem_code_flag"}, 
-    {2, "prev_discrete_event_state_severity_flag"}, 
-    
-    //Event Data 2
-    {4, "oem_code_bits_prev_discrete_event_state"}, 
-    {4, "oem_code_severity_event_reading_code"}, 
-    
-    //Event Data 3
-    {8, "oem_code"}, 
-    
-    {0, ""}
-  };
-
 
 int 
 ipmi_get_sel_record_type (u_int8_t record_type)

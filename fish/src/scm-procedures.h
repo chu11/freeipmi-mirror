@@ -65,8 +65,6 @@ SCM ex_sensors_cache_get_current_group ();
 SCM ex_sensors_get_group_list ();
 SCM ex_sdr_get_repo_info ();
 SCM ex_kcs_get_poll_count ();
-SCM ex_sel_display_first_entry ();
-SCM ex_sel_display_next_entry ();
 SCM ex_sel_get_first_entry ();
 SCM ex_sel_get_next_entry ();
 SCM ex_sel_get_first_entry_raw ();
