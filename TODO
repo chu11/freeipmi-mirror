@@ -101,3 +101,6 @@ Later on:
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
   * Extra documentation on bmc-config
+  * IPMI plugin for ethereal/tethereal/etc.
+    - achu: Would this even require linking with FreeIPMI?  I have no
+      idea.  Need to research this.
