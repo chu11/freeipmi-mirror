@@ -43,7 +43,6 @@ Bmc-watchdog
 - Add probing for proper base address
 - Add suspend arp options
 - Require Timer use to be SMS/OS?
-- Why doesn't disabled logging not log?
 
 Ipmipower
 
