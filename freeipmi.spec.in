@@ -49,10 +49,10 @@ mkdir -p $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{?_with_bmc_watchdog_setup:1}%{!?_with_bmc_watchdog_setup:0}
 %post utils
+%if %{?_with_bmc_watchdog_setup:1}%{!?_with_bmc_watchdog_setup:0}
 #
-# Install bmc-watchdog, but not by default
+# Start bmc-watchdog, but not by default
 #
 if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
     [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
@@ -61,6 +61,16 @@ if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
        /etc/rc.d/init.d/bmc-watchdog restart
     else
        /etc/rc.d/init.d/bmc-watchdog start
+    fi
+fi
+%endif
+%if %{?_with_powerman_restart:1}%{!?_with_powerman_restart:0}
+#
+# Restart powerman if it exists 
+#
+if [ -x /etc/rc.d/init.d/powerman ]; then
+    if /etc/rc.d/init.d/powerman status | grep -q running; then
+       /etc/rc.d/init.d/powerman restart
     fi
 fi
 %endif

@@ -1,8 +1,11 @@
+2004-05-19  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Added optional powerman restart check.
+	
 2004-05-18  A Balamurugan  <bala.a@californiadigital.com>
 
 	* doc/examples/hello-sensors.c: fixed.
 	
-
 2004-05-18  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/bmc-watchdog: Fix careless cut and paste typo.
