@@ -33,6 +33,9 @@
 #endif
 
 #include <errno.h>
+#ifdef __FreeBSD__
+#include <sys/time.h>
+#endif
 
 #include "freeipmi.h"
 

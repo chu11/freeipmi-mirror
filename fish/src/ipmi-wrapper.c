@@ -35,6 +35,9 @@ char *alloca ();
 #endif
 
 #include <stdio.h>
+#ifdef __FreeBSD__
+#include <sys/types.h>
+#endif
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -44,7 +47,11 @@ char *alloca ();
 #include <string.h>
 #endif
 
+#ifdef __FreeBSD__
+#include <stdlib.h>
+#else
 #include <alloca.h>
+#endif
 #include <netdb.h>
 
 #include "fish.h"

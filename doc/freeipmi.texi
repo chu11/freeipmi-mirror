@@ -151,6 +151,20 @@ List of dependencies under Fedora or RedHat GNU/Linux:
 @item GNU Readline - readline-4.x, readline-devel-4.x
 @end itemize
 
+List of dependencies under FreeBSD:
+@itemize @bullet
+@item FreeBSD (tested on FreeBSD 5.3-BETA7) - @*
+You will need "options SYSVSEM" in your kernel config or sysvsem.ko
+module loaded. On FreeBSD > 5.2.1 You will also need "device io" in
+kernel or loaded as module unless You specify USE_IOPERM compilation
+option (see note on i386_set_ioperm below).
+
+@item guile library (tested with guile-1.6.4_6) - ports/lang/guile
+@item argp library (tested with argp-standalone-1.3) -
+ports/devel/argp-standalone. 
+@item gmake
+@end itemize
+
 @node Build, Test Fire, Dependencies, Installation
 @section Building the source package.
 
@@ -172,6 +186,35 @@ Note: Please run @command{./autogen.sh} script before
  # make install
 @end example
 
+@subsection Installing under FreeBSD:
+
+Example:
+@example
+  tar xzvf freeipmi-0.1.3.tar.gz
+  cd freeipmi-0.1.3
+  env CFLAGS="-I/usr/local/include" \
+    LDFLAGS="-L/usr/local/lib -largp" \
+    ./configure
+  gmake all
+  # su to root
+  gmake install
+  mkdir -p /var/lib/freeipmi
+  chmod 0700 /var/lib/freeipmi
+  touch /var/lib/freeipmi/ipckey
+@end example
+
+@subsubsection Using i386_set_ioperm(2) instead of io(4) under FreeBSD:
+i386_set_ioperm has known issues on FreeBSD 5.x (bus errors
+on io port access), so this patch uses io(4) to access io ports by default.
+To enable using i386_set_ioperm instead of io(4) specify USE_IOPERM
+copmilation option at configure time:
+
+Example:
+@example
+    env CFLAGS="-DUSE_IOPERM -I/usr/local/include" \
+      LDFLAGS="-L/usr/local/lib -largp" \
+      ./configure
+@end example
 
 @node Test Fire,  , Build, Installation
 @section Test Fire

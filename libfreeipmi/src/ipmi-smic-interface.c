@@ -29,6 +29,10 @@
 #include <string.h>
 #endif
 
+#if defined(__FreeBSD__) && !defined(USE_IOPERM)
+#include <fcntl.h>
+#endif
+
 #include <errno.h>
 #include "freeipmi.h"
 
@@ -40,6 +44,9 @@
 #define _OUTB(data, port)  outb (data, port)
 #endif
 
+#if defined(__FreeBSD__) && !defined(USE_IOPERM)
+static int ipmi_smic_dev_io_fd = -1;
+#endif
 
 static u_int64_t smic_poll_count;
 static unsigned long smic_sleep_usecs = IPMI_SMIC_SLEEP_USECS;
@@ -62,8 +69,17 @@ ipmi_smic_io_init (u_int8_t sms_io_base, unsigned long sleep_usecs)
 {
   smic_sleep_usecs = sleep_usecs;
 
-#if defined(__FreeBSD__)
-  return (ioperm (sms_io_base, 0x02, 0x01));
+#ifdef __FreeBSD__
+#ifdef USE_IOPERM
+  /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
+  return (i386_set_ioperm(sms_io_base, 0x02, 0x01));
+#else
+  /* Opening /dev/io raises IOPL bits for that process. */
+  /* XXX This fd will remain open until exit as there is no
+   * uninitialization routine. */
+  ipmi_smic_dev_io_fd = open("/dev/io", O_RDONLY);
+  return (ipmi_smic_dev_io_fd == -1 ? -1 : 0);
+#endif
 #else
   return (iopl (3));
 #endif

@@ -1,3 +1,25 @@
+2004-10-28  Anand Babu  <ab@gnu.org.in>
+
+	* bmc-watchdog/src/bmc-watchdog.c fish/src/fi-commands.c
+	fish/src/fi-utils.c fish/src/fi-utils.h fish/src/fish.c
+	fish/src/ipmi-wrapper-sensor.c fish/src/ipmi-wrapper.c
+	fish/src/scm-procedures.c fish/src/xmalloc.h
+	ipmipower/src/ipmipower_output.c ipmipower/src/wrappers.c
+	ipmipower/src/wrappers.h libfreeipmi/src/freeipmi.h
+	libfreeipmi/src/ipmi-kcs-interface.c
+	libfreeipmi/src/ipmi-lan-interface.c
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	libfreeipmi/src/ipmi-sdr-repo-cache.c
+	libfreeipmi/src/ipmi-semaphores.h
+	libfreeipmi/src/ipmi-smic-interface.c libfreeipmi/src/ipmi-utils.c
+	libfreeipmi/src/ipmi-watchdog.c libfreeipmi/src/libfreeipmi.c
+	libfreeipmi/src/rmcp.c: Applied patch for FreeBSD port by 
+	Dmitry Frolov <frolov@riss-telecom.ru>.  Tested on FreeBSD
+	5.3-BETA7. 
+	* doc/freeipmi.texi: Updated doc on installation under FreeBSD.
+	* THANKS: Added Dimitry Frolov and other contributors.
+	* AUTHORS: Added package maintainers section.
+
 2004-10-27  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: more PEF commands.

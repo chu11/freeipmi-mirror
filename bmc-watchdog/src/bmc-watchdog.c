@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.17 2004-10-25 19:23:27 itz Exp $
+ *  $Id: bmc-watchdog.c,v 1.18 2004-10-28 07:33:59 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif
+#ifndef __FreeBSD__
 #include <sys/io.h>
+#endif
 #include <syslog.h>
 #include <assert.h>
 #include <stdarg.h>
@@ -1813,9 +1815,22 @@ _daemon_cmd(void)
 int 
 main(int argc, char **argv)
 {
+#if	defined(__FreeBSD__) && !defined(USE_IOPERM)
+  int dev_io_fd;
+#endif
+
   _err_init(argv[0]);
 
+#ifdef __FreeBSD__
+#ifdef USE_IOPERM
+  if (i386_set_ioperm(0, 0x10000, 1) == -1)
+#else
+  dev_io_fd = open("/dev/io", O_RDONLY);
+  if (dev_io_fd == -1)
+#endif /* !USE_IOPERM */
+#else
   if(iopl(3) != 0)
+#endif /* !__FreeBSD__ */
     {
       /* glibc bug on older ia64 systems returns EACCES instead of EPERM */  
       if (errno == EPERM || errno == EACCES)
@@ -1850,6 +1865,10 @@ main(int argc, char **argv)
     _daemon_cmd();
   else
     _err_exit("internal error, command not set");
+
+#if defined(__FreeBSD__) && !defined(USE_IOPERM)
+  close(dev_io_fd);
+#endif
             
   close(logfile_fd);
   closelog();

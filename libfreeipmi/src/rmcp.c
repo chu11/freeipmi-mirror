@@ -62,8 +62,16 @@ memset (void *s, int c, size_t n)
 # endif
 #endif
 
+#ifdef __FreeBSD__
+#include <sys/types.h>
+#endif
+
 #include <errno.h>
 #include <netinet/in.h>
+
+#if defined(__FreeBSD__) && !defined(EBADMSG)
+#define EBADMSG		ENOMSG
+#endif
 
 #include "freeipmi.h"
 

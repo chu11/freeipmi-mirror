@@ -1,8 +1,116 @@
-Copyright 1994, 1995, 1996, 1999, 2000, 2001, 2002 Free Software
-Foundation, Inc.
+GNU FreeIPMI Installation:
+**************************
 
    This file is free documentation; the Free Software Foundation gives
 unlimited permission to copy, distribute and modify it.
+
+GNU Free Documentation Licence V1.2 or later.
+Copyright 2004 FreeIPMI Core Team
+
+Installing on GNU/Linux:
+========================
+Dependencies:
+-------------
+GNU FreeIPMI is designed to have minimum dependencies on other
+libraries and tools.  FreeIPMI Shell alone depends on GNU Guile and
+GNU Readline for the convenience of extension, scripting and GNU Bash
+like user interface.  libfreeipmi library has virtually no
+dependencies at all.
+
+   List of dependencies under Debian GNU/Linux:
+   * GNU Guile    - guile-1.6, guile-1.6-dev
+
+   * GNU Readline - libreadline4, libreadline4-dev
+
+   List of dependencies under Fedora or RedHat GNU/Linux:
+   * GNU Guile    - guile-1.6.x, guile-devel-1.6.x.
+
+   * GNU Readline - readline-4.x, readline-devel-4.x
+
+Building the source package:
+----------------------------
+To compile the program, you must first run the `configure' script
+included with the source tar ball.  It works just like any other
+standard GNU `autoconf' created script.  See the more generic
+configure related installation instructions below.
+
+   For complete list of options, try `configure --help'.
+
+   Note: Please run `./autogen.sh' script before `./configure', if you
+are compiling FreeIPMI source from CVS.
+
+      # ./configure --prefix=/usr
+      # make
+      # make install
+
+
+Test Fire:
+----------
+GNU FreeIPMI works both in-band (with-in the system) and out-of-band
+(over the network).  Easiest way to test if your system has IPMI
+support or if the installation is OK is through `bmc-info' command.
+
+   Test if IPMI works:
+     debian-ia64:~# bmc-info
+     Device ID:         20
+     Device Revision:   1
+                        [SDR Support]
+     Firmware Revision: 0.27
+                        [Device Available (normal operation)]
+     IPMI Version:      1.5
+     Additional Device Support:
+                        [Sensor Device]
+                        [SDR Repository Device]
+                        [SEL Device]
+                        [FRU Inventory Device]
+                        [IPMB Event Receiver]
+                        [Chassis Device]
+     Manufacturer ID:   157h
+     Product ID:        100h
+     Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
+     debian-ia64:~#
+
+
+Installing on FreeBSD: 
+=====================
+          Contributed by Dmitry Frolov <frol(at)nov.net>
+Requirements:
+-------------
+  1. FreeBSD (tested on FreeBSD 5.3-BETA7).
+     You will need "options SYSVSEM" in your kernel config
+     or sysvsem.ko module loaded. On FreeBSD > 5.2.1 You will
+     also need "device io" in kernel or loaded as module unless
+     You specify USE_IOPERM compilation option (see note
+     on i386_set_ioperm below).
+  2. guile library (ports/lang/guile, tested with guile-1.6.4_6)
+  3. argp library (ports/devel/argp-standalone, argp-standalone-1.3 tested)
+  4. gmake
+
+Installation:
+-------------
+  tar xzvf freeipmi-0.1.3.tar.gz
+  cd freeipmi-0.1.3
+  patch -p0 < /path/to/this/patch
+  env CFLAGS="-I/usr/local/include" \
+    LDFLAGS="-L/usr/local/lib -largp" \
+    ./configure
+  gmake all
+  # su to root
+  gmake install
+  mkdir -p /var/lib/freeipmi
+  chmod 0700 /var/lib/freeipmi
+  touch /var/lib/freeipmi/ipckey
+
+Using i386_set_ioperm(2) instead of io(4):
+------------------------------------------
+  i386_set_ioperm has known issues on FreeBSD 5.x (bus errors
+  on io port access), so this patch uses io(4) to access io ports by default.
+  To enable using i386_set_ioperm instead of io(4) specify USE_IOPERM
+  copmilation option at configure time:
+
+    env CFLAGS="-DUSE_IOPERM -I/usr/local/include" \
+      LDFLAGS="-L/usr/local/lib -largp" \
+      ./configure
 
 Basic Installation
 ==================

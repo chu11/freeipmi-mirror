@@ -62,6 +62,10 @@ memset (void *s, int c, size_t n)
 # endif
 #endif
 
+#ifdef __FreeBSD__
+#include <sys/types.h>
+#endif
+
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>

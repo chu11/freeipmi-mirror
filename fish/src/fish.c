@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.6 2004-10-22 00:17:08 itz Exp $ 
+   $Id: fish.c,v 1.7 2004-10-28 07:33:59 ab Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -36,7 +36,9 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/socket.h>
+#ifndef __FreeBSD__
 #include <error.h>
+#endif
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>

@@ -56,7 +56,11 @@ void free ();
 # define _(Text) Text
 #endif
 
+#ifdef __FreeBSD__
+#include "freeipmi.h"
+#else
 #include "error.h"
+#endif
 
 #ifndef EXIT_FAILURE
 # define EXIT_FAILURE 1
@@ -71,10 +75,12 @@ char *xstrdup (char *p);
 void xfree (__VOID *p);
 #endif
 
+#ifndef __FreeBSD__
 #if __STDC__ && (HAVE_VPRINTF || HAVE_DOPRNT)
 void error (int, int, const char *, ...);
 #else
 void error ();
+#endif
 #endif
 
 #ifdef __cplusplus

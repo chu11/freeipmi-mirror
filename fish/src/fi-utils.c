@@ -80,7 +80,11 @@ strchr (const char* s, int c)
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
+#ifdef __FreeBSD__
+#include "freeipmi.h"
+#else
 #include <error.h>
+#endif
 
 #include <sys/socket.h>
 #include <netinet/in.h>

@@ -62,6 +62,10 @@ memset (void *s, int c, size_t n)
 # endif
 #endif
 
+#if defined(__FreeBSD__) && !defined(USE_IOPERM)
+#include <fcntl.h>
+#endif
+
 #include <errno.h>
 #include "freeipmi.h"
 
@@ -76,6 +80,10 @@ memset (void *s, int c, size_t n)
 static u_int64_t kcs_poll_count;
 static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS;
 static int kcs_mutex_semid;
+
+#if defined(__FreeBSD__) && !defined(USE_IOPERM)
+static int ipmi_ksc_dev_io_fd = -1;
+#endif
 
 fiid_template_t tmpl_hdr_kcs =
   {
@@ -104,8 +112,17 @@ ipmi_kcs_io_init (u_int16_t sms_io_base, unsigned long sleep_usecs)
   kcs_mutex_semid = ipmi_mutex_init (IPMI_KCS_IPCKEY ());
   ERR (kcs_mutex_semid != -1);
 
-#if defined(__FreeBSD__)
-  return (ioperm (sms_io_base, 0x02, 0x01));
+#ifdef __FreeBSD__
+#ifdef USE_IOPERM
+  /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
+  return (i386_set_ioperm(sms_io_base, 0x02, 0x01));
+#else
+  /* Opening /dev/io raises IOPL bits for current process. */
+  /* XXX This fd will remain open until exit as there is no
+   * uninitialization routine. */
+  ipmi_ksc_dev_io_fd = open("/dev/io", O_RDONLY);
+  return (ipmi_ksc_dev_io_fd == -1 ? -1 : 0);
+#endif
 #else
   return (iopl (3));
 #endif

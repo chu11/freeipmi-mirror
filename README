@@ -1,8 +1,3 @@
-	libfreeipmi - C library interface to FreeIPMI
-
-	fish - Free IPMI SHell - an extensible console based shell for
-        managing large number of IPMI compatible systems.
-
   Copyright (C) 2003 FreeIPMI Core Team
 
   fish is free software; you can redistribute it and/or modify

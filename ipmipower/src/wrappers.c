@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.2 2004-10-08 23:16:44 ab Exp $
+ *  $Id: wrappers.c,v 1.3 2004-10-28 07:33:59 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,6 +49,18 @@
 #include <sys/wait.h>
 #endif
 #include <sys/poll.h>
+
+#ifdef __FreeBSD__
+#include <sys/param.h>
+#if __FreeBSD_version >= 502010
+#include <sys/limits.h>
+#else
+#include <machine/limits.h>
+#endif
+#ifndef REG_NOERROR
+#define REG_NOERROR 0
+#endif
+#endif /* __FreeBSD__ */
 
 #include "wrappers.h"
 #include "cbuf.h"
@@ -362,7 +374,10 @@ int Accept(int fd, struct sockaddr_in *addr, socklen_t * addrlen)
          */
         if (!((errno == EWOULDBLOCK) ||
               (errno == ECONNABORTED) ||
-              (errno == EPROTO) || (errno == EINTR)))
+#ifndef __FreeBSD__
+              (errno == EPROTO) ||
+#endif
+              (errno == EINTR)))
             lsd_fatal_error(__FILE__, __LINE__, "accept");
     }
     return new;
@@ -509,8 +524,10 @@ Regexec(const regex_t * preg, const char *string,
     int n;
     char buf[MAX_REG_BUF];
 
+#ifndef __FreeBSD__
     /* Review: undocumented, is it needed? */
     re_syntax_options = RE_SYNTAX_POSIX_EXTENDED;
+#endif
     Strncpy(buf, string, MAX_REG_BUF);
     n = regexec(preg, buf, nmatch, pmatch, eflags);
     return n;

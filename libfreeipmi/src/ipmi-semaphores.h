@@ -79,7 +79,7 @@ do {								    \
 
 #define IPMI_MUTEX_UP(semid)                 IPMI_MUTEX_UNLOCK (semid)
 
-#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
+#if defined(__FreeBSD__)
   /* union semun is defined by including <sys/sem.h> */
 #else
   /* according to X/OPEN we have to define it ourselves */

@@ -54,6 +54,10 @@ char *alloca ();
 # endif
 #endif
 
+#if defined(__FreeBSD__) && !defined(EBADMSG)
+#define EBADMSG		ENOMSG
+#endif
+
 #include "fish.h"
 #include "extension.h"
 #include "fi-utils.h"

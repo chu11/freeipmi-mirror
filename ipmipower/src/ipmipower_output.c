@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.4 2004-10-28 07:33:59 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,7 +123,7 @@ ipmipower_output_finish(void)
   return;
 }
 
-auth_type_t 
+output_type_t 
 ipmipower_output_index(char *str) 
 {
   assert(str != NULL);

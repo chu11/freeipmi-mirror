@@ -90,6 +90,63 @@ extern "C" {
 #include "ipmi-ping.h"
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
+
+#ifdef __FreeBSD__
+extern void freeipmi_error(int __status, int __errnum,
+	const char *__format, ...)
+		__attribute__ ((__format__ (__printf__, 3, 4)));
+char *freeipmi_strndup(const char *, size_t);
+ssize_t freeipmi_getline(char **buf, size_t *bufsize, FILE *fp);
+
+#define error	freeipmi_error
+#define strndup	freeipmi_strndup
+#define getline	freeipmi_getline
+
+#if __GNUC__
+#define _program_name   __progname
+#define program_invocation_short_name	__progname
+extern char *__progname;
+#else
+#define _program_name   (NULL)
+#define	program_invocation_short_name	(NULL)
+#endif /* !__GNUC__ */
+
+/* Replacements for glibc-isms */
+
+#ifdef __GNUC__
+/* Duplicate S, returning an identical alloca'd string.  */
+#define strdupa(s)                             \
+ (__extension__                                \
+  ({                                           \
+   __const char *__old = (s);                  \
+   size_t __len = strlen (__old) + 1;          \
+   char *__new = (char *) alloca (__len);      \
+   (char *) memcpy (__new, __old, __len);      \
+  }))
+
+/* Return an alloca'd copy of at most N bytes of string.  */
+#define strndupa(s, n)                         \
+ (__extension__                                \
+  ({                                           \
+   __const char *__old = (s);                  \
+   size_t __len = strlen (__old);              \
+   char *__new = (char *) alloca (__len + 1);  \
+   __new[__len] = '\0';                        \
+   (char *) memcpy (__new, __old, __len);      \
+  }))
+
+/* Evaluate EXPRESSION, and repeat as long as it returns -1 with `errno'
+ *    set to EINTR.  */
+
+#define TEMP_FAILURE_RETRY(expression)         \
+ (__extension__                                \
+  ({ long int __result;                        \
+   do __result = (long int) (expression);      \
+   while (__result == -1L && errno == EINTR);  \
+  __result; }))
+#endif /* __GNUC__ */
+
+#endif /* __FreeBSD__ */
 #else
 #include <freeipmi/bit-ops.h>
 #include <freeipmi/fiid.h>

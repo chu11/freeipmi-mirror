@@ -72,9 +72,11 @@ int temp_rl_point;
   bell (); \
 }
 
+#ifndef __FreeBSD__
 /* defining strcasestr function temporarily */
 extern char *strcasestr (__const char *__haystack, __const char *__needle)
      __THROW __attribute_pure__;
+#endif
 
 void get_terminal_attributes (void);
 void set_terminal_attributes (void);

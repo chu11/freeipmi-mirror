@@ -6,7 +6,11 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifdef __FreeBSD__
+#include <stdlib.h>
+#else
 #include <alloca.h>
+#endif
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
