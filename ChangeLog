@@ -1,3 +1,46 @@
+2004-11-12  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_get_channel_auth_caps, ipmi_lan_get_session_challenge,
+	ipmi_lan_activate_session, ipmi_lan_set_session_priv_level,
+	ipmi_lan_close_session): Remove check for completion code after
+	call to ipmi_lan_cmd().  Check should be done by caller and
+	handled as it feels necessary.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_lan_open_session):
+	Check for completion code errors.
+
+	* configure.ac: Added --enable-syslog option.
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_comp_test): Remove syslogging
+	as default behavior.
+
+	* libfreeipmi/src/ipmi-error.h (__IPMI_TRACE, __IPMI_SYSLOG): New
+	macros.
+
+	* libfreeipmi/src/ipmi-error.h (ERR, ERR_EXIT): Cleaned up macros.
+	Disable syslogging as default behavior.
+
+	* fish/src/ipmi-wrapper.c (lan_close_session): Check completion
+	code.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_output.c,
+	ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in,
+	ipmipower/src/ipmipower.c: Changed "hostlist" output type to
+	"hostrange" type.  Globally reworded documentation and variable
+	names around this change.
+
+	* ipmipower/ipmipower.8.in: Added IPMI over LAN and
+	TROUBLESHOOTING sections.  Cleaned up various wording.
+
+	* ipmipower/ipmipower.conf.5.in, bmc-watchdog/bmc-watchdog.8.in,
+	ipmiping/ipmiping.8.in, rmcpping/rmcpping.8.in: Cleaned up some
+	wording and updated ORIGIN to be consistent to other LLNL
+	projects.
+
+	* README: This isn't the fish project, its the FreeIPMI project
+	:-)
+	
 2004-11-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd): Make
