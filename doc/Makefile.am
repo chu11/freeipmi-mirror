@@ -4,14 +4,13 @@ EXTRA_DIST = BUGS freeipmi-hackers-intro.sxi ipmi-network-layout.fig ipmi-over-t
 
 #  build and install the .info pages
 info_TEXINFOS = freeipmi.texi
-freeipmi_TEXINFOS = authors.texi version.texi gpl.texi fdl.texi permissions.texi
+freeipmi_TEXINFOS = authors.texi gpl.texi fdl.texi permissions.texi
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 
 export docdir
 
-doc_DATA = $(EXTRA_DIST) freeipmi.texi authors.texi gpl.texi version.texi fdl.texi \
-	   permissions.texi
+doc_DATA = $(EXTRA_DIST)
 
 ipmi-network-layout.pdf: ipmi-network-layout.fig Makefile
 	fig2dev -L pdf $< ipmi-network-layout.pdf
