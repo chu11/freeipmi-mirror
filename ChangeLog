@@ -1,5 +1,11 @@
 2004-05-13  Ian Zimmerman  <itz@californiadigital.com>
 
+	* fish/src/bmc-conf-key-utils.c: make bmc_config_key_list static,
+	it is not used outside of its defining file.
+
+	* fish/src/bmc-conf-key-utils.h: remove bmc_config_key_list and
+	make it static, it is not used outside of its defining file.
+
 	* fish/src/bmc-conf-checkout.c, fish/src/bmc-conf-commit.c,
 	fish/src/bmc-conf-utils.c, fish/src/ipmi-wrapper-sel.c,
 	fish/src/ipmi-wrapper.c, fish/src/scm-procedures.c,

@@ -28,7 +28,7 @@ strchr (const char* s, int c)
 #include "fi-utils.h"
 #include "bmc-conf-key-utils.h"
 
-const char *bmc_config_key_list[] = 
+static const char *bmc_config_key_list[] = 
   {
     "bmc_generated_gratuitous_arps_flag", 
     "bmc_generated_arp_responses_flag", 
