@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.1 2004-05-11 17:04:38 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.2 2004-11-15 20:45:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,8 +75,8 @@ struct ipmipower_config *conf = NULL;
 struct ipmipower_connection *ics = NULL;
 
 /* Array of hostlists for short output */
-int output_hostlist_flag = 0;
-hostlist_t output_hostlist[MSG_TYPE_NUM];
+int output_hostrange_flag = 0;
+hostlist_t output_hostrange[MSG_TYPE_NUM];
 
 /* 
  * _secure_setup
@@ -132,7 +132,7 @@ _setup(void)
 
   for (i = 0; i < MSG_TYPE_NUM; i++) 
     {
-      if ((output_hostlist[i] = hostlist_create(NULL)) == NULL)
+      if ((output_hostrange[i] = hostlist_create(NULL)) == NULL)
         err_exit("hostlist_create() error");
     }
   
@@ -180,7 +180,7 @@ _cleanup(void)
   ipmipower_connection_array_destroy(ics, conf->hosts_count);
 
   for (i = 0; i < MSG_TYPE_NUM; i++)
-    hostlist_destroy(output_hostlist[i]);
+    hostlist_destroy(output_hostrange[i]);
 
   hostlist_destroy(conf->hosts);
 

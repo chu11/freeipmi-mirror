@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.1 2004-10-14 23:56:04 itz Exp $
+\."$Id: ipmipower.8.in,v 1.2 2004-11-15 20:45:58 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,20 +24,21 @@
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
 .TH ipmipower 8 "April 2004" "ipmipower @VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 ipmipower \- IPMI power control utility
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B ipmipower
 .I "[OPTIONS]"
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B ipmipower
-implements power control through IPMI over LAN v1.5.  
+allows users to remotely power on, off, cycle, hard reset, status
+query, pulse diagnostic interrupt, or initiate a soft-shutdown of the
+OS via ACPI through the IPMI over LAN protocol.  See IPMI over LAN
+below for more information on IPMI.
 
-Whenever a power command (--on, --off, --cycle, --reset, --stat,
---pulse, or --soft) is specified on the command line,
+When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
+or --soft) is specified on the command line,
 .B ipmipower 
-will run in non-interactive mode.  
-.B Ipmipower 
 will attempt to run the power command on all hostnames listed on the
 command line then exit.
 
@@ -48,29 +49,45 @@ command line interface to enter various commands.  Details of the
 interactive command line interface can be found below under
 INTERACTIVE COMMANDS.
 
-See EXAMPLES below examples of how ipmipower is commonly used.
+See EXAMPLES below for examples of how ipmipower is commonly used.
 
-.SH BASIC OPTIONS
-The following options are basic options for 
+.SH "IPMI over LAN"
+IPMI over LAN communicates with a remote machine by sending UDP
+packets under IPv4 to the remote machine's Baseboard Management
+Controller (BMC).  The BMC is typically communicated to through port
+623 of the the onboard ethernet NIC on the motherboard.  At this point
+in time,
+.B ipmipower 
+assumes all communication is done through port 623.
+
+Before any IPMI over LAN communication can take place, the remote
+machine's BMC must be configured properly.  Of primary importance, the
+IP address, MAC address, subnet, usernames, passwords, privileges,
+acceptable authentication types, and LAN enabled communication must be
+configured on BMC.  Most power control commands require a privilege
+level of atleast OPERATOR.  The FreeIPMI tool
+.B bmc-config(1) 
+may be used to do this configuration.  A BMC configuration tool may
+have also been distributed with the machine.
+
+.SH "BASIC OPTIONS"
+The following options are the most common options used with  
 .B ipmipower.
 .TP
 .I "-h, --hostnames host1,host2,..."
-The list of hostname addresses to be controlled by 
+Specify the list of remote hosts to be controlled by 
 .B ipmipower.  
-The hostnames must resolve to the IP address of the NIC connected to
-the remote host Base Mother Controller (BMC).  If hostnames do not
-resolve to proper BMC IP addresses, RMCP ping messages will not
-discover the remote host or power commands will time out.  This option
-is required if a power command (--on, --off, --cycle, --reset, or
---stat, --pulse, --soft) is specified on the command line.  Hostnames
-may be specified in a range format; see HOST RANGES below.
+This option is required if a power command (--on, --off, --cycle,
+--reset, --stat, --pulse, or --soft) is specified on the command line.
+Hostnames may be specified in a range format; see HOST RANGES below.
 .TP
 .I "-u, --username name"
-Sets the username to use when authenticating with the BMC.  The user
-must have OPERATOR or ADMINISTRATOR privilege to run the --on, --off,
---reset, --cycle, --pulse, or --soft power control commands.  The user
-needs only USER privileges to determine the status of the machine
-through --stat.  If not specified, a null username is assumed.
+Sets the username to use when authenticating with the remote host.
+The user must have OPERATOR or ADMINISTRATOR privilege to run the
+--on, --off, --reset, --cycle, --pulse, or --soft power control
+commands.  The user only needs USER privileges to determine the power
+status of the machine through --stat.  If not specified, a null
+username is assumed.
 .TP
 .I "-p, --password pw"
 Sets the password to use when authenticating with the BMC.  If not
@@ -106,8 +123,9 @@ Output version and exit.
 .I "-C, --config file"
 Specify alternate configuration file.
 .LP
-.SH ADVANCED OPTIONS
-The following advanced options are used to change the behavior of
+.SH "ADVANCED OPTIONS"
+The following advanced options are used to change the default behavior
+of 
 .B ipmipower.
 .TP
 .I "-a, --authtype str"
@@ -119,9 +137,9 @@ The currently available authentication types are "none",
 uses "straight_passwd_key" authentication.
 .TP
 .I "-g, --on-if-off"
-The IPMI specification does not require the cycle or reset commands to
-turn on a machine that is currently powered off.  This option will
-force
+The IPMI specification does not require the power cycle or hard reset
+commands to turn on a machine that is currently powered off.  This
+option will force
 .B ipmipower 
 to issue a power on command instead of a power cycle or hard reset
 command if the remote machine's power is currently off.
@@ -130,12 +148,12 @@ command if the remote machine's power is currently off.
 Sets the output type to use with 
 .B ipmipower.  
 The currently available output types are "none", "newline", and
-"hostlist".  If not specified, 
+"hostrange".  If not specified, 
 .B ipmipower 
-uses newline output.  Hostlist output can be used to shorten output if
-the number of nodes in your cluster is quite large.  However, hostlist
-output will only output after the slowest node has completed its power
-control operation.
+uses newline output.  Hostrange output can be used to shorten output if
+the number of nodes being power controlled is quite large.  However,
+hostrange output will only output after all machines have completed
+their power control operation.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -157,23 +175,23 @@ the current process id.
 Change current logfile.
 \}
 .LP
-.SH NETWORK OPTIONS
-The following options are used to change the behavior of the actual
-.B ipmipower 
-network protocol used.
+.SH "NETWORK OPTIONS"
+The following options are used to change the behavior of
+.B ipmipower's 
+network behavior.
 .TP
 .I "-t, --timeout ms"
 Sets the timeout in milliseconds.  
 .B Ipmipower 
-uses the timeout value to determine when to give up on a power
+uses the timeout value to determine when to give up on a power control
 command.  If not specified, a default timeout of 20000 milliseconds
 (20 seconds) is used.
 .TP
 .I "-y, --retry-timeout ms"
-Sets the retry-timeout in milliseconds.  The IPMI protocol sends a
-series of packets back and forth to a remote host BMC in order to
-perform a power control operation.  When a response to any individual
-packet is not received after retry-timeout milliseconds, 
+Sets the retry-timeout in milliseconds.  IPMI over LAN requires a
+series of packets to be sent back and forth to a remote host BMC.
+When a response to any individual packet is not received after
+retry-timeout milliseconds,
 .B ipmipower
 will retry sending that packet.  If not specified, packet
 retransmissions will occur after 400 milliseconds (0.4 seconds).  The
@@ -183,9 +201,9 @@ retry-timeout length to 0.
 
 Note how this option differs from the "--timeout" option above.  The
 "--timeout" option refers to the entire amount of time the IPMI
-protocol has to complete a power control operation.  The "--retry"
-option refers to the amount of time any individual packet within the
-IPMI protocol has to complete.
+protocol has to complete a power control operation.  The
+"--retry-timeout" option refers to the amount of time any individual
+packet within the IPMI protocol has to complete.
 .TP
 .I "-b, --retry-backoff-count num"
 After every retry-backoff-count retransmissions, 
@@ -199,36 +217,41 @@ disabled by setting the retry backoff count to 0.
 .I "-i, --ping-interval ms"
 .TP
 .I "-z, --ping-timeout ms"
-.B Ipmipower 
+When running in interactive mode, 
+.B ipmipower 
 will send RMCP (Remote Management Control Protocol) ping discovery
 messages every ping-interval milliseconds to discover all remote hosts
 and confirm its support of IPMI.  Power comamnds cannot be sent to a
-host until it is discovered.  If a remote host does not respond within
-ping-timeout milliseconds, a host will be considered undiscovered and
-power commands will not be sent to it.  If not specified,
-ping-interval is 5000 milliseconds (5 seconds) and ping-timeout is
-30000 milliseconds (30 seconds).  Ping discovery requests can be
-disabled by setting the ping interval to 0.  If ping discovery messages
-are disabled, power commands will be attempted without knowledge of
-the host's existence or its support of IPMI.  The value of
-ping-interval must be less than the ping-timeout length.  RMCP ping
-discovery messages are automatically disabled in non-interactive mode.
-
+host until it is discovered (or possibly re-discovered).  A remote
+host is considered undiscovered if the host does not respond to RMCP
+ping messages within ping-timeout milliseconds.  When a host is
+considered undiscovered, power control commands will not be sent to
+it.  If not specified, ping-interval is 5000 milliseconds (5 seconds)
+and ping-timeout is 30000 milliseconds (30 seconds).  Ping discovery
+requests can be disabled by setting the ping interval to 0.  If ping
+discovery messages are disabled, power commands will be attempted
+without knowledge of the host's existence or its support of IPMI.  The
+value of ping-interval must be less than the ping-timeout length.
+RMCP ping discovery messages are automatically disabled in
+non-interactive mode.
 .TP
 .I "-v, --ping-packet-count num"
 .TP
 .I "-w, --ping-percent num"
-It is difficult to distinguish between a missing node and node with a
-bad connection when using just RMCP pings and timeouts.  For example,
-if a link consistently drops 80% of the packets to a particular node,
-a power control operation may have difficulty completing, although a
-recent pong response makes
+Since IPMI is based off of a UDP protocol, it is difficult for
+.B ipmipower
+to distinguish between a missing machine and a bad network connection
+when running in interactive mode.  For example, suppose a link
+consistently drops 80% of the packets to a particular machine.  The
+power control operation may have difficulty completing, although a
+recent pong response from RMCP makes
 .B ipmipower 
-believe the node exists and is functioning properly.  The
---ping-packet-count and --ping-percent options alleviate this
-problem.
+believe the machine is up and functioning properly.  
+
+The --ping-packet-count and --ping-percent options are used to
+alleviate this problem.
 .B Ipmipower 
-will monitor ping packets in ping-packet-count chunks.  If
+will monitor RMCP ping packets in ping-packet-count chunks.  If
 .B ipmipower 
 does not receive a response to greater than ping-percent of those
 packets,
@@ -242,9 +265,9 @@ ping-interval is set to 0.  Note that the --ping-percent option takes
 an integer as an argument, not a decimal.
 .TP
 .I "-x, --ping-consec-count num"
-Ping-consec-count is another measurement used to determine if a node
+Ping-consec-count is another heuristic used to determine if a node
 should be considered discovered, undiscovered, or with a bad
-connection.  If a valid response was received from the last
+connection.  If a valid RMCP pong response was received for the last
 ping-consec-count RMCP ping packets, a node will be considered
 discovered, regardless if ping-packet-count and ping-percent
 statistically consider the link to be unreliable.  If not specified,
@@ -311,7 +334,7 @@ quit
 specify a new authentication type, none, straight_passwd_key, md2, or md5.
 .TP
 .I "outputtype str"
-specify a new output type, none, newline, or hostlist.
+specify a new output type, none, newline, or hostrange.
 .if @WITH_DEBUG@ \{
 .TP
 .I "debug [on|off]"
@@ -416,7 +439,32 @@ when it is used in conjunction with powerman.  This will ensure
 .B ipmipower
 behaves similarly to other powerman devices.
 
-.SH KNOWN ISSUES
+.SH "TROUBLESHOOTING"
+Most often, problems with ipmipower involve a misconfiguration of the
+remote machine's BMC.  Double check to make sure the following are
+configured properly in the remote machine's BMC: IP address, MAC
+address, subnet mask, username(s), password(s), allowed authentication
+type(s), atleast OPERATOR privilege level for the user(s), enabled LAN
+activity.
+
+When powering on a powered off machine, the client must have a means
+by which to resolve the MAC address of the remote machine's ethernet
+card.  This is typically done in one of two ways.
+
+1) The first method requires enabling gratuitous ARPs on the remote
+machine.  The remote machine will send out a gratuitous ARP, which
+logically advertises the ethernet IP and MAC address so that other
+machines on the network can cache the IP to MAC address mapping in
+their local ARP cache.  For large clusters, this method is not
+recommended since gratuitous ARPs can flood the network with
+unnecessary traffic.
+
+2) The second method is to permanently store the remote machine's MAC
+address in the local ARP cache.  This is the more common approach.
+
+Other methods are listed in the IPMI specification.
+
+.SH "KNOWN ISSUES"
 In order to prevent brute force attacks, some BMCs will "lock up"
 after a number of username, password, or privilege errors.  There is
 no known way to cleanly deal with a "locked up" BMC.  The best option
@@ -436,9 +484,9 @@ IPMI specifications do not require BMCs to perform a power control
 operation before returning a completion code to the caller.
 Therefore, it is possible for
 .B ipmipower 
-power status queries to initially return information other than what
-you are expecting.  For example, if a "power off" operation is
-performed, a BMC may return a successful completion code to
+to return power status queries opposite of what you are expecting.
+For example, if a "power off" operation is performed, a BMC may return
+a successful completion code to
 .B ipmipower
 before the "power off" operation is actually performed.  Subsequent
 power status queries may return "on" for several seconds, until the
@@ -466,7 +514,7 @@ compiled binary, a generic "Permission Denied" is output under both
 circumstances.
 .IP o
 In interactive mode, "config" and "password" commands will output
-current password to stdout.
+the current password to stdout.
 .IP o
 Configuration info such as username and password can be output to the
 log file.
@@ -475,6 +523,8 @@ Before placing ipmipower in a production system, it is recommended
 that the program be compiled with debugging turned off.
 \}
 .SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov>.
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.
 .SH "SEE ALSO"
-ipmipower.conf(5)
+bmc-config(1), ipmipower.conf(5)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.3 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.4 2004-11-15 20:45:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -199,12 +199,12 @@ typedef enum { AUTH_TYPE_INVALID             = 0x00,
                                        a <= AUTH_TYPE_MD5)
 
 /* Output Types */
-typedef enum { OUTPUT_TYPE_INVALID  = 0,
-               OUTPUT_TYPE_NONE     = 1,
-               OUTPUT_TYPE_NEWLINE  = 2,
-               OUTPUT_TYPE_HOSTLIST = 3} output_type_t;
+typedef enum { OUTPUT_TYPE_INVALID   = 0,
+               OUTPUT_TYPE_NONE      = 1,
+               OUTPUT_TYPE_NEWLINE   = 2,
+               OUTPUT_TYPE_HOSTRANGE = 3} output_type_t;
 #define OUTPUT_TYPE_VALID(o)          (o >= OUTPUT_TYPE_NONE && \
-                                       o <= OUTPUT_TYPE_HOSTLIST)
+                                       o <= OUTPUT_TYPE_HOSTRANGE)
 
 /* Msg Types */
 typedef enum { MSG_TYPE_SUCCESS                 =  0,

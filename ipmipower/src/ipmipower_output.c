@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.4 2004-10-28 07:33:59 ab Exp $
+ *  $Id: ipmipower_output.c,v 1.5 2004-11-15 20:45:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,7 +41,7 @@
 
 extern cbuf_t ttyout;
 extern struct ipmipower_config *conf;
-extern hostlist_t output_hostlist[MSG_TYPE_NUM];
+extern hostlist_t output_hostrange[MSG_TYPE_NUM];
 
 static char *ipmipower_outputs[] = 
   {
@@ -72,9 +72,9 @@ ipmipower_output(msg_type_t num, char *hostname)
 
   if (conf->outputtype == OUTPUT_TYPE_NEWLINE)
     cbuf_printf(ttyout, "%s: %s\n", hostname, ipmipower_outputs[num]);
-  else if (conf->outputtype == OUTPUT_TYPE_HOSTLIST) 
+  else if (conf->outputtype == OUTPUT_TYPE_HOSTRANGE) 
     {
-      if (hostlist_push_host(output_hostlist[num], hostname) == 0)
+      if (hostlist_push_host(output_hostrange[num], hostname) == 0)
         err_exit("hostlist_push_host() error\n");
     }
 
@@ -84,19 +84,19 @@ ipmipower_output(msg_type_t num, char *hostname)
 void
 ipmipower_output_finish(void)
 {
-  if (conf->outputtype == OUTPUT_TYPE_HOSTLIST) 
+  if (conf->outputtype == OUTPUT_TYPE_HOSTRANGE) 
     {
       int i, rv;
       char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
       
       for (i = 0; i < MSG_TYPE_NUM; i++) 
         {
-          if (hostlist_count(output_hostlist[i]) > 0) {
+          if (hostlist_count(output_hostrange[i]) > 0) {
             memset(buffer, '\0', IPMIPOWER_HOSTLIST_BUFLEN); 
 
-            hostlist_sort(output_hostlist[i]);
+            hostlist_sort(output_hostrange[i]);
                 
-            rv = hostlist_ranged_string(output_hostlist[i], 
+            rv = hostlist_ranged_string(output_hostrange[i], 
                                         IPMIPOWER_HOSTLIST_BUFLEN, 
                                         buffer);
             if (rv < 0) 
@@ -104,18 +104,18 @@ ipmipower_output_finish(void)
                 cbuf_printf(ttyout, "OVERFLOWED BUFFER: %s\n", 
                             ipmipower_outputs[i]);
                 
-                while (hostlist_count(output_hostlist[i]) > 0)
-                  hostlist_delete_nth(output_hostlist[i], 0);
+                while (hostlist_count(output_hostrange[i]) > 0)
+                  hostlist_delete_nth(output_hostrange[i], 0);
               }
                 
             if (rv > 0) 
               {
                 cbuf_printf(ttyout, "%s: %s\n",
                             buffer, ipmipower_outputs[i]);
-                hostlist_delete(output_hostlist[i], buffer);
+                hostlist_delete(output_hostrange[i], buffer);
               }
             
-            assert(hostlist_count(output_hostlist[i]) == 0);
+            assert(hostlist_count(output_hostrange[i]) == 0);
           }
         } 
     }
@@ -132,8 +132,8 @@ ipmipower_output_index(char *str)
     return OUTPUT_TYPE_NONE;
   else if (!strcasecmp(str, "newline"))
     return OUTPUT_TYPE_NEWLINE;
-  else if (!strcasecmp(str, "hostlist"))
-    return OUTPUT_TYPE_HOSTLIST;
+  else if (!strcasecmp(str, "hostrange"))
+    return OUTPUT_TYPE_HOSTRANGE;
   else 
     return OUTPUT_TYPE_INVALID;
 }
@@ -151,8 +151,8 @@ ipmipower_output_string(output_type_t ot)
     case OUTPUT_TYPE_NEWLINE:
       return "newline";
       break;
-    case OUTPUT_TYPE_HOSTLIST:
-      return "hostlist";
+    case OUTPUT_TYPE_HOSTRANGE:
+      return "hostrange";
       break;
     default:
       err_exit("ipmipower_output_string: Invalid Output Type: %d\n", ot);
@@ -164,5 +164,5 @@ ipmipower_output_string(output_type_t ot)
 char *
 ipmipower_output_list(void) 
 {
-  return "none, newline, hostlist";
+  return "none, newline, hostrange";
 }

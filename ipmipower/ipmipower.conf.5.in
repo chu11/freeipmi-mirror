@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.1 2004-10-14 23:56:04 itz Exp $
+\."$Id: ipmipower.conf.5.in,v 1.2 2004-11-15 20:45:58 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,9 +24,9 @@
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
 .TH ipmipower.conf 5 "April 2004" "ipmipower @VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 ipmipower.conf \- specify alternate default values to ipmipower
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 The 
 .B ipmipower 
 configuration file can be used to set default values to
@@ -48,9 +48,9 @@ line through the --config option.
 
 The user can still override the configuration file values by
 specifying the options on the command line.  The configuration file
-does not stop a user from specifying certain options.
+does not stop a user from specifying any options on the command line.
 
-.SH CONFIGURATION OPTIONS
+.SH "CONFIGURATION OPTIONS"
 The following are a list of configuration options that can be
 specified in the configuration file.  Each configuration option must
 be listed on a separate line.  Arguments for an option are separated
@@ -90,15 +90,16 @@ Specify the default password to use.
 Specify the default authentication type to use.  
 .B Ipmipower 
 currently supports the following authentication types:
-"straight_passwd_key", "md2", and "md5".
+"none", "straight_passwd_key", "md2", and "md5".
 .TP
 .I on-if-off enable|disable
+Specify if on-if-off is enabled or disabled by default.
 .TP
 .I outputtype outputtype
 Specify the default outputtype type to use.  
 .B Ipmipower 
 currently supports the following output types: "none", "newline", and
-"hostlist".
+"hostrange".
 .TP
 .I timeout ms
 Specify the timeout in ms.
@@ -127,7 +128,7 @@ Specify a new ping percent
 Specify a new ping consec count
 .LP
 .br
-.SH FILES
+.SH "FILES"
 /etc/ipmipower.conf
-.SH SEE ALSO
+.SH "SEE ALSO"
 ipmipower(8)
