@@ -109,7 +109,7 @@ ipmi_ping (int sockfd, char *hostname, fiid_obj_t pong)
 }
 
 int
-lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username, char *auth_code, u_int8_t priv_level, u_int32_t *session_id, u_int32_t *session_seq_num)
+lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username, char *auth_code, u_int8_t priv_level, u_int32_t *session_id, u_int32_t *session_seq_num, u_int8_t *rq_seq)
 {
   struct sockaddr_in to_addr;
   struct hostent *hostinfo;
@@ -124,7 +124,7 @@ lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username
     return (1);
   to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
 
-  if (ipmi_lan_open_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, username, auth_code, strlen (auth_code), 0x01, priv_level, session_seq_num, session_id) == -1)
+  if (ipmi_lan_open_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, username, auth_code, strlen (auth_code), 0x01, priv_level, session_seq_num, session_id, rq_seq) == -1)
     return (1);
   return (0);
 }

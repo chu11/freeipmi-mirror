@@ -419,7 +419,7 @@ fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, fiid_obj_t obj_cmd)
 }
 
 int8_t
-ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, fiid_obj_t obj_cmd_rs)
+ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
 
@@ -436,7 +436,7 @@ ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t ho
   ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, obj_cmd_rq) != -1);
 
   ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
-		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 0,
+		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_get_channel_auth_caps_rq,
 		     obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs) != -1);
 
@@ -476,7 +476,7 @@ fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t us
 }
 
 int8_t
-ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, fiid_obj_t obj_cmd_rs)
+ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
 
@@ -494,7 +494,7 @@ ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t ho
                                        (username) ? strlen(username) : 0, obj_cmd_rq) != -1);
 
   ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
-		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 0,
+		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_get_session_challenge_rq,
 		     obj_cmd_rs, tmpl_cmd_get_session_challenge_rs) != -1);
   return (0);
@@ -526,7 +526,7 @@ fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t
 }
 
 int8_t
-ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t tmp_session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, fiid_obj_t obj_cmd_rs)
+ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t tmp_session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
   
@@ -545,7 +545,7 @@ ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostadd
 
   ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, auth_type, 
 		     0, tmp_session_id, auth_code_data, auth_code_data_len,
-		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 0, 
+		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq, 
 		     obj_cmd_rq, tmpl_cmd_activate_session_rq,
 		     obj_cmd_rs, tmpl_cmd_activate_session_rs) != -1);
   return (0);
@@ -594,39 +594,46 @@ ipmi_lan_set_session_priv_level (int sockfd, struct sockaddr *hostaddr, size_t h
 }
 
 int8_t
-ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int32_t initial_outbound_seq_num, u_int8_t priv_level, u_int32_t *session_seq_num, u_int32_t *session_id)
+ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int32_t initial_outbound_seq_num, u_int8_t priv_level, u_int32_t *session_seq_num, u_int32_t *session_id, u_int8_t *rq_seq)
 {
   fiid_obj_t obj_cmd_rs;
   u_int64_t temp_session_id, temp_session_seq_num;
   u_int8_t challenge_str[IPMI_CHALLENGE_STR_MAX];
-  
+
+  if (rq_seq == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  *rq_seq = 0;
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_channel_auth_caps_rs);
-  if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, obj_cmd_rs) == -1)
+  if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
   ipmi_xfree (obj_cmd_rs);
+  IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_session_challenge_rs);
   if (ipmi_lan_get_session_challenge (sockfd, hostaddr, hostaddr_len, 
-				      auth_type, username, obj_cmd_rs) == -1)
+				      auth_type, username, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
   *session_id = temp_session_id;
-
   fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, "challenge_str", challenge_str);
-
   ipmi_xfree (obj_cmd_rs);
+  IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
-
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
-				 auth_type, *session_id, auth_code_data, auth_code_data_len, priv_level, 
+				 auth_type, *session_id, auth_code_data, 
+				 auth_code_data_len, priv_level, 
 				 challenge_str, IPMI_CHALLENGE_STR_MAX,
-				 initial_outbound_seq_num, obj_cmd_rs) == -1)
+				 initial_outbound_seq_num, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
@@ -637,16 +644,18 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
 		"initial_inbound_seq_num", &temp_session_seq_num);
   *session_seq_num = temp_session_seq_num;
   ipmi_xfree (obj_cmd_rs);
+  IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
-
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
-				       auth_code_data, auth_code_data_len, priv_level, 1, obj_cmd_rs) == -1)
+				       auth_code_data, auth_code_data_len, priv_level,
+				       *rq_seq,  obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
   ipmi_xfree (obj_cmd_rs);
+  IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   return (0);
 

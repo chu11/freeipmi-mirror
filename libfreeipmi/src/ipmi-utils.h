@@ -59,6 +59,7 @@ int8_t ipmi_chksum_test (u_int8_t *buf, u_int64_t len);
 int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
 int ipmi_input_timeout (int fd, unsigned int seconds);
 int ipmi_is_root ();
+int open_free_udp_port (void);
 
 #ifdef __cplusplus
 }

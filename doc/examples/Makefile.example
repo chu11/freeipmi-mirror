@@ -1,12 +1,9 @@
-OBJS = hello-sensors
+OBJS = ipmi-lan-test hello-sensors
 CC = gcc
 CFLAGS = -Wall -g -D_GNU_SOURCE
 LDFLAGS = -lfreeipmi
 
 all: $(OBJS)
-
-$(OBJS): %: %.c
-	$(CC) $(CFLAGS) $(LDFLAGS) $< -o $@
 
 clean:
 	rm -f $(OBJS)

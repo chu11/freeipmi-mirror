@@ -1,3 +1,20 @@
+2004-12-11  Anand Babu  <ab@gnu.org.in>
+	* libfreeipmi/src/ipmi-msg-support-cmds.c: rqSeq'ing starts even
+	before session establishment. So ipmi_lan_get_channel_auth_caps,
+	ipmi_lan_get_session_challenge, ipmi_lan_activate_session and
+	ipmi_lan_open_session all takes rq_seq argument.
+
+	* libfreeipmi/src/ipmi-lan-interface.h: new IPMI_LAN_RQ_SEQ_INC macro.
+	
+	* fish/src/ipmi-wrapper.c: rq_seq argument.
+
+	* doc/examples/ipmi-lan-test.c: new lan bmc-info command example.
+	
+	* doc/examples/Makefile.example: facelift.
+
+	* libfreeipmi/src/ipmi-utils.c: new utility procedure
+	open_free_udp_port ().
+
 2004-12-09  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/bc-lan-conf-misc-section.scm: List 500 ms

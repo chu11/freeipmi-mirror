@@ -37,6 +37,13 @@
 #include <sys/time.h>
 #endif
 
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
 #include "freeipmi.h"
 
 ipmi_chksum_t
@@ -122,3 +129,49 @@ ipmi_is_root ()
     return 1;
   return 0;
 }
+
+
+int
+open_free_udp_port (void)
+{
+  int sockfd;
+  int sockname_len;
+  struct sockaddr_in sockname;
+  int free_port=1025;
+  int err;
+  extern int errno;
+
+  sockfd = socket (AF_INET, SOCK_DGRAM, 0);
+  if (sockfd < 0)
+    return (-1);
+
+  for (; free_port < 65535; free_port++)
+    {
+      /* Instead of probing if the current (may be the client side)
+      system has IPMI LAN support too, it is easier to avoid these two
+      RMCP reserved ports. -- Anand Babu*/
+      if ((free_port == RMCP_AUX_BUS_SHUNT) || 
+	  (free_port == RMCP_SECURE_AUX_BUS))
+	continue;
+
+      memset (&sockname, 0, sizeof (struct sockaddr_in));
+      sockname.sin_family = AF_INET;
+      sockname.sin_port   = htons (free_port);
+      sockname.sin_addr.s_addr = htonl (INADDR_ANY);
+      sockname_len = sizeof (struct sockaddr_in);
+      
+      if ((err = bind (sockfd, (struct sockaddr *) &sockname, sockname_len)) == 0)
+	return sockfd;
+      else
+	{
+	  if (errno == EADDRINUSE)
+	    continue;
+	  else
+	    return (-1);
+	}
+    }
+  close (sockfd);
+  errno = EBUSY;
+  return (-1);
+}
+
