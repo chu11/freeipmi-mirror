@@ -39,7 +39,7 @@
 (fi-load sensors-conf-file)
 
 (define (sensors-display-usage)
-  (display "sensors --usage --help --version --verbose --sdr-info --flush-cache --list-groups --prof --group=GROUP-NAME --sensors=\"SENSORS-LIST\"\n\tDisplay IPMI Sensors.\n"))
+  (display "sensors --usage --help --version --verbose --all --sdr-info --flush-cache --list-groups --prof --group=GROUP-NAME --sensors=\"SENSORS-LIST\"\n\tDisplay IPMI Sensors.\n"))
 
 (define (sensors-display-help)
   (begin 
@@ -49,7 +49,8 @@
     (display "  -h, --help             Show help\n") 
     (display "  -V, --version          Show version\n") 
     (display "  -v, --verbose          Verbose sensor output\n") 
-    (display "      -vv                Very verbose sensor output\n") 
+    (display "      -vv                Very verbose sensor output\n")
+    (display "  -a, --all              Display all sensors, override ignore list\n")
     (display "  -i, --sdr-info         Show SDR Info\n") 
     (display "  -f, --flush-cache      Flush sensor cache\n") 
     (display "  -l, --list-groups      List sensor groups\n") 
@@ -62,21 +63,21 @@
 			  (fi-version)))
   (newline))
 
-(define (sensors-cache-display _sensor-id)
+(define (sensors-cache-display _sensor-id _all-wanted)
   "display the current cache sensors in default mode"
-  (if (not (sensors-ignored? _sensor-id))
+  (if (or _all-wanted (not (sensors-ignored? _sensor-id)))
       (fi-sensors-cache-display)
       #f))
 
-(define (sensors-cache-verbose-display _sensor-id)
+(define (sensors-cache-verbose-display _sensor-id _all-wanted)
   "display the current cache sensors in verbose mode"
-  (if (not (sensors-ignored? _sensor-id))
+  (if (or _all-wanted (not (sensors-ignored? _sensor-id)))
       (fi-sensors-cache-verbose-display)
       #f))
 
-(define (sensors-cache-very-verbose-display _sensor-id)
+(define (sensors-cache-very-verbose-display _sensor-id _all-wanted)
   "display the current cache sensors in very verbose mode"
-  (if (not (sensors-ignored? _sensor-id))
+  (if (or (not (sensors-ignored? _sensor-id)))
       (fi-sensors-cache-very-verbose-display)
       #f))
 
@@ -199,7 +200,7 @@
 	  #t
 	  #f)))
 
-(define (sensors-group-display _group-name _verbose-wanted _verbose-count _prof-wanted)
+(define (sensors-group-display _group-name _verbose-wanted _verbose-count _prof-wanted _all-wanted)
   (fi-sensors-cache-load sensors-sdr-cache-file)
   (let ((prof-value 0)
 	(sensors-displayed #f))
@@ -214,21 +215,21 @@
 		     (set! prof-value (fi-kcs-get-poll-count))
 		     (cond 
 		      ((= _verbose-count 0)
-		       (if (sensors-cache-display sensor-id)
+		       (if (sensors-cache-display sensor-id _all-wanted)
 			   (begin 
 			     (set! sensors-displayed #t)
 			     (display "kcs-poll-count: ")
 			     (display (- (fi-kcs-get-poll-count) prof-value))
 			     (newline) (newline) (force-output))))
 		      ((= _verbose-count 1)
-		       (if (sensors-cache-verbose-display sensor-id)
+		       (if (sensors-cache-verbose-display sensor-id _all-wanted)
 			   (begin 
 			     (set! sensors-displayed #t)
 			     (display "kcs-poll-count: ")
 			     (display (- (fi-kcs-get-poll-count) prof-value))
 			     (newline) (newline) (newline) (force-output))))
 		      (else 
-		       (if (sensors-cache-very-verbose-display sensor-id)
+		       (if (sensors-cache-very-verbose-display sensor-id _all-wanted)
 			   (begin 
 			     (set! sensors-displayed #t)
 			     (display "kcs-poll-count: ")
@@ -236,15 +237,15 @@
 			     (newline) (newline) (newline) (force-output))))))
 		   (cond 
 		    ((= _verbose-count 0)
-		     (if (sensors-cache-display sensor-id)
+		     (if (sensors-cache-display sensor-id _all-wanted)
 			 (set! sensors-displayed #t)))
 		    ((= _verbose-count 1)
-		     (if (sensors-cache-verbose-display sensor-id)
+		     (if (sensors-cache-verbose-display sensor-id _all-wanted)
 			 (begin 
 			   (newline) (newline) (force-output)
 			   (set! sensors-displayed #t))))
 		    (else 
-		     (if (sensors-cache-very-verbose-display sensor-id)
+		     (if (sensors-cache-very-verbose-display sensor-id _all-wanted)
 			 (begin 
 			   (newline) (newline) (force-output)
 			   (set! sensors-displayed #t)))))))))
@@ -304,7 +305,7 @@
 ; 	    (set! sensors-exit-status 1)))))
 ;   (fi-sensors-cache-unload))
 
-(define (sensors-display _sensor-list _verbose-wanted _verbose-count _prof-wanted)
+(define (sensors-display _sensor-list _verbose-wanted _verbose-count _prof-wanted _all-wanted)
   (fi-sensors-cache-load sensors-sdr-cache-file)
   (let ((prof-value 0)
 	(sensor-displayed #f)
@@ -323,10 +324,10 @@
 	       (fi-sensors-cache-seek sensor-id)
 	       (if _verbose-wanted 
 		   (if (= _verbose-count 1)
-		       (set! sensor-displayed (sensors-cache-verbose-display sensor-id))
-		       (set! sensor-displayed (sensors-cache-very-verbose-display sensor-id)))
+		       (set! sensor-displayed (sensors-cache-verbose-display sensor-id _all-wanted))
+		       (set! sensor-displayed (sensors-cache-very-verbose-display sensor-id _all-wanted)))
 		   (begin 
-		     (set! sensor-displayed (sensors-cache-display sensor-id))
+		     (set! sensor-displayed (sensors-cache-display sensor-id _all-wanted))
 		     (if (= sensors-exit-status 0)
 			 (set! sensors-exit-status (fi-get-sensors-errno)))))
 	       (if (and _prof-wanted sensor-displayed)
@@ -365,7 +366,7 @@
       (force-output)))
   (fi-sensors-cache-unload))
 
-(define (sensors-display-all-records _verbose-wanted _verbose-count _prof-wanted)
+(define (sensors-display-all-records _verbose-wanted _verbose-count _prof-wanted _all-wanted)
   (fi-sensors-cache-load sensors-sdr-cache-file)
   (let ((prof-value 0)
 	(sensor-displayed #f))
@@ -375,10 +376,10 @@
 		      (set! prof-value (fi-kcs-get-poll-count)))
 		  (if _verbose-wanted 
 		      (if (= _verbose-count 1)
-			  (set! sensor-displayed (sensors-cache-verbose-display sensor-id))
-			  (set! sensor-displayed (sensors-cache-very-verbose-display sensor-id)))
+			  (set! sensor-displayed (sensors-cache-verbose-display sensor-id _all-wanted))
+			  (set! sensor-displayed (sensors-cache-very-verbose-display sensor-id _all-wanted)))
 		      (begin 
-			(set! sensor-displayed (sensors-cache-display sensor-id))
+			(set! sensor-displayed (sensors-cache-display sensor-id _all-wanted))
 			(if (= sensors-exit-status 0)
 			    (set! sensors-exit-status (fi-get-sensors-errno)))))
 		  (if (and _prof-wanted sensor-displayed)
@@ -398,6 +399,7 @@
 			(help        (single-char #\h) (value #f))
 			(version     (single-char #\V) (value #f))
 			(verbose     (single-char #\v) (value #f))
+                        (all         (single-char #\a) (value #f))
 			(sdr-info    (single-char #\i) (value #f))
 			(flush-cache (single-char #\f) (value #f))
 			(list-groups (single-char #\l) (value #f))
@@ -407,6 +409,7 @@
 	 (options (getopt-long args option-spec))
 	 (usage-wanted      (option-ref options 'usage #f))
 	 (help-wanted       (option-ref options 'help #f))
+         (all-wanted        (option-ref options 'all #f))
 	 (version-wanted    (option-ref options 'version #f))
 	 (verbose-wanted    (option-ref options 'verbose #f))
 	 (verbose-count     (if (option-ref options 'verbose #f)
@@ -457,11 +460,11 @@
 	  (begin 
 	    (if (not (string-null? group-name))
 		(sensors-group-display group-name verbose-wanted 
-				       verbose-count prof-wanted))
+				       verbose-count prof-wanted all-wanted))
 	    (if (not (null? sensor-list))
-		(sensors-display sensor-list verbose-wanted verbose-count prof-wanted))
+		(sensors-display sensor-list verbose-wanted verbose-count prof-wanted all-wanted))
 	    (if (and (string-null? group-name) (null? sensor-list))
-		(sensors-display-all-records verbose-wanted verbose-count prof-wanted))))))))
+		(sensors-display-all-records verbose-wanted verbose-count prof-wanted all-wanted))))))))
 
 
 (define (sensors args)
