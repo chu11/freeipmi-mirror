@@ -1,3 +1,8 @@
+2004-12-09  Albert Chu <chu11@llnl.gov>
+
+	* fish/extensions/bc-lan-conf-misc-section.scm: List 500 ms
+	interval length for gratuitous arp interval.
+	
 2004-12-08  Albert Chu <chu11@llnl.gov>
 
 	* fish/src/ipmi-wrapper-sensor.c

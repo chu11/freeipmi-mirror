@@ -58,7 +58,7 @@
      checkout-gratuitous-arp-interval 
      any->string
      same-string-ci?
-     "Give valid number")
+     "Give valid number. Intervals are 500 ms.")
     ;; You can add more in the form of 
     ;; (KEYSTRING 
     ;;  VALIDATION-PROC 
