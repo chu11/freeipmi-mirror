@@ -13,7 +13,7 @@
 	readability.
 
 	* freeipmi.spec.in: Fixed info file corner case discovered by John
-	Goebel <jgoebel at gmail.com>.
+	Goebel <jgoebel at slac.stanford.edu>.
 	
 2004-12-01  A Balamurugan  <bala.a@californiadigital.com>
 
