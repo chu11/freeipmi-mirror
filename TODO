@@ -49,14 +49,10 @@ ipmipower:
   * Buffer recently malloced space to avoid constant re-mallocing.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
-    - Or is setup the bottleneck, not the actual power control?
+    - already fast, so low priority 
   * Retransmit/Recheck/Reattempt for higher channel privs if lower
     ones not available??
     - This is a really strange corner case.  May not be worth it.
-  * Audit for performance improvements anywhere you can find it.
-    - "marking" queues with data in it??
-    - not mallocing/reset in each poll loop??
-    - constant millisecond calculations?
 
 ipmiping/rmcpping:
 ------------------
