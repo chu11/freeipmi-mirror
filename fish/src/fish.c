@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.5 2004-05-07 22:09:08 itz Exp $ 
+   $Id: fish.c,v 1.6 2004-10-22 00:17:08 itz Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -350,12 +350,6 @@ inner_main (int argc, char **argv)
   
   fi_load (FI_DEFAULT_CONFIG_FILE);
   
-  if (ipmi_kcs_io_init (sms_io_base, driver_poll_interval) != 0)
-    {
-      perror ("ipmi_kcs_io_init");
-      exit (-1);
-    }
-  
   /* load and evaluate init.scm from well known path */
   fi_load (FI_GLOBAL_INIT_FILE);
 
@@ -374,6 +368,12 @@ inner_main (int argc, char **argv)
 
       if ((ipmi_probe (ipmi_interface_kcs, &probe, &status) != 0) && !probe.bmc_io_mapped)
         sms_io_base = probe.base.bmc_iobase_addr;
+    }
+  
+  if (ipmi_kcs_io_init (sms_io_base, driver_poll_interval) != 0)
+    {
+      perror ("ipmi_kcs_io_init");
+      exit (-1);
     }
   
   if (script_file)
