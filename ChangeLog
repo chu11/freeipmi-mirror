@@ -2,11 +2,18 @@
 	
 	* freeipmi.spec.in: Add syslogging and tracing to debug rpm.
 
+	* libfreeipmi/src/ipmi-sha1.h, libfreeipmi/src/ipmi-sha1.c,
+	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-hmac.c: New
+	files.
+
+	* libfreeipmi/src/freeipmi.h, libfreeipmi/src/Makefile.am: Add new
+	sha1 and hmac files appropriately.
+
 2005-01-31  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Added information about auth
 	authentication, which didn't seem to get checked in on 2004-11-15.
-	
+
 2005-01-26  Albert Chu <chu11@llnl.gov>
 
 	Various code cleanup and minor fixes to ipmipower.
