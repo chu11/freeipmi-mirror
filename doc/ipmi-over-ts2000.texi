@@ -1,0 +1,270 @@
+\input texinfo @c -*-texinfo-*-
+@c %**start of header
+@setfilename ipmi-over-ts2000.texi
+@settitle IPMI over Cyclades TS2000
+@footnotestyle separate
+@c %**end of header
+
+@titlepage
+@title  IPMI over Cyclades TS2000
+@subtitle @today
+@c @image{freeipmi-logo}
+@author Anand Babu <@email{ab@@gnu.org.in}>
+
+@page
+@vskip 0pt plus 1filll
+FreeIPMI Core Team
+@url{http://www.gnu.org/software/freeipmi}@*
+Copyright @copyright{} 2002 FreeIPMI Core Team
+@sp 2
+Published by FreeIPMI Core Team*
+
+This manual is under the GNU Free Documentation License.
+
+@end titlepage
+
+@page
+@contents
+
+
+@chapter IPMI over Cyclades TS2000
+IPMI defines common interfaces to the  intelligent  hardware that is
+used to monitor server physical health characteristics, such as
+temperature, voltage, fans, power supplies, and chassis intrusion. In
+addition to health monitoring, IPMI includes other system management
+capabilities that help drive down the total cost of ownership (TCO)
+including automatic alerting, automatic system shutdown and restart,
+remote restart and power control capabilities, and asset tracking.
+
+This document describes how to support IPMI-1.5 Terminal mode over
+Cyclades TS2000 terminal server.
+
+@page
+@section IPMI Terminal Mode
+Terminal Mode is intended primarily for direct serial connection
+operation. The mode is designed so that a simple terminal or terminal
+emulator can be used to generate requests and get responses from the
+BMC. The IPMI messages are entered using printable ASCII
+characters. While a user can enable a line edit mode and directly
+enter the codes for an IPMI message, the main purpose of this mode is
+to facilitate the development of scripts that work with available
+terminal emulation programs.
+
+Terminal Mode also supports a small number of ASCII Text Commands that
+can be used for operations such as getting a high-level hardware
+health status for the system, and doing system reset and power on/off
+operations.
+@cindex {Terminal Mode}
+
+@section Block Diagram of IPMI setup
+
+@image{ipmi-network-layout}
+@cindex {IPMI - TS2000 Diagram}
+@page
+
+@section IPMI Physical Setup
+The physical network setup is pretty normal as described in the above
+diagram, except that the serial port B of IPMI compliant motherboard
+connects to Cyclades TS2000 serial port using a special RJ45<->RJ45
+cable provided by CDC. You should also refer to the marker on the
+cable to identify which end connects to IPMI board. The direction is
+important. For cable specifications @pxref{SE7500WV2 Serial PORT B to
+TS2000}.
+
+@subsection Serial Port B (SE7500WV2)
+Serial B is an external low profile 8-pin RJ45 connector that is
+located on the back of the board. For those server applications that
+require an external modem, an RJ45-to-DB9 adapter is necessary. A
+standard DH-10 to DB9 cable is available from Intel in the SE7500WV2
+Serial Port Accessory Kit.
+
+The rear RJ45 Serial B port is a fully functional serial port that can
+support any standard serial device. Using an RJ45 connector for a
+serial port allows direct support for serial port concentrators, which
+typically use RJ45 connectors and are widely used in the high-density
+server market. For server applications that use a serial concentrator
+to access the server management features of the baseboard, a standard
+8-pin CAT-5 cable from the serial concentrator is plugged directly
+into the rear RJ45 serial port. 
+
+To allow support of either of two serial port configuration standards
+used by serial port concentrators, the J5A2 jumper block located
+directly behind the rear RJ45 serial port must be jumpered
+appropriately according to the desired standard.
+
+@footnote{By default as configured in the factory, the SE7500WV2
+baseboard will have the rear RJ45 serial port configured to support a
+DSR signal which is compatible with the Cisco* standard. If you are
+using IPMI Terminal mode over Cyclades Terminal Server, this default
+setting will work.}
+@cindex {Serial Port B}
+
+@section Configuring The System
+In order to make IPMI work over serial interface through the TS2000
+terminal server, you need to carefully configure each components as
+described below.
+
+@subsection IPMI Terminal Mode Configuration
+You need to enable terminal mode in the SSU from @*
+@code{[SSU->Platform Event Manager->EMP->Options->Terminal Mode]}.@*
+You may also enable line editing and clear EMP password.
+
+@cindex {SSU}
+@cindex {Terminal Mode Configuration}
+
+@subsection Cyclades TS2000 Configuration
+@subsubsection Configuring brand new TS2000 with factory defaults
+@deffn Network telnet
+Use telnet client to connect to 192.168.160.10 and login as
+@samp{root}. When prompted for password, press enter.
+@end deffn
+
+@deffn {Serial Console} minicom
+Use minicom to /dev/ttyS{n} with 19200 8N1 serial port setting. You can
+use null modem cable + RJ45 to DB9 male DSR peripherals connector to
+connect to TS2000 console port. Login as @samp{root} and press enter
+for password.
+@end deffn
+
+@subsubsection IPMI related configuration
+In the file @code{/etc/portslave/pslave.conf} 
+Set the IP address of the eth0 and the serial port range as per your
+network requirements. Then configure your serial port setting to match
+the below values
+
+@example
+Speed    = 19200
+Datasize = 8
+StopBits = 1
+Parity   = none
+Serial flow control  = hardware
+@end example
+
+Activate the changes by running command 
+@example
+# signal_ras hup
+@end example
+
+If you are sure, the configuration is working fine, then Save the
+configuration into flash by 
+@example
+# saveconf
+@end example
+
+@cindex {TS2000 Configuration}
+@cindex {saveconf}
+@cindex {signale_ras}
+
+@subsection BIOS Console Redirection (Optional)
+To configure @samp{BIOS Console Redirection}, enter BIOS setup,
+@code{Server->Console Redirection} and fill in the values as mentioned
+below
+
+@itemize @bullet
+@item BIOS Redirection Port @code{[Serial 2 (RJ45)]}
+@item Baud Rate @code{[19.2K]}
+@item Flow Control @code{[CTS/RTS]}
+@item Terminal Type @code{[VT100+]}
+@end itemize
+@cindex {BIOS console redirection}
+
+@subsection GRUB Console Redirection (Optional)
+To configure @samp{GRUB Console Redirection}, add the following lines
+to @file{/boot/grub/menu.lst} or @file{grub.conf}
+
+@example
+serial --unit=1 --speed=19200 --word=8 --parity=no --stop=1
+terminal --timeout=10 serial console
+@end example
+@cindex {GRUB console redirection}
+
+@subsection Linux kernel Console Redirection
+Append @samp{console=} to the kernel command line in your boot loader
+configuration file.
+
+@example 
+## Example /boot/grub/menu.lst file
+title GNU/Linux (RemoteManagement)
+	root (hd0,0)
+	kernel /vmlinuz ro root=/dev/sda3 noapic console=tty0 console=ttyS1,19200,n8
+	initrd /initrd.img
+@end example
+@cindex {Linux kernel console redirection}
+
+@subsubsection GNU/Linux Serial Console
+Add the following line in your @file{/etc/inittab} file to start
+@samp{getty} on @file{/dev/ttyS1}
+@example 
+## Example /etc/inittab
+...
+...
+S2:12345:respawn:/sbin/getty 19200 ttyS1 vt100
+
+@end example
+@cindex {GNU/Linux console redirection}
+
+@section Accessing IPMI Terminal Mode
+Terminal Mode can be enabled to be entered on receiving an
+@code{<ESC>(} sequence. The BMC will respond with @code{[TMODE OK]} and will
+operate in terminal mode until the connection is terminated or the
+data pattern for Basic Mode or PPP Mode IPMI-RMCP packet is
+detected. 
+
+Steps to get access to IPMI terminal mode:
+@enumerate 1
+@item @code{telnet <IP address of TS2000 port>}
+@item press @code{ESC (}
+@item you must get @code{[TMODE OK]} response
+@item to verify if you are in terminal mode, type command @code{[SYS
+TMODE]} and you will get response @code{[TMODE OK]}
+@item login in to the system with command @code{[SYS PWD -N password]}
+@item to power on type @code{[SYS POWER ON]}. You will get BIOS
+console display if you have enabled BIOS console redirection. Do not
+press @code{ESC (} when you are in Console redirection mode. Wait
+until BIOS releases to console to the OS.
+@item to power off type @code{[SYS POWER OFF]}
+@item to log off type @code {[SYS PWD -X]} or just kill the session.
+@end enumerate
+
+For complete list of IPMI Terminal commands, refer to 
+@samp{IPMI 1.5 Reference Guide} @code{13.7.8 Terminal Mode ASCII Text
+Commands} on @code{Page 175}
+
+@cindex {Terminal Mode Access}
+
+@page
+@section SE7500WV2 Serial PORT B to TS2000
+@anchor{SE7500WV2 Serial PORT B to TS2000} SE7500WV2 Serial PORT B to
+TS2000 cable specification.
+@example
+RJ45                  SE7500WV2
+Cyclades              Serial Port B 
+--------              -------------
+ 3   TxD ------------ RxD    6
+ 6   RxD ------------ TxD    3
+ 4   Gnd ------------ Gnd    4
+
+ 2   DTR ------------ DSR    7
+ 7   DCD ------------ DTR    2
+
+ 1   RTS ------------ CTS    8
+ 5   CTS ------------ RTS    1
+
+@end example
+
+@cindex {IPMI Cable Specification}
+
+@section Useful URLs
+@enumerate a
+@item IPMI Home Page
+@url{http://www.intel.com/design/servers/ipmi/}
+@item IPMI Specifications
+@url {http://www.intel.com/design/servers/ipmi/spec.htm}
+@end enumerate
+@cindex {URLs}
+
+@page
+@printindex cp
+@bye
+
+
