@@ -33,6 +33,8 @@ fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
+  * kcs-raw or something similar in fish
+  * wrapper scripts to do proprietary crap
 
 bmc-watchdog:
 -------------
