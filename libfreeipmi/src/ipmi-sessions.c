@@ -108,8 +108,18 @@ fill_hdr_session  (fiid_template_t tmpl_session, u_int8_t auth_type, u_int32_t i
               errno = EINVAL;
               return (-1);
             }
-          memcpy (obj_hdr + fiid_obj_field_start_bytes (tmpl_session, "auth_code"),
-                  auth_code_data, auth_code_data_len);
+          
+          /* achu: The BMC may ignore any '\0' characters that indicate the
+           * end of the string.  So we need to guarantee the buffer is
+           * completely cleared before setting anything.
+           */
+          ERR_EXIT (fiid_obj_memset_field (obj_hdr, '\0', 
+                                           tmpl_session, "auth_code") == 0);
+          ERR_EXIT (fiid_obj_set_data (obj_hdr, 
+                                       tmpl_session, 
+                                       "auth_code", 
+                                       auth_code_data, 
+                                       auth_code_data_len) == 0);
         }
       else if (fiid_obj_field_lookup (tmpl_session, "auth_calc_data"))
         {
@@ -131,8 +141,17 @@ fill_hdr_session  (fiid_template_t tmpl_session, u_int8_t auth_type, u_int32_t i
               return (-1);
             }
           
-          memcpy(obj_hdr + fiid_obj_field_start_bytes (tmpl_session, "auth_calc_data"),
-                 auth_code_data, auth_code_data_len);
+          /* achu: The BMC may ignore any '\0' characters that indicate the
+           * end of the string.  So we need to guarantee the buffer is
+           * completely cleared before setting anything.
+           */
+          ERR_EXIT (fiid_obj_memset_field (obj_hdr, '\0', 
+                                           tmpl_session, "auth_calc_data") == 0);
+          ERR_EXIT (fiid_obj_set_data (obj_hdr, 
+                                       tmpl_session, 
+                                       "auth_calc_data", 
+                                       auth_code_data, 
+                                       auth_code_data_len) == 0);
         }
       else
         {

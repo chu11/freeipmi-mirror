@@ -447,31 +447,37 @@ ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t ho
 int8_t
 fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t username_len, fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type))
+  /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
+   * termination in IPMI packet not required
+   */
+  if (!obj_cmd 
+      || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+      || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
-   * termination in IPMI packet not required
-   */
-  if (username)
-    {
-      if ((strlen (username) > IPMI_SESSION_MAX_USERNAME_LEN) ||
-	  (username_len > IPMI_SESSION_MAX_USERNAME_LEN))
-	{
-	  errno = EINVAL;
-	  return (-1);
-	}
-
-      fiid_obj_set_data (obj_cmd, tmpl_cmd_get_session_challenge_rq, "username", username);
-    }
-  
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, "cmd", 
 		IPMI_CMD_GET_SESSION_CHALLENGE);
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, "auth_type",
 		auth_type);
+
+  /* achu: The BMC may ignore any '\0' characters that indicate the
+   * end of the string.  So we need to guarantee the buffer is
+   * completely cleared before setting anything.
+   */
+  ERR_EXIT (fiid_obj_memset_field(obj_cmd, '\0',
+                                  tmpl_cmd_get_session_challenge_rq,
+                                  "username") == 0);
+
+  if (username)
+    ERR_EXIT (fiid_obj_set_data (obj_cmd, 
+                                 tmpl_cmd_get_session_challenge_rq, 
+                                 "username", 
+                                 username, 
+                                 username_len) == 0);
+
   return (0);
 }
 
@@ -518,8 +524,13 @@ fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t
 		auth_type);
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, "max_priv_level", 
 		max_priv_level);
+  ERR_EXIT (fiid_obj_memset_field (obj_cmd, '\0', 
+                                   tmpl_cmd_activate_session_rq,
+                                   "challenge_str") == 0);
   if (challenge_str)
-    fiid_obj_set_data (obj_cmd, tmpl_cmd_activate_session_rq, "challenge_str", challenge_str);
+    fiid_obj_set_data (obj_cmd, tmpl_cmd_activate_session_rq, 
+                       "challenge_str", challenge_str, 
+                       challenge_str_len);
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, "initial_outbound_seq_num", 
 		initial_outbound_seq_num);
   return (0);
@@ -797,8 +808,19 @@ ipmi_kcs_set_channel_access (u_int8_t channel_number,
 int8_t 
 fill_kcs_set_user_name (fiid_obj_t obj_data_rq, 
 			u_int8_t user_id, 
-			char *user_name)
+			char *user_name,
+                        unsigned int user_name_len)
 {
+  /* achu: username can be IPMI_USER_NAME_MAX_LENGTH length.  Null
+   * termination in IPMI packet not required
+   */
+  if (!obj_data_rq
+      || (user_name && user_name_len > IPMI_USER_NAME_MAX_LENGTH))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_user_name_rq, 
 		"cmd", 
@@ -809,19 +831,20 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 		"user_id", 
 		user_id);
   
+  /* achu: The BMC may ignore any '\0' characters that indicate the
+   * end of the string.  So we need to guarantee the buffer is
+   * completely cleared before setting anything.
+   */
+  ERR_EXIT (fiid_obj_memset_field(obj_data_rq, '\0', 
+                                  tmpl_set_user_name_rq,
+                                  "user_name") == 0);
+
   if (user_name)
-    fiid_obj_set_data (obj_data_rq, 
-                       tmpl_set_user_name_rq, 
-                       "user_name", 
-                       user_name);
-  else
-    {
-      int32_t start_offset = fiid_obj_field_start_bytes (tmpl_set_user_name_rq,
-                                                         "user_name");
-      int32_t len = fiid_obj_field_len_bytes (tmpl_set_user_name_rq, 
-                                              "user_name");
-      memset (obj_data_rq + start_offset, '\0', len);
-    }
+    ERR_EXIT (fiid_obj_set_data (obj_data_rq, 
+                                 tmpl_set_user_name_rq, 
+                                 "user_name", 
+                                 user_name,
+                                 user_name_len) == 0);
   
   return 0;
 }
@@ -835,7 +858,9 @@ ipmi_kcs_set_user_name (u_int8_t user_id,
   int8_t status;
   
   obj_data_rq = fiid_obj_alloc (tmpl_set_user_name_rq);
-  fill_kcs_set_user_name (obj_data_rq, user_id, user_name);
+  fill_kcs_set_user_name (obj_data_rq, user_id, 
+                          user_name, 
+                          (user_name) ? strlen(user_name) : 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_user_name_rq, 
 			 obj_data_rs, tmpl_set_user_name_rs);
@@ -879,8 +904,20 @@ int8_t
 fill_kcs_set_user_password (fiid_obj_t obj_data_rq, 
 			    u_int8_t user_id, 
 			    u_int8_t operation, 
-			    char *user_password)
+			    char *user_password,
+                            unsigned int user_password_len)
 {
+  /* achu: password can be IPMI_USER_PASSWORD_MAX_LENGTH length.  Null
+   * termination in IPMI packet not required
+   */
+  if (!obj_data_rq
+      || (user_password 
+          && user_password_len > IPMI_USER_PASSWORD_MAX_LENGTH))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_user_password_rq, 
 		"cmd", 
@@ -896,34 +933,37 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
 		"operation", 
 		operation);
   
+  /* achu: The BMC may ignore any '\0' characters that indicate the
+   * end of the string.  So we need to guarantee the buffer is
+   * completely cleared before setting anything.
+   */
+  ERR_EXIT (fiid_obj_memset_field(obj_data_rq, '\0', 
+                                  tmpl_set_user_password_rq,
+                                  "password") == 0);
+
   if (user_password)
-    fiid_obj_set_data (obj_data_rq,
-                       tmpl_set_user_password_rq,
-                       "password",
-                       user_password);
-  else
-    {
-      int32_t start_offset = fiid_obj_field_start_bytes (tmpl_set_user_password_rq,
-                                                         "password");
-      int32_t len = fiid_obj_field_len_bytes (tmpl_set_user_password_rq,
-                                              "password");
-      memset (obj_data_rq + start_offset, '\0', len);
-    }
-  
+    ERR_EXIT (fiid_obj_set_data (obj_data_rq,
+                                 tmpl_set_user_password_rq,
+                                 "password",
+                                 user_password,
+                                 user_password_len) == 0);
+
   return 0;
 }
 
 int8_t 
 ipmi_kcs_set_user_password (u_int8_t user_id, 
 			    u_int8_t operation, 
-			    char *user_password, 
+			    char *user_password,
 			    fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
   obj_data_rq = fiid_obj_alloc (tmpl_set_user_password_rq);
-  fill_kcs_set_user_password (obj_data_rq, user_id, operation, user_password);
+  fill_kcs_set_user_password (obj_data_rq, user_id, operation, 
+                              user_password, 
+                              (user_password) ? strlen(user_password) : 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_set_user_password_rq, 
 			 obj_data_rs, tmpl_set_user_password_rs);
