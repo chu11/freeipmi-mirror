@@ -101,8 +101,8 @@ command_show_help (char *cmd_line)
   /* adds help facility to your new command
      if (all || (strcasecmp (command, "my_command") == 0))
      {
-     printf("my_command [optional argument]\n"
-     "\t- my_command really freaks ;-)\n");
+       printf("my_command [optional argument]\n"
+              "\t- my_command really freaks ;-)\n");
      }
   */
   dynamic_help_handler (command, all);
