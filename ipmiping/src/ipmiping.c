@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2 2005-01-25 17:34:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -149,6 +149,7 @@ parsepacket(char *buffer,
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_msg_trlr = NULL;
   u_int64_t req_seq, none, md2, md5, straight_passwd_key, oem, 
+    anonymous_login, null_username, non_null_username,
     user_level_auth, per_message_auth;
   int ret, retval = -1;
 
@@ -257,15 +258,26 @@ parsepacket(char *buffer,
       Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_type.oem_prop", (u_int64_t *)&oem);
       Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+                   "auth_status.anonymous_login", 
+                   (u_int64_t *)&anonymous_login);
+      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+                   "auth_status.null_username", 
+                   (u_int64_t *)&null_username);
+      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+                   "auth_status.non_null_username", 
+                   (u_int64_t *)&non_null_username);
+      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_status.user_level_auth", 
                    (u_int64_t *)&user_level_auth);
       Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_status.per_message_auth", 
                    (u_int64_t *)&per_message_auth);
-      printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s permsg=%s user=%s",
+      printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
              _setstr(straight_passwd_key),_setstr(oem), 
-             _setstr(user_level_auth), _setstr(per_message_auth));
+             _setstr(anonymous_login), _setstr(null_username), 
+             _setstr(non_null_username), _setstr(user_level_auth), 
+             _setstr(per_message_auth));
     }
   printf("\n");
     
