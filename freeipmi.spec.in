@@ -11,7 +11,7 @@ Release: %{release}
 License: GPL
 Group: Development/System
 Source: %{name}-%{version}.tar.gz
-BuildRoot: /var/tmp/%{name}-%{version}
+BuildRoot: %{_localstatedir}/tmp/%{name}-%{version}
 Summary: FreeIPMI
 %description
 The FreeIPMI project provides "Remote-Console" (out-of-band) and
@@ -43,7 +43,7 @@ Requires: freeipmi = %{version}-%{release}
 FreeIPMI utilities ipmipower, bmc-watchdog, ipmiping, and rmcpping.
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}
 
 %build
 %configure --program-prefix=%{?_program_prefix:%{_program_prefix}}
@@ -63,16 +63,16 @@ rm -rf $RPM_BUILD_ROOT
 # Start bmc-watchdog, but not by default
 #
 if [ "$1" = 1 ]; then
-   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+   if [ -x /etc/init.d/bmc-watchdog ]; then
       [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
    fi
 fi
 if [ $1 -ge 1 ]; then
-   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-      if /etc/rc.d/init.d/bmc-watchdog status | grep -q running; then
-         /etc/rc.d/init.d/bmc-watchdog restart
+   if [ -x /etc/init.d/bmc-watchdog ]; then
+      if /etc/init.d/bmc-watchdog status | grep -q running; then
+         /etc/init.d/bmc-watchdog restart
       else
-         /etc/rc.d/init.d/bmc-watchdog start
+         /etc/init.d/bmc-watchdog start
       fi
    fi
 fi
@@ -82,13 +82,13 @@ fi
 # Start bmc-watchdog if already running
 #
 if [ "$1" = 1 ]; then
-   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+   if [ -x /etc/init.d/bmc-watchdog ]; then
       [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
    fi
 fi
 if [ $1 -ge 1 ]; then
-   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-      /etc/rc.d/init.d/bmc-watchdog condrestart
+   if [ -x /etc/init.d/bmc-watchdog ]; then
+      /etc/init.d/bmc-watchdog condrestart
    fi
 fi
 %endif
@@ -96,9 +96,9 @@ fi
 #
 # Restart powerman if it exists 
 #
-if [ -x /etc/rc.d/init.d/powerman ]; then
-    if /etc/rc.d/init.d/powerman status | grep -q running; then
-       /etc/rc.d/init.d/powerman restart
+if [ -x /etc/init.d/powerman ]; then
+    if /etc/init.d/powerman status | grep -q running; then
+       /etc/init.d/powerman restart
     fi
 fi
 %endif
@@ -108,9 +108,9 @@ fi
 # Stop bmc-watchdog if it is running 
 #
 if [ "$1" = 0 ]; then
-    if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-       if /etc/rc.d/init.d/bmc-watchdog status | grep -q running; then
-          /etc/rc.d/init.d/bmc-watchdog stop
+    if [ -x /etc/init.d/bmc-watchdog ]; then
+       if /etc/init.d/bmc-watchdog status | grep -q running; then
+          /etc/init.d/bmc-watchdog stop
        fi
        [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
     fi
@@ -118,65 +118,66 @@ fi
 
 %files
 %defattr(-,root,root)
-%doc /usr/share/doc/freeipmi/AUTHORS
-%doc /usr/share/doc/freeipmi/BUGS
-%doc /usr/share/doc/freeipmi/COPYING
-%doc /usr/share/doc/freeipmi/ChangeLog
-%doc /usr/share/doc/freeipmi/INSTALL
-%doc /usr/share/doc/freeipmi/NEWS
-%doc /usr/share/doc/freeipmi/README
-%doc /usr/share/doc/freeipmi/TODO
-%doc /usr/share/doc/freeipmi/ipmi-over-ts2000.texi
-%doc /usr/share/info/freeipmi.info*
-/usr/lib/*so*
-/var/lib/
+%doc %{_datadir}/doc/%{name}/AUTHORS
+%doc %{_datadir}/doc/%{name}/BUGS
+%doc %{_datadir}/doc/%{name}/COPYING
+%doc %{_datadir}/doc/%{name}/ChangeLog
+%doc %{_datadir}/doc/%{name}/INSTALL
+%doc %{_datadir}/doc/%{name}/NEWS
+%doc %{_datadir}/doc/%{name}/README
+%doc %{_datadir}/doc/%{name}/THANKS
+%doc %{_datadir}/doc/%{name}/TODO
+%doc %{_datadir}/doc/%{name}/ipmi-over-ts2000.texi
+%doc %{_infodir}/freeipmi.info*
+%{_libdir}/*so*
+%{_localstatedir}/lib/*
  
 %files devel
 %defattr(-,root,root)
-%doc /usr/share/doc/freeipmi/examples/Makefile
-%doc /usr/share/doc/freeipmi/examples/hello-sensors.c
-%doc /usr/share/doc/freeipmi/freeipmi-hackers-intro.sxi
-%doc /usr/share/doc/freeipmi/ipmi-network-layout.fig
-/usr/lib/*.a
-/usr/lib/*.la
-/usr/include
+%doc %{_datadir}/doc/%{name}/examples/Makefile
+%doc %{_datadir}/doc/%{name}/examples/hello-sensors.c
+%doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.sxi
+%doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
+%{_libdir}/*.a
+%{_libdir}/*.la
+%{_includedir}/*
 
 %files fish
 %defattr(-,root,root)
-%config(noreplace) /etc/fish/fish.scm
-%config(noreplace) /etc/fish/sensors-conf.scm
-/usr/sbin/fish
-/usr/sbin/bmc-config
-/usr/sbin/bmc-info
-/usr/sbin/sel
-/usr/sbin/sensors
-/usr/share/fish
-/usr/share/man/man1/bmc-config.1*
-/usr/share/man/man1/bmc-info.1*
-/usr/share/man/man1/fish.1*
-/usr/share/man/man1/sel.1*
-/usr/share/man/man1/sensors.1*
+%config(noreplace) %{_sysconfdir}/fish/fish.scm
+%config(noreplace) %{_sysconfdir}/fish/sensors-conf.scm
+%{_sbindir}/fish
+%{_sbindir}/bmc-config
+%{_sbindir}/bmc-info
+%{_sbindir}/sel
+%{_sbindir}/sensors
+%{_mandir}/man1/bmc-config.1*
+%{_mandir}/man1/bmc-info.1*
+%{_mandir}/man1/fish.1*
+%{_mandir}/man1/sel.1*
+%{_mandir}/man1/sensors.1*
+%{_datadir}/fish/*
 
 %files utils
 %defattr(-,root,root)
-%doc /usr/share/doc/freeipmi/COPYING.bmc-watchdog
-%doc /usr/share/doc/freeipmi/DISCLAIMER.bmc-watchdog
-%doc /usr/share/doc/freeipmi/COPYING.ipmiping
-%doc /usr/share/doc/freeipmi/DISCLAIMER.ipmiping
-%doc /usr/share/doc/freeipmi/COPYING.ipmipower
-%doc /usr/share/doc/freeipmi/DISCLAIMER.ipmipower
-%doc /usr/share/doc/freeipmi/COPYING.rmcpping
-%doc /usr/share/doc/freeipmi/DISCLAIMER.rmcpping
-%config(noreplace) /etc/init.d/bmc-watchdog
-/usr/sbin/bmc-watchdog
-/usr/sbin/ipmiping
-/usr/sbin/ipmipower
-/usr/sbin/rmcpping
-/usr/share/man/man5/ipmipower.conf.5*
-/usr/share/man/man8/bmc-watchdog.8*
-/usr/share/man/man8/ipmiping.8*
-/usr/share/man/man8/ipmipower.8*
-/usr/share/man/man8/rmcpping.8*
-/var/log/
+%doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
+%doc %{_datadir}/doc/%{name}/COPYING.ipmiping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmiping
+%doc %{_datadir}/doc/%{name}/COPYING.ipmipower
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.ipmipower
+%doc %{_datadir}/doc/%{name}/COPYING.rmcpping
+%doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
+%config(noreplace) %{_sysconfdir}/init.d/bmc-watchdog
+%{_sbindir}/bmc-watchdog
+%{_sbindir}/ipmiping
+%{_sbindir}/ipmipower
+%{_sbindir}/rmcpping
+%{_mandir}/man5/ipmipower.conf.5*
+%{_mandir}/man8/bmc-watchdog.8*
+%{_mandir}/man8/ipmiping.8*
+%{_mandir}/man8/ipmipower.8*
+%{_mandir}/man8/rmcpping.8*
+%{_localstatedir}/log/*
 
 %changelog
