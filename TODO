@@ -25,7 +25,7 @@ libfreeipmi:
     function of some sort.
   * Feature to allow atomicity of multiple IPMI commands in a row.
     May or may not be possible.  Think about it.
-  * ipmi_lan_cmd() problem with return code.
+  * Auto retries in ipmi_lan_cmd()
   * open_lan_session - modify to use best secure connection available
   
 fish:
@@ -51,6 +51,7 @@ ipmipower:
   * Buffer recently malloced space to avoid constant re-mallocing.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
+  * Auto choose best authentication available.
 
 ipmiping/rmcpping:
 ------------------
@@ -71,6 +72,7 @@ General:
     - bmc-config wrapper script to handle common stuff
      - i.e. if you enable a user, automatically turn on
       IPMI lan and IPMI serial, passwd/md2 authentication, etc.
+  * extra documentation on bmc-config
 
 Autoconf issues:
 ----------------
