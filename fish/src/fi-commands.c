@@ -42,10 +42,6 @@
 #endif
 
 #include "freeipmi.h"
-#ifndef __FreeBSD__
-#include <error.h>
-#endif
-
 #include "fish.h"
 #include "fi-utils.h"
 #include "fi-commands.h"

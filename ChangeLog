@@ -1,3 +1,16 @@
+2005-01-09  Anand Babu  <ab@gnu.org.in>
+
+	* fish/src/fi-commands.c: replaced error(..) with
+	perror,exit. error() is not really portable.
+
+	* fish/src/fi-utils.c: likewise.
+
+	* fish/src/fish.c: likewise.
+
+	* fish/src/xmalloc.c: like wise.
+
+	* fish/src/xmalloc.h: likewise.
+
 2004-12-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,

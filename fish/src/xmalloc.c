@@ -19,6 +19,8 @@
 #include <config.h>
 #endif
 
+#include <stdio.h>
+
 #include "xmalloc.h"
 
 /* Prototypes for functions defined here.  */
@@ -40,7 +42,11 @@ fixup_null_alloc (n)
   if (n == 0)
     p = malloc ((size_t) 1);
   if (p == 0)
-    error (xmalloc_exit_failure, 0, _("Memory exhausted"));
+    {
+      perror ("malloc");
+      exit (xmalloc_exit_failure);
+    }
+
   return p;
 }
 

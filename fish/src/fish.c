@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.10 2004-12-05 08:06:24 ab Exp $ 
+   $Id: fish.c,v 1.11 2005-01-10 00:43:21 ab Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -36,9 +36,6 @@
 #include <sys/stat.h>
 #include <sys/resource.h>
 #include <sys/socket.h>
-#ifndef __FreeBSD__
-#include <error.h>
-#endif
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
@@ -174,13 +171,20 @@ fi_set_sock_timeout (unsigned int sock_timeout)
 
   if (setsockopt(fi_sockfd, SOL_SOCKET, SO_RCVTIMEO,
 		 &time, sizeof(time)) < 0)
-    error(1, errno, "setsockopt (SO_RCVTIMEO)");
+    {
+      perror ("setsockopt (SO_RCVTIMEO)");
+      exit (EXIT_FAILURE);
+    }
+
   /*
   time.tv_sec  =  fi_get_sock_timeout () / 1000;
   time.tv_usec = (fi_get_sock_timeout () % 1000) * 1000;
   if (setsockopt(fi_sockfd, SOL_SOCKET, SO_SNDTIMEO,
 		 &time, sizeof(time)) < 0)
-    error(1, errno, "setsockopt (SO_SNDTIMEO)");
+    {
+      perror ("setsockopt (SO_RCVTIMEO)");
+      exit (EXIT_FAILURE);
+    }
   */
 }
 

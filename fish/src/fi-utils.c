@@ -80,11 +80,6 @@ strchr (const char* s, int c)
 #include <sys/socket.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#ifdef __FreeBSD__
-#include "freeipmi.h"
-#else
-#include <error.h>
-#endif
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -323,7 +318,10 @@ open_free_udp_port (void)
 
   sockfd = socket (AF_INET, SOCK_DGRAM, 0);
   if (sockfd < 0)
-    error (EXIT_FAILURE, errno, "open_free_udp_port[socket]");
+    {
+      perror ("open_free_udp_port");
+      exit (EXIT_FAILURE);
+    }
 
   for (; free_port < 65535; free_port++)
     {
@@ -340,11 +338,16 @@ open_free_udp_port (void)
 	  if (errno == EADDRINUSE)
 	    continue;
 	  else
-	    error (EXIT_FAILURE, errno, "open_free_udp_port [bind err]");
+	    {
+	      perror ("open_free_udp_port [bind error]");
+	      exit (EXIT_FAILURE);
+	    }
 	}
     }
   close (sockfd);
-  error (EXIT_FAILURE, errno, "open_free_udp_port [no free port]");
+  perror ("open_free_udp_port [bind error]");
+  exit (EXIT_FAILURE);
+
   // avoid compiler warning
   return (-1);
 }
