@@ -928,7 +928,7 @@ get_bmc_username (u_int8_t userid, u_int8_t *username)
   
   if (userid == 1)
     {
-      strcpy (username, "Anonymous");
+      strcpy (username, "NULL");
       return 0;
     }
   

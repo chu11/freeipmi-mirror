@@ -54,7 +54,7 @@
 	(r_exponent (assoc-ref sdr-record "r_exponent"))
 	(b_exponent (assoc-ref sdr-record "b_exponent"))
 	(linear (assoc-ref sdr-record "linear"))
-	(is-signed (assoc-ref sdr-record "is_signed"))
+	(analog-data-format (assoc-ref sdr-record "analog_data_format"))
 	(current-reading     (assoc-ref sensor-reading "current_reading"))
 	(event-message (assoc-ref sensor-reading "event_message"))
 	(status              (assoc-ref sensor-reading "status")))
@@ -71,7 +71,7 @@
     (format #t "R Exponent: ~d~%" r_exponent)
     (format #t "B Exponent: ~d~%" b_exponent)
     (format #t "Linear: ~d~%" linear)
-    (format #t "Signed: ~a~%" (if is-signed "Yes" "No"))
+    (format #t "Analog Data Format: ~d~%" analog-data-format)
     (if is-lower-critical
 	(format #t "Lower Critical Threshold: ~f ~a~%" lower-critical unit-string)
 	(format #t "Lower Critical Threshold: ~a~%" "NA"))

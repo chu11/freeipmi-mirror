@@ -46,5 +46,6 @@ void ipmi_sensor_get_decode_params (u_int8_t *sensor_record,
 				    char *linear, 
 				    short *b, 
 				    short *m);
+int convert_sensor_state_to_offset (u_int16_t sensor_state, u_int16_t *offset);
 
 #endif

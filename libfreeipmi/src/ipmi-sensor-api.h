@@ -30,7 +30,7 @@ struct sdr_full_record
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   /* ************************* */
   u_int8_t slave_system_software_id;
   u_int8_t sensor_number;

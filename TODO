@@ -72,7 +72,7 @@ Bala's TODO List:
 =================
   * lan based sensors, sel and bmc-info
   * bmc-config --auto-configure
-  * sensors will be simplified with Scheme
+  * sensors will be simplified with Scheme <DONE>
   * dual fiid for ipmi_kcs_lan_set_auth_type_enables
 
 Ian's TODO List:

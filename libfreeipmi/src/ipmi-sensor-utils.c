@@ -229,3 +229,72 @@ ipmi_sensor_get_decode_params (u_int8_t *sensor_record,
 
   return;
 }
+
+int 
+convert_sensor_state_to_offset (u_int16_t sensor_state, u_int16_t *offset)
+{
+  if (sensor_state == 0)
+    {
+      // fprintf (stderr, "sensor_state is none\n");
+      return -1;
+    }
+  
+  switch (sensor_state)
+    {
+    case 0x1:    /* BIT  0 is set */
+      *offset = 0;
+      break;
+    case 0x2:    /* BIT  1 is set */
+      *offset = 1;
+      break;
+    case 0x4:    /* BIT  2 is set */
+      *offset = 2;
+      break;
+    case 0x8:    /* BIT  3 is set */
+      *offset = 3;
+      break;
+    case 0x10:   /* BIT  4 is set */
+      *offset = 4;
+      break;
+    case 0x20:   /* BIT  5 is set */
+      *offset = 5;
+      break;
+    case 0x40:   /* BIT  6 is set */
+      *offset = 6;
+      break;
+    case 0x80:   /* BIT  7 is set */
+      *offset = 7;
+      break;
+    case 0x100:  /* BIT  8 is set */
+      *offset = 8;
+      break;
+    case 0x200:  /* BIT  9 is set */
+      *offset = 9;
+      break;
+    case 0x400:  /* BIT 10 is set */
+      *offset = 10;
+      break;
+    case 0x800:  /* BIT 11 is set */
+      *offset = 11;
+      break;
+    case 0x1000: /* BIT 12 is set */
+      *offset = 12;
+      break;
+    case 0x2000: /* BIT 13 is set */
+      *offset = 13;
+      break;
+    case 0x4000: /* BIT 14 is set */
+      *offset = 14;
+      break;
+    case 0x8000: /* BIT 15 is set */
+      *offset = 15;
+      break;
+    default:
+      {
+	// fprintf (stderr, "sensor_state is out-of-range. state=%X\n", sensor_state);
+	return -1;
+      }
+    }
+  
+  return 0;
+}

@@ -1,3 +1,26 @@
+2005-02-07  A Balamurugan <bala.a@californiadigital.com>
+
+	* ROADMAP: updated
+
+	* TODO: updated
+
+	* fish/extensions/bmc-config.scm: fixed a bug; calling
+	non-existing primitive procedure
+
+	* fish/src/bmc-conf2.c: renamed "Anonymous" to "NULL" for user1.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.c: fixed compiler warnings
+
+	* libfreeipmi/src/ipmi-sensor-utils.[ch]: added new function
+	convert_sensor_state_to_offset()
+
+	* fish/extensions/sensors-very-verbose-display.scm,
+	fish/src/scm-procedures.c, libfreeipmi/src/ipmi-sensor-api.[ch]:
+	renamed is_signed to analog_data_format globally.  fixed logical
+	errors in sensor event message decoding.  Thanks to Albert Chu for
+	reporting these bugs.
+	
 2005-02-04  Albert Chu <chu11@llnl.gov>
 	
 	* freeipmi.spec.in: Add syslogging and tracing to debug rpm.

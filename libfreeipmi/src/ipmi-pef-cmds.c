@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.9 2004-12-05 02:34:48 ab Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.10 2005-02-08 05:42:38 balamurugan Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -1040,32 +1040,33 @@ ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
   return status;
 }
 
-static int8_t
-fill_kcs_set_alert_string_keys (fiid_obj_t obj_data_rq, u_int8_t string_selector,
-                                u_int8_t filter_number, u_int8_t string_set_number)
-{
-  FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_alert_string_keys_rq,
-                "cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
-  FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_alert_string_keys_rq,
-                "parameter_selector",
-                IPMI_PEF_PARAM_ALERT_STRING_KEYS);
-  FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_alert_string_keys_rq,
-                "pef_conf_param_string_selector",
-                string_selector);
-  FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_alert_string_keys_rq,
-                "pef_conf_param_filter_number",
-                filter_number);
-  FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_alert_string_keys_rq,
-                "pef_conf_param_string_set_number",
-                string_set_number);
-  return 0;
-}
+/* This function is not used yet.  When you find it useful, uncomment them */
+/* static int8_t */
+/* fill_kcs_set_alert_string_keys (fiid_obj_t obj_data_rq, u_int8_t string_selector, */
+/*                                 u_int8_t filter_number, u_int8_t string_set_number) */
+/* { */
+/*   FIID_OBJ_SET (obj_data_rq, */
+/*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
+/*                 "cmd", */
+/*                 IPMI_CMD_SET_PEF_CONF_PARAMS); */
+/*   FIID_OBJ_SET (obj_data_rq, */
+/*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
+/*                 "parameter_selector", */
+/*                 IPMI_PEF_PARAM_ALERT_STRING_KEYS); */
+/*   FIID_OBJ_SET (obj_data_rq, */
+/*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
+/*                 "pef_conf_param_string_selector", */
+/*                 string_selector); */
+/*   FIID_OBJ_SET (obj_data_rq, */
+/*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
+/*                 "pef_conf_param_filter_number", */
+/*                 filter_number); */
+/*   FIID_OBJ_SET (obj_data_rq, */
+/*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
+/*                 "pef_conf_param_string_set_number", */
+/*                 string_set_number); */
+/*   return 0; */
+/* } */
 
 int8_t
 ipmi_kcs_alert_immediate (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,

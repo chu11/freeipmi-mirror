@@ -390,7 +390,7 @@
   (set! args (list->strlist args))
   (catch 'misc-error
 	 (lambda ()
-	   (bmc-config-main (append '("bmc-config") args)))
+	   (bc-main (append '("bmc-config") args)))
 	 (lambda (k args . opts)
 	   (display "bmc-config: error: ")
 	   (display (cadr opts))

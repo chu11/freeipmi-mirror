@@ -26,12 +26,12 @@ Roadmap to 1.0.0
  Bala:
    Fish:
     * command bindings.
-    * Sensors rewrite.
+    * Sensors rewrite. <DONE>
     * Scheme primitives revisit.
     * bmc-config.
       * --auto and --expert modes.
-      * code cleanup.
-      * old bmc-config code removal.
+      * code cleanup. <DONE>
+      * old bmc-config code removal. <DONE>
    * FRU.
    * Adopt the the unified driver model for all IPMI sub-systems.
    * bmc-fence daemon.

@@ -121,9 +121,10 @@ extern "C" {
 #define IPMI_CHANNEL_MULTI_SESSION     0x2
 #define IPMI_CHANNEL_SESSION_BASED     0x3
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(channel_number) \
-        (((channel_number) >= 0x0 \
-          && (channel_number) <= 0xF) ? 1 : 0)
+        (((channel_number+1) >= 0x1 \
+          && (channel_number-1) <= 0xE) ? 1 : 0)
 
 #define IPMI_PASSWORD_OPERATION_DISABLE_USER     0x0
 #define IPMI_PASSWORD_OPERATION_ENABLE_USER      0x1

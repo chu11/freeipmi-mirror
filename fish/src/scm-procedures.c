@@ -2149,8 +2149,8 @@ get_scm_sdr_full_record (struct sdr_full_record *record,
 				    gh_str02scm ("linear"), 
 				    gh_long2scm (record->linear));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("is_signed"), 
-				    (record->is_signed ? SCM_BOOL_T : SCM_BOOL_F));
+				    gh_str02scm ("analog_data_format"), 
+				    gh_long2scm (record->analog_data_format));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("slave_system_software_id"), 
 				    gh_long2scm (record->slave_system_software_id));
@@ -2507,8 +2507,8 @@ scm2sdr_full_record (SCM scm_sdr_record, struct sdr_full_record *record)
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("linear"));
   record->linear = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("is_signed"));
-  record->is_signed = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("analog_data_format"));
+  record->analog_data_format = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
   record->slave_system_software_id = gh_scm2long (scm_value);

@@ -38,7 +38,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
   char r_exponent;
   char b_exponent;
   u_int8_t linear;
-  u_int8_t is_signed;
+  u_int8_t analog_data_format;
   
   u_int8_t record_length;
   fiid_obj_get (sdr_record_data, 
@@ -49,14 +49,14 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
   record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
   
   ipmi_sensor_get_decode_params (sdr_record_data, 
-				 &is_signed, &r_exponent, &b_exponent, 
+				 &analog_data_format, &r_exponent, &b_exponent, 
 				 &linear, &b, &m);
   sdr_full_record->b = b;
   sdr_full_record->m = m;
   sdr_full_record->r_exponent = r_exponent;
   sdr_full_record->b_exponent = b_exponent;
   sdr_full_record->linear = linear;
-  sdr_full_record->is_signed = is_signed;
+  sdr_full_record->analog_data_format = analog_data_format;
   
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_full_sensor_record, 
@@ -98,7 +98,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -111,7 +111,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -124,7 +124,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -137,7 +137,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -150,7 +150,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -175,7 +175,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -188,7 +188,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -201,7 +201,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -214,7 +214,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -227,7 +227,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   fiid_obj_get (sdr_record_data, 
@@ -240,7 +240,7 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 			      m,
 			      b,
 			      linear,
-			      is_signed,
+			      analog_data_format,
 			      val);
   
   for (c = 0, i = fiid_obj_field_start_bytes (tmpl_sdr_full_sensor_record, 
@@ -760,11 +760,12 @@ get_sensor_reading (struct sdr_record *sdr_record,
   char r_exponent = 0;
   char b_exponent = 0;
   u_int8_t linear = 0;
-  u_int8_t is_signed = 0;
+  u_int8_t analog_data_format = 0;
   
   fiid_obj_t obj_data_rs; 
   u_int64_t val;
   u_int8_t status = 0;
+  u_int16_t state_offset = 0;
   
   switch (sdr_record->record_type)
     {
@@ -781,7 +782,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
       r_exponent = sdr_record->record.sdr_full_record.r_exponent;
       b_exponent = sdr_record->record.sdr_full_record.b_exponent;
       linear = sdr_record->record.sdr_full_record.linear;
-      is_signed = sdr_record->record.sdr_full_record.is_signed;
+      analog_data_format = sdr_record->record.sdr_full_record.analog_data_format;
       break;
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       slave_sys_soft_id = sdr_record->record.sdr_compact_record.slave_system_software_id;
@@ -819,7 +820,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 								      m, 
 								      b, 
 								      linear, 
-								      is_signed, 
+								      analog_data_format, 
 								      (u_int8_t) val);
 	}
       else 
@@ -936,7 +937,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 								      m, 
 								      b, 
 								      linear, 
-								      is_signed, 
+								      analog_data_format, 
 								      (u_int8_t) val);
 	}
       else 
@@ -964,8 +965,10 @@ get_sensor_reading (struct sdr_record *sdr_record,
 		    tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
-      sensor_reading->event_message = ipmi_get_generic_event_message (event_reading_type, 
-								      (u_int16_t) val);
+      if (convert_sensor_state_to_offset (val, &state_offset) == 0)
+	sensor_reading->event_message = ipmi_get_generic_event_message (event_reading_type, state_offset);
+      else 
+	sensor_reading->event_message = NULL;
       
       return 0;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
@@ -987,7 +990,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 								      m, 
 								      b, 
 								      linear, 
-								      is_signed, 
+								      analog_data_format, 
 								      (u_int8_t) val);
 	}
       else 
@@ -1015,18 +1018,10 @@ get_sensor_reading (struct sdr_record *sdr_record,
 		    tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
-      
-/*       { */
-/* 	int i; */
-/* 	for (i = 0; i < fiid_obj_len_bytes (tmpl_get_sensor_discrete_reading_rs); i++) */
-/* 	  printf ("%02X ", obj_data_rs[i]); */
-/* 	printf ("\n"); */
-/* 	printf ("sensors: sensor_type: %Xh, sensor_state: %X\n",  */
-/* 		sensor_type, (u_int16_t) val); */
-/*       } */
-      
-      sensor_reading->event_message = ipmi_get_event_message (sensor_type, 
-							      (u_int16_t) val);
+      if (convert_sensor_state_to_offset (val, &state_offset) == 0)
+	sensor_reading->event_message = ipmi_get_event_message (sensor_type, state_offset);
+      else 
+	sensor_reading->event_message = NULL;
       
       return 0;
     case IPMI_SENSOR_CLASS_OEM:
