@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.h,v 1.1 2004-05-11 17:04:28 chu11 Exp $
+ *  $Id: error.h,v 1.2 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,6 +47,8 @@ void err_syslog(int toggle);
 void err_file_stream(int toggle, FILE *stream);
 void err_file_descriptor(int toggle, int fd);
 void err_cbuf(int toggle, cbuf_t buf);
+void err_cbuf_dump_file_stream(int toggle, FILE *stream);
+void err_cbuf_dump_file_descriptor(int toggle, int fd);
 
 /* Emit error message with a newline appended.  
  * If syslogging, use LOG_ERR level.

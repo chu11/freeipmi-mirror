@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.2 2004-11-15 20:45:59 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.3 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -154,6 +154,11 @@ _setup(void)
 
   /* if debug set, send debug info to stderr too */
   err_cbuf(conf->debug, ttyerr);
+
+  /* on err_exit() dump cbuf data to appropriate places too */
+  err_cbuf_dump_file_stream(conf->debug, stderr);
+  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
+
 #else
   err_cbuf(0, 0);
 #endif

@@ -1,3 +1,33 @@
+2004-12-17  Albert Chu <chu11@llnl.gov>
+
+	Added additional autodetection due to privilege level errors.
+
+	* ipmipower/src/ipmipower.h: Add privilege field to
+	ipmipower_powercmd struct.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
+	Initialize new privilege field.
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Add
+	appropriate code logic for this new autodetection feature.
+	
+	* ipmipower/src/ipmipower.h (ipmipower_packet_create): Where
+	appropriate, use privilege field of ipmipower_powercmd_t.
+
+	Fix err_exit() corner case, where ending debug output is not output.
+	
+	* ipmipower/src/error.h, ipmipower/src/error.c
+	(err_cbuf_dump_file_stream, err_cbuf_dump_file_descriptor): New
+	functions.
+
+	* ipmipower/src/error.c (err_exit): Dump cbuf contents
+	appropriately if about to exit.
+
+	* ipmipower/src/ipmipower.c (_setup),
+	ipmipower/src/ipmipower_prompt.c (_cmd_log, _cmd_logfile,
+	ipmipower_prompt_process_cmdline): Add appropriate calls to
+	err_cbuf_dump_file_stream and err_cbuf_dump_file_descriptor.
+
 2004-12-16  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-md2.c (ipmi_md2_finish),

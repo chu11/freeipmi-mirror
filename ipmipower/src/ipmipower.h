@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.6 2004-12-15 17:03:57 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.7 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -247,6 +247,7 @@ struct ipmipower_powercmd {
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
     u_int8_t authtype;
+    u_int8_t privilege;
 
     struct ipmipower_connection *ic;
   

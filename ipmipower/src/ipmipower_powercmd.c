@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.5 2004-11-16 17:37:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.6 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -162,7 +162,13 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
-  
+  /* authtype set after Get Authentication Capabilities Response */
+  /* Following are default minimum privileges, could be set higher later */
+  if (cmd == POWER_CMD_POWER_STATUS)
+    ip->privilege = IPMI_PRIV_LEVEL_USER;
+  else
+    ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+
   ip->ic = ic;
 
   list_append(pending, ip);
@@ -206,7 +212,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
    */
   if (!is_retry || pkt == ACTV_REQ)
     ip->ic->ipmi_send_count++;
-
+  
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
@@ -512,6 +518,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         auth_type_straight_passwd_key, auth_status_anonymous_login, 
         auth_status_null_username, auth_status_non_null_username, 
         auth_status_per_message_auth;
+      int authtype_try_higher_priv = 0;
 
       if ((rv = _recv_packet(ip, AUTH_RES)) != 1) 
         {
@@ -567,43 +574,78 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           else if (auth_type_straight_passwd_key)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
           else if (!strlen(conf->username) && !strlen(conf->password)
-              && auth_type_none)
+                   && auth_type_none)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
 	  else
 	    {
-	      /* achu: It may not seem possible to get to this point
-	       * since the check for anonymous_login, null_username,
-	       * or non_null_username has passed, but there's always
-	       * that iffy OEM authentication type that could be
-	       * enabled. Shame on you evil vendor!!
-	       */
+              /* achu: It may not seem possible to get to this point
+               * since the check for anonymous_login, null_username,
+               * or non_null_username has passed, but there's a few
+               * ways we can fail. That iffy OEM authentication type
+               * that could be enabled (shame on you evil vendor!!) or
+               * authentication at this privilege level isn't allowed.
+               */
+              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+                {
+                  /* Time to give up */
 #ifndef NDEBUG	      
-	      ipmipower_output(MSG_TYPE_AUTHAUTO, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_AUTHAUTO, ip->ic->hostname);
 #else
-	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
-	      return -1;
-	    }
-	}
+                  return -1;
+                }
+              else
+                authtype_try_higher_priv = 1;
+            }
+        }
       else
 	{
 	  /* Can we authenticate with the requested authentication
 	   * type? 
 	   */
  	  if ((!strlen(conf->username) && !strlen(conf->password)
-	       && !auth_type_none)
-	      || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWD_KEY 
-		  && !auth_type_straight_passwd_key)
-	      || (conf->authtype == AUTH_TYPE_MD2
-		  && !auth_type_md2)
+               && conf->authtype == AUTH_TYPE_NONE
+               && auth_type_none)
+              || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWD_KEY 
+                  && auth_type_straight_passwd_key)
+              || (conf->authtype == AUTH_TYPE_MD2
+		  && auth_type_md2)
 	      || (conf->authtype == AUTH_TYPE_MD5
-		  && !auth_type_md5))
-	    {
-	      ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
-	      return -1;
+		  && auth_type_md5))
+            ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
+          else
+            {
+              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+                {
+                  /* Time to give up */
+                  ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
+                  return -1;
+                }
+              else
+                authtype_try_higher_priv = 1;
 	    }
-	  ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
 	}
+         
+      /* achu: We can't authenticate with any known mechanism for the
+       * current privilege level.  But we may able to authenticate at
+       * a higher one.  Lets try again.
+       */
+      if (authtype_try_higher_priv)
+        {
+          /* Try a higher privilege level */
+          if (ip->privilege == IPMI_PRIV_LEVEL_USER)
+            ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+          else if (ip->privilege == IPMI_PRIV_LEVEL_OPERATOR)
+            ip->privilege = IPMI_PRIV_LEVEL_ADMIN;
+          else
+            err_exit("_process_ipmi_packets: invalid privilege state: %d", 
+                     ip->privilege);
+
+          /* Don't consider this a retransmission */
+          _send_packet(ip, AUTH_REQ, 0);
+          goto done;
+        }
 
       if (!auth_status_per_message_auth)
         ip->permsgauth_enabled = IPMIPOWER_TRUE;
@@ -700,7 +742,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           _send_packet(ip, CTRL_REQ, 0);
         }
       else
-        err_exit("invalid command state: %d", ip->cmd);
+        err_exit("_process_ipmi_packets: invalid command state: %d", ip->cmd);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CTRL_SENT) 
     {

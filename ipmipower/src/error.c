@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.c,v 1.1 2004-05-11 17:04:27 chu11 Exp $
+ *  $Id: error.c,v 1.2 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,6 +55,9 @@
 #define ERR_SYSLOG             0x04
 #define ERR_CBUF               0x08
 
+#define ERR_CBUF_DUMP_FILE_STREAM      0x10
+#define ERR_CBUF_DUMP_FILE_DESCRIPTOR  0x20
+
 #define ERROR_BUFLEN           1024
 
 /* basename of calling program */
@@ -65,6 +68,8 @@ static int    err_dest = ERR_NONE;
 static FILE  *err_fstream = NULL;
 static int    err_fd = -1;
 static cbuf_t err_cb = NULL;
+static FILE  *err_dump_fstream = NULL;
+static int    err_dump_fd = -1;
 
 /* Initialize error module.  'prog' is the name of the calling program
  * and will be the prefix of each error message.  Start logging to stderr.
@@ -116,6 +121,30 @@ void err_file_descriptor(int toggle, int fd)
     else {
         err_dest &= ~ERR_FILE_DESCRIPTOR;
         err_fd = -1;
+    }
+}
+
+void err_cbuf_dump_file_stream(int toggle, FILE *stream) 
+{
+    if (toggle) {
+        err_dest |= ERR_CBUF_DUMP_FILE_STREAM;
+        err_dump_fstream = stream; 
+    }
+    else {
+        err_dest &= ~ERR_CBUF_DUMP_FILE_STREAM;
+        err_dump_fstream = NULL;
+    }
+}
+
+void err_cbuf_dump_file_descriptor(int toggle, int fd) 
+{
+    if (toggle) {
+        err_dest |= ERR_CBUF_DUMP_FILE_DESCRIPTOR;
+        err_dump_fd = fd;
+    }
+    else {
+        err_dest &= ~ERR_CBUF_DUMP_FILE_DESCRIPTOR;
+        err_dump_fd = -1;
     }
 }
 
@@ -172,13 +201,22 @@ void err_exit(const char *fmt, ...)
 {
     va_list ap;
 
-    /* NOTE: If exiting, we can't use cbuf for output. */
-    if ((err_dest & ERR_CBUF) > 0)
-        err_cbuf(0, NULL);
-
     va_start(ap, fmt);
     _verr(LOG_ERR, fmt, ap);
     va_end(ap);
+
+    /* Dump on exit if appropriate.  We're exiting, so if
+     * something fails, don't bother.
+     */
+    if ((err_dest & ERR_CBUF_DUMP_FILE_STREAM) > 0)
+      {
+        int fd = fileno(err_dump_fstream);
+        cbuf_peek_to_fd(err_cb, fd, -1);
+      }
+
+    if ((err_dest & ERR_CBUF_DUMP_FILE_DESCRIPTOR) > 0)
+      cbuf_peek_to_fd(err_cb, err_dump_fd, -1);
+
     exit(1);
 }
 

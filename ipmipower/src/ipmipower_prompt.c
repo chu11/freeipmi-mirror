@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.4 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.5 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -383,7 +383,6 @@ _cmd_log(char **argv)
           conf->log = IPMIPOWER_FALSE;
           return;
         }
-      
     }
   else if (!conf->log && conf->logfile_fd != -1)
     {
@@ -391,6 +390,7 @@ _cmd_log(char **argv)
       conf->logfile_fd = -1;
     }
 
+  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
   cbuf_printf(ttyout, "logging is now %s\n", (conf->log) ? "on" : "off");
 }
 
@@ -433,6 +433,7 @@ _cmd_logfile(char **argv)
   memset(conf->logfile, '\0', MAXPATHLEN+1);
   strcpy(conf->logfile, file);
   conf->logfile_fd = fd;
+  err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
   
   cbuf_printf(ttyout, "log file set to %s\n", conf->logfile);
 }
@@ -696,6 +697,7 @@ ipmipower_prompt_process_cmdline(void)
 	      {
 		_cmd_set_flag(argv, &conf->debug, "debugging");
 		err_cbuf(conf->debug, ttyerr);
+                err_cbuf_dump_file_stream(conf->debug, stderr);
 	      }
             else if (strcmp(argv[0], "ipmidump") == 0)
               _cmd_set_flag(argv, &conf->ipmidump, "ipmi dump");

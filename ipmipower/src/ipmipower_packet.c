@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.5 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.6 2004-12-18 00:42:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -250,7 +250,7 @@ int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
-  u_int8_t at, priv;
+  u_int8_t at;
   int len = 0;
   fiid_obj_t obj;
 
@@ -270,11 +270,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   if (pkt == AUTH_REQ)
     {
-      if (ip->cmd == POWER_CMD_POWER_STATUS)
-        priv = IPMI_PRIV_LEVEL_USER;
-      else
-        priv = IPMI_PRIV_LEVEL_OPERATOR;
-
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, 
                            IPMI_SESSION_AUTH_TYPE_NONE, 
                            0, 0, NULL, 0, 
@@ -288,7 +283,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-      if (fill_cmd_get_channel_auth_caps(priv, ip->auth_req) < 0)
+      if (fill_cmd_get_channel_auth_caps(ip->privilege, ip->auth_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_channel_auth_caps: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -304,8 +299,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == SESS_REQ)
     {
       u_int8_t *username;
-
-      at = ip->authtype;
 
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, 
                            IPMI_SESSION_AUTH_TYPE_NONE, 
@@ -325,7 +318,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         username = NULL;
 
-      if (fill_cmd_get_session_challenge(at, 
+      if (fill_cmd_get_session_challenge(ip->authtype, 
                                          username, 
                                          strlen(conf->username),
                                          ip->sess_req) < 0)
@@ -351,17 +344,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         password = NULL;
 
-      at = ip->authtype;
-
-      if (ip->cmd == POWER_CMD_POWER_STATUS)
-        priv = IPMI_PRIV_LEVEL_USER;
-      else
-        priv = IPMI_PRIV_LEVEL_OPERATOR;
-
       Fiid_obj_get(ip->sess_res, tmpl_cmd_get_session_challenge_rs,
                    "tmp_session_id", &tmp_session_id);
       
-      if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
+      if (fill_hdr_session(tmpl_hdr_session_auth_calc, ip->authtype, 
                            0,
                            (u_int32_t)tmp_session_id, 
                            password,
@@ -376,7 +362,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-      if (fill_cmd_activate_session(at, priv, 
+      if (fill_cmd_activate_session(ip->authtype, ip->privilege, 
                                     ip->sess_res + fiid_obj_field_start_bytes(tmpl_cmd_get_session_challenge_rs, "challenge_str"), 
                                     fiid_obj_field_len_bytes(tmpl_cmd_get_session_challenge_rs, "challenge_str"),
                                     IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM,
@@ -398,6 +384,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       u_int64_t initial_inbound_seq_num;
       u_int64_t session_id;
       u_int8_t *password;
+      u_int8_t priv;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
@@ -414,8 +401,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         password = NULL;
 
-      /* We should skip the PRIV_REQ packet on a power status
-       * command, but I'll just leave this code here
+      /* We should skip the PRIV_REQ packet on a power status command,
+       * but I'll just leave the POWER_STATUS command check anyway.
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
         priv = IPMI_PRIV_LEVEL_USER;
