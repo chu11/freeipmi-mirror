@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.1 2004-05-11 17:05:11 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.2 2004-05-11 17:46:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -27,8 +27,6 @@
 #ifndef _IPMIPOWER_WRAPPERS_H
 #define _IPMIPOWER_WRAPPERS_H
 
-#include <freeipmi/freeipmi.h>
-
 #include "argv.h"
 #include "hprintf.h"
 #include "fd.h"
@@ -38,6 +36,7 @@
 #include "wrappers.h"
 #include "error.h"
 #include "conffile.h"
+#include "freeipmi.h"
 
 /* Cbuf_create
  * - Create cbuf buffer
