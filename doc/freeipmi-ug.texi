@@ -3605,8 +3605,8 @@ any of the following configuration listings would be acceptable:
 @example
 hostnames @var{host1} @var{host2} @var{host3} @var{foo1} @var{bar1}
 hostnames @var{host1},@var{host2},@var{host3},@var{foo1},@var{bar1}
-hostnames @var{host[1-3]} @var{foo1} @var{bar1}
-hostnames @var{host[1-3]} @var{foo1},@var{bar1}
+hostnames @var{host}[1-3] @var{foo1} @var{bar1}
+hostnames @var{host}[1-3] @var{foo1},@var{bar1}
 @end example
 
 At most 64 hostnames or hostname ranges can be separted by
