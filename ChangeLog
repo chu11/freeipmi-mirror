@@ -1,3 +1,11 @@
+2004-05-06 Albert Chu <chu11@llnl.gov>
+
+	* fish/fish.spec.in, fish/fish.lsm.in,
+	libfreeipmi/libfreeipmi.lsm.in, libfreeipmi/libfreeipmi.spec.in:
+	Removed files.
+
+	* configure.ac: Remove generation of lsm and spec files.
+
 2004-05-06 09:35  itz
 
 	* autogen.sh, configure.ac: Use ancient automake to satisfy RH
