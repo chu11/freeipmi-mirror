@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.3 2004-10-27 00:52:21 itz Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.4 2004-10-28 00:19:19 itz Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -49,6 +49,8 @@ extern fiid_template_t tmpl_get_pef_conf_param_startup_delay_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_alert_startup_delay_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_num_event_filters_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_event_filter_table_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_event_filter_data1_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_num_alert_policies_rs;
 
 enum which_event
   {
@@ -79,9 +81,16 @@ int8_t ipmi_kcs_get_pef_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t o
 int8_t ipmi_kcs_get_pef_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
                                            u_int8_t parameter_type, u_int8_t set_selector,
                                            u_int8_t block_selector);
-int8_t ipmi_kcs_get_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                        u_int8_t parameter_type, u_int8_t set_selector,
-                                        u_int8_t block_selector);
+int8_t ipmi_kcs_get_pef_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                            u_int8_t parameter_type, u_int8_t set_selector,
+                                            u_int8_t block_selector);
+int8_t
+ipmi_kcs_get_pef_filter_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                               u_int8_t parameter_type, u_int8_t set_selector, u_int8_t block_selector);
+int8_t
+ipmi_kcs_get_pef_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                     u_int8_t parameter_type, u_int8_t set_selector,
+                                     u_int8_t block_selector);
 
 #ifdef __cplusplus
 }

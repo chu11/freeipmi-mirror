@@ -1,3 +1,7 @@
+2004-10-27  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: more PEF commands.
+
 2004-10-26  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-pef-param-spec.h: New file.
