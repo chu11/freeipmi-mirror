@@ -750,47 +750,6 @@ display_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
       status = -1;
     }
   
-  printf ("N/A ");
-  
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"lower_critical_threshold",
-		&val);
-  printf ("(low=%.2f/",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    analog_data_format,
-				    val));
-  
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record, 
-		"nominal_reading", 
-		&val);
-  printf ("nom=%.2f/", 
-	  ipmi_sensor_decode_value (r_exponent, 
-				    b_exponent, 
-				    m, 
-				    b, 
-				    linear, 
-				    analog_data_format, 
-				    val));
-  
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"upper_critical_threshold",
-		&val);
-  printf ("high=%.2f) ",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    analog_data_format,
-				    val));
-  
   if (status == 0)
     {
       if (ipmi_sensor_discrete_health_check (sensor_type, data_rs))

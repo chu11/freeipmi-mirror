@@ -1,3 +1,9 @@
+2004-12-08  Albert Chu <chu11@llnl.gov>
+
+	* fish/src/ipmi-wrapper-sensor.c
+	(display_current_discrete_sensor_full_record): Don't output
+	thresholds for this non-threshold sensor.
+	
 2004-12-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-kcs-interface.h,
