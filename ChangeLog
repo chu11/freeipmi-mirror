@@ -1,3 +1,8 @@
+2005-03-01  Anand Babu  <ab@gnu.org.in>
+
+	* configure.ac: Added check for guile version. Minimum tested required
+	version is 1.6.4.
+
 2005-02-23  Anand Babu  <ab@gnu.org.in>
 
 	* CVS: New branch Release-0_1_3-branch with root tag Release-0_1_3.

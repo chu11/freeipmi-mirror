@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.21 2004-12-05 02:34:48 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.22 2005-03-02 01:51:56 ab Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -99,6 +99,29 @@ fi
 if test "x${enable_fish}" = "xyes" ; then
    GUILE_PROGS
    GUILE_FLAGS
+
+   # Check for minimum required Guile version:
+   GUILE_REQUIRED_MINIMUM_VERSION="1.6.4"
+   GUILE_VERSION=`guile -c "
+   (define (guile-current-version>=? min-required-version)
+   \"return TRUE if current-version >= VER\"
+   (let
+      ((installed-major (car (string-split (version) #\.)))
+       (installed-minor (cadr (string-split (version) #\.)))
+       (installed-micro (caddr (string-split (version) #\.)))
+       (required-major (car (string-split min-required-version #\.)))
+       (required-minor (cadr (string-split min-required-version #\.)))
+       (required-micro (caddr (string-split min-required-version #\.))))
+       (if (and (string-ci>=? installed-major required-major)
+                (string-ci>=? installed-minor required-minor)
+                (string-ci>=? installed-micro required-micro))
+           (display \"true\")
+           (display \"false\"))))
+   (guile-current-version>=? \"$GUILE_REQUIRED_MINIMUM_VERSION\")"`
+   if test "$GUILE_VERSION" != true; then
+      AC_MSG_ERROR([Installed version of GNU Guile is too old. You need "$GUILE_REQUIRED_MINIMUM_VERSION" or higher])
+   fi
+
    NOREADLINE_LIBS=${LIBS}
    LIBS=${READLINE_LIBS}
    AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
