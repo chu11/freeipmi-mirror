@@ -107,11 +107,12 @@
       (sel-display-version))
      ((string? hex-dump-name)
       (with-output-to-file hex-dump-name
-        (let loop ((first-entry (fi-sel-get-first-entry-hex)))
-          (if (string? first-entry)
-              (begin
-                (display first-entry)
-                (loop (fi-sel-get-next-entry-hex)))))))
+        (lambda ()
+          (let loop ((first-entry (fi-sel-get-first-entry-hex)))
+            (if (string? first-entry)
+                (begin
+                  (display first-entry)
+                  (loop (fi-sel-get-next-entry-hex))))))))
      (delete-all-wanted
       (fi-sel-clear))
      ((not (null? delete-list))
