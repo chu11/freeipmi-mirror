@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.2 2004-10-25 22:31:15 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.3 2004-11-15 20:46:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,20 +24,20 @@
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
 .TH bmc-watchdog 8 "April 2004" "bmc-watchdog @VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 bmc-watchdog \- BMC watchdog timer daemon and control utility
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B bmc-watchdog command [OPTIONS] [COMMAND_OPTIONS]...
 .br
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B bmc-watchdog
-controls a Base Management Controller (BMC) watchdog timer.  The
+controls a Baseboard Management Controller (BMC) watchdog timer.  The
 .B bmc-watchdog
 tool typically executes as a cronjob or daemon to manage the watchdog
 timer.  A user must be root in order to run
 .B bmc-watchdog. 
 
-.SH BMC WATCHDOG DETAILS
+.SH "BMC WATCHDOG DETAILS"
 A BMC watchdog timer is part of the Intelligent Platform Management
 Interface (IPMI) specification and is only available to BMCs that are
 compliant with IPMI.  When a BMC watchdog timer is started, it begins
@@ -46,7 +46,7 @@ timer hits zero, the timer will execute a pre-configured pre-timeout
 interrupt and/or timeout action.
 
 In order to stop the pre-timeout interrupt or timeout action from
-being generated, the watchdog timer must be periodically reset back to
+being executed, the watchdog timer must be periodically reset back to
 its initial beginning value.
 
 The BMC watchdog timer automatically stops itself when the machine is
@@ -64,7 +64,7 @@ timer will countdown to zero and reset the machine.
 
 See EXAMPLES below for examples of how bmc-watchdog is commonly used.
 
-.SH COMMANDS
+.SH "COMMANDS"
 The following commands are available to
 .B bmc-watchdog.
 .TP
@@ -83,8 +83,10 @@ configuration and state is printed to standard output.
 Reset BMC Watchdog Timer.  
 .TP
 .B  -t, --start                     
-Start BMC Watchdog Timer.  Identical to --reset command when the
-timer is stopped.  Does nothing if the timer is currently running.
+Start BMC Watchdog Timer.  Does nothing if the timer is currently
+running.  Identical to --reset command when the timer is stopped with
+the exception of the start command options listed below under START
+OPTIONS.
 .TP
 .B  -y, --stop                      
 Stop BMC Watchdog Timer.  Stops the current timer.
@@ -105,7 +107,7 @@ generated in the bmc-watchdog log.  The default log is stored at
 /var/log/freeipmi/bmc-watchdog.log.  The daemon can be stopped using
 the --stop command, --clear command, or by setting the stop_timer flag
 on the --set command.
-.SH OPTIONS
+.SH "OPTIONS"
 The following options can be used by any command.
 .TP
 .B  -h, --help
@@ -137,7 +139,7 @@ Turns off all logging done by
 Turns on debugging.  All data written and read from the BMC is dumped
 to stderr.
 \}
-.SH SET OPTIONS
+.SH "SET OPTIONS"
 The following options can be used by the set command to set or clear
 various BMC watchdog configuration parameters.
 .TP
@@ -205,7 +207,7 @@ is typically used when
 is used as a cronjob.  This can be used to reset the timer after it
 has been initially started.
 
-.SH START OPTIONS
+.SH "START OPTIONS"
 The following options can be used by the start command.
 .TP
 .B  -G INT, --gratuitous-arp=INT
@@ -220,7 +222,7 @@ timer is running.  A flag value of 1 suspends ARP responses.  A value
 of 0 will not suspend ARP responses.  If this option is not specified,
 ARP responses will not be suspended.
 
-.SH DAEMON OPTIONS
+.SH "DAEMON OPTIONS"
 The following options can be used by the daemon command to set the
 initial BMC watchdog configuration parameters.
 .TP
@@ -286,10 +288,10 @@ Errors are logged to the bmc-watchdog log.
 .LP 
 Setup a bmc-watchdog daemon that resets the machine after 15 minutes
 (900 seconds) if the OS has crashed (see default bmc-watchdog rc
-script /etc/init.d/bmc-watchdog a more complete example):
+script /etc/init.d/bmc-watchdog for a more complete example):
         bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
 
-.SH KNOWN ISSUES
+.SH "KNOWN ISSUES"
 .B Bmc-watchdog
 may fail to reset the watchdog timer if it is not scheduled properly.
 It is always recommended that 
@@ -299,6 +301,7 @@ be executed with a high scheduling priority.
 On some machines, the hardware based SMI Handler may disable a
 processor after a watchdog timer timeout if the timer use is set to
 something other than SMS/OS.
-
 .SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov>.
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.

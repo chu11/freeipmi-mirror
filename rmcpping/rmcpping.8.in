@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: rmcpping.8.in,v 1.1 2004-10-14 23:56:04 itz Exp $
+\."$Id: rmcpping.8.in,v 1.2 2004-11-15 20:46:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,9 +26,9 @@
 .TH RMCPING 8 "April 2004" "rmcpping @VERSION@" "System Manager Commands"
 .SH NAME
 rmcpping \- send RMCP Ping to network hosts
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B rmcpping [OPTIONS] destination
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B rmcpping
 uses the RMCP Ping request datagram to elicit an RMCP Pong response from a
 remote host.  The utility can be used to verify if a remote host supports
@@ -79,8 +79,9 @@ executes "rmcpping -c 1 destination" very quickly.  There is no known
 way to cleanly deal with a "confused" BMC.  The best option is to
 simply wait "awhile".
 .SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov>.  Command and manpage
-based off 
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.  Command and manpage based off 
 .B ping(8).
 .SH "SEE ALSO"
 ping(8), ipmiping(8)

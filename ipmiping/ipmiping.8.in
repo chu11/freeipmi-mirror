@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiping.8.in,v 1.1 2004-10-14 23:54:57 itz Exp $
+\."$Id: ipmiping.8.in,v 1.2 2004-11-15 20:46:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,11 +24,11 @@
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
 .TH IPMIPING 8 "April 2004" "ipmiping @VERSION@" "System Commands"
-.SH NAME
+.SH "NAME"
 ipmiping \- send IPMI Get Authentication Capabilitiy request to network hosts 
-.SH SYNOPSIS
+.SH "SYNOPSIS"
 .B ipmiping [OPTIONS] destination
-.SH DESCRIPTION
+.SH "DESCRIPTION"
 .B ipmiping
 uses the IPMI Get Authentication Capabilities request datagram to
 elicit an IPMI Get Authentication Capabilitiesl response from a remote
@@ -79,9 +79,10 @@ very quickly.  For example, this could happen if the user repeatedly
 executes "ipmiping -c 1 destination" very quickly.  There is no known
 way to cleanly deal with a "confused" BMC.  The best option is to
 simply wait "awhile".
-.SH ORIGIN
-Developed by Albert Chu <chu11@llnl.gov>.  Command and manpage
-based off 
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+This software is open source and distributed under the terms of the
+Gnu GPL.  Command and manpage based off 
 .B ping(8).
 .SH "SEE ALSO"
 ping(8), rmcpping(8)
