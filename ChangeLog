@@ -1,3 +1,9 @@
+2004-07-28  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-common.scm: added new procedure (file-exists?)
+	* fish/extensions/bc-section.scm: code cleanup and updated procedures
+	* fish/extensions/bc2.scm: like wise
+
 2004-07-26  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_bmclog, _init_bmc_watchdog):

@@ -190,3 +190,21 @@
   (and (= (length (string-split mac-address #\:)) 6)
        (boolean? (member #f (map (lambda (s) (string->number s 16)) 
 				 (string-split mac-address #\:))))))
+
+(define (file-exists? filename)
+  (catch 'system-error 
+	 (lambda ()
+	   (if (eq? (stat:type (stat filename)) 'regular)
+	       #t 
+	       (begin 
+		 (display 
+		  (string-append "error: " filename ": is not a regular file\n") 
+		  (current-error-port))
+		 #f)))
+	 (lambda error-info 
+	   (let ((errno (system-error-errno error-info)))
+	     (display (string-append "error: " filename ": ") (current-error-port))
+	     (display (strerror errno) (current-error-port))
+	     (display "\n" (current-error-port))
+	     #f))))
+

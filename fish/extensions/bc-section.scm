@@ -49,28 +49,61 @@
 		      #f)))))
     (read-data)))
 
-(define (validate-section-keys section-data section-keys)
-  (let ((line "")
-	(key "")
-	(value "")
-	(value-validator ""))
-    (if (null? section-data)
-	#t
-	(begin 
-	  (set! line (car section-data))
-	  (set! key (car (string-tokenize line)))
-	  (set! value (cadr (string-tokenize line)))
-	  (set! value-validator (get-value-validator key section-keys)) 
-	  (if (boolean? value-validator)
-	      (begin 
-		(display "ERROR: invalid key <") (display key) (display ">\n")
-		#f)
-	      (if (eval (list value-validator value) (interaction-environment))
-		  (validate-section-keys (cdr section-data) section-keys)
-		  (begin 
-		    (display "ERROR: invalid value <") (display value) 
-		    (display "> of key <") (display key) (display ">\n")
-		    #f)))))))
+(define (valid-key? key key-desc-list)
+  (not (boolean? (get-value-validator key key-desc-list))))
+
+(define (valid-value? key value key-desc-list)
+  (let ((value-validator (get-value-validator key key-desc-list)))
+    (if (boolean? value-validator)
+	#f
+	((primitive-eval value-validator) value))))
+
+(define (valid-section-name? section-name)
+  (not (boolean? (assoc (string-downcase section-name) section-name-desc))))
+
+(define (get-section-key-desc section-name)
+  (primitive-eval (assoc-ref section-name-desc 
+			     (string-downcase section-name))))
+
+;;; commit functions ;;;
+;;;;;;;;;;;;;;;;;;;;;;;;
+
+(define (validate-commit-section-data section-data key-desc-list) 
+  (if (null? section-data) 
+      #t 
+      (let* ((line  (car section-data)) 
+	     (key   (car (string-tokenize line))) 
+	     (value (cadr (string-tokenize line)))) 
+	(if (valid-key? key key-desc-list) 
+	    (if (valid-value? key value key-desc-list) 
+		(validate-commit-section-data (cdr section-data) key-desc-list) 
+		(begin 
+		  (display (string-append "ERROR: invalid value <" 
+					  value 
+					  "> of key <" 
+					  key 
+					  ">\n"))
+		  #f))
+	    (begin 
+	      (display (string-append "ERROR: invalid key <" 
+				      key 
+				      ">\n"))
+	      #f)))))
+
+(define (validate-commit-section section-data)
+  (if (null? section-data)
+      (begin 
+	(display "ERROR: invalid section data\n" (current-error-port))
+	#f)
+      (let ((section-name (car section-data)))
+	(if (valid-section-name? section-name)
+	    (validate-commit-section-data (cdr section-data)
+					  (get-section-key-desc section-name))
+	    (begin 
+	      (display (string-append "ERROR: invalid section name <"
+				    section-name 
+				    ">\n") (current-error-port))
+	      #f)))))
 
 (define (commit-section-values section-name section-data section-keys)
   (let ((line "")
@@ -105,65 +138,144 @@
 					"> FAILED\n"))
 		#f))))))
 
-(define (checkout-section-values section-name checkout-keys section-keys)
-  (let ((key "")
-	(value "")
-	(checkout-proc "")
-	(convertor-proc ""))
-    (if (null? checkout-keys)
-	#t
-	(begin 
-	  (set! key (car checkout-keys))
-	  (set! checkout-proc (get-checkout-proc key section-keys))
-	  (set! convertor-proc (get-value-convertor-proc key section-keys))
-; 	  (display key) (newline)
-; 	  (display convertor-proc) (newline)
-; 	  (display checkout-proc) (newline)
-	  (set! value ((primitive-eval checkout-proc) section-name))
-; 	  (display value) (newline)
-	  (if (list? value)
-	      (begin 
-		(set! value ((primitive-eval convertor-proc) (car value)))
-		(display (string-append "Function <" (simple->string checkout-proc)
-					"> Key <" key 
-					"> Value <" value 
-					"> DONE\n"))
-		(checkout-section-values section-name (cdr checkout-keys) section-keys))
-	      (begin 
-		(display (string-append "Function <" (simple->string checkout-proc) 
-					"> Key <" key 
-					"> Value <" (simple->string value)
-					"> FAILED\n"))
-		#f))))))
-
 (define (commit-section section-data)
   (let ((section-name (car section-data)))
     (commit-section-values section-name 
 			   (cdr section-data)
-			   (primitive-eval (assoc-ref section-name-desc 
-						      (string-downcase section-name))))))
+			   (get-section-key-desc section-name))))
 
-(define (checkout-section section-data)
-  (let ((section-name (car section-data)))
-    (checkout-section-values section-name 
-			     (cdr section-data)
-			     (primitive-eval (assoc-ref section-name-desc 
-							(string-downcase section-name))))))
+;;; checkout functions ;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(define (validate-section section-data)
-  (let ((section-name ""))
-    (if (null? section-data)
-	(begin 
-	  (display "ERROR: invalid section found\n")
-	  #f)
-	(begin 
-	  (set! section-name (car section-data))
-	  (if (boolean? (assoc (string-downcase section-name) section-name-desc))
-	      (begin 
-		(display (string-append "ERROR: invalid section name <" 
-					section-name ">\n"))
-		#f)
-	      (validate-section-keys (cdr section-data) 
-				     (primitive-eval 
-				      (assoc-ref section-name-desc 
-						 (string-downcase section-name)))))))))
+(define (validate-checkout-section-keys key-list key-desc-list) 
+  (if (null? key-list) 
+      #t 
+      (let ((key (car key-list)))
+	(if (valid-key? key key-desc-list) 
+	    (validate-checkout-section-data (cdr key-list) key-desc-list) 
+	    (begin 
+	      (display (string-append "ERROR: invalid key <" 
+				      key 
+				      ">\n"))
+	      #f)))))
+
+(define (validate-checkout-section section-data)
+  (if (null? section-data)
+      (begin 
+	(display "ERROR: invalid section data\n" (current-error-port))
+	#f)
+      (let ((section-name (car section-data)))
+	(if (valid-section-name? section-name)
+	    (validate-checkout-section-data (cdr section-data)
+					    (get-section-key-desc section-name))
+	    (begin 
+	      (display (string-append "ERROR: invalid section name <"
+				    section-name 
+				    ">\n") (current-error-port))
+	      #f)))))
+
+(define (checkout-section-value section-name key key-desc-list) 
+  (let* ((checkout-proc (get-checkout-proc key key-desc-list))
+	 (convertor-proc (get-value-convertor-proc key key-desc-list))
+	 (value ((primitive-eval checkout-proc) section-name)))
+    (if (list? value)
+	((primitive-eval convertor-proc) (car value))
+	#f)))
+
+(define (checkout-section-values section-name key-list key-desc-list fp)
+  (if (null? key-list) 
+      #t 
+      (let* ((key (car key-list))
+	     (value (checkout-section-value section-name 
+					    key 
+					    key-desc-list)))
+	(if (boolean? value)
+	    (display (string-append "Error in checkout of key <" 
+				    key 
+				    ">\n") (current-error-port))
+	    (display (string-append "\t" 
+				    (string-capitalize key) 
+				    "\t\t" 
+				    value 
+				    "\n") fp))
+	(checkout-section-values section-name (cdr key-list) key-desc-list fp))))
+
+(define (checkout-section section-data fp)
+  (display (string-append "Section " (car section-data) "\n") fp)
+  (checkout-section-values (car section-data)
+			   (cdr section-data)
+			   (get-section-key-desc (car section-data))
+			   fp)
+  (display "EndSection\n" fp))
+
+; (define (validate-section-keys section-data section-keys)
+;   (let ((line "")
+; 	(key "")
+; 	(value "")
+; 	(value-validator ""))
+;     (if (null? section-data)
+; 	#t
+; 	(begin 
+; 	  (set! line (car section-data))
+; 	  (set! key (car (string-tokenize line)))
+; 	  (set! value (cadr (string-tokenize line)))
+; 	  (set! value-validator (get-value-validator key section-keys)) 
+; 	  (if (boolean? value-validator)
+; 	      (begin 
+; 		(display "ERROR: invalid key <") (display key) (display ">\n")
+; 		#f)
+; 	      (if (eval (list value-validator value) (interaction-environment))
+; 		  (validate-section-keys (cdr section-data) section-keys)
+; 		  (begin 
+; 		    (display "ERROR: invalid value <") (display value) 
+; 		    (display "> of key <") (display key) (display ">\n")
+; 		    #f)))))))
+
+; (define (checkout-section section-data)
+;   (let ((section-name (car section-data)))
+;     (checkout-section-values section-name 
+; 			     (cdr section-data)
+; 			     (primitive-eval (assoc-ref section-name-desc 
+; 							(string-downcase section-name))))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+; (define (checkout-section-values section-name checkout-keys section-keys)
+;   (let ((key "")
+; 	(value "")
+; 	(checkout-proc "")
+; 	(convertor-proc ""))
+;     (if (null? checkout-keys)
+; 	#t
+; 	(begin 
+; 	  (set! key (car checkout-keys))
+; 	  (set! checkout-proc (get-checkout-proc key section-keys))
+; 	  (set! convertor-proc (get-value-convertor-proc key section-keys))
+; ; 	  (display key) (newline)
+; ; 	  (display convertor-proc) (newline)
+; ; 	  (display checkout-proc) (newline)
+; 	  (set! value ((primitive-eval checkout-proc) section-name))
+; ; 	  (display value) (newline)
+; 	  (if (list? value)
+; 	      (begin 
+; 		(set! value ((primitive-eval convertor-proc) (car value)))
+; 		(display (string-append "\t" 
+; 					(string-capitalize key) 
+; 					"\t\t" 
+; 					(string-capitalize value) 
+; 					"\n"))
+; ; 		(display (string-append "Function <" (simple->string checkout-proc)
+; ; 					"> Key <" key 
+; ; 					"> Value <" value 
+; ; 					"> DONE\n"))
+; 		(checkout-section-values section-name (cdr checkout-keys) section-keys))
+; 	      (begin 
+; 		(display (string-append "Function <" (simple->string checkout-proc) 
+; 					"> Key <" key 
+; 					"> Value <" (simple->string value)
+; 					"> FAILED\n") (current-error-port))
+; 		#f))))))
+
