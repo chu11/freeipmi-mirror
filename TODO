@@ -51,6 +51,9 @@ ipmipower:
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
     - already fast, so low priority 
+  * allow none authentication with username
+    - may require libfreeipmi support??
+
 
 ipmiping/rmcpping:
 ------------------
