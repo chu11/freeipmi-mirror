@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.15 2004-10-08 23:41:28 balamurugan Exp $
+ *  $Id: bmc-watchdog.c,v 1.16 2004-10-11 16:45:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -261,7 +261,7 @@ _get_port(void)
     return IPMI_KCS_SMS_IO_BASE_DEFAULT;
 }
 
-/* Must be called after cmdline parsed */
+/* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi(void)
 {
@@ -1261,14 +1261,14 @@ _timer_use_str(u_int8_t timer_use)
 }
 
 static char *
-_pre_interrupt_timeout_str(u_int8_t pre_timeout_interrupt)
+_pre_timeout_interrupt_str(u_int8_t pre_timeout_interrupt)
 {
   if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
     return "None";
   else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI)
     return "SMI";
   else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI)
-    return "NMI";
+    return "NMI / Diagnostic Interrupt";
   else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
     return "Messaging Interrupt";
   else
@@ -1325,7 +1325,7 @@ _get_cmd(void)
   printf("Timeout Action:              %s\n", 
          _timeout_action_str(timeout_action));
   printf("Pre-Timeout Interrupt:       %s\n", 
-         _pre_interrupt_timeout_str(pre_timeout_interrupt));
+         _pre_timeout_interrupt_str(pre_timeout_interrupt));
   printf("Pre-Timeout Interval:        %d seconds\n", pre_timeout_interval);
   printf("Timer Use BIOS FRB2 Flag:    %s\n", 
          (timer_use_expiration_flag_bios_frb2) ? "Set" : "Clear");

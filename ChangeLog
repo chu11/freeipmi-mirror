@@ -1,3 +1,13 @@
+2004-10-11  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_pre_interrupt_timeout_str):
+	Renamed to _pre_timeout_interrupt_str to match code style in rest
+	of program.  Output of NMI modified to more closely match IPMI
+	specification.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_cmd): Updated call to
+	_pre_timeout_interrupt_str appropriately.
+	
 2004-10-11  Anand Babu  <ab@gnu.org.in>
 
        * CVS tagged as release-0_1_0-tag.
