@@ -1,5 +1,10 @@
 2004-07-07  Albert Chu <chu11@llnl.gov>
 
+	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Removed fsync() calls.
+	Problem was unrelated to syncing.
+
+2004-07-07  Albert Chu <chu11@llnl.gov>
+
 	Replace syslogging with a BMC-Watchdog logfile.
 
 	* bmc-watchdog/src/bmc-watchdog.c (_bmclog, _bmclog_write,
@@ -27,6 +32,9 @@
 
 	* bmc-watchdog/Makefile.am: Added bmc-watchdog.log install and
 	dist.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Added fsync() call so
+	debug output is consistent.
 
 	* doc/bmc-watchdog.8.in: Updated with appropriate information for
 	changes above.
