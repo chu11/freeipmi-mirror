@@ -160,4 +160,33 @@ SCM ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
 						   SCM scm_bit_rate);
 SCM ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy);
 
+/*****************/
+SCM ex_get_bmc_username (SCM scm_userid);
+SCM ex_get_bmc_user_lan_channel_access (SCM scm_userid);
+SCM ex_get_bmc_user_serial_channel_access (SCM scm_userid);
+SCM ex_get_bmc_lan_channel_volatile_access ();
+SCM ex_get_bmc_lan_channel_non_volatile_access ();
+SCM ex_get_bmc_lan_conf_ip_addr_source ();
+SCM ex_get_bmc_lan_conf_ip_addr ();
+SCM ex_get_bmc_lan_conf_mac_addr ();
+SCM ex_get_bmc_lan_conf_subnet_mask ();
+SCM ex_get_bmc_lan_conf_default_gw_ip_addr ();
+SCM ex_get_bmc_lan_conf_default_gw_mac_addr ();
+SCM ex_get_bmc_lan_conf_backup_gw_ip_addr ();
+SCM ex_get_bmc_lan_conf_backup_gw_mac_addr ();
+SCM ex_get_bmc_lan_conf_auth_type_callback_enables ();
+SCM ex_get_bmc_lan_conf_auth_type_user_enables ();
+SCM ex_get_bmc_lan_conf_auth_type_operator_enables ();
+SCM ex_get_bmc_lan_conf_auth_type_admin_enables ();
+SCM ex_get_bmc_lan_conf_auth_type_oem_enables ();
+SCM ex_get_bmc_lan_conf_arp_control ();
+SCM ex_get_bmc_lan_conf_gratuitous_arp ();
+SCM ex_get_bmc_serial_channel_volatile_access ();
+SCM ex_get_bmc_serial_channel_non_volatile_access ();
+SCM ex_get_bmc_serial_conf_conn_mode ();
+SCM ex_get_bmc_serial_conf_page_blackout_interval ();
+SCM ex_get_bmc_serial_conf_call_retry_time ();
+SCM ex_get_bmc_serial_conf_ipmi_msg_comm_settings ();
+SCM ex_get_bmc_power_restore_policy ();
+
 #endif

@@ -1,5 +1,12 @@
 (use-modules (srfi srfi-13))
 
+(define (assoc-vref alist value)
+  (if (null? alist)
+      #f
+      (if (equal? value (cdr (car alist)))
+	  (caar alist)
+	  (assoc-vref (cdr alist) value))))
+
 (define privilege-limit-values '(("callback"        . 1) 
 				 ("user"            . 2) 
 				 ("operator"        . 3) 
@@ -7,21 +14,27 @@
 				 ("oem_proprietary" . 5) 
 				 ("no_access"       . #xF)))
 
-(define (get-privilege-limit string-token)
-  (assoc-ref privilege-limit-values (string-downcase string-token)))
+(define (get-privilege-limit value-string)
+  (assoc-ref privilege-limit-values (string-downcase value-string)))
 
 (define (valid-privilege-limit? str)
   (pair? (assoc (string-downcase str) privilege-limit-values)))
+
+(define (get-privilege-limit-value-string value)
+  (assoc-vref privilege-limit-values value))
 
 (define channel-access-modes '(("disabled"         . 0)
 			       ("pre_boot_only"    . 1)
 			       ("always_available" . 2)
 			       ("shared"           . 3)))
-(define (get-channel-access-mode string-token)
-  (assoc-ref channel-access-modes (string-downcase string-token)))
+(define (get-channel-access-mode value-string)
+  (assoc-ref channel-access-modes (string-downcase value-string)))
 
 (define (valid-channel-access-mode? str)
   (pair? (assoc (string-downcase str) channel-access-modes)))
+
+(define (get-channel-access-mode-value-string value)
+  (assoc-vref channel-access-modes value))
 
 (define ip-address-sources '(("unspecified" . 0)
 			     ("static"      . 1)
@@ -29,30 +42,39 @@
 			     ("use_bios"    . 3)
 			     ("use_others"  . 4)))
 
-(define (get-ip-address-source string-token)
-  (assoc-ref ip-address-sources (string-downcase string-token)))
+(define (get-ip-address-source value-string)
+  (assoc-ref ip-address-sources (string-downcase value-string)))
 
 (define (valid-ip-address-source? str)
   (pair? (assoc (string-downcase str) ip-address-sources)))
 
+(define (get-ip-address-source-value-string value)
+  (assoc-vref ip-address-sources value))
+
 (define connect-modes '(("modem_connect"  . 0)
 			("direct_connect" . 1)))
 
-(define (get-connect-mode string-token)
-  (assoc-ref connect-modes (string-downcase string-token)))
+(define (get-connect-mode value-string)
+  (assoc-ref connect-modes (string-downcase value-string)))
 
 (define (valid-connect-mode? str)
   (pair? (assoc (string-downcase str) connect-modes)))
+
+(define (get-connect-mode-value-string value)
+  (assoc-vref connect-modes value))
 
 (define flow-controls '(("no_flow_control" . 0)
 			("rts_cts"         . 1)
 			("xon_xoff"        . 2)))
 
-(define (get-flow-control string-token)
-  (assoc-ref flow-controls (string-downcase string-token)))
+(define (get-flow-control value-string)
+  (assoc-ref flow-controls (string-downcase value-string)))
 
 (define (valid-flow-control? str)
   (pair? (assoc (string-downcase str) flow-controls)))
+
+(define (get-flow-control-value-string value)
+  (assoc-vref flow-controls value))
 
 (define bit-rates '(("9600"   . 6)
 		    ("19200"  . 7)
@@ -60,21 +82,27 @@
 		    ("57600"  . 9)
 		    ("115200" . 10)))
 
-(define (get-bit-rate string-token)
-  (assoc-ref bit-rates (string-downcase string-token)))
+(define (get-bit-rate value-string)
+  (assoc-ref bit-rates (string-downcase value-string)))
 
 (define (valid-bit-rate? str)
   (pair? (assoc (string-downcase str) bit-rates)))
+
+(define (get-bit-rate-value-string value)
+  (assoc-vref bit-rates value))
 
 (define power-restore-policies '(("off_state_ac_apply"     . 0)
 				 ("restore_state_ac_apply" . 1)
 				 ("on_state_ac_apply"      . 2)))
 
-(define (get-power-restore-policy string-token)
-  (assoc-ref power-restore-policies (string-downcase string-token)))
+(define (get-power-restore-policy value-string)
+  (assoc-ref power-restore-policies (string-downcase value-string)))
 
 (define (valid-power-restore-policy? str)
   (pair? (assoc (string-downcase str) power-restore-policies)))
+
+(define (get-power-restore-policy-value-string value)
+  (assoc-vref power-restore-policies value))
 
 (define (read-valid-line fd)
   (let ((line (read-line fd)))
@@ -91,32 +119,49 @@
 (define (get-value-validator key validator-def)
   (if (null? validator-def)
       #f
-      (if (string-ci=? (string-downcase key) (car (car validator-def)))
+      (if (string-ci=? (string-downcase key) (caar validator-def))
 	  (cadr (car validator-def))
 	  (get-value-validator key (cdr validator-def)))))
 
 (define (get-convertor-proc key key-def)
   (if (null? key-def)
       #f
-      (if (string-ci=? (string-downcase key) (car (car key-def)))
+      (if (string-ci=? (string-downcase key) (caar key-def))
 	  (caddr (car key-def))
 	  (get-convertor-proc key (cdr key-def)))))
 
 (define (get-commit-proc key key-def)
   (if (null? key-def)
       #f
-      (if (string-ci=? (string-downcase key) (car (car key-def)))
+      (if (string-ci=? (string-downcase key) (caar key-def))
 	  (cadddr (car key-def))
 	  (get-commit-proc key (cdr key-def)))))
 
-(define (get-string string-token)
-  string-token)
+(define (get-checkout-proc key key-def)
+  (if (null? key-def)
+      #f
+      (if (string-ci=? (string-downcase key) (caar key-def))
+	  (car (cddddr (car key-def)))
+	  (get-checkout-proc key (cdr key-def)))))
 
-(define (get-boolean string-token)
-  (string-ci=? string-token "yes"))
+(define (get-value-convertor-proc key key-def)
+  (if (null? key-def)
+      #f
+      (if (string-ci=? (string-downcase key) (caar key-def))
+	  (cadr (cddddr (car key-def)))
+	  (get-value-convertor-proc key (cdr key-def)))))
 
-(define (get-integer string-token)
-  (string->number string-token))
+(define (get-string str)
+  str)
+
+(define (get-boolean str)
+  (string-ci=? str "yes"))
+
+(define (get-integer str)
+  (string->number str))
+
+(define (get-boolean-string bool)
+  (if bool "yes" "no"))
 
 (define (valid-username-password? str)
   (if (string? str)

@@ -787,13 +787,13 @@ set_bmc_power_restore_policy (u_int8_t power_restore_policy)
 
 
 u_int8_t 
-get_bmc_user_channel_access (u_int8_t userid, 
-			     u_int8_t channel_number, 
-			     u_int8_t *enable_ipmi_msgs, 
-			     u_int8_t *enable_link_auth, 
-			     u_int8_t *enable_restrict_to_callback, 
-			     u_int8_t *privilege_limit, 
-			     u_int8_t *session_limit)
+get_bmc_user_access (u_int8_t userid, 
+		     u_int8_t channel_number, 
+		     u_int8_t *enable_ipmi_msgs, 
+		     u_int8_t *enable_link_auth, 
+		     u_int8_t *enable_restrict_to_callback, 
+		     u_int8_t *privilege_limit, 
+		     u_int8_t *session_limit)
 {
   u_int8_t status;
   fiid_obj_t obj_data_rs;
@@ -836,41 +836,9 @@ get_bmc_user_channel_access (u_int8_t userid,
 		&val);
   *enable_restrict_to_callback = (u_int8_t) val;
   
+  *session_limit = 0;
+  
   return IPMI_COMP_CODE (obj_data_rs);
-}
-
-u_int8_t 
-get_bmc_user_lan_channel_access (u_int8_t userid, 
-				 u_int8_t *enable_ipmi_msgs, 
-				 u_int8_t *enable_link_auth, 
-				 u_int8_t *enable_restrict_to_callback, 
-				 u_int8_t *privilege_limit, 
-				 u_int8_t *session_limit)
-{
-  return get_bmc_user_channel_access (userid, 
-				      get_lan_channel_number (), 
-				      enable_ipmi_msgs, 
-				      enable_link_auth, 
-				      enable_restrict_to_callback, 
-				      privilege_limit, 
-				      session_limit);
-}
-
-u_int8_t 
-get_bmc_user_serial_channel_access (u_int8_t userid, 
-				    u_int8_t *enable_ipmi_msgs, 
-				    u_int8_t *enable_link_auth, 
-				    u_int8_t *enable_restrict_to_callback, 
-				    u_int8_t *privilege_limit, 
-				    u_int8_t *session_limit)
-{
-  return get_bmc_user_channel_access (userid, 
-				      get_serial_channel_number (), 
-				      enable_ipmi_msgs, 
-				      enable_link_auth, 
-				      enable_restrict_to_callback, 
-				      privilege_limit, 
-				      session_limit);
 }
 
 u_int8_t 
@@ -909,19 +877,19 @@ get_bmc_channel_access (u_int8_t channel_number,
 		tmpl_get_channel_access_rs, 
 		"user_level_authentication", 
 		&val);
-  *user_level_auth = val;
+  *user_level_auth = (val ? 0 : 1);
   
   fiid_obj_get (obj_data_rs, 
 		tmpl_get_channel_access_rs, 
 		"per_message_authentication", 
 		&val);
-  *per_message_auth = val;
+  *per_message_auth = (val ? 0 : 1);
   
   fiid_obj_get (obj_data_rs, 
 		tmpl_get_channel_access_rs, 
 		"pef_alerting", 
 		&val);
-  *pef_alerting = val;
+  *pef_alerting = (val ? 0 : 1);
   
   fiid_obj_get (obj_data_rs, 
 		tmpl_get_channel_access_rs, 
@@ -930,6 +898,97 @@ get_bmc_channel_access (u_int8_t channel_number,
   *privilege_limit = val;
   
   return (0);
+}
+
+u_int8_t 
+get_bmc_chassis_status (u_int8_t *power_restore_policy)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_cmd_get_chassis_status_rs));
+  status = ipmi_get_chassis_status (fi_get_sms_io_base (), 
+				    obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_cmd_get_chassis_status_rs, 
+		"power_state.power_restore_policy", 
+		&val);
+  *power_restore_policy = val;
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_username (u_int8_t userid, u_int8_t *username)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  
+  if (userid == 1)
+    {
+      strcpy (username, "Anonymous");
+      return 0;
+    }
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_user_name_rs));
+  status = ipmi_kcs_get_user_name (fi_get_sms_io_base (), 
+				   userid, 
+				   obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_user_name_rs, 
+		     "user_name", 
+		     username);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_user_lan_channel_access (u_int8_t userid, 
+				 u_int8_t *enable_ipmi_msgs, 
+				 u_int8_t *enable_link_auth, 
+				 u_int8_t *enable_restrict_to_callback, 
+				 u_int8_t *privilege_limit, 
+				 u_int8_t *session_limit)
+{
+  return get_bmc_user_access (userid, 
+			      get_lan_channel_number (), 
+			      enable_ipmi_msgs, 
+			      enable_link_auth, 
+			      enable_restrict_to_callback, 
+			      privilege_limit, 
+			      session_limit);
+}
+
+u_int8_t 
+get_bmc_user_serial_channel_access (u_int8_t userid, 
+				    u_int8_t *enable_ipmi_msgs, 
+				    u_int8_t *enable_link_auth, 
+				    u_int8_t *enable_restrict_to_callback, 
+				    u_int8_t *privilege_limit, 
+				    u_int8_t *session_limit)
+{
+  return get_bmc_user_access (userid, 
+			      get_serial_channel_number (), 
+			      enable_ipmi_msgs, 
+			      enable_link_auth, 
+			      enable_restrict_to_callback, 
+			      privilege_limit, 
+			      session_limit);
 }
 
 u_int8_t 
@@ -962,6 +1021,287 @@ get_bmc_lan_channel_non_volatile_access (u_int8_t *access_mode,
 				 per_message_auth, 
 				 pef_alerting, 
 				 privilege_limit);
+}
+
+u_int8_t 
+get_bmc_lan_conf_ip_addr_source (u_int8_t *ip_addr_source)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_source_rs));
+  status = ipmi_lan_get_ip_addr_source (fi_get_sms_io_base (), 
+					get_lan_channel_number (), 
+					IPMI_LAN_CONF_GET_PARAMETER, 
+					SET_SELECTOR, 
+					BLOCK_SELECTOR, 
+					obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_ip_addr_source_rs, 
+		"ip_addr_source", 
+		&val);
+  *ip_addr_source = val;
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_ip_addr (char *ip_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t ip_addr_bytes[4];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_rs));
+  status = ipmi_lan_get_ip_addr (fi_get_sms_io_base (), 
+				 get_lan_channel_number (), 
+				 IPMI_LAN_CONF_GET_PARAMETER, 
+				 SET_SELECTOR, 
+				 BLOCK_SELECTOR, 
+				 obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_ip_addr_rs, 
+		     "ip_addr", 
+		     ip_addr_bytes);
+  sprintf (ip_addr, 
+	   "%u.%u.%u.%u", 
+	   ip_addr_bytes[0], 
+	   ip_addr_bytes[1], 
+	   ip_addr_bytes[2], 
+	   ip_addr_bytes[3]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_mac_addr (char *mac_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t mac_addr_bytes[6];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
+  status = ipmi_lan_get_mac_addr (fi_get_sms_io_base (), 
+				  get_lan_channel_number (), 
+				  IPMI_LAN_CONF_GET_PARAMETER, 
+				  SET_SELECTOR, 
+				  BLOCK_SELECTOR, 
+				  obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_mac_addr_rs, 
+		     "mac_addr", 
+		     mac_addr_bytes);
+  sprintf (mac_addr, 
+	   "%02X:%02X:%02X:%02X:%02X:%02X", 
+	   mac_addr_bytes[0], 
+	   mac_addr_bytes[1], 
+	   mac_addr_bytes[2], 
+	   mac_addr_bytes[3], 
+	   mac_addr_bytes[4], 
+	   mac_addr_bytes[5]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_subnet_mask (char *subnet_mask)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t subnet_mask_bytes[4];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_subnet_mask_rs));
+  status = ipmi_lan_get_subnet_mask (fi_get_sms_io_base (), 
+				     get_lan_channel_number (), 
+				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     SET_SELECTOR, 
+				     BLOCK_SELECTOR, 
+				     obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_subnet_mask_rs, 
+		     "subnet_mask", 
+		     subnet_mask_bytes);
+  sprintf (subnet_mask, 
+	   "%u.%u.%u.%u", 
+	   subnet_mask_bytes[0], 
+	   subnet_mask_bytes[1], 
+	   subnet_mask_bytes[2], 
+	   subnet_mask_bytes[3]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_default_gw_ip_addr (char *default_gw_ip_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t ip_addr_bytes[4];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
+  status = ipmi_lan_get_gw1_ip_addr (fi_get_sms_io_base (), 
+				     get_lan_channel_number (), 
+				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     SET_SELECTOR, 
+				     BLOCK_SELECTOR, 
+				     obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
+		     "ip_addr", 
+		     ip_addr_bytes);
+  sprintf (default_gw_ip_addr, 
+	   "%u.%u.%u.%u", 
+	   ip_addr_bytes[0], 
+	   ip_addr_bytes[1], 
+	   ip_addr_bytes[2], 
+	   ip_addr_bytes[3]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_default_gw_mac_addr (char *default_gw_mac_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t mac_addr_bytes[6];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
+  status = ipmi_lan_get_gw1_mac_addr (fi_get_sms_io_base (), 
+				      get_lan_channel_number (), 
+				      IPMI_LAN_CONF_GET_PARAMETER, 
+				      SET_SELECTOR, 
+				      BLOCK_SELECTOR, 
+				      obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_mac_addr_rs, 
+		     "mac_addr", 
+		     mac_addr_bytes);
+  sprintf (default_gw_mac_addr, 
+	   "%02X:%02X:%02X:%02X:%02X:%02X", 
+	   mac_addr_bytes[0], 
+	   mac_addr_bytes[1], 
+	   mac_addr_bytes[2], 
+	   mac_addr_bytes[3], 
+	   mac_addr_bytes[4], 
+	   mac_addr_bytes[5]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_backup_gw_ip_addr (char *backup_gw_ip_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t ip_addr_bytes[4];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
+  status = ipmi_lan_get_gw2_ip_addr (fi_get_sms_io_base (), 
+				     get_lan_channel_number (), 
+				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     SET_SELECTOR, 
+				     BLOCK_SELECTOR, 
+				     obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
+		     "ip_addr", 
+		     ip_addr_bytes);
+  sprintf (backup_gw_ip_addr, 
+	   "%u.%u.%u.%u", 
+	   ip_addr_bytes[0], 
+	   ip_addr_bytes[1], 
+	   ip_addr_bytes[2], 
+	   ip_addr_bytes[3]);
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int8_t mac_addr_bytes[6];
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
+  status = ipmi_lan_get_gw2_mac_addr (fi_get_sms_io_base (), 
+				      get_lan_channel_number (), 
+				      IPMI_LAN_CONF_GET_PARAMETER, 
+				      SET_SELECTOR, 
+				      BLOCK_SELECTOR, 
+				      obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get_data (obj_data_rs, 
+		     tmpl_get_lan_conf_param_mac_addr_rs, 
+		     "mac_addr", 
+		     mac_addr_bytes);
+  sprintf (backup_gw_mac_addr, 
+	   "%02X:%02X:%02X:%02X:%02X:%02X", 
+	   mac_addr_bytes[0], 
+	   mac_addr_bytes[1], 
+	   mac_addr_bytes[2], 
+	   mac_addr_bytes[3], 
+	   mac_addr_bytes[4], 
+	   mac_addr_bytes[5]);
+  
+  return (0);
 }
 
 u_int8_t 
@@ -1178,6 +1518,36 @@ get_bmc_lan_conf_arp_control (u_int8_t *enable_gratuitous_arps,
 }
 
 u_int8_t 
+get_bmc_lan_conf_gratuitous_arp (u_int8_t *gratuitous_arp_interval)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gratuitous_arp_interval_rs));
+  status = ipmi_lan_get_gratuitous_arp_interval (fi_get_sms_io_base (), 
+						 get_lan_channel_number (), 
+						 IPMI_LAN_CONF_GET_PARAMETER, 
+						 SET_SELECTOR, 
+						 BLOCK_SELECTOR, 
+						 obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_gratuitous_arp_interval_rs, 
+		"gratuitous_arp_interval", 
+		&val);
+  *gratuitous_arp_interval = val;
+  
+  return (0);
+}
+
+u_int8_t 
 get_bmc_serial_channel_volatile_access (u_int8_t *access_mode, 
 					u_int8_t *user_level_auth, 
 					u_int8_t *per_message_auth, 
@@ -1262,6 +1632,66 @@ get_bmc_serial_conf_conn_mode (u_int8_t *enable_basic_mode,
 }
 
 u_int8_t 
+get_bmc_serial_conf_page_blackout_interval (u_int8_t *page_blackout_interval)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_pageblackout_rs));
+  status = ipmi_get_serial_page_blackout (fi_get_sms_io_base (), 
+					  get_serial_channel_number (), 
+					  IPMI_SERIAL_CONF_GET_PARAMETER, 
+					  SET_SELECTOR, 
+					  BLOCK_SELECTOR, 
+					  obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_serial_conf_param_pageblackout_rs, 
+		"page_blackout_interval", 
+		&val);
+  *page_blackout_interval = val;
+  
+  return (0);
+}
+
+u_int8_t 
+get_bmc_serial_conf_call_retry_time (u_int8_t *call_retry_time)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_retry_rs));
+  status = ipmi_get_serial_retry_time (fi_get_sms_io_base (), 
+				       get_serial_channel_number (), 
+				       IPMI_SERIAL_CONF_GET_PARAMETER, 
+				       SET_SELECTOR, 
+				       BLOCK_SELECTOR, 
+				       obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_serial_conf_param_retry_rs, 
+		"retry_time", 
+		&val);
+  *call_retry_time = val;
+  
+  return (0);
+}
+
+u_int8_t 
 get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup, 
 					    u_int8_t *flow_control, 
 					    u_int8_t *bit_rate)
@@ -1306,3 +1736,8 @@ get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup,
   return (0);
 }
 
+u_int8_t 
+get_bmc_power_restore_policy (u_int8_t *power_restore_policy)
+{
+  return get_bmc_chassis_status (power_restore_policy);
+}

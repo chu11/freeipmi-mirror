@@ -1764,3 +1764,516 @@ ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy)
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
+/**** get_XXXX functions *****/
+SCM 
+ex_get_bmc_username (SCM scm_userid)
+{
+  u_int8_t userid;
+  char username[17];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  userid = gh_scm2long (scm_userid);
+  memset (username, 0, 17);
+  if ((retval = get_bmc_username (userid, username)) == 0)
+    return_list = gh_list (gh_str02scm (username), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_user_lan_channel_access (SCM scm_userid)
+{
+  u_int8_t userid;
+  u_int8_t lan_enable_ipmi_msgs = 0;
+  u_int8_t lan_enable_link_auth = 0;
+  u_int8_t lan_enable_restrict_to_callback = 0;
+  u_int8_t lan_privilege_limit = 0;
+  u_int8_t lan_session_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  userid = gh_scm2long (scm_userid);
+  if ((retval = get_bmc_user_lan_channel_access (userid, 
+						 &lan_enable_ipmi_msgs, 
+						 &lan_enable_link_auth, 
+						 &lan_enable_restrict_to_callback, 
+						 &lan_privilege_limit, 
+						 &lan_session_limit)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (lan_enable_ipmi_msgs), 
+			     gh_bool2scm (lan_enable_link_auth), 
+			     gh_bool2scm (lan_enable_restrict_to_callback), 
+			     gh_long2scm (lan_privilege_limit), 
+			     gh_long2scm (lan_session_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_user_serial_channel_access (SCM scm_userid)
+{
+  u_int8_t userid;
+  u_int8_t serial_enable_ipmi_msgs = 0;
+  u_int8_t serial_enable_link_auth = 0;
+  u_int8_t serial_enable_restrict_to_callback = 0;
+  u_int8_t serial_privilege_limit = 0;
+  u_int8_t serial_session_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  userid = gh_scm2long (scm_userid);
+  if ((retval = get_bmc_user_serial_channel_access (userid, 
+						    &serial_enable_ipmi_msgs, 
+						    &serial_enable_link_auth, 
+						    &serial_enable_restrict_to_callback, 
+						    &serial_privilege_limit, 
+						    &serial_session_limit)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (serial_enable_ipmi_msgs), 
+			     gh_bool2scm (serial_enable_link_auth), 
+			     gh_bool2scm (serial_enable_restrict_to_callback), 
+			     gh_long2scm (serial_privilege_limit), 
+			     gh_long2scm (serial_session_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_channel_volatile_access ()
+{
+  u_int8_t access_mode = 0;
+  u_int8_t enable_user_level_auth = 0;
+  u_int8_t enable_per_message_auth = 0;
+  u_int8_t enable_pef_alerting = 0;
+  u_int8_t channel_privilege_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_channel_volatile_access (&access_mode, 
+						     &enable_user_level_auth, 
+						     &enable_per_message_auth, 
+						     &enable_pef_alerting, 
+						     &channel_privilege_limit)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (access_mode), 
+			     gh_bool2scm (enable_user_level_auth), 
+			     gh_bool2scm (enable_per_message_auth), 
+			     gh_bool2scm (enable_pef_alerting), 
+			     gh_long2scm (channel_privilege_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_channel_non_volatile_access ()
+{
+  u_int8_t access_mode = 0;
+  u_int8_t enable_user_level_auth = 0;
+  u_int8_t enable_per_message_auth = 0;
+  u_int8_t enable_pef_alerting = 0;
+  u_int8_t channel_privilege_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_channel_non_volatile_access (&access_mode, 
+							 &enable_user_level_auth, 
+							 &enable_per_message_auth, 
+							 &enable_pef_alerting, 
+							 &channel_privilege_limit)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (access_mode), 
+			     gh_bool2scm (enable_user_level_auth), 
+			     gh_bool2scm (enable_per_message_auth), 
+			     gh_bool2scm (enable_pef_alerting), 
+			     gh_long2scm (channel_privilege_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_ip_addr_source ()
+{
+  u_int8_t ip_address_source = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_ip_addr_source (&ip_address_source)) == 0)
+    return_list = gh_list (gh_long2scm (ip_address_source), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_ip_addr ()
+{
+  char ip_address[16];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_ip_addr (ip_address)) == 0)
+    return_list = gh_list (gh_str02scm (ip_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_mac_addr ()
+{
+  char mac_address[18];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_mac_addr (mac_address)) == 0)
+    return_list = gh_list (gh_str02scm (mac_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_subnet_mask ()
+{
+  char subnet_mask[16];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_subnet_mask (subnet_mask)) == 0)
+    return_list = gh_list (gh_str02scm (subnet_mask), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_default_gw_ip_addr ()
+{
+  char gw_ip_address[16];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_default_gw_ip_addr (gw_ip_address)) == 0)
+    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_default_gw_mac_addr ()
+{
+  char gw_mac_address[18];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_default_gw_mac_addr (gw_mac_address)) == 0)
+    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_backup_gw_ip_addr ()
+{
+  char gw_ip_address[16];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_backup_gw_ip_addr (gw_ip_address)) == 0)
+    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
+{
+  char gw_mac_address[18];
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (gw_mac_address)) == 0)
+    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_auth_type_callback_enables ()
+{
+  struct bmc_auth_level auth_type_enables;
+  u_int8_t retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (auth_type_enables.callback.type_none), 
+			     gh_bool2scm (auth_type_enables.callback.type_md2), 
+			     gh_bool2scm (auth_type_enables.callback.type_md5), 
+			     gh_bool2scm (auth_type_enables.callback.type_straight_password), 
+			     gh_bool2scm (auth_type_enables.callback.type_oem_proprietary), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_auth_type_user_enables ()
+{
+  struct bmc_auth_level auth_type_enables;
+  u_int8_t retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (auth_type_enables.user.type_none), 
+			     gh_bool2scm (auth_type_enables.user.type_md2), 
+			     gh_bool2scm (auth_type_enables.user.type_md5), 
+			     gh_bool2scm (auth_type_enables.user.type_straight_password), 
+			     gh_bool2scm (auth_type_enables.user.type_oem_proprietary), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_auth_type_operator_enables ()
+{
+  struct bmc_auth_level auth_type_enables;
+  u_int8_t retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (auth_type_enables.operator.type_none), 
+			     gh_bool2scm (auth_type_enables.operator.type_md2), 
+			     gh_bool2scm (auth_type_enables.operator.type_md5), 
+			     gh_bool2scm (auth_type_enables.operator.type_straight_password), 
+			     gh_bool2scm (auth_type_enables.operator.type_oem_proprietary), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_auth_type_admin_enables ()
+{
+  struct bmc_auth_level auth_type_enables;
+  u_int8_t retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (auth_type_enables.admin.type_none), 
+			     gh_bool2scm (auth_type_enables.admin.type_md2), 
+			     gh_bool2scm (auth_type_enables.admin.type_md5), 
+			     gh_bool2scm (auth_type_enables.admin.type_straight_password), 
+			     gh_bool2scm (auth_type_enables.admin.type_oem_proprietary), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_auth_type_oem_enables ()
+{
+  struct bmc_auth_level auth_type_enables;
+  u_int8_t retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (auth_type_enables.oem.type_none), 
+			     gh_bool2scm (auth_type_enables.oem.type_md2), 
+			     gh_bool2scm (auth_type_enables.oem.type_md5), 
+			     gh_bool2scm (auth_type_enables.oem.type_straight_password), 
+			     gh_bool2scm (auth_type_enables.oem.type_oem_proprietary), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_arp_control ()
+{
+  u_int8_t enable_gratuitous_arps;
+  u_int8_t enable_arp_response;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_arp_control (&enable_gratuitous_arps, 
+					      &enable_arp_response)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (enable_gratuitous_arps), 
+			     gh_bool2scm (enable_arp_response), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_lan_conf_gratuitous_arp ()
+{
+  u_int8_t gratuitous_arp_interval;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_lan_conf_gratuitous_arp (&gratuitous_arp_interval)) == 0)
+    return_list = gh_list (gh_long2scm (gratuitous_arp_interval), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_channel_volatile_access ()
+{
+  u_int8_t access_mode = 0;
+  u_int8_t enable_user_level_auth = 0;
+  u_int8_t enable_per_message_auth = 0;
+  u_int8_t enable_pef_alerting = 0;
+  u_int8_t channel_privilege_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_channel_volatile_access (&access_mode, 
+							&enable_user_level_auth, 
+							&enable_per_message_auth, 
+							&enable_pef_alerting, 
+							&channel_privilege_limit)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (access_mode), 
+			     gh_bool2scm (enable_user_level_auth), 
+			     gh_bool2scm (enable_per_message_auth), 
+			     gh_bool2scm (enable_pef_alerting), 
+			     gh_long2scm (channel_privilege_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_channel_non_volatile_access ()
+{
+  u_int8_t access_mode = 0;
+  u_int8_t enable_user_level_auth = 0;
+  u_int8_t enable_per_message_auth = 0;
+  u_int8_t enable_pef_alerting = 0;
+  u_int8_t channel_privilege_limit = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_channel_non_volatile_access (&access_mode, 
+							    &enable_user_level_auth, 
+							    &enable_per_message_auth, 
+							    &enable_pef_alerting, 
+							    &channel_privilege_limit)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (access_mode), 
+			     gh_bool2scm (enable_user_level_auth), 
+			     gh_bool2scm (enable_per_message_auth), 
+			     gh_bool2scm (enable_pef_alerting), 
+			     gh_long2scm (channel_privilege_limit), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_conf_conn_mode ()
+{
+  u_int8_t enable_basic_mode = 0;
+  u_int8_t enable_ppp_mode = 0;
+  u_int8_t enable_terminal_mode = 0;
+  u_int8_t connect_mode = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_conf_conn_mode (&enable_basic_mode, 
+					       &enable_ppp_mode, 
+					       &enable_terminal_mode, 
+					       &connect_mode)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (enable_basic_mode), 
+			     gh_bool2scm (enable_ppp_mode), 
+			     gh_bool2scm (enable_terminal_mode), 
+			     gh_long2scm (connect_mode), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_conf_page_blackout_interval ()
+{
+  u_int8_t page_blackout_interval = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_conf_page_blackout_interval (&page_blackout_interval)) == 0)
+    return_list = gh_list (gh_long2scm (page_blackout_interval), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_conf_call_retry_time ()
+{
+  u_int8_t call_retry_time = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_conf_call_retry_time (&call_retry_time)) == 0)
+    return_list = gh_list (gh_long2scm (call_retry_time), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
+{
+  u_int8_t enable_dtr_hangup = 0;
+  u_int8_t flow_control = 0;
+  u_int8_t bit_rate = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_serial_conf_ipmi_msg_comm_settings (&enable_dtr_hangup, 
+							    &flow_control, 
+							    &bit_rate)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (enable_dtr_hangup), 
+			     gh_long2scm (flow_control), 
+			     gh_long2scm (bit_rate), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_power_restore_policy ()
+{
+  u_int8_t power_restore_policy = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_bmc_power_restore_policy (&power_restore_policy)) == 0)
+    return_list = gh_list (gh_long2scm (power_restore_policy), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+

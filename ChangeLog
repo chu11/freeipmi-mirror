@@ -1,3 +1,89 @@
+2004-07-17  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-common.scm: added primitives for checkout support
+	* fish/extensions/bc-lan-conf-auth-section.scm: like wise
+	* fish/extensions/bc-lan-conf-misc-section.scm: like wise
+	* fish/extensions/bc-lan-conf-section.scm: like wise
+	* fish/extensions/bc-lan-serial-channel-section.scm: like wise
+	* fish/extensions/bc-misc-section.scm: like wise
+	* fish/extensions/bc-section.scm: like wise
+	* fish/extensions/bc-serial-conf-section.scm: like wise
+	* fish/extensions/bc-user-section.scm: like wise
+	* fish/src/bmc-conf2.[ch]: added new functions
+	get_bmc_user_access(), get_bmc_channel_access(),
+	get_bmc_chassis_status(), get_bmc_username(),
+	get_bmc_user_lan_channel_access(),
+	get_bmc_user_serial_channel_access(),
+	get_bmc_lan_channel_volatile_access(),
+	get_bmc_lan_channel_non_volatile_access(),
+	get_bmc_lan_conf_ip_addr_source(), get_bmc_lan_conf_ip_addr(),
+	get_bmc_lan_conf_mac_addr(), get_bmc_lan_conf_subnet_mask(),
+	get_bmc_lan_conf_default_gw_ip_addr(),
+	get_bmc_lan_conf_default_gw_mac_addr(),
+	get_bmc_lan_conf_backup_gw_ip_addr(),
+	get_bmc_lan_conf_backup_gw_mac_addr(),
+	get_bmc_lan_conf_auth_type_enables(),
+	get_bmc_lan_conf_arp_control(), get_bmc_lan_conf_gratuitous_arp(),
+	get_bmc_serial_channel_volatile_access(),
+	get_bmc_serial_channel_non_volatile_access(),
+	get_bmc_serial_conf_conn_mode(),
+	get_bmc_serial_conf_page_blackout_interval(),
+	get_bmc_serial_conf_call_retry_time(),
+	get_bmc_serial_conf_ipmi_msg_comm_settings() and
+	get_bmc_power_restore_policy()
+	* fish/src/extension.c: added new primitives
+	fi-get-bmc-username, fi-get-bmc-user-lan-channel-access,
+	fi-get-bmc-user-serial-channel-access,
+	fi-get-bmc-lan-channel-volatile-access,
+	fi-get-bmc-lan-channel-non-volatile-access,
+	fi-get-bmc-lan-conf-ip-address-source,
+	fi-get-bmc-lan-conf-ip-address, fi-get-bmc-lan-conf-mac-address,
+	fi-get-bmc-lan-conf-subnet-mask,
+	fi-get-bmc-lan-conf-default-gateway-ip-address,
+	fi-get-bmc-lan-conf-default-gateway-mac-address,
+	fi-get-bmc-lan-conf-backup-gateway-ip-address,
+	fi-get-bmc-lan-conf-backup-gateway-mac-address,
+	fi-get-bmc-lan-conf-auth-type-callback-enables,
+	fi-get-bmc-lan-conf-auth-type-user-enables,
+	fi-get-bmc-lan-conf-auth-type-operator-enables,
+	fi-get-bmc-lan-conf-auth-type-admin-enables,
+	fi-get-bmc-lan-conf-auth-type-oem-enables,
+	fi-get-bmc-lan-conf-arp-control,
+	fi-get-bmc-lan-conf-gratuitous-arp,
+	fi-get-bmc-serial-channel-volatile-access,
+	fi-get-bmc-serial-channel-non-volatile-access,
+	fi-get-bmc-serial-conf-conn-mode,
+	fi-get-bmc-serial-conf-page-blackout-interval,
+	fi-get-bmc-serial-conf-call-retry-time,
+	fi-get-bmc-serial-conf-ipmi-msg-comm-settings and
+	fi-get-bmc-power-restore-policy.
+	* fish/src/scm-procedures.[ch]: added new functions 
+	ex_get_bmc_username(), ex_get_bmc_user_lan_channel_access(),
+	ex_get_bmc_user_serial_channel_access(),
+	ex_get_bmc_lan_channel_volatile_access(),
+	ex_get_bmc_lan_channel_non_volatile_access(),
+	ex_get_bmc_lan_conf_ip_addr_source(),
+	ex_get_bmc_lan_conf_ip_addr(), ex_get_bmc_lan_conf_mac_addr(),
+	ex_get_bmc_lan_conf_subnet_mask(),
+	ex_get_bmc_lan_conf_default_gw_ip_addr(),
+	ex_get_bmc_lan_conf_default_gw_mac_addr(),
+	ex_get_bmc_lan_conf_backup_gw_ip_addr(),
+	ex_get_bmc_lan_conf_backup_gw_mac_addr(),
+	ex_get_bmc_lan_conf_auth_type_callback_enables(),
+	ex_get_bmc_lan_conf_auth_type_user_enables(),
+	ex_get_bmc_lan_conf_auth_type_operator_enables(),
+	ex_get_bmc_lan_conf_auth_type_admin_enables(),
+	ex_get_bmc_lan_conf_auth_type_oem_enables(),
+	ex_get_bmc_lan_conf_arp_control(),
+	ex_get_bmc_lan_conf_gratuitous_arp(),
+	ex_get_bmc_serial_channel_volatile_access(),
+	ex_get_bmc_serial_channel_non_volatile_access(),
+	ex_get_bmc_serial_conf_conn_mode(),
+	ex_get_bmc_serial_conf_page_blackout_interval(),
+	ex_get_bmc_serial_conf_call_retry_time(),
+	ex_get_bmc_serial_conf_ipmi_msg_comm_settings() and
+	ex_get_bmc_power_restore_policy()
+
 2004-07-13  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: code cleanup

@@ -115,13 +115,24 @@ u_int8_t set_bmc_power_restore_policy (u_int8_t power_restore_policy);
 
 
 
-u_int8_t get_bmc_user_channel_access (u_int8_t userid, 
-				      u_int8_t channel_number, 
-				      u_int8_t *enable_ipmi_msgs, 
-				      u_int8_t *enable_link_auth, 
-				      u_int8_t *enable_restrict_to_callback, 
-				      u_int8_t *privilege_limit, 
-				      u_int8_t *session_limit);
+u_int8_t get_bmc_user_access (u_int8_t userid, 
+			      u_int8_t channel_number, 
+			      u_int8_t *enable_ipmi_msgs, 
+			      u_int8_t *enable_link_auth, 
+			      u_int8_t *enable_restrict_to_callback, 
+			      u_int8_t *privilege_limit, 
+			      u_int8_t *session_limit);
+u_int8_t get_bmc_channel_access (u_int8_t channel_number, 
+				 u_int8_t access_type, 
+				 u_int8_t *access_mode, 
+				 u_int8_t *user_level_auth, 
+				 u_int8_t *per_message_auth, 
+				 u_int8_t *pef_alerting, 
+				 u_int8_t *privilege_limit);
+u_int8_t get_bmc_chassis_status (u_int8_t *power_restore_policy);
+
+
+u_int8_t get_bmc_username (u_int8_t userid, u_int8_t *username);
 u_int8_t get_bmc_user_lan_channel_access (u_int8_t userid, 
 					  u_int8_t *enable_ipmi_msgs, 
 					  u_int8_t *enable_link_auth, 
@@ -134,13 +145,8 @@ u_int8_t get_bmc_user_serial_channel_access (u_int8_t userid,
 					     u_int8_t *enable_restrict_to_callback, 
 					     u_int8_t *privilege_limit, 
 					     u_int8_t *session_limit);
-u_int8_t get_bmc_channel_access (u_int8_t channel_number, 
-				 u_int8_t access_type, 
-				 u_int8_t *access_mode, 
-				 u_int8_t *user_level_auth, 
-				 u_int8_t *per_message_auth, 
-				 u_int8_t *pef_alerting, 
-				 u_int8_t *privilege_limit);
+
+
 u_int8_t get_bmc_lan_channel_volatile_access (u_int8_t *access_mode, 
 					      u_int8_t *user_level_auth, 
 					      u_int8_t *per_message_auth, 
@@ -151,9 +157,18 @@ u_int8_t get_bmc_lan_channel_non_volatile_access (u_int8_t *access_mode,
 						  u_int8_t *per_message_auth, 
 						  u_int8_t *pef_alerting, 
 						  u_int8_t *privilege_limit);
+u_int8_t get_bmc_lan_conf_ip_addr_source (u_int8_t *ip_addr_source);
+u_int8_t get_bmc_lan_conf_ip_addr (char *ip_addr);
+u_int8_t get_bmc_lan_conf_mac_addr (char *mac_addr);
+u_int8_t get_bmc_lan_conf_subnet_mask (char *subnet_mask);
+u_int8_t get_bmc_lan_conf_default_gw_ip_addr (char *default_gw_ip_addr);
+u_int8_t get_bmc_lan_conf_default_gw_mac_addr (char *default_gw_mac_addr);
+u_int8_t get_bmc_lan_conf_backup_gw_ip_addr (char *backup_gw_ip_addr);
+u_int8_t get_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr);
 u_int8_t get_bmc_lan_conf_auth_type_enables (struct bmc_auth_level *bmc_auth_level);
 u_int8_t get_bmc_lan_conf_arp_control (u_int8_t *enable_gratuitous_arps, 
 				       u_int8_t *enable_arp_response);
+u_int8_t get_bmc_lan_conf_gratuitous_arp (u_int8_t *gratuitous_arp_interval);
 
 u_int8_t get_bmc_serial_channel_volatile_access (u_int8_t *access_mode, 
 						 u_int8_t *user_level_auth, 
@@ -169,8 +184,13 @@ u_int8_t get_bmc_serial_conf_conn_mode (u_int8_t *enable_basic_mode,
 					u_int8_t *enable_ppp_mode, 
 					u_int8_t *enable_terminal_mode, 
 					u_int8_t *connect_mode);
-
+u_int8_t get_bmc_serial_conf_page_blackout_interval (u_int8_t *page_blackout_interval);
+u_int8_t get_bmc_serial_conf_call_retry_time (u_int8_t *call_retry_time);
 u_int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup, 
 						     u_int8_t *flow_control, 
 						     u_int8_t *bit_rate);
+
+
+u_int8_t get_bmc_power_restore_policy (u_int8_t *power_restore_policy);
+
 #endif

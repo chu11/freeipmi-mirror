@@ -483,6 +483,141 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-set-bmc-power-restore-policy POWER-RESTORE-POLICY)
   */
+  
+  gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-username USERID)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-user-lan-channel-access", ex_get_bmc_user_lan_channel_access, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-user-lan-channel-access USERID)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-user-serial-channel-access", ex_get_bmc_user_serial_channel_access, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-user-serial-channel-access USERID)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-channel-volatile-access", ex_get_bmc_lan_channel_volatile_access, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-channel-volatile-access)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-channel-non-volatile-access", ex_get_bmc_lan_channel_non_volatile_access, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-channel-non-volatile-access)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address-source", ex_get_bmc_lan_conf_ip_addr_source, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-ip-address-source)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address", ex_get_bmc_lan_conf_ip_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-ip-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-mac-address", ex_get_bmc_lan_conf_mac_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-mac-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-subnet-mask", ex_get_bmc_lan_conf_subnet_mask, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-subnet-mask)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-ip-address", ex_get_bmc_lan_conf_default_gw_ip_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-ip-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-mac-address", ex_get_bmc_lan_conf_default_gw_mac_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-mac-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-ip-address", ex_get_bmc_lan_conf_backup_gw_ip_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-ip-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-mac-address", ex_get_bmc_lan_conf_backup_gw_mac_addr, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-mac-address)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-callback-enables", ex_get_bmc_lan_conf_auth_type_callback_enables, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-auth-type-callback-enables)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-user-enables", ex_get_bmc_lan_conf_auth_type_user_enables, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-auth-type-user-enables)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-operator-enables", ex_get_bmc_lan_conf_auth_type_operator_enables, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-auth-type-operator-enables)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-admin-enables", ex_get_bmc_lan_conf_auth_type_admin_enables, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-auth-type-admin-enables)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-oem-enables", ex_get_bmc_lan_conf_auth_type_oem_enables, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-auth-type-oem-enables)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-arp-control", ex_get_bmc_lan_conf_arp_control, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-arp-control)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-lan-conf-gratuitous-arp", ex_get_bmc_lan_conf_gratuitous_arp, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-gratuitous-arp)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-channel-volatile-access", ex_get_bmc_serial_channel_volatile_access, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-channel-volatile-access)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-channel-non-volatile-access", ex_get_bmc_serial_channel_non_volatile_access, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-channel-non-volatile-access)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-conf-conn-mode", ex_get_bmc_serial_conf_conn_mode, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-conf-conn-mode)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-conf-page-blackout-interval", ex_get_bmc_serial_conf_page_blackout_interval, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-conf-page-blackout-interval)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-conf-call-retry-time", ex_get_bmc_serial_conf_call_retry_time, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-conf-call-retry-time)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-serial-conf-ipmi-msg-comm-settings", ex_get_bmc_serial_conf_ipmi_msg_comm_settings, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-serial-conf-ipmi-msg-comm-settings)
+  */
+  
+  gh_new_procedure ("fi-get-bmc-power-restore-policy", ex_get_bmc_power_restore_policy, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-power-restore-policy)
+  */
 }
 
 // guile initialization area
