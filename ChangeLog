@@ -1,11 +1,8 @@
 2005-01-14  Anand Babu  <ab@gnu.org.in>
 
-	* libfreeipmi/src/ipmi-pef-cmds.c
-	(fill_kcs_set_alert_string_keys): fixed compiler warning.  
-
 	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Newly added. ACPI-Tables
-	user space device 
-	driver to locate IPMI SPMI table. Jointly developed by Bala and me.
+	user space device driver to locate IPMI SPMI table. Jointly
+	developed by Bala and me.
 
 	* libfreeipmi/src/smbios-locate.[c,h]: Moved from smbios.c,h.
 
