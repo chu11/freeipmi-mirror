@@ -30,7 +30,9 @@ Libfreeipmi
 - ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
   seeking.  Will probably require a "load and create" wrapper
   function of some sort.
-
+- Feature to allow atomicity of multiple IPMI commands in a row.
+  - May or may not be possible.  Think about it.
+  
 Fish
 
 - Create makefile wrappers to allow fish to work locally in
