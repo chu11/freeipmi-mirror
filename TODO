@@ -33,7 +33,6 @@ fish:
 
 bmc-watchdog:
 -------------
-  * Add probing for proper base address
   * Require Timer use to be SMS/OS?
   * Make get_lan_channel_number() non-hardcoded.
   * Ignore pre-timeout interval length comparison to initial countdown
