@@ -1,3 +1,7 @@
+2005-02-13  Anand Babu  <ab@gnu.org.in>
+
+	* ipmi-ssif-interface.c (ipmi_ssif_exit): New function.
+
 2005-02-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sha1.c (_f, _K): Added error checking and

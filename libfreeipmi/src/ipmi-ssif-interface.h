@@ -129,7 +129,7 @@ int ipmi_ssif_io_init (char *i2c_device, u_int8_t ipmb_addr, int *i2c_fd);
 *     len - length of buf 
 * 
 *  Returns:
-*     the number of bytes sent to the BMC
+*     the number of bytes written to the BMC
 *     -1 means failed to send data to the BMC
 *
 *
@@ -144,10 +144,23 @@ size_t ipmi_ssif_write (int i2c_fd, char *buf, size_t len);
 *     buf - array of unsigned chars which holds the response from the BMC
 * 
 *  Returns:
-*     the number of bytes received from the BMC
+*     the number of bytes read from the BMC
 *     -1 means failed to get respons from the BMC
 *
 *******************************************************************************/
 size_t ipmi_ssif_read (int i2c_fd, char *buf, size_t *len);
+
+
+/*******************************************************************************
+*  Routine: ipmi_ssif_exit closes SSIF device.
+*
+*     i2c_fd - file descriptor to the BMC device file.
+* 
+*  Returns:
+*     Returns 0 for success and -1 otherwise with errno is set appropriately.
+*
+*******************************************************************************/
+size_t ipmi_ssif_exit (int i2c_fd);
+
 
 #endif /* IPMI_SSIF_INTERFACE_H */

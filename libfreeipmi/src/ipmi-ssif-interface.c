@@ -182,3 +182,9 @@ ipmi_ssif_read (int i2c_fd, char *buf, size_t *len)
   else
     return (bytes_read);
 }
+
+int
+ipmi_ssif_io_exit (int i2c_fd)
+{
+  return (close (i2c_fd));
+}
