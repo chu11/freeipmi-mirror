@@ -188,8 +188,8 @@
 				    key 
 				    ">\n") (current-error-port))
 	    (display (string-append "\t" 
-				    (string-capitalize key) 
-				    "\t\t" 
+				    (format #f "~45a" 
+					    (string-capitalize key)) 
 				    value 
 				    "\n") fp))
 	(checkout-section-values section-name (cdr key-list) key-desc-list fp))))
@@ -201,6 +201,34 @@
 			   (get-section-key-desc (car section-data))
 			   fp)
   (display "EndSection\n" fp))
+
+
+;;; diff functions ;;;
+;;;;;;;;;;;;;;;;;;;;;;
+(define (diff-section-values section-name section-data key-desc-list)
+  (if (null? section-data)
+      #t
+      (let* ((line           (car section-data))
+	     (key            (car (string-tokenize line)))
+	     (value          (cadr (string-tokenize line)))
+	     (bmc-value      (checkout-section-value section-name 
+						     key 
+						     key-desc-list)))
+	(if (boolean? value)
+	    (display (string-append "Error in checkout of key <" 
+				    key 
+				    ">\n") (current-error-port))
+	    (if (not (string=? value bmc-value))
+		(begin 
+		  (display (string-append "USER:" key " " value "\n"))
+		  (display (string-append "BMC :" key " " bmc-value "\n")))))
+	(diff-section-values section-name (cdr section-data) key-desc-list))))
+
+(define (diff-section section-data)
+  (let ((section-name (car section-data)))
+    (diff-section-values section-name 
+			 (cdr section-data)
+			 (get-section-key-desc section-name))))
 
 ; (define (validate-section-keys section-data section-keys)
 ;   (let ((line "")

@@ -1,3 +1,16 @@
+2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
+
+	* doc/bmc-config.1: man page updated.
+
+	* fish/extensions/bc-common.scm: added new primitive procedure
+	(make-section)
+
+	* fish/extensions/bc-section.scm: added new primitive procedure
+	(diff-section-values) and (diff-section)
+
+	* fish/extensions/bc2.scm: updated. added support for --key-pair
+	and --diff
+
 2004-08-19  Ian Zimmerman  <itz@californiadigital.com>
 
 	* fish/extensions/sel.scm (sel-main):

@@ -19,6 +19,8 @@
 
 (use-modules (ice-9 getopt-long))
 
+(define bmc-config-exit-status 0)
+
 (fi-load "bc-common.scm")
 (fi-load "bc-user-section.scm")
 (fi-load "bc-lan-serial-channel-section.scm")
@@ -186,6 +188,23 @@
   (checkout-section serial_conf_s (current-output-port))
   (checkout-section misc_s (current-output-port)))
 
+(define (checkout-conf-to-file filename)
+  (if (string-null? filename)
+      (checkout-conf)
+      (let ((fp (open-output-file filename)))
+	(checkout-section user1_s fp)
+	(checkout-section user2_s fp)
+	(checkout-section user3_s fp)
+	(checkout-section user4_s fp)
+	(checkout-section lan_channel_s fp)
+	(checkout-section lan_conf_s fp)
+	(checkout-section lan_conf_auth_s fp)
+	(checkout-section lan_conf_misc_s fp)
+	(checkout-section serial_channel_s fp)
+	(checkout-section serial_conf_s fp)
+	(checkout-section misc_s fp)
+	(close fp))))
+
 (define (validate-conf-file fp)
   (let ((section (read-section fp)))
     (if (null? section)
@@ -202,9 +221,53 @@
 	    (commit-conf-file fp)
 	    #f))))
 
+(define (validate-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (validate-commit-section section-data)
+		(validate-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (commit-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (commit-section section-data)
+		(commit-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (diff-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (diff-section section-data)
+		(diff-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (diff-conf-file fp)
+  (let ((section (read-section fp)))
+    (if (null? section)
+	#t
+	(if (diff-section section)
+	    (diff-conf-file fp)
+	    #f))))
+
 
 (define (bc-display-usage)
-  (display "bmc-config --usage --help --version --checkout --commit=FILENAME\n\tBMC Configurator.\n"))
+  (display "bmc-config --usage --help --version  --checkout --commit --diff --filename=FILENAME --key-pair=KEY-PAIR\n\tBMC Configurator.\n"))
 
 (define (bc-display-help)
   (begin 
@@ -214,7 +277,11 @@
     (display "  -h, --help                 Show help\n")
     (display "  -V, --version              Show version\n")
     (display "  -o, --checkout             Fetch configuration information from BMC.\n")
-    (display "  -i FILENAME, --commit=FILENAME   Update configuration information to BMC\n")))
+    (display "  -i, --commit               Update configuration information to BMC\n")
+    (display "  -d, --diff                 Show differences with BMC\n")
+    (display "  -f FILENAME, --filename=FILENAME    Use this file for checkout/commit/diff\n")
+    (display "  -k \"KEY=VALUE\", --key-pair=\"KEY=VALUE\"    checkout/diff only this KEY/VALUE\n")
+))
 
 (define (bc-display-version)
   (display (string-append 
@@ -227,13 +294,44 @@
 			(help     (single-char #\h) (value #f))
 			(version  (single-char #\V) (value #f))
 			(checkout (single-char #\o) (value #f))
-			(commit   (single-char #\i) (value #t))))
+			(commit   (single-char #\i) (value #f))
+			(diff     (single-char #\d) (value #f))
+			(filename (single-char #\f) (value #t))
+			(key-pair (single-char #\k) (value #t))))
 	 (options (getopt-long args option-spec))
 	 (usage-wanted         (option-ref options 'usage    #f))
 	 (help-wanted          (option-ref options 'help     #f))
 	 (version-wanted       (option-ref options 'version  #f))
 	 (checkout-wanted      (option-ref options 'checkout #f))
-	 (commit-file          (option-ref options 'commit   "")))
+	 (commit-wanted        (option-ref options 'commit   #f))
+	 (diff-wanted          (option-ref options 'diff     #f))
+	 (filename             (option-ref options 'filename ""))
+	 (key-pair-list   (if (option-ref options 'key-pair #f)
+			      (let ((klist '()))
+				(map (lambda (arg)
+				       (if (equal? (car arg) 'key-pair)
+					   (if (string-index (cdr arg) #\=) 
+					       (set! klist 
+						     (append 
+						      klist 
+						      (string-separate (cdr arg) #\=)))
+                                               (begin
+                                                 (set! usage-wanted #t)
+                                                 (set! bmc-config-exit-status -1)))))
+				     options)
+				klist)
+			      '()))
+; 	 (key-pair-list (if (option-ref options 'key-pair #f)
+; 			    (let ((klist '()))
+; 			      (map (lambda (arg)
+; 				     (if (equal? (car arg) 'key-pair)
+; 					 (begin 
+; 					   (display (cdr arg))
+; 					   (newline))))
+; 				   options)
+; 			      klist)
+; 			    '()))
+)
     (cond 
      ;; argument type check
      (usage-wanted
@@ -243,15 +341,46 @@
      (version-wanted
       (bc-display-version))
      (checkout-wanted 
-      (checkout-conf))
-     ((not (string-null? commit-file)) 
-      (if (file-exists? filename)
-	  (let ((fp (open-input-file filename)))
-	    (if (validate-conf-file fp)
-		(begin 
-		  (seek fp 0 SEEK_SET)
-		  (commit-conf-file fp)))
-	    (close fp))))
+      (if (not (checkout-conf-to-file filename))
+	  (set! bmc-config-exit-status -1)))
+     (commit-wanted 
+      (if (and (string-null? filename) (null? key-pair-list))
+	  (bc-display-help)
+	  (begin 
+	    (if (not (string-null? filename))
+		(if (file-exists? filename)
+		    (let ((fp (open-input-file filename)))
+		      (if (validate-conf-file fp)
+			  (begin 
+			    (seek fp 0 SEEK_SET)
+			    (if (not (commit-conf-file fp))
+				(set! bmc-config-exit-status -1)))
+			  (set! bmc-config-exit-status -1))
+		      (close fp))))
+	    (if (not (null? key-pair-list))
+		(if (validate-key-pair-list key-pair-list)
+		    (if (not (commit-key-pair-list key-pair-list))
+			(set! bmc-config-exit-status -1))
+		    (set! bmc-config-exit-status -1))))))
+     (diff-wanted 
+      (if (and (string-null? filename) (null? key-pair-list))
+	  (bc-display-help)
+	  (begin 
+	    (if (not (string-null? filename))
+		(if (file-exists? filename)
+		    (let ((fp (open-input-file filename)))
+		      (if (validate-conf-file fp)
+			  (begin 
+			    (seek fp 0 SEEK_SET)
+			    (if (not (diff-conf-file fp))
+				(set! bmc-config-exit-status -1)))
+			  (set! bmc-config-exit-status -1))
+		      (close fp))))
+	    (if (not (null? key-pair-list))
+		(if (validate-key-pair-list key-pair-list)
+		    (if (not (diff-key-pair-list key-pair-list))
+			(set! bmc-config-exit-status -1))
+		    (set! bmc-config-exit-status -1))))))
      (else 
       (bc-display-help)))))
 

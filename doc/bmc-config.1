@@ -42,21 +42,21 @@ Store all BMC configuration to bmc-data1.conf.
 .PP
 Show all difference between BMC and bmc-data2.conf file.
 .PP
-.B # bmc-config --diff --key-pair="gratuitous_arp_interval=8"
+.B # bmc-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
 .PP
-Show difference 'gratuitous_arp_interval' key with '4' value with BMC.
+Show difference with BMC of key 'gratuitous_arp_interval' and value '4'.
 .PP
 .B # bmc-config --commit -f bmc-data1.conf
 .PP
 Commit all configuration values from bmc-data1.conf file to BMC.
 .PP
-.B # bmc-config --commit --key-pair="gratuitous_arp_interval=4"
+.B # bmc-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit 'gratuitous_arp_interval' key with '4' value to BMC.
+Commit key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
-.B # bmc-config --commit -f bmc-data-updt.conf --key-pair="gratuitous_arp_interval=4"
+.B # bmc-config --commit -f bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
 .PP
-Commit all configuration values from bmc-data-updt.conf and 'gratuitous_arp_interval' key with '4' value to BMC.
+Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
 .SH "REPORTING BUGS"
 Report bugs to <ab@gnu.org.in>.

@@ -208,3 +208,11 @@
 	     (display "\n" (current-error-port))
 	     #f))))
 
+(define (make-section key-string value)
+  (if (= (length (string-split key-string #\:)) 2)
+      (let* ((section-name-key-list (string-split key-string #\:))
+	     (section-data (list (car section-name-key-list))))
+	(append section-data
+		(list (string-append (cadr section-name-key-list) " " value))))
+      #f))
+
