@@ -1,3 +1,7 @@
+2004-05-18  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/bmc-watchdog: Fix careless cut and paste typo.
+	
 2004-05-13  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/Makefile.am: Remove uninstall-extra.
