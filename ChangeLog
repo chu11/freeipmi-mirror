@@ -33,7 +33,15 @@
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c: Now uses
 	fiid_obj_get/set and some code cleanup.
-	
+
+	* bmc-watchdog/src/bmc-watchdog.c: Supports reg_spacing.
+
+	* fish/src/fish.c: Supports reg_spacing.
+
+	* libfreeipmi/src/ipmi-probe.h: Added reg_space to probe info
+	structre. 
+
+	* libfreeipmi/src/smbios.c: enabled reg_space extraction.
 
 2004-12-02  Albert Chu <chu11@llnl.gov>
 

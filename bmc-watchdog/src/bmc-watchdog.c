@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.21 2004-12-05 02:34:48 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.22 2004-12-05 04:11:08 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -252,23 +252,35 @@ _err_exit(char *fmt, ...)
   exit(1);
 }
 
-static u_int32_t 
-_get_port(void)
+static int
+_get_port(u_int32_t *port, u_int8_t *reg_space)
 {
   ipmi_probe_info_t probeinfo;
   int status;
 
+  if ((port == NULL) || (reg_space == NULL))
+    return (-1);
+
   assert(cmdline_parsed != 0);
   
   if (cinfo.io_port)
-    return cinfo.io_port_val;
-  else
     {
-      ipmi_probe (ipmi_interface_kcs, &probeinfo, &status);
-      if (status == 0 && !probeinfo.bmc_io_mapped)
-        return (u_int32_t) probeinfo.base.bmc_iobase_addr;
-      else return IPMI_KCS_SMS_IO_BASE_DEFAULT;
+      *port      = cinfo.io_port_val;
+      *reg_space = IPMI_KCS_REG_SPACE_DEFAULT;
+      return (0);
     }
+
+  ipmi_probe (ipmi_interface_kcs, &probeinfo, &status);
+  if (status == 0 && !probeinfo.bmc_io_mapped)
+    {
+      *port      = probeinfo.base.bmc_iobase_addr;
+      *reg_space = probeinfo.base.reg_space;
+      return (0);
+    }
+
+  *port      = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+  *reg_space = IPMI_KCS_REG_SPACE_DEFAULT;
+  return (0);
 }
 
 /* Must be called after cmdline parsed b/c user may pass in io port */
@@ -276,11 +288,14 @@ static int
 _init_ipmi(void)
 {
   int ret;
-  u_int32_t port = _get_port();
+  u_int32_t port;
+  u_int8_t  reg_space;
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-  if ((ret = ipmi_kcs_io_init(port, IPMI_KCS_REG_SPACE_DEFAULT, IPMI_KCS_SLEEP_USECS)) < 0)
+  _get_port (&port, &reg_space);
+
+  if ((ret = ipmi_kcs_io_init(port, reg_space, IPMI_KCS_SLEEP_USECS)) < 0)
     _bmclog("ipmi_kcs_io_init: %s", strerror(errno));
 
   return ret;

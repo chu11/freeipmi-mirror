@@ -40,6 +40,8 @@ ipmi_probe (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
   int status;
   ipmi_probe_info_t* pinfo2;
 
+  memset (pinfo, 0, sizeof (ipmi_probe_info_t));
+
   status = 1;
   for (i = 0; things_to_try[i] != NULL; i++)
     {
