@@ -4,7 +4,7 @@
 
 2004-10-08  Anand Babu  <ab@gnu.org.in>
 
-	* authors.texi, fdl.texi, freeipmi-ug.texi, gpl.texi,
+	* authors.texi, fdl.texi, freeipmi.texi, gpl.texi,
 	permissions.texi, version.texi.in: newly added - GNU FreeIPMI
 	User's Guide. 
 	* authors.texinfo, fish.texinfo, freeipmi-hg.texinfo,
