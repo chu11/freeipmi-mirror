@@ -311,6 +311,18 @@ install_new_procedures (void)
      (display (fi-sel-get-next-entry))
   */
   
+  gh_new_procedure ("fi-sel-get-first-entry-raw", 
+		    ex_sel_get_first_entry_raw, 0, 0, 0);
+  
+  gh_new_procedure ("fi-sel-get-next-entry-raw", 
+		    ex_sel_get_next_entry_raw, 0, 0, 0);
+  
+  gh_new_procedure ("fi-sel-get-first-entry-hex", 
+		    ex_sel_get_first_entry_hex, 0, 0, 0);
+  
+  gh_new_procedure ("fi-sel-get-next-entry-hex", 
+		    ex_sel_get_next_entry_hex, 0, 0, 0);
+  
   gh_new_procedure ("fi-sel-delete-entry", 
 		    ex_sel_delete_entry, 1, 0, 0);
   /* example scheme expression

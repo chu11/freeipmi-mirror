@@ -1,5 +1,8 @@
 2004-08-17  Ian Zimmerman  <itz@californiadigital.com>
 
+	* fish/src/extension.c (install_new_procedures): 
+	install ex_sel_*_{raw,hex}.
+
 	* fish/src/scm-procedures.h: declare ex_sel_*_hex.
 
 	* fish/src/scm-procedures.c (ex_sel_get_first_entry_hex): 
