@@ -721,7 +721,7 @@ ex_sel_get_first_entry_raw ()
   if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
     {
       int i;
-      for (i = SEL_RECORD_SIZE; i >= 0; i--)
+      for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
     }
   return scm_sel_record;
@@ -736,7 +736,7 @@ ex_sel_get_next_entry_raw ()
   if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
     {
       int i;
-      for (i = SEL_RECORD_SIZE; i >= 0; i--)
+      for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
     }
   return scm_sel_record;

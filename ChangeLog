@@ -1,5 +1,8 @@
 2004-08-16  Ian Zimmerman  <itz@californiadigital.com>
 
+	* fish/src/scm-procedures.c (ex_sel_get_next_entry_raw):
+	Fix index out of bounds.
+
 	* fish/src/scm-procedures.h: add prototypes for
 	ex_sel_get_next_entry_raw and ex_sel_get_first_entry_raw.
 
