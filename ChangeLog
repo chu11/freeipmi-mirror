@@ -1,6 +1,7 @@
 2004-10-29  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: More PEF commands added.
+	(ipmi_kcs_get_pef_alert_string): And more of the same.
 
 2004-10-28  Albert Chu <chu11@llnl.gov>
 
