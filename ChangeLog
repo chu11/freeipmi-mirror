@@ -1,3 +1,8 @@
+2004-06-29  Albert Chu <chu11@llnl.gov>
+
+        * ipmipower/src/conffile.c (_parseline): Fixed argument parsing
+	bugs.
+	
 2004-06-25  Albert Chu <chu11@llnl.gov>
 
 	Added Suspend BMC Arps functionality to BMC-Watchdog

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.1 2004-05-11 17:04:25 chu11 Exp $
+ *  $Id: conffile.c,v 1.2 2004-06-29 20:18:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,18 +30,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#if STDC_HEADERS
 #include <string.h>
-#endif
-#if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
 #include <ctype.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
 
 #include "conffile.h"
 #include "fd.h"
@@ -465,6 +459,7 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
     char args[CONFFILE_MAX_ARGS][CONFFILE_MAX_ARGLEN];
     struct conffile_option *option = NULL;
     struct conffile_data data;
+    char *ptr;
 
     memset(&data, '\0', sizeof(struct conffile_data));
 
@@ -596,24 +591,44 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
         else
             data.boolval = 0;
     }
-    else if (option->option_type == CONFFILE_OPTION_INT)
-        data.intval = atoi(args[0]);
-    else if (option->option_type == CONFFILE_OPTION_DOUBLE)
-        data.doubleval = strtod(args[0], NULL);
+    else if (option->option_type == CONFFILE_OPTION_INT) {
+        data.intval = strtol(args[0], &ptr, 10);
+        if ((args[0] + strlen(args[0])) != ptr) {
+            cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
+            return -1;
+        }
+    }
+    else if (option->option_type == CONFFILE_OPTION_DOUBLE) {
+        data.doubleval = strtod(args[0], &ptr);
+        if ((args[0] + strlen(args[0])) != ptr) {
+            cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
+            return -1;
+        }
+    }
     else if (option->option_type == CONFFILE_OPTION_STRING) {
         strncpy(data.string, args[0], CONFFILE_MAX_ARGLEN);
         data.string[CONFFILE_MAX_ARGLEN - 1] = '\0';
     }
     else if (option->option_type == CONFFILE_OPTION_LIST_INT) {
         int i;
-        for (i = 0; i < numargs; i++)
-            data.intlist[i] = atoi(args[i]);
+        for (i = 0; i < numargs; i++) {
+            data.intlist[i] = strtol(args[i], &ptr, 10);
+            if ((args[i] + strlen(args[i])) != ptr) {
+                cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
+                return -1;
+            }
+        }
         data.intlist_len = numargs;
     }
     else if (option->option_type == CONFFILE_OPTION_LIST_DOUBLE) {
         int i;
-        for (i = 0; i < numargs; i++)
-            data.doublelist[i] = strtod(args[i], NULL);
+        for (i = 0; i < numargs; i++) {
+            data.doublelist[i] = strtod(args[i], &ptr);
+            if ((args[i] + strlen(args[i])) != ptr) {
+                cf->errnum = CONFFILE_ERR_PARSE_ARG_INVALID;
+                return -1;
+            }
+        }
         data.doublelist_len = numargs;
     }
     else if (option->option_type == CONFFILE_OPTION_LIST_STRING) {
