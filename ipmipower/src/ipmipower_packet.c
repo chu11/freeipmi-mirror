@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.6 2004-12-18 00:42:36 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.7 2005-01-21 21:27:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -401,8 +401,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         password = NULL;
 
-      /* We should skip the PRIV_REQ packet on a power status command,
-       * but I'll just leave the POWER_STATUS command check anyway.
+      /* Although we may have authenticated at a higher privilege level than
+       * necessary, we will only set the session privilege the maximum
+       * required for the appropriate power control command.
+       *
+       * Note that the protocol in ipmipower technically skips the set
+       * session privilege command for a power status query since a
+       * power status query only requires a USER privilege level.  I
+       * leave the if statement below anyways.
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
         priv = IPMI_PRIV_LEVEL_USER;
