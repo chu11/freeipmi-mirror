@@ -230,7 +230,55 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     // ID String type/Length code
     {8, "id_string_type_length_code"}, 
     // ID String bytes
-    {120, "sensor_id_string"}, 
+    {128, "sensor_id_string"}, 
+    {0, ""}
+  };
+
+fiid_template_t tmpl_sdr_event_only_sensor_record = 
+  {
+    // Sensor record header
+    // --------------------
+    {16, "record_id"}, 
+    {4,  "sdr_version_major"}, 
+    {4,  "sdr_version_minor"}, 
+    {8,  "record_type"}, 
+    {8,  "record_length"}, 
+    // Record Key bytes
+    // ----------------
+    // Sensor owner ID
+    {1, "ipmb_software_id"}, 
+    {7, "slave_system_software_id"}, 
+    // Sensor owner LUN
+    {2, "sensor_owner_lun"}, 
+    {2, "fru_inventory_device_owner_lun"}, 
+    {4, "channel_number"}, 
+    // Sensor Number
+    {8, "sensor_number"}, 
+    
+    // Record body bytes
+    // -----------------
+    // Entity ID
+    {8, "entity_id"}, 
+    // Entity instance
+    {7, "entity_instance_number"}, 
+    {1, "physical_logical_entity"}, 
+    
+    {8, "sensor_type"}, 
+    {8, "event_reading_type"}, 
+    
+    // Sensor Record Sharing, Sensor Direction
+    // ---------------------------------------
+    {4, "share_count"}, 
+    {2, "id_string_instance_modifier_type"}, 
+    {2, "sensor_direction"}, 
+    {7, "id_string_instance_modifier_offset"}, 
+    {1, "entity_instance_sharing"}, 
+    
+    {8, "reserved"}, 
+    {8, "OEM.reserved"}, 
+    
+    {8, "id_string_type_length_code"}, 
+    {128, "sensor_id_string"}, 
     {0, ""}
   };
 

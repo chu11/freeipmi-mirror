@@ -1,3 +1,22 @@
+2004-11-28  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/src/ipmi-wrapper.c (get_lan_channel_number): now using
+	probed channel.
+	
+	* fish/src/ipmi-wrapper.c (get_serial_channel_number): now using
+	probed channel.
+	
+	* fish/src/ipmi-wrapper.c (display_channel_info): new function.
+	
+	* fish/src/ipmi-wrapper.c (display_get_dev_id): now prints channel
+	info.
+
+	* fish/src/scm-procedures.c (ex_kcs_get_dev_id_display): fixed
+	memory leak.
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c: added new template
+	tmpl_sdr_event_only_sensor_record.
+
 2004-11-28  Anand Babu  <ab@gnu.org.in>
 
 	* fish/src/ipmi-wrapper.c (display_get_dev_id): bmc-info should

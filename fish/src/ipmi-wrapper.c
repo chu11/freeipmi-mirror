@@ -325,24 +325,56 @@ get_channel_info_list ()
 }
 
 u_int8_t 
-get_lan_channel_number_orig ()
+get_lan_channel_number ()
 {
   channel_info *channel_list;
   u_int8_t i;
+  
+  u_int8_t *obj_hdr_rs;
+  u_int8_t *obj_cmd_rs;
+  u_int32_t cmd_rs_len;
+  u_int64_t manf_id, prod_id;
+  
+  obj_hdr_rs = fiid_obj_alloc (tmpl_hdr_kcs);
+  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
+  cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
+  
+  if (ipmi_kcs_get_dev_id (fi_get_sms_io_base (), obj_hdr_rs, obj_cmd_rs) != 0)
+    return (-1);
+  
+  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
+  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_dev_id_rs, "prod_id", &prod_id);
+  
+  free (obj_hdr_rs);
+  free (obj_cmd_rs);
+  
+  switch (manf_id)
+    {
+    case IPMI_MANF_ID_INTEL:
+    case 0xB000157: // Intel 
+      switch (prod_id)
+	{
+	case IPMI_PROD_ID_SE7501WV2:
+	  return 7;
+	}
+    }
   
   channel_list = get_channel_info_list ();
   
   for (i = 0; i < 8; i++)
     {
       if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-	return channel_list[i].channel_number;
+        {
+          // printf ("lan_channel_number: %d\n", channel_list[i].channel_number);
+          return channel_list[i].channel_number;
+        }
     }
   
   return (-1);
 }
 
 u_int8_t 
-get_serial_channel_number_orig ()
+get_serial_channel_number ()
 {
   channel_info *channel_list;
   u_int8_t i;
@@ -352,22 +384,125 @@ get_serial_channel_number_orig ()
   for (i = 0; i < 8; i++)
     {
       if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
-	return channel_list[i].channel_number;
+        {
+          // printf ("serial_channel_number: %d\n", channel_list[i].channel_number);
+          return channel_list[i].channel_number;
+        }
     }
   
   return (-1);
 }
 
 u_int8_t 
-get_lan_channel_number ()
+get_lan_channel_number_known ()
 {
   return 7;
 }
 
 u_int8_t 
-get_serial_channel_number ()
+get_serial_channel_number_known ()
 {
   return 1;
+}
+
+int 
+display_channel_info ()
+{
+  channel_info *channel_list;
+  u_int8_t i;
+  
+  channel_list = get_channel_info_list ();
+  
+  printf ("Channel Information:\n");
+  for (i = 0; i < 8; i++)
+    {
+      if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RESERVED)
+	continue;
+      
+      printf ("       Channel No: %d\n", channel_list[i].channel_number);
+      
+      switch (channel_list[i].medium_type)
+	{
+	case IPMI_CHANNEL_MEDIUM_TYPE_RESERVED:
+	  printf ("      Medium Type: %s\n", "Reserved");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_IPMB:
+	  printf ("      Medium Type: %s\n", "IPMB (I2C)");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10:
+	  printf ("      Medium Type: %s\n", "ICMB v1.0");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09:
+	  printf ("      Medium Type: %s\n", "ICMB v0.9");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3:
+	  printf ("      Medium Type: %s\n", "802.3 LAN");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_RS232:
+	  printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN:
+	  printf ("      Medium Type: %s\n", "Other LAN");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS:
+	  printf ("      Medium Type: %s\n", "PCI SMBus");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11:
+	  printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20:
+	  printf ("      Medium Type: %s\n", "SMBus v2.0");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_USB_1X:
+	  printf ("      Medium Type: %s\n", "USB 1.x");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_USB_2X:
+	  printf ("      Medium Type: %s\n", "USB 2.x");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE:
+	  printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
+	  break;
+	case IPMI_CHANNEL_MEDIUM_TYPE_OEM:
+	  printf ("      Medium Type: %s\n", "OEM");
+	  break;
+	}
+      
+      switch (channel_list[i].protocol_type)
+	{
+	case IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED:
+	  printf ("    Protocol Type: %s\n", "Reserved");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_IPMB:
+	  printf ("    Protocol Type: %s\n", "IPMB-1.0");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10:
+	  printf ("    Protocol Type: %s\n", "ICMB-1.0");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X:
+	  printf ("    Protocol Type: %s\n", "IPMI-SMBus");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_KCS:
+	  printf ("    Protocol Type: %s\n", "KCS");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_SMIC:
+	  printf ("    Protocol Type: %s\n", "SMIC");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_10:
+	  printf ("    Protocol Type: %s\n", "BT-10");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_15:
+	  printf ("    Protocol Type: %s\n", "BT-15");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_TMODE:
+	  printf ("    Protocol Type: %s\n", "TMODE");
+	  break;
+	case IPMI_CHANNEL_PROTOCOL_TYPE_OEM:
+	  printf ("    Protocol Type: %s\n", "OEM");
+	  break;
+	}
+    }
+  
+  return 0;
 }
 
 int
@@ -485,5 +620,8 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
 	fprintf (stdout, "Aux Firmware Revision Info: %Xh\n", (unsigned int) val);
       }
   }
+  
+  display_channel_info ();
+  
   return (0);
 }

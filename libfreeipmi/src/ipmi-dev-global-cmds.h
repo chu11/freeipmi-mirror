@@ -33,6 +33,8 @@ extern "C" {
 #define IPMI_PROD_ID_SR870BN4       0x100
 #define IPMI_PROD_ID_CDC6440        0x100
 
+#define IPMI_PROD_ID_SE7501WV2      0x1B
+#define IPMI_PROD_ID_CDC1620        0x1B
 
 extern fiid_template_t tmpl_cmd_get_dev_id_rq;
 extern fiid_template_t tmpl_cmd_get_dev_id_rs;
