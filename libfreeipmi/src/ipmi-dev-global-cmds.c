@@ -128,32 +128,32 @@ fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs =
 
 
 int8_t
-fill_cmd_get_dev_id (fiid_obj_t obj_cmd)
+fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
 { 
-  if (obj_cmd == NULL)
+  if (obj_data_rq == NULL)
     {
       errno = EINVAL;
       return -1;
     }
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_dev_id_rq, "cmd", IPMI_CMD_GET_DEV_ID);
+  FIID_OBJ_SET (obj_data_rq, tmpl_cmd_get_dev_id_rq, "cmd", IPMI_CMD_GET_DEV_ID);
   return (0);
 }  
 
 int8_t
-ipmi_kcs_get_dev_id (fiid_obj_t obj_hdr_rs, fiid_obj_t obj_cmd_rs)
+ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs)
 {
-  fiid_obj_t obj_cmd = NULL;
-  u_int32_t obj_cmd_len;
+  fiid_obj_t obj_data_rq = NULL;
+  u_int32_t obj_data_len;
   
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq);
-  ERR (obj_cmd_len > 0);
-  obj_cmd = alloca (obj_cmd_len);
-  memset (obj_cmd, 0, obj_cmd_len);
-  ERR (obj_cmd);
+  obj_data_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq);
+  ERR (obj_data_len > 0);
+  obj_data_rq = alloca (obj_data_len);
+  memset (obj_data_rq, 0, obj_data_len);
+  ERR (obj_data_rq);
 
-  ERR (fill_cmd_get_dev_id (obj_cmd) == 0);
+  ERR (fill_cmd_get_dev_id (obj_data_rq) == 0);
   ERR (ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-		     obj_cmd, tmpl_cmd_get_dev_id_rq, 
-		     obj_cmd_rs, tmpl_cmd_get_dev_id_rs) == 0);
+		     obj_data_rq, tmpl_cmd_get_dev_id_rq, 
+		     obj_data_rs, tmpl_cmd_get_dev_id_rs) == 0);
   return (0);
 }

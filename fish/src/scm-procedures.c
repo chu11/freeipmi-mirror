@@ -225,24 +225,20 @@ ex_ipmi_ping (SCM scm_host_addr)
 SCM
 ex_kcs_get_dev_id_display (void)
 {
-  u_int8_t *obj_hdr_rs;
   u_int8_t *obj_cmd_rs;
   u_int32_t cmd_rs_len;
   u_int8_t retval;
   
-  obj_hdr_rs = fiid_obj_alloc (tmpl_hdr_kcs);
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
   cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
   
-  if (ipmi_kcs_get_dev_id (obj_hdr_rs, obj_cmd_rs) != 0)
+  if (ipmi_kcs_get_dev_id (obj_cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_kcs_get_dev_id (%p, %p)\n", obj_hdr_rs, obj_cmd_rs);
+      fprintf (stderr, "ipmi_kcs_get_dev_id (%p)\n", obj_cmd_rs);
       return (SCM_BOOL_F);
     }
-/*   fiid_obj_dump (1, obj_hdr_rs, tmpl_hdr_kcs); */
 /*   fiid_obj_dump (1, obj_cmd_rs, tmpl_cmd_get_dev_id_rs); */
   retval = display_get_dev_id (obj_cmd_rs, cmd_rs_len);
-  free (obj_hdr_rs);
   free (obj_cmd_rs);
   
   if (retval != 0)

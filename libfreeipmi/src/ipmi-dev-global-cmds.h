@@ -40,9 +40,8 @@ extern fiid_template_t tmpl_cmd_get_dev_id_rq;
 extern fiid_template_t tmpl_cmd_get_dev_id_rs;
 extern fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs;
 
-
-int8_t fill_cmd_get_dev_id (u_int8_t *cmd);
-int8_t ipmi_kcs_get_dev_id (u_int8_t *hdr_rs, u_int8_t *cmd_rs);
+int8_t fill_cmd_get_dev_id (fiid_obj_t obj_data_rq);
+int8_t ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs);
 
 #ifdef __cplusplus
 }
