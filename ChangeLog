@@ -12,6 +12,11 @@
 	* ipmi-over-ts2000.texi ipmi-network-layout.fig
 	ipmi-network-layout.xcf freeipmi-hackers-intro.sxi: additional
 	documentation added with (cvs add -kb) binary sticky flag. 
+	* fish/src/ipmi-wrapper-sensor.c: commented unused variables.
+	* ipmipower/src/wrappers.c (_checkfill): fixed unused-warning.
+	* ipmipower/src/ipmipower_check.c (_check_command): initialized
+	"expected_cmd" to -1.
+	* ipmipower/src/conffile.c (conffile_parse): initialized "len" to -1.
 	* configure.ac: now becomes 0.1.0.
 
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
