@@ -1,3 +1,7 @@
+2004-10-19  Ian Zimmerman  <itz@californiadigital.com>
+
+	* NEWS: insert a meaningless blurb to shut up lintian.
+
 2004-10-16  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi/src/fiid.h: fiid_template_t and fiid_tmpl_t are now
