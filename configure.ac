@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.3],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.18 2004-10-25 17:16:40 itz Exp $])
+AC_REVISION([$Id: configure.ac,v 1.19 2004-11-03 01:29:40 itz Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -41,14 +41,6 @@ AC_SUBST([LIBFREEIPMI_VERSION])
 LIBFREEIPMI_VERSION_INFO=$LIBFREEIPMI_CURRENT:$LIBFREEIPMI_REVISION:$LIBFREEIPMI_AGE
 AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 
-dnl Enable error tracing. Lower level calls will spit error messages
-dnl on to the console
-AC_ARG_ENABLE([trace],
-              AC_HELP_STRING([--enable-trace], [turn on error tracing]))
-if test "x${enable_trace}" = "xyes" ; then
-        AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
-fi
-
 AC_CANONICAL_HOST
 
 dnl Checks for programs.
@@ -56,13 +48,16 @@ AC_PROG_INSTALL
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET
-GUILE_PROGS
-GUILE_FLAGS
 
-dnl See if they want to build fish.
-AC_ARG_ENABLE([fish],
-              AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
-AM_CONDITIONAL([COND_FISH], [test x"${enable_fish}" != "xno"])
+dnl Enable error tracing. Lower level calls will spit error messages
+dnl on to the console
+AC_ARG_ENABLE([trace],
+              AC_HELP_STRING([--enable-trace], [turn on error tracing]))
+if test "x${enable_trace}" = "xyes" ; then
+     AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
+elif test "x${enable_trace}" = "x" ; then
+     enable_trace=no
+fi
 
 dnl Turn off all optimizations when debugging
 AC_ARG_ENABLE(debug,
@@ -75,20 +70,49 @@ if test "x${enable_debug}" = "xyes"; then
    fi
    WITH_DEBUG=1
 else
+   if test "x${enable_debug}" = "x" ; then
+      enable_debug=no
+   fi
    AC_DEFINE([NDEBUG], [1], [Define to 1 for a production release])
    WITH_DEBUG=0
 fi
 AC_SUBST(WITH_DEBUG)
 
+dnl See if they want to build fish.
+AC_ARG_ENABLE([fish],
+              AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
+AM_CONDITIONAL([COND_FISH], [test x"${enable_fish}" != "xno"])
+if test "x${enable_fish}" = "x" ; then
+   enable_fish=yes
+fi
+
+if test "x${enable_fish}" = "xyes" ; then
+   GUILE_PROGS
+   GUILE_FLAGS
+   NOREADLINE_LIBS=${LIBS}
+   LIBS=${READLINE_LIBS}
+   AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
+   AC_CHECK_LIB([readline],[readline])
+   have_ding=no
+   AC_CHECK_FUNCS([ding rl_ding],[have_ding=yes])
+   have_completion_matches=no
+   AC_CHECK_FUNCS([completion_matches rl_completion_matches],[have_completion_matches=yes])
+   if test "x${have_ding}" = "xno" -o "x${have_completion_matches}" = "xno" ; then
+      AC_MSG_ERROR([fish build requested but no readline functions found])
+   fi
+   READLINE_LIBS=${LIBS}
+   AC_SUBST([READLINE_LIBS])
+   LIBS=${NOREADLINE_LIBS}
+else
+   GUILE_CFLAGS=
+   AC_SUBST([GUILE_CFLAGS])
+   GUILE_LDFLAGS=
+   AC_SUBST([GUILE_LDFLAGS])
+   READLINE_LIBS=
+   AC_SUBST([READLINE_LIBS])
+fi
+
 dnl Checks for libraries.
-NOREADLINE_LIBS=${LIBS}
-LIBS=${READLINE_LIBS}
-AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
-AC_CHECK_LIB([readline],[readline])
-AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches])
-READLINE_LIBS=${LIBS}
-AC_SUBST([READLINE_LIBS])
-LIBS=${NOREADLINE_LIBS}
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN

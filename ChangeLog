@@ -1,3 +1,9 @@
+2004-11-02  Ian Zimmerman  <itz@californiadigital.com>
+
+	* configure.ac: fail configure if fish is being built but
+	readline is not found.  If fish is not being built, don't
+	check for readline or guile at all.
+
 2004-11-02  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Various fixes for potential build issues.
