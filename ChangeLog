@@ -1,3 +1,11 @@
+2004-10-14  Ian Zimmerman  <itz@californiadigital.com>
+
+	* configure.ac, bmc-watchdog/Makefile.am, fish/Makefile.am,
+	ipmiping/Makefile.am, ipmipower/Makefile.am, rmcpping/Makefile.am,
+	doc/Makefile.am: reflect the fact that manpage templates have
+	moved from the doc directory to be next to the binaries they
+	describe.
+
 2004-10-14  Anand Babu  <ab@gnu.org.in>
 
 	* freeipmi/libfreeipmi/src/ipmi-semaphores.h: Portability fixes -
