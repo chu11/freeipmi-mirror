@@ -1,3 +1,9 @@
+2004-07-09  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_sendto): Fix buffer
+	overrun bug: the pad byte must _not_ be copied from caller provided
+	buffer, because it is not there. (_pkt_len -> pkt_len).
+
 2004-07-07  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Removed fsync() calls.

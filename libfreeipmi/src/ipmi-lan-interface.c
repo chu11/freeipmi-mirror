@@ -556,7 +556,7 @@ ssize_t ipmi_lan_sendto (int sockfd, const void *pkt, size_t pkt_len, int flags,
   _pkt_len += pad_len;
   _pkt = alloca (_pkt_len);         
   memset (_pkt, 0, _pkt_len);
-  memcpy (_pkt, pkt, _pkt_len);
+  memcpy (_pkt, pkt, pkt_len);
   
   bytes_sent = sendto (sockfd, _pkt, _pkt_len, flags, to, tolen);
 
