@@ -56,6 +56,7 @@ ipmiping/rmcpping:
 
 General:
 --------
+  * Fix freeipmi.spec.in port issues
   * Testsuite for Freeipmi and IPMI conformance test.
   * Need to test following corner cases:
     - 16 byte passwords
