@@ -100,8 +100,8 @@ typedef struct fiid_field
 } fiid_field_t;
 
 /* typedef fiid_field_t fiid_template_t[]; */
-typedef fiid_field_t fiid_template_t[];
-typedef fiid_field_t fiid_tmpl_t[];
+typedef fiid_field_t const fiid_template_t[];
+typedef fiid_field_t const fiid_tmpl_t[];
 typedef u_int8_t *fiid_obj_t;
 /* FIID Template for testing. 
 fiid_template_t tmpl_test =

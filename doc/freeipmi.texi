@@ -430,6 +430,7 @@ replicate the configuration.
 * BMC checkout::                Extracting current BMC configuration.
 * BMC commit::                  Update BMC configuration.
 * Diff configuration::          Compare BMC configuration.
+* bmc-config known issues::     Known issues with the bmc-config.
 @end menu
 
 @node Options, Sample Configuration File, bmc-config, bmc-config
@@ -618,7 +619,7 @@ Section LAN_Conf
 EndSection
 Section LAN_Conf_Auth
 	## Possible values: Yes/No
-	Callback_Enable_Auth_Type_None               Yes
+	Callback_Enable_Auth_Type_None               No
 	## Possible values: Yes/No
 	Callback_Enable_Auth_Type_Md2                Yes
 	## Possible values: Yes/No
@@ -628,7 +629,7 @@ Section LAN_Conf_Auth
 	## Possible values: Yes/No
 	Callback_Enable_Auth_Type_Oem_Proprietary    No
 	## Possible values: Yes/No
-	User_Enable_Auth_Type_None                   Yes
+	User_Enable_Auth_Type_None                   No
 	## Possible values: Yes/No
 	User_Enable_Auth_Type_Md2                    Yes
 	## Possible values: Yes/No
@@ -761,7 +762,7 @@ debian-ia64:~# bmc-config --commit -k "LAN_conf:Ip_Address=192.168.1.60"
 Note: At this point of time, configuration settings can only be fed
 through a file or key-value pairs and not stdin.
 
-@node Diff configuration,  , BMC commit, bmc-config
+@node Diff configuration, bmc-config known issues, BMC commit, bmc-config
 @section Compare BMC configuration
 
 To compare the differences between current active BMC settings and the
@@ -780,6 +781,81 @@ debian-ia64:~# bmc-config --diff -k "User2:Username=guest"
 USER:Username=guest
 BMC :Username=ipmiuser differs
 debian-ia64:~# 
+@end example
+
+@node bmc-config known issues,  , Diff configuration, bmc-config
+@section bmc-config known issues
+
+@subsection Auth_Type_None conflict
+@option{XXXXXXX_Auth_Type_None} @emph{cannot be} @option{Yes} when
+ever any of the
+@option{XXXXXXX_Auth_Type_@{Md2|Md5|Straight_Password|Oem_Proprietary@}}
+are set to @option{Yes}.
+
+@subsubsection Bad configration
+@option{XXXXXXX_Auth_Type_None} @emph{should be} set to @option{No}. 
+
+@example 
+Section LAN_Conf_Auth
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_None                  Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md2                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md5                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Straight_Password     Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Oem_Proprietary       No
+EndSection
+@end example
+
+@subsubsection Good configration
+@example 
+Section LAN_Conf_Auth
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_None                  No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md2                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md5                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Straight_Password     Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Oem_Proprietary       No
+EndSection
+@end example
+
+@subsubsection Good configration
+@example 
+Section LAN_Conf_Auth
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_None                  Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md2                   No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md5                   No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Straight_Password     No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Oem_Proprietary       No
+EndSection
+@end example
+
+@subsubsection Good configration
+@example 
+Section LAN_Conf_Auth
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_None                  No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md2                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md5                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Straight_Password     Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Oem_Proprietary       Yes
+EndSection
 @end example
 
 @node bmc-info, sensors, bmc-config, Top

@@ -1,3 +1,11 @@
+2004-10-16  Anand Babu  <ab@gnu.org.in>
+
+	* libfreeipmi/src/fiid.h: fiid_template_t and fiid_tmpl_t are now
+	constants.
+	
+	* doc/freeipmi.texi: Added "Auth_Type_None conflict" section to
+	bmc-config known issues.
+
 2004-10-14  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac, bmc-watchdog/Makefile.am, fish/Makefile.am,
@@ -13,6 +21,7 @@
 
 	* freeipmi/libfreeipmi/src/ipmi-semaphores.h: Portability fixes -
 	careful macro checks for union semun. 
+	
 	* freeipmi/libfreeipmi/src/xmalloc.h: Removed error.h and
 	error prototype. 
 
@@ -63,26 +72,36 @@
 	* authors.texi, fdl.texi, freeipmi.texi, gpl.texi,
 	permissions.texi, version.texi.in: newly added - GNU FreeIPMI
 	User's Guide. 
+	
 	* authors.texinfo, fish.texinfo, freeipmi-hg.texinfo,
 	gpl.texinfo: removed.
+	
 	* ipmi-over-ts2000.texi ipmi-network-layout.fig
 	ipmi-network-layout.xcf freeipmi-hackers-intro.sxi: additional
 	documentation added with (cvs add -kb) binary sticky flag. 
+	
 	* fish/src/ipmi-wrapper-sensor.c: commented unused variables.
+	
 	* ipmipower/src/wrappers.c (_checkfill): fixed unused-warning.
+	
 	* ipmipower/src/ipmipower_check.c (_check_command): initialized
 	"expected_cmd" to -1.
+	
 	* ipmipower/src/conffile.c (conffile_parse): initialized "len" to
 	-1.
+	
 	* doc/Makefile.am: new entries to handle additional documentation
 	and PDF creation.
+	
 	* TODO: cleanup and reformating.
+	
 	* configure.ac: now becomes 0.1.0.
 	
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c: Fixed compatibility issues with
 	GCC 2.96
+	
 	* libfreeipmi/src/ipmi-ping.c: like wise
 
 2004-10-07  Albert Chu <chu11@llnl.gov>
