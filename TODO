@@ -42,8 +42,8 @@ Bmc-watchdog
 
 - Add probing for proper base address
 - Add suspend arp options
-- Add autoconf option to specify default kcs port address??
 - Require Timer use to be SMS/OS?
+- Why doesn't disabled logging not log?
 
 Ipmipower
 
