@@ -74,7 +74,7 @@ do {                                     \
 #define _ERR_RET(errdesc, str)           \
 do {                                     \
    _ERR (errdesc, str);                  \
-   return (comp_code);                   \
+   return (0);                           \
 } while (0)
 
 int8_t ipmi_strerror_r(u_int8_t cmd, u_int8_t comp_code, u_int8_t *errstr, size_t len)

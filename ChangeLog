@@ -1,3 +1,48 @@
+2004-06-25  Albert Chu <chu11@llnl.gov>
+
+	Added Suspend BMC Arps functionality to BMC-Watchdog
+
+	* bmc-watchdog/src/bmc-watchdog.c (_suspend_bmc_arps_cmd,
+	_get_lan_channel_number): New Functions.
+	
+	* bmc-watchdog/src/bmc-watchdog.c (_usage, _cmdline_parse,
+	_start_cmd, _daemon_setup): Added --arp-response-suspend and
+	--gratuitous-arp-suspend support.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Added netfn argument.
+	Use netfn argument in kcs function calls.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_reset_watchdog_timer_cmd,
+	_set_watchdog_timer_cmd, _get_watchdog_timer_cmd,
+	_suspend_bmc_arps_cmd): Pass appropriate network function to
+	_cmd().
+
+	* libfreeipmi/src/ipmi-watchdog.c: Fix typo in
+	fiid_cmd_suspend_bmc_arp_rq template.
+
+	* libfreeipmi/src/ipmi-watchdog.h,libfreeipmi/src/ipmi-watchdog.c
+	(fill_cmd_suspend_bmc_arps): Added channel_number argument.  Fill
+	channel_argument field based on argument.
+
+	* libfreeipmi/src/ipmi-watchdog.h: Added
+	IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND,
+	IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND,
+	IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND,
+	IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND,
+	IPMI_WATCHDOG_GRATUITOUS_ARP_VALID, and
+	IPMI_WATCHDOG_ARP_RESPONSE_VALID macros.
+
+	* doc/bmc-watchdog.8.in: Updated with new info about suspend arps
+	options.
+
+	Misc. Fixes.
+
+	* libfreeipmi/src/ipmi-error.c (_ERR_RET): Fixed return value
+	error in macro.
+
+	* TODO: Remove suspend arps note.  Added note about need to
+	reprogram _get_lan_channel_number().
+	
 2004-06-24  Albert Chu <chu11@llnl.gov>
 
 	Added Pulse Diagnostic Interrupt and Soft OS Shutdown commands

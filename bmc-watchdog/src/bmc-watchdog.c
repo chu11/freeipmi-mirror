@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.2 2004-05-10 17:49:42 itz Exp $
+ *  $Id: bmc-watchdog.c,v 1.3 2004-06-26 00:42:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,6 +116,10 @@ struct cmdline_info
   int clear_oem;
   int initial_countdown_seconds;
   u_int32_t initial_countdown_seconds_val;
+  int gratuitous_arp;
+  u_int8_t gratuitous_arp_val;
+  int arp_response;
+  u_int8_t arp_response_val;
   int start_after_set;
   int reset_after_set;
   int start_if_stopped;
@@ -248,7 +252,7 @@ _sleep(unsigned int sleep_len)
 }
 
 static int
-_cmd(char *str, int retry_wait_time, int retry_attempt, 
+_cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
      fiid_obj_t cmd_rq, fiid_template_t tmpl_rq,
      fiid_obj_t cmd_rs, fiid_template_t tmpl_rs)
 {
@@ -257,6 +261,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt,
   int retry_count = 0;
 
   assert (str != NULL && retry_wait_time >= 0 && retry_attempt >= 0
+          && (netfn == IPMI_NET_FN_APP_RQ || netfn == IPMI_NET_FN_TRANSPORT_RQ)
           && cmd_rq != NULL && tmpl_rq != NULL
           && cmd_rs != NULL && tmpl_rs != NULL);
 
@@ -271,7 +276,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt,
   while (1)
     {
       if (ipmi_kcs_cmd_interruptible(port, IPMI_BMC_IPMB_LUN_BMC,
-                                     IPMI_NET_FN_APP_RQ, cmd_rq, 
+                                     netfn, cmd_rq, 
                                      tmpl_rq, cmd_rs, tmpl_rs) < 0)
         {
           if (errno != EAGAIN && errno != EBUSY)
@@ -351,7 +356,8 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
     
-  retval = _cmd("Reset Cmd", retry_wait_time, retry_attempt,
+  retval = _cmd("Reset Cmd", retry_wait_time, retry_attempt, 
+                IPMI_NET_FN_APP_RQ,
                 cmd_rq, tmpl_cmd_reset_watchdog_timer_rq,
                 cmd_rs, tmpl_cmd_reset_watchdog_timer_rs);
 
@@ -419,7 +425,8 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
     
-  retval = _cmd("Set Cmd", retry_wait_time, retry_attempt,
+  retval = _cmd("Set Cmd", retry_wait_time, retry_attempt, 
+                IPMI_NET_FN_APP_RQ,
                 cmd_rq, tmpl_cmd_set_watchdog_timer_rq,
                 cmd_rs, tmpl_cmd_set_watchdog_timer_rs);
 
@@ -486,7 +493,8 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  if ((retval =_cmd("Get Cmd", retry_wait_time, retry_attempt,
+  if ((retval =_cmd("Get Cmd", retry_wait_time, retry_attempt, 
+                    IPMI_NET_FN_APP_RQ,
                     cmd_rq, tmpl_cmd_get_watchdog_timer_rq,
                     cmd_rs, tmpl_cmd_get_watchdog_timer_rs)) != 0)
     goto cleanup;
@@ -576,6 +584,57 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   return retval;
 }
 
+/* Stolen from fish, need something better later */
+static u_int8_t
+_get_lan_channel_number(void)
+{
+  return 7;
+}
+
+static int
+_suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
+                      u_int8_t gratuitous_arp,
+                      u_int8_t arp_response)
+{
+  fiid_obj_t cmd_rq = NULL;
+  fiid_obj_t cmd_rs = NULL;
+  int retval = -1;
+
+  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
+    {
+      _syslog(LOG_ERR, "_suspend_bmc_arps: fiid_obj_alloc: %s", 
+              strerror(errno));
+      goto cleanup;
+    }
+
+  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
+    {
+      _syslog(LOG_ERR, "_suspend_bmc_arps: fiid_obj_alloc: %s", 
+              strerror(errno));
+      goto cleanup;
+    }
+
+  if (fill_cmd_suspend_bmc_arps(_get_lan_channel_number(),
+                                gratuitous_arp,
+                                arp_response,
+                                cmd_rq) < 0)
+    {
+      _syslog(LOG_ERR, "_suspend_bmc_arps_cmd: "
+              "fill_cmd_suspend_bmc_arps: %s", strerror(errno));
+      goto cleanup;
+    }
+    
+  retval = _cmd("Suspend Cmd", retry_wait_time, retry_attempt,
+                IPMI_NET_FN_TRANSPORT_RQ,
+                cmd_rq, tmpl_cmd_suspend_bmc_arps_rq,
+                cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
+
+ cleanup:
+  fiid_obj_free(cmd_rq);
+  fiid_obj_free(cmd_rs);
+  return retval;
+}
+
 static void 
 _usage(void) 
 {
@@ -630,6 +689,12 @@ _usage(void)
           "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
           "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
 	  "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n"
+          "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs\n"
+          "             %d = Suspend Gratuitous ARPs\n"
+          "             %d = Do Not Suspend Gratuitous ARPs\n"
+          "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
+          "             %d = Suspend ARP Responses\n"
+          "             %d = Do Not Suspend ARP Responses\n"
 	  "  -w         --start-after-set            Start timer after set if timer is stopped\n"
 	  "  -x         --reset-after-set            Reset timer after set if timer is running\n"
           "  -j         --start-if-stopped           Don't set if timer is stopped, just start\n"
@@ -651,7 +716,11 @@ _usage(void)
 	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
           IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI,
 	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI,
-	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
+	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT,
+          IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND,
+          IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND,
+          IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND,
+          IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND);
   exit(1);
 }
 
@@ -694,6 +763,8 @@ _cmdline_parse(int argc, char **argv)
     {"clear-sms-os",          0, NULL, 'S'},
     {"clear-oem",             0, NULL, 'O'},
     {"initial-countdown",     1, NULL, 'i'},
+    {"gratuitous-arp",        1, NULL, 'G'},
+    {"arp-response",          1, NULL, 'A'},
     {"start-after-set",       0, NULL, 'w'},
     {"reset-after-set",       0, NULL, 'x'},
     {"start-if-stopped",      0, NULL, 'j'}, 
@@ -706,7 +777,7 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvo:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjke:");
+  strcpy(options, "hvo:nsgrtycd u:m:l:a:p:z:G:A:FPLSOi:wxjke:");
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
@@ -827,6 +898,20 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.initial_countdown_seconds_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("initial countdown value out of range");
           break;
+        case 'G':
+          cinfo.gratuitous_arp++;
+          cinfo.gratuitous_arp_val = (u_int8_t)strtol(optarg, &ptr, 10);
+          if ((ptr != (optarg + strlen(optarg)))
+              || !IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(cinfo.gratuitous_arp_val))
+            _err_exit("gratuitous arp value invalid");
+          break;
+        case 'A':
+          cinfo.arp_response++;
+          cinfo.arp_response_val = (u_int8_t)strtol(optarg, &ptr, 10);
+          if ((ptr != (optarg + strlen(optarg)))
+              || !IPMI_WATCHDOG_ARP_RESPONSE_VALID(cinfo.arp_response_val))
+            _err_exit("arp response value invalid");
+          break;
         case 'w':
           cinfo.start_after_set++;
           break;
@@ -864,7 +949,7 @@ _cmdline_parse(int argc, char **argv)
   if (count == 0)
     _usage();
   if (count > 1)
-    _err_exit("Only one command (set, get, reset, start, stop, clearm, daemon) can be specified");
+    _err_exit("Only one command (set, get, reset, start, stop, clear, daemon) can be specified");
 
   if (((cinfo.get || cinfo.reset || cinfo.start || cinfo.stop || cinfo.clear)
        && (cinfo.timer_use || cinfo.stop_timer || cinfo.log
@@ -878,7 +963,9 @@ _cmdline_parse(int argc, char **argv)
           && cinfo.reset_period)
       || (cinfo.daemon
           && (cinfo.stop_timer || cinfo.start_after_set || cinfo.reset_after_set
-              || cinfo.reset_if_running)))
+              || cinfo.reset_if_running))
+      || ((cinfo.set || cinfo.get || cinfo.reset || cinfo.stop || cinfo.clear)
+          && (cinfo.gratuitous_arp || cinfo.arp_response)))
     _err_exit("Invalid command option specified for this command");
 
   cmdline_parsed++;
@@ -1121,6 +1208,29 @@ _start_cmd(void)
         _ipmi_err_exit(IPMI_CMD_RESET_WATCHDOG_TIMER, ret, 
                        "Reset Watchdog Timer Error");
     }
+
+
+  if (cinfo.gratuitous_arp || cinfo.arp_response)
+    {
+      u_int8_t gratuitous_arp, arp_response;
+
+      if (cinfo.gratuitous_arp)
+        gratuitous_arp = cinfo.gratuitous_arp_val;
+      else
+        gratuitous_arp = IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND;
+
+      if (cinfo.arp_response)
+        arp_response = cinfo.arp_response_val;
+      else
+        arp_response = IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND;
+        
+      if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
+                                       BMC_WATCHDOG_RETRY_ATTEMPT,
+                                       gratuitous_arp,
+                                       arp_response)) != 0)
+        _ipmi_err_exit(IPMI_CMD_SUSPEND_BMC_ARPS, ret, 
+                       "Suspend BMC ARPs Error");
+    }
 }
 
 static void
@@ -1318,6 +1428,33 @@ _daemon_setup(void)
           continue;
         }
       break;
+    }
+
+  if (cinfo.gratuitous_arp || cinfo.arp_response)
+    {
+      u_int8_t gratuitous_arp, arp_response;
+      
+      if (cinfo.gratuitous_arp)
+        gratuitous_arp = cinfo.gratuitous_arp_val;
+      else
+        gratuitous_arp = IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND;
+      
+      if (cinfo.arp_response)
+        arp_response = cinfo.gratuitous_arp_val;
+      else
+        arp_response = IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND;
+
+      while (1)
+        {
+          if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
+                                           BMC_WATCHDOG_RETRY_ATTEMPT,
+                                           gratuitous_arp,
+                                           arp_response)) != 0)
+            {
+              _deamon_cmd_error_exit("Suspend BMC ARPs", ret);
+              continue;
+            }
+        }
     }
 
   return;

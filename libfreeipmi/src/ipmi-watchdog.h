@@ -56,6 +56,12 @@ extern "C" {
 #define IPMI_WATCHDOG_TIMER_USE_EXP_FLAG_SMS_OS                 0x10
 #define IPMI_WATCHDOG_TIMER_USE_EXP_FLAG_OEM                    0x20
 
+#define IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND                 0
+#define IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND                    1
+
+#define IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND                   0
+#define IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND                      1
+
 #define IPMI_WATCHDOG_LOG_VALID(x) \
         (((x) == IPMI_WATCHDOG_LOG_ENABLE \
           || (x) == IPMI_WATCHDOG_LOG_DISABLE) ? 1 : 0)
@@ -83,6 +89,14 @@ extern "C" {
           || (x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN \
           || (x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE) ? 1 : 0)
 
+#define IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(x) \
+        (((x) == IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND \
+          || (x) == IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
+
+#define IPMI_WATCHDOG_ARP_RESPONSE_VALID(x) \
+        (((x) == IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND \
+          || (x) == IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND) ? 1 : 0)
+
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rs;
 extern fiid_template_t tmpl_cmd_set_watchdog_timer_rq;
@@ -95,7 +109,7 @@ extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
 int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd);
 int8_t fill_cmd_set_watchdog_timer (u_int8_t timer_use, u_int8_t stop_timer, u_int8_t log, u_int8_t timeout_action, u_int8_t pre_timeout_interrupt, u_int8_t pre_timeout_interval, u_int8_t timer_use_expiration_flag_bios_frb2, u_int8_t timer_use_expiration_flag_bios_post, u_int8_t timer_use_expiration_flag_os_load, u_int8_t timer_use_expiration_flag_sms_os, u_int8_t timer_use_expiration_flag_oem, u_int8_t initial_countdown_value_ls_byte, u_int8_t initial_countdown_value_ms_byte, fiid_obj_t obj_cmd);
 int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd);
-int8_t fill_cmd_suspend_bmc_arps (u_int8_t gratuitous_arp_suspend, u_int8_t arp_response_suspend, fiid_obj_t obj_cmd);
+int8_t fill_cmd_suspend_bmc_arps (u_int8_t channel_number, u_int8_t gratuitous_arp_suspend, u_int8_t arp_response_suspend, fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

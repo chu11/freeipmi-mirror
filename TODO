@@ -27,7 +27,6 @@ Cleanup use of autoconf defs.  i.e. use "/* HAVE_FOO_H */" and etc.
 
 Libfreeipmi
 
-- 19.3 Suspend BMC ARPs command
 - IPMI 1.5 Errata - Get Chassis Status 
 - Consider encapsulating length, ids, types in fiid_obj_t
   and fiid_template_t down the road.
@@ -45,8 +44,8 @@ Fish
 Bmc-watchdog
 
 - Add probing for proper base address
-- Add suspend arp options
 - Require Timer use to be SMS/OS?
+- Make get_lan_channel_number() non-hardcoded.
 
 Ipmipower
 
