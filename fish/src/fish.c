@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.1 2004-05-05 21:00:19 itz Exp $ 
+   $Id: fish.c,v 1.2 2004-05-05 23:10:01 itz Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -420,7 +420,7 @@ running_for_first_time (void)
     }
   else
     {
-      printf ("\nRunning " PACKAGE " for first time!!\n");
+      printf ("\nRunning fish for first time!!\n");
       printf ("[%s] created\n", config_directory);
     }
   
