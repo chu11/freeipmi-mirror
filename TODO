@@ -60,24 +60,15 @@ ipmiping/rmcpping:
 General:
 --------
   * Testsuite for Freeipmi and IPMI conformance test.
-  * Need to test following corner cases:
-    - 16 byte passwords
-    - passwords with spaces
   * New tools?
     - SEL collector/logger thingie for clusters
     - tool/script to detect busted BMC/IORiser
-    - bmc-config wrapper script to handle common stuff
-     - i.e. if you enable a user, automatically turn on
-      IPMI lan and IPMI serial, passwd/md2 authentication, etc.
 
 Autoconf issues:
 ----------------
-  * Cleanup use of autoconf defs.  i.e. use "/* HAVE_FOO_H */" and
-   etc.
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
   * bittypes.h and inttypes.h for u_int32_t, etc.
-  * default io-port config option?
          
 Bala's TODO List:
 =================

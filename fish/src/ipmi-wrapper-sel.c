@@ -455,7 +455,7 @@ get_sel_record (u_int8_t *record_data, struct sel_record *sel_rec)
 		"record_type",
 		&val);
   record_type = val;
-  
+
   switch (ipmi_get_sel_record_type (record_type))
     {
     case IPMI_SEL_SYSTEM_EVENT_RECORD:
