@@ -121,7 +121,7 @@
 			(help     (single-char #\h) (value #f))
 			(version  (single-char #\V) (value #f))
                         (info     (single-char #\i) (value #f))
-                        (hex-dump (single-char #\x) (value 'optional))
+                        (hex-dump (single-char #\x) (value optional))
 			(delete-all    (single-char #\c) (value #f))
 			(delete   (single-char #\d) (value #t))))
 	 (options (getopt-long args option-spec))
