@@ -137,7 +137,7 @@ fiid_obj_field_start_bytes (fiid_template_t tmpl, u_int8_t *field)
 {
   int start = 0;
   start = fiid_obj_field_start (tmpl, field);
-  ERR (start != 1);
+  ERR (start != -1);
   return (BITS_ROUND_BYTES (start));
 }
 
@@ -218,6 +218,27 @@ fiid_obj_memset (fiid_obj_t obj, int c, fiid_template_t tmpl)
 
   return (memset (obj, c, fiid_obj_len_bytes (tmpl)));
 }
+
+int8_t 
+fiid_obj_memset_field (fiid_obj_t obj, int c, fiid_template_t tmpl, u_int8_t *field)
+{
+  int field_index; 
+  int32_t len; 
+
+  if (!(obj && tmpl))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((field_index = fiid_obj_field_start_bytes (tmpl, field)) == -1)
+    return (-1);
+  
+  len = fiid_obj_field_len_bytes (tmpl, field);
+  memset ((obj + field_index), c, len);
+  return 0;
+}
+
 
 void
 fiid_obj_free (fiid_obj_t obj)
@@ -476,16 +497,24 @@ fiid_obj_get_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8
 }
 
 int8_t 
-fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data)
+fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data, u_int32_t data_len)
 {
   int field_index; 
+  int32_t len; 
   
   if ((field_index = fiid_obj_field_start_bytes (tmpl, field)) == -1)
     return (-1);
   
+  if (!data || !data_len)
+    return 0;
+
+  len = fiid_obj_field_len_bytes (tmpl, field);
+
+  if (data_len > len)
+    data_len = len;
+
   memcpy ((obj + field_index), 
 	  data, 
-	  fiid_obj_field_len_bytes (tmpl, field));
+	  data_len);
   return 0;
 }
-

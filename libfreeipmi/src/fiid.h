@@ -130,14 +130,14 @@ int32_t fiid_obj_block_len (fiid_template_t tmpl, u_int8_t *field_start, u_int8_
 int32_t fiid_obj_block_len_bytes (fiid_template_t tmpl, u_int8_t *field_start, u_int8_t *field_end);
 void * fiid_obj_alloc (fiid_template_t tmpl);
 void * fiid_obj_memset (fiid_obj_t obj, int c, fiid_template_t tmpl);
+int8_t fiid_obj_memset_field (fiid_obj_t obj, int c, fiid_template_t tmpl, u_int8_t *field);
 void fiid_obj_free (fiid_obj_t obj);
 int8_t fiid_obj_set (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t val);
 int8_t fiid_obj_get (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t *val);
 fiid_field_t *__fiid_template_make (u_int8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
 int8_t fiid_obj_get_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data);
-int8_t fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data);
-
+int8_t fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data, u_int32_t data_len);
 
 #ifdef __cplusplus
 }
