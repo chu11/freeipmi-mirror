@@ -1,3 +1,39 @@
+2004-12-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_memset_field): New function.
+
+	* libfreeipmi/src/fiid.c, libfreeipmi/src/fiid.c
+	(fiid_obj_set_data): Add data_length parameter.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c (fill_kcs_set_user_name,
+	fill_kcs_set_user_password ): Fixed additional corner cases
+	affecting functionality of bmc-config on different systems.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_get_session_challenge): Fixed potential bugs due to
+	style similarities to above fixes.
+
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session): 
+	Fixed potential bugs due to
+	style similarities to above fixes.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_activate_session): Fix for interface change.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_kcs_set_user_name,
+	ipmi_kcs_set_user_password): Fix for interface changes.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h
+	(ipmi_kcs_set_user_password): Fix interface for naming
+	consistency.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_field_start_bytes): Fix error
+	check bug.
+
+	* libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value):
+	Remove useless line that could break builds on debug conditions.
+	
 2004-12-11  Anand Babu  <ab@gnu.org.in>
 	* libfreeipmi/src/ipmi-msg-support-cmds.c: rqSeq'ing starts even
 	before session establishment. So ipmi_lan_get_channel_auth_caps,
