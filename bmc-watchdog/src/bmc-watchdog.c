@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.8 2004-07-07 21:48:55 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.9 2004-07-08 00:39:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -363,8 +363,6 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
     {
       if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
         _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
-      if (fsync(STDERR_FILENO) < 0)
-        _bmclog("%s: fsync: %s", str, strerror(errno));
     }
 #endif
 
@@ -409,8 +407,6 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
     {
       if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
         _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
-      if (fsync(STDERR_FILENO) < 0)
-        _bmclog("%s: fsync: %s", str, strerror(errno));
     }
 #endif
 
