@@ -1,3 +1,13 @@
+2004-12-06  Albert Chu <chu11@llnl.gov>
+
+	* fish/extensions/bc2.scm: Turn on "Enable_User" option.
+
+	* fish/extensions/bc-user-section.scm (checkout-enable-user):
+	Return empty string instead of false.
+
+	* fish/extensions/bc-user-section.scm (diff-enable-user): New
+	function.
+	
 2004-12-04  Anand Babu  <ab@gnu.org.in>
 	* CVS: tagged before commit checkpoint-pre-kcs-api-change.
 

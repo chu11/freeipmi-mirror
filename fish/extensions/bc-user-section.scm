@@ -35,7 +35,11 @@
        ((string-ci=? section-name "user4")
 	(fi-set-bmc-enable-user 4 user-status)))))
 
-(define (checkout-enable-user section-name) #f)
+; achu: Can't checkout
+(define (checkout-enable-user section-name) (list ""))
+
+; achu: Can't check, just assume its ok??
+(define (diff-enable-user section-name user-enable-user bmc-enable-user) #t)
 
 (define (commit-clear-password section-name password-status)
   (if (list? password-status)
@@ -322,9 +326,9 @@
      get-boolean 
      commit-enable-user 
      checkout-enable-user 
-     get-boolean-string
-     same-string?
-     "Possible values: Yes/No")
+     get-string
+     diff-enable-user
+     "Possible values: Yes/No or blank to not set")
     ("clear_password" 
      valid-boolean? 
      get-boolean 

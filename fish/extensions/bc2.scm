@@ -33,7 +33,7 @@
 
 (define user1_s '("User1" 
 		  "Username" 
-; 		  "Enable_User" 
+ 		  "Enable_User" 
 ; 		  "Clear_Password" 
 		  "Password" 
 		  "LAN_Enable_IPMI_Msgs" 
@@ -49,7 +49,7 @@
 
 (define user2_s '("User2" 
 		  "Username" 
-; 		  "Enable_User" 
+ 		  "Enable_User" 
 ; 		  "Clear_Password" 
 		  "Password" 
 		  "LAN_Enable_IPMI_Msgs" 
@@ -65,7 +65,7 @@
 
 (define user3_s '("User3" 
 		  "Username" 
-; 		  "Enable_User" 
+ 		  "Enable_User" 
 ; 		  "Clear_Password" 
 		  "Password" 
 		  "LAN_Enable_IPMI_Msgs" 
@@ -81,7 +81,7 @@
 
 (define user4_s '("User4" 
 		  "Username" 
-; 		  "Enable_User" 
+ 		  "Enable_User" 
 ; 		  "Clear_Password" 
 		  "Password" 
 		  "LAN_Enable_IPMI_Msgs" 
