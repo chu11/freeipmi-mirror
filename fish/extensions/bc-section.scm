@@ -127,12 +127,12 @@
 	(if (commit-proc section-name value) 
 	    (begin 
 	      (display (string-append "Committed Key <" key 
-				      "> Value <" (simple->string value) 
+				      "> Value <" (any->string value) 
 				      ">\n"))
 	      (commit-section-values section-name (cdr section-data) section-keys))
 	    (begin 
 	      (display (string-append "Commit Key <" key 
-				      "> Value <" (simple->string value) 
+				      "> Value <" (any->string value) 
 				      "> FAILED\n"))
 	      #f)))))
 
@@ -238,75 +238,3 @@
     (diff-section-values section-name 
 			 (cdr section-data)
 			 (get-section-key-desc section-name))))
-
-; (define (validate-section-keys section-data section-keys)
-;   (let ((line "")
-; 	(key "")
-; 	(value "")
-; 	(value-validator ""))
-;     (if (null? section-data)
-; 	#t
-; 	(begin 
-; 	  (set! line (car section-data))
-; 	  (set! key (car (string-tokenize line)))
-; 	  (set! value (cadr (string-tokenize line)))
-; 	  (set! value-validator (get-value-validator key section-keys)) 
-; 	  (if (boolean? value-validator)
-; 	      (begin 
-; 		(display "ERROR: invalid key <") (display key) (display ">\n")
-; 		#f)
-; 	      (if (eval (list value-validator value) (interaction-environment))
-; 		  (validate-section-keys (cdr section-data) section-keys)
-; 		  (begin 
-; 		    (display "ERROR: invalid value <") (display value) 
-; 		    (display "> of key <") (display key) (display ">\n")
-; 		    #f)))))))
-
-; (define (checkout-section section-data)
-;   (let ((section-name (car section-data)))
-;     (checkout-section-values section-name 
-; 			     (cdr section-data)
-; 			     (primitive-eval (assoc-ref section-name-desc 
-; 							(string-downcase section-name))))))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-; (define (checkout-section-values section-name checkout-keys section-keys)
-;   (let ((key "")
-; 	(value "")
-; 	(checkout-proc "")
-; 	(convertor-proc ""))
-;     (if (null? checkout-keys)
-; 	#t
-; 	(begin 
-; 	  (set! key (car checkout-keys))
-; 	  (set! checkout-proc (get-checkout-proc key section-keys))
-; 	  (set! convertor-proc (get-value-convertor-proc key section-keys))
-; ; 	  (display key) (newline)
-; ; 	  (display convertor-proc) (newline)
-; ; 	  (display checkout-proc) (newline)
-; 	  (set! value ((primitive-eval checkout-proc) section-name))
-; ; 	  (display value) (newline)
-; 	  (if (list? value)
-; 	      (begin 
-; 		(set! value ((primitive-eval convertor-proc) (car value)))
-; 		(display (string-append "\t" 
-; 					(string-capitalize key) 
-; 					"\t\t" 
-; 					(string-capitalize value) 
-; 					"\n"))
-; ; 		(display (string-append "Function <" (simple->string checkout-proc)
-; ; 					"> Key <" key 
-; ; 					"> Value <" value 
-; ; 					"> DONE\n"))
-; 		(checkout-section-values section-name (cdr checkout-keys) section-keys))
-; 	      (begin 
-; 		(display (string-append "Function <" (simple->string checkout-proc) 
-; 					"> Key <" key 
-; 					"> Value <" (simple->string value)
-; 					"> FAILED\n") (current-error-port))
-; 		#f))))))
-

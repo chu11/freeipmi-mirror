@@ -37,24 +37,15 @@
   (let ((tline (string-trim-both line)))
     (or (start-with? tline #\#) (start-with? tline #\;))))
 
-(define (simple->string sd)
+(define (any->string sd)
   (cond 
-   ((symbol? sd)
-    (symbol->string sd))
-   ((number? sd)
-    (number->string sd))
-   ((char? sd)
-    (string sd))
-   ((boolean? sd)
-    (if sd "#t" "#f"))
-   ((list? sd)
-    "()")
-   (else 
-    sd)))
+   ((string? sd) sd)
+   ((char? sd)   (string sd))
+   (else         (object->string sd))))
 
 (define (list->sentence li)
   "convert list to space separated sentence"
-  (let ((word (simple->string (car li))))
+  (let ((word (any->string (car li))))
     (if (= (length li) 1)
 	word
 	(string-append word " " (list->sentence (cdr li))))))

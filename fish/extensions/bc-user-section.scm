@@ -349,7 +349,7 @@
      get-integer 
      commit-lan-session-limit 
      checkout-lan-session-limit 
-     simple->string 
+     any->string 
      "Give valid number")
     ("serial_enable_ipmi_msgs" 
      valid-boolean? 
@@ -384,7 +384,7 @@
      get-integer 
      commit-serial-session-limit 
      checkout-serial-session-limit 
-     simple->string 
+     any->string 
      "Give valid number")
     ;; You can add more in the form of 
     ;; (KEYSTRING VALIDATION-PROC CONVERTION-PROC BMC-COMMIT-PROC)

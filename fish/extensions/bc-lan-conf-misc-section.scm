@@ -44,6 +44,6 @@
      get-integer 
      commit-gratuitous-arp-interval 
      checkout-gratuitous-arp-interval 
-     simple->string
+     any->string
      "Give valid number")
 ))

@@ -111,14 +111,14 @@
      get-integer 
      commit-page-blackout-interval 
      checkout-page-blackout-interval 
-     simple->string
+     any->string
      "Give valid number")
     ("call_retry_time" 
      valid-integer? 
      get-integer 
      commit-call-retry-time 
      checkout-call-retry-time 
-     simple->string
+     any->string
      "Give valid number")
     ("enable_dtr_hangup" 
      valid-boolean? 
