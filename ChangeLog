@@ -3,14 +3,16 @@
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_set_alert_string_keys): fixed compiler warning.  
 
-	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Newly added. ACPI-Tables user space device
+	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Newly added. ACPI-Tables
+	user space device 
 	driver to locate IPMI SPMI table. Jointly developed by Bala and me.
 
 	* libfreeipmi/src/smbios-locate.[c,h]: Moved from smbios.c,h.
 
 	* libfreeipmi/src/pci-locate.[c,h]: Moved from pcilocate.c,h.
 
-	* libfreeipmi/src/ipmi-locate.[c,h]: Moved from ipmi-probe.c,h. New interface type definitions.
+	* libfreeipmi/src/ipmi-locate.[c,h]: Moved from
+	ipmi-probe.c,h. New interface type definitions. 
 
 	* libfreeipmi/src/ipmi-utils.c: New functions - ipmi_ioremap,
 	ipmi_iounmap and ipmi_get_physical_mem_data.
