@@ -115,7 +115,10 @@
 		     "Default_Gateway_IP_Address" 
 		     "Default_Gateway_MAC_Address" 
 		     "Backup_Gateway_IP_Address" 
-		     "Backup_Gateway_MAC_Address"))
+		     "Backup_Gateway_MAC_Address"
+                     "Vlan_Id_Enable"
+                     "Vlan_Id"                     
+                     "Vlan_Priority"))
 
 (define lan_conf_auth_s '("LAN_Conf_Auth" 
 			  "Callback_Enable_Auth_Type_None" 

@@ -39,5 +39,7 @@
 #define IPMI_LAN_PARAM_NO_OF_DESTINATIONS           17
 #define IPMI_LAN_PARAM_DESTINATION_TYPE             18
 #define IPMI_LAN_PARAM_DESTINATION_ADDRESSES        19
+#define IPMI_LAN_PARAM_VLAN_ID                      20
+#define IPMI_LAN_PARAM_VLAN_PRIORITY                21
 
 #endif

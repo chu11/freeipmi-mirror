@@ -326,6 +326,16 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-mac-address MAC-ADDRESS)
   */
+
+  gh_new_procedure ("fi-set-bmc-lan-conf-vlan-id", ex_set_bmc_lan_conf_vlan_id, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-vlan-id VLAN_ID_FLAG VLAN_ID)
+  */
+
+  gh_new_procedure ("fi-set-bmc-lan-conf-vlan-priority", ex_set_bmc_lan_conf_vlan_priority, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-vlan-priority VLAN_PRIORITY)
+  */
   
   gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-callback-enables", ex_set_bmc_lan_conf_auth_type_callback_enables, 5, 0, 0);
   /* 
@@ -462,6 +472,16 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-mac-address)
   */
   
+  gh_new_procedure ("fi-get-bmc-lan-conf-vlan-id", ex_get_bmc_lan_conf_vlan_id, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-vlan-id)
+  */
+
+  gh_new_procedure ("fi-get-bmc-lan-conf-vlan-priority", ex_get_bmc_lan_conf_vlan_priority, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-bmc-lan-conf-vlan-priority)
+  */
+
   gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-callback-enables", ex_get_bmc_lan_conf_auth_type_callback_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-callback-enables)

@@ -76,8 +76,34 @@
       #t 
       (fi-set-bmc-lan-conf-backup-gateway-mac-address gateway-mac-address)))
 
-(define (checkout-backup-gateway-mac-address section-name) 
-  (fi-get-bmc-lan-conf-backup-gateway-mac-address)) 
+(define (checkout-backup-gateway-mac-address section-name)
+  (fi-get-bmc-lan-conf-backup-gateway-mac-address))
+
+(define (checkout-vlan-id-enable section-name) 
+  (let ((param-list (fi-get-bmc-lan-conf-vlan-id)))
+    (if (list? param-list) (list (car param-list)) #f)))
+
+(define (commit-vlan-id-enable section-name vlan-id-enable) 
+  (if (list? vlan-id-enable)
+      #t
+      (fi-set-bmc-lan-conf-vlan-id vlan-id-enable "dummy")))
+
+(define (checkout-vlan-id section-name) 
+  (let ((param-list (fi-get-bmc-lan-conf-vlan-id)))
+    (if (list? param-list) (list (cadr param-list)) #f)))
+
+(define (commit-vlan-id section-name vlan-id) 
+  (if (list? vlan-id)
+      #t
+      (fi-set-bmc-lan-conf-vlan-id 0 vlan-id)))
+
+(define (checkout-vlan-priority section-name) 
+  (fi-get-bmc-lan-conf-vlan-priority)) 
+
+(define (commit-vlan-priority section-name vlan-priority)
+  (if (list? vlan-priority)
+      #t
+      (fi-set-bmc-lan-conf-vlan-priority vlan-priority)))
 
 (define lan-conf-keys-validator 
   '(
@@ -154,6 +180,30 @@
      get-string
      same-string-ci?
      "Give valid MAC Address")
+    ("vlan_id_enable" 
+     valid-boolean? 
+     get-boolean
+     commit-vlan-id-enable
+     checkout-vlan-id-enable
+     get-boolean-string
+     same-string-ci?
+     "Possible values: Yes/No")
+    ("vlan_id" 
+     valid-integer? 
+     get-integer
+     commit-vlan-id 
+     checkout-vlan-id
+     any->string
+     same-string-ci?
+     "Give valid number.")
+    ("vlan_priority" 
+     valid-integer? 
+     get-integer
+     commit-vlan-priority 
+     checkout-vlan-priority
+     any->string
+     same-string-ci?
+     "Give valid number.")
     ;; You can add more in the form of 
     ;; (KEYSTRING 
     ;;  VALIDATION-PROC 

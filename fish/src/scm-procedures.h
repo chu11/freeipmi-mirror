@@ -101,6 +101,10 @@ SCM ex_set_bmc_lan_conf_default_gw_ip_addr (SCM scm_gw_ip_address);
 SCM ex_set_bmc_lan_conf_default_gw_mac_addr (SCM scm_gw_mac_address);
 SCM ex_set_bmc_lan_conf_backup_gw_ip_addr (SCM scm_gw_ip_address);
 SCM ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address);
+SCM ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
+                                 SCM scm_vlan_id);
+SCM ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority);
+
 SCM ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none, 
 						    SCM scm_auth_type_md2, 
 						    SCM scm_auth_type_md5, 
@@ -165,6 +169,8 @@ SCM ex_get_bmc_lan_conf_default_gw_ip_addr ();
 SCM ex_get_bmc_lan_conf_default_gw_mac_addr ();
 SCM ex_get_bmc_lan_conf_backup_gw_ip_addr ();
 SCM ex_get_bmc_lan_conf_backup_gw_mac_addr ();
+SCM ex_get_bmc_lan_conf_vlan_id ();
+SCM ex_get_bmc_lan_conf_vlan_priority ();
 SCM ex_get_bmc_lan_conf_auth_type_callback_enables ();
 SCM ex_get_bmc_lan_conf_auth_type_user_enables ();
 SCM ex_get_bmc_lan_conf_auth_type_operator_enables ();

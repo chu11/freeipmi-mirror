@@ -72,6 +72,8 @@ extern fiid_template_t tmpl_set_lan_conf_param_rs;
 extern fiid_template_t tmpl_set_lan_conf_param_bmc_generated_arp_control_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_gratuitous_arp_interval_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_auth_type_enables_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq;
 
 extern fiid_template_t tmpl_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_suspend_bmc_arps_rs;
@@ -86,6 +88,8 @@ extern fiid_template_t tmpl_get_lan_conf_param_mac_addr_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_subnet_mask_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_gw_ip_addr_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_gw_mac_addr_rs;
+extern fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs;
+extern fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs;
 
 int8_t ipmi_lan_set_arp (u_int8_t channel_number, 
 			 u_int8_t bmc_generated_gratuitous_arps_flag, 
@@ -208,6 +212,26 @@ int8_t ipmi_lan_get_gw2_mac_addr (u_int8_t channel_number,
 				  u_int8_t block_selector,
 				  fiid_obj_t obj_data_rs);
 
+int8_t ipmi_lan_set_vlan_id (u_int8_t channel_number,
+                             u_int8_t vlan_id_flag,
+                             u_int32_t vlan_id,
+                             fiid_obj_t obj_data_rs);
+
+int8_t ipmi_lan_get_vlan_id (u_int8_t channel_number,
+                             u_int8_t parameter_type,
+                             u_int8_t set_selector,
+                             u_int8_t block_selector,
+                             fiid_obj_t obj_data_rs);
+
+int8_t ipmi_lan_set_vlan_priority (u_int8_t channel_number,
+                                   u_int32_t vlan_priority,
+                                   fiid_obj_t obj_data_rs);
+
+int8_t ipmi_lan_get_vlan_priority (u_int8_t channel_number,
+                                   u_int8_t parameter_type,
+                                   u_int8_t set_selector,
+                                   u_int8_t block_selector,
+                                   fiid_obj_t obj_data_rs);
 
 #ifdef __cplusplus
 }

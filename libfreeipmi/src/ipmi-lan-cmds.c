@@ -168,6 +168,35 @@ fiid_template_t tmpl_set_lan_conf_param_mac_addr_rq =
     {0, ""}
   };
 
+fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq =
+  {
+    {8, "cmd"},
+    {4, "channel_number"},
+    {4, "reserved"},
+    {8, "parameter_selector"},
+
+    {8, "vlan_id_ls"},
+    {4, "vlan_id_ms"},
+    {3, "reserved"},
+    {1, "vlan_id_flag"},
+
+    {0, ""}
+  };
+
+fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq =
+  {
+    {8, "cmd"},
+    {4, "channel_number"},
+    {4, "reserved"},
+    {8, "parameter_selector"},
+
+    {3, "vlan_priority"},
+    {2, "unspecified"},
+    {3, "reserved"},
+
+    {0, ""}
+  };
+
 fiid_template_t tmpl_suspend_bmc_arps_rq =
   {
     {8, "cmd"}, 
@@ -371,6 +400,37 @@ fiid_template_t tmpl_get_lan_conf_param_gw_mac_addr_rs =
     {48, "mac_addr"},
 
     {0, ""}
+  };
+
+fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs =
+  {
+    {8,  "cmd"}, 
+    {8,  "comp_code"}, 
+    
+    {4, "present_revision"}, 
+    {4, "oldest_revision_parameter"}, 
+    
+    {8, "vlan_id_ls"},
+    {4, "vlan_id_ms"},
+    {3, "reserved"},
+    {1, "vlan_id_flag"},
+    
+    {0,  ""}
+  };
+
+fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs =
+  {
+    {8,  "cmd"}, 
+    {8,  "comp_code"}, 
+    
+    {4, "present_revision"}, 
+    {4, "oldest_revision_parameter"}, 
+    
+    {3, "vlan_priority"},
+    {2, "unspecified"},
+    {3, "reserved"},
+    
+    {0,  ""}
   };
 
 int8_t 
@@ -720,6 +780,138 @@ ipmi_lan_set_gw2_ip_addr (u_int8_t channel_number,
 			     ip_addr) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_set_lan_conf_param_ip_addr_rq, 
+			 obj_data_rs, tmpl_set_lan_conf_param_rs);
+  free (obj_data_rq);
+  return status;
+}
+
+int8_t 
+fill_lan_set_vlan_id (fiid_obj_t obj_data_rq, 
+                      u_int8_t channel_number, 
+                      u_int8_t vlan_id_flag,
+                      u_int32_t vlan_id)
+{
+  u_int8_t *ptr, ls, ms;
+
+  if (obj_data_rq == NULL
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq,
+		"cmd", 
+		IPMI_CMD_SET_LAN_CONF_PARAMS);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq, 
+		"channel_number", 
+		channel_number);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq, 
+		"parameter_selector", 
+		IPMI_LAN_PARAM_VLAN_ID);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq, 
+		"vlan_id_flag", 
+		vlan_id_flag);
+
+  ptr = (u_int8_t *)&vlan_id;
+#if WORDS_BIGENDIAN
+  ls = ptr[3];
+  ms = ptr[2];
+#else
+  ls = ptr[0];
+  ms = ptr[1];
+#endif
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq, 
+		"vlan_id_ls", 
+		ls);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_id_rq, 
+		"vlan_id_ms", 
+		ms);
+  
+  return 0;
+}
+
+int8_t 
+ipmi_lan_set_vlan_id (u_int8_t channel_number,
+                      u_int8_t vlan_id_flag,
+                      u_int32_t vlan_id,
+                      fiid_obj_t obj_data_rs)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_id_rq);
+  ERR (fill_lan_set_vlan_id (obj_data_rq, 
+			     channel_number,
+                             vlan_id_flag,
+			     vlan_id) == 0);
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+			 obj_data_rq, tmpl_set_lan_conf_param_vlan_id_rq, 
+			 obj_data_rs, tmpl_set_lan_conf_param_rs);
+  free (obj_data_rq);
+  return status;
+}
+
+int8_t 
+fill_lan_set_vlan_priority (fiid_obj_t obj_data_rq, 
+                            u_int8_t channel_number, 
+                            u_int8_t vlan_priority)
+{
+  if (obj_data_rq == NULL
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_priority_rq,
+		"cmd", 
+		IPMI_CMD_SET_LAN_CONF_PARAMS);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_priority_rq, 
+		"channel_number", 
+		channel_number);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_priority_rq, 
+		"parameter_selector", 
+		IPMI_LAN_PARAM_VLAN_PRIORITY);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_set_lan_conf_param_vlan_priority_rq, 
+		"vlan_priority", 
+		vlan_priority);
+  
+  return 0;
+}
+
+int8_t 
+ipmi_lan_set_vlan_priority (u_int8_t channel_number,
+                            u_int32_t vlan_priority,
+                            fiid_obj_t obj_data_rs)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_priority_rq);
+  ERR (fill_lan_set_vlan_priority (obj_data_rq, 
+                                   channel_number,
+                                   vlan_priority) == 0);
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+			 obj_data_rq, tmpl_set_lan_conf_param_vlan_priority_rq, 
 			 obj_data_rs, tmpl_set_lan_conf_param_rs);
   free (obj_data_rq);
   return status;
@@ -1244,3 +1436,50 @@ ipmi_suspend_bmc_arps (u_int8_t channel_number,
   return status;
 }
 
+int8_t 
+ipmi_lan_get_vlan_id (u_int8_t channel_number, 
+                      u_int8_t parameter_type, 
+                      u_int8_t set_selector, 
+                      u_int8_t block_selector, 
+                      fiid_obj_t obj_data_rs)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  ERR (fill_get_lan_conf_param (obj_data_rq, 
+				IPMI_LAN_PARAM_VLAN_ID,
+				channel_number, 
+				parameter_type, 
+				set_selector, 
+				block_selector) == 0);
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
+			 obj_data_rs, tmpl_get_lan_conf_param_vlan_id_rs);
+  free (obj_data_rq);
+  return status;
+}
+
+int8_t 
+ipmi_lan_get_vlan_priority (u_int8_t channel_number, 
+                            u_int8_t parameter_type, 
+                            u_int8_t set_selector, 
+                            u_int8_t block_selector, 
+                            fiid_obj_t obj_data_rs)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  ERR (fill_get_lan_conf_param (obj_data_rq, 
+				IPMI_LAN_PARAM_VLAN_PRIORITY,
+				channel_number, 
+				parameter_type, 
+				set_selector, 
+				block_selector) == 0);
+  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+			 obj_data_rq, tmpl_get_lan_conf_param_rq, 
+			 obj_data_rs, tmpl_get_lan_conf_param_vlan_priority_rs);
+  free (obj_data_rq);
+  return status;
+}

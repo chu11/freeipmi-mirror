@@ -1,3 +1,64 @@
+2005-03-18  Albert Chu <chu11@llnl.gov>
+
+	Added support for vlan configuration in bmc-config.
+
+	* libfreeipmi/src/ipmi-lan-param-spec.h: Add vlan lan conf
+	definitions.
+	
+	* libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c: Define new templates
+	tmpl_set_lan_conf_param_vlan_id_rq,
+	tmpl_set_lan_conf_param_vlan_priority_rq,
+	tmpl_get_lan_conf_param_vlan_id_rs, and
+	tmpl_get_lan_conf_param_vlan_priority_rs.
+
+	* libfreeipmi/src/ipmi-lan-cmds.h, libfreeipmi/src/ipmi-lan-cmds.c
+	(fill_lan_set_vlan_id, ipmi_lan_set_vlan_id,
+	fill_lan_set_vlan_priority, ipmi_lan_set_vlan_priority,
+	ipmi_lan_get_vlan_id, ipmi_lan_get_vlan_priority): New functions.
+
+	* fish/extensions/bc-lan-conf-section.scm
+	(checkout-vlan-id-enable, commit-vlan-id-enable, checkout-vlan-id,
+	commit-vlan-id, checkout-vlan-priority, commit-vlan-priority): New
+	functions.  Added additional entries to lan-conf-keys-validator.
+
+	* fish/extensions/bmc-config.scm: Added new vlan entries to
+	lan_conf_s.
+
+	* fish/src/bmc-conf2.h, fish/src/bmc-conf2.c
+	(set_bmc_lan_conf_vlan_id, set_bmc_lan_conf_vlan_priority,
+	get_bmc_lan_conf_vlan_id, get_bmc_lan_conf_vlan_priority): New
+	functions.
+
+	* fish/src/extension.c (fi-set-bmc-lan-conf-vlan-id,
+	fi-set-bmc-lan-conf-vlan-priority, fi-get-bmc-lan-conf-vlan-id,
+	fi-get-bmc-lan-conf-vlan-priority): Define new procedures.
+
+	* fish/src/scm-procedures.h, fish/src/scm-procedures.c
+	(ex_set_bmc_lan_conf_vlan_id, ex_set_bmc_lan_conf_vlan_priority,
+	ex_get_bmc_lan_conf_vlan_id, ex_get_bmc_lan_conf_vlan_priority):
+	New functions.
+
+	Misc
+
+	* freeipmi.spec.in: Updated to reflect renaming of sel and sensors
+	tools.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Add
+	workaround for per-msg authentication found on some Dell
+	motherboards.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Add
+	workaround for sequence numbering bugs found in some mBMC modules.
+
+	* ipmipower/src/ipmipower_checks.c (_check_outbound_seq_num): Add
+	additional debug info.
+	
+	* ipmipower/src/ipmipower_powercmd.c (_retry_packets): Fix corner
+	case in permission checks.
+
+	* ipmipower/ipmipower.8.in: Add some more trouble-shooting tips.
+
 2005-03-16  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/sensors.scm: added ipmi-sensors-conf.scm

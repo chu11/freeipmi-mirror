@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.9 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.10 2005-03-18 22:06:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -323,6 +323,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   int ret, at, len = 0;
   char buffer[IPMI_PACKET_BUFLEN];
   u_int8_t *password;
+  int check_authcode_retry_flag = 0;
 
   assert(PACKET_TYPE_VALID_RES(pkt));
 
@@ -349,7 +350,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_SESSION_AUTH_TYPE_NONE;
+        {
+          at = IPMI_SESSION_AUTH_TYPE_NONE;
+          check_authcode_retry_flag++;
+        }
       else
         at = ip->authtype;
     }
@@ -369,9 +373,40 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
                                         at,
                                         password,
                                         strlen(conf->password))) < 0)
-    err_exit("_recv_packet(%s:%d): ipmi_lan_check_chksum: %s",
+    err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
+  /* achu: When per-message authentication is disabled, and we send a
+   * message to a remote machine with auth-type none, some
+   * motherboards will respond with a message with the auth-type used
+   * in the activate session stage. So here's our second
+   * session-authcode check attempt under these circumstances.
+   */
+  if (!ret && check_authcode_retry_flag)
+    {
+      dbg("_recv_packet(%s:%d): retry authcode check");
+
+      at = ip->authtype;
+
+      if (at != IPMI_SESSION_AUTH_TYPE_NONE)
+        {
+          if (strlen(conf->password))
+            password = (u_int8_t *)conf->password;
+          else
+            password = NULL;
+        }
+      else
+        password = NULL;
+
+      if ((ret = check_hdr_session_authcode(buffer, len,
+                                            tmpl_hdr_session_auth_calc,
+                                            at,
+                                            password,
+                                            strlen(conf->password))) < 0)
+        err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+
   if (!ret)
     {
       dbg("_recv_packet(%s:%d): bad authcode",
@@ -386,6 +421,75 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       ip->retry_count = 0;  /* important to reset */
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
       return 1;
+    }
+  else
+    {
+      /* achu: We handle a few remote BMC IPMI compliance bugs discovered
+       * in some vendor's hardware.
+       *
+       * On some buggy BMCs the initial outbound sequence number on
+       * the activate session response is off by one.  When working
+       * around this, note that there is no need to check for a
+       * sequence number range on the activate session response
+       * packet.  The activate session response packet is supposed to
+       * contain a pre-defined initial outbound sequence number.
+       *
+       * On some buggy BMCs, the outbound sequence number is identical
+       * to the inbound sequence number when closing a session.  This
+       * is despite what previous outbound sequence numbers were sent
+       * out of the BMC.
+       */
+      if (pkt == ACTV_RES || pkt == CLOS_RES)
+        {
+          dbg("_recv_packet(%s:%d): re-checking outbound sequence number:",
+              ip->ic->hostname, ip->protocol_state);
+
+          if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
+            {
+              u_int64_t pktoseq, myoseq;
+
+              Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
+                           "session_seq_num", &pktoseq);
+
+              if (pkt == ACTV_RES)
+                {
+                  myoseq = IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM + ip->session_outbound_count;
+
+                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
+                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
+
+                  if ((myoseq + 1) == pktoseq)
+                    {
+                      dbg("_recv_packet(%s:%d): outbound count adjusted");
+                      ip->session_outbound_count += 1;
+                      ip->retry_count = 0;  /* important to reset */
+                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+                      return 1;
+                    }
+                }
+
+              if (pkt == CLOS_RES)
+                {
+                  u_int64_t initial_inbound_seq_num;
+
+                  Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
+                               "initial_inbound_seq_num", &initial_inbound_seq_num);
+                  
+                  myoseq = initial_inbound_seq_num + (ip->session_inbound_count - 1);
+
+                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
+                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
+
+                  if (myoseq == pktoseq)
+                    {
+                      dbg("_recv_packet(%s:%d): outbound count accepted");
+                      ip->retry_count = 0;  /* important to reset */
+                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+                      return 1;
+                    }
+                }
+            }
+        }
     }
 
   return _bad_packet(ip, pkt);
@@ -593,10 +697,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        * our username/password combination 
        */
       if ((!strlen(conf->username) && !strlen(conf->password)
-	   && !auth_status_anonymous_login)
-	  || (!strlen(conf->username) 
-	      && !auth_status_anonymous_login
-	      && !auth_status_null_username)
+           && !auth_status_anonymous_login
+           && !auth_type_none)
+          || (!strlen(conf->username) 
+              && !auth_status_anonymous_login
+              && !auth_status_null_username)
 	  || (strlen(conf->username)
 	      && !auth_status_non_null_username))
 	{

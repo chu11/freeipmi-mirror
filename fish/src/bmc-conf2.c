@@ -480,6 +480,40 @@ set_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr)
   return status;
 }
 
+u_int8_t
+set_bmc_lan_conf_vlan_id (u_int8_t vlan_id_flag,
+			  u_int32_t vlan_id)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_set_lan_conf_param_rs));
+  status = ipmi_lan_set_vlan_id (get_lan_channel_number (), 
+				 vlan_id_flag, 
+				 vlan_id, 
+				 obj_data_rs);
+  
+  if (status == 0)
+    return IPMI_COMP_CODE (obj_data_rs);
+  return status;
+}
+
+u_int8_t
+set_bmc_lan_conf_vlan_priority (u_int8_t vlan_priority)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_set_lan_conf_param_rs));
+  status = ipmi_lan_set_vlan_priority (get_lan_channel_number (), 
+                                       vlan_priority, 
+                                       obj_data_rs);
+  
+  if (status == 0)
+    return IPMI_COMP_CODE (obj_data_rs);
+  return status;
+}
+
 u_int8_t 
 set_bmc_lan_conf_auth_type_enables (struct bmc_auth_level *bmc_auth_level)
 {
@@ -1286,6 +1320,87 @@ get_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr)
 	   mac_addr_bytes[4], 
 	   mac_addr_bytes[5]);
   
+  return (0);
+}
+
+u_int8_t 
+get_bmc_lan_conf_vlan_id (u_int8_t *vlan_id_flag,
+			  u_int32_t *vlan_id)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t ls_val, ms_val, val;
+  u_int8_t *ptr;
+
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_vlan_id_rs));
+  
+  status = ipmi_lan_get_vlan_id (get_lan_channel_number (), 
+                                 IPMI_LAN_CONF_GET_PARAMETER, 
+                                 SET_SELECTOR, 
+                                 BLOCK_SELECTOR, 
+                                 obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_vlan_id_rs,
+		"vlan_id_ls", 
+		&ls_val);
+
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_vlan_id_rs,
+		"vlan_id_ms", 
+		&ms_val);
+  
+  ptr = (u_int8_t *)vlan_id;
+#if WORDS_BIGENDIAN
+  ptr[3] = ls_val;
+  ptr[2] = ms_val;
+#else
+  ptr[0] = ls_val;
+  ptr[1] = ms_val;
+#endif
+
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_vlan_id_rs,
+		"vlan_id_flag", 
+		&val);
+  *vlan_id_flag = val;
+
+  return (0);
+}
+
+u_int8_t
+get_bmc_lan_conf_vlan_priority (u_int8_t *vlan_priority)
+{
+  u_int8_t status;
+  fiid_obj_t obj_data_rs;
+  u_int64_t val;
+
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_vlan_priority_rs));
+  
+  status = ipmi_lan_get_vlan_priority (get_lan_channel_number (), 
+                                       IPMI_LAN_CONF_GET_PARAMETER, 
+                                       SET_SELECTOR, 
+                                       BLOCK_SELECTOR, 
+                                       obj_data_rs);
+  
+  if (status != 0)
+    return status;
+  
+  if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    return IPMI_COMP_CODE (obj_data_rs);
+  
+  fiid_obj_get (obj_data_rs, 
+		tmpl_get_lan_conf_param_vlan_priority_rs,
+		"vlan_priority", 
+		&val);
+  *vlan_priority = val;
+
   return (0);
 }
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.5 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.6 2005-03-18 22:06:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,6 +99,12 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
                 "expected: %d",
                 ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
         }
+    }
+  else
+    {
+      dbg("_check_outbound_seq_num(%s:%d): oseq: %d, "
+          "expected: %d",
+          ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
     }
 
   return retval;

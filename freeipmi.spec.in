@@ -173,14 +173,14 @@ fi
 %{_sbindir}/fish
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
-%{_sbindir}/sel
-%{_sbindir}/sensors
+%{_sbindir}/ipmi-sel
+%{_sbindir}/ipmi-sensors
 %{_mandir}/man1/bmc-config.1*
 %{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man1/bmc-info.1*
 %{_mandir}/man1/fish.1*
-%{_mandir}/man1/sel.1*
-%{_mandir}/man1/sensors.1*
+%{_mandir}/man1/ipmi-sel.1*
+%{_mandir}/man1/ipmi-sensors.1*
 %{_datadir}/fish/*
 
 %files utils

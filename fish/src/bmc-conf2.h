@@ -100,6 +100,10 @@ u_int8_t set_bmc_lan_conf_default_gw_ip_addr (char *default_gw_ip_addr);
 u_int8_t set_bmc_lan_conf_default_gw_mac_addr (char *default_gw_mac_addr);
 u_int8_t set_bmc_lan_conf_backup_gw_ip_addr (char *backup_gw_ip_addr);
 u_int8_t set_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr);
+u_int8_t set_bmc_lan_conf_vlan_id (u_int8_t vlan_id_flag,
+                                   u_int32_t vlan_id);
+u_int8_t set_bmc_lan_conf_vlan_priority (u_int8_t vlan_priority);
+
 u_int8_t set_bmc_lan_conf_auth_type_enables (struct bmc_auth_level *bmc_auth_level);
 u_int8_t set_bmc_lan_conf_arp_control (u_int8_t enable_gratuitous_arps, 
 				       u_int8_t enable_arp_response);
@@ -210,6 +214,8 @@ u_int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup,
 
 
 u_int8_t get_bmc_power_restore_policy (u_int8_t *power_restore_policy);
+u_int8_t get_bmc_lan_conf_vlan_id (u_int8_t *vlan_id_flag, u_int32_t *vlan_id);
+u_int8_t get_bmc_lan_conf_vlan_priority (u_int8_t *vlan_priority);
 
 /***********************************************************/
 u_int8_t check_bmc_user_password (u_int8_t userid, u_int8_t *password);

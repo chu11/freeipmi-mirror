@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.7 2005-03-13 04:19:53 ab Exp $
+\."$Id: ipmipower.8.in,v 1.8 2005-03-18 22:06:55 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -476,6 +476,12 @@ execute faster on the commandline.  This performance problem should
 not matter when running in interactive mode or with
 .B powerman, 
 since it is a one-time setup cost.
+
+If 
+.B ipmipower
+attempts are constantly timing out, increasing the retry timeout to
+a few seconds may help.  Some remote BMCs are considerably slower
+than others.
 
 .SH "KNOWN ISSUES"
 In order to prevent brute force attacks, some BMCs will "lock up"

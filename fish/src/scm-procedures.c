@@ -1180,6 +1180,49 @@ ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
 }
 
 SCM 
+ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag, 
+                             SCM scm_vlan_id)
+{
+  u_int8_t vlan_id_flag;
+  u_int32_t vlan_id;
+  int retval;
+  
+  retval = get_bmc_lan_conf_vlan_id (&vlan_id_flag, 
+                                     &vlan_id);
+  if (retval)
+    return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+  
+  if (scm_boolean_p (scm_vlan_id_flag) == SCM_BOOL_T)
+    vlan_id_flag = gh_scm2bool (scm_vlan_id_flag);
+
+  if (scm_integer_p (scm_vlan_id) == SCM_BOOL_T)
+    vlan_id = gh_scm2long (scm_vlan_id);
+  
+  retval = set_bmc_lan_conf_vlan_id (vlan_id_flag, 
+                                     vlan_id);
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority)
+{
+  u_int8_t vlan_priority;
+  u_int8_t retval;
+  
+  retval = get_bmc_lan_conf_vlan_priority (&vlan_priority);
+
+  if (retval)
+    return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+
+  if (scm_integer_p (scm_vlan_priority) == SCM_BOOL_T)
+    vlan_priority = gh_scm2long (scm_vlan_priority);
+
+  retval = set_bmc_lan_conf_vlan_priority (vlan_priority);
+
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
 ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none, 
 						SCM scm_auth_type_md2, 
 						SCM scm_auth_type_md5, 
@@ -1809,6 +1852,35 @@ ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
   if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (gw_mac_address)) == 0)
     return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
   
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM
+ex_get_bmc_lan_conf_vlan_id ()
+{
+  u_int8_t vlan_id_flag = 0;
+  u_int32_t vlan_id = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+
+  if ((retval = get_bmc_lan_conf_vlan_id (&vlan_id_flag, &vlan_id)) == 0)
+    return_list = gh_list (gh_bool2scm (vlan_id_flag), 
+			   gh_long2scm (vlan_id), 
+			   SCM_UNDEFINED);
+
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM
+ex_get_bmc_lan_conf_vlan_priority ()
+{
+  u_int8_t vlan_priority = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+
+  if ((retval = get_bmc_lan_conf_vlan_priority (&vlan_priority)) == 0)
+    return_list = gh_list (gh_long2scm (vlan_priority), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 
