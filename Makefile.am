@@ -1,4 +1,4 @@
-SUBDIRS = doc libfreeipmi fish bmc-watchdog ipmipower
+SUBDIRS = doc libfreeipmi fish bmc-watchdog ipmipower ipmiping rmcpping
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@

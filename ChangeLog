@@ -1,3 +1,25 @@
+2004-05-14  Albert Chu <chu11@llnl.gov>
+
+	* COPYING.ipmiping, DISCLAIMER.ipmiping, COPYING.rmcpping,
+	DISCLAIMER.rmcpping, doc/ipmiping.8.in, doc/rmcpping.8.in,
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c,
+	ipmiping/Makefile.am, ipmiping/src/Makefile.am,
+	ipmiping/src/ipmiping.c, rcmpping/Makefile.am,
+	rmcpping/src/Makefile.am, rmcpping/src/rmcpping.c: New files.
+	
+	* TODO: Added ipmiping and rmcpping todo list.
+
+	* configure.ac: Generate ipmiping and rmcpping manpages.  Generate
+	ipmiping and rmcpping makefiles.
+
+	* doc/Makefile.am: Added ipmiping and rmcpping manpages.
+
+	* Makefile.am: Added ipmiping and rmcpping subdirectories.
+
+	* libfreeipmi/src/Makefile.am: Added ipmi-ping.h and ipmi-ping.c.
+
+	* libfreeipmi/src/freeipmi.h: Added ipmi-ping.h.
+	
 2004-05-12  Ian Zimmerman  <itz@californiadigital.com>
 
 	* fish/extensions/bmc-config.scm (bmc-config-main): If an

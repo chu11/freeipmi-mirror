@@ -1,0 +1,86 @@
+\."#############################################################################
+\."$Id: rmcpping.8.in,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+\."#############################################################################
+\."  Copyright (C) 2003 The Regents of the University of California.
+\."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+\."  Written by Albert Chu <chu11@llnl.gov>
+\."  UCRL-CODE-155448
+\."
+\."  This file is part of Ipmiping, tools for pinging IPMI and RMCP compliant
+\."  remote systems. For details, see http://www.llnl.gov/linux/.
+\."
+\."  Ipmiping is free software; you can redistribute it and/or modify it under
+\."  the terms of the GNU General Public License as published by the Free
+\."  Software Foundation; either version 2 of the License, or (at your option)
+\."  any later version.
+\."
+\."  Ipmiping is distributed in the hope that it will be useful, but WITHOUT
+\."  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+\."  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+\."  for more details.
+\."
+\."  You should have received a copy of the GNU General Public License along
+\."  with Ipmiping; if not, write to the Free Software Foundation, Inc.,
+\."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+\."############################################################################
+.TH RMCPING 8 "April 2004" "rmcpping @VERSION@" "System Manager Commands"
+.SH NAME
+rmcpping \- send RMCP Ping to network hosts
+.SH SYNOPSIS
+.B rmcpping [OPTIONS] destination
+.SH DESCRIPTION
+.B rmcpping
+uses the RMCP Ping request datagram to elicit an RMCP Pong response from a
+remote host.  The utility can be used to verify if a remote host supports
+RMCP or IPMI.
+
+.B rmcpping
+will return 0 to the environment if it receives atleast 1 response
+from the remote host.  Otherwise, it exits with a value of 1.
+.SH OPTIONS
+The following options are available 
+.TP
+.I "-h"
+Output help menu.
+.TP
+.I "-V"
+Output version.
+.TP
+.I "-c count"
+Stop after sending 
+.I count
+ping packets.
+.TP
+.I "-i interval"
+Wait 
+.I interval 
+seconds between sending each packet.  The default is to wait for one
+second between each packet normally.
+.TP
+.I "-I interface address"
+Set source address to specified interface address. Argument may
+be numeric IP address or name of device.
+.TP
+.I "-t timeout"
+Time to wait for a response, in seconds. Default is 5 seconds.
+.TP
+.I "-v"
+Verbose output.
+.if @WITH_DEBUG@ \{
+.TP
+.I "-d"
+Turn on debugging.
+\}
+.SH "KNOWN ISSUES"
+It has been observed that some remote BMCs can get "confused" and
+delay packet responses if duplicate packets are sent in succession
+very quickly.  For example, this could happen if the user repeatedly
+executes "rmcpping -c 1 destination" very quickly.  There is no known
+way to cleanly deal with a "confused" BMC.  The best option is to
+simply wait "awhile".
+.SH "ORIGIN"
+Developed by Albert Chu <chu11@llnl.gov>.  Command and manpage
+based off 
+.B ping(8).
+.SH "SEE ALSO"
+ping(8), ipmiping(8)

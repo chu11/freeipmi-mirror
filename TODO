@@ -21,6 +21,10 @@ libfreeipmi:
 Al's TODO list
 ==============
 
+General
+
+Cleanup use of autoconf defs.  i.e. use "/* HAVE_FOO_H */" and etc.
+
 Libfreeipmi
 
 - 19.3 Suspend BMC ARPs command
@@ -54,6 +58,11 @@ Ipmipower
 - Buffer recently malloced space to avoid constant re-mallocing.
 - Add readline or similar functionality in interactive mode.
 - Add pulse diagnostic interrupt and soft-shutdown.
+
+Ipmiping/Rmcpping
+
+- Make starting sequence number random to reduce probability of
+"confused" BMC known issue?
 
 General
 

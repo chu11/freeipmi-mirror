@@ -1,0 +1,87 @@
+/*****************************************************************************\
+ *  $Id: ipmi-ping.h,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *****************************************************************************
+ *  Copyright (C) 2003 The Regents of the University of California.
+ *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
+ *  Written by Albert Chu <chu11@llnl.gov>
+ *  UCRL-CODE-155448
+ *  
+ *  This file is part of Ipmiping, tools for pinging IPMI and RMCP compliant
+ *  remote systems. For details, see http://www.llnl.gov/linux/.
+ *
+ *  Ipmiping is free software; you can redistribute it and/or modify 
+ *  it under the terms of the GNU General Public License as published by the 
+ *  Free Software Foundation; either version 2 of the License, or (at your 
+ *  option) any later version.
+ *  
+ *  Ipmiping is distributed in the hope that it will be useful, but 
+ *  WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
+ *  or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License 
+ *  for more details.
+ *  
+ *  You should have received a copy of the GNU General Public License along
+ *  with Ipmiping; if not, write to the Free Software Foundation, Inc.,
+ *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+\*****************************************************************************/
+
+#ifndef _IPMI_PING_H
+#define _IPMI_PING_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Ipmi_Ping_CreatePacket
+ * - Create a ping request packet and store it in the buffer
+ * - Return length of packet created, or -1 on error.
+ */
+typedef int (*Ipmi_Ping_CreatePacket)(char *buffer, 
+                                      int buflen, 
+                                      unsigned int seq_num_count, 
+                                      int debug);
+
+/* Ipmi_Ping_ParsePacket
+ * - Parse packet stored in buffer and output info about received
+ *   packet to stdout.
+ * - Return 1 if packet matches sequence number, 0 if packet does not,
+ *   -1 on error.
+ */
+typedef int (*Ipmi_Ping_ParsePacket)(char *buffer, 
+                                     int buflen, 
+                                     const char *from, 
+                                     unsigned int seq_num_count, 
+                                     int verbose, 
+                                     int debug);
+
+/* Ipmi_Ping_LatePacket
+ * - Output info about timed out packet to stdout
+ */
+typedef void (*Ipmi_Ping_LatePacket)(unsigned int seq_num_count);
+
+/* Ipmi_Ping_EndResult
+ * - Output final results to stdout and return exit code
+ */ 
+typedef int (*Ipmi_Ping_EndResult)(const char *progname, 
+                                   const char *dest,
+                                   unsigned int sent_count, 
+                                   unsigned int recv_count);
+
+/* ipmi_ping_err_exit
+ * - exit with GNU style exit output
+ */
+void ipmi_ping_err_exit(char *fmt, ...);
+
+/* ipmi_ping_common
+ * - wrapper function for common ping utilities
+ */
+void ipmi_ping_main(int argc, char **argv,
+                    Ipmi_Ping_CreatePacket _create, 
+                    Ipmi_Ping_ParsePacket _parse, 
+                    Ipmi_Ping_LatePacket _late, 
+                    Ipmi_Ping_EndResult _end);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _IPMI_PING_H */
