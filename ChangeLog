@@ -6,6 +6,9 @@
 	moved from the doc directory to be next to the binaries they
 	describe.
 
+	* configure.ac, fish/src/Makefile.am: Do not link everything with
+	ncurses and readline, just fish.
+
 2004-10-14  Anand Babu  <ab@gnu.org.in>
 
 	* freeipmi/libfreeipmi/src/ipmi-semaphores.h: Portability fixes -

@@ -4,7 +4,7 @@ fish_SOURCES=fish.c xmalloc.c fi-utils.c interpreter.c \
 	fi-commands.c bmc-conf-checkout.c bmc-conf-commit.c bmc-conf-utils.c \
 	ipmi-wrapper-sensor.c ipmi-wrapper-sel.c bmc-conf-key-utils.c bmc-conf2.c 
 
-fish_LDADD = ../../libfreeipmi/src/libfreeipmi.la $(GUILE_LDFLAGS)
+fish_LDADD = ../../libfreeipmi/src/libfreeipmi.la $(GUILE_LDFLAGS) $(READLINE_LIBS)
 
 noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h\
 	extension.h scm-procedures.h guile-wrapper.h ipmi-wrapper.h \

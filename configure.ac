@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.13 2004-10-15 00:07:29 itz Exp $])
+AC_REVISION([$Id: configure.ac,v 1.14 2004-10-15 18:29:02 itz Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -76,8 +76,14 @@ fi
 AC_SUBST(WITH_DEBUG)
 
 dnl Checks for libraries.
+NOREADLINE_LIBS=${LIBS}
+LIBS=${READLINE_LIBS}
 AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
 AC_CHECK_LIB([readline],[readline])
+AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches])
+READLINE_LIBS=${LIBS}
+AC_SUBST([READLINE_LIBS])
+LIBS=${NOREADLINE_LIBS}
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
@@ -85,7 +91,7 @@ AC_C_BIGENDIAN
 dnl Checks for library functions.
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
-AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches strchr memcpy memset getopt_long mlock])
+AC_CHECK_FUNCS([strchr memcpy memset getopt_long mlock])
 
 dnl Checks for header files.
 AC_HEADER_STDC
