@@ -31,12 +31,7 @@ Roadmap to 1.0.0
     * bmc-config.
       * --auto and --expert modes.
       * code cleanup.
-   FRU.
-   Adopt the the unified driver model for all IPMI sub-systems.
-   bmc-fence daemon.
-
-
-
- 
- 
-  
+      * old bmc-config code removal.
+   * FRU.
+   * Adopt the the unified driver model for all IPMI sub-systems.
+   * bmc-fence daemon.

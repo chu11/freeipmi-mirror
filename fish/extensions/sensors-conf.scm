@@ -7,7 +7,7 @@
 ; (sensors-ignore! '(54 55 88))
 
 ;; Example: Group Aliases
-(sensors-group-alias-list-append!
+(sensors-alias-list-append!
   '(
 ;    (mysystem . ("Processor" "Fan" "Power Supply" "Current Memory Chassis"))
     (power . ("Power Supply"))

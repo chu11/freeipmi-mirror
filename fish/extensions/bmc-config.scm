@@ -1,6 +1,5 @@
-;;; bmc-config.scm: BMC configuration system
-;;; authors: M.P.Anand Babu <ab@gnu.org.in> 
-;;; Balamurugan <bala.a@californiadigital.com>
+;;; bmc-config.scm: BMC configurator
+;;; authors: Balamurugan <bala.a@californiadigital.com>
 
 ;;; This program is free software; you can redistribute it and/or
 ;;; modify it under the terms of the GNU General Public License as
@@ -22,139 +21,275 @@
 
 (define bmc-config-exit-status 0)
 
-(define (bmc-config-display-usage)
-  (display "bmc-config --usage --help --version --checkout --commit --diff --filename=FILENAME --key-pair=\"KEY=VALUE\" ...\n\tGet and set BMC configurations.\n"))
+(fi-load "bc-common.scm")
+(fi-load "bc-user-section.scm")
+(fi-load "bc-lan-serial-channel-section.scm")
+(fi-load "bc-lan-conf-section.scm")
+(fi-load "bc-lan-conf-auth-section.scm")
+(fi-load "bc-lan-conf-misc-section.scm")
+(fi-load "bc-serial-conf-section.scm")
+(fi-load "bc-misc-section.scm")
+(fi-load "bc-section.scm")
 
-(define (bmc-config-display-help)
+(define user1_s '("User1" 
+		  "Username" 
+ 		  "Enable_User" 
+; 		  "Clear_Password" 
+		  "Password" 
+		  "LAN_Enable_IPMI_Msgs" 
+		  "LAN_Enable_Link_Auth" 
+		  "LAN_Enable_Restrict_To_Callback" 
+		  "LAN_Privilege_Limit" 
+		  "LAN_Session_Limit" 
+		  "Serial_Enable_IPMI_Msgs" 
+		  "Serial_Enable_Link_Auth" 
+		  "Serial_Enable_Restrict_To_Callback" 
+		  "Serial_Privilege_Limit" 
+		  "Serial_Session_Limit"))
+
+(define user2_s '("User2" 
+		  "Username" 
+ 		  "Enable_User" 
+; 		  "Clear_Password" 
+		  "Password" 
+		  "LAN_Enable_IPMI_Msgs" 
+		  "LAN_Enable_Link_Auth" 
+		  "LAN_Enable_Restrict_To_Callback" 
+		  "LAN_Privilege_Limit" 
+		  "LAN_Session_Limit" 
+		  "Serial_Enable_IPMI_Msgs" 
+		  "Serial_Enable_Link_Auth" 
+		  "Serial_Enable_Restrict_To_Callback" 
+		  "Serial_Privilege_Limit" 
+		  "Serial_Session_Limit"))
+
+(define user3_s '("User3" 
+		  "Username" 
+ 		  "Enable_User" 
+; 		  "Clear_Password" 
+		  "Password" 
+		  "LAN_Enable_IPMI_Msgs" 
+		  "LAN_Enable_Link_Auth" 
+		  "LAN_Enable_Restrict_To_Callback" 
+		  "LAN_Privilege_Limit" 
+		  "LAN_Session_Limit" 
+		  "Serial_Enable_IPMI_Msgs" 
+		  "Serial_Enable_Link_Auth" 
+		  "Serial_Enable_Restrict_To_Callback" 
+		  "Serial_Privilege_Limit" 
+		  "Serial_Session_Limit"))
+
+(define user4_s '("User4" 
+		  "Username" 
+ 		  "Enable_User" 
+; 		  "Clear_Password" 
+		  "Password" 
+		  "LAN_Enable_IPMI_Msgs" 
+		  "LAN_Enable_Link_Auth" 
+		  "LAN_Enable_Restrict_To_Callback" 
+		  "LAN_Privilege_Limit" 
+		  "LAN_Session_Limit" 
+		  "Serial_Enable_IPMI_Msgs" 
+		  "Serial_Enable_Link_Auth" 
+		  "Serial_Enable_Restrict_To_Callback" 
+		  "Serial_Privilege_Limit" 
+		  "Serial_Session_Limit"))
+
+(define lan_channel_s '("LAN_Channel" 
+			"Volatile_Access_Mode" 
+			"Volatile_Enable_User_Level_Auth" 
+			"Volatile_Enable_Per_Message_Auth" 
+			"Volatile_Enable_Pef_Alerting" 
+			"Volatile_Channel_Privilege_Limit" 
+			"Non_Volatile_Access_Mode" 
+			"Non_Volatile_Enable_User_Level_Auth" 
+			"Non_Volatile_Enable_Per_Message_Auth" 
+			"Non_Volatile_Enable_Pef_Alerting" 
+			"Non_Volatile_Channel_Privilege_Limit"))
+
+(define lan_conf_s '("LAN_Conf" 
+		     "IP_Address_Source" 
+		     "IP_Address" 
+		     "MAC_Address" 
+		     "Subnet_Mask" 
+		     "Default_Gateway_IP_Address" 
+		     "Default_Gateway_MAC_Address" 
+		     "Backup_Gateway_IP_Address" 
+		     "Backup_Gateway_MAC_Address"))
+
+(define lan_conf_auth_s '("LAN_Conf_Auth" 
+			  "Callback_Enable_Auth_Type_None" 
+			  "Callback_Enable_Auth_Type_MD2" 
+			  "Callback_Enable_Auth_Type_MD5" 
+			  "Callback_Enable_Auth_Type_Straight_Password" 
+			  "Callback_Enable_Auth_Type_OEM_Proprietary" 
+			  "User_Enable_Auth_Type_None" 
+			  "User_Enable_Auth_Type_MD2" 
+			  "User_Enable_Auth_Type_MD5" 
+			  "User_Enable_Auth_Type_Straight_Password" 
+			  "User_Enable_Auth_Type_OEM_Proprietary" 
+			  "Operator_Enable_Auth_Type_None" 
+			  "Operator_Enable_Auth_Type_MD2" 
+			  "Operator_Enable_Auth_Type_MD5" 
+			  "Operator_Enable_Auth_Type_Straight_Password" 
+			  "Operator_Enable_Auth_Type_OEM_Proprietary" 
+			  "Admin_Enable_Auth_Type_None" 
+			  "Admin_Enable_Auth_Type_MD2" 
+			  "Admin_Enable_Auth_Type_MD5" 
+			  "Admin_Enable_Auth_Type_Straight_Password" 
+			  "Admin_Enable_Auth_Type_OEM_Proprietary" 
+			  "OEM_Enable_Auth_Type_None" 
+			  "OEM_Enable_Auth_Type_MD2" 
+			  "OEM_Enable_Auth_Type_MD5" 
+			  "OEM_Enable_Auth_Type_Straight_Password" 
+			  "OEM_Enable_Auth_Type_OEM_Proprietary"))
+
+(define lan_conf_misc_s '("LAN_Conf_Misc" 
+			  "Enable_Gratuitous_ARPs" 
+			  "Enable_ARP_Response" 
+			  "Gratuitous_ARP_Interval"))
+
+(define serial_channel_s '("Serial_Channel" 
+			   "Volatile_Access_Mode" 
+			   "Volatile_Enable_User_Level_Auth" 
+			   "Volatile_Enable_Per_Message_Auth" 
+			   "Volatile_Enable_Pef_Alerting" 
+			   "Volatile_Channel_Privilege_Limit" 
+			   "Non_Volatile_Access_Mode" 
+			   "Non_Volatile_Enable_User_Level_Auth" 
+			   "Non_Volatile_Enable_Per_Message_Auth" 
+			   "Non_Volatile_Enable_Pef_Alerting" 
+			   "Non_Volatile_Channel_Privilege_Limit"))
+
+(define serial_conf_s '("Serial_Conf" 
+			"Enable_Basic_Mode" 
+			"Enable_PPP_Mode" 
+			"Enable_Terminal_Mode" 
+			"Connect_Mode" 
+			"Page_Blackout_Interval" 
+			"Call_Retry_Time" 
+			"Enable_DTR_Hangup" 
+			"Flow_Control" 
+			"Bit_Rate"))
+
+(define misc_s '("Misc" 
+		 "Power_Restore_Policy"))
+
+(define (checkout-conf)
+  (checkout-section user1_s (current-output-port))
+  (checkout-section user2_s (current-output-port))
+  (checkout-section user3_s (current-output-port))
+  (checkout-section user4_s (current-output-port))
+  (checkout-section lan_channel_s (current-output-port))
+  (checkout-section lan_conf_s (current-output-port))
+  (checkout-section lan_conf_auth_s (current-output-port))
+  (checkout-section lan_conf_misc_s (current-output-port))
+  (checkout-section serial_channel_s (current-output-port))
+  (checkout-section serial_conf_s (current-output-port))
+  (checkout-section misc_s (current-output-port)))
+
+(define (checkout-conf-to-file filename)
+  (if (string-null? filename)
+      (checkout-conf)
+      (let ((fp (open-output-file filename)))
+	(checkout-section user1_s fp)
+	(checkout-section user2_s fp)
+	(checkout-section user3_s fp)
+	(checkout-section user4_s fp)
+	(checkout-section lan_channel_s fp)
+	(checkout-section lan_conf_s fp)
+	(checkout-section lan_conf_auth_s fp)
+	(checkout-section lan_conf_misc_s fp)
+	(checkout-section serial_channel_s fp)
+	(checkout-section serial_conf_s fp)
+	(checkout-section misc_s fp)
+	(close fp))))
+
+(define (validate-conf-file fp)
+  (let ((section (read-section fp)))
+    (if (null? section)
+	#t 
+	(if (validate-commit-section section)
+	    (validate-conf-file fp)
+	    #f))))
+
+(define (commit-conf-file fp)
+  (let ((section (read-section fp)))
+    (if (null? section)
+	#t
+	(if (commit-section section)
+	    (commit-conf-file fp)
+	    #f))))
+
+(define (validate-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (validate-commit-section section-data)
+		(validate-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (commit-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (commit-section section-data)
+		(commit-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (diff-key-pair-list key-pair-list)
+  (if (null? key-pair-list)
+      #t
+      (let* ((key-string (car key-pair-list))
+	     (value      (cadr key-pair-list))
+	     (section-data (make-section key-string value)))
+	(if (list? section-data)
+	    (if (diff-section section-data)
+		(diff-key-pair-list (cddr key-pair-list))
+		#f)
+	    #f))))
+
+(define (diff-conf-file fp)
+  (let ((section (read-section fp)))
+    (if (null? section)
+	#t
+	(if (diff-section section)
+	    (diff-conf-file fp)
+	    #f))))
+
+
+(define (bc-display-usage)
+  (display "bmc-config --usage --help --version  --checkout --commit --diff --filename=FILENAME --key-pair=KEY-PAIR\n\tBMC Configurator.\n"))
+
+(define (bc-display-help)
   (begin 
-    (display "IPMI BMC Configurator is used to get and set BMC configurations\n\n")
+    (display "BMC Configurator.\n\n")
     (display "Options:\n")
     (display "  -u, --usage                Usage message\n") 
     (display "  -h, --help                 Show help\n")
     (display "  -V, --version              Show version\n")
     (display "  -o, --checkout             Fetch configuration information from BMC.\n")
     (display "  -i, --commit               Update configuration information to BMC\n")
-    (display "  -d, --diff                 Show differences between BMC and config file or key pairs.\n")
-    (display "  -f FILENAME, --filename=FILENAME    Use this file for BMC get/set.\n")
-    (display "  -k \"KEY=VALUE\", --key-pair=\"KEY=VALUE\"    Update configuration information to BMC.  This option can be used multiple times.\n")))
+    (display "  -d, --diff                 Show differences with BMC\n")
+    (display "  -f FILENAME, --filename=FILENAME    Use this file for checkout/commit/diff\n")
+    (display "  -k \"KEY=VALUE\", --key-pair=\"KEY=VALUE\"    checkout/diff only this KEY/VALUE\n")
+))
 
-(define (bmc-config-display-version)
+(define (bc-display-version)
   (display (string-append 
-	    "IPMI BMC Configurator version " 
+	    "BMC Configurator." 
 	    (fi-version)))
   (newline))
 
-(define (file-exists? filename)
-  (catch 'system-error 
-	 (lambda ()
-	   (if (eq? (stat:type (stat filename)) 'regular)
-	       #t 
-	       (begin 
-		 (display 
-		  (string-append "error: " filename ": is not a regular file\n") 
-		  (current-error-port))
-		 #f)))
-	 (lambda error-info 
-	   (let ((errno (system-error-errno error-info)))
-	     (display (string-append "error: " filename ": ") (current-error-port))
-	     (display (strerror errno) (current-error-port))
-	     (display "\n" (current-error-port))
-	     #f))))
-
-(define (bmc-config-check-key-pairs_old key-list)
-  (fi-bmc-config-checkout "/tmp/.bmc-config.swap")
-  (letrec ((key-check-flag #t)
-	   (bmc-config-check-key 
-	    (lambda (key key-list)
-	      (if (not (fi-bmc-config-check-key "/tmp/.bmc-config.swap" key))
-		  (begin 
-		    (display (string-append "error: '" key "' key not found\n"))
-		    (set! key-check-flag #f)
-		    (set! bmc-config-exit-status 1)))
-	      (if (not (null? key-list))
-		  (bmc-config-check-key (car key-list) (cddr key-list))))))
-    (bmc-config-check-key (car key-list) (cddr key-list))
-    key-check-flag))
-
-(define (bmc-config-check-key-pairs key-list)
-  (letrec ((key-check-flag #t)
-	   (bmc-config-check-key 
-	    (lambda (key key-list)
-	      (if (not (fi-bmc-config-check-key key))
-		  (begin 
-		    (display (string-append "error: '" key "' key not found\n"))
-		    (set! key-check-flag #f)
-		    (set! bmc-config-exit-status 1)))
-	      (if (not (null? key-list))
-		  (bmc-config-check-key (car key-list) (cddr key-list))))))
-    (bmc-config-check-key (car key-list) (cddr key-list))
-    key-check-flag))
-		    
-
-(define (bmc-config-checkout filename)
-  (fi-bmc-config-checkout filename))
-
-(define (bmc-config-commit-file filename)
-  (fi-bmc-config-commit filename))
-
-(define (bmc-config-commit-key-pairs key-list)
-  (fi-bmc-config-checkout "/tmp/.bmc-config.swap")
-  (letrec ((bmc-config-edit-key-pair 
-	    (lambda (key value key-list)
-	      (fi-bmc-config-edit-key-pair "/tmp/.bmc-config.swap" key value)
-	      (if (not (null? key-list))
-		  (bmc-config-edit-key-pair (car key-list) (cadr key-list) (cddr key-list))))))
-    (bmc-config-edit-key-pair (car key-list) (cadr key-list) (cddr key-list)))
-  (fi-bmc-config-commit "/tmp/.bmc-config.swap"))
-
-(define (bmc-config-commit-file-key-pairs filename key-list)
-  (system (string-append "cp -af " filename " /tmp/.bmc-config.swap"))
-  (letrec ((bmc-config-edit-key-pair 
-	    (lambda (key value key-list)
-	      (fi-bmc-config-edit-key-pair "/tmp/.bmc-config.swap" key value)
-	      (if (not (null? key-list))
-		  (bmc-config-edit-key-pair (car key-list) (cadr key-list) (cddr key-list))))))
-    (bmc-config-edit-key-pair (car key-list) (cadr key-list) (cddr key-list)))
-  (fi-bmc-config-commit "/tmp/.bmc-config.swap"))
-
-
-(define (bmc-config-commit filename key-list)
-  (if (not (string-null? filename))
-      (if (file-exists? filename)
-	  (if (not (null? key-list))
-	      (if (bmc-config-check-key-pairs key-list)
-		  (bmc-config-commit-file-key-pairs filename key-list))
-	      (bmc-config-commit-file filename))
-	  (set! bmc-config-exit-status 1))
-      (if (not (null? key-list))
-	  (if (bmc-config-check-key-pairs key-list)
-	      (bmc-config-commit-key-pairs key-list)))))
-
-(define (bmc-config-diff-key-pairs key-list)
-  (fi-bmc-config-checkout "/tmp/.bmc-config.swap")
-  (letrec ((bmc-config-diff-key-pair
-	    (lambda (key value key-list)
-	      (if (= (fi-bmc-config-diff-key-pair "/tmp/.bmc-config.swap" key value) 1)
-		  (set! bmc-config-exit-status 1))
-	      (if (not (null? key-list))
-		  (bmc-config-diff-key-pair (car key-list) (cadr key-list) (cddr key-list))))))
-    (bmc-config-diff-key-pair (car key-list) (cadr key-list) (cddr key-list))))
-
-(define (bmc-config-diff-file filename)
-  (fi-bmc-config-checkout "/tmp/.bmc-config.swap")
-  (if (= (fi-bmc-config-diff-file "/tmp/.bmc-config.swap" filename) 1)
-      (set! bmc-config-exit-status 1)))
-
-(define (bmc-config-diff filename key-list)
-  (if (not (string-null? filename))
-      (if (file-exists? filename)
-	  (bmc-config-diff-file filename)
-	  (set! bmc-config-exit-status 1)))
-  (if (not (null? key-list))
-      (if (bmc-config-check-key-pairs key-list)
-	  (bmc-config-diff-key-pairs key-list))))
-
-(define (bmc-config-main args)
+(define (bc-main args)
   (let* ((option-spec '((usage    (single-char #\u) (value #f))
 			(help     (single-char #\h) (value #f))
 			(version  (single-char #\V) (value #f))
@@ -164,14 +299,13 @@
 			(filename (single-char #\f) (value #t))
 			(key-pair (single-char #\k) (value #t))))
 	 (options (getopt-long args option-spec))
-	 (usage-wanted    (option-ref options 'usage    #f))
-	 (help-wanted     (option-ref options 'help     #f))
-	 (version-wanted  (option-ref options 'version  #f))
-	 (checkout-wanted (option-ref options 'checkout #f))
-	 (commit-wanted   (option-ref options 'commit   #f))
-	 (diff-wanted     (option-ref options 'diff     #f))
-	 (filename        (option-ref options 'filename ""))
-	 (args            (option-ref options '()       '()))
+	 (usage-wanted         (option-ref options 'usage    #f))
+	 (help-wanted          (option-ref options 'help     #f))
+	 (version-wanted       (option-ref options 'version  #f))
+	 (checkout-wanted      (option-ref options 'checkout #f))
+	 (commit-wanted        (option-ref options 'commit   #f))
+	 (diff-wanted          (option-ref options 'diff     #f))
+	 (filename             (option-ref options 'filename ""))
 	 (key-pair-list   (if (option-ref options 'key-pair #f)
 			      (let ((klist '()))
 				(map (lambda (arg)
@@ -183,26 +317,73 @@
 						      (string-separate (cdr arg) #\=)))
                                                (begin
                                                  (set! usage-wanted #t)
-                                                 (set! bmc-config-exit-status 1)))))
+                                                 (set! bmc-config-exit-status -1)))))
 				     options)
 				klist)
-			      '())))
-    ;;(begin (display key-pair-list) (newline))
+			      '()))
+; 	 (key-pair-list (if (option-ref options 'key-pair #f)
+; 			    (let ((klist '()))
+; 			      (map (lambda (arg)
+; 				     (if (equal? (car arg) 'key-pair)
+; 					 (begin 
+; 					   (display (cdr arg))
+; 					   (newline))))
+; 				   options)
+; 			      klist)
+; 			    '()))
+)
     (cond 
+     ;; argument type check
      (usage-wanted
-      (bmc-config-display-usage))
+      (bc-display-usage))
      (help-wanted
-      (bmc-config-display-help))
+      (bc-display-help))
      (version-wanted
-      (bmc-config-display-version))
+      (bc-display-version))
      (checkout-wanted 
-      (bmc-config-checkout filename))
+      (if (not (checkout-conf-to-file filename))
+	  (set! bmc-config-exit-status -1)))
      (commit-wanted 
-      (bmc-config-commit filename key-pair-list))
+      (if (and (string-null? filename) (null? key-pair-list))
+	  (bc-display-help)
+	  (begin 
+	    (if (not (string-null? filename))
+		(if (file-exists? filename)
+		    (let ((fp (open-input-file filename)))
+		      (if (validate-conf-file fp)
+			  (begin 
+			    (seek fp 0 SEEK_SET)
+			    (if (not (commit-conf-file fp))
+				(set! bmc-config-exit-status -1)))
+			  (set! bmc-config-exit-status -1))
+		      (close fp))))
+	    (if (not (null? key-pair-list))
+		(if (validate-key-pair-list key-pair-list)
+		    (if (not (commit-key-pair-list key-pair-list))
+			(set! bmc-config-exit-status -1))
+		    (set! bmc-config-exit-status -1))))))
      (diff-wanted 
-      (bmc-config-diff filename key-pair-list))
+      (if (and (string-null? filename) (null? key-pair-list))
+	  (bc-display-help)
+	  (begin 
+	    (if (not (string-null? filename))
+		(if (file-exists? filename)
+		    (let ((fp (open-input-file filename)))
+		      (if (validate-conf-file fp)
+			  (begin 
+			    (seek fp 0 SEEK_SET)
+			    (if (not (diff-conf-file fp))
+				(set! bmc-config-exit-status -1)))
+			  (set! bmc-config-exit-status -1))
+		      (close fp))))
+	    (if (not (null? key-pair-list))
+		(if (validate-key-pair-list key-pair-list)
+		    (if (not (diff-key-pair-list key-pair-list))
+			(set! bmc-config-exit-status -1))
+		    (set! bmc-config-exit-status -1))))))
      (else 
-      (bmc-config-display-usage)))))
+      (bc-display-help)))))
+
 
 (define (bmc-config args)
   "fish bmc-config main"
@@ -218,4 +399,17 @@
 (fi-register-command! 
  '("bmc-config" 
    "bmc-config --usage --help --version --checkout --commit --diff --filename FILENAME --key-pair=\"KEY=VALUE\" ...\n\tGet and set BMC configurations."))
+
+;;; main starts here ;;;
+
+; (define fp (open-input-file "bc2.conf"))
+; (if (validate-conf-file fp)
+;     (begin 
+;       (display "bc2.conf is validated\n")
+;       (seek fp 0 SEEK_SET)
+;       (if (commit-conf-file fp)
+; 	  (display "bc2.conf is committed\n")
+; 	  (display "unable to commit file bc2.conf\n")))
+;     (display "fix the file and rerun\n"))
+; (close fp)
 

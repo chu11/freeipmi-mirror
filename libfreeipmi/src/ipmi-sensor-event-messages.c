@@ -28,6 +28,243 @@
 /***********      event message functions   ***************/
 /**********************************************************/
 char *
+get_01_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Lower Non-critical - going low");
+    case 0x01:
+      return strdup ("Lower Non-critical - going high");
+    case 0x02:
+      return strdup ("Lower Critical - going low");
+    case 0x03:
+      return strdup ("Lower Critical - going high");
+    case 0x04:
+      return strdup ("Lower Non-recoverable - going low");
+    case 0x05:
+      return strdup ("Lower Non-recoverable - going high");
+    case 0x06:
+      return strdup ("Upper Non-critical - going low");
+    case 0x07:
+      return strdup ("Upper Non-critical - going high");
+    case 0x08:
+      return strdup ("Upper Critical - going low");
+    case 0x09:
+      return strdup ("Upper Critical - going high");
+    case 0x0A:
+      return strdup ("Upper Non-recoverable - going low");
+    case 0x0B:
+      return strdup ("Upper Non-recoverable - going high");
+    }
+  
+  return NULL;
+}
+
+char *
+get_02_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Transition to Idle");
+    case 0x01:
+      return strdup ("Transition to Active");
+    case 0x02:
+      return strdup ("Transition to Busy");
+    }
+  
+  return NULL;
+}
+
+char *
+get_03_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("State Deasserted");
+    case 0x01:
+      return strdup ("State Asserted");
+    }
+  
+  return NULL;
+}
+
+char *
+get_04_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Predictive Failure deasserted");
+    case 0x01:
+      return strdup ("Predictive Failure asserted");
+    }
+  
+  return NULL;
+}
+
+char *
+get_05_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Limit Not Exceeded");
+    case 0x01:
+      return strdup ("Limit Exceeded");
+    }
+  
+  return NULL;
+}
+
+char *
+get_06_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Performance Met");
+    case 0x01:
+      return strdup ("Performance Lags");
+    }
+  
+  return NULL;
+}
+
+char *
+get_07_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("transition to OK");
+    case 0x01:
+      return strdup ("transition to Non-Critical from OK");
+    case 0x02:
+      return strdup ("transition to Critical from less severe");
+    case 0x03:
+      return strdup ("transition to Non-recoverable from less severe");
+    case 0x04:
+      return strdup ("transition to Non-Critical from more severe");
+    case 0x05:
+      return strdup ("transition to Critical from Non-recoverable");
+    case 0x06:
+      return strdup ("transition to Non-recoverable");
+    case 0x07:
+	return strdup ("Monitor");
+    case 0x08:
+      return strdup ("Informational");
+    }
+  
+  return NULL;
+}
+
+char *
+get_08_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Device Removed / Device Absent");
+    case 0x01:
+	return strdup ("Device Inserted / Device Present");
+    }
+  
+  return NULL;
+}
+
+char *
+get_09_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Device Disabled");
+    case 0x01:
+      return strdup ("Device Enabled");
+    }
+  
+  return NULL;
+}
+
+char *
+get_0A_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("transition to Running");
+    case 0x01:
+      return strdup ("transition to In Test");
+    case 0x02:
+      return strdup ("transition to Power Off");
+    case 0x03:
+      return strdup ("transition to On Line");
+    case 0x04:
+      return strdup ("transition to Off Line");
+    case 0x05:
+      return strdup ("transition to Off Duty");
+    case 0x06:
+      return strdup ("transition to Degraded");
+    case 0x07:
+      return strdup ("transition to Power Save");
+    case 0x08:
+      return strdup ("Install Error");
+    }
+  
+  return NULL;
+}
+
+char *
+get_0B_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("Fully Redundant (formerly \"Redundancy Regained\")");
+    case 0x01:
+      return strdup ("Redundancy Lost");
+    case 0x02:
+      return strdup ("Redundancy Degraded");
+    case 0x03:
+      return strdup ("Entered from Redundancy Degraded or Fully Redundant");
+    case 0x04:
+      return strdup ("Entered from Non-redundant:Insufficient Resources");
+    case 0x05:
+      return strdup ("Non-redundant:Insufficient Resources");
+    case 0x06:
+      return strdup ("Redundancy Degraded from Fully Redundant");
+    case 0x07:
+      return strdup ("Redundancy Degraded from Non-redundant");
+    }
+  
+  return NULL;
+}
+
+char *
+get_0C_generic_event_message (u_int16_t offset)
+{
+  switch (offset)
+    {
+    case 0x00:
+      return strdup ("D0 Power State");
+    case 0x01:
+      return strdup ("D1 Power State");
+    case 0x02:
+      return strdup ("D2 Power State");
+    case 0x03:
+      return strdup ("D3 Power State");
+    }
+  
+  return NULL;
+}
+
+/**********************************************************/
+/***********      event message functions   ***************/
+/**********************************************************/
+char *
 get_01_event_message (int offset)
 {
   return strdup ("Temperature");
@@ -1515,6 +1752,28 @@ get_2A_event_data3_message (int offset, u_int8_t event_data)
 }
 
 /***************************************************/
+char *
+ipmi_get_generic_event_message (u_int8_t event_reading_type, u_int16_t offset)
+{
+  switch (event_reading_type)
+    {
+    case 0x01: return get_01_generic_event_message (offset);
+    case 0x02: return get_02_generic_event_message (offset);
+    case 0x03: return get_03_generic_event_message (offset);
+    case 0x04: return get_04_generic_event_message (offset);
+    case 0x05: return get_05_generic_event_message (offset);
+    case 0x06: return get_06_generic_event_message (offset);
+    case 0x07: return get_07_generic_event_message (offset);
+    case 0x08: return get_08_generic_event_message (offset);
+    case 0x09: return get_09_generic_event_message (offset);
+    case 0x0A: return get_0A_generic_event_message (offset);
+    case 0x0B: return get_0B_generic_event_message (offset);
+    case 0x0C: return get_0C_generic_event_message (offset);
+    }
+  
+  return NULL;
+}
+
 char *
 ipmi_get_event_message (int sensor_type_code, int offset)
 {

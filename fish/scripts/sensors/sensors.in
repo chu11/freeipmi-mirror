@@ -1,10 +1,42 @@
 #! @prefix@/sbin/fish -s
 !#
-(catch 'misc-error   
+(catch 'misc-error 
        (lambda ()
-	 (sensors-main (fi-command-line)))
+	 (let* ((cmd-args    (sensors-argp-parse (fi-command-line)))
+		(sensor-list (sensors-get-sensors-option cmd-args))
+		(group-name  (sensors-get-group-option cmd-args)))
+	   (cond 
+	    ((sensors-get-extra-option cmd-args)
+	     (begin 
+	       (set! sensors-exit-status 1)
+	       (display sensors-program-short-name (current-error-port))
+	       (display ": error: invalid option "
+			(current-error-port))
+	       (display (sensors-get-extra-option cmd-args)
+			(current-error-port))
+	       (display "\n" (current-error-port))))
+	    ((list? (member #f (map number? sensor-list)))
+	     (begin 
+	       (set! sensors-exit-status 1)
+	       (display sensors-program-short-name (current-error-port))
+	       (display ": error: non-numeric sensor number\n"
+			(current-error-port))))
+	    ((and (string? group-name) 
+		  (not (member #t 
+			       (map (lambda (arg) (string-ci=? group-name arg)) 
+				    (fi-sensors-get-group-list))))
+		  (not (sensors-alias? group-name)))
+	     (begin 
+	       (set! sensors-exit-status 1)
+	       (display sensors-program-short-name (current-error-port))
+	       (display ": error: unknown group name\n"
+			(current-error-port))))
+	    (else 
+	     (sensors-main cmd-args)))))
        (lambda (k args . opts)
-	 (display "sensors: error: ")
-	 (display (cadr opts))
-	 (newline)))
+	 (set! sensors-exit-status 1)
+	 (display sensors-program-short-name (current-error-port))
+	 (display ": error: " (current-error-port))
+	 (display (cadr opts) (current-error-port))
+	 (display "\n" (current-error-port))))
 (fi-exit sensors-exit-status)

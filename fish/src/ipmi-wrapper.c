@@ -586,3 +586,47 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
   
   return (0);
 }
+
+char *
+get_ipmi_host_ip_address ()
+{
+  /* if IN-BAND */
+  return strdup ("127.0.0.1");
+  
+  /* if OUT-OF-BAND */
+  {
+    char hostname[] = {"localhost"};
+    struct hostent *hostinfo = NULL;
+    struct in_addr *in_addr = NULL;
+    
+    hostinfo = gethostbyname (hostname);
+    if (hostinfo == NULL)
+      return NULL;
+    
+    in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
+    
+    return strdup (inet_ntoa (*in_addr));
+  }
+}
+
+char *
+get_sdr_cache_filename ()
+{
+  char *cache_filename = NULL;
+  char *ipmi_host_ip_address = NULL;
+  
+  ipmi_host_ip_address = get_ipmi_host_ip_address ();
+  
+  asprintf (&cache_filename, 
+	    "%s/%s/%s/%s.%s", 
+	    get_home_directory (), 
+	    FI_CONFIG_DIRECTORY, 
+	    FI_SDR_CACHE_DIR, 
+	    FI_SDR_CACHE_FILENAME_PREFIX, 
+	    ipmi_host_ip_address);
+  
+  free (ipmi_host_ip_address);
+  
+  return cache_filename;
+}
+

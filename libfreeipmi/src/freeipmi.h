@@ -44,6 +44,7 @@ extern "C" {
 #include <math.h>
 #include <err.h>
 #include <errno.h>
+#include <time.h>
   
 #ifdef FREEIPMI_LIBRARY
 #include "xmalloc.h"
@@ -92,6 +93,8 @@ extern "C" {
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #include "ipmi-sensor-event-messages.h"
+#include "ipmi-sensor-api.h"
+#include "ipmi-sel-api.h"
 
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
@@ -192,6 +195,8 @@ extern char *__progname;
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>
+#include <freeipmi/ipmi-sensor-api.h>
+#include <freeipmi/ipmi-sel-api.h>
 #endif
 
 #ifdef __cplusplus

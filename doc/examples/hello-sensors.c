@@ -1347,14 +1347,14 @@ display_very_verbose_oem_record (sdr_repo_cache_t *sdr_repo_cache)
   u_int8_t record_length;
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_oem_sensor_record, 
+		tmpl_sdr_oem_record, 
 		"record_length", 
 		&val);
   record_length = val;
   record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_oem_sensor_record, 
+		tmpl_sdr_oem_record, 
 		"record_id", 
 		&val);
   printf ("Record ID: %d\n", (u_int16_t) val);
@@ -1362,7 +1362,7 @@ display_very_verbose_oem_record (sdr_repo_cache_t *sdr_repo_cache)
   printf ("Sensor Number: NONE\n");
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_oem_sensor_record, 
+		tmpl_sdr_oem_record, 
 		"manufacturer_id", 
 		&val);
   printf ("Manufacturer ID: %06Xh\n", (u_int32_t) val);
@@ -1467,7 +1467,7 @@ main ()
   char cache_filename[] = "/tmp/sdr-repo.cache";
   int retval;
   int total_records;
-  int rec_id;
+  int rec_no;
   
   /* init kcs */
   if (ipmi_kcs_io_init (SMS_IO_BASE, IPMI_KCS_REG_SPACE_DEFAULT, IPMI_KCS_SLEEP_USECS) != 0)
@@ -1499,13 +1499,13 @@ main ()
   printf ("Total SDR records: %d\n", total_records);
   
   /* display all records */
-  for (rec_id = 1; rec_id <= total_records; rec_id++)
+  for (rec_no = 1; rec_no <= total_records; rec_no++)
     {
-      if (ipmi_sdr_repo_cache_seek (&sdr_repo_cache, rec_id))
+      if (ipmi_sdr_repo_cache_seek (&sdr_repo_cache, rec_no))
 	{
 	  fprintf (stderr, 
-		   "error: ipmi_sdr_repo_cache_seek failed on rec_id %d\n", 
-		   rec_id);
+		   "error: ipmi_sdr_repo_cache_seek failed on rec_no %d\n", 
+		   rec_no);
 	  break;
 	}
       
@@ -1518,8 +1518,8 @@ main ()
      if (ipmi_sdr_repo_cache_first (&sdr_repo_cache))
      {
      fprintf (stderr,
-     "error: ipmi_sdr_repo_cache_seek failed on rec_id %d\n",
-     rec_id);
+     "error: ipmi_sdr_repo_cache_seek failed on rec_no %d\n",
+     rec_no);
      if (ipmi_sdr_repo_cache_unload (&sdr_repo_cache))
      {
      fprintf (stderr, "error: ipmi_sdr_repo_cache_unload failed\n");

@@ -43,28 +43,14 @@ SCM ex_set_sock_timeout (SCM scm_sock_timeout);
 SCM ex_set_driver_poll_interval (SCM scm_driver_poll_interval);
 SCM ex_get_script_command_line ();
 
-SCM ex_bmc_config_checkout (SCM scm_filename);
-SCM ex_bmc_config_commit (SCM scm_filename);
-SCM ex_bmc_config_edit_key_pair (SCM scm_filename, SCM scm_key, SCM scm_value);
-SCM ex_bmc_config_diff_key_pair (SCM scm_filename, SCM scm_key, SCM scm_value);
-SCM ex_bmc_config_diff_file (SCM scm_bmc_filename, SCM scm_filename);
-SCM ex_bmc_config_check_key (SCM scm_key);
-
-SCM ex_sensors_cache_create (SCM scm_cache_filename);
 SCM ex_get_default_sdr_repo_cache_filename (void);
-SCM ex_sensors_cache_load (SCM scm_cache_filename);
-SCM ex_sensors_cache_unload ();
-SCM ex_sensors_cache_seek (SCM scm_rec_id);
-SCM ex_sensors_cache_first ();
-SCM ex_sensors_cache_next ();
-SCM ex_sensors_cache_display ();
-SCM ex_sensors_cache_get_total_records ();
-SCM ex_sensors_cache_verbose_display ();
-SCM ex_sensors_cache_very_verbose_display ();
+
 SCM ex_sensors_cache_get_current_group ();
 SCM ex_sensors_get_group_list ();
 SCM ex_sdr_get_repo_info ();
+
 SCM ex_kcs_get_poll_count ();
+
 SCM ex_sel_get_first_entry ();
 SCM ex_sel_get_next_entry ();
 SCM ex_sel_get_first_entry_raw ();
@@ -73,10 +59,10 @@ SCM ex_sel_get_first_entry_hex ();
 SCM ex_sel_get_next_entry_hex ();
 SCM ex_sel_get_info ();
 SCM ex_sel_get_info_binary ();
-
 SCM ex_sel_delete_entry (SCM scm_record_id);
 SCM ex_sel_clear ();
 SCM ex_sel_get_clear_status ();
+
 SCM ex_get_sensors_errno ();
 
 /***
@@ -194,7 +180,12 @@ SCM ex_get_bmc_serial_conf_call_retry_time ();
 SCM ex_get_bmc_serial_conf_ipmi_msg_comm_settings ();
 SCM ex_get_bmc_power_restore_policy ();
 
-/***********************************************************/
 SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
+/***********************************************************/
+
+SCM ex_get_sdr_record (SCM scm_record_id);
+SCM ex_get_sensor_reading (SCM scm_sdr_record);
+SCM ex_get_sdr_cache_filename ();
+SCM ex_get_sdr_repo_info ();
 
 #endif

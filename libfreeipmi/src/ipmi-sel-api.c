@@ -1,44 +1,29 @@
+/* 
+   ipmi-sel-api.c - IPMI SEL commands API
+
+   Copyright (C) 2005 FreeIPMI Core Team
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+
+*/
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
 #include "freeipmi.h"
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <stdlib.h>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#include "fi-utils.h"
-#include "ipmi-wrapper-sel.h"
-#include "fish.h"
 
 sel_descriptor_t seld;
 
@@ -379,7 +364,7 @@ get_sel_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_re
 	    "Manufacturer ID %02Xh", 
 	    manufacturer_id);
   asprintf (&(sel_record->event_message), 
-	    "OEM Defined = " F_X64 "h", 
+	    "OEM Defined = %lXh", 
 	    oem_defined);
   
   sel_record->event_data2_message = NULL;

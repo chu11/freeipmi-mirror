@@ -75,9 +75,7 @@ Bala's TODO List:
 =================
   * lan based sensors, sel and bmc-info
   * bmc-config --auto-configure
-  * automatic channel probing
   * sensors will be simplified with Scheme
-  * Set assert tag
   * dual fiid for ipmi_kcs_lan_set_auth_type_enables
 
 Ian's TODO List:

@@ -250,7 +250,7 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
   sdr_repo_cache->cache_curr = sdr_repo_cache->cache_start + 
     fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs);
   
-  sdr_repo_cache->cache_curr_rec_id = 1;
+  sdr_repo_cache->cache_curr_rec_no = 1;
   
   return (0);
 }
@@ -284,7 +284,7 @@ ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 int 
-ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_id)
+ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_no)
 {
   int i;
   
@@ -294,37 +294,34 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_id)
       return -1;
     }
 
-  if (rec_id <= 0 || rec_id > sdr_repo_cache->total_records)
+  if (rec_no <= 0 || rec_no > sdr_repo_cache->total_records)
     {
       errno = ERANGE;
       return (-1);
     }
   
-  if (rec_id >= sdr_repo_cache->cache_curr_rec_id)
+  if (rec_no >= sdr_repo_cache->cache_curr_rec_no)
     {
-      /* Don't re-start at the beginning of the cache if it is
-       * unnecessary
-       */
-
-      for (i = 0; i < (rec_id - sdr_repo_cache->cache_curr_rec_id); i++)
+      /* skip (rec_no - sdr_repo_cache->cache_curr_rec_no) records */
+      for (i = 0; i < (rec_no - sdr_repo_cache->cache_curr_rec_no); i++)
         {
           sdr_repo_cache->cache_curr = (sdr_repo_cache->cache_curr + 
                                         sdr_repo_cache->cache_curr[4] + 
                                         fiid_obj_len_bytes (tmpl_sdr_sensor_record_header));
         }
-      sdr_repo_cache->cache_curr_rec_id += (rec_id - sdr_repo_cache->cache_curr_rec_id);
+      sdr_repo_cache->cache_curr_rec_no += (rec_no - sdr_repo_cache->cache_curr_rec_no);
     }
   else
     {
       sdr_repo_cache->cache_curr = sdr_repo_cache->cache_start + 
         fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs);
-      for (i = 1; i < rec_id; i++)
+      for (i = 1; i < rec_no; i++)
         {
           sdr_repo_cache->cache_curr = (sdr_repo_cache->cache_curr + 
                                         sdr_repo_cache->cache_curr[4] + 
                                         fiid_obj_len_bytes (tmpl_sdr_sensor_record_header));
         }
-      sdr_repo_cache->cache_curr_rec_id = i;
+      sdr_repo_cache->cache_curr_rec_no = i;
     }
   
   return (0);
@@ -352,7 +349,7 @@ ipmi_sdr_repo_cache_next (sdr_repo_cache_t *sdr_repo_cache)
     }
 
   return (ipmi_sdr_repo_cache_seek (sdr_repo_cache, 
-				    sdr_repo_cache->cache_curr_rec_id + 1));
+				    sdr_repo_cache->cache_curr_rec_no + 1));
 }
 
 int 

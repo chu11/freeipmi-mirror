@@ -132,18 +132,6 @@ fiid_template_t tmpl_get_sdr_rs =
     {0,  ""}
   };
 
-fiid_template_t tmpl_sdr_sensor_record_header = 
-  {
-    // Sensor record header
-    // --------------------
-    {16, "record_id"}, 
-    {4,  "sdr_version_major"}, 
-    {4,  "sdr_version_minor"}, 
-    {8,  "record_type"}, 
-    {8,  "record_length"}, 
-    {0, ""}
-  };
-
 int8_t 
 fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 {

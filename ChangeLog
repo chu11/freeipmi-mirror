@@ -1,3 +1,114 @@
+2005-01-18  A Balamurugan  <bala.a@californiadigital.com>
+
+	* ROADMAP: updated
+	
+	* TODO: updated
+	
+	* doc/examples/hello-sensors.c: modified
+	
+	* fish/extensions/Makefile.am: updated
+	
+	* fish/extensions/bc-lan-conf-auth-section.scm: updated
+	
+	* fish/extensions/bc-lan-conf-misc-section.scm: updated
+	
+	* fish/extensions/bc-lan-conf-section.scm: updated
+	
+	* fish/extensions/bc-lan-serial-channel-section.scm: updated
+	
+	* fish/extensions/bc-misc-section.scm: updated
+	
+	* fish/extensions/bc-serial-conf-section.scm: updated
+	
+	* fish/extensions/bc-user-section.scm: updated
+	
+	* fish/extensions/bmc-config.scm: moved bc2.scm to bmc-config.scm
+	
+	* fish/extensions/sdr.scm: new file
+	
+	* fish/extensions/sensors-alias.scm: new file
+	
+	* fish/extensions/sensors-common.scm: new files
+	
+	* fish/extensions/sensors-conf.scm: rewritten
+	
+	* fish/extensions/sensors-simple-display.scm: new file
+	
+	* fish/extensions/sensors-utils.scm: file is removed
+	
+	* fish/extensions/sensors-verbose-display.scm: new file
+	
+	* fish/extensions/sensors-very-verbose-display.scm: new file
+	
+	* fish/extensions/sensors.scm: rewritten
+	
+	* fish/scripts/sensors/sensors.in: rewritten
+	
+	* fish/src/Makefile.am: updated
+	
+	* fish/src/bmc-conf-checkout.[ch]: files are removed
+	
+	* fish/src/bmc-conf-commit.[ch]: files are removed
+	
+	* fish/src/bmc-conf-key-utils.[ch]: files are removed
+	
+	* fish/src/bmc-conf-utils.[ch]: files are removed
+	
+	* fish/src/extension.c: removed old bmc-config and sensors
+	procedures, and added new sensors procedures.
+	
+	* fish/src/fi-utils.[ch]: rewritten
+	get_global_extensions_directory(),
+	get_local_extensions_directory() and fi_load().
+		
+	* fish/src/fish.c: rewritten running_for_first_time()
+		
+	* fish/src/fish.h: added FI_SDR_CACHE_DIR and
+	FI_SDR_CACHE_FILENAME_PREFIX.
+	
+	* fish/src/ipmi-wrapper-sel.[ch]: files are removed
+	
+	* fish/src/ipmi-wrapper-sensor.[ch]: files are removed
+	
+	* fish/src/ipmi-wrapper.[ch]: added functions
+	get_ipmi_host_ip_address() and get_sdr_cache_filename().
+	
+	* fish/src/scm-procedures.[ch]: removed old bmc-config and sensors
+	functions, and added new sensors functions.
+	
+	* libfreeipmi/src/Makefile.am: updated
+	
+	* libfreeipmi/src/freeipmi.h: updated
+	
+	* libfreeipmi/src/ipmi-sdr-record-types.[ch]: renamed
+	tmpl_sdr_oem_sensor_record to tmpl_sdr_oem_record.  added new
+	template tmpl_sdr_sensor_record_header.
+	
+	* libfreeipmi/src/ipmi-sdr-repo-cache.[ch]: member
+	cache_curr_rec_id of sdr_repo_cache_t renamed to
+	cache_curr_rec_no.
+	
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.[ch]: removed fiid template
+	tmpl_sdr_sensor_record_header.
+	
+	* libfreeipmi/src/ipmi-sel-api.[ch]: new files
+	
+	* libfreeipmi/src/ipmi-sensor-api.[ch]: new files
+	
+	* libfreeipmi/src/ipmi-sensor-cmds.c: renamed fiid member
+	status_reading_availablity to
+	status_reading_availability. template
+	tmpl_get_sensor_discrete_reading_rs is rewritten.
+	
+	* libfreeipmi/src/ipmi-sensor-event-messages.[ch]: added new
+	functions get_01_generic_event_message(),
+	get_02_generic_event_message(), get_03_generic_event_message(),
+	get_04_generic_event_message(), get_05_generic_event_message(),
+	get_06_generic_event_message(), get_07_generic_event_message(),
+	get_08_generic_event_message(), get_09_generic_event_message(),
+	get_0A_generic_event_message(), get_0B_generic_event_message(),
+	get_0C_generic_event_message(), ipmi_get_generic_event_message()
+	
 2005-01-14  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Newly added. ACPI-Tables

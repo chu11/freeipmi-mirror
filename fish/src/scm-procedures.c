@@ -63,12 +63,6 @@ char *alloca ();
 #include "fi-utils.h"
 #include "interpreter.h"
 #include "ipmi-wrapper.h"
-#include "bmc-conf-checkout.h"
-#include "bmc-conf-commit.h"
-#include "bmc-conf-utils.h"
-#include "bmc-conf-key-utils.h"
-#include "ipmi-wrapper-sensor.h"
-#include "ipmi-wrapper-sel.h"
 #include "bmc-conf2.h"
 #include "scm-procedures.h"
 #include "xmalloc.h"
@@ -129,11 +123,17 @@ ex_hook_return (void)
   return (SCM_UNSPECIFIED);
 }
 
-SCM
+SCM 
 ex_load (SCM scm_filename)
 {
-  fi_load (gh_scm2newstr (scm_filename, NULL));
-  return (SCM_UNSPECIFIED);
+  char *filename = NULL;
+  int retval;
+  
+  filename = gh_scm2newstr (scm_filename, NULL);
+  retval = fi_load (filename);
+  free (filename);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM
@@ -276,287 +276,9 @@ ex_get_script_command_line ()
 }
 
 SCM 
-ex_bmc_config_checkout (SCM scm_filename)
-{
-  char *filename;
-  
-  filename = gh_scm2newstr (scm_filename, NULL);
-  
-  bmc_config_checkout (filename);
-  
-  return (SCM_UNSPECIFIED);
-}
-
-SCM 
-ex_bmc_config_commit (SCM scm_filename)
-{
-  char *filename;
-  
-  filename = gh_scm2newstr (scm_filename, NULL);
-  
-  bmc_config_commit (filename);
-  
-  free (filename);
-  
-  return (SCM_UNSPECIFIED);
-}
-
-SCM 
-ex_bmc_config_edit_key_pair (SCM scm_filename, SCM scm_key, SCM scm_value)
-{
-  char *filename = NULL;
-  char *key = NULL;
-  char *value = NULL;
-  int retval;
-  
-  filename = gh_scm2newstr (scm_filename, NULL);
-  key = gh_scm2newstr (scm_key, NULL);
-  value = gh_scm2newstr (scm_value, NULL);
-  
-  retval = edit_key_pair_bmc_config_file (filename, key, value);
-  
-  free (filename);
-  free (key);
-  free (value);
-  
-  return (gh_bool2scm (retval));
-}
-
-/* SCM  */
-/* ex_bmc_config_check_key_orig (SCM scm_filename, SCM scm_key) */
-/* { */
-/*   char *filename = NULL; */
-/*   char *key = NULL; */
-/*   int retval; */
-  
-/*   filename = gh_scm2newstr (scm_filename, NULL); */
-/*   key = gh_scm2newstr (scm_key, NULL); */
-  
-/*   retval = check_bmc_config_file_key (filename, key); */
-  
-/*   free (filename); */
-/*   free (key); */
-  
-/*   if (retval == 0) */
-/*     return SCM_BOOL_T; */
-/*   return SCM_BOOL_F; */
-/* } */
-
-SCM 
-ex_bmc_config_check_key (SCM scm_key)
-{
-  char *key = NULL;
-  int retval;
-  
-  key = gh_scm2newstr (scm_key, NULL);
-  retval = bmc_config_validate_key (key);  
-  free (key);
-  
-  if (retval)
-    return SCM_BOOL_T;
-  return SCM_BOOL_F;
-}
-
-SCM 
-ex_bmc_config_diff_key_pair (SCM scm_filename, SCM scm_key, SCM scm_value)
-{
-  char *filename = NULL;
-  char *key = NULL;
-  char *value = NULL;
-  int retval;
-  
-  filename = gh_scm2newstr (scm_filename, NULL);
-  key = gh_scm2newstr (scm_key, NULL);
-  value = gh_scm2newstr (scm_value, NULL);
-  
-  retval = bmc_config_diff_key_pair (filename, key, value);
-  
-  free (filename);
-  free (key);
-  free (value);
-  
-  return (gh_int2scm (retval));
-}
-
-SCM 
-ex_bmc_config_diff_file (SCM scm_bmc_filename, SCM scm_filename)
-{
-  char *bmc_filename = NULL;
-  char *filename = NULL;
-  int retval;
-  
-  bmc_filename = gh_scm2newstr (scm_bmc_filename, NULL);
-  filename = gh_scm2newstr (scm_filename, NULL);
-  
-  retval = bmc_config_diff_file (bmc_filename, filename);
-  
-  free (bmc_filename);
-  free (filename);
-  
-  return (gh_int2scm (retval));
-}
-
-SCM 
-ex_sensors_cache_create (SCM scm_cache_filename)
-{
-  char *cache_filename = NULL;
-  u_int8_t retval;
-  
-  cache_filename = gh_scm2newstr (scm_cache_filename, NULL);
-  
-  retval = ipmi_sdr_cache_create (cache_filename);
-  
-  free (cache_filename);
-  
-  if (retval)
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
 ex_get_default_sdr_repo_cache_filename (void)
 {
   return (gh_str02scm (FI_DEFAULT_SDR_REPO_CACHE_FILENAME));
-}
-
-SCM 
-ex_sensors_cache_load (SCM scm_cache_filename)
-{
-  char *filename;
-  struct stat stbuf;
-
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  filename = gh_scm2newstr (scm_cache_filename, NULL);
-  
-  if (stat (filename, &stbuf) == 0)
-    {
-      if (!S_ISREG (stbuf.st_mode))
-	{
-	  printf ("%d, %d\n", stbuf.st_mode, S_IFREG);
-	  fprintf (stderr, "%s: Not a regular file [%s].\n",
-		   program_invocation_short_name, filename);
-	  return (SCM_BOOL_F);
-	}
-    }
-  else
-    {
-      fprintf (stderr, "%s: stat failed on file [%s]; %s\n",
-	       program_invocation_short_name, filename, strerror (errno));
-      return (SCM_BOOL_F);
-    }
-  
-  if (ipmi_sdr_repo_cache_load (sdr_repo_cache, filename) == -1)
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
-ex_sensors_cache_unload ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (ipmi_sdr_repo_cache_unload (sdr_repo_cache))
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
-ex_sensors_cache_seek (SCM scm_rec_id)
-{
-  u_int16_t rec_id;
-  
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  rec_id = gh_scm2long (scm_rec_id);
-  
-  if (ipmi_sdr_repo_cache_seek (sdr_repo_cache, rec_id))
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
-ex_sensors_cache_first ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (ipmi_sdr_repo_cache_first (sdr_repo_cache))
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
-ex_sensors_cache_next ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (ipmi_sdr_repo_cache_next (sdr_repo_cache))
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
-}
-
-SCM 
-ex_sensors_cache_display ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (display_current_sensor (sdr_repo_cache))
-    return (SCM_BOOL_T);
-  
-  return (SCM_BOOL_F);
-}
-
-SCM 
-ex_sensors_cache_get_total_records ()
-{
-  int total_records;
-  
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  total_records = get_sdr_total_records (sdr_repo_cache);
-  
-  return (gh_long2scm (total_records));
-}
-
-SCM 
-ex_sensors_cache_verbose_display ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (display_verbose_current_sensor (sdr_repo_cache))
-    return (SCM_BOOL_T);
-  
-  return (SCM_BOOL_F);
-}
-
-SCM 
-ex_sensors_cache_very_verbose_display ()
-{
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  if (display_very_verbose_current_sensor (sdr_repo_cache))
-    return (SCM_BOOL_T);
-  
-  return (SCM_BOOL_F);
-}
-
-SCM 
-ex_sensors_cache_get_current_group ()
-{
-  const char *group_name;
-  
-  sdr_repo_cache_t *sdr_repo_cache = get_sdr_repo_cache ();
-  
-  group_name = ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache);
-  
-  if (group_name)
-    return (gh_str02scm (group_name));
-  return (gh_str02scm (""));
 }
 
 SCM 
@@ -1105,12 +827,6 @@ ex_sel_get_clear_status ()
 		"erasure_progress", 
 		&val);
   return (gh_long2scm (val));
-}
-
-SCM 
-ex_get_sensors_errno ()
-{
-  return (gh_long2scm (get_sensors_errno ()));
 }
 
 /***
@@ -2386,5 +2102,868 @@ ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
   free (password);
   
   return (retval ? SCM_BOOL_T : SCM_BOOL_F);
+}
+
+/*********** new sensor procedures ***************/
+SCM 
+get_scm_sdr_full_record (struct sdr_full_record *record, 
+			 SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_lower_non_recoverable_threshold"), 
+				    (record->readable_lower_non_recoverable_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_upper_non_recoverable_threshold"), 
+				    (record->readable_upper_non_recoverable_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_lower_critical_threshold"), 
+				    (record->readable_lower_critical_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_upper_critical_threshold"), 
+				    (record->readable_upper_critical_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_lower_non_critical_threshold"), 
+				    (record->readable_lower_non_critical_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("readable_upper_non_critical_threshold"), 
+				    (record->readable_upper_non_critical_threshold ? 
+				     SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("b"), 
+				    gh_long2scm (record->b));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("m"), 
+				    gh_long2scm (record->m));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("r_exponent"), 
+				    gh_long2scm (record->r_exponent));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("b_exponent"), 
+				    gh_long2scm (record->b_exponent));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("linear"), 
+				    gh_long2scm (record->linear));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("is_signed"), 
+				    (record->is_signed ? SCM_BOOL_T : SCM_BOOL_F));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("slave_system_software_id"), 
+				    gh_long2scm (record->slave_system_software_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_number"), 
+				    gh_long2scm (record->sensor_number));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_type"), 
+				    gh_long2scm (record->sensor_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("group_name"), 
+				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("event_reading_type"), 
+				    gh_long2scm (record->event_reading_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_unit"), 
+				    gh_long2scm (record->sensor_unit));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("unit_short_string"), 
+				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("unit_string"), 
+				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("nominal_reading"), 
+				    gh_double2scm (record->nominal_reading));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("normal_min"), 
+				    gh_double2scm (record->normal_min));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("normal_max"), 
+				    gh_double2scm (record->normal_max));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_min_reading"), 
+				    gh_double2scm (record->sensor_min_reading));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_max_reading"), 
+				    gh_double2scm (record->sensor_max_reading));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("negative_hysteresis"), 
+				    gh_long2scm (record->negative_hysteresis));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("positive_hysteresis"), 
+				    gh_long2scm (record->positive_hysteresis));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("lower_non_recoverable_threshold"), 
+				    gh_double2scm (record->lower_non_recoverable_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("upper_non_recoverable_threshold"), 
+				    gh_double2scm (record->upper_non_recoverable_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("lower_critical_threshold"), 
+				    gh_double2scm (record->lower_critical_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("upper_critical_threshold"), 
+				    gh_double2scm (record->upper_critical_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("lower_non_critical_threshold"), 
+				    gh_double2scm (record->lower_non_critical_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("upper_non_critical_threshold"), 
+				    gh_double2scm (record->upper_non_critical_threshold));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_name"), 
+				    gh_str02scm (record->sensor_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_compact_record (struct sdr_compact_record *record, 
+			    SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("slave_system_software_id"), 
+				    gh_long2scm (record->slave_system_software_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_number"), 
+				    gh_long2scm (record->sensor_number));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_type"), 
+				    gh_long2scm (record->sensor_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("group_name"), 
+				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("event_reading_type"), 
+				    gh_long2scm (record->event_reading_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_unit"), 
+				    gh_long2scm (record->sensor_unit));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("unit_short_string"), 
+				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("unit_string"), 
+				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("negative_hysteresis"), 
+				    gh_long2scm (record->negative_hysteresis));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("positive_hysteresis"), 
+				    gh_long2scm (record->positive_hysteresis));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_name"), 
+				    gh_str02scm (record->sensor_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_event_only_record (struct sdr_event_only_record *record, 
+			       SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("slave_system_software_id"), 
+				    gh_long2scm (record->slave_system_software_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_number"), 
+				    gh_long2scm (record->sensor_number));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_type"), 
+				    gh_long2scm (record->sensor_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("group_name"), 
+				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("event_reading_type"), 
+				    gh_long2scm (record->event_reading_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("sensor_name"), 
+				    gh_str02scm (record->sensor_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_entity_association_record (struct sdr_entity_association_record *record, 
+				       SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("container_entity_id"), 
+				    gh_long2scm (record->container_entity_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("container_entity_instance"), 
+				    gh_long2scm (record->container_entity_instance));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_generic_device_locator_record (struct sdr_generic_device_locator_record *record, 
+					   SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("direct_access_address"), 
+				    gh_long2scm (record->direct_access_address));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("channel_number"), 
+				    gh_long2scm (record->channel_number));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_slave_address"), 
+				    gh_long2scm (record->device_slave_address));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("private_bus_id"), 
+				    gh_long2scm (record->private_bus_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("lun_master_write_read_command"), 
+				    gh_long2scm (record->lun_master_write_read_command));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("address_span"), 
+				    gh_long2scm (record->address_span));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_type"), 
+				    gh_long2scm (record->device_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_type_modifier"), 
+				    gh_long2scm (record->device_type_modifier));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("entity_id"), 
+				    gh_long2scm (record->entity_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("entity_instance"), 
+				    gh_long2scm (record->entity_instance));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_name"), 
+				    gh_str02scm (record->device_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_logical_fru_device_locator_record (struct sdr_logical_fru_device_locator_record *record, 
+					       SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_type"), 
+				    gh_long2scm (record->device_type));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_type_modifier"), 
+				    gh_long2scm (record->device_type_modifier));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("fru_entity_id"), 
+				    gh_long2scm (record->fru_entity_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("fru_entity_instance"), 
+				    gh_long2scm (record->fru_entity_instance));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_name"), 
+				    gh_str02scm (record->device_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_management_controller_device_locator_record (struct sdr_management_controller_device_locator_record *record, 
+							 SCM scm_sdr_record)
+{
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("entity_id"), 
+				    gh_long2scm (record->entity_id));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("entity_instance"), 
+				    gh_long2scm (record->entity_instance));
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("device_name"), 
+				    gh_str02scm (record->device_name));
+  
+  return scm_sdr_record;
+}
+
+SCM 
+get_scm_sdr_oem_record (struct sdr_oem_record *record, 
+			SCM scm_sdr_record)
+{
+  char *oem_data = NULL;
+  char *tmp_oem_data = NULL;
+  int i;
+  
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("manufacturer_id"), 
+				    gh_long2scm (record->manufacturer_id));
+  
+  for (i = 0; i < record->oem_data_length; i++)
+    {
+      tmp_oem_data = oem_data;
+      if (oem_data)
+	{
+	  oem_data = NULL;
+	  asprintf (&oem_data, "%s %02X", tmp_oem_data, record->oem_data[i]);
+	  free (tmp_oem_data);
+	}
+      else
+	asprintf (&oem_data, "%02X", record->oem_data[i]);
+    }
+  
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("oem_data"), 
+				    gh_str02scm (oem_data));
+  
+  free (oem_data);
+  
+  return scm_sdr_record;
+}
+
+SCM 
+ex_get_sdr_record (SCM scm_record_id)
+{
+  struct sdr_record sdr_record;
+  SCM scm_sdr_record = SCM_EOL;
+  u_int16_t record_id = 0;
+  u_int16_t next_record_id = 0;
+  
+  record_id = gh_scm2long (scm_record_id);
+  
+  memset (&sdr_record, 0, sizeof (struct sdr_record));
+  
+  if (get_sdr_record (record_id, &next_record_id, &sdr_record))
+    return SCM_BOOL_F;
+  
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("record_id"), 
+				    gh_long2scm (sdr_record.record_id));
+  
+  scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
+				    gh_str02scm ("record_type"), 
+				    gh_long2scm (sdr_record.record_type));
+  
+  switch (sdr_record.record_type)
+    {
+    case IPMI_SDR_FORMAT_FULL_RECORD:
+      scm_sdr_record = get_scm_sdr_full_record (&(sdr_record.record.sdr_full_record), 
+						scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_COMPACT_RECORD:
+      scm_sdr_record = get_scm_sdr_compact_record (&(sdr_record.record.sdr_compact_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+      scm_sdr_record = get_scm_sdr_event_only_record (&(sdr_record.record.sdr_event_only_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD:
+      scm_sdr_record = get_scm_sdr_entity_association_record (&(sdr_record.record.sdr_entity_association_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD:
+      scm_sdr_record = get_scm_sdr_generic_device_locator_record (&(sdr_record.record.sdr_generic_device_locator_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD:
+      scm_sdr_record = get_scm_sdr_logical_fru_device_locator_record (&(sdr_record.record.sdr_logical_fru_device_locator_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD:
+      scm_sdr_record = get_scm_sdr_management_controller_device_locator_record (&(sdr_record.record.sdr_management_controller_device_locator_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_OEM_RECORD:
+      scm_sdr_record = get_scm_sdr_oem_record (&(sdr_record.record.sdr_oem_record), scm_sdr_record);
+      break;
+    case IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD:
+    case IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
+    default:
+      {
+	fprintf (stderr, 
+		 "%s: record_type = %02Xh and record_id = %d not handled.  "
+		 "Please report to freeipmi-devel@gnu.org\n", 
+		 __PRETTY_FUNCTION__, sdr_record.record_type, sdr_record.record_id);
+      }
+    }
+  
+  scm_sdr_record = gh_list (gh_long2scm (next_record_id), 
+			    scm_sdr_record, 
+			    SCM_UNDEFINED);
+  
+  return scm_sdr_record;
+}
+
+void 
+scm2sdr_full_record (SCM scm_sdr_record, struct sdr_full_record *record)
+{
+  SCM scm_value;
+  char *sensor_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("b"));
+  record->b = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("m"));
+  record->m = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("r_exponent"));
+  record->r_exponent = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("b_exponent"));
+  record->b_exponent = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("linear"));
+  record->linear = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("is_signed"));
+  record->is_signed = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  record->slave_system_software_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  record->sensor_number = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  record->sensor_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  record->event_reading_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
+  record->sensor_unit = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("nominal_reading"));
+  record->nominal_reading = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_min"));
+  record->normal_min = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_max"));
+  record->normal_max = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_min_reading"));
+  record->sensor_min_reading = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_max_reading"));
+  record->sensor_max_reading = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
+  record->negative_hysteresis = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
+  record->positive_hysteresis = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_non_recoverable_threshold"));
+  record->lower_non_recoverable_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_non_recoverable_threshold"));
+  record->upper_non_recoverable_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_critical_threshold"));
+  record->lower_critical_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_critical_threshold"));
+  record->upper_critical_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_non_critical_threshold"));
+  record->lower_non_critical_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_non_critical_threshold"));
+  record->upper_non_critical_threshold = gh_scm2double (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->sensor_name, sensor_name_ptr, 16);
+  free (sensor_name_ptr);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_critical_threshold"));
+  record->readable_lower_critical_threshold = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_critical_threshold"));
+  record->readable_upper_critical_threshold = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_critical_threshold"));
+  record->readable_lower_non_critical_threshold = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_critical_threshold"));
+  record->readable_upper_non_critical_threshold = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_recoverable_threshold"));
+  record->readable_lower_non_recoverable_threshold = gh_scm2bool (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_recoverable_threshold"));
+  record->readable_upper_non_recoverable_threshold = gh_scm2bool (scm_value);
+  
+  return;
+}
+
+void 
+scm2sdr_compact_record (SCM scm_sdr_record, struct sdr_compact_record *record)
+{
+  SCM scm_value;
+  char *sensor_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  record->slave_system_software_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  record->sensor_number = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  record->sensor_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  record->event_reading_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
+  record->sensor_unit = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
+  record->negative_hysteresis = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
+  record->positive_hysteresis = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->sensor_name, sensor_name_ptr, 16);
+  free (sensor_name_ptr);
+  
+  return;
+}
+
+void 
+scm2sdr_event_only_record (SCM scm_sdr_record, struct sdr_event_only_record *record)
+{
+  SCM scm_value;
+  char *sensor_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  record->slave_system_software_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  record->sensor_number = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  record->sensor_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  record->event_reading_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->sensor_name, sensor_name_ptr, 16);
+  free (sensor_name_ptr);
+  
+  return;
+}
+
+void 
+scm2sdr_entity_association_record (SCM scm_sdr_record, struct sdr_entity_association_record *record)
+{
+  SCM scm_value;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("container_entity_id"));
+  record->container_entity_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("container_entity_instance"));
+  record->container_entity_instance = gh_scm2long (scm_value);
+  
+  return;
+}
+
+void 
+scm2sdr_generic_device_locator_record (SCM scm_sdr_record, struct sdr_generic_device_locator_record *record)
+{
+  SCM scm_value;
+  char *device_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("direct_access_address"));
+  record->direct_access_address = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("channel_number"));
+  record->channel_number = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_slave_address"));
+  record->device_slave_address = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("private_bus_id"));
+  record->private_bus_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lun_master_write_read_command"));
+  record->lun_master_write_read_command = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("address_span"));
+  record->address_span = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type"));
+  record->device_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type_modifier"));
+  record->device_type_modifier = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_id"));
+  record->entity_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_instance"));
+  record->entity_instance = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  device_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->device_name, device_name_ptr, 16);
+  free (device_name_ptr);
+  
+  return;
+}
+
+void 
+scm2sdr_logical_fru_device_locator_record (SCM scm_sdr_record, struct sdr_logical_fru_device_locator_record *record)
+{
+  SCM scm_value;
+  char *device_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type"));
+  record->device_type = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type_modifier"));
+  record->device_type_modifier = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("fru_entity_id"));
+  record->fru_entity_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("fru_entity_instance"));
+  record->fru_entity_instance = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  device_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->device_name, device_name_ptr, 16);
+  free (device_name_ptr);
+  
+  return;
+}
+
+void 
+scm2sdr_management_controller_device_locator_record (SCM scm_sdr_record, struct sdr_management_controller_device_locator_record *record)
+{
+  SCM scm_value;
+  char *device_name_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_id"));
+  record->entity_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_instance"));
+  record->entity_instance = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  device_name_ptr = gh_scm2newstr (scm_value, NULL);
+  strncpy (record->device_name, device_name_ptr, 16);
+  free (device_name_ptr);
+  
+  return;
+}
+
+void 
+scm2sdr_oem_record (SCM scm_sdr_record, struct sdr_oem_record *record)
+{
+  SCM scm_value;
+  SCM scm_oem_data_list;
+  int i;
+  char *oem_data_ptr = NULL;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("manufacturer_id"));
+  record->manufacturer_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("oem_data"));
+  scm_oem_data_list = scm_string_split (scm_value, gh_char2scm (' '));
+  
+  scm_value = scm_length (scm_oem_data_list);
+  record->oem_data_length = gh_scm2long (scm_value);
+  
+  for (i = 0; i < record->oem_data_length; i++)
+    {
+      scm_value = scm_list_ref (scm_oem_data_list, gh_long2scm (i));
+      oem_data_ptr = gh_scm2newstr (scm_value, NULL);
+      record->oem_data[i] = strtol (oem_data_ptr, NULL, 16);
+      free (oem_data_ptr);
+    }
+  
+  return;
+}
+
+int 
+scm2sdr_record (SCM scm_sdr_record, struct sdr_record *sdr_record)
+{
+  SCM scm_value;
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("record_id"));
+  sdr_record->record_id = gh_scm2long (scm_value);
+  
+  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("record_type"));
+  sdr_record->record_type = gh_scm2long (scm_value);
+  
+  switch (sdr_record->record_type)
+    {
+    case IPMI_SDR_FORMAT_FULL_RECORD:
+      scm2sdr_full_record (scm_sdr_record, &(sdr_record->record.sdr_full_record));
+      break;
+    case IPMI_SDR_FORMAT_COMPACT_RECORD:
+      scm2sdr_compact_record (scm_sdr_record, &(sdr_record->record.sdr_compact_record));
+      break;
+    case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
+      scm2sdr_event_only_record (scm_sdr_record, &(sdr_record->record.sdr_event_only_record));
+      break;
+    case IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD:
+      scm2sdr_entity_association_record (scm_sdr_record, &(sdr_record->record.sdr_entity_association_record));
+      break;
+    case IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD:
+      scm2sdr_generic_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_generic_device_locator_record));
+      break;
+    case IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD:
+      scm2sdr_logical_fru_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_logical_fru_device_locator_record));
+      break;
+    case IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD:
+      scm2sdr_management_controller_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_management_controller_device_locator_record));
+      break;
+    case IPMI_SDR_FORMAT_OEM_RECORD:
+      scm2sdr_oem_record (scm_sdr_record, &(sdr_record->record.sdr_oem_record));
+      break;
+    case IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD:
+    case IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
+    default:
+      {
+	fprintf (stderr, 
+		 "%s: record_type = %02Xh and record_id = %d not handled.  "
+		 "Please report to freeipmi-devel@gnu.org\n", 
+		 __PRETTY_FUNCTION__, sdr_record->record_type, sdr_record->record_id);
+	return -1;
+      }
+    }
+  
+  return 0;
+}
+
+SCM 
+ex_get_sensor_reading (SCM scm_sdr_record)
+{
+  struct sensor_reading sensor_reading;
+  struct sdr_record sdr_record;
+  SCM scm_sensor_reading = SCM_EOL;
+  
+  scm2sdr_record (scm_sdr_record, &sdr_record);
+  
+  memset (&sensor_reading, 0, sizeof (struct sensor_reading));
+  if (get_sensor_reading (&sdr_record, &sensor_reading) != 0)
+    return SCM_BOOL_F;
+  
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("current_reading"), 
+					gh_double2scm (sensor_reading.current_reading));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("reading_availability_flag"), 
+					(sensor_reading.reading_availability_flag ? 
+					 SCM_BOOL_F : SCM_BOOL_T));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("sensor_scanning_flag"), 
+					(sensor_reading.sensor_scanning_flag ? 
+					 SCM_BOOL_T : SCM_BOOL_F));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("event_messages_flag"), 
+					(sensor_reading.event_messages_flag ? 
+					 SCM_BOOL_T : SCM_BOOL_F));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("short_event_message"), 
+					gh_str02scm (sensor_reading.short_event_message));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("event_message"), 
+					gh_str02scm (sensor_reading.event_message));
+  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
+					gh_str02scm ("status"), 
+					(sensor_reading.status ? 
+					 SCM_BOOL_T : SCM_BOOL_F));
+  
+  if (sensor_reading.short_event_message)
+    free (sensor_reading.short_event_message);
+  if (sensor_reading.event_message)
+    free (sensor_reading.event_message);
+  
+  return scm_sensor_reading;
+}
+
+SCM 
+ex_get_sdr_cache_filename ()
+{
+  return gh_str02scm (get_sdr_cache_filename ());
+}
+
+SCM 
+ex_get_sdr_repo_info ()
+{
+  SCM scm_repo_info_list = SCM_EOL;
+  
+  u_int8_t *data_rs = NULL;
+  
+  char version_string[17];
+  u_int8_t sdr_major_version;
+  u_int8_t sdr_minor_version;
+  
+  u_int64_t val;
+  
+  /* get_repo_info */
+  data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
+  if (ipmi_kcs_get_repo_info (data_rs) != 0)
+    return SCM_EOL;
+  
+  fiid_obj_get (data_rs, 
+		tmpl_get_sdr_repo_info_rs, 
+		"comp_code", 
+		&val);
+  if (val != 0)
+    return SCM_EOL;
+  
+  /* appending sdr version */
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"sdr_version_major",
+		&val);
+  sdr_major_version = val;
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"sdr_version_minor",
+		&val);
+  sdr_minor_version = val;
+  snprintf (version_string, 17, 
+	    "%d.%d", 
+	    sdr_major_version, sdr_minor_version);
+  scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
+					gh_str02scm ("sdr_version"), 
+					gh_str02scm (version_string));
+  
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"record_count",
+		&val);
+  scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
+					gh_str02scm ("record_count"), 
+					gh_long2scm (val));
+  
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"free_space",
+		&val);
+  scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
+					gh_str02scm ("free_space"), 
+					gh_long2scm (val));
+  
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"recent_addition_timestamp",
+		&val);
+  scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
+					gh_str02scm ("recent_addition_timestamp"), 
+					gh_ulong2scm (val));
+  
+  fiid_obj_get (data_rs,
+		tmpl_get_sdr_repo_info_rs,
+		"recent_erase_timestamp",
+		&val);
+  scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
+					gh_str02scm ("recent_erase_timestamp"), 
+					gh_ulong2scm (val));
+  
+  return (scm_repo_info_list);
 }
 

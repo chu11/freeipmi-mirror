@@ -43,4 +43,7 @@ int8_t get_lan_channel_number ();
 int8_t get_serial_channel_number ();
 int display_channel_info ();
 
+char *get_ipmi_host_ip_address ();
+char *get_sdr_cache_filename ();
+
 #endif

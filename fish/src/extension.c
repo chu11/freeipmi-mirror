@@ -1,5 +1,5 @@
 /* 
-   extension.c: freehoo extensions to guile
+   extension.c: fish extensions to guile
    
    This program is free software; you can redistribute it and/or
    modify it under the terms of the GNU General Public License as
@@ -181,95 +181,10 @@ install_new_procedures (void)
      (display (fi-command-line))
   */
   
-  gh_new_procedure ("fi-bmc-config-checkout", ex_bmc_config_checkout, 1, 0, 0);
-  /* example scheme expression
-     (fi-bmc-config-checkout "bmc-config.dat")
-  */
-  
-  gh_new_procedure ("fi-bmc-config-commit", ex_bmc_config_commit, 1, 0, 0);
-  /* example scheme expression
-     (fi-bmc-config-commit "bmc-config.dat")
-  */
-  
-  gh_new_procedure ("fi-bmc-config-edit-key-pair", ex_bmc_config_edit_key_pair, 3, 0, 0);
-  /* example scheme expression
-     (display (fi-bmc-config-edit-key-pair "bmc-config.dat", "gratuitous_arp_interval", "8"))
-  */
-  
-  gh_new_procedure ("fi-bmc-config-check-key", ex_bmc_config_check_key, 1, 0, 0);
-  /* example scheme expression
-     (display (fi-bmc-config-check-key "gratuitous_arp_interval"))
-  */
-  
-  gh_new_procedure ("fi-bmc-config-diff-key-pair", ex_bmc_config_diff_key_pair, 3, 0, 0);
-  /* example scheme expression
-     (display (fi-bmc-config-diff-key-pair "bmc-config.dat", "gratuitous_arp_interval", "8"))
-  */
-  
-  gh_new_procedure ("fi-bmc-config-diff-file", ex_bmc_config_diff_file, 2, 0, 0);
-  /* example scheme expression
-     (display (fi-bmc-config-diff-file "bmc-config.dat", "new-bmc-config.dat"))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-create", ex_sensors_cache_create, 1, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-create "/tmp/sdr-repo.cache"))
-  */
-  
   gh_new_procedure ("fi-sensors-get-default-cache-filename", 
 		    ex_get_default_sdr_repo_cache_filename, 0, 0, 0);
   /* example scheme expression
      (display (fi-sensors-get-default-cache-filename))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-load", ex_sensors_cache_load, 1, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-load "/tmp/sdr-repo.cache"))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-unload", ex_sensors_cache_unload, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-unload))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-seek", ex_sensors_cache_seek, 1, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-seek))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-first", ex_sensors_cache_first, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-first))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-next", ex_sensors_cache_next, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-next))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-display", ex_sensors_cache_display, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-display))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-get-total-records", ex_sensors_cache_get_total_records, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-get-total-records))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-verbose-display", ex_sensors_cache_verbose_display, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-verbose-display))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-very-verbose-display", ex_sensors_cache_very_verbose_display, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-very-verbose-display))
-  */
-  
-  gh_new_procedure ("fi-sensors-cache-get-current-group", ex_sensors_cache_get_current_group, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-cache-get-current-group))
   */
   
   gh_new_procedure ("fi-sensors-get-group-list", ex_sensors_get_group_list, 0, 0, 0);
@@ -334,13 +249,6 @@ install_new_procedures (void)
   /* example scheme expression
      (display (fi-sel-get-clear-status))
   */
-  
-  gh_new_procedure ("fi-get-sensors-errno", 
-		    ex_get_sensors_errno, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-get-sensors-errno))
-  */
-
   
   /***
    *** bmc-conf2 extension functions
@@ -628,6 +536,26 @@ install_new_procedures (void)
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
   /* 
      syntax in scheme: (fi-check-bmc-user-password USERID PASSWORD)
+  */
+  
+  gh_new_procedure ("fi-get-sdr-record", ex_get_sdr_record, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sdr-record)
+  */
+  
+  gh_new_procedure ("fi-get-sensor-reading", ex_get_sensor_reading, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sensor-reading)
+  */
+  
+  gh_new_procedure ("fi-get-sdr-cache-filename", ex_get_sdr_cache_filename, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sdr-cache-filename)
+  */
+  
+  gh_new_procedure ("fi-get-sdr-repo-info", ex_get_sdr_repo_info, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sdr-repo-info)
   */
 }
 

@@ -33,6 +33,18 @@
 #include "freeipmi.h"
 //#include "ipmi-sdr-record-types.h"
 
+fiid_template_t tmpl_sdr_sensor_record_header = 
+  {
+    // Sensor record header
+    // --------------------
+    {16, "record_id"}, 
+    {4,  "sdr_version_major"}, 
+    {4,  "sdr_version_minor"}, 
+    {8,  "record_type"}, 
+    {8,  "record_length"}, 
+    {0, ""}
+  };
+
 fiid_template_t tmpl_sdr_full_sensor_record = 
   {
     // Sensor record header
@@ -400,7 +412,7 @@ fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record =
     // ID String type/Length code
     {8, "id_string_type_length_code"}, 
     // ID String bytes
-    {128, "sensor_id_string"}, 
+    {128, "device_id_string"}, 
     {0, ""}
   };
 
@@ -489,11 +501,11 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_sensor_record =
     // ID String type/Length code
     {8, "id_string_type_length_code"}, 
     // ID String bytes
-    {128, "sensor_id_string"}, 
+    {128, "device_id_string"}, 
     {0, ""}
   };
 
-fiid_template_t tmpl_sdr_oem_sensor_record = 
+fiid_template_t tmpl_sdr_oem_record = 
   {
     // Sensor record header
     // --------------------

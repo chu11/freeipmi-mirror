@@ -40,6 +40,8 @@
 #define FI_DEFAULT_RETRY_COUNT      1
 
 #define FI_DEFAULT_SDR_REPO_CACHE_FILENAME    IPMI_DEFAULT_SDR_REPO_CACHE_FILENAME
+#define FI_SDR_CACHE_DIR                "sdr-cache"
+#define FI_SDR_CACHE_FILENAME_PREFIX    "sdr-cache"
 
 int fi_get_verbose ();
 void fi_set_verbose (int verbose);

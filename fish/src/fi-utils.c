@@ -246,64 +246,79 @@ get_config_filename (void)
 char *
 get_global_extensions_directory (void)
 {
-  char *global_extensions_directory;
-  int length = strlen (FI_GLOBAL_EXTENSIONS_DIRECTORY) + 2;
-
-  global_extensions_directory = (char *) calloc (length, sizeof (char));
-  sprintf (global_extensions_directory, "%s/",
-	   FI_GLOBAL_EXTENSIONS_DIRECTORY);
-
+  char *global_extensions_directory = NULL;
+  
+  asprintf (&global_extensions_directory, "%s",
+	    FI_GLOBAL_EXTENSIONS_DIRECTORY);
+  
   return global_extensions_directory;
 }
 
 char *
 get_local_extensions_directory (void)
 {
-  char *local_extensions_directory;
-  int length = strlen (get_home_directory ()) +
-    strlen (FI_LOCAL_EXTENSIONS_DIRECTORY) + 2;
-
-  local_extensions_directory = (char *) calloc (length, sizeof (char));
-  sprintf (local_extensions_directory, "%s/%s/", get_home_directory (),
-	   FI_LOCAL_EXTENSIONS_DIRECTORY);
-
+  char *local_extensions_directory = NULL;
+  
+  asprintf (&local_extensions_directory, 
+	    "%s/%s", 
+	    get_home_directory (),
+	    FI_LOCAL_EXTENSIONS_DIRECTORY);
+  
   return local_extensions_directory;
 }
 
-void
+int 
 fi_load (char *filename)
 {
-  char *extension_filepath;
   struct stat buf;
-  int length;
-
-  if (stat (filename, &buf) == 0)
+  
+  char *ext_filename = NULL;
+  char *ext_directory = NULL;
+  
+  ext_filename = strdup (filename);
+  if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (filename);
-      return;
+      gh_eval_file_with_standard_handler (ext_filename);
+      if (ext_filename)
+	free (ext_filename);
+      return 0;
     }
-
-  length = strlen (get_local_extensions_directory ()) + strlen (filename) + 1;
-  extension_filepath = (char *) calloc (length, sizeof (char));
-  sprintf (extension_filepath, "%s%s", get_local_extensions_directory (),
-	   filename);
-  if (stat (extension_filepath, &buf) == 0)
+  if (ext_filename)
+    free (ext_filename);
+  
+  ext_directory = get_local_extensions_directory ();
+  asprintf (&ext_filename, "%s/%s", ext_directory, filename);
+  if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (extension_filepath);
-      return;
+      gh_eval_file_with_standard_handler (ext_filename);
+      if (ext_directory)
+	free (ext_directory);
+      if (ext_filename)
+	free (ext_filename);
+      return 0;
     }
-  free (extension_filepath);
-
-  length =
-    strlen (get_global_extensions_directory ()) + strlen (filename) + 1;
-  extension_filepath = (char *) calloc (length, sizeof (char));
-  sprintf (extension_filepath, "%s%s", get_global_extensions_directory (),
-	   filename);
-  if (stat (extension_filepath, &buf) == 0)
+  if (ext_directory)
+    free (ext_directory);
+  if (ext_filename)
+    free (ext_filename);
+  
+  ext_directory = get_global_extensions_directory ();
+  asprintf (&ext_filename, "%s/%s", ext_directory, filename);
+  if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (extension_filepath);
-      return;
+      gh_eval_file_with_standard_handler (ext_filename);
+      if (ext_directory)
+	free (ext_directory);
+      if (ext_filename)
+	free (ext_filename);
+      return 0;
     }
+  if (ext_directory)
+    free (ext_directory);
+  if (ext_filename)
+    free (ext_filename);
+  
+  return (-1);
 }
 
 int

@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.12 2005-01-14 10:32:26 ab Exp $ 
+   $Id: fish.c,v 1.13 2005-01-18 21:49:01 balamurugan Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -438,49 +438,72 @@ main (int argc, char **argv)
 void
 running_for_first_time (void)
 {
-  struct stat *config_file_stat = NULL;
-  int config_file_fd;
-  char *config_directory = get_config_directory ();
-  char *config_filename = get_config_filename ();
+  int retval;
+  int error_no;
   
-  if (mkdir (config_directory, FI_CONFIG_DIRECTORY_MODE) != 0)
+  struct stat config_file_stat;
+  int config_file_fd;
+  char *config_directory = NULL;
+  char *config_filename = NULL;
+  char *sdr_cache_dir = NULL;
+  
+  config_directory = get_config_directory ();
+  retval = mkdir (config_directory, FI_CONFIG_DIRECTORY_MODE);
+  error_no = errno;
+  if (!(retval == 0 || error_no == EEXIST))
     {
-      // mkdir  succeeded
-      // means config dir is there already
-      return;
+      fprintf (stderr, "%s: mkdir(\"%s\"): %s\n", 
+	       program_invocation_short_name, config_directory, strerror (error_no));
+      exit (EXIT_FAILURE);
     }
-  else
+  if (retval == 0)
     {
       printf ("\nRunning fish for first time!!\n");
       printf ("[%s] created\n", config_directory);
     }
+  free (config_directory);
   
-  // see if config file is there
-  if (stat (config_filename, config_file_stat) != 0)
+  asprintf (&sdr_cache_dir, 
+	    "%s/%s/%s", 
+	    get_home_directory (), 
+	    FI_CONFIG_DIRECTORY, 
+	    FI_SDR_CACHE_DIR);
+  retval = mkdir (sdr_cache_dir, FI_CONFIG_DIRECTORY_MODE);
+  error_no = errno;
+  if (!(retval == 0 || error_no == EEXIST))
     {
-      // config file missing, so touch it
-      config_file_fd = open (config_filename, O_CREAT);
+      fprintf (stderr, "%s: mkdir(\"%s\"): %s\n", 
+	       program_invocation_short_name, sdr_cache_dir, strerror (error_no));
+      exit (EXIT_FAILURE);
+    }
+  if (retval == 0)
+    {
+      printf ("[%s] created\n", sdr_cache_dir);
+    }
+  free (sdr_cache_dir);
+  
+  config_filename = get_config_filename ();
+  if (stat (config_filename, &config_file_stat) != 0)
+    {
+      config_file_fd = open (config_filename, O_WRONLY | O_CREAT, FI_CONFIG_FILE_MODE);
+      error_no = errno;
       if (config_file_fd == -1)
 	{
-	  perror ("open[config_file]");
-	  exit (EXIT_FAILURE);
-	}
-      if (fchmod (config_file_fd, FI_CONFIG_DIRECTORY_MODE) != 0)
-	{
-	  perror ("fchmod[" FI_CONFIG_FILE "]");
+	  fprintf (stderr, "%s: open(\"%s\"): %s\n", 
+		   program_invocation_short_name, config_filename, strerror (error_no));
 	  exit (EXIT_FAILURE);
 	}
       close (config_file_fd);
       printf ("[%s] created\n\n", config_filename);
     }
+  free (config_filename);
   
   // this is required for delayed, higher level setup procedures
   // that needs to be executed after guile initialization
   // of after sign-in.
   set_setup_mode (1);
-
-  free (config_directory);
-  free (config_filename);
+  
+  return;
 }
 
 int
