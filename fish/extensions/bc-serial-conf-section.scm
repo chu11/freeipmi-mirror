@@ -65,52 +65,61 @@
      get-boolean 
      commit-enable-basic-mode 
      checkout-enable-basic-mode 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("enable_ppp_mode" 
      valid-boolean? 
      get-boolean 
      commit-enable-ppp-mode 
      checkout-enable-ppp-mode 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("enable_terminal_mode" 
      valid-boolean? 
      get-boolean 
      commit-enable-terminal-mode 
      checkout-enable-terminal-mode 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("connect_mode" 
      valid-connect-mode? 
      get-connect-mode 
      commit-connect-mode 
      checkout-connect-mode 
-     get-connect-mode-value-string)
+     get-connect-mode-value-string 
+     "Possible Values: Modem_Connect/Direct_Connect")
     ("page_blackout_interval" 
      valid-integer? 
      get-integer 
      commit-page-blackout-interval 
      checkout-page-blackout-interval 
-     simple->string)
+     simple->string
+     "Give valid number")
     ("call_retry_time" 
      valid-integer? 
      get-integer 
      commit-call-retry-time 
      checkout-call-retry-time 
-     simple->string)
+     simple->string
+     "Give valid number")
     ("enable_dtr_hangup" 
      valid-boolean? 
      get-boolean 
      commit-enable-dtr-hangup 
      checkout-enable-dtr-hangup 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("flow_control" 
      valid-flow-control? 
      get-flow-control 
      commit-flow-control 
      checkout-flow-control 
-     get-flow-control-value-string)
+     get-flow-control-value-string
+     "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF")
     ("bit_rate" 
      valid-bit-rate? 
      get-bit-rate 
      commit-bit-rate 
      checkout-bit-rate 
-     get-bit-rate-value-string)))
+     get-bit-rate-value-string
+     "Possible values: 9600/19200/38400/57600/115200")))

@@ -151,6 +151,13 @@
 	  (primitive-eval (cadr (cddddr (car key-def))))
 	  (get-value-convertor-proc key (cdr key-def)))))
 
+(define (get-doc-string key key-def)
+  (if (null? key-def)
+      #f
+      (if (string-ci=? (string-downcase key) (caar key-def))
+	  (caddr (cddddr (car key-def)))
+	  (get-doc-string key (cdr key-def)))))
+
 (define (get-string str)
   str)
 

@@ -24,17 +24,20 @@
      get-boolean 
      commit-enable-gratuitous-arps 
      checkout-enable-gratuitous-arps 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("enable_arp_response" 
      valid-boolean? 
      get-boolean 
      commit-enable-arp-response 
      checkout-enable-arp-response 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("gratuitous_arp_interval" 
      valid-integer? 
      get-integer 
      commit-gratuitous-arp-interval 
      checkout-gratuitous-arp-interval 
-     simple->string)
+     simple->string
+     "Give valid number")
 ))

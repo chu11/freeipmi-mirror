@@ -1,3 +1,16 @@
+2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-common.scm: added new primitive procedure
+	(get-doc-string)
+	* fish/extensions/bc-lan-conf-auth-section.scm: added doc string
+	* fish/extensions/bc-lan-conf-misc-section.scm: like wise
+	* fish/extensions/bc-lan-conf-section.scm: like wise
+	* fish/extensions/bc-lan-serial-channel-section.scm: like wise
+	* fish/extensions/bc-misc-section.scm: like wise 
+	* fish/extensions/bc-section.scm: like wise
+	* fish/extensions/bc-serial-conf-section.scm: like wise
+	* fish/extensions/bc-user-section.scm: like wise
+
 2004-08-20  Anand Babu  <ab@gnu.org.in>
 
 	* CVS tagged as release-0_1_0_alpha6-tag

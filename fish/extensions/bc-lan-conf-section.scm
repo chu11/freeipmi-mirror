@@ -52,48 +52,56 @@
      get-ip-address-source 
      commit-ip-address-source 
      checkout-ip-address-source 
-     get-ip-address-source-value-string)
+     get-ip-address-source-value-string
+     "Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others")
     ("ip_address" 
      valid-ip-address? 
      get-string 
      commit-ip-address 
      checkout-ip-address 
-     get-string)
+     get-string
+     "Give valid IP Address")
     ("mac_address" 
      valid-mac-address? 
      get-string 
      commit-mac-address 
      checkout-mac-address 
-     get-string)
+     get-string
+     "Give valid MAC Address")
     ("subnet_mask" 
      valid-ip-address? 
      get-string 
      commit-subnet-mask 
      checkout-subnet-mask 
-     get-string)
+     get-string
+     "Give valid Subnet mask")
     ("default_gateway_ip_address" 
      valid-ip-address? 
      get-string 
      commit-default-gateway-ip-address 
      checkout-default-gateway-ip-address 
-     get-string)
+     get-string
+     "Give valid IP Address")
     ("default_gateway_mac_address" 
      valid-mac-address? 
      get-string 
      commit-default-gateway-mac-address 
      checkout-default-gateway-mac-address 
-     get-string)
+     get-string
+     "Give valid MAC Address")
     ("backup_gateway_ip_address" 
      valid-ip-address? 
      get-string 
      commit-backup-gateway-ip-address 
      checkout-backup-gateway-ip-address 
-     get-string)
+     get-string
+     "Give valid IP Address")
     ("backup_gateway_mac_address" 
      valid-mac-address? 
      get-string 
      commit-backup-gateway-mac-address 
      checkout-backup-gateway-mac-address 
-     get-string)
+     get-string
+     "Give valid MAC Address")
 ))
 

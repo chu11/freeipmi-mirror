@@ -187,7 +187,10 @@
 	    (display (string-append "Error in checkout of key <" 
 				    key 
 				    ">\n") (current-error-port))
-	    (display (string-append "\t" 
+	    (display (string-append "\t## " 
+				    (get-doc-string key key-desc-list)
+				    "\n"
+				    "\t" 
 				    (format #f "~45a" 
 					    (string-capitalize key)) 
 				    value 

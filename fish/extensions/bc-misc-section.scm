@@ -10,5 +10,6 @@
      get-power-restore-policy 
      commit-power-restore-policy 
      checkout-power-restore-policy 
-     get-power-restore-policy-value-string)
+     get-power-restore-policy-value-string
+     "Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply")
     ))

@@ -179,151 +179,176 @@
      get-boolean 
      commit-callback-enable-auth-type-none 
      checkout-callback-enable-auth-type-none 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("callback_enable_auth_type_md2" 
      valid-boolean? 
      get-boolean 
      commit-callback-enable-auth-type-md2 
      checkout-callback-enable-auth-type-md2 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("callback_enable_auth_type_md5" 
      valid-boolean? 
      get-boolean 
      commit-callback-enable-auth-type-md5 
      checkout-callback-enable-auth-type-md5 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("callback_enable_auth_type_straight_password" 
      valid-boolean? 
      get-boolean 
      commit-callback-enable-auth-type-straight-password 
      checkout-callback-enable-auth-type-straight-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("callback_enable_auth_type_oem_proprietary" 
      valid-boolean? 
      get-boolean 
      commit-callback-enable-auth-type-oem-proprietary 
      checkout-callback-enable-auth-type-oem-proprietary 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("user_enable_auth_type_none" 
      valid-boolean? 
      get-boolean 
      commit-user-enable-auth-type-none 
      checkout-user-enable-auth-type-none 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("user_enable_auth_type_md2" 
      valid-boolean? 
      get-boolean 
      commit-user-enable-auth-type-md2 
      checkout-user-enable-auth-type-md2 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("user_enable_auth_type_md5" 
      valid-boolean? 
      get-boolean 
      commit-user-enable-auth-type-md5 
      checkout-user-enable-auth-type-md5 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("user_enable_auth_type_straight_password" 
      valid-boolean? 
      get-boolean 
      commit-user-enable-auth-type-straight-password 
      checkout-user-enable-auth-type-straight-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("user_enable_auth_type_oem_proprietary" 
      valid-boolean? 
      get-boolean 
      commit-user-enable-auth-type-oem-proprietary 
      checkout-user-enable-auth-type-oem-proprietary 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("operator_enable_auth_type_none" 
      valid-boolean? 
      get-boolean 
      commit-operator-enable-auth-type-none 
      checkout-operator-enable-auth-type-none 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("operator_enable_auth_type_md2" 
      valid-boolean? 
      get-boolean 
      commit-operator-enable-auth-type-md2 
      checkout-operator-enable-auth-type-md2 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("operator_enable_auth_type_md5" 
      valid-boolean? 
      get-boolean 
      commit-operator-enable-auth-type-md5 
      checkout-operator-enable-auth-type-md5 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("operator_enable_auth_type_straight_password" 
      valid-boolean? 
      get-boolean 
      commit-operator-enable-auth-type-straight-password 
      checkout-operator-enable-auth-type-straight-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("operator_enable_auth_type_oem_proprietary" 
      valid-boolean? 
      get-boolean 
      commit-operator-enable-auth-type-oem-proprietary 
      checkout-operator-enable-auth-type-oem-proprietary 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("admin_enable_auth_type_none" 
      valid-boolean? 
      get-boolean 
      commit-admin-enable-auth-type-none 
      checkout-admin-enable-auth-type-none 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("admin_enable_auth_type_md2" 
      valid-boolean? 
      get-boolean 
      commit-admin-enable-auth-type-md2 
      checkout-admin-enable-auth-type-md2 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("admin_enable_auth_type_md5" 
      valid-boolean? 
      get-boolean 
      commit-admin-enable-auth-type-md5 
      checkout-admin-enable-auth-type-md5 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("admin_enable_auth_type_straight_password" 
      valid-boolean? 
      get-boolean 
      commit-admin-enable-auth-type-straight-password 
      checkout-admin-enable-auth-type-straight-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("admin_enable_auth_type_oem_proprietary" 
      valid-boolean? 
      get-boolean 
      commit-admin-enable-auth-type-oem-proprietary 
      checkout-admin-enable-auth-type-oem-proprietary 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("oem_enable_auth_type_none" 
      valid-boolean? 
      get-boolean 
      commit-oem-enable-auth-type-none 
      checkout-oem-enable-auth-type-none 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("oem_enable_auth_type_md2" 
      valid-boolean? 
      get-boolean 
      commit-oem-enable-auth-type-md2 
      checkout-oem-enable-auth-type-md2 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("oem_enable_auth_type_md5" 
      valid-boolean? 
      get-boolean 
      commit-oem-enable-auth-type-md5 
      checkout-oem-enable-auth-type-md5 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("oem_enable_auth_type_straight_password" 
      valid-boolean? 
      get-boolean 
      commit-oem-enable-auth-type-straight-password 
      checkout-oem-enable-auth-type-straight-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("oem_enable_auth_type_oem_proprietary" 
      valid-boolean? 
      get-boolean 
      commit-oem-enable-auth-type-oem-proprietary 
      checkout-oem-enable-auth-type-oem-proprietary 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ;; You can add more by
     ;; (KEY-STRING  VALUE-VALIDATOR-PROC  VALUE-CONVERTOR-PROC  VALUE-COMMIT-PROC)
 ))

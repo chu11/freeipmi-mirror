@@ -265,85 +265,99 @@
      get-string 
      commit-username 
      checkout-username 
-     get-string)
+     get-string
+     "Give username")
     ("enable_user" 
      valid-boolean? 
      get-boolean 
      commit-enable-user 
      checkout-enable-user 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("clear_password" 
      valid-boolean? 
      get-boolean 
      commit-clear-password 
      checkout-clear-password 
-     get-boolean-string)
+     get-boolean-string
+     "Possible values: Yes/No")
     ("password" 
      valid-username-password? 
      get-string 
      commit-password 
      checkout-password 
-     get-string)
+     get-string
+     "Give password")
     ("lan_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 
      commit-lan-enable-ipmi-msgs 
      checkout-lan-enable-ipmi-msgs 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("lan_enable_link_auth" 
      valid-boolean? 
      get-boolean 
      commit-lan-enable-link-auth 
      checkout-lan-enable-link-auth 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("lan_enable_restrict_to_callback" 
      valid-boolean? 
      get-boolean 
      commit-lan-enable-restrict-to-callback 
      checkout-lan-enable-restrict-to-callback 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("lan_privilege_limit" 
      valid-privilege-limit? 
      get-privilege-limit 
      commit-lan-privilege-limit 
      checkout-lan-privilege-limit 
-     get-privilege-limit-value-string)
+     get-privilege-limit-value-string 
+     "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ("lan_session_limit" 
      valid-integer? 
      get-integer 
      commit-lan-session-limit 
      checkout-lan-session-limit 
-     simple->string)
+     simple->string 
+     "Give valid number")
     ("serial_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 
      commit-serial-enable-ipmi-msgs 
      checkout-serial-enable-ipmi-msgs 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("serial_enable_link_auth" 
      valid-boolean? 
      get-boolean 
      commit-serial-enable-link-auth 
      checkout-serial-enable-link-auth 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("serial_enable_restrict_to_callback" 
      valid-boolean? 
      get-boolean 
      commit-serial-enable-restrict-to-callback 
      checkout-serial-enable-restrict-to-callback 
-     get-boolean-string)
+     get-boolean-string 
+     "Possible values: Yes/No")
     ("serial_privilege_limit" 
      valid-privilege-limit? 
      get-privilege-limit 
      commit-serial-privilege-limit 
      checkout-serial-privilege-limit 
-     get-privilege-limit-value-string)
+     get-privilege-limit-value-string
+     "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access")
     ("serial_session_limit" 
      valid-integer? 
      get-integer 
      commit-serial-session-limit 
      checkout-serial-session-limit 
-     simple->string)
+     simple->string 
+     "Give valid number")
     ;; You can add more in the form of 
     ;; (KEYSTRING VALIDATION-PROC CONVERTION-PROC BMC-COMMIT-PROC)
     ))
