@@ -7,6 +7,17 @@
 	"install-sh -d". "mkinstalldir" script is obsolete and
 	non-portable.
 
+	* fish/scripts/sel/ipmi-sel.in: Renamed "sel.in" to "ipmi-sel.in".
+
+	* fish/scripts/sensors/ipmi-sensors.in: Renamed "sensors.in" to
+	"ipmi-sensors.in".
+
+	* Makefile.am: Updated for sel and sensors name change.
+	
+	* fish/scripts/sel/Makefile.am: Like wise.
+
+	* fish/scripts/sensors/Makefile.am: Like wise.
+	
 2005-02-23  Anand Babu  <ab@gnu.org.in>
 
 	* CVS: New branch Release-0_1_3-branch with root tag Release-0_1_3.
