@@ -417,6 +417,8 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
   int ret;
 
   ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
+  if (ret == -1 && errno == EAGAIN)
+    return -1;
   ERR ((!(ret == -1 && errno != EAGAIN)));
 
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Entered Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
