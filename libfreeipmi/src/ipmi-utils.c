@@ -82,11 +82,13 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
   
   if (IPMI_COMP_CODE (obj_cmd) != IPMI_COMMAND_SUCCESS)
     {
+#if defined (IPMI_SYSLOG)
       char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN]; 
       ipmi_strerror_cmd_r (obj_cmd, _str, IPMI_ERR_STR_MAX_LEN);
       sprintf (errstr, "cmd[%d].comp_code[%d]: %s", obj_cmd[0],
 	       IPMI_COMP_CODE (obj_cmd), _str);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
+#endif /* IPMI_SYSLOG */
       return (0);
     }
   return (1); 

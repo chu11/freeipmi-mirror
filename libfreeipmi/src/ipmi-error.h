@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include <syslog.h>
+#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -180,91 +181,62 @@ do {                                                                    \
 } while (0)
 #endif
 
+#if defined (IPMI_SYSLOG)
+#define __IPMI_SYSLOG                                                   \
+      char errstr[IPMI_ERR_STR_MAX_LEN];                                \
+      snprintf (errstr, IPMI_ERR_STR_MAX_LEN,                           \
+               "%s: %d: %s: errno (%d): expression failed", __FILE__,   \
+               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
+      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
+#else
+#define __IPMI_SYSLOG
+#endif /* IPMI_SYSLOG */
+
+#if defined (IPMI_TRACE)
+#define __IPMI_TRACE                                                    \
+      fprintf (stderr,                                                  \
+               "%s: %d: %s: errno (%d): expression failed\n", __FILE__, \
+               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
+      fflush (stderr);                                                  
+#else
+#define __IPMI_TRACE
+#endif /* IPMI_TRACE */
 
 #if defined (FREEIPMI_LIBRARY)
 #   if defined (ERR)
 #      undef ERR
 #   endif
-#   if defined (IPMI_TRACE)
-#      define ERR(expr)                                                 \
+#   define ERR(expr)                                                    \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       extern int errno;                                                 \
       int save_errno = errno;                                           \
-      char errstr[IPMI_ERR_STR_MAX_LEN];                                \
-      snprintf (errstr, IPMI_ERR_STR_MAX_LEN,                           \
-               "%s: %d: %s: errno (%d): expression failed", __FILE__,   \
-               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
-      fprintf (stderr,                                                  \
-               "%s: %d: %s: errno (%d): expression failed\n", __FILE__, \
-               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
-      fflush (stderr);                                                  \
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);     \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
       errno = save_errno;                                               \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
-#   else
-#      define ERR(expr)                                                 \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      extern int errno;                                                 \
-      int save_errno = errno;                                           \
-      char errstr[IPMI_ERR_STR_MAX_LEN];                                \
-      snprintf (errstr, IPMI_ERR_STR_MAX_LEN,                           \
-               "%s: %d: %s: errno (%d): expression failed", __FILE__,   \
-               __LINE__, __PRETTY_FUNCTION__, errno);                   \
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);     \
-      errno = save_errno;                                               \
-      return (-1);                                                      \
-    }                                                                   \
-} while (0)
-#   endif
-#endif
+#endif /* FREEIPMI_LIBRARY */
 
 #if defined (FREEIPMI_LIBRARY)
 #   if defined (ERR_EXIT)
 #      undef ERR_EXIT
 #   endif
-#   if defined (IPMI_TRACE)
-#      define ERR_EXIT(expr)                                            \
+#   define ERR_EXIT(expr)                                               \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
       extern int errno;                                                 \
       int save_errno = errno;                                           \
-      char errstr[IPMI_ERR_STR_MAX_LEN];                                \
-      snprintf (errstr, IPMI_ERR_STR_MAX_LEN,                           \
-               "%s: %d: %s: %d: expression failed", __FILE__,           \
-               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
-      fprintf (stderr, "%s: %d: %s: %d: expression failed\n", __FILE__, \
-               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
-      fflush (stderr);                                                  \
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);     \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
       errno = save_errno;                                               \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
-#   else
-#      define ERR_EXIT(expr)                                            \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      extern int errno;                                                 \
-      int save_errno = errno;                                           \
-      char errstr[IPMI_ERR_STR_MAX_LEN];                                \
-      snprintf (errstr, IPMI_ERR_STR_MAX_LEN,                           \
-               "%s: %d: %s: %d: expression failed", __FILE__,           \
-               __LINE__, __PRETTY_FUNCTION__, save_errno);              \
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);     \
-      errno = save_errno;                                               \
-      exit(1);                                                          \
-    }                                                                   \
-} while (0)
-#   endif
-#endif
+#endif /* FREEIPMI_LIBRARY */
 
 int8_t ipmi_strerror_r(u_int8_t cmd, u_int8_t comp_code, u_int8_t *buf, size_t len);
 int8_t ipmi_strerror_cmd_r(fiid_obj_t obj_cmd, u_int8_t *buf, size_t len);
