@@ -1,3 +1,8 @@
+2004-08-24  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c
+	(ipmi_kcs_get_sensor_thresholds): Fix typo.
+
 2004-08-23  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_bmclog): Fix typo.
