@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sha1.c,v 1.1 2005-02-05 01:22:48 chu11 Exp $
+ *  $Id: ipmi-sha1.c,v 1.2 2005-02-13 14:45:22 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,7 +112,6 @@ _f(unsigned int t, int32_t B, int32_t C, int32_t D)
 static int32_t
 _K(unsigned int t)
 {
-  
   if (t >= 0 && t <= 19)
     return 0x5A827999;
   else if (t >= 20 && t <= 39)

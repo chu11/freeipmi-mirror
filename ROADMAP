@@ -11,7 +11,7 @@ Roadmap to 1.0.0
      Session sequencing.
    SMBus/SSIF Driver. (0.2.0)
    BT Driver.
-   SOL daemon (sold) for IPMI-2.0 (and Tyan Prop IPMI-1.5).
+   SOL daemon (sold) for IPMI-2.0.
    Hackers Guide.
    Test utility.
 

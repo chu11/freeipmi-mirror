@@ -1,3 +1,20 @@
+2005-02-13  Anand Babu  <ab@gnu.org.in>
+
+	* ipmi-ssif-interface.[c,h]: Newly added. SSIF driver.
+
+	* ROADMAP: dropped Tyan IPMI-1.5 proprietary SOL plan. IPMI-2.0
+	will soon become a standard as most vendors including Tyan are
+	getting ready with IPMI-2.0 release.
+
+	* /libfreeipmi/src/ipmi-locate.h: ipmi_locate_info structrue now
+	includes i2c device name pointer.
+
+	* /libfreeipmi/src/ipmi-hmac.c: Initialized h_info to NULL to
+	avoid compiler warning.
+
+	* THANKS: Added Amitoj Singh <amitoj@fnal.gov> and Don Holmgren
+	<djholm@fnal.gov> for their help with SSIF driver.
+
 2005-02-07  A Balamurugan <bala.a@californiadigital.com>
 
 	* ROADMAP: updated

@@ -1,7 +1,7 @@
 /* 
    ipmi-locate.h - Locate IPMI interfaces by any means necessary.
 
-   Copyright (C) 2004 FreeIPMI Core Team
+   Copyright (C) 2004,05 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@ struct ipmi_locate_info
   u_int8_t ipmi_ver_major;
   u_int8_t ipmi_ver_minor;
   u_int8_t interface_type; /* KCS, SMIC, BT, SSIF */
+  char *bmc_i2c_dev_name;
   u_int8_t addr_space_id;  /* Memory mapped, IO mapped, SMBus*/
   union {
     u_int64_t bmc_iobase_addr;

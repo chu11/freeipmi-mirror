@@ -34,6 +34,8 @@
 #endif
 
 #include <errno.h>
+#include <linux/types.h>
+
 #include "freeipmi.h"
 
 #if defined(__FreeBSD__)

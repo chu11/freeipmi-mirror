@@ -8,15 +8,17 @@ generally assist in the GNU FreeIPMI maintainership process:
 
     -- [sorted alphabetically] --
 
+Amitoj Singh <amitoj@fnal.gov>: ipmitool.c SSIF interface
 Brian Rice <brian.rice@intel.com>: Support
 Dmitry Frolov <frolov@riss-telecom.ru>:  FreeBSD Port
+Don Holmgren <djholm@fnal.gov>: SSIF driver info
 Douglas Bone <douglas.bone@californiadigital.com>: Support and Guidance
+James Zhou <jamesz@tyan.com>: Tyan S2881/2 IPMI compliance, Feedbacks
 Joseph Ruscio <jruscio@californiadigital.com>: QA
 Mridul Jain <mridul.jain@californiadigital.com>: Support and Promotion
 Raphael Deng <RaphaelD@tyan.com>: Tyan S2881/2 IPMI compliance, Feedbacks
 Rick Moen <rick.moen@californiadigital.com>: Support
 Robin Goldstone <robing@llnl.gov>: Support and Guidance
-James Zhou <jamesz@tyan.com>: Tyan S2881/2 IPMI compliance, Feedbacks
 
 And special thanks to California Digital and LLNL for contributing
 developers and resources to this project. 

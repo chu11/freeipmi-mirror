@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-hmac.c,v 1.1 2005-02-05 01:22:48 chu11 Exp $
+ *  $Id: ipmi-hmac.c,v 1.2 2005-02-13 14:45:22 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,7 +83,7 @@ ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned 
   u_int8_t *opad = NULL;
   u_int8_t *hashed_key = NULL;
   int i, save_errno;
-  ipmi_hmac_h_info_t *h_info;
+  ipmi_hmac_h_info_t *h_info = NULL;
 
   if (!ctx || !IPMI_HMAC_TYPE_VALID(type))
     {

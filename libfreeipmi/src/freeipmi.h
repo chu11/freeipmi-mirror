@@ -63,12 +63,13 @@ extern "C" {
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
 #include "ipmi-sessions.h"
-#include "ipmi-msg-support-cmds.h"
 #include "ipmi-semaphores.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
+#include "ipmi-ssif-interface.h"
+#include "ipmi-msg-support-cmds.h"
 #include "ipmi-chassis-cmds.h"
 #include "ipmi-dev-global-cmds.h"
 #include "ipmi-sdr-repo-cmds.h"
@@ -172,6 +173,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
+#include <freeipmi/ipmi-ssif-interface.h>
 #include <freeipmi/ipmi-msg-support-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-dev-global-cmds.h>
