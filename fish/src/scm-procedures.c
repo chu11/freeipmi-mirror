@@ -683,7 +683,7 @@ ex_kcs_get_poll_count ()
 SCM 
 ex_sel_display_first_entry ()
 {
-  u_int8_t record_data[16];
+  u_int8_t record_data[SEL_RECORD_SIZE];
   
   if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
     {
@@ -699,7 +699,7 @@ ex_sel_display_first_entry ()
 SCM 
 ex_sel_display_next_entry ()
 {
-  u_int8_t record_data[16];
+  u_int8_t record_data[SEL_RECORD_SIZE];
   
   if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) != 0)
     {
@@ -712,10 +712,15 @@ ex_sel_display_next_entry ()
   return SCM_BOOL_F;
 }
 
+SCM
+ex_sel_dump_first_entry (SCM dump_file_name)
+{
+}
+
 SCM 
 ex_sel_get_first_entry ()
 {
-  u_int8_t record_data[16];
+  u_int8_t record_data[SEL_RECORD_SIZE];
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
@@ -752,7 +757,7 @@ ex_sel_get_first_entry ()
 SCM 
 ex_sel_get_next_entry ()
 {
-  u_int8_t record_data[16];
+  u_int8_t record_data[SEL_RECORD_SIZE];
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   

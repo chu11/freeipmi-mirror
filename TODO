@@ -79,6 +79,10 @@ Bala's TODO List:
 =================
 */* 2004-02-16 15:25 bala: dual fiid for ipmi_kcs_lan_set_auth_type_enables
 
+Ian's TODO List:
+================
+Convert fish to the (now preferred) scm_ interface completely.
+
 Later on:
 =========
 

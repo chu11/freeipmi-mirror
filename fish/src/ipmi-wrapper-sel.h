@@ -1,6 +1,8 @@
 #ifndef _IPMI_WRAPPER_SEL_H
 #define _IPMI_WRAPPER_SEL_H
 
+#define SEL_RECORD_SIZE 16
+
 struct sel_record
 {
   u_int16_t record_id;
