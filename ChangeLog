@@ -1,3 +1,43 @@
+2004-12-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_get_channel_number):
+	New function.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(_search_for_medium_channel_number): New function.
+
+	* fish/src/ipmi-wrapper.c (get_lan_channel_number,
+	get_serial_channel_number): Use new ipmi_get_channel_number
+	function.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_lan_channel_number):
+	Removed function.
+
+	* bmc-wathcodg/src/bmc-watchdog.c (_suspend_bmc_arps_cmd): Use
+	new ipmi_get_channel_number function.
+	
+	* libfreeipmi/src/ipmi-dev-global-cmds.h,
+	libfreeipmi/src/ipmi-dev-global-cmds.c (ipmi_kcs_get_dev_id):
+	Remove pointless obj_hdr_rs parameter.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.h,
+	libfreeipmi/src/ipmi-dev-global-cmds.c (fill_cmd_get_dev_id,
+	ipmi_kcs_get_dev_id): Clean up parameter types and parameter names
+	to be consistent with much of the rest of libfreeipmi.
+
+	* fish/src/scm-procedures.c (ex_kcs_get_dev_id_display): Fix for
+	interface change.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Added
+	IPMI_CHANNEL_NUMBER_VALID macro.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c: Added appropriate channel
+	number checks in fill functions with channel_number parameters.
+	Check for errors in many functions that call fill functions.
+	
 2004-12-17  Albert Chu <chu11@llnl.gov>
 
 	Added additional autodetection due to privilege level errors.
