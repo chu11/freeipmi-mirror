@@ -15,6 +15,3 @@ DEFINITSCRIPT_DATA = $(DEFINITSCRIPT)
 
 install-data-hook:
 	chmod 755 $(DEFINITSCRIPTdir)/$(DEFINITSCRIPT)
-
-uninstall-extra:
-	$(DEFINITSCRIPTdir)

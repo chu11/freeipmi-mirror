@@ -1,3 +1,17 @@
+2004-05-13  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/Makefile.am: Remove uninstall-extra.
+
+	* autogen.sh: Change --foreign strictness to --gnu since we are
+	now a gnu project.
+
+	* COPYING, INSTALL, freeipmi.spec.in: New Files.
+
+	* Makefile.am: Add COPYING and INSTALL to dist and install. Add
+	freeipmi.spec.in to dist.
+
+	* configure.ac: Generate freeipmi.spec.
+
 2004-05-13  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/Makefile.am (IPCDIR), doc/examples/Makefile.am
