@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#define IPMI_DEFAULT_SDR_REPO_CACHE_FILENAME    "/var/lib/libfreeipmi/sdr-repo-cache"
+#define IPMI_DEFAULT_SDR_REPO_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repo-cache"
 
 typedef struct sdr_repo_cache
 {
