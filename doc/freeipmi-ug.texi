@@ -1,0 +1,4261 @@
+\input texinfo @c -*-texinfo-*-
+@c This file uses the @command command introduced in Texinfo 4.0.
+@c %**start of header
+@setfilename freeipmi-ug.info
+@settitle The GNU FreeIPMI User's Guide
+@finalout
+@c %**end of header
+
+@include version.texi
+
+@dircategory Platform Management
+@direntry
+* FreeIPMI UG: (freeipmi-ug).  GNU FreeIPMI User's Guide 
+@end direntry
+
+@ifinfo
+Copyright @copyright{} 2002-2004 FreeIPMI Core Team.
+
+@include permissions.texi
+@end ifinfo
+
+@titlepage
+@title GNU FreeIPMI User's Guide
+@subtitle Free Intelligent Platform Management System
+@subtitle Version @value{VERSION} updated on @today{}
+@author by Anand Babu @email{ab@@gnu.org.in}
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2004 FreeIPMI Core Team
+
+@include permissions.texi
+@end titlepage
+
+@node Top, Introduction, (dir), (dir)
+@ifinfo
+User's Guide for @strong{GNU FreeIPMI} platform management system.
+
+This edition of the documentation was last updated on @today{} for
+release @value{VERSION} of the GNU FreeIPMI.
+@end ifinfo
+
+@c Output the table of contents at the beginning.
+@shortcontents
+@contents
+
+@c All the menus can be updated with the EMACS command
+@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
+@menu
+* Introduction::                Introduction to the GNU FreeIPMI system.
+* Installation::                Installing the software.
+* libfreeipmi::                 High-level C library for @acronym{IPMI}
+* fish::                        FreeIPMI SHell.
+* bmc-config::                  Baseboard Management Controller configurator.
+* bmc-info::                    Baseboard Management Controller information.
+* sensors::                     @acronym{IPMI} sensors utility.
+* sel::                         System Event Log utility.
+* bmc-watchdog::                Watchdog daemon.
+* ipmipower::                   @acronym{IPMI} power control utility.
+* ipmiping::                    @acronym{IPMI} ping reachability test utility.
+* rmcpping::                    RMCP ping reachability test utility.
+* Trouble-shooting::            Trouble-shooting tips.
+* Contact us::                  Contact Information.
+* Authors::                     FreeIPMI core team members.
+* Copying::                     GNU FreeIPMI is a Free Software.
+* Glossary::                    Conventions and terminologies. 
+* Concept Index::               Index of concepts.
+* Program Index::               Index of programs.
+@end menu
+
+@node Introduction, Installation, Top, Top
+@chapter Introduction to the GNU FreeIPMI system
+@cindex Introduction to the GNU FreeIPMI system
+
+GNU FreeIPMI is a Free Intelligent Platform Management System Software.
+It provides ``Remote-Console'' (out-of-band), ``System Management
+Software'' (in-band) and a development library confirming to
+Intelligent  Platform Management Interface (@acronym{IPMI} v1.5) standards. 
+
+GNU FreeIPMI User's Guide concentrates installation, usage,
+troubleshooting and bug reporting.  It corresponds to @value{VERSION}
+release. 
+
+@menu
+* Intended Audience::           Who should read this guide?.
+* About IPMI::                  Platform Management Standard.
+@end menu
+
+@node Intended Audience, About IPMI, Introduction, Introduction
+@section Who should read this guide?
+If you want to use the @emph{Intelligent Platform Management Interface}
+functionalities available on modern motherboards running GNU or any
+POSIX compliant operating systems, this guide is right for you.
+
+@c The internals of GNU FreeIPMI system including how to hack,
+@c extend or porting to new platforms are documented in a separate manual
+@c called @inforef{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@.
+
+@node About IPMI,  , Intended Audience, Introduction
+@section @acronym{IPMI} - Platform Management Standard
+
+The @acronym{IPMI} specifications define standardized, abstracted interfaces to
+the platform management subsystem.  @acronym{IPMI} includes the definition of
+interfaces for extending platform management between board within the
+main chassis, and between multiple chassis.
+
+The term platform management is used to refer to the monitoring and
+control functions that are built in to the platform hardware and
+primarily used for the purpose of monitoring the health of the system
+hardware.  This typically includes monitoring elements such as system
+temperatures, voltages, fans, power supplies, bus errors, system
+physical security, etc.  It includes automatic and manually driven
+recovery capabilities such as local or remote system resets and power
+on/off operations.  It includes the logging of abnormal or out-of-range
+conditions for later examination and alerting where the platform
+issues the alert without aid of run-time software.  Lastly it includes
+inventory information that can help identify a failed hardware unit.
+
+@node Installation, libfreeipmi, Introduction, Top
+@chapter Installing GNU FreeIPMI
+You can obtain copies of source, binary, documentation and other
+useful information from the
+@uref{http://www.gnu.org/software/freeipmi, GNU FreeIPMI Home Page}@.
+
+@menu
+* Dependencies::                Dependent run-time and libraries.
+* Build::                       Compile and install from the source.
+* Test Fire::                   Test fire your installation.
+@end menu
+
+@node Dependencies, Build, Installation, Installation
+@section Dependencies
+GNU FreeIPMI is designed to have minimum dependencies on other
+libraries and tools.  FreeIPMI Shell alone depends on GNU Guile and GNU
+Readline for the convenience of extension, scripting and GNU Bash like
+user interface.  libfreeipmi library has virtually no dependencies at
+all.  
+
+List of dependencies under Debian GNU/Linux:
+@itemize @bullet
+@item GNU Guile    - guile-1.6, guile-1.6-dev
+@item GNU Readline - libreadline4, libreadline4-dev
+@end itemize
+
+@cindex Guile
+@cindex Readline
+
+List of dependencies under Fedora or RedHat GNU/Linux:
+@itemize @bullet
+@item GNU Guile    - guile-1.6.x, guile-devel-1.6.x.
+@item GNU Readline - readline-4.x, readline-devel-4.x
+@end itemize
+
+@node Build, Test Fire, Dependencies, Installation
+@section Building the source package.
+
+To compile the program, you must first run the @command{configure}
+script included with the source tar ball.  It works just like any other
+standard GNU @command{autoconf} created script.  See the more generic
+configure related installation instructions below.
+
+For complete list of options, try @command{configure --help}@.
+
+Note: Please run @command{./autogen.sh} script before
+@command{./configure}, if you are compiling FreeIPMI source from CVS.
+
+@cindex ./configure
+
+@example
+ # ./configure --prefix=/usr
+ # make
+ # make install
+@end example
+
+
+@node Test Fire,  , Build, Installation
+@section Test Fire
+GNU FreeIPMI works both in-band (with-in the system) and out-of-band
+(over the network).  Easiest way to test if your system has @acronym{IPMI}
+support or if the installation is OK is through @command{bmc-info}
+command.
+
+Test if @acronym{IPMI} works:
+@example
+debian-ia64:~# bmc-info 
+Device ID:         20
+Device Revision:   1
+                   [SDR Support]
+Firmware Revision: 0.27
+                   [Device Available (normal operation)]
+IPMI Version:      1.5
+Additional Device Support:
+                   [Sensor Device]
+                   [SDR Repository Device]
+                   [SEL Device]
+                   [FRU Inventory Device]
+                   [IPMB Event Receiver]
+                   [Chassis Device]
+Manufacturer ID:   157h
+Product ID:        100h
+Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
+debian-ia64:~# 
+@end example
+
+If you don't get the expected response from @command{bmc-info} command,
+please refer to @ref{Trouble-shooting}@.
+
+@node libfreeipmi, fish, Installation, Top
+@chapter @acronym{IPMI} C library (libfreeipmi)
+@pindex libfreeipmi
+
+The Core of GNU FreeIPMI system consists of LAN, KCS, SMIC system
+interface device drivers, all packaged in a single portable C
+library.  Management applications can access the BMC at various levels 
+using higher level @acronym{IPMI} command APIs or raw read/write interface to
+the driver. 
+
+Library internally uses SM BIOS and PCI drivers to locate the system
+interfaces. 
+
+You should note that all the device drivers are completely written in
+user-space.  If you already have any in-kernel @acronym{IPMI} drivers loaded,
+unload them before you launch any GNU FreeIPMI utility.  Otherwise
+there are no other prerequisites.
+
+@c If you want to develop your own remote-console or
+@c system-management-software or integrate @acronym{IPMI} functionality into your
+@c software using C language interface, then you should refer to
+@c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@. 
+
+@node fish, bmc-config, libfreeipmi, Top
+@chapter @acronym{FISH} FreeIPMI SHell
+@cindex fish
+@cindex FreeIPMI SHell
+@pindex fish
+
+Fish provides shell, extension/plug-in and scripting interface.  As a
+shell, User has access to both in-band and out-of-band access to the
+host BMC through a rich set of @acronym{IPMI} commands.
+
+Experienced System Administrators can quickly add features or
+limitlessly customize the system using the extension interface in
+Scheme language.  For example, Pushing System Event Log data to a MySQL
+server, Triggering alarm upon Platform Chassis Intrusion, Generating
+email for critical platform events like processor temperature above
+threshold limit or fan failure or memory errors@enddots{}  In fact, most of
+the functionalities and commands of this shell are themselves
+implemented through Fish extensions. 
+
+@c GNU FreeIPMI User's Guide only gives a overview of @command{fish}@.  To
+@c master @command{fish} scripting and extension, please refer to  
+@c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@.
+
+@menu
+* fish options::                Command-line arguments to fish.
+* fish configuration file::     Sample configuration file.
+* Invoking fish::               Different ways to invoke fish.
+@end menu
+
+@node fish options, fish configuration file, fish, fish
+@section Command-line arguments to fish
+@cindex fish options
+
+@itemize @bullet
+@item ---brief @*
+      Shorten output.
+
+@item -q, ---quiet, ---silent @*
+      Inhibit usual output.
+
+@item ---driver-poll-interval=@var{usec} @*
+      User @var{usec} driver poll interval.
+
+@item -s, ---script-file=@var{script-file} @*
+      Load and execute given @var{script-file}@.
+
+@item ---sms-io-base=@var{sms-io-base} @*
+      System Interface Driver SMS IO base address.
+
+@item -v, ---verbose @*
+      Print more information.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
+@end itemize
+
+@node fish configuration file, Invoking fish, fish options, fish
+@section Setting default startup options
+@cindex fish.scm
+
+Fish can be customized to great extent using Scheme language
+interface.  You should refer to @ref{Top, The Guile Reference Manual,
+guile} for advanced options. 
+
+Example configuration file: @file{/usr/etc/fish/fish.scm}
+@lisp
+;; fish.scm: default fish configuration scm
+
+;; Customize Fish:
+(fi-set-prompt! "fish# ")
+
+;; Set driver SMS IO Base port
+; (fi-set-sms-io-base! #x0CA2)
+
+;; Set Driver Internals:
+; (fi-set-default-driver-poll-interval 10)
+
+;; Example Group Aliases
+; (set! sensors-group-alias-list
+;   '(
+;     (mysystem . (Processor Fan "Power Supply" Current Memory Chassis))
+;     (power . ("Power Supply"))
+;     (security . ("Platform Chassis Intrusion Platform Security Violation"))
+;     ))
+@end lisp
+
+@node Invoking fish,  , fish configuration file, fish
+@section Invoking fish
+
+@subsection fish as shell
+Fish takes (GNU getopt-long style) command-line arguments and starts
+as a shell by default with a neat readline interface.  You can type
+@command{fish} commands at the prompt.  Type @option{--help} to get
+help on list of available commands and @option{quit} to exit the
+shell.
+
+@example
+fish# debian-ia64:~# fish
+FreeIPMI Shell [fish-0.1.0]
+Copyright (C) 2003-2004 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms
+of the GNU General Public License.  This program has absolutely no
+warranty.
+fish# help sensors
+sensors --version --usage --help --verbose --sdr-info --flush-cache
+--list-groups --group=GROUP-NAME --sensors "SENSORS-LIST"
+        Display IPMI Sensors.
+
+fish# quit
+debian-ia64:~#
+@end example
+
+@subsection Fish as script interpreter
+To start fish as a script interpreter, you can either include script
+header or invoke with @command{fish} with
+@option{--script-file=SCRIPT-FILE} option.
+
+@cindex /usr/sbin/fish
+
+Example @command{fish} self executable script:
+@lisp
+#! /usr/sbin/fish -s
+!#
+(bmc-info-main (fi-command-line))
+(display "bmc-info exited with [")
+(display bmc-info-exit-status)
+(display "] status\n")
+(fi-exit bmc-info-exit-status)
+@end lisp
+
+Example invoking through command-line:
+@example
+debian-ia64:~# fish --script-file=/root/work/fish-examples/bmc-info.scm
+Device ID:         20
+Device Revision:   1
+                   [SDR Support]
+Firmware Revision: 0.27
+                   [Device Available (normal operation)]
+IPMI Version:      1.5
+Additional Device Support:
+                   [Sensor Device]
+                   [SDR Repository Device]
+                   [SEL Device]
+                   [FRU Inventory Device]
+                   [IPMB Event Receiver]
+                   [Chassis Device]
+Manufacturer ID:   157h
+Product ID:        100h
+Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
+bmc-info exited with 0 status
+debian-ia64:~#
+@end example
+
+@subsection Fish extensions
+@cindex Extensions
+
+Fish extensions are like normal Scheme programming with additional
+built-in @acronym{IPMI} primitives and procedures.  You should refer to 
+@ref{Top, The Guile Reference Manual, guile} to learn more about
+writing extensions.
+
+Example @command{fish} extension:
+This simple extension upon loading, will dynamically add
+@command{bmc-info} command to the @command{fish} shell.
+
+@lisp
+;;
+;; bmc-info.scm: fish extension to get BMC information.
+;;
+(define (bmc-info args)
+  "Show BMC information"
+  (fi-kcs-get-dev-id-display))
+(fi-register-command! '("bmc-info" "bmc-info\n\t- Show BMC Information."))
+@end lisp
+
+Example: Loading the above @file{bmc-info.scm} extension.
+@example 
+fish# load /root/work/fish-examples/bmc-info.scm
+fish# help bmc-info
+bmc-info
+        Shows BMC Information.
+fish#
+@end example
+
+@node bmc-config, bmc-info, fish, Top
+@chapter bmc-config
+@pindex bmc-config
+A command line BMC configuration utility.  You can view, set and
+replicate the configuration.
+
+@menu
+* Options::                     Command-line arguments to bmc-config.
+* Sample Configuration File::   Sample Configuration File.
+* BMC checkout::                Extracting current BMC configuration.
+* BMC commit::                  Update BMC configuration.
+* Diff configuration::          Compare BMC configuration.
+@end menu
+
+@node Options, Sample Configuration File, bmc-config, bmc-config
+@section Command-line arguments to bmc-config
+
+@itemize @bullet
+@item -u, ---usage @*
+      Usage message
+
+@item -h, ---help @*
+      Show help
+
+@item -V, ---version @*
+      Show version
+
+@item -o, ---checkout @*
+      Fetch configuration information from BMC.
+
+@item -i, ---commit @*
+      Update configuration information to BMC
+
+@item -d, ---diff @*
+      Show differences between BMC and config file or key pairs.
+
+@item -f @var{filename}, ---filename=@var{filename} @*
+      Use this file for BMC get/set.
+
+@item -k @var{key=value}, ---key-pair=@var{key=value} @*
+      Update configuration information to BMC.  This option can be used multiple times.
+@end itemize
+
+@node Sample Configuration File, BMC checkout, Options, bmc-config
+@section Sample Configuration File
+@command{bmc-config} emits current BMC configuration settings to
+stdout in the same format as that of configuration file, when no file
+argument is specified.
+
+@cindex bmc-config configuration file 
+
+Example: Extracting BMC configuration to stdout.
+@example
+debian-ia64:~# bmc-config --checkout 
+Section User1
+	## Give username
+	Username                                     Anonymous
+	## Give password or leave it blank to clear password
+	Password                                     
+	## Possible values: Yes/No
+	Lan_Enable_Ipmi_Msgs                         Yes
+	## Possible values: Yes/No
+	Lan_Enable_Link_Auth                         Yes
+	## Possible values: Yes/No
+	Lan_Enable_Restrict_To_Callback              No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Lan_Privilege_Limit                          User
+	## Give valid number
+	Lan_Session_Limit                            0
+	## Possible values: Yes/No
+	Serial_Enable_Ipmi_Msgs                      Yes
+	## Possible values: Yes/No
+	Serial_Enable_Link_Auth                      Yes
+	## Possible values: Yes/No
+	Serial_Enable_Restrict_To_Callback           No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Serial_Privilege_Limit                       User
+	## Give valid number
+	Serial_Session_Limit                         0
+EndSection
+Section User2
+	## Give username
+	Username                                     ipmiuser
+	## Give password or leave it blank to clear password
+	Password                                     
+	## Possible values: Yes/No
+	Lan_Enable_Ipmi_Msgs                         Yes
+	## Possible values: Yes/No
+	Lan_Enable_Link_Auth                         Yes
+	## Possible values: Yes/No
+	Lan_Enable_Restrict_To_Callback              No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Lan_Privilege_Limit                          Administrator
+	## Give valid number
+	Lan_Session_Limit                            0
+	## Possible values: Yes/No
+	Serial_Enable_Ipmi_Msgs                      No
+	## Possible values: Yes/No
+	Serial_Enable_Link_Auth                      No
+	## Possible values: Yes/No
+	Serial_Enable_Restrict_To_Callback           No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Serial_Privilege_Limit                       No_Access
+	## Give valid number
+	Serial_Session_Limit                         0
+EndSection
+Section User3
+	## Give username
+	Username                                     operator
+	## Give password or leave it blank to clear password
+	Password                                     
+	## Possible values: Yes/No
+	Lan_Enable_Ipmi_Msgs                         No
+	## Possible values: Yes/No
+	Lan_Enable_Link_Auth                         No
+	## Possible values: Yes/No
+	Lan_Enable_Restrict_To_Callback              No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Lan_Privilege_Limit                          No_Access
+	## Give valid number
+	Lan_Session_Limit                            0
+	## Possible values: Yes/No
+	Serial_Enable_Ipmi_Msgs                      No
+	## Possible values: Yes/No
+	Serial_Enable_Link_Auth                      No
+	## Possible values: Yes/No
+	Serial_Enable_Restrict_To_Callback           No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Serial_Privilege_Limit                       No_Access
+	## Give valid number
+	Serial_Session_Limit                         0
+EndSection
+Section User4
+	## Give username
+	Username                                     user
+	## Give password or leave it blank to clear password
+	Password                                     
+	## Possible values: Yes/No
+	Lan_Enable_Ipmi_Msgs                         No
+	## Possible values: Yes/No
+	Lan_Enable_Link_Auth                         No
+	## Possible values: Yes/No
+	Lan_Enable_Restrict_To_Callback              No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Lan_Privilege_Limit                          No_Access
+	## Give valid number
+	Lan_Session_Limit                            0
+	## Possible values: Yes/No
+	Serial_Enable_Ipmi_Msgs                      No
+	## Possible values: Yes/No
+	Serial_Enable_Link_Auth                      No
+	## Possible values: Yes/No
+	Serial_Enable_Restrict_To_Callback           No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Serial_Privilege_Limit                       No_Access
+	## Give valid number
+	Serial_Session_Limit                         0
+EndSection
+Section LAN_Channel
+	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+	Volatile_Access_Mode                         Always_Available
+	## Possible values: Yes/No
+	Volatile_Enable_User_Level_Auth              Yes
+	## Possible values: Yes/No
+	Volatile_Enable_Per_Message_Auth             No
+	## Possible values: Yes/No
+	Volatile_Enable_Pef_Alerting                 No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Volatile_Channel_Privilege_Limit             User
+	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+	Non_Volatile_Access_Mode                     Always_Available
+	## Possible values: Yes/No
+	Non_Volatile_Enable_User_Level_Auth          Yes
+	## Possible values: Yes/No
+	Non_Volatile_Enable_Per_Message_Auth         No
+	## Possible values: Yes/No
+	Non_Volatile_Enable_Pef_Alerting             No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Non_Volatile_Channel_Privilege_Limit         User
+EndSection
+Section LAN_Conf
+	## Possible values: Unspecified/Static/Use_DHCP/Use_BIOS/Use_Others
+	Ip_Address_Source                            Static
+	## Give valid IP Address
+	Ip_Address                                   192.168.1.60
+	## Give valid MAC Address
+	Mac_Address                                  00:0E:0C:21:81:B4
+	## Give valid Subnet mask
+	Subnet_Mask                                  255.255.255.0
+	## Give valid IP Address
+	Default_Gateway_Ip_Address                   192.168.1.1
+	## Give valid MAC Address
+	Default_Gateway_Mac_Address                  00:00:00:00:00:00
+	## Give valid IP Address
+	Backup_Gateway_Ip_Address                    192.168.1.1
+	## Give valid MAC Address
+	Backup_Gateway_Mac_Address                   00:00:00:00:00:00
+EndSection
+Section LAN_Conf_Auth
+	## Possible values: Yes/No
+	Callback_Enable_Auth_Type_None               Yes
+	## Possible values: Yes/No
+	Callback_Enable_Auth_Type_Md2                Yes
+	## Possible values: Yes/No
+	Callback_Enable_Auth_Type_Md5                Yes
+	## Possible values: Yes/No
+	Callback_Enable_Auth_Type_Straight_Password  Yes
+	## Possible values: Yes/No
+	Callback_Enable_Auth_Type_Oem_Proprietary    No
+	## Possible values: Yes/No
+	User_Enable_Auth_Type_None                   Yes
+	## Possible values: Yes/No
+	User_Enable_Auth_Type_Md2                    Yes
+	## Possible values: Yes/No
+	User_Enable_Auth_Type_Md5                    Yes
+	## Possible values: Yes/No
+	User_Enable_Auth_Type_Straight_Password      Yes
+	## Possible values: Yes/No
+	User_Enable_Auth_Type_Oem_Proprietary        No
+	## Possible values: Yes/No
+	Operator_Enable_Auth_Type_None               No
+	## Possible values: Yes/No
+	Operator_Enable_Auth_Type_Md2                Yes
+	## Possible values: Yes/No
+	Operator_Enable_Auth_Type_Md5                Yes
+	## Possible values: Yes/No
+	Operator_Enable_Auth_Type_Straight_Password  Yes
+	## Possible values: Yes/No
+	Operator_Enable_Auth_Type_Oem_Proprietary    No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_None                  No
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md2                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Md5                   Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Straight_Password     Yes
+	## Possible values: Yes/No
+	Admin_Enable_Auth_Type_Oem_Proprietary       No
+	## Possible values: Yes/No
+	Oem_Enable_Auth_Type_None                    No
+	## Possible values: Yes/No
+	Oem_Enable_Auth_Type_Md2                     No
+	## Possible values: Yes/No
+	Oem_Enable_Auth_Type_Md5                     No
+	## Possible values: Yes/No
+	Oem_Enable_Auth_Type_Straight_Password       No
+	## Possible values: Yes/No
+	Oem_Enable_Auth_Type_Oem_Proprietary         No
+EndSection
+Section LAN_Conf_Misc
+	## Possible values: Yes/No
+	Enable_Gratuitous_Arps                       Yes
+	## Possible values: Yes/No
+	Enable_Arp_Response                          No
+	## Give valid number
+	Gratuitous_Arp_Interval                      4
+EndSection
+Section Serial_Channel
+	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+	Volatile_Access_Mode                         Always_Available
+	## Possible values: Yes/No
+	Volatile_Enable_User_Level_Auth              Yes
+	## Possible values: Yes/No
+	Volatile_Enable_Per_Message_Auth             No
+	## Possible values: Yes/No
+	Volatile_Enable_Pef_Alerting                 No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Volatile_Channel_Privilege_Limit             User
+	## Possible values: Disabled/Pre_Boot_Only/Always_Available/Shared
+	Non_Volatile_Access_Mode                     Always_Available
+	## Possible values: Yes/No
+	Non_Volatile_Enable_User_Level_Auth          Yes
+	## Possible values: Yes/No
+	Non_Volatile_Enable_Per_Message_Auth         No
+	## Possible values: Yes/No
+	Non_Volatile_Enable_Pef_Alerting             No
+	## Possible values: Callback/User/Operator/Administrator/OEM_Proprietary/No_Access
+	Non_Volatile_Channel_Privilege_Limit         User
+EndSection
+Section Serial_Conf
+	## Possible values: Yes/No
+	Enable_Basic_Mode                            Yes
+	## Possible values: Yes/No
+	Enable_Ppp_Mode                              Yes
+	## Possible values: Yes/No
+	Enable_Terminal_Mode                         No
+	## Possible Values: Modem_Connect/Direct_Connect
+	Connect_Mode                                 Direct_Connect
+	## Give valid number
+	Page_Blackout_Interval                       0
+	## Give valid number
+	Call_Retry_Time                              60
+	## Possible values: Yes/No
+	Enable_Dtr_Hangup                            Yes
+	## Possible values: No_Flow_Control/RTS_CTS/XON_XOFF
+	Flow_Control                                 No_Flow_Control
+	## Possible values: 9600/19200/38400/57600/115200
+	Bit_Rate                                     115200
+EndSection
+Section Misc
+	## Possible Values: Off_State_AC_Apply/Restore_State_AC_Apply/On_State_AC_Apply
+	Power_Restore_Policy                         Restore_State_Ac_Apply
+EndSection
+debian-ia64:~#
+@end example
+
+@node BMC checkout, BMC commit, Sample Configuration File, bmc-config
+@section Extracting current BMC configuration
+`checkout'' option generates a configuration file containing
+the current BMC settings.  Configuration file is in plain text format
+with sections enclosing key-value pairs.  Comments will guide you to
+choose appropriate values.  Use your favorite editor (like GNU Emacs)
+to edit these fields.  Comment character is @samp{#}@.
+
+Example: Creating a BMC configuration file.
+@example
+debian-ia64:~# bmc-config --checkout --filename=/tmp/bmc.conf
+@end example
+
+Alternatively you can redirect stdout to the configuration file too.
+@example
+debian-ia64:~# bmc-config --checkout > /tmp/bmc.conf
+@end example
+
+@node BMC commit, Diff configuration, BMC checkout, bmc-config
+@section Update BMC configuration
+After customizing the BMC configuration file, you can update the
+BMC configuration using ``commit'' option.
+
+Example using configuration file:
+@example
+debian-ia64:~# bmc-config --commit -f /tmp/bmc.conf
+@end example
+
+Example using a specific key:
+@example
+debian-ia64:~# bmc-config --commit -k "LAN_conf:Ip_Address=192.168.1.60"
+@end example
+
+Note: At this point of time, configuration settings can only be fed
+through a file or key-value pairs and not stdin.
+
+@node Diff configuration,  , BMC commit, bmc-config
+@section Compare BMC configuration
+
+To compare the differences between current active BMC settings and the
+configuration file, use ``diff'' option
+
+Example: Comparing the configuration file and BMC settings.
+@example
+debian-ia64:~# bmc-config --diff -f /tmp/bmc.conf
+USER:Ip_Address=192.168.10.160
+BMC :Ip_Address=192.168.1.60 differs
+USER:Default_Gateway_Ip_Address=192.168.10.1
+BMC :Default_Gateway_Ip_Address=192.168.1.1 differs
+USER:Backup_Gateway_Ip_Address=192.168.10.1
+BMC :Backup_Gateway_Ip_Address=192.168.1.1 differs
+debian-ia64:~# bmc-config --diff -k "User2:Username=guest"
+USER:Username=guest
+BMC :Username=ipmiuser differs
+debian-ia64:~# 
+@end example
+
+@node bmc-info, sensors, bmc-config, Top
+@chapter bmc-info
+@pindex bmc-info
+@command{bmc-info} command displays BMC/@acronym{IPMI} version information and
+the list of additional devices supported.  This command is mostly used
+for checking if @acronym{IPMI} is supported or if BMC/FRU/SDR firmware upgrade
+completed successfully.
+
+@section Command-line options
+@itemize @bullet
+@item -u, ---usage @*
+      Usage message.
+
+@item -h, ---help @*
+      Show help.
+
+@item -V, ---version @*
+      Show version information.
+@end itemize 
+
+@section Example
+@example
+debian-ia64:~# bmc-info 
+Device ID:         20
+Device Revision:   1
+                   [SDR Support]
+Firmware Revision: 0.27
+                   [Device Available (normal operation)]
+IPMI Version:      1.5
+Additional Device Support:
+                   [Sensor Device]
+                   [SDR Repository Device]
+                   [SEL Device]
+                   [FRU Inventory Device]
+                   [IPMB Event Receiver]
+                   [Chassis Device]
+Manufacturer ID:   157h
+Product ID:        100h
+Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
+debian-ia64:~# 
+@end example
+
+@node sensors, sel, bmc-info, Top
+@chapter sensors
+@pindex sensors
+@command{sensors} utility reports the monitored system health
+information, such as temperatures and voltages, fan status, etc with
+nominal, threshold max/min readings and status descriptions.
+
+@menu
+* sensors options::             Command-line arguments.
+* sensors configuration file::  Sample configuration file.
+* sensors examples::            @command{sensors} in action.
+@end menu
+
+@node sensors options, sensors configuration file, sensors, sensors
+@section command-line arguments
+@itemize
+@item -u, ---usage @*
+      Usage message.
+
+@item -h, ---help @*
+      Show help.
+
+@item -V, ---version @*
+      Show version information.
+
+@item -v, ---verbose @*
+      Verbose sensor output.
+
+@item -vv @*
+      Very verbose sensor output.
+
+@item -a, ---all @*
+      Display all sensors, override ignore list.
+
+@item -i, ---sdr-info @*
+      Show SDR Info.
+
+@item -f, ---flush-cache @*
+      Flush sensor cache.
+
+@item -l, ---list-groups
+      List the sensor groups.
+
+@item -p, ---prof
+      Profile system interface driver polling.
+
+@item -g @var{group-name}, ---group=@var{group-name}
+      List sensors from group.
+
+@item -s @var{sensors-list}, ---sensors=@var{sensors-list}
+      List the given sensors.
+@end itemize
+
+@node sensors configuration file, sensors examples, sensors options, sensors
+@section Setting default startup options
+
+@cindex sensors-conf.scm
+
+Example sensors-conf.scm file:
+@lisp
+;;; file: /usr/etc/fish/sensors-conf.scm
+
+;; sensors-conf.scm: sensors configuration file
+
+;; Sensors cache filename
+; (set! sensors-sdr-cache-file "/path/to/cache-filename")
+
+;; Example: Ignore these sensors
+; (sensors-ignore! '(54 55 88))
+
+;; Example: Group Aliases
+(sensors-group-alias-list-append!
+  '(
+;    (mysystem . ("Processor" "Fan" "Power Supply" "Current Memory Chassis"))
+    (power . ("Power Supply"))
+    (security . ("Platform Chassis Intrusion" "Platform Security Violation"))
+    ))
+@end lisp
+
+@node sensors examples,  , sensors configuration file, sensors
+@section sensors in action
+
+CDC 6440 (A.K.A SR870BN4) - a Quad Itanium2 system has 136 sensors on
+board.  GNU FreeIPMI running on Thunder supercomputer monitors 139264
+sensors in total.
+
+@cindex Thunder
+@cindex CDC 6440
+@cindex SR870BN4
+
+@subsection Sample sensors output
+@example
+debian-ia64:~# sensors
+1: I/O Bd +1.3V (Voltage): 1.33 V (low=1.23/nom=1.30/high=1.36) [OK]
+2: I/O Bd +1.5V (Voltage): 1.53 V (low=1.42/nom=1.50/high=1.57) [OK]
+3: I/O Bd +1.8V (Voltage): 1.82 V (low=1.70/nom=1.80/high=1.88) [OK]
+4: I/O Bd +3.3V SB (Voltage): 3.26 V (low=3.13/nom=3.30/high=3.45) [OK]
+5: I/O Bd +3.3V_A (Voltage): 3.38 V (low=3.06/nom=3.30/high=3.52) [OK]
+6: I/O Bd +3.3V_B (Voltage): 3.38 V (low=3.12/nom=3.30/high=3.46) [OK]
+7: IORISER CMOS Bat (Voltage): 3.22 V (low=2.40/nom=2.99/high=3.60) [OK]
+8: I/O Bd +5V_A (Voltage): 4.99 V (low=4.73/nom=4.99/high=5.23) [OK]
+9: I/O Bd +5V_B (Voltage): 5.03 V (low=4.74/nom=5.00/high=5.23) [OK]
+10: I/O Bd +12V (Voltage): 11.97 V (low=11.28/nom=11.90/high=12.46) [OK]
+11: I/O Bd -12V (Voltage): -11.99 V (low=-12.64/nom=-12.06/high=-11.49) [OK]
+12: Proc Bd +1.2V (Voltage): 1.21 V (low=1.18/nom=1.20/high=1.21) [OK]
+13: MEM Bd 1 +1.25V (Voltage): 1.28 V (low=1.18/nom=1.25/high=1.31) [OK]
+14: MEM Bd 2 +1.25V (Voltage): 1.28 V (low=1.18/nom=1.25/high=1.31) [OK]
+15: Proc Bd +1.3V (Voltage): 1.32 V (low=1.22/nom=1.30/high=1.36) [OK]
+16: Proc Bd +1.5V (Voltage): 1.52 V (low=1.45/nom=1.50/high=1.54) [OK]
+17: Proc Bd +1.8V (Voltage): 1.82 V (low=1.73/nom=1.80/high=1.87) [OK]
+18: Proc Bd +3.3V SB (Voltage): 3.27 V (low=3.13/nom=3.29/high=3.46) [OK]
+19: Proc Bd +3.3V (Voltage): 3.30 V (low=3.13/nom=3.29/high=3.46) [OK]
+20: IORISER +12V SB (Voltage): 12.33 V (low=11.21/nom=11.80/high=12.39) [OK]
+21: IORISER +2.5V (Voltage): 2.50 V (low=2.35/nom=2.47/high=2.60) [OK]
+22: IORISER +1.5V SB (Voltage): 1.52 V (low=1.42/nom=1.50/high=1.57) [OK]
+23: IORISER +1.5V (Voltage): 1.52 V (low=1.42/nom=1.50/high=1.57) [OK]
+24: IORISER +5V SB (Voltage): 4.96 V (low=4.67/nom=4.93/high=5.16) [OK]
+25: I/O Bd SCSI +5V (Voltage): 5.04 V (low=4.63/nom=4.99/high=5.33) [OK]
+26: Mem Bd 1 Temp (Temperature): 29.00 C (low=10.00/nom=33.00/high=45.00) [OK]
+27: Mem Bd 2 Temp (Temperature): 30.00 C (low=10.00/nom=33.00/high=45.00) [OK]
+28: I/O Bd Temp 1 (Temperature): 28.00 C (low=10.00/nom=46.00/high=54.00) [OK]
+29: I/O Bd SIOH Temp (Temperature): 39.00 C (low=10.00/nom=55.00/high=95.00) [OK]
+30: I/O Bd Temp 3 (Temperature): 27.00 C (low=10.00/nom=49.00/high=57.00) [OK]
+31: Proc Bd Amb Temp (Temperature): 21.00 C (low=10.00/nom=25.00/high=38.00) [OK]
+32: Proc Bd SNC Temp (Temperature): 41.00 C (low=10.00/nom=55.00/high=95.00) [OK]
+33: F38 Tach Fan 1 (Fan): 2600.00 RPM (low=2260.00/nom=2600.00/high=2880.00) [OK]
+34: F38 Tach Fan 2 (Fan): 2620.00 RPM (low=2260.00/nom=2600.00/high=2880.00) [OK]
+35: F25 Tach Fan 3 (Fan): 2480.00 RPM (low=2160.00/nom=2500.00/high=2780.00) [OK]
+36: F25 Tach Fan 4 (Fan): 2480.00 RPM (low=2260.00/nom=2620.00/high=2900.00) [OK]
+37: Mem Bd 1 FanBst (OEM Reserved): 29.00 C (low=10.00/nom=33.00/high=45.00) [OK]
+38: Mem Bd 2 FanBst (OEM Reserved): 30.00 C (low=10.00/nom=33.00/high=45.00) [OK]
+39: I/O Bd FanBst 1 (OEM Reserved): 28.00 C (low=10.00/nom=46.00/high=54.00) [OK]
+40: IOBd SIOH FanBst (OEM Reserved): 39.00 C (low=10.00/nom=55.00/high=95.00) [OK]
+41: I/O Bd FanBst 3 (OEM Reserved): 27.00 C (low=10.00/nom=49.00/high=57.00) [OK]
+42: Proc Bd Amb FanB (OEM Reserved): 21.00 C (low=10.00/nom=25.00/high=29.00) [OK]
+43: Proc Bd SNC FanB (OEM Reserved): 41.00 C (low=10.00/nom=55.00/high=95.00) [OK]
+44: Proc 1 Temp (Temperature): 38.00 C (low=15.00/nom=70.00/high=98.00) [OK]
+45: Proc 2 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
+46: Proc 3 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
+47: Proc 4 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
+48: Proc 1 FanBst (OEM Reserved): 38.00 C (low=10.00/nom=70.00/high=100.00) [OK]
+49: Proc 2 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
+50: Proc 3 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
+51: Proc 4 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
+53: Pwr Unit Status (Power Unit): [OK]
+54: Pwr Unit Redund (Power Unit): [OK]
+55: Watchdog  (Watchdog 2): [OK]
+56: Scrty Violation (Platform Security Violation): [OK]
+57: Physical Scrty (Platform Chassis Intrusion): [OK]
+58: POST Error (System Firmware): [OK]
+59: Crit Int Status (Critical Interrupt): [OK]
+60: EVT Log Disabled (Event Logging Disabled): [OK]
+61: System Event (System Event): [OK]
+62: Int SCSI TERMV0 (Voltage): [Performance Met]
+63: Int SCSI TERMV1 (Voltage): [Performance Met]
+64: Int SCSI TERMV2 (Voltage): [Performance Met]
+65: Ext SCSI TERMV0 (Voltage): [Performance Met]
+66: Ext SCSI TERMV1 (Voltage): [Performance Met]
+67: Ext SCSI TERMV2 (Voltage): [Performance Met]
+68: Pwr Supply 1 (Power Supply): [OK]
+69: Pwr Supply 2 (Power Supply): [OK]
+70: IO Bd 3.3V D2D 3 (Power Supply): [OK]
+71: IO Bd 3.3V D2D 4 (Power Supply): [OK]
+72: IO Bd 5V D2D 1 (Power Supply): [OK]
+73: IO Bd 5V D2D 2 (Power Supply): [OK]
+74: ProcBd 3.3V D2D1 (Power Supply): [OK]
+75: ProcBd 2.5V D2D1 (Power Supply): [OK]
+76: ProcBd 2.5V D2D2 (Power Supply): [OK]
+77: MemBd1 1.25V D2D (Power Supply): [OK]
+78: MemBd2 1.25V D2D (Power Supply): [OK]
+79: Proc 12V SB PwGd (Voltage): [Performance Met]
+80: Node PwrGd (Voltage): [Performance Met]
+81: Mem Bd1 Pres (Board): [Device Inserted/Device Present]
+82: Mem Bd2 Pres (Board): [Device Inserted/Device Present]
+83: Fan 1 Present (Fan): [Device Inserted/Device Present]
+84: Fan 2 Present (Fan): [Device Inserted/Device Present]
+85: Fan 3 Present (Fan): [Device Inserted/Device Present]
+86: Fan 4 Present (Fan): [Device Inserted/Device Present]
+87: IO Bd Interlock (Board): [Device Inserted/Device Present]
+88: IORISER Interlck (Board): [Device Inserted/Device Present]
+89: Proc Bd Interlck (Board): [Device Inserted/Device Present]
+90: SCSI Interlock (Board): [Device Inserted/Device Present]
+91: INIT State (OEM Reserved): [State Deasserted]
+92: Proc 1 Status (Processor): [OK]
+93: Proc 2 Status (Processor): [Unknown]
+94: Proc 3 Status (Processor): [Unknown]
+95: Proc 4 Status (Processor): [Unknown]
+96: Proc 1 PwrGd (Voltage): [Performance Met]
+97: Proc 2 PwrGd (Voltage): [Unknown]
+98: Proc 3 PwrGd (Voltage): [Unknown]
+99: Proc 4 PwrGd (Voltage): [Unknown]
+100: PCI HP Slot 1 (Slot Connector): [OK]
+101: PCI HP Slot 2 (Slot Connector): [OK]
+102: PCI HP Slot 3 (Slot Connector): [OK]
+103: PCI HP Slot 4 (Slot Connector): [OK]
+104: PCI HP Slot 5 (Slot Connector): [OK]
+105: PCI HP Slot 6 (Slot Connector): [OK]
+106: PCI HP Slot 7 (Slot Connector): [OK]
+107: PCI HP Slot 8 (Slot Connector): [OK]
+debian-ia64:~#
+@end example
+
+@subsection Sample very-verbose output
+@example
+debian-ia64:~# sensors -vv
+Record ID: 1
+Sensor type: I/O Bd +1.3V (Voltage)
+Sensor number: #16
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.20 Volts
+Upper Critical threshold: 1.39 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 2.55 Volts
+Normal min: 1.23 Volts
+Nominal reading: 1.30 Volts
+Normal max: 1.36 Volts
+Sensor reading: 1.33 Volts
+Sensor status: OK
+
+Record ID: 2
+Sensor type: I/O Bd +1.5V (Voltage)
+Sensor number: #17
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.38 Volts
+Upper Critical threshold: 1.61 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 2.55 Volts
+Normal min: 1.42 Volts
+Nominal reading: 1.50 Volts
+Normal max: 1.57 Volts
+Sensor reading: 1.53 Volts
+Sensor status: OK
+
+Record ID: 3
+Sensor type: I/O Bd +1.8V (Voltage)
+Sensor number: #18
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.66 Volts
+Upper Critical threshold: 1.93 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.70 Volts
+Nominal reading: 1.80 Volts
+Normal max: 1.88 Volts
+Sensor reading: 1.82 Volts
+Sensor status: OK
+
+Record ID: 4
+Sensor type: I/O Bd +3.3V SB (Voltage)
+Sensor number: #21
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 3.04 Volts
+Upper Critical threshold: 3.54 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 4.33 Volts
+Normal min: 3.13 Volts
+Nominal reading: 3.30 Volts
+Normal max: 3.45 Volts
+Sensor reading: 3.26 Volts
+Sensor status: OK
+
+Record ID: 5
+Sensor type: I/O Bd +3.3V_A (Voltage)
+Sensor number: #22
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 2.94 Volts
+Upper Critical threshold: 3.60 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 5.10 Volts
+Normal min: 3.06 Volts
+Nominal reading: 3.30 Volts
+Normal max: 3.52 Volts
+Sensor reading: 3.38 Volts
+Sensor status: OK
+
+Record ID: 6
+Sensor type: I/O Bd +3.3V_B (Voltage)
+Sensor number: #23
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 3.04 Volts
+Upper Critical threshold: 3.54 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 4.08 Volts
+Normal min: 3.12 Volts
+Nominal reading: 3.30 Volts
+Normal max: 3.46 Volts
+Sensor reading: 3.38 Volts
+Sensor status: OK
+
+Record ID: 7
+Sensor type: IORISER CMOS Bat (Voltage)
+Sensor number: #24
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 2.30 Volts
+Upper Critical threshold: 3.68 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 4.08 Volts
+Normal min: 2.40 Volts
+Nominal reading: 2.99 Volts
+Normal max: 3.60 Volts
+Sensor reading: 3.22 Volts
+Sensor status: OK
+
+Record ID: 8
+Sensor type: I/O Bd +5V_A (Voltage)
+Sensor number: #25
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 4.60 Volts
+Upper Critical threshold: 5.36 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 6.63 Volts
+Normal min: 4.73 Volts
+Nominal reading: 4.99 Volts
+Normal max: 5.23 Volts
+Sensor reading: 4.99 Volts
+Sensor status: OK
+
+Record ID: 9
+Sensor type: I/O Bd +5V_B (Voltage)
+Sensor number: #26
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.01 Volts
+Upper non-recoverable threshold: 0.01 Volts
+Lower Critical threshold: 4.61 Volts
+Upper Critical threshold: 5.36 Volts
+Lower non-critical threshold: 0.01 Volts
+Upper non-critical threshold: 0.01 Volts
+Sensor min. reading: 0.01 Volts
+Sensor max. reading: 6.64 Volts
+Normal min: 4.74 Volts
+Nominal reading: 5.00 Volts
+Normal max: 5.23 Volts
+Sensor reading: 5.03 Volts
+Sensor status: OK
+
+Record ID: 10
+Sensor type: I/O Bd +12V (Voltage)
+Sensor number: #27
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 10.97 Volts
+Upper Critical threshold: 12.77 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 15.81 Volts
+Normal min: 11.28 Volts
+Nominal reading: 11.90 Volts
+Normal max: 12.46 Volts
+Sensor reading: 11.97 Volts
+Sensor status: OK
+
+Record ID: 11
+Sensor type: I/O Bd -12V (Voltage)
+Sensor number: #28
+Event/Reading type code: 01h
+Lower non-recoverable threshold: -16.60 Volts
+Upper non-recoverable threshold: -16.60 Volts
+Lower Critical threshold: -13.00 Volts
+Upper Critical threshold: -11.20 Volts
+Lower non-critical threshold: -16.60 Volts
+Upper non-critical threshold: -16.60 Volts
+Sensor min. reading: -16.60 Volts
+Sensor max. reading: 1.76 Volts
+Normal min: -12.64 Volts
+Nominal reading: -12.06 Volts
+Normal max: -11.49 Volts
+Sensor reading: -11.99 Volts
+Sensor status: OK
+
+Record ID: 12
+Sensor type: Proc Bd +1.2V (Voltage)
+Sensor number: #29
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.08 Volts
+Upper Critical threshold: 1.31 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.18 Volts
+Nominal reading: 1.20 Volts
+Normal max: 1.21 Volts
+Sensor reading: 1.21 Volts
+Sensor status: OK
+
+Record ID: 13
+Sensor type: MEM Bd 1 +1.25V (Voltage)
+Sensor number: #30
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.15 Volts
+Upper Critical threshold: 1.33 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.18 Volts
+Nominal reading: 1.25 Volts
+Normal max: 1.31 Volts
+Sensor reading: 1.28 Volts
+Sensor status: OK
+
+Record ID: 14
+Sensor type: MEM Bd 2 +1.25V (Voltage)
+Sensor number: #31
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.15 Volts
+Upper Critical threshold: 1.33 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.18 Volts
+Nominal reading: 1.25 Volts
+Normal max: 1.31 Volts
+Sensor reading: 1.28 Volts
+Sensor status: OK
+
+Record ID: 15
+Sensor type: Proc Bd +1.3V (Voltage)
+Sensor number: #32
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.16 Volts
+Upper Critical threshold: 1.43 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.22 Volts
+Nominal reading: 1.30 Volts
+Normal max: 1.36 Volts
+Sensor reading: 1.32 Volts
+Sensor status: OK
+
+Record ID: 16
+Sensor type: Proc Bd +1.5V (Voltage)
+Sensor number: #33
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.34 Volts
+Upper Critical threshold: 1.64 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.45 Volts
+Nominal reading: 1.50 Volts
+Normal max: 1.54 Volts
+Sensor reading: 1.52 Volts
+Sensor status: OK
+
+Record ID: 17
+Sensor type: Proc Bd +1.8V (Voltage)
+Sensor number: #34
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.62 Volts
+Upper Critical threshold: 1.98 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.06 Volts
+Normal min: 1.73 Volts
+Nominal reading: 1.80 Volts
+Normal max: 1.87 Volts
+Sensor reading: 1.82 Volts
+Sensor status: OK
+
+Record ID: 18
+Sensor type: Proc Bd +3.3V SB (Voltage)
+Sensor number: #35
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 2.99 Volts
+Upper Critical threshold: 3.59 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 4.39 Volts
+Normal min: 3.13 Volts
+Nominal reading: 3.29 Volts
+Normal max: 3.46 Volts
+Sensor reading: 3.27 Volts
+Sensor status: OK
+
+Record ID: 19
+Sensor type: Proc Bd +3.3V (Voltage)
+Sensor number: #36
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 2.99 Volts
+Upper Critical threshold: 3.59 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 4.39 Volts
+Normal min: 3.13 Volts
+Nominal reading: 3.29 Volts
+Normal max: 3.46 Volts
+Sensor reading: 3.30 Volts
+Sensor status: OK
+
+Record ID: 20
+Sensor type: IORISER +12V SB (Voltage)
+Sensor number: #37
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 10.80 Volts
+Upper Critical threshold: 12.80 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 15.04 Volts
+Normal min: 11.21 Volts
+Nominal reading: 11.80 Volts
+Normal max: 12.39 Volts
+Sensor reading: 12.33 Volts
+Sensor status: OK
+
+Record ID: 21
+Sensor type: IORISER +2.5V (Voltage)
+Sensor number: #38
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 2.26 Volts
+Upper Critical threshold: 2.69 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 3.75 Volts
+Normal min: 2.35 Volts
+Nominal reading: 2.47 Volts
+Normal max: 2.60 Volts
+Sensor reading: 2.50 Volts
+Sensor status: OK
+
+Record ID: 22
+Sensor type: IORISER +1.5V SB (Voltage)
+Sensor number: #39
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.37 Volts
+Upper Critical threshold: 1.63 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 2.50 Volts
+Normal min: 1.42 Volts
+Nominal reading: 1.50 Volts
+Normal max: 1.57 Volts
+Sensor reading: 1.52 Volts
+Sensor status: OK
+
+Record ID: 23
+Sensor type: IORISER +1.5V (Voltage)
+Sensor number: #40
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 1.37 Volts
+Upper Critical threshold: 1.63 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 2.50 Volts
+Normal min: 1.42 Volts
+Nominal reading: 1.50 Volts
+Normal max: 1.57 Volts
+Sensor reading: 1.51 Volts
+Sensor status: OK
+
+Record ID: 24
+Sensor type: IORISER +5V SB (Voltage)
+Sensor number: #41
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 4.50 Volts
+Upper Critical threshold: 5.34 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 7.40 Volts
+Normal min: 4.67 Volts
+Nominal reading: 4.93 Volts
+Normal max: 5.16 Volts
+Sensor reading: 4.93 Volts
+Sensor status: OK
+
+Record ID: 25
+Sensor type: I/O Bd SCSI +5V (Voltage)
+Sensor number: #42
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Volts
+Upper non-recoverable threshold: 0.00 Volts
+Lower Critical threshold: 4.51 Volts
+Upper Critical threshold: 5.47 Volts
+Lower non-critical threshold: 0.00 Volts
+Upper non-critical threshold: 0.00 Volts
+Sensor min. reading: 0.00 Volts
+Sensor max. reading: 6.12 Volts
+Normal min: 4.63 Volts
+Nominal reading: 4.99 Volts
+Normal max: 5.33 Volts
+Sensor reading: 5.04 Volts
+Sensor status: OK
+
+Record ID: 26
+Sensor type: Mem Bd 1 Temp (Temperature)
+Sensor number: #48
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 53.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 50.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 33.00 Degrees C
+Normal max: 45.00 Degrees C
+Sensor reading: 29.00 Degrees C
+Sensor status: OK
+
+Record ID: 27
+Sensor type: Mem Bd 2 Temp (Temperature)
+Sensor number: #49
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 53.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 50.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 33.00 Degrees C
+Normal max: 45.00 Degrees C
+Sensor reading: 30.00 Degrees C
+Sensor status: OK
+
+Record ID: 28
+Sensor type: I/O Bd Temp 1 (Temperature)
+Sensor number: #50
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 61.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 58.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 46.00 Degrees C
+Normal max: 54.00 Degrees C
+Sensor reading: 28.00 Degrees C
+Sensor status: OK
+
+Record ID: 29
+Sensor type: I/O Bd SIOH Temp (Temperature)
+Sensor number: #51
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 105.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 100.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 55.00 Degrees C
+Normal max: 95.00 Degrees C
+Sensor reading: 39.00 Degrees C
+Sensor status: OK
+
+Record ID: 30
+Sensor type: I/O Bd Temp 3 (Temperature)
+Sensor number: #52
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 64.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 61.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 49.00 Degrees C
+Normal max: 57.00 Degrees C
+Sensor reading: 27.00 Degrees C
+Sensor status: OK
+
+Record ID: 31
+Sensor type: Proc Bd Amb Temp (Temperature)
+Sensor number: #53
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 44.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 40.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 25.00 Degrees C
+Normal max: 38.00 Degrees C
+Sensor reading: 21.00 Degrees C
+Sensor status: OK
+
+Record ID: 32
+Sensor type: Proc Bd SNC Temp (Temperature)
+Sensor number: #54
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 105.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 100.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 55.00 Degrees C
+Normal max: 95.00 Degrees C
+Sensor reading: 40.00 Degrees C
+Sensor status: OK
+
+Record ID: 33
+Sensor type: F38 Tach Fan 1 (Fan)
+Sensor number: #64
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 RPM
+Upper non-recoverable threshold: 0.00 RPM
+Lower Critical threshold: 2100.00 RPM
+Upper Critical threshold: 0.00 RPM
+Lower non-critical threshold: 0.00 RPM
+Upper non-critical threshold: 0.00 RPM
+Sensor min. reading: 0.00 RPM
+Sensor max. reading: 5100.00 RPM
+Normal min: 2260.00 RPM
+Nominal reading: 2600.00 RPM
+Normal max: 2880.00 RPM
+Sensor reading: 2620.00 RPM
+Sensor status: OK
+
+Record ID: 34
+Sensor type: F38 Tach Fan 2 (Fan)
+Sensor number: #65
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 RPM
+Upper non-recoverable threshold: 0.00 RPM
+Lower Critical threshold: 2100.00 RPM
+Upper Critical threshold: 0.00 RPM
+Lower non-critical threshold: 0.00 RPM
+Upper non-critical threshold: 0.00 RPM
+Sensor min. reading: 0.00 RPM
+Sensor max. reading: 5100.00 RPM
+Normal min: 2260.00 RPM
+Nominal reading: 2600.00 RPM
+Normal max: 2880.00 RPM
+Sensor reading: 2600.00 RPM
+Sensor status: OK
+
+Record ID: 35
+Sensor type: F25 Tach Fan 3 (Fan)
+Sensor number: #66
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 RPM
+Upper non-recoverable threshold: 0.00 RPM
+Lower Critical threshold: 2000.00 RPM
+Upper Critical threshold: 0.00 RPM
+Lower non-critical threshold: 0.00 RPM
+Upper non-critical threshold: 0.00 RPM
+Sensor min. reading: 0.00 RPM
+Sensor max. reading: 5100.00 RPM
+Normal min: 2160.00 RPM
+Nominal reading: 2500.00 RPM
+Normal max: 2780.00 RPM
+Sensor reading: 2480.00 RPM
+Sensor status: OK
+
+Record ID: 36
+Sensor type: F25 Tach Fan 4 (Fan)
+Sensor number: #67
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 RPM
+Upper non-recoverable threshold: 0.00 RPM
+Lower Critical threshold: 2100.00 RPM
+Upper Critical threshold: 0.00 RPM
+Lower non-critical threshold: 0.00 RPM
+Upper non-critical threshold: 0.00 RPM
+Sensor min. reading: 0.00 RPM
+Sensor max. reading: 5100.00 RPM
+Normal min: 2260.00 RPM
+Nominal reading: 2620.00 RPM
+Normal max: 2900.00 RPM
+Sensor reading: 2500.00 RPM
+Sensor status: OK
+
+Record ID: 37
+Sensor type: Mem Bd 1 FanBst (OEM Reserved)
+Sensor number: #80
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 47.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 33.00 Degrees C
+Normal max: 45.00 Degrees C
+Sensor reading: 29.00 Degrees C
+Sensor status: OK
+
+Record ID: 38
+Sensor type: Mem Bd 2 FanBst (OEM Reserved)
+Sensor number: #81
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 47.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 33.00 Degrees C
+Normal max: 45.00 Degrees C
+Sensor reading: 30.00 Degrees C
+Sensor status: OK
+
+Record ID: 39
+Sensor type: I/O Bd FanBst 1 (OEM Reserved)
+Sensor number: #82
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 56.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 46.00 Degrees C
+Normal max: 54.00 Degrees C
+Sensor reading: 28.00 Degrees C
+Sensor status: OK
+
+Record ID: 40
+Sensor type: IOBd SIOH FanBst (OEM Reserved)
+Sensor number: #83
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 97.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 55.00 Degrees C
+Normal max: 95.00 Degrees C
+Sensor reading: 39.00 Degrees C
+Sensor status: OK
+
+Record ID: 41
+Sensor type: I/O Bd FanBst 3 (OEM Reserved)
+Sensor number: #84
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 59.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 49.00 Degrees C
+Normal max: 57.00 Degrees C
+Sensor reading: 27.00 Degrees C
+Sensor status: OK
+
+Record ID: 42
+Sensor type: Proc Bd Amb FanB (OEM Reserved)
+Sensor number: #85
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 30.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 25.00 Degrees C
+Normal max: 29.00 Degrees C
+Sensor reading: 21.00 Degrees C
+Sensor status: OK
+
+Record ID: 43
+Sensor type: Proc Bd SNC FanB (OEM Reserved)
+Sensor number: #86
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 97.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 55.00 Degrees C
+Normal max: 95.00 Degrees C
+Sensor reading: 40.00 Degrees C
+Sensor status: OK
+
+Record ID: 44
+Sensor type: Proc 1 Temp (Temperature)
+Sensor number: #152
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 2.00 Degrees C
+Upper Critical threshold: 112.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 105.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 15.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 98.00 Degrees C
+Sensor reading: 39.00 Degrees C
+Sensor status: OK
+
+Record ID: 45
+Sensor type: Proc 2 Temp (Temperature)
+Sensor number: #153
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 2.00 Degrees C
+Upper Critical threshold: 112.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 105.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 15.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 98.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 46
+Sensor type: Proc 3 Temp (Temperature)
+Sensor number: #154
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 2.00 Degrees C
+Upper Critical threshold: 112.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 105.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 15.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 98.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 47
+Sensor type: Proc 4 Temp (Temperature)
+Sensor number: #155
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 2.00 Degrees C
+Upper Critical threshold: 112.00 Degrees C
+Lower non-critical threshold: 9.00 Degrees C
+Upper non-critical threshold: 105.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 15.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 98.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 48
+Sensor type: Proc 1 FanBst (OEM Reserved)
+Sensor number: #160
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 103.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 100.00 Degrees C
+Sensor reading: 39.00 Degrees C
+Sensor status: OK
+
+Record ID: 49
+Sensor type: Proc 2 FanBst (OEM Reserved)
+Sensor number: #161
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 103.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 100.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 50
+Sensor type: Proc 3 FanBst (OEM Reserved)
+Sensor number: #162
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 103.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 100.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 51
+Sensor type: Proc 4 FanBst (OEM Reserved)
+Sensor number: #163
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 0.00 Degrees C
+Upper Critical threshold: 0.00 Degrees C
+Lower non-critical threshold: 0.00 Degrees C
+Upper non-critical threshold: 103.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 10.00 Degrees C
+Nominal reading: 70.00 Degrees C
+Normal max: 100.00 Degrees C
+Sensor reading: N/A
+Sensor status: Unknown
+
+Record ID: 52
+Sensor type: HSC SCSI BP Temp (Temperature)
+Sensor number: #1
+Event/Reading type code: 01h
+Lower non-recoverable threshold: 0.00 Degrees C
+Upper non-recoverable threshold: 0.00 Degrees C
+Lower Critical threshold: 5.00 Degrees C
+Upper Critical threshold: 43.00 Degrees C
+Lower non-critical threshold: 10.00 Degrees C
+Upper non-critical threshold: 39.00 Degrees C
+Sensor min. reading: -128.00 Degrees C
+Sensor max. reading: 127.00 Degrees C
+Normal min: 12.00 Degrees C
+Nominal reading: 28.00 Degrees C
+Normal max: 38.00 Degrees C
+Sensor reading: 0.00 Degrees C
+Sensor status: OK
+
+Record ID: 53
+Sensor type: Pwr Unit Status (Power Unit)
+Sensor number: #1
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Power Off/Power Down: [OK]
+Power Cycle: [OK]
+240VA Power Down: [OK]
+Interlock Power Down: [OK]
+AC lost: [OK]
+Soft Power Control Failure: [OK]
+Power Unit Failure detected: [OK]
+Predictive Failure: [OK]
+
+Record ID: 54
+Sensor type: Pwr Unit Redund (Power Unit)
+Sensor number: #2
+Event/Reading type code: 0Bh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [OK]
+
+Record ID: 55
+Sensor type: Watchdog  (Watchdog 2)
+Sensor number: #3
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Timer expired, status only (no action, no interrupt): [OK]
+Hard Reset: [OK]
+Power Down: [OK]
+Power Cycle: [OK]
+Timer interrupt: [OK]
+
+Record ID: 56
+Sensor type: Scrty Violation (Platform Security Violation)
+Sensor number: #4
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Secure Mode (Front Panel Lockout) Violation attempt: [OK]
+Pre-boot Password Violation - user password: [OK]
+Pre-boot Password Violation attempt - setup password: [OK]
+Pre-boot Password Violation - network boot password: [OK]
+Other pre-boot Password Violation: [OK]
+Out-of-band Access Password Violation: [OK]
+
+Record ID: 57
+Sensor type: Physical Scrty (Platform Chassis Intrusion)
+Sensor number: #5
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+General Chassis Intrusion: [OK]
+Drive Bay intrusion: [OK]
+I/O Card area intrusion: [OK]
+Processor area intrusion: [OK]
+LAN Leash Lost (system is unplugged from LAN): [OK]
+Unauthorized dock/undock: [OK]
+FAN area intrusion: [OK]
+
+Record ID: 58
+Sensor type: POST Error (System Firmware)
+Sensor number: #6
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+System Firmware Error (POST Error): [OK]
+System Firmware Hang: [OK]
+System Firmware Progress: [OK]
+
+Record ID: 59
+Sensor type: Crit Int Status (Critical Interrupt)
+Sensor number: #7
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Front Panel NMI/Diagnostic Interrupt: [OK]
+Bus Timeout: [OK]
+I/O channel check NMI: [OK]
+Software NMI: [OK]
+PCI PERR: [OK]
+PCI SERR: [OK]
+EISA Fail Safe Timeout: [OK]
+Bus Correctable Error: [OK]
+Bus Uncorrectable Error: [OK]
+Fatal NMI (port 61h, bit 7): [OK]
+
+Record ID: 60
+Sensor type: EVT Log Disabled (Event Logging Disabled)
+Sensor number: #9
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Correctable Memory Error Logging Disabled: [OK]
+Event `Type' Logging Disabled: [OK]
+Log Area Reset/Cleared: [OK]
+All Event Logging Disabled: [OK]
+SEL Full: [OK]
+SEL Almost Full: [OK]
+
+Record ID: 61
+Sensor type: System Event (System Event)
+Sensor number: #10
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+System Reconfigured: [OK]
+OEM System Boot Event: [OK]
+Undetermined system hardware failure: [OK]
+Entry added to Auxiliary Log: [OK]
+PEF Action: [OK]
+
+Record ID: 62
+Sensor type: Int SCSI TERMV0 (Voltage)
+Sensor number: #96
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 63
+Sensor type: Int SCSI TERMV1 (Voltage)
+Sensor number: #97
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 64
+Sensor type: Int SCSI TERMV2 (Voltage)
+Sensor number: #98
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 65
+Sensor type: Ext SCSI TERMV0 (Voltage)
+Sensor number: #99
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 66
+Sensor type: Ext SCSI TERMV1 (Voltage)
+Sensor number: #100
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 67
+Sensor type: Ext SCSI TERMV2 (Voltage)
+Sensor number: #101
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 68
+Sensor type: Pwr Supply 1 (Power Supply)
+Sensor number: #112
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 69
+Sensor type: Pwr Supply 2 (Power Supply)
+Sensor number: #113
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 70
+Sensor type: IO Bd 3.3V D2D 3 (Power Supply)
+Sensor number: #116
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 71
+Sensor type: IO Bd 3.3V D2D 4 (Power Supply)
+Sensor number: #117
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 72
+Sensor type: IO Bd 5V D2D 1 (Power Supply)
+Sensor number: #118
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 73
+Sensor type: IO Bd 5V D2D 2 (Power Supply)
+Sensor number: #119
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 74
+Sensor type: ProcBd 3.3V D2D1 (Power Supply)
+Sensor number: #120
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 75
+Sensor type: ProcBd 2.5V D2D1 (Power Supply)
+Sensor number: #121
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 76
+Sensor type: ProcBd 2.5V D2D2 (Power Supply)
+Sensor number: #122
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 77
+Sensor type: MemBd1 1.25V D2D (Power Supply)
+Sensor number: #123
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 78
+Sensor type: MemBd2 1.25V D2D (Power Supply)
+Sensor number: #124
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Presence detected: [OK]
+Power Supply Failure detected: [OK]
+Predictive Failure: [OK]
+Power Supply AC input lost: [OK]
+Power Supply input AC lost or out-of-range: [OK]
+Power Supply input AC out-of-range, but present: [OK]
+Configuration error: [OK]
+
+Record ID: 79
+Sensor type: Proc 12V SB PwGd (Voltage)
+Sensor number: #126
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 80
+Sensor type: Node PwrGd (Voltage)
+Sensor number: #127
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 81
+Sensor type: Mem Bd1 Pres (Board)
+Sensor number: #128
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 82
+Sensor type: Mem Bd2 Pres (Board)
+Sensor number: #129
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 83
+Sensor type: Fan 1 Present (Fan)
+Sensor number: #130
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 84
+Sensor type: Fan 2 Present (Fan)
+Sensor number: #131
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 85
+Sensor type: Fan 3 Present (Fan)
+Sensor number: #132
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 86
+Sensor type: Fan 4 Present (Fan)
+Sensor number: #133
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 87
+Sensor type: IO Bd Interlock (Board)
+Sensor number: #134
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 88
+Sensor type: IORISER Interlck (Board)
+Sensor number: #135
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 89
+Sensor type: Proc Bd Interlck (Board)
+Sensor number: #136
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 90
+Sensor type: SCSI Interlock (Board)
+Sensor number: #137
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Device Inserted/Device Present]
+
+Record ID: 91
+Sensor type: INIT State (OEM Reserved)
+Sensor number: #138
+Event/Reading type code: 03h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [State Deasserted]
+
+Record ID: 92
+Sensor type: Proc 1 Status (Processor)
+Sensor number: #144
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+IERR: [OK]
+Thermal Trip: [OK]
+FRB1/BIST failure: [OK]
+FRB2/Hang in POST failure: [OK]
+FRB3/Processor Startup/Initialization failure: [OK]
+Configuration Error: [OK]
+SM BIOS `Uncorrectable CPU-complex Error': [OK]
+Processor Presence detected: [OK]
+Processor disabled: [OK]
+Terminator Presence Detected: [Unknown]
+Processor Automatically Throttled: [OK]
+
+Record ID: 93
+Sensor type: Proc 2 Status (Processor)
+Sensor number: #145
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+IERR: [OK]
+Thermal Trip: [OK]
+FRB1/BIST failure: [OK]
+FRB2/Hang in POST failure: [OK]
+FRB3/Processor Startup/Initialization failure: [OK]
+Configuration Error: [OK]
+SM BIOS `Uncorrectable CPU-complex Error': [OK]
+Processor Presence detected: [Unknown]
+Processor disabled: [OK]
+Terminator Presence Detected: [Unknown]
+Processor Automatically Throttled: [OK]
+
+Record ID: 94
+Sensor type: Proc 3 Status (Processor)
+Sensor number: #146
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+IERR: [OK]
+Thermal Trip: [OK]
+FRB1/BIST failure: [OK]
+FRB2/Hang in POST failure: [OK]
+FRB3/Processor Startup/Initialization failure: [OK]
+Configuration Error: [OK]
+SM BIOS `Uncorrectable CPU-complex Error': [OK]
+Processor Presence detected: [Unknown]
+Processor disabled: [OK]
+Terminator Presence Detected: [Unknown]
+Processor Automatically Throttled: [OK]
+
+Record ID: 95
+Sensor type: Proc 4 Status (Processor)
+Sensor number: #147
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+IERR: [OK]
+Thermal Trip: [OK]
+FRB1/BIST failure: [OK]
+FRB2/Hang in POST failure: [OK]
+FRB3/Processor Startup/Initialization failure: [OK]
+Configuration Error: [OK]
+SM BIOS `Uncorrectable CPU-complex Error': [OK]
+Processor Presence detected: [Unknown]
+Processor disabled: [OK]
+Terminator Presence Detected: [Unknown]
+Processor Automatically Throttled: [OK]
+
+Record ID: 96
+Sensor type: Proc 1 PwrGd (Voltage)
+Sensor number: #164
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Performance Met]
+
+Record ID: 97
+Sensor type: Proc 2 PwrGd (Voltage)
+Sensor number: #165
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Unknown]
+
+Record ID: 98
+Sensor type: Proc 3 PwrGd (Voltage)
+Sensor number: #166
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Unknown]
+
+Record ID: 99
+Sensor type: Proc 4 PwrGd (Voltage)
+Sensor number: #167
+Event/Reading type code: 06h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Unknown]
+
+Record ID: 100
+Sensor type: PCI HP Slot 1 (Slot Connector)
+Sensor number: #224
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 101
+Sensor type: PCI HP Slot 2 (Slot Connector)
+Sensor number: #225
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 102
+Sensor type: PCI HP Slot 3 (Slot Connector)
+Sensor number: #226
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 103
+Sensor type: PCI HP Slot 4 (Slot Connector)
+Sensor number: #227
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 104
+Sensor type: PCI HP Slot 5 (Slot Connector)
+Sensor number: #228
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 105
+Sensor type: PCI HP Slot 6 (Slot Connector)
+Sensor number: #229
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 106
+Sensor type: PCI HP Slot 7 (Slot Connector)
+Sensor number: #230
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 107
+Sensor type: PCI HP Slot 8 (Slot Connector)
+Sensor number: #231
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Fault Status asserted: [OK]
+Identify Status asserted: [OK]
+Slot/Connector Device installed/attached: [Unknown]
+Slot/Connector Ready for Device Installation: [OK]
+Slot/Connector Ready for Device Removal: [OK]
+Slot Power is Off: [Unknown]
+Slot/Connector Device Removal Request: [OK]
+Interlock asserted: [OK]
+Slot is Disabled: [OK]
+Slot holds spare device: [OK]
+
+Record ID: 108
+Sensor type: HSC Drv 1 Status (Drive Slot)
+Sensor number: #2
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+
+Record ID: 109
+Sensor type: HSC Drv 2 Status (Drive Slot)
+Sensor number: #3
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+
+Record ID: 110
+Sensor type: HSC Drv 3 Status (Drive Slot)
+Sensor number: #4
+Event/Reading type code: 6Fh
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+
+Record ID: 111
+Sensor type: HSC Drv 1 Pres (Drive Slot)
+Sensor number: #9
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [OK]
+
+Record ID: 112
+Sensor type: HSC Drv 2 Pres (Drive Slot)
+Sensor number: #10
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [OK]
+
+Record ID: 113
+Sensor type: HSC Drv 3 Pres (Drive Slot)
+Sensor number: #11
+Event/Reading type code: 08h
+Hysteresis +ve: 0
+Hysteresis -ve: 0
+Sensor status: [Unknown]
+
+Record ID: 114
+Sensor Number: NONE
+Container entity ID: 13h
+Container entity instance: 01h
+
+Record ID: 115
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 03h
+FRU entity ID: 03h
+FRU entity instance: 01h
+Device name: Proc 1 INFO FRU
+
+Record ID: 116
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 03h
+FRU entity ID: 03h
+FRU entity instance: 02h
+Device name: Proc 2 INFO FRU
+
+Record ID: 117
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 03h
+FRU entity ID: 03h
+FRU entity instance: 03h
+Device name: Proc 3 INFO FRU
+
+Record ID: 118
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 03h
+FRU entity ID: 03h
+FRU entity instance: 04h
+Device name: Proc 4 INFO FRU
+
+Record ID: 119
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 03h
+FRU entity instance: 05h
+Device name: Proc 1 OEM FRU
+
+Record ID: 120
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 03h
+FRU entity instance: 06h
+Device name: Proc 2 OEM FRU
+
+Record ID: 121
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 03h
+FRU entity instance: 07h
+Device name: Proc 3 OEM FRU
+
+Record ID: 122
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 03h
+FRU entity instance: 08h
+Device name: Proc 4 OEM FRU
+
+Record ID: 123
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 0Ah
+FRU entity instance: 01h
+Device name: Pwr Supply 1 FRU
+
+Record ID: 124
+Sensor Number: NONE
+Device type: 09h
+Device type modifier: 02h
+FRU entity ID: 0Ah
+FRU entity instance: 02h
+Device name: Pwr Supply 2 FRU
+
+Record ID: 125
+Sensor Number: NONE
+Device type: 02h
+Device type modifier: 00h
+FRU entity ID: 12h
+FRU entity instance: 01h
+Device name: Proc Bd FRU
+
+Record ID: 126
+Sensor Number: NONE
+Device type: 02h
+Device type modifier: 00h
+FRU entity ID: 08h
+FRU entity instance: 01h
+Device name: Mem Bd1 FRU
+
+Record ID: 127
+Sensor Number: NONE
+Device type: 02h
+Device type modifier: 00h
+FRU entity ID: 08h
+FRU entity instance: 02h
+Device name: Mem Bd2 FRU
+
+Record ID: 128
+Sensor Number: NONE
+Device type: 05h
+Device type modifier: 05h
+FRU entity ID: 10h
+FRU entity instance: 01h
+Device name: I/O Bd FRU
+
+Record ID: 129
+Sensor Number: NONE
+Entity ID: 07h
+Entity instance: 01h
+Device name: Basebrd Mgt Ctlr
+
+Record ID: 130
+Sensor Number: NONE
+Entity ID: 0Fh
+Entity instance: 01h
+Device name: Hot Swap Ctlr
+
+Record ID: 131
+Sensor Number: NONE
+Entity ID: 07h
+Entity instance: 02h
+Device name: Chs Bridge Ctlr
+
+Record ID: 132
+Sensor Number: NONE
+Manufacturer ID: 000157h
+OEM Data: 02 02 00 01 70 71 
+
+Record ID: 133
+Sensor Number: NONE
+Manufacturer ID: 000157h
+OEM Data: 03 90 40 FC 
+
+Record ID: 134
+Sensor Number: NONE
+Manufacturer ID: 000157h
+OEM Data: 54 00 00 50 00 50 00 50 01 07 D0 07 D0 07 D0 02 00 00 00 00 00 00 
+
+Record ID: 135
+Sensor Number: NONE
+Manufacturer ID: 000157h
+OEM Data: 53 44 52 20 56 65 72 73 69 6F 6E 20 30 2E 31 38 
+
+Record ID: 136
+Sensor Number: NONE
+Manufacturer ID: 000157h
+OEM Data: 53 44 52 20 50 6B 67 2E 20 56 65 72 20 32 2E 30 2E 31 38 
+
+debian-ia64:~# 
+@end example
+
+@node sel, bmc-watchdog, sensors, Top
+@chapter sel
+@pindex sel
+BMC provides a centralized, non-volatile System Event Log and logs
+system events and certain system configuration information to this
+device. You can perform a postmortem analysis on a system even when a
+the processor(s) are disabled because of a failure.  Sel utility helps
+you view and manage system event log.
+
+@menu
+* sel options::                 Command-line arguments.
+* sel sample output::           Sample system event log output.
+@end menu
+
+@node sel options, sel sample output, sel, sel
+@section command-line arguments
+
+@itemize @bullet
+@item -u, ---usage @*
+      Usage message.
+ 
+@item -h, ---help @*
+      Show help information.
+
+@item -V, ---version @*
+      Show version information.
+
+@item -i, ---info @*
+      Show SEL header information.
+
+@item -x @var{file}, ---hex-dump=@var{file} @*
+      Output raw SEL data in ASCII hex format beginning with the SEL header info.
+
+@item -c, ---delete-all @*
+      Delete all records in the SEL.
+
+@item -d REC-LIST, ---delete=@var{rec-list} @*
+      Delete this specific list of @var{rec-list} records in the SEL.
+@end itemize
+
+@node sel sample output,  , sel options, sel
+@section sel sample output
+
+@example
+debian-ia64:~# sel 
+4:30-Dec-2003 00:20:24:Event Logging Disabled #9:Log Area Reset/Cleared:SMI Handler
+24:30-Dec-2003 00:23:21:Power Unit #1:Power Unit Failure detected:SMI Handler
+124:14-Jan-2004 23:13:11:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+144:14-Jan-2004 23:13:13:System Event #8:OEM System Boot Event:BIOS
+164:16-Jan-2004 18:41:40:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
+244:16-Jan-2004 22:18:50:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+264:16-Jan-2004 22:18:52:System Event #8:OEM System Boot Event:BIOS
+284:17-Jan-2004 00:26:49:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+304:17-Jan-2004 00:26:50:System Event #8:OEM System Boot Event:BIOS
+324:16-Jan-2004 09:53:17:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+344:16-Jan-2004 09:53:19:System Event #8:OEM System Boot Event:BIOS
+364:23-Jan-2004 05:43:43:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
+384:23-Jan-2004 05:44:06:Power Supply #113:Power Supply AC input lost:SMI Handler
+1944:26-May-2004 06:03:53:System Event #8:OEM System Boot Event:BIOS
+1964:26-May-2004 06:09:40:Power Unit #1:Power Unit Failure detected:SMI Handler
+1984:26-May-2004 06:09:59:Power Unit #1:Soft Power Control Failure:SMI Handler
+2124:26-May-2004 06:19:26:Voltage #23:Lower Critical - going low:SMI Handler
+2144:26-May-2004 06:20:36:System Event #8:OEM System Boot Event:BIOS
+2164:26-May-2004 06:21:15:Power Unit #1:Power Unit Failure detected:SMI Handler
+2184:26-May-2004 06:21:30:Power Unit #1:Power Unit Failure detected:SMI Handler
+2344:26-May-2004 07:39:37:System Event #8:OEM System Boot Event:BIOS
+2424:26-May-2004 08:43:19:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2444:26-May-2004 08:43:23:System Event #8:OEM System Boot Event:BIOS
+2464:26-May-2004 08:49:43:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2484:26-May-2004 08:49:46:System Event #8:OEM System Boot Event:BIOS
+2664:26-May-2004 08:59:35:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2684:26-May-2004 08:59:38:System Event #8:OEM System Boot Event:BIOS
+2704:26-May-2004 09:08:42:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2724:26-May-2004 09:08:46:System Event #8:OEM System Boot Event:BIOS
+2744:26-May-2004 09:13:33:Board #136:Device Removed/Device Absent:SMI Handler
+2824:26-May-2004 09:18:29:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2844:26-May-2004 09:18:33:System Event #8:OEM System Boot Event:BIOS
+2884:26-May-2004 09:30:38:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2904:26-May-2004 09:30:42:System Event #8:OEM System Boot Event:BIOS
+2924:26-May-2004 09:36:17:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+2944:26-May-2004 09:36:20:System Event #8:OEM System Boot Event:BIOS
+2964:26-May-2004 09:49:59:Power Supply #112:Power Supply AC input lost:SMI Handler
+3004:26-May-2004 10:05:37:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+3024:26-May-2004 10:05:40:System Event #8:OEM System Boot Event:BIOS
+3064:26-May-2004 10:19:50:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+3084:26-May-2004 10:19:54:System Event #8:OEM System Boot Event:BIOS
+3124:26-May-2004 10:27:36:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+3144:26-May-2004 10:27:39:System Event #8:OEM System Boot Event:BIOS
+3164:27-May-2004 02:58:23:Power Supply #113:Power Supply AC input lost:SMI Handler
+3224:30-Jun-2004 07:13:20:System Event #8:OEM System Boot Event:BIOS
+3244:30-Jun-2004 07:13:49:Fan #65:Lower Critical - going low:SMI Handler
+3264:30-Jun-2004 07:13:50:Fan #131:Device Removed/Device Absent:SMI Handler
+3284:30-Jun-2004 07:13:53:Fan #131:Device Inserted/Device Present:SMI Handler
+3304:30-Jun-2004 07:14:01:Fan #65:Lower Critical - going low:SMI Handler
+3324:30-Jun-2004 07:14:01:Fan #67:Lower Critical - going low:SMI Handler
+3344:30-Jun-2004 07:14:05:Fan #132:Device Removed/Device Absent:SMI Handler
+3364:30-Jun-2004 07:14:08:Fan #132:Device Inserted/Device Present:SMI Handler
+3384:30-Jun-2004 07:14:13:Fan #67:Lower Critical - going low:SMI Handler
+3404:30-Jun-2004 07:14:23:Fan #130:Device Removed/Device Absent:SMI Handler
+3424:30-Jun-2004 07:14:25:Fan #64:Lower Critical - going low:SMI Handler
+3444:30-Jun-2004 07:14:25:Fan #65:Lower Critical - going low:SMI Handler
+3464:30-Jun-2004 07:14:26:Fan #131:Device Removed/Device Absent:SMI Handler
+3484:30-Jun-2004 07:14:32:Fan #130:Device Inserted/Device Present:SMI Handler
+3504:30-Jun-2004 07:14:37:Fan #64:Lower Critical - going low:SMI Handler
+3524:30-Jun-2004 07:15:02:Fan #131:Device Inserted/Device Present:SMI Handler
+3544:30-Jun-2004 07:15:11:Fan #132:Device Removed/Device Absent:SMI Handler
+3564:30-Jun-2004 07:15:13:Fan #65:Lower Critical - going low:SMI Handler
+3584:30-Jun-2004 07:15:14:Fan #132:Device Inserted/Device Present:SMI Handler
+3604:30-Jun-2004 07:15:20:Fan #132:Device Removed/Device Absent:SMI Handler
+3624:30-Jun-2004 07:15:23:Fan #132:Device Inserted/Device Present:SMI Handler
+3644:30-Jun-2004 07:15:25:Fan #67:Lower Critical - going low:SMI Handler
+3664:30-Jun-2004 07:15:26:Fan #133:Device Removed/Device Absent:SMI Handler
+3684:30-Jun-2004 07:15:29:Fan #132:Device Removed/Device Absent:SMI Handler
+3704:30-Jun-2004 07:15:31:Fan #66:Lower Critical - going low:SMI Handler
+3724:30-Jun-2004 07:15:41:Fan #132:Device Inserted/Device Present:SMI Handler
+3744:30-Jun-2004 07:15:47:Fan #133:Device Inserted/Device Present:SMI Handler
+3764:30-Jun-2004 07:15:49:Fan #66:Lower Critical - going low:SMI Handler
+3784:30-Jun-2004 07:15:55:Fan #67:Lower Critical - going low:SMI Handler
+3804:30-Jun-2004 07:17:00:Power Supply #113:Power Supply AC input lost:SMI Handler
+3844:30-Jun-2004 07:21:46:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+3864:30-Jun-2004 07:21:48:System Event #8:OEM System Boot Event:BIOS
+3884:30-Jun-2004 07:21:57:Power Supply #113:Power Supply AC input lost:SMI Handler
+3904:30-Jun-2004 08:29:18:System Event #8:OEM System Boot Event:BIOS
+3924:06-Jul-2004 08:54:35:System Event #8:OEM System Boot Event:BIOS
+3944:06-Jul-2004 09:02:38:Power Unit #1:Power Unit Failure detected:SMI Handler
+3964:31-Dec-1969 16:00:05:Power Unit #1:AC lost:SMI Handler
+3984:06-Jul-2004 09:04:03:System Event #8:OEM System Boot Event:BIOS
+4004:06-Jul-2004 09:09:07:Power Unit #1:Power Unit Failure detected:SMI Handler
+4044:06-Jul-2004 09:10:35:System Event #8:OEM System Boot Event:BIOS
+4064:21-Jul-2004 01:15:59:Board #137:Device Removed/Device Absent:SMI Handler
+4084:21-Jul-2004 01:16:18:Board #137:Device Inserted/Device Present:SMI Handler
+4104:23-Jul-2004 02:51:10:Power Supply #112:Power Supply Failure detected:SMI Handler
+4144:23-Jul-2004 02:54:40:System Event #8:OEM System Boot Event:BIOS
+4424:25-Aug-2004 10:49:41:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
+4444:25-Aug-2004 10:50:19:Power Unit #1:Power Unit Failure detected:SMI Handler
+4484:25-Aug-2004 10:53:57:System Event #8:OEM System Boot Event:BIOS
+4504:25-Aug-2004 14:14:09:System Event #8:OEM System Boot Event:BIOS
+4524:25-Aug-2004 14:26:28:Power Supply #112:Power Supply AC input lost:SMI Handler
+4584:26-Aug-2004 13:58:50:System Event #8:OEM System Boot Event:BIOS
+4604:27-Aug-2004 15:12:55:Power Supply #113:Power Supply AC input lost:SMI Handler
+4644:27-Aug-2004 15:17:45:System Event #8:OEM System Boot Event:BIOS
+4684:27-Aug-2004 16:33:03:System Event #8:OEM System Boot Event:BIOS
+4704:27-Aug-2004 19:11:41:Power Supply #113:Power Supply AC input lost:SMI Handler
+4724:27-Aug-2004 19:11:41:Power Unit #1:Power Unit Failure detected:SMI Handler
+4784:27-Aug-2004 19:14:42:System Event #8:OEM System Boot Event:BIOS
+4804:30-Aug-2004 12:54:01:System Event #8:OEM System Boot Event:BIOS
+4824:07-Sep-2004 13:09:39:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
+4844:07-Sep-2004 13:10:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
+4864:13-Sep-2004 10:00:49:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+4884:13-Sep-2004 10:00:51:System Event #8:OEM System Boot Event:BIOS
+4904:13-Sep-2004 11:59:02:Power Unit #1:Power Unit Failure detected:SMI Handler
+4944:13-Sep-2004 13:22:20:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+4964:13-Sep-2004 13:22:22:System Event #8:OEM System Boot Event:BIOS
+4984:13-Sep-2004 13:24:56:Power Unit #1:Power Unit Failure detected:SMI Handler
+5024:13-Sep-2004 13:29:43:System Firmware #6:System Firmware Error (POST Error):SMI Handler
+5044:13-Sep-2004 13:29:45:System Event #8:OEM System Boot Event:BIOS
+debian-ia64:~# 
+@end example
+
+@node bmc-watchdog, ipmipower, sel, Top
+@chapter bmc-watchdog
+@pindex bmc-watchdog
+@command{bmc-watchdog} is a daemon and configuration utility for BMC
+watchdog timer.  When run as a daemon, it periodically resets the timer
+so that, should the system lock up, the BMC can perform an appropriate
+emergency recovery action. 
+
+The bmc-watchdog tool typically executes as a cronjob or daemon to
+manage the watchdog timer.  A user must be root in order to run
+bmc-watchdog.  
+
+@menu
+* Watchdog theory::             BMC Watchdog Theory.
+* bmc-watchdog options::        Command-line arguments.
+* bmc-watchdog example::        @command{bmc-watchdog} example.
+* bmc-watchdog known issues::   Known issues with the @command{bmc-watchdog}.
+@end menu
+
+@node Watchdog theory, bmc-watchdog options, bmc-watchdog, bmc-watchdog
+@section BMC Watchdog Theory
+
+A BMC watchdog timer is part of the Intelligent Platform Management
+Interface (@acronym{IPMI}) specification and is only available to BMCs that are
+compliant with @acronym{IPMI}@.  When a BMC watchdog timer is started, it begins
+counting down to zero from some positive number of seconds.  When the
+timer hits zero, the timer will execute a pre-configured pre-timeout
+interrupt and/or timeout action.
+
+In order to stop the pre-timeout interrupt or timeout action from
+being generated, the watchdog timer must be periodically reset back to
+its initial beginning value.
+
+The BMC watchdog timer automatically stops itself when the machine is
+rebooted.  Therefore, when a machine is brought up, the BMC watchdog
+timer must be setup again before it can be used.
+
+Typically, a BMC watchdog timer is used to automatically reset a
+machine that has crashed.  When the operating system first starts up,
+the BMC timer is set to its initial countdown value.  At periodic
+intervals, when the operating system is functioning properly, the
+watchdog timer can be reset by the OS or a userspace program.  Thus,
+the timer never counts down to zero.  When the system crashes, the
+timer cannot be reset by the OS or userspace program.  Eventually, the
+timer will countdown to zero and reset the machine.
+
+@node bmc-watchdog options, bmc-watchdog example, Watchdog theory, bmc-watchdog
+@section command-line arguments
+
+@menu
+* bmc-watchdog general options::  General command-line arguments.
+* bmc-watchdog command options::  Command command-line arguments.
+* bmc-watchdog set options::    Set command-line arguments.
+* bmc-watchdog start options::  Start command-line arguments.
+* bmc-watchdog daemon options::  Daemon command-line arguments.
+@end menu
+
+@node bmc-watchdog general options, bmc-watchdog command options, bmc-watchdog options, bmc-watchdog options
+@subsection bmc-watchdog general options
+The following commands are available to bmc-watchdog.
+@itemize @bullet
+The following options can be used by any command.
+
+@item -h, ---help @*
+      Display the help menu.  If a specific command (@option{--set},
+@option{--get}, @option{--reset}, @option{--start}, @option{--stop},
+@option{--clear}, or @option{--daemon}) is listed on the command line,
+only the specific options for that command will be listed.
+
+@item -v, ---version @*
+      Display the version information.
+
+@item -o @var{int}, ---io-port=@var{int} @*
+      Identify the System Base Address for KCS SMS/IO.  By default,
+@samp{0x0CA2} is used.  Port @samp{0x8A2} is also common.  If the
+io-port number is prefixed with a @samp{0x}, it is assumed to be a
+base-16 integer.  Otherwise, it is assumed to be a base-10 integer.
+
+@cindex io-port
+
+@item -f @var{string}, ---logfile=@var{string} @*
+      Specify an alternate logfile from the default of
+@file{/var/log/freeipmi/bmc-watchdog.log}@. 
+@cindex bmc-watchdog.log
+
+@item -n, ---no-logging
+      Turns off all logging done by bmc-watchdog.
+@end itemize
+
+@node bmc-watchdog command options, bmc-watchdog set options, bmc-watchdog general options, bmc-watchdog options
+@subsection bmc-watchdog command options
+The following commands are available to bmc-watchdog.
+@itemize @bullet
+@item -s, ---set @*
+       Set BMC Watchdog Configuration.  BMC watchdog timer
+configuration values can be set using the set command options listed
+below under @ref{bmc-watchdog set options}@.  If a particular configuration
+parameter is not specified on the command line, the current
+configuration of that parameter will not be changed.
+
+@item -g, ---get @*
+      Get BMC watchdog configuration and state.  The current
+configuration and state is printed to standard output.
+
+@item -r, ---reset @*
+      Reset BMC watchdog timer.
+
+@item -t, ---start @*
+      Start BMC watchdog timer identical to ---reset command when the
+timer is stopped.  Does nothing if the timer is currently running.
+
+@item -y, ---stop @*
+      Stop BMC watchdog timer.  Stops the current timer.
+
+@item -c, ---clear @*
+      Clear BMC watchdog configuration.  Clears all configuration
+values for the watchdog timer, except for timer use, which is kept at
+its current value.
+
+@item -d, ---daemon @*
+      Run @command{bmc-watchdog} as a daemon.  Configurable BMC
+watchdog timer options are listed below under @ref{bmc-watchdog daemon options}@.
+The configuration values are set once, then the daemon will reset the
+timer at specified periodic intervals.  Every time the BMC watchdog
+timer is reset, a log entry will be generated in the
+@file{bmc-watchdog} log.  The default log is stored at
+@file{/var/log/freeipmi/bmc-watchdog.log}@.  The daemon can be stopped
+using the @option{--stop} command, @option{--clear} command, or by setting
+the @samp{stop_timer} flag on the @option{--set} command.
+@end itemize
+
+@node bmc-watchdog set options, bmc-watchdog start options, bmc-watchdog command options, bmc-watchdog options
+@subsection bmc-watchdog set options
+The following options can be used by the set command to set or clear
+various BMC watchdog configuration parameters. 
+
+@itemize @bullet
+@item -u @var{int}, ---timer-use=@var{int} @*
+      Set timer use.  The timer use value can be set to one of the
+following:
+@example
+      @samp{1} = BIOS FRB2 
+      @samp{2} = BIOS POST 
+      @samp{3} = OS_LOAD
+      @samp{4} = SMS OS
+      @samp{5} = OEM
+@end example
+
+@item -m @var{int}, ---stop-timer=@var{int} @*
+      Set stop timer flag.  A flag value of @samp{0} stops the current
+BMC watchdog timer.  A value of @samp{1} doesn't turn off the current
+watchdog timer.
+
+@item -l @var{int}, ---log=@var{int} @*
+      Set log flag.  A flag value of @samp{0} turns logging on.  A value
+      of @samp{1} turns logging off.
+
+@item -a @var{int}, ---timeout-action=@var{int} @*
+      Set timeout action.  The timeout action can be set to one of the
+following:  
+@example
+      @samp{0} = No action
+      @samp{1} = Hard Reset
+      @samp{2} = Power Down
+      @samp{3} = Power Cycle
+@end example
+
+@item -p @var{int}, ---pre-timeout-interrupt=@var{int} @*
+      Set pre-timeout interrupt.  The pre timeout interrupt can be set
+to one of the following: 
+@example
+      @samp{0} = None
+      @samp{1} = SMI
+      @samp{2} = NMI
+      @samp{3} = Messaging Interrupt
+@end example
+
+@item -z @var{secs}, ---pre-timeout-interval=@var{secs} @*
+      Set pre-timeout interval in seconds.
+
+@item -F, ---clear-bios-frb2 @*
+      Clear BIOS FRB2 Timer Use flag.
+
+@item -P, ---clear-bios-post @*
+      Clear BIOS POST Timer Use flag.
+
+@item -L, ---clear-os-load @*
+      Clear OS Load Timer Use flag.
+
+@item -S, ---clear-sms-os @*
+      Clear SMS/OS Timer Use flag.
+
+@item -O, ---clear-oem @*
+      Clear OEM Timer Use Flag.
+
+@item -i @var{secs}, ---initial-countdown=@var{secs} @*
+      Set initial countdown in seconds.
+
+@item -w, ---start-after-set @*
+      Start timer after set command if timer is stopped.  This is
+typically used when bmc-watchdog is used as a cronjob.  This can be
+used to automatically start the timer after it has been set the first
+time.
+
+@item -x, ---reset-after-set @*
+      Reset timer after set command if timer is running.
+
+@item -j, ---start-if-stopped @*
+      Don't execute set command if timer is stopped, just start
+timer. 
+
+@item -k, ---reset-if-running @*
+      Don't execute set command if timer is running, just reset
+timer.  This is typically used when bmc-watchdog is used as a cronjob.
+This can be used to reset the timer after it has been initially
+started.
+@end itemize
+
+@node bmc-watchdog start options, bmc-watchdog daemon options, bmc-watchdog set options, bmc-watchdog options
+@subsection bmc-watchdog start options
+The following options can be used by the start command.
+
+@itemize @bullet
+@item -G @var{int}, ---gratuitous-arp=@var{int} @*
+       Suspend or don't suspend gratuitous ARPs while the BMC timer is
+running.  A flag value of @samp{1} suspends gratuitous ARPs.  A value of
+@samp{0} will not suspend gratuitous ARPs.  If this option is not
+specified, gratuitous ARPs will not be suspended.
+
+@item -A @var{int}, ---arp-response=@var{int} @*
+      Suspend or don't suspend BMC-generated ARP responses while the
+BMC timer is running.  A flag value of @samp{1} suspends ARP responses.
+A value of @samp{0} will not suspend ARP responses.  If this option is
+not specified, ARP responses will not be suspended.
+@end itemize
+
+@node bmc-watchdog daemon options,  , bmc-watchdog start options, bmc-watchdog options
+@subsection bmc-watchdog daemon options
+The following options can be used by the daemon command to set the
+initial BMC watchdog configuration parameters. 
+
+@itemize @bullet
+@item -u @var{int}, ---timer-use=@var{int} @*
+      Set timer use.  The timer use value can be set to one of the
+following:
+@example
+      @samp{1} = BIOS FRB2 
+      @samp{2} = BIOS POST 
+      @samp{3} = OS_LOAD
+      @samp{4} = SMS OS
+      @samp{5} = OEM
+@end example
+
+@item -l @var{int}, ---log=@var{int} @*
+      Set Log Flag.  A flag value of @samp{0} turns logging on.  A
+value of @samp{1} turns logging off.
+
+@item -a @var{int}, ---timeout-action=@var{int} @*
+      Set timeout action.  The timeout action can be set to one of the
+following:
+@example
+      @samp{0} = No action
+      @samp{1} = Hard Reset
+      @samp{2} = Power Down
+      @samp{3} = Power Cycle
+@end example
+
+@item -p @var{int}, ---pre-timeout-interrupt=@var{int} @*
+      Set pre-timeout interrupt.  The pre timeout interrupt can be set
+to one of the following:
+@example
+      @samp{0} = None
+      @samp{1} = SMI
+      @samp{2} = NMI
+      @samp{3} = Messaging Interrupt
+@end example
+
+@item -z @var{secs}, ---pre-timeout-interval=@var{secs} @*
+      Set pre-timeout interval in seconds.
+
+@item -F, ---clear-bios-frb2 @*
+      Clear  BIOS FRB2 Timer Use flag.
+
+@item -P, ---clear-bios-post @*
+      Clear BIOS POST Timer Use flag.
+
+@item -L, ---clear-os-load @*
+      Clear OS Load Timer Use flag.
+
+@item -S, ---clear-sms-os @*
+      Clear SMS/OS Timer Use flag.
+
+@item -O, ---clear-oem @*
+      Clear OEM Timer Use flag.
+
+@item -i @var{secs}, ---initial-countdown=@var{secs} @*
+      Set initial countdown in seconds.
+
+@item -G @var{int}, ---gratuitous-arp=@var{int} @*
+      Suspend or don't suspend gratuitous ARPs while the BMC timer is
+running.  A flag value of @samp{1} suspends gratuitous ARPs.  A value
+of @samp{0} will not suspend gratuitous ARPs.  If this option is not
+specified, gratuitous ARPs will not be suspended.
+
+@item -A @var{int}, ---arp-response=@var{int} @*
+      Suspend or don't suspend BMC-generated ARP responses while the
+BMC timer is running.  A flag value of @samp{1} suspends ARP responses.
+A value of @samp{0} will not suspend ARP responses.  If this option is
+not specified, ARP responses will not be suspended.
+
+@item -e, ---reset-period
+      Time interval to wait before resetting timer.  The default is
+@samp{60} seconds.
+@end itemize
+
+@node bmc-watchdog example, bmc-watchdog known issues, bmc-watchdog options, bmc-watchdog
+@section bmc-watchdog example
+Setup a bmc-watchdog daemon that resets the machine after 
+@samp{15 minutes} (900 seconds) if the OS has crashed.
+@footnote{see default @command{bmc-watchdog} rc script
+@file{/etc/init.d/bmc-watchdog} a more complete example.}
+
+@example
+debian-ia64:~# bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
+debian-ia64:~# ps -C bmc-watchdog
+  PID TTY          TIME CMD
+ 1035 ?        00:00:00 bmc-watchdog
+debian-ia64:~# 
+@end example
+
+@node bmc-watchdog known issues,  , bmc-watchdog example, bmc-watchdog
+@section bmc-watchdog known issues
+@command{bmc-watchdog} may fail to reset the watchdog timer if it is
+not  scheduled  properly.  It is always recommended that bmc-watchdog
+be executed with a high scheduling priority.
+
+On some machines, the hardware based SMI Handler may disable a
+processor after a watchdog timer timeout if the timer use is set to
+something other than SMS/OS.
+
+@node ipmipower, ipmiping, bmc-watchdog, Top
+@chapter IPMI power control utility
+@pindex ipmipower
+Remote out-of-band chassis control utility to perform power-up,
+power-down, power-cycle, hard-reset, pulse-diagnostics-interrupt and
+OS soft shutdown operations.
+
+PowerMan @uref{http://www.llnl.gov/linux/powerman/} now supports
+@command{ipmipower} as a remote power control device. 
+
+Whenever a power command (@option{--on}, @option{--off},
+@option{--cycle}, @option{--reset}, @option{--stat}, @option{--pulse},
+or @option{--soft}) is specified on the command-line,
+@command{ipmipower} will run in non-interactive mode.
+@command{ipmipower} will attempt to run the power command on all
+hostnames listed on the command line then exit. 
+
+If no power commands are specified on the command line,
+@command{ipmipower} will run in interactive mode.  Interactive mode
+gives the user a command-line interface to enter various commands.
+Details of the interactive command line interface can be found under
+@ref{ipmipower basic options} section.
+
+@menu
+* ipmipower options::           Command-line arguments. 
+* ipmipower configuration file::  Configuration file.
+* ipmipower interactive commands::  Interactive commands.
+* Host ranges::                 Host range specificaiton.
+* ipmipower example::           ipmipower example.
+* Use with powerman::           PowerMan integration.
+* ipmipower known issues::      Known issues.
+@end menu
+
+@node ipmipower options, ipmipower configuration file, ipmipower, ipmipower
+@section Command-line arguments
+
+@menu
+* ipmipower basic options::     Basic options.
+* ipmipower advanced options::  Advanced options.
+* ipmipower network options::   Network options.
+@end menu
+
+@node ipmipower basic options, ipmipower advanced options, ipmipower options, ipmipower options
+@subsection ipmipower basic options
+The following options are basic options for ipmipower.
+
+@itemize @bullet
+         @item -h, ---hostnames @var{host1},@var{host2},@dots{} @*
+      The list of hostname addresses to be controlled by
+@command{ipmipower}@. The hostnames must resolve to the IP address of
+the NIC connected to the remote host BMC.  If hostnames do not resolve
+to proper BMC IP addresses,  RMCP ping messages will not discover the
+remote host or power commands will time out.  This option is required
+if a power command (@option{--on}, @option{--off}, @option{--cycle},
+@option{--reset}, or @option{--stat}, @option{--pulse},
+@option{--soft}) is specified on the command-line.  Hostnames may be
+specified in a range format; see @ref{Host ranges} section.
+
+@item -u, ---username @var{name} @*
+      Sets the username to use when authenticating with the BMC.  The
+user must have @var{operator} or @var{administrator} privilege to run
+the  @option{--on}, @option{--off}, @option{--reset},
+@option{--cycle}, @option{--pulse}, or @option{--soft} power control
+commands.  The user needs only @var{user} privileges to determine the
+status of the machine through @option{--stat}@.  If not specified, a
+null username (Anonymous Login @samp{User ID 1}) is assumed.
+
+@item -p, ---password @var{password} @*
+      Sets the @var{password} to use when authenticating with the BMC.
+If not specified, a null password is assumed.
+
+@item -n, ---on @*
+      Power on the target hosts.
+
+@item -f, ---off @*
+      Power off the target hosts.
+
+@item -c, ---cycle @*
+      Power cycle the target hosts.
+
+@item -r, ---reset @*
+      Reset the target hosts.
+
+@item -s, ---stat @*
+      Get power status of the target hosts.
+
+@item -j, ---pulse @*
+      Send power diagnostic interrupt to target hosts.
+
+@item -k, ---soft @*
+      Initiate a soft-shutdown of the OS via ACPI.
+
+@item -H, ---help @*
+      Display the help menu and exit.
+
+@item -V, ---version @*
+      Display the version information and exit.
+
+@item -C, ---config file @*
+      Specify alternate configuration file.
+@end itemize
+
+@node ipmipower advanced options, ipmipower network options, ipmipower basic options, ipmipower options
+@subsection ipmipower advanced options
+The following advanced options are used to change the behavior of
+ipmipower.
+
+@itemize @bullet
+@item -a, ---authtype @var{auth-type} @*
+      Sets the authentication type to use with @command{ipmipower}@.
+The currently available authentication types are:
+@example
+        @samp{none}
+        @samp{straight_passwd_key} => (default)
+        @samp{md2}
+        @samp{md5}
+@end example
+
+@item -g,  ---on-if-off @*
+      The @acronym{IPMI} specification does not require the @command{cycle} or
+@command{reset} commands to turn on a machine that is currently
+powered off.  This option will force @command{ipmipower} to issue a
+power on command instead of a power cycle or hard reset command if the
+remote machine's power is currently off.
+
+@item -o, ---outputtype @var{output-type} @*
+       Sets the output type to use with @command{ipmipower}@.  The
+currently available output types are: 
+@example
+        @samp{none}
+        @samp{newline}    => (default)
+        @samp{hostlist}
+@end example
+@end itemize
+
+Hostlist output can be used to shorten output if the number of nodes
+in your cluster is quite large.  However, hostlist output will only
+output after the slowest node has completed its power control
+operation. 
+
+@node ipmipower network options,  , ipmipower advanced options, ipmipower options
+@subsection ipmipower network options
+The following options are used to change the behavior of the actual
+@command{ipmipower} network protocol used. 
+
+@itemize @bullet
+@item -t, ---timeout @var{time-out} @*
+      Sets the @var{time-out} in milliseconds.  @command{ipmipower}
+uses the @var{time-out} value to determine when to give up on a power
+command.  If not specified, a default @var{time-out} of 20000
+milliseconds (20 seconds) is used.
+
+@item -y, ---retry-timeout @var{retry-timeout} @*
+      Sets the retry-timeout in milliseconds.  The @acronym{IPMI} protocol sends
+a series of packets back and forth to a remote host BMC in order to
+perform a power control operation.  When a response to any individual
+packet is not received after @var{retry-timeout} milliseconds,
+@command{ipmipower} will retry sending that packet.  If not specified,
+packet retransmissions will occur after @samp{400} milliseconds (0.4
+seconds).  The value @var{ms} must be less than the time out length
+specified with @option{--timeout}@.  Packet retransmissions can be
+disabled by setting the @var{retry-timeout} length to @samp{0}@.
+
+       Note how this option differs from the @option{--timeout} option
+above.  The @option{--timeout} option refers to the entire amount of
+time the @acronym{IPMI} protocol has to complete a power control operation.  The
+@option{--retry} option refers to the amount of time any individual
+packet within the @acronym{IPMI} protocol has to complete.
+
+@item -b, ---retry-backoff-count @var{retry-backoff-count} @*
+      After every @var{retry-backoff-count} retransmissions,
+@command{ipmipower} will increase the @var{retry-timeout} length by
+another factor for the duration of the current power control
+operation.  This is done to reduce network traffic and allow BMC
+buffers to empty.  If not specified, @var{retry-backoff-count} is
+@samp{8}@.  Retransmission backoff can be disabled by setting the retry
+backoff count to @samp{0}@.
+
+@item -i, ---ping-interval @var{ping-interval} @*
+@item -z, ---ping-timeout @var{ping-timeout} @*
+      @command{ipmipower} will send RMCP ping discovery messages every
+@var{ping-interval} milliseconds to discover all remote hosts and
+confirm its support of @acronym{IPMI}@.  Power commands cannot be sent to a host
+until it is discovered.  If a remote host does not respond within
+@var{ping-timeout} milliseconds, a host will be considered
+undiscovered and power commands will not be sent to it.  If not
+specified, @var{ping-interval} is @samp{5000} milliseconds (5 seconds)
+and @var{ping-timeout} is @samp{30000} milliseconds (30 seconds).
+Ping discovery requests can be disabled by setting the ping interval
+to @samp{0}@.  If ping discovery messages are disabled, power commands
+will be attempted without knowledge of the host's existence or its
+support of @acronym{IPMI}@.  The value of @var{ping-interval} must be less than
+the @var{ping-timeout} length.  RMCP ping discovery messages are
+automatically disabled in non-interactive mode.
+
+@item -v, ---ping-packet-count @var{ping-packet-count} @*
+@item -w, ---ping-percent @var{ping-percent} @*
+      It is difficult to distinguish between a missing node and node
+with a bad connection when using just RMCP pings and timeouts. For
+example, if a link consistently drops 80% of the packets to a
+particular node, a power control operation may have difficulty
+completing, although a recent pong response makes ipmipower
+believe the node exists and is functioning properly.  The
+@option{--ping-packet-count} and  @option{--ping-percent} options
+alleviate this problem.  @command{ipmipower} will monitor ping packets
+in @var{ping-packet-count} chunks.  If @command{ipmipower} does not
+receive a response to greater than @var{ping-percent} of those
+packets, @command{ipmipower} will assume the link to this node is bad
+and will not send power control operations to that node until the
+connection is determined to be reliable.  If not specified,
+@var{ping-packet-count} is @samp{10} and @var{ping-percent} is
+@samp{50}@.  This heuristic can be disabled by setting either
+@var{ping-packet-count} or @var{ping-percent} to @samp{0}@.  This
+feature is not used if @var{ping-interval} is set to @samp{0}@.  Note
+that the @option{--ping-percent} option takes an integer as an
+argument, not a decimal.
+
+@item -x, ---ping-consec-count @var{ping-consec-count} @*
+      @var{ping-consec-count} is another measurement used to determine
+if a node should be considered discovered, undiscovered, or with a bad
+connection.  If a valid response was received from the last
+@var{ping-consec-count} RMCP ping packets, a node will be considered
+discovered, regardless if @var{ping-packet-count} and
+@var{ping-percent} statistically consider the link to be unreliable.
+If not specified, @var{ping-consec-count} is @samp{5}@.  This feature
+can be disabled by setting @var{ping-consec-count} to @samp{0}@.  This
+feature is not used if @var{ping-interval},
+@option{--ping-packet-count}, or @option{--ping-percent} are set to
+@samp{0}@.
+@end itemize
+
+@node ipmipower configuration file, ipmipower interactive commands, ipmipower options, ipmipower
+@section ipmipower configuration file
+The @command{ipmipower} configuration file can be used to set default
+values to ipmipower when values aren't set on the command line.  This
+allows users to avoid typing in a long list of command line options
+everytime ipmipower is executed.  It can also be used to hide
+usernames and passwords from the @command{ps} command. See
+@ref{ipmipower known issues} for details.
+
+By default, the configuration file is stored at
+@file{/etc/ipmipower.conf}.  But users may select a different
+configuration file at the command line through the @option{--config}
+option.
+
+The user can still override the configuration file values by
+specifying the options on the command line.  The configuration file
+does not stop a user from specifying certain options. 
+
+@subsection Configuration options
+The following are a list of configuration options that can be
+specified in the configuration file.  Each configuration option must
+be listed on a separate line.  Arguments for an option are separated
+by any amount of whitespace.  Multiple arguments are also separated by
+whitespace.  Comments can be marked by using the pound sign ("#")
+character, and lines can be continued on the next using backslash
+("\").
+
+Note that it is possible to list the username and password in
+the con- figuration file.  If this data is stored in a configuration
+file, sys- tem administrators should limit access to this file.
+
+@itemize @bullet
+@item hostnames @var{host1} @var{host2} @var{host3} @dots{} @*
+
+Specify the default hostnames.  Multiple hostnames or hostname ranges
+can be specified by separating each range by whitespace.  See
+@ref{Host ranges} for information on hostname ranges.  For example,
+any of the following configuration listings would be acceptable:
+
+@example
+hostnames @var{host1} @var{host2} @var{host3} @var{foo1} @var{bar1}
+hostnames @var{host1},@var{host2},@var{host3},@var{foo1},@var{bar1}
+hostnames @var{host[1-3]} @var{foo1} @var{bar1}
+hostnames @var{host[1-3]} @var{foo1},@var{bar1}
+@end example
+
+At most 64 hostnames or hostname ranges can be separted by
+whitespace. 
+
+@item username @var{username} @*
+Specify the default @var{username} to use.
+
+@item password @var{password} @*
+Specify the default @var{password} to use.
+
+@item authtype @var{authtype} @*
+Specify the default authentication type to use.  @command{ipmipower}
+currently supports the following authentication types: 
+
+@example
+        @samp{straight_passwd_key}
+        @samp{md2}
+        @samp{md5}
+@end example
+
+@item on-if-off enable|disable @*
+
+@item outputtype @var{outputtype} @*
+Specify the default outputtype type to use.  @command{ipmipower}
+currently supports the following output types:  
+
+@example
+        @samp{none}
+        @samp{newline}    => (default)
+        @samp{hostlist}
+@end example
+
+@item timeout @var{timeout} @*
+Specify the @var{timeout} in ms.
+
+@item retry-timeout @var{timeout} @*
+Specify the retry @var{timeout} in ms.  See @ref{ipmipower} for an
+explanation on the difference between this is the @var{timeout}
+option. 
+
+@item retry-backoff-count @var{num} @*
+Specify the retry backoff count.
+
+@item ping-interval @var{interval-length} @*
+Specify the ping @var{interval-length} in ms.
+
+@item ping-timeout @var{timeout} @*
+Specify the ping @var{timeout} length in ms.
+
+@item ping-packet-count @var{count} @*
+Specify a new ping packet @var{count}.
+
+@item ping-percent @var{num} @*
+Specify a new ping percent.
+
+@item ping-consec-count @var{count} @*
+       Specify a new ping consec @var{count}.
+@end itemize
+
+@node ipmipower interactive commands, Host ranges, ipmipower configuration file, ipmipower
+@section ipmipower interactive commands
+@command{ipmipower} provides the following interactive commands at the
+@samp{ipmipower>} prompt.  Before any @command{power} commands (@samp{on},
+@samp{off}, @samp{cycle}, @samp{reset}, @samp{stat}, @samp{pulse}, or
+@samp{soft}) can be used, hostnames must be configured into @command{ipmipower},
+either through the command prompt or the @command{hostnames} command below.
+
+@itemize @bullet
+@item hostnames @var{str} @*
+      Specify a new set of hosts, no @var{str} to unconfigure all hosts.
+
+@item username @var{str} @*
+      Specify a new username, no @var{str} for null username.
+
+@item password @var{str} @*
+      Specify a new password, no @var{str} for null password.
+
+@item on @var{host} @*
+      Turns on all hosts, or only the specified host.
+
+@item off @var{host} @*
+      Turns off all hosts, or only the specified host.
+
+@item cycle @var{host} @*
+      Power cycle all hosts, or specified host.
+
+@item reset @var{host} @*
+      Hard reset all hosts or specified host.
+
+@item stat @var{host} @*
+      Queries power status for all hosts, or only the specified host.
+
+@item pulse @var{host} @*
+      Send pulse diagnostic interrupt to all hosts, or only the
+specified host. 
+
+@item soft @var{host} @*
+      Initiate a soft-shutdown of the OS via ACPI  to  all  hosts,  or
+     only the specified host.
+
+@item help @*
+      Display the help menu.
+
+@item advanced @*
+      Display the advanced help menu.
+
+@item network @*
+      Display the network help menu.
+
+@item quit @*
+      Quit ipmipower.
+
+@item authtype @var{str} @*
+      Specify a new authentication type:
+@example
+        @samp{none}
+        @samp{straight_passwd_key}
+        @samp{md2}
+        @samp{md5}
+@end example
+
+@item outputtype @var{str} @*
+      Specify a new output type:
+@example
+        @samp{none}
+        @samp{newline}
+        @samp{hostlist}
+@end example
+
+@item config @*
+      Output the current configuration.
+
+@item timeout @var{ms} @*
+      Specify a new timeout length.
+
+@item retry-timeout @var{ms} @*
+      Specify a new retry timeout length.
+
+@item retry-backoff-count @var{num} @*
+      Specify a new retry backoff count.
+
+@item ping-interval @var{ms} @*
+      Specify a new ping interval length.
+
+@item ping-timeout @var{ms} @*
+      Specify a new ping timeout length.
+
+@item ping-packet-count @var{num} @*
+      Specify a new ping packet count.
+
+@item ping-percent @var{num} @*
+      Specify a new ping percent.
+
+@item ping-consec-count @var{num} @*
+      Specify a new ping consec count.
+@end itemize
+
+@node Host ranges, ipmipower example, ipmipower interactive commands, ipmipower
+@section Host ranges
+As noted above, ipmipower accepts a range of hostnames in the general
+form: prefix[n-m,l-k,...], where n < m and l < k, etc., as an
+alternative to explicit comma separated lists of hosts.  This form
+should not be confused with regular expression character classes (also
+denoted by []).  For example, foo[19] does not represent foo1 or foo9,
+but rather represents a degenerate range: foo19.
+
+This range syntax is meant only as a convenience on clusters with a
+prefixNN naming convention and specification of ranges should not be
+considered necessary -- the list foo1,foo9 could be specified as
+such, or by the range foo[1,9].
+
+Some examples of range usage follow:
+@example
+        foo[01-05] instead of foo01,foo02,foo03,foo04,foo05
+        foo[7,9-10] instead of foo7,foo9,foo10
+        foo[0-3] instead of foo0,foo1,foo2,foo3
+@end example
+
+As a reminder to the reader, some shells will interpret brackets ([
+and ]) for pattern matching.  Depending on your shell, it may be
+necessary to enclose ranged lists within quotes.
+
+@node ipmipower example, Use with powerman, Host ranges, ipmipower
+@section ipmipower example
+
+Determine the power status of foo[0-2] with null username and
+password.
+@example
+        ipmipower -h foo[0-2] --stat
+@end example
+
+Determine the power status of foo[0-2] with non-null username and
+password.
+@example
+        ipmipower -h foo[0-2] -u foo -p bar --stat
+@end example
+
+Hard reset nodes foo[0-2] with non-null username and password.
+@example
+        ipmipower -h foo[0-2] -u foo -p bar --reset
+@end example
+
+Hard reset the nodes configured in a configuration file.
+@example
+        ipmipower -C /etc/powerctrl.conf --reset
+@end example
+
+Example @command{ipmipower} session:
+@example
+debian-sid:~# ipmipower --hostnames debian-ia64 --password "rea1secret" --stat
+debian-ia64: on
+debian-sid:~# ipmipower --hostnames debian-ia64 --password "rea1secret" --off
+debian-ia64: ok
+debian-sid:~# ipmipower --hostnames debian-ia64 --password "rea1secret" --stat
+debian-ia64: off
+debian-sid:~# ipmipower --hostnames debian-ia64 --password "rea1secret" --on
+debian-ia64: ok
+debian-sid:~# 
+@end example
+
+@node Use with powerman, ipmipower known issues, ipmipower example, ipmipower
+@section Use with powerman
+@cindex powerman
+@pindex powerman
+The @command{powerman} device configuration file @file{ipmipower.dev}
+supplied with @command{powerman} 1.0.20 and beyond can be used to
+control one or more instances of @command{ipmipower} in coprocess
+mode. 
+
+Due to deficiencies within @command{powerman}, the power control
+operations @option{--on}, @option{--off}, @option{--cycle},
+@option{--reset} will be reported as successful, despite any errors
+that may occur.  The user should use the @option{--query} option to
+ensure that all remote hosts were successfully powered on or off. 
+
+It is recommend that the @option{--on-if-off} option be used with
+@command{ipmipower} when it is used in conjunction with powerman.  This
+will ensure @command{ipmipower} behaves similarly to other
+@command{powerman} devices. 
+
+@node ipmipower known issues,  , Use with powerman, ipmipower
+@section Known issues with the ipmipower command
+In order to prevent brute force attacks, some BMCs will @emph{lock up}
+after a number of username, password, or privilege errors.  There is
+no known way to cleanly deal with a @emph{locked up} BMC.  The best
+option is to simply @strong{wait awhile}@.
+
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the @command{ps} command or looking in the
+@file{/proc} file system.  The most secure solution is to enter the
+username and password while in interactive mode.  If administrators do
+not wish to type in their username and password at the interactive
+prompt, they can be listed in a configuration file, in which the
+access to this file can be limited. 
+
+@acronym{IPMI} specifications do not require BMCs to perform a power
+control operation before returning a completion code to the caller.
+Therefore, it is possible for ipmipower power status queries to
+initially return information other than what you are expecting.  For
+example, if a @samp{power off} operation is performed, a BMC may
+return a successful completion-code to ipmipower before the
+@samp{power off} operation is actually performed.  Subsequent power
+status queries may return @samp{on} for several seconds, until the BMC
+actually performs the @samp{power off} operation.
+
+@node ipmiping, rmcpping, ipmipower, Top
+@chapter ipmiping
+@pindex ipmiping
+@acronym{IPMI} discovery and reachability test tool. 
+
+@command{ipmiping} uses the @acronym{IPMI} @command{Get Authentication
+Capabilities} request datagram to elicit an @acronym{IPMI} @command{Get
+Authentication Capabilities} response from a remote host.  The utility
+can be used to verify if a remote host supports @acronym{IPMI}@.
+
+Returns @samp{0} to the environment if it receives at least @samp{1}
+response from the remote host.  Otherwise, it exists with a value of
+@samp{1}@. 
+
+@menu
+* ipmiping options::            Command-line arguments.
+* ipmiping example::            @command{ipmiping} example.
+* ipmiping known issues::       Known issues with the @command{ipmi-ping}
+@end menu
+
+@node ipmiping options, ipmiping example, ipmiping, ipmiping
+@section command-line arguments
+@subsection Synopsis
+ipmiping [OPTIONS] destination
+
+The following options are available
+@itemize @bullet
+@item -h @*
+      Display the help menu.
+
+@item -V @*
+      Display the version information.
+
+@item -c @var{count} @*
+      Stop after sending @var{count} request packets.
+
+@item -i @var{interval} @*
+      Wait @var{interval} seconds between sending each packet.  The
+default is to wait for one second between each packet.
+
+@item -I @var{interface-address} @*
+      Set source address to specified
+@var{interface-address}@. Argument may be numeric IP address or name of
+device. 
+
+@item -t @var{timeout} @*
+      Time to wait for a response, in seconds. Default is five
+seconds. 
+
+@item -v @*
+      Verbose Display.
+@end itemize
+
+@node ipmiping example, ipmiping known issues, ipmiping options, ipmiping
+@section ipmiping example
+
+Example: Test the BMC reachability of host @samp{debian-ia64} using
+@acronym{IPMI} protocol.
+@example
+debian-sid:~# ipmiping debian-ia64
+ipmiping debian-ia64 (192.168.1.60)
+response received from 192.168.1.60: rq_seq=0
+response received from 192.168.1.60: rq_seq=1
+response received from 192.168.1.60: rq_seq=2
+response received from 192.168.1.60: rq_seq=3
+response received from 192.168.1.60: rq_seq=4
+response received from 192.168.1.60: rq_seq=5
+--- ipmiping debian-ia64 statistics ---
+6 requests transmitted, 6 responses received in time, 0.0% packet loss
+@end example
+
+Example: Test the BMC reachability of host @samp{debian-ia64} in
+verbose mode. 
+@example
+debian-sid:~# ipmiping -v debian-ia64
+ipmiping debian-ia64 (192.168.1.60)
+response received from 192.168.1.60: rq_seq=0, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+response received from 192.168.1.60: rq_seq=1, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+response received from 192.168.1.60: rq_seq=2, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+response received from 192.168.1.60: rq_seq=3, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+response received from 192.168.1.60: rq_seq=4, auth: none=set md2=set md5=set passwd=set oem=clear permsg=clear user=set
+--- ipmiping debian-ia64 statistics ---
+5 requests transmitted, 5 responses received in time, 0.0% packet loss
+@end example
+
+Example: Test the BMC reachability of host @samp{debian-ia64} by
+sending exactly 2 packets.
+@example
+debian-sid:~# ipmiping -c 2 debian-ia64
+ipmiping debian-ia64 (192.168.1.60)
+response received from 192.168.1.60: rq_seq=0
+response received from 192.168.1.60: rq_seq=1
+--- ipmiping debian-ia64 statistics ---
+2 requests transmitted, 2 responses received in time, 0.0% packet loss
+debian-sid:~# 
+@end example
+
+@node ipmiping known issues,  , ipmiping example, ipmiping
+@section ipmiping known issues
+It has been observed that some remote BMCs can get @emph{confused} and
+delay packet responses if duplicate packets are sent in succession
+very quickly.  For example, this could happen if the user repeatedly
+executes @command{ipmiping -c 1 destination} very quickly.  There is
+no known way to cleanly deal with a @emph{confused} BMC.  The best
+option is to simply @strong{wait awhile}@.
+
+@node rmcpping, Trouble-shooting, ipmiping, Top
+@chapter rmcpping
+@pindex rmcpping
+RMCP/@acronym{IPMI} discovery and reachability test tool.
+
+@command{rmcpping} uses the RMCP ping request datagram to elicit an
+RMCP pong response from a remote host.  The utility can be used to
+verify if a remote host supports RMCP or @acronym{IPMI}@.
+
+Returns 0 to the environment if it receives at least @samp{1}
+response from the remote host.  Otherwise, it exits with a value of
+@samp{1}@.
+
+@menu
+* rmcpping options::            Command-line arguments.
+* rmcpping example::            @command{rmcpping} example.
+* rmcpping known issues::       Known issues with the @command{rmcpping}@.
+@end menu
+
+@node rmcpping options, rmcpping example, rmcpping, rmcpping
+@section Command-line arguments
+
+@subsection Synopsis
+rmcpping [OPTIONS] destination
+@itemize
+@item -h @*
+      Display the help menu.
+
+@item -V @*
+      Display the version information.
+
+@item -c @var{count} @*
+      Stop after sending count ping packets.
+
+@item -i @var{interval} @*
+      Wait @var{interval} seconds between sending each packet.  The
+default is to wait for one second between each packet normally.
+
+@item -I @var{interface-address} @*
+      Set source address to specified @var{interface-address}@.
+Argument may be numeric IP address or name of device.
+
+@item -t @var{timeout} @*
+      Time to wait for a response, in seconds.  Default is @samp{5}
+seconds. 
+
+@item -v
+      Verbose display.
+@end itemize
+
+@node rmcpping example, rmcpping known issues, rmcpping options, rmcpping
+@section rmcpping example
+Example: Test the BMC reachability of host @samp{debian-ia64} using
+RMCP protocol. 
+
+@example
+debian-sid:~# rmcpping debian-ia64
+rmcpping debian-ia64 (192.168.1.60)
+pong received from 192.168.1.60: msg_tag=0
+pong received from 192.168.1.60: msg_tag=1
+pong received from 192.168.1.60: msg_tag=2
+pong received from 192.168.1.60: msg_tag=3
+pong received from 192.168.1.60: msg_tag=4
+pong received from 192.168.1.60: msg_tag=5
+pong received from 192.168.1.60: msg_tag=6
+pong received from 192.168.1.60: msg_tag=7
+pong received from 192.168.1.60: msg_tag=8
+--- rmcpping debian-ia64 statistics ---
+9 pings transmitted, 9 pongs received in time, 0.0% packet loss
+@end example
+
+Example: Test the BMC reachability of host @samp{debian-ia64} in
+verbose mode.
+@example
+debian-sid:~# rmcpping -v debian-ia64
+rmcpping debian-ia64 (192.168.1.60)
+pong received from 192.168.1.60: msg_tag=0, ipmi supported
+pong received from 192.168.1.60: msg_tag=1, ipmi supported
+pong received from 192.168.1.60: msg_tag=2, ipmi supported
+pong received from 192.168.1.60: msg_tag=3, ipmi supported
+pong received from 192.168.1.60: msg_tag=4, ipmi supported
+--- rmcpping debian-ia64 statistics ---
+5 pings transmitted, 5 pongs received in time, 0.0% packet loss
+@end example
+
+Example: Test the BMC reachability of host @samp{debian-ia64} by
+sending exactly 2 packets.
+@example
+debian-sid:~# rmcpping -c 2 debian-ia64
+rmcpping debian-ia64 (192.168.1.60)
+pong received from 192.168.1.60: msg_tag=0
+pong received from 192.168.1.60: msg_tag=1
+--- rmcpping debian-ia64 statistics ---
+2 pings transmitted, 2 pongs received in time, 0.0% packet loss
+debian-sid:~# 
+@end example
+
+@node rmcpping known issues,  , rmcpping example, rmcpping
+@section rmcpping known issues
+It has been observed that some remote BMCs can get @emph{confused} and
+delay packet responses if duplicate packets are sent in succession
+very quickly.  For example, this could happen if the user repeatedly
+executes @command{rmcpping -c 1 destination} very quickly.  There is
+no known way to cleanly deal with a @emph{confused} BMC.  The best
+option is to simply @strong{wait awhile}@.
+
+@node Trouble-shooting, Contact us, rmcpping, Top
+@chapter Trouble-shooting
+
+@menu
+* Ports conflict::              Fencing @acronym{IPMI} @acronym{IP} ports.
+* Fish exception::              @strong{Cat ate the fish} exception.
+* IPC key conflict::            Non-unique IPC key.
+@end menu
+
+@node Ports conflict, Fish exception, Trouble-shooting, Trouble-shooting
+@section Fencing @acronym{IPMI} @acronym{IP} ports
+@cindex Ports conflict
+@cindex Fencing BMC
+@example
+Append the following to /etc/services:
+# BMC IPMI/RMCP services
+rmcp    623/udp         # Aux Bus Shunt (Primary RMCP Port)
+rmcps   664/udp         # Secure Aux Bus (Secondary RMCP Port)
+@end example
+@acronym{BMC} internally (at hardware level) uses the above mentioned
+ports for sending @acronym{RMCP}/@acronym{IPMI} packets . To avoid any
+conflit with the @acronym{BMC}, Operating System should make sure no
+other applications or services uses these ports for communication.
+One easy way to do this is to start a simple daemon at the boot time
+that opens these ports but never uses them. 
+
+Most common victims to this issue are Remote-shell (rsh) and NIS
+services. You will notice ``time out'' errors under heavy load, when
+these services run over the @acronym{BMC} reserved ports.
+
+Secure connections to BMC port 664 is not enabled on most BMC
+implementations by default.
+
+Thanks to Anand Manian (GE Power Systems) for reporting this 
+problem.
+
+@node Fish exception, IPC key conflict, Ports conflict, Trouble-shooting
+@section ``Cat ate the fish'' exception
+@cindex Cat ate the fish
+@cindex Fish exception
+@command{fish} throws exception if it encounters any error in its
+extension system. Most of the times, You will get a clear indicative
+message from the exception dump. 
+
+In this example, Fish throws an exception message, when a built-in
+primitive is misspelt as @command{fi-set-promt!} instead of
+@command{fi-set-prompt!}. Unbound-variable @samp{tag} and @samp{throw
+args} gives you the clue.
+@example
+root@@gnu:~/work/freeipmi# fish
+
+>>--:>  >>--:>  >>--:> >>--:>
+~ ~   Cat ate the fish!!  ~ ~
+>>--:>  >>--:>  >>--:> >>--:>
+Fish Exception (gh_standard_handler dump):
+tag        : unbound-variable
+throw args : (#f Unbound variable: ~S (fi-set-promt!) #f)
+data       : [/usr/etc/fish/fish.scm]
+No backtrace available.
+
+FreeIPMI Shell [fish-0.1.0]
+Copyright (C) 2003-2004 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+fish> 
+@end example
+
+@example
+;; file: /usr/etc/fish/fish.scm (fish startup file)
+(fi-set-promt! "fish# ")  
+            ^---<< Typo, Spell correctly as "fi-set-prompt!"
+@end example
+
+@node IPC key conflict,  , Fish exception, Trouble-shooting
+@section Non-unique IPC key
+@cindex IPC key conflict
+Drivers internally use the inode number of
+@file{/var/lib/freeipmi/ipckey} to obtain a system wide unique IPC key
+for locking and synchronization through @code{ftok} call.  It is
+extremely rare (but possible) for more than one application to
+conflict with this IPC key, because @code{ftok} doesn't absolutely 
+guarantee system wide uniqueness. 
+
+To regenerate a new system wide unique IPC key, you have to recreate
+@file{/var/lib/freeipmi/ipckey} with a new inode number.
+
+Example: Recreating @file{/var/lib/freeipmi/ipckey} file.
+@example
+debian-ia64:~# touch -f /var/lib/freeipmi/ipckey.new
+debian-ia64:~# ls --inode /var/lib/freeipmi/ipckey
+2289282 /var/lib/freeipmi/ipckey
+debian-ia64:~# ls --inode /var/lib/freeipmi/ipckey.new
+2289284 /var/lib/freeipmi/ipckey.new
+debian-ia64:~# mv -f /var/lib/freeipmi/ipckey.new
+/var/lib/freeipmi/ipckey
+debian-ia64:~# ls --inode /var/lib/freeipmi/ipckey
+2289284 /var/lib/freeipmi/ipckey
+debian-ia64:~#
+@end example
+
+@node Contact us, Authors, Trouble-shooting, Top
+@chapter Contact us
+
+@itemize @bullet
+@item Homepage:      @uref{http://www.gnu.org/software/freeipmi}
+
+@item Project Main:  @uref{https://savannah.gnu.org/projects/freeipmi/}
+
+@item Download:      @uref{https://savannah.gnu.org/files/?group=freeipmi}
+
+@item Mailing List:  @uref{https://savannah.gnu.org/mail/?group=freeipmi}
+
+@item Support:       @uref{https://savannah.gnu.org/support/?group=freeipmi}
+
+@item Patches:       @uref{https://savannah.gnu.org/patch/?group=freeipmi}
+
+@item News:          @uref{https://savannah.gnu.org/news/?group=freeipmi}
+
+@item Bugs:          @uref{https://savannah.gnu.org/bugs/?group=freeipmi}
+
+@item Tasks:         @uref{https://savannah.gnu.org/task/?group=freeipmi}
+
+@item CVS:           @uref{https://savannah.gnu.org/cvs/?group=freeipmi}
+@end itemize
+
+@subsection For everything else...
+Contact Anand Babu @email{ab@@gnu.org.in}
+
+@node Authors, Copying, Contact us, Top
+@chapter Authors
+@include authors.texi
+
+@node Copying, Glossary, Authors, Top
+@chapter Copying
+@cindex Copying
+
+@menu
+* GNU FreeIPMI license::        
+* GNU FreeIPMI documentation license::  
+@end menu
+
+@node GNU FreeIPMI license, GNU FreeIPMI documentation license, Copying, Copying
+@section GNU FreeIPMI license
+@include gpl.texi
+
+@node GNU FreeIPMI documentation license,  , GNU FreeIPMI license, Copying
+@section GNU FreeIPMI documentation license
+@include fdl.texi
+
+@node Glossary, Concept Index, Copying, Top
+@chapter Glossary
+@multitable @columnfractions 0.15 0.85
+@item BMC   @tab [B]aseboard [M]anagement [C]ontroller.
+@item FISH  @tab [F]ree[I]PMI [SH]ell.
+@item GNU   @tab [G]NU's [N]ot [U]nix.
+@item GPL   @tab GNU [G]eneral [P]ublic [L]icense.
+@item IP    @tab [I]nternet [P]rotocol.
+@item IPMI  @tab [I]ntelligent [P]latform [M]anagement [I]nterface
+@item NIS   @tab [N]etwork [I]nformation [S]ervice. 
+Also humerously known as [N]etwork [I]ntrusion [S]ervice :) .  
+@item RMCP  @tab [R]empote [M]anagement [C]ontrol [P]rotocol.
+@item RSH   @tab [R]emote [SH]ell.
+@end multitable
+
+@node Concept Index, Program Index, Glossary, Top
+@unnumbered Concept index
+@printindex cp
+
+@node Program Index,  , Concept Index, Top
+@unnumbered Program index
+@printindex pg
+
+@bye

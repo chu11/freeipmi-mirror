@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.6 2004-10-05 01:09:55 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.7 2004-10-08 21:29:26 ab Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,7 +118,7 @@ The currently available authentication types are "none",
 .B ipmipower
 uses "straight_passwd_key" authentication.
 .TP
-.I "-g, "--on-if-off"
+.I "-g, --on-if-off"
 The IPMI specification does not require the cycle or reset commands to
 turn on a machine that is currently powered off.  This option will
 force
