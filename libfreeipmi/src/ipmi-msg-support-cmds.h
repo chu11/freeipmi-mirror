@@ -263,6 +263,7 @@ extern fiid_template_t tmpl_cmd_set_session_priv_level_rq;
 extern fiid_template_t tmpl_cmd_set_session_priv_level_rs;
 extern fiid_template_t tmpl_cmd_close_session_rq;
 extern fiid_template_t tmpl_cmd_close_session_rs;
+extern fiid_template_t tmpl_get_channel_access_rq;
 extern fiid_template_t tmpl_get_channel_access_rs;
 
 int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, fiid_obj_t obj_cmd);

@@ -800,10 +800,19 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 		"user_id", 
 		user_id);
   
-  fiid_obj_set_data (obj_data_rq, 
-		     tmpl_set_user_name_rq, 
-		     "user_name", 
-		     user_name);
+  if (user_name)
+    fiid_obj_set_data (obj_data_rq, 
+                       tmpl_set_user_name_rq, 
+                       "user_name", 
+                       user_name);
+  else
+    {
+      int32_t start_offset = fiid_obj_field_start_bytes (tmpl_set_user_name_rq,
+                                                         "user_name");
+      int32_t len = fiid_obj_field_len_bytes (tmpl_set_user_name_rq, 
+                                              "user_name");
+      memset (obj_data_rq + start_offset, '\0', len);
+    }
   
   return 0;
 }
@@ -878,10 +887,19 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
 		"operation", 
 		operation);
   
-  fiid_obj_set_data (obj_data_rq, 
-		     tmpl_set_user_password_rq, 
-		     "password", 
-		     user_password);
+  if (user_password)
+    fiid_obj_set_data (obj_data_rq,
+                       tmpl_set_user_password_rq,
+                       "password",
+                       user_password);
+  else
+    {
+      int32_t start_offset = fiid_obj_field_start_bytes (tmpl_set_user_password_rq,
+                                                         "password");
+      int32_t len = fiid_obj_field_len_bytes (tmpl_set_user_password_rq,
+                                              "password");
+      memset (obj_data_rq + start_offset, '\0', len);
+    }
   
   return 0;
 }
