@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sha1.c,v 1.2 2005-02-13 14:45:22 ab Exp $
+ *  $Id: ipmi-sha1.c,v 1.3 2005-02-13 22:02:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,32 +96,39 @@ ipmi_sha1_init(ipmi_sha1_t *ctx)
   return 0;
 }
 
+/* As defined under section 5 of RFC 3174 */
 static int32_t
 _f(unsigned int t, int32_t B, int32_t C, int32_t D)
 {
+  ERR_EXIT(t >= 0 && t <= 79);
+
   if (t >= 0 && t <= 19)
     return ((B & C) | ((~B) & D));
   else if (t >= 20 && t <= 39)
     return (B ^ C ^ D);
   else if (t >= 40 && t <= 59)
     return ((B & C) | (B & D) | (C & D));
-  else if (t >= 60 && t <= 79)
+  else /* t >= 60 && t <= 79 */
     return (B ^ C ^ D);
 }
 
+/* As defined under section 5 of RFC 3174 */
 static int32_t
 _K(unsigned int t)
 {
+  ERR_EXIT(t >= 0 && t <= 79);
+
   if (t >= 0 && t <= 19)
     return 0x5A827999;
   else if (t >= 20 && t <= 39)
     return 0x6ED9EBA1;
   else if (t >= 40 && t <= 59)
     return 0x8F1BBCDC;
-  else if (t >= 60 && t <= 79)
+  else /* t >= 60 && t <= 79 */
     return 0xCA62C1D6;
 }
 
+/* Calculate digest using method #1 as defined in RFC 3174 */
 static void 
 _ipmi_sha1_update_digest(ipmi_sha1_t *ctx) 
 {

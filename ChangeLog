@@ -1,3 +1,8 @@
+2005-02-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sha1.c (_f, _K): Added error checking and
+	modified else condition to remove potential compiler warnings.
+	
 2005-02-13  Anand Babu  <ab@gnu.org.in>
 
 	* ipmi-ssif-interface.[c,h]: Newly added. SSIF driver.
