@@ -79,6 +79,7 @@ Autoconf issues:
 - socklet_t, doesn't exist on all OSes.
 - stdarg.h, other OSes use varargs.h
 - bittypes.h and inttypes.h for u_int32_t, etc.
+- default io-port config option?
 
 Testsuite for Freeipmi and IPMI conformance test.
 
