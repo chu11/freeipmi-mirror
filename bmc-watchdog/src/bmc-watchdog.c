@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.5 2004-07-07 18:07:46 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.6 2004-07-07 21:29:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -288,7 +288,7 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
         _err_exit("Error opening logfile '%s': %s",
                   cinfo.logfile, strerror(errno));
       else
-        _syslog(LOG_ERR, "_daemon_init: Error opening logfile '%s': %s",
+        _syslog(LOG_ERR, "Error opening logfile '%s': %s",
                 cinfo.logfile, strerror(errno));
       exit(1);
     }
@@ -298,7 +298,7 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
       if (err_to_stderr)
         _err_exit("_init_ipmi: %s", strerror(errno));
       else
-        _syslog(LOG_ERR, "_daemon_init: _init_ipmi: %s", strerror(errno));
+        _syslog(LOG_ERR, "_init_ipmi: %s", strerror(errno));
       exit(1);
     }
 }
