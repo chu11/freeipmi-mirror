@@ -706,7 +706,8 @@ ipmi_lan_cmd (u_int32_t sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, 
 /*     fiid_obj_dump (2, obj_cmd_rs, tmpl_cmd_rs); */
     /* __DEBUG__ << */
 
-    ERR (ipmi_comp_test (obj_cmd_rs));
+    /* Caller is reponsible for checking return code */
+    /* ERR (ipmi_comp_test (obj_cmd_rs)); */
 
   }
   return (0);

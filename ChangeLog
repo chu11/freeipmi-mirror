@@ -1,3 +1,15 @@
+2004-11-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd): Make
+	ipmi_lan_cmd() consistent to style of ipmi_kcs_cmd() by requiring
+	caller to check completion code.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_get_channel_auth_caps, ipmi_lan_get_session_challenge,
+	ipmi_lan_activate_session, ipmi_lan_set_session_priv_level,
+	ipmi_lan_close_session): Add check for completion code after call
+	to ipmi_lan_cmd().
+	
 2004-11-04  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: Yet more PEF routines.
