@@ -1,3 +1,7 @@
+2004-11-04  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: Yet more PEF routines.
+
 2004-11-03  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: Lots of new PEF routines added.

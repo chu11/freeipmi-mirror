@@ -17,7 +17,7 @@
 /* the Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA. */
 
-/* $Id: ipmi-pef-cmds.c,v 1.7 2004-11-04 01:59:29 itz Exp $ */
+/* $Id: ipmi-pef-cmds.c,v 1.8 2004-11-05 01:02:23 itz Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -948,31 +948,63 @@ fill_kcs_set_filter_table_entry (fiid_obj_t obj_data_rq, u_int8_t filter_number,
   return 0;
 }
 
+int8_t
+ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
+                                 const event_filter_table_entry_t* entry)
+{
+  int8_t status;
+  fiid_obj_t obj_data_rq;
+
+  obj_data_rq = fiid_obj_alloc (tmpl_set_pef_conf_param_event_filter_table_rq);
+  fill_kcs_set_filter_table_entry (obj_data_rq, filter_number, entry);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
+                         obj_data_rq, tmpl_set_pef_conf_param_event_filter_table_rq,
+                         obj_data_rs, tmpl_set_pef_conf_param_rs);
+  free (obj_data_rq);
+  return status;
+}
+
 static int8_t
 fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, u_int8_t filter_number,
                                  event_filter_type_t filter_type, u_int8_t enabled)
 {
   FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_event_filter_table_rq,
+                tmpl_set_pef_conf_param_event_filter_data1_rq,
                 "cmd",
                 IPMI_CMD_SET_PEF_CONF_PARAMS);
   FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_event_filter_table_rq,
+                tmpl_set_pef_conf_param_event_filter_data1_rq,
                 "parameter_selector",
                 IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1);
   FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_event_filter_table_rq,
+                tmpl_set_pef_conf_param_event_filter_data1_rq,
                 "pef_conf_param_filter_number",
                 filter_number);
   FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_event_filter_table_rq,
+                tmpl_set_pef_conf_param_event_filter_data1_rq,
                 "pef_conf_param_filter_type",
                 filter_type);
   FIID_OBJ_SET (obj_data_rq,
-                tmpl_set_pef_conf_param_event_filter_table_rq,
+                tmpl_set_pef_conf_param_event_filter_data1_rq,
                 "pef_conf_param_filter_enable",
                 enabled);
   return 0;
+}
+
+int8_t
+ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
+                                 event_filter_type_t filter_type, u_int8_t enabled)
+{
+  int8_t status;
+  fiid_obj_t obj_data_rq;
+
+  obj_data_rq = fiid_obj_alloc (tmpl_set_pef_conf_param_event_filter_data1_rq);
+  fill_kcs_set_filter_table_data1 (obj_data_rq, filter_number, filter_type, enabled);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
+                         obj_data_rq, tmpl_set_pef_conf_param_event_filter_data1_rq,
+                         obj_data_rs, tmpl_set_pef_conf_param_rs);
+  free (obj_data_rq);
+  return status;
 }
 
 static int8_t
@@ -991,6 +1023,21 @@ fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, u_int8_t num_alert_poli
                 "pef_conf_param_num_alert_policies",
                 num_alert_policies);
   return 0;
+}
+
+int8_t
+ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_alert_policies)
+{
+  int8_t status;
+  fiid_obj_t obj_data_rq;
+
+  obj_data_rq = fiid_obj_alloc (tmpl_set_pef_conf_param_num_alert_policies_rq);
+  fill_kcs_set_num_alert_policies (obj_data_rq, num_alert_policies);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
+                         obj_data_rq, tmpl_set_pef_conf_param_num_alert_policies_rq,
+                         obj_data_rs, tmpl_set_pef_conf_param_rs);
+  free (obj_data_rq);
+  return status;
 }
 
 static int8_t

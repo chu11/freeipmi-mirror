@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.7 2004-11-04 01:59:29 itz Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.8 2004-11-05 01:02:23 itz Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -178,6 +178,17 @@ ipmi_kcs_set_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 
 int8_t
 ipmi_kcs_set_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_event_filters);
+
+int8_t
+ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
+                                 const event_filter_table_entry_t* entry);
+
+int8_t
+ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
+                                 event_filter_type_t filter_type, u_int8_t enabled);
+
+int8_t
+ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_alert_policies);
 
 #ifdef __cplusplus
 }
