@@ -796,22 +796,51 @@ ex_sel_get_info ()
       struct tm tmtime;
       char addtime [32];
       char erasetime [32];
+      time_t bintime;
 
-      gmtime_r (&info.last_add_time, &tmtime);
+      bintime = info.last_add_time;
+      gmtime_r (&bintime, &tmtime);
       strftime (addtime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
-      gmtime_r (&info.last_erase_time, &tmtime);
+      bintime = info.last_erase_time;
+      gmtime_r (&bintime, &tmtime);
       strftime (erasetime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
       snprintf (buf, 1024,
-                "Version                     IPMI v%hu.%hu\n"
-                "Number of Entries           %hu\n"
+                "Version                     IPMI v%lu.%lu\n"
+                "Number of Entries           %lu\n"
                 "Last Add Time               %s\n"
                 "Last Erase Time             %s\n"
-                "Free Space Remaining        %hu\n\n",
+                "Free Space Remaining        %lu\n\n",
                 info.version_major, info.version_minor,
                 info.entry_count,
                 addtime, erasetime,
                 info.free_space);
       return gh_str02scm (buf);
+    }
+  else return SCM_BOOL_F;
+}
+
+SCM
+ex_sel_get_info_binary ()
+{
+  sel_info_t info;
+
+  if (get_sel_info (&info) == 0)
+    {
+      SCM tail = SCM_EOL;
+      
+      tail = gh_cons (info.flags & get_sel_alloc_info_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = gh_cons (info.flags & reserve_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = gh_cons (info.flags & partial_add_sel_entry_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = gh_cons (info.flags & delete_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = gh_cons (info.flags & overflow_flag ? SCM_BOOL_T : SCM_BOOL_F, tail);
+
+      return gh_cons (gh_ulong2scm (info.version_major),
+                      gh_cons (gh_ulong2scm (info.version_minor),
+                               gh_cons (gh_ulong2scm (info.entry_count),
+                                        gh_cons (gh_ulong2scm (info.last_add_time),
+                                                 gh_cons (gh_ulong2scm (info.last_erase_time),
+                                                          gh_cons (gh_ulong2scm (info.free_space),
+                                                                   tail))))));
     }
   else return SCM_BOOL_F;
 }

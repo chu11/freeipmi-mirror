@@ -326,6 +326,9 @@ install_new_procedures (void)
   gh_new_procedure ("fi-sel-get-info",
                     ex_sel_get_info, 0, 0, 0);
 
+  gh_new_procedure ("fi-sel-get-info-binary",
+                    ex_sel_get_info_binary, 0, 0, 0);
+
   gh_new_procedure ("fi-sel-delete-entry", 
 		    ex_sel_delete_entry, 1, 0, 0);
   /* example scheme expression

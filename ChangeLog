@@ -1,3 +1,23 @@
+2004-08-20  Ian Zimmerman  <itz@californiadigital.com>
+
+	* fish/extensions/sel.scm (sel-hex-dump):
+	Use sel-display-info.
+	(sel-display-info): New function.
+	(sel-display-flags): New function.
+
+	* fish/src/extension.c (install_new_procedures):
+	New function ex_sel_get_info_binary.
+
+	* fish/src/scm-procedures.h (ex_sel_get_info_binary):
+	New function.
+
+	* fish/src/scm-procedures.c (ex_sel_get_info_binary):
+	New function.
+
+	* fish/src/ipmi-wrapper-sel.h (struct sel_info):
+	Make all fields unsigned long for easier conversion
+	to Scheme.
+
 2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
 
 	* doc/bmc-config.1: man page updated.

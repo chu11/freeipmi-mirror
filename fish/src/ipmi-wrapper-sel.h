@@ -24,13 +24,13 @@ typedef enum sel_info_flag sel_info_flag_t;
 
 struct sel_info
 {
-  unsigned short version_major;
-  unsigned short version_minor;
-  unsigned short entry_count;
-  unsigned short free_space;
-  time_t last_add_time;
-  time_t last_erase_time;
-  sel_info_flag_t flags;
+  unsigned long version_major;
+  unsigned long version_minor;
+  unsigned long entry_count;
+  unsigned long free_space;
+  unsigned long last_add_time;
+  unsigned long last_erase_time;
+  unsigned long flags;
 };
 typedef struct sel_info sel_info_t;
 

@@ -74,6 +74,7 @@ SCM ex_sel_get_next_entry_raw ();
 SCM ex_sel_get_first_entry_hex ();
 SCM ex_sel_get_next_entry_hex ();
 SCM ex_sel_get_info ();
+SCM ex_sel_get_info_binary ();
 
 SCM ex_sel_delete_entry (SCM scm_record_id);
 SCM ex_sel_clear ();

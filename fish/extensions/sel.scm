@@ -75,13 +75,46 @@
 	(sel-delete-record-list (cdr delete-list)))))
 
 (define (sel-hex-dump)
-  (let ((info (fi-sel-get-info)))
-    (if (string? info) (display info)))
+  (let ((info (fi-sel-get-info-binary)))
+    (sel-display-info gmtime info))
   (let loop ((first-entry (fi-sel-get-first-entry-hex)))
     (if (string? first-entry)
         (begin
           (display first-entry)
           (loop (fi-sel-get-next-entry-hex))))))
+
+(define (sel-display-info time-splitter info)
+  (if info
+      (let ((last-add-time-string
+             (strftime "%m/%d/%Y - %H:%M:%S" (time-splitter (list-ref info 3))))
+            (last-erase-time-string
+             (strftime "%m/%d/%Y - %H:%M:%S" (time-splitter (list-ref info 4)))))
+        (simple-format
+         #t (string-append
+             "Version                     IPMI v~A.~A\n"
+             "Number of Entries           ~A\n"
+             "Last Add Time               ~A\n"
+             "Last Erase Time             ~A\n"
+             "Free Space Remaining        ~A\n\n")
+         (list-ref info 0) (list-ref info 1)
+         (list-ref info 2)
+         last-add-time-string
+         last-erase-time-string
+         (list-ref info 5)))))
+
+(define (sel-display-flags info)
+  (if info
+      (begin
+        (display "Overflow Flag                                     ")
+        (display (if (list-ref info 6) "Yes\n" "No\n"))
+        (display "Delete SEL Command Supported                      ")
+        (display (if (list-ref info 7) "Yes\n" "No\n"))
+        (display "Partial Add SEL Enty Command Supported            ")
+        (display (if (list-ref info 8) "Yes\n" "No\n"))
+        (display "Reserve SEL Command Supported                     ")
+        (display (if (list-ref info 9) "Yes\n" "No\n"))
+        (display "Get SEL Allocation Information Command Supported  ")
+        (display (if (list-ref info 10) "Yes\n" "No\n")))))
 
 (define (sel-main args)
   (let* ((option-spec '((usage    (single-char #\u) (value #f))
@@ -117,8 +150,9 @@
      (version-wanted
       (sel-display-version))
      (info-wanted
-      (let ((info (fi-sel-get-info)))
-        (if (string? info) (display info))))
+      (let ((info (fi-sel-get-info-binary)))
+        (sel-display-info localtime info)
+        (sel-display-flags info)))
      ((string? hex-dump-name)
       (with-output-to-file hex-dump-name
         sel-hex-dump))
