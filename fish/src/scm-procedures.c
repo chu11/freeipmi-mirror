@@ -713,8 +713,33 @@ ex_sel_display_next_entry ()
 }
 
 SCM
-ex_sel_dump_first_entry (SCM dump_file_name)
+ex_sel_get_first_entry_raw ()
 {
+  u_int8_t record_data[SEL_RECORD_SIZE];
+  SCM scm_sel_record = SCM_EOL;
+  
+  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+    {
+      int i;
+      for (i = SEL_RECORD_SIZE; i >= 0; i--)
+        scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
+    }
+  return scm_sel_record;
+}
+
+SCM
+ex_sel_get_next_entry_raw ()
+{
+  u_int8_t record_data[SEL_RECORD_SIZE];
+  SCM scm_sel_record = SCM_EOL;
+  
+  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+    {
+      int i;
+      for (i = SEL_RECORD_SIZE; i >= 0; i--)
+        scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
+    }
+  return scm_sel_record;
 }
 
 SCM 
