@@ -1,3 +1,8 @@
+2004-08-19  Ian Zimmerman  <itz@californiadigital.com>
+
+	* fish/extensions/sel.scm (sel-main):
+	add --info option.
+
 2004-08-19  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/ipmi-wrapper-sensor.c: modified

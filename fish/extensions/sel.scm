@@ -23,7 +23,7 @@
 (define sel-exit-status 0)
 
 (define (sel-display-usage)
-  (display "sel --usage --help --version --delete-all --hex-dump=FILE --delete=REC-LIST\n\tSystem Event Logger.\n"))
+  (display "sel --usage --help --version --delete-all --info --hex-dump[=FILE] --delete=REC-LIST\n\tSystem Event Logger.\n"))
 
 (define (sel-display-help)
   (begin 
@@ -33,7 +33,8 @@
     (display "  -h, --help                 Show help\n")
     (display "  -V, --version              Show version\n")
     (display "  -c, --delete-all           Delete all SEL entries\n")
-    (display "  -x FILE, --hex-dump=FILE   Output SEL hex dump to FILE\n")
+    (display "  -i, --info                 Show general information about SEL\n")
+    (display "  -x [FILE], --hex-dump[=FILE]   Output SEL hex dump to FILE or stdout\n")
     (display "  -d REC-LIST, --delete=REC-LIST   Delete given records in SEL\n")))
 
 (define (sel-display-version)
@@ -73,18 +74,28 @@
 	    (set! sel-exit-status 1))
 	(sel-delete-record-list (cdr delete-list)))))
 
+(define (sel-hex-dump)
+  (let ((info (fi-sel-get-info)))
+    (if (string? info) (display info)))
+  (let loop ((first-entry (fi-sel-get-first-entry-hex)))
+    (if (string? first-entry)
+        (begin
+          (display first-entry)
+          (loop (fi-sel-get-next-entry-hex))))))
 
 (define (sel-main args)
   (let* ((option-spec '((usage    (single-char #\u) (value #f))
 			(help     (single-char #\h) (value #f))
 			(version  (single-char #\V) (value #f))
-                        (hex-dump (single-char #\x) (value #t))
+                        (info     (single-char #\i) (value #f))
+                        (hex-dump (single-char #\x) (value 'optional))
 			(delete-all    (single-char #\c) (value #f))
 			(delete   (single-char #\d) (value #t))))
 	 (options (getopt-long args option-spec))
 	 (usage-wanted         (option-ref options 'usage    #f))
 	 (help-wanted          (option-ref options 'help     #f))
 	 (version-wanted       (option-ref options 'version  #f))
+         (info-wanted          (option-ref options 'info     #f))
          (hex-dump-name        (option-ref options 'hex-dump #f))
 	 (delete-all-wanted    (option-ref options 'delete-all    #f))
 	 (delete-list          (sentence->tokens (string-replace 
@@ -105,16 +116,14 @@
       (sel-display-help))
      (version-wanted
       (sel-display-version))
+     (info-wanted
+      (let ((info (fi-sel-get-info)))
+        (if (string? info) (display info))))
      ((string? hex-dump-name)
       (with-output-to-file hex-dump-name
-        (lambda ()
-          (let ((info (fi-sel-get-info)))
-            (if (string? info) (display info)))
-          (let loop ((first-entry (fi-sel-get-first-entry-hex)))
-            (if (string? first-entry)
-                (begin
-                  (display first-entry)
-                  (loop (fi-sel-get-next-entry-hex))))))))
+        sel-hex-dump))
+     (hex-dump-name
+      (sel-hex-dump))
      (delete-all-wanted
       (fi-sel-clear))
      ((not (null? delete-list))
@@ -135,5 +144,5 @@
 
 (fi-register-command! 
  '("sel" 
-   "sel --usage --help --version --hex-dump=FILE --delete-all --delete=REC-LIST\n\tSystem Event Logger."))
+   "sel --usage --help --version --info --hex-dump[=FILE] --delete-all --delete=REC-LIST\n\tSystem Event Logger."))
 
