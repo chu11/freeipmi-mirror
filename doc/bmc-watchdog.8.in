@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.7 2004-09-14 20:46:18 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.8 2004-09-17 20:50:53 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,6 +62,8 @@ the timer never counts down to zero.  When the system crashes, the
 timer cannot be reset by the OS or userspace program.  Eventually, the
 timer will countdown to zero and reset the machine.
 
+See EXAMPLES below for examples of how bmc-watchdog is commonly used.
+
 .SH COMMANDS
 The following commands are available to
 .B bmc-watchdog.
@@ -115,9 +117,10 @@ line, only the specific options for that command will be listed.
 Output the program version.
 .TP
 .B  -o INT, --io-port=INT
-Identify the System Base Address for KCS SMS/IO.  By default, 0x08A2 is
-used.  If the io-port number is prefixed with a "0x", it is assumed to
-be a base 16 integer.  Otherwise, it is assumed to be a base 10 integer.
+Identify the System Base Address for KCS SMS/IO.  By default, 0x0CA2
+is used.  Port 0x8A2 is also common.  If the io-port number is
+prefixed with a "0x", it is assumed to be a base 16 integer.
+Otherwise, it is assumed to be a base 10 integer.
 .TP
 .B  -f STRING, --logfile=STRING
 Specify an alternate logfile from the default of
@@ -276,6 +279,13 @@ Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
 Errors are logged to the bmc-watchdog log.
+
+.SH "EXAMPLES" 
+.LP 
+Setup a bmc-watchdog daemon that resets the machine after 15 minutes
+(900 seconds) if the OS has crashed (see default bmc-watchdog rc
+script /etc/init.d/bmc-watchdog a more complete example):
+        bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
 
 .SH KNOWN ISSUES
 .B Bmc-watchdog

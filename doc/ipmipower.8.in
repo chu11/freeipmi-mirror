@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.3 2004-09-14 20:46:18 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.4 2004-09-17 20:50:53 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,6 +47,8 @@ will run in interactive mode.  Interactive mode gives the user a
 command line interface to enter various commands.  Details of the
 interactive command line interface can be found below under
 INTERACTIVE COMMANDS.
+
+See EXAMPLES below examples of how ipmipower is commonly used.
 
 .SH BASIC OPTIONS
 The following options are basic options for 
@@ -393,14 +395,17 @@ and ]) for pattern matching.  Depending on your shell, it may be
 necessary to enclose ranged lists within quotes.
 .SH "EXAMPLES"
 .LP
-Determine the status of foo[0-2] with null username and password
+Determine the power status of foo[0-2] with null username and password
         ipmipower -h foo[0-2] --stat
 .LP
-Determine the status of foo[0-2] with non-null username and password
+Determine the power status of foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --stat
 .LP
-Determine the status of foo[0-2] with packet retries turned off
-        ipmipower -h foo[0-2] --retry-timeout 0 --stat
+Hard reset nodes foo[0-2] with non-null username and password
+        ipmipower -h foo[0-2] -u foo -p bar --reset
+.LP
+Hard reset the nodes configured in a configuration file
+	ipmipower -C /etc/powerctrl.conf --reset
 .SH "USE WITH POWERMAN"
 The 
 .B powerman

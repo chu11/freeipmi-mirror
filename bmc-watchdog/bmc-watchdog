@@ -17,14 +17,13 @@ case "$1" in
       # Default deamon mode
       #
       # timer use = SMS/OS
-      # pre-timeout interrupt = NMI
-      # action = none
-      # pre-timeout-interval = 30 seconds
+      # pre-timeout interrupt = none
+      # action = reset
       # -F, -P, -L, -S, -O - clear flags
       # initial-countdown = 900 seconds (15 mins)
       # reset-period = 60 seconds
 
-      daemon -20 $DAEMON -d -u 4 -p 2 -a 0 -z 30 -F -P -L -S -O -i 900 -e 60 
+      daemon -20 $DAEMON -d -u 4 -p 0 -a 1 -F -P -L -S -O -i 900 -e 60 
       RETVAL=$?
       echo
       [ $RETVAL -eq 0 ] && touch /var/lock/subsys/bmc-watchdog

@@ -1,3 +1,19 @@
+2004-09-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port),
+	doc/bmc-watchdog.8.in: Make default port 0xCA2 based on IPMI spec.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port): Fix bug with
+	--io-port option.
+
+	* doc/bmc-watchdog.8.in: Added examples.
+
+	* bmc-watchdog/bmc-watchdog: Modified default rc script to reset a
+	machine instead of generate an INIT.  This is the more common use
+	of the bmc-watchdog.
+
+	* doc/ipmipower.8.in: Fixed up examples.
+	
 2004-09-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_output.c: Fixed output message.

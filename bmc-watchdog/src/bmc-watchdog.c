@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.12 2004-08-23 23:20:52 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.13 2004-09-17 20:50:53 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -256,9 +256,9 @@ _get_port(void)
   assert(cmdline_parsed != 0);
   
   if (cinfo.io_port)
-    return cinfo.io_port;
+    return cinfo.io_port_val;
   else
-    return IPMI_KCS_SMS_IO_BASE_SR870BN4;
+    return IPMI_KCS_SMS_IO_BASE_DEFAULT;
 }
 
 /* Must be called after cmdline parsed */
