@@ -3,7 +3,8 @@ AB's TODO list
 libfreeipmi:
 ------------
 [HIGH PRIORITY]
-  * Nil
+  * SPMI driver
+  * Unified Driver Model (one interface for all in-band and out-of-band drivers)
 
 [MEDIUM PRIORITY]
   * Missing IPMI commands.

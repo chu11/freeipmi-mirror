@@ -1,3 +1,34 @@
+2005-01-14  Anand Babu  <ab@gnu.org.in>
+
+	* libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_set_alert_string_keys): fixed compiler warning.  
+
+	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Newly added. ACPI-Tables user space device
+	driver to locate IPMI SPMI table. Jointly developed by Bala and me.
+
+	* libfreeipmi/src/smbios-locate.[c,h]: Moved from smbios.c,h.
+
+	* libfreeipmi/src/pci-locate.[c,h]: Moved from pcilocate.c,h.
+
+	* libfreeipmi/src/ipmi-locate.[c,h]: Moved from ipmi-probe.c,h. New interface type definitions.
+
+	* libfreeipmi/src/ipmi-utils.c: New functions - ipmi_ioremap,
+	ipmi_iounmap and ipmi_get_physical_mem_data.
+
+	* bmc-watchdog/src/bmc-watchdog.c: Now uses ipmi_locate_t
+	interface and the new model accepts reg-space in bytes
+	directly. _REG_SPACE_VALID macro removed. 
+
+	* freeipmi/fish/src/fish.c: like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c: Removed ipmi_kcs_reg_space
+	function. ipmi_kcs_io_init now accepts reg_space in bytes instead
+	of reg_space_boundary in bits.
+
+	* libfreeipmi/src/ipmi-kcs-interface.h: Removed reg-space related
+	definitions. Its now a job of ipmi-locate sub-system.
+
+
 2005-01-09  Anand Babu  <ab@gnu.org.in>
 
 	* fish/src/fi-commands.c: replaced error(..) with

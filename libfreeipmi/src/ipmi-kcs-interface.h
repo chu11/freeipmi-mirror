@@ -46,12 +46,6 @@ extern "C" {
 #define IPMI_KCS_SMS_IO_BASE_SR870BN4   0x08A2 
 #define IPMI_KCS_SMS_IO_BASE_CDC6440    0x08A2
 
-#define IPMI_KCS_REG_SPACE_1BYTE_BOUND    0x00
-#define IPMI_KCS_REG_SPACE_4BYTE_BOUND    0x01
-#define IPMI_KCS_REG_SPACE_16BYTE_BOUND   0x02
-#define IPMI_KCS_REG_SPACE_RESERVED_BOUND 0x03
-#define IPMI_KCS_REG_SPACE_DEFAULT        IPMI_KCS_REG_SPACE_1BYTE_BOUND  
-
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
 #define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
@@ -105,7 +99,6 @@ extern "C" {
 extern fiid_template_t tmpl_hdr_kcs;
 
 /* Never call these functions directly, unless you are a FreeIPMI hacker */
-int ipmi_kcs_reg_space (u_int8_t reg_space_boundary);
 int8_t ipmi_kcs_get_status ();
 void ipmi_kcs_wait_for_ibf_clear ();
 void ipmi_kcs_wait_for_obf_set ();
@@ -119,7 +112,7 @@ int8_t ipmi_kcs_test_if_state (u_int8_t status);
 void ipmi_kcs_clear_obf ();
 
 /* High level calls */
-int ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space_boundary, unsigned long sleep_usecs);
+int ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space, unsigned long sleep_usecs);
 
 ssize_t ipmi_kcs_read (u_int8_t *bytes, u_int32_t bytes_len);
 ssize_t ipmi_kcs_write (u_int8_t *bytes, u_int32_t bytes_len);

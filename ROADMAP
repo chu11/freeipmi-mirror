@@ -6,23 +6,17 @@ maintain TODOs and task list, use TODO file.
 Roadmap to 1.0.0
 ================
  AB:
-   Unified Driver Model.
+   Unified Driver Model. (0.2.0)
    LAN driver improvement:
      Session sequencing.
-   SMBus/SSIF Driver.
+   SMBus/SSIF Driver. (0.2.0)
    BT Driver.
    SOL daemon (sold) for IPMI-2.0 (and Tyan Prop IPMI-1.5).
    Hackers Guide.
    Test utility.
 
  ITZ:
-   PEF
-   IPMI-locate:
-     High level calls (abstraction)
-     ACPI-locate - Control methods
-     ACPI-locate - SPMI through ACPI descriptor table
-     (Find the status of dev-acpi project and let me know if it needs 
-     more help.)
+   PEF.
 
  Al:
    SNMP support.
@@ -37,9 +31,7 @@ Roadmap to 1.0.0
     * bmc-config.
       * --auto and --expert modes.
       * code cleanup.
-   Sel: event data support (DONE)
    FRU.
-   Dynamic channel probing. (DONE)
    Adopt the the unified driver model for all IPMI sub-systems.
    bmc-fence daemon.
 

@@ -1,7 +1,7 @@
 /* 
-   pcilocate.c - Locate IPMI interfaces by scanning PCI bus information
+   pci-locate.c - Locate IPMI interfaces by scanning PCI bus information
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -118,8 +118,8 @@ pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* preg
 /* pinfo = pointer to information structure filled in by this function */
 /* statusp = optional (NULL allowed) pointer to store status information  */
 
-ipmi_probe_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
+ipmi_locate_info_t*
+pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
 {
   unsigned dfn;
   unsigned vendor;
@@ -192,8 +192,8 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
 
 #else  /* __linux */
 
-ipmi_probe_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
+ipmi_locate_info_t*
+pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
 {
   if (statusp != NULL) *statusp = 2;
   return NULL;

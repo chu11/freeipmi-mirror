@@ -79,7 +79,7 @@ memset (void *s, int c, size_t n)
 
 static u_int64_t     kcs_poll_count;
 static u_int16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-static int           kcs_reg_space   = IPMI_KCS_REG_SPACE_DEFAULT;
+static int           kcs_reg_space   = IPMI_REG_SPACE_DEFAULT;
 static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS;
 static int           kcs_mutex_semid;
 
@@ -107,25 +107,7 @@ ipmi_kcs_get_mutex_semid (void)
 }
 
 int
-ipmi_kcs_reg_space (u_int8_t reg_space_boundary)
-{
-  switch (reg_space_boundary)
-    {
-    case IPMI_KCS_REG_SPACE_1BYTE_BOUND:
-      return (0x01);
-    case IPMI_KCS_REG_SPACE_4BYTE_BOUND:
-      return (0x04);
-    case IPMI_KCS_REG_SPACE_16BYTE_BOUND:
-      return (0x10);
-    case IPMI_KCS_REG_SPACE_RESERVED_BOUND:
-    default:
-      errno = EINVAL;
-      return (-1);
-    }
-}
-
-int
-ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space_boundary, \
+ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space, \
 		  unsigned long sleep_usecs)
 {
   if (sms_io_base < 1)
@@ -135,8 +117,10 @@ ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space_boundary, \
     }
 
   kcs_sms_io_base = sms_io_base;
-  ERR ((kcs_reg_space   = ipmi_kcs_reg_space (reg_space_boundary)) != -1);
+  kcs_reg_space   = reg_space;
   kcs_sleep_usecs = sleep_usecs;
+
+  
   ERR ((kcs_mutex_semid = ipmi_mutex_init (IPMI_KCS_IPCKEY ())) != -1);
 
 #ifdef __FreeBSD__

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.25 2004-12-20 18:35:07 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.26 2005-01-14 10:32:26 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -92,11 +92,6 @@
        } \
      *d = val; \
   } while (0) 
-
-#define _REG_SPACE_VALID(x) \
-        (((x) == IPMI_KCS_REG_SPACE_1BYTE_BOUND \
-         || (x) == IPMI_KCS_REG_SPACE_4BYTE_BOUND \
-         || (x) == IPMI_KCS_REG_SPACE_16BYTE_BOUND) ? 1 : 0)
 
 struct cmdline_info
 {
@@ -262,7 +257,7 @@ _err_exit(char *fmt, ...)
 static int
 _get_port(u_int32_t *port, u_int8_t *reg_space)
 {
-  ipmi_probe_info_t probeinfo;
+  ipmi_locate_info_t locate_info;
   int status;
 
   if ((port == NULL) || (reg_space == NULL))
@@ -277,16 +272,16 @@ _get_port(u_int32_t *port, u_int8_t *reg_space)
       return (0);
     }
 
-  ipmi_probe (ipmi_interface_kcs, &probeinfo, &status);
-  if (status == 0 && !probeinfo.bmc_io_mapped)
+  ipmi_locate (ipmi_interface_kcs, &locate_info, &status);
+  if (status == 0 && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
     {
-      *port      = probeinfo.base.bmc_iobase_addr;
-      *reg_space = probeinfo.reg_space;
+      *port      = locate_info.base_addr.bmc_iobase_addr;
+      *reg_space = locate_info.reg_space;
       return (0);
     }
 
   *port      = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-  *reg_space = IPMI_KCS_REG_SPACE_DEFAULT;
+  *reg_space = IPMI_REG_SPACE_DEFAULT;
   return (0);
 }
 
@@ -817,15 +812,9 @@ _usage(void)
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
 	  "  -o INT     --io-port=INT                Base address for KCS SMS I/O\n"
-          "  -R INT     --reg-space=INT              Base address register spacing\n"
-          "             %d = 1 byte\n"
-          "             %d = 4 bytes\n"
-          "             %d = 16 bytes\n"
+          "  -R INT     --reg-space=INT              Base address register spacing in bytes\n"
           "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
-          "  -n         --no-logging                 Turn off all syslogging\n",
-          IPMI_KCS_REG_SPACE_1BYTE_BOUND,
-          IPMI_KCS_REG_SPACE_4BYTE_BOUND,
-          IPMI_KCS_REG_SPACE_16BYTE_BOUND);
+          "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
 	  "  -D         --debug                      Turn on debugging\n");
@@ -1029,8 +1018,7 @@ _cmdline_parse(int argc, char **argv)
           break;
         case 'R':
           cinfo.reg_space_val = strtol(optarg, &ptr, 10);
-          if (ptr != (optarg + strlen(optarg))
-              || !_REG_SPACE_VALID(cinfo.reg_space_val))
+          if (ptr != (optarg + strlen(optarg)))
             _err_exit("reg-space value invalid");
           break;
         case 'f':

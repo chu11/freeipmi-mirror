@@ -19,10 +19,40 @@
 #include <limits.h>
 #include "freeipmi.h"
 
+int
+ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space)
+{
+  extern int errno;
+  if (!(reg_space))
+    {
+      *reg_space = 0;
+      errno = EINVAL;
+      return (-1);
+    }
+
+  switch (reg_space_boundary)
+    {
+    case IPMI_SMBIOS_REG_SPACE_1BYTE_BOUND:
+      *reg_space = 0x01;
+      return (0);
+    case IPMI_SMBIOS_REG_SPACE_4BYTE_BOUND:
+      *reg_space = 0x04;
+      return (0);
+    case IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND:
+      *reg_space = 0x10;
+      return (0);
+    case IPMI_SMBIOS_REG_SPACE_RESERVED:
+    default:
+      *reg_space = 0;
+      errno = EINVAL;
+      return (-1);
+    }
+}
+
+
 /* SMBIOS Reference Specification: map area between 000f0000 and
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
-
 
 /* is_ipmi_entry
    ARGUMENTS:
@@ -43,24 +73,23 @@ is_ipmi_entry (u_int8_t* sigp)
   if (memcmp (sigp, smbios_entry_sig, sizeof (smbios_entry_sig)) != 0)
     return 0;
 
-  entry_len = sigp[SMBIOS_ENTRY_LEN_OFFSET];
+  entry_len = sigp[IPMI_SMBIOS_ENTRY_LEN_OFFSET];
 
-  csum_given = sigp[SMBIOS_ENTRY_CSUM_OFFSET];
+  csum_given = sigp[IPMI_SMBIOS_ENTRY_CSUM_OFFSET];
   csum_computed = 0;
   for (bp = sigp; bp < sigp + entry_len; bp++)
     csum_computed = (csum_computed + (*bp)) % (1 << CHAR_BIT);
 
-  if (memcmp (sigp + SMBIOS_ENTRY_ANCHOR_OFFSET, smbios_entry_anchor,
+  if (memcmp (sigp + IPMI_SMBIOS_ENTRY_ANCHOR_OFFSET, smbios_entry_anchor,
 	      sizeof (smbios_entry_anchor)) != 0)
-    return 0;
+    return (0);
 
-  csum_given = sigp[SMBIOS_ENTRY_ANCHOR_CSUM_OFFSET];
+  csum_given = sigp[IPMI_SMBIOS_ENTRY_ANCHOR_CSUM_OFFSET];
   csum_computed = 0;
-  for (bp = sigp + SMBIOS_ENTRY_ANCHOR_CSUM_OFFSET; bp < sigp + entry_len; bp++)
+  for (bp = sigp + IPMI_SMBIOS_ENTRY_ANCHOR_CSUM_OFFSET; bp < sigp + entry_len; bp++)
     csum_computed = (csum_computed + (*bp)) % (1 << CHAR_BIT);
     
-  return 1;
-
+  return (1);
 }
 
 
@@ -74,10 +103,10 @@ is_ipmi_entry (u_int8_t* sigp)
 static int
 is_ipmi_dev_info (ipmi_interface_t type, u_int8_t* dev_info_p)
 {
-  if (*dev_info_p != SMBIOS_IPMI_DEV_INFO_SIG)
+  if (*dev_info_p != IPMI_SMBIOS_IPMI_DEV_INFO_SIG)
     return 0;
 
-  if (dev_info_p[SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET] != type)
+  if (dev_info_p[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET] != type)
     return 0;
 
   return 1;
@@ -135,11 +164,11 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
   u_int8_t* pmem_entry; 
 
   status = 1;
-  pmem_entry = map_physmem (SMBIOS_AREA_START, SMBIOS_AREA_LEN, &map_entry, &map_entry_len);
+  pmem_entry = map_physmem (IPMI_SMBIOS_AREA_START, IPMI_SMBIOS_AREA_LEN, &map_entry, &map_entry_len);
   if (pmem_entry != NULL)
     {
       u_int8_t* sigp;
-      for (sigp = pmem_entry; sigp - pmem_entry < SMBIOS_AREA_LEN; sigp += SMBIOS_AREA_ALIGN)
+      for (sigp = pmem_entry; sigp - pmem_entry < IPMI_SMBIOS_AREA_LEN; sigp += IPMI_SMBIOS_AREA_ALIGN)
 	{
 	  if (is_ipmi_entry (sigp))
 	    {
@@ -148,8 +177,8 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
 	      void* map_table;
 	      size_t map_table_len;
 
-	      s_table_len = *(u_int16_t*)(sigp + SMBIOS_ENTRY_TLEN_OFFSET);
-	      pmem_table = map_physmem (*(u_int32_t*)(sigp + SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
+	      s_table_len = *(u_int16_t*)(sigp + IPMI_SMBIOS_ENTRY_TLEN_OFFSET);
+	      pmem_table = map_physmem (*(u_int32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
 					&map_table, &map_table_len);
 	      if (pmem_table != NULL)
 		{
@@ -158,7 +187,7 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
 		  u_int8_t* var_info_p;
 
 		  dev_info_p = pmem_table;
-		  size = dev_info_p[SMBIOS_DEV_INFO_LEN_OFFSET];
+		  size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
 		  while (dev_info_p - pmem_table < s_table_len)
 		    {
 		      if (is_ipmi_dev_info (type, dev_info_p))
@@ -180,7 +209,7 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
 		      while (var_info_p[0] != 0 || var_info_p[1] != 0)
 			var_info_p++;
 		      dev_info_p = var_info_p + 2;
-		      size = dev_info_p[SMBIOS_DEV_INFO_LEN_OFFSET];
+		      size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
 		    }
 		  munmap (map_table, map_table_len);
 		}
@@ -203,8 +232,8 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
    information: 1 - structure not found, -1 - error, 0 - success
    RETURNS:
    pinfo if successful, NULL otherwise */
-ipmi_probe_info_t*
-smbios_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
+ipmi_locate_info_t*
+smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
 {
   u_int8_t* bufp;
   u_int8_t version;
@@ -213,61 +242,57 @@ smbios_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statu
 
   bufp = copy_impi_dev_info (type, statusp);
   if (bufp == NULL)
-    return NULL;
+    return (NULL);
 
-  pinfo->type = bufp[SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
-  version = bufp[SMBIOS_IPMI_DEV_INFO_VER_OFFSET];
-/*   pinfo->ipmi_major = (version >> 4) & 0xf; */
-/*   pinfo->ipmi_minor = version & 0xf; */
-/*   pinfo->i2c_slave_addr = bufp[SMBIOS_IPMI_DEV_INFO_I2C_OFFSET]; */
-/*   pinfo->nvstor_dev_addr = bufp[SMBIOS_IPMI_DEV_INFO_NVSTOR_OFFSET]; */
+  version = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_VER_OFFSET];
+  pinfo->ipmi_ver_major = (version >> 4) & 0xf;
+  pinfo->ipmi_ver_minor = version & 0xf;
 
-  strobed = addr = *(u_int64_t*)(bufp+SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
+  pinfo->interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
+  if (pinfo->interface_type != type)
+    {
+      free (bufp);
+      return (NULL);
+    }
 
-  if (bufp[SMBIOS_DEV_INFO_LEN_OFFSET] > SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
+  pinfo->base_addr.bmc_smbus_slave_addr= bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
+
+  strobed = addr = *(u_int64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
+
+  if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
     {
       u_int8_t modifier;
       u_int8_t lsb;
+      int reg_space_boundary;
 
-      modifier = bufp[SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET];
-      lsb = (modifier >> SMBIOS_LSB_BIT) & 1;
+      modifier = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET];
+      lsb = (modifier >> IPMI_SMBIOS_LSB_BIT) & 1;
       strobed = (strobed & ~1) | lsb;
 
-      pinfo->reg_space =  (modifier >> SMBIOS_REGSPACING_SHIFT) & SMBIOS_REGSPACING_MASK;
-
-/*       if (((modifier >> SMBIOS_INTINFO_PRESENT_BIT) & 1) != 0) */
-/* 	{ */
-/* 	  pinfo->ipmi_int_specified = 1; */
-/* 	  pinfo->ipmi_int_polarity = (modifier >> SMBIOS_INTINFO_POLARITY_BIT) & 1; */
-/* 	  pinfo->ipmi_int_trigger = (modifier >> SMBIOS_INTINFO_TRIGGER_BIT) & 1; */
-/* 	} */
-/*       else */
-/* 	pinfo->ipmi_int_specified = 0; */
+      reg_space_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
+      if (ipmi_smbios_reg_space (reg_space_boundary, &pinfo->reg_space) == -1)
+	{
+	  free (bufp);
+	  return (NULL);
+	}
     }
-/*   else */
-/*     pinfo->ipmi_int_specified = 0; */
 
   if ((addr & 1) != 0)
     {
-      pinfo->bmc_io_mapped = 0;
-      pinfo->ipmi_iobase = strobed;
+      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      pinfo->base_addr.bmc_iobase_addr = strobed;
     }
   else
     {
-      pinfo->bmc_io_mapped = 1;
-      pinfo->ipmi_membase = strobed;
+      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+      pinfo->base_addr.bmc_membase_addr = strobed;
     }
 
-  if (bufp[SMBIOS_DEV_INFO_LEN_OFFSET] > SMBIOS_DEV_INFO_INTNUM_OFFSET)
-    pinfo->intr_num = bufp[SMBIOS_DEV_INFO_INTNUM_OFFSET];
-  else
-    pinfo->intr_num = 0;
-
   free (bufp);
-  return pinfo;
+  return (pinfo);
 }
 
-#ifdef SMBIOS_MAIN
+#ifdef IPMI_SMBIOS_MAIN
 int
 main (int argc, char** argv)
 {

@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.11 2005-01-10 00:43:21 ab Exp $ 
+   $Id: fish.c,v 1.12 2005-01-14 10:32:26 ab Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -110,7 +110,7 @@ static unsigned int sms_io_base = IPMI_KCS_SMS_IO_BASE_SR870BN4;
 #else
 static unsigned int sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
 #endif
-static u_int8_t reg_space = IPMI_KCS_REG_SPACE_DEFAULT;
+static u_int8_t reg_space = IPMI_REG_SPACE_DEFAULT;
 
 static struct argp_option options[] =
 {
@@ -370,14 +370,14 @@ inner_main (int argc, char **argv)
     sms_io_base = cmdline_sms_io_base;
   else
     {
-      ipmi_probe_info_t probe;
+      ipmi_locate_info_t locate_info;
       int status;
 
-      if ((ipmi_probe (ipmi_interface_kcs, &probe, &status) != 0) && 
-	  !probe.bmc_io_mapped)
+      ipmi_locate (IPMI_INTERFACE_KCS, &locate_info, &status);
+      if (status == 0 && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
 	{
-	  sms_io_base = probe.base.bmc_iobase_addr;
-	  reg_space   = probe.reg_space;
+	  sms_io_base = locate_info.base_addr.bmc_iobase_addr;
+	  reg_space   = locate_info.reg_space;
 	}
     }
   

@@ -43,7 +43,12 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <netdb.h>
+#include <sys/mman.h>
+
 #include "freeipmi.h"
 
 ipmi_chksum_t
@@ -130,7 +135,6 @@ ipmi_is_root ()
   return 0;
 }
 
-
 int
 open_free_udp_port (void)
 {
@@ -175,3 +179,73 @@ open_free_udp_port (void)
   return (-1);
 }
 
+
+int 
+ipmi_ioremap (u_int64_t physical_addr, size_t physical_addr_len, 
+	      void **virtual_addr, 
+	      void **mapped_addr, size_t *mapped_addr_len)
+{
+  u_int64_t startaddr;
+  u_int32_t pad;
+  int mem_fd;
+  extern int errno;
+  
+  if (!(physical_addr_len && virtual_addr && 
+	mapped_addr && mapped_addr_len))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if ((mem_fd = open ("/dev/mem", O_RDONLY)) == -1)
+    return (-1);
+  
+  pad = physical_addr % getpagesize ();
+  startaddr = physical_addr - pad;
+  *mapped_addr_len = physical_addr_len + pad;
+  *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
+
+  
+  if (*mapped_addr == MAP_FAILED)
+    {
+      close (mem_fd);
+      return (-1);
+    }
+
+  close (mem_fd);
+  *virtual_addr = (*mapped_addr) + pad;
+  return (0);
+}
+
+int 
+ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
+{
+  return (munmap (mapped_addr, mapped_addr_len));
+}
+
+int 
+ipmi_get_physical_mem_data (u_int64_t physical_address, 
+			    size_t length, 
+			    u_int8_t *data)
+{
+  void *virtual_addr = NULL;
+  void *mapped_addr = NULL;
+  size_t mapped_addr_len = 0;
+  
+  if (data == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (ipmi_ioremap (physical_address, length, 
+		    &virtual_addr, 
+		    &mapped_addr, &mapped_addr_len) != 0)
+    return (-1);
+  
+  memcpy (data, virtual_addr, length);
+  
+  ipmi_iounmap (mapped_addr, mapped_addr_len);
+  
+  return 0;
+}

@@ -1,7 +1,7 @@
 /* 
    pcilocate.c - Locate IPMI interfaces by scanning PCI bus information
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,23 +24,23 @@
 
 #include "freeipmi.h"
 
-typedef ipmi_probe_info_t* ((*ipmi_probe_func)(ipmi_interface_t, ipmi_probe_info_t*, int*));
+typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_t, ipmi_locate_info_t*, int*));
 
-ipmi_probe_info_t*
-ipmi_probe (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
+ipmi_locate_info_t*
+ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
 {
-  static ipmi_probe_func things_to_try[] =
+  static ipmi_locate_func things_to_try[] =
     {
       pci_get_dev_info,
-      /* acpi_get_dev_info, */
+      acpi_spmi_get_dev_info,
       smbios_get_dev_info,
       NULL
     };
   int i;
   int status;
-  ipmi_probe_info_t* pinfo2;
+  ipmi_locate_info_t* pinfo2;
 
-  memset (pinfo, 0, sizeof (ipmi_probe_info_t));
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
 
   status = 1;
   for (i = 0; things_to_try[i] != NULL; i++)

@@ -52,11 +52,12 @@ extern "C" {
 #if defined (FREEIPMI_BUILD)
 #include "bit-ops.h"
 #include "fiid.h"
-#include "ipmi-probe.h"
-#include "pcilocate.h"
-#include "smbios.h"
 #include "ipmi-utils.h"
 #include "ipmi-error.h"
+#include "ipmi-locate.h"
+#include "smbios-locate.h"
+#include "pci-locate.h"
+#include "acpi-spmi-locate.h"
 #include "rmcp.h"
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
@@ -151,11 +152,12 @@ extern char *__progname;
 #else
 #include <freeipmi/bit-ops.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-probe.h>
-#include <freeipmi/smbios.h>
-#include <freeipmi/pcilocate.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-error.h>
+#include <freeipmi/ipmi-locate.h>
+#include <freeipmi/smbios-locate.h>
+#include <freeipmi/acpi-spmi-locate.h>
+#include <freeipmi/pci-locate.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-cmd-spec.h>
