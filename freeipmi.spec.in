@@ -165,7 +165,7 @@ fi
 %{_sbindir}/sel
 %{_sbindir}/sensors
 %{_mandir}/man1/bmc-config.1*
-%{_mandir}/man5/bmc-config.5*
+%{_mandir}/man5/bmc-config.conf.5*
 %{_mandir}/man1/bmc-info.1*
 %{_mandir}/man1/fish.1*
 %{_mandir}/man1/sel.1*
