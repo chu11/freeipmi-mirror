@@ -2842,6 +2842,8 @@ ex_get_sensor_reading (SCM scm_sdr_record)
   struct sensor_reading sensor_reading;
   struct sdr_record sdr_record;
   SCM scm_sensor_reading = SCM_EOL;
+  int i;
+  SCM scm_event_message_list = SCM_EOL;
   
   scm2sdr_record (scm_sdr_record, &sdr_record);
   
@@ -2864,21 +2866,28 @@ ex_get_sensor_reading (SCM scm_sdr_record)
 					gh_str02scm ("event_messages_flag"), 
 					(sensor_reading.event_messages_flag ? 
 					 SCM_BOOL_T : SCM_BOOL_F));
+  if (sensor_reading.event_message_list != NULL)
+    {
+      for (i = 0; 
+	   sensor_reading.event_message_list[i]; 
+	   i++)
+	{
+	  scm_event_message_list = 
+	    gh_append2 (scm_event_message_list, 
+			gh_list (gh_str02scm (sensor_reading.event_message_list[i]), 
+				 SCM_UNDEFINED));
+	}
+    }
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("short_event_message"), 
-					gh_str02scm (sensor_reading.short_event_message));
-  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("event_message"), 
-					gh_str02scm (sensor_reading.event_message));
-  scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("status"), 
-					(sensor_reading.status ? 
-					 SCM_BOOL_T : SCM_BOOL_F));
+					gh_str02scm ("event_message_list"), 
+					scm_event_message_list);
   
-  if (sensor_reading.short_event_message)
-    free (sensor_reading.short_event_message);
-  if (sensor_reading.event_message)
-    free (sensor_reading.event_message);
+  if (sensor_reading.event_message_list != NULL)
+    {
+      for (i = 0; sensor_reading.event_message_list[i]; i++)
+	free (sensor_reading.event_message_list[i]);
+      free (sensor_reading.event_message_list);
+    }
   
   return scm_sensor_reading;
 }

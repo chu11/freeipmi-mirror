@@ -1,3 +1,30 @@
+2005-02-23  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/sdr.scm: improved record fetching message
+
+	* fish/extensions/sensors-simple-display.scm,
+	fish/extensions/sensors-verbose-display.scm,
+	fish/extensions/sensors-very-verbose-display.scm: now displays
+	multiple event messages
+
+	* fish/src/scm-procedures.c: removed short_event_message, status
+	and event_message becomes event_message_list in
+	ex_get_sensor_reading()
+
+	* libfreeipmi/src/ipmi-sensor-api.c: now get_sensor_reading()
+	returns multiple event messages.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c: modified template
+	tmpl_get_sensor_threshold_reading_rs.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.[ch]: added new
+	functions ipmi_get_generic_event_message_list() and
+	ipmi_get_event_message_list().
+
+	* ipmi-sensor-utils.[ch]: removed function
+	convert_sensor_state_to_offset().
+
+	
 2005-02-23  Anand Babu  <ab@gnu.org.in>
 
 	Thanks tp Julian Elischer <julian@elischer.org> for reporting

@@ -765,7 +765,6 @@ get_sensor_reading (struct sdr_record *sdr_record,
   fiid_obj_t obj_data_rs; 
   u_int64_t val;
   u_int8_t status = 0;
-  u_int16_t state_offset = 0;
   
   switch (sdr_record->record_type)
     {
@@ -846,77 +845,11 @@ get_sensor_reading (struct sdr_record *sdr_record,
       
       fiid_obj_get (obj_data_rs, 
 		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_lower_non_critical_threshold", 
+		    "sensor_state", 
 		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Non-Critical");
-	  sensor_reading->event_message = strdup ("Lower Non-critical - going low");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
+      sensor_reading->event_message_list = 
+	ipmi_get_generic_event_message_list (event_reading_type, val);
       
-      fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_upper_non_critical_threshold", 
-		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Non-Critical");
-	  sensor_reading->event_message = strdup ("Upper Non-critical - going high");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
-      
-      fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_lower_critical_threshold", 
-		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Critical");
-	  sensor_reading->event_message = strdup ("Lower critical - going low");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
-      
-      fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_upper_critical_threshold", 
-		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Critical");
-	  sensor_reading->event_message = strdup ("Upper critical - going high");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
-      
-      fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_lower_non_recoverable_threshold", 
-		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Non-Recoverable");
-	  sensor_reading->event_message = strdup ("Lower Non-Recoverable - going low");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
-      
-      fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
-		    "status_comparison_upper_non_recoverable_threshold", 
-		    &val);
-      if (val == 1)
-	{
-	  sensor_reading->short_event_message = strdup ("Non-Recoverable");
-	  sensor_reading->event_message = strdup ("Upper Non-Recoverable - going high");
-	  sensor_reading->status = 0;
-	  return 0;
-	}
-      
-      sensor_reading->status = 1;
       return 0;
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
       status = ipmi_kcs_get_discrete_reading (sensor_number, 
@@ -965,10 +898,8 @@ get_sensor_reading (struct sdr_record *sdr_record,
 		    tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
-      if (convert_sensor_state_to_offset (val, &state_offset) == 0)
-	sensor_reading->event_message = ipmi_get_generic_event_message (event_reading_type, state_offset);
-      else 
-	sensor_reading->event_message = NULL;
+      sensor_reading->event_message_list = 
+	ipmi_get_generic_event_message_list (event_reading_type, val);
       
       return 0;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
@@ -1018,10 +949,8 @@ get_sensor_reading (struct sdr_record *sdr_record,
 		    tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
-      if (convert_sensor_state_to_offset (val, &state_offset) == 0)
-	sensor_reading->event_message = ipmi_get_event_message (sensor_type, state_offset);
-      else 
-	sensor_reading->event_message = NULL;
+      sensor_reading->event_message_list = 
+	ipmi_get_event_message_list (sensor_type, val);
       
       return 0;
     case IPMI_SENSOR_CLASS_OEM:
@@ -1057,9 +986,15 @@ get_sensor_reading (struct sdr_record *sdr_record,
 		    tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
-      asprintf (&(sensor_reading->event_message), 
-		"OEM State = %04Xh", 
-		(u_int16_t) val);
+      {
+	char *event_message = NULL;
+	asprintf (&event_message, 
+		  "OEM State = %04Xh", 
+		  (u_int16_t) val);
+	sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2);
+	sensor_reading->event_message_list[0] = event_message;
+	sensor_reading->event_message_list[1] = NULL;
+      }
       
       return 0;
     }

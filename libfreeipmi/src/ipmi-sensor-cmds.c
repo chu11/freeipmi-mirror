@@ -647,12 +647,13 @@ fiid_template_t tmpl_get_sensor_threshold_reading_rs =
     {1, "status_sensor_scanning"}, 
     {1, "status_all_event_messages"}, 
     
-    {1, "status_comparison_lower_non_critical_threshold"}, 
-    {1, "status_comparison_lower_critical_threshold"}, 
-    {1, "status_comparison_lower_non_recoverable_threshold"}, 
-    {1, "status_comparison_upper_non_critical_threshold"}, 
-    {1, "status_comparison_upper_critical_threshold"}, 
-    {1, "status_comparison_upper_non_recoverable_threshold"}, 
+    {6, "sensor_state"}, 
+/*     {1, "status_comparison_lower_non_critical_threshold"},  */
+/*     {1, "status_comparison_lower_critical_threshold"},  */
+/*     {1, "status_comparison_lower_non_recoverable_threshold"},  */
+/*     {1, "status_comparison_upper_non_critical_threshold"},  */
+/*     {1, "status_comparison_upper_critical_threshold"},  */
+/*     {1, "status_comparison_upper_non_recoverable_threshold"},  */
     {2, "reserved2"}, 
     
     /* optional byte */

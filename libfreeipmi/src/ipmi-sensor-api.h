@@ -149,9 +149,7 @@ struct sensor_reading
   u_int8_t reading_availability_flag;
   u_int8_t sensor_scanning_flag;
   u_int8_t event_messages_flag;
-  char *short_event_message;
-  char *event_message;
-  int status;
+  char **event_message_list;
 };
 
 void get_sdr_full_record (u_int8_t *sdr_record_data, 

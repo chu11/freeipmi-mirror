@@ -167,9 +167,9 @@ get_08_generic_event_message (u_int16_t offset)
   switch (offset)
     {
     case 0x00:
-      return strdup ("Device Removed / Device Absent");
+      return strdup ("Device Removed/Device Absent");
     case 0x01:
-	return strdup ("Device Inserted / Device Present");
+	return strdup ("Device Inserted/Device Present");
     }
   
   return NULL;
@@ -396,7 +396,7 @@ get_09_event_message (int offset)
   switch (offset)
     {
     case 0x00: 
-      return strdup ("Power Off / Power Down");
+      return strdup ("Power Off/Power Down");
     case 0x01: 
       return strdup ("Power Cycle");
     case 0x02: 
@@ -422,9 +422,9 @@ get_0C_event_message (int offset)
   switch (offset)
     {
     case 0x00:
-      return strdup ("Correctable ECC / other correctable memory error");
+      return strdup ("Correctable ECC/other correctable memory error");
     case 0x01:
-      return strdup ("Uncorrectable ECC / other uncorrectable memory error");
+      return strdup ("Uncorrectable ECC/other uncorrectable memory error");
     case 0x02:
       return strdup ("Parity");
     case 0x03:
@@ -432,7 +432,7 @@ get_0C_event_message (int offset)
     case 0x04:
       return strdup ("Memory Device Disabled");
     case 0x05:
-      return strdup ("Correctable ECC / other correctable memory error logging limit reached");
+      return strdup ("Correctable ECC/other correctable memory error logging limit reached");
     case 0x06:
       return strdup ("Presence detected");
     case 0x07:
@@ -498,7 +498,7 @@ get_11_event_message (int offset)
     case 0x04:
       return strdup ("OS Watchdog Power Cycle");
     case 0x05:
-      return strdup ("OS Watchdog NMI / Diagnostic Interrupt");
+      return strdup ("OS Watchdog NMI/Diagnostic Interrupt");
     case 0x06:
       return strdup ("OS Watchdog Expired, status only");
     case 0x07:
@@ -536,7 +536,7 @@ get_13_event_message (int offset)
   switch (offset)
     {
     case 0x00:
-      return strdup ("Front Panel NMI / Diagnostic Interrupt");
+      return strdup ("Front Panel NMI/Diagnostic Interrupt");
     case 0x01:
       return strdup ("Bus Timeout");
     case 0x02:
@@ -663,7 +663,7 @@ get_20_event_message (int offset)
   switch (offset)
     {
     case 0x00:
-      return strdup ("Stop during OS load / initialization");
+      return strdup ("Stop during OS load/initialization");
     case 0x01:
       return strdup ("Run-time Stop");
     }
@@ -681,15 +681,15 @@ get_21_event_message (int offset)
     case 0x01:
       return strdup ("Identify Status asserted");
     case 0x02:
-      return strdup ("Slot / Connector Device installed/attached");
+      return strdup ("Slot/Connector Device installed/attached");
     case 0x03:
-      return strdup ("Slot / Connector Ready for Device Installation");
+      return strdup ("Slot/Connector Ready for Device Installation");
     case 0x04:
       return strdup ("Slot/Connector Ready for Device Removal");
     case 0x05:
       return strdup ("Slot Power is Off");
     case 0x06:
-      return strdup ("Slot / Connector Device Removal Request");
+      return strdup ("Slot/Connector Device Removal Request");
     case 0x07:
       return strdup ("Interlock asserted");
     case 0x08:
@@ -707,7 +707,7 @@ get_22_event_message (int offset)
   switch (offset)
     {
     case 0x00:
-      return strdup ("S0 / G0 \"working\"");
+      return strdup ("S0/G0 \"working\"");
     case 0x01:
       return strdup ("S1 \"sleeping with system h/w & processor context maintained\"");
     case 0x02:
@@ -715,13 +715,13 @@ get_22_event_message (int offset)
     case 0x03:
       return strdup ("S3 \"sleeping, processor & h/w context lost, memory retained.\"");
     case 0x04:
-      return strdup ("S4 \"non-volatile sleep / suspend-to disk\"");
+      return strdup ("S4 \"non-volatile sleep/suspend-to disk\"");
     case 0x05:
-      return strdup ("S5 / G2 \"soft-off\"");
+      return strdup ("S5/G2 \"soft-off\"");
     case 0x06:
-      return strdup ("S4 / S5 soft-off, particular S4 / S5 state cannot be determined");
+      return strdup ("S4/S5 soft-off, particular S4/S5 state cannot be determined");
     case 0x07:
-      return strdup ("G3 / Mechanical Off");
+      return strdup ("G3/Mechanical Off");
     case 0x08:
       return strdup ("Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)");
     case 0x09:
@@ -1466,7 +1466,7 @@ get_2B_event_data2_message (int offset, u_int8_t event_data)
 	case 0x08:
 	  return strdup ("Version change type = other management controller firmware");
 	case 0x09:
-	  return strdup ("Version change type = system firmware (EFI / BIOS) change");
+	  return strdup ("Version change type = system firmware (EFI/BIOS) change");
 	case 0x0A:
 	  return strdup ("Version change type = SMBIOS change");
 	case 0x0B:
@@ -1850,4 +1850,66 @@ ipmi_get_event_data3_message (int sensor_type_code, int offset, u_int8_t event_d
     }
   
   return NULL;
+}
+
+char **
+ipmi_get_generic_event_message_list (u_int8_t event_reading_type, u_int16_t sensor_state)
+{
+  char **event_message_list = NULL;
+  char *message_list[16];
+  int i = 0;
+  u_int16_t offset;
+  u_int16_t bit; 
+  
+  for (offset = 0; offset < 16; offset++)
+    {
+      bit = pow (2, offset);
+      if (sensor_state & bit)
+	{
+	  message_list[i] = ipmi_get_generic_event_message (event_reading_type, offset);
+	  if (message_list[i])
+	    i++;
+	}
+    }
+  
+  if (i != 0)
+    {
+      event_message_list = (char **) malloc (sizeof (char *) * (i + 1));
+      for (offset = 0; offset < i; offset++)
+	event_message_list[offset] = message_list[offset];
+      event_message_list[i] = NULL;
+    }
+  
+  return event_message_list;
+}
+
+char **
+ipmi_get_event_message_list (int sensor_type_code, u_int16_t sensor_state)
+{
+  char **event_message_list = NULL;
+  char *message_list[16];
+  int i = 0;
+  u_int16_t offset;
+  u_int16_t bit; 
+  
+  for (offset = 0; offset < 16; offset++)
+    {
+      bit = pow (2, offset);
+      if (sensor_state & bit)
+	{
+	  message_list[i] = ipmi_get_event_message (sensor_type_code, offset);
+	  if (message_list[i])
+	    i++;
+	}
+    }
+  
+  if (i != 0)
+    {
+      event_message_list = (char **) malloc (sizeof (char *) * (i + 1));
+      for (offset = 0; offset < i; offset++)
+	event_message_list[offset] = message_list[offset];
+      event_message_list[i] = NULL;
+    }
+  
+  return event_message_list;
 }

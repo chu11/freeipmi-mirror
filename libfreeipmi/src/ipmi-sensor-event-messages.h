@@ -89,5 +89,7 @@ char *ipmi_get_generic_event_message (u_int8_t event_reading_type, u_int16_t off
 char *ipmi_get_event_message (int sensor_type_code, int offset);
 char *ipmi_get_event_data2_message (int sensor_type_code, int offset, u_int8_t event_data);
 char *ipmi_get_event_data3_message (int sensor_type_code, int offset, u_int8_t event_data);
+char **ipmi_get_generic_event_message_list (u_int8_t event_reading_type, u_int16_t sensor_state);
+char **ipmi_get_event_message_list (int sensor_type_code, u_int16_t sensor_state);
 
 #endif

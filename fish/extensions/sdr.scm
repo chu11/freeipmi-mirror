@@ -39,12 +39,20 @@
   (letrec ((sdr-record-list '())
 	   (next-record-id  0)
 	   (sdr-record      '())
+	   (sdr-info        (fi-get-sdr-repo-info))
+	   (record-count    0)
+	   (record-index    0)
 	   (get-sdr-record 
 	    (lambda (record-id)
 	      (if (not (= record-id #xFFFF))
 		  (begin 
+		    (set! record-count (assoc-ref sdr-info "record_count"))
+		    (set! record-index (+ record-index 1))
 		    (display 
-		     (format #f "Fetching record# ~d ~!\r" record-id)
+		     (format #f "Fetching record ~d of ~d (current record ID ~d) ~!\r" 
+			     record-index
+			     record-count
+			     record-id)
 		     (current-error-port))
 		    (set! sdr-record (fi-get-sdr-record record-id))
 		    (if (not (boolean? sdr-record))
