@@ -1,3 +1,9 @@
+2004-08-19  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/src/ipmi-wrapper-sensor.c: modified
+	display_current_threshold_sensor_full_record() and
+	display_verbose_current_threshold_sensor_full_record().
+
 2004-08-18  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/src/pcilocate.c (pci_get_dev_info): 

@@ -74,12 +74,12 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   u_int8_t sensor_type;
   u_int8_t event_reading_type_code;
   
-  int readable_lower_non_critical_threshold;
-  int readable_upper_non_critical_threshold;
-  int readable_lower_critical_threshold;
-  int readable_upper_critical_threshold;
-  int readable_lower_non_recoverable_threshold;
-  int readable_upper_non_recoverable_threshold;
+  int readable_lower_non_critical_threshold = 0;
+  int readable_upper_non_critical_threshold = 0;
+  int readable_lower_critical_threshold = 0;
+  int readable_upper_critical_threshold = 0;
+  int readable_lower_non_recoverable_threshold = 0;
+  int readable_upper_non_recoverable_threshold = 0;
   double lower_limit = 0.0;
   double upper_limit = 0.0;
   double lower_non_critical_threshold;
@@ -88,6 +88,9 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   double upper_critical_threshold;
   double lower_non_recoverable_threshold;
   double upper_non_recoverable_threshold;
+  double normal_min;
+  double normal_max;
+  
   int error_type = 0;
   int alert_flag = 0;
   
@@ -205,6 +208,30 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 							      is_signed,
 							      val);
   
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record,
+		"normal_min",
+		&val);
+  normal_min = ipmi_sensor_decode_value (r_exponent,
+					 b_exponent,
+					 m,
+					 b,
+					 linear,
+					 is_signed,
+					 val);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record,
+		"normal_max",
+		&val);
+  normal_max = ipmi_sensor_decode_value (r_exponent,
+					 b_exponent,
+					 m,
+					 b,
+					 linear,
+					 is_signed,
+					 val);
+  
   status = ipmi_kcs_get_sensor_thresholds (fi_get_sms_io_base (), 
 					   sensor_number, 
 					   data_rs);
@@ -280,7 +307,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   else 
     printf ("N/A ");
   
-  printf ("(low=%.2f/", lower_critical_threshold);
+  printf ("(low=%.2f/", normal_min);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_full_sensor_record, 
@@ -295,7 +322,7 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    is_signed, 
 				    val));
   
-  printf ("high=%.2f) ", upper_critical_threshold);
+  printf ("high=%.2f) ", normal_max);
   
   if (status == 0)
     {
@@ -1042,7 +1069,7 @@ get_sdr_total_records (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 void 
-display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
+display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache, int is_very_verbose)
 {
   u_int64_t val;
   int i;
@@ -1061,12 +1088,12 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   u_int8_t sensor_type;
   u_int8_t event_reading_type_code;
 
-  int readable_lower_non_critical_threshold;
-  int readable_upper_non_critical_threshold;
-  int readable_lower_critical_threshold;
-  int readable_upper_critical_threshold;
-  int readable_lower_non_recoverable_threshold;
-  int readable_upper_non_recoverable_threshold;
+  int readable_lower_non_critical_threshold = 0;
+  int readable_upper_non_critical_threshold = 0;
+  int readable_lower_critical_threshold = 0;
+  int readable_upper_critical_threshold = 0;
+  int readable_lower_non_recoverable_threshold = 0;
+  int readable_upper_non_recoverable_threshold = 0;
   double lower_limit = 0.0;
   double upper_limit = 0.0;
   double lower_non_critical_threshold;
@@ -1193,45 +1220,50 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 							      is_signed,
 							      val);
   
-  status = ipmi_kcs_get_sensor_thresholds (fi_get_sms_io_base (), 
-					   sensor_number, 
-					   data_rs);
-  if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
+  {
+    fiid_obj_t obj_data_rs;
+      
+    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sensor_thresholds_rs));
+    status = ipmi_kcs_get_sensor_thresholds (fi_get_sms_io_base (), 
+					     sensor_number, 
+					     obj_data_rs);
+    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
     {
       /*       char err_msg[IPMI_ERR_STR_MAX_LEN]; */
       /*       ipmi_strerror_cmd_r (data_rs, err_msg, IPMI_ERR_STR_MAX_LEN); */
       status = -1;
     }
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_lower_non_critical_threshold", 
-		&val);
-  readable_lower_non_critical_threshold = val;
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_upper_non_critical_threshold", 
-		&val);
-  readable_upper_non_critical_threshold = val;
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_lower_critical_threshold", 
-		&val);
-  readable_lower_critical_threshold = val;
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_upper_critical_threshold", 
-		&val);
-  readable_upper_critical_threshold = val;
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_lower_non_recoverable_threshold", 
-		&val);
-  readable_lower_non_recoverable_threshold = val;
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_thresholds_rs, 
-		"readable_upper_non_recoverable_threshold", 
-		&val);
-  readable_upper_non_recoverable_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_lower_non_critical_threshold", 
+		  &val);
+    readable_lower_non_critical_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_upper_non_critical_threshold", 
+		  &val);
+    readable_upper_non_critical_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_lower_critical_threshold", 
+		  &val);
+    readable_lower_critical_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_upper_critical_threshold", 
+		  &val);
+    readable_upper_critical_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_lower_non_recoverable_threshold", 
+		  &val);
+    readable_lower_non_recoverable_threshold = val;
+    fiid_obj_get (obj_data_rs, 
+		  tmpl_get_sensor_thresholds_rs, 
+		  "readable_upper_non_recoverable_threshold", 
+		  &val);
+    readable_upper_non_recoverable_threshold = val;
+  }
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_full_sensor_record,
@@ -1248,89 +1280,107 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   
   printf ("Event/Reading type code: %02Xh\n", event_reading_type_code);
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"lower_non_recoverable_threshold",
-		&val);
-  printf ("Lower non-recoverable threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val), 
-	  ipmi_sensor_units[base_unit]);
+  if (readable_lower_non_recoverable_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "lower_non_recoverable_threshold",
+		    &val);
+      printf ("Lower non-recoverable threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val), 
+	      ipmi_sensor_units[base_unit]);
+    }
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"upper_non_recoverable_threshold",
-		&val);
-  printf ("Upper non-recoverable threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val), 
-	  ipmi_sensor_units[base_unit]);
+  if (readable_upper_non_recoverable_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "upper_non_recoverable_threshold",
+		    &val);
+      printf ("Upper non-recoverable threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val), 
+	      ipmi_sensor_units[base_unit]);
+    }
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"lower_critical_threshold",
-		&val);
-  printf ("Lower Critical threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val),
-	  ipmi_sensor_units[base_unit]);
+  if (readable_lower_critical_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "lower_critical_threshold",
+		    &val);
+      printf ("Lower Critical threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val),
+	      ipmi_sensor_units[base_unit]);
+    }
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"upper_critical_threshold",
-		&val);
-  printf ("Upper Critical threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val),
-	  ipmi_sensor_units[base_unit]);
+  if (readable_upper_critical_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "upper_critical_threshold",
+		    &val);
+      printf ("Upper Critical threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val),
+	      ipmi_sensor_units[base_unit]);
+    }
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"lower_non_critical_threshold",
-		&val);
-  printf ("Lower non-critical threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val),
-	  ipmi_sensor_units[base_unit]);
+  if (readable_lower_non_critical_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "lower_non_critical_threshold",
+		    &val);
+      printf ("Lower non-critical threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val),
+	      ipmi_sensor_units[base_unit]);
+    }
   
-  fiid_obj_get (sdr_repo_cache->cache_curr, 
-		tmpl_sdr_full_sensor_record,
-		"upper_non_critical_threshold",
-		&val);
-  printf ("Upper non-critical threshold: %.2f %s\n",
-	  ipmi_sensor_decode_value (r_exponent,
-				    b_exponent,
-				    m,
-				    b,
-				    linear,
-				    is_signed,
-				    val),
-	  ipmi_sensor_units[base_unit]);
+  if (readable_upper_non_critical_threshold || is_very_verbose)
+    {
+      fiid_obj_get (sdr_repo_cache->cache_curr, 
+		    tmpl_sdr_full_sensor_record,
+		    "upper_non_critical_threshold",
+		    &val);
+      printf ("Upper non-critical threshold: %.2f %s\n",
+	      ipmi_sensor_decode_value (r_exponent,
+					b_exponent,
+					m,
+					b,
+					linear,
+					is_signed,
+					val),
+	      ipmi_sensor_units[base_unit]);
+    }
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_full_sensor_record,
@@ -1518,6 +1568,13 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 
 void 
 display_verbose_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
+{
+  // This function never be called
+  printf ("This function never be called\n");
+}
+
+void 
+display_verbose_current_generic_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_repo_cache)
 {
   u_int64_t val;
   int i;
@@ -1916,6 +1973,13 @@ display_verbose_current_generic_discrete_sensor_compact_record (sdr_repo_cache_t
 
 void 
 display_verbose_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
+{
+  // This function never be called
+  printf ("This function never be called\n");
+}
+
+void 
+display_verbose_current_discrete_sensor_full_record_old (sdr_repo_cache_t *sdr_repo_cache)
 {
   u_int64_t val;
   int i;
@@ -2337,7 +2401,7 @@ display_verbose_current_sensor (sdr_repo_cache_t *sdr_repo_cache)
       switch (val)
 	{
 	case IPMI_SDR_FORMAT_FULL_RECORD:
-	  display_verbose_current_threshold_sensor_full_record (sdr_repo_cache);
+	  display_verbose_current_threshold_sensor_full_record (sdr_repo_cache, 0);
 	  fflush (stdout);
 	  break;
 	      
@@ -2659,7 +2723,7 @@ display_very_verbose_current_sensor (sdr_repo_cache_t *sdr_repo_cache)
       switch (ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache))
 	{
 	case IPMI_SENSOR_CLASS_THRESHOLD:
-	  display_verbose_current_threshold_sensor_full_record (sdr_repo_cache);
+	  display_verbose_current_threshold_sensor_full_record (sdr_repo_cache, 1);
 	  fflush (stdout);
 	  break;
 	case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
