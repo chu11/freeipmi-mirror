@@ -51,7 +51,9 @@ ipmipower:
   * Buffer recently malloced space to avoid constant re-mallocing.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
-  * Auto choose best authentication available.
+  * Retransmit/Recheck/Reattempt for higher channel privs is lower
+    ones not available??
+    - This is a really strange corner case.  May not be worth it.
 
 ipmiping/rmcpping:
 ------------------
