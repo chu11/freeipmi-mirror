@@ -319,7 +319,7 @@ int8_t ipmi_kcs_get_user_name (u_int8_t user_id,
 
 int8_t ipmi_kcs_set_user_password (u_int8_t user_id, 
 				   u_int8_t operation, 
-				   char *password, 
+				   char *user_password, 
 				   fiid_obj_t obj_data_rs);
 
 int8_t ipmi_kcs_set_user_access (u_int8_t channel_number,
