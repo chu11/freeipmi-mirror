@@ -195,7 +195,7 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
 ipmi_probe_info_t*
 pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
 {
-  if (*statusp != NULL) *statusp = 2;
+  if (statusp != NULL) *statusp = 2;
   return NULL;
 }
 

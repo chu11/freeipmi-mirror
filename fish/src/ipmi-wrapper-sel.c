@@ -38,53 +38,63 @@ char *alloca ();
 
 #include "fi-utils.h"
 #include "ipmi-wrapper-sel.h"
+#include "fish.h"
 
 sel_descriptor_t seld;
 
-/* int  */
-/* display_sel_info () */
-/* { */
-/*   fiid_obj_t obj_hdr_rs; */
-/*   fiid_obj_t obj_data_rs; */
-/*   int status; */
-/*   u_int64_t val; */
-/*   int log_entry_count; */
+int
+get_sel_info (sel_info_t* pinfo)
+{
+  fiid_obj_t obj_data_rs;
+  int status;
+  u_int64_t val;
   
-/*   obj_hdr_rs = alloca (fiid_obj_len_bytes (tmpl_hdr_kcs)); */
-/*   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_info_rs)); */
-/*   status = ipmi_kcs_get_sel_info (SMS_IO_BASE, obj_hdr_rs, obj_data_rs); */
+  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_info_rs));
+  status = ipmi_kcs_get_sel_info (fi_get_sms_io_base (), obj_data_rs);
   
-/*   if (status != 0) */
-/*     { */
-/*       fprintf (stderr,  */
-/* 	       "error: ipmi_kcs_get_sel_info() failed.\n"); */
-/*       return (-1); */
-/*     } */
+  if (status != 0)
+    {
+      fprintf (stderr,
+	       "error: ipmi_kcs_get_sel_info() failed.\n");
+      return (-1);
+    }
   
-/*   if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS) */
-/*     { */
-/*       char err_msg[IPMI_ERR_STR_MAX_LEN]; */
-/*       ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN); */
-/*       fprintf (stderr,  */
-/* 	       "error: ipmi_kcs_get_sel_info() failed with %s\n",  */
-/* 	       err_msg); */
-/*       return (-1); */
-/*     } */
+  if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
+    {
+      char err_msg[IPMI_ERR_STR_MAX_LEN];
+      ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr,
+	       "error: ipmi_kcs_get_sel_info() failed with %s\n",
+	       err_msg);
+      return (-1);
+    }
   
-/*   fiid_obj_get (obj_data_rs,  */
-/* 		tmpl_get_sel_info_rs,  */
-/* 		"log_entry_count",  */
-/* 		&val); */
-/*   printf ("SEL log entry count: %d\n", (int) val); */
-    
-/*   fiid_obj_get (obj_data_rs,  */
-/* 		tmpl_get_sel_info_rs,  */
-/* 		"free_space",  */
-/* 		&val); */
-/*   printf ("SEL free space: %d\n", 0x10000 - (int) val); */
-  
-/*   return 0; */
-/* } */
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "sel_version_major", &val);
+  pinfo->version_major = val;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "sel_version_minor", &val);
+  pinfo->version_minor = val;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "log_entry_count", &val);
+  pinfo->entry_count = val;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "free_space", &val);
+  pinfo->free_space = val;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "recent_addition_timestamp", &val);
+  pinfo->last_add_time = val;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "recent_erase_timestamp", &val);
+  pinfo->last_erase_time = val;
+  pinfo->flags = 0;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "get_sel_alloc_info_cmd_support", &val);
+  if (val) pinfo->flags |= get_sel_alloc_info_cmd_support;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "reserve_sel_cmd_support", &val);
+  if (val) pinfo->flags |= reserve_sel_cmd_support;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "partial_add_sel_entry_cmd_support", &val);
+  if (val) pinfo->flags |= partial_add_sel_entry_cmd_support;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "delete_sel_cmd_support", &val);
+  if (val) pinfo->flags |= delete_sel_cmd_support;
+  fiid_obj_get (obj_data_rs, tmpl_get_sel_info_rs, "overflow_flag", &val);
+  if (val) pinfo->flags |= overflow_flag;
+
+  return 0;
+}
 
 sel_descriptor_t *
 get_seld ()

@@ -108,6 +108,8 @@
      ((string? hex-dump-name)
       (with-output-to-file hex-dump-name
         (lambda ()
+          (let ((info (fi-sel-get-info)))
+            (if (string? info) (display info)))
           (let loop ((first-entry (fi-sel-get-first-entry-hex)))
             (if (string? first-entry)
                 (begin

@@ -12,6 +12,29 @@ struct sel_record
   char *generator_id;
 };
 
+enum sel_info_flag
+  {
+    get_sel_alloc_info_cmd_support = 1,
+    reserve_sel_cmd_support = 2,
+    partial_add_sel_entry_cmd_support = 4,
+    delete_sel_cmd_support = 8,
+    overflow_flag = 16,
+  };
+typedef enum sel_info_flag sel_info_flag_t;
+
+struct sel_info
+{
+  unsigned short version_major;
+  unsigned short version_minor;
+  unsigned short entry_count;
+  unsigned short free_space;
+  time_t last_add_time;
+  time_t last_erase_time;
+  sel_info_flag_t flags;
+};
+typedef struct sel_info sel_info_t;
+
+int get_sel_info (sel_info_t* pinfo);
 sel_descriptor_t *get_seld ();
 int display_sel_threshold_system_event_record (u_int8_t *record_data);
 int display_sel_generic_discrete_system_event_record (u_int8_t *record_data);

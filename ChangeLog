@@ -1,3 +1,27 @@
+2004-08-18  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/pcilocate.c (pci_get_dev_info): 
+	Fix a typo causing warning in the stubbed out branch.
+
+	* fish/extensions/sel.scm (sel-main):
+	Add call to fi-sel-get-info.
+
+	* fish/src/extension.c (install_new_procedures):
+	Register fi-sel-get-info.
+
+	* fish/src/scm-procedures.h (ex_sel_get_info):
+	Declare new function.
+	
+	* fish/src/scm-procedures.c (ex_sel_get_info): 
+	Add function.
+
+	* fish/src/ipmi-wrapper-sel.c (get_sel_info): 
+	Add function.
+
+	* fish/src/ipmi-wrapper-sel.h (struct sel_info):
+	Add this structure and enum for the flags field.
+	(get_sel_info): declare new function.
+	
 2004-08-18  A Balamurugan  <bala.a@californiadigital.com>
 
 	* TODO: added new todo's.

@@ -754,7 +754,7 @@ ex_sel_get_first_entry_hex ()
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
-                "ED1:[%02X] ED2:[%02X] ED3:[%02X]\n",
+                "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n",
                 record_data[0], record_data[1], record_data[2], record_data[3], 
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
@@ -775,12 +775,43 @@ ex_sel_get_next_entry_hex ()
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
-                "ED1:[%02X] ED2:[%02X] ED3:[%02X]\n",
+                "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n",
                 record_data[0], record_data[1], record_data[2], record_data[3], 
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
                 record_data[12], record_data[13], record_data[14], record_data[15]);
       return gh_str02scm (hex_data);
+    }
+  else return SCM_BOOL_F;
+}
+
+SCM
+ex_sel_get_info ()
+{
+  sel_info_t info;
+
+  if (get_sel_info (&info) == 0)
+    {
+      char buf [1024];
+      struct tm tmtime;
+      char addtime [32];
+      char erasetime [32];
+
+      gmtime_r (&info.last_add_time, &tmtime);
+      strftime (addtime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
+      gmtime_r (&info.last_erase_time, &tmtime);
+      strftime (erasetime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
+      snprintf (buf, 1024,
+                "Version                     IPMI v%hu.%hu\n"
+                "Number of Entries           %hu\n"
+                "Last Add Time               %s\n"
+                "Last Erase Time             %s\n"
+                "Free Space Remaining        %hu\n\n",
+                info.version_major, info.version_minor,
+                info.entry_count,
+                addtime, erasetime,
+                info.free_space);
+      return gh_str02scm (buf);
     }
   else return SCM_BOOL_F;
 }
