@@ -90,7 +90,6 @@ Ian's TODO List:
 ================
   * Convert fish to the (now preferred) scm_ interface completely.
   * Event Messaging and PEF Subsystem.
-  * Debian packages.
   * Enable build without fish (not depending on readline and guile).
   * When building with fish, fail configure if prerequisites aren't present.
 

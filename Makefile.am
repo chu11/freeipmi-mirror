@@ -1,4 +1,8 @@
-SUBDIRS = doc libfreeipmi fish bmc-watchdog ipmipower ipmiping rmcpping
+if COND_FISH
+  MAYBE_FISH = fish
+endif
+
+SUBDIRS = doc libfreeipmi bmc-watchdog ipmipower ipmiping rmcpping $(MAYBE_FISH)
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@

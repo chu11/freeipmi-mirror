@@ -1,3 +1,7 @@
+2004-10-25  Ian Zimmerman  <itz@californiadigital.com>
+
+	* configure.ac, Makefile.am: make it possible to disable fish building.
+
 2004-10-24  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac: bump version number to 0.1.3.

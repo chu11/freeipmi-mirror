@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.3],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.17 2004-10-25 05:35:29 itz Exp $])
+AC_REVISION([$Id: configure.ac,v 1.18 2004-10-25 17:16:40 itz Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -58,6 +58,11 @@ AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET
 GUILE_PROGS
 GUILE_FLAGS
+
+dnl See if they want to build fish.
+AC_ARG_ENABLE([fish],
+              AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
+AM_CONDITIONAL([COND_FISH], [test x"${enable_fish}" != "xno"])
 
 dnl Turn off all optimizations when debugging
 AC_ARG_ENABLE(debug,
