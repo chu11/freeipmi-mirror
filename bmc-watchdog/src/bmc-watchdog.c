@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.11 2004-07-26 18:40:42 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.12 2004-08-23 23:20:52 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -202,7 +202,7 @@ _bmclog(const char *fmt, ...)
 
   assert (fmt != NULL 
           && err_progname != NULL 
-          && (conf.no_logging || logfile_fd >= 0));
+          && (cinfo.no_logging || logfile_fd >= 0));
   
   if (cinfo.no_logging)
     return;

@@ -1,3 +1,7 @@
+2004-08-23  Albert Chu  <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_bmclog): Fix typo.
+	
 2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: added new primitive procedure
