@@ -1,0 +1,22 @@
+GNU FreeIPMI would not be what it is today without the invaluable help
+of everybody who was kind enough to spend time testing it and
+reporting bugs. 
+
+The following people made especially gracious contributions of their
+time and energy in helping to track down bugs, add new features, and
+generally assist in the GNU FreeIPMI maintainership process:
+
+    -- [sorted alphabetically] --
+
+Brian Rice <brian.rice@intel.com>: Support
+Dmitry Frolov <frolov@riss-telecom.ru>:  FreeBSD Port
+Douglas Bone <douglas.bone@californiadigital.com>: Support and Guidance
+Joseph Ruscio <jruscio@californiadigital.com>: QA
+Mridul Jain <mridul.jain@californiadigital.com>: Support and Promotion
+Raphael Deng <RaphaelD@tyan.com>: Tyan S2881/2 IPMI compliance, Feedbacks
+Rick Moen <rick.moen@californiadigital.com>: Support
+Robin Goldstone <robing@llnl.gov>: Support and Guidance
+James Zhou <jamesz@tyan.com>: Tyan S2881/2 IPMI compliance, Feedbacks
+
+And special thanks to California Digital and LLNL for contributing
+developers and resources to this project. 

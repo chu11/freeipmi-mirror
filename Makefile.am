@@ -7,7 +7,7 @@ SUBDIRS = doc libfreeipmi bmc-watchdog ipmipower ipmiping rmcpping $(MAYBE_FISH)
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
  
-EXTRA = ChangeLog AUTHORS COPYING INSTALL NEWS README TODO COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower COPYING.ipmiping DISCLAIMER.ipmiping COPYING.rmcpping DISCLAIMER.rmcpping
+EXTRA = ChangeLog AUTHORS COPYING INSTALL NEWS README TODO THANKS COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower COPYING.ipmiping DISCLAIMER.ipmiping COPYING.rmcpping DISCLAIMER.rmcpping
  
 docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)
