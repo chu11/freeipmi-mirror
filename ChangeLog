@@ -1,3 +1,18 @@
+2004-11-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd_raw,
+	ipmi_kcs_cmd_raw_interruptible): New functions.
+
+	* ipmipower/src/ipmipower_connection.c (_connection_setup): Remove
+	incorrect comment statement.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_set_cmd, _daemon_setup): Don't
+	compare value of pre_timeout_interrupt value against initial
+	countdown if pre-timeout interrupt is none.
+
+	* ipmipower/ipmipower.8.in: Fix a minor wording mistake.
+
 2004-11-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Fix

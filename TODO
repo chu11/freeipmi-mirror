@@ -38,8 +38,6 @@ bmc-watchdog:
   * Require Timer use to be SMS/OS?
   * Make get_lan_channel_number() non-hardcoded.
   * Allow over lan?
-  * Ignore pre-timeout interval length comparison to initial countdown
-    if pre-timeout interval is none
 
 ipmipower:
 ----------
@@ -52,9 +50,13 @@ ipmipower:
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
     - Or is setup the bottleneck, not the actual power control?
-  * Retransmit/Recheck/Reattempt for higher channel privs is lower
+  * Retransmit/Recheck/Reattempt for higher channel privs if lower
     ones not available??
     - This is a really strange corner case.  May not be worth it.
+  * Audit for performance improvements anywhere you can find it.
+    - "marking" queues with data in it??
+    - not mallocing/reset in each poll loop??
+    - constant millisecond calculations?
 
 ipmiping/rmcpping:
 ------------------
@@ -64,7 +66,6 @@ ipmiping/rmcpping:
 
 General:
 --------
-  * Fix freeipmi.spec.in port issues
   * Testsuite for Freeipmi and IPMI conformance test.
   * Need to test following corner cases:
     - 16 byte passwords
@@ -75,7 +76,6 @@ General:
     - bmc-config wrapper script to handle common stuff
      - i.e. if you enable a user, automatically turn on
       IPMI lan and IPMI serial, passwd/md2 authentication, etc.
-  * extra documentation on bmc-config
 
 Autoconf issues:
 ----------------
@@ -104,3 +104,4 @@ Later on:
 =========
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
+  * Extra documentation on bmc-config

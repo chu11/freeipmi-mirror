@@ -124,7 +124,8 @@ int ipmi_kcs_get_mutex_semid (void);
 int ipmi_kcs_io_init (u_int16_t sms_io_base, unsigned long sleep_usecs);
 int8_t ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
 int8_t ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
-
+int8_t ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
+int8_t ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_cmd_rq, u_int32_t buf_rq_len, u_int8_t *buf_cmd_rs, u_int32_t *buf_rs_len);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.18 2004-10-28 07:33:59 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.19 2004-11-22 19:18:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1185,7 +1185,8 @@ _set_cmd(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if (pre_timeout_interval > initial_countdown_seconds)
+  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+      && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
 
   if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
@@ -1566,7 +1567,8 @@ _daemon_setup(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if (pre_timeout_interval > initial_countdown_seconds)
+  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+      && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
   if (cinfo.reset_period)
     reset_period = cinfo.reset_period_val;

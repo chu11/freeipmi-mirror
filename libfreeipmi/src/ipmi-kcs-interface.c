@@ -636,3 +636,120 @@ ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fi
   }
   return (0);
 }
+
+int8_t
+ipmi_kcs_cmd_raw (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
+{
+  if (!(sms_io_base && buf_rq && buf_rq_len > 0 
+        && buf_rs && buf_rs_len && *buf_rs_len > 0))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  { /* Request Block */
+    u_int8_t *bytes = NULL; 
+    u_int32_t obj_hdr_rq_len, bytes_len;
+    
+    obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
+    ERR (obj_hdr_rq_len > 0);
+
+    bytes_len = obj_hdr_rq_len + buf_rq_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+
+    ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
+    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
+
+    ERR (ipmi_kcs_write (sms_io_base, bytes, bytes_len) != -1);
+  }
+  { /* Response Block */
+    u_int8_t *bytes = NULL; 
+    u_int32_t obj_hdr_rs_len, bytes_read, bytes_len;
+    
+    obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
+    ERR (obj_hdr_rs_len != -1);
+
+    bytes_len = obj_hdr_rs_len + *buf_rs_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+    
+    ERR ((bytes_read = ipmi_kcs_read (sms_io_base, bytes, bytes_len)) != -1);
+    if (bytes_read > obj_hdr_rs_len)
+      {
+        u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
+        if (rs_len <= *buf_rs_len)
+          *buf_rs_len = rs_len;
+        
+        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
+      }
+    else
+      /* achu: the cmd and comp_code should always be returned, so
+       * hopefully we never ever reach this point */
+      *buf_rs_len = 0;
+  }
+  return (0);
+}
+
+int8_t
+ipmi_kcs_cmd_raw_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
+{
+  int ret;
+
+  if (!(sms_io_base && buf_rq && buf_rq_len > 0 
+        && buf_rs && buf_rs_len && *buf_rs_len > 0))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  { /* Request Block */
+    u_int8_t *bytes = NULL; 
+    u_int32_t obj_hdr_rq_len, bytes_len;
+    
+    obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
+    ERR (obj_hdr_rq_len > 0);
+
+    bytes_len = obj_hdr_rq_len + buf_rq_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+
+    ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
+    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
+
+    ret = ipmi_kcs_write_interruptible (sms_io_base, bytes, bytes_len);
+    if (ret == -1 && errno == EAGAIN)
+      return -1;
+    ERR ((!(ret == -1 && errno != EAGAIN)));
+  }
+  { /* Response Block */
+    u_int8_t *bytes = NULL; 
+    u_int32_t obj_hdr_rs_len, bytes_read, bytes_len;
+    
+    obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
+    ERR (obj_hdr_rs_len != -1);
+
+    bytes_len = obj_hdr_rs_len + *buf_rs_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+    
+    ERR ((bytes_read = ipmi_kcs_read (sms_io_base, bytes, bytes_len)) != -1);
+    if (bytes_read > obj_hdr_rs_len)
+      {
+        u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
+        if (rs_len <= *buf_rs_len)
+          *buf_rs_len = rs_len;
+        
+        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
+      }
+    else
+      /* achu: the cmd and comp_code should always be returned, so
+       * hopefully we never ever reach this point */
+      *buf_rs_len = 0;
+  }
+  return (0);
+}
