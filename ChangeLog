@@ -1,5 +1,7 @@
 2004-10-26  Ian Zimmerman  <itz@californiadigital.com>
 
+	* libfreeipmi/src/ipmi-pef-param-spec.h: New file.
+
 	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi.h,
 	libfreeipmi/src/ipmi-pef-cmds.h, libfreeipmi/src/ipmi-pef-cmds.c:
 	added first batch of low level PEF functions.
