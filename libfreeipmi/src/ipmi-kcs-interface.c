@@ -113,7 +113,7 @@ ipmi_kcs_reg_space (u_int8_t reg_space_boundary)
     {
     case IPMI_KCS_REG_SPACE_1BYTE_BOUND:
       return (0x01);
-    case IPMI_KCS_REG_SPACE_32BIT_BOUND:
+    case IPMI_KCS_REG_SPACE_4BYTE_BOUND:
       return (0x04);
     case IPMI_KCS_REG_SPACE_16BYTE_BOUND:
       return (0x10);
