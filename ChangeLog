@@ -1,3 +1,41 @@
+2004-06-24  Albert Chu <chu11@llnl.gov>
+
+	Added Pulse Diagnostic Interrupt and Soft OS Shutdown commands
+
+	* ipmipower/src/ipmipower.h: Added POWER_CMD_PULSE_DIAG_INTR and
+	POWER_CMD_SOFT_SHUTDOWN_OS definitions.
+
+	* ipmipower/src/ipmipower_config.c (_usage,
+	ipmipower_config_cmdline_parse): Added support for --pulse and
+	--soft options.
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_help,
+	ipmipower_prompt_process_cmdline): Added support for pulse and
+	soft commands.
+
+	* ipmipower/src/ipmipower_config.c (ipmipower_packet_create):
+	Added support for pulse diagnostic interrupts and soft os
+	shutdowns.
+
+	* doc/ipmipower.8.in: Added information about --pulse and --soft
+	options.
+
+	* TODO: Remove pulse diag and soft shutdown todo.
+
+	Misc Fixes.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_config.c,
+	ipmipower/src/ipmipower_packet.c,
+	ipmipower/src/ipmipower_powercmd.c,
+	ipmipower/src/ipmipower_prompt.c: Changed POWER_CMD_POWER_STAT to
+	POWER_CMD_POWER_STATUS.
+
+	* ipmipower/src/ipmipower_config.c (_usage): Reworded some usage.
+
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Put 'break' after usage and
+	version.
+
 2004-06-23  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_prompt.c (_cmd_authtype): Check for

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.1 2004-05-11 17:05:04 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.2 2004-06-25 00:40:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -615,7 +615,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       /* We can skip PRIV_REQ on a power status check, because
        * privilege is already set to the user level
        */
-      if (ip->cmd == POWER_CMD_POWER_STAT)
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
         _send_packet(ip, CHAS_REQ, 0);
       else
         _send_packet(ip, PRIV_REQ, 0);
@@ -631,10 +631,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       /* Next packet we send depends on the command and the options
-       * set.  POWER_STAT shouldn't be possible at this point, but oh
+       * set.  POWER_STATUS shouldn't be possible at this point, but oh
        * well.
        */
-      if (ip->cmd == POWER_CMD_POWER_STAT
+      if (ip->cmd == POWER_CMD_POWER_STATUS
           || (conf->on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
@@ -659,7 +659,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    "power_state.power_on",
                    &power_state);
 
-      if (ip->cmd == POWER_CMD_POWER_STAT) 
+      if (ip->cmd == POWER_CMD_POWER_STATUS) 
         {
           ipmipower_output((power_state) ? MSG_TYPE_ON : MSG_TYPE_OFF, 
                            ip->ic->hostname); 

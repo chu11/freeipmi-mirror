@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.2 2004-05-11 17:51:11 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.3 2004-06-25 00:40:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -186,7 +186,9 @@ _usage(void)
           "-f --off              Power Off\n"
           "-c --cycle            Power Cycle\n"
           "-r --reset            Power Reset\n"
-          "-s --stat             Power Status\n"
+          "-s --stat             Power Status Query\n"
+          "-j --pulse            Pulse Diagnostic Interrupt\n"
+          "-k --soft             Soft Shutdown OS via ACPI\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
           "-C --config           Specify Alternate Config File\n"
@@ -211,9 +213,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsHVC:a:e:goDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:e:goDIRLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsHVC:a:e:got:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:e:got:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -227,6 +229,8 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"cycle",               0, NULL, 'c'},
       {"reset",               0, NULL, 'r'},
       {"stat",                0, NULL, 's'},
+      {"pulse",               0, NULL, 'j'},
+      {"soft",                0, NULL, 'k'},
       {"help",                0, NULL, 'H'},
       {"version",             0, NULL, 'V'},
       {"config",              1, NULL, 'C'}, 
@@ -297,12 +301,20 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->powercmd = POWER_CMD_POWER_RESET;
           break;
         case 's':       /* --stat */ 
-          conf->powercmd = POWER_CMD_POWER_STAT;
+          conf->powercmd = POWER_CMD_POWER_STATUS;
+          break;
+        case 'j':       /* --pulse */
+          conf->powercmd = POWER_CMD_PULSE_DIAG_INTR;
+          break;
+        case 'k':       /* --soft */
+          conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
           break;
         case 'H':       /* --help */
           _usage();
+          break;
         case 'V':       /* --version */
           _version();
+          break;
         case 'C':
           if (strlen(optarg) > MAXPATHLEN)
             err_exit("Command Line Error: configuration file pathname too long");

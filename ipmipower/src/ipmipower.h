@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.1 2004-05-11 17:04:38 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.2 2004-06-25 00:40:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -131,14 +131,16 @@ typedef enum { IPMIPOWER_TRUE  = 1,
 /* power_cmd_t 
  * - power control commands 
  */
-typedef enum { POWER_CMD_NONE        = 0x00,
-               POWER_CMD_POWER_OFF   = 0x01, 
-               POWER_CMD_POWER_ON    = 0x02, 
-               POWER_CMD_POWER_CYCLE = 0x03, 
-               POWER_CMD_POWER_RESET = 0x04, 
-               POWER_CMD_POWER_STAT  = 0x05} power_cmd_t;
+typedef enum { POWER_CMD_NONE             = 0x00,
+               POWER_CMD_POWER_OFF        = 0x01,
+               POWER_CMD_POWER_ON         = 0x02,
+               POWER_CMD_POWER_CYCLE      = 0x03,
+               POWER_CMD_POWER_RESET      = 0x04,
+               POWER_CMD_POWER_STATUS     = 0x05,
+               POWER_CMD_PULSE_DIAG_INTR  = 0x06, 
+               POWER_CMD_SOFT_SHUTDOWN_OS = 0x07} power_cmd_t;
 #define POWER_CMD_VALID(c)             (c > POWER_CMD_NONE && \
-                                        c <= POWER_CMD_POWER_STAT)
+                                        c <= POWER_CMD_SOFT_SHUTDOWN_OS)
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.

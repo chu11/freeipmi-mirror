@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.2 2004-06-23 22:05:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.3 2004-06-25 00:40:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -71,6 +71,8 @@ _cmd_help(void)
               "cycle [node]           - power cycle all nodes, or listed node\n"
               "reset [node]           - hard reset all nodes, or listed node\n"
               "stat [node]            - list power of all nodes, or listed node\n"
+              "pulse [node]           - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
+              "soft [node]            - soft shutdown all nodes, or listed nodes\n"
               "help                   - output this help menu\n"
               "advanced               - output advanced help menu\n"
               "network                - output network help menu\n"
@@ -765,7 +767,11 @@ ipmipower_prompt_process_cmdline(void)
             else if (strcmp(argv[0], "reset") == 0)
               _cmd_power(argv, POWER_CMD_POWER_RESET);
             else if (strcmp(argv[0], "stat") == 0)
-              _cmd_power(argv, POWER_CMD_POWER_STAT);
+              _cmd_power(argv, POWER_CMD_POWER_STATUS);
+            else if (strcmp(argv[0], "pulse") == 0)
+              _cmd_power(argv, POWER_CMD_PULSE_DIAG_INTR);
+            else if (strcmp(argv[0], "soft") == 0)
+              _cmd_power(argv, POWER_CMD_SOFT_SHUTDOWN_OS);
             else if (strcmp(argv[0], "help") == 0 
                      || strcmp(argv[0], "?") == 0)
               _cmd_help();

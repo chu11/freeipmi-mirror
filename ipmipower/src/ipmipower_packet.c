@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.1 2004-05-11 17:04:45 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.2 2004-06-25 00:40:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -270,7 +270,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   if (pkt == AUTH_REQ)
     {
-      if (ip->cmd == POWER_CMD_POWER_STAT)
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
         priv = IPMI_PRIV_LEVEL_USER;
       else
         priv = IPMI_PRIV_LEVEL_OPERATOR;
@@ -353,7 +353,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       at = ipmipower_ipmi_auth_type(conf->authtype);
 
-      if (ip->cmd == POWER_CMD_POWER_STAT)
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
         priv = IPMI_PRIV_LEVEL_USER;
       else
         priv = IPMI_PRIV_LEVEL_OPERATOR;
@@ -418,7 +418,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       /* We should skip the PRIV_REQ packet on a power status
        * command, but I'll just leave this code here
        */
-      if (ip->cmd == POWER_CMD_POWER_STAT)
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
         priv = IPMI_PRIV_LEVEL_USER;
       else
         priv = IPMI_PRIV_LEVEL_OPERATOR;
@@ -579,7 +579,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       assert(ip->cmd == POWER_CMD_POWER_OFF 
              || ip->cmd == POWER_CMD_POWER_ON  
              || ip->cmd == POWER_CMD_POWER_CYCLE 
-             || ip->cmd == POWER_CMD_POWER_RESET);
+             || ip->cmd == POWER_CMD_POWER_RESET
+             || ip->cmd == POWER_CMD_PULSE_DIAG_INTR
+             || ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS);
 
       if (conf->permsgauth_hosts != NULL
           && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
@@ -605,6 +607,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         command = IPMI_CHASSIS_CTRL_POWER_CYCLE;
       else if (ip->cmd == POWER_CMD_POWER_RESET)
         command = IPMI_CHASSIS_CTRL_HARD_RESET;
+      else if (ip->cmd == POWER_CMD_PULSE_DIAG_INTR)
+        command = IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR;
+      else if (ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
+        command = IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN;
 
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
                    "initial_inbound_seq_num", &initial_inbound_seq_num);
