@@ -1,3 +1,7 @@
+2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c: fixed compiler warnings
+
 2004-10-08  Anand Babu  <ab@gnu.org.in>
 
 	* authors.texi, fdl.texi, freeipmi-ug.texi, gpl.texi,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.14 2004-10-08 16:09:05 balamurugan Exp $
+ *  $Id: bmc-watchdog.c,v 1.15 2004-10-08 23:41:28 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1032,8 +1032,8 @@ _cmdline_parse(int argc, char **argv)
           cinfo.pre_timeout_interval_val = (u_int8_t)strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("pre timeout interval value invalid");
-          if (cinfo.pre_timeout_interval_val < IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS
-              || cinfo.pre_timeout_interval_val > IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS)
+          if ((cinfo.pre_timeout_interval_val - 1) < (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS - 1)
+              || (cinfo.pre_timeout_interval_val - 1) > (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS - 1))
             _err_exit("pre timeout interval value out of range");
           break;
         case 'F':
