@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.9 2004-07-08 00:39:01 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.10 2004-07-13 00:22:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -198,8 +198,8 @@ _bmclog(const char *fmt, ...)
   struct tm *tm;
   int len;
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
-  char tbuffer[BMC_WATCHDOG_ERR_BUFLEN];
-  
+  char fbuffer[BMC_WATCHDOG_ERR_BUFLEN];
+
   assert (fmt != NULL && err_progname != NULL && logfile_fd >= 0);
   
   if (cinfo.no_logging)
@@ -211,15 +211,17 @@ _bmclog(const char *fmt, ...)
   if ((tm = localtime(&t)) == NULL)
     {
       /* Just use the value from time() */
-      len = snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%ld: %s\n", t, fmt);
+      snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%ld: %s\n", t, fmt);
     }
   else
     {
+      char tbuffer[BMC_WATCHDOG_ERR_BUFLEN];
       strftime(tbuffer, BMC_WATCHDOG_ERR_BUFLEN, "[%b %d %H:%M:%S]", tm);
-      len = snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", tbuffer, fmt);
+      snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", tbuffer, fmt);
     }
   
-  _bmclog_write(buffer, len);
+  len = vsnprintf(fbuffer, BMC_WATCHDOG_ERR_BUFLEN, buffer, ap);
+  _bmclog_write(fbuffer, len);
  
   va_end(ap);
 }

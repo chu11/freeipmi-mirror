@@ -1,3 +1,10 @@
+2004-07-12  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/Makefile.am: Fixed typo.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_bmclog): Fixed juvenile
+	mistake where arguments weren't output to the bmc log.
+
 2004-07-09  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Renamed with_bmc_watchdog_setup conditional
