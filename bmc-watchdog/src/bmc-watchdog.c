@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.3 2004-06-26 00:42:29 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.4 2004-07-06 22:52:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,14 +116,14 @@ struct cmdline_info
   int clear_oem;
   int initial_countdown_seconds;
   u_int32_t initial_countdown_seconds_val;
-  int gratuitous_arp;
-  u_int8_t gratuitous_arp_val;
-  int arp_response;
-  u_int8_t arp_response_val;
   int start_after_set;
   int reset_after_set;
   int start_if_stopped;
   int reset_if_running;
+  int gratuitous_arp;
+  u_int8_t gratuitous_arp_val;
+  int arp_response;
+  u_int8_t arp_response_val;
   int reset_period;
   u_int32_t reset_period_val; 
 #ifndef NDEBUG
@@ -635,22 +635,54 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
   return retval;
 }
 
+static char *
+_cmd_string(void)
+{
+  if (cinfo.get)
+    return "--get";
+  else if (cinfo.set)
+    return "--set";
+  else if (cinfo.reset)
+    return "--reset";
+  else if (cinfo.start)
+    return "--start";
+  else if (cinfo.stop)
+    return "--stop";
+  else if (cinfo.clear)
+    return "--clear";
+  else if (cinfo.daemon)
+    return "--daemon";
+  else
+    return NULL;
+}
+
 static void 
 _usage(void) 
 {
+  char *cmdstr = _cmd_string();
+
+  if (cmdstr == NULL)
+    {
+      fprintf(stderr,
+              "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
+      fprintf(stderr,
+              "COMMANDS:\n"
+              "  -s         --set                        Set BMC Watchdog Config\n"
+              "  -g         --get                        Get BMC Watchdog Config\n"
+              "  -r         --reset                      Reset BMC Watchdog Timer\n"
+              "  -t         --start                      Start BMC Watchdog Timer\n"
+              "  -y         --stop                       Stop BMC Watchdog Timer\n"
+              "  -c         --clear                      Clear BMC Watchdog Config\n"
+              "  -d         --daemon                     Run in Daemon Mode\n\n");
+    }
+  else
+    fprintf(stderr,
+            "Usage: bmc-watchdog %s [OPTIONS]... \n\n", cmdstr);
+
   fprintf(stderr,
-          "Usage: bmc-watchdog <COMMAND> [OPTIONS]... [COMMAND_OPTIONS]...\n\n");
-  fprintf(stderr,
-          "COMMANDS:\n"
-          "  -s         --set                        Set BMC Watchdog Config\n"
-          "  -g         --get                        Get BMC Watchdog Config\n"
-          "  -r         --reset                      Reset BMC Watchdog Timer\n"
-          "  -t         --start                      Start BMC Watchdog Timer\n"
-          "  -y         --stop                       Stop BMC Watchdog Timer\n"
-          "  -c         --clear                      Clear BMC Watchdog Config\n"
-          "  -d         --daemon                     Run in Daemon Mode\n\n");
-  fprintf(stderr,
-	  "OPTIONS (All commands):\n"
+	  "OPTIONS:\n"
+          "  -h         --help                       Output help menu\n"
+          "  -v         --version                    Output version\n"
 	  "  -o INT     --io-port=INT                Base address for KCS SMS I/O\n"
           "  -n         --no-syslog                  Turn off all syslogging\n");
 #ifndef NDEBUG
@@ -658,69 +690,84 @@ _usage(void)
 	  "  -D         --debug                      Turn on debugging\n");
 #endif
   fprintf(stderr, "\n");
-  fprintf(stderr,
-	  "COMMAND OPTIONS:\n"
-          "  -u INT     --timer-use=INT              Set timer use\n"
-          "             %d = BIOS FRB2\n"
-          "             %d = BIOS POST\n"
-          "             %d = OS_LOAD\n"
-          "             %d = SMS OS\n"
-          "             %d = OEM\n"
-	  "  -m INT     --stop-timer=INT             Set Stop Timer Flag\n"
-          "             %d = Stop Timer\n"
-          "             %d = Don't Stop timer\n"
-          "  -l INT     --log=INT                    Set Log Flag\n"
-          "             %d = Enable Log\n"
-          "             %d = Disable Log\n"
-	  "  -a INT     --timeout-action=INT         Set timeout action\n"
-	  "             %d = No action\n" 
-	  "             %d = Hard Reset\n"
-	  "             %d = Power Down\n"
-	  "             %d = Power Cycle\n"
-	  "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt\n"
-	  "             %d = None\n" 
-	  "             %d = SMI\n" 
-	  "             %d = NMI\n" 
-	  "             %d = Messaging Interrupt\n"
-	  "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds\n"
-          "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag\n"
-          "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag\n"
-          "  -L         --clear-os-load              Clear OS Load Timer Use Flag\n"
-          "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
-          "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
-	  "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n"
-          "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs\n"
-          "             %d = Suspend Gratuitous ARPs\n"
-          "             %d = Do Not Suspend Gratuitous ARPs\n"
-          "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
-          "             %d = Suspend ARP Responses\n"
-          "             %d = Do Not Suspend ARP Responses\n"
-	  "  -w         --start-after-set            Start timer after set if timer is stopped\n"
-	  "  -x         --reset-after-set            Reset timer after set if timer is running\n"
-          "  -j         --start-if-stopped           Don't set if timer is stopped, just start\n"
-          "  -k         --reset-if-running           Don't set if timer is running, just reset\n"
-          "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n\n",
-          IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2,
-          IPMI_WATCHDOG_TIMER_USE_BIOS_POST,
-          IPMI_WATCHDOG_TIMER_USE_OS_LOAD, 
-          IPMI_WATCHDOG_TIMER_USE_SMS_OS,
-          IPMI_WATCHDOG_TIMER_USE_OEM,
-          IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
-          IPMI_WATCHDOG_STOP_TIMER_DISABLE,
-          IPMI_WATCHDOG_LOG_ENABLE, 
-          IPMI_WATCHDOG_LOG_DISABLE,
-	  IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
-	  IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET,
-	  IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN,
-	  IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE,
-	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
-          IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI,
-	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI,
-	  IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT,
-          IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND,
-          IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND,
-          IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND,
-          IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND);
+
+  if (cinfo.set || cinfo.start || cinfo.daemon)
+    fprintf(stderr, 
+            "COMMAND SPECIFIC OPTIONS:\n");
+
+  if (cinfo.set || cinfo.daemon)
+    fprintf(stderr,
+            "  -u INT     --timer-use=INT              Set timer use\n"
+            "             %d = BIOS FRB2\n"
+            "             %d = BIOS POST\n"
+            "             %d = OS_LOAD\n"
+            "             %d = SMS OS\n"
+            "             %d = OEM\n"
+            "  -m INT     --stop-timer=INT             Set Stop Timer Flag\n"
+            "             %d = Stop Timer\n"
+            "             %d = Don't Stop timer\n"
+            "  -l INT     --log=INT                    Set Log Flag\n"
+            "             %d = Enable Log\n"
+            "             %d = Disable Log\n"
+            "  -a INT     --timeout-action=INT         Set timeout action\n"
+            "             %d = No action\n" 
+            "             %d = Hard Reset\n"
+            "             %d = Power Down\n"
+            "             %d = Power Cycle\n"
+            "  -p INT     --pre-timeout-interrupt=INT  Set pre-timeout interrupt\n"
+            "             %d = None\n" 
+            "             %d = SMI\n" 
+            "             %d = NMI\n" 
+            "             %d = Messaging Interrupt\n"
+            "  -z SECS    --pre-timeout-interval=SECS  Set pre-timeout interval in seconds\n"
+            "  -F         --clear-bios-frb2            Clear BIOS FRB2 Timer Use Flag\n"
+            "  -P         --clear-bios-post            Clear BIOS POST Timer Use Flag\n"
+            "  -L         --clear-os-load              Clear OS Load Timer Use Flag\n"
+            "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
+            "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
+            "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n",
+            IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2,
+            IPMI_WATCHDOG_TIMER_USE_BIOS_POST,
+            IPMI_WATCHDOG_TIMER_USE_OS_LOAD, 
+            IPMI_WATCHDOG_TIMER_USE_SMS_OS,
+            IPMI_WATCHDOG_TIMER_USE_OEM,
+            IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+            IPMI_WATCHDOG_STOP_TIMER_DISABLE,
+            IPMI_WATCHDOG_LOG_ENABLE, 
+            IPMI_WATCHDOG_LOG_DISABLE,
+            IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
+            IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET,
+            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN,
+            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE,
+            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
+            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI,
+            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI,
+            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
+  if (cinfo.set)
+    fprintf(stderr,
+            "  -w         --start-after-set            Start timer after set if timer is stopped\n"
+            "  -x         --reset-after-set            Reset timer after set if timer is running\n"
+            "  -j         --start-if-stopped           Don't set if timer is stopped, just start\n"
+            "  -k         --reset-if-running           Don't set if timer is running, just reset\n");
+  if (cinfo.start || cinfo.daemon)
+    fprintf(stderr, 
+            "  -G INT     --gratuitous-arp=INT         Suspend Gratuitous ARPs\n"
+            "             %d = Suspend Gratuitous ARPs\n"
+            "             %d = Do Not Suspend Gratuitous ARPs\n"
+            "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
+            "             %d = Suspend ARP Responses\n"
+            "             %d = Do Not Suspend ARP Responses\n",
+            IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND,
+            IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND,
+            IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND,
+            IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND);
+  if (cinfo.daemon)
+    fprintf(stderr, 
+            "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n");
+              
+  if (cinfo.set || cinfo.start || cinfo.daemon)
+    fprintf(stderr, "\n");
+
   exit(1);
 }
 
@@ -763,12 +810,12 @@ _cmdline_parse(int argc, char **argv)
     {"clear-sms-os",          0, NULL, 'S'},
     {"clear-oem",             0, NULL, 'O'},
     {"initial-countdown",     1, NULL, 'i'},
-    {"gratuitous-arp",        1, NULL, 'G'},
-    {"arp-response",          1, NULL, 'A'},
     {"start-after-set",       0, NULL, 'w'},
     {"reset-after-set",       0, NULL, 'x'},
     {"start-if-stopped",      0, NULL, 'j'}, 
     {"reset-if-running",      0, NULL, 'k'},
+    {"gratuitous-arp",        1, NULL, 'G'},
+    {"arp-response",          1, NULL, 'A'},
     {"reset-period",          1, NULL, 'e'},
 #ifndef NDEBUG
     {"debug",                 0, NULL, 'D'},
@@ -777,10 +824,12 @@ _cmdline_parse(int argc, char **argv)
   };
 #endif /* HAVE_GETOPT_LONG */
 
-  strcpy(options, "hvo:nsgrtycd u:m:l:a:p:z:G:A:FPLSOi:wxjke:");
+  strcpy(options, "hvo:nsgrtycd u:m:l:a:p:z:FPLSOi:wxjkG:A:e:");
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
+
+  int help_opt = 0;
 
   /* turn off output messages printed by getopt_long */
   opterr = 0;
@@ -794,9 +843,11 @@ _cmdline_parse(int argc, char **argv)
       switch(c) 
         {
         case 'h':
-          _usage();
+          help_opt++;
+          break;
         case 'v':
           _version();
+          break;
         case 's':
           cinfo.set++;
           break;
@@ -898,6 +949,17 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.initial_countdown_seconds_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("initial countdown value out of range");
           break;
+        case 'w':
+          cinfo.start_after_set++;
+          break;
+        case 'x':
+          cinfo.reset_after_set++;
+          break;
+        case 'j':
+          cinfo.start_if_stopped++;
+        case 'k':
+          cinfo.reset_if_running++;
+          break;
         case 'G':
           cinfo.gratuitous_arp++;
           cinfo.gratuitous_arp_val = (u_int8_t)strtol(optarg, &ptr, 10);
@@ -911,17 +973,6 @@ _cmdline_parse(int argc, char **argv)
           if ((ptr != (optarg + strlen(optarg)))
               || !IPMI_WATCHDOG_ARP_RESPONSE_VALID(cinfo.arp_response_val))
             _err_exit("arp response value invalid");
-          break;
-        case 'w':
-          cinfo.start_after_set++;
-          break;
-        case 'x':
-          cinfo.reset_after_set++;
-          break;
-        case 'j':
-          cinfo.start_if_stopped++;
-        case 'k':
-          cinfo.reset_if_running++;
           break;
         case 'e':
           cinfo.reset_period++;
@@ -946,7 +997,7 @@ _cmdline_parse(int argc, char **argv)
   
   count = cinfo.set + cinfo.get + cinfo.reset +  
     cinfo.start + cinfo.stop + cinfo.clear + cinfo.daemon;
-  if (count == 0)
+  if (count == 0 || help_opt)
     _usage();
   if (count > 1)
     _err_exit("Only one command (set, get, reset, start, stop, clear, daemon) can be specified");
@@ -966,7 +1017,10 @@ _cmdline_parse(int argc, char **argv)
               || cinfo.reset_if_running))
       || ((cinfo.set || cinfo.get || cinfo.reset || cinfo.stop || cinfo.clear)
           && (cinfo.gratuitous_arp || cinfo.arp_response)))
-    _err_exit("Invalid command option specified for this command");
+    {
+      char *cmdstr = _cmd_string();
+      _err_exit("Invalid command option specified for '%s' command", cmdstr);
+    }
 
   cmdline_parsed++;
 }

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.4 2004-06-26 00:42:30 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.5 2004-07-06 22:52:35 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -107,6 +107,14 @@ below.  The daemon can be stopped using the --stop or --clear command
 above, or by setting the stop_timer flag on the --set command.  
 .SH OPTIONS
 The following options can be used by any command.
+.TP
+.B -h, --help
+Output the help menu.  If a specific command (--set, --get, --reset,
+--start, --stop, --clear, or --daemon) is listed on the command
+line, only the specific options for that command will be listed.
+.TP
+.B -v, --version
+Output the program version.
 .TP
 .B  -o INT, --io-port=INT
 Identify the System Base Address for KCS SMS/IO.  By default, 0x08A2 is
