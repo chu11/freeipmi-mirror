@@ -17,7 +17,7 @@
 /* the Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA. */
 
-/* $Id: ipmi-pef-cmds.c,v 1.4 2004-10-28 00:19:19 itz Exp $ */
+/* $Id: ipmi-pef-cmds.c,v 1.5 2004-10-29 22:42:21 itz Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -314,6 +314,24 @@ fiid_template_t tmpl_get_pef_conf_param_num_alert_policies_rs =
     {0, ""}
   };    
 
+fiid_template_t tmpl_get_pef_conf_param_alert_string_keys_rs =
+  {
+    {8, "cmd"},
+
+    {8, "comp_code"},
+
+    {7, "pef_conf_param_string_selector"},
+    {1, "reserved"},
+
+    {7, "pef_conf_param_filter_number"},
+    {1, "reserved"},
+
+    {7, "pef_conf_param_string_set_number"},
+    {1, "reserved"},
+
+    {0, ""}
+  };
+
 static int8_t
 fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, u_int8_t parameter_selector,
                              u_int8_t parameter_type,
@@ -346,6 +364,27 @@ fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, u_int8_t parameter_selector
 		block_selector);
   
   return 0;
+}
+
+int8_t
+ipmi_kcs_get_pef_alert_string_keys (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                    u_int8_t parameter_type, u_int8_t set_selector,
+                                    u_int8_t block_selector)
+{
+  fiid_obj_t obj_data_rq;
+  int8_t status;
+
+  obj_data_rq = fiid_obj_alloc (tmpl_get_pef_conf_param_rq);
+  fill_kcs_get_pef_conf_param (obj_data_rq,
+                               IPMI_PEF_PARAM_ALERT_STRING_KEYS,
+                               parameter_type,
+                               set_selector,
+                               block_selector);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
+                         obj_data_rq, tmpl_get_pef_conf_param_rq,
+                         obj_data_rs, tmpl_get_pef_conf_param_alert_string_keys_rs);
+  free (obj_data_rq);
+  return status;
 }
 
 int8_t
