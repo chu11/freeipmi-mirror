@@ -1,3 +1,18 @@
+2004-05-13  Ian Zimmerman  <itz@californiadigital.com>
+
+	* fish/src/bmc-conf-checkout.c, fish/src/bmc-conf-commit.c,
+	fish/src/bmc-conf-utils.c, fish/src/ipmi-wrapper-sel.c,
+	fish/src/ipmi-wrapper.c, fish/src/scm-procedures.c,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-kcs-interface.c,
+	libfreeipmi/src/ipmi-lan-interface.c,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cache.c,
+	libfreeipmi/src/ipmi-sel-record-types.c, libfreeipmi/src/rmcp.c:
+	add nasty autoconf dance for alloca.
+
+	* configure.ac: Add AC_FUNC_ALLOCA.
+
 2004-05-13  Albert Chu <chu11@llnl.gov>
 
 	* COPYING.ipmiping, DISCLAIMER.ipmiping, COPYING.rmcpping,
