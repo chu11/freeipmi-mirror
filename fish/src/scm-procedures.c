@@ -72,6 +72,7 @@ char *alloca ();
 extern char *program_invocation_short_name;
 extern int errno;
 
+#define SEL_HEX_RECORD_SIZE 128
 
 /*
 SCM
@@ -740,6 +741,48 @@ ex_sel_get_next_entry_raw ()
         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
     }
   return scm_sel_record;
+}
+
+SCM
+ex_sel_get_first_entry_hex ()
+{
+  u_int8_t record_data [SEL_RECORD_SIZE];
+  u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
+  
+  if (ipmi_sel_get_first_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+    {
+      snprintf (hex_data, SEL_HEX_RECORD_SIZE,
+                "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
+                "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
+                "ED1:[%02X] ED2:[%02X] ED3:[%02X]\n",
+                record_data[0], record_data[1], record_data[2], record_data[3], 
+                record_data[4], record_data[5], record_data[6], record_data[7], 
+                record_data[8], record_data[9], record_data[10], record_data[11], 
+                record_data[12], record_data[13], record_data[14], record_data[15]);
+      return gh_str02scm (hex_data);
+    }
+  else return SCM_BOOL_F;
+}
+
+SCM
+ex_sel_get_next_entry_hex ()
+{
+  u_int8_t record_data [SEL_RECORD_SIZE];
+  u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
+  
+  if (ipmi_sel_get_next_entry (fi_get_sms_io_base (), get_seld (), record_data) == 0)
+    {
+      snprintf (hex_data, SEL_HEX_RECORD_SIZE,
+                "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
+                "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
+                "ED1:[%02X] ED2:[%02X] ED3:[%02X]\n",
+                record_data[0], record_data[1], record_data[2], record_data[3], 
+                record_data[4], record_data[5], record_data[6], record_data[7], 
+                record_data[8], record_data[9], record_data[10], record_data[11], 
+                record_data[12], record_data[13], record_data[14], record_data[15]);
+      return gh_str02scm (hex_data);
+    }
+  else return SCM_BOOL_F;
 }
 
 SCM 
