@@ -84,9 +84,6 @@ Later on:
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
   * Extra documentation on bmc-config
-  * IPMI plugin for ethereal/tethereal/etc.
-    - achu: Would this even require linking with FreeIPMI?  I have no
-      idea.  Need to research this.
   * Code auditing
     - Templates/API/etc: Some say "username" some have "user_name".
     - Lots of functions don't check input parameters, i.e. null buffers
