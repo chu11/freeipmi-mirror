@@ -33,12 +33,10 @@ fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
-  * sel output includes more watchdog timer info
 
 bmc-watchdog:
 -------------
   * Require Timer use to be SMS/OS?
-  * Allow over lan?
 
 ipmipower:
 ----------
@@ -46,8 +44,7 @@ ipmipower:
     cannot be compiled with locked pages??
   * There are probably port issues with mmap/mlock.
   * Add readline or similar functionality in interactive mode.
-  * Multithread to increase speed on large clusters
-    - already fast, so low priority 
+  * Multithread to increase speed even more?
 
 ipmiping/rmcpping:
 ------------------
