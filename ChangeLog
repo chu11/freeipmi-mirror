@@ -1,3 +1,16 @@
+2005-01-21  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_check.c (_check_session_id): Added
+	workaround for BMCs that return bad session ids.
+
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_check_values), ipmipower/src/ipmipower_prompt.c
+	(_cmd_username, _cmd_authtype): Remove non-null username check
+	with auth-type none.
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): 
+	Remove NULL username requirement for auth-type none.
+	
 2005-01-18  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/extension.c: removed bmc-conf-utils.h include.

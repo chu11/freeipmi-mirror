@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.2 2004-10-08 23:16:44 ab Exp $
+ *  $Id: ipmipower_check.c,v 1.3 2005-01-21 18:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,7 +128,13 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
         ip->ic->hostname, ip->protocol_state, session_id, 
         actv_res_session_id);
   
-  return ((session_id == actv_res_session_id) ? 1 : 0);
+  /* On some motherboards, the remote BMC returns zeroes for the
+   * session id instead of the actual session id.  To work around this
+   * problem, we'll assume the session id is correct if it is equal to
+   * zero.
+   */
+  return (((session_id == actv_res_session_id)
+           || (session_id == 0)) ? 1 : 0);
 }
 
 static int 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.5 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.6 2005-01-21 18:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -619,10 +619,6 @@ ipmipower_config_check_values(void)
 
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
     err_exit("Error: Must specify target hostnames in non-interactive mode");
-
-  if (conf->authtype == AUTH_TYPE_NONE && strlen(conf->username) > 0)
-    err_exit("Error: username cannot be set for authentication type \"%s\"",
-             ipmipower_auth_string(conf->authtype));
 
   if (conf->authtype == AUTH_TYPE_NONE && strlen(conf->password) > 0)
     err_exit("Error: password cannot be set for authentication type \"%s\"",

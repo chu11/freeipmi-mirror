@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.5 2004-12-18 00:42:36 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.6 2005-01-21 18:15:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -252,12 +252,7 @@ _cmd_username(char **argv)
 {
   assert(argv != NULL);
 
-  if (argv[1] && conf->authtype == AUTH_TYPE_NONE)
-    {
-      cbuf_printf(ttyout, "username cannot be set for authtype \"%s\"\n",
-                  ipmipower_auth_string(conf->authtype));
-    }
-  else if (argv[1] == NULL 
+  if (argv[1] == NULL 
            || (argv[1] && strlen(argv[1]) <= IPMI_SESSION_MAX_USERNAME_LEN)) 
     {
       memset(conf->username, '\0', IPMI_SESSION_MAX_USERNAME_LEN+1);
@@ -311,9 +306,6 @@ _cmd_authtype(char **argv)
       auth_type_t at = ipmipower_auth_index(argv[1]);
       if (at == AUTH_TYPE_INVALID)
         cbuf_printf(ttyout, "%s invalid authtype\n", argv[1]);
-      else if (at == AUTH_TYPE_NONE && strlen(conf->username) > 0)
-        cbuf_printf(ttyout, "username cannot be set for authtype \"%s\"\n", 
-                    argv[1]);
       else if (at == AUTH_TYPE_NONE && strlen(conf->password) > 0)
         cbuf_printf(ttyout, "password cannot be set for authtype \"%s\"\n", 
                     argv[1]);
