@@ -46,7 +46,7 @@ Bmc-watchdog
 - Add probing for proper base address
 - Require Timer use to be SMS/OS?
 - Make get_lan_channel_number() non-hardcoded.
-- Log to a different file.
+- Cleanup code??  File is getting quite large.
 
 Ipmipower
 

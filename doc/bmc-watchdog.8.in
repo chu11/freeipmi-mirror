@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.5 2004-07-06 22:52:35 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.6 2004-07-07 18:07:46 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -101,19 +101,20 @@ Run
 as a daemon.  Configurable BMC watchdog timer options are listed below
 under DAEMON OPTIONS.  The configuration values are set once, then the
 daemon will reset the timer at specified periodic intervals.
-Everytime the BMC watchdog timer is reset, a syslog entry will be
-generated.  This can be disabled using the --no-syslog option listed
-below.  The daemon can be stopped using the --stop or --clear command
-above, or by setting the stop_timer flag on the --set command.  
+Everytime the BMC watchdog timer is reset, a log entry will be
+generated in the bmc-watchdog log.  The default log is stored at
+/var/log/freeipmi/bmc-watchdog.log.  The daemon can be stopped using
+the --stop or --clear command above, or by setting the stop_timer flag
+on the --set command.
 .SH OPTIONS
 The following options can be used by any command.
 .TP
-.B -h, --help
+.B  -h, --help
 Output the help menu.  If a specific command (--set, --get, --reset,
 --start, --stop, --clear, or --daemon) is listed on the command
 line, only the specific options for that command will be listed.
 .TP
-.B -v, --version
+.B  -v, --version
 Output the program version.
 .TP
 .B  -o INT, --io-port=INT
@@ -121,11 +122,13 @@ Identify the System Base Address for KCS SMS/IO.  By default, 0x08A2 is
 used.  If the io-port number is prefixed with a "0x", it is assumed to
 be a base 16 integer.  Otherwise, it is assumed to be a base 10 integer.
 .TP
-.B  -n, --no-syslog
-Turns off all syslogging done by 
+.B  -f STRING, --logfile=STRING
+Specify an alternate logfile from the default of
+/var/log/freeipmi/bmc-wawtchdog.log.
+.TP
+.B  -n, --no-logging
+Turns off all logging done by 
 .B bmc-watchdog.  
-This option is particularly useful if you find syslog messages from
-the bmc-watchdog daemon mode filling up the syslog too quickly.
 .if @WITH_DEBUG@ \{
 .TP
 .B  -D, --debug
@@ -275,10 +278,7 @@ ARP responses will not be suspended.
 Time interval to wait before resetting timer.  The default is 60
 seconds.
 .SH "ERRORS"
-Errors are logged to the syslog LOG_DAEMON facility when 
-.B bmc-watchdog
-is run in daemon mode.  Otherwise, it is logged to the LOG_CRON
-facility.
+Errors are logged to bmc-watchdog log.
 
 .SH KNOWN ISSUES
 .B Bmc-watchdog

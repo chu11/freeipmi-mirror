@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.4 2004-07-06 22:52:35 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.5 2004-07-07 18:07:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,6 +41,9 @@
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif
 #include <errno.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -56,6 +59,7 @@
 #  include <time.h>
 # endif
 #endif
+
 #include "freeipmi.h"
 
 /* Pre Timeout Interval is 1 byte */
@@ -74,12 +78,14 @@
 #define BMC_WATCHDOG_RETRY_WAIT_TIME                 1
 #define BMC_WATCHDOG_RETRY_ATTEMPT                   5
 
+#define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
+
 #define _FIID_OBJ_GET(a, b, c, d, e) \
   do { \
      u_int64_t val; \
      if (fiid_obj_get((a), (b), (c), &val) < 0) \
        { \
-         _syslog(LOG_ERR, "%s: fiid_obj_get: %s", (e), strerror(errno)); \
+         _bmclog("%s: fiid_obj_get: %s", (e), strerror(errno)); \
          goto cleanup; \
        } \
      *d = val; \
@@ -96,7 +102,8 @@ struct cmdline_info
   int daemon;
   int io_port;
   u_int32_t io_port_val;
-  int no_syslog;
+  char *logfile;
+  int no_logging;
   int timer_use;
   u_int8_t timer_use_val;
   int stop_timer;
@@ -139,6 +146,8 @@ struct cmdline_info cinfo;
 
 int shutdown_flag = 1;
 
+int logfile_fd = -1;
+
 static void
 _syslog(int priority, const char *fmt, ...)
 {
@@ -146,13 +155,72 @@ _syslog(int priority, const char *fmt, ...)
 
   assert (fmt != NULL && err_progname != NULL);
 
+  if (cinfo.no_logging)
+    return;
+
   va_list ap;
   va_start(ap, fmt);
-  if (!cinfo.no_syslog)
+  snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
+  vsyslog(priority, buffer, ap);
+  va_end(ap);
+}
+
+static void
+_bmclog_write(void *buf, size_t count)
+{
+  size_t ret, left;
+  char *ptr;
+
+  ptr = buf;
+  left = count;
+  while (left > 0) 
     {
-      snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
-      vsyslog(priority, buffer, ap);
+      if ((ret = write(logfile_fd, ptr, left)) < 0) 
+        {
+          if (errno == EINTR)
+            continue;
+          else
+            {
+              /* The only place we should really need to syslog */
+              _syslog(LOG_ERR, "_bmcwrite: write: %s", strerror(errno));
+              return;
+            }
+        }
+      ptr += ret;
+      left -= ret;
     }
+}
+
+static void
+_bmclog(const char *fmt, ...)
+{
+  time_t t;
+  struct tm *tm;
+  int len;
+  char buffer[BMC_WATCHDOG_ERR_BUFLEN];
+  char tbuffer[BMC_WATCHDOG_ERR_BUFLEN];
+  
+  assert (fmt != NULL && err_progname != NULL && logfile_fd >= 0);
+  
+  if (cinfo.no_logging)
+    return;
+
+  va_list ap;
+  va_start(ap, fmt);
+  t = time(NULL);
+  if ((tm = localtime(&t)) == NULL)
+    {
+      /* Just use the value from time() */
+      len = snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%ld: %s\n", t, fmt);
+    }
+  else
+    {
+      strftime(tbuffer, BMC_WATCHDOG_ERR_BUFLEN, "[%b %d %H:%M:%S]", tm);
+      len = snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", tbuffer, fmt);
+    }
+  
+  _bmclog_write(buffer, len);
+ 
   va_end(ap);
 }
 
@@ -199,15 +267,40 @@ _init_ipmi(void)
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
   if ((ret = ipmi_kcs_io_init(port, IPMI_KCS_SLEEP_USECS)) < 0)
-    {
-      if (cinfo.daemon)
-        openlog(err_progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
-      else
-        openlog(err_progname, LOG_ODELAY | LOG_PID, LOG_CRON);
-      _syslog(LOG_ERR, "ipmi_kcs_io_init: %s", strerror(errno));
-    }
+    _bmclog("ipmi_kcs_io_init: %s", strerror(errno));
 
   return ret;
+}
+
+/* Must be called after cmdline parsed */
+static void
+_init_bmc_watchdog(int facility, int err_to_stderr)
+{
+  assert(facility == LOG_CRON || facility == LOG_DAEMON);
+
+  openlog(err_progname, LOG_ODELAY | LOG_PID, facility);
+
+  if ((logfile_fd = open(cinfo.logfile,
+                         O_WRONLY | O_CREAT | O_APPEND,
+                         S_IRUSR | S_IWUSR)) < 0)
+    {
+      if (err_to_stderr)
+        _err_exit("Error opening logfile '%s': %s",
+                  cinfo.logfile, strerror(errno));
+      else
+        _syslog(LOG_ERR, "_daemon_init: Error opening logfile '%s': %s",
+                cinfo.logfile, strerror(errno));
+      exit(1);
+    }
+
+  if (_init_ipmi() < 0)
+    {
+      if (err_to_stderr)
+        _err_exit("_init_ipmi: %s", strerror(errno));
+      else
+        _syslog(LOG_ERR, "_daemon_init: _init_ipmi: %s", strerror(errno));
+      exit(1);
+    }
 }
 
 static void
@@ -269,7 +362,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
   if (cinfo.debug)
     {
       if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
-        _syslog(LOG_ERR, "%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
@@ -281,7 +374,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
-              _syslog(LOG_ERR, "%s: ipmi_kcs_cmd_interruptible: %s", 
+              _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
                       str, strerror(errno));
               return -1;
             }
@@ -289,7 +382,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
             {
               if (retry_count >= retry_attempt)
                 {
-                  _syslog(LOG_ERR, "%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
                           "retry_wait_time=%d, retry_attempt=%d", 
                           str, retry_wait_time, retry_attempt);
                   return -1;
@@ -298,7 +391,7 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
               if (cinfo.debug)
                 {
                   fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
-                  _syslog(LOG_ERR, "%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
                 }
 #endif
               _sleep(retry_wait_time);
@@ -313,14 +406,14 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, u_int8_t netfn,
   if (cinfo.debug)
     {
       if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
-        _syslog(LOG_ERR, "%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
   _FIID_OBJ_GET(cmd_rs, tmpl_rs, "comp_code", &comp_code, str);
 
   if (comp_code != IPMI_COMMAND_SUCCESS)
-    _syslog(LOG_ERR, "%s: cmd error: %Xh", str, comp_code);
+    _bmclog("%s: cmd error: %Xh", str, comp_code);
 
   return (int)comp_code;
 
@@ -337,21 +430,21 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
 
   if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
     {
-      _syslog(LOG_ERR, "_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
     {
-      _syslog(LOG_ERR, "_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if (fill_cmd_reset_watchdog_timer(cmd_rq) < 0)
     {
-      _syslog(LOG_ERR, "_reset_watchdog_timer_cmd: "
+      _bmclog("_reset_watchdog_timer_cmd: "
               "fill_cmd_reset_watchdog_timer: %s", strerror(errno));
       goto cleanup;
     }
@@ -398,14 +491,14 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
 
   if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
     {
-      _syslog(LOG_ERR, "_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
     {
-      _syslog(LOG_ERR, "_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -420,7 +513,7 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                                   timer_use_expiration_flag_oem,
                                   ls_byte, ms_byte, cmd_rq) < 0)
     {
-      _syslog(LOG_ERR, "_set_watchdog_timer_cmd: "
+      _bmclog("_set_watchdog_timer_cmd: "
               "fill_cmd_set_watchdog_timer: %s", strerror(errno));
       goto cleanup;
     }
@@ -474,21 +567,21 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
 
   if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
     {
-      _syslog(LOG_ERR, "_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
     {
-      _syslog(LOG_ERR, "_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if (fill_cmd_get_watchdog_timer(cmd_rq) < 0)
     {
-      _syslog(LOG_ERR, "_get_watchdog_timer_cmd: "
+      _bmclog("_get_watchdog_timer_cmd: "
               "fill_cmd_get_watchdog_timer: %s", strerror(errno));
       goto cleanup;
     }
@@ -602,14 +695,14 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
 
   if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
     {
-      _syslog(LOG_ERR, "_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
 
   if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
     {
-      _syslog(LOG_ERR, "_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -619,7 +712,7 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
                                 arp_response,
                                 cmd_rq) < 0)
     {
-      _syslog(LOG_ERR, "_suspend_bmc_arps_cmd: "
+      _bmclog("_suspend_bmc_arps_cmd: "
               "fill_cmd_suspend_bmc_arps: %s", strerror(errno));
       goto cleanup;
     }
@@ -684,7 +777,8 @@ _usage(void)
           "  -h         --help                       Output help menu\n"
           "  -v         --version                    Output version\n"
 	  "  -o INT     --io-port=INT                Base address for KCS SMS I/O\n"
-          "  -n         --no-syslog                  Turn off all syslogging\n");
+          "  -f STRING  --logfile=STRING             Specify alternate logfile\n"
+          "  -n         --no-logging                 Turn off all syslogging\n");
 #ifndef NDEBUG
   fprintf(stderr,
 	  "  -D         --debug                      Turn on debugging\n");
@@ -779,6 +873,13 @@ _version(void)
 }
 
 static void
+_cmdline_default(void)
+{
+  memset(&cinfo, '\0', sizeof(cinfo));
+  cinfo.logfile = BMC_WATCHDOG_LOGFILE;
+}
+
+static void
 _cmdline_parse(int argc, char **argv)
 {
   int c, count, base = 10;
@@ -797,7 +898,7 @@ _cmdline_parse(int argc, char **argv)
     {"clear",                 0, NULL, 'c'},
     {"daemon",                0, NULL, 'd'},
     {"io-port",               1, NULL, 'o'},
-    {"no-syslog",             0, NULL, 'n'},
+    {"no-logging",            0, NULL, 'n'},
     {"timer-use",             1, NULL, 'u'},
     {"stop-timer",            1, NULL, 'm'},
     {"log",                   1, NULL, 'l'},
@@ -879,7 +980,7 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("io-port value invalid");
           break;
         case 'n':
-          cinfo.no_syslog++;
+          cinfo.no_logging++;
           break;
         case 'u':
           cinfo.timer_use++;
@@ -1374,7 +1475,7 @@ _daemon_init()
   for (i = 0; i < 64; i++)
     close(i);
 
-  openlog(err_progname, LOG_ODELAY | LOG_PID, LOG_DAEMON);
+  _init_bmc_watchdog(LOG_DAEMON, 0);
 }
 
 static void
@@ -1385,11 +1486,11 @@ _deamon_cmd_error_exit(char *str, int ret)
   if (ret < 0) 
     {
       if (errno == EAGAIN || errno == EBUSY)
-        _syslog(LOG_ERR, "%s: BMC Busy", str);
+        _bmclog("%s: BMC Busy", str);
       else if (errno == EINVAL || errno == EIDRM)
         {
           /* Assume semaphore was deleted for some strange reason */
-          _syslog(LOG_ERR, "%s: semaphore deleted: %s", str,
+          _bmclog("%s: semaphore deleted: %s", str,
                   strerror(errno));
           
           if (_init_ipmi() < 0)
@@ -1397,12 +1498,12 @@ _deamon_cmd_error_exit(char *str, int ret)
         }
       else
         {
-          _syslog(LOG_ERR, "%s Error: %s", str, strerror(errno));
+          _bmclog("%s Error: %s", str, strerror(errno));
           exit(1);
         }
     }
   else
-    _syslog(LOG_ERR, "%s IPMI Error: %Xh", str, ret);
+    _bmclog("%s IPMI Error: %Xh", str, ret);
   _sleep(BMC_WATCHDOG_RETRY_WAIT_TIME);
 }
 
@@ -1528,19 +1629,19 @@ _daemon_cmd_error_noexit(char *str, int ret)
   if (ret < 0) 
     {
       if (errno == EAGAIN || errno == EBUSY)
-        _syslog(LOG_ERR, "%s Error: BMC Busy", str);
+        _bmclog("%s Error: BMC Busy", str);
       else if (errno == EINVAL || errno == EIDRM)
         {
           /* Assume semaphore was deleted for some strange reason */
-          _syslog(LOG_ERR, "%s: semaphore deleted: %s", str,
+          _bmclog("%s: semaphore deleted: %s", str,
                   strerror(errno));
           _init_ipmi();
         }
       else
-        _syslog(LOG_ERR, "%s Error: %s", str, strerror(errno));
+        _bmclog("%s Error: %s", str, strerror(errno));
     }
   else
-    _syslog(LOG_ERR, "%s IPMI Error: %Xh", str, ret);
+    _bmclog("%s IPMI Error: %Xh", str, ret);
 }
 
 static void
@@ -1571,7 +1672,7 @@ _daemon_cmd(void)
   if (signal(SIGINT, _signal_handler) == SIG_ERR)
     _err_exit("signal: %s", strerror(errno));
 
-  _syslog(LOG_NOTICE, "starting bmc-watchdog daemon");
+  _bmclog("starting bmc-watchdog daemon");
 
   retry_wait_time = BMC_WATCHDOG_RETRY_WAIT_TIME;
   retry_attempt = BMC_WATCHDOG_RETRY_ATTEMPT;
@@ -1592,7 +1693,7 @@ _daemon_cmd(void)
 
       if (gettimeofday(&start_tv, NULL) < 0) 
         {
-          _syslog(LOG_ERR, "gettimeofday: %s", strerror(errno));
+          _bmclog("gettimeofday: %s", strerror(errno));
           timeval_bad++;
         }
 
@@ -1607,7 +1708,7 @@ _daemon_cmd(void)
       
       if (timer_state == IPMI_WATCHDOG_TIMER_STATE_STOPPED)
         {
-          _syslog(LOG_ERR, "timer stopped by another process");
+          _bmclog("timer stopped by another process");
           goto cleanup; 
         }
 
@@ -1622,18 +1723,18 @@ _daemon_cmd(void)
 
           if (ipmi_strerror_r(IPMI_CMD_RESET_WATCHDOG_TIMER, ret, 
                               buf, BMC_WATCHDOG_STR_BUFLEN) < 0)
-            _syslog(LOG_ERR, "Reset Watchdog Timer IPMI Error: %Xh", ret);
+            _bmclog("Reset Watchdog Timer IPMI Error: %Xh", ret);
           else
-            _syslog(LOG_ERR, "Reset Watchdog Timer IPMI Error: %s", buf);
+            _bmclog("Reset Watchdog Timer IPMI Error: %s", buf);
         }
       else 
-        _syslog(LOG_NOTICE, "BMC-Watchdog Timer Reset");
+        _bmclog("BMC-Watchdog Timer Reset");
 
 
     sleep_now:
       if (gettimeofday(&end_tv, NULL) < 0)
         {
-          _syslog(LOG_ERR, "gettimeofday: %s", strerror(errno));
+          _bmclog("gettimeofday: %s", strerror(errno));
           timeval_bad++;
         }
 
@@ -1688,7 +1789,7 @@ _daemon_cmd(void)
     }
 
  cleanup:
-  _syslog(LOG_NOTICE, "stopping bmc-watchdog daemon");
+  _bmclog("stopping bmc-watchdog daemon");
 }
 
 int 
@@ -1705,19 +1806,15 @@ main(int argc, char **argv)
         _err_exit("iopl: %s", strerror(errno));
     }
 
-  memset(&cinfo,  '\0', sizeof(cinfo));
+  _cmdline_default();
   _cmdline_parse(argc, argv);
 
-  /* Assumes its a cronjob if its not a daemon */
-  if (!cinfo.no_syslog)
-    {
-      /* daemon will open log in daemon_init */
-      if (!cinfo.daemon)
-        openlog(err_progname, LOG_ODELAY | LOG_PID, LOG_CRON);
-    }
-
-  if (_init_ipmi() < 0)
-    _err_exit("_init_ipmi: %s", strerror(errno));
+  /* Early initialization.  Assumes its a cronjob if its not a daemon.
+   * Daemon must do all initialization in daemon_init() b/c
+   * daemon_init() needs to close all formerly open file descriptors.
+   */
+  if (!cinfo.daemon)
+    _init_bmc_watchdog(LOG_CRON, 1);
 
   if (cinfo.set)
     _set_cmd();
@@ -1736,6 +1833,7 @@ main(int argc, char **argv)
   else
     _err_exit("internal error, command not set");
             
+  close(logfile_fd);
   closelog();
   exit(0);
 }

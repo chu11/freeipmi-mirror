@@ -107,7 +107,7 @@ fi
 %doc /usr/share/doc/freeipmi/README
 %doc /usr/share/doc/freeipmi/TODO
 /usr/lib/*so*
-/var
+/var/lib/
  
 %files devel
 %defattr(-,root,root)
@@ -155,5 +155,6 @@ fi
 /usr/share/man/man8/ipmiping.8*
 /usr/share/man/man8/ipmipower.8*
 /usr/share/man/man8/rmcpping.8*
+/var/log/
 
 %changelog

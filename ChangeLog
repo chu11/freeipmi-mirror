@@ -1,3 +1,39 @@
+2004-07-07  Albert Chu <chu11@llnl.gov>
+
+	Replace syslogging with a BMC-Watchdog logfile.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_bmclog, _bmclog_write,
+	_cmdline_default, _init_bmc_watchdog): New functions.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmdline_parse, _usage): Rename
+	--no-syslog to --no-logging option.  Added --logfile option.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi, _daemon_init):
+	Removed openlog() calls.
+
+	* bmc-watchdog/src/bmc-watchdog.c (main, _daemon_init): Call new
+	_init_bmc_watchdog() function.
+
+	* bmc-watchdog/src/bmc-watchdog.c (main): Call new
+	_cmdline_default() function.  Close logfile_fd descriptor.
+	
+	* bmc-watchdog/src/bmc-watchdog.c: Globally use _bmclog() instead
+	of _syslog().
+
+	* bmc-watchdog/src/bmc-watchdog.c (_syslog): Slightly alter code
+	structure.
+
+	* bmc-watchdog/bmc-watchdog.log: New file.
+
+	* bmc-watchdog/Makefile.am: Added bmc-watchdog.log install and
+	dist.
+
+	* doc/bmc-watchdog.8.in: Updated with appropriate information for
+	changes above.
+
+	* freeipmi.spec.in: Updated with packaging requirements of files
+	in /var.
+
 2004-07-06  Albert Chu <chu11@llnl.gov>
 
 	* doc/bmc-watchdog.8.in: Added --help and --version options.
