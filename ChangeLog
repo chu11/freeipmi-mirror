@@ -1,3 +1,8 @@
+2005-01-25  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.8.in: Add note that a null username means
+	the anonymous username.
+	
 2005-01-24  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_ioremap): open with O_SYNC.

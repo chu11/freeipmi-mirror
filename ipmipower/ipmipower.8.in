@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.4 2004-11-24 18:59:58 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.5 2005-01-25 16:55:02 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,7 +87,7 @@ The user must have OPERATOR or ADMINISTRATOR privilege to run the
 --on, --off, --reset, --cycle, --pulse, or --soft power control
 commands.  The user only needs USER privileges to determine the power
 status of the machine through --stat.  If not specified, a null
-username is assumed.
+(i.e. anonymous) username is assumed.
 .TP
 .I "-p, --password pw"
 Sets the password to use when authenticating with the BMC.  If not
