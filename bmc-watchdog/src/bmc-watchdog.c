@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.13 2004-09-17 20:50:53 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.14 2004-10-08 16:09:05 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -152,13 +152,13 @@ static void
 _syslog(int priority, const char *fmt, ...)
 {
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
+  va_list ap;
 
   assert (fmt != NULL && err_progname != NULL);
 
   if (cinfo.no_logging)
     return;
 
-  va_list ap;
   va_start(ap, fmt);
   snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
   vsyslog(priority, buffer, ap);
@@ -199,15 +199,15 @@ _bmclog(const char *fmt, ...)
   int len;
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
   char fbuffer[BMC_WATCHDOG_ERR_BUFLEN];
-
+  va_list ap;
+  
   assert (fmt != NULL 
           && err_progname != NULL 
           && (cinfo.no_logging || logfile_fd >= 0));
   
   if (cinfo.no_logging)
     return;
-
-  va_list ap;
+  
   va_start(ap, fmt);
   t = time(NULL);
   if ((tm = localtime(&t)) == NULL)
@@ -239,10 +239,10 @@ static void
 _err_exit(char *fmt, ...)
 {
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
-
-  assert (fmt != NULL && err_progname != NULL);
-
   va_list ap;
+  
+  assert (fmt != NULL && err_progname != NULL);
+  
   va_start(ap, fmt);
   snprintf(buffer, BMC_WATCHDOG_ERR_BUFLEN, "%s: %s\n", err_progname, fmt);
   vfprintf(stderr, buffer, ap);
@@ -892,7 +892,8 @@ _cmdline_parse(int argc, char **argv)
   int c, count, base = 10;
   char options[100];
   char *ptr;
-
+  int help_opt = 0;
+  
 #if HAVE_GETOPT_LONG
   struct option long_options[] = {
     {"help",                  0, NULL, 'h'},
@@ -937,8 +938,6 @@ _cmdline_parse(int argc, char **argv)
 #ifndef NDEBUG
   strcat(options, "D");
 #endif
-
-  int help_opt = 0;
 
   /* turn off output messages printed by getopt_long */
   opterr = 0;

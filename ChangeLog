@@ -1,3 +1,9 @@
+2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c: Fixed compatibility issues with
+	GCC 2.96
+	* libfreeipmi/src/ipmi-ping.c: like wise
+
 2004-10-07  Albert Chu <chu11@llnl.gov>
 
 	* doc/bmc-watchdog.8.in: Fixed typo, 0x0CA2 to 0xCA2.

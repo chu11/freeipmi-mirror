@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.2 2004-10-08 16:09:05 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,9 +112,11 @@ _cleanup(void)
 void
 _err_init(char *__progname)
 {
+  char *ptr = NULL;
+  
   assert(__progname != NULL);
-
-  char *ptr = strrchr(__progname, '/');
+  
+  ptr = strrchr(__progname, '/');
   _progname = (ptr == NULL) ? __progname : ptr + 1;
 }
 
