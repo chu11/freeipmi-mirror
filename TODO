@@ -42,7 +42,6 @@ bmc-watchdog:
 
 ipmipower:
 ----------
-  * Research and implement better packet analysis algorithms.
   * Output warning/error/message/something in autoconf if ipmipower
     cannot be compiled with locked pages??
   * There are probably port issues with mmap/mlock.
