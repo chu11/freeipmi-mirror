@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.2 2004-11-22 19:18:00 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.3 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
       return -1;
     }
 
-  /* Secure an ephemeral ports */
+  /* Secure ephemeral ports */
   bzero(&srcaddr, sizeof(struct sockaddr_in));
   srcaddr.sin_family = AF_INET;
   srcaddr.sin_port = htons(0);

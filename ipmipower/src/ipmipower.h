@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.7 2004-12-18 00:42:36 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,6 +47,7 @@
 #include "freeipmi.h"
 #include "hostlist.h"
 #include "cbuf.h"
+#include "list.h"
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
@@ -273,6 +274,8 @@ struct ipmipower_powercmd {
     fiid_obj_t chas_res;
     fiid_obj_t ctrl_req;
     fiid_obj_t ctrl_res;
+
+    List sockets_to_close;
 };
 
 /* ipmipower_connection

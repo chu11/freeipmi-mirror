@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.1 2004-05-11 17:05:09 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.2 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,15 +78,16 @@ Cbuf_write_from_fd(cbuf_t buf, int fd)
     err_exit("Cbuf_write_from_fd(%d): %s", fd, strerror(errno));
   
   /* achu: If you are running ipmipower in co-process mode with
-   * powerman, this error condition will probably be hit with fd ==
-   * STDIN_FILENO.  The powerman daemon is usually closed by
-   * /etc/init.d/powerman stop, which kills a process through a
+   * powerman, this error condition will probably be hit with the file
+   * descriptor STDIN_FILENO.  The powerman daemon is usually closed
+   * by /etc/init.d/powerman stop, which kills a process through a
    * signal.  Thus, powerman closes stdin and stdout pipes to
-   * ipmipower, giving us a EOF reading.
+   * ipmipower and the call to cbuf_write_from_fd will give us an EOF
+   * reading.  We'll consider this EOF an "ok" error.
    */
   if (n == 0)
     {
-      if (fd == STDIN_FILENO)   /* Exit cleanly, an "ok" error */
+      if (fd == STDIN_FILENO)
         exit(1);
       else
         err_exit("Cbuf_write_from_fd(%d): EOF", fd);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.8 2005-01-24 16:59:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.9 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,7 +60,6 @@ extern struct ipmipower_config *conf;
 
 /* Queue of all pending power commands */
 static List pending = NULL;
-static List sockets_to_close = NULL;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -93,6 +92,20 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_free(ip->ctrl_req);
   Fiid_obj_free(ip->ctrl_res);
 
+  /* Close all sockets that were saved during the Get Session
+   * Challenge phase of the IPMI protocol.
+   */
+  if (list_count(ip->sockets_to_close) > 0) {
+    int *fd;
+    while ((fd = list_pop(ip->sockets_to_close))) 
+      {
+	Close(*fd);
+	Free(fd);
+      }
+  }
+
+  list_destroy(ip->sockets_to_close);
+
   Free(ip);
 }
 
@@ -103,10 +116,6 @@ ipmipower_powercmd_setup()
     
   pending = list_create((ListDelF)_destroy_ipmipower_powercmd);
   if (pending == NULL)
-    err_exit("list_create() error");
-
-  sockets_to_close = list_create(NULL);
-  if (sockets_to_close == NULL)
     err_exit("list_create() error");
 }
 
@@ -162,14 +171,23 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
-  /* authtype set after Get Authentication Capabilities Response */
-  /* Following are default minimum privileges, could be set higher later */
+
+  /* ip->authtype is set after Get Authentication Capabilities
+   * Response is received 
+   */
+
+  /* Following are default minimum privileges according to the IPMI
+   * specification 
+   */
   if (cmd == POWER_CMD_POWER_STATUS)
     ip->privilege = IPMI_PRIV_LEVEL_USER;
   else
     ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
 
   ip->ic = ic;
+
+  if ((ip->sockets_to_close = list_create(NULL)) == NULL)
+    err_exit("list_create() error");
 
   list_append(pending, ip);
 }
@@ -221,8 +239,22 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     ip->protocol_state = PROTOCOL_STATE_AUTH_SENT;
   else if (pkt == SESS_REQ)
     ip->protocol_state = PROTOCOL_STATE_SESS_SENT;
-  else if (pkt == ACTV_REQ)
-    ip->protocol_state = PROTOCOL_STATE_ACTV_SENT;
+  else if (pkt == ACTV_REQ) 
+    {
+      ip->protocol_state = PROTOCOL_STATE_ACTV_SENT;
+
+      /* Close all sockets that were saved during the Get Session
+       * Challenge phase of the IPMI protocol.
+       */
+      if (list_count(ip->sockets_to_close) > 0) {
+	int *fd;
+	while ((fd = list_pop(ip->sockets_to_close))) 
+	  {
+	    Close(*fd);
+	    Free(fd);
+	  }
+      }
+    }
   else if (pkt == PRIV_REQ)
     ip->protocol_state = PROTOCOL_STATE_PRIV_SENT;
   else if (pkt == CLOS_REQ)
@@ -435,9 +467,9 @@ _retry_packets(ipmipower_powercmd_t ip)
        *
        * In the event we need to resend this packet multiple times, we
        * do not want the chance that old ports will be used again.
-       * Therefore, we store the old ports on a list, and close all of
-       * them in ipmipower_powercmd_process_pending() when all queued
-       * power control commands are done.
+       * Therefore, we store the old file descriptrs (which are bound
+       * to the old ports) on a list, and close all of them after
+       * we have gotten past this phase of the protocol.
        *
        * Coincidently this fixes another problem.  Because the Get
        * Session Challenge contains the Session ID and Challenge
@@ -467,7 +499,7 @@ _retry_packets(ipmipower_powercmd_t ip)
 
       old_fd = (int *)Malloc(sizeof(int));
       *old_fd = ip->ic->ipmi_fd;
-      list_push(sockets_to_close, old_fd);
+      list_push(ip->sockets_to_close, old_fd);
 
       ip->ic->ipmi_fd = new_fd;
 
@@ -531,6 +563,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
+      /* Using results from Get Authentication Capabilities Response,
+       * determine:
+       *
+       * 1) If we are capable of authenticating with the remote host.
+       *
+       * 2) How to authenticate with the remote host.
+       */
+
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_type.none", &auth_type_none);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
@@ -549,10 +589,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_status.per_message_auth", &auth_status_per_message_auth);
 
-      /* Does this BMC support our authentication type */
+      /* Does the remote BMC's authentication configuration support
+       * our username/password combination 
+       */
       if ((!strlen(conf->username) && !strlen(conf->password)
 	   && !auth_status_anonymous_login)
-	  || (!strlen(conf->username) && strlen(conf->password)
+	  || (!strlen(conf->username) 
+	      && !auth_status_anonymous_login
 	      && !auth_status_null_username)
 	  || (strlen(conf->username)
 	      && !auth_status_non_null_username))
@@ -587,7 +630,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                * since the check for anonymous_login, null_username,
                * or non_null_username has passed, but there's a few
                * ways we can fail. That iffy OEM authentication type
-               * that could be enabled (shame on you evil vendor!!) or
+               * could be enabled (shame on you evil vendor!!) or
                * authentication at this privilege level isn't allowed.
                */
               if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
@@ -606,8 +649,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
       else
 	{
-	  /* Can we authenticate with the requested authentication
-	   * type? 
+	  /* Can we authenticate with the user specified
+	   * authentication type?
 	   */
  	  if ((conf->authtype == AUTH_TYPE_NONE
                && auth_type_none)
@@ -631,9 +674,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	    }
 	}
          
-      /* achu: We can't authenticate with any known mechanism for the
-       * current privilege level.  But we may able to authenticate at
-       * a higher one.  Lets try again.
+      /* We can't authenticate with any mechanism for the current
+       * privilege level.  But we may able to authenticate at a higher
+       * one.  Lets up the privilege level and try again.
        */
       if (authtype_try_higher_priv)
         {
@@ -682,8 +725,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* We can skip PRIV_REQ on a power status check, because
-       * privilege is already set to the user level
+      /* We can skip PRIV_REQ on a power status check, because the
+       * default IPMI session privilege level is the user privilege
+       * level
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
         _send_packet(ip, CHAS_REQ, 0);
@@ -700,9 +744,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* Next packet we send depends on the command and the options
-       * set.  POWER_STATUS shouldn't be possible at this point, but oh
-       * well.
+      /* Next packet we send depends on the power command and the
+       * options set.  The POWER_CMD_POWER_STATUS command shouldn't be
+       * possible at this point (see comments above under
+       * protocol_state == PROTOCOL_STATE_ACTV_SENT), but we leave the
+       * code below anyway.
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS
           || (conf->on_if_off 
@@ -760,7 +806,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         
       ipmipower_output(MSG_TYPE_OK, ip->ic->hostname);
 
-      /* No response from close if POWER_CMD_POWER_RESET successful */
+      /* Typically there is no response from the IPMI close command if
+       * the POWER_CMD_POWER_RESET power control command is
+       * successful.  So just skip the close session.
+       */
       if (ip->cmd == POWER_CMD_POWER_RESET)
         goto finish_up;
       else
@@ -796,7 +845,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 }
 
 int 
-ipmipower_powercmd_process_pending(int *timeout) 
+ipmipower_powercmd_process_pending(int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
@@ -804,10 +853,9 @@ ipmipower_powercmd_process_pending(int *timeout)
   int num_pending;
 
   assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
-  assert(sockets_to_close != NULL);
   assert(timeout != NULL);
 
-  /* Don't edit timeout if no pending jobs */
+  /* if there are no pending jobs, don't edit the timeout */
   if (list_is_empty(pending))
     return 0;
 
@@ -829,19 +877,7 @@ ipmipower_powercmd_process_pending(int *timeout)
   list_iterator_destroy(itr);
 
   if ((num_pending = list_count(pending)) == 0) 
-    {
-      ipmipower_output_finish();
-      
-      /* Close all sockets that were saved */
-      if (list_count(sockets_to_close) > 0) {
-        int *fd;
-        while ((fd = list_pop(sockets_to_close))) 
-          {
-            Close(*fd);
-            Free(fd);
-          }
-      }
-    }
+    ipmipower_output_finish();
   
   *timeout = max_timeout;
   return num_pending;

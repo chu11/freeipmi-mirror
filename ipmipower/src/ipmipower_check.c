@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.4 2005-01-24 16:59:05 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.5 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -123,16 +123,17 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    "session_id", &actv_res_session_id);
     }
   
-  if (session_id != actv_res_session_id)
-    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
-        ip->ic->hostname, ip->protocol_state, session_id, 
-        actv_res_session_id);
-  
-  /* On some motherboards, the remote BMC returns zeroes for the
+  /* achu: On some motherboards, the remote BMC returns zeroes for the
    * session id instead of the actual session id.  To work around this
    * problem, we'll assume the session id is correct if it is equal to
    * zero.
    */
+
+  if (session_id != actv_res_session_id && session_id != 0)
+    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
+        ip->ic->hostname, ip->protocol_state, session_id, 
+        actv_res_session_id);
+  
   return (((session_id == actv_res_session_id)
            || (session_id == 0)) ? 1 : 0);
 }

@@ -1,3 +1,33 @@
+2005-01-26  Albert Chu <chu11@llnl.gov>
+
+	Various code cleanup and minor fixes to ipmipower.
+
+	* ipmipower/src/ipmipower.c (_poll_loop): Don't re-malloc on each
+	iteration.
+
+	* ipmipower/src/ipmipower.c (_secure_setup): Renamed to
+	_security_initialization.
+
+	* ipmipower/src/ipmipower.c (_cleanup): Add logging on cleaning.
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets):
+	Remove check for non-null password when checking if remote machine
+	supports null usernames.
+
+	* ipmipower/src/ipmipower.h: Added new sockets_to_close list in
+	struct ipmipower_powercmd.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_setup,
+	ipmipower_powercmd_queue, ipmipower_powercmd_process_queue,
+	_retry_packets, _send_packet, _destroy_ipmipower_powercmd): Move
+	sockets_to_close from global list to per ipmipower_powercmd struct
+	list.  This change allows sockets to be closed earlier, so more
+	file descriptors and ports are available more quickly to
+	ipmipower.
+
+	* ipmipower/src/ipmipower_check.c (_check_session_id): Fix corner
+	case with output of debugging message.
+	
 2005-01-25  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Add note that a null username means

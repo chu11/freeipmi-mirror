@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.3 2004-12-18 00:42:36 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.4 2005-01-27 01:11:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,10 +79,10 @@ int output_hostrange_flag = 0;
 hostlist_t output_hostrange[MSG_TYPE_NUM];
 
 /* 
- * _secure_setup
+ * _security_initialization
  */
 static void
-_secure_setup(void)
+_security_initialization(void)
 {
   /* Disable core dumping when not-debugging.  Do not want username,
    * password or other important stuff to core dump.
@@ -127,7 +127,7 @@ _setup(void)
     {
       ics = ipmipower_connection_array_create(conf->hosts, conf->hosts_count);
       if (ics == NULL)
-        exit(1);
+        exit(1);		/* error message output in the above call */
     }
 
   for (i = 0; i < MSG_TYPE_NUM; i++) 
@@ -140,9 +140,8 @@ _setup(void)
   err_syslog(1);
 
 #ifndef NDEBUG
-  srand(Time(NULL));	    /* sometimes used to add random packet
-			     * drop debugging code, just leave this
-			     */
+  /* Sometimes used to add random packet drop debugging code.  Just leave. */
+  srand(Time(NULL));
 
   if (strlen(conf->logfile)) 
     {
@@ -176,9 +175,17 @@ _cleanup(void)
 
   cbuf_destroy(ttyin);
   
-  /* Flush before destroying */
+  /* Flush before destroying. */
+#ifndef NDEBUG
+  if (conf->log)
+    cbuf_peek_to_fd(ttyout, conf->logfile_fd, -1);
+#endif
   cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1);
   cbuf_destroy(ttyout);
+#ifndef NDEBUG
+  if (conf->log)
+    cbuf_peek_to_fd(ttyerr, conf->logfile_fd, -1);
+#endif
   cbuf_read_to_fd(ttyerr, STDERR_FILENO, -1);
   cbuf_destroy(ttyerr);
 
@@ -260,20 +267,22 @@ _recvfrom(cbuf_t buf, int fd, struct sockaddr_in *srcaddr)
 
 /* _poll_loop
  * - poll on all descriptors
- * - use poll instead of select, we may use alot of descriptors
  */
 static void 
 _poll_loop(int non_interactive) 
 {
+  int nfds = 0;
+  struct pollfd *pfds = NULL;
+
   while (non_interactive || ipmipower_prompt_process_cmdline()) 
     {
-      int i, nfds, num, timeout;
+      int i, num, timeout;
       int powercmd_timeout = -1;
       int ping_timeout = -1;
-      struct pollfd *pfds = NULL;
       
-      /* If no pending commands before this call,
-       * powercmd_timeout will not be set */
+      /* If there are no pending commands before this call,
+       * powercmd_timeout will not be set
+       */
       num = ipmipower_powercmd_process_pending(&powercmd_timeout);
       if (non_interactive && num == 0)
         break;
@@ -292,10 +301,17 @@ _poll_loop(int non_interactive)
       else
         timeout = powercmd_timeout; 
       
-      /* Recalc/Re-malloc each time b/c user may re-configure hostnames */
-      /* "*2" for ipmi_fd and ping_fd, "+3" for ttys */
-      nfds = (conf->hosts_count*2) + 3;   
-      pfds = (struct pollfd *)Malloc(nfds * sizeof(struct pollfd));
+      /* Has the number of hosts changed? */
+      if (nfds != (conf->hosts_count*2) + 3)
+	{
+	  /* The "*2" is for each host's two fds, one for ipmi
+	   * (ipmi_fd) and one for rmcp (ping_fd).  The "+3" is for
+	   * stdin, stdout, stderr.
+	   */
+	  nfds = (conf->hosts_count*2) + 3;   
+	  Free(pfds);
+	  pfds = (struct pollfd *)Malloc(nfds * sizeof(struct pollfd));
+	}
       
       for (i = 0; i < conf->hosts_count; i++) 
         {
@@ -385,9 +401,9 @@ _poll_loop(int non_interactive)
 #endif
           Cbuf_read_to_fd(ttyerr, STDERR_FILENO);
         }
-      
-      Free(pfds);
     }
+
+  Free(pfds);
 }
 
 int 
@@ -401,7 +417,7 @@ main(int argc, char *argv[])
   err_init(argv[0]);
   err_file_descriptor(1, STDERR_FILENO); /* initially errors goto stderr */
   
-  _secure_setup();
+  _security_initialization();
 
   ipmipower_config_setup();
   assert(conf != NULL);
@@ -414,6 +430,10 @@ main(int argc, char *argv[])
    * does not work on all operating systems.  See KNOWN ISSUES in
    * manpage.  Start at index 1, since we don't need to clear out the
    * "ipmipower" command.
+   *
+   * Reminder: This loop must be called after
+   * ipmipower_config_setup(), otherwise getopt() will not be able to
+   * parse the command line arguments.
    */
   for (i = 1; i < argc; i++)
     memset(argv[i], '\0', strlen(argv[i]));
@@ -426,7 +446,10 @@ main(int argc, char *argv[])
 
   ipmipower_powercmd_setup();
   
-  /* register power command if passed at command line */
+  /* If power command (i.e. --reset, --stat, etc.) is passed at
+   * command line, put the power control commands in the pending
+   * queue.
+   */
   if (conf->powercmd != POWER_CMD_NONE) 
     {
       int i;
@@ -439,6 +462,7 @@ main(int argc, char *argv[])
   
   /* immediately send out discovery messages upon startup */
   ipmipower_ping_force_discovery_sweep();
+
   _poll_loop((conf->powercmd != POWER_CMD_NONE) ? 1 : 0);
   
   ipmipower_powercmd_cleanup();
