@@ -154,7 +154,7 @@ map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
   if (startp == NULL || totallen == NULL)
     return NULL;
 
-  mem_fd = open ("/dev/mem", O_RDONLY);
+  mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC);
 
   if (mem_fd != -1)
     {
@@ -279,8 +279,6 @@ smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* stat
       return (NULL);
     }
 
-  pinfo->base_addr.bmc_smbus_slave_addr= bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
-
   strobed = addr = *(u_int64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
 
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
@@ -301,15 +299,23 @@ smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* stat
 	}
     }
 
-  if ((addr & 1) != 0)
+  if (pinfo->interface_type == IPMI_INTERFACE_SSIF)
     {
-      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-      pinfo->base_addr.bmc_iobase_addr = strobed;
+      pinfo->addr_space_id  = IPMI_ADDRESS_SPACE_ID_SMBUS;
+      pinfo->base_addr.bmc_smbus_slave_addr = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
     }
   else
     {
-      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-      pinfo->base_addr.bmc_membase_addr = strobed;
+      if ((addr & 1) != 0)
+	{
+	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+	  pinfo->base_addr.bmc_iobase_addr = strobed;
+	}
+      else
+	{
+	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+	  pinfo->base_addr.bmc_membase_addr = strobed;
+	}
     }
 
   free (bufp);

@@ -1,3 +1,11 @@
+2005-01-24  Anand Babu  <ab@gnu.org.in>
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_ioremap): open with O_SYNC.
+	
+	* libfreeipmi/src/smbios-locate.c: like wise in
+	map_physmem. smbios_get_dev_info function now properly assigns
+	SSIF smbus slave addr and address space id.
+
 2005-01-24  Albert Chu <chu11@llnl.gov>
 	
 	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets):

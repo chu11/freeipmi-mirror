@@ -197,7 +197,7 @@ ipmi_ioremap (u_int64_t physical_addr, size_t physical_addr_len,
       return (-1);
     }
   
-  if ((mem_fd = open ("/dev/mem", O_RDONLY)) == -1)
+  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
     return (-1);
   
   pad = physical_addr % getpagesize ();
