@@ -1,3 +1,10 @@
+2004-12-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h (AUTH_TYPE_VALID_OR_AUTO): New macro.
+
+	* ipmipower/src/ipmipower_auth.c (ipmipower_auth_string): Fix
+	corner case.
+	
 2004-12-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c

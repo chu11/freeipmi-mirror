@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.5 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.6 2004-12-15 17:03:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -198,6 +198,8 @@ typedef enum { AUTH_TYPE_INVALID             = 0x00,
                AUTH_TYPE_MD5                 = 0x05 } auth_type_t;
 #define AUTH_TYPE_VALID(a)            (a >= AUTH_TYPE_NONE && \
                                        a <= AUTH_TYPE_MD5)
+#define AUTH_TYPE_VALID_OR_AUTO(a)    (a >= AUTH_TYPE_AUTO && \
+				       a <= AUTH_TYPE_MD5)
 
 /* Output Types */
 typedef enum { OUTPUT_TYPE_INVALID   = 0,

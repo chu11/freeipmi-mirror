@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.2 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.3 2004-12-15 17:03:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,7 +63,7 @@ ipmipower_auth_index(char *str)
 char *
 ipmipower_auth_string(auth_type_t at) 
 {
-  assert(AUTH_TYPE_VALID(at));
+  assert(AUTH_TYPE_VALID_OR_AUTO(at));
 
   switch(at) 
     {
