@@ -1,3 +1,47 @@
+2004-05-11  Albert Chu <chu11@llnl.gov>
+
+	Added ipmipower.
+	
+	* COPYING.ipmipower, DISCLAIMER.ipmipower, doc/ipmipower.8.in,
+	doc/ipmipower.conf.5.in, ipmipower/Makefile.am,
+	ipmipower/src/Makefile.am, ipmipower/src/argv.c,
+	ipmipower/src/argv.h, ipmipower/src/cbuf.c, ipmipower/src/cbuf.h,
+	ipmipower/src/conffile.c, ipmipower/src/conffile.h,
+	ipmipower/src/error.c, ipmipower/src/error.h, ipmipower/src/fd.c,
+	ipmipower/src/fd.h, ipmipower/src/hostlist.c,
+	ipmipower/src/hostlist.h, ipmipower/src/hprintf.c,
+	ipmipower/src/hprintf.h, ipmipower/src/ipmipower_auth.c,
+	ipmipower/src/ipmipower_auth.h, ipmipower/src/ipmipower.c,
+	ipmipower/src/ipmipower_check.c, ipmipower/src/ipmipower_check.h,
+	ipmipower/src/ipmipower_config.c,
+	ipmipower/src/ipmipower_config.h,
+	ipmipower/src/ipmipower_connection.c,
+	ipmipower/src/ipmipower_connection.h, ipmipower/src/ipmipower.h,
+	ipmipower/src/ipmipower_output.c,
+	ipmipower/src/ipmipower_output.h,
+	ipmipower/src/ipmipower_packet.c,
+	ipmipower/src/ipmipower_packet.h, ipmipower/src/ipmipower_ping.c,
+	ipmipower/src/ipmipower_ping.h,
+	ipmipower/src/ipmipower_powercmd.c,
+	ipmipower/src/ipmipower_powercmd.h,
+	ipmipower/src/ipmipower_prompt.c,
+	ipmipower/src/ipmipower_prompt.h, ipmipower/src/ipmipower_util.c,
+	ipmipower/src/ipmipower_util.h,
+	ipmipower/src/ipmipower_wrappers.c,
+	ipmipower/src/ipmipower_wrappers.h, ipmipower/src/list.c,
+	ipmipower/src/list.h, ipmipower/src/wrappers.c,
+	ipmipower/src/wrappers.h: New files.
+
+	* doc/Makefile.am: Added ipmipower.8 and ipmipower.conf.5.
+
+	* Makefile.am: Added ipmipower subdirectory.
+
+	* configure.ac: Added sys/wait.h, mmap, and mlock checks.
+	Generate ipmipower.8 and ipmipower.conf.5 manpages.  Generate
+	Makefile.am and ipmipower/src Makefiles.
+
+	* TODO: Added ipmipower todo list.
+	
 2004-05-10  Ian Zimmerman  <itz@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_set_watchdog_timer_cmd):

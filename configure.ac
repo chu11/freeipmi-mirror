@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.0],[freeipmi-devel@nongnu.org])
-AC_REVISION([$Id: configure.ac,v 1.5 2004-05-07 23:47:22 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.6 2004-05-11 17:04:08 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -19,10 +19,11 @@ AC_CONFIG_FILES([
         fish/scripts/sensors/sensors fish/scripts/bmc-config/Makefile
         fish/scripts/bmc-config/bmc-config fish/scripts/sel/Makefile
         fish/scripts/sel/sel fish/scripts/bmc-info/Makefile
-        fish/scripts/bmc-info/bmc-info 
+        fish/scripts/bmc-info/bmc-info
         libfreeipmi/Makefile libfreeipmi/src/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
-        doc/bmc-watchdog.8])
+        ipmipower/Makefile ipmipower/src/Makefile
+        doc/bmc-watchdog.8 doc/ipmipower.8 doc/ipmipower.conf.5])
 
 ISODATE=`date +%Y-%m-%d`
 AC_SUBST([ISODATE])
@@ -85,11 +86,13 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches strchr memcpy memset getopt_long])
+AC_FUNC_MMAP
+AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches strchr memcpy memset getopt_long mlock])
 
 dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
+AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h])
 
 AC_OUTPUT

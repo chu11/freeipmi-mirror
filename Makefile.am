@@ -1,9 +1,9 @@
-SUBDIRS = doc libfreeipmi fish bmc-watchdog
+SUBDIRS = doc libfreeipmi fish bmc-watchdog ipmipower
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
  
-EXTRA = ChangeLog AUTHORS NEWS README TODO COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog
+EXTRA = ChangeLog AUTHORS NEWS README TODO COPYING.bmc-watchdog DISCLAIMER.bmc-watchdog COPYING.ipmipower DISCLAIMER.ipmipower
  
 docdir   = $(datadir)/doc/$(PACKAGE)
 doc_DATA = $(EXTRA)
