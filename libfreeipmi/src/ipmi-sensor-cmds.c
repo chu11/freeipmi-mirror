@@ -647,13 +647,12 @@ fiid_template_t tmpl_get_sensor_threshold_reading_rs =
     {1, "status_sensor_scanning"}, 
     {1, "status_all_event_messages"}, 
     
-    {6, "sensor_state"}, 
-/*     {1, "status_comparison_lower_non_critical_threshold"},  */
-/*     {1, "status_comparison_lower_critical_threshold"},  */
-/*     {1, "status_comparison_lower_non_recoverable_threshold"},  */
-/*     {1, "status_comparison_upper_non_critical_threshold"},  */
-/*     {1, "status_comparison_upper_critical_threshold"},  */
-/*     {1, "status_comparison_upper_non_recoverable_threshold"},  */
+    {1, "status_comparison_lower_non_critical_threshold"},
+    {1, "status_comparison_lower_critical_threshold"},
+    {1, "status_comparison_lower_non_recoverable_threshold"},
+    {1, "status_comparison_upper_non_critical_threshold"},
+    {1, "status_comparison_upper_critical_threshold"},
+    {1, "status_comparison_upper_non_recoverable_threshold"},
     {2, "reserved2"}, 
     
     /* optional byte */
@@ -681,23 +680,22 @@ fiid_template_t tmpl_get_sensor_discrete_reading_rs =
     {1, "status_sensor_scanning"}, 
     {1, "status_all_event_messages"}, 
     
-    {15, "sensor_state"}, 
-/*     {1, "state_0_asserted"},  */
-/*     {1, "state_1_asserted"},  */
-/*     {1, "state_2_asserted"},  */
-/*     {1, "state_3_asserted"},  */
-/*     {1, "state_4_asserted"},  */
-/*     {1, "state_5_asserted"},  */
-/*     {1, "state_6_asserted"},  */
-/*     {1, "state_7_asserted"},  */
+    {1, "state_0_asserted"},
+    {1, "state_1_asserted"},
+    {1, "state_2_asserted"},
+    {1, "state_3_asserted"},
+    {1, "state_4_asserted"},
+    {1, "state_5_asserted"},
+    {1, "state_6_asserted"},
+    {1, "state_7_asserted"},
     
-/*     {1, "state_8_asserted"},  */
-/*     {1, "state_9_asserted"},  */
-/*     {1, "state_10_asserted"},  */
-/*     {1, "state_11_asserted"},  */
-/*     {1, "state_12_asserted"},  */
-/*     {1, "state_13_asserted"},  */
-/*     {1, "state_14_asserted"},  */
+    {1, "state_8_asserted"},
+    {1, "state_9_asserted"},
+    {1, "state_10_asserted"},
+    {1, "state_11_asserted"},
+    {1, "state_12_asserted"},
+    {1, "state_13_asserted"},
+    {1, "state_14_asserted"},
     {1, "reserved2"}, 
     
     {0,  ""}

@@ -21,6 +21,7 @@
 (fi-load "sensors-verbose-display.scm")
 (fi-load "sensors-very-verbose-display.scm")
 (fi-load "sensors-alias.scm")
+(fi-load "ipmi-sensors-conf.scm")
 
 (define (sensors-display-group-sensors sdr-record-list group-name 
 				       verbose-count all-option)

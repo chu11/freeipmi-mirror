@@ -751,6 +751,45 @@ u_int8_t
 get_sensor_reading (struct sdr_record *sdr_record, 
 		    struct sensor_reading *sensor_reading)
 {
+  fiid_template_t l_tmpl_get_sensor_threshold_reading_rs =
+    {
+      {8, "cmd"}, 
+      {8, "comp_code"}, 
+      
+      {8, "sensor_reading"}, 
+      
+      {5, "reserved1"}, 
+      {1, "status_reading_availability"}, 
+      {1, "status_sensor_scanning"}, 
+      {1, "status_all_event_messages"}, 
+      
+      {6, "sensor_state"}, 
+      {2, "reserved2"}, 
+      
+      /* optional byte */
+      {8, "ignore"}, 
+      
+      {0,  ""}
+    };
+  
+  fiid_template_t l_tmpl_get_sensor_discrete_reading_rs =
+    {
+      {8, "cmd"}, 
+      {8, "comp_code"}, 
+      
+      {8, "sensor_reading"}, 
+      
+      {5, "reserved1"}, 
+      {1, "status_reading_availability"}, 
+      {1, "status_sensor_scanning"}, 
+      {1, "status_all_event_messages"}, 
+      
+      {15, "sensor_state"}, 
+      {1, "reserved2"}, 
+      
+      {0,  ""}
+    };
+  
   u_int8_t slave_sys_soft_id;
   u_int8_t event_reading_type;
   u_int8_t sensor_number;
@@ -796,7 +835,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
       return -1;
     }
   
-  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sensor_threshold_reading_rs));
+  obj_data_rs = alloca (fiid_obj_len_bytes (l_tmpl_get_sensor_threshold_reading_rs));
   
   switch (ipmi_sensor_classify (event_reading_type))
     {
@@ -809,7 +848,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	return status;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
+		    l_tmpl_get_sensor_threshold_reading_rs, 
 		    "sensor_reading", 
 		    &val);
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
@@ -828,23 +867,23 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	}
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
+		    l_tmpl_get_sensor_threshold_reading_rs, 
 		    "status_reading_availability", 
 		    &val);
       sensor_reading->reading_availability_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
+		    l_tmpl_get_sensor_threshold_reading_rs, 
 		    "status_sensor_scanning", 
 		    &val);
       sensor_reading->sensor_scanning_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
+		    l_tmpl_get_sensor_threshold_reading_rs, 
 		    "status_all_event_messages", 
 		    &val);
       sensor_reading->event_messages_flag = val;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_threshold_reading_rs, 
+		    l_tmpl_get_sensor_threshold_reading_rs, 
 		    "sensor_state", 
 		    &val);
       sensor_reading->event_message_list = 
@@ -860,7 +899,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	return status;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_reading", 
 		    &val);
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
@@ -879,23 +918,23 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	}
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_reading_availability", 
 		    &val);
       sensor_reading->reading_availability_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_sensor_scanning", 
 		    &val);
       sensor_reading->sensor_scanning_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_all_event_messages", 
 		    &val);
       sensor_reading->event_messages_flag = val;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
       sensor_reading->event_message_list = 
@@ -911,7 +950,7 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	return status;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_reading", 
 		    &val);
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
@@ -930,23 +969,23 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	}
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_reading_availability", 
 		    &val);
       sensor_reading->reading_availability_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_sensor_scanning", 
 		    &val);
       sensor_reading->sensor_scanning_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_all_event_messages", 
 		    &val);
       sensor_reading->event_messages_flag = val;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
       sensor_reading->event_message_list = 
@@ -962,28 +1001,28 @@ get_sensor_reading (struct sdr_record *sdr_record,
 	return status;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_reading", 
 		    &val);
       sensor_reading->current_reading = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_reading_availability", 
 		    &val);
       sensor_reading->reading_availability_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_sensor_scanning", 
 		    &val);
       sensor_reading->sensor_scanning_flag = val;
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "status_all_event_messages", 
 		    &val);
       sensor_reading->event_messages_flag = val;
       
       fiid_obj_get (obj_data_rs, 
-		    tmpl_get_sensor_discrete_reading_rs, 
+		    l_tmpl_get_sensor_discrete_reading_rs, 
 		    "sensor_state", 
 		    &val);
       {
