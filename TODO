@@ -45,10 +45,6 @@ ipmipower:
   * Output warning/error/message/something in autoconf if ipmipower
     cannot be compiled with locked pages??
   * There are probably port issues with mmap/mlock.
-  * Re-implement BMC workaround to use ports less wastefully.
-  * Re-code to use less ports in general
-    - ipmi and ping fd's into one?
-  * Buffer recently malloced space to avoid constant re-mallocing.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed on large clusters
     - already fast, so low priority 
