@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.1 2004-05-11 17:04:44 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.2 2004-09-15 15:39:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,7 +60,7 @@ static char *ipmipower_outputs[] =
     "timed out",
     "not discovered",
     "bad connection",
-    "uknown node name",
+    "unknown node name",
     "out of resources",
     "bmc busy",
     "bmc error"

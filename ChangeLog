@@ -1,3 +1,7 @@
+2004-09-15  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_output.c: Fixed output message.
+
 2004-09-14  Albert Chu <chu11@llnl.gov>
 
 	* doc/bmc-watchdog.8.in, doc/ipmipower.8.in,
