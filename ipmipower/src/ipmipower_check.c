@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.3 2005-01-21 18:15:05 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.4 2005-01-24 16:59:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -69,7 +69,7 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
        * number.
        */
       
-      if (myoseq >= ip->retry_count 
+      if (myoseq >= ip->retry_count /* normal case */
           && pktoseq < myoseq
           && pktoseq >= (myoseq - ip->retry_count)) 
         {
@@ -79,7 +79,7 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
               "oseq: %d, expected: %d",
               ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
         }
-      else 
+      else 			/* seq-num wrap-around case */
         {
           u_int32_t max = 0xffffffff;
           u_int32_t num = max - (ip->retry_count - myoseq);

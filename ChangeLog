@@ -1,3 +1,8 @@
+2005-01-24  Albert Chu <chu11@llnl.gov>
+	
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets):
+	Change priority ordering of auto authentication type selection.
+
 2005-01-21  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_check.c (_check_session_id): Added

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.7 2005-01-21 18:15:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.8 2005-01-24 16:59:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -268,7 +268,10 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_response_data(ip, pkt, &oseq, &sid, &netfn, &rseq, &cmd, &cc);
 
-  /* What the heck is this packet? */
+  /* We could reach this point for several reasons:
+   * - packet is corrupted
+   * - packet is a reply to a retransmission that we don't need
+   */
   dbg("_bad_packet(%s:%d): ignoring bad packet: oseq=%x sid=%x "
       "netfn=%x rseq=%x cmd=%x cc=%x",
       ip->ic->hostname, ip->protocol_state, oseq, sid, netfn, 
@@ -438,9 +441,10 @@ _retry_packets(ipmipower_powercmd_t ip)
        *
        * Coincidently this fixes another problem.  Because the Get
        * Session Challenge contains the Session ID and Challenge
-       * String, we would have to check requester sequence numbers
-       * to make sure we got the right Session ID and Challenge
-       * String.  We can drop that check using this approach.
+       * String, we would have to check requester sequence numbers to
+       * make sure we got the right Session ID and Challenge String.
+       * We can drop that check using this approach.  See comments
+       * above in _send_packet.
        */
       int new_fd, *old_fd;
       struct sockaddr_in srcaddr;
@@ -565,15 +569,17 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (conf->authtype == AUTH_TYPE_AUTO)
 	{
 	  /* Choose the best authentication type available.
-	   * md5 > md2 > straight_passwd_key > none
+	   * none and null password > md5 > md2 > straight_passwd_key > none
 	   */
-          if (auth_type_md5)
+	  if (!strlen(conf->password) && auth_type_none)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
+	  else if (auth_type_md5)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
           else if (auth_type_md2)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
           else if (auth_type_straight_passwd_key)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
-          else if (!strlen(conf->password) && auth_type_none)
+          else if (auth_type_none)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
 	  else
 	    {

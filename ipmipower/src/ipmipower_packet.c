@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.7 2005-01-21 21:27:29 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8 2005-01-24 16:59:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -732,8 +732,6 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == CTRL_RES 
            && cc == IPMI_ERR_REQUEST_PARAMETER_NOT_SUPPORTED)
     return MSG_TYPE_OPERATION;
-  else
-    return MSG_TYPE_BMCERROR;
   
-  return MSG_TYPE_BMCERROR;   /* Make compiler shut up */
+  return MSG_TYPE_BMCERROR;
 }
