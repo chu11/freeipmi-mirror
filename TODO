@@ -78,6 +78,11 @@ Need to test following corner cases:
 Bala's TODO List:
 =================
 */* 2004-02-16 15:25 bala: dual fiid for ipmi_kcs_lan_set_auth_type_enables
+*/* 2004-08-18 07:37 bala: sensors will be simplified with Scheme
+*/* 2004-08-18 07:37 bala: SDR Validation code
+*/* 2004-08-18 07:37 bala: sensor min/max reading, normal min/max,
+nominal reading, event/reading type code should be moved to Very
+Verbose in sensors.
 
 Ian's TODO List:
 ================

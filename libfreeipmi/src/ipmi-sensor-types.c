@@ -866,8 +866,22 @@ ipmi_sensor_threshold_health_check (double sensor_reading,
   if (val == 1)
     return 0;
   
-  if (sensor_reading < normal_min || sensor_reading > normal_max)
-    return 0;
+  if (normal_min != 0)
+    {
+      if (sensor_reading < normal_min)
+	return 0;
+      else 
+	{
+	  if (normal_max != 0)
+	    {
+	      if (sensor_reading > normal_max)
+		return 0;
+	    }
+	}
+    }
+  
+/*   if (sensor_reading < normal_min || sensor_reading > normal_max) */
+/*     return 0; */
   return 1;
 }
 

@@ -90,6 +90,9 @@ int8_t ipmi_kcs_get_threshold_reading (u_int16_t sms_io_base,
 int8_t ipmi_kcs_get_discrete_reading (u_int16_t sms_io_base, 
 				      u_int8_t sensor_number, 
 				      fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_get_sensor_thresholds (u_int16_t sms_io_base, 
+				       u_int8_t sensor_number, 
+				       fiid_obj_t obj_data_rs);
 
 #ifdef __cplusplus
 }

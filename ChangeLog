@@ -1,3 +1,13 @@
+2004-08-18  A Balamurugan  <bala.a@californiadigital.com>
+
+	* TODO: added new todo's.
+	* fish/src/ipmi-wrapper-sensor.c: now sensor status are relavent
+	to threshold state.
+	* libfreeipmi/src/ipmi-sensor-cmds.c: added
+	ipmi_kcs_get_sensor_thresholds().
+	* libfreeipmi/src/ipmi-sensor-types.c: updated
+	ipmi_sensor_threshold_health_check().
+
 2004-08-17  Ian Zimmerman  <itz@californiadigital.com>
 
 	* fish/extensions/sel.scm (sel-display-help): add --hex-dump

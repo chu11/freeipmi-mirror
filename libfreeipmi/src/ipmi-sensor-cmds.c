@@ -800,3 +800,36 @@ ipmi_kcs_get_discrete_reading (u_int16_t sms_io_base,
   return status;
 }
 
+int8_t 
+fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
+{
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_get_sensor_thresholds_rq, 
+		"cmd", 
+		IPMI_CMD_GET_SENSOR_THRESHOLDS); 
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		tmpl_get_sensor_thresholds_rq, 
+		"sensor_number", 
+		sensor_number);
+  
+  return 0;
+}
+
+int8_t 
+ipmi_kcs_get_sensor_thresholds (u_int16_t sms_io_base, 
+				u_int8_t sensor_number, 
+				fiid_obj_t obj_data_rs)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_thresholds_rq);
+  fill_kcs_get_discrete_reading (obj_data_rq, sensor_number);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			 obj_data_rq, tmpl_get_sensor_thresholds_rq, 
+			 obj_data_rs, tmpl_get_sensor_thresholds_rs);
+  free (obj_data_rq);
+  return status;
+}
+
