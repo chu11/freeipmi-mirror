@@ -15,6 +15,6 @@ AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOUR
 	     -DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
-	@cd `dirname $@` && make `basename $@`
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:
