@@ -1,13 +1,15 @@
 (define (commit-username section-name username)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-username 1 username))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-username 2 username))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-username 3 username))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-username 4 username))))
+  (if (list? username)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-username 1 username))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-username 2 username))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-username 3 username))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-username 4 username)))))
 
 (define (checkout-username section-name)
   (cond 
@@ -21,32 +23,38 @@
     (fi-get-bmc-username 4))))
 
 (define (commit-enable-user section-name user-status)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-enable-user 1 user-status))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-enable-user 2 user-status))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-enable-user 3 user-status))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-enable-user 4 user-status))))
+  (if (list? user-status)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-enable-user 1 user-status))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-enable-user 2 user-status))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-enable-user 3 user-status))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-enable-user 4 user-status)))))
 
 (define (checkout-enable-user section-name) #f)
 
 (define (commit-clear-password section-name password-status)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (if password-status (fi-set-bmc-user-password 1 "") #t))
-   ((string-ci=? section-name "user2")
-    (if password-status (fi-set-bmc-user-password 2 "") #t))
-   ((string-ci=? section-name "user3")
-    (if password-status (fi-set-bmc-user-password 3 "") #t))
-   ((string-ci=? section-name "user4")
-    (if password-status (fi-set-bmc-user-password 4 "") #t))))
+  (if (list? password-status)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(if password-status (fi-set-bmc-user-password 1 "") #t))
+       ((string-ci=? section-name "user2")
+	(if password-status (fi-set-bmc-user-password 2 "") #t))
+       ((string-ci=? section-name "user3")
+	(if password-status (fi-set-bmc-user-password 3 "") #t))
+       ((string-ci=? section-name "user4")
+	(if password-status (fi-set-bmc-user-password 4 "") #t)))))
 
 (define (checkout-clear-password section-name) #f)
 
 (define (commit-password section-name password)
+  (if (list? password)
+      (set! password ""))
   (cond 
    ((string-ci=? section-name "user1")
     (fi-set-bmc-user-password 1 password))
@@ -57,18 +65,20 @@
    ((string-ci=? section-name "user4")
     (fi-set-bmc-user-password 4 password))))
 
-(define (checkout-password section-name) (list "cdc123"))
+(define (checkout-password section-name) (list ""))
 
 (define (commit-lan-enable-ipmi-msgs section-name enable-ipmi-msgs)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-lan-channel-access 1 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-lan-channel-access 2 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-lan-channel-access 3 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-lan-channel-access 4 enable-ipmi-msgs 0 0 #f #f))))
+  (if (list? enable-ipmi-msgs)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-lan-channel-access 1 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-lan-channel-access 2 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-lan-channel-access 3 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-lan-channel-access 4 enable-ipmi-msgs 0 0 #f #f)))))
 
 (define (checkout-lan-enable-ipmi-msgs section-name)
   (let* ((userid (cond 
@@ -80,15 +90,17 @@
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-lan-enable-link-auth section-name enable-link-auth)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-lan-channel-access 1 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-lan-channel-access 2 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-lan-channel-access 3 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-lan-channel-access 4 0 enable-link-auth 0 #f #f))))
+  (if (list? enable-link-auth)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-lan-channel-access 1 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-lan-channel-access 2 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-lan-channel-access 3 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-lan-channel-access 4 0 enable-link-auth 0 #f #f)))))
 
 (define (checkout-lan-enable-link-auth section-name)
   (let* ((userid (cond 
@@ -100,15 +112,17 @@
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-lan-enable-restrict-to-callback section-name enable-restrict-to-callback)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-lan-channel-access 1 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-lan-channel-access 2 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-lan-channel-access 3 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-lan-channel-access 4 0 0 enable-restrict-to-callback #f #f))))
+  (if (list? enable-restrict-to-callback)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-lan-channel-access 1 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-lan-channel-access 2 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-lan-channel-access 3 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-lan-channel-access 4 0 0 enable-restrict-to-callback #f #f)))))
 
 (define (checkout-lan-enable-restrict-to-callback section-name)
   (let* ((userid (cond 
@@ -120,15 +134,17 @@
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-lan-privilege-limit section-name privilege-limit)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-lan-channel-access 1 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-lan-channel-access 2 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-lan-channel-access 3 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-lan-channel-access 4 0 0 0 privilege-limit #f))))
+  (if (list? privilege-limit)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-lan-channel-access 1 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-lan-channel-access 2 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-lan-channel-access 3 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-lan-channel-access 4 0 0 0 privilege-limit #f)))))
 
 (define (checkout-lan-privilege-limit section-name)
   (let* ((userid (cond 
@@ -140,15 +156,17 @@
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-lan-session-limit section-name session-limit)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-lan-channel-access 1 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-lan-channel-access 2 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-lan-channel-access 3 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-lan-channel-access 4 0 0 0 #f session-limit))))
+  (if (list? session-limit)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-lan-channel-access 1 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-lan-channel-access 2 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-lan-channel-access 3 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-lan-channel-access 4 0 0 0 #f session-limit)))))
 
 (define (checkout-lan-session-limit section-name)
   (let* ((userid (cond 
@@ -160,15 +178,17 @@
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define (commit-serial-enable-ipmi-msgs section-name enable-ipmi-msgs)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-serial-channel-access 1 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-serial-channel-access 2 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-serial-channel-access 3 enable-ipmi-msgs 0 0 #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-serial-channel-access 4 enable-ipmi-msgs 0 0 #f #f))))
+  (if (list? enable-ipmi-msgs)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-serial-channel-access 1 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-serial-channel-access 2 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-serial-channel-access 3 enable-ipmi-msgs 0 0 #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-serial-channel-access 4 enable-ipmi-msgs 0 0 #f #f)))))
 
 (define (checkout-serial-enable-ipmi-msgs section-name)
   (let* ((userid (cond 
@@ -180,15 +200,17 @@
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-serial-enable-link-auth section-name enable-link-auth)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-serial-channel-access 1 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-serial-channel-access 2 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-serial-channel-access 3 0 enable-link-auth 0 #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-serial-channel-access 4 0 enable-link-auth 0 #f #f))))
+  (if (list? enable-link-auth)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-serial-channel-access 1 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-serial-channel-access 2 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-serial-channel-access 3 0 enable-link-auth 0 #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-serial-channel-access 4 0 enable-link-auth 0 #f #f)))))
 
 (define (checkout-serial-enable-link-auth section-name)
   (let* ((userid (cond 
@@ -200,15 +222,17 @@
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-serial-enable-restrict-to-callback section-name enable-restrict-to-callback)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-serial-channel-access 1 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-serial-channel-access 2 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-serial-channel-access 3 0 0 enable-restrict-to-callback #f #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-serial-channel-access 4 0 0 enable-restrict-to-callback #f #f))))
+  (if (list? enable-restrict-to-callback)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-serial-channel-access 1 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-serial-channel-access 2 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-serial-channel-access 3 0 0 enable-restrict-to-callback #f #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-serial-channel-access 4 0 0 enable-restrict-to-callback #f #f)))))
 
 (define (checkout-serial-enable-restrict-to-callback section-name)
   (let* ((userid (cond 
@@ -220,15 +244,17 @@
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-serial-privilege-limit section-name privilege-limit)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-serial-channel-access 1 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-serial-channel-access 2 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-serial-channel-access 3 0 0 0 privilege-limit #f))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-serial-channel-access 4 0 0 0 privilege-limit #f))))
+  (if (list? privilege-limit)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-serial-channel-access 1 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-serial-channel-access 2 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-serial-channel-access 3 0 0 0 privilege-limit #f))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-serial-channel-access 4 0 0 0 privilege-limit #f)))))
 
 (define (checkout-serial-privilege-limit section-name)
   (let* ((userid (cond 
@@ -240,15 +266,17 @@
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-serial-session-limit section-name session-limit)
-  (cond 
-   ((string-ci=? section-name "user1")
-    (fi-set-bmc-user-serial-channel-access 1 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user2")
-    (fi-set-bmc-user-serial-channel-access 2 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user3")
-    (fi-set-bmc-user-serial-channel-access 3 0 0 0 #f session-limit))
-   ((string-ci=? section-name "user4")
-    (fi-set-bmc-user-serial-channel-access 4 0 0 0 #f session-limit))))
+  (if (list? session-limit)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-serial-channel-access 1 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-serial-channel-access 2 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-serial-channel-access 3 0 0 0 #f session-limit))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-serial-channel-access 4 0 0 0 #f session-limit)))))
 
 (define (checkout-serial-session-limit section-name)
   (let* ((userid (cond 
@@ -287,7 +315,7 @@
      commit-password 
      checkout-password 
      get-string
-     "Give password")
+     "Give password or leave it blank to clear password")
     ("lan_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 

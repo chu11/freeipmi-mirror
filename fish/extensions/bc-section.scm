@@ -73,9 +73,11 @@
       #t 
       (let* ((line  (car section-data)) 
 	     (key   (car (string-tokenize line))) 
-	     (value (cadr (string-tokenize line)))) 
+	     (value (if (= (length (string-tokenize line)) 1)
+			#f 
+			(cadr (string-tokenize line))))) 
 	(if (valid-key? key key-desc-list) 
-	    (if (valid-value? key value key-desc-list) 
+	    (if (or (eq? value #f) (valid-value? key value key-desc-list)) 
 		(validate-commit-section-data (cdr section-data) key-desc-list) 
 		(begin 
 		  (display (string-append "ERROR: invalid value <" 
@@ -110,10 +112,12 @@
       #t
       (let* ((line           (car section-data))
 	     (key            (car (string-tokenize line)))
-	     (value          (cadr (string-tokenize line)))
+	     (value          (if (= (length (string-tokenize line)) 1)
+				 '() 
+				 (cadr (string-tokenize line))))
 	     (convertor-proc (get-convertor-proc key section-keys)) 
-	     (commit-proc    (get-commit-proc key section-keys))
-	     (value          (convertor-proc value))) 
+	     (commit-proc    (get-commit-proc key section-keys)))
+	(if (string? value) (set! value (convertor-proc value)))
 ; 	  (set! value (eval (list convertor-proc value) (interaction-environment)))
 ; 	  (display key) (newline)
 ; 	  (display value) (newline)
@@ -213,11 +217,13 @@
       #t
       (let* ((line           (car section-data))
 	     (key            (car (string-tokenize line)))
-	     (value          (cadr (string-tokenize line)))
+	     (value          (if (= (length (string-tokenize line)) 1)
+				 "(null)" 
+				 (cadr (string-tokenize line))))
 	     (bmc-value      (checkout-section-value section-name 
 						     key 
 						     key-desc-list)))
-	(if (boolean? value)
+	(if (boolean? bmc-value)
 	    (display (string-append "Error in checkout of key <" 
 				    key 
 				    ">\n") (current-error-port))

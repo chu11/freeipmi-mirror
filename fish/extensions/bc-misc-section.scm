@@ -1,5 +1,7 @@
 (define (commit-power-restore-policy section-name power-restore-policy)
-  (fi-set-bmc-power-restore-policy power-restore-policy))
+  (if (list? power-restore-policy)
+      #t 
+      (fi-set-bmc-power-restore-policy power-restore-policy)))
 
 (define (checkout-power-restore-policy section-name) 
   (fi-get-bmc-power-restore-policy)) 

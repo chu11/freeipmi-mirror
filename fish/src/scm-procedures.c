@@ -1332,10 +1332,6 @@ ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode,
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  enable_user_level_auth = (enable_user_level_auth ? 0 : 1);
-  enable_per_message_auth = (enable_per_message_auth ? 0 : 1);
-  enable_pef_alerting = (enable_pef_alerting ? 0 : 1);
-  
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
@@ -1376,10 +1372,6 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
 						    &channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
-  
-  enable_user_level_auth = (enable_user_level_auth ? 0 : 1);
-  enable_per_message_auth = (enable_per_message_auth ? 0 : 1);
-  enable_pef_alerting = (enable_pef_alerting ? 0 : 1);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
@@ -1732,10 +1724,6 @@ ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode,
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  enable_user_level_auth = (enable_user_level_auth ? 0 : 1);
-  enable_per_message_auth = (enable_per_message_auth ? 0 : 1);
-  enable_pef_alerting = (enable_pef_alerting ? 0 : 1);
-  
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
@@ -1776,10 +1764,6 @@ ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode,
 						       &channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
-  
-  enable_user_level_auth = (enable_user_level_auth ? 0 : 1);
-  enable_per_message_auth = (enable_per_message_auth ? 0 : 1);
-  enable_pef_alerting = (enable_pef_alerting ? 0 : 1);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);

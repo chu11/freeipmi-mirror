@@ -47,6 +47,8 @@
     (string sd))
    ((boolean? sd)
     (if sd "#t" "#f"))
+   ((list? sd)
+    "()")
    (else 
     sd)))
 

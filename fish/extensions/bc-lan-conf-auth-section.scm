@@ -1,173 +1,223 @@
 (define (commit-callback-enable-auth-type-none section-name auth-type-none)
-  (fi-set-bmc-lan-conf-auth-type-callback-enables auth-type-none 0 0 0 0))
+  (if (list? auth-type-none)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-callback-enables auth-type-none 0 0 0 0)))
 
 (define (checkout-callback-enable-auth-type-none section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-callback-enables))) 
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-callback-enable-auth-type-md2 section-name auth-type-md2)
-  (fi-set-bmc-lan-conf-auth-type-callback-enables 0 auth-type-md2 0 0 0))
+  (if (list? auth-type-md2)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-callback-enables 0 auth-type-md2 0 0 0)))
 
 (define (checkout-callback-enable-auth-type-md2 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-callback-enables))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-callback-enable-auth-type-md5 section-name auth-type-md5)
-  (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 auth-type-md5 0 0))
+  (if (list? auth-type-md5)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 auth-type-md5 0 0)))
 
 (define (checkout-callback-enable-auth-type-md5 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-callback-enables))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-callback-enable-auth-type-straight-password section-name auth-type-straight-password)
-  (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 0 auth-type-straight-password 0))
+  (if (list? auth-type-straight-password)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 0 auth-type-straight-password 0)))
 
 (define (checkout-callback-enable-auth-type-straight-password section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-callback-enables))) 
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-callback-enable-auth-type-oem-proprietary section-name auth-type-oem-proprietary)
-  (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 0 0 auth-type-oem-proprietary))
+  (if (list? auth-type-oem-proprietary)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-callback-enables 0 0 0 0 auth-type-oem-proprietary)))
 
 (define (checkout-callback-enable-auth-type-oem-proprietary section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-callback-enables))) 
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define (commit-user-enable-auth-type-none section-name auth-type-none)
-  (fi-set-bmc-lan-conf-auth-type-user-enables auth-type-none 0 0 0 0))
+  (if (list? auth-type-none)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-user-enables auth-type-none 0 0 0 0)))
 
 (define (checkout-user-enable-auth-type-none section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-user-enables))) 
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-user-enable-auth-type-md2 section-name auth-type-md2)
-  (fi-set-bmc-lan-conf-auth-type-user-enables 0 auth-type-md2 0 0 0))
+  (if (list? auth-type-md2)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-user-enables 0 auth-type-md2 0 0 0)))
 
 (define (checkout-user-enable-auth-type-md2 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-user-enables))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-user-enable-auth-type-md5 section-name auth-type-md5)
-  (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 auth-type-md5 0 0))
+  (if (list? auth-type-md5)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 auth-type-md5 0 0)))
 
 (define (checkout-user-enable-auth-type-md5 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-user-enables))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-user-enable-auth-type-straight-password section-name auth-type-straight-password)
-  (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 0 auth-type-straight-password 0))
+  (if (list? auth-type-straight-password)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 0 auth-type-straight-password 0)))
 
 (define (checkout-user-enable-auth-type-straight-password section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-user-enables))) 
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-user-enable-auth-type-oem-proprietary section-name auth-type-oem-proprietary)
-  (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 0 0 auth-type-oem-proprietary))
+  (if (list? auth-type-oem-proprietary)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-user-enables 0 0 0 0 auth-type-oem-proprietary)))
 
 (define (checkout-user-enable-auth-type-oem-proprietary section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-user-enables))) 
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define (commit-operator-enable-auth-type-none section-name auth-type-none)
-  (fi-set-bmc-lan-conf-auth-type-operator-enables auth-type-none 0 0 0 0))
+  (if (list? auth-type-none)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-operator-enables auth-type-none 0 0 0 0)))
 
 (define (checkout-operator-enable-auth-type-none section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-operator-enables))) 
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-operator-enable-auth-type-md2 section-name auth-type-md2)
-  (fi-set-bmc-lan-conf-auth-type-operator-enables 0 auth-type-md2 0 0 0))
+  (if (list? auth-type-md2)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-operator-enables 0 auth-type-md2 0 0 0)))
 
 (define (checkout-operator-enable-auth-type-md2 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-operator-enables))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-operator-enable-auth-type-md5 section-name auth-type-md5)
-  (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 auth-type-md5 0 0))
+  (if (list? auth-type-md5)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 auth-type-md5 0 0)))
 
 (define (checkout-operator-enable-auth-type-md5 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-operator-enables))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-operator-enable-auth-type-straight-password section-name auth-type-straight-password)
-  (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 0 auth-type-straight-password 0))
+  (if (list? auth-type-straight-password)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 0 auth-type-straight-password 0)))
 
 (define (checkout-operator-enable-auth-type-straight-password section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-operator-enables))) 
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-operator-enable-auth-type-oem-proprietary section-name auth-type-oem-proprietary)
-  (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 0 0 auth-type-oem-proprietary))
+  (if (list? auth-type-oem-proprietary)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-operator-enables 0 0 0 0 auth-type-oem-proprietary)))
 
 (define (checkout-operator-enable-auth-type-oem-proprietary section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-operator-enables))) 
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define (commit-admin-enable-auth-type-none section-name auth-type-none)
-  (fi-set-bmc-lan-conf-auth-type-admin-enables auth-type-none 0 0 0 0))
+  (if (list? auth-type-none)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-admin-enables auth-type-none 0 0 0 0)))
 
 (define (checkout-admin-enable-auth-type-none section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-admin-enables))) 
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-admin-enable-auth-type-md2 section-name auth-type-md2)
-  (fi-set-bmc-lan-conf-auth-type-admin-enables 0 auth-type-md2 0 0 0))
+  (if (list? auth-type-md2)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-admin-enables 0 auth-type-md2 0 0 0)))
 
 (define (checkout-admin-enable-auth-type-md2 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-admin-enables))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-admin-enable-auth-type-md5 section-name auth-type-md5)
-  (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 auth-type-md5 0 0))
+  (if (list? auth-type-md5)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 auth-type-md5 0 0)))
 
 (define (checkout-admin-enable-auth-type-md5 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-admin-enables))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-admin-enable-auth-type-straight-password section-name auth-type-straight-password)
-  (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 0 auth-type-straight-password 0))
+  (if (list? auth-type-straight-password)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 0 auth-type-straight-password 0)))
 
 (define (checkout-admin-enable-auth-type-straight-password section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-admin-enables))) 
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-admin-enable-auth-type-oem-proprietary section-name auth-type-oem-proprietary)
-  (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 0 0 auth-type-oem-proprietary))
+  (if (list? auth-type-oem-proprietary)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-admin-enables 0 0 0 0 auth-type-oem-proprietary)))
 
 (define (checkout-admin-enable-auth-type-oem-proprietary section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-admin-enables))) 
     (if (list? param-list) (cddddr param-list) #f)))
 
 (define (commit-oem-enable-auth-type-none section-name auth-type-none)
-  (fi-set-bmc-lan-conf-auth-type-oem-enables auth-type-none 0 0 0 0))
+  (if (list? auth-type-none)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-oem-enables auth-type-none 0 0 0 0)))
 
 (define (checkout-oem-enable-auth-type-none section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-oem-enables))) 
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-oem-enable-auth-type-md2 section-name auth-type-md2)
-  (fi-set-bmc-lan-conf-auth-type-oem-enables 0 auth-type-md2 0 0 0))
+  (if (list? auth-type-md2)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-oem-enables 0 auth-type-md2 0 0 0)))
 
 (define (checkout-oem-enable-auth-type-md2 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-oem-enables))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-oem-enable-auth-type-md5 section-name auth-type-md5)
-  (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 auth-type-md5 0 0))
+  (if (list? auth-type-md5)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 auth-type-md5 0 0)))
 
 (define (checkout-oem-enable-auth-type-md5 section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-oem-enables))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-oem-enable-auth-type-straight-password section-name auth-type-straight-password)
-  (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 0 auth-type-straight-password 0))
+  (if (list? auth-type-straight-password)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 0 auth-type-straight-password 0)))
 
 (define (checkout-oem-enable-auth-type-straight-password section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-oem-enables))) 
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-oem-enable-auth-type-oem-proprietary section-name auth-type-oem-proprietary)
-  (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 0 0 auth-type-oem-proprietary))
+  (if (list? auth-type-oem-proprietary)
+      #t 
+      (fi-set-bmc-lan-conf-auth-type-oem-enables 0 0 0 0 auth-type-oem-proprietary)))
 
 (define (checkout-oem-enable-auth-type-oem-proprietary section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-auth-type-oem-enables))) 
