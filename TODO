@@ -69,6 +69,7 @@ Ipmipower
 - Re-implement BMC workaround to use ports less wastefully.
 - Buffer recently malloced space to avoid constant re-mallocing.
 - Add readline or similar functionality in interactive mode.
+- get rid of the ping-consec-count option, that thing is useless
 
 Ipmiping/Rmcpping
 
