@@ -74,6 +74,7 @@ Ipmiping/Rmcpping
 
 - Make starting sequence number random to reduce probability of
 "confused" BMC known issue?
+- Randomizing port on client can also fix the issue??
 
 General
 
