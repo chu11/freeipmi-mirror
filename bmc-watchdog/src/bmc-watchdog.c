@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.10 2004-07-13 00:22:40 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.11 2004-07-26 18:40:42 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -200,7 +200,9 @@ _bmclog(const char *fmt, ...)
   char buffer[BMC_WATCHDOG_ERR_BUFLEN];
   char fbuffer[BMC_WATCHDOG_ERR_BUFLEN];
 
-  assert (fmt != NULL && err_progname != NULL && logfile_fd >= 0);
+  assert (fmt != NULL 
+          && err_progname != NULL 
+          && (conf.no_logging || logfile_fd >= 0));
   
   if (cinfo.no_logging)
     return;
@@ -282,17 +284,20 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
 
   openlog(err_progname, LOG_ODELAY | LOG_PID, facility);
 
-  if ((logfile_fd = open(cinfo.logfile,
-                         O_WRONLY | O_CREAT | O_APPEND,
-                         S_IRUSR | S_IWUSR)) < 0)
+  if (!cinfo.no_logging)
     {
-      if (err_to_stderr)
-        _err_exit("Error opening logfile '%s': %s",
-                  cinfo.logfile, strerror(errno));
-      else
-        _syslog(LOG_ERR, "Error opening logfile '%s': %s",
-                cinfo.logfile, strerror(errno));
-      exit(1);
+      if ((logfile_fd = open(cinfo.logfile,
+                             O_WRONLY | O_CREAT | O_APPEND,
+                             S_IRUSR | S_IWUSR)) < 0)
+        {
+          if (err_to_stderr)
+            _err_exit("Error opening logfile '%s': %s",
+                      cinfo.logfile, strerror(errno));
+          else
+            _syslog(LOG_ERR, "Error opening logfile '%s': %s",
+                    cinfo.logfile, strerror(errno));
+          exit(1);
+        }
     }
 
   if (_init_ipmi() < 0)

@@ -1,3 +1,8 @@
+2004-07-26  Albert Chu  <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_bmclog, _init_bmc_watchdog):
+	Fixed --no-logging option.
+	
 2004-07-17  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: added primitives for checkout support
