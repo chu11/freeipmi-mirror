@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-dist_man_MANS = rmcpping.8
+man_MANS = rmcpping.8
 
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P

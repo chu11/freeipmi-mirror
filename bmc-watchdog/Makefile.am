@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-dist_man_MANS = bmc-watchdog.8
+man_MANS = bmc-watchdog.8
 
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P
