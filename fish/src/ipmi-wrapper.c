@@ -150,6 +150,9 @@ lan_close_session (int sockfd, char *hostname, u_int8_t auth_type, u_int32_t ses
     return (1);
 
   if (ipmi_lan_close_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, session_seq_num, session_id, auth_code, strlen (auth_code), rq_seq, close_session_id, obj_cmd_rs) == -1)
+    return (-1);
+  
+  if (IPMI_COMP_CODE(obj_cmd_rs) != IPMI_COMMAND_SUCCESS)
     {
       char errstr[IPMI_ERR_STR_MAX_LEN];
       ipmi_strerror_cmd_r (obj_cmd_rs, errstr, IPMI_ERR_STR_MAX_LEN);

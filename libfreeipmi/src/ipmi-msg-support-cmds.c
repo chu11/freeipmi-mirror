@@ -440,8 +440,6 @@ ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t ho
 		     obj_cmd_rq, tmpl_cmd_get_channel_auth_caps_rq,
 		     obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs) != -1);
 
-  ERR (ipmi_comp_test (obj_cmd_rs));
-
   /* INFO: you can also do auth type check here */
   return (0);
 }
@@ -506,7 +504,6 @@ ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t ho
 		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 0,
 		     obj_cmd_rq, tmpl_cmd_get_session_challenge_rq,
 		     obj_cmd_rs, tmpl_cmd_get_session_challenge_rs) != -1);
-  ERR (ipmi_comp_test (obj_cmd_rs));
   return (0);
 }
 
@@ -565,7 +562,6 @@ ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostadd
 		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 0, 
 		     obj_cmd_rq, tmpl_cmd_activate_session_rq,
 		     obj_cmd_rs, tmpl_cmd_activate_session_rs) != -1);
-  ERR (ipmi_comp_test (obj_cmd_rs));
   return (0);
 }
 
@@ -608,7 +604,6 @@ ipmi_lan_set_session_priv_level (int sockfd, struct sockaddr *hostaddr, size_t h
 		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_set_session_priv_level_rq,
 		     obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs) != -1);
-  ERR (ipmi_comp_test (obj_cmd_rs));
   return (0);
 }
 
@@ -622,11 +617,15 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_channel_auth_caps_rs);
   if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, obj_cmd_rs) == -1)
     goto error;
+  if (!ipmi_comp_test (obj_cmd_rs))
+    goto error;
   ipmi_xfree (obj_cmd_rs);
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_session_challenge_rs);
   if (ipmi_lan_get_session_challenge (sockfd, hostaddr, hostaddr_len, 
 				      auth_type, username, obj_cmd_rs) == -1)
+    goto error;
+  if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
@@ -646,6 +645,8 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
 				 challenge_str, IPMI_CHALLENGE_STR_MAX,
 				 initial_outbound_seq_num, obj_cmd_rs) == -1)
     goto error;
+  if (!ipmi_comp_test (obj_cmd_rs))
+    goto error;
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		"session_id", &temp_session_id);
   *session_id = temp_session_id;
@@ -659,6 +660,8 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
 				       auth_code_data, auth_code_data_len, priv_level, 1, obj_cmd_rs) == -1)
+    goto error;
+  if (!ipmi_comp_test (obj_cmd_rs))
     goto error;
   ipmi_xfree (obj_cmd_rs);
 
@@ -706,7 +709,6 @@ ipmi_lan_close_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_l
 		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_close_session_rq,
 		     obj_cmd_rs, tmpl_cmd_close_session_rs) != -1);
-  ERR (ipmi_comp_test (obj_cmd_rs));
   return (0);
 }
 
