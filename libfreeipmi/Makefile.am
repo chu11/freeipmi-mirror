@@ -7,9 +7,9 @@ DISTCLEANFILES = .deps/*.P
 IPCKEY = ipckey
 
 if RPM_INSTALL
-IPCDIR = $(RPM_BUILD_ROOT)/var/lib/$(PACKAGE_NAME)
+IPCDIR = $(RPM_BUILD_ROOT)/var/lib/$(PACKAGE)
 else
-IPCDIR = /var/lib/$(PACKAGE_NAME)
+IPCDIR = /var/lib/$(PACKAGE)
 endif
 
 Ipckeydir     = $(IPCDIR)

@@ -1,5 +1,8 @@
 2004-05-13  Ian Zimmerman  <itz@californiadigital.com>
 
+	* libfreeipmi/Makefile.am (IPCDIR), doc/examples/Makefile.am
+	(Examplesdir), doc/Makefile.am (docdir): s/PACKAGE_NAME/PACKAGE/
+
 	* fish/src/bmc-conf-key-utils.c: make bmc_config_key_list static,
 	it is not used outside of its defining file.
 

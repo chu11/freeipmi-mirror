@@ -12,7 +12,7 @@ dist_man_MANS = fish.1 bmc-config.1 bmc-info.1 fish.1 sel.1 sensors.1 \
 
 EXTRA_DIST = BUGS
 
-docdir   = $(datadir)/doc/$(PACKAGE_NAME)
+docdir   = $(datadir)/doc/$(PACKAGE)
 
 doc_DATA = $(EXTRA_DIST)
 
