@@ -46,6 +46,7 @@ ipmipower:
   * There are probably port issues with mmap/mlock.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed even more?
+  * local power off
 
 ipmiping/rmcpping:
 ------------------
