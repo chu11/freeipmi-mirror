@@ -84,12 +84,12 @@
 					  value 
 					  "> of key <" 
 					  key 
-					  ">\n"))
+					  ">\n") (current-error-port))
 		  #f))
 	    (begin 
 	      (display (string-append "ERROR: invalid key <" 
 				      key 
-				      ">\n"))
+				      ">\n") (current-error-port))
 	      #f)))))
 
 (define (validate-commit-section section-data)
@@ -108,33 +108,33 @@
 	      #f)))))
 
 (define (commit-section-values section-name section-data section-keys)
-  (if (null? section-data)
-      #t
-      (let* ((line           (car section-data))
-	     (key            (car (string-tokenize line)))
-	     (value          (if (= (length (string-tokenize line)) 1)
-				 '() 
-				 (cadr (string-tokenize line))))
-	     (convertor-proc (get-convertor-proc key section-keys)) 
-	     (commit-proc    (get-commit-proc key section-keys)))
-	(if (string? value) (set! value (convertor-proc value)))
+  (let ((status #t))
+    (if (null? section-data)
+	status 
+	(let* ((line           (car section-data))
+	       (key            (car (string-tokenize line)))
+	       (value-string   (if (= (length (string-tokenize line)) 1)
+				   "" 
+				   (cadr (string-tokenize line))))
+	       (convertor-proc (get-convertor-proc key section-keys)) 
+	       (commit-proc    (get-commit-proc key section-keys))
+	       (value          (if (string-null? value-string) 
+				   '() 
+				   (convertor-proc value-string))))
 ; 	  (set! value (eval (list convertor-proc value) (interaction-environment)))
 ; 	  (display key) (newline)
 ; 	  (display value) (newline)
 ; 	  (display convertor-proc) (newline)
 ; 	  (display commit-proc) (newline)
 ; 	  (if (eval (list commit-proc section-name value) (interaction-environment))
-	(if (commit-proc section-name value) 
-	    (begin 
-	      (display (string-append "Committed Key <" key 
-				      "> Value <" (any->string value) 
-				      ">\n"))
-	      (commit-section-values section-name (cdr section-data) section-keys))
-	    (begin 
-	      (display (string-append "Commit Key <" key 
-				      "> Value <" (any->string value) 
-				      "> FAILED\n"))
-	      #f)))))
+	  (if (not (commit-proc section-name value))
+	      (begin 
+		(set! status #f)
+		(display (string-append "Commit Section <" section-name 
+					"> Key <" key 
+					"> Value <" value-string 
+					"> FAILED\n") (current-error-port))))
+	  (commit-section-values section-name (cdr section-data) section-keys)))))
 
 (define (commit-section section-data)
   (let ((section-name (car section-data)))
@@ -154,7 +154,7 @@
 	    (begin 
 	      (display (string-append "ERROR: invalid key <" 
 				      key 
-				      ">\n"))
+				      ">\n") (current-error-port))
 	      #f)))))
 
 (define (validate-checkout-section section-data)

@@ -1,3 +1,8 @@
+2004-09-22  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-section.scm: bug #10446, skip unsupported
+	fields, is fixed.
+
 2004-09-17  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_get_port),
