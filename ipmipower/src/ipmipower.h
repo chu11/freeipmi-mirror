@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.4 2004-11-15 20:45:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.5 2004-11-16 01:28:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -191,10 +191,11 @@ typedef enum { LINK_GOOD = 0x01,
 
 /* Authentication Types */
 typedef enum { AUTH_TYPE_INVALID             = 0x00,
-               AUTH_TYPE_NONE                = 0x01,
-               AUTH_TYPE_STRAIGHT_PASSWD_KEY = 0x02,
-               AUTH_TYPE_MD2                 = 0x03,
-               AUTH_TYPE_MD5                 = 0x04 } auth_type_t;
+	       AUTH_TYPE_AUTO                = 0x01,
+               AUTH_TYPE_NONE                = 0x02,
+               AUTH_TYPE_STRAIGHT_PASSWD_KEY = 0x03,
+               AUTH_TYPE_MD2                 = 0x04,
+               AUTH_TYPE_MD5                 = 0x05 } auth_type_t;
 #define AUTH_TYPE_VALID(a)            (a >= AUTH_TYPE_NONE && \
                                        a <= AUTH_TYPE_MD5)
 
@@ -217,13 +218,14 @@ typedef enum { MSG_TYPE_SUCCESS                 =  0,
                MSG_TYPE_PRIVILEGE               =  7,
                MSG_TYPE_OPERATION               =  8,
                MSG_TYPE_AUTHTYPE                =  9,
-               MSG_TYPE_TIMEDOUT                = 10,
-               MSG_TYPE_NOTDISCOVERED           = 11,
-               MSG_TYPE_BADCONNECTION           = 12,
-               MSG_TYPE_UNKNOWNNODE             = 13,
-               MSG_TYPE_RESOURCES               = 14,
-               MSG_TYPE_BMCBUSY                 = 15,
-               MSG_TYPE_BMCERROR                = 16 } msg_type_t;
+	       MSG_TYPE_AUTHAUTO                = 10,
+               MSG_TYPE_TIMEDOUT                = 11,
+               MSG_TYPE_NOTDISCOVERED           = 12,
+               MSG_TYPE_BADCONNECTION           = 13,
+               MSG_TYPE_UNKNOWNNODE             = 14,
+               MSG_TYPE_RESOURCES               = 15,
+               MSG_TYPE_BMCBUSY                 = 16,
+               MSG_TYPE_BMCERROR                = 17 } msg_type_t;
 #define MSG_TYPE_VALID(m)             (m >= MSG_TYPE_SUCCESS && \
                                        m <= MSG_TYPE_BMCERROR)
 #define MSG_TYPE_NUM                  (MSG_TYPE_BMCERROR+1)
@@ -242,6 +244,7 @@ struct ipmipower_powercmd {
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
+    u_int8_t authtype;
 
     struct ipmipower_connection *ic;
   

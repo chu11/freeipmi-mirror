@@ -1,5 +1,34 @@
 2004-11-15  Albert Chu <chu11@llnl.gov>
 
+	Added auto authentication type to ipmipower to automatically
+	choose the most secure authentication among those available from
+	the remote machine.
+
+	* ipmipower/src/ipmipower.h: Added AUTH_TYPE_AUTO to auth_type_t.
+	Added authtype field to ipmipower_powercmd structure. 
+
+	* ipmipower/src/ipmipower_auth.c
+	(ipmipower_auth_index, ipmipower_auth_string,
+	ipmipower_auth_list): Added "auto" authtype support.
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets):
+	Calculate best authentication available under "auto" authtype.
+	Store authentication type code in authtype field of
+	ipmipower_powercmd struct.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet),
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_create): Use
+	authtype field of ipmipower_powercmd_t pointer rather than calling
+	ipmipower_ipmi_auth_type.
+
+	* ipmipower/src/ipmipower_config.c (ipmipower_config_setup): Make
+	"auto" the default.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in: Added
+	"auto" as available authentication type.
+	
+2004-11-15  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(ipmi_lan_get_channel_auth_caps, ipmi_lan_get_session_challenge,
 	ipmi_lan_activate_session, ipmi_lan_set_session_priv_level,

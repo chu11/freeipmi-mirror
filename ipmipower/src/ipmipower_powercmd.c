@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.4 2004-11-16 01:28:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -304,13 +304,13 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTH_RES || pkt == SESS_RES)
     at = IPMI_SESSION_AUTH_TYPE_NONE;
   else if (pkt == ACTV_RES)
-    at = ipmipower_ipmi_auth_type(conf->authtype);
+    at = ip->authtype;
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE;
       else
-        at = ipmipower_ipmi_auth_type(conf->authtype);
+        at = ip->authtype;
     }
 
   if (at != IPMI_SESSION_AUTH_TYPE_NONE)
@@ -538,36 +538,73 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
                    "auth_status.per_message_auth", &auth_status_per_message_auth);
 
-      /* Does this BMC support our authentication attempt */
-
+      /* Does this BMC support our authentication type */
       if ((!strlen(conf->username) && !strlen(conf->password)
-           && !auth_status_anonymous_login)
-          || (!strlen(conf->username) && strlen(conf->password)
-              && !auth_status_null_username)
-          || (strlen(conf->username)
-              && !auth_status_non_null_username))
-        {
+	   && !auth_status_anonymous_login)
+	  || (!strlen(conf->username) && strlen(conf->password)
+	      && !auth_status_null_username)
+	  || (strlen(conf->username)
+	      && !auth_status_non_null_username))
+	{
 #ifndef NDEBUG
-          ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
+	  ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
 #else
-          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
-          ip->error_occurred = IPMIPOWER_TRUE; 
-          return -1;
-        }
+	  ip->error_occurred = IPMIPOWER_TRUE; 
+	  return -1;
+	}
 
-      if ((!strlen(conf->username) && !strlen(conf->password)
-           && !auth_type_none)
-          || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWD_KEY 
-              && !auth_type_straight_passwd_key)
-          || (conf->authtype == AUTH_TYPE_MD2
-              && !auth_type_md2)
-          || (conf->authtype == AUTH_TYPE_MD5
-              && !auth_type_md5))
-        {
-          ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
-          return -1;
-        }
+      if (conf->authtype == AUTH_TYPE_AUTO)
+	{
+	  /* Choose the best authentication type available.
+	   * md5 > md2 > straight_passwd_key.  NULL username
+	   * and NULL password are a special case.
+	   */
+	  if (!strlen(conf->username) && !strlen(conf->password)
+	      && auth_type_none)
+	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
+	  else if (auth_type_md5)
+	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
+	  else if (auth_type_md2)
+	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
+	  else if (auth_type_straight_passwd_key)
+	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
+	  else
+	    {
+	      /* achu: It may not seem possible to get to this point
+	       * since the check for anonymous_login, null_username,
+	       * or non_null_username has passed, but there's always
+	       * that iffy OEM authentication type that could be
+	       * enabled. Shame on you evil vendor!!
+	       */
+#ifndef NDEBUG	      
+	      ipmipower_output(MSG_TYPE_AUTHAUTO, ip->ic->hostname);
+#else
+	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+	      return -1;
+	    }
+	}
+      else
+	{
+	  /* Can we authenticate with the requested authentication
+	   * type? 
+	   */
+ 	  if ((!strlen(conf->username) && !strlen(conf->password)
+	       && !auth_type_none)
+	      || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWD_KEY 
+		  && !auth_type_straight_passwd_key)
+	      || (conf->authtype == AUTH_TYPE_MD2
+		  && !auth_type_md2)
+	      || (conf->authtype == AUTH_TYPE_MD5
+		  && !auth_type_md5))
+	    {
+	      ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
+	      return -1;
+	    }
+	  ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
+	}
 
       if (!auth_status_per_message_auth)
         ip->permsgauth_enabled = IPMIPOWER_TRUE;

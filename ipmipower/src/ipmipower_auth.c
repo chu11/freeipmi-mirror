@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.1 2004-05-11 17:04:38 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.2 2004-11-16 01:28:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,7 +46,9 @@ ipmipower_auth_index(char *str)
 {
   assert(str != NULL);
 
-  if (!strcasecmp(str, "none"))
+  if (!strcasecmp(str, "auto"))
+    return AUTH_TYPE_AUTO;
+  else if (!strcasecmp(str, "none"))
     return AUTH_TYPE_NONE;
   else if (!strcasecmp(str, "straight_passwd_key"))
     return AUTH_TYPE_STRAIGHT_PASSWD_KEY;
@@ -65,6 +67,9 @@ ipmipower_auth_string(auth_type_t at)
 
   switch(at) 
     {
+    case AUTH_TYPE_AUTO:
+      return "auto";
+      break;
     case AUTH_TYPE_NONE:
       return "none";
       break;
@@ -87,7 +92,7 @@ ipmipower_auth_string(auth_type_t at)
 char *
 ipmipower_auth_list(void) 
 {
-  return "none, straight_passwd_key, md2, md5";
+  return "auto, none, straight_passwd_key, md2, md5";
 }
 
 u_int8_t

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.4 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.5 2004-11-16 01:28:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,7 +76,7 @@ ipmipower_config_setup(void)
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
-  conf->authtype = AUTH_TYPE_STRAIGHT_PASSWD_KEY;
+  conf->authtype = AUTH_TYPE_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
 #ifndef NDEBUG
