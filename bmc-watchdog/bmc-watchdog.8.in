@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.4 2004-12-08 00:57:14 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.5 2005-02-19 01:15:15 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -127,9 +127,7 @@ is prefixed with a "0x", it is assumed to be a base 16 integer.
 Otherwise, it is assumed to be a base 10 integer.
 .TP
 .B  -R INT, --reg-space=INT
-Specify base address register spacing.  The register spacing value can be
-set to one of the following: 0 = 1 byte, 1 = 4 bytes, 2 = 16 bytes.
-If not specified,
+Specify base address register spacing. If not specified,
 .B bmc-watchdog 
 will attempt to probe for the system's default register spacing.  If
 the probe fails, the IPMI defined default will be used.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.26 2005-01-14 10:32:26 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.27 2005-02-19 01:15:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -255,7 +255,7 @@ _err_exit(char *fmt, ...)
 }
 
 static int
-_get_port(u_int32_t *port, u_int8_t *reg_space)
+_get_port_and_reg_space(u_int32_t *port, u_int8_t *reg_space)
 {
   ipmi_locate_info_t locate_info;
   int status;
@@ -266,17 +266,21 @@ _get_port(u_int32_t *port, u_int8_t *reg_space)
   assert(cmdline_parsed != 0);
   
   if (cinfo.io_port)
-    {
-      *port      = cinfo.io_port_val;
-      *reg_space = cinfo.reg_space_val;
-      return (0);
-    }
+    *port      = cinfo.io_port_val;
+
+  if (cinfo.reg_space)
+    *reg_space = cinfo.reg_space_val;
+
+  if (cinfo.io_port && cinfo.reg_space)
+    return (0);
 
   ipmi_locate (ipmi_interface_kcs, &locate_info, &status);
   if (status == 0 && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
     {
-      *port      = locate_info.base_addr.bmc_iobase_addr;
-      *reg_space = locate_info.reg_space;
+      if (!cinfo.io_port)
+        *port      = locate_info.base_addr.bmc_iobase_addr;
+      if (!cinfo.reg_space)
+        *reg_space = locate_info.reg_space;
       return (0);
     }
 
@@ -295,7 +299,7 @@ _init_ipmi(void)
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-  _get_port (&port, &reg_space);
+  _get_port_and_reg_space (&port, &reg_space);
 
   if ((ret = ipmi_kcs_io_init(port, reg_space, IPMI_KCS_SLEEP_USECS)) < 0)
     _bmclog("ipmi_kcs_io_init: %s", strerror(errno));
@@ -1017,6 +1021,7 @@ _cmdline_parse(int argc, char **argv)
             _err_exit("io-port value invalid");
           break;
         case 'R':
+          cinfo.reg_space++;
           cinfo.reg_space_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reg-space value invalid");

@@ -1,3 +1,13 @@
+2005-02-18  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port): Renamed to
+	_get_port_and_reg_space.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port_and_reg_space): Fixed
+	logic errors due to changes in libfreeipmi.
+
+	* bmc-watchdog/bmc-watchdog.8.in: Updated appropriately.
+	
 2005-02-13  Anand Babu  <ab@gnu.org.in>
 
 	* ipmi-ssif-interface.c (ipmi_ssif_exit): New function.
