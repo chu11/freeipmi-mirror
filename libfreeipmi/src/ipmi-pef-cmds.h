@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.1 2004-10-26 22:16:23 itz Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.2 2004-10-27 00:18:16 itz Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -42,6 +42,13 @@ extern fiid_template_t tmpl_get_last_processed_event_rs;
 extern fiid_template_t tmpl_pet_ack_rq;
 extern fiid_template_t tmpl_pet_ack_rs;
 
+extern fiid_template_t tmpl_get_pef_conf_param_rq;
+extern fiid_template_t tmpl_get_pef_conf_param_pef_control_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_global_action_control_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_startup_delay_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_alert_startup_delay_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_num_event_filters_rs;
+
 enum which_event
   {
     last_software_event = 0,
@@ -54,9 +61,23 @@ int8_t ipmi_kcs_arm_pef_postpone_timer (u_int16_t sms_io_base, fiid_obj_t obj_da
 int8_t ipmi_kcs_set_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
                                           which_event_t which, u_int16_t id);
 int8_t ipmi_kcs_get_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs);
-int8_t ipmi_pet_ack (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int16_t sequence_number,
+int8_t ipmi_kcs_pet_ack (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int16_t sequence_number,
                      u_int32_t timestamp, u_int8_t source_type, u_int8_t sensor_device,
                      u_int8_t sensor_number, u_int32_t event_data);
+int8_t ipmi_kcs_get_pef_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                 u_int8_t parameter_type, u_int8_t set_selector, u_int8_t block_selector);
+int8_t ipmi_kcs_get_pef_global_action_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                               u_int8_t parameter_type, u_int8_t set_selector,
+                                               u_int8_t block_selector);
+int8_t ipmi_kcs_get_pef_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                       u_int8_t parameter_type, u_int8_t set_selector,
+                                       u_int8_t block_selector);
+int8_t ipmi_kcs_get_pef_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                             u_int8_t parameter_type, u_int8_t set_selector,
+                                             u_int8_t block_selector);
+int8_t ipmi_kcs_get_pef_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                           u_int8_t parameter_type, u_int8_t set_selector,
+                                           u_int8_t block_selector);
 
 #ifdef __cplusplus
 }

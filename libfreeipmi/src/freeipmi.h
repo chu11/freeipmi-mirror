@@ -88,6 +88,7 @@ extern "C" {
 #include "ipmi-watchdog.h"
 #include "ipmi-msg-interface-desc.h"
 #include "ipmi-ping.h"
+#include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #else
 #include <freeipmi/bit-ops.h>
@@ -129,6 +130,7 @@ extern "C" {
 #include <freeipmi/ipmi-msg-interface-desc.h>
 #include <freeipmi/ipmi-ping.h>
 #include <freeipmi/ipmi-pef-cmds.h>
+#include <freeipmi/ipmi-pef-param-spec.h>
 #endif
 
 #ifdef __cplusplus
