@@ -4,7 +4,8 @@ AB:
   * Done:
     - SMBus/SSIF Driver.
   * Work in progress:
-    - Unified Driver Model: Single API set for all in-band and out-of-band drivers.
+    - Unified Driver Model: Single API set for all in-band and
+      out-of-band drivers.
 Bala:
   * Done:
     - Sensors rewrite.
@@ -12,7 +13,9 @@ Bala:
     - old bmc-config code removal.
   * Work in progress:
     - bmc-config --auto and --expert modes.
-    - Adopt the the unified driver model for all APIs.
+    - Adopt the the unified driver model for all APIs. This will make
+      all GNU FreeIPMI tools work for both in-band and out-of-band
+      interfaces.
     - bmc-fence daemon.
 
 Release 0.3.0 (End of June 2005)
@@ -53,5 +56,4 @@ AB:
 
 Al:
    Web Interface: Ganglia ad-don???
-   SuperMicro Support.
 
