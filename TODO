@@ -36,6 +36,7 @@ bmc-watchdog:
 -------------
   * Require Timer use to be SMS/OS?
   * Make get_lan_channel_number() non-hardcoded.
+  * Allow over lan?
   * Ignore pre-timeout interval length comparison to initial countdown
     if pre-timeout interval is none
 
