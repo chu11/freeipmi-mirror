@@ -39,8 +39,8 @@ int chassis_ctrl (int sockfd, char *hostname, unsigned char auth_type, unsigned 
 #endif
 
 channel_info *get_channel_info_list ();
-u_int8_t get_lan_channel_number ();
-u_int8_t get_serial_channel_number ();
+int8_t get_lan_channel_number ();
+int8_t get_serial_channel_number ();
 int display_channel_info ();
 
 #endif

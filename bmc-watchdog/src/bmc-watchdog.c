@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.24 2004-12-08 00:57:14 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.25 2004-12-20 18:35:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -715,13 +715,6 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   return retval;
 }
 
-/* Stolen from fish, need something better later */
-static u_int8_t
-_get_lan_channel_number(void)
-{
-  return 7;
-}
-
 static int
 _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
                       u_int8_t gratuitous_arp,
@@ -730,6 +723,7 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
+  int8_t num;
 
   if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
     {
@@ -745,7 +739,15 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  if (fill_cmd_suspend_bmc_arps(_get_lan_channel_number(),
+  num = ipmi_get_channel_number(IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  if (num < 0)
+    {
+      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number: %s",
+	      strerror(errno));
+      goto cleanup;
+    }
+
+  if (fill_cmd_suspend_bmc_arps(num,
                                 gratuitous_arp,
                                 arp_response,
                                 cmd_rq) < 0)

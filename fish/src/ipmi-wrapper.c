@@ -62,6 +62,12 @@ char *alloca ();
 u_int8_t channel_info_list_initialized = false;
 channel_info channel_info_list[8];
 
+/* achu: caching to make bmc-config work more quickly */
+static u_int8_t lan_channel_number_initialized = false;
+static int8_t lan_channel_number;
+static u_int8_t serial_channel_number_initialized = false;
+static int8_t serial_channel_number;
+
 static unsigned int rmcp_msg_tag;
 
 static unsigned int 
@@ -323,73 +329,28 @@ get_channel_info_list ()
   return (channel_info_list);
 }
 
-u_int8_t 
+int8_t 
 get_lan_channel_number ()
 {
-  channel_info *channel_list;
-  u_int8_t i;
-  
-  u_int8_t *obj_hdr_rs;
-  u_int8_t *obj_cmd_rs;
-  u_int32_t cmd_rs_len;
-  u_int64_t manf_id, prod_id;
-  
-  obj_hdr_rs = fiid_obj_alloc (tmpl_hdr_kcs);
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
-  cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
-  
-  if (ipmi_kcs_get_dev_id (obj_hdr_rs, obj_cmd_rs) != 0)
-    return (-1);
-  
-  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
-  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_dev_id_rs, "prod_id", &prod_id);
-  
-  free (obj_hdr_rs);
-  free (obj_cmd_rs);
-  
-  switch (manf_id)
-    {
-    case IPMI_MANF_ID_INTEL:
-    case 0xB000157: // Intel 
-      switch (prod_id)
-	{
-	case IPMI_PROD_ID_SE7501WV2:
-	  return 7;
-	}
-    }
-  
-  channel_list = get_channel_info_list ();
-  
-  for (i = 0; i < 8; i++)
-    {
-      if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-        {
-          // printf ("lan_channel_number: %d\n", channel_list[i].channel_number);
-          return channel_list[i].channel_number;
-        }
-    }
-  
-  return (-1);
+  if (lan_channel_number_initialized)
+    return lan_channel_number;
+
+  lan_channel_number = ipmi_get_channel_number (IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  if (!(lan_channel_number < 0))
+    lan_channel_number_initialized = true;
+  return lan_channel_number;
 }
 
-u_int8_t 
+int8_t 
 get_serial_channel_number ()
 {
-  channel_info *channel_list;
-  u_int8_t i;
-  
-  channel_list = get_channel_info_list ();
-  
-  for (i = 0; i < 8; i++)
-    {
-      if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
-        {
-          // printf ("serial_channel_number: %d\n", channel_list[i].channel_number);
-          return channel_list[i].channel_number;
-        }
-    }
-  
-  return (-1);
+  if (serial_channel_number_initialized)
+    return serial_channel_number;
+
+  serial_channel_number = ipmi_get_channel_number (IPMI_CHANNEL_MEDIUM_TYPE_RS232);
+  if (!(serial_channel_number < 0))
+    serial_channel_number_initialized = true;
+  return serial_channel_number;
 }
 
 u_int8_t 
