@@ -90,6 +90,11 @@ Need to test following corner cases:
 New tools?
 - SEL collector/logger thingie for clusters
 - tool/script to detect busted BMC/IORiser
+- bmc-config wrapper script to handle common stuff
+  - i.e. if you enable a user, automatically turn on
+         IPMI lan and IPMI serial, passwd/md2 authentication,
+         etc.
+         
 
 Bala's TODO List:
 =================
