@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.2 2004-06-25 00:40:20 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.3 2004-09-14 20:46:18 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -60,15 +60,15 @@ the remote host Base Mother Controller (BMC).  If hostnames do not
 resolve to proper BMC IP addresses, RMCP ping messages will not
 discover the remote host or power commands will time out.  This option
 is required if a power command (--on, --off, --cycle, --reset, or
---stat) is specified on the command line.  Hostnames may
-be specified in a range format; see HOST RANGES below.
+--stat, --pulse, --soft) is specified on the command line.  Hostnames
+may be specified in a range format; see HOST RANGES below.
 .TP
 .I "-u, --username name"
 Sets the username to use when authenticating with the BMC.  The user
 must have OPERATOR or ADMINISTRATOR privilege to run the --on, --off,
---reset, or --cycle power control commands.  The user needs only USER
-privileges to determine the status of the machine through --stat.  If
-not specified, a null username is assumed.
+--reset, --cycle, --pulse, or --soft power control commands.  The user
+needs only USER privileges to determine the status of the machine
+through --stat.  If not specified, a null username is assumed.
 .TP
 .I "-p, --password pw"
 Sets the password to use when authenticating with the BMC.  If not
@@ -215,11 +215,12 @@ ping-timeout milliseconds, a host will be considered undiscovered and
 power commands will not be sent to it.  If not specified,
 ping-interval is 5000 milliseconds (5 seconds) and ping-timeout is
 30000 milliseconds (30 seconds).  Ping discovery requests can be
-disabled by setting the ping length to 0.  If ping discovery messages
+disabled by setting the ping interval to 0.  If ping discovery messages
 are disabled, power commands will be attempted without knowledge of
 the host's existence or its support of IPMI.  The value of
 ping-interval must be less than the ping-timeout length.  RMCP ping
 discovery messages are automatically disabled in non-interactive mode.
+
 .TP
 .I "-v, --ping-packet-count num"
 .TP
@@ -265,8 +266,8 @@ logs errors to the syslog LOG_DAEMON facility.
 .SH "INTERACTIVE COMMANDS"
 .B ipmipower
 provides the following interactive commands at the ipmipower> prompt.
-Before any power commands (on, off, cycle, reset, or stat) can be
-used, hostnames must be configured into 
+Before any power commands (on, off, cycle, reset, stat, pulse, or
+soft) can be used, hostnames must be configured into
 .B ipmipower, 
 either through the command prompt or the hostnames command below.
 .TP
@@ -298,7 +299,7 @@ queries power status for all hosts, or only the specified host.
 send pulse diagnostic interrupt to all hosts, or only the specified host.
 .TP
 .I "soft [host]"
-Initiate a soft-shutdown of the OS via ACPI.
+Initiate a soft-shutdown of the OS via ACPI to all hosts, or only the specified host.
 .TP
 .I help
 output help menu
@@ -439,23 +440,17 @@ the interactive prompt, they can be listed in a configuration file, in
 which the access to this file can be limited.
 
 IPMI specifications do not require BMCs to perform a power control
-operation before returning a completion code to the caller.  For
-example, if a "power off" operation is requested, a BMC may return a
-successful completion code to
-.B ipmipower
-before the "power off" operation is actually performed.
-.B Ipmipower 
-will not wait until the requested operation is actually performed, it
-will finish when a completion code is returned from the remote BMC.
+operation before returning a completion code to the caller.
 Therefore, it is possible for
 .B ipmipower 
 power status queries to initially return information other than what
-you are expecting.  For example, after a successful "power off"
-completion code has been returned from a remote machine, it is
-possible for
-.B ipmipower 
-power status queries to return "on" for several seconds, until the BMC
-actually performs the "power off" operation.
+you are expecting.  For example, if a "power off" operation is
+performed, a BMC may return a successful completion code to
+.B ipmipower
+before the "power off" operation is actually performed.  Subsequent
+power status queries may return "on" for several seconds, until the
+BMC actually performs the "power off" operation.
+
 .if @WITH_DEBUG@ \{
 
 This version of ipmipower was compiled with debugging.  When compiled

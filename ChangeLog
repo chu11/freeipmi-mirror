@@ -1,3 +1,8 @@
+2004-09-14  Albert Chu <chu11@llnl.gov>
+
+	* doc/bmc-watchdog.8.in, doc/ipmipower.8.in,
+	doc/ipmipower.conf.5.in: Fixed wording and a few typos.
+	
 2004-09-09  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: now bmc-config --diff checks user
