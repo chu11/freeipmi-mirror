@@ -6,6 +6,17 @@ libfreeipmi:
   * FreeIPMI Hackers Guide.
   * FreeIPMI FAQ.
   * Event Messaging and PEF Subsystem.
+  * sel: better decoding of error messages. More info below...
+    1. SELVIEW prints out description of post error which is valuable
+    for debug while FreeIPMI SEL Viewer does not.
+      *SELVIEW : System Firmware Error (POST Error). POST Code: 8140 -
+                 Processor 01: failed FRB level 3 timer.
+      *Free IPMI SEL viewer :   System Firmware Error (POST Error)
+    2. SELVIEW prints out description of processor error while
+    FreeIPMI SEL Viewer prints out. 
+      *SELVIEW :  Correctable error in Processor CPU2 - J7M1D
+      *FreeIPMI SEL viewer :   Processor #0:IERR:SMI Handler
+    Thanks to Robin and Brian Rice for the above info.
 
 [MEDIUM PRIORITY]
   * All commands (with few exceptions like lan-set-ipaddr) should have
