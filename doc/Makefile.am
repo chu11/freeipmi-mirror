@@ -6,7 +6,8 @@ fish_TEXINFOS = gpl.texinfo
 freeipmi_hg_TEXINFOS = authors.texinfo
 
 #  install the man pages
-dist_man_MANS = fish.1 bmc-config.1 bmc-info.1 fish.1 sel.1 sensors.1
+dist_man_MANS = fish.1 bmc-config.1 bmc-info.1 fish.1 sel.1 sensors.1 \
+	        bmc-watchdog.8
 
 EXTRA_DIST = BUGS
 

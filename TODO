@@ -38,6 +38,11 @@ Fish
 - Create makefile wrappers to allow fish to work locally in
   build directory rather that requiring installation.
 
+Bmc-watchdog
+
+- Add probing for proper base address
+- Add suspend arp options
+
 General
 
 Autoconf issues:

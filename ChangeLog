@@ -1,3 +1,23 @@
+2004-05-07  Albert Chu <chu11@llnl.gov>
+
+	Added bmc-watchdog
+
+	* COPYING.bmc-watchdog, DISCLAIMER.bmc-watchdog,
+	doc/bmc-watchdog.8.in, bmc-watchdog/Makefile.am,
+	bmc-watchdog/bmc-watchdog, bmc-watchdog/src/Makefile.am,
+	bmc-watchdog/src/bmc-watchdog.c: New files.
+
+	* Makefile.am: Added bmc-watchdog subdirectory.  Add docs and
+	other files to dist.
+
+	* TODO: Added bmc-watchdog todo list.
+
+	* configure.ac: Generate bmc-watchdog makefiles and manpage.
+	Added --enable-debug option, getopt_long function check, and big
+	endian check.
+
+	* doc/Makefile.am: Added bmc-watchdog.8.
+
 2004-05-06  Ian Zimmerman  <itz@californiadigital.com>
 
 	* fish/src/fish.c (inner_main): make sure command line overrides

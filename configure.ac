@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.0],[freeipmi-devel@nongnu.org])
-AC_REVISION([$Id: configure.ac,v 1.3 2004-05-06 19:54:41 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.4 2004-05-07 20:56:42 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -20,7 +20,9 @@ AC_CONFIG_FILES([
         fish/scripts/bmc-config/bmc-config fish/scripts/sel/Makefile
         fish/scripts/sel/sel fish/scripts/bmc-info/Makefile
         fish/scripts/bmc-info/bmc-info 
-        libfreeipmi/Makefile libfreeipmi/src/Makefile])
+        libfreeipmi/Makefile libfreeipmi/src/Makefile
+        bmc-watchdog/Makefile bmc-watchdog/src/Makefile
+        doc/bmc-watchdog.8])
 
 ISODATE=`date +%Y-%m-%d`
 AC_SUBST([ISODATE])
@@ -59,14 +61,35 @@ AC_PROG_MAKE_SET
 GUILE_PROGS
 GUILE_FLAGS
 
+dnl By default AC_PROG_CC sets CFLAGS="-g -O2". Turn off debugging if
+dnl not explicitly requested.
+AC_ARG_ENABLE(debug,
+              AC_HELP_STRING([--enable-debug], [turn on debugging]),
+              [
+               if test "$GCC" = "yes"; then 
+                  CFLAGS="-ggdb -Wall"
+               elif test "$ac_cv_prog_cc_g" = "yes"; then
+                  CFLAGS="-g"
+               fi
+               WITH_DEBUG=1
+              ],
+              [
+               AC_DEFINE([NDEBUG], [1], 
+                         [Define to 1 for a production release])
+               CFLAGS="-O2"
+               WITH_DEBUG=0
+              ])
+AC_SUBST(WITH_DEBUG)
+
 dnl Checks for libraries.
 AC_SEARCH_LIBS([tgetent],[ncurses termcap curses])
 AC_CHECK_LIB([readline],[readline])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_BIGENDIAN
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches strchr memcpy memset])
+AC_CHECK_FUNCS([ding rl_ding completion_matches rl_completion_matches strchr memcpy memset getopt_long])
 
 dnl Checks for header files.
 AC_HEADER_STDC
