@@ -1,3 +1,76 @@
+2004-07-12  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-common.scm: new file
+	* fish/extensions/bc-lan-conf-auth-section.scm: new file
+	* fish/extensions/bc-lan-conf-misc-section.scm: new file
+	* fish/extensions/bc-lan-conf-section.scm: new file
+	* fish/extensions/bc-lan-serial-channel-section.scm: new file
+	* fish/extensions/bc-misc-section.scm: new file
+	* fish/extensions/bc-section.scm: new file
+	* fish/extensions/bc-serial-conf-section.scm: new file
+	* fish/extensions/bc-user-section.scm: new file
+	* fish/extensions/bc2.scm: new file
+	* fish/src/bmc-conf2.c: new file
+	* fish/src/bmc-conf2.h: new file
+	* fish/extensions/Makefile.am: updated
+	* fish/extensions/init.scm: added load-entry of bmc-conf2
+	* fish/extensions/utils.scm: code cleanup
+	* fish/src/Makefile.am: updated
+	* fish/src/extension.c: added new primitive procedures
+	fi-set-bmc-username, fi-set-bmc-enable-user,
+	fi-set-bmc-user-password, fi-set-bmc-user-lan-channel-access,
+	fi-set-bmc-user-serial-channel-access,
+	fi-set-bmc-lan-channel-volatile-access,
+	fi-set-bmc-lan-channel-non-volatile-access,
+	fi-set-bmc-lan-conf-ip-address-source,
+	fi-set-bmc-lan-conf-ip-address, fi-set-bmc-lan-conf-mac-address,
+	fi-set-bmc-lan-conf-subnet-mask,
+	fi-set-bmc-lan-conf-default-gateway-ip-address,
+	fi-set-bmc-lan-conf-default-gateway-mac-address,
+	fi-set-bmc-lan-conf-backup-gateway-ip-address,
+	fi-set-bmc-lan-conf-backup-gateway-mac-address,
+	fi-set-bmc-lan-conf-auth-type-callback-enables,
+	fi-set-bmc-lan-conf-auth-type-user-enables,
+	fi-set-bmc-lan-conf-auth-type-operator-enables,
+	fi-set-bmc-lan-conf-auth-type-admin-enables,
+	fi-set-bmc-lan-conf-auth-type-oem-enables,
+	fi-set-bmc-lan-conf-arp-control,
+	fi-set-bmc-lan-conf-gratuitous-arp,
+	fi-set-bmc-serial-channel-volatile-access,
+	fi-set-bmc-serial-channel-non-volatile-access,
+	fi-set-bmc-serial-conf-conn-mode,
+	fi-set-bmc-serial-conf-page-blackout-interval,
+	fi-set-bmc-serial-conf-call-retry-time,
+	fi-set-bmc-serial-conf-ipmi-msg-comm-settings and
+	fi-set-bmc-power-restore-policy
+	* fish/src/scm-procedures.[ch]: added new functions
+	ex_set_bmc_username(), ex_set_bmc_enable_user(),
+	ex_set_bmc_user_password(), ex_set_bmc_user_lan_channel_access(),
+	ex_set_bmc_user_serial_channel_access(),
+	ex_set_bmc_lan_channel_volatile_access(),
+	ex_set_bmc_lan_channel_non_volatile_access(),
+	ex_set_bmc_lan_conf_ip_addr_source(),
+	ex_set_bmc_lan_conf_ip_addr(), ex_set_bmc_lan_conf_mac_addr(),
+	ex_set_bmc_lan_conf_subnet_mask(),
+	ex_set_bmc_lan_conf_default_gw_ip_addr(),
+	ex_set_bmc_lan_conf_default_gw_mac_addr(),
+	ex_set_bmc_lan_conf_backup_gw_ip_addr(),
+	ex_set_bmc_lan_conf_backup_gw_mac_addr(),
+	ex_set_bmc_lan_conf_auth_type_callback_enables(),
+	ex_set_bmc_lan_conf_auth_type_user_enables(),
+	ex_set_bmc_lan_conf_auth_type_operator_enables(),
+	ex_set_bmc_lan_conf_auth_type_admin_enables(),
+	ex_set_bmc_lan_conf_auth_type_oem_enables(),
+	ex_set_bmc_lan_conf_arp_control(),
+	ex_set_bmc_lan_conf_gratuitous_arp(),
+	ex_set_bmc_serial_channel_volatile_access(),
+	ex_set_bmc_serial_channel_non_volatile_access(),
+	ex_set_bmc_serial_conf_conn_mode(),
+	ex_set_bmc_serial_conf_page_blackout_interval(),
+	ex_set_bmc_serial_conf_call_retry_time(),
+	ex_set_bmc_serial_conf_ipmi_msg_comm_settings() and
+	ex_set_bmc_power_restore_policy()
+
 2004-07-12  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/Makefile.am: Fixed typo.

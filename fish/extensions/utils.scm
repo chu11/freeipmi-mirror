@@ -25,6 +25,38 @@
 ;;       (else '())))
 
 
+(use-modules (srfi srfi-13))
+
+(define (start-with? line ch)
+  (and (string? line) (char=? (string-ref line 0) ch)))
+
+(define (blank-line? line)
+  (and (string? line) (string-null? (string-trim-both line))))
+
+(define (comment-line? line)
+  (let ((tline (string-trim-both line)))
+    (or (start-with? tline #\#) (start-with? tline #\;))))
+
+(define (simple->string sd)
+  (cond 
+   ((symbol? sd)
+    (symbol->string sd))
+   ((number? sd)
+    (number->string sd))
+   ((char? sd)
+    (string sd))
+   ((boolean? sd)
+    (if sd "#t" "#f"))
+   (else 
+    sd)))
+
+(define (list->sentence li)
+  "convert list to space separated sentence"
+  (let ((word (simple->string (car li))))
+    (if (= (length li) 1)
+	word
+	(string-append word " " (list->sentence (cdr li))))))
+
 ;; range with proper tail recursion --ab
 (define (range start end)
   "return a list of numbers in the given range"
@@ -163,11 +195,6 @@
 	(append-word '())))))
 
 
-(define (blank-line? line)
-  "return true if line is blank"
-  (null? (sentence->words line)))
-
-
 ;;; string utils
 ;; for string-match procedure
 (use-modules (ice-9 regex))
@@ -192,17 +219,6 @@
 	(append-word '())))))
 
 
-(define (list->sentence li)
-  "convert list to space separated sentence"
-  (let
-      ((word (if (symbol? (car li))
-		 (symbol->string (car li))
-		 (number->string (car li)))))
-    (if (= (length li) 1)
-	word
-	(string-append word " " (list->sentence (cdr li))))))
-
-
 (define (string-separate str ch)
   (let ((index (string-index str ch)))
     (if index
@@ -222,12 +238,6 @@
 	   (string-set! newstr i rch)))
      (range 0 (- (string-length newstr) 1)))
     newstr))
-
-
-(define (blank-line? line)
-  "return true if line is blank"
-  (or (= 0 (string-length line))
-      (null? (sentence->tokens line))))
 
 
 (define (dollor->number dollor)

@@ -74,5 +74,90 @@ SCM ex_sel_clear ();
 SCM ex_sel_get_clear_status ();
 SCM ex_get_sensors_errno ();
 
+/***
+ *** bmc-conf2 extension functions
+ ***/
+SCM ex_set_bmc_username (SCM scm_userid, SCM scm_username);
+SCM ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status);
+SCM ex_set_bmc_user_password (SCM scm_userid, SCM scm_password);
+SCM ex_set_bmc_user_lan_channel_access (SCM scm_userid, 
+					SCM scm_lan_enable_ipmi_msgs, 
+					SCM scm_lan_enable_link_auth, 
+					SCM scm_lan_enable_restrict_to_callback, 
+					SCM scm_lan_privilege_limit, 
+					SCM scm_lan_session_limit);
+SCM ex_set_bmc_user_serial_channel_access (SCM scm_userid, 
+					   SCM scm_serial_enable_ipmi_msgs, 
+					   SCM scm_serial_enable_link_auth, 
+					   SCM scm_serial_enable_restrict_to_callback, 
+					   SCM scm_serial_privilege_limit, 
+					   SCM scm_serial_session_limit);
+SCM ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode, 
+					   SCM scm_enable_user_level_auth, 
+					   SCM scm_enable_per_message_auth, 
+					   SCM scm_enable_pef_alerting, 
+					   SCM scm_channel_privilege_limit);
+SCM ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode, 
+						SCM scm_enable_user_level_auth, 
+						SCM scm_enable_per_message_auth, 
+						SCM scm_enable_pef_alerting, 
+						SCM scm_channel_privilege_limit);
+SCM ex_set_bmc_lan_conf_ip_addr_source (SCM scm_ip_address_source);
+SCM ex_set_bmc_lan_conf_ip_addr (SCM scm_ip_address);
+SCM ex_set_bmc_lan_conf_mac_addr (SCM scm_mac_address);
+SCM ex_set_bmc_lan_conf_subnet_mask (SCM scm_subnet_mask);
+SCM ex_set_bmc_lan_conf_default_gw_ip_addr (SCM scm_gw_ip_address);
+SCM ex_set_bmc_lan_conf_default_gw_mac_addr (SCM scm_gw_mac_address);
+SCM ex_set_bmc_lan_conf_backup_gw_ip_addr (SCM scm_gw_ip_address);
+SCM ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address);
+SCM ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none, 
+						    SCM scm_auth_type_md2, 
+						    SCM scm_auth_type_md5, 
+						    SCM scm_auth_type_straight_password, 
+						    SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none, 
+						SCM scm_auth_type_md2, 
+						SCM scm_auth_type_md5, 
+						SCM scm_auth_type_straight_password, 
+						SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none, 
+						    SCM scm_auth_type_md2, 
+						    SCM scm_auth_type_md5, 
+						    SCM scm_auth_type_straight_password, 
+						    SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none, 
+						 SCM scm_auth_type_md2, 
+						 SCM scm_auth_type_md5, 
+						 SCM scm_auth_type_straight_password, 
+						 SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none, 
+					       SCM scm_auth_type_md2, 
+					       SCM scm_auth_type_md5, 
+					       SCM scm_auth_type_straight_password, 
+					       SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps, 
+				     SCM scm_enable_arp_response);
+SCM ex_set_bmc_lan_conf_gratuitous_arp (SCM scm_gratuitous_arp_interval);
+
+SCM ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode, 
+					       SCM scm_enable_user_level_auth, 
+					       SCM scm_enable_per_message_auth, 
+					       SCM scm_enable_pef_alerting, 
+					       SCM scm_channel_privilege_limit);
+SCM ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode, 
+						   SCM scm_enable_user_level_auth, 
+						   SCM scm_enable_per_message_auth, 
+						   SCM scm_enable_pef_alerting, 
+						   SCM scm_channel_privilege_limit);
+SCM ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode, 
+				      SCM scm_enable_ppp_mode, 
+				      SCM scm_enable_terminal_mode, 
+				      SCM scm_connect_mode);
+SCM ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval);
+SCM ex_set_bmc_serial_conf_call_retry_time (SCM scm_call_retry_time);
+SCM ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup, 
+						   SCM scm_flow_control, 
+						   SCM scm_bit_rate);
+SCM ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy);
 
 #endif

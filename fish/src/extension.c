@@ -334,6 +334,155 @@ install_new_procedures (void)
   /* example scheme expression
      (display (fi-get-sensors-errno))
   */
+
+  
+  /***
+   *** bmc-conf2 extension functions
+   ***/
+  gh_new_procedure ("fi-set-bmc-username", ex_set_bmc_username, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-username USERID USERNAME)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-enable-user", ex_set_bmc_enable_user, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-enable-user USERID BOOLEAN)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-user-password", ex_set_bmc_user_password, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-user-password USERID PASSWORD)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-user-lan-channel-access", ex_set_bmc_user_lan_channel_access, 6, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-user-lan-channel-access USERID ENABLE-IPMI-MSGS ENABLE-LINK-AUTH ENABLE-RESTRICT-TO-CALLBACK PRIVILEGE-LIMIT SESSION-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-user-serial-channel-access", ex_set_bmc_user_serial_channel_access, 6, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-user-serial-channel-access USERID ENABLE-IPMI-MSGS ENABLE-LINK-AUTH ENABLE-RESTRICT-TO-CALLBACK PRIVILEGE-LIMIT SESSION-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-channel-volatile-access", ex_set_bmc_lan_channel_volatile_access, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-channel-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-channel-non-volatile-access", ex_set_bmc_lan_channel_non_volatile_access, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address-source", ex_set_bmc_lan_conf_ip_addr_source, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-ip-address-source IP-ADDRESS-SOURCE)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address", ex_set_bmc_lan_conf_ip_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-ip-address IP-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-mac-address", ex_set_bmc_lan_conf_mac_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-mac-address MAC-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-subnet-mask", ex_set_bmc_lan_conf_subnet_mask, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-subnet-mask SUBNET-MASK)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-ip-address", ex_set_bmc_lan_conf_default_gw_ip_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-ip-address IP-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-mac-address", ex_set_bmc_lan_conf_default_gw_mac_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-mac-address MAC-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-ip-address", ex_set_bmc_lan_conf_backup_gw_ip_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-ip-address IP-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-mac-address", ex_set_bmc_lan_conf_backup_gw_mac_addr, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-mac-address MAC-ADDRESS)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-callback-enables", ex_set_bmc_lan_conf_auth_type_callback_enables, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-auth-type-callback-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-user-enables", ex_set_bmc_lan_conf_auth_type_user_enables, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-auth-type-user-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-operator-enables", ex_set_bmc_lan_conf_auth_type_operator_enables, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-auth-type-operator-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-admin-enables", ex_set_bmc_lan_conf_auth_type_admin_enables, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-auth-type-admin-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-oem-enables", ex_set_bmc_lan_conf_auth_type_oem_enables, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-auth-type-oem-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-arp-control", ex_set_bmc_lan_conf_arp_control, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-arp-control ENABLE-GRATUITOUS-ARPS ENABLE-ARP-RESPONSE)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-lan-conf-gratuitous-arp", ex_set_bmc_lan_conf_gratuitous_arp, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-lan-conf-gratuitous-arp ARP-INTERVAL)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-channel-volatile-access", ex_set_bmc_serial_channel_volatile_access, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-channel-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-channel-non-volatile-access", ex_set_bmc_serial_channel_non_volatile_access, 5, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-conf-conn-mode", ex_set_bmc_serial_conf_conn_mode, 4, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-conf-conn-mode BASIC-MODE PPP-MODE TERMINAL-MODE CONNECT-MODE)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-conf-page-blackout-interval", ex_set_bmc_serial_conf_page_blackout_interval, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-conf-page-blackout-interval PAGE-BLACKOUT-INTERVAL)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-conf-call-retry-time", ex_set_bmc_serial_conf_call_retry_time, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-conf-call-retry-time CALL-RETRY-TIME)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-serial-conf-ipmi-msg-comm-settings", ex_set_bmc_serial_conf_ipmi_msg_comm_settings, 3, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-serial-conf-ipmi-msg-comm-settings DTR-HANGUP FLOW-CONTROL BIT-RATE)
+  */
+  
+  gh_new_procedure ("fi-set-bmc-power-restore-policy", ex_set_bmc_power_restore_policy, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-power-restore-policy POWER-RESTORE-POLICY)
+  */
 }
 
 // guile initialization area
