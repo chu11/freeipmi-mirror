@@ -2,6 +2,10 @@
 
 	* fish/extensions/bc-lan-conf-misc-section.scm: List 500 ms
 	interval length for gratuitous arp interval.
+
+	* fish/bmc-config.conf.5: New file.
+
+	* fish/Makefile.am: added new manpage.
 	
 2004-12-08  Albert Chu <chu11@llnl.gov>
 
