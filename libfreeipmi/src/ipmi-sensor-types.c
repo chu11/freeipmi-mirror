@@ -24,7 +24,7 @@
 
 #include "freeipmi.h"
 
-const char *ipmi_sensor_types[] = 
+const char *const ipmi_sensor_types[] = 
   {
     "Unknown", 
     "Temperature",
@@ -74,9 +74,9 @@ const char *ipmi_sensor_types[] =
     NULL
   };
 
-const char *ipmi_oem_sensor_type = "OEM Reserved";
+const char *const ipmi_oem_sensor_type = "OEM Reserved";
 
-const char *ipmi_sensor_units[] = 
+const char *const ipmi_sensor_units[] = 
   {
     "Unspecified", 
     "Degrees C", 
@@ -171,7 +171,7 @@ const char *ipmi_sensor_units[] =
     NULL
   };
 
-const char *ipmi_sensor_units_short[] = 
+const char *const ipmi_sensor_units_short[] = 
   {
     "Unspecified",
     "C",
@@ -266,7 +266,7 @@ const char *ipmi_sensor_units_short[] =
     NULL
   };
 
-const char *ipmi_sensor_type_threshold_desc[] = 
+const char *const ipmi_sensor_type_threshold_desc[] = 
   {
     "Lower Non-critical - going low", 
     "Lower Non-critical - going high", 
@@ -602,7 +602,7 @@ const struct ipmi_discrete_desc ipmi_sensor_type_fru_state[] =
     {NULL, 0}
   };
 
-const struct ipmi_discrete_desc *ipmi_sensor_type_desc_ptr[] = 
+const struct ipmi_discrete_desc *const ipmi_sensor_type_desc_ptr[] = 
   {
     ipmi_sensor_type_dummy_desc, 
     ipmi_sensor_type_dummy_desc, 
@@ -654,12 +654,12 @@ const struct ipmi_discrete_desc *ipmi_sensor_type_desc_ptr[] =
     NULL 
   };
 
-const char *ipmi_event_reading_type_code_dummy_desc[] = 
+const char *const ipmi_event_reading_type_code_dummy_desc[] = 
   {
     NULL
   };
 
-const char *ipmi_event_reading_type_code_2_desc[] = 
+const char *const ipmi_event_reading_type_code_2_desc[] = 
   {
     "Transition to Idle", 
     "Transition to Active", 
@@ -667,35 +667,35 @@ const char *ipmi_event_reading_type_code_2_desc[] =
     NULL
   };
 
-const char *ipmi_event_reading_type_code_3_desc[] = 
+const char *const ipmi_event_reading_type_code_3_desc[] = 
   {
     "State Deasserted", 
     "State Asserted", 
     NULL
   };
 
-const char *ipmi_event_reading_type_code_4_desc[] = 
+const char *const ipmi_event_reading_type_code_4_desc[] = 
   {
     "Predictive Failure deasserted", 
     "Predictive Failure asserted", 
     NULL
   }; 
 
-const char *ipmi_event_reading_type_code_5_desc[] = 
+const char *const ipmi_event_reading_type_code_5_desc[] = 
   {
     "Limit Not Exceeded", 
     "Limit Exceeded", 
     NULL
   }; 
 
-const char *ipmi_event_reading_type_code_6_desc[] = 
+const char *const ipmi_event_reading_type_code_6_desc[] = 
   {
     "Performance Met", 
     "Performance Lags", 
     NULL
   };
 
-const char *ipmi_event_reading_type_code_7_desc[] = 
+const char *const ipmi_event_reading_type_code_7_desc[] = 
   {
     "transition to OK", 
     "transition to Non-Critical from OK", 
@@ -709,21 +709,21 @@ const char *ipmi_event_reading_type_code_7_desc[] =
     NULL
   };
 
-const char *ipmi_event_reading_type_code_8_desc[] = 
+const char *const ipmi_event_reading_type_code_8_desc[] = 
   {
     "Device Removed/Device Absent", 
     "Device Inserted/Device Present", 
     NULL
   };
 
-const char *ipmi_event_reading_type_code_9_desc[] = 
+const char *const ipmi_event_reading_type_code_9_desc[] = 
   {
     "Device Disabled", 
     "Device Enabled", 
     NULL
   };
 
-const char *ipmi_event_reading_type_code_10_desc[] = 
+const char *const ipmi_event_reading_type_code_10_desc[] = 
   {
     "transition to Running", 
     "transition to In Test", 
@@ -736,7 +736,7 @@ const char *ipmi_event_reading_type_code_10_desc[] =
     NULL
   };
 
-const char *ipmi_event_reading_type_code_11_desc[] = 
+const char *const ipmi_event_reading_type_code_11_desc[] = 
   {
     "Fully Redundant", 
     "Redundancy Lost", 
@@ -749,7 +749,7 @@ const char *ipmi_event_reading_type_code_11_desc[] =
     NULL
   };
 
-const char *ipmi_event_reading_type_code_12_desc[] = 
+const char *const ipmi_event_reading_type_code_12_desc[] = 
   {
     "D0 Power State", 
     "D1 Power State", 
@@ -758,7 +758,7 @@ const char *ipmi_event_reading_type_code_12_desc[] =
     NULL
   };
 
-const char **ipmi_event_reading_type_code_desc_ptr[] = 
+const char *const *const ipmi_event_reading_type_code_desc_ptr[] = 
   {
     ipmi_event_reading_type_code_dummy_desc, 
     ipmi_event_reading_type_code_dummy_desc, 

@@ -231,10 +231,10 @@ enum ipmi_sensor_class
     IPMI_SENSOR_CLASS_OEM
   };
 
-extern const char *ipmi_sensor_types[];
-extern const char *ipmi_oem_sensor_type;
-extern const char *ipmi_sensor_units[];
-extern const char *ipmi_sensor_units_short[];
+extern const char *const ipmi_sensor_types[];
+extern const char *const ipmi_oem_sensor_type;
+extern const char *const ipmi_sensor_units[];
+extern const char *const ipmi_sensor_units_short[];
 
 typedef struct ipmi_discrete_desc
 {
@@ -243,7 +243,7 @@ typedef struct ipmi_discrete_desc
 } ipmi_discrete_desc_t ;
 
 
-extern const char *ipmi_sensor_type_threshold_desc[];
+extern const char *const ipmi_sensor_type_threshold_desc[];
 
 extern const ipmi_discrete_desc_t ipmi_sensor_type_dummy_desc[]; 
 extern const ipmi_discrete_desc_t ipmi_sensor_type_physical_security_desc[]; 
@@ -275,16 +275,16 @@ extern const ipmi_discrete_desc_t ipmi_sensor_type_session_audit[];
 extern const ipmi_discrete_desc_t ipmi_sensor_type_version_change[];
 extern const ipmi_discrete_desc_t ipmi_sensor_type_fru_state[];
 
-extern const struct ipmi_discrete_desc *ipmi_sensor_type_desc_ptr[];
+extern const struct ipmi_discrete_desc *const ipmi_sensor_type_desc_ptr[];
 
-extern const char *ipmi_event_reading_type_code_dummy_desc[];
-extern const char *ipmi_event_reading_type_code_2_desc[];
-extern const char *ipmi_event_reading_type_code_3_desc[];
-extern const char *ipmi_event_reading_type_code_6_desc[];
-extern const char *ipmi_event_reading_type_code_8_desc[];
-extern const char *ipmi_event_reading_type_code_11_desc[];
+extern const char *const ipmi_event_reading_type_code_dummy_desc[];
+extern const char *const ipmi_event_reading_type_code_2_desc[];
+extern const char *const ipmi_event_reading_type_code_3_desc[];
+extern const char *const ipmi_event_reading_type_code_6_desc[];
+extern const char *const ipmi_event_reading_type_code_8_desc[];
+extern const char *const ipmi_event_reading_type_code_11_desc[];
 
-extern const char **ipmi_event_reading_type_code_desc_ptr[];
+extern const char *const *const ipmi_event_reading_type_code_desc_ptr[];
 
 
 int ipmi_sensor_classify (u_int8_t event_reading_type_code);
