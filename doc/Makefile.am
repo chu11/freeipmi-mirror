@@ -19,6 +19,8 @@ ipmi-network-layout.pdf: ipmi-network-layout.fig Makefile
 ipmi-over-ts2000.pdf: ipmi-over-ts2000.texi ipmi-network-layout.pdf
 	texi2pdf -c $<
 
+CLEANFILES = ipmi-network-layout.pdf ipmi-over-ts2000.pdf
+
 pdf-local: ipmi-over-ts2000.pdf ipmi-network-layout.pdf
 
 uninstall-extra:
