@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.8 2004-09-17 20:50:53 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.9 2004-10-07 16:05:38 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,7 +117,7 @@ line, only the specific options for that command will be listed.
 Output the program version.
 .TP
 .B  -o INT, --io-port=INT
-Identify the System Base Address for KCS SMS/IO.  By default, 0x0CA2
+Identify the System Base Address for KCS SMS/IO.  By default, 0xCA2
 is used.  Port 0x8A2 is also common.  If the io-port number is
 prefixed with a "0x", it is assumed to be a base 16 integer.
 Otherwise, it is assumed to be a base 10 integer.

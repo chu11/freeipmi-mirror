@@ -1,3 +1,7 @@
+2004-10-07  Albert Chu <chu11@llnl.gov>
+
+	* doc/bmc-watchdog.8.in: Fixed typo, 0x0CA2 to 0xCA2.
+	
 2004-10-04  Albert Chu <chu11@llnl.gov>
 
 	Removed --permsgauth_hosts command line option in ipmipower.
