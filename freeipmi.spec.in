@@ -1,12 +1,18 @@
 #
 # Copyright (c) 2003 FreeIPMI Core Team
 #
+
 %define name @PACKAGE@
 %define version @VERSION@
+%if %{?_with_debug:1}%{!?_with_debug:0}
+%define release 1.debug
+%else
 %define release 1
+%endif
 
 Name: %{name}
 Version: %{version}
+
 Release: %{release}
 License: GPL
 Group: Development/System
@@ -42,11 +48,16 @@ Requires: freeipmi = %{version}-%{release}
 %description utils
 FreeIPMI utilities ipmipower, bmc-watchdog, ipmiping, and rmcpping.
 
+%if %{?_with_debug:1}%{!?_with_debug:0}
+  %define _enable_debug --enable-debug
+%endif
+
 %prep
 %setup -q -n %{name}-%{version}
 
 %build
-%configure --program-prefix=%{?_program_prefix:%{_program_prefix}}
+%configure --program-prefix=%{?_program_prefix:%{_program_prefix}} \
+           %{?_enable_debug}
 make
 
 %install

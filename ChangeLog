@@ -6,6 +6,8 @@
 	* ipmiping/src/ipmiping.c (parsepacket): Output anonymous, null,
 	null-username info on verbose mode.
 
+	* freeipmi.spec.in: Add support for building debug rpms.
+
 2005-01-24  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_ioremap): open with O_SYNC.
