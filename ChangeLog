@@ -45,7 +45,7 @@
 	tools.
 
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Add
-	workaround for per-msg authentication found on some Dell
+	workaround for per-msg authentication issues found on some Dell
 	motherboards.
 
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Add
