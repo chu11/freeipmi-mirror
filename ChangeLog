@@ -1,3 +1,8 @@
+2004-11-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.8.in: Add information about gethostbyname()
+	bottleneck.
+	
 2004-11-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-kcs-interface.h,

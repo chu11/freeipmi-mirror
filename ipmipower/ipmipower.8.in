@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.3 2004-11-22 19:18:00 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.4 2004-11-24 18:59:58 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -463,6 +463,18 @@ unnecessary traffic.
 address in the local ARP cache.  This is the more common approach.
 
 Other methods are listed in the IPMI specification.
+
+If 
+.B ipmipower 
+is running a tad slow when running a power control command on the
+commandline (compared to running a power control command in
+interactive mode), hostname IP resolution may be slowing the startup
+code down.  Hostname resolution tuning may help make
+.B ipmipower 
+execute faster on the commandline.  This performance problem should
+not matter when running in interactive mode or with
+.B powerman, 
+since it is a one-time setup cost.
 
 .SH "KNOWN ISSUES"
 In order to prevent brute force attacks, some BMCs will "lock up"
