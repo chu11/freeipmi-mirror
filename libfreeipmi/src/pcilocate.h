@@ -18,9 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#if INCLUDE_UNTESTED
-
 #ifndef _PCILOCATE_H
 ipmi_probe_info_t* pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp);
-#endif
 #endif

@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.4 2004-05-07 00:16:29 itz Exp $ 
+   $Id: fish.c,v 1.5 2004-05-07 22:09:08 itz Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -92,7 +92,7 @@ enum {DUMMY_KEY=129,
 static int want_quiet;			/* --quiet, --silent */
 static int want_brief;			/* --brief */
 static int want_verbose = 0;		/* --verbose */
-static int default_want_verbose = -1;
+static int cmdline_want_verbose = -1;
 static char *script_file = NULL;
 static int script_arg_start_index = 0;
 static int script_argc = 0;
@@ -103,9 +103,9 @@ static int fi_sockfd = -1;
 static unsigned int fi_sock_timeout = 0;
 static unsigned int fi_retry_count = 0;
 static unsigned long driver_poll_interval = IPMI_KCS_SLEEP_USECS ;
-static unsigned long default_driver_poll_interval = 0;
+static unsigned long cmdline_driver_poll_interval = 0;
 
-static unsigned int default_sms_io_base = 0;
+static unsigned int cmdline_sms_io_base = 0;
 #ifdef __ia64__
 static unsigned int sms_io_base = IPMI_KCS_SMS_IO_BASE_SR870BN4;
 #else
@@ -226,13 +226,13 @@ parse_opt (int key, char *arg, struct argp_state *state)
       want_brief = 1;
       break;
     case 'v':			/* --verbose */
-      default_want_verbose = 1;
+      cmdline_want_verbose = 1;
       break;
     case POLL_INTERVAL_KEY:     /* --driver-poll-interval */
-      default_driver_poll_interval = atol (arg);
+      cmdline_driver_poll_interval = atol (arg);
       break;
     case SMS_IO_BASE:           /* --sms-io-base */
-      default_sms_io_base = atol (arg);
+      cmdline_sms_io_base = atol (arg);
       break;
       
     case 's':                   /* --script-file */
@@ -360,12 +360,21 @@ inner_main (int argc, char **argv)
   fi_load (FI_GLOBAL_INIT_FILE);
 
   /* itz 2004-05-06 make sure command line overrides files if they conflict */
-  if (default_want_verbose != -1)
-    want_verbose = default_want_verbose;
-  if (default_driver_poll_interval != 0)
-    driver_poll_interval = default_driver_poll_interval;
-  if (default_sms_io_base != 0)
-    sms_io_base = default_sms_io_base;
+  if (cmdline_want_verbose != -1)
+    want_verbose = cmdline_want_verbose;
+  if (cmdline_driver_poll_interval != 0)
+    driver_poll_interval = cmdline_driver_poll_interval;
+
+  if (cmdline_sms_io_base != 0)
+    sms_io_base = cmdline_sms_io_base;
+  else
+    {
+      ipmi_probe_info_t probe;
+      int status;
+
+      if ((ipmi_probe (ipmi_interface_kcs, &probe, &status) != 0) && !probe.bmc_io_mapped)
+        sms_io_base = probe.base.bmc_iobase_addr;
+    }
   
   if (script_file)
     {

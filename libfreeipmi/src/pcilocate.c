@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#if INCLUDE_UNTESTED /* untested code */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -27,6 +25,8 @@
 #include <stdio.h>
 
 #include "freeipmi.h"
+
+#ifdef UNTESTED /* __linux */           /* this code uses the /proc filesystem */
 
 #define PCI_CLASS_REVISION	0x08	/* High 24 bits are class, low 8 revision */
 #define PCI_REVISION_ID         0x08    /* Revision ID */
@@ -162,13 +162,13 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
 		switch (base_addr[i] & PCI_BASE_ADDRESS_SPACE)
 		  {
 		  case past_io:
-		    pinfo->bmc_io_mapped = 1;
+		    pinfo->bmc_io_mapped = 0;
 		    pinfo->base.bmc_iobase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_IO_MASK;
 		    if (statusp != NULL) *statusp = 0;
 		    return pinfo;
 
 		  case past_memory:
-		    pinfo->bmc_io_mapped = 0;
+		    pinfo->bmc_io_mapped = 1;
 		    pinfo->base.bmc_membase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
 		    if (statusp != NULL) *statusp = 0;
 		    return pinfo;
@@ -190,4 +190,13 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
   return NULL;
 }
 
-#endif /* untested code */
+#else  /* __linux */
+
+ipmi_probe_info_t*
+pci_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
+{
+  if (*statusp != NULL) *statusp = 2;
+  return NULL;
+}
+
+#endif

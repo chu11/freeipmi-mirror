@@ -18,8 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#if INCLUDE_UNTESTED
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -58,4 +56,3 @@ ipmi_probe (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statusp)
   return NULL;
 }
 
-#endif
