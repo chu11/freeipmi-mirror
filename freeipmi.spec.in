@@ -62,24 +62,34 @@ rm -rf $RPM_BUILD_ROOT
 #
 # Start bmc-watchdog, but not by default
 #
-if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-    [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
-    [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
-    if /etc/rc.d/init.d/bmc-watchdog status | grep -q running; then
-       /etc/rc.d/init.d/bmc-watchdog restart
-    else
-       /etc/rc.d/init.d/bmc-watchdog start
-    fi
+if [ "$1" = 1 ]; then
+   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+      [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
+   fi
+fi
+if [ $1 -ge 1 ]; then
+   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+      if /etc/rc.d/init.d/bmc-watchdog status | grep -q running; then
+         /etc/rc.d/init.d/bmc-watchdog restart
+      else
+         /etc/rc.d/init.d/bmc-watchdog start
+      fi
+   fi
 fi
 %endif
 %if %{?_with_bmc_watchdog_condrestart:1}%{!?_with_bmc_watchdog_condrestart:0}
 #
-# Start bmc-watchdog if it already running
+# Start bmc-watchdog if already running
 #
-if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-    [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
-    [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
-    /etc/rc.d/init.d/bmc-watchdog condrestart
+if [ "$1" = 1 ]; then
+   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+      [ -x /sbin/chkconfig ] && /sbin/chkconfig --add bmc-watchdog
+   fi
+fi
+if [ $1 -ge 1 ]; then
+   if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
+      /etc/rc.d/init.d/bmc-watchdog condrestart
+   fi
 fi
 %endif
 %if %{?_with_powerman_restart:1}%{!?_with_powerman_restart:0}
@@ -99,10 +109,10 @@ fi
 #
 if [ "$1" = 0 ]; then
     if [ -x /etc/rc.d/init.d/bmc-watchdog ]; then
-       [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
        if /etc/rc.d/init.d/bmc-watchdog status | grep -q running; then
           /etc/rc.d/init.d/bmc-watchdog stop
        fi
+       [ -x /sbin/chkconfig ] && /sbin/chkconfig --del bmc-watchdog
     fi
 fi
 

@@ -1,3 +1,8 @@
+2004-09-27  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Fixed up administration issues with the post
+	install script.
+	
 2004-09-22  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-section.scm: bug #10446, skip unsupported
