@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.1 2004-05-07 20:56:42 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.2 2004-05-10 17:49:42 itz Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -384,7 +384,7 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   ptr = (u_int8_t *)&initial_countdown_chunks;
 #ifdef WORDS_BIGENDIAN
   ls_byte = ptr[3];
-  my_byte = ptr[2];
+  ms_byte = ptr[2];
 #else
   ls_byte = ptr[0];
   ms_byte = ptr[1];

@@ -1,3 +1,8 @@
+2004-05-10  Ian Zimmerman  <itz@californiadigital.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_set_watchdog_timer_cmd):
+	corrected typo in BIGENDIAN case
+
 2004-05-07  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Fixed bugs with --enable-debug option pointed out
