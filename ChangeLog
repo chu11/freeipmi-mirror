@@ -14,7 +14,9 @@
 
 	* doc/Makefile.am: Added ipmiping and rmcpping manpages.
 
-	* Makefile.am: Added ipmiping and rmcpping subdirectories.
+	* Makefile.am: Added ipmiping and rmcpping subdirectories.  Added
+	COPYING.ipmiping, DISCLAIMER.ipmiping, COPYING.rmcpping,
+	DISCLAIMER.rmcpping.
 
 	* libfreeipmi/src/Makefile.am: Added ipmi-ping.h and ipmi-ping.c.
 
