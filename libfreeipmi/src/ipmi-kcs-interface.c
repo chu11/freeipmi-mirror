@@ -347,6 +347,7 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
 
   if ((bytes == NULL) || (bytes_len == 0))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EINVAL;
       bytes_count = -1;
       goto failure;
@@ -358,6 +359,7 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
   ipmi_kcs_wait_for_ibf_clear (sms_io_base);
   if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -372,7 +374,9 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
       ipmi_kcs_wait_for_ibf_clear (sms_io_base);
       if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
         {
+          IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 	  errno = EBUSY;
+          bytes_count = -1;
 	  goto failure;
         }
       ipmi_kcs_clear_obf (sms_io_base);
@@ -383,6 +387,7 @@ ipmi_kcs_write (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t  bytes_len)
   ipmi_kcs_wait_for_ibf_clear (sms_io_base);
   if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -409,12 +414,16 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
 {
   u_int8_t *buf=bytes;
   u_int32_t bytes_count = 0;
+  int ret;
 
-  ERR (IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ()) != -1);
+  ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
+  ERR ((!(ret == -1 && errno != EAGAIN)));
+
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Entered Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
 
   if ((bytes == NULL) || (bytes_len == 0))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EINVAL;
       bytes_count = -1;
       goto failure;
@@ -426,6 +435,7 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
   ipmi_kcs_wait_for_ibf_clear (sms_io_base);
   if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -440,7 +450,9 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
       ipmi_kcs_wait_for_ibf_clear (sms_io_base);
       if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
         {
+          IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 	  errno = EBUSY;
+          bytes_count = -1;
 	  goto failure;
         }
       ipmi_kcs_clear_obf (sms_io_base);
@@ -451,6 +463,7 @@ ipmi_kcs_write_interruptible (u_int16_t sms_io_base, u_int8_t *bytes, u_int32_t 
   ipmi_kcs_wait_for_ibf_clear (sms_io_base);
   if (!ipmi_kcs_test_if_state (sms_io_base, IPMI_KCS_STATE_WRITE))
     {
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -530,6 +543,8 @@ ipmi_kcs_cmd (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_c
 int8_t
 ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
 {
+  int ret;
+
   if (!(sms_io_base && obj_cmd_rq && tmpl_cmd_rq && obj_cmd_rs && tmpl_cmd_rs))
     {
       errno = EINVAL;
@@ -556,7 +571,10 @@ ipmi_kcs_cmd_interruptible (u_int16_t sms_io_base, u_int8_t lun, u_int8_t fn, fi
     ERR (assemble_ipmi_kcs_pkt (obj_hdr_rq, obj_cmd_rq, 
 				  tmpl_cmd_rq, bytes, bytes_len) > 0);
 
-    ERR (ipmi_kcs_write_interruptible (sms_io_base, bytes, bytes_len) != -1);
+    ret = ipmi_kcs_write_interruptible (sms_io_base, bytes, bytes_len);
+    if (ret == -1 && errno == EAGAIN)
+      return -1;
+    ERR ((!(ret == -1 && errno != EAGAIN)));
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
