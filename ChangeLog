@@ -1,3 +1,12 @@
+2004-10-08  Anand Babu  <ab@gnu.org.in>
+
+	* authors.texi, fdl.texi, freeipmi-ug.texi, gpl.texi,
+	permissions.texi, version.texi.in: newly added - GNU FreeIPMI
+	User's Guide. 
+	* authors.texinfo, fish.texinfo, freeipmi-hg.texinfo,
+	gpl.texinfo: removed.
+	* configure.ac: now becomes 0.1.0.
+
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c: Fixed compatibility issues with
