@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.4 2004-10-16 23:59:00 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,7 +44,7 @@
 extern struct ipmipower_config *conf;
 
 /* fiid_template_t */
-fiid_field_t *
+const fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   assert(ip != NULL);

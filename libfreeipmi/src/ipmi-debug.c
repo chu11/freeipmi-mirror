@@ -198,14 +198,14 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
     {
       if (tmpl[i].len <= 64)
 	{
-	  FIID_OBJ_GET (obj, tmpl, tmpl[i].key, &val);	
+	  FIID_OBJ_GET (obj, tmpl, (char *) tmpl[i].key, &val);	
 	  _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix_ptr, (u_int64_t) val, tmpl[i].key, tmpl[i].len));
         } 
       else
         {
           _DPRINTF ((fd, "%s[  BYTE ARRAY ... ] = %s[%2dB]\n", prefix_ptr, tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
           _output_byte_array(fd, prefix_ptr, 
-                             obj + fiid_obj_field_start_bytes(tmpl, tmpl[i].key),
+                             obj + fiid_obj_field_start_bytes(tmpl, (char *) tmpl[i].key),
                              BITS_ROUND_BYTES(tmpl[i].len));
         }
     }

@@ -2,7 +2,13 @@
 
 	* libfreeipmi/src/fiid.h: fiid_template_t and fiid_tmpl_t are now
 	constants.
-	
+
+	* ipmipower/src/ipmipower_packet.c
+	(ipmipower_packet_cmd_template): modified return type accordingly.
+
+	* libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_perror): fixed
+	typecast warnings.
+
 	* doc/freeipmi.texi: Added "Auth_Type_None conflict" section to
 	bmc-config known issues.
 
