@@ -1,3 +1,7 @@
+2004-11-03  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: Lots of new PEF routines added.
+
 2004-11-02  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac: fail configure if fish is being built but
