@@ -54,6 +54,8 @@ ipmiping/rmcpping:
 
 General:
 --------
+  * for local builds, don't require /var/log/freeipmi/ipckey to be
+    installed
   * Testsuite for Freeipmi and IPMI conformance test.
   * New tools?
     - SEL collector/logger thingie for clusters
