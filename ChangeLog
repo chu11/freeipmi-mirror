@@ -1,3 +1,15 @@
+2004-05-07  Ian Zimmerman  <itz@californiadigital.com>
+
+	* fish/src/fish.c (inner_main): add call to ipmi_probe to locate
+	kcs io registers.
+
+	* libfreeipmi/src/pcilocate.c: enclose everything
+	in a big #ifdef __linux because it uses /proc
+	(pci_get_dev_info): reverse the semantics of pinfo->bmc_io_mapped.
+
+	* fish/src/fish.c (inner_main): rename default_ variables to cmdline_
+	as that describes much better what they do.
+
 2004-05-07  Albert Chu <chu11@llnl.gov>
 
 	Added bmc-watchdog
