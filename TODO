@@ -47,6 +47,7 @@ ipmipower:
   * Re-implement BMC workaround to use ports less wastefully.
   * Buffer recently malloced space to avoid constant re-mallocing.
   * Add readline or similar functionality in interactive mode.
+  * Multithread to increase speed on large clusters
 
 ipmiping/rmcpping:
 ------------------
