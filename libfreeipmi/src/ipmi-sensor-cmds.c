@@ -655,6 +655,9 @@ fiid_template_t tmpl_get_sensor_threshold_reading_rs =
     {1, "status_comparison_upper_non_recoverable_threshold"}, 
     {2, "reserved2"}, 
     
+    /* optional byte */
+    {8, "ignore"}, 
+    
     {0,  ""}
   };
 

@@ -1,3 +1,8 @@
+2004-09-29  A Balamurugan  <bala.a@californiadigital.com>
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c: added optional ignore byte
+	in template tmpl_get_sensor_threshold_reading_rs.
+
 2004-09-27  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Fixed up administration issues with the post
