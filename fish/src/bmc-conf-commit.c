@@ -994,6 +994,7 @@ set_user_password_commit (FILE *fp)
   for (user_id = 1; user_id <= 4; user_id++)
     {
       obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_set_user_password_rs));
+      memset (password_data, 0, IPMI_USER_PASSWORD_MAX_LENGTH);
       
       line = fi_getline (fp);
       if (line == NULL || *line == '\0')
@@ -1006,30 +1007,44 @@ set_user_password_commit (FILE *fp)
       password = value_string;
       free (line);
       
+      status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
+					   user_id, 
+					   IPMI_PASSWORD_OPERATION_ENABLE_USER, 
+					   password_data, 
+					   obj_data_rs);
+      if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
+	{
+	  char err_msg[IPMI_ERR_STR_MAX_LEN];
+	  ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
+	  fprintf (stderr, 
+		   "error: ipmi_kcs_set_user_password: %d: %s\n", 
+		   IPMI_COMP_CODE(obj_data_rs), err_msg);
+	}
+      if (status != 0)
+	perror ("ipmi_kcs_set_user_password");
+      
       if (strcmp (password, PASSWORD_MASK) == 0)
 	{
 	  free (value_string);
 	  continue;
 	}
       
-      if (strlen (password) > IPMI_USER_PASSWORD_MAX_LENGTH)
-	fprintf (stderr, 
-		 "warning: first %d characters are taken from user%d_password\n", 
-		 IPMI_USER_NAME_MAX_LENGTH, user_id);
-      
-      memset (password_data, 0, IPMI_USER_PASSWORD_MAX_LENGTH);
-      if (strlen (password) < IPMI_USER_PASSWORD_MAX_LENGTH)
+      if (strlen (password) < (IPMI_USER_PASSWORD_MAX_LENGTH - 1))
 	memcpy (password_data, password, strlen (password));
       else 
-	memcpy (password_data, password, IPMI_USER_PASSWORD_MAX_LENGTH);
+	{
+	  fprintf (stderr, 
+		   "warning: first %d characters are taken from user%d_password\n", 
+		   (IPMI_USER_PASSWORD_MAX_LENGTH - 1), user_id);
+	  memcpy (password_data, password, IPMI_USER_PASSWORD_MAX_LENGTH - 1);
+	}
+      free (value_string);
       
       status = ipmi_kcs_set_user_password (fi_get_sms_io_base (), 
 					   user_id, 
 					   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
 					   password_data, 
 					   obj_data_rs);
-      
-      free (value_string);
       
       if (IPMI_COMP_CODE (obj_data_rs) != IPMI_COMMAND_SUCCESS)
 	{
