@@ -1,0 +1,58 @@
+AB's TODO list
+==============
+libfreeipmi:
+------------
+[HIGH PRIORITY]
+  * FreeIPMI Hackers Guide.
+  * FreeIPMI FAQ.
+  * Event Messaging and PEF Subsystem.
+
+[MEDIUM PRIORITY]
+  * All commands (with few exceptions like lan-set-ipaddr) should have
+    both LAN and KCS APIs.
+  * Rest of other notable IPMI commands.
+  * Modify system boot priority table.
+
+[LOW PRIORITY]
+  * FRU Commands (SDR Repo does a similar job).
+  * Set Asset Tag
+  * Command to Switch MUX between BMC and ttyS1
+
+Al's TODO list
+==============
+
+Libfreeipmi
+
+- 19.3 Suspend BMC ARPs command
+- IPMI 1.5 Errata - Get Chassis Status 
+- Consider encapsulating length, ids, types in fiid_obj_t
+  and fiid_template_t down the road.
+- ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
+  seeking.  Will probably require a "load and create" wrapper
+  function of some sort.
+
+Fish
+
+- Create makefile wrappers to allow fish to work locally in
+  build directory rather that requiring installation.
+
+General
+
+Autoconf issues:
+- socklet_t, doesn't exist on all OSes.
+- stdarg.h, other OSes use varargs.h
+- bittypes.h and inttypes.h for u_int32_t, etc.
+
+Testsuite for Freeipmi and IPMI conformance test.
+
+Need to test following corner cases:
+- 16 byte passwords
+- passwords with spaces
+
+Bala's TODO List:
+=================
+*/* 2004-02-16 15:25 bala: dual fiid for ipmi_kcs_lan_set_auth_type_enables
+
+Later on:
+=========
+
