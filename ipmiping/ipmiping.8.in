@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiping.8.in,v 1.2 2004-11-15 20:46:25 chu11 Exp $
+\."$Id: ipmiping.8.in,v 1.3 2005-03-13 04:19:53 ab Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -23,7 +23,7 @@
 \."  with Ipmiping; if not, write to the Free Software Foundation, Inc.,
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
-.TH IPMIPING 8 "April 2004" "ipmiping @VERSION@" "System Commands"
+.TH IPMIPING 8 "@ISODATE@" "ipmiping @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 ipmiping \- send IPMI Get Authentication Capabilitiy request to network hosts 
 .SH "SYNOPSIS"
@@ -80,7 +80,7 @@ executes "ipmiping -c 1 destination" very quickly.  There is no known
 way to cleanly deal with a "confused" BMC.  The best option is to
 simply wait "awhile".
 .SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.  Command and manpage based off 
 .B ping(8).

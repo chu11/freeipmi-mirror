@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.5 2005-02-19 01:15:15 chu11 Exp $
+\."$Id: bmc-watchdog.8.in,v 1.6 2005-03-13 04:19:53 ab Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -23,7 +23,7 @@
 \."  with Bmc-Watchdog; if not, write to the Free Software Foundation, Inc.,
 \."  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \."############################################################################
-.TH bmc-watchdog 8 "April 2004" "bmc-watchdog @VERSION@" "System Commands"
+.TH bmc-watchdog 8 "@ISODATE@" "bmc-watchdog @PACKAGE_VERSION@" "System Commands"
 .SH "NAME"
 bmc-watchdog \- BMC watchdog timer daemon and control utility
 .SH "SYNOPSIS"
@@ -308,6 +308,6 @@ On some machines, the hardware based SMI Handler may disable a
 processor after a watchdog timer timeout if the timer use is set to
 something other than SMS/OS.
 .SH "ORIGIN"
-Developed by Albert Chu <chu11@llnl.gov> on LLNL's Linux clusters.
+Developed by Albert Chu <chu11@llnl.gov> on LLNL's GNU/Linux clusters.
 This software is open source and distributed under the terms of the
 Gnu GPL.

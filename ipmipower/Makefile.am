@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-man_MANS = ipmipower.8 ipmipower.conf.5
+dist_man_MANS = ipmipower.8 ipmipower.conf.5
 
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P

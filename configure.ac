@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.23 2005-03-02 02:23:58 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.24 2005-03-13 04:19:53 ab Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -14,12 +14,14 @@ AM_CONFIG_HEADER([config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
-        Makefile doc/Makefile doc/examples/Makefile fish/Makefile fish/src/Makefile
-        fish/extensions/Makefile fish/scripts/Makefile fish/scripts/sensors/Makefile
-        fish/scripts/sensors/ipmi-sensors fish/scripts/bmc-config/Makefile
-        fish/scripts/bmc-config/bmc-config fish/scripts/sel/Makefile
-        fish/scripts/sel/ipmi-sel fish/scripts/bmc-info/Makefile
-        fish/scripts/bmc-info/bmc-info
+        Makefile doc/Makefile doc/examples/Makefile fish/Makefile 
+	fish/bmc-config.8 fish/bmc-info.8 fish/fish.8 fish/ipmi-sel.8
+	fish/ipmi-sensors.8 fish/bmc-config.conf.5 
+	fish/src/Makefile fish/extensions/Makefile fish/scripts/Makefile
+	fish/scripts/sensors/Makefile fish/scripts/sensors/ipmi-sensors
+	fish/scripts/bmc-config/Makefile fish/scripts/bmc-config/bmc-config 
+	fish/scripts/sel/Makefile fish/scripts/sel/ipmi-sel 
+	fish/scripts/bmc-info/Makefile fish/scripts/bmc-info/bmc-info
         libfreeipmi/Makefile libfreeipmi/src/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
         ipmipower/Makefile ipmipower/src/Makefile

@@ -1,4 +1,4 @@
-;; sensors-conf.scm: sensros configuration file
+;; ipmi-sensors-conf.scm: IPMI sensros configuration file
 
 ;; Sensors cache filename
 ; (set! sensors-sdr-cache-file "/path/to/cache-filename")

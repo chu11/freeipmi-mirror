@@ -25,18 +25,6 @@
 extern "C" {
 #endif
 
-/* NOTE:
-   There are three approached to packing structure.
-   => "-fpack-struct" in src/Makefile.am
-   => PACKED marco for __attribute__((packed))
-   => #pragma pack(1)
-
-#if defined(__GNU__)
-#define PACKED __attribute__((packed))
-#else
-#define PACKED packed
-#endif
-*/
 
 #include <sys/types.h>
 #include <sys/ipc.h>  

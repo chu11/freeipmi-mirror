@@ -1,4 +1,4 @@
-.TH bmc-config.conf 5 "November 2004" "bmc-config @VERSION@" "User Commands"
+.TH bmc-config.conf 5 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "User Commands"
 .SH "NAME"
 bmc-config \- BMC configuration file format and details
 .br

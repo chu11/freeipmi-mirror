@@ -1,6 +1,6 @@
 SUBDIRS = src
 
-man_MANS = ipmiping.8
+dist_man_MANS = ipmiping.8
 
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P

@@ -53,8 +53,8 @@ release @value{VERSION} of the GNU FreeIPMI.
 * fish::                        FreeIPMI SHell.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
-* sensors::                     @acronym{IPMI} sensors utility.
-* sel::                         System Event Log utility.
+* ipmi-sensors::                @acronym{IPMI} sensors utility.
+* ipmi-sel::                    @acronym{IPMI} System Event Log.
 * bmc-watchdog::                Watchdog daemon.
 * ipmipower::                   @acronym{IPMI} power control utility.
 * ipmiping::                    @acronym{IPMI} ping reachability test utility.
@@ -901,7 +901,7 @@ Section LAN_Conf_Auth
 EndSection
 @end example
 
-@node bmc-info, sensors, bmc-config, Top
+@node bmc-info, ipmi-sensors, bmc-config, Top
 @chapter bmc-info
 @pindex bmc-info
 @command{bmc-info} command displays BMC/@acronym{IPMI} version information and
@@ -943,20 +943,20 @@ Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
 debian-ia64:~# 
 @end example
 
-@node sensors, sel, bmc-info, Top
-@chapter sensors
-@pindex sensors
-@command{sensors} utility reports the monitored system health
+@node ipmi-sensors, ipmi-sel, bmc-info, Top
+@chapter ipmi-sensors
+@pindex ipmi-sensors
+@command{ipmi-sensors} utility reports the monitored system health
 information, such as temperatures and voltages, fan status, etc with
 nominal, threshold max/min readings and status descriptions.
 
 @menu
-* sensors options::             Command-line arguments.
-* sensors configuration file::  Sample configuration file.
-* sensors examples::            @command{sensors} in action.
+* ipmi-sensors options::        Command-line arguments.
+* ipmi-sensors configuration file::  Sample configuration file.
+* ipmi-sensors examples::       Examples.
 @end menu
 
-@node sensors options, sensors configuration file, sensors, sensors
+@node ipmi-sensors options, ipmi-sensors configuration file, ipmi-sensors, ipmi-sensors
 @section command-line arguments
 @itemize
 @item -u, ---usage @*
@@ -996,16 +996,16 @@ nominal, threshold max/min readings and status descriptions.
       List the given sensors.
 @end itemize
 
-@node sensors configuration file, sensors examples, sensors options, sensors
+@node ipmi-sensors configuration file, ipmi-sensors examples, ipmi-sensors options, ipmi-sensors
 @section Setting default startup options
 
-@cindex sensors-conf.scm
+@cindex ipmi-sensors-conf.scm
 
-Example sensors-conf.scm file:
+Example ipmi-sensors-conf.scm file:
 @lisp
-;;; file: /usr/etc/fish/sensors-conf.scm
+;;; file: /usr/etc/fish/ipmi-sensors-conf.scm
 
-;; sensors-conf.scm: sensors configuration file
+;; ipmi-sensors-conf.scm: sensors configuration file
 
 ;; Sensors cache filename
 ; (set! sensors-sdr-cache-file "/path/to/cache-filename")
@@ -1022,8 +1022,8 @@ Example sensors-conf.scm file:
     ))
 @end lisp
 
-@node sensors examples,  , sensors configuration file, sensors
-@section sensors in action
+@node ipmi-sensors examples,  , ipmi-sensors configuration file, ipmi-sensors
+@section ipmi-sensors in action
 
 CDC 6440 (A.K.A SR870BN4) - a Quad Itanium2 system has 136 sensors on
 board.  GNU FreeIPMI running on Thunder supercomputer monitors 139264
@@ -1033,9 +1033,9 @@ sensors in total.
 @cindex CDC 6440
 @cindex SR870BN4
 
-@subsection Sample sensors output
+@subsection Sample ipmi-sensors output
 @example
-debian-ia64:~# sensors
+debian-ia64:~# ipmi-sensors
 1: I/O Bd +1.3V (Voltage): 1.33 V (low=1.23/nom=1.30/high=1.36) [OK]
 2: I/O Bd +1.5V (Voltage): 1.53 V (low=1.42/nom=1.50/high=1.57) [OK]
 3: I/O Bd +1.8V (Voltage): 1.82 V (low=1.70/nom=1.80/high=1.88) [OK]
@@ -1147,7 +1147,7 @@ debian-ia64:~#
 
 @subsection Sample very-verbose output
 @example
-debian-ia64:~# sensors -vv
+debian-ia64:~# ipmi-sensors -vv
 Record ID: 1
 Sensor type: I/O Bd +1.3V (Voltage)
 Sensor number: #16
@@ -2952,21 +2952,21 @@ OEM Data: 53 44 52 20 50 6B 67 2E 20 56 65 72 20 32 2E 30 2E 31 38
 debian-ia64:~# 
 @end example
 
-@node sel, bmc-watchdog, sensors, Top
-@chapter sel
-@pindex sel
+@node ipmi-sel, bmc-watchdog, ipmi-sensors, Top
+@chapter ipmi-sel
+@pindex ipmi-sel
 BMC provides a centralized, non-volatile System Event Log and logs
 system events and certain system configuration information to this
 device. You can perform a postmortem analysis on a system even when a
-the processor(s) are disabled because of a failure.  Sel utility helps
+the processor(s) are disabled because of a failure.  ipmi-sel utility helps
 you view and manage system event log.
 
 @menu
-* sel options::                 Command-line arguments.
-* sel sample output::           Sample system event log output.
+* ipmi-sel options::            Command-line arguments.
+* ipmi-sel sample output::      
 @end menu
 
-@node sel options, sel sample output, sel, sel
+@node ipmi-sel options, ipmi-sel sample output, ipmi-sel, ipmi-sel
 @section command-line arguments
 
 @itemize @bullet
@@ -2992,11 +2992,11 @@ you view and manage system event log.
       Delete this specific list of @var{rec-list} records in the SEL.
 @end itemize
 
-@node sel sample output,  , sel options, sel
-@section sel sample output
+@node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel
+@section ipmi-sel sample output
 
 @example
-debian-ia64:~# sel 
+debian-ia64:~# ipmi-sel 
 4:30-Dec-2003 00:20:24:Event Logging Disabled #9:Log Area Reset/Cleared:SMI Handler
 24:30-Dec-2003 00:23:21:Power Unit #1:Power Unit Failure detected:SMI Handler
 124:14-Jan-2004 23:13:11:System Firmware #6:System Firmware Error (POST Error):SMI Handler
@@ -3111,7 +3111,7 @@ debian-ia64:~# sel
 debian-ia64:~# 
 @end example
 
-@node bmc-watchdog, ipmipower, sel, Top
+@node bmc-watchdog, ipmipower, ipmi-sel, Top
 @chapter bmc-watchdog
 @pindex bmc-watchdog
 @command{bmc-watchdog} is a daemon and configuration utility for BMC
