@@ -42,8 +42,8 @@ struct ipmi_probe_info
   union {
     u_int64_t bmc_iobase_addr;
     u_int64_t bmc_membase_addr;
-    u_int8_t  reg_space;
   } base;
+  u_int8_t  reg_space;
   u_int16_t intr_num;
 };
 typedef struct ipmi_probe_info ipmi_probe_info_t;

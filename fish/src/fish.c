@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.9 2004-12-05 04:11:09 ab Exp $ 
+   $Id: fish.c,v 1.10 2004-12-05 08:06:24 ab Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -373,7 +373,7 @@ inner_main (int argc, char **argv)
 	  !probe.bmc_io_mapped)
 	{
 	  sms_io_base = probe.base.bmc_iobase_addr;
-	  reg_space   = probe.base.reg_space;
+	  reg_space   = probe.reg_space;
 	}
     }
   

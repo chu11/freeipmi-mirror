@@ -233,7 +233,7 @@ smbios_get_dev_info (ipmi_interface_t type, ipmi_probe_info_t* pinfo, int* statu
       lsb = (modifier >> SMBIOS_LSB_BIT) & 1;
       strobed = (strobed & ~1) | lsb;
 
-      pinfo->base.reg_space = (modifier >> SMBIOS_REGSPACING_SHIFT) & SMBIOS_REGSPACING_MASK;
+      pinfo->reg_space =  (modifier >> SMBIOS_REGSPACING_SHIFT) & SMBIOS_REGSPACING_MASK;
 
 /*       if (((modifier >> SMBIOS_INTINFO_PRESENT_BIT) & 1) != 0) */
 /* 	{ */

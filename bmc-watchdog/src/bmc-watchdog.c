@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.22 2004-12-05 04:11:08 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.23 2004-12-05 08:06:24 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -274,7 +274,7 @@ _get_port(u_int32_t *port, u_int8_t *reg_space)
   if (status == 0 && !probeinfo.bmc_io_mapped)
     {
       *port      = probeinfo.base.bmc_iobase_addr;
-      *reg_space = probeinfo.base.reg_space;
+      *reg_space = probeinfo.reg_space;
       return (0);
     }
 
