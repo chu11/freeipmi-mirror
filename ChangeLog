@@ -1,3 +1,7 @@
+2004-08-05  Ian Zimmerman  <itz@californiadigital.com>
+
+	* configure.ac: Bump version for snapshot release.
+
 2004-07-28  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/extensions/bc-common.scm: added new procedure (file-exists?)
