@@ -1,0 +1,10 @@
+#! @prefix@/sbin/fish -s
+!#
+(catch 'misc-error   
+       (lambda ()
+	 (sensors-main (fi-command-line)))
+       (lambda (k args . opts)
+	 (display "sensors: error: ")
+	 (display (cadr opts))
+	 (newline)))
+(fi-exit sensors-exit-status)

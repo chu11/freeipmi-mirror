@@ -1,0 +1,135 @@
+/* 
+   freeipmi.h - C library interface to IPMI
+
+   Copyright (C) 2003, 2004 FreeIPMI Core Team
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+*/
+
+#ifndef _FREEIPMI_H
+#define	_FREEIPMI_H	1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* NOTE:
+   There are three approached to packing structure.
+   => "-fpack-struct" in src/Makefile.am
+   => PACKED marco for __attribute__((packed))
+   => #pragma pack(1)
+
+#if defined(__GNU__)
+#define PACKED __attribute__((packed))
+#else
+#define PACKED packed
+#endif
+*/
+
+#include <sys/types.h>
+#include <sys/ipc.h>  
+#include <sys/sem.h>
+#include <math.h>
+#include <err.h>
+#include <errno.h>
+  
+#ifdef FREEIPMI_LIBRARY
+#include "xmalloc.h"
+#endif
+
+#if defined (FREEIPMI_BUILD)
+#include "bit-ops.h"
+#include "fiid.h"
+#include "ipmi-probe.h"
+#include "pcilocate.h"
+#include "smbios.h"
+#include "ipmi-utils.h"
+#include "ipmi-error.h"
+#include "rmcp.h"
+#include "ipmi-cmd-spec.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-sessions.h"
+#include "ipmi-msg-support-cmds.h"
+#include "ipmi-semaphores.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-lan-interface.h"
+#include "ipmi-kcs-interface.h"
+#include "ipmi-smic-interface.h"
+#include "ipmi-chassis-cmds.h"
+#include "ipmi-dev-global-cmds.h"
+#include "ipmi-sdr-repo-cmds.h"
+#include "ipmi-sdr-record-types.h"
+#include "ipmi-sensor-types.h"
+#include "ipmi-sensor-cmds.h"
+#include "ipmi-sel-record-types.h"
+#include "ipmi-sel-cmds.h"
+#include "ipmi-lan-param-spec.h"
+#include "ipmi-lan-cmds.h"
+#include "ipmi-serial-modem-param-spec.h"
+#include "ipmi-serial-cmds.h"
+#include "ipmi-sol-cmds.h"
+#include "ipmi-debug.h"
+#include "ipmi-md2.h"
+#include "ipmi-md5.h"
+#include "ipmi-sdr-repo-cache.h"
+#include "ipmi-sensor-utils.h"
+#include "ipmi-watchdog.h"
+#include "ipmi-msg-interface-desc.h"
+#else
+#include <freeipmi/bit-ops.h>
+#include <freeipmi/fiid.h>
+#include <freeipmi/ipmi-probe.h>
+#include <freeipmi/smbios.h>
+#include <freeipmi/pcilocate.h>
+#include <freeipmi/ipmi-utils.h>
+#include <freeipmi/ipmi-error.h>
+#include <freeipmi/rmcp.h>
+#include <freeipmi/ipmi-sessions.h>
+#include <freeipmi/ipmi-cmd-spec.h>
+#include <freeipmi/ipmi-netfn-spec.h>
+#include <freeipmi/ipmi-semaphores.h>
+#include <freeipmi/ipmi-ipmb-interface.h>
+#include <freeipmi/ipmi-lan-interface.h>
+#include <freeipmi/ipmi-kcs-interface.h>
+#include <freeipmi/ipmi-smic-interface.h>
+#include <freeipmi/ipmi-msg-support-cmds.h>
+#include <freeipmi/ipmi-chassis-cmds.h>
+#include <freeipmi/ipmi-dev-global-cmds.h>
+#include <freeipmi/ipmi-sdr-record-types.h>
+#include <freeipmi/ipmi-sdr-repo-cmds.h>
+#include <freeipmi/ipmi-sensor-cmds.h>
+#include <freeipmi/ipmi-sensor-types.h>
+#include <freeipmi/ipmi-sel-record-types.h>
+#include <freeipmi/ipmi-sel-cmds.h>
+#include <freeipmi/ipmi-lan-param-spec.h>
+#include <freeipmi/ipmi-lan-cmds.h>
+#include <freeipmi/ipmi-serial-modem-param-spec.h>
+#include <freeipmi/ipmi-serial-cmds.h>
+#include <freeipmi/ipmi-sol-cmds.h>
+#include <freeipmi/ipmi-debug.h>
+#include <freeipmi/ipmi-md2.h>
+#include <freeipmi/ipmi-md5.h>
+#include <freeipmi/ipmi-sdr-repo-cache.h>
+#include <freeipmi/ipmi-sensor-utils.h>
+#include <freeipmi/ipmi-watchdog.h>
+#include <freeipmi/ipmi-msg-interface-desc.h>
+#endif
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* freeipmi.h */
+

@@ -1,0 +1,829 @@
+\input texinfo @c -*-texinfo-*-
+@c This file uses the @command command introduced in Texinfo 4.0.
+@c %**start of header
+@setfilename freeipmi-hg.info
+@settitle FreeIPMI Hackers Guide
+@finalout
+@setchapternewpage odd
+@c %**end of header
+
+@include vers-hg.texi
+
+@ifinfo
+@file{FreeIPMI Hackers Guide} contains necessary information to hack
+the @command{FreeIPMI} system and become a core member.
+
+Copyright (C) 2003 FreeIPMI Core Team
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+@ignore
+Permission is granted to process this file through TeX and print the
+results, provided the printed document carries copying permission
+notice identical to this one except for the removal of this paragraph
+(this paragraph not being relevant to the printed manual).
+
+@end ignore
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end ifinfo
+
+@titlepage
+@title FreeIPMI Hackers Guide
+@subtitle Free Intelligent Platform Management System
+@subtitle Version @value{VERSION} Updated on @today{}
+@author by Anand Babu <ab@@gnu.org.in>
+
+@page
+@vskip 0pt plus 1filll
+Copyright @copyright{} 2002 FreeIPMI Core Team
+
+Permission is granted to make and distribute verbatim copies of
+this manual provided the copyright notice and this permission notice
+are preserved on all copies.
+
+Permission is granted to copy and distribute modified versions of this
+manual under the conditions for verbatim copying, provided that the entire
+resulting derived work is distributed under the terms of a permission
+notice identical to this one.
+
+Permission is granted to copy and distribute translations of this manual
+into another language, under the above conditions for modified versions,
+except that this permission notice may be stated in a translation approved
+by the Foundation.
+@end titlepage
+
+@c All the nodes can be updated using the EMACS command
+@c texinfo-every-node-update, which is normally bound to C-c C-u C-e.
+@node Top, Copying, (dir), (dir)
+
+@ifinfo
+@file{FreeIPMI Hackers Guide} contains necessary information to hack
+the @command{FreeIPMI} system and become a core member.
+@end ifinfo
+
+@c All the menus can be updated with the EMACS command
+@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
+@menu
+* Copying::                     How you can copy and share @command{libfreeipmi}.
+* Introduction::                Introduction to the FreeIPMI system.
+* Design Goals::                Design Goals.
+* Design Framework::            Overall Design Framework.
+* LAN Interface::               LAN Interface.
+* KCS Interface::               Keyboard Controller Style Interface.
+* SMIC Interface::              Server Management Interface Chip Interface.
+* BMC SMI::
+* Chassis Commands::            Chassis Commands.
+* Utility Functions::           Common Utility Functions.
+* Error Handling::              Error Handling.
+* Debugging::                   Debugging Functions.
+* Problems::                    Reporting bugs.
+* Authors::                     FreeIPMI Core Team
+* Concept Index::               Index of concepts.
+
+@detailmenu
+ --- The Detailed Node Listing ---
+
+Introduction
+
+* Getting Started::            What this manual is for and how to use it.
+* Standards and Portability::  Standards and sources upon which the
+                                FreeIPMI system is based.
+* Using the Library::          Some practical uses of the library.
+* Roadmap to the manual::      Overview of the remaining chapters in
+                                this manual.
+
+@end detailmenu
+@end menu
+
+@node Copying, Introduction, Top, Top
+@chapter License
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2, or (at your option)
+any later version.
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this software; see the file COPYING.  If not, write to the
+Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+02111-1307 USA
+
+@node Introduction, Design Goals, Copying, Top
+@chapter Introduction
+FreeIPMI is a Free Intelligent Platform Management System Software.
+
+@menu
+* Getting Started::            What this manual is for and how to use it.
+* Standards and Portability::  Standards and sources upon which the
+                                FreeIPMI system is based.
+* Using the Library::          Some practical uses of the library.
+* Roadmap to the manual::      Overview of the remaining chapters in
+                                this manual
+@end menu
+
+@node Getting Started,  , Introduction, Introduction
+
+@section Who should read this guide?
+If you want to write IPMI based management applications or hack the
+FreeIPMI system itself, This guide is right for you. Otherwise system
+/ network administrators, who just wants to use the management
+tools should refer to specific user guides provided along with the
+documentation.
+
+@section Getting Started
+This manual is written with the assumption that you are at least
+somewhat familiar with the C programming language, GNU Coding
+Standards, and Platform Management. Specifically, familiarity with
+IPMI v1.5 specification is required.
+   The FreeIPMI library includes several ``header files'', each of which
+provides definitions and declarations for a group of related
+IPMI commands. The organization of this manual generally follows the
+same division as the header files.
+
+   If you are reading this manual for the first time, you should read
+all of the introductory material and skim the remaining chapters.
+
+@node Standards and Portability,  , Introduction, Introduction
+
+@section Standards
+FreeIPMI system is based on IPMIv1.5 specification.
+
+@subsection IPMIv1.5 Specification
+The IPMI specifications define standardized, abstracted interfaces to
+the platform management subsystem. IPMI includes the definition of
+interfaces for extending platform management between board within the
+main chassis, and between multiple chassis.
+
+The term platform management is used to refer to the monitoring and
+control functions that are built in to the platform hardware and
+primarily used for the purpose of monitoring the health of the system
+hardware. This typically includes monitoring elements such as system
+temperatures, voltages, fans, power supplies, bus errors, system
+physical security, etc. It includes automatic and manually driven
+recovery capabilities such as local or remote system resets and power
+on/off operations. It includes the logging of abnormal or out-of-range
+conditions for later examination and alerting where the platform
+issues the alert without aid of run-time software. Lastly it includes
+inventory information that can help identify a failed hardware unit.
+
+@section Portability
+Most of the porting issues will be addressed by Autoconf and
+Automake at the compile time by probing for appropriate target system
+type and availability of system calls / library functions to enable
+specific compiler options, macros and flags.
+
+@itemize
+@item Source Dependency:@*
+FreeIPMI library is not dependent on any other source except GNU C
+library. It is fairly easily portable to most platforms with little
+effort.
+
+@item Tool Chain Dependency:@*
+As of now FreeIPMI system uses GNU tool chain with _GNU_SOURCE
+assumption. Which means all extensions from ISO C89, ISO C99, POSIX.1,
+POSIX.2, BSD, SVID, X/Open, LFS, and GNU will be used. In the cases
+where POSIX.1 conflicts with BSD, the   POSIX definitions take
+precedence.
+
+@item Platform Dependency:@*
+FreeIPMI inband user-space drivers does I/O mapped communication with
+the IPMI system interface. Library expects at least one of ioperm or
+iopl or /dev/port interface to be provided by the target platform.
+How ever the LAN part of FreeIPMI library for writing remote console
+applications does not depend on these system calls.
+
+@item Byte Ordering:@*
+Multi-byte fields in IPMI LAN RMCP/ASF fields are specified as being
+transmitted in Network Byte Order - meaning most-significant byte
+first. RMCP and ASF-specified fields are therefore transferred
+most-significant byte first. The IPMI convention is to transfer
+multi-byte numeric fields least-significant Byte first. Therefore,
+unless otherwise specified: Data in the IPMI Session Header and IPMI
+Message fields are transmitted least-significant byte first.
+
+Byte ordering will be take can care by Autoconf script and compiler
+macros at the build time..
+
+@item Structure Packing:@*
+FreeIPMI uses @code{#pragma pack@{1@}} to pack the bit fields without
+any holes. The behaviour may vary based on the target platform and
+chosen compiler.
+@end itemize
+
+@node Using the Library,  , Introduction, Introduction
+
+@itemize
+@item Header Files:@*
+@file{freeipmi/freeipmi.h} includes all the necessary header files
+requied by the management application. How ever the application
+programmer is free to @command{grep} for specific struct definitions
+, function prototypes and macros inside the @file{freeipmi} folder.
+
+@cindex header files
+
+@item Linking Library:@*
+The application program needs to tell the linker about FreeIPMI
+library name by passing @code{-L FREEIPMI_LIB_PATH -lfreeipmi}.
+@end itemize
+@cindex linking
+
+@node Roadmap to the manual,  , Introduction, Introduction
+@cindex Roadmap
+Best documentation is always the source itself. How ever this guide
+will help you to understand the organization of the source, design
+framework, goals, discription of the structures and prototypes and
+every thing you need to know before you start hacking the source.
+
+It will be handy to keep the source and IPMI v1.5 guide along while
+browsing through this guide.
+
+@node Design Goals, Design Framework, Introduction, Top
+@chapter Design Goals
+@cindex Goals
+
+Goal of the FreeIPMI system Design is centered around correctness of
+the implementation at the center with at most precedence.
+
+@verbatim
+
+                     +-------------------------+
+                     |       Performance       |
+                     | +---------------------+ |
+                     | |     Portability     | |
+                     | | +-----------------+ | |
+                     | | |   Completeness  | | |
+                     | | | +-------------+ | | |
+                     | | | | Correctness | | | |
+                     | | | +-------------+ | | |
+                     | | +-----------------+ | |
+                     | +---------------------+ |
+                     +-------------------------+
+@end verbatim
+
+@node Design Framework, LAN Interface, Design Goals, Top
+@chapter Design Framework
+@cindex Framework
+The FreeIPMI system includes various components that together work
+with the platform managment hardware to provide complete system
+management capability
+
+@deffn {library} @file{libfreeipmi}
+FreeIPMI C library implementing LAN, KCS and SMIC interfaces
+@end deffn
+
+@deffn {remote console/ system management software} @file{fish}
+FreeIPMI SHell - highly extensible/programmable shell with readline
+and scripting interface for platform management. Provides both remote
+management and inband system management functionality.
+@end deffn
+
+@deffn {remote console software} @file{ipmipower}
+A Command line tool for executing chassis control commands over LAN.
+@example
+Example:
+Power cycling, Chassis status
+@end example
+@end deffn
+
+@deffn {system management software} @file{bmc-smi}
+A kernel module for handling system management interrupt and logging
+critical failures and events to the SEL.
+@end deffn
+
+@page
+
+@verbatim
+_____________________________________________________________________________
+                                                          User Mode
+                +----------------------------+
+                | System Management Software |
+                +----^-----------------------+
+                 KCS/|
+                 SMIC|
+               INBAND|
+_____________________|_______________________________________________________
+                     |                                    Kernel Mode
+                     |    +---------------------+
+                     |    |     OS Kernel       |
+                     |    | +-----------------+ |
+                     |    | | BMC SMI Handler | |
+                     |    | +-----^-----------+ |
+                     |    +-------|-------------+
+_____________________|______INBAND|__________________________________________
+                     |            |                       Hardware
+                +----V-----------------+
+                |  +-----+  Platform   |
+                |  | BMC |  Management |
+                |  +-----+  Hardware   |
+                +----^-----------------+
+                     |
+                  +--V--+
+                  | NIC |
+                  +--^--+
+_____________________|_______________________________________________________
+          RMCP/UDP/IP|                                    Network
+_____________________|_______________________________________________________
+                     |                                    User Mode
+      +--------------V----------+
+      | Remote Console Software |
+      +-------------------------+
+_____________________________________________________________________________
+@end verbatim
+
+@node LAN Interface, KCS Interface, Design Framework, Top
+@chapter LAN Interface
+For LAN transfers, IPMI messages are a special class of data
+encapsulated in an IPMI Session packet. The IPMI Session packets are
+encapsulated in RMCP packets, which are encapsulated in UDP datagrams.
+
+@file{libfreeipmi} abstracts the IPMI LAN communication by providing
+various higher level procedures and structures.
+
+@section LAN Message Format
+@verbatim
+  IPMI LAN Packet
+           +----------------------------------+
+           |        IP                        |
+           | +------------------------------+ |
+           | |      UDP                     | |
+           | | +--------------------------+ | |
+           | | |    RMCP                  | | |
+           | | | +----------------------+ | | |
+           | | | |  Session       |     | | | |
+           | | | |----------------|  I  | | | |
+           | | | |  Message       |  P  | | | |
+           | | | |----------------|  M  | | | |
+           | | | |  Data          |  I  | | | |
+           | | | |----------------|     | | | |
+           | | | |  Checksum      |     | | | |
+           | | | +----------------------+ | | |
+           | | +--------------------------+ | |
+           | +------------------------------+ |
+           +----------------------------------+
+@end verbatim
+
+@section LAN Core Functions
+@deffn function {ssize_t ipmi_sendto} (int sockfd, rmcp_hdr_t *rmcp_hdr, const void *ipmi_pkt, size_t ipmi_pkt_len, int flags, const struct sockaddr *to, unsigned int tolen);
+@anchor{receive} The remote console application should make use of
+this function to send and receive RMCP and IPMI messages across
+LAN. This function abstracts necessary IPMI formalities like packing
+and padding.
+
+On success, this function returns the size of *ipmi_pkt transmitted.
+On error, -1 is returned, and errno is set appropriately;
+@end deffn
+
+@deffn function {ssize_t ipmi_recvfrom} (int sockfd, rmcp_hdr_t *rmcp_hdr, void *ipmi_pkt, size_t ipmi_pkt_len, int flags, struct sockaddr *from, unsigned int *fromlen);
+
+@pxref{receive}
+
+On success, this function returns the size of *ipmi_pkt received.
+On error, -1 is returned, and errno is set appropriately;
+@end deffn
+
+@section RMCP Header
+@deffn structure rmcp_hdr_t rmcp_hdr
+For RMCP_ASF_MSG_TYPE_PRESENCE_PING, RMCP_ASF_MSG_TYPE_PRESENCE_PONG
+commands rmcp_hdr should contain RMCP_HDR_ASF. For all other IPMI
+commands it should contain RMCP_HDR_IPMI.
+@end deffn
+@verbatim
+  typedef struct rmcp_hdr 
+  {
+    u_int8_t ver;
+    u_int8_t reserved;
+    u_int8_t seq_num;
+    u_int8_t msg_class;
+  } rmcp_hdr_t;
+@end verbatim
+
+@deffn function {int rmcp_asf_presence_ping} (rmcp_asf_presence_ping_t *asf_presence_ping);
+This function returns information about the interfaces supported via
+RMCP. It is used both to discover managed systems that support RMCP
+and to determine whether the system supports IPMI LAN messaging and/or
+additional ASF commands. This message must be supported on the Primary
+RMCP port @code{RMCP_PRI_RMCP_PORT}.
+
+ASF Presence Ping message - Request:
+@deffn argument rmcp_asf_presence_ping_t *asf_presence_ping
+Takes a pointer to pre-allocated @var{asf_presence_ping} buffer and
+fills in the request data.
+@end deffn
+
+ASF Presence Pong Message - Response Structure:
+@verbatim
+  typedef struct rmcp_asf_presence_pong
+  {
+    u_int32_t iana_enterprise_num;
+    u_int8_t msg_type;
+    u_int8_t msg_tag;
+    u_int8_t reserved1;
+    u_int8_t data_len;
+    u_int32_t oem_iana_enterprise_num;
+    u_int32_t oem_defined;
+    struct {
+      u_int8_t version:4;
+      u_int8_t reserved:3;
+      u_int8_t ipmi_supported:1;
+    } supported_entities;
+    u_int8_t supported_interactions;
+    u_int8_t reserved2[6];
+  } rmcp_asf_presence_pong_t;
+@end verbatim
+@end deffn
+
+@section Session Theory
+
+Please refer to IPMIv1.5 specification 6.11.7 - Session Activation and
+IPMI Challenge-Response
+
+@section Session Header
+
+@deffn structure ipmi_session_t ipmi_session
+
+@verbatim
+  typedef struct ipmi_session
+  {
+    u_int8_t auth_type;
+    u_int32_t session_seq_num;
+    u_int32_t session_id;
+    u_int8_t ipmi_msg_len;
+  } ipmi_session_t;
+
+  typedef struct ipmi_session_auth
+  {
+    u_int8_t auth_type;
+    u_int32_t session_seq_num;
+    u_int32_t session_id;
+    u_int8_t auth_code[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+    u_int8_t ipmi_msg_len;
+  } ipmi_session_auth_t;
+@end verbatim
+
+The presence of  session header fields in a packet is based on whether
+the channel is specified as supporting multiple sessions or not. In
+addition, which session fields are present is based on the
+authentication type. Single-session connections and session-less 
+channels do not include session header fields. 
+
+Session header fields are present on all packets where the channel and
+connection mode is specified as supporting multiple sessions, even if
+the particular implementation only supports one session. Commands like
+@code{Get System GUID}, @code{Get Channel Authentication
+Capabilities}, @code{Get Session Challenge}, and @code{Activate
+Session commands} that are executed before session activation handles
+session headers in a different way. Refer to the source code and
+IPMIv1.5 documentation for further info.
+@end deffn
+
+@deffn ipmi_session_t u_int8_t auth_type
+Possible values for auth_type are
+@itemize
+@item IPMI_SESSION_AUTH_TYPE_NONE
+@item IPMI_SESSION_AUTH_TYPE_MD2
+@item IPMI_SESSION_AUTH_TYPE_MD5
+@item IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
+@item IPMI_SESSION_AUTH_TYPE_OEM_PROP
+@end itemize
+@end deffn
+
+@deffn ipmi_session_t u_int32_t session_seq_num
+The @anchor{Session ID} Session ID and Session Sequence Number must be
+non-zero for commands executed during an active session. All 0 s for
+the Session ID and/or Session Sequence Number (null Session ID, null
+Session Sequence Number) are special values only used for commands
+that can be executed prior to establishing a session, e.g. Get System
+GUID, Get Channel Authentication Capabilities, and Get Session
+Challenge. The Activate Session command uses a null Session Sequence
+Number before a session is activated, but does not use a null Session
+ID. Instead, it must use the Temporary Session ID given by the BMC in
+the response to the Get Session Challenge command.
+@end deffn
+
+@deffn ipmi_session_t u_int32_t session_id
+Refer to @pxref{Session ID}
+@end deffn
+
+@deffn ipmi_session_t u_int8_t ipmi_msg_len
+ipmi_msg_len is total size of ipmi_rq_msg_t, data and check sum.
+@end deffn
+
+@section Session Activation and IPMI Challenge-Response
+
+@deffn function {int ipmi_get_channel_auth_caps_rq} (u_int8_t rs_lun, u_int8_t rq_seq, ipmi_get_channel_auth_caps_rq_t *get_channel_auth_caps_rq);
+
+This command is sent in unauthenticated (clear) format. This command
+is used to retrieve capability information about the channel that the
+message is delivered over, or for a particular channel. The command
+returns the authentication algorithm support for the given privilege
+level. When activating a session, the privilege level passed in this
+command will normally be the same Requested Maximum Privilege level
+that will be used for a subsequent Activate Session command. 
+
+@code{ipmi_get_channel_auth_caps} Request:
+@anchor{rs_lun}
+@deffn argument u_int8_t rs_lun
+Requester LUN - Possible values are
+@itemize 
+@item IPMI_BMC_IPMB_LUN_BMC
+@item IPMI_BMC_IPMB_LUN_OEM_LUN1
+@item IPMI_BMC_IPMB_LUN_SMS_MSG_LUN
+@item IPMI_BMC_IPMB_LUN_OEM_LUN2
+@end itemize
+@end deffn
+
+@anchor{rq_seq}
+@deffn argument u_int8_t rq_seq
+Requester sequence number - A 6 bit field generated by the user to
+keep track of requests and responses.
+@end deffn
+
+@deffn argument ipmi_get_channel_auth_caps_rq_t *get_channel_auth_caps_rq
+Takes a pointer to pre-allocated @var{get_channel_auth_caps_rq} buffer and
+fills in the request data.
+@end deffn
+
+@code{ipmi_get_channel_auth_caps} Response Structure:
+@verbatim
+typedef struct ipmi_get_session_challenge_rs
+{
+  ipmi_session_t session;
+  ipmi_rs_msg_t msg;
+  struct {
+    u_int32_t tmp_session_id; /* LS byte first */
+    u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+  } data;
+  ipmi_chksum_t chksum;
+} ipmi_get_session_challenge_rs_t;
+@end verbatim
+
+@footnote{@code{ipmi_get_channel_auth_caps} command can also be used as a no-op
+Ping to keep a session from timing out.}
+@end deffn
+
+@deffn function {int ipmi_get_session_challenge_rq} (u_int8_t auth_type, u_int8_t rs_lun, u_int8_t rq_seq, u_int8_t *username, u_int32_t username_len, ipmi_get_session_challenge_rq_t *get_session_challenge_rq);
+
+This command is sent in unauthenticated format. While a session ID is
+returned from the response to the @code{ipmi_get_session_challenge}
+command, the session must be activated using the
+@code{ipmi_activate_session} command before it can be used for sending
+other authenticated commands. The @code{ipmi_activate_session} command
+provides the starting sequence number for subsequent messages under
+the session. When the management controller looks up user names the
+controller scans the names sequentially by user ID starting from User
+ID 1. Disabled user names are skipped. The scan stops when the first
+matching enabled user name is made.
+
+@code{ipmi_get_session_challenge} Request:
+@deffn argument u_int8_t auth_type
+@anchor{auth_type}
+Authentication Type: Possible values are 
+@itemize
+@item IPMI_SESSION_AUTH_TYPE_NONE
+@item IPMI_SESSION_AUTH_TYPE_MD2
+@item IPMI_SESSION_AUTH_TYPE_MD5
+@item IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
+@item IPMI_SESSION_AUTH_TYPE_OEM_PROP
+@end itemize
+@end deffn
+
+@deffn argument u_int8_t rs_lun
+@pxref{rs_lun}
+@end deffn
+
+@deffn argument u_int8_t rq_seq
+@pxref{rq_seq}
+@end deffn
+
+@deffn argument u_int8_t *username
+@anchor{username}
+User Name of IPMI_SESSION_MAX_USERNAME_LEN bytes. All 0 s for null
+user name (User 1)
+@end deffn
+
+@deffn argument u_int32_t username_len
+@pxref{username}
+@end deffn
+
+@deffn argument ipmi_get_session_challenge_rq_t *get_session_challenge_rq
+Takes a pointer to pre-allocated @var{get_session_challenge_rq} buffer
+and fills in the request data.
+@end deffn
+
+@code{ipmi_get_session_challenge} Response:
+@verbatim
+  typedef struct ipmi_get_session_challenge_rs
+  {
+    ipmi_session_t session;
+    ipmi_rs_msg_t msg;
+    struct {
+      u_int32_t tmp_session_id; /* LS byte first */
+      u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+    } data;
+    ipmi_chksum_t chksum;
+  } ipmi_get_session_challenge_rs_t;
+@end verbatim
+@end deffn
+
+@deffn function {int ipmi_activate_session_rq} (u_int8_t auth_type, u_int32_t tmp_session_id, u_int8_t *auth_code, u_int32_t auth_code_len, u_int8_t rs_lun, u_int8_t rq_seq, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, ipmi_activate_session_rq_t *activate_session_rq);
+
+While a Session ID is returned from the response to the
+@code{ipmi_get_session_challenge} command, the session must be
+activated using the @var{ipmi_activate_session} command before it can
+be used for sending other authenticated commands. The initial
+@var{ipmi_activate_session} command is used by the remote console to
+set the starting sequence number for subsequent messages under the
+session. When the @var{ipmi_activate_session} command is issued (for a
+given session ID) the outbound session sequence number is set by the
+remote console and can be any random value. For a given temporary
+session ID, the BMC must accept @var{ipmi_activate_session} commands
+with a null session sequence number and silently discard all other
+commands targeted to that session ID. This provision is to enable a
+remote console to retry the @var{ipmi_activate_session} command in
+case the response was lost. The BMC will continue to accept the
+@var{ipmi_activate_session} command with a null session sequence
+number until the first valid and appropriately authenticated command
+with a non-null session sequence number is received. (The non-null
+sequence number must also be within the range specified by the initial
+inbound sequence number). After which, all subsequent commands for the
+session must have appropriately incremented, non-null sequence number
+values, including any @var{ipmi_activate_session} commands that may be
+received during session operation. The remote console can use an
+@var{ipmi_activate_session} command to change the outbound session
+sequence number during session operation. The BMC may also elect to
+change its inbound session sequence number at that time, or may
+continue with the inbound session sequence number sequence already in
+progress.
+
+@code{ipmi_avtivate_session} Request:
+@deffn argument  u_int8_t auth_type
+@pxref{auth_type}
+@end deffn
+
+@deffn u_int32_t tmp_session_id
+The  Session ID is returned from the response to the
+@code{ipmi_get_session_challenge} command.
+
+Temporary Session ID. LS byte first. This is a provision for a
+temporary Session ID that can be given out to parties that have
+requested challenges, but have not yet activated a session. It can be
+used as a mechanism to help protect against denial of service attacks
+by grabbing all free session IDs.
+@end deffn
+
+@deffn argument u_int8_t *auth_code
+@anchor{auth_code}
+AuthCode = present unless authentication type = None. See IPMIv1.5
+Section 18.15.1 - AuthCode Algorithms for information on calculating
+this field for authentication types that are not None.
+
+User can supply auth_code buffer not exceeding
+IPMI_SESSION_MAX_AUTH_CODE_LEN.
+@end deffn
+
+@deffn argument u_int32_t auth_code_len
+@pxref{auth_code}
+@end deffn
+
+@deffn argument u_int8_t rs_lun
+@pxref{rs_lun}
+@end deffn
+
+@deffn argument u_int8_t rq_seq
+@pxref{rq_seq}
+@end deffn
+
+@deffn argument u_int8_t max_priv_level
+@anchor{max_priv_level}
+Maximum privilege level requested. Indicates the highest privilege
+level that may be requested for this session. This privilege level
+must be less than or equal to the privilege limit for the channel and
+the privilege limit for the user in order for the
+@var{ipmi_activate_session} command to be successful (completion code
+= IPMI_COMMAND_SUCCESS). Once the @var{ipmi_activate_session} command
+has been successful, the requested privilege level becomes a session
+limit that cannot be raised beyond the requested level, even if the
+user and/or channel privilege level limits would allow it. I.e. it
+takes precedence over the channel and user privilege level limits.
+
+Possible values are:
+@itemize
+@item IPMI_PRIV_LEVEL_RESERVED
+@item IPMI_PRIV_LEVEL_CALLBACK
+@item IPMI_PRIV_LEVEL_USER
+@item IPMI_PRIV_LEVEL_OPERATOR
+@item IPMI_PRIV_LEVEL_ADMIN
+@item IPMI_PRIV_LEVEL_OEM
+@end itemize
+@end deffn
+
+@anchor{challenge_str}
+@deffn argument u_int8_t *challenge_str
+For multi-session channels: (e.g. LAN channel): Challenge String data
+from corresponding Get Session Challenge response. For single-session
+channels that lack session header (e.g. serial/modem in Basic Mode):
+Clear text password or AuthCode. See IPMIv1.5 Section 18.15.1 -
+AuthCode Algorithms.
+
+User passes a pointer to buffer not exceeding IPMI_SESSION_CHALLENGE_STR_LEN.
+@end deffn
+
+@deffn argument u_int32_t challenge_str_len
+@pxref{challenge_str}
+@end deffn
+
+@deffn argument ipmi_activate_session_rq_t *activate_session_rq
+Takes a pointer to pre-allocated @var{activate_session_rq} buffer
+and fills in the request data.
+@end deffn
+
+@code{ipmi_activate_session} Response:
+@verbatim
+  typedef struct ipmi_activate_session_rs
+  {
+    ipmi_session_auth_t session;
+    ipmi_rs_msg_t msg;
+    struct {
+      u_int8_t auth_type:4;
+      u_int8_t reserved1:4;
+      u_int32_t session_id; 
+      u_int32_t initial_inbound_seq_num;
+      u_int8_t max_priv_level:4;
+      u_int8_t reserved2:4;
+    } data;
+    ipmi_chksum_t chksum;
+  } ipmi_activate_session_rs_t;
+@end verbatim
+@end deffn
+
+@deffn function {int ipmi_set_session_priv_level_rq} (u_int8_t auth_type, u_int32_t inbound_seq_num, u_int32_t session_id, u_int8_t *auth_code, u_int32_t auth_code_len, u_int8_t rs_lun, u_int8_t rq_seq, u_int8_t priv_level, ipmi_set_session_priv_level_rq_t *set_session_priv_level_rq);
+
+@end deffn
+
+@deffn function {int ipmi_close_session_rq} (u_int8_t auth_type, u_int32_t inbound_seq_num, u_int32_t session_id, u_int8_t *auth_code, u_int32_t auth_code_len, u_int8_t rs_lun, u_int8_t rq_seq, u_int32_t close_session_id, ipmi_close_session_rq_t *close_session_rq);
+
+@end deffn
+
+
+@node KCS Interface, SMIC Interface, LAN Interface, Top
+@chapter Keyboard Controller Style Interface
+
+@node SMIC Interface, BMC SMI, KCS Interface, Top
+@chapter Server Management Interface Chip Interface
+
+@node BMC SMI, Chassis Commands, SMIC Interface, Top
+@chapter BMC SMI
+
+@node  Chassis Commands, Utility Functions, BMC SMI, Top
+@chapter Chassis Commands
+
+@node  Utility Functions, Error Handling, Chassis Commands, Top
+@chapter Utility Functions
+
+@node Error Handling, Debugging, Utility Functions, Top
+@chapter Error Handling
+
+@node  Debugging, Problems, Error Handling, Top
+@chapter Debugging
+
+@node Problems, Authors, Debugging, Top
+@chapter Reporting Bugs
+@cindex bugs
+@cindex problems
+
+If you find a bug in @command{libfreeipmi}, please send electronic mail to
+@email{ab@@gnu.org.in}.  Include the version number, which you can find by
+running @w{@samp{libfreeipmi --version}}.  Also include in your message the
+output that the program produced and the output you expected.@refill
+
+If you have other questions, comments or suggestions about
+@command{libfreeipmi}, contact the author via electronic mail to
+@email{ab@@gnu.org.in}.  The author will try to help you out, although he
+may not have time to fix your problems.
+
+@node Authors, Concept Index, Problems, Top
+@chapter Authors
+@include authors.texinfo
+@cindex Authors
+
+@node Concept Index,  , Authors, Top
+@unnumbered Concept Index
+@printindex cp
+
+@shortcontents
+@contents
+@bye

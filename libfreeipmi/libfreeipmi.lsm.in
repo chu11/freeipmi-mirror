@@ -1,0 +1,21 @@
+Begin3
+Title:		libfreeipmi
+Version:	@PACKAGE_VERSION@
+Entered-date:	@ISODATE@
+Description:	C library interface to FreeIPMI
+		@configure_input@
+		Please edit libfreeipmi.lsm.in to fix the Keywords and
+		Primary-site entries, add several more lines of
+		description here if appropriate, and to delete these
+		instructions.
+Keywords:	[substitute your keywords here]
+Author: 	ab@gnu.org.in (M. P. Anand Babu)
+Maintained-by:	ab@gnu.org.in (M. P. Anand Babu)
+Primary-site:	metalab.unc.edu pub/Linux/apps/some/directory
+		31k libfreeipmi-@PACKAGE_VERSION@.tar.gz
+		500  libfreeipmi.lsm
+Alternate-site: 
+Original-site:  
+Platforms:      
+Copying-policy:	GNU copyleft
+End
