@@ -16,9 +16,12 @@
 	* ipmipower/src/wrappers.c (_checkfill): fixed unused-warning.
 	* ipmipower/src/ipmipower_check.c (_check_command): initialized
 	"expected_cmd" to -1.
-	* ipmipower/src/conffile.c (conffile_parse): initialized "len" to -1.
+	* ipmipower/src/conffile.c (conffile_parse): initialized "len" to
+	-1.
+	* doc/Makefile.am: new entries to handle additional documentation
+	and PDF creation.
 	* configure.ac: now becomes 0.1.0.
-
+	
 2004-10-08  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c: Fixed compatibility issues with

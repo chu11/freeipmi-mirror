@@ -1,7 +1,6 @@
 SUBDIRS = examples
 
-# Additional documentation
-EXTRA_DIST = BUGS ipmi-over-ts2000.texi ipmi-network-layout.fig ipmi-network-layout.xcf freeipmi-hackers-intro.sxi
+EXTRA_DIST = BUGS freeipmi-hackers-intro.sxi ipmi-network-layout.fig ipmi-over-ts2000.texi 
 
 #  build and install the .info pages
 info_TEXINFOS = freeipmi.texi
@@ -14,8 +13,16 @@ dist_man_MANS = fish.1 bmc-config.1 bmc-info.1 fish.1 sel.1 sensors.1 \
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 
-doc_DATA = $(EXTRA_DIST)
+doc_DATA = $(EXTRA_DIST) freeipmi.texi authors.texi gpl.texi version.texi fdl.texi \
+	   permissions.texi
+
+ipmi-network-layout.pdf: ipmi-network-layout.fig Makefile
+	fig2dev -L pdf $< ipmi-network-layout.pdf
+
+ipmi-over-ts2000.pdf: ipmi-over-ts2000.texi ipmi-network-layout.pdf
+	texi2pdf -c $<
+
+pdf-local: ipmi-over-ts2000.pdf ipmi-network-layout.pdf
 
 uninstall-extra:
 	$(docdir)
-
