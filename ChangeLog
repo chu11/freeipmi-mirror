@@ -1,3 +1,9 @@
+2004-10-26  Ian Zimmerman  <itz@californiadigital.com>
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi.h,
+	libfreeipmi/src/ipmi-pef-cmds.h, libfreeipmi/src/ipmi-pef-cmds.c:
+	added first batch of low level PEF functions.
+
 2004-10-25  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Additional file packaging changes based on
