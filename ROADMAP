@@ -1,37 +1,57 @@
-NOTE:
-This file is like a check list of items for the "Release Manager" to
-make 1.0.0 release. DO NOT INCLUDE THIS FILE IN PACKAGING.  To
-maintain TODOs and task list, use TODO file. 
+Release 0.2.0 (End of March 2005)
+---------------------------------
+AB:
+  * Done:
+    - SMBus/SSIF Driver.
+  * Work in progress:
+    - Unified Driver Model: Single API set for all in-band and out-of-band drivers.
+Bala:
+  * Done:
+    - Sensors rewrite.
+    - bmc-config code cleanup.
+    - old bmc-config code removal.
+  * Work in progress:
+    - bmc-config --auto and --expert modes.
+    - Adopt the the unified driver model for all APIs.
+    - bmc-fence daemon.
 
-Roadmap to 1.0.0
-================
- AB:
-   Unified Driver Model. (0.2.0)
-   LAN driver improvement:
-     Session sequencing.
-   SMBus/SSIF Driver. (0.2.0)
-   BT Driver.
-   SOL daemon (sold) for IPMI-2.0.
+Release 0.3.0 (End of June 2005)
+--------------------------------
+AB:
+   * Yet to start:
+     - Raw command interface and utility.
+     - Debug and dump support.
+     - libfreeipmi APIs revisit.
+     - Scheme primitives revisit.
+Bala:
+   * Yet to start:
+     - Fish PEF primitives and PEF utility.
+Al:
+   * Yet to start:
+     - SOL daemon (sold) for IPMI-2.0.
+     - LAN session sequencing and re-transmission.
+ITZ:
+   * Done:
+     - PEF APIs
+   * Yet to start:
+     - Convert possible gh_ APIs to scm_.
+
+Release 0.4.0
+-------------
+AB:
+   * Yet to start:
+     - BT driver.
+Bala:
+   * Yet to start:
+     - FRU sub system
+     - SDR utility to checkout, manipulate and commit.
+
+Release 0.1.0
+-------------
+AB:
    Hackers Guide.
-   Test utility.
 
- ITZ:
-   PEF.
-
- Al:
-   SNMP support.
-   Web Interface: Ganglia addon???
+Al:
+   Web Interface: Ganglia ad-don???
    SuperMicro Support.
 
- Bala:
-   Fish:
-    * command bindings.
-    * Sensors rewrite. <DONE>
-    * Scheme primitives revisit.
-    * bmc-config.
-      * --auto and --expert modes.
-      * code cleanup. <DONE>
-      * old bmc-config code removal. <DONE>
-   * FRU.
-   * Adopt the the unified driver model for all IPMI sub-systems.
-   * bmc-fence daemon.
