@@ -12,6 +12,9 @@
 
 	* configure.ac: Generate freeipmi.spec.
 
+	* doc/bmc-watchdog.8.in: Changed default io-port to corresponding
+	value used in code.
+
 2004-05-13  Ian Zimmerman  <itz@californiadigital.com>
 
 	* libfreeipmi/Makefile.am (IPCDIR), doc/examples/Makefile.am
