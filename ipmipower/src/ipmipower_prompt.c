@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.1 2004-05-11 17:05:05 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.2 2004-06-23 22:05:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -311,10 +311,10 @@ _cmd_authtype(char **argv)
       auth_type_t at = ipmipower_auth_index(argv[1]);
       if (at == AUTH_TYPE_INVALID)
         cbuf_printf(ttyout, "%s invalid authtype\n", argv[1]);
-      else if (at == AUTH_TYPE_NONE && conf->username != NULL)
+      else if (at == AUTH_TYPE_NONE && strlen(conf->username) > 0)
         cbuf_printf(ttyout, "username cannot be set for authtype \"%s\"\n", 
                     argv[1]);
-      else if (at == AUTH_TYPE_NONE && conf->password != NULL)
+      else if (at == AUTH_TYPE_NONE && strlen(conf->password) > 0)
         cbuf_printf(ttyout, "password cannot be set for authtype \"%s\"\n", 
                     argv[1]);
       else 

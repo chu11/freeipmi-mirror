@@ -1,3 +1,8 @@
+2004-06-23  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_authtype): Check for
+	username and password length rather than non-null.
+	
 2004-06-23  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/ipmi-wrapper.c: now get_lan_channel_number() and
