@@ -17,7 +17,7 @@
 /* the Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA. */
 
-/* $Id: ipmi-pef-cmds.c,v 1.2 2004-10-27 00:18:16 itz Exp $ */
+/* $Id: ipmi-pef-cmds.c,v 1.3 2004-10-27 00:52:21 itz Exp $ */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -227,6 +227,65 @@ fiid_template_t tmpl_get_pef_conf_param_num_event_filters_rs =
     {0, ""}
   };
 
+fiid_template_t tmpl_get_pef_conf_param_event_filter_table_rs =
+  {
+    {8, "cmd"},
+
+    {8, "comp_code"},
+
+    {7, "pef_conf_param_filter_number"},
+    {1, "reserved"},
+
+    {5, "reserved"},
+    {2, "pef_conf_param_filter_type"},
+    {1, "pef_conf_param_filter_enable"},
+
+    {1, "pef_conf_param_filter_alert"},
+    {1, "pef_conf_param_filter_poweroff"},
+    {1, "pef_conf_param_filter_reset"},
+    {1, "pef_conf_param_filter_powercycle"},
+    {1, "pef_conf_param_filter_oem_action"},
+    {1, "pef_conf_param_filter_diag_interrupt"},
+    {2, "reserved"},
+
+    {4, "pef_conf_param_filter_policy_number"},
+    {4, "reserved"},
+
+    {8, "pef_conf_param_filter_severity"},
+
+    {8, "pef_conf_param_filter_id"},
+
+    {8, "pef_conf_param_filter_channel"},
+
+    {8, "pef_conf_param_filter_sensor_type"},
+
+    {8, "pef_conf_param_filter_sensor_number"},
+
+    {8, "pef_conf_param_filter_event_trigger"},
+
+    {16, "pef_conf_param_filter_data_offset_mask"},
+
+    {8, "pef_conf_param_filter_data1_and_mask"},
+
+    {8, "pef_conf_param_filter_data1_compare1_mask"},
+
+    {8, "pef_conf_param_filter_data1_compare2_mask"},
+
+    {8, "pef_conf_param_filter_data2_and_mask"},
+
+    {8, "pef_conf_param_filter_data2_compare1_mask"},
+
+    {8, "pef_conf_param_filter_data2_compare2_mask"},
+
+    {8, "pef_conf_param_filter_data3_and_mask"},
+
+    {8, "pef_conf_param_filter_data3_compare1_mask"},
+
+    {8, "pef_conf_param_filter_data3_compare2_mask"},
+
+    {0, ""}
+  };
+
 static int8_t
 fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, u_int8_t parameter_selector,
                              u_int8_t parameter_type,
@@ -361,6 +420,27 @@ ipmi_kcs_get_pef_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_r
   status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
 			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
 			 obj_data_rs, tmpl_get_pef_conf_param_num_event_filters_rs);
+  free (obj_data_rq);
+  return status;
+}
+
+int8_t
+ipmi_kcs_get_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                 u_int8_t parameter_type, u_int8_t set_selector,
+                                 u_int8_t block_selector)
+{
+  fiid_obj_t obj_data_rq; 
+  int8_t status;
+  
+  obj_data_rq = fiid_obj_alloc (tmpl_get_pef_conf_param_rq);
+  fill_kcs_get_pef_conf_param (obj_data_rq, 
+                               IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
+                               parameter_type, 
+                               set_selector, 
+                               block_selector);
+  status = ipmi_kcs_cmd (sms_io_base, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
+			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
+			 obj_data_rs, tmpl_get_pef_conf_param_event_filter_table_rs);
   free (obj_data_rq);
   return status;
 }
