@@ -1531,8 +1531,121 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
 void 
 display_verbose_current_generic_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 {
-  // This function never be called
-  printf ("This function never be called\n");
+  u_int64_t val;
+  int i;
+  
+  u_int8_t base_unit;
+  
+  u_int8_t sensor_number;
+  u_int8_t sensor_type;
+  u_int8_t event_reading_type_code;
+  
+  u_int8_t data_rs[] = {0, 0, 0, 0, 0, 0};
+  u_int8_t status;
+  
+  u_int8_t record_length;
+  
+  char *status_message = NULL;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"record_length", 
+		&val);
+  record_length = val;
+  record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_base_unit", 
+		&val);
+  base_unit = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"event_reading_type", 
+		&val);
+  event_reading_type_code = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_number", 
+		&val);
+  sensor_number = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_type", 
+		&val);
+  sensor_type = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"record_id",
+		&val);
+  printf ("Record ID: %d\n", (u_int16_t) val);
+  
+  printf ("Sensor type: ");
+  for (i = 48; i < record_length; i++)
+    printf ("%c", sdr_repo_cache->cache_curr[i]);
+  printf (" (%s)\n", ipmi_get_sensor_group (sensor_type));
+  
+  printf ("Sensor number: #%d\n", sensor_number);
+  
+  printf ("Event/Reading type code: %02Xh\n", event_reading_type_code);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"positive_hysteresis", 
+		&val);
+  printf ("Hysteresis +ve: %d\n", (u_int8_t) val);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"negative_hysteresis", 
+		&val);
+  printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
+  
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
+					  data_rs);
+  
+  if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
+    {
+      /*       char err_msg[IPMI_ERR_STR_MAX_LEN]; */
+      /*       ipmi_strerror_cmd_r (data_rs, err_msg, IPMI_ERR_STR_MAX_LEN); */
+      status = -1;
+    }
+  
+  if (status == 0)
+    {
+      char key[65];
+      
+      for (i = 0; 
+	   ipmi_event_reading_type_code_desc_ptr[event_reading_type_code][i] != NULL; 
+	   i++)
+	{
+	  if (strcasecmp (ipmi_event_reading_type_code_desc_ptr[event_reading_type_code][i], 
+			  "reserved") == 0)
+	    continue;
+	  
+	  snprintf (key, 64, "state_%d_asserted", i);
+	  fiid_obj_get (data_rs, 
+			tmpl_get_sensor_discrete_reading_rs, 
+			key, 
+			&val);
+	  
+	  if (val == 1)
+	    {
+	      status_message = (char *) ipmi_event_reading_type_code_desc_ptr[event_reading_type_code][i];
+	      break;
+	    }
+	}
+      if (status_message == NULL)
+	status_message = strdupa ("OK");
+    }
+  else 
+    status_message = strdupa ("Unknown");
+  
+  printf ("Sensor status: [%s]\n", status_message);
 }
 
 void 
@@ -1934,8 +2047,118 @@ display_verbose_current_generic_discrete_sensor_compact_record (sdr_repo_cache_t
 void 
 display_verbose_current_discrete_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 {
-  // This function never be called
-  printf ("This function never be called\n");
+  u_int64_t val;
+  int i;
+  
+  u_int8_t base_unit;
+  
+  u_int8_t sensor_number;
+  u_int8_t sensor_type;
+  u_int8_t event_reading_type_code;
+  
+  u_int8_t data_rs[] = {0, 0, 0, 0, 0, 0};
+  u_int8_t status;
+  
+  u_int8_t record_length;
+  
+  char *status_message = NULL;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"record_length", 
+		&val);
+  record_length = val;
+  record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_base_unit", 
+		&val);
+  base_unit = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"event_reading_type", 
+		&val);
+  event_reading_type_code = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_number", 
+		&val);
+  sensor_number = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"sensor_type", 
+		&val);
+  sensor_type = val;
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"record_id",
+		&val);
+  printf ("Record ID: %d\n", (u_int16_t) val);
+  
+  printf ("Sensor type: ");
+  for (i = 48; i < record_length; i++)
+    printf ("%c", sdr_repo_cache->cache_curr[i]);
+  printf (" (%s)\n", ipmi_get_sensor_group (sensor_type));
+  
+  printf ("Sensor number: #%d\n", sensor_number);
+  
+  printf ("Event/Reading type code: %02Xh\n", event_reading_type_code);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"positive_hysteresis", 
+		&val);
+  printf ("Hysteresis +ve: %d\n", (u_int8_t) val);
+  
+  fiid_obj_get (sdr_repo_cache->cache_curr, 
+		tmpl_sdr_full_sensor_record, 
+		"negative_hysteresis", 
+		&val);
+  printf ("Hysteresis -ve: %d\n", (u_int8_t) val);
+  
+  status = ipmi_kcs_get_discrete_reading (sensor_number, 
+					  data_rs);
+  
+  if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
+    {
+      /*       char err_msg[IPMI_ERR_STR_MAX_LEN]; */
+      /*       ipmi_strerror_cmd_r (data_rs, err_msg, IPMI_ERR_STR_MAX_LEN); */
+      status = -1;
+    }
+  
+  if (status == 0)
+    {
+      char key[65];
+      struct ipmi_discrete_desc *discrete_sensor_desc;
+      
+      discrete_sensor_desc = (struct ipmi_discrete_desc *) 
+	ipmi_sensor_type_desc_ptr[sensor_type];
+      
+      for (i = 0; discrete_sensor_desc[i].message != NULL; i++)
+	{
+	  if (strcasecmp (discrete_sensor_desc[i].message, "reserved") == 0)
+	    continue;
+	  
+	  snprintf (key, 64, "state_%d_asserted", i);
+	  fiid_obj_get (data_rs, 
+			tmpl_get_sensor_discrete_reading_rs, 
+			key, 
+			&val);
+	  
+	  printf ("%s: [%s]\n", discrete_sensor_desc[i].message, 
+		  ((discrete_sensor_desc[i].normal_code == val) ? "OK": "Unknown"));
+	}
+      return;
+    }
+  else 
+    status_message = strdupa ("Unknown");
+  
+  printf ("Sensor status: [%s]\n", status_message);
 }
 
 void 

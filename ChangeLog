@@ -7,6 +7,11 @@
 
 	* fish/Makefile.am: added new manpage.
 	
+	* fish/src/ipmi-wrapper-sensor.c
+	(display_verbose_current-generic_discrete_sensor_full_record,
+	display_verbose_current_discrete_sensor_full_record): Filled in
+	code for functions.
+
 2004-12-08  Albert Chu <chu11@llnl.gov>
 
 	* fish/src/ipmi-wrapper-sensor.c
