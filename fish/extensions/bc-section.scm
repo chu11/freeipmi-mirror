@@ -1,14 +1,14 @@
-(define section-name-list '("user1" 
-			    "user2" 
-			    "user3" 
-			    "user4" 
-			    "lan_channel" 
-			    "lan_conf" 
-			    "lan_conf_auth" 
-			    "lan_conf_misc" 
-			    "serial_channel" 
-			    "serial_conf"
-			    "misc"))
+(define section-name-desc '(("user1"          . user-keys-validator)
+			    ("user2"          . user-keys-validator)
+			    ("user3"          . user-keys-validator)
+			    ("user4"          . user-keys-validator)
+			    ("lan_channel"    . lan-serial-channel-keys-validator)
+			    ("lan_conf"       . lan-conf-keys-validator)
+			    ("lan_conf_auth"  . lan-conf-auth-keys-validator)
+			    ("lan_conf_misc"  . lan-conf-misc-keys-validator)
+			    ("serial_channel" . lan-serial-channel-keys-validator)
+			    ("serial_conf"    . serial-conf-keys-validator)
+			    ("misc"           . misc-keys-validator)))
 
 (define (read-section-data fd)
   (letrec ((section-data '())
@@ -105,63 +105,27 @@
 					"> FAILED\n"))
 		#f))))))
 
+(define (commit-section section-data)
+  (let ((section-name (car section-data)))
+    (commit-section-values section-name 
+			   (cdr section-data)
+			   (primitive-eval (assoc-ref section-name-desc 
+						      (string-downcase section-name))))))
+
 (define (validate-section section-data)
   (let ((section-name ""))
-    (if (not (list? section-data))
+    (if (null? section-data)
 	(begin 
-	  (display "ERROR: invalid section\n")
+	  (display "ERROR: invalid section found\n")
 	  #f)
 	(begin 
 	  (set! section-name (car section-data))
-	  (if (boolean? (member (string-downcase section-name) section-name-list))
+	  (if (boolean? (assoc (string-downcase section-name) section-name-desc))
 	      (begin 
 		(display (string-append "ERROR: invalid section name <" 
 					section-name ">\n"))
 		#f)
-	      (cond 
-	       ((or (string-ci=? section-name "user1") 
-		    (string-ci=? section-name "user2") 
-		    (string-ci=? section-name "user3") 
-		    (string-ci=? section-name "user4"))
-		(validate-section-keys (cdr section-data) user-keys-validator))
-	       ((string-ci=? section-name "lan_channel")
-		(validate-section-keys (cdr section-data) lan-serial-channel-keys-validator))
-	       ((string-ci=? section-name "lan_conf")
-		(validate-section-keys (cdr section-data) lan-conf-keys-validator))
-	       ((string-ci=? section-name "lan_conf_auth")
-		(validate-section-keys (cdr section-data) lan-conf-auth-keys-validator))
-	       ((string-ci=? section-name "lan_conf_misc")
-		(validate-section-keys (cdr section-data) lan-conf-misc-keys-validator))
-	       ((string-ci=? section-name "serial_channel")
-		(validate-section-keys (cdr section-data) lan-serial-channel-keys-validator))
-	       ((string-ci=? section-name "serial_conf")
-		(validate-section-keys (cdr section-data) serial-conf-keys-validator))
-	       ((string-ci=? section-name "misc")
-		(validate-section-keys (cdr section-data) misc-keys-validator))
-	       (else 
-		(display "currently not supported\n"))))))))
-
-(define (commit-section section-data)
-  (let ((section-name (car section-data)))
-    (cond 
-     ((or (string-ci=? section-name "user1") 
-	  (string-ci=? section-name "user2") 
-	  (string-ci=? section-name "user3") 
-	  (string-ci=? section-name "user4"))
-      (commit-section-values section-name (cdr section-data) user-keys-validator))
-     ((string-ci=? section-name "lan_channel")
-      (commit-section-values section-name (cdr section-data) lan-serial-channel-keys-validator))
-     ((string-ci=? section-name "lan_conf")
-      (commit-section-values section-name (cdr section-data) lan-conf-keys-validator))
-     ((string-ci=? section-name "lan_conf_auth")
-      (commit-section-values section-name (cdr section-data) lan-conf-auth-keys-validator))
-     ((string-ci=? section-name "lan_conf_misc")
-      (commit-section-values section-name (cdr section-data) lan-conf-misc-keys-validator))
-     ((string-ci=? section-name "serial_channel")
-      (commit-section-values section-name (cdr section-data) lan-serial-channel-keys-validator))
-     ((string-ci=? section-name "serial_conf")
-      (commit-section-values section-name (cdr section-data) serial-conf-keys-validator))
-     ((string-ci=? section-name "misc")
-      (commit-section-values section-name (cdr section-data) misc-keys-validator))
-     (else 
-      (display "currently not supported\n")))))
+	      (validate-section-keys (cdr section-data) 
+				     (primitive-eval 
+				      (assoc-ref section-name-desc 
+						 (string-downcase section-name)))))))))

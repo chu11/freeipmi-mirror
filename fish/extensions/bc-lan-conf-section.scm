@@ -23,12 +23,12 @@
   (fi-set-bmc-lan-conf-backup-gateway-mac-address gateway-mac-address))
 
 (define lan-conf-keys-validator 
-  '(("IP_Address_Source" valid-ip-address-source? get-ip-address-source commit-ip-address-source)
-    ("IP_Address" valid-ip-address? get-string commit-ip-address)
-    ("MAC_Address" valid-mac-address? get-string commit-mac-address)
-    ("Subnet_Mask" valid-ip-address? get-string commit-subnet-mask)
-    ("Default_Gateway_IP_Address" valid-ip-address? get-string commit-default-gateway-ip-address)
-    ("Default_Gateway_MAC_Address" valid-mac-address? get-string commit-default-gateway-mac-address)
-    ("Backup_Gateway_IP_Address" valid-ip-address? get-string commit-backup-gateway-ip-address)
-    ("Backup_Gateway_MAC_Address" valid-mac-address? get-string commit-backup-gateway-mac-address)))
+  '(("ip_address_source" valid-ip-address-source? get-ip-address-source commit-ip-address-source)
+    ("ip_address" valid-ip-address? get-string commit-ip-address)
+    ("mac_address" valid-mac-address? get-string commit-mac-address)
+    ("subnet_mask" valid-ip-address? get-string commit-subnet-mask)
+    ("default_gateway_ip_address" valid-ip-address? get-string commit-default-gateway-ip-address)
+    ("default_gateway_mac_address" valid-mac-address? get-string commit-default-gateway-mac-address)
+    ("backup_gateway_ip_address" valid-ip-address? get-string commit-backup-gateway-ip-address)
+    ("backup_gateway_mac_address" valid-mac-address? get-string commit-backup-gateway-mac-address)))
 

@@ -8,6 +8,6 @@
   (fi-set-bmc-lan-conf-gratuitous-arp gratuitous-arp-interval))
 
 (define lan-conf-misc-keys-validator 
-  '(("Enable_Gratuitous_ARPs" valid-boolean? get-boolean commit-enable-gratuitous-arps)
-    ("Enable_ARP_Response" valid-boolean? get-boolean commit-enable-arp-response)
-    ("Gratuitous_ARP_Interval" valid-integer? get-integer commit-gratuitous-arp-interval)))
+  '(("enable_gratuitous_arps" valid-boolean? get-boolean commit-enable-gratuitous-arps)
+    ("enable_arp_response" valid-boolean? get-boolean commit-enable-arp-response)
+    ("gratuitous_arp_interval" valid-integer? get-integer commit-gratuitous-arp-interval)))
