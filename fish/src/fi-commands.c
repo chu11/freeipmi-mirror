@@ -45,6 +45,7 @@
 #include <error.h>
 
 #include "fish.h"
+#include "guile-wrapper.h"
 #include "fi-utils.h"
 #include "fi-commands.h"
 #include "interpreter.h"
@@ -55,7 +56,10 @@ extern int errno;
 void
 command_eval_scheme_str (char *cmd_line)
 {
-  gh_eval_str_with_stack_saving_handler (cmd_line);
+  /* FIXME: We need to see if "backtrace" works for gh_eval_str_with_catch */
+  /* gh_eval_str_with_stack_saving_handler (cmd_line); */
+  gh_eval_str_with_catch (cmd_line, fish_exception_handler);
+
   scm_force_output (scm_current_output_port ());
 }
 
@@ -110,7 +114,8 @@ command_show_help (char *cmd_line)
 void
 command_load_scheme_file (char *cmd_line)
 {
-  gh_eval_file_with_standard_handler (cmd_line);
+  /* gh_eval_file_with_standard_handler (cmd_line); */
+  fi_load (cmd_line);
   scm_force_output (scm_current_output_port ());
 }
 

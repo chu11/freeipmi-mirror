@@ -86,6 +86,7 @@ strchr (const char* s, int c)
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#include "guile-wrapper.h"
 #include "fi-utils.h"
 #include "fish.h"
 
@@ -280,7 +281,7 @@ fi_load (char *filename)
 
   if (stat (filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (filename);
+      gh_eval_file_with_catch (filename, fish_exception_handler);
       return;
     }
 
@@ -290,7 +291,7 @@ fi_load (char *filename)
 	   filename);
   if (stat (extension_filepath, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (extension_filepath);
+      gh_eval_file_with_catch (extension_filepath, fish_exception_handler);
       return;
     }
   free (extension_filepath);
@@ -302,7 +303,7 @@ fi_load (char *filename)
 	   filename);
   if (stat (extension_filepath, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (extension_filepath);
+      gh_eval_file_with_catch (extension_filepath, fish_exception_handler);
       return;
     }
 }

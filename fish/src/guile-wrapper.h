@@ -20,7 +20,6 @@
 #define _GUILE_WRAPPER_H
 
 /* C exception handler for guile*/
-SCM gh_standard_handler(void *data, SCM tag, SCM throw_args);
+SCM fish_exception_handler (void *data, SCM tag, SCM throw_args);
 
-
-#endif
+#endif /* _GUILE_WRAPPER_H */

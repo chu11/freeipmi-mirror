@@ -23,7 +23,8 @@
 #include <guile/gh.h>
 #include "guile-wrapper.h"
 
-SCM gh_standard_handler(void *data, SCM tag, SCM throw_args)
+SCM
+fish_exception_handler (void *data, SCM tag, SCM throw_args)
 {
   fprintf (stderr, "\n>>--:>  >>--:>  >>--:> >>--:>");
   fprintf (stderr, "\n~ ~   Cat ate the fish!!  ~ ~");

@@ -1,3 +1,17 @@
+2005-02-23  Anand Babu  <ab@gnu.org.in>
+
+        Thanks tp Julian Elischer <julian@elischer.org> for reporting
+	static compilation problem. 
+
+        * src/guile-wrapper.c: Renamed gh_standard_handler to
+	fish_exception_handler.
+
+        * fish/src/fi-utils.c: fi_load now uses fish exception handler.
+
+        * fish/src/fi-commands.c : command_eval_scheme_str now uses fish
+	exception handler. command_load_scheme_file now uses fi_load API.
+
+	
 2004-10-24  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac: bump version number to 0.1.3.
