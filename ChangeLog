@@ -1,3 +1,10 @@
+2004-10-14  Anand Babu  <ab@gnu.org.in>
+
+	* freeipmi/libfreeipmi/src/ipmi-semaphores.h: Portability fixes -
+	careful macro checks for union semun. 
+	* freeipmi/libfreeipmi/src/xmalloc.h: Removed error.h and
+	error prototype. 
+
 2004-10-14  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac: Remove --enable-rpm-install option.

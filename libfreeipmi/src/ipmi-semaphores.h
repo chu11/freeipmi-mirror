@@ -78,16 +78,18 @@ do {								    \
 } while (0)
 
 #define IPMI_MUTEX_UP(semid)                 IPMI_MUTEX_UNLOCK (semid)
-  
-#ifndef _LINUX_SEM_H
-/* arg for semctl system calls. */
-union semun {
-  int val;                        /* value for SETVAL */
-  struct semid_ds *buf;           /* buffer for IPC_STAT & IPC_SET */
-  unsigned short *array;          /* array for GETALL & SETALL */
-  struct seminfo *__buf;          /* buffer for IPC_INFO */
-  void *__pad;
-};
+
+#if defined(__GNU_LIBRARY__) && !defined(_SEM_SEMUN_UNDEFINED)
+  /* union semun is defined by including <sys/sem.h> */
+#else
+  /* according to X/OPEN we have to define it ourselves */
+  union semun {
+    int val;                        /* value for SETVAL */
+    struct semid_ds *buf;           /* buffer for IPC_STAT & IPC_SET */
+    unsigned short *array;          /* array for GETALL & SETALL */
+    struct seminfo *__buf;          /* buffer for IPC_INFO */
+    void *__pad;
+  };
 #endif
 
 extern struct sembuf mutex_lock_buf_interruptible;

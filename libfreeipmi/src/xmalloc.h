@@ -56,8 +56,6 @@ void free ();
 # define _(Text) Text
 #endif
 
-#include "error.h"
-
 #ifndef EXIT_FAILURE
 # define EXIT_FAILURE 1
 #endif
@@ -69,14 +67,6 @@ __VOID *ipmi_xcalloc (size_t n, size_t s);
 __VOID *ipmi_xrealloc (__VOID *p, size_t n);
 char *ipmi_xstrdup (char *p);
 void ipmi_xfree (__VOID *p);
-#endif
-
-
-
-#if __STDC__ && (HAVE_VPRINTF || HAVE_DOPRNT)
-void error (int, int, const char *, ...);
-#else
-void error ();
 #endif
 
 #ifdef __cplusplus
