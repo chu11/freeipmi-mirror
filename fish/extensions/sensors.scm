@@ -25,6 +25,8 @@
 ;; 			   (power . ("Power Supply"))))
 
 (use-modules (ice-9 getopt-long))
+(use-modules (srfi srfi-13))
+(use-modules (srfi srfi-14))
 
 ;; Global variables
 (define sensors-sdr-cache-file (fi-sensors-get-default-cache-filename))
@@ -426,16 +428,18 @@
 	 (prof-wanted        (option-ref options 'prof #f))
 	 (group-name         (option-ref options 'group ""))
 	 ;;(sensor-list        (sentence->tokens (option-ref options 'sensors "")))
-	 (sensor-list        (sentence->tokens (string-replace 
-						(option-ref options 'sensors "") 
-						#\, #\space)))
+	 (sensor-list        (map string->number
+                                  (string-tokenize
+                                   (option-ref options 'sensors "")
+                                   (char-set-complement
+                                    (char-set-adjoin char-set:whitespace #\, )))))
 	 (args               (option-ref options '() '())))
     (cond 
      ;; argument type check
      ((list? (member #f (map number? sensor-list)))
       (begin (display (string-append sensors-program-short-name 
 			      ": error: Invalid argument [" 
-			      (list->asv (list->strlist sensor-list) " ") 
+			      (option-ref options 'sensors "") 
 			      "] to --sensors option\n")
 	       (current-error-port))
 	     (set! sensors-exit-status 1)))
