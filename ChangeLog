@@ -3,6 +3,11 @@
 	* libfreeipmi/src/ipmi-md2.c (ipmi_md2_finish),
 	libfreeipmi/src/ipmi-md5.c (ipmi_md5_finish): Clear magic number,
 	which will force caller to re-initialize context.
+
+	* libfreeipmi/src/ipmi-md2.h, libfreeipmi/src/ipmi-md2.c,
+	libfreeipmi/src/ipmi-md5.h, libfreeipmi/src/ipmi-md5.c: Fixed
+	headers.  These were originally a part of ipmipower first.  Its a
+	legal thing.
 	
 2004-12-15  Albert Chu <chu11@llnl.gov>
 
