@@ -41,7 +41,7 @@
 #include <fcntl.h>
 #endif
 
-#include <freeipmi.h>
+#include "freeipmi.h"
 #include <error.h>
 
 #include "fish.h"

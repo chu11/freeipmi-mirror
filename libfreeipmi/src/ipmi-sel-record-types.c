@@ -29,7 +29,7 @@
 #include <string.h>
 #endif
 
-#include <freeipmi.h>
+#include "freeipmi.h"
 
 fiid_template_t tmpl_sel_record_header = 
   {

@@ -42,7 +42,7 @@
 #include <fcntl.h>
 #endif
 
-#include <freeipmi.h>
+#include "freeipmi.h"
 
 #include "fish.h"
 #include "fi-utils.h"

@@ -6,6 +6,20 @@
 
 	* configure.ac: Remove generation of lsm and spec files.
 
+	* fish/src/Makefile.am: Added dependency check to libfreeipmi.la.
+
+	* fish/src/bmc-conf-checkout.c, fish/src/bmc-conf-commit.c,
+	fish/src/bmc-conf-key-utils.c, fish/src/bmc-conf-utils.c,
+	fish/src/fi-commands.c, fish/src/fish.c, fish/src/interpreter.c,
+	fish/src/ipmi-wrapper-sel.c, fish/src/ipmi-wrapper-sensor.c,
+	fish/src/ipmi-wrapper.c, libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sel-record-types.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: Changed <freeipmi.h> to
+	"freeipmi.h" to ensure use of local header.
+
+	* TODO: New file.
+
 2004-05-06 09:35  itz
 
 	* autogen.sh, configure.ac: Use ancient automake to satisfy RH

@@ -23,7 +23,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <freeipmi.h>
+#include "freeipmi.h"
 
 #ifdef STDC_HEADERS
 #include <string.h>

@@ -14,3 +14,7 @@ noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h\
 AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
 	     -DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
 
+../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
+	@cd `dirname $@` && make `basename $@`
+
+force-dependency-check:

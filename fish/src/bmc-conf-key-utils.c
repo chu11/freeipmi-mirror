@@ -2,7 +2,7 @@
 #include <config.h>
 #endif
 
-#include <freeipmi.h>
+#include "freeipmi.h"
 #include <stdio.h>
 #include <stdlib.h>
 
