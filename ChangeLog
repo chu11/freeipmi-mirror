@@ -1,3 +1,8 @@
+2004-11-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Fix
+	logic error in "auto" authentication calculation.
+	
 2004-11-15  Albert Chu <chu11@llnl.gov>
 
 	Added auto authentication type to ipmipower to automatically

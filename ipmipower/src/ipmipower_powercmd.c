@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.4 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.5 2004-11-16 17:37:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -558,18 +558,17 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (conf->authtype == AUTH_TYPE_AUTO)
 	{
 	  /* Choose the best authentication type available.
-	   * md5 > md2 > straight_passwd_key.  NULL username
-	   * and NULL password are a special case.
+	   * md5 > md2 > straight_passwd_key.
 	   */
-	  if (!strlen(conf->username) && !strlen(conf->password)
-	      && auth_type_none)
-	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
-	  else if (auth_type_md5)
-	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
-	  else if (auth_type_md2)
-	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
-	  else if (auth_type_straight_passwd_key)
-	    ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
+          if (auth_type_md5)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
+          else if (auth_type_md2)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
+          else if (auth_type_straight_passwd_key)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
+          else if (!strlen(conf->username) && !strlen(conf->password)
+              && auth_type_none)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
 	  else
 	    {
 	      /* achu: It may not seem possible to get to this point
