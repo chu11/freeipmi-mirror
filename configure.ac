@@ -1,16 +1,16 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.0],[freeipmi-devel@nongnu.org])
-AC_REVISION([$Id: configure.ac,v 1.1 2004-05-05 21:00:18 itz Exp $])
+AC_REVISION([$Id: configure.ac,v 1.2 2004-05-06 16:35:45 itz Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
-AC_PREREQ([2.59])
+AC_PREREQ([2.57])
 
 dnl Locate the sources.
 AC_CONFIG_SRCDIR([fish/fish.scm])
 
 dnl create a config.h file
-AC_CONFIG_HEADERS([config.h])
+AM_CONFIG_HEADER([config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
@@ -38,13 +38,13 @@ AC_SUBST([LIBFREEIPMI_VERSION_INFO])
 dnl Enable error tracing. Lower level calls will spit error messages
 dnl on to the console
 AC_ARG_ENABLE([trace],
-              AS_HELP_STRING([--enable-trace], [turn on error tracing]))
+              AC_HELP_STRING([--enable-trace], [turn on error tracing]))
 if test "x${enable_trace}" = "xyes" ; then
         AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
 fi
 
 AC_ARG_ENABLE([rpm-install],
-              AS_HELP_STRING([--enable-rpm-install], 
+              AC_HELP_STRING([--enable-rpm-install], 
                              [perform unique installation for building rpms]),
               [RPM_INSTALL=${enableval}],
               [RPM_INSTALL=no])
