@@ -23,12 +23,13 @@
 #include <guile/gh.h>
 #include "guile-wrapper.h"
 
-SCM gh_standard_handler(void *data, SCM tag, SCM throw_args)
+SCM
+fish_exception_handler (void *data, SCM tag, SCM throw_args)
 {
   fprintf (stderr, "\n>>--:>  >>--:>  >>--:> >>--:>");
   fprintf (stderr, "\n~ ~   Cat ate the fish!!  ~ ~");
   fprintf (stderr, "\n>>--:>  >>--:>  >>--:> >>--:>");
-  fprintf (stderr, "\nFish Exception (gh_standard_handler dump):");
+  fprintf (stderr, "\nFish Exception Handler:");
   fprintf (stderr, "\ntag        : ");
   fflush (stdout);
   gh_display (tag);
@@ -42,3 +43,4 @@ SCM gh_standard_handler(void *data, SCM tag, SCM throw_args)
   gh_newline();
   return SCM_UNSPECIFIED;
 }
+

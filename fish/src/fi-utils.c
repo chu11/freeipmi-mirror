@@ -86,6 +86,7 @@ strchr (const char* s, int c)
 #include <arpa/inet.h>
 
 #include "fi-utils.h"
+#include "guile-wrapper.h"
 #include "fish.h"
 
 static tcflag_t old_lflag;
@@ -278,7 +279,7 @@ fi_load (char *filename)
   ext_filename = strdup (filename);
   if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (ext_filename);
+      gh_eval_file_with_catch (ext_filename, fish_exception_handler);
       if (ext_filename)
 	free (ext_filename);
       return 0;
@@ -290,7 +291,7 @@ fi_load (char *filename)
   asprintf (&ext_filename, "%s/%s", ext_directory, filename);
   if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (ext_filename);
+      gh_eval_file_with_catch (ext_filename, fish_exception_handler);
       if (ext_directory)
 	free (ext_directory);
       if (ext_filename)
@@ -306,7 +307,7 @@ fi_load (char *filename)
   asprintf (&ext_filename, "%s/%s", ext_directory, filename);
   if (stat (ext_filename, &buf) == 0)
     {
-      gh_eval_file_with_standard_handler (ext_filename);
+      gh_eval_file_with_catch (ext_filename, fish_exception_handler);
       if (ext_directory)
 	free (ext_directory);
       if (ext_filename)
@@ -320,53 +321,6 @@ fi_load (char *filename)
   
   return (-1);
 }
-
-int
-open_free_udp_port (void)
-{
-  int sockfd;
-  int sockname_len;
-  struct sockaddr_in sockname;
-  int free_port=1025;
-  int err;
-  extern int errno;
-
-  sockfd = socket (AF_INET, SOCK_DGRAM, 0);
-  if (sockfd < 0)
-    {
-      perror ("open_free_udp_port");
-      exit (EXIT_FAILURE);
-    }
-
-  for (; free_port < 65535; free_port++)
-    {
-      memset (&sockname, 0, sizeof (struct sockaddr_in));
-      sockname.sin_family = AF_INET;
-      sockname.sin_port   = htons (free_port);
-      sockname.sin_addr.s_addr = htonl (INADDR_ANY);
-      sockname_len = sizeof (struct sockaddr_in);
-      
-      if ((err = bind (sockfd, (struct sockaddr *) &sockname, sockname_len)) == 0)
-	return sockfd;
-      else
-	{
-	  if (errno == EADDRINUSE)
-	    continue;
-	  else
-	    {
-	      perror ("open_free_udp_port [bind error]");
-	      exit (EXIT_FAILURE);
-	    }
-	}
-    }
-  close (sockfd);
-  perror ("open_free_udp_port [bind error]");
-  exit (EXIT_FAILURE);
-
-  // avoid compiler warning
-  return (-1);
-}
-
 
 char *
 fi_getline (FILE *fp)

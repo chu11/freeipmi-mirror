@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.13 2005-01-18 21:49:01 balamurugan Exp $ 
+   $Id: fish.c,v 1.14 2005-02-23 16:11:57 ab Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -352,7 +352,7 @@ inner_main (int argc, char **argv)
   
 
   guile_env_init ();
-  fi_sockfd = open_free_udp_port ();
+  fi_sockfd = ipmi_open_free_udp_port ();
   fi_set_sock_timeout (FI_DEFAULT_SOCK_TIMEOUT);
   
   fi_load (FI_DEFAULT_CONFIG_FILE);

@@ -57,7 +57,7 @@ main (void)
     auth_code_data_len = strlen (auth_code_data);
 
   /* Open client (local) UDP socket */
-  if ((sockfd = open_free_udp_port ()) == -1)
+  if ((sockfd = ipmi_open_free_udp_port ()) == -1)
     return (1);
   
   host.sin_family = AF_INET;

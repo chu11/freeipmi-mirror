@@ -91,7 +91,6 @@ char *get_config_directory (void);
 char *get_global_extensions_directory (void);
 char *get_local_extensions_directory (void);
 int fi_load (char *filename);
-int open_free_udp_port (void);
 char *fi_getline (FILE *fp);
 char *fi_get_value (char *line);
 int is_valid_ip (char *ip);

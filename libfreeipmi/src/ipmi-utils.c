@@ -136,7 +136,7 @@ ipmi_is_root ()
 }
 
 int
-open_free_udp_port (void)
+ipmi_open_free_udp_port (void)
 {
   int sockfd;
   int sockname_len;
