@@ -24,7 +24,6 @@
 #include "fish.h"
 #include "extension.h"
 #include "scm-procedures.h"
-#include "bmc-conf-utils.h"
 
 SCM ex_fish_ready_hook;
 int hook_return = 0;

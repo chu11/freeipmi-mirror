@@ -1,5 +1,9 @@
 2005-01-18  A Balamurugan  <bala.a@californiadigital.com>
 
+	* fish/src/extension.c: removed bmc-conf-utils.h include.
+
+2005-01-18  A Balamurugan  <bala.a@californiadigital.com>
+
 	* ROADMAP: updated
 	
 	* TODO: updated
