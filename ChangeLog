@@ -1,3 +1,8 @@
+2005-03-20  Anand Babu  <ab@gnu.org.in>
+
+	* fish/src/fish.c (inner_main): Check return value of
+	ipmi_open_free_udp_port. 
+
 2005-03-18  Albert Chu <chu11@llnl.gov>
 
 	Added support for vlan configuration in bmc-config.
