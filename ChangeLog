@@ -1,5 +1,8 @@
 2004-08-20  Ian Zimmerman  <itz@californiadigital.com>
 
+	* doc/sel.1: document new options -x, --hex-dump
+	and -i, --info.
+
 	* fish/extensions/sel.scm (sel-hex-dump):
 	Use sel-display-info.
 	(sel-display-info): New function.
