@@ -54,6 +54,7 @@ extern "C" {
 extern fiid_template_t tmpl_sdr_full_sensor_record;
 extern fiid_template_t tmpl_sdr_compact_sensor_record;
 extern fiid_template_t tmpl_sdr_entity_association_sensor_record;
+extern fiid_template_t tmpl_generic_device_locator_sensor_record;
 extern fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record;
 extern fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_sensor_record;
 extern fiid_template_t tmpl_sdr_management_controller_device_locator_sensor_record;

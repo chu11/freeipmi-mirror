@@ -308,7 +308,8 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   else 
     printf ("N/A ");
   
-  printf ("(low=%.2f/", normal_min);
+/*   printf ("(low=%.2f/", normal_min); */
+  printf ("(low=%.2f/", lower_critical_threshold);
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_full_sensor_record, 
@@ -323,7 +324,8 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
 				    is_signed, 
 				    val));
   
-  printf ("high=%.2f) ", normal_max);
+/*   printf ("high=%.2f) ", normal_max); */
+  printf ("high=%.2f) ", upper_critical_threshold);
   
   if (status == 0)
     {
@@ -2789,14 +2791,12 @@ display_very_verbose_current_sensor (sdr_repo_cache_t *sdr_repo_cache)
       {
 	char errstr[IPMI_ERR_STR_MAX_LEN];
 	snprintf (errstr, IPMI_ERR_STR_MAX_LEN, 
-		  "BUG: %s: %d: %s: record-id %d: "
-		  "record type [%02X] "
-		  "is not handled\n", 
-		  __FILE__, __LINE__, __PRETTY_FUNCTION__, 
-		  sdr_repo_cache->cache_curr_rec_id, (u_int8_t) val);
+		  "%s: record id %d: record type [%02Xh] is not handled\n", 
+		  __PRETTY_FUNCTION__, sdr_repo_cache->cache_curr_rec_id, 
+		  (u_int8_t) val);
 	
 	syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERR), errstr);
-	printf ("__DEBUG__: %s", errstr);
+	/* printf ("__DEBUG__: %s", errstr); */
       }
       fflush (stdout);
       break;

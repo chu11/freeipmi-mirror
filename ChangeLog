@@ -1,3 +1,11 @@
+2004-10-25  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/src/ipmi-wrapper-sensor.c: now sensors normal output shows
+	upper/lower critical threshold instead of normal min/max.
+
+	* libfreeipmi/src/ipmi-sdr-record-types.[ch]: added new template
+	tmpl_generic_device_locator_sensor_record.
+
 2004-10-25  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac, Makefile.am: make it possible to disable fish building.

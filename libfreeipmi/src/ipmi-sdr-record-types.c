@@ -273,6 +273,48 @@ fiid_template_t tmpl_sdr_entity_association_sensor_record =
     {0, ""}
   };
 
+fiid_template_t tmpl_generic_device_locator_sensor_record = 
+  {
+    // Sensor record header
+    // --------------------
+    {16, "record_id"}, 
+    {4,  "sdr_version_major"}, 
+    {4,  "sdr_version_minor"}, 
+    {8,  "record_type"}, 
+    {8,  "record_length"}, 
+    // Record Key bytes
+    // ----------------
+    // Direct Access Address
+    {1, "direct_access_address.reserved"}, 
+    {7, "direct_access_address"}, 
+    // Device Slave Address
+    {1, "channel_number_ms"}, 
+    {7, "device_slave_address"}, 
+    // Access LUN / Bus ID
+    {3, "private_bus_id"}, 
+    {2, "lun_master_write_read_command"}, 
+    {3, "channel_number_ls"}, 
+    // Address span
+    {3, "address_span"}, 
+    {5, "address_span.reserved"}, 
+    // Reserved
+    {8, "reserved"}, 
+    // Device Type
+    {8, "device_type"}, 
+    // Device Type Modifier
+    {8, "device_type_modifier"}, 
+    // Entity ID
+    {8, "entity_id"}, 
+    // Entity Instance
+    {8, "entity_instance"}, 
+    // OEM Reserved
+    {8, "oem_reserved"}, 
+    // Device ID String Type/Length
+    {8, "device_id_string_type_length"}, 
+    // Device ID String
+    {128, "device_id_string"}, 
+    {0, ""}
+  };
 
 fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record = 
   {
