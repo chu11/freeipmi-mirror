@@ -1,3 +1,8 @@
+2004-10-25  Ian Zimmerman  <itz@californiadigital.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port): probe for KCS
+	IO port, don't use hardcoded default.
+
 2004-10-25  A Balamurugan  <bala.a@californiadigital.com>
 
 	* fish/src/ipmi-wrapper-sensor.c: now sensors normal output shows

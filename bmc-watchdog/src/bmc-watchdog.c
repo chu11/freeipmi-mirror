@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.16 2004-10-11 16:45:23 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.17 2004-10-25 19:23:27 itz Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -253,12 +253,20 @@ _err_exit(char *fmt, ...)
 static u_int32_t 
 _get_port(void)
 {
+  ipmi_probe_info_t probeinfo;
+  int status;
+
   assert(cmdline_parsed != 0);
   
   if (cinfo.io_port)
     return cinfo.io_port_val;
   else
-    return IPMI_KCS_SMS_IO_BASE_DEFAULT;
+    {
+      ipmi_probe (ipmi_interface_kcs, &probeinfo, &status);
+      if (status == 0 && !probeinfo.bmc_io_mapped)
+        return (u_int32_t) probeinfo.base.bmc_iobase_addr;
+      else return IPMI_KCS_SMS_IO_BASE_DEFAULT;
+    }
 }
 
 /* Must be called after cmdline parsed b/c user may pass in io port */
