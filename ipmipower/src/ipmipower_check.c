@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.1 2004-05-11 17:04:41 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.2 2004-10-08 23:16:44 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -178,7 +178,7 @@ static int
 _check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   u_int64_t cmd = 0;
-  u_int64_t expected_cmd;
+  u_int64_t expected_cmd = -1;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));

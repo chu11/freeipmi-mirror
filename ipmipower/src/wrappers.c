@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.1 2004-05-11 17:05:24 chu11 Exp $
+ *  $Id: wrappers.c,v 1.2 2004-10-08 23:16:44 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -267,6 +267,8 @@ void Delay(struct timeval *tv)
 
 static int _checkfill(unsigned char *buf, unsigned char fill, int size)
 {
+  (void) &_checkfill;    /* Avoid warning "defined but not used" */
+
     while (size-- > 0)
         if (buf[size] != fill)
             return 0;

@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <alloca.h>
 
 #ifdef HAVE_FCNTL_H
 #include <fcntl.h>
@@ -80,8 +81,8 @@ display_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo_cache)
   int readable_upper_critical_threshold = 0;
   int readable_lower_non_recoverable_threshold = 0;
   int readable_upper_non_recoverable_threshold = 0;
-  double lower_limit = 0.0;
-  double upper_limit = 0.0;
+/*   double lower_limit = 0.0; */
+/*   double upper_limit = 0.0; */
   double lower_non_critical_threshold;
   double upper_non_critical_threshold;
   double lower_critical_threshold;
@@ -1094,8 +1095,8 @@ display_verbose_current_threshold_sensor_full_record (sdr_repo_cache_t *sdr_repo
   int readable_upper_critical_threshold = 0;
   int readable_lower_non_recoverable_threshold = 0;
   int readable_upper_non_recoverable_threshold = 0;
-  double lower_limit = 0.0;
-  double upper_limit = 0.0;
+/*   double lower_limit = 0.0; */
+/*   double upper_limit = 0.0; */
   double lower_non_critical_threshold;
   double upper_non_critical_threshold;
   double lower_critical_threshold;
