@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.2 2004-09-14 20:46:18 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.3 2004-10-05 01:09:55 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,13 +93,6 @@ currently supports the following authentication types:
 "straight_passwd_key", "md2", and "md5".
 .TP
 .I on-if-off enable|disable
-.TP
-.I permsgauth_hosts hostA hostB hostC ...
-Specify the hosts that will not perform per-msg authentication.
-Multiple hostnames or hostname ranges can be specified similarly to
-the
-.I hostnames 
-option above.
 .TP
 .I outputtype outputtype
 Specify the default outputtype type to use.  

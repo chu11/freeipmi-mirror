@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.2 2004-09-15 15:39:05 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,8 +55,6 @@ static char *ipmipower_outputs[] =
     "cannot obtain proper privilege level",
     "invalid operation",
     "invalid authtype",
-    "permsgauth is required",
-    "permsgauth must be disabled",
     "timed out",
     "not discovered",
     "bad connection",

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.5 2004-09-27 21:25:56 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.6 2004-10-05 01:09:55 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,15 +117,6 @@ The currently available authentication types are "none",
 "straight_passwd_key", "md2", and "md5".  If not specified, 
 .B ipmipower
 uses "straight_passwd_key" authentication.
-.TP
-.I "-e, --permsgauth_hosts hostA,hostB,..."
-The list of hostname addresses that will not perform per-msg
-authentication.  Disabling per-msg authentication can help reduce the
-amount of authentication computation done by
-.B ipmipower 
-(in particular if "md2" or "md5" authentication is used) and reduce
-the amount of data sent over the network. Hostnames in the list may be
-specified in a range format; see HOST RANGES below.
 .TP
 .I "-g, "--on-if-off"
 The IPMI specification does not require the cycle or reset commands to
@@ -319,9 +310,6 @@ quit
 .I "authtype str"
 specify a new authentication type, none, straight_passwd_key, md2, or md5.
 .TP
-.I "permsgauth_hosts str"
-specify a new set of hosts to disable per-msg authentication, no str to unconfigure all hosts
-.TP
 .I "outputtype str"
 specify a new output type, none, newline, or hostlist.
 .if @WITH_DEBUG@ \{
@@ -434,12 +422,12 @@ after a number of username, password, or privilege errors.  There is
 no known way to cleanly deal with a "locked up" BMC.  The best option
 is to simply wait "awhile".
 
-If you input your username and password on the command line, the
-username and password can be discovered by other users when using the
+On certain operating systems, if you input your username and password
+on the command line, the username and password may be discovered by
+other users when using the
 .B ps(1) 
-command or looking in the /proc file system
-on certain operating systems.  The most secure solution is to enter
-the username and password while in interactive mode.  If
+command or looking in the /proc file system.  The most secure solution
+is to enter the username and password while in interactive mode.  If
 administrators do not wish to type in their username and password at
 the interactive prompt, they can be listed in a configuration file, in
 which the access to this file can be limited.

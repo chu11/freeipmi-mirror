@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.3 2004-06-25 00:40:20 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.4 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -85,8 +85,6 @@ _cmd_advanced(void)
 {
   cbuf_printf(ttyout, 
               "authtype str            - set a new authentication type\n"
-              "permsgauth_hosts [str]  - set a new set of hostnames to disable\n"
-              "                          per-msg authentication (no str for none)\n"
               "on-if-off [on|off]      - toggle on-if-off functionality\n"
               "outputtype str          - set a new output type\n");
 #ifndef NDEBUG
@@ -331,85 +329,6 @@ _cmd_authtype(char **argv)
 }
 
 static void 
-_cmd_permsgauth_hosts(char **argv) 
-{
-  hostlist_t hl; 
-
-  assert(argv != NULL);
-
-  if (conf->hosts == NULL)
-    {
-      cbuf_printf(ttyout, "hostnames for power control must be input first");
-      return;
-    }
-
-  if (argv[1] == NULL) 
-    {
-      hostlist_destroy(conf->permsgauth_hosts);
-
-      conf->permsgauth_hosts = NULL;
-      conf->permsgauth_hosts_count = 0;
-
-      cbuf_printf(ttyout, "permsgauth_hosts unconfigured\n");
-    }
-  else if ((hl = hostlist_create(argv[1])) == NULL)
-    cbuf_printf(ttyout, "hostnames incorrectly formatted\n");
-  else 
-    {
-      int rv, hl_count;
-      hostlist_iterator_t itr;
-      char *str;
-
-      char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
-
-      hostlist_uniq(hl);
-
-      hl_count = hostlist_count(hl);
-      if (hl_count < IPMIPOWER_MINNODES || hl_count > IPMIPOWER_MAXNODES) 
-        {
-          cbuf_printf(ttyout, "invalid number of hostnames\n");
-          hostlist_destroy(hl);
-          return;
-        }
-
-      if ((itr = hostlist_iterator_create(hl)) == NULL)
-        {
-          cbuf_printf(ttyout, "error verifying hostnames\n");
-          hostlist_destroy(hl);
-          return; 
-        }
-
-      while ((str = hostlist_next(itr)) != NULL)
-        {
-          if (hostlist_find(conf->hosts, str) < 0)
-            {
-              cbuf_printf(ttyout, "host \"%s\" not configured for power "
-                          "control\n", str);
-              hostlist_destroy(hl);
-              free(str);
-              return;
-            }
-          free(str);
-        }
-      hostlist_iterator_destroy(itr);
-
-      hostlist_destroy(conf->permsgauth_hosts);
-
-      conf->permsgauth_hosts = hl;
-      conf->permsgauth_hosts_count = hl_count;
-
-      rv = hostlist_ranged_string(conf->permsgauth_hosts, 
-                                  IPMIPOWER_HOSTLIST_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "permsgauth_hosts: can't output, overflows internal "
-                    "buffer\n");
-      if (rv > 0)
-        cbuf_printf(ttyout, "permsgauth_hosts: %s\n", buffer);
-    }
-}
-
-static void 
 _cmd_outputtype(char **argv) 
 {
   assert(argv != NULL);
@@ -607,23 +526,6 @@ _cmd_config(void)
   cbuf_printf(ttyout, "Authtype:            %s\n", 
               ipmipower_auth_string(conf->authtype));
 
-  if (conf->permsgauth_hosts != NULL) 
-    {
-      int rv;
-      char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
-
-      rv = hostlist_ranged_string(conf->permsgauth_hosts, 
-                                  IPMIPOWER_HOSTLIST_BUFLEN, 
-                                  buffer);
-      if (rv < 0)
-        cbuf_printf(ttyout, "PerMsgAuth_Hosts:    can't output, overflows "
-                    "internal buffer\n");
-      if (rv > 0)
-        cbuf_printf(ttyout, "PerMsgAuth_Hosts:    %s\n", buffer);
-    }
-  else
-    cbuf_printf(ttyout, "PerMsgAuth_Hosts:    NONE\n");
-
   cbuf_printf(ttyout, "On-If-Off:           %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:          %s\n",
@@ -785,8 +687,6 @@ ipmipower_prompt_process_cmdline(void)
               quit = 1;
             else if (strcmp(argv[0], "authtype") == 0)
               _cmd_authtype(argv);
-            else if (strcmp(argv[0], "permsgauth_hosts") == 0)
-              _cmd_permsgauth_hosts(argv);
             else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)

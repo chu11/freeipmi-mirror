@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.2 2004-06-25 00:40:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -161,6 +161,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->session_outbound_count = 0;
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
+  ip->permsgauth_enabled = IPMIPOWER_TRUE;
   
   ip->ic = ic;
 
@@ -302,11 +303,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   
   if (pkt == AUTH_RES || pkt == SESS_RES)
     at = IPMI_SESSION_AUTH_TYPE_NONE;
-  else if (pkt == ACTV_RES || conf->permsgauth_hosts == NULL)
+  else if (pkt == ACTV_RES)
     at = ipmipower_ipmi_auth_type(conf->authtype);
   else
     {
-      if (hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE;
       else
         at = ipmipower_ipmi_auth_type(conf->authtype);
@@ -568,23 +569,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           return -1;
         }
 
-      if (conf->permsgauth_hosts != NULL
-          && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
-        {
-          if (!auth_status_per_message_auth)
-            {
-              ipmipower_output(MSG_TYPE_PERMSGAUTH_REQUIRED, ip->ic->hostname);
-              return -1;
-            }
-        }
+      if (!auth_status_per_message_auth)
+        ip->permsgauth_enabled = IPMIPOWER_TRUE;
       else
-        {
-          if (auth_status_per_message_auth)
-            {
-              ipmipower_output(MSG_TYPE_PERMSGAUTH_DISABLED, ip->ic->hostname);
-              return -1;
-            }
-        }
+        ip->permsgauth_enabled = IPMIPOWER_FALSE;
 
       _send_packet(ip, SESS_REQ, 0);
     }

@@ -70,9 +70,6 @@ Ipmipower
 - Buffer recently malloced space to avoid constant re-mallocing.
 - Add readline or similar functionality in interactive mode.
 - get rid of the ping-consec-count option, that thing is useless
-- fix up per-msg auth output/usage/manpage, or remove option and
-  have ipmipower use whatever is returned from get authentication
-  capabilities.
 
 Ipmiping/Rmcpping
 

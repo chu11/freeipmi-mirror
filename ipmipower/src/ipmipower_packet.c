@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.2 2004-06-25 00:40:20 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.3 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -399,8 +399,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       u_int64_t session_id;
       u_int8_t *password;
 
-      if (conf->permsgauth_hosts != NULL
-          && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
       else
         at = ipmipower_ipmi_auth_type(conf->authtype);
@@ -463,8 +462,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       u_int64_t session_id;
       u_int8_t *password;
 
-      if (conf->permsgauth_hosts != NULL
-          && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
       else
         at = ipmipower_ipmi_auth_type(conf->authtype);
@@ -519,8 +517,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       u_int64_t session_id;
       u_int8_t *password;
 
-      if (conf->permsgauth_hosts != NULL
-          && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
       else
         at = ipmipower_ipmi_auth_type(conf->authtype);
@@ -583,8 +580,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
              || ip->cmd == POWER_CMD_PULSE_DIAG_INTR
              || ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS);
 
-      if (conf->permsgauth_hosts != NULL
-          && hostlist_find(conf->permsgauth_hosts, ip->ic->hostname) >= 0)
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
       else
         at = ipmipower_ipmi_auth_type(conf->authtype);

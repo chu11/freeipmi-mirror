@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.2 2004-06-25 00:40:20 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.3 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -217,15 +217,13 @@ typedef enum { MSG_TYPE_SUCCESS                 =  0,
                MSG_TYPE_PRIVILEGE               =  7,
                MSG_TYPE_OPERATION               =  8,
                MSG_TYPE_AUTHTYPE                =  9,
-               MSG_TYPE_PERMSGAUTH_REQUIRED     = 10,
-               MSG_TYPE_PERMSGAUTH_DISABLED     = 11,
-               MSG_TYPE_TIMEDOUT                = 12,
-               MSG_TYPE_NOTDISCOVERED           = 13,
-               MSG_TYPE_BADCONNECTION           = 14,
-               MSG_TYPE_UNKNOWNNODE             = 15,
-               MSG_TYPE_RESOURCES               = 16,
-               MSG_TYPE_BMCBUSY                 = 17,
-               MSG_TYPE_BMCERROR                = 18 } msg_type_t;
+               MSG_TYPE_TIMEDOUT                = 10,
+               MSG_TYPE_NOTDISCOVERED           = 11,
+               MSG_TYPE_BADCONNECTION           = 12,
+               MSG_TYPE_UNKNOWNNODE             = 13,
+               MSG_TYPE_RESOURCES               = 14,
+               MSG_TYPE_BMCBUSY                 = 15,
+               MSG_TYPE_BMCERROR                = 16 } msg_type_t;
 #define MSG_TYPE_VALID(m)             (m >= MSG_TYPE_SUCCESS && \
                                        m <= MSG_TYPE_BMCERROR)
 #define MSG_TYPE_NUM                  (MSG_TYPE_BMCERROR+1)
@@ -243,6 +241,7 @@ struct ipmipower_powercmd {
     unsigned int session_outbound_count;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
+    ipmipower_bool_t permsgauth_enabled;
 
     struct ipmipower_connection *ic;
   
@@ -313,8 +312,6 @@ struct ipmipower_config
   char              configfile[MAXPATHLEN+1];
 
   auth_type_t       authtype;
-  hostlist_t        permsgauth_hosts;
-  int               permsgauth_hosts_count;
   ipmipower_bool_t  on_if_off;
   output_type_t     outputtype;
 #ifndef NDEBUG
@@ -339,7 +336,6 @@ struct ipmipower_config
   ipmipower_bool_t  username_set;
   ipmipower_bool_t  password_set;
   ipmipower_bool_t  authtype_set;
-  ipmipower_bool_t  permsgauth_hosts_set;
   ipmipower_bool_t  on_if_off_set;
   ipmipower_bool_t  outputtype_set;
   ipmipower_bool_t  timeout_len_set;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.3 2004-06-25 00:40:20 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.4 2004-10-05 01:09:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,8 +77,6 @@ ipmipower_config_setup(void)
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
   conf->authtype = AUTH_TYPE_STRAIGHT_PASSWD_KEY;
-  conf->permsgauth_hosts = NULL;
-  conf->permsgauth_hosts_count = 0;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
 #ifndef NDEBUG
@@ -104,7 +102,6 @@ ipmipower_config_setup(void)
   conf->username_set = IPMIPOWER_FALSE;
   conf->password_set = IPMIPOWER_FALSE;
   conf->authtype_set = IPMIPOWER_FALSE;
-  conf->permsgauth_hosts_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
@@ -213,9 +210,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:e:goDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:goDIRLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:e:got:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:got:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -236,7 +233,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"config",              1, NULL, 'C'}, 
 
       {"authtype",            1, NULL, 'a'},  
-      {"permsgauth",          1, NULL, 'e'},
       {"on-if-off",           0, NULL, 'g'},
       {"outputtype",          1, NULL, 'o'},
 #ifndef NDEBUG
@@ -323,13 +319,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'a':       /* --authtype */
           conf->authtype = ipmipower_auth_index(optarg);
           conf->authtype_set = IPMIPOWER_TRUE;
-          break;
-        case 'e':       /* --permsgauth */
-          if ((conf->permsgauth_hosts = hostlist_create(optarg)) == NULL)
-            err_exit("Error: Permsgauth hostnames incorrectly formatted");
-          hostlist_uniq(conf->permsgauth_hosts);
-          conf->permsgauth_hosts_count = hostlist_count(conf->permsgauth_hosts);
-          conf->permsgauth_hosts_set = IPMIPOWER_TRUE;
           break;
         case 'g':       /* --on-if-off */
           conf->on_if_off = !conf->on_if_off;
@@ -454,34 +443,6 @@ _cb_hostnames(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_permsgauth_hosts(conffile_t cf, struct conffile_data *data,
-                     char *optionname, int option_type, void *option_ptr, 
-                     int option_data, void *app_ptr, int app_data) 
-{
-  int i;
-
-  if (conf->permsgauth_hosts_set == IPMIPOWER_TRUE)
-    return 0;
-
-  if ((conf->permsgauth_hosts = hostlist_create(NULL)) == NULL)
-    err_exit("Conf-> File Error: Permsgauth hostnames "
-             "incorrectly formatted");
-  
-  for (i = 0; i < data->stringlist_len; i++) 
-    {
-      if (hostlist_push(conf->permsgauth_hosts, data->stringlist[i]) == 0)
-        err_exit("Conf-> File Error: Permsgauth hostnames "
-                 "incorrectly formatted");
-    }
-  
-  hostlist_uniq(conf->permsgauth_hosts);
-  
-  conf->permsgauth_hosts_count = hostlist_count(conf->permsgauth_hosts);
-  
-  return 0;
-}
-
-static int 
 _cb_authtype(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr, 
              int option_data, void *app_ptr, int app_data) 
@@ -571,10 +532,9 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, authtype_flag, 
-    on_if_off_flag, permsgauth_hosts_flag, outputtype_flag, timeout_flag, 
-    retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
-    ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
-    ping_consec_count_flag;
+    on_if_off_flag, outputtype_flag, timeout_flag, retry_timeout_flag, 
+    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
+    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -586,8 +546,6 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &password_flag, NULL, 0},
       {"authtype", CONFFILE_OPTION_STRING, -1, _cb_authtype, 
        1, 0, &authtype_flag, NULL, 0},
-      {"permsgauth_hosts", CONFFILE_OPTION_LIST_STRING, -1, 
-       _cb_permsgauth_hosts, 1, 0, &permsgauth_hosts_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
@@ -661,27 +619,6 @@ ipmipower_config_check_values(void)
 
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
     err_exit("Error: Must specify target hostnames in non-interactive mode");
-
-  if (conf->hosts == NULL && conf->permsgauth_hosts != NULL)
-    err_exit("Error: Must specify power control hosts as well as "
-             "permsgauth hosts");
-
-  if (conf->permsgauth_hosts)
-    {
-      hostlist_iterator_t itr;
-      char *str;
-
-      if ((itr = hostlist_iterator_create(conf->permsgauth_hosts)) == NULL)
-        err_exit("Error: hostlist_iterator_create");
-
-      while ((str = hostlist_next(itr)) != NULL)
-        {
-          if (hostlist_find(conf->hosts, str) < 0)
-            err_exit("host \"%s\" not configured for power control", str);
-          free(str);
-        }
-      hostlist_iterator_destroy(itr);
-    }
 
   if (conf->authtype == AUTH_TYPE_NONE && strlen(conf->username) > 0)
     err_exit("Error: username cannot be set for authentication type \"%s\"",

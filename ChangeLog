@@ -1,3 +1,46 @@
+2004-10-04  Albert Chu <chu11@llnl.gov>
+
+	Removed --permsgauth_hosts command line option in ipmipower.
+
+	* doc/ipmipower.8.in, doc/ipmipower.conf.5.in: Removed all
+	references to permsgauth_hosts command line, interactive command,
+	and configuration file options.  Slight re-word of information in
+	KNOWN ISSUES.
+
+	* ipmipower/src/ipmipower.h: Removed MSG_TYPE_PERMSGAUTH_REQUIRED
+	and MSG_TYPE_PERMSGAUTH_DISABLED definitions.  Removed
+	permsgauth_hosts, permsgauth_hosts_count, and permsgauth_hosts_set
+	in ipmipower_config.  Added permsgauth_enabled to
+	ipmipower_powercmd.
+
+	* ipmipower/src/ipmipower_config.c (ipmipower_config_setup,
+	ipmipower_config_cmdline_parse, ipmipower_config_conffile_parse,
+	ipmipower_config_check_values): Removed all configuration
+	regarding permsgauth_hosts command line and configuration
+	file options.
+
+	* ipmipower/src/ipmipower_output.c: Removed permsgauth output messages.
+
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_create): Base
+	authentication on permsgauth_enabled flag.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue):
+	Initialize permsgauth_enabled.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Base
+	authentication on permsgauth_enabled flag.
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Set
+	permsgauth_enabled flag based on result of Get Authentication
+	Capabilities response.
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_permsgauth_hosts):
+	Removed function.
+
+	* ipmipower/src/ipmipower_prompt.c (_cmd_advanced, _cmd_config,
+	ipmipower_prompt_process_cmdline): Removed all reference to
+	permsgauth_hosts interactive command.
+	
 2004-09-29  A Balamurugan  <bala.a@californiadigital.com>
 
 	* libfreeipmi/src/ipmi-sensor-cmds.c: added optional ignore byte
