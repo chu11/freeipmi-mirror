@@ -4,6 +4,12 @@
 	Ian.
 
 	* ipmipower/src/ipmipower_config.c: Remove _GNU_SOURCE define.
+
+	* bmc-watchdog/bmc-watchdog: Set default use to SMS/OS and clear
+	all flags in default daemon execution.
+
+	* doc/bmc-watchdog.8.in: Added known issue about using something
+	other than SMS/OS for the bmc watchdog timer use.
 	
 2004-05-11  Albert Chu <chu11@llnl.gov>
 
