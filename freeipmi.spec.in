@@ -49,7 +49,7 @@ Requires: freeipmi = %{version}-%{release}
 FreeIPMI utilities ipmipower, bmc-watchdog, ipmiping, and rmcpping.
 
 %if %{?_with_debug:1}%{!?_with_debug:0}
-  %define _enable_debug --enable-debug
+  %define _enable_debug --enable-debug --enable-trace --enable-syslog
 %endif
 
 %prep
