@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.10 2005-03-18 22:06:55 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11 2005-03-18 22:18:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -460,7 +460,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
                   if ((myoseq + 1) == pktoseq)
                     {
-                      dbg("_recv_packet(%s:%d): outbound count adjusted");
+                      dbg("_recv_packet(%s:%d): outbound count adjusted",
+                          ip->ic->hostname, ip->protocol_state);
                       ip->session_outbound_count += 1;
                       ip->retry_count = 0;  /* important to reset */
                       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
@@ -482,7 +483,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
                   if (myoseq == pktoseq)
                     {
-                      dbg("_recv_packet(%s:%d): outbound count accepted");
+                      dbg("_recv_packet(%s:%d): outbound count accepted",
+                          ip->ic->hostname, ip->protocol_state);
                       ip->retry_count = 0;  /* important to reset */
                       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
                       return 1;
