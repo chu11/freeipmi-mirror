@@ -37,7 +37,6 @@ fish:
 bmc-watchdog:
 -------------
   * Require Timer use to be SMS/OS?
-  * Make get_lan_channel_number() non-hardcoded.
   * Allow over lan?
 
 ipmipower:

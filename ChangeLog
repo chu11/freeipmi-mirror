@@ -7,14 +7,14 @@
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(_search_for_medium_channel_number): New function.
 
-	* fish/src/ipmi-wrapper.c (get_lan_channel_number,
-	get_serial_channel_number): Use new ipmi_get_channel_number
-	function.
+	* fish/src/ipmi-wrapper.h, fish/src/ipmi-wrapper.c
+	(get_lan_channel_number, get_serial_channel_number): Use new
+	ipmi_get_channel_number function.
 
 	* bmc-watchdog/src/bmc-watchdog.c (_get_lan_channel_number):
 	Removed function.
 
-	* bmc-wathcodg/src/bmc-watchdog.c (_suspend_bmc_arps_cmd): Use
+	* bmc-wathcdog/src/bmc-watchdog.c (_suspend_bmc_arps_cmd): Use
 	new ipmi_get_channel_number function.
 	
 	* libfreeipmi/src/ipmi-dev-global-cmds.h,
