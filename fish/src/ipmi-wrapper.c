@@ -315,7 +315,7 @@ get_channel_info_list ()
 }
 
 u_int8_t 
-get_lan_channel_number ()
+get_lan_channel_number_orig ()
 {
   channel_info *channel_list;
   u_int8_t i;
@@ -332,7 +332,7 @@ get_lan_channel_number ()
 }
 
 u_int8_t 
-get_serial_channel_number ()
+get_serial_channel_number_orig ()
 {
   channel_info *channel_list;
   u_int8_t i;
@@ -346,6 +346,18 @@ get_serial_channel_number ()
     }
   
   return (-1);
+}
+
+u_int8_t 
+get_lan_channel_number ()
+{
+  return 7;
+}
+
+u_int8_t 
+get_serial_channel_number ()
+{
+  return 1;
 }
 
 int
