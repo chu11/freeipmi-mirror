@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.4 2004-09-17 20:50:53 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.5 2004-09-27 21:25:56 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -405,7 +405,7 @@ Hard reset nodes foo[0-2] with non-null username and password
         ipmipower -h foo[0-2] -u foo -p bar --reset
 .LP
 Hard reset the nodes configured in a configuration file
-	ipmipower -C /etc/powerctrl.conf --reset
+        ipmipower -C /etc/powerctrl.conf --reset
 .SH "USE WITH POWERMAN"
 The 
 .B powerman
