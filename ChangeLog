@@ -1,5 +1,8 @@
 2004-05-12  Ian Zimmerman  <itz@californiadigital.com>
 
+	* fish/extensions/bmc-config.scm (bmc-config-main): If an
+	incomplete key-pair is given just display usage and exit.
+
 	* fish/extensions/sensors.scm (sensors-main): use string-tokenize
 	to split sensors list, not read.
 

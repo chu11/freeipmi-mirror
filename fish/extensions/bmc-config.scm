@@ -181,8 +181,9 @@
 						     (append 
 						      klist 
 						      (string-separate (cdr arg) #\=)))
-					       (set! klist 
-						     (append klist (list (cdr arg) ""))))))
+                                               (begin
+                                                 (set! usage-wanted #t)
+                                                 (set! bmc-config-exit-status 1)))))
 				     options)
 				klist)
 			      '())))
