@@ -46,13 +46,13 @@ FreeIPMI utilities ipmipower, bmc-watchdog, ipmiping, and rmcpping.
 %setup -q
 
 %build
-%configure --program-prefix=%{?_program_prefix:%{_program_prefix}} --enable-rpm-install
+%configure --program-prefix=%{?_program_prefix:%{_program_prefix}}
 make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
-%makeinstall
+DESTDIR="$RPM_BUILD_ROOT" make install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -120,12 +120,25 @@ fi
 %defattr(-,root,root)
 %doc /usr/share/doc/freeipmi/AUTHORS
 %doc /usr/share/doc/freeipmi/BUGS
-%doc /usr/share/doc/freeipmi/ChangeLog
 %doc /usr/share/doc/freeipmi/COPYING
+%doc /usr/share/doc/freeipmi/ChangeLog
 %doc /usr/share/doc/freeipmi/INSTALL
 %doc /usr/share/doc/freeipmi/NEWS
 %doc /usr/share/doc/freeipmi/README
 %doc /usr/share/doc/freeipmi/TODO
+%doc /usr/share/doc/freeipmi/authors.texi
+%doc /usr/share/doc/freeipmi/fdl.texi
+%doc /usr/share/doc/freeipmi/freeipmi.texi
+%doc /usr/share/doc/freeipmi/gpl.texi
+%doc /usr/share/doc/freeipmi/ipmi-over-ts2000.texi
+%doc /usr/share/doc/freeipmi/permissions.texi
+%doc /usr/share/doc/freeipmi/version.texi
+%doc /usr/share/info/freeipmi.info*
+%doc /usr/share/info/freeipmi.info-1*
+%doc /usr/share/info/freeipmi.info-2*
+%doc /usr/share/info/freeipmi.info-3*
+%doc /usr/share/info/freeipmi.info-4*
+%doc /usr/share/info/freeipmi.info-5*
 /usr/lib/*so*
 /var/lib/
  
@@ -133,14 +146,14 @@ fi
 %defattr(-,root,root)
 %doc /usr/share/doc/freeipmi/examples/Makefile
 %doc /usr/share/doc/freeipmi/examples/hello-sensors.c
-%doc /usr/share/info/freeipmi-hg.info*
+%doc /usr/share/doc/freeipmi/freeipmi-hackers-intro.sxi
+%doc /usr/share/doc/freeipmi/ipmi-network-layout.fig
 /usr/lib/*.a
 /usr/lib/*.la
 /usr/include
 
 %files fish
 %defattr(-,root,root)
-%doc /usr/share/info/fish.info*
 %config(noreplace) /etc/fish/fish.scm
 %config(noreplace) /etc/fish/sensors-conf.scm
 /usr/sbin/fish
@@ -165,7 +178,7 @@ fi
 %doc /usr/share/doc/freeipmi/DISCLAIMER.ipmipower
 %doc /usr/share/doc/freeipmi/COPYING.rmcpping
 %doc /usr/share/doc/freeipmi/DISCLAIMER.rmcpping
-%config(noreplace) /etc/rc.d/init.d/bmc-watchdog
+%config(noreplace) /etc/init.d/bmc-watchdog
 /usr/sbin/bmc-watchdog
 /usr/sbin/ipmiping
 /usr/sbin/ipmipower

@@ -1,3 +1,20 @@
+2004-10-14  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac: Remove --enable-rpm-install option.
+
+	* freeipmi.spec.in: Remove use of --enable-rpm-install.  Added and
+	removed package documents appropriately based on recent document
+	changes.  Make install using DESTDIR.
+
+	* bmc-watchdog/bmc-watchdog.log: Removed file.
+
+	* bmc-watchdog/Makefile.am: Use init.d rather than rc.d/init.d for
+	portability.  Remove install of bmc-watchdog.log, just make
+	/var/log/freeipmi directory.
+
+	* bmc-watchdog/Makefile.am, libfreeipmi/Makefile.am: Remove use of
+	RPM_INSTALL flag.
+	
 2004-10-13  Ian Zimmerman  <itz@californiadigital.com>
 
 	* doc/examples/Makefile.am (Examplesdir): use $(docdir)/examples

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.1.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.11 2004-10-08 21:41:21 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.12 2004-10-14 20:19:27 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -48,13 +48,6 @@ AC_ARG_ENABLE([trace],
 if test "x${enable_trace}" = "xyes" ; then
         AC_DEFINE([IPMI_TRACE],[1],[Define to turn on error tracing])
 fi
-
-AC_ARG_ENABLE([rpm-install],
-              AC_HELP_STRING([--enable-rpm-install], 
-                             [perform unique installation for building rpms]),
-              [RPM_INSTALL=${enableval}],
-              [RPM_INSTALL=no])
-AM_CONDITIONAL([RPM_INSTALL], [test "$RPM_INSTALL" = "yes"])
 
 AC_CANONICAL_HOST
 
