@@ -1,3 +1,9 @@
+2004-12-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-md2.c (ipmi_md2_finish),
+	libfreeipmi/src/ipmi-md5.c (ipmi_md5_finish): Clear magic number,
+	which will force caller to re-initialize context.
+	
 2004-12-15  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h (AUTH_TYPE_VALID_OR_AUTO): New macro.

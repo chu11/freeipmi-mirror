@@ -250,6 +250,7 @@ ipmi_md2_finish(ipmi_md2_t *ctx, u_int8_t *digest, unsigned int digestlen)
   _ipmi_md2_append_padding_and_checksum(ctx);
   memcpy(digest, X, IPMI_MD2_DIGEST_LEN);
   
+  ctx->magic = ~IPMI_MD2_MAGIC;
   return IPMI_MD2_DIGEST_LEN;
 }
 

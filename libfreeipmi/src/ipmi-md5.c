@@ -393,5 +393,6 @@ ipmi_md5_finish(ipmi_md5_t *ctx, u_int8_t *digest, unsigned int digestlen)
   digest[14] = (D & 0x00ff0000) >> 16;
   digest[15] = (D & 0xff000000) >> 24;
   
+  ctx->magic = ~IPMI_MD5_MAGIC;
   return IPMI_MD5_DIGEST_LEN;
 }
