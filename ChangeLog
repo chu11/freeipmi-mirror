@@ -1,3 +1,37 @@
+2004-12-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c: Globally rename
+	IPMI_KCS_REG_SPACE_32BIT_BOUND to IPMI_KCS_REG_SPACE_4BYTE_BOUND
+	for consistency.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Add forgotten
+	tmpl_get_channel_access_rq definition.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_kcs_set_user_name): Don't segfault on NULL username.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_kcs_set_user_password): Don't segfault on NULL password.
+
+	* libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value):
+	Change is_signed parameter to analog_data_format and calculate
+	sensor reading based on analog data format rather than binary
+	signed or unsigned parameter.
+
+	* libfreeipmi/src/ipmi-sensor-utils.c
+	(ipmi_sensor_get_decode_params): Change is_signed parameter to
+	analog_data_format and read analog_data_format by fiid_obj_get.
+
+	* fish/src/ipmi-wrapper-sensor.c: Globally rename "is_signed" to
+	"analog_data_format".
+	
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port, _usage,
+	_cmdline_parse): Support --reg-space option.
+
+	* bmc-watchdog/bmc-watchdog.8.in: Update with new register spacing
+	option.
+	
 2004-12-06  Albert Chu <chu11@llnl.gov>
 
 	* fish/extensions/bc2.scm: Turn on "Enable_User" option.
