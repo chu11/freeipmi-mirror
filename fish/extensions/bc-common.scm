@@ -21,7 +21,7 @@
   (pair? (assoc (string-downcase str) privilege-limit-values)))
 
 (define (get-privilege-limit-value-string value)
-  (assoc-vref privilege-limit-values value))
+  (string-capitalize (assoc-vref privilege-limit-values value)))
 
 (define channel-access-modes '(("disabled"         . 0)
 			       ("pre_boot_only"    . 1)
@@ -34,7 +34,7 @@
   (pair? (assoc (string-downcase str) channel-access-modes)))
 
 (define (get-channel-access-mode-value-string value)
-  (assoc-vref channel-access-modes value))
+  (string-capitalize (assoc-vref channel-access-modes value)))
 
 (define ip-address-sources '(("unspecified" . 0)
 			     ("static"      . 1)
@@ -49,7 +49,7 @@
   (pair? (assoc (string-downcase str) ip-address-sources)))
 
 (define (get-ip-address-source-value-string value)
-  (assoc-vref ip-address-sources value))
+  (string-capitalize (assoc-vref ip-address-sources value)))
 
 (define connect-modes '(("modem_connect"  . 0)
 			("direct_connect" . 1)))
@@ -61,7 +61,7 @@
   (pair? (assoc (string-downcase str) connect-modes)))
 
 (define (get-connect-mode-value-string value)
-  (assoc-vref connect-modes value))
+  (string-capitalize (assoc-vref connect-modes value)))
 
 (define flow-controls '(("no_flow_control" . 0)
 			("rts_cts"         . 1)
@@ -74,7 +74,7 @@
   (pair? (assoc (string-downcase str) flow-controls)))
 
 (define (get-flow-control-value-string value)
-  (assoc-vref flow-controls value))
+  (string-capitalize (assoc-vref flow-controls value)))
 
 (define bit-rates '(("9600"   . 6)
 		    ("19200"  . 7)
@@ -89,7 +89,7 @@
   (pair? (assoc (string-downcase str) bit-rates)))
 
 (define (get-bit-rate-value-string value)
-  (assoc-vref bit-rates value))
+  (string-capitalize (assoc-vref bit-rates value)))
 
 (define power-restore-policies '(("off_state_ac_apply"     . 0)
 				 ("restore_state_ac_apply" . 1)
@@ -102,7 +102,7 @@
   (pair? (assoc (string-downcase str) power-restore-policies)))
 
 (define (get-power-restore-policy-value-string value)
-  (assoc-vref power-restore-policies value))
+  (string-capitalize (assoc-vref power-restore-policies value)))
 
 (define (read-valid-line fd)
   (let ((line (read-line fd)))
@@ -120,35 +120,35 @@
   (if (null? validator-def)
       #f
       (if (string-ci=? (string-downcase key) (caar validator-def))
-	  (cadr (car validator-def))
+	  (primitive-eval (cadr (car validator-def)))
 	  (get-value-validator key (cdr validator-def)))))
 
 (define (get-convertor-proc key key-def)
   (if (null? key-def)
       #f
       (if (string-ci=? (string-downcase key) (caar key-def))
-	  (caddr (car key-def))
+	  (primitive-eval (caddr (car key-def)))
 	  (get-convertor-proc key (cdr key-def)))))
 
 (define (get-commit-proc key key-def)
   (if (null? key-def)
       #f
       (if (string-ci=? (string-downcase key) (caar key-def))
-	  (cadddr (car key-def))
+	  (primitive-eval (cadddr (car key-def)))
 	  (get-commit-proc key (cdr key-def)))))
 
 (define (get-checkout-proc key key-def)
   (if (null? key-def)
       #f
       (if (string-ci=? (string-downcase key) (caar key-def))
-	  (car (cddddr (car key-def)))
+	  (primitive-eval (car (cddddr (car key-def))))
 	  (get-checkout-proc key (cdr key-def)))))
 
 (define (get-value-convertor-proc key key-def)
   (if (null? key-def)
       #f
       (if (string-ci=? (string-downcase key) (caar key-def))
-	  (cadr (cddddr (car key-def)))
+	  (primitive-eval (cadr (cddddr (car key-def))))
 	  (get-value-convertor-proc key (cdr key-def)))))
 
 (define (get-string str)
@@ -161,7 +161,7 @@
   (string->number str))
 
 (define (get-boolean-string bool)
-  (if bool "yes" "no"))
+  (if bool "Yes" "No"))
 
 (define (valid-username-password? str)
   (if (string? str)

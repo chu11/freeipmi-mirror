@@ -2,7 +2,8 @@
 !#
 (catch 'misc-error
        (lambda ()
-	(bmc-config-main (fi-command-line)))
+;;	(bmc-config-main (fi-command-line)))
+	(bc-main (fi-command-line)))
        (lambda (k args . opts)
 	 (display "bmc-config: error: ")
 	 (display (cadr opts))

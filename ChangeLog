@@ -1,3 +1,9 @@
+2004-08-16  A Balamurugan  <bala.a@californiadigital.com>
+
+	* fish/extensions/bc-common.scm: code cleanups
+	* fish/extensions/bc-section.scm: like wise
+	* fish/scripts/bmc-config/bmc-config.in: now uses new bmc-config
+
 2004-08-05  Ian Zimmerman  <itz@californiadigital.com>
 
 	* configure.ac: Bump version for snapshot release.

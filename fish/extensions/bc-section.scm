@@ -106,37 +106,31 @@
 	      #f)))))
 
 (define (commit-section-values section-name section-data section-keys)
-  (let ((line "")
-	(key "")
-	(value "")
-	(convertor-proc "")
-	(commit-proc ""))
-    (if (null? section-data)
-	#t
-	(begin 
-	  (set! line (car section-data))
-	  (set! key (car (string-tokenize line)))
-	  (set! value (cadr (string-tokenize line)))
-	  (set! convertor-proc (get-convertor-proc key section-keys)) 
-	  (set! commit-proc (get-commit-proc key section-keys))
-	  (set! value (eval (list convertor-proc value) (interaction-environment)))
+  (if (null? section-data)
+      #t
+      (let* ((line           (car section-data))
+	     (key            (car (string-tokenize line)))
+	     (value          (cadr (string-tokenize line)))
+	     (convertor-proc (get-convertor-proc key section-keys)) 
+	     (commit-proc    (get-commit-proc key section-keys))
+	     (value          (convertor-proc value))) 
+; 	  (set! value (eval (list convertor-proc value) (interaction-environment)))
 ; 	  (display key) (newline)
 ; 	  (display value) (newline)
 ; 	  (display convertor-proc) (newline)
 ; 	  (display commit-proc) (newline)
-	  (if (eval (list commit-proc section-name value) (interaction-environment))
-	      (begin 
-		(display (string-append "Function <" (simple->string commit-proc)
-					"> Key <" key 
-					"> Value <" (simple->string value) 
-					"> DONE\n"))
-		(commit-section-values section-name (cdr section-data) section-keys))
-	      (begin 
-		(display (string-append "Function <" (simple->string commit-proc) 
-					"> Key <" key 
-					"> Value <" (simple->string value) 
-					"> FAILED\n"))
-		#f))))))
+; 	  (if (eval (list commit-proc section-name value) (interaction-environment))
+	(if (commit-proc section-name value) 
+	    (begin 
+	      (display (string-append "Committed Key <" key 
+				      "> Value <" (simple->string value) 
+				      ">\n"))
+	      (commit-section-values section-name (cdr section-data) section-keys))
+	    (begin 
+	      (display (string-append "Commit Key <" key 
+				      "> Value <" (simple->string value) 
+				      "> FAILED\n"))
+	      #f)))))
 
 (define (commit-section section-data)
   (let ((section-name (car section-data)))
@@ -177,7 +171,7 @@
 (define (checkout-section-value section-name key key-desc-list) 
   (let* ((checkout-proc (get-checkout-proc key key-desc-list))
 	 (convertor-proc (get-value-convertor-proc key key-desc-list))
-	 (value ((primitive-eval checkout-proc) section-name)))
+	 (value (checkout-proc section-name)))
     (if (list? value)
 	((primitive-eval convertor-proc) (car value))
 	#f)))
