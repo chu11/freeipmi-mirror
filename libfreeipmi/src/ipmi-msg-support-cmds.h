@@ -121,6 +121,10 @@ extern "C" {
 #define IPMI_CHANNEL_MULTI_SESSION     0x2
 #define IPMI_CHANNEL_SESSION_BASED     0x3
 
+#define IPMI_CHANNEL_NUMBER_VALID(channel_number) \
+        (((channel_number) >= 0x0 \
+          && (channel_number) <= 0xF) ? 1 : 0)
+
 #define IPMI_PASSWORD_OPERATION_DISABLE_USER     0x0
 #define IPMI_PASSWORD_OPERATION_ENABLE_USER      0x1
 #define IPMI_PASSWORD_OPERATION_SET_PASSWORD     0x2
@@ -345,6 +349,8 @@ int8_t ipmi_kcs_get_channel_info (u_int8_t channel_number,
 int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t cmd);
 
 int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t comp_code);
+
+int8_t ipmi_get_channel_number (u_int8_t channel_medium_type);
 
 #ifdef __cplusplus
 }
