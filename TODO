@@ -32,6 +32,7 @@ fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
+  * sel output includes more watchdog timer info
 
 bmc-watchdog:
 -------------
