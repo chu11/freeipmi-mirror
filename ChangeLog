@@ -1,3 +1,7 @@
+2004-08-20  Anand Babu  <ab@gnu.org.in>
+
+	* CVS tagged as release-0_1_0_alpha6-tag
+	
 2004-08-20  A Balamurugan  <bala.a@californiadigital.com>
 
 	* doc/sel.1: added examples
@@ -7,7 +11,6 @@
 	* fish/extensions/sel.scm (sel-main): fixed bug in parsing
 	hex dump optional argument. Argument to value should not be
 	quoted. 
-
 	
 2004-08-20  Ian Zimmerman  <itz@californiadigital.com>
 
