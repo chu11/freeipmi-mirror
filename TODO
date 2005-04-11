@@ -34,6 +34,7 @@ fish:
     build directory rather that requiring installation.
   * kcs-raw or something similar in fish
   * wrapper scripts to do proprietary crap
+  * don't hang if there is no bmc on the system, die/quit appropriately
 
 bmc-watchdog:
 -------------
