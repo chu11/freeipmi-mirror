@@ -48,6 +48,7 @@ ipmipower:
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed even more?
   * local power off
+  * chassis identify
 
 ipmiping/rmcpping:
 ------------------
