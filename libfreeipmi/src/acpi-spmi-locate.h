@@ -167,13 +167,11 @@ int ipmi_acpi_get_spmi_table (u_int8_t interface_type,
  * PARAMETERS:  
  *   type    = which interface (KCS, SMIC, BT)
  *   pinfo   = pointer to information structure filled in by this function
- *   statusp = optional (NULL allowed) pointer to store status
- *             information: 1 - structure not found, -1 - error, 0 - success
  *
  * RETURNS:
  *   pinfo if successful, NULL otherwise 
  ******************************************************************************/
 ipmi_locate_info_t *acpi_spmi_get_dev_info (ipmi_interface_t interface_type, 
-					    ipmi_locate_info_t *pinfo, int *statusp);
+					    ipmi_locate_info_t *pinfo);
 
 #endif

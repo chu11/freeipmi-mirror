@@ -756,13 +756,13 @@ ipmi_acpi_get_spmi_table (u_int8_t interface_type,
 
 ipmi_locate_info_t*
 acpi_spmi_get_dev_info (ipmi_interface_t interface_type, 
-			ipmi_locate_info_t* pinfo, int* statusp)
+			ipmi_locate_info_t* pinfo)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   extern int errno;
-
-  if (!(pinfo && statusp))
+  
+  if (pinfo == NULL)
     {
       errno = EINVAL;
       return (NULL);

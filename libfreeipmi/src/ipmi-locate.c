@@ -24,11 +24,13 @@
 
 #include "freeipmi.h"
 
-typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_t, ipmi_locate_info_t*, int*));
+typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_t, ipmi_locate_info_t*));
 
 ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
+ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 {
+  extern int errno;
+  
   static ipmi_locate_func things_to_try[] =
     {
       pci_get_dev_info,
@@ -37,24 +39,19 @@ ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
       NULL
     };
   int i;
-  int status;
   ipmi_locate_info_t* pinfo2;
-
+  
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-
-  status = 1;
+  
   for (i = 0; things_to_try[i] != NULL; i++)
     {
-      pinfo2 = (*things_to_try[i])(type, pinfo, &status);
-      if (status == 0)
-	{
-	  if (statusp != NULL) *statusp = 0;
-	  return pinfo2;
-	}
-      else if (status < 0)
-	break;
+      pinfo2 = (*things_to_try[i])(type, pinfo);
+      
+      if (pinfo2 != NULL)
+	return pinfo2;
     }
-  if (statusp != NULL) *statusp = status;
+  
+  errno = ENODEV;
+  
   return NULL;
 }
-

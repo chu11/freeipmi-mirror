@@ -59,6 +59,6 @@
 #define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
 int ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space);
-ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp);
+ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo);
 
 #endif

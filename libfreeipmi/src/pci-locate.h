@@ -20,5 +20,5 @@
 
 #ifndef _PCI_LOCATE_H
 #define _PCI_LOCATE_H 1
-ipmi_locate_info_t* pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp);
+ipmi_locate_info_t* pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo);
 #endif

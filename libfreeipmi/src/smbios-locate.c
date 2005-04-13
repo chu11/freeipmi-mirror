@@ -173,13 +173,11 @@ map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
 /* copy_impi_dev_info
    ARGUMENTS:
    type = which interface (KCS, SMIC, BT)
-   statusp = optional (NULL allowed) pointer to store status
-   information: 1 - structure not found, -1 - error, 0 - success
    RETURNS:
    pointer to the device info structure in heap (caller responsible
    for freeing */
 static u_int8_t*
-copy_impi_dev_info (ipmi_interface_t type, int* statusp)
+copy_impi_dev_info (ipmi_interface_t type)
 {
   int status;
   u_int8_t* result = NULL;
@@ -243,8 +241,6 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
 	}
       munmap (map_entry, map_entry_len);
     }
-  if (statusp != NULL)
-    *statusp = status;
   return (status == 0 ? result : NULL);
 }
 
@@ -252,19 +248,17 @@ copy_impi_dev_info (ipmi_interface_t type, int* statusp)
    ARGUMENTS:
    type = which interface (KCS, SMIC, BT)
    pinfo = pointer to information structure filled in by this function
-   statusp = optional (NULL allowed) pointer to store status
-   information: 1 - structure not found, -1 - error, 0 - success
    RETURNS:
    pinfo if successful, NULL otherwise */
 ipmi_locate_info_t*
-smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
+smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 {
   u_int8_t* bufp;
   u_int8_t version;
   u_int64_t addr;
   u_int64_t strobed;
 
-  bufp = copy_impi_dev_info (type, statusp);
+  bufp = copy_impi_dev_info (type);
   if (bufp == NULL)
     return (NULL);
 

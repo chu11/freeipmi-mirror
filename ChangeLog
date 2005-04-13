@@ -1,3 +1,21 @@
+2005-04-13  A Balamurugan  <bala.a@californiadigital.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port_and_reg_space):
+	removed status variable
+	
+	* fish/src/fish.c (inner_main): like wise
+	
+	* libfreeipmi/src/acpi-spmi-locate.[ch] (acpi_spmi_get_dev_info):
+	like wise
+
+	* libfreeipmi/src/ipmi-locate.[ch] (ipmi_locate): like wise
+
+	* libfreeipmi/src/pci-locate.[ch] (pci_get_dev_info): like wise
+
+	* libfreeipmi/src/smbios-locate.[ch] (smbios_get_dev_info): like
+	wise
+	
+
 2005-03-20  Anand Babu  <ab@gnu.org.in>
 
 	* fish/src/fish.c (inner_main): Check return value of

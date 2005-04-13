@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.15 2005-03-20 12:45:17 ab Exp $ 
+   $Id: fish.c,v 1.16 2005-04-13 10:00:42 balamurugan Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for managing large number of IPMI compatible systems.
 
@@ -378,10 +378,8 @@ inner_main (int argc, char **argv)
   else
     {
       ipmi_locate_info_t locate_info;
-      int status;
-
-      ipmi_locate (IPMI_INTERFACE_KCS, &locate_info, &status);
-      if (status == 0 && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
+      
+      if (ipmi_locate (IPMI_INTERFACE_KCS, &locate_info) != NULL && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
 	{
 	  sms_io_base = locate_info.base_addr.bmc_iobase_addr;
 	  reg_space   = locate_info.reg_space;

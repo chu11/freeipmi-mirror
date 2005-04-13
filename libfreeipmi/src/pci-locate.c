@@ -82,11 +82,10 @@ typedef struct pci_class_regs pci_class_regs_t;
 /* dev = device number from devices file */
 /* func = function number from devices file */
 /* pregs = pointer to structure where to store the important registers */
-/* statusp = optional (NULL allowed) pointer to store status */
 /* return : pregs if successful, otherwise NULL */
 
 static pci_class_regs_t*
-pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* pregs, int* statusp)
+pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* pregs)
 {
   FILE* fp;
   char fname[128];
@@ -95,7 +94,6 @@ pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* preg
   fp = fopen (fname, "r");
   if (fp == NULL)
     {
-      if (statusp) *statusp = -1;
       return NULL;
     }
   fseek (fp, PCI_CLASS_REVISION, SEEK_SET);
@@ -116,10 +114,9 @@ pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* preg
 /* pci_get_dev_info - probe PCI for IPMI interrupt number and register base */
 /* type = which interface (KCS, SMIC, BT) */
 /* pinfo = pointer to information structure filled in by this function */
-/* statusp = optional (NULL allowed) pointer to store status information  */
 
 ipmi_locate_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
+pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 {
   unsigned dfn;
   unsigned vendor;
@@ -164,13 +161,11 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp
 		  case past_io:
 		    pinfo->bmc_io_mapped = 0;
 		    pinfo->base.bmc_iobase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_IO_MASK;
-		    if (statusp != NULL) *statusp = 0;
 		    return pinfo;
 
 		  case past_memory:
 		    pinfo->bmc_io_mapped = 1;
 		    pinfo->base.bmc_membase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
-		    if (statusp != NULL) *statusp = 0;
 		    return pinfo;
 		  }
 	      }
@@ -186,16 +181,14 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp
   }
  failure:
   if (fp_devices != NULL) fclose (fp_devices);
-  if (statusp != NULL) *statusp = status;
   return NULL;
 }
 
 #else  /* __linux */
 
 ipmi_locate_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo, int* statusp)
+pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 {
-  if (statusp != NULL) *statusp = 2;
   return NULL;
 }
 
