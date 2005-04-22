@@ -1,3 +1,9 @@
+2005-04-22  A Balamurugan  <bala.a@californiadigital.com>
+
+	* libfreeipmi/src/acpi-spmi-locate.c
+	(ipmi_acpi_get_firmware_table): fixed unaligned access warnings.
+	
+
 2005-04-13  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_get_port_and_reg_space):

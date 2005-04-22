@@ -666,9 +666,31 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
   for (i = 0, signature_table_count = 0; i < acpi_table_count; i++)
     {
       if (revision < 2)
-	table_address = ((u_int32_t *) rsdt_xsdt_table_data)[i];
+	{
+	  fiid_template_t tmpl_table_address =
+	    {
+	      {32, "table_address"}, 
+	      {0,  ""}
+	    };
+	  
+	  fiid_obj_get ((rsdt_xsdt_table_data + (i * 4)), 
+			tmpl_table_address, 
+			"table_address", 
+			&table_address);
+	}
       else 
-	table_address = ((u_int64_t *) rsdt_xsdt_table_data)[i];
+	{
+	  fiid_template_t tmpl_table_address =
+	    {
+	      {64, "table_address"}, 
+	      {0,  ""}
+	    };
+	  
+	  fiid_obj_get ((rsdt_xsdt_table_data + (i * 8)), 
+			tmpl_table_address, 
+			"table_address", 
+			&table_address);
+	}
       
       if (ipmi_acpi_get_table (table_address, signature, 
 			       &acpi_table, 
