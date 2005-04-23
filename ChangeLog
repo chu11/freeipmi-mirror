@@ -1,3 +1,12 @@
+2005-04-23  A Balamurugan  <bala.a@californiadigital.com>
+
+	* doc/examples/hello-sensors.c: file is removed.
+
+	* doc/examples/Makefile.am: updated.
+
+	* doc/examples/Makefile.example: updated.
+	
+
 2005-04-22  A Balamurugan  <bala.a@californiadigital.com>
 
 	* libfreeipmi/src/acpi-spmi-locate.c

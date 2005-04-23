@@ -1,5 +1,5 @@
-# libfreeipi Examples
-LIBFREEIPMI_EXAMPLES = hello-sensors.c
+# libfreeipmi Examples
+LIBFREEIPMI_EXAMPLES = ipmi-lan-test.c
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 Examplesdir     = $(docdir)/examples
