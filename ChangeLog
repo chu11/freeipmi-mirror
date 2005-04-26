@@ -1,3 +1,8 @@
+2005-04-26  Anand Babu  <ab@gnu.org.in>
+
+	* fish/src/xmalloc.c: replaced error(...) references with more
+	portable perror(...).
+
 2005-02-23  Anand Babu  <ab@gnu.org.in>
 
         Thanks tp Julian Elischer <julian@elischer.org> for reporting
