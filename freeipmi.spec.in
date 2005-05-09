@@ -159,6 +159,7 @@ fi
 %files devel
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/examples/Makefile
+%doc %{_datadir}/doc/%{name}/examples/ipmi-lan-test.c
 %doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.sxi
 %doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
 %{_libdir}/*.a
