@@ -1,3 +1,7 @@
+2005-05-09  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Updated for recent changes to install.
+	
 2005-04-23  A Balamurugan  <bala.a@californiadigital.com>
 
 	* doc/examples/hello-sensors.c: file is removed.

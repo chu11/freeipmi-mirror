@@ -159,7 +159,6 @@ fi
 %files devel
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/examples/Makefile
-%doc %{_datadir}/doc/%{name}/examples/hello-sensors.c
 %doc %{_datadir}/doc/%{name}/freeipmi-hackers-intro.sxi
 %doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
 %{_libdir}/*.a
@@ -169,18 +168,18 @@ fi
 %files fish
 %defattr(-,root,root)
 %config(noreplace) %{_sysconfdir}/fish/fish.scm
-%config(noreplace) %{_sysconfdir}/fish/sensors-conf.scm
+%config(noreplace) %{_sysconfdir}/fish/ipmi-sensors-conf.scm
 %{_sbindir}/fish
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
-%{_mandir}/man1/bmc-config.1*
+%{_mandir}/man1/bmc-config.8*
 %{_mandir}/man5/bmc-config.conf.5*
-%{_mandir}/man1/bmc-info.1*
-%{_mandir}/man1/fish.1*
-%{_mandir}/man1/ipmi-sel.1*
-%{_mandir}/man1/ipmi-sensors.1*
+%{_mandir}/man1/bmc-info.8*
+%{_mandir}/man1/fish.8*
+%{_mandir}/man1/ipmi-sel.8*
+%{_mandir}/man1/ipmi-sensors.8*
 %{_datadir}/fish/*
 
 %files utils
