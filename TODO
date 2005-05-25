@@ -27,6 +27,7 @@ libfreeipmi:
     May or may not be possible.  Think about it.
   * Auto retries in ipmi_lan_cmd()
   * open_lan_session - modify to use best secure connection available
+  * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   
 fish:
 -----
