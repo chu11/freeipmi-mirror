@@ -9,6 +9,7 @@ generally assist in the GNU FreeIPMI maintainership process:
     -- [sorted alphabetically] --
 
 Amitoj Singh <amitoj@fnal.gov>: ipmitool.c SSIF interface
+Anand Avati <avati@hardcodecafe.com>: Gratuitous ARP Daemon
 Brian Rice <brian.rice@intel.com>: Support
 Dmitry Frolov <frolov@riss-telecom.ru>:  FreeBSD Port
 Don Holmgren <djholm@fnal.gov>: SSIF driver info
