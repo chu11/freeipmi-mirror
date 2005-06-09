@@ -1,3 +1,7 @@
+2005-06-09  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Updated for garpd.
+	
 2005-06-08  Anand Babu  <ab@gnu.org.in>
 
 	* garpd: Integrated Anand Avati's <avati@hardcodecafe.com> Gratuitous
