@@ -1,4 +1,4 @@
-.TH IPMI-SEL 8 "@ISODATE@" "ipmi-sel @PACKAGE_VERSION@" "User Commands"
+.TH IPMI-SEL 8 "@ISODATE@" "ipmi-sel @PACKAGE_VERSION@" "System Commands"
 .SH NAME
 ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE_VERSION@
 .SH DESCRIPTION

@@ -135,6 +135,25 @@ ipmi_is_root ()
   return 0;
 }
 
+unsigned int
+ipmi_get_random_seed (void)
+{
+  unsigned int seed;
+  int fd;
+  
+  if ((fd = open ("/dev/urandom", O_RDONLY)) == -1)
+    goto fail_over_seed;
+  
+  if (read (fd, &seed, sizeof (seed)) < sizeof (seed))
+    goto fail_over_seed;
+
+  close (fd);
+  return (seed);
+
+ fail_over_seed:
+  return ((unsigned int) time (0));
+}
+
 int
 ipmi_open_free_udp_port (void)
 {

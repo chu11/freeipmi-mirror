@@ -1,4 +1,4 @@
-.TH BMC-CONFIG 8 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "User Commands"
+.TH BMC-CONFIG 8 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "System Commands"
 .SH NAME
 bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAGE_VERSION@
 .SH DESCRIPTION

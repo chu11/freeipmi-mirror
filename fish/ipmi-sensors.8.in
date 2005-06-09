@@ -1,4 +1,4 @@
-.TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "User Commands"
+.TH IPMI-SENSORS 8 "@ISODATE@" "IPMI Sensors version @PACKAGE_VERSION@" "System Commands"
 .SH NAME
 ipmi-sensors \- manual page for sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION

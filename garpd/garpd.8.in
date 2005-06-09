@@ -1,0 +1,78 @@
+.TH FREEIPMI 8 "@ISODATE@" "Gratuitous ARP Daemon [garpd-@PACKAGE_VERSION@]" "System Commands"
+.SH NAME
+GNU FreeIPMI \- manual page for Gratuitous ARP Daemon [garpd-@PACKAGE_VERSION@]
+.SH SYNOPSIS
+.B garpd
+[\fIOPTION\fR...]
+.SH DESCRIPTION
+GARPD daemon broadcasts request based gratuitous ARP packets with IP and MAC Address mappings from a configuration file.  GARPD is particularly useful for IPMI BMCs (mBMC) which do not support Gartuitous ARP. How ever there are other uses for GARP like IP address conflicts, IP address take over, ARP updates in a clustered environment, NIC link status updates.
+
+.SH OPTIONS
+.TP
+\fB\-c\fR, \fB\-\-config\-file\fR=\fIFILE\fR
+Configuration file
+.TP
+\fB\-D\fR, \fB\-\-no\-daemon\fR
+Do not become a daemon
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR, \fB\-\-silent\fR
+Inhibit usual output
+.TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print more information
+.TP
+-?, \fB\-\-help\fR
+Give this help list
+.TP
+\fB\-\-usage\fR
+Give a short usage message
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print program version
+.PP
+Mandatory or optional arguments to long options are also mandatory or optional
+for any corresponding short options.
+.SH "EXAMPLE CONFIGURATION FILE" 
+.LP 
+   # @prefix@/etc/garpd.conf: garpd configuration file.
+
+   # Set default interface to eth0.
+   default iface [eth0]
+   # Send broadcasts every 5 seconds.
+   default delay 5
+
+   # host and MAC mappings to be broadcasted as Gratuitous ARP.
+   host = node2  mac=aa:bb:cc:33:13:c2  iface=eth1
+   host = 1.2.3.4  mac= aa:1b:cc:33:13:c2   iface=[eth2 eth3 eth4]
+   host = 5.6.7.8  mac= aa:1b:cc:33:13:c2  iface = [ eth4 ]
+   # Use default iface.
+   host = 9.10.11.12  mac =aa:1b:cc:33:13:c2 
+
+.SH NOTES
+.B Gratuitous ARP:
+Usually ARP works as follows. Host A sends out an ARP request for the hardware address of an IP address on host B. Host B sees the request and sends an ARP reply containing the hardware address for the interface with the IP address in question. Host A then records the hardware address in its ARP cache so it doesn't have to do an ARP request and wait for a reply each time it wants to send a packet. Entries in an ARP cache typically expire after about two minutes. For more information on ARP, please see RFC 826.
+
+.B Request Based Gratuitous ARP:
+A gratuitous ARP request packet where the source and destination IP are both set to the IP of the machine issuing the packet and the destination MAC is the broadcast address ff:ff:ff:ff:ff:ff.  Ordinarily, no reply packet will occur. And all hosts on the LAN will refresh their ARP caches using the source hardware address of this request.  
+
+.B Response Based Gratuitous ARP:
+A gratuitous ARP reply packet without any ARP request where the ARP reply is addressed to the broadcast hardware address.  All hosts on the LAN will receive the ARP reply and refresh their ARP cache accordingly.
+
+.SH "REPORTING BUGS"
+Report bugs to <@PACKAGE_BUGREPORT@>.
+.SH COPYRIGHT
+Copyright \(co 2003 - 05 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+The full documentation for
+.B GNU FreeIPMI
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B FreeIPMI
+programs are properly installed at your site, the command
+.IP
+.B info FreeIPMI garpd
+.PP
+should give you access to the complete manual.

@@ -1,3 +1,16 @@
+2005-06-08  Anand Babu  <ab@gnu.org.in>
+
+	* garpd: Integrated Anand Avati's <avati@hardcodecafe.com> Gratuitous
+	ARP Daemon (garpd) project.  Thanks Anand.
+	
+	* doc/freeipmi.texi: Added texinfo documentation for garpd.
+	
+	* libfreeipmi/src/ipmi-utils.c: added ipmi_get_random_seed
+	function.
+	
+	* fish/ipmi-sel.8.in, fish/ipmi-sel.8.in, fish/fish.8.in,
+	fish/bmc-info.8.in, fish/bmc-config.8.in: Man section update.
+	
 2005-05-09  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated for recent changes to install.
@@ -9,14 +22,12 @@
 	* doc/examples/Makefile.am: updated.
 
 	* doc/examples/Makefile.example: updated.
-	
 
 2005-04-22  A Balamurugan  <bala.a@californiadigital.com>
 
 	* libfreeipmi/src/acpi-spmi-locate.c
 	(ipmi_acpi_get_firmware_table): fixed unaligned access warnings.
 	
-
 2005-04-13  A Balamurugan  <bala.a@californiadigital.com>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_get_port_and_reg_space):
@@ -34,7 +45,6 @@
 	* libfreeipmi/src/smbios-locate.[ch] (smbios_get_dev_info): like
 	wise
 	
-
 2005-03-20  Anand Babu  <ab@gnu.org.in>
 
 	* fish/src/fish.c (inner_main): Check return value of

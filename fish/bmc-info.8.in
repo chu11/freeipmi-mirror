@@ -1,4 +1,4 @@
-.TH BMC-INFO 8 "@ISODATE@" "bmc-info @PACKAGE_VERSION@" "User Commands"
+.TH BMC-INFO 8 "@ISODATE@" "bmc-info @PACKAGE_VERSION@" "System Commands"
 .SH NAME
 bmc-info \- manual page for bmc-info.  BMC Info @PACKAGE_VERSION@
 .SH DESCRIPTION
