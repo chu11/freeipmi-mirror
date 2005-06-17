@@ -4248,11 +4248,24 @@ garpd [OPTIONS...]
 
 The following options are available
 @itemize @bullet
+@item -b, --batch-delay=NUM @*
+      Delay between batch of broadcasts.
+
 @item -c, --config-file=FILE  @*
       Configuration file.
 
 @item -D, --no-daemon @*
       Do not become a daemon
+
+@item -i, --interval-delay=NUM @*
+      Delay between every broadcast within in a batch. Set this to
+      avoid network flooding effect.
+
+@item -o, --send-once=SPEC @*
+      Send GARP broadcast once in no-daemon mode and exit. Multiple
+      send-once arguments are allowed. Any meaningful entry in the
+      config file can be used as ``spec''. All Host/MAC pairs in the
+      config file are ignored. 
 
 @item -q, --quiet, --silent @*
       Inhibit usual output
@@ -4275,8 +4288,10 @@ Example ``garpd'' configuration file.
 
 # Set default interface to eth0.
 default iface [eth0]
-# Send broadcasts every 5 seconds.
-default delay 5
+# Send broadcasts every 500 milli seconds.
+batch-delay 500
+# Delay 200 milli seconds between every broadcast.
+interval-delay 200
 
 # host and MAC mappings to be broadcasted as Gratuitous ARP.
 host = node2  mac=aa:bb:cc:33:13:c2  iface=eth1

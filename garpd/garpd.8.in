@@ -12,6 +12,12 @@ GARPD daemon broadcasts request based gratuitous ARP packets with IP and MAC Add
 \fB\-c\fR, \fB\-\-config\-file\fR=\fIFILE\fR
 Configuration file
 .TP
+\fB\-b\fR, \fB\-\-batch\-delay\fR=\fIms\fR
+Batch delay in milliseconds
+.TP
+\fB\-i\fR, \fB\-\-interval\-delay\fR=\fIms\fR
+Interval delay in milliseconds
+.TP
 \fB\-D\fR, \fB\-\-no\-daemon\fR
 Do not become a daemon
 .TP
@@ -38,8 +44,9 @@ for any corresponding short options.
 
    # Set default interface to eth0.
    default iface [eth0]
-   # Send broadcasts every 5 seconds.
-   default delay 5
+   # Send broadcasts every 500 milli seconds.
+   batch-delay 500
+   interval-delay 200
 
    # host and MAC mappings to be broadcasted as Gratuitous ARP.
    host = node2  mac=aa:bb:cc:33:13:c2  iface=eth1

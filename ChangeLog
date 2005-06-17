@@ -1,3 +1,13 @@
+2005-06-17  Anand Babu  <ab@gnu.org.in>
+
+	* garpd/src/garpd.c: support for interval-delay and
+	batch-delay. --send-once support. fixed broadcast order. delay
+	variable is now global only. Thanks to Anand Avati again.
+
+	* doc/freeipmi.texi: updated documentation.
+
+	* garpd/garpd.8: like wise.
+
 2005-06-09  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated for garpd.

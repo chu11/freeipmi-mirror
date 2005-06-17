@@ -1,5 +1,5 @@
 /* 
-   $Id: garpd.c,v 1.1 2005-06-09 01:40:55 ab Exp $
+   $Id: garpd.c,v 1.2 2005-06-17 16:39:26 ab Exp $
 
    garpd - Gratuitous ARP Daemon - Send Gratuitous ARPs for each ARP
    MAC address mapping from the config file.
@@ -101,12 +101,28 @@ static char doc[] =  "GNU FreeIPMI (garpd) -- Gratuitous ARP Daemon";
 /* A description of the arguments we accept. */
 static char args_doc[] = "";
 
+void parse_config_line (char *line);
+char mode; 
+
+/* ********************** */
+#define IFACE_MAX       64
+#define DEFAULT_DELAY   3000
+
+/* ********************** */
+
+unsigned long batch_delay = DEFAULT_DELAY;
+unsigned long interval_delay = DEFAULT_DELAY;
+
+
 /* The options we understand. */
 static struct argp_option options[] = {
   {"verbose",   'v', 0, 0,  "Produce verbose output" },
   {"quiet",     'q', 0, 0,  "Do not produce any output" },
   {"silent",    's', 0, OPTION_ALIAS },
+  {"batch-delay", 'b', "NUM", 0, "Batch delay"},
+  {"interval-delay", 'i', "NUM", 0, "Interval delay"},
   {"no-daemon", 'D', 0, 0, "Do not become a daemon"},
+  {"send-once", 'o', "SPEC", 0, "Send Gratuitous ARP defined by \"spec\""},
   {"config-file", 'c', "FILE", 0,
    "Configuration file"},
   { 0 }
@@ -134,8 +150,18 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case 'v':
       arguments->verbose = 1;
       break;
+    case 'b':
+      batch_delay = atoi (arg);
+      break;
+    case 'i':
+      interval_delay = atoi (arg);
+      break;
     case 'D':
       arguments->no_daemon = 1;
+      break;
+    case 'o':
+      mode = 1;
+      parse_config_line (arg);
       break;
     case 'c':
       arguments->config_file = arg;
@@ -160,12 +186,6 @@ parse_opt (int key, char *arg, struct argp_state *state)
 
 /* Our argp parser. */
 static struct argp argp = { options, parse_opt, args_doc, doc};
-
-/* ********************** */
-#define IFACE_MAX       64
-#define DEFAULT_DELAY   3000
-
-/* ********************** */
 
 #ifndef IFNAMSIZ
 #define IFNAMSIZ 16
@@ -192,7 +212,6 @@ struct map {
 struct map *garpd_list;
 char *config_filename;
 char default_iface[IFNAMSIZ * 64];
-unsigned long default_delay = DEFAULT_DELAY;
 
 static inline unsigned int
 get_random_seed (void)
@@ -269,36 +288,18 @@ free_resources ()
       }
 }
 
-void
-load_config_file (char *cf)
+void parse_config_line (char *chic)
 {
-    FILE *cfp;
-    char chic[2048];
-    int line_no = 0;
-    extern int errno;
-
-    cfp = fopen (cf, "r");
-
-    if (!cfp)
-      {
-	fprintf (stderr, "garpd: fopen (%s): %s\n", cf, strerror (errno));
-	exit (1);
-      }
-
-    /* one iteration per entry */
-    while (fgets (chic, 2048, cfp)) {
 	char *ptr;
 	char mac_flag, ip_flag;
 
+        static int line_no = 0;
 	char mac[18];
 	unsigned long ip=0;
 	unsigned long delay;
 	char iface[IFNAMSIZ];
 
 	struct in_addr ip_in;
-
-	/* just in case */
-	chic[2047] = 0;
 
 
 	/* consider her comments */
@@ -311,12 +312,12 @@ load_config_file (char *cf)
 	line_no++;
 
 	mac_flag = ip_flag = 0;
-	delay = 0;		/* default_delay; */
+	delay = 0;		/* batch_delay; */
 	strcpy (iface, "default");
 
 	/* empty line */
 	if (!ptr)
-	    continue;
+	    return;
 
 
 #define NEXT_TOKEN  do {    \
@@ -327,14 +328,14 @@ load_config_file (char *cf)
 #define NEXT_LIST_TOKEN  do {    \
         ptr = strtok (NULL, "[]");    \
         if (!ptr) { \
-            parse_error (cf, line_no, "Incomplete line");   \
+            parse_error (config_filename, line_no, "Incomplete line");   \
         }   \
 } while (0)
 
 #define NEXT_EMPTY_TOKEN  do {    \
         ptr = strtok (NULL, DELIMITER);    \
         if (ptr) { \
-            parse_error (cf, line_no, ptr);   \
+            parse_error (config_filename, line_no, ptr);   \
         }   \
 } while (0)
 
@@ -342,27 +343,20 @@ load_config_file (char *cf)
 #define NEXT_NONEMPTY_TOKEN  do {    \
         ptr = strtok (NULL, DELIMITER);    \
         if (!ptr) { \
-            parse_error (cf, line_no, "Incomplete line");   \
+            parse_error (config_filename, line_no, "Incomplete line");   \
         }   \
 } while (0)
 
 #define NEXT_TOKEN_IS_EQUAL_OR_DIE  do {    \
         NEXT_NONEMPTY_TOKEN; \
         if (strcmp (ptr,"=")) { \
-            parse_error (cf, line_no, ptr); \
+            parse_error (config_filename, line_no, ptr); \
         }   \
 } while (0)
 
 	if (!strcasecmp(ptr, "default")) {
 	    NEXT_NONEMPTY_TOKEN;
-	    if (!strcasecmp(ptr, "delay")) {
-		NEXT_NONEMPTY_TOKEN;
-		default_delay = atol(ptr);
-		if (!default_delay) {
-		    ERR("Invalid default delay %lu\n", default_delay);
-		    exit(1);
-		}
-	    } else if (!strcasecmp(ptr, "iface")) {
+	    if (!strcasecmp(ptr, "iface")) {
 		ptr += 6;
 		while (*ptr
 		       && (*ptr == ' ' || *ptr == '\t' || *ptr == '\n'))
@@ -374,17 +368,38 @@ load_config_file (char *cf)
 		}
 		strcpy(default_iface, ptr);
 	    } else {
-		parse_error(cf, line_no, ptr);
+		parse_error(config_filename, line_no, ptr);
 	    }
 	    NEXT_EMPTY_TOKEN;
-	    continue;
+	    return;
 	}
+       if (!strcasecmp(ptr, "batch-delay")) {
+           NEXT_NONEMPTY_TOKEN;
+           if (batch_delay) return; /* already set from command line */
+	   batch_delay = atol(ptr);
+           if (!batch_delay) {
+               ERR("Invalid batch delay %s\n", ptr);
+               exit(1);
+           }
+           return;
+       }
+
+       if (!strcasecmp(ptr, "interval-delay")) {
+           NEXT_NONEMPTY_TOKEN;
+           if (interval_delay) return;
+	   interval_delay = atol(ptr);
+           if (!interval_delay) {
+               ERR("Invalid interval delay %s\n", ptr);
+               exit(1);
+           }
+           return; 
+       }
 
 #define NEXT_TOKEN_IS_IP_OR_DIE  do {    \
         NEXT_NONEMPTY_TOKEN; \
         ip = do_dns (ptr);  \
         if (!ip) {  \
-            parse_error (cf, line_no, ptr); \
+            parse_error (config_filename, line_no, ptr); \
         }   \
 } while (0)
 
@@ -393,10 +408,11 @@ load_config_file (char *cf)
     int dummy;      \
     if (sscanf (ptr,"%2x:%2x:%2x:%2x:%2x:%2x",        \
              &dummy,&dummy,&dummy,&dummy,&dummy,&dummy) != 6) { \
-            parse_error (cf, line_no, ptr);     \
+            parse_error (config_filename, line_no, ptr);     \
     }       \
 }while (0)
 
+        if (mode == 2) return;
 	/* one iteration per var=value */
 	while (ptr) {
 	    if (!strcasecmp(ptr, "host")) {
@@ -425,23 +441,29 @@ load_config_file (char *cf)
 		}
 		strcpy(iface, ptr);
 	    } else {
-		parse_error(cf, line_no, ptr);
+		parse_error(config_filename, line_no, ptr);
 	    }
 	    NEXT_TOKEN;
 	}
 	/* process entry */
 	if (!ip_flag || !mac_flag) {
-	    parse_error(cf, line_no, "Insufficient info");
+	    parse_error(config_filename, line_no, "Insufficient info");
 	}
 
 	ip_in.s_addr = ip;
 	{
-	    struct map *newif;
+	    struct map *newif,*trav;
 
 	    newif = (struct map *) calloc(1, sizeof(*garpd_list));
 
-	    newif->next = garpd_list;
-	    garpd_list = newif;
+            if (!garpd_list) {
+                garpd_list = newif;
+            } else {
+                trav = garpd_list;
+                while (trav->next)
+                    trav = trav->next;
+                trav->next = newif;
+            }
 
 	    sscanf (mac, "%2x:%2x:%2x:%2x:%2x:%2x",
 		    (unsigned int *)(unsigned char *) &garpd_list->mac[0],
@@ -451,15 +473,39 @@ load_config_file (char *cf)
 		    (unsigned int *)(unsigned char *) &garpd_list->mac[4],
 		    (unsigned int *)(unsigned char *) &garpd_list->mac[5]);
 
-	    strcpy(newif->name, iface);
-	    newif->ip = ip;
-/* 	    newif->delay = delay; */
-/* 	    rnd = rand() % default_delay; */
-/* 	    garpd_list->last_shot.tv_sec = time(NULL) + (rnd / 1000); */
-/* 	    garpd_list->last_shot.tv_usec = (rnd % 1000) * 1000; */
-	}
+       strcpy(newif->name, iface);
+       newif->ip = ip;
+/*     newif->delay = delay; */
+/*     rnd = rand() % batch_delay; */
+/*     garpd_list->last_shot.tv_sec = time(NULL) + (rnd / 1000); */
+/*     garpd_list->last_shot.tv_usec = (rnd % 1000) * 1000; */
     }
 }
+
+void
+load_config_file (char *cf)
+{
+    FILE *cfp;
+    char chic[2048];
+    extern int errno;
+
+    cfp = fopen (cf, "r");
+
+    if (!cfp)
+      {
+	fprintf (stderr, "garpd: fopen (%s): %s\n", cf, strerror (errno));
+	exit (1);
+      }
+
+    /* one iteration per entry */
+    while (fgets (chic, 2048, cfp)) {
+	/* play safe, just in case :) */
+	chic[2047] = 0;
+
+        parse_config_line (chic);
+    }
+}
+
 
 void
 send_garpd (int socket, struct map *map)
@@ -497,7 +543,7 @@ garpd_ticker (struct map *map, int socket)
     struct timeval tv;
     gettimeofday (&tv, NULL);
     if (!map->delay) {
-	map->delay = default_delay;
+	map->delay = batch_delay;
     }
     if ((map->last_shot.tv_usec + map->last_shot.tv_sec * 1000000) +
 	(map->delay * 1000) <= (tv.tv_usec + tv.tv_sec * 1000000)) {
@@ -572,11 +618,17 @@ void garpd_loop ()
 	    int i;
 	    for (i = 0; i < inf->count; i++)
 	      {
+                /* each send_garpd here goes to a different
+                 * interface. no need to sleep () between
+                 * them as I am not burst flooding
+                 */
 		send_garpd (iface_sock_map[inf->index[i]], inf);
 	      }
 	    inf = inf->next;
+            usleep (interval_delay * 1000);
 	  }
-	sleep (default_delay);
+        if (mode == 2) return;
+	usleep (batch_delay * 1000);
     }
 }
 
@@ -601,10 +653,11 @@ main (int argc, char *argv[])
     else
       config_filename = strdup (FI_DEFAULT_CONFIG_FILE);
 
-    garpd_list = NULL;
+//    garpd_list = NULL;
     memset (iface_sock_map, -1, IFACE_MAX);
     /* clean_me (); */
 
+    mode++;
     load_config_file (config_filename);
     garpd_socket_init ();
 
@@ -612,7 +665,8 @@ main (int argc, char *argv[])
       daemon (0, 0);
 
     garpd_loop ();
-    
+ 
     /* control should never reach here */
+    /* why not? :) */
     return (0);
 }
