@@ -40,9 +40,11 @@ fish:
 bmc-watchdog:
 -------------
   * Require Timer use to be SMS/OS?
+  * argp
 
 ipmipower:
 ----------
+  * argp
   * Output warning/error/message/something in autoconf if ipmipower
     cannot be compiled with locked pages??
   * There are probably port issues with mmap/mlock.
@@ -55,6 +57,7 @@ ipmipower:
 
 ipmiping/rmcpping:
 ------------------
+  * argp
   * Make starting sequence number random to reduce probability of
     "confused" BMC known issue?
   * Randomizing port on client can also fix the issue??
