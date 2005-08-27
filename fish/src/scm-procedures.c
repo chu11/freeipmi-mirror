@@ -396,18 +396,6 @@ ex_sdr_get_repo_info ()
 }
 
 SCM
-ex_kcs_get_poll_count ()
-{
-  u_int64_t poll_count;
-  SCM kcs_poll_count;
-
-  poll_count = ipmi_kcs_get_poll_count ();
-  kcs_poll_count = gh_long2scm (poll_count);
-  
-  return (kcs_poll_count);
-}
-
-SCM
 ex_sel_get_first_entry_raw ()
 {
   u_int8_t record_data[SEL_RECORD_SIZE];

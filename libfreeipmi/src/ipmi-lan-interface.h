@@ -1,7 +1,7 @@
 /* 
    ipmi-lan-interface.h - IPMI LAN Interface
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -150,14 +150,75 @@ extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;
 
-int8_t fill_lan_msg_hdr (u_int8_t net_fn, u_int8_t rs_lun, u_int8_t rq_seq, fiid_obj_t obj_msg);
-int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, fiid_obj_t obj_hdr_session, fiid_template_t tmpl_hdr_session, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *pkt, u_int32_t pkt_len);
-int8_t unassemble_ipmi_lan_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_hdr_session, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr_rmcp, fiid_obj_t obj_hdr_session, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_obj_t obj_msg_trlr);
-ssize_t ipmi_lan_sendto (int sockfd, const void *ipmi_lan_pkt, size_t ipmi_lan_pkt_len, int flags, const struct sockaddr *to, unsigned int tolen);
-ssize_t ipmi_lan_recvfrom (int sockfd, void *ipmi_pkt, size_t ipmi_pkt_len, int flags, struct sockaddr *from, unsigned int *fromlen);
-int8_t ipmi_lan_cmd (u_int32_t sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t net_fn, u_int8_t lun, u_int8_t rq_seq, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_lan_check_net_fn(fiid_template_t tmpl_msg_hdr, fiid_obj_t obj_msg_hdr, u_int8_t net_fn);
-int8_t ipmi_lan_check_rq_seq(fiid_template_t tmpl_msg_hdr, fiid_obj_t obj_msg_hdr, u_int8_t rq_seq);
+
+int8_t fill_lan_msg_hdr (u_int8_t net_fn, 
+			 u_int8_t rs_lun, 
+			 u_int8_t rq_seq, 
+			 fiid_obj_t obj_msg);
+
+int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
+			       fiid_obj_t obj_hdr_session, 
+			       fiid_template_t tmpl_hdr_session, 
+			       fiid_obj_t obj_msg_hdr, 
+			       fiid_obj_t obj_cmd, 
+			       fiid_template_t tmpl_cmd, 
+			       u_int8_t *pkt, 
+			       u_int32_t pkt_len);
+
+int8_t unassemble_ipmi_lan_pkt (u_int8_t *pkt, 
+				u_int32_t pkt_len, 
+				fiid_template_t tmpl_hdr_session, 
+				fiid_template_t tmpl_cmd, 
+				fiid_obj_t obj_hdr_rmcp, 
+				fiid_obj_t obj_hdr_session, 
+				fiid_obj_t obj_msg_hdr, 
+				fiid_obj_t obj_cmd, 
+				fiid_obj_t obj_msg_trlr);
+
+ssize_t ipmi_lan_sendto (int sockfd, 
+			 const void *pkt, 
+			 size_t pkt_len, 
+			 int flags, 
+			 const struct sockaddr *to, 
+			 unsigned int tolen);
+
+ssize_t ipmi_lan_recvfrom (int sockfd, 
+			   void *pkt, 
+			   size_t pkt_len, 
+			   int flags, 
+			   struct sockaddr *from, 
+			   unsigned int *fromlen);
+
+int8_t ipmi_lan_cmd (u_int32_t sockfd, 
+		     struct sockaddr *hostaddr, 
+		     size_t hostaddr_len, 
+		     u_int8_t auth_type, 
+		     u_int32_t session_seq_num, 
+		     u_int32_t session_id, 
+		     u_int8_t *auth_code_data, 
+		     u_int32_t auth_code_data_len, 
+		     u_int8_t net_fn, 
+		     u_int8_t lun, 
+		     u_int8_t rq_seq, 
+		     fiid_obj_t obj_cmd_rq, 
+		     fiid_template_t tmpl_cmd_rq, 
+		     fiid_obj_t obj_cmd_rs, 
+		     fiid_template_t tmpl_cmd_rs);
+
+int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
+		      fiid_obj_t obj_cmd_rq, 
+		      fiid_template_t tmpl_cmd_rq, 
+		      fiid_obj_t obj_cmd_rs, 
+		      fiid_template_t tmpl_cmd_rs);
+
+int8_t ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
+			      fiid_obj_t obj_msg_hdr, 
+			      u_int8_t net_fn);
+
+int8_t ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
+			      fiid_obj_t obj_msg_hdr, 
+			      u_int8_t rq_seq);
+
 int8_t ipmi_lan_check_chksum (u_int8_t *pkt, u_int64_t pkt_len);
 
 #ifdef __cplusplus

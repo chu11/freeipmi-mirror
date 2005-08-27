@@ -46,7 +46,7 @@
 #define IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET 	0x8
 #define IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET 	0x10
 #define IPMI_SMBIOS_LSB_BIT 				4
-#define IPMI_SMBIOS_REGSPACING_SHIFT 		6
+#define IPMI_SMBIOS_REGSPACING_SHIFT 		        6
 #define IPMI_SMBIOS_REGSPACING_MASK 			0x3
 #define IPMI_SMBIOS_INTINFO_PRESENT_BIT 		3
 #define IPMI_SMBIOS_INTINFO_POLARITY_BIT 		1
@@ -59,6 +59,6 @@
 #define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
 int ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space);
-ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo);
+ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
 
 #endif

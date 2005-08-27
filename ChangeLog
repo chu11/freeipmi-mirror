@@ -1,3 +1,72 @@
+2005-08-27  A Balamurugan  <bala@zresearch.com>
+
+	* doc/version.texi: New file.
+
+	* doc/examples/ipmi-lan-test-udm.c: New file.
+
+	* libfreeipmi/src/ipmi-interface.[c,h]: New files.  Implements
+	unified driver model.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_get_port_and_reg_space): Uses
+	ipmi_driver_type_t enum.
+
+	* doc/freeipmi.texi: Removed profiling support for sensors node.
+
+	* doc/examples/Makefile.am: Updated.
+
+	* doc/examples/ipmi-lan-test.c: Updated.
+
+	* fish/src/extension.c: Removed fi-kcs-get-poll-count procedure.
+
+	* fish/src/ipmi-wrapper.c: Removed auth_code_len in
+	ipmi_lan_open_session().
+
+	* fish/src/scm-procedures.[c,h]: Removed function
+	ex_kcs_get_poll_count().
+
+	* libfreeipmi/src/Makefile.am: Updated.
+
+	* libfreeipmi/src/acpi-spmi-locate.[c,h]: Uses
+	ipmi_interface_type_t enum.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_free): Uses ipmi_xfree().
+
+	* libfreeipmi/src/fiid.h (FIID_OBJ_ALLOC): Updated -
+	fiid_obj_alloc accepts tmpl directly now.
+
+	* libfreeipmi/src/freeipmi.h: Updated.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.[c,h]: Added new function
+	ipmi_cmd_get_dev_id().
+
+	* libfreeipmi/src/ipmi-kcs-interface.[c,h]: Now
+	ipmi_kcs_get_status(), ipmi_kcs_wait_for_ibf_clear(),
+	ipmi_kcs_wait_for_obf_set(), ipmi_kcs_read_byte(),
+	ipmi_kcs_read_next(), ipmi_kcs_start_write(),
+	ipmi_kcs_write_byte(), ipmi_kcs_end_write(), ipmi_kcs_get_abort(),
+	ipmi_kcs_test_if_state(), ipmi_kcs_clear_obf(), ipmi_kcs_read(),
+	ipmi_kcs_write() and ipmi_kcs_write_interruptible() use
+	ipmi_device_t.  Updated ipmi_kcs_open().  Added ipmi_kcs_cmd2()
+	and ipmi_kcs_cmd2().  Removed ipmi_kcs_get_poll_count().
+
+	* libfreeipmi/src/ipmi-lan-interface.[c,h]: Added New function
+	ipmi_lan_cmd2().
+
+	* libfreeipmi/src/ipmi-locate.[c,h]: Uses ipmi_interface_type_t
+	enum.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.[c,h]: Added New functions
+	ipmi_cmd_get_channel_auth_caps2(),
+	ipmi_cmd_get_session_challenge2(), ipmi_cmd_activate_session2(),
+	ipmi_cmd_set_session_priv_level2(), ipmi_lan_open_session2() and
+	ipmi_lan_close_session2().
+
+	* libfreeipmi/src/pci-locate.[c,h]: Uses ipmi_interface_type_t
+	enum.
+
+	* libfreeipmi/src/smbios-locate.[c,h]: Added fiid template for
+	smbios ipmi-device-info record.  Uses ipmi_interface_type_t enum.
+
 2005-06-17  Anand Babu  <ab@gnu.org.in>
 
 	* garpd/src/garpd.c: support for interval-delay and

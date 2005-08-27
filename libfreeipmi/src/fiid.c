@@ -244,7 +244,7 @@ void
 fiid_obj_free (fiid_obj_t obj)
 {
   if (obj)
-    free (obj);
+    ipmi_xfree (obj);
 }
 
 int8_t

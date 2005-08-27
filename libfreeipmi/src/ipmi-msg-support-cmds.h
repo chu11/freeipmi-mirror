@@ -1,7 +1,7 @@
 /*
    ipmi-msg-support-cmds.h - IPMI Message Support Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -271,17 +271,99 @@ extern fiid_template_t tmpl_cmd_close_session_rs;
 extern fiid_template_t tmpl_get_channel_access_rq;
 extern fiid_template_t tmpl_get_channel_access_rs;
 
-int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs);
-int8_t fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t username_len, fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs);
-int8_t fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, fiid_obj_t obj_cmd);
-int8_t ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t tmp_session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs);
-int8_t fill_cmd_set_session_priv_level (u_int8_t priv_level, fiid_obj_t obj_cmd);
-int8_t ipmi_lan_set_session_priv_level (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t priv_level, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs);
-int8_t ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int32_t initial_outbound_seq_num, u_int8_t priv_level, u_int32_t *session_seq_num, u_int32_t *session_id, u_int8_t *rq_seq);
-int8_t fill_cmd_close_session (u_int32_t close_session_id, fiid_obj_t obj_cmd);
-int8_t ipmi_lan_close_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t rq_seq, u_int32_t close_session_id, fiid_obj_t obj_cmd_rs);
+int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
+				       fiid_obj_t obj_cmd);
+int8_t ipmi_lan_get_channel_auth_caps (int sockfd, 
+				       struct sockaddr *hostaddr, 
+				       size_t hostaddr_len, 
+				       u_int8_t rq_seq, 
+				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
+					fiid_obj_t obj_cmd_rs);
+
+int8_t fill_cmd_get_session_challenge (u_int8_t auth_type, 
+				       char *username, 
+				       u_int32_t username_len, 
+				       fiid_obj_t obj_cmd);
+int8_t ipmi_lan_get_session_challenge (int sockfd, 
+				       struct sockaddr *hostaddr, 
+				       size_t hostaddr_len, 
+				       u_int8_t auth_type, 
+				       char *username, 
+				       u_int8_t rq_seq, 
+				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev, 
+					fiid_obj_t obj_cmd_rs);
+
+int8_t fill_cmd_activate_session (u_int8_t auth_type, 
+				  u_int8_t max_priv_level, 
+				  u_int8_t *challenge_str, 
+				  u_int32_t challenge_str_len, 
+				  u_int32_t initial_outbound_seq_num, 
+				  fiid_obj_t obj_cmd);
+int8_t ipmi_lan_activate_session (int sockfd, 
+				  struct sockaddr *hostaddr, 
+				  size_t hostaddr_len, 
+				  u_int8_t auth_type, 
+				  u_int32_t tmp_session_id, 
+				  u_int8_t *auth_code_data, 
+				  u_int32_t auth_code_data_len, 
+				  u_int8_t max_priv_level, 
+				  u_int8_t *challenge_str, 
+				  u_int32_t challenge_str_len, 
+				  u_int32_t initial_outbound_seq_num, 
+				  u_int8_t rq_seq, 
+				  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
+				   u_int8_t *challenge_str, 
+				   u_int32_t challenge_str_len, 
+				   fiid_obj_t obj_cmd_rs);
+
+int8_t fill_cmd_set_session_priv_level (u_int8_t priv_level, 
+					fiid_obj_t obj_cmd);
+int8_t ipmi_lan_set_session_priv_level (int sockfd, 
+					struct sockaddr *hostaddr, 
+					size_t hostaddr_len, 
+					u_int8_t auth_type, 
+					u_int32_t session_seq_num, 
+					u_int32_t session_id, 
+					u_int8_t *auth_code_data, 
+					u_int32_t auth_code_data_len, 
+					u_int8_t priv_level, 
+					u_int8_t rq_seq, 
+					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
+					 fiid_obj_t obj_cmd_rs);
+
+
+int8_t ipmi_lan_open_session (int sockfd, 
+			      struct sockaddr *hostaddr, 
+			      size_t hostaddr_len, 
+			      u_int8_t auth_type, 
+			      char *username, 
+			      char *password, 
+			      u_int32_t initial_outbound_seq_num, 
+			      u_int8_t priv_level, 
+			      u_int32_t *session_seq_num, 
+			      u_int32_t *session_id, 
+			      u_int8_t *rq_seq);
+int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
+
+int8_t fill_cmd_close_session (u_int32_t close_session_id, 
+			       fiid_obj_t obj_cmd);
+int8_t ipmi_lan_close_session (int sockfd, 
+			       struct sockaddr *hostaddr, 
+			       size_t hostaddr_len, 
+			       u_int8_t auth_type, 
+			       u_int32_t session_seq_num, 
+			       u_int32_t session_id, 
+			       u_int8_t *auth_code_data, 
+			       u_int32_t auth_code_data_len, 
+			       u_int8_t rq_seq, 
+			       u_int32_t close_session_id, 
+			       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_lan_close_session2 (ipmi_device_t *dev, 
+				fiid_obj_t obj_cmd_rs);
 
 
 extern fiid_template_t tmpl_set_channel_access_rq;

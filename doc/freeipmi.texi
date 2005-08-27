@@ -987,9 +987,6 @@ nominal, threshold max/min readings and status descriptions.
 @item -l, ---list-groups
       List the sensor groups.
 
-@item -p, ---prof
-      Profile system interface driver polling.
-
 @item -g @var{group-name}, ---group=@var{group-name}
       List sensors from group.
 

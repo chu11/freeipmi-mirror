@@ -75,7 +75,8 @@ fiid_template_t tmpl_hdr_session_auth_calc =
     {32,  "session_id"},
     {256, "auth_calc_data"},
     {8,   "ipmi_msg_len"},
-    {0,   ""}  };
+    {0,   ""}
+  };
 
 
 int8_t

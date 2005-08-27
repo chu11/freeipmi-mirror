@@ -24,10 +24,10 @@
 
 #include "freeipmi.h"
 
-typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_t, ipmi_locate_info_t*));
+typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t, ipmi_locate_info_t*));
 
 ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
   extern int errno;
   
@@ -50,8 +50,7 @@ ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
       if (pinfo2 != NULL)
 	return pinfo2;
     }
-  
-  errno = ENODEV;
-  
+
+/*   errno = ENODEV; */
   return NULL;
 }

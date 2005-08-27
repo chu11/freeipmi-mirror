@@ -187,7 +187,7 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 #else  /* __linux */
 
 ipmi_locate_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
+pci_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
   return NULL;
 }

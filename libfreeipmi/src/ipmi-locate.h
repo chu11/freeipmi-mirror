@@ -31,29 +31,36 @@ extern "C" {
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
 
-#define IPMI_INTERFACE_RESERVED   0x00
-#define IPMI_INTERFACE_KCS        0x01
-#define IPMI_INTERFACE_SMIC       0x02
-#define IPMI_INTERFACE_BT         0x03
-#define IPMI_INTERFACE_SSIF       0x04
-#define IPMI_INTERFACE_MAX        IPMI_INTERFACE_SSIF
+/* USE ipmi_interface_type_t INSTEAD --Anand Babu */
+/* #define IPMI_INTERFACE_RESERVED   0x00 */
+/* #define IPMI_INTERFACE_KCS        0x01 */
+/* #define IPMI_INTERFACE_SMIC       0x02 */
+/* #define IPMI_INTERFACE_BT         0x03 */
+/* #define IPMI_INTERFACE_SSIF       0x04 */
+/* #define IPMI_INTERFACE_MAX        IPMI_INTERFACE_SSIF */
 /* 5-255 Reserved */
 
-enum ipmi_interface
+enum ipmi_interface_type
 {
-  ipmi_interface_kcs = 1,
-  ipmi_interface_smic = 2,
-  ipmi_interface_bt = 3,
-  ipmi_interface_ssif = 4,
-  ipmi_interface_last
+  IPMI_INTERFACE_RESERVED = 0,
+  IPMI_INTERFACE_KCS = 1,
+  IPMI_INTERFACE_SMIC = 2,
+  IPMI_INTERFACE_BT = 3,
+  IPMI_INTERFACE_SSIF = 4,
+  /* Note: If you add a new interface here, don't forget to update
+  "IPMI_INTERFACE_MAX" macro below. */
 };
-typedef enum ipmi_interface ipmi_interface_t;
+typedef enum ipmi_interface_type ipmi_interface_type_t;
+
+#define IPMI_INTERFACE_MAX  IPMI_INTERFACE_SSIF
+#define IPMI_INTERFACE_LAST IPMI_INTERFACE_MAX
 
 struct ipmi_locate_info
 {
   u_int8_t ipmi_ver_major;
   u_int8_t ipmi_ver_minor;
-  u_int8_t interface_type; /* KCS, SMIC, BT, SSIF */
+  /* u_int8_t interface_type;  *//* KCS, SMIC, BT, SSIF */
+  ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char *bmc_i2c_dev_name;
   u_int8_t addr_space_id;  /* Memory mapped, IO mapped, SMBus*/
   union {
@@ -66,7 +73,7 @@ struct ipmi_locate_info
 typedef struct ipmi_locate_info ipmi_locate_info_t;
 
 ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_t type, ipmi_locate_info_t* pinfo);
+ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
 
 #ifdef __cplusplus
 }

@@ -171,7 +171,7 @@ int ipmi_acpi_get_spmi_table (u_int8_t interface_type,
  * RETURNS:
  *   pinfo if successful, NULL otherwise 
  ******************************************************************************/
-ipmi_locate_info_t *acpi_spmi_get_dev_info (ipmi_interface_t interface_type, 
+ipmi_locate_info_t *acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type, 
 					    ipmi_locate_info_t *pinfo);
 
 #endif

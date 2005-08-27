@@ -35,7 +35,7 @@ extern "C" {
 
 #define FIID_OBJ_ALLOC(obj, tmpl)                             \
 do {                                                          \
-    obj = fiid_obj_alloc (fiid_obj_len_bytes (tmpl));	      \
+    obj = fiid_obj_alloc (tmpl);                              \
     ERR (obj);						      \
 } while (0)	
 

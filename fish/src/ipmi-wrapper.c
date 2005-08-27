@@ -130,7 +130,7 @@ lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username
     return (1);
   to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
 
-  if (ipmi_lan_open_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, username, auth_code, strlen (auth_code), 0x01, priv_level, session_seq_num, session_id, rq_seq) == -1)
+  if (ipmi_lan_open_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, username, auth_code, 0x01, priv_level, session_seq_num, session_id, rq_seq) == -1)
     return (1);
   return (0);
 }

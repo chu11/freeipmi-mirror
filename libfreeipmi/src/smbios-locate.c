@@ -43,6 +43,70 @@
 #include <limits.h>
 #include "freeipmi.h"
 
+
+fiid_template_t tmpl_smbios_ipmi_device_info_record =
+  {
+    {8, "cmd"}, 
+    {8, "comp_code"}, 
+
+    {8, "type"}, /* IPMI Device Information structure indicator. value = 38
+		    (Note this number is given in decimal) */
+    {8, "length"}, /* Length of the structure, a minimum of 10h (for
+		      full IPMI address description, this is a minimum
+		      of 12h) */
+    {16, "handle"}, 
+    {8, "interface_type"}, /* Baseboard Management Controller (BMC)
+			      interface type, see Table C1-2, Interface Type
+			      field values. */
+    {4, "ipmi_spec_revision.minor"}, /* Somewhat mis-named. Actually identifies the
+					IPMI Specification Version, in BCD format, to
+					which the BMC was designed. Bits 7:4 hold the
+					most significant digit of the version, 
+					while bits 3:0 hold the least significant bits,
+					e.g. a value of 15h indicates version 1.5. */ 
+    {4, "ipmi_spec_revision.major"},
+    {8, "i2c_slave_address"}, /* The slave address on the I2C bus of this BMC. */
+    {8, "nv_storage_device_address"}, /* Bus id of the NV storage device. If no storage
+					 device exists for this BMC, the field is set to
+					 0FFh. */
+    {1, "base_addr.io_mapped_or_mem_mapped"}, 
+    {15, "base_address"}, /* Identifies the base address (either memory-
+			     mapped or I/O) of the BMC. If the least-
+			     significant bit of the field is a 1, the address is
+			     in I/O space; otherwise, the address is
+			     memory-mapped. Refer to the IPMI Interface
+			     Specification for usage details. */
+    {1, "interrupt_trigger_mode"}, /* bit 0 - Interrupt Trigger Mode.
+				      1b = level, 0b = edge. */
+    {1, "interrupt_polarity"}, /* bit 1 - Interrupt Polarity.
+				  1b = active high, 0b = active low. */
+    {1, "base_address_modifier_interrupt_info.reserved1"}, /* bit 2 - reserved. 
+							      Return as 0b. */
+    {1, "interrupt_info"}, /* Interrupt Info
+			      Identifies the type and polarity of the
+			      interrupt associated with the IPMI system
+			      interface, if any.
+			      bit 3 - 1b = interrupt info specified
+			      0b = interrupt info not specified */
+    {1, "ls_bit_for_addresses"}, /* bit 4 - LS-bit for addresses
+				    0b = Address bit 0 = 0b
+				    1b = Address bit 0 = 1b */
+    {1, "base_address_modifier_interrupt_info.reserved2"}, /* bit 5 - reserved. 
+							      Return as 0b. */
+    {2, "register_spacing"}, /* bit 7:6 - Register spacing
+				00b = interface registers are on
+				successive byte boundaries
+				01b = interface registers are on 32-
+				bit boundaries
+				10b = interface registers are on 16-
+				byte boundaries
+				11b = reserved */
+    {8, "interrupt_number"}, /* Interrupt number for IPMI System Interface.
+				00h = unspecified / unsupported */
+    {0, ""}
+  };
+
+
 int
 ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space)
 {
@@ -125,7 +189,7 @@ is_ipmi_entry (u_int8_t* sigp)
    0 = not a IPMI device info structure for TYPE
    1 = yes, IPMI device info structure for TYPE */
 static int
-is_ipmi_dev_info (ipmi_interface_t type, u_int8_t* dev_info_p)
+is_ipmi_dev_info (ipmi_interface_type_t type, u_int8_t* dev_info_p)
 {
   if (*dev_info_p != IPMI_SMBIOS_IPMI_DEV_INFO_SIG)
     return 0;
@@ -177,7 +241,7 @@ map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
    pointer to the device info structure in heap (caller responsible
    for freeing */
 static u_int8_t*
-copy_impi_dev_info (ipmi_interface_t type)
+copy_impi_dev_info (ipmi_interface_type_t type)
 {
   int status;
   u_int8_t* result = NULL;
@@ -251,7 +315,7 @@ copy_impi_dev_info (ipmi_interface_t type)
    RETURNS:
    pinfo if successful, NULL otherwise */
 ipmi_locate_info_t*
-smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
+smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
   u_int8_t* bufp;
   u_int8_t version;
@@ -270,6 +334,7 @@ smbios_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
   if (pinfo->interface_type != type)
     {
       free (bufp);
+      errno = ENODEV;
       return (NULL);
     }
 

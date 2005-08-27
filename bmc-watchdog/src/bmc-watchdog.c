@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.28 2005-04-13 10:00:42 balamurugan Exp $
+ *  $Id: bmc-watchdog.c,v 1.29 2005-08-27 10:29:43 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -273,7 +273,7 @@ _get_port_and_reg_space(u_int32_t *port, u_int8_t *reg_space)
   if (cinfo.io_port && cinfo.reg_space)
     return (0);
   
-  if (ipmi_locate (ipmi_interface_kcs, &locate_info) != NULL && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
+  if (ipmi_locate (IPMI_INTERFACE_KCS, &locate_info) != NULL && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
     {
       if (!cinfo.io_port)
         *port      = locate_info.base_addr.bmc_iobase_addr;

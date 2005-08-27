@@ -52,6 +52,7 @@ extern "C" {
 #include "ipmi-netfn-spec.h"
 #include "ipmi-sessions.h"
 #include "ipmi-semaphores.h"
+#include "ipmi-interface.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
 #include "ipmi-kcs-interface.h"
@@ -157,6 +158,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-semaphores.h>
+#include <freeipmi/ipmi-interface.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-kcs-interface.h>

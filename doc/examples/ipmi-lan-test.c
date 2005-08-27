@@ -41,20 +41,15 @@ main (void)
   u_int8_t auth_type;
   u_int32_t session_seq_num;
   u_int32_t session_id;
-  u_int32_t auth_code_data_len;
   u_int8_t net_fn;
   u_int8_t lun;
   u_int8_t rq_seq;
   struct hostent *hostinfo;
   struct sockaddr_in host;
-  u_int8_t *auth_code_data = PASSWORD;
   u_int32_t initial_outbound_seq_num;
   
-  status = auth_type = session_seq_num = session_id = auth_code_data_len = net_fn = lun = 0; 
-  rq_seq = 3;
+  rq_seq = status = auth_type = session_seq_num = session_id = net_fn = lun = 0; 
   initial_outbound_seq_num = 1;
-  if (auth_code_data)
-    auth_code_data_len = strlen (auth_code_data);
 
   /* Open client (local) UDP socket */
   if ((sockfd = ipmi_open_free_udp_port ()) == -1)
@@ -73,7 +68,7 @@ main (void)
   /* IPMI open LAN session */
   {
     initial_outbound_seq_num = 1;
-    if((status = ipmi_lan_open_session (sockfd, (struct sockaddr *) &host, sizeof (struct sockaddr), AUTH_TYPE, USERNAME, PASSWORD,  auth_code_data_len, initial_outbound_seq_num, PRIVILEGE_LEVEL, &session_seq_num, &session_id)) == -1)
+    if((status = ipmi_lan_open_session (sockfd, (struct sockaddr *) &host, sizeof (struct sockaddr), AUTH_TYPE, USERNAME, PASSWORD, initial_outbound_seq_num, PRIVILEGE_LEVEL, &session_seq_num, &session_id, &rq_seq)) == -1)
       {
 	fprintf (stderr, "Error: Open session failed.\n");
 	exit (EXIT_FAILURE);

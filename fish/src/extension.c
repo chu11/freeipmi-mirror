@@ -196,11 +196,6 @@ install_new_procedures (void)
      (display (fi-sdr-get-repo-info))
   */
   
-  gh_new_procedure ("fi-kcs-get-poll-count", ex_kcs_get_poll_count, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-kcs-get-poll-count))
-  */
-  
   gh_new_procedure ("fi-sel-get-first-entry", 
 		    ex_sel_get_first_entry, 0, 0, 0);
   /* example scheme expression

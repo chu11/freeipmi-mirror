@@ -1,7 +1,7 @@
 /* 
    ipmi-msg-support-cmds.c - IPMI Message Support Commands
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -396,8 +396,9 @@ fiid_template_t tmpl_get_channel_info_rs =
   };
 
 
-int8_t
-fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, fiid_obj_t obj_cmd)
+int8_t 
+fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
+				fiid_obj_t obj_cmd)
 {
   if (!obj_cmd || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
     {
@@ -418,8 +419,12 @@ fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, fiid_obj_t obj_cmd)
   return (0);
 }
 
-int8_t
-ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_lan_get_channel_auth_caps (int sockfd, 
+				struct sockaddr *hostaddr, 
+				size_t hostaddr_len, 
+				u_int8_t rq_seq, 
+				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
 
@@ -439,13 +444,75 @@ ipmi_lan_get_channel_auth_caps (int sockfd, struct sockaddr *hostaddr, size_t ho
 		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_get_channel_auth_caps_rq,
 		     obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs) != -1);
-
+  
   /* INFO: you can also do auth type check here */
   return (0);
 }
 
-int8_t
-fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t username_len, fiid_obj_t obj_cmd)
+int8_t 
+ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  ipmi_device_t local_dev;
+  fiid_obj_t obj_cmd_rq;
+  
+  if (!(dev->private.local_sockfd && 
+	dev->private.remote_host && 
+	dev->private.remote_host_len && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  memcpy (&local_dev, dev, sizeof (ipmi_device_t));
+  local_dev.io.outofband.rq.obj_hdr_rmcp = NULL;
+  local_dev.io.outofband.rs.obj_hdr_rmcp = NULL;
+  local_dev.io.outofband.rq.obj_hdr_session = NULL;
+  local_dev.io.outofband.rs.obj_hdr_session = NULL;
+  local_dev.io.outofband.rq.obj_msg_hdr = NULL;
+  local_dev.io.outofband.rs.obj_msg_hdr = NULL;
+  
+  local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
+    local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
+  
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_hdr_rmcp,
+		   *(local_dev.io.outofband.rq.tmpl_hdr_rmcp_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_hdr_rmcp,
+		   *(local_dev.io.outofband.rs.tmpl_hdr_rmcp_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_hdr_session,
+		   *(local_dev.io.outofband.rq.tmpl_hdr_session_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_hdr_session,
+		   *(local_dev.io.outofband.rs.tmpl_hdr_session_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_msg_hdr,
+		   *(local_dev.io.outofband.rq.tmpl_msg_hdr_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_msg_hdr,
+		   *(local_dev.io.outofband.rs.tmpl_msg_hdr_ptr));
+  
+  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_get_channel_auth_caps_rq));
+  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_channel_auth_caps_rq));
+  ERR (obj_cmd_rq);
+  
+  ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, obj_cmd_rq) != -1);
+  
+  ERR (ipmi_lan_cmd2 (&local_dev, 
+		      obj_cmd_rq, 
+		      tmpl_cmd_get_channel_auth_caps_rq, 
+		      obj_cmd_rs, 
+		      tmpl_cmd_get_channel_auth_caps_rs) != -1);
+  
+  /* Note: We need to copy local_dev.io.outofband.rs.obj_hdr_session
+     content to dev->io.outofband.rs.obj_hdr_session here -- Bala.A */
+  
+  /* INFO: you can also do auth type check here */
+  return (0);
+}
+
+int8_t 
+fill_cmd_get_session_challenge (u_int8_t auth_type, 
+				char *username, 
+				u_int32_t username_len, 
+				fiid_obj_t obj_cmd)
 {
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
@@ -481,8 +548,14 @@ fill_cmd_get_session_challenge (u_int8_t auth_type, char *username, u_int32_t us
   return (0);
 }
 
-int8_t
-ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_lan_get_session_challenge (int sockfd, 
+				struct sockaddr *hostaddr, 
+				size_t hostaddr_len, 
+				u_int8_t auth_type, 
+				char *username, 
+				u_int8_t rq_seq, 
+				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
 
@@ -506,8 +579,74 @@ ipmi_lan_get_session_challenge (int sockfd, struct sockaddr *hostaddr, size_t ho
   return (0);
 }
 
-int8_t
-fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, fiid_obj_t obj_cmd)
+int8_t 
+ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  ipmi_device_t local_dev;
+  fiid_obj_t obj_cmd_rq;
+  
+  if (!(dev->private.local_sockfd && 
+	dev->private.remote_host && 
+	dev->private.remote_host_len && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  memcpy (&local_dev, dev, sizeof (ipmi_device_t));
+  local_dev.io.outofband.rq.obj_hdr_rmcp = NULL;
+  local_dev.io.outofband.rs.obj_hdr_rmcp = NULL;
+  local_dev.io.outofband.rq.obj_hdr_session = NULL;
+  local_dev.io.outofband.rs.obj_hdr_session = NULL;
+  local_dev.io.outofband.rq.obj_msg_hdr = NULL;
+  local_dev.io.outofband.rs.obj_msg_hdr = NULL;
+  
+  local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
+    local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
+  
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_hdr_rmcp,
+		   *(local_dev.io.outofband.rq.tmpl_hdr_rmcp_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_hdr_rmcp,
+		   *(local_dev.io.outofband.rs.tmpl_hdr_rmcp_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_hdr_session,
+		   *(local_dev.io.outofband.rq.tmpl_hdr_session_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_hdr_session,
+		   *(local_dev.io.outofband.rs.tmpl_hdr_session_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rq.obj_msg_hdr,
+		   *(local_dev.io.outofband.rq.tmpl_msg_hdr_ptr));
+  FIID_OBJ_ALLOCA (local_dev.io.outofband.rs.obj_msg_hdr,
+		   *(local_dev.io.outofband.rs.tmpl_msg_hdr_ptr));
+  
+  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_get_session_challenge_rq));
+  ERR (obj_cmd_rq);
+  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_session_challenge_rq));
+  
+  ERR (fill_cmd_get_session_challenge (dev->private.auth_type, 
+				       dev->private.username, 
+                                       ((dev->private.username) ? 
+					strlen (dev->private.username) : 0), 
+				       obj_cmd_rq) != -1);
+  
+  ERR (ipmi_lan_cmd2 (&local_dev, 
+		      obj_cmd_rq, 
+		      tmpl_cmd_get_session_challenge_rq, 
+		      obj_cmd_rs, 
+		      tmpl_cmd_get_session_challenge_rs) != -1);
+  
+  /* Note: We need to copy local_dev.io.outofband.rs.obj_hdr_session
+     content to dev->io.outofband.rs.obj_hdr_session here -- Bala.A */
+  return (0);
+}
+
+int8_t 
+fill_cmd_activate_session (u_int8_t auth_type, 
+			   u_int8_t max_priv_level, 
+			   u_int8_t *challenge_str, 
+			   u_int32_t challenge_str_len, 
+			   u_int32_t initial_outbound_seq_num, 
+			   fiid_obj_t obj_cmd)
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
@@ -536,8 +675,20 @@ fill_cmd_activate_session (u_int8_t auth_type, u_int8_t max_priv_level, u_int8_t
   return (0);
 }
 
-int8_t
-ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t tmp_session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t max_priv_level, u_int8_t *challenge_str, u_int32_t challenge_str_len, u_int32_t initial_outbound_seq_num, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_lan_activate_session (int sockfd, 
+			   struct sockaddr *hostaddr, 
+			   size_t hostaddr_len, 
+			   u_int8_t auth_type, 
+			   u_int32_t tmp_session_id, 
+			   u_int8_t *auth_code_data, 
+			   u_int32_t auth_code_data_len, 
+			   u_int8_t max_priv_level, 
+			   u_int8_t *challenge_str, 
+			   u_int32_t challenge_str_len, 
+			   u_int32_t initial_outbound_seq_num, 
+			   u_int8_t rq_seq, 
+			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
   
@@ -562,8 +713,45 @@ ipmi_lan_activate_session (int sockfd, struct sockaddr *hostaddr, size_t hostadd
   return (0);
 }
 
-int8_t
-fill_cmd_set_session_priv_level (u_int8_t priv_level, fiid_obj_t obj_cmd)
+int8_t 
+ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
+			    u_int8_t *challenge_str, 
+			    u_int32_t challenge_str_len, 
+			    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq;
+  
+  if (!(dev->private.local_sockfd && 
+	dev->private.remote_host && 
+	dev->private.remote_host_len && 
+	dev->private.session_id &&
+	challenge_str && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_activate_session_rq);
+  
+  ERR (fill_cmd_activate_session (dev->private.auth_type, 
+				  dev->private.priv_level, 
+				  challenge_str, 
+				  challenge_str_len, 
+				  dev->private.initial_outbound_seq_num, 
+				  obj_cmd_rq) != -1);
+  
+  ERR (ipmi_lan_cmd2 (dev, 
+		      obj_cmd_rq, 
+		      tmpl_cmd_activate_session_rq,
+		      obj_cmd_rs, 
+		      tmpl_cmd_activate_session_rs) != -1);
+  return (0);
+}
+
+int8_t 
+fill_cmd_set_session_priv_level (u_int8_t priv_level, 
+				 fiid_obj_t obj_cmd)
 {
   if (!IPMI_PRIV_LEVEL_VALID(priv_level)
       || obj_cmd == NULL)
@@ -579,8 +767,18 @@ fill_cmd_set_session_priv_level (u_int8_t priv_level, fiid_obj_t obj_cmd)
   return (0);
 }  
 
-int8_t
-ipmi_lan_set_session_priv_level (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t priv_level, u_int8_t rq_seq, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_lan_set_session_priv_level (int sockfd, 
+				 struct sockaddr *hostaddr, 
+				 size_t hostaddr_len, 
+				 u_int8_t auth_type, 
+				 u_int32_t session_seq_num, 
+				 u_int32_t session_id, 
+				 u_int8_t *auth_code_data, 
+				 u_int32_t auth_code_data_len, 
+				 u_int8_t priv_level, 
+				 u_int8_t rq_seq, 
+				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
   
@@ -604,14 +802,56 @@ ipmi_lan_set_session_priv_level (int sockfd, struct sockaddr *hostaddr, size_t h
   return (0);
 }
 
-int8_t
-ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, char *username, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int32_t initial_outbound_seq_num, u_int8_t priv_level, u_int32_t *session_seq_num, u_int32_t *session_id, u_int8_t *rq_seq)
+int8_t 
+ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
+				  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq;
+  
+  if (!(dev->private.local_sockfd && 
+	dev->private.remote_host && 
+	dev->private.remote_host_len && 
+	dev->private.session_id && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_set_session_priv_level_rq));
+  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_set_session_priv_level_rq));
+  ERR (obj_cmd_rq);
+  
+  ERR (fill_cmd_set_session_priv_level (dev->private.priv_level, obj_cmd_rq) != -1);
+  
+  ERR (ipmi_lan_cmd2 (dev, 
+		      obj_cmd_rq, 
+		      tmpl_cmd_set_session_priv_level_rq,
+		      obj_cmd_rs, 
+		      tmpl_cmd_set_session_priv_level_rs) != -1);
+  return (0);
+}
+
+int8_t 
+ipmi_lan_open_session (int sockfd, 
+		       struct sockaddr *hostaddr, 
+		       size_t hostaddr_len, 
+		       u_int8_t auth_type, 
+		       char *username, 
+		       char *password, 
+		       u_int32_t initial_outbound_seq_num, 
+		       u_int8_t priv_level, 
+		       u_int32_t *session_seq_num, 
+		       u_int32_t *session_id, 
+		       u_int8_t *rq_seq)
 {
   fiid_obj_t obj_cmd_rs;
   u_int64_t temp_session_id, temp_session_seq_num;
   u_int8_t challenge_str[IPMI_CHALLENGE_STR_MAX];
+  int password_len = strlen (password);
 
-  if (rq_seq == NULL)
+  if ((password_len > IPMI_USER_PASSWORD_MAX_LENGTH) || 
+      (rq_seq == NULL))
     {
       errno = EINVAL;
       return (-1);
@@ -641,9 +881,8 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
-				 auth_type, *session_id, auth_code_data, 
-				 auth_code_data_len, priv_level, 
-				 challenge_str, IPMI_CHALLENGE_STR_MAX,
+				 auth_type, *session_id, password, password_len,
+				 priv_level, challenge_str, IPMI_CHALLENGE_STR_MAX,
 				 initial_outbound_seq_num, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
@@ -660,7 +899,7 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
-				       auth_code_data, auth_code_data_len, priv_level,
+				       password, password_len, priv_level,
 				       *rq_seq,  obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
@@ -675,8 +914,109 @@ ipmi_lan_open_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_le
   return (-1);
 }
 
-int8_t
-fill_cmd_close_session (u_int32_t close_session_id, fiid_obj_t obj_cmd)
+int8_t 
+ipmi_lan_open_session2 (ipmi_device_t *dev)
+{
+  fiid_obj_t obj_cmd_rs;
+  u_int64_t temp_session_id, temp_session_seq_num;
+  u_int8_t challenge_str[IPMI_CHALLENGE_STR_MAX];
+  u_int64_t supported_auth_type = 0;
+  
+  dev->private.rq_seq = 0;
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs);
+  if (ipmi_cmd_get_channel_auth_caps2 (dev, obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  if (!ipmi_comp_test (obj_cmd_rs))
+    {
+      return (-1);
+    }
+  switch (dev->private.auth_type)
+    {
+    case IPMI_SESSION_AUTH_TYPE_NONE:
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
+		    "auth_type.none", &supported_auth_type);
+      break;
+    case IPMI_SESSION_AUTH_TYPE_MD2:
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
+		    "auth_type.md2", &supported_auth_type);
+      break;
+    case IPMI_SESSION_AUTH_TYPE_MD5:
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
+		    "auth_type.md5", &supported_auth_type);
+      break;
+    case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
+		    "auth_type.straight_passwd_key", &supported_auth_type);
+      break;
+    case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
+		    "auth_type.oem_prop", &supported_auth_type);
+      break;
+    default:
+      errno = EINVAL;
+      return (-1);
+    }
+  if (supported_auth_type == 0)
+    {
+      errno = ENOTSUP;
+      return (-1);
+    }
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
+  if (ipmi_cmd_get_session_challenge2 (dev, obj_cmd_rs) == -1)
+    {
+      return (-1);
+    }
+  if (!ipmi_comp_test (obj_cmd_rs))
+    {
+      return (-1);
+    }
+  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
+		"tmp_session_id", &temp_session_id);
+  dev->private.session_id = temp_session_id;
+  fiid_obj_get_data (obj_cmd_rs, 
+		     tmpl_cmd_get_session_challenge_rs, 
+		     "challenge_str", 
+		     challenge_str);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_activate_session_rs);
+  if (ipmi_cmd_activate_session2 (dev, 
+				  challenge_str, 
+				  IPMI_CHALLENGE_STR_MAX, 
+				  obj_cmd_rs) == -1)
+    {
+      return (-1);
+    }
+  if (!ipmi_comp_test (obj_cmd_rs))
+    {
+      return (-1);
+    }
+  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
+		"session_id", &temp_session_id);
+  dev->private.session_id = temp_session_id;
+  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
+		"initial_inbound_seq_num", &temp_session_seq_num);
+  dev->private.session_seq_num = temp_session_seq_num;
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs);
+  if (ipmi_cmd_set_session_priv_level2 (dev, obj_cmd_rs) == -1)
+    {
+      return (-1);
+    }
+  if (!ipmi_comp_test (obj_cmd_rs))
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
+int8_t 
+fill_cmd_close_session (u_int32_t close_session_id, 
+			fiid_obj_t obj_cmd)
 {
   if (obj_cmd == NULL)
     {
@@ -691,8 +1031,18 @@ fill_cmd_close_session (u_int32_t close_session_id, fiid_obj_t obj_cmd)
   return (0);
 }  
 
-int8_t
-ipmi_lan_close_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_len, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, u_int8_t rq_seq, u_int32_t close_session_id, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_lan_close_session (int sockfd, 
+			struct sockaddr *hostaddr, 
+			size_t hostaddr_len, 
+			u_int8_t auth_type, 
+			u_int32_t session_seq_num, 
+			u_int32_t session_id, 
+			u_int8_t *auth_code_data, 
+			u_int32_t auth_code_data_len, 
+			u_int8_t rq_seq, 
+			u_int32_t close_session_id, 
+			fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
   
@@ -712,6 +1062,39 @@ ipmi_lan_close_session (int sockfd, struct sockaddr *hostaddr, size_t hostaddr_l
 		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
 		     obj_cmd_rq, tmpl_cmd_close_session_rq,
 		     obj_cmd_rs, tmpl_cmd_close_session_rs) != -1);
+  return (0);
+}
+
+int8_t 
+ipmi_lan_close_session2 (ipmi_device_t *dev, 
+			 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq;
+  
+  if (!(dev->private.remote_host && 
+	dev->private.local_sockfd && 
+	dev->private.remote_host_len && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_close_session_rq));
+  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_close_session_rq));
+  ERR (obj_cmd_rq);
+  
+  ERR (fill_cmd_close_session (dev->private.session_id, obj_cmd_rq) != -1);
+  ERR (ipmi_lan_cmd2 (dev, 
+		      obj_cmd_rq, 
+		      tmpl_cmd_close_session_rq,
+		      obj_cmd_rs, 
+		      tmpl_cmd_close_session_rs) != -1);
+  if (!ipmi_comp_test (obj_cmd_rs))
+    {
+      return (-1);
+    }
+  
   return (0);
 }
 
