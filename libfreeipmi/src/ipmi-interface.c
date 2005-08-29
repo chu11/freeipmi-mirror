@@ -411,18 +411,23 @@ ipmi_outofband_close (ipmi_device_t *dev)
   return (retval);
 }
 
-static int
+static int 
 ipmi_inband_close (ipmi_device_t *dev)
 {
+#ifdef __FreeBSD__
+#ifndef USE_IOPERM
+  close (dev->private.dev_fd);
+#endif
+#endif
+  
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
-
+  
   ipmi_xfree (dev->private.dev_name);
-  close (dev->private.dev_fd);
-
+  
   if (dev->private.mutex_semid)
     IPMI_MUTEX_UNLOCK (dev->private.mutex_semid);
-
+  
   return (0);
 }
 
