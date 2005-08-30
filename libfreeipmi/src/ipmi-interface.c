@@ -155,8 +155,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->private.priv_level = priv_level;
   dev->private.net_fn = net_fn;
   dev->private.lun = lun;
-  /* No locking for out-of-band driver */
-  dev->private.mutex_semid = -1;
   
   /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;

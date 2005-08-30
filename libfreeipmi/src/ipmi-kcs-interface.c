@@ -83,7 +83,7 @@ memset (void *s, int c, size_t n)
 /* static u_int16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT; */
 /* static int           kcs_reg_space   = IPMI_REG_SPACE_DEFAULT; */
 /* static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS; */
-static int           kcs_mutex_semid;
+static int           kcs_mutex_semid = 0;
 ipmi_device_t _dev;
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
