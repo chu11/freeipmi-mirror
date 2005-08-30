@@ -175,8 +175,12 @@ fill_hdr_ipmi_kcs (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_hdr)
   return 0;
 }
 
-int8_t
-assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *pkt, u_int32_t pkt_len)
+int8_t 
+assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
+		       fiid_obj_t obj_cmd, 
+		       fiid_template_t tmpl_cmd, 
+		       u_int8_t *pkt, 
+		       u_int32_t pkt_len)
 {
   u_int32_t obj_cmd_len, obj_hdr_len;
   if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
@@ -198,8 +202,12 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t t
   return (obj_hdr_len + obj_cmd_len);
 }
 
-int8_t
-unassemble_ipmi_kcs_pkt (u_int8_t *pkt, u_int32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd)
+int8_t 
+unassemble_ipmi_kcs_pkt (u_int8_t *pkt, 
+			 u_int32_t pkt_len, 
+			 fiid_obj_t obj_hdr, 
+			 fiid_obj_t obj_cmd, 
+			 fiid_template_t tmpl_cmd)
 {
   u_int32_t indx = 0;
 
@@ -543,8 +551,13 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev, u_int8_t *bytes, u_int32_t  by
   return (bytes_count);
 }
 
-int8_t
-ipmi_kcs_cmd (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
+int8_t 
+ipmi_kcs_cmd (u_int8_t lun, 
+	      u_int8_t fn, 
+	      fiid_obj_t obj_cmd_rq, 
+	      fiid_template_t tmpl_cmd_rq, 
+	      fiid_obj_t obj_cmd_rs, 
+	      fiid_template_t tmpl_cmd_rs)
 {
   ipmi_device_t *dev = &_dev;
 
@@ -603,48 +616,61 @@ ipmi_kcs_cmd (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t 
   return (0);
 }
 
-
-int8_t
-ipmi_kcs_cmd2 (ipmi_device_t *dev, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rs, fiid_obj_t obj_cmd_rs)
+int8_t 
+ipmi_kcs_cmd2 (ipmi_device_t *dev, 
+	       fiid_template_t tmpl_cmd_rq, 
+	       fiid_obj_t obj_cmd_rq, 
+	       fiid_template_t tmpl_cmd_rs, 
+	       fiid_obj_t obj_cmd_rs)
 {
   if (!(dev && tmpl_cmd_rq && obj_cmd_rq && tmpl_cmd_rs && obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
-
-  { /* Request Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, obj_cmd_rq_len, bytes_len;
+  
+  { 
+    u_int8_t *pkt;
+    u_int32_t pkt_len;
     
-    obj_cmd_rq_len = fiid_obj_len_bytes (tmpl_cmd_rq);
-    obj_hdr_rq_len = fiid_obj_len_bytes (*dev->io.inband.rq.tmpl_hdr_ptr);
-    bytes_len = obj_hdr_rq_len + obj_cmd_rq_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rq.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rq);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
     
-    ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, obj_cmd_rq, 
-				  tmpl_cmd_rq, bytes, bytes_len) > 0);
-
-    ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
+    ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
+			    dev->private.net_fn, 
+			    dev->io.inband.rq.obj_hdr) > 0);
+    ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, 
+				obj_cmd_rq, 
+				tmpl_cmd_rq, 
+				pkt, 
+				pkt_len) > 0);
+    ERR (ipmi_kcs_write (dev, pkt, pkt_len) != -1);
   }
-  { /* Response Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
+  
+  { 
+    u_int8_t *pkt;
+    u_int32_t pkt_len;
     
-    obj_hdr_rs_len = fiid_obj_len_bytes (*dev->io.inband.rs.tmpl_hdr_ptr);
-    obj_cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_rs);
-    bytes_len = obj_hdr_rs_len + obj_cmd_rs_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rs);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
     
-    ERR (ipmi_kcs_read (dev, bytes, bytes_len) != -1);
-    ERR (unassemble_ipmi_kcs_pkt (bytes, bytes_len,
-				  dev->io.inband.rs.obj_hdr, obj_cmd_rs, 
+    ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
+			    dev->private.net_fn, 
+			    dev->io.inband.rs.obj_hdr) > 0);
+    ERR (ipmi_kcs_read (dev, pkt, pkt_len) != -1);
+    ERR (unassemble_ipmi_kcs_pkt (pkt, 
+				  pkt_len, 
+				  dev->io.inband.rs.obj_hdr, 
+				  obj_cmd_rs, 
 				  tmpl_cmd_rs) != -1);
   }
+  
   return (0);
 }
 

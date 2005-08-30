@@ -158,12 +158,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   /* No locking for out-of-band driver */
   dev->private.mutex_semid = -1;
   
-  if (ipmi_open (dev, dev->type, dev->mode) == -1)
-    {
-      memset (dev, 0, sizeof (ipmi_device_t));
-      return (-1);
-    }
-  
   /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
   dev->io.outofband.rs.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
@@ -251,7 +245,7 @@ ipmi_open_inband (ipmi_device_t *dev,
   
   memset (dev, 0, sizeof (ipmi_device_t));
   
-  switch (dev->type)
+  switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
       if (ipmi_locate (IPMI_INTERFACE_KCS, &dev->private.locate_info) == NULL)
@@ -276,6 +270,9 @@ ipmi_open_inband (ipmi_device_t *dev,
   
   dev->type = driver_type;
   dev->mode = mode;
+  dev->private.lun = lun;
+  dev->private.net_fn = fn;
+  dev->poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
   
   /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
      If we cant find the bass address, we better exit. -- Anand Babu */
@@ -318,20 +315,10 @@ ipmi_open_inband (ipmi_device_t *dev,
   dev->io.inband.rq.tmpl_hdr_ptr = &tmpl_inband_hdr;
   dev->io.inband.rs.tmpl_hdr_ptr = &tmpl_inband_hdr;
   
-  FIID_OBJ_ALLOC (dev->io.inband.rq.obj_hdr,
+  FIID_OBJ_ALLOC (dev->io.inband.rq.obj_hdr, 
 		  *dev->io.inband.rq.tmpl_hdr_ptr);
-  FIID_OBJ_ALLOC (dev->io.inband.rs.obj_hdr,
+  FIID_OBJ_ALLOC (dev->io.inband.rs.obj_hdr, 
 		  *dev->io.inband.rs.tmpl_hdr_ptr);
-  
-  fill_hdr_ipmi_kcs (lun, fn, dev->io.inband.rq.obj_hdr);
-  
-  if (ipmi_open (dev, driver_type, mode) == -1)
-    {
-      fiid_obj_free (dev->io.inband.rq.obj_hdr);
-      fiid_obj_free (dev->io.inband.rs.obj_hdr);
-      memset (dev, 0, sizeof (ipmi_device_t));
-      return (-1);
-    }
   
   return (0);
 }
