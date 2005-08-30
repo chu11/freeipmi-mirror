@@ -641,7 +641,7 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     
     ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
 			    dev->private.net_fn, 
-			    dev->io.inband.rq.obj_hdr) > 0);
+			    dev->io.inband.rq.obj_hdr) == 0);
     ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, 
 				obj_cmd_rq, 
 				tmpl_cmd_rq, 
@@ -662,7 +662,7 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     
     ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
 			    dev->private.net_fn, 
-			    dev->io.inband.rs.obj_hdr) > 0);
+			    dev->io.inband.rs.obj_hdr) == 0);
     ERR (ipmi_kcs_read (dev, pkt, pkt_len) != -1);
     ERR (unassemble_ipmi_kcs_pkt (pkt, 
 				  pkt_len, 

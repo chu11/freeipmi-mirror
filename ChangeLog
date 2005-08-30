@@ -1,5 +1,10 @@
 2005-08-30  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd2): Fixed bug
+	in error condition check.
+
+2005-08-30  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/src/ipmi-semaphores.h (IPMI_MUTEX_LOCK): Continues
 	only for non-zero semid.
 
