@@ -19,6 +19,46 @@
 #include <config.h>
 #endif
 
+/* AIX requires this to be the first thing in the file.  */
+#ifndef __GNUC__
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+ #pragma alloca
+#  else
+#   ifndef alloca /* predefined by HP cc +Olibcalls */
+char *alloca ();
+#   endif
+#  endif
+# endif
+#endif
+
+#include <stdio.h>
+
+#ifdef STDC_HEADERS
+#include <string.h>
+#else
+# include <sys/types.h>
+
+# ifndef HAVE_MEMCPY
+static void*
+memcpy (void *dest, const void *src, size_t n)
+{
+  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
+  return dest;
+}
+# endif
+# ifndef HAVE_MEMSET
+static void*
+memset (void *s, int c, size_t n)
+{
+  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
+  return s;
+}
+# endif
+#endif
+
 #include <errno.h>
 #include <syslog.h>
 #include "xmalloc.h"
@@ -42,6 +82,9 @@ fixup_null_alloc (n)
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), _("Memory exhausted"));
       errno = ENOMEM;
     }
+  else 
+    memset (p, 0, 1);
+  
   return p;
 }
 
@@ -55,6 +98,9 @@ ipmi_xmalloc (n)
   p = malloc (n);
   if (p == 0)
     p = fixup_null_alloc (n);
+  else 
+    memset (p, 0, n);
+  
   return p;
 }
 

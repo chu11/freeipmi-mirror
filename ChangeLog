@@ -1,3 +1,10 @@
+2005-08-31  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/xmalloc.c (ipmi_xmalloc): Returns zero
+	initialized allocated buffer.
+
+	* libfreeipmi/src/xmalloc.c (fixup_null_alloc): like wise.
+
 2005-08-30  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd2): Fixed bug
