@@ -1,7 +1,7 @@
 /* 
    fiid.h - FreeIPMI Interface Definition
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,7 +29,8 @@ extern "C" {
 #define FIID_FIELD_MAX 256
 
 #define FIID_OBJ_ALLOCA(obj, tmpl)                            \
-    obj = alloca (fiid_obj_len_bytes (tmpl));		      \
+    obj = (fiid_obj_len_bytes (tmpl) != -1) ?                 \
+      alloca (fiid_obj_len_bytes (tmpl)) : NULL;	      \
     ERR (obj);						      \
     memset (obj, 0, fiid_obj_len_bytes (tmpl))                \
 
@@ -118,26 +119,55 @@ fiid_template_t tmpl_test =
 
 int32_t fiid_obj_len (fiid_template_t tmpl);
 int32_t fiid_obj_len_bytes (fiid_template_t tmpl);
-int32_t fiid_obj_field_start_end (fiid_template_t tmpl, u_int8_t *field, u_int32_t *start, u_int32_t *end);
+int32_t fiid_obj_field_start_end (fiid_template_t tmpl, 
+				  u_int8_t *field, 
+				  u_int32_t *start, 
+				  u_int32_t *end);
 int8_t fiid_obj_field_lookup (fiid_template_t tmpl, u_int8_t *field);
 int32_t fiid_obj_field_start (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_start_bytes (fiid_template_t tmpl, u_int8_t *field);
+int32_t fiid_obj_field_start_bytes (fiid_template_t tmpl, 
+				    u_int8_t *field);
 int32_t fiid_obj_field_end (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_end_bytes (fiid_template_t tmpl, u_int8_t *field);
+int32_t fiid_obj_field_end_bytes (fiid_template_t tmpl, 
+				  u_int8_t *field);
 int32_t fiid_obj_field_len (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_len_bytes (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_block_len (fiid_template_t tmpl, u_int8_t *field_start, u_int8_t *field_end);
-int32_t fiid_obj_block_len_bytes (fiid_template_t tmpl, u_int8_t *field_start, u_int8_t *field_end);
-void * fiid_obj_alloc (fiid_template_t tmpl);
-void * fiid_obj_memset (fiid_obj_t obj, int c, fiid_template_t tmpl);
-int8_t fiid_obj_memset_field (fiid_obj_t obj, int c, fiid_template_t tmpl, u_int8_t *field);
+int32_t fiid_obj_field_len_bytes (fiid_template_t tmpl, 
+				  u_int8_t *field);
+int32_t fiid_obj_block_len (fiid_template_t tmpl, 
+			    u_int8_t *field_start, 
+			    u_int8_t *field_end);
+int32_t fiid_obj_block_len_bytes (fiid_template_t tmpl, 
+				  u_int8_t *field_start, 
+				  u_int8_t *field_end);
+fiid_obj_t fiid_obj_alloc (fiid_template_t tmpl);
+fiid_obj_t fiid_obj_memset (fiid_obj_t obj, 
+			    int c, 
+			    fiid_template_t tmpl);
+int8_t fiid_obj_memset_field (fiid_obj_t obj, 
+			      int c, 
+			      fiid_template_t tmpl, 
+			      u_int8_t *field);
 void fiid_obj_free (fiid_obj_t obj);
-int8_t fiid_obj_set (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t val);
-int8_t fiid_obj_get (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t *val);
+int8_t fiid_obj_set (fiid_obj_t obj, 
+		     fiid_template_t tmpl, 
+		     u_int8_t *field, 
+		     u_int64_t val);
+int8_t fiid_obj_get (fiid_obj_t obj, 
+		     fiid_template_t tmpl, 
+		     u_int8_t *field, 
+		     u_int64_t *val);
 fiid_field_t *__fiid_template_make (u_int8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
-int8_t fiid_obj_get_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data);
-int8_t fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int8_t *data, u_int32_t data_len);
+int8_t fiid_obj_get_data (fiid_obj_t obj, 
+			  fiid_template_t tmpl, 
+			  u_int8_t *field, 
+			  u_int8_t *data);
+int8_t fiid_obj_set_data (fiid_obj_t obj, 
+			  fiid_template_t tmpl, 
+			  u_int8_t *field, 
+			  u_int8_t *data, 
+			  u_int32_t data_len);
+fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj, fiid_template_t tmpl);
 
 #ifdef __cplusplus
 }

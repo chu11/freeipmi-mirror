@@ -136,9 +136,7 @@ typedef struct ipmi_device ipmi_device_t;
 
 int ipmi_open_inband (ipmi_device_t *dev, 
 		      ipmi_driver_type_t driver_type, 
-		      ipmi_mode_t mode, 
-		      u_int8_t lun, 
-		      u_int8_t fn);
+		      ipmi_mode_t mode);
 int ipmi_open_outofband (ipmi_device_t *dev, 
 			 ipmi_driver_type_t driver_type, 
 			 ipmi_mode_t mode, 
@@ -147,15 +145,13 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 u_int8_t auth_type, 
 			 char *username, 
 			 char *password, 
-			 u_int8_t priv_level, 
-			 u_int8_t net_fn, 
-			 u_int8_t lun);
+			 u_int8_t priv_level);
 int ipmi_close (ipmi_device_t *dev);
 int ipmi_cmd (ipmi_device_t *dev, 
-	      fiid_template_t tmpl_cmd_rq, 
 	      fiid_obj_t obj_cmd_rq, 
-	      fiid_template_t tmpl_cmd_rs, 
-	      fiid_obj_t obj_cmd_rs);
+	      fiid_template_t tmpl_cmd_rq, 
+	      fiid_obj_t obj_cmd_rs, 
+	      fiid_template_t tmpl_cmd_rs);
 int ipmi_cmd_raw (ipmi_device_t *dev, 
 		  char *in, 
 		  size_t in_len, 

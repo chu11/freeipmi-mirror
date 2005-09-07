@@ -1,7 +1,7 @@
 /*
    ipmi-dev-global-cmds.h - IPMI Device Global Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ extern fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs;
 
 int8_t fill_cmd_get_dev_id (fiid_obj_t obj_data_rq);
 int8_t ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs);
-int8_t ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_data_rs);
+int8_t ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs);
 
 #ifdef __cplusplus
 }

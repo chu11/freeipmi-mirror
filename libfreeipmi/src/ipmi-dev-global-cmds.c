@@ -1,7 +1,7 @@
 /* 
    ipmi-dev-global-cmds.c - IPMI Device Global Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -130,11 +130,6 @@ fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs =
 int8_t
 fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
 { 
-  if (obj_data_rq == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
   FIID_OBJ_SET (obj_data_rq, tmpl_cmd_get_dev_id_rq, "cmd", IPMI_CMD_GET_DEV_ID);
   return (0);
 }  
@@ -158,20 +153,27 @@ ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs)
   return (0);
 }
 
-int8_t
-ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_data_rs)
+int8_t 
+ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs)
 {
-  fiid_obj_t obj_data_rq = NULL;
-  u_int32_t obj_data_len;
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
   
-  obj_data_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq);
-  ERR (obj_data_len > 0);
-  obj_data_rq = alloca (obj_data_len);
-  memset (obj_data_rq, 0, obj_data_len);
-  ERR (obj_data_rq);
-
-  ERR (fill_cmd_get_dev_id (obj_data_rq) == 0);
-  ERR (ipmi_cmd (dev, tmpl_cmd_get_dev_id_rq, obj_data_rq, 
-		 tmpl_cmd_get_dev_id_rs, obj_data_rs) == 0);
-  return (0);
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_cmd_get_dev_id_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_cmd_get_dev_id_rs);
+  
+  ERR (fill_cmd_get_dev_id (data_rq) == 0);
+  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_cmd_get_dev_id_rq, 
+		 data_rs, 
+		 tmpl_cmd_get_dev_id_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_cmd_get_dev_id_rs);
+  
+  return ((*obj_data_rs != NULL) ? 0 : -1);
 }

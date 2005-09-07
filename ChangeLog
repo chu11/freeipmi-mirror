@@ -1,3 +1,47 @@
+2005-09-06  A Balamurugan  <bala@zresearch.com>
+
+	* doc/examples/udm-test.c: Renamed ipmi-lan-test-udm.c file.
+
+	* doc/examples/Makefile.am: Updated.
+
+	* doc/examples/Makefile.example: Updated.
+
+	* libfreeipmi/src/xmalloc.[c,h] (ipmi_xfree): Its a macro now.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_inband): net_fn and
+	lun are set by ipmi_cmd_COMMAND functions.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_io_init):
+	Updated.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c (ipmi_cmd_get_dev_id):
+	Rewritten.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_len_bytes): Fixed bug calling
+	BITS_ROUND_BYTES macro.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_field_end_bytes): like wise.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_field_len_bytes): like wise.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_block_len_bytes): like wise.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_block_len): Now returns
+	absolute value.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_alloc): Now returns fiid_obj_t
+	type pointer.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_memset): like wise.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_dup): New function.
+
+	* libfreeipmi/src/fiid.h (FIID_OBJ_ALLOCA): Checks error
+	condition.
+
 2005-08-31  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/xmalloc.c (ipmi_xmalloc): Returns zero

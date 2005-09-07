@@ -66,7 +66,12 @@ __VOID *ipmi_xmalloc (size_t n);
 __VOID *ipmi_xcalloc (size_t n, size_t s);
 __VOID *ipmi_xrealloc (__VOID *p, size_t n);
 char *ipmi_xstrdup (char *p);
-void ipmi_xfree (__VOID *p);
+#define ipmi_xfree(p)     \
+  if (p)		  \
+  {			  \
+    free (p);		  \
+    p = NULL;		  \
+  }
 #endif
 
 #ifdef __cplusplus

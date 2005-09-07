@@ -106,10 +106,11 @@ ipmi_kcs_get_mutex_semid (void)
 /* FIXME: This function has to go. It is replaced by ipmi_open_inband 
             -- Anand Babu */
 int
-ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space, \
+ipmi_kcs_io_init (u_int16_t sms_io_base, 
+		  u_int8_t reg_space, 
 		  unsigned long sleep_usecs)
 {
-  return (ipmi_open_inband (&_dev, IPMI_DEVICE_KCS, IPMI_MODE_DEFAULT, IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ));
+  return (ipmi_open_inband (&_dev, IPMI_DEVICE_KCS, IPMI_MODE_DEFAULT));
 
 #if 0
   if (sms_io_base < 1)
@@ -144,7 +145,9 @@ ipmi_kcs_io_init (u_int16_t sms_io_base, u_int8_t reg_space, \
 /* FIXME: this function has to go --Anand Babu */
 #if 0
 int
-ipmi_kcs_open (u_int16_t sms_io_base, u_int8_t reg_space, unsigned long sleep_usecs)
+ipmi_kcs_open (u_int16_t sms_io_base, 
+	       u_int8_t reg_space, 
+	       unsigned long sleep_usecs)
 {
   if (sms_io_base < 1)
     {
@@ -160,7 +163,9 @@ ipmi_kcs_open (u_int16_t sms_io_base, u_int8_t reg_space, unsigned long sleep_us
 #endif
 
 int8_t
-fill_hdr_ipmi_kcs (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_hdr)
+fill_hdr_ipmi_kcs (u_int8_t lun, 
+		   u_int8_t fn, 
+		   fiid_obj_t obj_hdr)
 {
   if ((lun > IPMI_BMC_IPMB_LUN_OEM_LUN2) ||
       (fn > IPMI_NET_FN_TRANSPORT_RS)    ||
@@ -350,7 +355,9 @@ ipmi_kcs_clear_obf (ipmi_device_t *dev)
  * Main read loop.
  */
 ssize_t
-ipmi_kcs_read (ipmi_device_t *dev, u_int8_t* bytes, u_int32_t bytes_len)
+ipmi_kcs_read (ipmi_device_t *dev, 
+	       u_int8_t* bytes, 
+	       u_int32_t bytes_len)
 {
   u_int8_t *p = bytes;
   int len = 0;
@@ -403,7 +410,9 @@ ipmi_kcs_read (ipmi_device_t *dev, u_int8_t* bytes, u_int32_t bytes_len)
  * Standard write loop. 
  */
 ssize_t
-ipmi_kcs_write (ipmi_device_t *dev, u_int8_t *bytes, u_int32_t  bytes_len)
+ipmi_kcs_write (ipmi_device_t *dev, 
+		u_int8_t *bytes, 
+		u_int32_t  bytes_len)
 {
   u_int8_t *buf=bytes;
   u_int32_t bytes_count = 0;
@@ -478,7 +487,9 @@ ipmi_kcs_write (ipmi_device_t *dev, u_int8_t *bytes, u_int32_t  bytes_len)
     want to try again some time later.
  */
 ssize_t
-ipmi_kcs_write_interruptible (ipmi_device_t *dev, u_int8_t *bytes, u_int32_t  bytes_len)
+ipmi_kcs_write_interruptible (ipmi_device_t *dev, 
+			      u_int8_t *bytes, 
+			      u_int32_t  bytes_len)
 {
   u_int8_t *buf=bytes;
   u_int32_t bytes_count = 0;
@@ -618,10 +629,10 @@ ipmi_kcs_cmd (u_int8_t lun,
 
 int8_t 
 ipmi_kcs_cmd2 (ipmi_device_t *dev, 
-	       fiid_template_t tmpl_cmd_rq, 
 	       fiid_obj_t obj_cmd_rq, 
-	       fiid_template_t tmpl_cmd_rs, 
-	       fiid_obj_t obj_cmd_rs)
+	       fiid_template_t tmpl_cmd_rq, 
+	       fiid_obj_t obj_cmd_rs, 
+	       fiid_template_t tmpl_cmd_rs)
 {
   if (!(dev && tmpl_cmd_rq && obj_cmd_rq && tmpl_cmd_rs && obj_cmd_rs))
     {
@@ -676,7 +687,12 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
 
 
 int8_t
-ipmi_kcs_cmd_interruptible (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fiid_template_t tmpl_cmd_rq, fiid_obj_t obj_cmd_rs, fiid_template_t tmpl_cmd_rs)
+ipmi_kcs_cmd_interruptible (u_int8_t lun, 
+			    u_int8_t fn, 
+			    fiid_obj_t obj_cmd_rq, 
+			    fiid_template_t tmpl_cmd_rq, 
+			    fiid_obj_t obj_cmd_rs, 
+			    fiid_template_t tmpl_cmd_rs)
 {
   int ret;
   ipmi_device_t *dev = &_dev;
@@ -740,7 +756,12 @@ ipmi_kcs_cmd_interruptible (u_int8_t lun, u_int8_t fn, fiid_obj_t obj_cmd_rq, fi
 }
 
 int8_t
-ipmi_kcs_cmd_raw (u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, size_t buf_rq_len, u_int8_t *buf_rs, size_t *buf_rs_len)
+ipmi_kcs_cmd_raw (u_int8_t lun, 
+		  u_int8_t fn, 
+		  u_int8_t *buf_rq, 
+		  size_t buf_rq_len, 
+		  u_int8_t *buf_rs, 
+		  size_t *buf_rs_len)
 {
   ipmi_device_t *dev = &_dev;
 
@@ -798,7 +819,11 @@ ipmi_kcs_cmd_raw (u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, size_t buf_rq_len
 }
 
 int8_t
-ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, u_int8_t *buf_rq, size_t buf_rq_len, u_int8_t *buf_rs, size_t *buf_rs_len)
+ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, 
+		   u_int8_t *buf_rq, 
+		   size_t buf_rq_len, 
+		   u_int8_t *buf_rs, 
+		   size_t *buf_rs_len)
 {
   if (!(dev && buf_rq && buf_rq_len > 0 
         && buf_rs && buf_rs_len && *buf_rs_len > 0))
@@ -855,7 +880,12 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, u_int8_t *buf_rq, size_t buf_rq_len, u_in
 }
 
 int8_t
-ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, u_int8_t fn, u_int8_t *buf_rq, u_int32_t buf_rq_len, u_int8_t *buf_rs, u_int32_t *buf_rs_len)
+ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, 
+				u_int8_t fn, 
+				u_int8_t *buf_rq, 
+				u_int32_t buf_rq_len, 
+				u_int8_t *buf_rs, 
+				u_int32_t *buf_rs_len)
 {
   int ret;
   ipmi_device_t *dev = &_dev;

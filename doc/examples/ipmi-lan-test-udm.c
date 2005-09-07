@@ -41,6 +41,8 @@ main (void)
   struct hostent *hostinfo;
   struct sockaddr_in host;
   
+  fiid_obj_t obj_cmd_rs;
+  
   host.sin_family = AF_INET;
   host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
   hostinfo = gethostbyname (IPMI_HOST);
@@ -59,38 +61,18 @@ main (void)
 			   AUTH_TYPE, 
 			   USERNAME, 
 			   PASSWORD, 
-			   PRIVILEGE_LEVEL, 
-			   IPMI_NET_FN_APP_RQ, 
-			   IPMI_BMC_IPMB_LUN_BMC) != 0)
+			   PRIVILEGE_LEVEL) != 0)
     {
       fprintf (stderr, "ipmi_open_outofband() failed\n");
       exit (EXIT_FAILURE);
     }
   
-  /* IPMI Get Device ID command */
-  {
-    fiid_obj_t obj_cmd_rq;
-    fiid_obj_t obj_cmd_rs;
-    
-    obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq));
-    memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq));
-    
-    obj_cmd_rs = alloca (fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs));
-    memset (obj_cmd_rs, 0, fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs));
-    
-    fill_cmd_get_dev_id (obj_cmd_rq);
-    
-    if (ipmi_cmd (&dev, 
-		  tmpl_cmd_get_dev_id_rq, 
-		  obj_cmd_rq, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  obj_cmd_rs) != 0)
-      {
-	fprintf (stderr, "ipmi_cmd() failed\n");
-      }
-    
-    fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
-  }
+  if (ipmi_cmd_get_dev_id (&dev, &obj_cmd_rs) != 0)
+    {
+      fprintf (stderr, "ipmi_cmd() failed\n");
+    }
+  fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  ipmi_xfree (obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {

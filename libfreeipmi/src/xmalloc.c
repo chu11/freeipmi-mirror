@@ -145,12 +145,3 @@ ipmi_xstrdup (str)
   return p;
 }
 
-void
-ipmi_xfree (__VOID *p)
-{
-  if (p)
-    {
-      free (p);
-      p = 0;
-    }
-}

@@ -78,7 +78,9 @@ fiid_template_t tmpl_inband_hdr =
 
 /* Generic Open Call: common initialization code for all drivers */
 static int
-ipmi_open (ipmi_device_t *dev, ipmi_driver_type_t type, ipmi_mode_t mode)
+ipmi_open (ipmi_device_t *dev, 
+	   ipmi_driver_type_t type, 
+	   ipmi_mode_t mode)
 {
   if (dev == NULL)
     {
@@ -102,9 +104,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		     u_int8_t auth_type, 
 		     char *username, 
 		     char *password, 
-		     u_int8_t priv_level, 
-		     u_int8_t net_fn, 
-		     u_int8_t lun)
+		     u_int8_t priv_level)
 {
   int status;
   
@@ -153,8 +153,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->private.password = password;
   dev->private.password_len = ((password) ? strlen (password) : 0);
   dev->private.priv_level = priv_level;
-  dev->private.net_fn = net_fn;
-  dev->private.lun = lun;
   
   /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
@@ -231,9 +229,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 int 
 ipmi_open_inband (ipmi_device_t *dev, 
 		  ipmi_driver_type_t driver_type, 
-		  ipmi_mode_t mode,
-		  u_int8_t lun, 
-		  u_int8_t fn)
+		  ipmi_mode_t mode)
 {
   if (dev == NULL)
     {
@@ -268,8 +264,6 @@ ipmi_open_inband (ipmi_device_t *dev,
   
   dev->type = driver_type;
   dev->mode = mode;
-  dev->private.lun = lun;
-  dev->private.net_fn = fn;
   dev->poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
   
   /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
@@ -323,11 +317,17 @@ ipmi_open_inband (ipmi_device_t *dev,
 
 int 
 ipmi_cmd (ipmi_device_t *dev, 
-	  fiid_template_t tmpl_cmd_rq, 
 	  fiid_obj_t obj_cmd_rq, 
-	  fiid_template_t tmpl_cmd_rs, 
-	  fiid_obj_t obj_cmd_rs)
+	  fiid_template_t tmpl_cmd_rq, 
+	  fiid_obj_t obj_cmd_rs, 
+	  fiid_template_t tmpl_cmd_rs)
 {
+  if (dev == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
@@ -338,10 +338,10 @@ ipmi_cmd (ipmi_device_t *dev,
 			    tmpl_cmd_rs);
     case IPMI_DEVICE_KCS:
       return ipmi_kcs_cmd2 (dev, 
-			    tmpl_cmd_rq, 
 			    obj_cmd_rq, 
-			    tmpl_cmd_rs, 
-			    obj_cmd_rs);
+			    tmpl_cmd_rq, 
+			    obj_cmd_rs, 
+			    tmpl_cmd_rs);
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
     case IPMI_DEVICE_SSIF:
@@ -353,9 +353,19 @@ ipmi_cmd (ipmi_device_t *dev,
   return (0);
 }
 
-int
-ipmi_cmd_raw (ipmi_device_t *dev, char *in, size_t in_len, char *out, size_t *out_len)
+int 
+ipmi_cmd_raw (ipmi_device_t *dev, 
+	      char *in, 
+	      size_t in_len, 
+	      char *out, 
+	      size_t *out_len)
 {
+  if (dev == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
@@ -419,6 +429,12 @@ ipmi_inband_close (ipmi_device_t *dev)
 int
 ipmi_close (ipmi_device_t *dev)
 {
+  if (dev == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
