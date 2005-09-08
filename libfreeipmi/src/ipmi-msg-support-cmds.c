@@ -495,6 +495,8 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   
   ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, obj_cmd_rq) != -1);
   
+  local_dev.private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.private.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (&local_dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_get_channel_auth_caps_rq, 
@@ -629,6 +631,8 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 					strlen (dev->private.username) : 0), 
 				       obj_cmd_rq) != -1);
   
+  local_dev.private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.private.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (&local_dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_get_session_challenge_rq, 
@@ -741,6 +745,8 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 				  dev->private.initial_outbound_seq_num, 
 				  obj_cmd_rq) != -1);
   
+  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_activate_session_rq,
@@ -824,6 +830,8 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
   
   ERR (fill_cmd_set_session_priv_level (dev->private.priv_level, obj_cmd_rq) != -1);
   
+  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_set_session_priv_level_rq,
@@ -1085,6 +1093,8 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
   ERR (obj_cmd_rq);
   
   ERR (fill_cmd_close_session (dev->private.session_id, obj_cmd_rq) != -1);
+  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_close_session_rq,
