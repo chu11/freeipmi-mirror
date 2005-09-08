@@ -118,7 +118,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	      arguments->auth_type = IPMI_SESSION_AUTH_TYPE_MD5;
 	    }
 	  else 
-	    if (strcasecmp (arg, "straight") == 0)
+	    if (strcasecmp (arg, "plain") == 0)
 	      {
 		arguments->auth_type = IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
 	      }

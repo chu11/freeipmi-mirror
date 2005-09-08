@@ -1,3 +1,8 @@
+2005-09-08  A Balamurugan  <bala@zresearch.com>
+
+	* doc/examples/udm-test.c (parse_opt): Fixed a bug in argument
+	parsing.
+
 2005-09-07  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
