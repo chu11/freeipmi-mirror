@@ -615,7 +615,8 @@ fiid_obj_dup (fiid_obj_t src_obj, fiid_template_t tmpl)
       int len;
       
       len = fiid_obj_len_bytes (tmpl);
-      ERR (len != -1);
+      if (len == -1)
+	return NULL;
       memcpy (dest_obj, src_obj, len);
     }
   

@@ -76,25 +76,6 @@ fiid_template_t tmpl_inband_hdr =
     {0, ""}
   };
 
-/* Generic Open Call: common initialization code for all drivers */
-static int
-ipmi_open (ipmi_device_t *dev, 
-	   ipmi_driver_type_t type, 
-	   ipmi_mode_t mode)
-{
-  if (dev == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  dev->private.dev_fd = -1;
-  if (dev->poll_interval_usecs <= 0)
-    dev->poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
-
-  return (0);
-}
-
 int 
 ipmi_open_outofband (ipmi_device_t *dev, 
 		     ipmi_driver_type_t driver_type, 
@@ -134,25 +115,23 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->type = driver_type;
   dev->mode = mode;
   /* No probing for out-of-band driver */
-  dev->private.dev_name = NULL;
-  dev->private.dev_fd = -1; 
-  dev->private.remote_host     = remote_host;
-  dev->private.remote_host_len = remote_host_len;
-  dev->private.auth_type = auth_type;
+  dev->io.outofband.remote_host     = remote_host;
+  dev->io.outofband.remote_host_len = remote_host_len;
+  dev->io.outofband.auth_type = auth_type;
   { 
     /* Random number generation */
     unsigned int seedp;
     seedp = (int) clock () % (int) time (NULL);
     srand (seedp);
-    dev->private.initial_outbound_seq_num = rand_r (&seedp);
+    dev->io.outofband.initial_outbound_seq_num = rand_r (&seedp);
   }
-  dev->private.session_id = 0;
-  dev->private.session_seq_num = 0;
-  dev->private.rq_seq = 0;
-  dev->private.username = username;
-  dev->private.password = password;
-  dev->private.password_len = ((password) ? strlen (password) : 0);
-  dev->private.priv_level = priv_level;
+  dev->io.outofband.session_id = 0;
+  dev->io.outofband.session_seq_num = 0;
+  dev->io.outofband.rq_seq = 0;
+  dev->io.outofband.username = username;
+  dev->io.outofband.password = password;
+  dev->io.outofband.password_len = ((password) ? strlen (password) : 0);
+  dev->io.outofband.priv_level = priv_level;
   
   /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
@@ -196,7 +175,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		  *dev->io.outofband.rs.tmpl_msg_hdr_ptr);
   
   /* Open client (local) UDP socket */
-  if ((dev->private.local_sockfd = ipmi_open_free_udp_port ()) == -1)
+  if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
     {
       fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
       fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
@@ -242,19 +221,18 @@ ipmi_open_inband (ipmi_device_t *dev,
   switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
-      if (ipmi_locate (IPMI_INTERFACE_KCS, &dev->private.locate_info) == NULL)
+      if (ipmi_locate (IPMI_INTERFACE_KCS, &(dev->io.inband.locate_info)) == NULL)
 	return (-1);
-      /* ipmi_kcs_open (dev->private.locate_info.base_addr.bmc_iobase_addr, dev->private.locate_info.reg_space, 1); */
       break;
     case IPMI_DEVICE_SMIC:
-      if (ipmi_locate (IPMI_INTERFACE_SMIC, &dev->private.locate_info) == NULL)
+      if (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) == NULL)
 	return (-1);
       break;
     case IPMI_DEVICE_BT:
       errno = ENOTSUP;
       return (-1);
     case IPMI_DEVICE_SSIF:
-      if (ipmi_locate (IPMI_INTERFACE_SSIF, &dev->private.locate_info) == NULL)
+      if (ipmi_locate (IPMI_INTERFACE_SSIF, &(dev->io.inband.locate_info)) == NULL)
 	return (-1);
       break;
     default:
@@ -264,11 +242,11 @@ ipmi_open_inband (ipmi_device_t *dev,
   
   dev->type = driver_type;
   dev->mode = mode;
-  dev->poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
+  dev->io.inband.poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
   
   /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
      If we cant find the bass address, we better exit. -- Anand Babu */
-  if (dev->private.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+  if (dev->io.inband.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
     {
       memset (dev, 0, sizeof (ipmi_device_t));
       errno = ENODEV;
@@ -355,9 +333,9 @@ ipmi_cmd (ipmi_device_t *dev,
 
 int 
 ipmi_cmd_raw (ipmi_device_t *dev, 
-	      char *in, 
+	      u_int8_t *in, 
 	      size_t in_len, 
-	      char *out, 
+	      u_int8_t *out, 
 	      size_t *out_len)
 {
   if (dev == NULL)
@@ -418,10 +396,10 @@ ipmi_inband_close (ipmi_device_t *dev)
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
   
-  ipmi_xfree (dev->private.dev_name);
+  ipmi_xfree (dev->io.inband.dev_name);
   
-  if (dev->private.mutex_semid)
-    IPMI_MUTEX_UNLOCK (dev->private.mutex_semid);
+  if (dev->io.inband.mutex_semid)
+    IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
   
   return (0);
 }

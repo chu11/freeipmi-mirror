@@ -165,8 +165,8 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs)
   FIID_OBJ_ALLOCA (data_rs, tmpl_cmd_get_dev_id_rs);
   
   ERR (fill_cmd_get_dev_id (data_rq) == 0);
-  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
 		 data_rq, 
 		 tmpl_cmd_get_dev_id_rq, 

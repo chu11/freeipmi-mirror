@@ -456,9 +456,9 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq;
   
-  if (!(dev->private.local_sockfd && 
-	dev->private.remote_host && 
-	dev->private.remote_host_len && 
+  if (!(dev->io.outofband.local_sockfd && 
+	dev->io.outofband.remote_host && 
+	dev->io.outofband.remote_host_len && 
 	obj_cmd_rs))
     {
       errno = EINVAL;
@@ -495,8 +495,8 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   
   ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, obj_cmd_rq) != -1);
   
-  local_dev.private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  local_dev.private.net_fn = IPMI_NET_FN_APP_RQ;
+  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (&local_dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_get_channel_auth_caps_rq, 
@@ -588,9 +588,9 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq;
   
-  if (!(dev->private.local_sockfd && 
-	dev->private.remote_host && 
-	dev->private.remote_host_len && 
+  if (!(dev->io.outofband.local_sockfd && 
+	dev->io.outofband.remote_host && 
+	dev->io.outofband.remote_host_len && 
 	obj_cmd_rs))
     {
       errno = EINVAL;
@@ -625,14 +625,14 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   ERR (obj_cmd_rq);
   memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_session_challenge_rq));
   
-  ERR (fill_cmd_get_session_challenge (dev->private.auth_type, 
-				       dev->private.username, 
-                                       ((dev->private.username) ? 
-					strlen (dev->private.username) : 0), 
+  ERR (fill_cmd_get_session_challenge (dev->io.outofband.auth_type, 
+				       dev->io.outofband.username, 
+                                       ((dev->io.outofband.username) ? 
+					strlen (dev->io.outofband.username) : 0), 
 				       obj_cmd_rq) != -1);
   
-  local_dev.private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  local_dev.private.net_fn = IPMI_NET_FN_APP_RQ;
+  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (&local_dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_get_session_challenge_rq, 
@@ -725,10 +725,10 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq;
   
-  if (!(dev->private.local_sockfd && 
-	dev->private.remote_host && 
-	dev->private.remote_host_len && 
-	dev->private.session_id &&
+  if (!(dev->io.outofband.local_sockfd && 
+	dev->io.outofband.remote_host && 
+	dev->io.outofband.remote_host_len && 
+	dev->io.outofband.session_id &&
 	challenge_str && 
 	obj_cmd_rs))
     {
@@ -738,15 +738,15 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_activate_session_rq);
   
-  ERR (fill_cmd_activate_session (dev->private.auth_type, 
-				  dev->private.priv_level, 
+  ERR (fill_cmd_activate_session (dev->io.outofband.auth_type, 
+				  dev->io.outofband.priv_level, 
 				  challenge_str, 
 				  challenge_str_len, 
-				  dev->private.initial_outbound_seq_num, 
+				  dev->io.outofband.initial_outbound_seq_num, 
 				  obj_cmd_rq) != -1);
   
-  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_activate_session_rq,
@@ -814,10 +814,10 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq;
   
-  if (!(dev->private.local_sockfd && 
-	dev->private.remote_host && 
-	dev->private.remote_host_len && 
-	dev->private.session_id && 
+  if (!(dev->io.outofband.local_sockfd && 
+	dev->io.outofband.remote_host && 
+	dev->io.outofband.remote_host_len && 
+	dev->io.outofband.session_id && 
 	obj_cmd_rs))
     {
       errno = EINVAL;
@@ -828,10 +828,10 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
   memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_set_session_priv_level_rq));
   ERR (obj_cmd_rq);
   
-  ERR (fill_cmd_set_session_priv_level (dev->private.priv_level, obj_cmd_rq) != -1);
+  ERR (fill_cmd_set_session_priv_level (dev->io.outofband.priv_level, obj_cmd_rq) != -1);
   
-  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_set_session_priv_level_rq,
@@ -930,7 +930,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   u_int8_t challenge_str[IPMI_CHALLENGE_STR_MAX];
   u_int64_t supported_auth_type = 0;
   
-  dev->private.rq_seq = 0;
+  dev->io.outofband.rq_seq = 0;
   
   FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs);
   if (ipmi_cmd_get_channel_auth_caps2 (dev, obj_cmd_rs) != 0)
@@ -941,7 +941,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     {
       return (-1);
     }
-  switch (dev->private.auth_type)
+  switch (dev->io.outofband.auth_type)
     {
     case IPMI_SESSION_AUTH_TYPE_NONE:
       FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs, 
@@ -984,7 +984,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
-  dev->private.session_id = temp_session_id;
+  dev->io.outofband.session_id = temp_session_id;
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_cmd_get_session_challenge_rs, 
 		     "challenge_str", 
@@ -1004,10 +1004,10 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		"session_id", &temp_session_id);
-  dev->private.session_id = temp_session_id;
+  dev->io.outofband.session_id = temp_session_id;
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		"initial_inbound_seq_num", &temp_session_seq_num);
-  dev->private.session_seq_num = temp_session_seq_num;
+  dev->io.outofband.session_seq_num = temp_session_seq_num;
   
   FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs);
   if (ipmi_cmd_set_session_priv_level2 (dev, obj_cmd_rs) == -1)
@@ -1079,9 +1079,9 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq;
   
-  if (!(dev->private.remote_host && 
-	dev->private.local_sockfd && 
-	dev->private.remote_host_len && 
+  if (!(dev->io.outofband.remote_host && 
+	dev->io.outofband.local_sockfd && 
+	dev->io.outofband.remote_host_len && 
 	obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1092,9 +1092,9 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
   memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_close_session_rq));
   ERR (obj_cmd_rq);
   
-  ERR (fill_cmd_close_session (dev->private.session_id, obj_cmd_rq) != -1);
-  dev->private.lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->private.net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (fill_cmd_close_session (dev->io.outofband.session_id, obj_cmd_rq) != -1);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_lan_cmd2 (dev, 
 		      obj_cmd_rq, 
 		      tmpl_cmd_close_session_rq,

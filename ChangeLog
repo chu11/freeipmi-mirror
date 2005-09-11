@@ -1,3 +1,74 @@
+2005-09-11  A Balamurugan  <bala@zresearch.com>
+
+	* doc/version.texi: Updated.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_dup): Fixed a bug in error
+	condition.
+
+	* libfreeipmi/src/ipmi-interface.h: Modifed ipmi_device_t
+	structure.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open): Removed.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c (ipmi_cmd_get_dev_id):
+	Modified for change in ipmi_device_t structure.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband): like
+	wise.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_inband): like wise.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_inband_close): like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_get_status): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c
+	(ipmi_kcs_wait_for_ibf_clear): like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c
+	(ipmi_kcs_wait_for_obf_set): like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read_byte): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read_next): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_start_write):
+	like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_write_byte): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_end_write): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_get_abort): like
+	wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd2): like wise.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_auth_caps2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_session_challenge2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_activate_session2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_set_session_priv_level2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_open_session2): like wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_close_session2): like wise.
+
 2005-09-08  A Balamurugan  <bala@zresearch.com>
 
 	* doc/examples/udm-test.c (parse_opt): Fixed a bug in argument

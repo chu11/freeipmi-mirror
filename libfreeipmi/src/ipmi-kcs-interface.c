@@ -250,7 +250,7 @@ unassemble_ipmi_kcs_pkt (u_int8_t *pkt,
 int8_t
 ipmi_kcs_get_status (ipmi_device_t *dev)
 {
-  return _INB (IPMI_KCS_REG_STATUS (dev->private.locate_info.base_addr.bmc_iobase_addr, dev->private.locate_info.reg_space));
+  return _INB (IPMI_KCS_REG_STATUS (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
 
 /*
@@ -261,7 +261,7 @@ void
 ipmi_kcs_wait_for_ibf_clear (ipmi_device_t *dev)
 {
   while (ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_IBF)
-    usleep (dev->poll_interval_usecs);
+    usleep (dev->io.inband.poll_interval_usecs);
 }
 
 /* 
@@ -273,7 +273,7 @@ void
 ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev)
 {
   while (!(ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_OBF))
-    usleep (dev->poll_interval_usecs);
+    usleep (dev->io.inband.poll_interval_usecs);
 }
 
 /*
@@ -282,7 +282,7 @@ ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev)
 int8_t
 ipmi_kcs_read_byte (ipmi_device_t *dev)
 {
-  return _INB (IPMI_KCS_REG_DATAOUT (dev->private.locate_info.base_addr.bmc_iobase_addr));
+  return _INB (IPMI_KCS_REG_DATAOUT (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
 }
 
 /*
@@ -291,7 +291,7 @@ ipmi_kcs_read_byte (ipmi_device_t *dev)
 void
 ipmi_kcs_read_next (ipmi_device_t *dev) 
 {
-  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (dev->private.locate_info.base_addr.bmc_iobase_addr));
+  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
 }
 /*
  * Set up channel for writing.
@@ -299,7 +299,7 @@ ipmi_kcs_read_next (ipmi_device_t *dev)
 void
 ipmi_kcs_start_write (ipmi_device_t *dev)
 {
-  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (dev->private.locate_info.base_addr.bmc_iobase_addr, dev->private.locate_info.reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
 
 /*
@@ -308,7 +308,7 @@ ipmi_kcs_start_write (ipmi_device_t *dev)
 void
 ipmi_kcs_write_byte (ipmi_device_t *dev, u_int8_t byte)
 {
-  _OUTB (byte, IPMI_KCS_REG_DATAIN (dev->private.locate_info.base_addr.bmc_iobase_addr));
+  _OUTB (byte, IPMI_KCS_REG_DATAIN (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
 }
 
 /* 
@@ -317,7 +317,7 @@ ipmi_kcs_write_byte (ipmi_device_t *dev, u_int8_t byte)
 void
 ipmi_kcs_end_write (ipmi_device_t *dev)
 {
-  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (dev->private.locate_info.base_addr.bmc_iobase_addr, dev->private.locate_info.reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
 
 /* 
@@ -326,7 +326,7 @@ ipmi_kcs_end_write (ipmi_device_t *dev)
 void
 ipmi_kcs_get_abort (ipmi_device_t *dev)
 {
-  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (dev->private.locate_info.base_addr.bmc_iobase_addr, dev->private.locate_info.reg_space));
+  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
 
 int8_t
@@ -650,8 +650,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     memset (pkt, 0, pkt_len);
     ERR (pkt);
     
-    ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
-			    dev->private.net_fn, 
+    ERR (fill_hdr_ipmi_kcs (dev->lun, 
+			    dev->net_fn, 
 			    dev->io.inband.rq.obj_hdr) == 0);
     ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, 
 				obj_cmd_rq, 
@@ -671,8 +671,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     memset (pkt, 0, pkt_len);
     ERR (pkt);
     
-    ERR (fill_hdr_ipmi_kcs (dev->private.lun, 
-			    dev->private.net_fn, 
+    ERR (fill_hdr_ipmi_kcs (dev->lun, 
+			    dev->net_fn, 
 			    dev->io.inband.rs.obj_hdr) == 0);
     ERR (ipmi_kcs_read (dev, pkt, pkt_len) != -1);
     ERR (unassemble_ipmi_kcs_pkt (pkt, 

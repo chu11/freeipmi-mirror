@@ -800,9 +800,9 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	       fiid_template_t tmpl_cmd_rs)
 {
   if (!(dev && 
-	dev->private.remote_host && 
-	dev->private.remote_host_len && 
-	dev->private.local_sockfd && 
+	dev->io.outofband.remote_host && 
+	dev->io.outofband.remote_host_len && 
+	dev->io.outofband.local_sockfd && 
 	tmpl_cmd_rq && 
 	obj_cmd_rq && 
 	tmpl_cmd_rs && 
@@ -817,23 +817,23 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     u_int32_t pkt_len;
     int status = 0;
     
-    pkt_len = _ipmi_lan_pkt_rq_size (dev->private.auth_type, tmpl_cmd_rq); 
+    pkt_len = _ipmi_lan_pkt_rq_size (dev->io.outofband.auth_type, tmpl_cmd_rq); 
     pkt = alloca (pkt_len);
     ERR (pkt);
     memset (pkt, 0, pkt_len);
     
     ERR (fill_hdr_rmcp_ipmi (dev->io.outofband.rq.obj_hdr_rmcp) != -1);
     ERR (fill_hdr_session (*(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
-			   dev->private.auth_type, 
-			   dev->private.session_seq_num, 
-			   dev->private.session_id, 
-			   dev->private.password, 
-			   dev->private.password_len, 
+			   dev->io.outofband.auth_type, 
+			   dev->io.outofband.session_seq_num, 
+			   dev->io.outofband.session_id, 
+			   dev->io.outofband.password, 
+			   dev->io.outofband.password_len, 
                            tmpl_cmd_rq, 
 			   dev->io.outofband.rq.obj_hdr_session) != -1);
-    ERR (fill_lan_msg_hdr (dev->private.net_fn, 
-			   dev->private.lun, 
-			   dev->private.rq_seq, 
+    ERR (fill_lan_msg_hdr (dev->net_fn, 
+			   dev->lun, 
+			   dev->io.outofband.rq_seq, 
 			   dev->io.outofband.rq.obj_msg_hdr) != -1);
     ERR (assemble_ipmi_lan_pkt (dev->io.outofband.rq.obj_hdr_rmcp, 
 				dev->io.outofband.rq.obj_hdr_session, 
@@ -842,8 +842,8 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 				obj_cmd_rq, tmpl_cmd_rq,
 				pkt, pkt_len) != -1);
     
-    dev->private.session_seq_num++;
-    IPMI_LAN_RQ_SEQ_INC (dev->private.rq_seq);
+    dev->io.outofband.session_seq_num++;
+    IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
     
     /* __DEBUG >> */
     /*     fiid_obj_dump (2, obj_hdr_rmcp, tmpl_hdr_rmcp); */
@@ -852,9 +852,9 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     /*     fiid_obj_dump (2, obj_cmd_rq, tmpl_cmd_rq); */
     /* __DEBUG >> */
     
-    status = ipmi_lan_sendto (dev->private.local_sockfd, pkt, pkt_len, 0, 
-			      dev->private.remote_host, 
-			      dev->private.remote_host_len);
+    status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0, 
+			      dev->io.outofband.remote_host, 
+			      dev->io.outofband.remote_host_len);
     ERR (status != -1);
   }
   
@@ -865,13 +865,13 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     u_int32_t _pkt_len = 1024;
     int32_t pkt_len;
     
-    pkt_len = _ipmi_lan_pkt_rs_size (dev->private.auth_type, tmpl_cmd_rs);
+    pkt_len = _ipmi_lan_pkt_rs_size (dev->io.outofband.auth_type, tmpl_cmd_rs);
     pkt     = alloca (_pkt_len);
     memset (pkt, 0, _pkt_len);
     ERR (pkt);
     
     fromlen = sizeof (struct sockaddr_in);
-    pkt_len = ipmi_lan_recvfrom (dev->private.local_sockfd, 
+    pkt_len = ipmi_lan_recvfrom (dev->io.outofband.local_sockfd, 
 				 pkt, 
 				 _pkt_len, 
 				 0, 
