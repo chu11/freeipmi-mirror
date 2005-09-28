@@ -870,7 +870,10 @@ ipmi_lan_open_session (int sockfd,
   if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
-    goto error;
+    {
+      errno = EINVAL;
+      goto error;
+    }
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
@@ -879,7 +882,11 @@ ipmi_lan_open_session (int sockfd,
 				      auth_type, username, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
-    goto error;
+    {
+      errno = EINVAL;
+      goto error;
+    }
+
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
   *session_id = temp_session_id;
@@ -894,7 +901,11 @@ ipmi_lan_open_session (int sockfd,
 				 initial_outbound_seq_num, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
-    goto error;
+    {
+      errno = EINVAL;
+      goto error;
+    }
+
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		"session_id", &temp_session_id);
   *session_id = temp_session_id;
@@ -911,7 +922,11 @@ ipmi_lan_open_session (int sockfd,
 				       *rq_seq,  obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
-    goto error;
+    {
+      errno = EINVAL;
+      goto error;
+    }
+
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
@@ -939,6 +954,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   if (!ipmi_comp_test (obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
   switch (dev->io.outofband.auth_type)
@@ -980,6 +996,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   if (!ipmi_comp_test (obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
@@ -1000,6 +1017,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   if (!ipmi_comp_test (obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
@@ -1016,6 +1034,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     }
   if (!ipmi_comp_test (obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
   
@@ -1102,6 +1121,7 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
 		      tmpl_cmd_close_session_rs) != -1);
   if (!ipmi_comp_test (obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
   

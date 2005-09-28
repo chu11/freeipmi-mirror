@@ -1,3 +1,9 @@
+2005-09-27  Anand Babu  <ab@gnu.org.in>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c: all ipmi_comp_test
+	failures now sets errno properly. Thanks to James Laros
+	<jhlaros@sandia.gov> for reporting this bug.
+
 2005-09-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Added note about ipmipower's cluster
