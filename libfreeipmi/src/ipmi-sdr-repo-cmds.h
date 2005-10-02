@@ -1,7 +1,7 @@
 /* 
    ipmi-sdr-repo-cmds.h - IPMI SDR Repository commands
 
-   Copyright (C) 2003,2004,2005 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -66,6 +66,18 @@ int8_t ipmi_kcs_get_sdr (u_int16_t record_id,
 			 u_int8_t record_length, 
 			 u_int8_t *sensor_record, 
 			 u_int8_t *comp_code);
+
+int8_t ipmi_cmd_get_repo_info2 (ipmi_device_t *dev, 
+				fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_repo_alloc_info2 (ipmi_device_t *dev, 
+				      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_reserve_repo2 (ipmi_device_t *dev, 
+			       fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
+			  u_int16_t record_id, 
+			  fiid_obj_t *obj_data_rs, 
+			  fiid_obj_t *sensor_record);
+
 
 #ifdef __cplusplus
 }

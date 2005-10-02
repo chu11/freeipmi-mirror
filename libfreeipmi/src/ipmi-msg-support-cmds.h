@@ -415,6 +415,51 @@ int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8
 
 int8_t ipmi_get_channel_number (u_int8_t channel_medium_type);
 
+int8_t ipmi_cmd_set_channel_access2 (ipmi_device_t *dev, 
+				     u_int8_t channel_number, 
+				     u_int8_t ipmi_messaging_access_mode, 
+				     u_int8_t user_level_authentication, 
+				     u_int8_t per_message_authentication, 
+				     u_int8_t pef_alerting, 
+				     u_int8_t channel_access_set_flag, 
+				     u_int8_t channel_privilege_level_limit, 
+				     u_int8_t channel_privilege_level_limit_set_flag, 
+				     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
+				u_int8_t user_id, 
+				char *user_name, 
+				fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
+				u_int8_t user_id, 
+				fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
+				    u_int8_t user_id, 
+				    u_int8_t operation, 
+				    char *user_password,
+				    fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number,
+				  u_int8_t user_id,
+				  u_int8_t restrict_to_callback,
+				  u_int8_t enable_link_auth,
+				  u_int8_t enable_ipmi_msgs,
+				  u_int8_t user_privilege_level_limit,
+				  u_int8_t user_session_number_limit, 
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number,
+				  u_int8_t user_id,
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
+				     u_int8_t channel_number,
+				     u_int8_t channel_access_set_flag,
+				     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
+				   u_int8_t channel_number,
+				   fiid_obj_t *obj_data_rs);
+
+
+
 #ifdef __cplusplus
 }
 #endif

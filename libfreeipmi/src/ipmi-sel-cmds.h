@@ -1,7 +1,7 @@
 /* 
    ipmi-sel-cmds.h - IPMI System Event Log Commands
    
-   Copyright (C) 2003 - 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -63,6 +63,24 @@ int8_t ipmi_kcs_delete_sel_entry (u_int16_t reservation_id,
 int8_t ipmi_kcs_clear_sel (u_int16_t reservation_id, 
 			   u_int8_t opcode, 
 			   fiid_obj_t obj_data_rs);
+
+int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
+			       fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev, 
+				     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_reserve_sel2 (ipmi_device_t *dev, 
+			      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev, 
+				u_int16_t record_id, 
+				fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev, 
+				   u_int16_t reservation_id, 
+				   u_int16_t record_id, 
+				   fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_clear_sel2 (ipmi_device_t *dev, 
+			    u_int16_t reservation_id, 
+			    u_int8_t opcode, 
+			    fiid_obj_t *obj_data_rs);
 
 
 #ifdef __cplusplus

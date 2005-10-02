@@ -1,7 +1,7 @@
 /* 
    ipmi-sensor-cmds.c - IPMI Sensor commands
 
-   Copyright (C) 2003-2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -770,6 +770,41 @@ ipmi_kcs_get_threshold_reading (u_int8_t sensor_number,
 }
 
 int8_t 
+ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
+				 u_int8_t sensor_number, 
+				 fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_threshold_reading_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_threshold_reading_rs);
+  
+  ERR (fill_kcs_get_threshold_reading (data_rq, 
+				       sensor_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sensor_threshold_reading_rq, 
+		 data_rs, 
+		 tmpl_get_sensor_threshold_reading_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, 
+			       tmpl_get_sensor_threshold_reading_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -802,6 +837,41 @@ ipmi_kcs_get_discrete_reading (u_int8_t sensor_number,
 }
 
 int8_t 
+ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
+				u_int8_t sensor_number, 
+				fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_discrete_reading_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_discrete_reading_rs);
+  
+  ERR (fill_kcs_get_discrete_reading (data_rq, 
+				      sensor_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sensor_discrete_reading_rq, 
+		 data_rs, 
+		 tmpl_get_sensor_discrete_reading_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, 
+			       tmpl_get_sensor_discrete_reading_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -831,5 +901,40 @@ ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number,
 			 obj_data_rs, tmpl_get_sensor_thresholds_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
+				 u_int8_t sensor_number, 
+				 fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_thresholds_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_thresholds_rs);
+  
+  ERR (fill_kcs_get_sensor_thresholds (data_rq, 
+				       sensor_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sensor_thresholds_rq, 
+		 data_rs, 
+		 tmpl_get_sensor_thresholds_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, 
+			       tmpl_get_sensor_thresholds_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 

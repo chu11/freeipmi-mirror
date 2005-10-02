@@ -1,7 +1,7 @@
 /* 
    ipmi-sol-cmds.c - IPMI SOL Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -128,6 +128,42 @@ ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base,
 }
 
 int8_t 
+ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
+				       u_int8_t channel_number, 
+				       u_int8_t sol_payload, 
+				       fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_set_sol_conf_param_sol_enable_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_set_sol_conf_param_sol_enable_rs);
+  
+  ERR (fill_sol_conf_sol_enable_disable (data_rq, 
+					 channel_number, 
+					 sol_payload) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_set_sol_conf_param_sol_enable_rq, 
+		 data_rs, 
+		 tmpl_set_sol_conf_param_sol_enable_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_sol_conf_param_sol_enable_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 ipmi_sol_conf_sol_enable (u_int16_t sms_io_base, 
 			  u_int8_t channel_number, 
 			  fiid_obj_t obj_data_rs)
@@ -139,6 +175,17 @@ ipmi_sol_conf_sol_enable (u_int16_t sms_io_base,
 }
 
 int8_t 
+ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
+			       u_int8_t channel_number, 
+			       fiid_obj_t *obj_data_rs)
+{
+  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
+						channel_number, 
+						IPMI_SOL_PAYLOAD_ENABLE, 
+						obj_data_rs);
+}
+
+int8_t 
 ipmi_sol_conf_sol_disable (u_int16_t sms_io_base, 
 			   u_int8_t channel_number, 
 			   fiid_obj_t obj_data_rs)
@@ -147,6 +194,17 @@ ipmi_sol_conf_sol_disable (u_int16_t sms_io_base,
 					   channel_number, 
 					   IPMI_SOL_PAYLOAD_DISABLE, 
 					   obj_data_rs);
+}
+
+int8_t 
+ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
+				u_int8_t channel_number, 
+				fiid_obj_t *obj_data_rs)
+{
+  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
+						channel_number, 
+						IPMI_SOL_PAYLOAD_DISABLE, 
+						obj_data_rs);
 }
 
 int8_t 
@@ -213,5 +271,46 @@ ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
 			 obj_data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
+				   u_int8_t channel_number,
+				   u_int8_t parameter_type,
+				   u_int8_t set_selector,
+				   u_int8_t block_selector,
+				   fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sol_conf_param_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
+  
+  ERR (fill_get_sol_conf_param (data_rq, 
+				IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
+				channel_number, 
+				parameter_type, 
+				set_selector, 
+				block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sol_conf_param_rq, 
+		 data_rs, 
+		 tmpl_get_sol_conf_param_sol_enable_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 

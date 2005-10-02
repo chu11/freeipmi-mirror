@@ -1,7 +1,7 @@
 /* 
    ipmi-sensor-cmds.c - IPMI sensor commands
 
-   Copyright (C) 2005 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -108,6 +108,17 @@ extern fiid_template_t tmpl_get_sensor_type_rs;
 int8_t ipmi_kcs_get_threshold_reading (u_int8_t sensor_number, fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_get_discrete_reading (u_int8_t sensor_number, fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number, fiid_obj_t obj_data_rs);
+
+int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
+					u_int8_t sensor_number, 
+					fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
+				       u_int8_t sensor_number, 
+				       fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
+					u_int8_t sensor_number, 
+					fiid_obj_t *obj_data_rs);
+
 
 #ifdef __cplusplus
 }

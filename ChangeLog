@@ -1,5 +1,67 @@
 2005-10-01  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(ipmi_cmd_set_power_restore_policy2,
+	ipmi_cmd_get_chassis_status2): New functions.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c (ipmi_cmd_get_dev_id):
+	Improved.
+
+	* ibfreeipmi/src/ipmi-lan-cmds.c (ipmi_cmd_lan_set_arp2,
+	ipmi_lan_set_gratuitous_arp_interval2,
+	ipmi_cmd_lan_set_auth_type_enables2,
+	ipmi_cmd_lan_set_ip_addr_source2, ipmi_cmd_lan_set_ip_addr2,
+	ipmi_cmd_lan_set_default_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2, ipmi_cmd_lan_set_vlan_id2,
+	ipmi_cmd_lan_set_vlan_priority2, ipmi_cmd_lan_set_subnet_mask2,
+	ipmi_cmd_lan_set_mac_addr2, ipmi_cmd_lan_set_default_gw_mac_addr2,
+	ipmi_cmd_lan_set_hackup_gw_mac_addr2, ipmi_cmd_lan_get_arp2,
+	ipmi_cmd_lan_get_gratuitous_arp_interval2,
+	ipmi_cmd_lan_get_auth_type_enables2,
+	ipmi_cmd_lan_get_ip_addr_source2, ipmi_cmd_lan_get_ip_addr2,
+	ipmi_cmd_lan_get_default_gw_ip_addr2,
+	ipmi_cmd_lan_get_backup_gw_ip_addr2,
+	ipmi_cmd_lan_get_subnet_mask2, ipmi_cmd_lan_get_mac_addr2,
+	ipmi_cmd_lan_get_default_gw_mac_addr2,
+	ipmi_cmd_lan_get_backup_gw_mac_addr2, ipmi_cmd_suspend_bmc_arps2,
+	ipmi_cmd_lan_get_vlan_id2, ipmi_cmd_lan_get_vlan_priority2): New
+	functions.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_set_channel_access2, ipmi_cmd_set_user_name2,
+	ipmi_cmd_get_user_name2, ipmi_cmd_set_user_password2,
+	ipmi_cmd_set_user_access2, ipmi_cmd_get_user_access2,
+	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): New
+	functions.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c (ipmi_cmd_get_repo_info2,
+	ipmi_cmd_get_repo_alloc_info2, ipmi_cmd_reserve_repo2,
+	ipmi_cmd_get_sdr2): New functions.
+
+	* libfreeipmi/src/ipmi-sel-cmds.c (ipmi_cmd_get_sel_info2,
+	ipmi_cmd_get_sel_alloc_info2, ipmi_cmd_reserve_sel2,
+	ipmi_cmd_get_sel_entry2, ipmi_cmd_delete_sel_entry2,
+	ipmi_cmd_clear_sel2): New functions.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c
+	(ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
+	ipmi_cmd_get_sensor_thresholds2): New functions.
+
+	* libfreeipmi/src/ipmi-serial-cmds.c
+	(ipmi_cmd_set_serial_connmode2,
+	ipmi_cmd_set_serial_page_blackout_interval2,
+	ipmi_cmd_set_serial_retry_time2, ipmi_cmd_set_serial_comm_bits2,
+	ipmi_cmd_get_serial_connmode2, ipmi_cmd_get_serial_page_blackout2,
+	ipmi_cmd_get_serial_retry_time2, ipmi_cmd_get_serial_comm_bits2):
+	New functions.
+
+	* libfreeipmi/src/ipmi-sol-cmds.c
+	(ipmi_cmd_sol_conf_sol_enable_disable2,
+	ipmi_cmd_sol_conf_sol_enable2, ipmi_cmd_sol_conf_sol_disable2,
+	ipmi_cmd_sol_conf_get_sol_enable2): New functions.
+
+2005-10-01  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband):
 	Improved.
 

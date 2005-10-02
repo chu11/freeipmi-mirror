@@ -1235,6 +1235,54 @@ ipmi_kcs_set_channel_access (u_int8_t channel_number,
 }
 
 int8_t 
+ipmi_cmd_set_channel_access2 (ipmi_device_t *dev, 
+			      u_int8_t channel_number, 
+			      u_int8_t ipmi_messaging_access_mode, 
+			      u_int8_t user_level_authentication, 
+			      u_int8_t per_message_authentication, 
+			      u_int8_t pef_alerting, 
+			      u_int8_t channel_access_set_flag, 
+			      u_int8_t channel_privilege_level_limit, 
+			      u_int8_t channel_privilege_level_limit_set_flag, 
+			      fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_set_channel_access_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_set_channel_access_rs);
+  
+  ERR (fill_kcs_set_channel_access (data_rq, 
+				    channel_number, 
+				    ipmi_messaging_access_mode, 
+				    user_level_authentication, 
+				    per_message_authentication, 
+				    pef_alerting, 
+				    channel_access_set_flag, 
+				    channel_privilege_level_limit, 
+				    channel_privilege_level_limit_set_flag) == 0); 
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_set_channel_access_rq, 
+		 data_rs, 
+		 tmpl_set_channel_access_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_channel_access_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_set_user_name (fiid_obj_t obj_data_rq, 
 			u_int8_t user_id, 
 			char *user_name,
@@ -1298,6 +1346,43 @@ ipmi_kcs_set_user_name (u_int8_t user_id,
 }
 
 int8_t 
+ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
+			 u_int8_t user_id, 
+			 char *user_name, 
+			 fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_set_user_name_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_set_user_name_rs);
+  
+  ERR (fill_kcs_set_user_name (data_rq, 
+			       user_id, 
+			       user_name, 
+			       ((user_name) ? strlen (user_name) : 0)) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_set_user_name_rq, 
+		 data_rs, 
+		 tmpl_set_user_name_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_user_name_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_get_user_name (fiid_obj_t obj_data_rq, u_int8_t user_id) 
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -1327,6 +1412,39 @@ ipmi_kcs_get_user_name (u_int8_t user_id,
 			 obj_data_rs, tmpl_get_user_name_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
+			 u_int8_t user_id, 
+			 fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_user_name_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_user_name_rs);
+  
+  ERR (fill_kcs_get_user_name (data_rq, user_id) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_user_name_rq, 
+		 data_rs, 
+		 tmpl_get_user_name_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_user_name_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t 
@@ -1398,6 +1516,45 @@ ipmi_kcs_set_user_password (u_int8_t user_id,
 			 obj_data_rs, tmpl_set_user_password_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
+			     u_int8_t user_id, 
+			     u_int8_t operation, 
+			     char *user_password,
+			     fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_set_user_password_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_set_user_password_rs);
+  
+  ERR (fill_kcs_set_user_password (data_rq, 
+				   user_id, 
+				   operation, 
+				   user_password, 
+				   ((user_password) ? strlen(user_password) : 0)) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_set_user_password_rq, 
+		 data_rs, 
+		 tmpl_set_user_password_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_user_password_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t 
@@ -1494,6 +1651,52 @@ ipmi_kcs_set_user_access (u_int8_t channel_number,
   return status;
 }
 
+int8_t 
+ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
+			   u_int8_t channel_number,
+			   u_int8_t user_id,
+			   u_int8_t restrict_to_callback,
+			   u_int8_t enable_link_auth,
+			   u_int8_t enable_ipmi_msgs,
+			   u_int8_t user_privilege_level_limit,
+			   u_int8_t user_session_number_limit, 
+			   fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_set_user_access_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_set_user_access_rs);
+  
+  ERR (fill_kcs_set_user_access (data_rq, 
+				 channel_number,
+				 user_id,
+				 restrict_to_callback,
+				 enable_link_auth,
+				 enable_ipmi_msgs,
+				 user_privilege_level_limit,
+				 user_session_number_limit) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_set_user_access_rq, 
+		 data_rs, 
+		 tmpl_set_user_access_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_user_access_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
 int8_t
 fill_kcs_get_user_access (fiid_obj_t obj_data_rq, 
 			  u_int8_t channel_number,
@@ -1539,6 +1742,40 @@ ipmi_kcs_get_user_access (u_int8_t channel_number,
 			 obj_data_rs, tmpl_get_user_access_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 
+			   u_int8_t channel_number,
+			   u_int8_t user_id,
+			   fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_user_access_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_user_access_rs);
+  
+  ERR (fill_kcs_get_user_access (data_rq, channel_number, user_id) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_user_access_rq, 
+		 data_rs, 
+		 tmpl_get_user_access_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_user_access_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 
@@ -1590,6 +1827,42 @@ ipmi_kcs_get_channel_access (u_int8_t channel_number,
 }
 
 int8_t 
+ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
+			      u_int8_t channel_number,
+			      u_int8_t channel_access_set_flag,
+			      fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_channel_access_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_access_rs);
+  
+  ERR (fill_kcs_get_channel_access (data_rq, 
+				    channel_number, 
+				    channel_access_set_flag) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_channel_access_rq, 
+		 data_rs, 
+		 tmpl_get_channel_access_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_channel_access_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, u_int8_t channel_number)
 {
   if (obj_data_rq == NULL
@@ -1626,6 +1899,39 @@ ipmi_kcs_get_channel_info (u_int8_t channel_number,
 			 obj_data_rs, tmpl_get_channel_info_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
+			    u_int8_t channel_number,
+			    fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_channel_info_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_info_rs);
+  
+  ERR (fill_kcs_get_channel_info (data_rq, channel_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_APP_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_channel_info_rq, 
+		 data_rs, 
+		 tmpl_get_channel_info_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_channel_info_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t

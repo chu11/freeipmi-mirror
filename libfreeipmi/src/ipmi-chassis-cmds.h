@@ -1,7 +1,7 @@
 /*
    ipmi-chassis-cmds.h - IPMI Chassis Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,12 @@
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_MAINS    0x2
 #define IPMI_POWER_RESTORE_POLICY_RESTORE_POWER                     0x1
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWER_OFF             0x0
+
+#define IPMI_POWER_RESTORE_POLICY_VALID(policy)                         \
+((policy == IPMI_POWER_RESTORE_POLICY_NO_CHANGE ||                      \
+  policy == IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_MAINS || \
+  policy == IPMI_POWER_RESTORE_POLICY_RESTORE_POWER ||                  \
+  policy == IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWER_OFF) ? 1 : 0)
 
 #ifdef __cplusplus
 extern "C" {
@@ -116,7 +122,6 @@ extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 
 int8_t fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
                                           u_int8_t power_restore_policy);
-
 int8_t ipmi_set_power_restore_policy (u_int8_t power_restore_policy, 
 				      fiid_obj_t obj_data_rs);
 
@@ -125,6 +130,11 @@ int8_t ipmi_get_chassis_status (fiid_obj_t obj_data_rs);
 
 int8_t fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
+int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
+					   u_int8_t power_restore_policy, 
+					   fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
+				     fiid_obj_t *obj_data_rs);
 
 #ifdef __cplusplus
 }

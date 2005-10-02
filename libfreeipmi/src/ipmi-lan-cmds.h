@@ -1,7 +1,7 @@
 /*
    ipmi-lan-cmds.h - IPMI LAN Commands
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -107,6 +107,8 @@ int8_t ipmi_lan_set_auth_type_enables (u_int8_t channel_number,
 				       u_int8_t max_privilege_auth_type_admin_level, 
 				       u_int8_t max_privilege_auth_type_oem_level, 
 				       fiid_obj_t obj_data_rs);
+
+
 
 int8_t 
 ipmi_lan_get_auth_type_enables (u_int8_t channel_number, 
@@ -232,6 +234,149 @@ int8_t ipmi_lan_get_vlan_priority (u_int8_t channel_number,
                                    u_int8_t set_selector,
                                    u_int8_t block_selector,
                                    fiid_obj_t obj_data_rs);
+
+int8_t ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev, 
+			      u_int8_t channel_number, 
+			      u_int8_t bmc_generated_gratuitous_arps_flag, 
+			      u_int8_t bmc_generated_arp_responses_flag, 
+			      fiid_obj_t *obj_data_rs);
+int8_t ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev, 
+					      u_int8_t channel_number, 
+					      u_int8_t gratuitous_arp_interval, 
+					      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
+					    u_int8_t channel_number, 
+					    u_int8_t max_privilege_auth_type_callback_level, 
+					    u_int8_t max_privilege_auth_type_user_level, 
+					    u_int8_t max_privilege_auth_type_operator_level, 
+					    u_int8_t max_privilege_auth_type_admin_level, 
+					    u_int8_t max_privilege_auth_type_oem_level, 
+					    fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev, 
+					 u_int8_t channel_number, 
+					 u_int8_t ip_addr_source, 
+					 fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number, 
+				  u_int32_t ip_addr, 
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev, 
+					     u_int8_t channel_number, 
+					     u_int32_t ip_addr, 
+					     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev, 
+					    u_int8_t channel_number, 
+					    u_int32_t ip_addr, 
+					    fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number, 
+				  u_int8_t vlan_id_flag, 
+				  u_int32_t vlan_id, 
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev, 
+					u_int8_t channel_number,
+					u_int32_t vlan_priority,
+					fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev, 
+				      u_int8_t channel_number, 
+				      u_int32_t subnet_mask, 
+				      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev, 
+				   u_int8_t channel_number,
+				   u_int64_t mac_addr,
+				   fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev, 
+					      u_int8_t channel_number,
+					      u_int64_t mac_addr,
+					      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_set_hackup_gw_mac_addr2 (ipmi_device_t *dev, 
+					     u_int8_t channel_number,
+					     u_int64_t mac_addr,
+					     fiid_obj_t *obj_data_rs);
+
+int8_t ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev, 
+			      u_int8_t channel_number, 
+			      u_int8_t parameter_type, 
+			      u_int8_t set_selector, 
+			      u_int8_t block_selector, 
+			      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev, 
+						  u_int8_t channel_number, 
+						  u_int8_t parameter_type, 
+						  u_int8_t set_selector, 
+						  u_int8_t block_selector, 
+						  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev, 
+					    u_int8_t channel_number, 
+					    u_int8_t parameter_type, 
+					    u_int8_t set_selector, 
+					    u_int8_t block_selector, 
+					    fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev, 
+					 u_int8_t channel_number, 
+					 u_int8_t parameter_type, 
+					 u_int8_t set_selector, 
+					 u_int8_t block_selector, 
+					 fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number,
+				  u_int8_t parameter_type,
+				  u_int8_t set_selector,
+				  u_int8_t block_selector,
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev, 
+					     u_int8_t channel_number,
+					     u_int8_t parameter_type,
+					     u_int8_t set_selector,
+					     u_int8_t block_selector,
+					     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev, 
+					    u_int8_t channel_number,
+					    u_int8_t parameter_type,
+					    u_int8_t set_selector,
+					    u_int8_t block_selector,
+					    fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev, 
+				      u_int8_t channel_number,
+				      u_int8_t parameter_type,
+				      u_int8_t set_selector,
+				      u_int8_t block_selector,
+				      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev, 
+				   u_int8_t channel_number,
+				   u_int8_t parameter_type,
+				   u_int8_t set_selector,
+				   u_int8_t block_selector,
+				   fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev, 
+					      u_int8_t channel_number,
+					      u_int8_t parameter_type,
+					      u_int8_t set_selector,
+					      u_int8_t block_selector,
+					      fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev, 
+					     u_int8_t channel_number,
+					     u_int8_t parameter_type,
+					     u_int8_t set_selector,
+					     u_int8_t block_selector,
+					     fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev, 
+				   u_int8_t channel_number, 
+				   u_int8_t gratuitous_arp_suspend, 
+				   u_int8_t arp_response_suspend, 
+				   fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev, 
+				  u_int8_t channel_number, 
+				  u_int8_t parameter_type, 
+				  u_int8_t set_selector, 
+				  u_int8_t block_selector, 
+				  fiid_obj_t *obj_data_rs);
+int8_t ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev, 
+					u_int8_t channel_number, 
+					u_int8_t parameter_type, 
+					u_int8_t set_selector, 
+					u_int8_t block_selector, 
+					fiid_obj_t *obj_data_rs);
 
 #ifdef __cplusplus
 }

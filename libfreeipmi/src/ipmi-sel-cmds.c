@@ -1,7 +1,7 @@
 /* 
    ipmi-sel-cmds.c - IPMI System Event Log Commands
    
-   Copyright (C) 2003 - 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -177,6 +177,38 @@ ipmi_kcs_get_sel_info (fiid_obj_t obj_data_rs)
 }
 
 int8_t 
+ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
+			fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sel_info_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sel_info_rs);
+  
+  ERR (fill_kcs_get_sel_info (data_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sel_info_rq, 
+		 data_rs, 
+		 tmpl_get_sel_info_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_sel_info_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -202,6 +234,38 @@ ipmi_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rs)
 }
 
 int8_t 
+ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev, 
+			      fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sel_alloc_info_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sel_alloc_info_rs);
+  
+  ERR (fill_kcs_get_sel_alloc_info (data_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sel_alloc_info_rq, 
+		 data_rs, 
+		 tmpl_get_sel_alloc_info_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_sel_alloc_info_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -224,6 +288,38 @@ ipmi_kcs_reserve_sel (fiid_obj_t obj_data_rs)
 			 obj_data_rs, tmpl_reserve_sel_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_reserve_sel2 (ipmi_device_t *dev, 
+		       fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_reserve_sel_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_reserve_sel_rs);
+  
+  ERR (fill_kcs_reserve_sel (data_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_reserve_sel_rq, 
+		 data_rs, 
+		 tmpl_reserve_sel_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_reserve_sel_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t 
@@ -260,6 +356,39 @@ ipmi_kcs_get_sel_entry (u_int16_t record_id, fiid_obj_t obj_data_rs)
 			 obj_data_rs, tmpl_get_sel_entry_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev, 
+			 u_int16_t record_id, 
+			 fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sel_entry_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sel_entry_rs);
+  
+  ERR (fill_kcs_get_sel_entry (data_rq, record_id) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_get_sel_entry_rq, 
+		 data_rs, 
+		 tmpl_get_sel_entry_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_sel_entry_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t 
@@ -300,6 +429,42 @@ ipmi_kcs_delete_sel_entry (u_int16_t reservation_id,
 			 obj_data_rs, tmpl_delete_sel_entry_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev, 
+			    u_int16_t reservation_id, 
+			    u_int16_t record_id, 
+			    fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_delete_sel_entry_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_delete_sel_entry_rs);
+  
+  ERR (fill_kcs_delete_sel_entry (data_rq, 
+				  reservation_id, 
+				  record_id) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_delete_sel_entry_rq, 
+		 data_rs, 
+		 tmpl_delete_sel_entry_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_delete_sel_entry_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 
 int8_t 
@@ -353,5 +518,41 @@ ipmi_kcs_clear_sel (u_int16_t reservation_id,
 			 obj_data_rs, tmpl_clear_sel_rs);
   free (obj_data_rq);
   return status;
+}
+
+int8_t 
+ipmi_cmd_clear_sel2 (ipmi_device_t *dev, 
+		     u_int16_t reservation_id, 
+		     u_int8_t opcode, 
+		     fiid_obj_t *obj_data_rs)
+{
+  fiid_obj_t data_rq = NULL;
+  fiid_obj_t data_rs = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
+  *obj_data_rs = NULL;
+  
+  FIID_OBJ_ALLOCA (data_rq, tmpl_clear_sel_rq);
+  FIID_OBJ_ALLOCA (data_rs, tmpl_clear_sel_rs);
+  
+  ERR (fill_kcs_clear_sel (data_rq, 
+			   reservation_id, 
+			   opcode) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
+  ERR (ipmi_cmd (dev, 
+		 data_rq, 
+		 tmpl_clear_sel_rq, 
+		 data_rs, 
+		 tmpl_clear_sel_rs) == 0);
+  
+  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_clear_sel_rs);
+  
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
 

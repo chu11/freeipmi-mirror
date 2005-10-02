@@ -159,6 +159,9 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs)
   fiid_obj_t data_rq = NULL;
   fiid_obj_t data_rs = NULL;
   
+  ERR (dev != NULL);
+  ERR (obj_data_rs != NULL);
+  
   *obj_data_rs = NULL;
   
   FIID_OBJ_ALLOCA (data_rq, tmpl_cmd_get_dev_id_rq);
@@ -175,5 +178,8 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs)
   
   *obj_data_rs = fiid_obj_dup (data_rs, tmpl_cmd_get_dev_id_rs);
   
-  return ((*obj_data_rs != NULL) ? 0 : -1);
+  ERR (*obj_data_rs != NULL);
+  ERR (ipmi_comp_test (data_rs) == 1);
+  
+  return (0);
 }
