@@ -1,3 +1,26 @@
+2005-10-01  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband):
+	Improved.
+
+	* libfreeipmi/src/ipmi-interface.h: Removed
+	initial_outbound_seq_num and added challenge_string,
+	tmpl_msg_trlr_ptr and obj_msg_trlr in ipmi_device_t.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum1,
+	get_rs_checksum1, get_rq_checksum2, get_rs_checksum2,
+	fill_lan_msg_hdr2, fill_lan_msg_trlr2, fill_hdr_session2,
+	_ipmi_lan_pkt_rq_size2, _ipmi_lan_pkt_rs_size2,
+	assemble_ipmi_lan_pkt2, unassemble_ipmi_lan_pkt2,
+	ipmi_lan_validate_checksum): New functions.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Improved.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_auth_caps2, ipmi_cmd_get_session_challenge2,
+	ipmi_cmd_activate_session2, ipmi_cmd_set_session_priv_level2,
+	ipmi_lan_open_session2, ipmi_lan_close_session2): Improved.
+
 2005-09-27  Anand Babu  <ab@gnu.org.in>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c: all ipmi_comp_test

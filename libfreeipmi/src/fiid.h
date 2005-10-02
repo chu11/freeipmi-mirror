@@ -32,7 +32,7 @@ extern "C" {
     obj = (fiid_obj_len_bytes (tmpl) != -1) ?                 \
       alloca (fiid_obj_len_bytes (tmpl)) : NULL;	      \
     ERR (obj);						      \
-    memset (obj, 0, fiid_obj_len_bytes (tmpl))                \
+    memset (obj, 0, fiid_obj_len_bytes (tmpl))
 
 #define FIID_OBJ_ALLOC(obj, tmpl)                             \
 do {                                                          \

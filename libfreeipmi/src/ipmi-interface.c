@@ -112,47 +112,78 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
+  if (IPMI_SESSION_AUTH_TYPE_VALID (auth_type) == 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (username != NULL && 
+      strlen (username) > IPMI_SESSION_MAX_USERNAME_LEN)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (password != NULL && 
+      strlen (password) > IPMI_SESSION_MAX_AUTH_CODE_LEN)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (IPMI_PRIV_LEVEL_VALID (priv_level) == 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
   dev->type = driver_type;
   dev->mode = mode;
   /* No probing for out-of-band driver */
   dev->io.outofband.remote_host     = remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
   dev->io.outofband.auth_type = auth_type;
-  { 
-    /* Random number generation */
-    unsigned int seedp;
-    seedp = (int) clock () % (int) time (NULL);
-    srand (seedp);
-    dev->io.outofband.initial_outbound_seq_num = rand_r (&seedp);
-  }
-  dev->io.outofband.session_id = 0;
-  dev->io.outofband.session_seq_num = 0;
-  dev->io.outofband.rq_seq = 0;
-  dev->io.outofband.username = username;
-  dev->io.outofband.password = password;
-  dev->io.outofband.password_len = ((password) ? strlen (password) : 0);
+  /* dev is already initialized, no need to init these again */
+  /*   memset (dev->io.outofband.challenge_string, 0, IPMI_SESSION_CHALLENGE_STR_LEN); */
+  /*   dev->io.outofband.session_id = 0; */
+  /*   dev->io.outofband.session_seq_num = 0; */
+  /*   dev->io.outofband.rq_seq = 0; */
+  if (username != NULL)
+    {
+      memcpy (dev->io.outofband.username, 
+	      username, 
+	      strlen (username));
+    }
+  if (password != NULL)
+    {
+      memcpy (dev->io.outofband.password, 
+	      password, 
+	      strlen (password));
+    }
   dev->io.outofband.priv_level = priv_level;
   
   /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
   dev->io.outofband.rs.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
   
-  switch (auth_type)
+  switch (dev->io.outofband.auth_type)
     {
     case IPMI_SESSION_AUTH_TYPE_NONE:
       dev->io.outofband.rq.tmpl_hdr_session_ptr = 
 	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
       break;
-    case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
-      dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth;
-      break;
     case IPMI_SESSION_AUTH_TYPE_MD2:
     case IPMI_SESSION_AUTH_TYPE_MD5:
     case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
       dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth_calc;
+	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth;
       break;
+    case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
+      dev->io.outofband.rq.tmpl_hdr_session_ptr = 
+	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth_calc;
+      fprintf (stderr, "%s:%d:%s(): auth_type OEM is not supported\n", 
+	       __FILE__, __LINE__, __PRETTY_FUNCTION__);
     default:
       memset (dev, 0, sizeof (ipmi_device_t));
       errno = EINVAL;
@@ -160,6 +191,9 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   dev->io.outofband.rq.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rq;
   dev->io.outofband.rs.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rs;
+  
+  dev->io.outofband.rq.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
+  dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
   FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_hdr_rmcp,
 		  *dev->io.outofband.rq.tmpl_hdr_rmcp_ptr);
@@ -173,6 +207,10 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		  *dev->io.outofband.rq.tmpl_msg_hdr_ptr);
   FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_msg_hdr,
 		  *dev->io.outofband.rs.tmpl_msg_hdr_ptr);
+  FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_msg_trlr,
+		  *dev->io.outofband.rq.tmpl_msg_trlr_ptr);
+  FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_msg_trlr,
+		  *dev->io.outofband.rs.tmpl_msg_trlr_ptr);
   
   /* Open client (local) UDP socket */
   if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
@@ -183,6 +221,8 @@ ipmi_open_outofband (ipmi_device_t *dev,
       fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
       fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
       fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
+      fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
+      fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
       memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
@@ -198,6 +238,8 @@ ipmi_open_outofband (ipmi_device_t *dev,
       fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
       fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
       fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
+      fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
+      fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
       memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
@@ -380,6 +422,8 @@ ipmi_outofband_close (ipmi_device_t *dev)
   fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
   fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
   fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
+  fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
+  fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
   
   return (retval);
 }

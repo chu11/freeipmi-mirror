@@ -25,23 +25,6 @@
 extern "C" {
 #endif
 
-#define IPMI_SESSION_MAX_USERNAME_LEN  0x10
-#define IPMI_SESSION_CHALLENGE_STR_LEN 0x10
-#define IPMI_SESSION_MAX_AUTH_CODE_LEN 0x10
-
-#define IPMI_SESSION_AUTH_TYPE_NONE                0x00
-#define IPMI_SESSION_AUTH_TYPE_MD2                 0x01
-#define IPMI_SESSION_AUTH_TYPE_MD5                 0x02
-#define IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
-#define IPMI_SESSION_AUTH_TYPE_OEM_PROP            0x05
-
-#define IPMI_SESSION_AUTH_TYPE_VALID(auth_type) \
-        (((auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
-          || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
-          || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
-          || (auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
-          || (auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
-
 #if 0
 #pragma pack(1)
 typedef struct ipmi_session

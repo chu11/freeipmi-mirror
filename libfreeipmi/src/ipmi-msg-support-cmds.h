@@ -33,24 +33,6 @@ extern "C" {
 #define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
 #define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
 
-#define IPMI_PRIV_LEVEL_RESERVED     0x00
-#define IPMI_PRIV_LEVEL_CALLBACK     0x01
-#define IPMI_PRIV_LEVEL_USER         0x02
-#define IPMI_PRIV_LEVEL_OPERATOR     0x03
-#define IPMI_PRIV_LEVEL_ADMIN        0x04
-#define IPMI_PRIV_LEVEL_OEM          0x05
-#define IPMI_PRIV_LEVEL_NO_ACCESS    0x0F
-
-#define IPMI_PRIV_LEVEL_VALID(priv_level) \
-        (((priv_level) == IPMI_PRIV_LEVEL_RESERVED \
-          || (priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
-          || (priv_level) == IPMI_PRIV_LEVEL_USER \
-          || (priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
-          || (priv_level) == IPMI_PRIV_LEVEL_ADMIN \
-          || (priv_level) == IPMI_PRIV_LEVEL_OEM) ? 1 : 0)
-
-#define IPMI_CHALLENGE_STR_MAX  0x10
-
 #define IPMI_MESSAGING_ACCESS_MODE_DISABLED            0x0
 #define IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY       0x1
 #define IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE    0x2
@@ -315,8 +297,6 @@ int8_t ipmi_lan_activate_session (int sockfd,
 				  u_int8_t rq_seq, 
 				  fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
-				   u_int8_t *challenge_str, 
-				   u_int32_t challenge_str_len, 
 				   fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_set_session_priv_level (u_int8_t priv_level, 
