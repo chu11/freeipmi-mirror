@@ -1,6 +1,6 @@
-/*   ipmi-pef-cmds.c - IPMI System Event Log Commands 
+/*   ipmi-pef-cmds.c - IPMI Platform Event Filtering Commands 
    
-  Copyright (C) 2003 - 2004 FreeIPMI Core Team
+  Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
 This file is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,11 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.10 2005-02-08 05:42:38 balamurugan Exp $  */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+$Id: ipmi-pef-cmds.c,v 1.11 2005-10-06 10:41:09 balamurugan Exp $  */
 
 #include "freeipmi.h"
 
@@ -1459,3 +1455,687 @@ ipmi_kcs_pet_ack (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int16_t seque
   free (obj_data_rq);
   return status;
 }
+
+int8_t 
+ipmi_cmd_set_pef_control2 (ipmi_device_t *dev, 
+			   u_int8_t enable_pef, 
+			   u_int8_t enable_pef_event_msgs, 
+			   u_int8_t enable_startup_delay, 
+			   u_int8_t enable_alert_startup_delay, 
+			   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_pef_control_rq);
+  ERR (fill_kcs_set_pef_control (obj_cmd_rq, 
+				 enable_pef, 
+				 enable_pef_event_msgs,
+				 enable_startup_delay, 
+				 enable_alert_startup_delay) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_pef_control_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev, 
+				     u_int8_t enable_alert,
+				     u_int8_t enable_powerdown, 
+				     u_int8_t enable_reset,
+				     u_int8_t enable_powercycle, 
+				     u_int8_t enable_oem,
+				     u_int8_t enable_diag_interrupt, 
+				     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_global_action_control_rq);
+  ERR (fill_kcs_set_global_action_control (obj_cmd_rq, 
+					   enable_alert, 
+					   enable_powerdown,
+					   enable_reset, 
+					   enable_powercycle, 
+					   enable_oem, 
+					   enable_diag_interrupt) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_global_action_control_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev, 
+			     u_int8_t startup_delay, 
+			     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_startup_delay_rq);
+  ERR (fill_kcs_set_startup_delay (obj_cmd_rq, startup_delay) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_startup_delay_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev, 
+				   u_int8_t alert_startup_delay, 
+				   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_alert_startup_delay_rq);
+  ERR (fill_kcs_set_alert_startup_delay (obj_cmd_rq, 
+					 alert_startup_delay) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_alert_startup_delay_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev, 
+				 u_int8_t num_event_filters, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_event_filters_rq);
+  ERR (fill_kcs_set_num_event_filters (obj_cmd_rq, 
+				       num_event_filters) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_num_event_filters_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev, 
+				  u_int8_t filter_number,
+				  const event_filter_table_entry_t *entry, 
+				  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_event_filter_table_rq);
+  ERR (fill_kcs_set_filter_table_entry (obj_cmd_rq, 
+					filter_number, 
+					entry) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_event_filter_table_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev, 
+				   u_int8_t filter_number,
+				   event_filter_type_t filter_type, 
+				   u_int8_t enabled, 
+				   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_event_filter_data1_rq);
+  ERR (fill_kcs_set_filter_table_data1 (obj_cmd_rq, 
+					filter_number, 
+					filter_type, 
+					enabled) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_event_filter_data1_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev, 
+				  u_int8_t num_alert_policies, 
+				  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_alert_policies_rq);
+  ERR (fill_kcs_set_num_alert_policies (obj_cmd_rq, 
+					num_alert_policies) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_pef_conf_param_num_alert_policies_rq,
+		 obj_cmd_rs, 
+		 tmpl_set_pef_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
+			   u_int8_t channel_number, 
+			   u_int8_t destination_selector,
+			   u_int8_t string_selector, 
+			   u_int8_t string_enable, 
+			   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_alert_immediate_rq);
+  ERR (fill_kcs_alert_immediate (obj_cmd_rq, 
+				 channel_number, 
+				 destination_selector,
+				 string_selector, 
+				 string_enable) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_alert_immediate_rq,
+		 obj_cmd_rs, 
+		 tmpl_alert_immediate_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);                            
+}
+
+int8_t 
+ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
+				u_int8_t parameter_type, 
+				u_int8_t set_selector,
+				u_int8_t block_selector, 
+				fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
+				    IPMI_PEF_PARAM_ALERT_STRINGS,
+				    parameter_type,
+				    set_selector,
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq,
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_alert_strings_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
+				     u_int8_t parameter_type, 
+				     u_int8_t set_selector,
+				     u_int8_t block_selector, 
+				     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
+				    IPMI_PEF_PARAM_ALERT_STRING_KEYS,
+				    parameter_type,
+				    set_selector,
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_alert_string_keys_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
+				      u_int8_t parameter_type, 
+				      u_int8_t set_selector,
+				      u_int8_t block_selector, 
+				      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
+				    IPMI_PEF_PARAM_NUM_ALERT_POLICY_ENTRIES,
+				    parameter_type,
+				    set_selector,
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq,
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_num_alert_policies_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev, 
+				 u_int8_t parameter_type, 
+				 u_int8_t set_selector, 
+				 u_int8_t block_selector, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
+				    IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
+				    parameter_type,
+				    set_selector,
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq,
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_event_filter_data1_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_control2 (ipmi_device_t *dev, 
+			   u_int8_t parameter_type, 
+			   u_int8_t set_selector, 
+			   u_int8_t block_selector, 
+			   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_PEF_CONTROL,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_pef_control_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev, 
+					 u_int8_t parameter_type, 
+					 u_int8_t set_selector,
+					 u_int8_t block_selector, 
+					 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_ACTION_GLOBAL_CONTROL,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_global_action_control_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev, 
+				 u_int8_t parameter_type, 
+				 u_int8_t set_selector,
+				 u_int8_t block_selector, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_STARTUP_DELAY,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_startup_delay_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev, 
+				       u_int8_t parameter_type, 
+				       u_int8_t set_selector,
+				       u_int8_t block_selector, 
+				       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_ALERT_STARTUP_DELAY,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_alert_startup_delay_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev, 
+				     u_int8_t parameter_type, 
+				     u_int8_t set_selector,
+				     u_int8_t block_selector, 
+				     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_NUM_EVENT_FILTERS,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_num_event_filters_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev, 
+				      u_int8_t parameter_type, 
+				      u_int8_t set_selector,
+				      u_int8_t block_selector, 
+				      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_event_filter_table_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL; 
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_info_rq);
+  ERR (fill_kcs_get_pef_caps (obj_cmd_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_caps_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_caps_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev, 
+				  u_int8_t countdown, 
+				  fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_arm_pef_postpone_timer_rq);
+  ERR (fill_kcs_arm_pef_postpone_timer (obj_cmd_rq, 
+					countdown) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_arm_pef_postpone_timer_rq, 
+		 obj_cmd_rs, 
+		 tmpl_arm_pef_postpone_timer_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}  
+
+int8_t 
+ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev, 
+				    which_event_t which, 
+				    u_int16_t id, 
+				    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_last_processed_event_rq);
+  ERR (fill_kcs_set_last_processed_event (obj_cmd_rq, 
+					  which, 
+					  id) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_last_processed_event_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_last_processed_event_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_last_processed_event2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_last_processed_event_rq);
+  ERR (fill_kcs_get_last_proessed_event (obj_cmd_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_last_processed_event_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_last_processed_event_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_pet_ack2 (ipmi_device_t *dev, 
+		   u_int16_t sequence_number, 
+		   u_int32_t timestamp, 
+		   u_int8_t source_type, 
+		   u_int8_t sensor_device, 
+		   u_int8_t sensor_number, 
+		   u_int32_t event_data, 
+		   fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_pet_ack_rq);
+  ERR (fill_kcs_pet_ack (obj_cmd_rq, 
+			 sequence_number, 
+			 timestamp, 
+			 source_type,
+			 sensor_device, 
+			 sensor_number, 
+			 event_data) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_pet_ack_rq,
+		 obj_cmd_rs, 
+		 tmpl_pet_ack_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+

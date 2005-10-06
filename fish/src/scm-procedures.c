@@ -16,59 +16,8 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <freeipmi.h>
-#include <guile/gh.h>
-#include <readline/readline.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <errno.h>
-#include <math.h>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
-
-#if defined(__FreeBSD__) && !defined(EBADMSG)
-#define EBADMSG		ENOMSG
-#endif
-
-#include "fish.h"
-#include "extension.h"
-#include "fi-utils.h"
-#include "interpreter.h"
-#include "ipmi-wrapper.h"
-#include "bmc-conf2.h"
-#include "scm-procedures.h"
-#include "xmalloc.h"
-
-extern char *program_invocation_short_name;
-extern int errno;
+#include "common.h"
 
 #define SEL_HEX_RECORD_SIZE 128
 
@@ -185,66 +134,35 @@ ex_set_sms_io_base (SCM scm_sms_io_base)
 }
 
 SCM
-ex_get_sock_timeout ()
-{
-  return (gh_ulong2scm (fi_get_sock_timeout ()));
-}
-
-SCM
-ex_set_sock_timeout (SCM scm_sock_timeout)
-{
-  fi_set_sock_timeout (gh_scm2long (scm_sock_timeout));
-  return (SCM_UNSPECIFIED);
-}
-
-SCM
 ex_set_driver_poll_interval (SCM scm_driver_poll_interval)
 {
   set_driver_poll_interval (gh_scm2long (scm_driver_poll_interval));
   return (SCM_UNSPECIFIED);
 }
 
-SCM
-ex_ipmi_ping (SCM scm_host_addr)
+SCM 
+ex_ipmi_ping (SCM scm_host, SCM scm_timeout)
 {
+  char *host = NULL;
+  unsigned int sock_timeout = 0;
   int status = 0;
-  u_int8_t *pong;
-  pong   = fiid_obj_alloc (tmpl_cmd_asf_presence_pong);
-  status = ipmi_ping (fi_get_sockfd (),
-		      gh_scm2newstr (scm_host_addr, NULL), pong);
-  xfree (pong);
-  if (errno == EBADMSG)
-    warn ("Increase your socket timeout value");
-
-  if (status == 0)
-    return (SCM_BOOL_T);
-  else
-    return (SCM_BOOL_F);
+  
+  host = gh_scm2newstr (scm_host, NULL);
+  sock_timeout = gh_scm2long (scm_timeout);
+  
+  status = ipmi_ping (host, sock_timeout);
+  xfree (host);
+  
+  return (status == 0 ? SCM_BOOL_T : SCM_BOOL_F);
 }
 
-SCM
-ex_kcs_get_dev_id_display (void)
+SCM 
+ex_cmd_get_dev_id_display (void)
 {
-  u_int8_t *obj_cmd_rs;
-  u_int32_t cmd_rs_len;
-  u_int8_t retval;
+  if (display_get_dev_id () == 0)
+    return (SCM_BOOL_T);
   
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_dev_id_rs);
-  cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs);
-  
-  if (ipmi_kcs_get_dev_id (obj_cmd_rs) != 0)
-    {
-      fprintf (stderr, "ipmi_kcs_get_dev_id (%p)\n", obj_cmd_rs);
-      return (SCM_BOOL_F);
-    }
-/*   fiid_obj_dump (1, obj_cmd_rs, tmpl_cmd_get_dev_id_rs); */
-  retval = display_get_dev_id (obj_cmd_rs, cmd_rs_len);
-  free (obj_cmd_rs);
-  
-  if (retval != 0)
-    return (SCM_BOOL_F);
-  
-  return (SCM_BOOL_T);
+  return (SCM_BOOL_F);
 }
 
 SCM 
@@ -3036,3 +2954,257 @@ ex_get_sdr_repo_info ()
   return (scm_repo_info_list);
 }
 
+SCM 
+ex_get_bmc_info ()
+{
+  SCM scm_bmc_info_list = SCM_EOL;
+  
+  fiid_obj_t cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
+    {
+      perror ("ipmi_cmd_get_dev_id()");
+    }
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_id", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("dev_id"), 
+				       gh_long2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_rev.rev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("dev_revision"), 
+				       gh_long2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_rev.sdr_support", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("sdr_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  {
+    char version_string[17];
+    u_int64_t major, minor;
+    
+    fiid_obj_get (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "firmware_rev1.major_rev", 
+		  &major);
+    fiid_obj_get (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "firmware_rev2.minor_rev", 
+		  &minor);
+    snprintf (version_string, 17, 
+	      "%d.%d", 
+	      (int) major, (int) minor);
+    scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+					 gh_str02scm ("firmware_revision"), 
+					 gh_str02scm (version_string));
+  }
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"firmware_rev1.dev_available", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("dev_availability"), 
+				       gh_bool2scm ((unsigned int) val));
+  {
+    char version_string[17];
+    u_int64_t major, minor;
+    
+    fiid_obj_get (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "ipmi_ver.ms_bits", 
+		  &major);
+    fiid_obj_get (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "ipmi_ver.ls_bits", 
+		  &minor);
+    snprintf (version_string, 17, 
+	      "%d.%d", 
+	      (int) major, (int) minor);
+    scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+					 gh_str02scm ("ipmi_version"), 
+					 gh_str02scm (version_string));
+  }
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sensor_dev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("sensor_dev_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sdr_repo_dev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("sdr_repo_dev_support"), 
+				       gh_bool2scm ((unsigned int) val));
+
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sel_dev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("sel_dev_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.fru_inventory_dev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("fru_inventory_dev_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.ipmb_evnt_receiver", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("ipmb_event_receiver_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.ipmb_evnt_generator", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("ipmb_event_generator_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.bridge", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("bridge_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.chassis_dev", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("chassis_dev_support"), 
+				       gh_bool2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"manf_id.id", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("manufacturer_id"), 
+				       gh_long2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"prod_id", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("product_id"), 
+				       gh_long2scm ((unsigned int) val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"aux_firmware_rev_info", 
+		&val);
+  scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
+				       gh_str02scm ("aux_firmware_rev_info"), 
+				       gh_long2scm ((unsigned int) val));
+  
+  return scm_bmc_info_list;
+}
+
+SCM 
+ex_ipmi_open (SCM scm_arg_list)
+{
+  SCM scm_value;
+  struct arguments arguments;
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (0));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.poll_interval = IPMI_POLL_INTERVAL_USECS;
+  else 
+    arguments.poll_interval = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (1));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    {
+#ifdef __ia64__
+      arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_SR870BN4;
+#else
+      arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+#endif
+    }
+  else 
+    arguments.poll_interval = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (2));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.host = NULL;
+  else 
+    arguments.host = gh_scm2newstr (scm_value, NULL);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (3));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.username = NULL;
+  else 
+    arguments.username = gh_scm2newstr (scm_value, NULL);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.password = NULL;
+  else 
+    arguments.password = gh_scm2newstr (scm_value, NULL);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
+  else 
+    arguments.auth_type = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.priv_level = IPMI_PRIV_LEVEL_USER;
+  else 
+    arguments.priv_level = gh_scm2int (scm_value);
+  
+  arguments.quiet = 0;
+  arguments.brief = 0;
+  arguments.verbose = 0;
+  arguments.script_file = NULL;
+  
+  if (fi_ipmi_open (&arguments) == 0)
+    {
+      xfree (arguments.host);
+      xfree (arguments.username);
+      xfree (arguments.password);
+      return SCM_BOOL_T;
+    }
+  else 
+    return SCM_BOOL_F;
+}
+
+SCM 
+ex_ipmi_close ()
+{
+  if (fi_ipmi_close () == 0)
+    return SCM_BOOL_T;
+  else 
+    return SCM_BOOL_F;
+}

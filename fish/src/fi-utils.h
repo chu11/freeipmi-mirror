@@ -15,6 +15,9 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
+#ifndef _FI_UTILS_H
+#define _FI_UTILS_H
+
 #ifndef whitespace
 #define whitespace(c) (((c) == ' ') || ((c) == '\t'))
 #endif
@@ -57,7 +60,7 @@ int temp_rl_point;
 /* use this macro only for exporting to scheme environment.
    FIXME: still not working. test with proudofgnuyahoo.scm
 */
- #define EX_PRINTF_MESSAGE(format, args...) \
+#define EX_PRINTF_MESSAGE(format, args...) \
 { \
   temp_rl_point = rl_point; \
   rl_kill_text (0, rl_end); \
@@ -71,12 +74,6 @@ int temp_rl_point;
   rl_forced_update_display (); \
   bell (); \
 }
-
-#ifndef __FreeBSD__
-/* defining strcasestr function temporarily */
-extern char *strcasestr (__const char *__haystack, __const char *__needle)
-     __THROW __attribute_pure__;
-#endif
 
 void get_terminal_attributes (void);
 void set_terminal_attributes (void);
@@ -95,3 +92,5 @@ char *fi_getline (FILE *fp);
 char *fi_get_value (char *line);
 int is_valid_ip (char *ip);
 int is_valid_mac_address (char *mac_address);
+
+#endif

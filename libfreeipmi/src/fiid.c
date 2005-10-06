@@ -19,35 +19,6 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdarg.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
 #include "freeipmi.h"
 
 int32_t
@@ -302,8 +273,7 @@ fiid_obj_memset_field (fiid_obj_t obj,
 void
 fiid_obj_free (fiid_obj_t obj)
 {
-  if (obj)
-    ipmi_xfree (obj);
+  ipmi_xfree (obj);
 }
 
 int8_t

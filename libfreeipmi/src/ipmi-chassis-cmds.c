@@ -18,17 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
 #include "freeipmi.h"
 
 fiid_template_t tmpl_set_power_restore_policy_rq =
@@ -137,45 +126,6 @@ ipmi_set_power_restore_policy (u_int8_t power_restore_policy,
   return status;
 }
 
-int8_t 
-ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
-				    u_int8_t power_restore_policy, 
-				    fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  if (IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy) == 0)
-    {
-      return (-1);
-    }
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_power_restore_policy_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_power_restore_policy_rs);
-  
-  ERR (fill_cmd_set_power_restore_policy (data_rq, 
-					  power_restore_policy) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_power_restore_policy_rq, 
-		 data_rs, 
-		 tmpl_set_power_restore_policy_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_power_restore_policy_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 { 
@@ -205,38 +155,6 @@ ipmi_get_chassis_status (fiid_obj_t obj_data_rs)
   return status;
 }
 
-int8_t 
-ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
-			      fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_cmd_get_chassis_status_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_cmd_get_chassis_status_rs);
-  
-  ERR (fill_cmd_get_chassis_status (data_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_cmd_get_chassis_status_rq, 
-		 data_rs, 
-		 tmpl_cmd_get_chassis_status_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_cmd_get_chassis_status_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
 int8_t
 fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
@@ -253,3 +171,57 @@ fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd)
 		chassis_ctrl);
   return 0;
 }  
+
+int8_t 
+ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
+				    u_int8_t power_restore_policy, 
+				    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  if (IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy) == 0)
+    {
+      return (-1);
+    }
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_power_restore_policy_rq);
+  ERR (fill_cmd_set_power_restore_policy (obj_cmd_rq, 
+					  power_restore_policy) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_power_restore_policy_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_power_restore_policy_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
+			      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
+  ERR (fill_cmd_get_chassis_status (obj_cmd_rq) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_cmd_get_chassis_status_rq, 
+		 obj_cmd_rs, 
+		 tmpl_cmd_get_chassis_status_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+

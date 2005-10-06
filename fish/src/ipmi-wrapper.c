@@ -15,49 +15,10 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
+#include "common.h"
 
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#endif
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include "freeipmi.h"
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#ifdef __FreeBSD__
-#include <stdlib.h>
-#else
-#include <alloca.h>
-#endif
-#include <netdb.h>
-
-#include "fish.h"
-#include "ipmi-wrapper.h"
-#include "fi-utils.h"
+static ipmi_device_t dev;
+static int dev_opened = false;
 
 u_int8_t channel_info_list_initialized = false;
 channel_info channel_info_list[8];
@@ -68,202 +29,131 @@ static int8_t lan_channel_number;
 static u_int8_t serial_channel_number_initialized = false;
 static int8_t serial_channel_number;
 
-static unsigned int rmcp_msg_tag;
+static unsigned int rmcp_msg_tag = 0;
 
-static unsigned int 
-_get_rmcp_msg_tag (void)
+ipmi_device_t *
+fi_get_ipmi_device ()
 {
-  if (rmcp_msg_tag == 0xFE)
-    rmcp_msg_tag = 0; /* roll over */
-
-  return (rmcp_msg_tag++);
-  /* return (0xFF); */
+  return &dev;
 }
 
-int
-ipmi_ping (int sockfd, char *hostname, fiid_obj_t pong)
+int 
+fi_ipmi_open (struct arguments *args)
 {
-  int status;
-  struct sockaddr_in to_addr;
-  struct hostent *hostinfo;
-
-  if (hostname == NULL)
-      return (1);
-
-  to_addr.sin_family = AF_INET;
-  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
-  hostinfo = gethostbyname (hostname);
-  if (hostinfo == NULL)
-    return (1);
-  to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
-
-  {
-    int _msg_tag;
-    _msg_tag = _get_rmcp_msg_tag ();
-    status = ipmi_rmcp_ping (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), _msg_tag, pong);
-
-    /*    
-    {
-      u_int64_t val;
-      fiid_obj_get (pong, tmpl_cmd_asf_presence_pong, "msg_tag", &val);
-      fprintf (stdout, "msg_tag[Rq:%d, Rs:%qd]n", _msg_tag, val);
-    }
-    fiid_obj_dump (2, tmpl_cmd_asf_presence_pong, pong);
-    */
-  }
-  return (status);
-}
-
-int
-lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username, char *auth_code, u_int8_t priv_level, u_int32_t *session_id, u_int32_t *session_seq_num, u_int8_t *rq_seq)
-{
-  struct sockaddr_in to_addr;
-  struct hostent *hostinfo;
-
-  if (hostname == NULL)
-      return (1);
-
-  to_addr.sin_family = AF_INET;
-  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
-  hostinfo = gethostbyname (hostname);
-  if (hostinfo == NULL)
-    return (1);
-  to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
-
-  if (ipmi_lan_open_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, username, auth_code, 0x01, priv_level, session_seq_num, session_id, rq_seq) == -1)
-    return (1);
-  return (0);
-}
-
-int8_t
-lan_close_session (int sockfd, char *hostname, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, char *auth_code, u_int8_t rq_seq, u_int32_t close_session_id)
-{
-  struct sockaddr_in to_addr;
-  struct hostent *hostinfo;
-  fiid_obj_t obj_cmd_rs;
-
-  if (hostname == NULL)
-    return (1);
-
-  to_addr.sin_family = AF_INET;
-  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
-  hostinfo = gethostbyname (hostname);
-  if (hostinfo == NULL)
-    return (1);
-  to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
-
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
-  if (!obj_cmd_rs)
-    return (1);
-
-  if (ipmi_lan_close_session (sockfd, (struct sockaddr *) &to_addr, sizeof (struct sockaddr_in), auth_type, session_seq_num, session_id, auth_code, strlen (auth_code), rq_seq, close_session_id, obj_cmd_rs) == -1)
-    return (-1);
+  if (dev_opened)
+    return 0;
   
-  if (IPMI_COMP_CODE(obj_cmd_rs) != IPMI_COMMAND_SUCCESS)
+  if (args->host != NULL)
     {
-      char errstr[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_cmd_rs, errstr, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "ipmi_close_session_rs: %s\n", errstr);
-      fiid_obj_free (obj_cmd_rs);
+      struct hostent *hostinfo;
+      struct sockaddr_in host;
+      
+      host.sin_family = AF_INET;
+      host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
+      hostinfo = gethostbyname (args->host);
+      if (hostinfo == NULL)
+	{
+	  perror ("gethostbyname()");
+	  return (-1);
+	}
+      host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
+      
+      if (ipmi_open_outofband (&dev, 
+			       IPMI_DEVICE_LAN, 
+			       IPMI_MODE_DEFAULT, 
+			       (struct sockaddr *) &host, 
+			       sizeof (struct sockaddr), 
+			       args->auth_type, 
+			       args->username, 
+			       args->password, 
+			       args->priv_level) != 0)
+	{
+	  perror ("ipmi_open_outofband()");
+	  return (-1);
+	}
+    }
+  else 
+    {
+      if (!ipmi_is_root ())
+	{
+	  fprintf (stderr, 
+		   "Warning: You are NOT root; "
+		   "inband access may NOT work\n");
+	}
+      if (ipmi_open_inband (&dev, 
+			    IPMI_DEVICE_KCS, 
+			    IPMI_MODE_DEFAULT) != 0)
+	{
+	  perror ("ipmi_open_inband()");
+	  return (-1);
+	}
+      ipmi_enable_old_kcs_init (&dev);
+    }
+  
+  dev_opened = true;
+  
+  return 0;
+}
+
+int 
+fi_ipmi_close ()
+{
+  if (!dev_opened)
+    return 0;
+  
+  if (ipmi_close (&dev) != 0)
+    {
+      perror ("ipmi_close()");
       return (-1);
     }
-  return 0;
-}
-
-
-#if 0
-int
-chassis_ctrl (int sockfd, char *hostname, unsigned char auth_type, unsigned char priv_level, char *username, char *passwd, unsigned int session_id, unsigned int inbound_seq_num, unsigned char session_seq_num, unsigned char chassis_ctrl)
-{
-  int status;
-  struct sockaddr_in to_addr;
-  struct hostent *hostinfo;
-
-  if (hostname == NULL)
-      return (1);
-
-  to_addr.sin_family = AF_INET;
-  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
-  hostinfo = gethostbyname (hostname);
-  if (hostinfo == NULL)
-    return (1);
-  to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
   
-  /* Chassis Control - Request */
-  {
-    net_fn_t net_fn;
-    ipmi_cmd_chassis_ctrl_rq_t cmd;
-    u_int32_t cmd_len;
-    void *lan_pkt;
-    u_int32_t lan_pkt_len;
-
-    cmd_len = sizeof (ipmi_cmd_set_session_priv_level_rq_t);
-    lan_pkt_len = IPMI_LAN_RQ_PKT_SIZE (cmd_len);
-    
-    lan_pkt = alloca (lan_pkt_len);
-    if (lan_pkt == NULL)    /* on error, NULL not returned on all systems */
-      return (1);
-
-    net_fn.fn  = IPMI_NET_FN_CHASSIS_RQ;
-    net_fn.lun = IPMI_BMC_IPMB_LUN_BMC;
-
-    ipmi_chassis_ctrl_rq (chassis_ctrl, &cmd);
-
-    assemble_ipmi_lan_rq_pkt (IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, inbound_seq_num, session_id, passwd, IPMI_SESSION_MAX_AUTH_CODE_LEN, net_fn, session_seq_num, &cmd, cmd_len, lan_pkt, lan_pkt_len);
-    
-    status = ipmi_lan_sendto (sockfd, lan_pkt, lan_pkt_len, 0, (struct sockaddr *)&to_addr, sizeof (struct sockaddr_in));
-    if (status == -1) 
-      {
-	perror ("ipmi_lan_sendto");
-	return (1);
-      }
-  }
-
-  /* Chassis Control - Response */
-  {
-    struct sockaddr_in from;
-    socklen_t fromlen;
-    rmcp_hdr_t rmcp_hdr;
-    ipmi_session_auth_t session;
-    ipmi_lan_msg_rs_t msg;
-    ipmi_cmd_chassis_ctrl_rs_t cmd;
-    u_int32_t cmd_len;
-    ipmi_chksum_t chksum;
-    void *lan_pkt;
-    u_int32_t lan_pkt_len;
-
-    cmd_len     = sizeof (ipmi_cmd_chassis_ctrl_rs_t);
-    lan_pkt_len = IPMI_LAN_RS_PKT_SIZE (cmd_len);
-    lan_pkt = alloca (lan_pkt_len);
-    if (lan_pkt == NULL)
-      return (1);
-    
-    status = ipmi_lan_recvfrom (sockfd, lan_pkt, lan_pkt_len, 0, (struct sockaddr *)&from, &fromlen);
-    if (status == -1)
-      {
-	perror ("ipmi_lan_recvfrom");
-	return (1);
-      }
-
-    if (!ipmi_lan_chksum_test (lan_pkt, lan_pkt_len))
-      {
-	fprintf (stderr, "ipmi_chassis_ctrl_rs: chksum mismatch\n");
-	return (-1);
-      }
-
-    unassemble_ipmi_lan_rs_pkt (lan_pkt, lan_pkt_len, cmd_len, &rmcp_hdr, &session, &msg, &cmd, &chksum);
-    
-    if (cmd.comp_code != IPMI_COMMAND_SUCCESS)
-      {
-	char errstr[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (IPMI_CMD_CHASSIS_CTRL, cmd.comp_code, errstr, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, "ipmi_chassis_ctrl_rs: %s\n", errstr);
-	return (-1);
-      }
-  }
+  dev_opened = false;
+  
   return 0;
 }
-#endif
+
+static char *
+get_ipmi_host_ip_address ()
+{
+  /* if IN-BAND */
+  return strdup ("127.0.0.1");
+  
+  /* if OUT-OF-BAND */
+  {
+    char hostname[] = {"localhost"};
+    struct hostent *hostinfo = NULL;
+    struct in_addr *in_addr = NULL;
+    
+    hostinfo = gethostbyname (hostname);
+    if (hostinfo == NULL)
+      return NULL;
+    
+    in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
+    
+    return strdup (inet_ntoa (*in_addr));
+  }
+}
+
+char *
+get_sdr_cache_filename ()
+{
+  char *cache_filename = NULL;
+  char *ipmi_host_ip_address = NULL;
+  
+  ipmi_host_ip_address = get_ipmi_host_ip_address ();
+  
+  asprintf (&cache_filename, 
+	    "%s/%s/%s/%s.%s", 
+	    get_home_directory (), 
+	    FI_CONFIG_DIRECTORY, 
+	    FI_SDR_CACHE_DIR, 
+	    FI_SDR_CACHE_FILENAME_PREFIX, 
+	    ipmi_host_ip_address);
+  
+  free (ipmi_host_ip_address);
+  
+  return cache_filename;
+}
 
 channel_info *
 get_channel_info_list ()
@@ -276,14 +166,12 @@ get_channel_info_list ()
   if (channel_info_list_initialized)
     return (channel_info_list);
   
-  data_rs = alloca (fiid_obj_len_bytes (tmpl_get_channel_info_rs));
-  
+  fiid_obj_alloca (data_rs, tmpl_get_channel_info_rs);
   for (i = 0, ci = 0; i < 8; i++)
     {
-      if (ipmi_kcs_get_channel_info (i, data_rs) != 0)
-	continue;
-      
-      if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
+      if (ipmi_cmd_get_channel_info2 (fi_get_ipmi_device (), 
+				      i, 
+				      data_rs) != 0)
 	continue;
       
       fiid_obj_get (data_rs, 
@@ -324,8 +212,10 @@ get_channel_info_list ()
 	channel_info_list[ci].protocol_type = IPMI_CHANNEL_PROTOCOL_TYPE_OEM;
       
       ci++;
-   }
+    }
+  
   channel_info_list_initialized = true;
+  
   return (channel_info_list);
 }
 
@@ -365,7 +255,7 @@ get_serial_channel_number_known ()
   return 1;
 }
 
-int 
+static int 
 display_channel_info ()
 {
   channel_info *channel_list;
@@ -465,86 +355,149 @@ display_channel_info ()
   return 0;
 }
 
-int
-display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
+int 
+display_get_dev_id ()
 {
-  u_int64_t val;
-  if (cmd_rs == NULL) 
-      return (-1);
-
-  if (cmd_rs_len < fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rs))
-    return (-1);
-
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "comp_code", &val);
-  if (val != IPMI_KCS_STATUS_SUCCESS)
+  fiid_obj_t cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      char err[IPMI_ERR_STR_MAX_LEN];
-      ipmi_kcs_strstatus_r(val, err, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "bmc-info: %s\n", err);
+      perror ("ipmi_cmd_get_dev_id()");
       return (-1);
     }
   
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "dev_id", &val);
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_id", 
+		&val);
   fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "dev_rev.rev", &val);
-  fprintf (stdout, "Device Revision:   %X\n", (unsigned int) val);
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "dev_rev.sdr_support", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_rev.rev", 
+		&val);
+  fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"dev_rev.sdr_support", 
+		&val);
   if (val)
     fprintf (stdout, "                   [SDR Support]\n");
+  
   {
     u_int64_t maj, min;
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "firmware_rev1.major_rev", &maj);
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "firmware_rev2.minor_rev", &min);
-    fprintf (stdout, "Firmware Revision: %X.%X\n", (unsigned int) maj, (unsigned int) min);
+    FIID_OBJ_GET (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "firmware_rev1.major_rev", 
+		  &maj);
+    FIID_OBJ_GET (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "firmware_rev2.minor_rev", 
+		  &min);
+    fprintf (stdout, "Firmware Revision: %d.%d\n", 
+	     (unsigned int) maj, (unsigned int) min);
   }
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "firmware_rev1.dev_available", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"firmware_rev1.dev_available", 
+		&val);
   if (val == 0)
-    fprintf (stdout, "                   [Device Available (normal operation)]\n");
+    fprintf (stdout, 
+	     "                   [Device Available (normal operation)]\n");
   else
     {
-      fprintf (stdout, "                   [Device Not Available]\n");
-      fprintf (stdout, "                   [firmware, SDR update or self init in progress]\n");
+      fprintf (stdout, 
+	       "                   [Device Not Available]\n");
+      fprintf (stdout, 
+	       "                   [firmware, SDR update or self init in progress]\n");
     }
+  
   {
     u_int64_t ms, ls;
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "ipmi_ver.ms_bits", &ms);
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "ipmi_ver.ls_bits", &ls);
-    fprintf (stdout, "IPMI Version:      %X.%X\n", (unsigned int) ms, (unsigned int) ls);
+    FIID_OBJ_GET (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "ipmi_ver.ms_bits", 
+		  &ms);
+    FIID_OBJ_GET (cmd_rs, 
+		  tmpl_cmd_get_dev_id_rs, 
+		  "ipmi_ver.ls_bits", 
+		  &ls);
+    fprintf (stdout, 
+	     "IPMI Version:      %d.%d\n", (unsigned int) ms, (unsigned int) ls);
   }
+  
   fprintf (stdout, "Additional Device Support:\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.sensor_dev", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sensor_dev", 
+		&val);
   if(val)
     fprintf (stdout, "                   [Sensor Device]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.sdr_repo_dev", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sdr_repo_dev", 
+		&val);
   if(val)
     fprintf (stdout, "                   [SDR Repository Device]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.sel_dev", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.sel_dev", 
+		&val);
   if(val)
     fprintf (stdout, "                   [SEL Device]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.fru_inventory_dev", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.fru_inventory_dev", 
+		&val);
   if(val)
     fprintf (stdout, "                   [FRU Inventory Device]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.ipmb_evnt_receiver", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.ipmb_evnt_receiver", 
+		&val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Receiver]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.ipmb_evnt_generator", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.ipmb_evnt_generator", 
+		&val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Generator]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.bridge", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.bridge", 
+		&val);
   if(val)
     fprintf (stdout, "                   [Bridge]\n");
-  FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "additional_dev_support.chassis_dev", &val);
+  
+  FIID_OBJ_GET (cmd_rs, 
+		tmpl_cmd_get_dev_id_rs, 
+		"additional_dev_support.chassis_dev", 
+		&val);
   if(val)
     fprintf (stdout, "                   [Chassis Device]\n");
-
+  
   {
     u_int64_t manf_id, prod_id;
+    
     FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
     fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manf_id);
+    
     FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "prod_id", &prod_id);
     fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) prod_id);
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "aux_firmware_rev_info", &val);
     
+    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "aux_firmware_rev_info", &val);
     switch (manf_id)
       {
       case IPMI_MANF_ID_INTEL: 
@@ -572,7 +525,10 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
 			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
 			    "aux_firmware_rev_info.pia.minor",
 			    &pia_min);
-	      fprintf (stdout, "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n", (unsigned int) bc_maj, (unsigned int) bc_min, (unsigned int) pia_maj, (unsigned int) pia_min);
+	      fprintf (stdout, 
+		       "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
+		       (unsigned int) bc_maj, (unsigned int) bc_min, 
+		       (unsigned int) pia_maj, (unsigned int) pia_min);
 	      break;
 	    }
 	  }
@@ -582,51 +538,78 @@ display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len)
       }
   }
   
-  display_channel_info ();
-  
-  return (0);
+  return (display_channel_info ());
 }
 
-char *
-get_ipmi_host_ip_address ()
+static unsigned int 
+_get_rmcp_msg_tag (void)
 {
-  /* if IN-BAND */
-  return strdup ("127.0.0.1");
+  if (rmcp_msg_tag == 0xFE)
+    rmcp_msg_tag = 0; /* roll over */
   
-  /* if OUT-OF-BAND */
+  return (rmcp_msg_tag++);
+}
+
+int 
+ipmi_ping (char *host, unsigned int sock_timeout)
+{
+  int sockfd;
+  int status;
+  struct sockaddr_in to_addr;
+  struct hostent *hostinfo;
+  
+  if (host == NULL)
+    return (-1);
+  
+  hostinfo = gethostbyname (host);
+  if (hostinfo == NULL)
+    {
+      perror ("gethostbyname()");
+      return (-1);
+    }
+  
+  sockfd = ipmi_open_free_udp_port ();
+  if (sockfd == -1)
+    {
+      perror ("ipmi_open_free_udp_port()");
+      return (-1);
+    }
+  
   {
-    char hostname[] = {"localhost"};
-    struct hostent *hostinfo = NULL;
-    struct in_addr *in_addr = NULL;
+    struct timeval time;
     
-    hostinfo = gethostbyname (hostname);
-    if (hostinfo == NULL)
-      return NULL;
+    time.tv_sec  = sock_timeout / 1000;
+    time.tv_usec = (sock_timeout % 1000) * 1000;
     
-    in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
-    
-    return strdup (inet_ntoa (*in_addr));
+    if (setsockopt (sockfd, SOL_SOCKET, SO_RCVTIMEO, 
+		    &time, sizeof (time)) < 0)
+      {
+	perror ("setsockopt()");
+	close (sockfd);
+	return (-1);
+      }
   }
-}
-
-char *
-get_sdr_cache_filename ()
-{
-  char *cache_filename = NULL;
-  char *ipmi_host_ip_address = NULL;
   
-  ipmi_host_ip_address = get_ipmi_host_ip_address ();
+  to_addr.sin_family = AF_INET;
+  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
+  to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
   
-  asprintf (&cache_filename, 
-	    "%s/%s/%s/%s.%s", 
-	    get_home_directory (), 
-	    FI_CONFIG_DIRECTORY, 
-	    FI_SDR_CACHE_DIR, 
-	    FI_SDR_CACHE_FILENAME_PREFIX, 
-	    ipmi_host_ip_address);
+  {
+    fiid_obj_t pong = NULL;
+    
+    fiid_obj_alloca (pong, tmpl_cmd_asf_presence_pong);
+    status = ipmi_rmcp_ping (sockfd, 
+			     (struct sockaddr *) &to_addr, 
+			     sizeof (struct sockaddr_in), 
+			     _get_rmcp_msg_tag (), 
+			     pong);
+    
+    if (errno == EBADMSG)
+      warn ("Increase your socket timeout value");
+  }
   
-  free (ipmi_host_ip_address);
+  close (sockfd);
   
-  return cache_filename;
+  return (status);
 }
 

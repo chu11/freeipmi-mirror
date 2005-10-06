@@ -28,13 +28,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <freeipmi/freeipmi.h>
 
-#define ipmi_xfree(p)     \
-  if (p)		  \
-  {			  \
-    free (p);		  \
-    p = NULL;		  \
-  }
-
 const char *argp_program_version = "udm-test 0.1.0";
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
@@ -213,7 +206,7 @@ main (int argc, char **argv)
       hostinfo = gethostbyname (arguments.hostname);
       if (hostinfo == NULL)
 	{
-	  fprintf (stderr, "Unknown host %s.\n", arguments.hostname);
+	  perror ("gethostbyname()");
 	  exit (EXIT_FAILURE);
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
@@ -228,7 +221,7 @@ main (int argc, char **argv)
 			       arguments.password, 
 			       arguments.priv_level) != 0)
 	{
-	  fprintf (stderr, "ipmi_open_outofband() failed\n");
+	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
 	}
     }
@@ -238,21 +231,21 @@ main (int argc, char **argv)
 			    IPMI_DEVICE_KCS, 
 			    IPMI_MODE_DEFAULT) != 0)
 	{
-	  fprintf (stderr, "ipmi_open_inband() failed\n");
+	  perror ("ipmi_open_inband()");
 	  exit (EXIT_FAILURE);
 	}
     }
   
-  if (ipmi_cmd_get_dev_id (&dev, &obj_cmd_rs) != 0)
+  fiid_obj_alloca (obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (ipmi_cmd_get_dev_id (&dev, obj_cmd_rs) != 0)
     {
-      fprintf (stderr, "ipmi_cmd() failed\n");
+      perror ("ipmi_cmd()");
     }
   fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
-  ipmi_xfree (obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {
-      fprintf (stderr, "ipmi_close() failed\n");
+      perror ("ipmi_close()");
       exit (EXIT_FAILURE);
     }
   

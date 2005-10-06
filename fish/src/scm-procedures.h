@@ -35,11 +35,8 @@ SCM ex_set_sms_io_base (SCM scm_sms_io_base);
 SCM ex_load (SCM scm_filename);
 SCM ex_get_sysconfig_dir (void);
 
-SCM ex_ipmi_ping (SCM scm_host_addr);
-SCM ex_kcs_get_dev_id_display (void);
+SCM ex_ipmi_ping (SCM scm_host, SCM scm_timeout);
 
-SCM ex_get_sock_timeout ();
-SCM ex_set_sock_timeout (SCM scm_sock_timeout);
 SCM ex_set_driver_poll_interval (SCM scm_driver_poll_interval);
 SCM ex_get_script_command_line ();
 
@@ -191,5 +188,12 @@ SCM ex_get_sdr_record (SCM scm_record_id);
 SCM ex_get_sensor_reading (SCM scm_sdr_record);
 SCM ex_get_sdr_cache_filename ();
 SCM ex_get_sdr_repo_info ();
+
+/* udm driver exports */
+SCM ex_ipmi_open (SCM scm_arg_list);
+SCM ex_ipmi_close ();
+
+/* bmc info exports */
+SCM ex_cmd_get_dev_id_display (void);
 
 #endif

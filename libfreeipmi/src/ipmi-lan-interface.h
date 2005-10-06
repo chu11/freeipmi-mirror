@@ -25,9 +25,6 @@
 extern "C" {
 #endif
 
-#include <sys/types.h>
-#include <sys/socket.h>
-
 /*
   Complete IPMI LAN Request Packet
   +----------------------+

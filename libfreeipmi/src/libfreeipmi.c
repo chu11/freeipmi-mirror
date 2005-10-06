@@ -1,7 +1,7 @@
 /* 
    libfreeipmi - C library interface to FreeIPMI
 
-   Copyright (C) 2002 FreeIPMI Core Team
+   Copyright (C) 2002, 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,25 +16,12 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
-
-#include <termios.h>
-#include <grp.h>
-#include <pwd.h>
 */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
 
 #include "freeipmi.h"
 
-
 #ifdef __FreeBSD__
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdarg.h>
 #include <readline/readline.h>
 
 /* Replacement for glibc error() */

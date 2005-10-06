@@ -1,7 +1,7 @@
 /* 
    ipmi-sdr-record-types.c - IPMI SDR record types
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,19 +19,7 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
 #include "freeipmi.h"
-//#include "ipmi-sdr-record-types.h"
 
 fiid_template_t tmpl_sdr_sensor_record_header = 
   {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.3 2004-12-17 02:14:56 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.4 2005-10-06 10:41:09 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -23,37 +23,6 @@
  *  with Ipmipower; if not, write to the Free Software Foundation, Inc.,
  *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \*****************************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#include <errno.h>
 
 #include "freeipmi.h"
 

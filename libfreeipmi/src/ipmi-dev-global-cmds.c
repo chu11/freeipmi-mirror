@@ -18,48 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
 #include "freeipmi.h"
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
 
 fiid_template_t tmpl_cmd_get_dev_id_rq =
   {
@@ -154,32 +113,24 @@ ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs)
 }
 
 int8_t 
-ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t *obj_data_rs)
+ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
+  fiid_obj_t obj_cmd_rq = NULL;
   
   ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
+  ERR (obj_cmd_rs != NULL);
   
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_cmd_get_dev_id_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_cmd_get_dev_id_rs);
-  
-  ERR (fill_cmd_get_dev_id (data_rq) == 0);
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_dev_id_rq);
+  ERR (fill_cmd_get_dev_id (obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
-		 data_rq, 
+		 obj_cmd_rq, 
 		 tmpl_cmd_get_dev_id_rq, 
-		 data_rs, 
+		 obj_cmd_rs, 
 		 tmpl_cmd_get_dev_id_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_cmd_get_dev_id_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
   return (0);
 }
+

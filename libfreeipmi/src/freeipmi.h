@@ -1,7 +1,7 @@
 /* 
    freeipmi.h - C library interface to IPMI
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,15 +25,138 @@
 extern "C" {
 #endif
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-#include <sys/types.h>
-#include <sys/ipc.h>  
-#include <sys/sem.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <err.h>
+#include <signal.h>
 #include <errno.h>
-#include <time.h>
-  
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/types.h>
+#include <sys/select.h>
+#include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <sys/param.h>
+#include <sys/resource.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <net/if.h>
+#include <netdb.h>
+#include <getopt.h>
+#include <assert.h>
+#include <limits.h>
+#include <syslog.h>
+
+#if defined(__FreeBSD__)
+# include <machine/cpufunc.h>
+# include <machine/sysarch.h>
+#else
+# include <sys/io.h>
+#endif
+
+#ifdef STDC_HEADERS
+# include <string.h>
+# include <stdarg.h>
+#else
+# include <sys/types.h>
+# ifndef HAVE_MEMCPY
+   static void*
+   memcpy (void *dest, const void *src, size_t n)
+   {
+     while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
+     return dest;
+   }
+# endif
+# ifndef HAVE_MEMSET
+   static void*
+   memset (void *s, int c, size_t n)
+   {
+     while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
+     return s;
+   }
+# endif
+# ifndef HAVE_STRCHR
+  static char*
+  strchr (const char* s, int c)
+  {
+    while (*s != '\0')
+      if (*s == (char)c) return s;
+      else s++;
+    return NULL;
+  }
+# endif
+#endif
+
+#ifdef HAVE_UNISTD_H
+# include <unistd.h>
+#endif
+
+/* AIX requires this to be the first thing in the file.  */
+#ifndef __GNUC__
+# if HAVE_ALLOCA_H
+#  include <alloca.h>
+# else
+#  ifdef _AIX
+#   pragma alloca
+#  else
+#   ifndef alloca /* predefined by HP cc +Olibcalls */
+     char *alloca ();
+#   endif
+#  endif
+# endif
+#endif
+
+#if HAVE_FCNTL_H
+# if defined(__FreeBSD__) && !defined(USE_IOPERM)
+#  include <fcntl.h>
+# else
+#  include <fcntl.h>
+# endif
+#endif
+
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  ifdef __FreeBSD__
+#   include <sys/time.h>
+#  else
+#   include <time.h>
+#  endif
+# endif
+#endif
+
+#if ENABLE_NLS
+# include <libintl.h>
+# define _(Text) gettext (Text)
+#else
+# define textdomain(Domain)
+# define _(Text) Text
+#endif
+#define N_(Text) Text
+
+#if defined(__FreeBSD__)
+#define _INB(port)  inb (port)
+#define _OUTB(data, port)  outb (port, data)
+#else
+#define _INB(port)  inb (port)
+#define _OUTB(data, port)  outb (data, port)
+#endif
+
+#if defined(__FreeBSD__) && !defined(EBADMSG)
+#define EBADMSG		ENOMSG
+#endif
+
 #ifdef FREEIPMI_LIBRARY
 #include "xmalloc.h"
 #endif

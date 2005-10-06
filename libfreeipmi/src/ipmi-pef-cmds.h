@@ -1,7 +1,7 @@
 /* 
-   ipmi-pef-cmds.h - IPMI System Event Log Commands
+   ipmi-pef-cmds.h - IPMI Platform Event Filtering Commands 
    
-   Copyright (C) 2003 - 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.8 2004-11-05 01:02:23 itz Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.9 2005-10-06 10:41:10 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -189,6 +189,119 @@ ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
 
 int8_t
 ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_alert_policies);
+
+
+int8_t ipmi_cmd_set_pef_control2 (ipmi_device_t *dev, 
+				  u_int8_t enable_pef, 
+				  u_int8_t enable_pef_event_msgs, 
+				  u_int8_t enable_startup_delay, 
+				  u_int8_t enable_alert_startup_delay, 
+				  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev, 
+					    u_int8_t enable_alert,
+					    u_int8_t enable_powerdown, 
+					    u_int8_t enable_reset,
+					    u_int8_t enable_powercycle, 
+					    u_int8_t enable_oem,
+					    u_int8_t enable_diag_interrupt, 
+					    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev, 
+				    u_int8_t startup_delay, 
+				    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev, 
+					  u_int8_t alert_startup_delay, 
+					  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev, 
+					u_int8_t num_event_filters, 
+					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev, 
+					 u_int8_t filter_number,
+					 const event_filter_table_entry_t *entry, 
+					 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev, 
+					  u_int8_t filter_number,
+					  event_filter_type_t filter_type, 
+					  u_int8_t enabled, 
+					  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev, 
+					 u_int8_t num_alert_policies, 
+					 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
+				  u_int8_t channel_number, 
+				  u_int8_t destination_selector,
+				  u_int8_t string_selector, 
+				  u_int8_t string_enable, 
+				  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
+				       u_int8_t parameter_type, 
+				       u_int8_t set_selector,
+				       u_int8_t block_selector, 
+				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
+					    u_int8_t parameter_type, 
+					    u_int8_t set_selector,
+					    u_int8_t block_selector, 
+					    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
+					     u_int8_t parameter_type, 
+					     u_int8_t set_selector,
+					     u_int8_t block_selector, 
+					     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev, 
+					u_int8_t parameter_type, 
+					u_int8_t set_selector, 
+					u_int8_t block_selector, 
+					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_control2 (ipmi_device_t *dev, 
+				  u_int8_t parameter_type, 
+				  u_int8_t set_selector, 
+				  u_int8_t block_selector, 
+				  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev, 
+						u_int8_t parameter_type, 
+						u_int8_t set_selector,
+						u_int8_t block_selector, 
+						fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev, 
+					u_int8_t parameter_type, 
+					u_int8_t set_selector,
+					u_int8_t block_selector, 
+					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev, 
+					      u_int8_t parameter_type, 
+					      u_int8_t set_selector,
+					      u_int8_t block_selector, 
+					      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev, 
+					    u_int8_t parameter_type, 
+					    u_int8_t set_selector,
+					    u_int8_t block_selector, 
+					    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev, 
+					     u_int8_t parameter_type, 
+					     u_int8_t set_selector,
+					     u_int8_t block_selector, 
+					     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev, 
+					 u_int8_t countdown, 
+					 fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev, 
+					   which_event_t which, 
+					   u_int16_t id, 
+					   fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_last_processed_event2 (ipmi_device_t *dev, 
+					   fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_pet_ack2 (ipmi_device_t *dev, 
+			  u_int16_t sequence_number, 
+			  u_int32_t timestamp, 
+			  u_int8_t source_type, 
+			  u_int8_t sensor_device, 
+			  u_int8_t sensor_number, 
+			  u_int32_t event_data, 
+			  fiid_obj_t obj_cmd_rs);
+
+
 
 #ifdef __cplusplus
 }

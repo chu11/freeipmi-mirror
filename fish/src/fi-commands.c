@@ -15,39 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <stdlib.h>
-#include <assert.h>
-#include <guile/gh.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#include "freeipmi.h"
-#include "fish.h"
-#include "fi-utils.h"
-#include "guile-wrapper.h"
-#include "fi-commands.h"
-#include "interpreter.h"
-#include "ipmi-wrapper.h"
+#include "common.h"
 
 extern int errno;
 

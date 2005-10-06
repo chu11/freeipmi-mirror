@@ -1,7 +1,7 @@
 /* 
    rmcp.c - remote management control protocol procedures
 
-   Copyright (C) 2003 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,60 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 
 */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#endif
-
-#include <errno.h>
-#include <netinet/in.h>
-
-#if defined(__FreeBSD__) && !defined(EBADMSG)
-#define EBADMSG		ENOMSG
-#endif
 
 #include "freeipmi.h"
 

@@ -18,17 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "freeipmi.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
 
 fiid_template_t tmpl_set_sol_conf_param_sol_enable_rq =
   {
@@ -128,42 +118,6 @@ ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number, 
-				       u_int8_t sol_payload, 
-				       fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_sol_conf_param_sol_enable_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_sol_conf_param_sol_enable_rs);
-  
-  ERR (fill_sol_conf_sol_enable_disable (data_rq, 
-					 channel_number, 
-					 sol_payload) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_sol_conf_param_sol_enable_rq, 
-		 data_rs, 
-		 tmpl_set_sol_conf_param_sol_enable_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_sol_conf_param_sol_enable_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 ipmi_sol_conf_sol_enable (u_int16_t sms_io_base, 
 			  u_int8_t channel_number, 
 			  fiid_obj_t obj_data_rs)
@@ -175,17 +129,6 @@ ipmi_sol_conf_sol_enable (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number, 
-			       fiid_obj_t *obj_data_rs)
-{
-  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
-						channel_number, 
-						IPMI_SOL_PAYLOAD_ENABLE, 
-						obj_data_rs);
-}
-
-int8_t 
 ipmi_sol_conf_sol_disable (u_int16_t sms_io_base, 
 			   u_int8_t channel_number, 
 			   fiid_obj_t obj_data_rs)
@@ -194,17 +137,6 @@ ipmi_sol_conf_sol_disable (u_int16_t sms_io_base,
 					   channel_number, 
 					   IPMI_SOL_PAYLOAD_DISABLE, 
 					   obj_data_rs);
-}
-
-int8_t 
-ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
-				u_int8_t channel_number, 
-				fiid_obj_t *obj_data_rs)
-{
-  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
-						channel_number, 
-						IPMI_SOL_PAYLOAD_DISABLE, 
-						obj_data_rs);
 }
 
 int8_t 
@@ -274,25 +206,69 @@ ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
 }
 
 int8_t 
+ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
+				       u_int8_t channel_number, 
+				       u_int8_t sol_payload, 
+				       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_sol_conf_param_sol_enable_rq);
+  ERR (fill_sol_conf_sol_enable_disable (obj_cmd_rq, 
+					 channel_number, 
+					 sol_payload) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_sol_conf_param_sol_enable_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_sol_conf_param_sol_enable_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
+			       u_int8_t channel_number, 
+			       fiid_obj_t obj_cmd_rs)
+{
+  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
+						channel_number, 
+						IPMI_SOL_PAYLOAD_ENABLE, 
+						obj_cmd_rs);
+}
+
+int8_t 
+ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
+				u_int8_t channel_number, 
+				fiid_obj_t obj_cmd_rs)
+{
+  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
+						channel_number, 
+						IPMI_SOL_PAYLOAD_DISABLE, 
+						obj_cmd_rs);
+}
+
+int8_t 
 ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
 				   u_int8_t channel_number,
 				   u_int8_t parameter_type,
 				   u_int8_t set_selector,
 				   u_int8_t block_selector,
-				   fiid_obj_t *obj_data_rs)
+				   fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
+  fiid_obj_t obj_cmd_rq = NULL;
   
   ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
+  ERR (obj_cmd_rs != NULL);
   
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sol_conf_param_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
-  
-  ERR (fill_get_sol_conf_param (data_rq, 
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sol_conf_param_rq);
+  ERR (fill_get_sol_conf_param (obj_cmd_rq, 
 				IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
 				channel_number, 
 				parameter_type, 
@@ -301,15 +277,11 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
-		 data_rq, 
+		 obj_cmd_rq, 
 		 tmpl_get_sol_conf_param_rq, 
-		 data_rs, 
+		 obj_cmd_rs, 
 		 tmpl_get_sol_conf_param_sol_enable_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_sol_conf_param_sol_enable_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
   return (0);
 }

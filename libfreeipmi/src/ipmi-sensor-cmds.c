@@ -18,22 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <stdlib.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
 #include "freeipmi.h"
-
-//#include "ipmi-sensor-cmds.h"
-
-//#define DEBUG
 
 /* Intel - Not Implemented */
 fiid_template_t tmpl_get_dev_sdr_info_rq =
@@ -770,41 +755,6 @@ ipmi_kcs_get_threshold_reading (u_int8_t sensor_number,
 }
 
 int8_t 
-ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
-				 u_int8_t sensor_number, 
-				 fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_threshold_reading_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_threshold_reading_rs);
-  
-  ERR (fill_kcs_get_threshold_reading (data_rq, 
-				       sensor_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_get_sensor_threshold_reading_rq, 
-		 data_rs, 
-		 tmpl_get_sensor_threshold_reading_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, 
-			       tmpl_get_sensor_threshold_reading_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, u_int8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -834,41 +784,6 @@ ipmi_kcs_get_discrete_reading (u_int8_t sensor_number,
 			 obj_data_rs, tmpl_get_sensor_discrete_reading_rs);
   free (obj_data_rq);
   return status;
-}
-
-int8_t 
-ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
-				u_int8_t sensor_number, 
-				fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_discrete_reading_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_discrete_reading_rs);
-  
-  ERR (fill_kcs_get_discrete_reading (data_rq, 
-				      sensor_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_get_sensor_discrete_reading_rq, 
-		 data_rs, 
-		 tmpl_get_sensor_discrete_reading_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, 
-			       tmpl_get_sensor_discrete_reading_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
 }
 
 int8_t 
@@ -904,36 +819,76 @@ ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number,
 }
 
 int8_t 
-ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
+ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
 				 u_int8_t sensor_number, 
-				 fiid_obj_t *obj_data_rs)
+				 fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
+  fiid_obj_t obj_cmd_rq = NULL;
   
   ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
+  ERR (obj_cmd_rs != NULL);
   
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_sensor_thresholds_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_sensor_thresholds_rs);
-  
-  ERR (fill_kcs_get_sensor_thresholds (data_rq, 
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_threshold_reading_rq);
+  ERR (fill_kcs_get_threshold_reading (obj_cmd_rq, 
 				       sensor_number) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
-		 data_rq, 
+		 obj_cmd_rq, 
+		 tmpl_get_sensor_threshold_reading_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_sensor_threshold_reading_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
+				u_int8_t sensor_number, 
+				fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_discrete_reading_rq);
+  ERR (fill_kcs_get_discrete_reading (obj_cmd_rq, 
+				      sensor_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_sensor_discrete_reading_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_sensor_discrete_reading_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
+				 u_int8_t sensor_number, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
+  ERR (fill_kcs_get_sensor_thresholds (obj_cmd_rq, 
+				       sensor_number) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
 		 tmpl_get_sensor_thresholds_rq, 
-		 data_rs, 
+		 obj_cmd_rs, 
 		 tmpl_get_sensor_thresholds_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, 
-			       tmpl_get_sensor_thresholds_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
   return (0);
 }

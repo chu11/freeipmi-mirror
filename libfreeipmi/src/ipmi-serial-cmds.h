@@ -86,46 +86,46 @@ int8_t ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
 				      u_int8_t ppp_mode_enable,
 				      u_int8_t terminal_mode_enable,
 				      u_int8_t direct,
-				      fiid_obj_t *obj_data_rs);
+				      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev, 
 						    u_int8_t channel_number, 
 						    u_int8_t page_blackout_interval, 
-						    fiid_obj_t *obj_data_rs);
+						    fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev, 
 					u_int8_t channel_number, 
 					u_int8_t retry_time, 
-					fiid_obj_t *obj_data_rs);
+					fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev, 
 				       u_int8_t channel_number, 
 				       u_int8_t dtr_hangup,
 				       u_int8_t flow_control,
 				       u_int8_t bit_rate,
-				       fiid_obj_t *obj_data_rs);
+				       fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev, 
 				      u_int8_t channel_number,
 				      u_int8_t parameter_type,
 				      u_int8_t set_selector,
 				      u_int8_t block_selector,
-				      fiid_obj_t *obj_data_rs);
+				      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev, 
 					   u_int8_t channel_number,
 					   u_int8_t parameter_type,
 					   u_int8_t set_selector,
 					   u_int8_t block_selector,
-					   fiid_obj_t *obj_data_rs);
+					   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev, 
 					u_int8_t channel_number,
 					u_int8_t parameter_type,
 					u_int8_t set_selector,
 					u_int8_t block_selector,
-					fiid_obj_t *obj_data_rs);
+					fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev, 
 				       u_int8_t channel_number,
 				       u_int8_t parameter_type,
 				       u_int8_t set_selector,
 				       u_int8_t block_selector,
-				       fiid_obj_t *obj_data_rs);
+				       fiid_obj_t obj_cmd_rs);
 
 
 #ifdef __cplusplus

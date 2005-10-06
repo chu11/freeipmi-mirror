@@ -1,4 +1,4 @@
-/* Copyright (C) 2003 - 2004 FreeIPMI Core Team */
+/* Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team */
 
 /* This file is free software; you can redistribute it and/or modify */
 /* it under the terms of the GNU General Public License as published by */
@@ -15,7 +15,7 @@
 /* the Free Software Foundation, Inc., 59 Temple Place - Suite 330, */
 /* Boston, MA 02111-1307, USA. */
 
-/* $Id: ipmi-pef-param-spec.h,v 1.1 2004-10-26 23:14:17 itz Exp $ */
+/* $Id: ipmi-pef-param-spec.h,v 1.2 2005-10-06 10:41:10 balamurugan Exp $ */
 
 #ifndef IPMI_PEF_PARAM_SPEC_H_INCLUDED
 #define IPMI_PEF_PARAM_SPEC_H_INCLUDED

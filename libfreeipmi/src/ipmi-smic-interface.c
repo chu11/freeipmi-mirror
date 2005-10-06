@@ -1,7 +1,7 @@
 /* 
    ipmi-smic-interface.c: IPMI - System Management Interface Chip - SMS Interface
 
-   Copyright (C) 2003-2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,32 +19,8 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#if defined(__FreeBSD__) && !defined(USE_IOPERM)
-#include <fcntl.h>
-#endif
-
-#include <errno.h>
-#include <linux/types.h>
-
 #include "freeipmi.h"
-
-#if defined(__FreeBSD__)
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (port, data)
-#else
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (data, port)
-#endif
+#include <linux/types.h>
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_smic_dev_io_fd = -1;

@@ -5,7 +5,7 @@
 
    fish.h: fish header
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,6 +23,9 @@
 
 */
 
+#ifndef _FISH_H
+#define _FISH_H
+
 #define FI_DEFAULT_PROMPT_STRING    "fish> "
 #define FI_CONFIG_DIRECTORY         ".fish"
 #define FI_CONFIG_DIRECTORY_MODE    S_IRWXU
@@ -36,26 +39,10 @@
 #define FI_INIT_FILE                   "init.scm"
 #define FI_GLOBAL_INIT_FILE            FI_GLOBAL_EXTENSIONS_DIRECTORY "/" FI_INIT_FILE
 
-#define FI_DEFAULT_SOCK_TIMEOUT     3000
-#define FI_DEFAULT_RETRY_COUNT      1
-
 #define FI_DEFAULT_SDR_REPO_CACHE_FILENAME    IPMI_DEFAULT_SDR_REPO_CACHE_FILENAME
 #define FI_SDR_CACHE_DIR                "sdr-cache"
 #define FI_SDR_CACHE_FILENAME_PREFIX    "sdr-cache"
 
-int fi_get_verbose ();
-void fi_set_verbose (int verbose);
-void running_for_first_time (void);
-char *get_default_prompt (void);
-void set_default_prompt (char *prompt_default_value);
-int get_setup_mode (void);
 void set_setup_mode (int setup_mode_value);
-void set_driver_poll_interval (int driver_poll_interval_value);
-int fi_get_sockfd (void);
-unsigned int fi_get_sock_timeout (void);
-void fi_set_sock_timeout (unsigned int sock_timeout);
-unsigned int fi_get_retry_count (void);
-int get_script_argc ();
-char **get_script_argv ();
-u_int16_t fi_get_sms_io_base ();
-void fi_set_sms_io_base (u_int16_t io_base);
+
+#endif

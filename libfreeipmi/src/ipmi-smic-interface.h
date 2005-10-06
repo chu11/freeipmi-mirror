@@ -1,7 +1,7 @@
 /* 
    ipmi-smic-interface.h - IPMI SMIC SMS Interface
 
-   Copyright (C) 2003-2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -23,18 +23,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(__FreeBSD__)
-#include <sys/types.h>
-#include <machine/cpufunc.h>
-#include <machine/sysarch.h>
-#else
-#include <sys/io.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 /* Config items */

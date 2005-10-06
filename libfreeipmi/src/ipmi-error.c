@@ -1,7 +1,7 @@
 /* 
    ipmi-error.c - IPMI error handling
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,36 +19,6 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <errno.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#include <sys/types.h>
 #include "freeipmi.h"
 
 #if defined (_ERR) 

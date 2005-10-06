@@ -1,7 +1,7 @@
 /* 
    ipmi-kcs-interface.h - IPMI KCS SMS Interface
 
-   Copyright (C) 2003-2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,18 +24,6 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if defined(__FreeBSD__)
-#include <sys/types.h>
-#include <machine/cpufunc.h>
-#include <machine/sysarch.h>
-#else
-#include <sys/io.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 #define IPMI_KCS_SLEEP_USECS            0x01
@@ -112,6 +100,7 @@ int8_t ipmi_kcs_test_if_state (ipmi_device_t *dev, u_int8_t status);
 void ipmi_kcs_clear_obf (ipmi_device_t *dev);
 
 /* High level calls */
+void ipmi_enable_old_kcs_init (ipmi_device_t *dev);
 int ipmi_kcs_io_init (u_int16_t sms_io_base, 
 		      u_int8_t reg_space, 
 		      unsigned long sleep_usecs);

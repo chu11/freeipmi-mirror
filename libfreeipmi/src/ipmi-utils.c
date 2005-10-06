@@ -1,7 +1,7 @@
 /* 
    ipmi-utils.c - general utility procedures
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,27 +27,6 @@
    To verify add all the bytes and the checksum and then % 256 should
    yield 0.
 */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <errno.h>
-#ifdef __FreeBSD__
-#include <sys/time.h>
-#endif
-
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <sys/mman.h>
 
 #include "freeipmi.h"
 

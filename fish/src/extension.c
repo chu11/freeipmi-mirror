@@ -15,15 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <guile/gh.h>
-#include "fish.h"
-#include "extension.h"
-#include "scm-procedures.h"
+#include "common.h"
 
 SCM ex_fish_ready_hook;
 int hook_return = 0;
@@ -149,32 +141,17 @@ install_new_procedures (void)
      (fi-set-sms-io-base! #x0CA2)
   */
 
-  gh_new_procedure ("fi-set-sock-timeout!", ex_set_sock_timeout, 1, 0, 0);
-  /* example scheme expression
-     (fi-set-sock-timeout! 3000) ;; 3 secs timeout
-  */
-
   gh_new_procedure ("fi-set-default-driver-poll-interval", 
 		    ex_set_driver_poll_interval, 1, 0, 0);
   /* example scheme expression
      (fi-set-default-driver-poll-interval 100)
   */
 
-  gh_new_procedure ("fi-get-sock-timeout", ex_get_sock_timeout, 0, 0, 0);
+  gh_new_procedure ("fi-ping", ex_ipmi_ping, 2, 0, 0);
   /* example scheme expression
-     (define timeout (fi-set-sock-timeout))
+     (fi-ping "ipmi.gnu.org" timeout)
   */
 
-  gh_new_procedure ("fi-ping", ex_ipmi_ping, 1, 0, 0);
-  /* example scheme expression
-     (fi-ping "ipmi.gnu.org")
-  */
-
-  gh_new_procedure ("fi-kcs-get-dev-id-display", ex_kcs_get_dev_id_display, 0, 0, 0);
-  /* example scheme expression
-     (fi-kcs-get-dev-id-display)
-  */
-  
   gh_new_procedure ("fi-command-line", ex_get_script_command_line, 0, 0, 0);
   /* example scheme expression
      (display (fi-command-line))
@@ -571,6 +548,11 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-get-sdr-repo-info)
   */
+  
+  gh_new_procedure ("fi-ipmi-open", ex_ipmi_open, 1, 0, 0);
+  gh_new_procedure ("fi-ipmi-close", ex_ipmi_close, 0, 0, 0);
+  gh_new_procedure ("fi-cmd-get-dev-id-display", ex_cmd_get_dev_id_display, 0, 0, 0);
+  
 }
 
 // guile initialization area

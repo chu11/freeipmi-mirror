@@ -110,7 +110,7 @@ struct ipmi_device
     struct 
     {
       int                local_sockfd;
-      struct sockaddr    *remote_host;
+      struct sockaddr    remote_host;
       unsigned int       remote_host_len;
       
       u_int8_t           auth_type;

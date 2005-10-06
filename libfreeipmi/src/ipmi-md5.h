@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.h,v 1.2 2004-12-17 02:14:56 chu11 Exp $
+ *  $Id: ipmi-md5.h,v 1.3 2005-10-06 10:41:09 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,8 +30,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include <sys/types.h>
 
 #define IPMI_MD5_BLOCK_LEN       64
 #define IPMI_MD5_BLOCK_WORDS_LEN (IPMI_MD5_BLOCK_LEN/4)

@@ -1,3 +1,216 @@
+2005-10-06  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(ipmi_cmd_set_power_restore_policy2,
+	ipmi_cmd_get_chassis_status2): Functions does not allocate
+	obj_cmd_rs.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c (ipmi_cmd_get_dev_id):
+	like wise.
+
+	* ibfreeipmi/src/ipmi-lan-cmds.c (ipmi_cmd_lan_set_arp2,
+	ipmi_lan_set_gratuitous_arp_interval2,
+	ipmi_cmd_lan_set_auth_type_enables2,
+	ipmi_cmd_lan_set_ip_addr_source2, ipmi_cmd_lan_set_ip_addr2,
+	ipmi_cmd_lan_set_default_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2, ipmi_cmd_lan_set_vlan_id2,
+	ipmi_cmd_lan_set_vlan_priority2, ipmi_cmd_lan_set_subnet_mask2,
+	ipmi_cmd_lan_set_mac_addr2, ipmi_cmd_lan_set_default_gw_mac_addr2,
+	ipmi_cmd_lan_set_hackup_gw_mac_addr2, ipmi_cmd_lan_get_arp2,
+	ipmi_cmd_lan_get_gratuitous_arp_interval2,
+	ipmi_cmd_lan_get_auth_type_enables2,
+	ipmi_cmd_lan_get_ip_addr_source2, ipmi_cmd_lan_get_ip_addr2,
+	ipmi_cmd_lan_get_default_gw_ip_addr2,
+	ipmi_cmd_lan_get_backup_gw_ip_addr2,
+	ipmi_cmd_lan_get_subnet_mask2, ipmi_cmd_lan_get_mac_addr2,
+	ipmi_cmd_lan_get_default_gw_mac_addr2,
+	ipmi_cmd_lan_get_backup_gw_mac_addr2, ipmi_cmd_suspend_bmc_arps2,
+	ipmi_cmd_lan_get_vlan_id2, ipmi_cmd_lan_get_vlan_priority2): like
+	wise.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_auth_caps2, ipmi_cmd_get_session_challenge2,
+	ipmi_cmd_activate_session2, ipmi_cmd_set_session_priv_level2,
+	ipmi_lan_open_session2, ipmi_lan_close_session2,
+	ipmi_cmd_set_channel_access2, ipmi_cmd_set_user_name2,
+	ipmi_cmd_get_user_name2, ipmi_cmd_set_user_password2,
+	ipmi_cmd_set_user_access2, ipmi_cmd_get_user_access2,
+	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): like
+	wise.
+	
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c (ipmi_cmd_get_repo_info2,
+	ipmi_cmd_get_repo_alloc_info2, ipmi_cmd_reserve_repo2,
+	ipmi_cmd_get_sdr2): like wise.
+
+	* libfreeipmi/src/ipmi-sel-cmds.c (ipmi_cmd_get_sel_info2,
+	ipmi_cmd_get_sel_alloc_info2, ipmi_cmd_reserve_sel2,
+	ipmi_cmd_get_sel_entry2, ipmi_cmd_delete_sel_entry2,
+	ipmi_cmd_clear_sel2): like wise.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c
+	(ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
+	ipmi_cmd_get_sensor_thresholds2): like wise.
+
+	* libfreeipmi/src/ipmi-serial-cmds.c
+	(ipmi_cmd_set_serial_connmode2,
+	ipmi_cmd_set_serial_page_blackout_interval2,
+	ipmi_cmd_set_serial_retry_time2, ipmi_cmd_set_serial_comm_bits2,
+	ipmi_cmd_get_serial_connmode2, ipmi_cmd_get_serial_page_blackout2,
+	ipmi_cmd_get_serial_retry_time2, ipmi_cmd_get_serial_comm_bits2):
+	like wise.
+
+	* libfreeipmi/src/ipmi-sol-cmds.c
+	(ipmi_cmd_sol_conf_sol_enable_disable2,
+	ipmi_cmd_sol_conf_sol_enable2, ipmi_cmd_sol_conf_sol_disable2,
+	ipmi_cmd_sol_conf_get_sol_enable2): like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-pef-cmds.c
+	(ipmi_cmd_set_pef_control2, ipmi_cmd_set_global_action_control2,
+	ipmi_cmd_set_startup_delay2, ipmi_cmd_set_alert_startup_delay2,
+	ipmi_cmd_set_num_event_filters2, ipmi_cmd_set_filter_table_entry2,
+	ipmi_cmd_set_filter_table_data1_2,
+	ipmi_cmd_set_num_alert_policies2, ipmi_cmd_alert_immediate2,
+	ipmi_cmd_get_pef_alert_string2,
+	ipmi_cmd_get_pef_alert_string_keys2,
+	ipmi_cmd_get_pef_num_alert_policies2,
+	ipmi_cmd_get_pef_filter_data1_2, ipmi_cmd_get_pef_control2,
+	ipmi_cmd_get_pef_global_action_control2,
+	ipmi_cmd_get_pef_startup_delay2,
+	ipmi_cmd_get_pef_alert_startup_delay2,
+	ipmi_cmd_get_pef_num_event_filters2,
+	ipmi_cmd_get_pef_filter_table_entry2, ipmi_cmd_get_pef_caps2,
+	ipmi_cmd_arm_pef_postpone_timer2,
+	ipmi_cmd_set_last_processed_event2,
+	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2): new
+	functions.
+
+	* freeipmi/libfreeipmi/src/fiid.h (fiid_obj_alloca): New macro.
+
+	* freeipmi/libfreeipmi/src/ipmi-interface.c (ipmi_outofband_free,
+	ipmi_inband_free): New functions.
+
+	* freeipmi/libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband,
+	ipmi_open_inband, ipmi_outofband_close, ipmi_inband_close):
+	Improved.
+
+	* freeipmi/libfreeipmi/src/ipmi-kcs-interface.c
+	(ipmi_enable_old_kcs_init): New function.
+
+	* freeipmi/libfreeipmi/src/freeipmi.h: Updated.
+
+	* freeipmi/libfreeipmi/src/bit-ops.[ch]: #include cleanup.
+
+	* freeipmi/libfreeipmi/src/fiid.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-debug.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-error.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-hmac.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-lan-interface.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-locate.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-md2.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-md5.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-msg-interface-desc.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-netfn-spec.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-ping.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sdr-record-types.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sdr-repo-cache.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sel-record-types.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-semaphores.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sensor-api.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sensor-event-messages.c: like
+	wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sensor-types.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sensor-utils.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sessions.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-sha1.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-smic-interface.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-ssif-interface.c: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-utils.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/ipmi-watchdog.c: like wise.
+
+	* freeipmi/libfreeipmi/src/libfreeipmi.c: like wise.
+
+	* freeipmi/libfreeipmi/src/pci-locate.c: like wise.
+
+	* freeipmi/libfreeipmi/src/rmcp.[ch]: like wise.
+
+	* freeipmi/libfreeipmi/src/smbios-locate.c: like wise.
+
+	* freeipmi/libfreeipmi/src/xmalloc.[ch]: like wise.
+
+	* freeipmi/doc/examples/udm-test.c: Updated.
+
+	* freeipmi/fish/src/common.h: New file.
+
+	* freeipmi/fish/src/fish-argp.[ch]: New files.
+
+	* freeipmi/fish/src/extension.c (install_new_procedures): Added
+	fi-ipmi-open, fi-ipmi-close, fi-cmd-get-dev-id-display procedures.
+	Removed fi-set-sock-timeout!, fi-get-sock-timeout and
+	fi-kcs-get-dev-id-display procedures.
+
+	* freeipmi/fish/src/fish.[ch]: Major code cleanup.
+
+	* freeipmi/fish/src/interpreter.c: Code cleanup.
+
+	* freeipmi/fish/src/ipmi-wrapper.[ch]: Major code cleanup.
+
+	* freeipmi/fish/src/ipmi-wrapper.c (fi_get_ipmi_device,
+	fi_ipmi_open, fi_ipmi_close): New functions.
+
+	* freeipmi/fish/src/Makefile.am: Updated.
+
+	* freeipmi/fish/src/scm-procedures.c (ex_get_sock_timeout,
+	ex_set_sock_timeout, ex_kcs_get_dev_id_display): Removed.
+
+	* freeipmi/fish/src/scm-procedures.c (ex_cmd_get_dev_id_display,
+	ex_get_bmc_info, ex_ipmi_open, ex_ipmi_close): New functions.
+
+	* freeipmi/fish/src/bmc-conf2.c: #include cleanup.
+
+	* freeipmi/fish/src/fi-commands.c: like wise.
+
+	* freeipmi/fish/src/fi-utils.c: like wise.
+
+	* freeipmi/fish/src/fi-utils.h: like wise.
+
+	* freeipmi/fish/src/guile-wrapper.c: like wise.
+
+	* freeipmi/fish/src/xmalloc.[ch]: like wise.
+
+	* freeipmi/fish/Makefile.am: Updated.
+
+	* freeipmi/fish/extensions/bmc-info.scm: Rewritten.
+
+	* freeipmi/fish/extensions/discovery.scm: Updated.
+
+	* freeipmi/fish/extensions/Makefile.am: Updated.
+
+	* freeipmi/fish/scripts/bmc-info/bmc-info.in: Rewritten.
+
 2005-10-04  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Update with new files.

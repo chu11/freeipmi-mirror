@@ -19,60 +19,7 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#endif
-
-#include <sys/socket.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <errno.h>
-
 #include "freeipmi.h"
-
 
 /* IPMI LAN Message Request Header */
 fiid_template_t tmpl_lan_msg_hdr_rq =
@@ -1390,8 +1337,6 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	       fiid_template_t tmpl_cmd_rs)
 {
   if (!(dev && 
-	dev->io.outofband.remote_host && 
-	dev->io.outofband.remote_host_len && 
 	dev->io.outofband.local_sockfd && 
 	tmpl_cmd_rq && 
 	obj_cmd_rq && 
@@ -1456,7 +1401,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
     
     status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0, 
-			      dev->io.outofband.remote_host, 
+			      &(dev->io.outofband.remote_host), 
 			      dev->io.outofband.remote_host_len);
     ERR (status != -1);
   }

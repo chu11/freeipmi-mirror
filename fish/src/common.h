@@ -1,7 +1,9 @@
 /* 
-   ipmi-netfn-spec.c: IPMI Network Function Specification
+   $Id: common.h,v 1.1 2005-10-06 10:41:09 balamurugan Exp $ 
 
-   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+   common.c - Common header definitions.
+
+   Copyright (C) 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,15 +20,28 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
+#ifndef _COMMON_H
+#define _COMMON_H
+
 #include "freeipmi.h"
 
-/* Assemble NetFn/LUN byte for IMPI command */
-u_int8_t
-ipmi_netfn2byte (net_fn_t net_fn)
-{
-  u_int8_t netfn_byte=0;
-  /* 2 LS bits are LUN; rest are NetFn */
-  netfn_byte = (net_fn.fn<<2);
-  netfn_byte += net_fn.lun;
-  return netfn_byte;
-}
+#include <argp.h>
+#include <pwd.h>
+#include <termios.h>
+#include <guile/gh.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
+#include "xmalloc.h"
+#include "fish-argp.h"
+#include "fi-utils.h"
+#include "guile-wrapper.h"
+#include "extension.h"
+#include "interpreter.h"
+#include "ipmi-wrapper.h"
+#include "bmc-conf2.h"
+#include "scm-procedures.h"
+#include "fi-commands.h"
+#include "fish.h"
+
+#endif

@@ -111,13 +111,13 @@ int8_t ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number, fiid_obj_t obj_da
 
 int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
 					u_int8_t sensor_number, 
-					fiid_obj_t *obj_data_rs);
+					fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
 				       u_int8_t sensor_number, 
-				       fiid_obj_t *obj_data_rs);
+				       fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
 					u_int8_t sensor_number, 
-					fiid_obj_t *obj_data_rs);
+					fiid_obj_t obj_cmd_rs);
 
 
 #ifdef __cplusplus

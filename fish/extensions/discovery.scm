@@ -36,7 +36,7 @@
   (set! fi-discovery-cache '())
   (map
    (lambda (ipaddr)
-     (if (eq? (fi-ping ipaddr) #t)
+     (if (eq? (fi-ping ipaddr 3000) #t)
 	 (begin
 	   (set! fi-discovery-cache
 		 (append fi-discovery-cache (list ipaddr)))
@@ -68,25 +68,3 @@
  '("who" 
    "who\n\t- dislay list of IPMI compatible systems discovered"))
 
-(define (set-sock-timeout! args)
-  "set socket timeout value in milli seconds"
-  (set! args (list->strlist args))
-  (if (= (length args) 1)
-      (fi-set-sock-timeout! (string->number (car args)))
-      (display "set-sock-timeout!: wrong number of arguments, type \"help set-sock-timeout!\" for more info\n")))
-
-(fi-register-command! 
- '("set-sock-timeout!"
-   "set-sock-timeout!\n\t- sets socket timeout value in milli seconds"))
-
-(define (get-sock-timeout args)
-  "get current socket timeout value in milli seconds"
-  (display (string-append "current socket timeout: "
-			  (number->string (fi-get-sock-timeout))
-			  "ms.\n")))
-(fi-register-command! 
- '("get-sock-timeout"
-   "get-sock-timeout\n\t- get current socket timeout value in milli seconds"))
-
-   
-      

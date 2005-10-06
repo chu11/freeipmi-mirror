@@ -16,39 +16,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <stdlib.h>
-#include <assert.h>
-#include <guile/gh.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#include "freeipmi.h"
-
-#include "fish.h"
-#include "fi-utils.h"
-#include "fi-commands.h"
-#include "interpreter.h"
-#include "ipmi-wrapper.h"
+#include "common.h"
 
 char *commands[] = { "eval", "help", "load", "quit", "reset", "status", "toggle", NULL};
 
@@ -313,37 +281,6 @@ interpreter (char *cmd_line)
       else
 	syntax_error (command);
     }
-#if 0
-  else if (strcasecmp (command, "pon") == 0)
-    {
-      unsigned int session_id, session_seq_num;
-      unsigned char rq_seq=0;
-      if (lan_open_session (fi_get_sockfd (), "192.168.1.9", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 0, 0, IPMI_PRIV_LEVEL_ADMIN, &session_id, &session_seq_num) == 0)
-	{
-	  /* rq_seq++
-	  session_seq_num++;
-	  chassis_ctrl (fi_get_sockfd (), "192.168.1.9", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, IPMI_PRIV_LEVEL_ADMIN, 0, 0, session_id, inbound_seq_num, session_seq_num, IPMI_CHASSIS_CTRL_POWER_UP);
-	  */
-	  rq_seq++;
-	  session_seq_num++;
-	  lan_close_session (fi_get_sockfd (), "192.168.1.9", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, session_seq_num, session_id, 0,  rq_seq, session_id);
-	}
-    }
-  else if (strcasecmp (command, "poff") == 0)
-    {
-      unsigned int session_id = 0, inbound_seq_num = 0;
-      unsigned char session_seq_num = 0;
-      if (open_session (fi_get_sockfd (), "192.168.1.56", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, IPMI_PRIV_LEVEL_ADMIN, 0, 0, &session_id, &inbound_seq_num, &session_seq_num) == 0)
-	{
-	  inbound_seq_num++;
-	  session_seq_num++;
-	  chassis_ctrl (fi_get_sockfd (), "192.168.1.56", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, IPMI_PRIV_LEVEL_ADMIN, 0, 0, session_id, inbound_seq_num, session_seq_num, IPMI_CHASSIS_CTRL_POWER_DOWN);
-	  inbound_seq_num++;
-	  session_seq_num++;
-	  close_session (fi_get_sockfd (), "192.168.1.56", IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, IPMI_PRIV_LEVEL_ADMIN, 0, 0, session_id, inbound_seq_num, session_seq_num, session_id);
-	}
-     } 
-#endif
   else if (gh_list_p (dynamic_commands) == 1)
     {
       int i = 0;

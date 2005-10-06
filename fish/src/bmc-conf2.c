@@ -16,59 +16,10 @@
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include "freeipmi.h"
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
+#include "common.h"
 
 #define SET_SELECTOR      0x0
 #define BLOCK_SELECTOR    0x0
-
-#include <stdlib.h>
-
-#include "fish.h"
-#include "fi-utils.h"
-#include "ipmi-wrapper.h"
-#include "bmc-conf2.h"
 
 /* struct bmc_user */
 /* { */

@@ -1,5 +1,6 @@
 /* 
-   ipmi-interface.c: IPMI Unified Driver Model (API interface for all IPMI drivers)
+   ipmi-interface.c: IPMI Unified Driver Model (API interface for all
+   IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -19,54 +20,6 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#include <stdlib.h>
-#include <time.h>
-#include <fcntl.h>
-#include <errno.h>
 #include "freeipmi.h"
 
 fiid_template_t tmpl_inband_hdr =
@@ -75,6 +28,28 @@ fiid_template_t tmpl_inband_hdr =
     {6, "net_fn"},
     {0, ""}
   };
+
+
+static void 
+ipmi_outofband_free (ipmi_device_t *dev)
+{
+  fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
+  fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
+  fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
+  fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
+  fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
+  fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
+  fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
+  fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
+}
+
+static void 
+ipmi_inband_free (ipmi_device_t *dev)
+{
+  fiid_obj_free (dev->io.inband.rq.obj_hdr);
+  fiid_obj_free (dev->io.inband.rs.obj_hdr);
+  ipmi_xfree (dev->io.inband.dev_name);
+}
 
 int 
 ipmi_open_outofband (ipmi_device_t *dev, 
@@ -140,15 +115,11 @@ ipmi_open_outofband (ipmi_device_t *dev,
   
   dev->type = driver_type;
   dev->mode = mode;
-  /* No probing for out-of-band driver */
-  dev->io.outofband.remote_host     = remote_host;
+  memcpy (&(dev->io.outofband.remote_host), 
+	  remote_host, 
+	  sizeof (struct sockaddr));
   dev->io.outofband.remote_host_len = remote_host_len;
   dev->io.outofband.auth_type = auth_type;
-  /* dev is already initialized, no need to init these again */
-  /*   memset (dev->io.outofband.challenge_string, 0, IPMI_SESSION_CHALLENGE_STR_LEN); */
-  /*   dev->io.outofband.session_id = 0; */
-  /*   dev->io.outofband.session_seq_num = 0; */
-  /*   dev->io.outofband.rq_seq = 0; */
   if (username != NULL)
     {
       memcpy (dev->io.outofband.username, 
@@ -163,10 +134,8 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   dev->io.outofband.priv_level = priv_level;
   
-  /* Prepare out-of-band headers */
   dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
   dev->io.outofband.rs.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
-  
   switch (dev->io.outofband.auth_type)
     {
     case IPMI_SESSION_AUTH_TYPE_NONE:
@@ -185,44 +154,88 @@ ipmi_open_outofband (ipmi_device_t *dev,
       fprintf (stderr, "%s:%d:%s(): auth_type OEM is not supported\n", 
 	       __FILE__, __LINE__, __PRETTY_FUNCTION__);
     default:
+      ipmi_outofband_free (dev);
       memset (dev, 0, sizeof (ipmi_device_t));
       errno = EINVAL;
       return (-1);
     }
   dev->io.outofband.rq.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rq;
   dev->io.outofband.rs.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rs;
-  
   dev->io.outofband.rq.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
-  FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_hdr_rmcp,
-		  *dev->io.outofband.rq.tmpl_hdr_rmcp_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_hdr_rmcp,
-		  *dev->io.outofband.rs.tmpl_hdr_rmcp_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_hdr_session,
-		  *dev->io.outofband.rq.tmpl_hdr_session_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_hdr_session,
-		  *dev->io.outofband.rs.tmpl_hdr_session_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_msg_hdr,
-		  *dev->io.outofband.rq.tmpl_msg_hdr_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_msg_hdr,
-		  *dev->io.outofband.rs.tmpl_msg_hdr_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rq.obj_msg_trlr,
-		  *dev->io.outofband.rq.tmpl_msg_trlr_ptr);
-  FIID_OBJ_ALLOC (dev->io.outofband.rs.obj_msg_trlr,
-		  *dev->io.outofband.rs.tmpl_msg_trlr_ptr);
+  dev->io.outofband.rq.obj_hdr_rmcp = 
+    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
+  if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  dev->io.outofband.rs.obj_hdr_rmcp = 
+    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
+  if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  
+  dev->io.outofband.rq.obj_hdr_session = 
+    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+  if (dev->io.outofband.rq.obj_hdr_session == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  dev->io.outofband.rs.obj_hdr_session = 
+    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
+  if (dev->io.outofband.rs.obj_hdr_session == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  
+  dev->io.outofband.rq.obj_msg_hdr = 
+    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
+  if (dev->io.outofband.rq.obj_msg_hdr == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  dev->io.outofband.rs.obj_msg_hdr = 
+    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
+  if (dev->io.outofband.rs.obj_msg_hdr == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  
+  dev->io.outofband.rq.obj_msg_trlr = 
+    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
+  if (dev->io.outofband.rq.obj_msg_trlr == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  dev->io.outofband.rs.obj_msg_trlr = 
+    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+  if (dev->io.outofband.rs.obj_msg_trlr == NULL)
+    {
+      ipmi_outofband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
   
   /* Open client (local) UDP socket */
   if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
     {
-      fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
-      fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
-      fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
-      fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
-      fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
-      fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
-      fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
-      fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
+      ipmi_outofband_free (dev);
       memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
@@ -231,15 +244,9 @@ ipmi_open_outofband (ipmi_device_t *dev,
      -- Anand Babu */
   if ((status = ipmi_lan_open_session2 (dev)) == -1)
     {
-      /* close the opened socket */
-      fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
-      fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
-      fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
-      fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
-      fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
-      fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
-      fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
-      fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
+      if (dev->io.outofband.local_sockfd)
+	close (dev->io.outofband.local_sockfd);
+      ipmi_outofband_free (dev);
       memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
@@ -263,19 +270,16 @@ ipmi_open_inband (ipmi_device_t *dev,
   switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
-      if (ipmi_locate (IPMI_INTERFACE_KCS, &(dev->io.inband.locate_info)) == NULL)
-	return (-1);
+      ERR (ipmi_locate (IPMI_INTERFACE_KCS, &(dev->io.inband.locate_info)) != NULL);
       break;
     case IPMI_DEVICE_SMIC:
-      if (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) == NULL)
-	return (-1);
+      ERR (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) != NULL);
       break;
     case IPMI_DEVICE_BT:
       errno = ENOTSUP;
       return (-1);
     case IPMI_DEVICE_SSIF:
-      if (ipmi_locate (IPMI_INTERFACE_SSIF, &(dev->io.inband.locate_info)) == NULL)
-	return (-1);
+      ERR (ipmi_locate (IPMI_INTERFACE_SSIF, &(dev->io.inband.locate_info)) != NULL);
       break;
     default:
       errno = EINVAL;
@@ -327,10 +331,22 @@ ipmi_open_inband (ipmi_device_t *dev,
   dev->io.inband.rq.tmpl_hdr_ptr = &tmpl_inband_hdr;
   dev->io.inband.rs.tmpl_hdr_ptr = &tmpl_inband_hdr;
   
-  FIID_OBJ_ALLOC (dev->io.inband.rq.obj_hdr, 
-		  *dev->io.inband.rq.tmpl_hdr_ptr);
-  FIID_OBJ_ALLOC (dev->io.inband.rs.obj_hdr, 
-		  *dev->io.inband.rs.tmpl_hdr_ptr);
+  dev->io.inband.rq.obj_hdr = 
+    fiid_obj_alloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
+  if (dev->io.inband.rq.obj_hdr == NULL)
+    {
+      ipmi_inband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
+  dev->io.inband.rs.obj_hdr = 
+    fiid_obj_alloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
+  if (dev->io.inband.rs.obj_hdr == NULL)
+    {
+      ipmi_inband_free (dev);
+      memset (dev, 0, sizeof (ipmi_device_t));
+      return (-1);
+    }
   
   return (0);
 }
@@ -410,20 +426,12 @@ ipmi_outofband_close (ipmi_device_t *dev)
   fiid_obj_t obj_cmd_rs = NULL;
   
   FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_close_session_rs);
+  retval = ipmi_lan_close_session2 (dev, obj_cmd_rs);
   
-  if (ipmi_lan_close_session2 (dev, obj_cmd_rs) != 0)
-    {
-      retval = -1;
-    }
+  if (dev->io.outofband.local_sockfd)
+    close (dev->io.outofband.local_sockfd);
   
-  fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
-  fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
-  fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
-  fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
-  fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
-  fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
-  fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
-  fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
+  ipmi_outofband_free (dev);
   
   return (retval);
 }
@@ -437,10 +445,7 @@ ipmi_inband_close (ipmi_device_t *dev)
 #endif
 #endif
   
-  fiid_obj_free (dev->io.inband.rq.obj_hdr);
-  fiid_obj_free (dev->io.inband.rs.obj_hdr);
-  
-  ipmi_xfree (dev->io.inband.dev_name);
+  ipmi_inband_free (dev);
   
   if (dev->io.inband.mutex_semid)
     IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);

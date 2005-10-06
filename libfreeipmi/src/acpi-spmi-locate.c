@@ -1,7 +1,8 @@
 /* 
-   acpi-spmi-locate.c - ACPI tables driver to locate IPMI interfaces using SPMI table.
+   acpi-spmi-locate.c - ACPI tables driver to locate IPMI interfaces
+   using SPMI table.
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

@@ -18,20 +18,6 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <errno.h>
-
-/* #define DEBUG */
-
 #include "freeipmi.h"
 
 fiid_template_t tmpl_set_serial_conf_param_rs =
@@ -265,48 +251,6 @@ ipmi_set_serial_connmode (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number, 
-			       u_int8_t basic_mode_enable,
-			       u_int8_t ppp_mode_enable,
-			       u_int8_t terminal_mode_enable,
-			       u_int8_t direct,
-			       fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_serial_conf_param_connmode_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (fill_set_serial_connmode (data_rq, 
-				 channel_number, 
-				 basic_mode_enable, 
-				 ppp_mode_enable, 
-				 terminal_mode_enable, 
-				 direct) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_serial_conf_param_connmode_rq, 
-		 data_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq, 
 					u_int8_t channel_number, 
 					u_int8_t page_blackout_interval)
@@ -361,42 +305,6 @@ ipmi_set_serial_page_blackout_interval (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev, 
-					     u_int8_t channel_number, 
-					     u_int8_t page_blackout_interval, 
-					     fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_serial_conf_param_pageblackout_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (fill_set_serial_page_blackout_interval (data_rq, 
-					       channel_number, 
-					       page_blackout_interval) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_serial_conf_param_pageblackout_rq, 
-		 data_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 fill_set_serial_retry_time (fiid_obj_t obj_data_rq, 
 			    u_int8_t channel_number, 
 			    u_int8_t retry_time)
@@ -448,42 +356,6 @@ ipmi_set_serial_retry_time (u_int8_t channel_number,
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
   return status;
-}
-
-int8_t 
-ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number, 
-				 u_int8_t retry_time, 
-				 fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_serial_conf_param_retry_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (fill_set_serial_retry_time (data_rq, 
-				   channel_number, 
-				   retry_time) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_serial_conf_param_retry_rq, 
-		 data_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
 }
 
 int8_t 
@@ -554,46 +426,6 @@ ipmi_set_serial_comm_bits (u_int8_t channel_number,
 			 obj_data_rs, tmpl_set_serial_conf_param_rs);
   free (obj_data_rq);
   return status;
-}
-
-int8_t 
-ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev, 
-				u_int8_t channel_number, 
-				u_int8_t dtr_hangup,
-				u_int8_t flow_control,
-				u_int8_t bit_rate,
-				fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_set_serial_conf_param_commbits_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (fill_set_serial_comm_bits (data_rq, 
-				  channel_number, 
-				  dtr_hangup,
-				  flow_control,
-				  bit_rate) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_set_serial_conf_param_commbits_rq, 
-		 data_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_set_serial_conf_param_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
 }
 
 int8_t 
@@ -669,47 +501,6 @@ ipmi_get_serial_connmode (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number,
-			       u_int8_t parameter_type,
-			       u_int8_t set_selector,
-			       u_int8_t block_selector,
-			       fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_serial_conf_param_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_serial_conf_param_connmode_rs);
-  
-  ERR (fill_get_serial_conf_param (data_rq, 
-				   IPMI_SERIAL_PARAM_CONNECTION_MODE, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 data_rs, 
-		 tmpl_get_serial_conf_param_connmode_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_serial_conf_param_connmode_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 ipmi_get_serial_page_blackout (u_int8_t channel_number,
 			       u_int8_t parameter_type,
 			       u_int8_t set_selector,
@@ -731,47 +522,6 @@ ipmi_get_serial_page_blackout (u_int8_t channel_number,
 			 obj_data_rs, tmpl_get_serial_conf_param_pageblackout_rs);
   free (obj_data_rq);
   return status;
-}
-
-int8_t 
-ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev, 
-				    u_int8_t channel_number,
-				    u_int8_t parameter_type,
-				    u_int8_t set_selector,
-				    u_int8_t block_selector,
-				    fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_serial_conf_param_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_serial_conf_param_pageblackout_rs);
-  
-  ERR (fill_get_serial_conf_param (data_rq, 
-				   IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 data_rs, 
-		 tmpl_get_serial_conf_param_pageblackout_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_serial_conf_param_pageblackout_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
 }
 
 int8_t 
@@ -799,47 +549,6 @@ ipmi_get_serial_retry_time (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number,
-				 u_int8_t parameter_type,
-				 u_int8_t set_selector,
-				 u_int8_t block_selector,
-				 fiid_obj_t *obj_data_rs)
-{
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
-  
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_serial_conf_param_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_serial_conf_param_retry_rs);
-  
-  ERR (fill_get_serial_conf_param (data_rq, 
-				   IPMI_SERIAL_PARAM_RETRY_TIME, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
-  ERR (ipmi_cmd (dev, 
-		 data_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 data_rs, 
-		 tmpl_get_serial_conf_param_retry_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_serial_conf_param_retry_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
 ipmi_get_serial_comm_bits (u_int8_t channel_number,
 			   u_int8_t parameter_type,
 			   u_int8_t set_selector,
@@ -864,25 +573,234 @@ ipmi_get_serial_comm_bits (u_int8_t channel_number,
 }
 
 int8_t 
+ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev, 
+			       u_int8_t channel_number, 
+			       u_int8_t basic_mode_enable,
+			       u_int8_t ppp_mode_enable,
+			       u_int8_t terminal_mode_enable,
+			       u_int8_t direct,
+			       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_connmode_rq);
+  ERR (fill_set_serial_connmode (obj_cmd_rq, 
+				 channel_number, 
+				 basic_mode_enable, 
+				 ppp_mode_enable, 
+				 terminal_mode_enable, 
+				 direct) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_serial_conf_param_connmode_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_serial_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev, 
+					     u_int8_t channel_number, 
+					     u_int8_t page_blackout_interval, 
+					     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_pageblackout_rq);
+  ERR (fill_set_serial_page_blackout_interval (obj_cmd_rq, 
+					       channel_number, 
+					       page_blackout_interval) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_serial_conf_param_pageblackout_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_serial_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev, 
+				 u_int8_t channel_number, 
+				 u_int8_t retry_time, 
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_retry_rq);
+  ERR (fill_set_serial_retry_time (obj_cmd_rq, 
+				   channel_number, 
+				   retry_time) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_serial_conf_param_retry_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_serial_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev, 
+				u_int8_t channel_number, 
+				u_int8_t dtr_hangup,
+				u_int8_t flow_control,
+				u_int8_t bit_rate,
+				fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_commbits_rq);
+  ERR (fill_set_serial_comm_bits (obj_cmd_rq, 
+				  channel_number, 
+				  dtr_hangup,
+				  flow_control,
+				  bit_rate) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_set_serial_conf_param_commbits_rq, 
+		 obj_cmd_rs, 
+		 tmpl_set_serial_conf_param_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev, 
+			       u_int8_t channel_number,
+			       u_int8_t parameter_type,
+			       u_int8_t set_selector,
+			       u_int8_t block_selector,
+			       fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
+  ERR (fill_get_serial_conf_param (obj_cmd_rq, 
+				   IPMI_SERIAL_PARAM_CONNECTION_MODE, 
+				   channel_number, 
+				   parameter_type, 
+				   set_selector, 
+				   block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_serial_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_serial_conf_param_connmode_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev, 
+				    u_int8_t channel_number,
+				    u_int8_t parameter_type,
+				    u_int8_t set_selector,
+				    u_int8_t block_selector,
+				    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
+  ERR (fill_get_serial_conf_param (obj_cmd_rq, 
+				   IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
+				   channel_number, 
+				   parameter_type, 
+				   set_selector, 
+				   block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_serial_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_serial_conf_param_pageblackout_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
+ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev, 
+				 u_int8_t channel_number,
+				 u_int8_t parameter_type,
+				 u_int8_t set_selector,
+				 u_int8_t block_selector,
+				 fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
+  ERR (fill_get_serial_conf_param (obj_cmd_rq, 
+				   IPMI_SERIAL_PARAM_RETRY_TIME, 
+				   channel_number, 
+				   parameter_type, 
+				   set_selector, 
+				   block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_serial_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_serial_conf_param_retry_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev, 
 				u_int8_t channel_number,
 				u_int8_t parameter_type,
 				u_int8_t set_selector,
 				u_int8_t block_selector,
-				fiid_obj_t *obj_data_rs)
+				fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t data_rq = NULL;
-  fiid_obj_t data_rs = NULL;
+  fiid_obj_t obj_cmd_rq = NULL;
   
   ERR (dev != NULL);
-  ERR (obj_data_rs != NULL);
+  ERR (obj_cmd_rs != NULL);
   
-  *obj_data_rs = NULL;
-  
-  FIID_OBJ_ALLOCA (data_rq, tmpl_get_serial_conf_param_rq);
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_serial_conf_param_commbits_rs);
-  
-  ERR (fill_get_serial_conf_param (data_rq, 
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
+  ERR (fill_get_serial_conf_param (obj_cmd_rq, 
 				   IPMI_SERIAL_PARAM_COMM_BITS, 
 				   channel_number, 
 				   parameter_type, 
@@ -891,15 +809,11 @@ ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev,
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
-		 data_rq, 
+		 obj_cmd_rq, 
 		 tmpl_get_serial_conf_param_rq, 
-		 data_rs, 
+		 obj_cmd_rs, 
 		 tmpl_get_serial_conf_param_commbits_rs) == 0);
-  
-  *obj_data_rs = fiid_obj_dup (data_rs, tmpl_get_serial_conf_param_commbits_rs);
-  
-  ERR (*obj_data_rs != NULL);
-  ERR (ipmi_comp_test (data_rs) == 1);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
   return (0);
 }

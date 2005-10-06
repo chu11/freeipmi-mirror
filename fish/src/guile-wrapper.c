@@ -15,13 +15,7 @@
    along with this program; if not, write to the Free Software
    Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-#include <guile/gh.h>
-#include "guile-wrapper.h"
+#include "common.h"
 
 SCM
 fish_exception_handler (void *data, SCM tag, SCM throw_args)

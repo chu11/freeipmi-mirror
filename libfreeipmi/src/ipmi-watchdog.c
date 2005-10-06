@@ -1,7 +1,7 @@
 /* 
    ipmi-msg-support-cmds.c - IPMI Message Support Commands
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,22 +17,6 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <errno.h>
-#ifdef __FreeBSD__
-#include <sys/types.h>
-#endif
-#include <netinet/in.h>
 
 #include "freeipmi.h"
 

@@ -61,19 +61,19 @@ int8_t ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
 int8_t ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
 					      u_int8_t channel_number, 
 					      u_int8_t sol_payload, 
-					      fiid_obj_t *obj_data_rs);
+					      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
 				      u_int8_t channel_number, 
-				      fiid_obj_t *obj_data_rs);
+				      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
 				       u_int8_t channel_number, 
-				       fiid_obj_t *obj_data_rs);
+				       fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
 					  u_int8_t channel_number,
 					  u_int8_t parameter_type,
 					  u_int8_t set_selector,
 					  u_int8_t block_selector,
-					  fiid_obj_t *obj_data_rs);
+					  fiid_obj_t obj_cmd_rs);
 
 
 #ifdef __cplusplus

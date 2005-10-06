@@ -23,21 +23,11 @@
 extern "C" {
 #endif
 
-#if HAVE_CONFIG_H
-# include <config.h>
-#endif
-
 #if __STDC__
 # define __VOID void
 #else
 # define __VOID char
 #endif
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <sys/types.h>
 
 #if STDC_HEADERS
 # include <stdlib.h>
@@ -46,18 +36,6 @@ __VOID *calloc ();
 __VOID *malloc ();
 __VOID *realloc ();
 void free ();
-#endif
-
-#if ENABLE_NLS
-# include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define textdomain(Domain)
-# define _(Text) Text
-#endif
-
-#ifndef EXIT_FAILURE
-# define EXIT_FAILURE 1
 #endif
 
 /* Prototypes for functions defined here.  */

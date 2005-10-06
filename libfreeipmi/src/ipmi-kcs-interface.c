@@ -1,7 +1,7 @@
 /* 
    ipmi-kcs-interface.c: IPMI - Keyboard Controller Style - SMS Interface
 
-   Copyright (C) 2003-2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,63 +19,7 @@
 
 */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-/* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
- #pragma alloca
-#  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-char *alloca ();
-#   endif
-#  endif
-# endif
-#endif
-
-#include <stdio.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-static void*
-memcpy (void *dest, const void *src, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-  return dest;
-}
-# endif
-# ifndef HAVE_MEMSET
-static void*
-memset (void *s, int c, size_t n)
-{
-  while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-  return s;
-}
-# endif
-#endif
-
-#if defined(__FreeBSD__) && !defined(USE_IOPERM)
-#include <fcntl.h>
-#endif
-
-#include <errno.h>
 #include "freeipmi.h"
-
-#if defined(__FreeBSD__)
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (port, data)
-#else
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (data, port)
-#endif
 
 /* FIXME: This whole set of global variables should go. It is replaced
           by ipmi_device_t structure. -- Anand Babu */
@@ -105,6 +49,12 @@ ipmi_kcs_get_mutex_semid (void)
 
 /* FIXME: This function has to go. It is replaced by ipmi_open_inband 
             -- Anand Babu */
+void 
+ipmi_enable_old_kcs_init (ipmi_device_t *dev)
+{
+  _dev = *dev;
+}
+
 int
 ipmi_kcs_io_init (u_int16_t sms_io_base, 
 		  u_int8_t reg_space, 

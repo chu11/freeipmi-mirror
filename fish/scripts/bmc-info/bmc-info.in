@@ -1,11 +1,8 @@
 #! @prefix@/sbin/fish -s
 !#
-(catch 'misc-error
-       (lambda ()
-	(bmc-info-main (fi-command-line)))
-       (lambda (k args . opts)
-	 (display "bmc-info: error: ")
-	 (display (cadr opts))
-	 (newline)))
+
+(let ((cmd-args (bmc-info-argp (fi-command-line))))
+  (if (list? cmd-args)
+      (bmc-info-main cmd-args)))
 (fi-exit bmc-info-exit-status)
 

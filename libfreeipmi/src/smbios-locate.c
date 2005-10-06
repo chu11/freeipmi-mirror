@@ -1,7 +1,7 @@
 /* 
    smbios-locate.c - SMBIOS driver to locate IPMI interfaces.
 
-   Copyright (C) 2003, 2004,2005 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,27 +22,7 @@
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#ifdef HAVE_FCNTL_H
-#include <fcntl.h>
-#endif
-
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
-#include <sys/mman.h>
-
-#ifdef STDC_HEADERS
-#include <string.h>
-#endif
-
-#include <limits.h>
 #include "freeipmi.h"
-
 
 fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {

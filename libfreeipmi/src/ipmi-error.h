@@ -1,7 +1,7 @@
 /* 
    ipmi-error.h - IPMI error handling
 
-   Copyright (C) 2003, 2004 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,10 +22,6 @@
 
 #ifndef _IPMI_ERROR_H
 #define	_IPMI_ERROR_H
-
-#include <stdio.h>
-#include <syslog.h>
-#include <errno.h>
 
 #ifdef __cplusplus
 extern "C" {

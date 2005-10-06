@@ -29,21 +29,20 @@ typedef struct channel_info
   u_int8_t actual_protocol_type;
 } channel_info;
 
-int ipmi_ping (int sockfd, char *hostname, u_int8_t *presence_pong);
-int lan_open_session (int sockfd, char *hostname, u_int8_t auth_type, char *username, char *auth_code, u_int8_t priv_level, u_int32_t *session_id, u_int32_t *session_seq_num, u_int8_t *rq_seq);
-int8_t lan_close_session (int sockfd, char *hostname, u_int8_t auth_type, u_int32_t session_seq_num, u_int32_t session_id, char *auth_code, u_int8_t rq_seq, u_int32_t close_session_id);
-int display_get_dev_id (u_int8_t *cmd_rs, u_int32_t cmd_rs_len);
+ipmi_device_t *fi_get_ipmi_device ();
+int fi_ipmi_open (struct arguments *args);
+int fi_ipmi_close ();
 
-#if 0
-int chassis_ctrl (int sockfd, char *hostname, unsigned char auth_type, unsigned char priv_level, char *username, char *passwd, unsigned int session_id, unsigned int inbound_seq_num, unsigned char session_seq_num, unsigned char chassis_ctrl);
-#endif
+char *get_sdr_cache_filename ();
 
 channel_info *get_channel_info_list ();
 int8_t get_lan_channel_number ();
 int8_t get_serial_channel_number ();
-int display_channel_info ();
+u_int8_t get_lan_channel_number_known ();
+u_int8_t get_serial_channel_number_known ();
 
-char *get_ipmi_host_ip_address ();
-char *get_sdr_cache_filename ();
+int display_get_dev_id ();
+
+int ipmi_ping (char *host, unsigned int sock_timeout);
 
 #endif
