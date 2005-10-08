@@ -46,130 +46,327 @@
   (list? (member sensor-id sensors-ignored-list)))
 
 (define (sensors-display-usage)
-  (display sensors-program-short-name)
-  (display " --help --usage --version --verbose --all \\\n")
-  (display (make-string (string-length sensors-program-short-name) #\space))
-  (display " --sdr-info --flush-cache --list-groups \\\n")
-  (display (make-string (string-length sensors-program-short-name) #\space))
-  (display " --group=GROUP-NAME --sensors=SENSORS-LIST\n")
-  (display "\tDisplays current readings of sensor chip through BMC.\n"))
+  (begin 
+    (display "Usage: ipmi-sensors [-iflv?V] [-h IPMIHOST] [-u USERNAME]\n")
+    (display "                    [-p PASSWORD] [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
+    (display "                    [-g GROUP] [-s SENSORS-LIST]\n")
+    (display "                    [--driver-poll-interval=USEC]\n")
+    (display "                    [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
+    (display "                    [--username=USERNAME] [--password=PASSWORD]\n")
+    (display "                    [--auth-type=AUTHTYPE]\n")
+    (display "                    [--priv-level=PRIVILEGE-LEVEL] [--verbose]\n")
+    (display "                    [--sdr-info] [--flush-cache] [--list-groups]\n")
+    (display "                    [--all] [--group=GROUP] [--sensors=SENSORS-LIST]\n")
+    (display "                    [--help] [--usage] [--version]\n")))
 
 (define (sensors-display-help)
-  (display "IPMI Sensors displays current readings of sensor chip through BMC.\n\n")
-  (display "Options:\n") 
-  (display "  -u, --usage            Show usage.\n") 
-  (display "  -h, --help             Show help.\n") 
-  (display "  -V, --version          Show version.\n") 
-  (display "  -v, --verbose          Increase verbosity in output.\n") 
-  (display "      -vv                Very verbose in output.\n")
-  (display "  -i, --sdr-info         Show SDR Information.\n") 
-  (display "  -f, --flush-cache      Flush sensor cache.\n") 
-  (display "  -l, --list-groups      List sensor groups.\n") 
-  (display "  -a, --all              Display all sensors.(override sensors ignore-list)\n")
-  (display "  -g GROUP-NAME, --group=GROUP-NAME    Show sensors belongs to given group.\n")
-  (display "  -s SENSORS-LIST, --sensors=SENSORS-LIST    Show listed sensors.\n"))
+  (begin 
+    (display "Usage: ipmi-sensors [OPTION...] \n")
+    (display "ipmi-sensors displays current readings of sensor chips through BMC.\n")
+    (display "\n")
+    (display "      --driver-poll-interval=USEC\n")
+    (display "                             User USEC driver poll interval.\n")
+    (display "      --sms-io-base=SMS-IO-BASE   SMS IO Base address.\n")
+    (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
+    (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
+    (display "                             length is 16.\n")
+    (display "  -p, --password=PASSWORD    Use PASSWORD instead of NULL.  Maximum PASSWORD\n")
+    (display "                             length is 16.\n")
+    (display "  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of NONE.  Allowed values are\n")
+    (display "                             NONE, MD2, MD5, PLAIN and OEM.\n")
+    (display "  -l, --priv-level=PRIVILEGE-LEVEL\n")
+    (display "                             Use this PRIVILEGE-LEVEL instead of USER.  Allowed\n")
+    (display "                             values are CALLBACK, USER, OPERATOR, ADMIN and\n")
+    (display "                             OEM.\n")
+    (display "  -v, --verbose              Increase verbosity in output.  More -v\n")
+    (display "                             more verbosity.\n") 
+    (display "  -i, --sdr-info             Show SDR Information.\n") 
+    (display "  -f, --flush-cache          Flush sensor cache.\n") 
+    (display "  -l, --list-groups          List sensor groups.\n") 
+    (display "      --all                  Display all sensors (Ignore sensors ignore-list).\n")
+    (display "  -g, --group=GROUP          Show sensors belongs to this GROUP.\n")
+    (display "  -s, --sensors=SENSORS-LIST Show listed sensors.\n")
+    (display "  -?, --help                 Give this help list.\n")
+    (display "      --usage                Give a short usage message.\n")
+    (display "  -V, --version              Print program version.\n")
+    (display "\n")
+    (display "Mandatory or optional arguments to long options are also mandatory or optional\n")
+    (display "for any corresponding short options.\n")
+    (display "\n")
+    (display "Report bugs to <freeipmi-devel@gnu.org>.\n")))
 
 (define (sensors-display-version)
-  (display "IPMI Sensors version ")
-  (display (fi-version))
-  (newline))
+  (begin 
+    (display (string-append "IPMI Sensors [ipmi-sensors-" (fi-version) "]\n"))
+    (display "Copyright (C) 2003-2005 FreeIPMI Core Team\n")
+    (display "This program is free software; you may redistribute it under the terms of\n")
+    (display "the GNU General Public License.  This program has absolutely no warranty.\n")))
 
-(define (sensors-argp-parse args)
-  (let* ((sensors-cmd-args '())
-	 (optional-args '())
-	 (option-spec '((help        (single-char #\h) (value #f))
-			(usage       (single-char #\u) (value #f))
-			(version     (single-char #\V) (value #f))
-			(verbose     (single-char #\v) (value #f))
-			(sdr-info    (single-char #\i) (value #f))
-			(flush-cache (single-char #\f) (value #f))
-			(list-groups (single-char #\l) (value #f))
-                        (all         (single-char #\a) (value #f))
-			(group       (single-char #\g) (value #t))
-			(sensors     (single-char #\s) (value #t))))
-	 (options (getopt-long args option-spec)))
-    ;; -h, --help option (0)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'help    #f))))
-    ;; -u, --usage option (1)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'usage   #f))))
-    ;; -V, --version option (2)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'version #f))))
-    ;; -v, --verbose option (3)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (let ((vcount 0))
-					   (for-each (lambda (arg)
-						       (if (equal? (car arg) 'verbose)
-							   (set! vcount 
-								 (+ vcount 1))))
-						     options)
-					   vcount))))
-    ;; -i, --sdr-info option (4)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'sdr-info    #f))))
-    ;; -f, --flush-cache option (5)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'flush-cache #f))))
-    ;; -l, --list-groups option (6)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'list-groups #f))))
-    ;; -a, --all option (7)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'all         #f))))
-    ;; -g, --group option (8)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (option-ref options 'group       #f))))
-    ;; -s, --sensors option (9)
-    (set! sensors-cmd-args (append sensors-cmd-args 
-				   (list (map string->number
-					      (string-tokenize
-					       (option-ref options 'sensors "")
-					       (char-set-complement
-						(char-set-adjoin char-set:whitespace 
-								 #\,)))))))
-    ;; extra options (10)
-    (set! optional-args  (option-ref options '() '()))
-    (if (not (null? optional-args))
-	(set! sensors-cmd-args (append sensors-cmd-args 
-				       (list optional-args))))
-    sensors-cmd-args))
+(define (sensors-argp args)
+  (catch 'misc-error 
+	 (lambda () 
+	   (let* ((sensors-cmd-args '())
+		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
+				 (sms-io-base   (single-char #\204) (value #t))
+				 (host          (single-char #\h)   (value #t))
+				 (username      (single-char #\u)   (value #t))
+				 (password      (single-char #\p)   (value #t))
+				 (auth-type     (single-char #\a)   (value #t))
+				 (priv-level    (single-char #\l)   (value #t))
+				 (help          (single-char #\?)   (value #f))
+				 (usage         (single-char #\377) (value #f))
+				 (version       (single-char #\V)   (value #f))
+				 (verbose       (single-char #\v)   (value #f))
+				 (sdr-info      (single-char #\i)   (value #f))
+				 (flush-cache   (single-char #\f)   (value #f))
+				 (list-groups   (single-char #\l)   (value #f))
+				 (all           (single-char #\376) (value #f))
+				 (group         (single-char #\g)   (value #t))
+				 (sensors       (single-char #\s)   (value #t))))
+		  (options (getopt-long args option-spec))
+		  (poll-interval  (option-ref options 'driver-poll-interval #f))
+		  (sms-io-base    (option-ref options 'sms-io-base   #f))
+		  (host           (option-ref options 'host          #f))
+		  (username       (option-ref options 'usernmae      #f))
+		  (password       (option-ref options 'password      #f))
+		  (auth-type      (option-ref options 'auth-type     #f))
+		  (priv-level     (option-ref options 'priv-level    #f))
+		  (help-wanted    (option-ref options 'help          #f))
+		  (usage-wanted   (option-ref options 'usage         #f))
+		  (version-wanted (option-ref options 'version       #f))
+		  (verbose-wanted (option-ref options 'verbose       #f))
+		  (sdr-info       (option-ref options 'sdr-info      #f))
+		  (flush-cache    (option-ref options 'flush-cache   #f))
+		  (list-groups    (option-ref options 'list-groups   #f))
+		  (all-wanted     (option-ref options 'all           #f))
+		  (group-name     (option-ref options 'group         #f))
+		  (sensors-list   (option-ref options 'sensors       #f))
+		  (extra-args     (option-ref options '()            #f)))
+	     ;; extra arguments
+	     (if (and (not (null? extra-args)) (list? sensors-cmd-args))
+		 (begin 
+		   (display "Usage: ipmi-sensors [OPTION...] \n"
+			    (current-error-port))
+		   (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			    (current-error-port))
+		   (set! sensors-exit-status 64)
+		   (set! sensors-cmd-args #f)))
+	     ;; --driver-poll-interval (0)
+	     (if (and (string? poll-interval) (list? sensors-cmd-args))
+		 (begin 
+		   (set! poll-interval (string->number poll-interval))
+		   (if (boolean? poll-interval)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensors-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list poll-interval))))
+	     ;; --sms-io-base (1)
+	     (if (and (string? sms-io-base) (list? sensors-cmd-args))
+		 (begin 
+		   (set! sms-io-base (string->number sms-io-base))
+		   (if (boolean? sms-io-base)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensors-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list sms-io-base))))
+	     ;; --host (2)
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list host))))
+	     ;; --username (3)
+	     (if (and (string? username) (list? sensors-cmd-args))
+		 (begin 
+		   (if (not (= (string-length username) 16))
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensors-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list username))))
+	     ;; --password (4)
+	     (if (and (string? password) (list? sensors-cmd-args))
+		 (begin 
+		   (if (not (= (string-length password) 16))
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensors-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list password))))
+	     ;; --auth-type (5)
+	     (if (and (string? auth-type) (list? sensors-cmd-args))
+		 (cond 
+		  ((string-ci=? auth-type "none")
+		   (set! auth-type 0))
+		  ((string-ci=? auth-type "md2")
+		   (set! auth-type 1))
+		  ((string-ci=? auth-type "md5")
+		   (set! auth-type 2))
+		  ((string-ci=? auth-type "plain")
+		   (set! auth-type 4))
+		  ((string-ci=? auth-type "oem")
+		   (set! auth-type 5))
+		  (else 
+		   (begin 
+		     (display "Usage: ipmi-sensors [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			      (current-error-port))
+		     (set! sensors-exit-status 64)
+		     (set! sensors-cmd-args #f))))
+		 (set! auth-type 0))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list auth-type))))
+	     ;; --priv-level (6)
+	     (if (and (string? priv-level) (list? sensors-cmd-args))
+		 (cond 
+		  ((string-ci=? priv-level "callback")
+		   (set! priv-level 1))
+		  ((string-ci=? priv-level "user")
+		   (set! priv-level 2))
+		  ((string-ci=? priv-level "operator")
+		   (set! priv-level 3))
+		  ((string-ci=? priv-level "admin")
+		   (set! priv-level 4))
+		  ((string-ci=? priv-level "oem")
+		   (set! priv-level 5))
+		  (else 
+		   (begin 
+		     (display "Usage: ipmi-sensors [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			      (current-error-port))
+		     (set! sensors-exit-status 64)
+		     (set! sensors-cmd-args #f))))
+		 (set! priv-level 2))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list priv-level))))
+	     ;; --help (7)
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list help-wanted))))
+	     ;; --usage (8)
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list usage-wanted))))
+	     ;; --version (9)
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list version-wanted))))
+	     ;; -v, --verbose option (10) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (if verbose-wanted 
+		     (set! verbose-wanted (let ((vcount 0))
+					    (for-each (lambda (arg)
+							(if (equal? (car arg) 'verbose)
+							    (set! vcount 
+								  (+ vcount 1))))
+						      options)
+					    vcount))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list verbose-wanted))))
+	     ;; -i, --sdr-info option (11) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list sdr-info))))
+	     ;; -f, --flush-cache option (12) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list flush-cache))))
+	     ;; -l, --list-groups option (13) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list list-groups))))
+	     ;; -a, --all option (14) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list all-wanted))))
+	     ;; -g, --group option (15) sensor specific
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list group-name))))
+	     ;; -s, --sensors option (16) sensor specific
+	     (if (and (string? sensors-list) (list? sensors-cmd-args))
+		 (begin 
+		   (set! sensors-list (sentence->tokens (string-replace 
+							 sensors-list 
+							 #\, #\space)))
+		   (if (or (list? (member #f (map number? sensors-list)))
+			   (null? sensors-list))
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensors-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list sensors-list))))
+	     sensors-cmd-args))
+	 (lambda (k args . opts)
+	   (display "ipmi-sensors: error: " (current-error-port))
+	   (display (cadr opts) (current-error-port))
+	   (display "\n" (current-error-port))
+	   (display "Usage: ipmi-sensors [OPTION...] \n"
+		    (current-error-port))
+	   (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+		    (current-error-port))
+	   (set! sensors-exit-status 64)
+	   #f)))
 
 (define (sensors-get-help-option cmd-args)
-  (list-ref cmd-args 0))
-
-(define (sensors-get-usage-option cmd-args)
-  (list-ref cmd-args 1))
-
-(define (sensors-get-version-option cmd-args)
-  (list-ref cmd-args 2))
-
-(define (sensors-get-verbose-option cmd-args)
-  (list-ref cmd-args 3))
-
-(define (sensors-get-sdr-info-option cmd-args)
-  (list-ref cmd-args 4))
-
-(define (sensors-get-flush-cache-option cmd-args)
-  (list-ref cmd-args 5))
-
-(define (sensors-get-list-group-option cmd-args)
-  (list-ref cmd-args 6))
-
-(define (sensors-get-all-option cmd-args)
   (list-ref cmd-args 7))
 
-(define (sensors-get-group-option cmd-args)
+(define (sensors-get-usage-option cmd-args)
   (list-ref cmd-args 8))
 
-(define (sensors-get-sensors-option cmd-args)
+(define (sensors-get-version-option cmd-args)
   (list-ref cmd-args 9))
 
-(define (sensors-get-extra-option cmd-args)
-  (if (= (length cmd-args) 11)
-      (list-ref cmd-args 10)
-      #f))
+(define (sensors-get-verbose-option cmd-args)
+  (list-ref cmd-args 10))
+
+(define (sensors-get-sdr-info-option cmd-args)
+  (list-ref cmd-args 11))
+
+(define (sensors-get-flush-cache-option cmd-args)
+  (list-ref cmd-args 12))
+
+(define (sensors-get-list-group-option cmd-args)
+  (list-ref cmd-args 13))
+
+(define (sensors-get-all-option cmd-args)
+  (list-ref cmd-args 14))
+
+(define (sensors-get-group-option cmd-args)
+  (list-ref cmd-args 15))
+
+(define (sensors-get-sensors-option cmd-args)
+  (list-ref cmd-args 16))
 
 (define (sensors-display-alias)
   (if (defined? 'sensors-alias-list)

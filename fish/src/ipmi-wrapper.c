@@ -20,6 +20,8 @@
 static ipmi_device_t dev;
 static int dev_opened = false;
 
+static sel_descriptor_t seld;
+
 u_int8_t channel_info_list_initialized = false;
 channel_info channel_info_list[8];
 
@@ -35,6 +37,12 @@ ipmi_device_t *
 fi_get_ipmi_device ()
 {
   return &dev;
+}
+
+sel_descriptor_t *
+fi_get_seld ()
+{
+  return &seld;
 }
 
 int 
@@ -364,7 +372,7 @@ display_get_dev_id ()
   fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
   if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      perror ("ipmi_cmd_get_dev_id()");
+      ipmi_error (cmd_rs, "ipmi_cmd_get_dev_id()");
       return (-1);
     }
   

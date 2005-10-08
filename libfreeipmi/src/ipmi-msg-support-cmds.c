@@ -1359,7 +1359,7 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   ERR (dev->type == IPMI_DEVICE_LAN);
-  memcpy (&local_dev, dev, sizeof (ipmi_device_t));
+  local_dev = *dev;
   local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
   local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
     local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
@@ -1373,6 +1373,8 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
 				       obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
+  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (&local_dev, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_channel_auth_caps_rq, 
@@ -1395,7 +1397,7 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   ERR (dev->type == IPMI_DEVICE_LAN);
-  memcpy (&local_dev, dev, sizeof (ipmi_device_t));
+  local_dev = *dev;
   local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
   local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
     local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
@@ -1411,6 +1413,8 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 				       obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
+  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
+  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (&local_dev, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_session_challenge_rq, 

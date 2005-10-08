@@ -168,11 +168,6 @@ install_new_procedures (void)
      (display (fi-sensors-get-group-list))
   */
   
-  gh_new_procedure ("fi-sdr-get-repo-info", ex_sdr_get_repo_info, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sdr-get-repo-info))
-  */
-  
   gh_new_procedure ("fi-sel-get-first-entry", 
 		    ex_sel_get_first_entry, 0, 0, 0);
   /* example scheme expression
@@ -197,9 +192,6 @@ install_new_procedures (void)
   gh_new_procedure ("fi-sel-get-next-entry-hex", 
 		    ex_sel_get_next_entry_hex, 0, 0, 0);
   
-  gh_new_procedure ("fi-sel-get-info",
-                    ex_sel_get_info, 0, 0, 0);
-
   gh_new_procedure ("fi-sel-get-info-binary",
                     ex_sel_get_info_binary, 0, 0, 0);
 

@@ -60,6 +60,7 @@ struct sdr_full_record
   u_int8_t readable_upper_non_recoverable_threshold;
   /* ************************* */
 };
+typedef struct sdr_full_record sdr_full_record_t;
 
 struct sdr_compact_record
 {
@@ -72,6 +73,7 @@ struct sdr_compact_record
   u_int8_t positive_hysteresis;
   char sensor_name[17];
 };
+typedef struct sdr_compact_record sdr_compact_record_t;
 
 struct sdr_event_only_record
 {
@@ -81,12 +83,14 @@ struct sdr_event_only_record
   u_int8_t event_reading_type;
   char sensor_name[17];
 };
+typedef struct sdr_event_only_record sdr_event_only_record_t;
 
 struct sdr_entity_association_record
 {
   u_int8_t container_entity_id;
   u_int8_t container_entity_instance;
 };
+typedef struct sdr_entity_association_record sdr_entity_association_record_t;
 
 struct sdr_generic_device_locator_record
 {
@@ -102,6 +106,7 @@ struct sdr_generic_device_locator_record
   u_int8_t entity_instance;
   char device_name[17];
 };
+typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_record_t;
 
 struct sdr_logical_fru_device_locator_record
 {
@@ -111,6 +116,7 @@ struct sdr_logical_fru_device_locator_record
   u_int8_t fru_entity_instance;
   char device_name[17];
 };
+typedef struct sdr_logical_fru_device_locator_record sdr_logical_fru_device_locator_record_t;
 
 struct sdr_management_controller_device_locator_record
 {
@@ -118,6 +124,7 @@ struct sdr_management_controller_device_locator_record
   u_int8_t entity_instance;
   char device_name[17];
 };
+typedef struct sdr_management_controller_device_locator_record sdr_management_controller_device_locator_record_t;
 
 struct sdr_oem_record
 {
@@ -125,6 +132,7 @@ struct sdr_oem_record
   u_int8_t oem_data_length;
   u_int8_t oem_data[55];
 };
+typedef struct sdr_oem_record sdr_oem_record_t;
 
 struct sdr_record 
 {
@@ -132,16 +140,17 @@ struct sdr_record
   u_int8_t record_type;
   union 
   {
-    struct sdr_full_record sdr_full_record;
-    struct sdr_compact_record sdr_compact_record;
-    struct sdr_event_only_record sdr_event_only_record;
-    struct sdr_entity_association_record sdr_entity_association_record;
-    struct sdr_generic_device_locator_record sdr_generic_device_locator_record;
-    struct sdr_logical_fru_device_locator_record sdr_logical_fru_device_locator_record;
-    struct sdr_management_controller_device_locator_record sdr_management_controller_device_locator_record;
-    struct sdr_oem_record sdr_oem_record;
+    sdr_full_record_t sdr_full_record;
+    sdr_compact_record_t sdr_compact_record;
+    sdr_event_only_record_t sdr_event_only_record;
+    sdr_entity_association_record_t sdr_entity_association_record;
+    sdr_generic_device_locator_record_t sdr_generic_device_locator_record;
+    sdr_logical_fru_device_locator_record_t sdr_logical_fru_device_locator_record;
+    sdr_management_controller_device_locator_record_t sdr_management_controller_device_locator_record;
+    sdr_oem_record_t sdr_oem_record;
   } record;
 };
+typedef struct sdr_record sdr_record_t;
 
 struct sensor_reading
 {
@@ -151,26 +160,30 @@ struct sensor_reading
   u_int8_t event_messages_flag;
   char **event_message_list;
 };
+typedef struct sensor_reading sensor_reading_t;
 
 void get_sdr_full_record (u_int8_t *sdr_record_data, 
-			  struct sdr_full_record *sdr_full_record);
+			  sdr_full_record_t *sdr_full_record);
 void get_sdr_compact_record (u_int8_t *sdr_record_data, 
-			     struct sdr_compact_record *sdr_compact_record);
+			     sdr_compact_record_t *sdr_compact_record);
 void get_sdr_event_only_record (u_int8_t *sdr_record_data, 
-				struct sdr_event_only_record *sdr_event_only_record);
+				sdr_event_only_record_t *sdr_event_only_record);
 void get_sdr_entity_association_record (u_int8_t *sdr_record_data, 
-					struct sdr_entity_association_record *sdr_entity_association_record);
+					sdr_entity_association_record_t *sdr_entity_association_record);
 void get_sdr_generic_device_locator_record (u_int8_t *sdr_record_data, 
-					    struct sdr_generic_device_locator_record *sdr_generic_device_locator_record);
+					    sdr_generic_device_locator_record_t *sdr_generic_device_locator_record);
 void get_sdr_logical_fru_device_locator_record (u_int8_t *sdr_record_data, 
-						struct sdr_logical_fru_device_locator_record *sdr_logical_fru_device_locator_record);
+						sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record);
 void get_sdr_management_controller_device_locator_record (u_int8_t *sdr_record_data, 
-							  struct sdr_management_controller_device_locator_record *sdr_management_controller_device_locator_record);
+							  sdr_management_controller_device_locator_record_t *sdr_management_controller_device_locator_record);
 void get_sdr_oem_record (u_int8_t *sdr_record_data, 
-			 struct sdr_oem_record *sdr_oem_record);
+			 sdr_oem_record_t *sdr_oem_record);
 
-u_int8_t get_sdr_record (u_int16_t record_id, u_int16_t *next_record_id, 
-			 struct sdr_record *sdr_record);
-u_int8_t get_sensor_reading (struct sdr_record *sdr_record, 
-			     struct sensor_reading *sensor_reading);
+u_int8_t get_sdr_record (ipmi_device_t *dev, 
+			 u_int16_t record_id, 
+			 u_int16_t *next_record_id, 
+			 sdr_record_t *sdr_record);
+u_int8_t get_sensor_reading (ipmi_device_t *dev, 
+			     sdr_record_t *sdr_record, 
+			     sensor_reading_t *sensor_reading);
 #endif

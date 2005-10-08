@@ -44,11 +44,13 @@
    (else         (object->string sd))))
 
 (define (list->sentence li)
-  "convert list to space separated sentence"
-  (let ((word (any->string (car li))))
-    (if (= (length li) 1)
-	word
-	(string-append word " " (list->sentence (cdr li))))))
+  (if (not (list? li))
+      #f
+      (if (null? li)
+	  ""
+	  (string-append (any->string (car li)) 
+			 " " 
+			 (list->sentence (cdr li))))))
 
 ;; range with proper tail recursion --ab
 (define (range start end)
@@ -88,15 +90,11 @@
 
 (define (list->strlist li)
   "converts a list of numbers/symbols to list of strings"
-  (if (= (length li) 0)
-      '()
-      (if (= (length li) 1)
-	  (list 
-	   (symbol->string 
-	    (any->symbol (car li))))
-	  (append (list 
-		   (symbol->string 
-		    (any->symbol (car li))))
+  (if (not (list? li))
+      #f
+      (if (null? li)
+	  '()
+	  (append (list (any->string (car li)))
 		  (list->strlist (cdr li))))))
 
 (define (local-date-time)
@@ -168,6 +166,12 @@
     (skip-whitespace port)
     (loop '())))
 
+;; alternative code is (string-tokenize sentence)
+;; (string-tokenize sentence
+;; 		 (char-set-complement
+;; 		  (char-set-adjoin 
+;; 		   char-set:whitespace 
+;; 		   #\,)))
 (define (sentence->words sentence)
   "convert sentence to list of words"
   (with-input-from-string sentence

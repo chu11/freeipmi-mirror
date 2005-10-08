@@ -46,13 +46,16 @@ enum ipmi_sel_record_type
     IPMI_SEL_NON_TIMESTAMPED_OEM_RECORD = 0xFF 
   };
 
-typedef struct sel_descriptor
+struct sel_record
 {
-  u_int16_t first_record_id;
-  u_int16_t next_record_id;
-  
-} sel_descriptor_t;
-
+  u_int16_t record_id;
+  char *timestamp;
+  char *sensor_info;
+  char *event_message;
+  char *event_data2_message;
+  char *event_data3_message;
+};
+typedef struct sel_record sel_record_t;
 
 extern fiid_template_t tmpl_sel_record_header;
 
@@ -65,9 +68,7 @@ extern fiid_template_t tmpl_discrete_event_data;
 extern fiid_template_t tmpl_oem_event_data;
 
 int ipmi_get_sel_record_type (u_int8_t record_type);
-
-int ipmi_sel_get_first_entry (sel_descriptor_t *seld, u_int8_t *record_data);
-int ipmi_sel_get_next_entry (sel_descriptor_t *seld, u_int8_t *record_data);
+int get_sel_record (u_int8_t *record_data, sel_record_t *sel_record);
 
 #ifdef __cplusplus
 }

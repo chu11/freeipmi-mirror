@@ -1,3 +1,92 @@
+2005-10-08  A Balamurugan  <bala@zresearch.com>
+
+	* freeipmi/libfreeipmi/src/freeipmi.h: Enables static function
+	definitions only if config.h file exists.
+
+	* freeipmi/libfreeipmi/src/ipmi-error.c (ipmi_strerror_r,
+	ipmi_strerror_cmd_r, ipmi_kcs_strstatus_r): Improved.
+
+	* freeipmi/libfreeipmi/src/ipmi-error.c (ipmi_error): New
+	function.
+
+	* freeipmi/libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_auth_caps2,
+	ipmi_cmd_get_session_challenge2): Fixed serious bug which makes
+	function failure.
+
+	* freeipmi/libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	(ipmi_cmd_get_sdr_repo_info2, ipmi_cmd_get_sdr_repo_alloc_info2,
+	ipmi_cmd_reserve_sdr_repo2): Renamed.
+
+	* freeipmi/libfreeipmi/src/ipmi-sel-api.c
+	(ipmi_sel_get_first_entry, ipmi_sel_get_next_entry, get_sel_info):
+	UDM enabled.
+
+	* freeipmi/libfreeipmi/src/ipmi-sel-api.c
+	(get_sel_system_event_record, get_sel_timestamped_oem_record,
+	get_sel_non_timestamped_oem_record, get_sel_record): Moved to
+	ipmi-sel-record-types.c.
+
+	* freeipmi/libfreeipmi/src/ipmi-sel-record-types.c
+	(ipmi_sel_get_first_entry, ipmi_sel_get_next_entry): Moved to
+	ipmi-sel-api.c.
+
+	* freeipmi/libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record,
+	get_sensor_reading): UDM enabled.
+
+	* freeipmi/libfreeipmi/src/ipmi-utils.c (ipmi_comp_test): Sets
+	errno when failure.
+
+	* freeipmi/fish/src/extension.c (install_new_procedures): Removed
+	fi-sdr-get-repo-info and fi-sel-get-info procedure exports.
+
+	* freeipmi/fish/src/interpreter.c (dynamic_command_handler):
+	Simplified.
+
+	* freeipmi/fish/src/ipmi-wrapper.c (fi_get_seld): New function.
+
+	* freeipmi/fish/src/ipmi-wrapper.c (fi_ipmi_open): Uses
+	ipmi_error().
+
+	* freeipmi/fish/src/scm-procedures.c (ex_sdr_get_repo_info,
+	ex_sel_get_info): Removed.
+
+	* freeipmi/fish/src/scm-procedures.c (ex_sel_get_first_entry_raw,
+	ex_sel_get_next_entry_raw, ex_sel_get_first_entry_hex,
+	ex_sel_get_next_entry_hex, ex_sel_get_info_binary,
+	ex_sel_get_first_entry, ex_sel_get_next_entry,
+	ex_sel_delete_entry, ex_sel_clear, ex_sel_get_clear_status,
+	ex_get_sdr_record, ex_get_sensor_reading, ex_get_sdr_repo_info):
+	Uses UDM enabled functions.
+
+	* freeipmi/fish/src/scm-procedures.c (ex_get_bmc_info): Uses
+	ipmi_error().
+
+	* freeipmi/fish/extensions/bc-common.scm: Better command line
+	argument parsing..
+
+	* freeipmi/fish/extensions/bmc-config.scm: Initial work of UDM
+	support.
+
+	* freeipmi/fish/extensions/bmc-info.scm: Fixed fish register
+	command bug.
+
+	* freeipmi/fish/extensions/sel.scm: UDM enabled.
+
+	* freeipmi/fish/extensions/sensors-common.scm: Better command line
+	argument parsing.
+
+	* freeipmi/fish/extensions/sensors.scm: UDM enabled.
+
+	* freeipmi/fish/extensions/utils.scm: Simplified list->sentence
+	and list->strlist procedures.
+
+	* freeipmi/fish/scripts/bmc-config/bmc-config.in: Simplified.
+
+	* freeipmi/fish/scripts/sel/ipmi-sel.in: Simplified.
+
+	* freeipmi/fish/scripts/sensors/ipmi-sensors.in: Simplified.
+
 2005-10-06  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-chassis-cmds.c

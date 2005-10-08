@@ -17,6 +17,10 @@
 
 (use-modules (srfi srfi-13))
 
+(use-modules (ice-9 getopt-long))
+
+(define bmc-config-exit-status 0)
+
 (define (assoc-vref alist value)
   (if (null? alist)
       #f
@@ -251,4 +255,319 @@
 
 (define (same-string-ci? section-name string1 string2)
   (string-ci=? string1 string2))
+
+(define (bmc-config-display-usage)
+  (begin 
+    (display "Usage: bmc-config [-dio?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]\n")
+    (display "                  [-a AUTHTYPE] [-l PRIVILEGE-LEVEL] [-f FILENAME]\n")
+    (display "                  [-k KEY-PAIR] [--driver-poll-interval=USEC]\n")
+    (display "                  [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
+    (display "                  [--username=USERNAME] [--password=PASSWORD]\n")
+    (display "                  [--auth-type=AUTHTYPE]\n")
+    (display "                  [--priv-level=PRIVILEGE-LEVEL] [--checkout]\n")
+    (display "                  [--commit] [--diff] [--filename=FILENAME]\n")
+    (display "                  [--key-pair=KEY-PAIR] [--help] [--usage] [--version]\n")))
+
+(define (bmc-config-display-help)
+  (begin 
+    (display "Usage: bmc-config [OPTION...] \n")
+    (display "bmc-config displays information about BMC.\n")
+    (display "\n")
+    (display "      --driver-poll-interval=USEC\n")
+    (display "                             User USEC driver poll interval.\n")
+    (display "      --sms-io-base=SMS-IO-BASE   SMS IO Base address.\n")
+    (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
+    (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
+    (display "                             length is 16.\n")
+    (display "  -p, --password=PASSWORD    Use PASSWORD instead of NULL.  Maximum PASSWORD\n")
+    (display "                             length is 16.\n")
+    (display "  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of NONE.  Allowed values are\n")
+    (display "                             NONE, MD2, MD5, PLAIN and OEM.\n")
+    (display "  -l, --priv-level=PRIVILEGE-LEVEL\n")
+    (display "                             Use this PRIVILEGE-LEVEL instead of USER.  Allowed\n")
+    (display "                             values are CALLBACK, USER, OPERATOR, ADMIN and\n")
+    (display "                             OEM.\n")
+    (display "  -o, --checkout             Get BMC configuration.\n")
+    (display "  -i, --commit               Update BMC configuration.\n")
+    (display "  -d, --diff                 Show configuration differences with BMC.\n")
+    (display "  -f, --filename=FILENAME    Use FILENAME in checkout, commit or diff.\n")
+    (display "  -k, --key-pair=KEY-PAIR    Use KEY-PAIR in checkout or diff.\n")
+    (display "  -?, --help                 Give this help list.\n")
+    (display "      --usage                Give a short usage message.\n")
+    (display "  -V, --version              Print program version.\n")
+    (display "\n")
+    (display "Mandatory or optional arguments to long options are also mandatory or optional\n")
+    (display "for any corresponding short options.\n")
+    (display "\n")
+    (display "Report bugs to <freeipmi-devel@gnu.org>.\n")))
+
+(define (bmc-config-display-version)
+  (begin 
+    (display (string-append "BMC Configurator [bmc-config-" (fi-version) "]\n"))
+    (display "Copyright (C) 2003-2005 FreeIPMI Core Team\n")
+    (display "This program is free software; you may redistribute it under the terms of\n")
+    (display "the GNU General Public License.  This program has absolutely no warranty.\n")))
+
+(define (bmc-config-argp args)
+  (catch 'misc-error 
+	 (lambda () 
+	   (let* ((bmc-config-cmd-args '())
+		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
+				 (sms-io-base   (single-char #\204) (value #t))
+				 (host          (single-char #\h)   (value #t))
+				 (username      (single-char #\u)   (value #t))
+				 (password      (single-char #\p)   (value #t))
+				 (auth-type     (single-char #\a)   (value #t))
+				 (priv-level    (single-char #\l)   (value #t))
+				 (help          (single-char #\?)   (value #f))
+				 (usage         (single-char #\377) (value #f))
+				 (version       (single-char #\V)   (value #f))
+				 (checkout      (single-char #\o)   (value #f))
+				 (commit        (single-char #\i)   (value #f))
+				 (diff          (single-char #\d)   (value #f))
+				 (filename      (single-char #\f)   (value #t))
+				 (key-pair      (single-char #\k)   (value #t))))
+		  (options (getopt-long args option-spec))
+		  (poll-interval  (option-ref options 'driver-poll-interval #f))
+		  (sms-io-base    (option-ref options 'sms-io-base   #f))
+		  (host           (option-ref options 'host          #f))
+		  (username       (option-ref options 'usernmae      #f))
+		  (password       (option-ref options 'password      #f))
+		  (auth-type      (option-ref options 'auth-type     #f))
+		  (priv-level     (option-ref options 'priv-level    #f))
+		  (help-wanted    (option-ref options 'help          #f))
+		  (usage-wanted   (option-ref options 'usage         #f))
+		  (version-wanted (option-ref options 'version       #f))
+		  (checkout       (option-ref options 'checkout      #f))
+		  (commit-wanted  (option-ref options 'commit        #f))
+		  (diff-wanted    (option-ref options 'diff          #f))
+		  (filename       (option-ref options 'filename      #f))
+		  (key-pairs      (option-ref options 'key-pair      #f))
+		  (extra-args     (option-ref options '()            #f)))
+	     ;; extra arguments
+	     (if (and (not (null? extra-args)) (list? bmc-config-cmd-args))
+		 (begin 
+		   (display "Usage: bmc-config [OPTION...] \n"
+			    (current-error-port))
+		   (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+			    (current-error-port))
+		   (set! bmc-config-exit-status 64)
+		   (set! bmc-config-cmd-args #f)))
+	     ;; --driver-poll-interval (0)
+	     (if (and (string? poll-interval) (list? bmc-config-cmd-args))
+		 (begin 
+		   (set! poll-interval (string->number poll-interval))
+		   (if (boolean? poll-interval)
+		       (begin 
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list poll-interval))))
+	     ;; --sms-io-base (1)
+	     (if (and (string? sms-io-base) (list? bmc-config-cmd-args))
+		 (begin 
+		   (set! sms-io-base (string->number sms-io-base))
+		   (if (boolean? sms-io-base)
+		       (begin 
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list sms-io-base))))
+	     ;; --host (2)
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list host))))
+	     ;; --username (3)
+	     (if (and (string? username) (list? bmc-config-cmd-args))
+		 (begin 
+		   (if (not (= (string-length username) 16))
+		       (begin 
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list username))))
+	     ;; --password (4)
+	     (if (and (string? password) (list? bmc-config-cmd-args))
+		 (begin 
+		   (if (not (= (string-length password) 16))
+		       (begin 
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list password))))
+	     ;; --auth-type (5)
+	     (if (and (string? auth-type) (list? bmc-config-cmd-args))
+		 (cond 
+		  ((string-ci=? auth-type "none")
+		   (set! auth-type 0))
+		  ((string-ci=? auth-type "md2")
+		   (set! auth-type 1))
+		  ((string-ci=? auth-type "md5")
+		   (set! auth-type 2))
+		  ((string-ci=? auth-type "plain")
+		   (set! auth-type 4))
+		  ((string-ci=? auth-type "oem")
+		   (set! auth-type 5))
+		  (else 
+		   (begin 
+		     (display "Usage: bmc-config [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+			      (current-error-port))
+		     (set! bmc-config-exit-status 64)
+		     (set! bmc-config-cmd-args #f))))
+		 (set! auth-type 0))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list auth-type))))
+	     ;; --priv-level (6)
+	     (if (and (string? priv-level) (list? bmc-config-cmd-args))
+		 (cond 
+		  ((string-ci=? priv-level "callback")
+		   (set! priv-level 1))
+		  ((string-ci=? priv-level "user")
+		   (set! priv-level 2))
+		  ((string-ci=? priv-level "operator")
+		   (set! priv-level 3))
+		  ((string-ci=? priv-level "admin")
+		   (set! priv-level 4))
+		  ((string-ci=? priv-level "oem")
+		   (set! priv-level 5))
+		  (else 
+		   (begin 
+		     (display "Usage: bmc-config [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+			      (current-error-port))
+		     (set! bmc-config-exit-status 64)
+		     (set! bmc-config-cmd-args #f))))
+		 (set! priv-level 2))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list priv-level))))
+	     ;; --help (7)
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list help-wanted))))
+	     ;; --usage (8)
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list usage-wanted))))
+	     ;; --version (9)
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list version-wanted))))
+	     ;; --checkout (10) bmc-config specific
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list checkout))))
+	     ;; --commit (11) bmc-config specific
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list commit-wanted))))
+	     ;; --diff (12) bmc-config specific
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list diff-wanted))))
+	     ;; --filename (13) bmc-config specific
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list filename))))
+	     ;; --key-pair (14) bmc-config specific
+	     (if (and (string? key-pairs) (list? bmc-config-cmd-args))
+		 (set! key-pairs 
+		       (let ((klist '()))
+			 (for-each (lambda (arg)
+				     (if (and (equal? (car arg) 'key-pair)
+					      (list? bmc-config-cmd-args))
+					 (if (string-index (cdr arg) #\=) 
+					     (set! klist 
+						   (append 
+						    klist 
+						    (string-separate (cdr arg) #\=)))
+					     (begin 
+					       (display "Usage: bmc-config [OPTION...] \n"
+							(current-error-port))
+					       (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+							(current-error-port))
+					       (set! bmc-config-exit-status 64)
+					       (set! bmc-config-cmd-args #f)))))
+				   options)
+			 klist)))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list key-pairs))))
+	     ;; special check -- bmc-config specific
+	     ;; Followings option combinations are errors
+	     ;; * No checkout, commit or diff
+	     ;; * commit or diff without filename or key-pair
+	     ;; * filename without checkout, commit or diff
+	     ;; * key-pair without commit or diff
+	     (if (list? bmc-config-cmd-args)
+		 (if (or (not (or checkout commit-wanted diff-wanted))
+			 (and (or commit-wanted diff-wanted)
+			      (boolean? filename) (boolean? key-pairs))
+			 (and (string? filename)
+			      (not (or checkout commit-wanted diff-wanted)))
+			 (and (list? key-pairs)
+			      (not (or commit-wanted diff-wanted))))
+		     (begin 
+		       (bmc-config-display-help)
+		       (set! bmc-config-exit-status 64)
+		       (set! bmc-config-cmd-args #f))))
+	     bmc-config-cmd-args))
+	 (lambda (k args . opts)
+	   (display "bmc-config: error: " (current-error-port))
+	   (display (cadr opts) (current-error-port))
+	   (display "\n" (current-error-port))
+	   (display "Usage: bmc-config [OPTION...] \n"
+		    (current-error-port))
+	   (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+		    (current-error-port))
+	   (set! bmc-config-exit-status 64)
+	   #f)))
+
+(define (bmc-config-get-help-option cmd-args)
+  (list-ref cmd-args 7))
+
+(define (bmc-config-get-usage-option cmd-args)
+  (list-ref cmd-args 8))
+
+(define (bmc-config-get-version-option cmd-args)
+  (list-ref cmd-args 9))
+
+(define (bmc-config-get-checkout-option cmd-args)
+  (list-ref cmd-args 10))
+
+(define (bmc-config-get-commit-option cmd-args)
+  (list-ref cmd-args 11))
+
+(define (bmc-config-get-diff-option cmd-args)
+  (list-ref cmd-args 12))
+
+(define (bmc-config-get-filename-option cmd-args)
+  (list-ref cmd-args 13))
+
+(define (bmc-config-get-key-pair-option cmd-args)
+  (list-ref cmd-args 14))
 

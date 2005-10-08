@@ -1,11 +1,7 @@
 #! @prefix@/sbin/fish -s
 !#
-(catch 'misc-error
-       (lambda ()
-	(sel-main (fi-command-line)))
-       (lambda (k args . opts)
-	 (display "sel: error: ")
-	 (display (cadr opts))
-	 (newline)))
+(let ((cmd-args (sel-argp (fi-command-line))))
+  (if (list? cmd-args)
+      (sel-main cmd-args)))
 (fi-exit sel-exit-status)
 

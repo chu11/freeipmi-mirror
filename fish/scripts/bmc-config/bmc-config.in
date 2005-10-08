@@ -2,8 +2,9 @@
 !#
 (catch 'misc-error
        (lambda ()
-;;	(bmc-config-main (fi-command-line)))
-	(bc-main (fi-command-line)))
+	 (let ((cmd-args (bmc-config-argp (fi-command-line))))
+	   (if (list? cmd-args)
+	       (bmc-config-main cmd-args))))
        (lambda (k args . opts)
 	 (display "bmc-config: error: ")
 	 (display (cadr opts))

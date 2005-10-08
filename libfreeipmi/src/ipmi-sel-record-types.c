@@ -97,104 +97,365 @@ ipmi_get_sel_record_type (u_int8_t record_type)
   return IPMI_SEL_UNKNOWN_RECORD;
 }
 
-int 
-ipmi_sel_get_first_entry (sel_descriptor_t *seld, 
-			  u_int8_t *record_data)
+static int 
+get_sel_system_event_record (u_int8_t *record_data, sel_record_t *sel_record)
 {
-  fiid_obj_t obj_data_rs;
-  int status;
+  u_int16_t record_id;
+  u_int32_t timestamp;
+  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
+  u_int8_t ipmb_slave_addr_sys_soft_id;
+  u_int8_t channel_number;
+  u_int8_t sensor_type;
+  u_int8_t sensor_number;
+  u_int8_t event_type_code;
+  u_int8_t assertion_deassertion_event;
+  u_int8_t event_reading_code_offset;
+  u_int8_t event_data2_flag;
+  u_int8_t event_data3_flag;
+  u_int8_t event_data2;
+  u_int8_t event_data3;
+  
   u_int64_t val;
   
-  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_entry_rs));
-  status = ipmi_kcs_get_sel_entry (IPMI_SEL_FIRST_ENTRY, 
-				   obj_data_rs);
   
-  if (status != 0)
-    {
-      fprintf (stderr, 
-	       "error: ipmi_kcs_get_sel_entry() failed.\n");
-      return (-1);
-    }
-  
-  if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-    {
-      char err_msg[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, 
-	       "error: ipmi_kcs_get_sel_entry() failed with %s\n", 
-	       err_msg);
-      return (-1);
-    }
-  
-  seld->first_record_id = IPMI_SEL_FIRST_ENTRY;
-  fiid_obj_get (obj_data_rs, 
-		tmpl_get_sel_entry_rs, 
-		"next_record_id", 
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"record_id", 
 		&val);
-  seld->next_record_id = val;
+  record_id = val;
   
-  fiid_obj_get_data (obj_data_rs, 
-		     tmpl_get_sel_entry_rs, 
-		     "record_data", 
-		     record_data);
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"timestamp", 
+		&val);
+  timestamp = val;
   
-/*   { */
-/*     int i; */
-/*     for (i = 0; i < fiid_obj_len_bytes (tmpl_get_sel_entry_rs) - record_data_index; i++) */
-/*       printf ("%02X ", record_data[i]); */
-/*     printf ("\n"); */
-/*   } */
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"ipmb_slave_addr_sys_soft_id_flag", 
+		&val);
+  ipmb_slave_addr_sys_soft_id_flag = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"ipmb_slave_addr_sys_soft_id", 
+		&val);
+  ipmb_slave_addr_sys_soft_id = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"channel_number", 
+		&val);
+  channel_number = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"sensor_type", 
+		&val);
+  sensor_type = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"sensor_number", 
+		&val);
+  sensor_number = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_type_code", 
+		&val);
+  event_type_code = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"assertion_deassertion_event", 
+		&val);
+  assertion_deassertion_event = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_reading_code_offset", 
+		&val);
+  event_reading_code_offset = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data2_flag", 
+		&val);
+  event_data2_flag = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data3_flag", 
+		&val);
+  event_data3_flag = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data2", 
+		&val);
+  event_data2 = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_system_event_record, 
+		"event_data3", 
+		&val);
+  event_data3 = val;
+  
+  sel_record->record_id = record_id;
+  {
+    char buffer[256];
+    time_t time;
+    
+    time = timestamp;
+    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
+    
+    sel_record->timestamp = strdup (buffer);
+  }
+  sel_record->sensor_info = NULL;
+  asprintf (&(sel_record->sensor_info), 
+	    "%s #%d", 
+	    ipmi_get_sensor_group (sensor_type), sensor_number);
+  sel_record->event_message = ipmi_get_event_message (sensor_type, 
+						      event_reading_code_offset);
+  switch (ipmi_sensor_classify (event_type_code))
+    {
+    case IPMI_SENSOR_CLASS_THRESHOLD:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_READING:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "OEM code = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "OEM code = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message),
+		      "OEM code = %02Xh",
+		      event_data2);
+	    break;
+	  case IPMI_SEL_PREV_STATE_SEVERITY:
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message),
+		      "OEM code = %02Xh",
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    event_reading_code_offset, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_OEM:
+      {
+	asprintf (&(sel_record->event_data2_message), 
+		  "Event Data2 = %02Xh", 
+		  event_data2);
+	asprintf (&(sel_record->event_data3_message), 
+		  "Event Data3 = %02Xh", 
+		  event_data3);
+	break;
+      }
+    default:
+      sel_record->event_data2_message = NULL;
+      sel_record->event_data3_message = NULL;
+    }
+  
+  return 0;
+}
+
+static int 
+get_sel_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_record)
+{
+  u_int16_t record_id;
+  u_int32_t timestamp;
+  u_int32_t manufacturer_id;
+  u_int64_t oem_defined;
+  u_int64_t val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_timestamped_oem_record, 
+		"record_id", 
+		&val);
+  record_id = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_timestamped_oem_record, 
+		"timestamp", 
+		&val);
+  timestamp = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_timestamped_oem_record, 
+		"manufacturer_id", 
+		&val);
+  manufacturer_id = val;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_timestamped_oem_record, 
+		"oem_defined", 
+		&val);
+  oem_defined = val;
+  
+  sel_record->record_id = record_id;
+  {
+    char buffer[256];
+    time_t time;
+    
+    time = timestamp;
+    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
+    
+    sel_record->timestamp = strdup (buffer);
+  }
+  asprintf (&(sel_record->sensor_info), 
+	    "Manufacturer ID %02Xh", 
+	    manufacturer_id);
+  asprintf (&(sel_record->event_message), 
+	    "OEM Defined = %lXh", 
+	    oem_defined);
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
+  
+  return 0;
+}
+
+static int 
+get_sel_non_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_record)
+{
+  u_int16_t record_id;
+  u_int8_t *oem_defined;
+  int8_t oem_defined_index;
+  u_int64_t val;
+  int i;
+  char *str = NULL;
+  char *tmp_str = NULL;
+  
+  fiid_obj_get (record_data, 
+		tmpl_sel_non_timestamped_oem_record, 
+		"record_id", 
+		&val);
+  record_id = val;
+  
+  oem_defined_index = fiid_obj_field_start_bytes (tmpl_sel_non_timestamped_oem_record, 
+						  "oem_defined");
+  if (oem_defined_index == -1)
+    return 1;
+  oem_defined = record_data + oem_defined_index;
+  
+  sel_record->record_id = record_id;
+  sel_record->timestamp = NULL;
+  sel_record->sensor_info = NULL;
+  sel_record->event_message = NULL;
+  
+  for (i = 0; 
+       i < (fiid_obj_len_bytes (tmpl_sel_non_timestamped_oem_record) - 
+	    oem_defined_index); 
+       i++)
+    {
+      tmp_str = str;
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s %02X", tmp_str, oem_defined[i]);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%02X", oem_defined[i]);
+    }
+  
+  if (str)
+    {
+      asprintf (&(sel_record->event_message), "OEM defined = %s", str);
+      free (str);
+    }
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
+  
   return 0;
 }
 
 int 
-ipmi_sel_get_next_entry (sel_descriptor_t *seld, 
-			 u_int8_t *record_data)
+get_sel_record (u_int8_t *record_data, sel_record_t *sel_record)
 {
-  fiid_obj_t obj_data_rs;
-  int status;
+  u_int8_t record_type;
   u_int64_t val;
   
-  if (seld->next_record_id == IPMI_SEL_LAST_ENTRY)
-    return -1;
-  
-  obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sel_entry_rs));
-  status = ipmi_kcs_get_sel_entry (seld->next_record_id, 
-				   obj_data_rs);
-  
-  if (status != 0)
-    {
-      fprintf (stderr, 
-	       "error: ipmi_kcs_get_sel_entry() failed.\n");
-      return (-1);
-    }
-  
-  if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-    {
-      char err_msg[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, 
-	       "error: ipmi_kcs_get_sel_entry() failed with %s\n", 
-	       err_msg);
-      return (-1);
-    }
-  
-  fiid_obj_get (obj_data_rs, 
-		tmpl_get_sel_entry_rs, 
-		"next_record_id", 
+  fiid_obj_get (record_data,
+		tmpl_sel_record_header,
+		"record_type",
 		&val);
-  seld->next_record_id = val;
+  record_type = val;
+
+  switch (ipmi_get_sel_record_type (record_type))
+    {
+    case IPMI_SEL_SYSTEM_EVENT_RECORD:
+      return get_sel_system_event_record (record_data, sel_record);
+    case IPMI_SEL_TIMESTAMPED_OEM_RECORD:
+      return get_sel_timestamped_oem_record (record_data, sel_record);
+    case IPMI_SEL_NON_TIMESTAMPED_OEM_RECORD:
+      return get_sel_non_timestamped_oem_record (record_data, sel_record);
+    }
   
-  fiid_obj_get_data (obj_data_rs, 
-		     tmpl_get_sel_entry_rs, 
-		     "record_data", 
-		     record_data);
-  
-/*   { */
-/*     int i; */
-/*     for (i = 0; i < fiid_obj_len_bytes (tmpl_get_sel_entry_rs) - record_data_index; i++) */
-/*       printf ("%02X ", record_data[i]); */
-/*     printf ("\n"); */
-/*   } */
-  return 0;
+  return -1;
 }
+

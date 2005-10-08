@@ -24,15 +24,12 @@
 
 #define SEL_RECORD_SIZE 16
 
-struct sel_record
+struct sel_descriptor
 {
-  u_int16_t record_id;
-  char *timestamp;
-  char *sensor_info;
-  char *event_message;
-  char *event_data2_message;
-  char *event_data3_message;
+  u_int16_t first_record_id;
+  u_int16_t next_record_id;
 };
+typedef struct sel_descriptor sel_descriptor_t;
 
 enum sel_info_flag
   {
@@ -56,12 +53,13 @@ struct sel_info
 };
 typedef struct sel_info sel_info_t;
 
-int get_sel_info (sel_info_t* pinfo);
-sel_descriptor_t *get_seld ();
-
-int get_sel_system_event_record (u_int8_t *record_data, struct sel_record *sel_record);
-int get_sel_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_record);
-int get_sel_non_timestamped_oem_record (u_int8_t *record_data, struct sel_record *sel_record);
-int get_sel_record (u_int8_t *record_data, struct sel_record *sel_record);
+int ipmi_sel_get_first_entry (ipmi_device_t *dev, 
+			      sel_descriptor_t *seld, 
+			      u_int8_t *record_data);
+int ipmi_sel_get_next_entry (ipmi_device_t *dev, 
+			     sel_descriptor_t *seld, 
+			     u_int8_t *record_data);
+int get_sel_info (ipmi_device_t *dev, 
+		  sel_info_t *pinfo);
 
 #endif 

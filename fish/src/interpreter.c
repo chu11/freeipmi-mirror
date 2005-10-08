@@ -309,41 +309,28 @@ interpreter (char *cmd_line)
   return;
 }
 
-void
+void 
 dynamic_command_handler (char *dynamic_command, char *cmd_line)
 {
   /*
-    (and (defined? 'command) (command '(arg1 arg2 art3 ...)))
+    (and (procedure? 'dynamic_command) 
+         (dynamic_command '(arg1 arg2 ... argN)))
   */
-  char *dynamic_command_line;
-  int length;
-  char *empty_line = "";
-
-  if (!(cmd_line && *cmd_line))
-    cmd_line = empty_line;
-
-  length = strlen ("(and (defined? '") + strlen (dynamic_command)
-    + strlen (") (") + strlen (dynamic_command) + strlen (" '(")
-    + strlen (cmd_line) + strlen (")))") + 1;
-
-  dynamic_command_line = (char *) malloc (length * sizeof (char));
-
-  /* Using sprintf is dangerous, because dynamic_command field and
-     cmd_line field are supplied by the user. Commented by ab
-  sprintf (dynamic_command_line, "(and (defined? '%s) (%s '(%s)))", 
-	   dynamic_command, dynamic_command, cmd_line);
-  */
-
-  strcpy (dynamic_command_line, "(and (defined? '");
-  strcat (dynamic_command_line, dynamic_command);
-  strcat (dynamic_command_line, ") (");
-  strcat (dynamic_command_line, dynamic_command);
-  strcat (dynamic_command_line, " '(");
-  strcat (dynamic_command_line, cmd_line);
-  strcat (dynamic_command_line, ")))");
-
-  command_eval_scheme_str (dynamic_command_line);
-  free (dynamic_command_line);
+  
+  char *eval_string = NULL;
+  
+  if (dynamic_command == NULL)
+    return;
+  
+  asprintf (&eval_string, 
+	    "(and (procedure? %s) (%s '(%s)))", 
+	    dynamic_command, 
+	    dynamic_command, 
+	    (cmd_line ? cmd_line : ""));
+  
+  command_eval_scheme_str (eval_string);
+  
+  free (eval_string);
 }
 
 void

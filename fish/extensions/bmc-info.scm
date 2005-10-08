@@ -71,7 +71,7 @@
   (catch 'misc-error 
 	 (lambda () 
 	   (let* ((bmc-info-cmd-args '())
-		  (option-spec '((poll-interval (single-char #\203) (value #t))
+		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
 				 (sms-io-base   (single-char #\204) (value #t))
 				 (host          (single-char #\h)   (value #t))
 				 (username      (single-char #\u)   (value #t))
@@ -82,7 +82,7 @@
 				 (usage         (single-char #\377) (value #f))
 				 (version       (single-char #\V)   (value #f))))
 		  (options (getopt-long args option-spec))
-		  (poll-interval  (option-ref options 'poll-interval #f))
+		  (poll-interval  (option-ref options 'driver-poll-interval #f))
 		  (sms-io-base    (option-ref options 'sms-io-base   #f))
 		  (host           (option-ref options 'host          #f))
 		  (username       (option-ref options 'usernmae      #f))
@@ -133,7 +133,7 @@
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list sms-io-base))))
 	     ;; --host (2)
-	     (if (and (list? bmc-info-cmd-args) (list? bmc-info-cmd-args))
+	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list host))))
 	     ;; --username (3)
@@ -189,7 +189,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list auth-type))))
-	     ;; --auth-type (6)
+	     ;; --priv-level (6)
 	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
@@ -215,15 +215,15 @@
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list priv-level))))
 	     ;; --help (7)
-	     (if (and (list? bmc-info-cmd-args) (list? bmc-info-cmd-args))
+	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list help-wanted))))
 	     ;; --usage (8)
-	     (if (and (list? bmc-info-cmd-args) (list? bmc-info-cmd-args))
+	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list usage-wanted))))
 	     ;; --version (9)
-	     (if (and (list? bmc-info-cmd-args) (list? bmc-info-cmd-args))
+	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list version-wanted))))
 	     bmc-info-cmd-args))
@@ -262,18 +262,18 @@
 
 (define (bmc-info args)
   "fish bmc-info main"
-  (let ((cmd-args (bmc-info-argp (string-append "bmc-info " 
-						(list->strlist args)))))
+  (let ((cmd-args (bmc-info-argp (append (list "bmc-info") 
+					 (list->strlist args)))))
     (if (list? cmd-args)
 	(bmc-info-main cmd-args))))
 
 (fi-register-command! 
- '("bmc-info" 
-   (string-append 
-    "bmc-info [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
-    "         [--host=IPMIHOST] [--username=USERNAME] [--password=PASSWORD]\n"
-    "         [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n"
-    "         [--help] [--usage] [--version]\n"
-    "\n"
-    "   Displays information about BMC.")))
+ (list "bmc-info" 
+       (string-append 
+	"bmc-info [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
+	"         [--host=IPMIHOST] [--username=USERNAME] [--password=PASSWORD]\n"
+	"         [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n"
+	"         [--help] [--usage] [--version]\n"
+	"\n"
+	"   Displays information about BMC.")))
 

@@ -115,9 +115,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   
   dev->type = driver_type;
   dev->mode = mode;
-  memcpy (&(dev->io.outofband.remote_host), 
-	  remote_host, 
-	  sizeof (struct sockaddr));
+  dev->io.outofband.remote_host = *remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
   dev->io.outofband.auth_type = auth_type;
   if (username != NULL)

@@ -61,104 +61,116 @@ extern "C" {
 # include <sys/io.h>
 #endif
 
-#ifdef STDC_HEADERS
-# include <string.h>
-# include <stdarg.h>
-#else
-# include <sys/types.h>
-# ifndef HAVE_MEMCPY
-   static void*
-   memcpy (void *dest, const void *src, size_t n)
+#ifdef HAVE_CONFIG_H
+# ifdef STDC_HEADERS
+#  include <string.h>
+#  include <stdarg.h>
+# else
+#  include <sys/types.h>
+#  ifndef HAVE_MEMCPY
+    static void*
+    memcpy (void *dest, const void *src, size_t n)
+    {
+      while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
+      return dest;
+    }
+#  endif
+#  ifndef HAVE_MEMSET
+    static void*
+    memset (void *s, int c, size_t n)
+    {
+      while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
+      return s;
+    }
+#  endif
+#  ifndef HAVE_STRCHR
+   static char*
+   strchr (const char* s, int c)
    {
-     while (0 <= --n) ((unsigned char*)dest) [n] = ((unsigned char*)src) [n];
-     return dest;
+     while (*s != '\0')
+       if (*s == (char)c) return s;
+       else s++;
+     return NULL;
    }
+#  endif
 # endif
-# ifndef HAVE_MEMSET
-   static void*
-   memset (void *s, int c, size_t n)
-   {
-     while (0 <= --n) ((unsigned char*)s) [n] = (unsigned char) c;
-     return s;
-   }
-# endif
-# ifndef HAVE_STRCHR
-  static char*
-  strchr (const char* s, int c)
-  {
-    while (*s != '\0')
-      if (*s == (char)c) return s;
-      else s++;
-    return NULL;
-  }
-# endif
-#endif
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
+# ifdef HAVE_UNISTD_H
+#  include <unistd.h>
+# endif
 
 /* AIX requires this to be the first thing in the file.  */
-#ifndef __GNUC__
-# if HAVE_ALLOCA_H
-#  include <alloca.h>
-# else
-#  ifdef _AIX
-#   pragma alloca
+# ifndef __GNUC__
+#  if HAVE_ALLOCA_H
+#   include <alloca.h>
 #  else
-#   ifndef alloca /* predefined by HP cc +Olibcalls */
-     char *alloca ();
+#   ifdef _AIX
+#    pragma alloca
+#   else
+#    ifndef alloca /* predefined by HP cc +Olibcalls */
+      char *alloca ();
+#    endif
 #   endif
 #  endif
 # endif
-#endif
 
-#if HAVE_FCNTL_H
-# if defined(__FreeBSD__) && !defined(USE_IOPERM)
-#  include <fcntl.h>
-# else
-#  include <fcntl.h>
-# endif
-#endif
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  ifdef __FreeBSD__
-#   include <sys/time.h>
+# if HAVE_FCNTL_H
+#  if defined(__FreeBSD__) && !defined(USE_IOPERM)
+#   include <fcntl.h>
 #  else
-#   include <time.h>
+#   include <fcntl.h>
 #  endif
 # endif
-#endif
 
-#if ENABLE_NLS
+# if TIME_WITH_SYS_TIME
+#  include <sys/time.h>
+#  include <time.h>
+# else
+#  if HAVE_SYS_TIME_H
+#   include <sys/time.h>
+#  else
+#   ifdef __FreeBSD__
+#    include <sys/time.h>
+#   else
+#    include <time.h>
+#   endif
+#  endif
+# endif
+
+# if ENABLE_NLS
+#  include <libintl.h>
+#  define _(Text) gettext (Text)
+# else
+#  define textdomain(Domain)
+#  define _(Text) Text
+# endif
+# define N_(Text) Text
+
+#else /* HAVE_CONFIG_H */
+# include <string.h>
+# include <stdarg.h>
+# include <unistd.h>
+# include <alloca.h>
+# include <fcntl.h>
+# include <sys/time.h>
+# include <time.h>
 # include <libintl.h>
-# define _(Text) gettext (Text)
-#else
-# define textdomain(Domain)
-# define _(Text) Text
-#endif
-#define N_(Text) Text
+#endif /* HAVE_CONFIG_H */
 
 #if defined(__FreeBSD__)
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (port, data)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (port, data)
 #else
-#define _INB(port)  inb (port)
-#define _OUTB(data, port)  outb (data, port)
+# define _INB(port)  inb (port)
+# define _OUTB(data, port)  outb (data, port)
 #endif
 
 #if defined(__FreeBSD__) && !defined(EBADMSG)
-#define EBADMSG		ENOMSG
+# define EBADMSG    ENOMSG
 #endif
 
 #ifdef FREEIPMI_LIBRARY
-#include "xmalloc.h"
+# include "xmalloc.h"
 #endif
 
 #if defined (FREEIPMI_BUILD)

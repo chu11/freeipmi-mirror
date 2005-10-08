@@ -62,7 +62,7 @@ ipmi_chksum_test (u_int8_t *buf, u_int64_t len)
   return ((chksum_val == chksum_calc) ? 1 : 0);
 }
 
-int8_t
+int8_t 
 ipmi_comp_test (fiid_obj_t obj_cmd)
 {
   if (!obj_cmd)
@@ -80,6 +80,7 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
 	       IPMI_COMP_CODE (obj_cmd), _str);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
 #endif /* IPMI_SYSLOG */
+      errno = EIO;
       return (0);
     }
   return (1); 

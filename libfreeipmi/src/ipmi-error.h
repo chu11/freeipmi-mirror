@@ -234,9 +234,18 @@ do {                                                                    \
 } while (0)
 #endif /* FREEIPMI_LIBRARY */
 
-int8_t ipmi_strerror_r(u_int8_t cmd, u_int8_t comp_code, u_int8_t *buf, size_t len);
-int8_t ipmi_strerror_cmd_r(fiid_obj_t obj_cmd, u_int8_t *buf, size_t len);
-int8_t ipmi_kcs_strstatus_r(u_int8_t status_code, u_int8_t *status_str, size_t len);
+int8_t ipmi_strerror_r (u_int8_t cmd, 
+			u_int8_t comp_code, 
+			char *errstr, 
+			size_t len);
+int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd, 
+			    char *errstr, 
+			    size_t len);
+int8_t ipmi_kcs_strstatus_r (u_int8_t status_code, 
+			     char *errstr, 
+			     size_t len);
+void ipmi_error (fiid_obj_t obj_cmd, 
+		 const char *s);
 
 #ifdef __cplusplus
 }

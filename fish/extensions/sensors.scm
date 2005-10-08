@@ -104,68 +104,36 @@
     (sensors-display-usage))
    ((sensors-get-version-option cmd-args)
     (sensors-display-version))
-   ((sensors-get-sdr-info-option cmd-args)
-    (sensors-display-sdr-info (fi-get-sdr-repo-info)))
    ((sensors-get-flush-cache-option cmd-args)
     (sensors-flush-cache))
-   ((sensors-get-list-group-option cmd-args)
-    (sensors-display-group-list))
    (else 
-    (sensors-display-sensors cmd-args))))
+    (and (fi-ipmi-open cmd-args)
+	 (begin 
+	   (cond 
+	    ((sensors-get-sdr-info-option cmd-args)
+	     (sensors-display-sdr-info (fi-get-sdr-repo-info)))
+	    ((sensors-get-list-group-option cmd-args)
+	     (sensors-display-group-list))
+	    (else 
+	     (sensors-display-sensors cmd-args)))
+	   (fi-ipmi-close))))))
 
 (define (sensors args)
   "fish sensors main"
-  (set! args (list->strlist args))
-  (catch 'misc-error
-	 (lambda ()
-	   (sensors-main (append '("sensors") args)))
-	 (lambda (k args . opts)
-	   (display "sensors: error: ")
-	   (display (cadr opts))
-	   (newline))))
+  (let ((cmd-args (sensors-argp (append (list "sensors") 
+				    (list->strlist args)))))
+    (if (list? cmd-args)
+	(sensors-main cmd-args))))
 
 (fi-register-command! 
- '("sensors" 
-   "sensors --version --usage --help --verbose --sdr-info --flush-cache --list-groups --group=GROUP-NAME --sensors \"SENSORS-LIST\"\n\tDisplay IPMI Sensors.\n"))
-
-; (catch 'misc-error 
-;        (lambda ()
-; 	 (let* ((cmd-args    (sensors-argp-parse (fi-command-line)))
-; 		(sensor-list (sensors-get-sensors-option cmd-args))
-; 		(group-name  (sensors-get-group-option cmd-args)))
-; 	   (cond 
-; 	    ((sensors-get-extra-option cmd-args)
-; 	     (begin 
-; 	       (set! sensors-exit-status 1)
-; 	       (display sensors-program-short-name (current-error-port))
-; 	       (display ": error: invalid option "
-; 			(current-error-port))
-; 	       (display (sensors-get-extra-option cmd-args)
-; 			(current-error-port))
-; 	       (display "\n" (current-error-port))))
-; 	    ((list? (member #f (map number? sensor-list)))
-; 	     (begin 
-; 	       (set! sensors-exit-status 1)
-; 	       (display sensors-program-short-name (current-error-port))
-; 	       (display ": error: non-numeric sensor number\n"
-; 			(current-error-port))))
-; 	    ((and (string? group-name) 
-; 		  (not (member #t 
-; 			       (map (lambda (arg) (string-ci=? group-name arg)) 
-; 				    (fi-sensors-get-group-list))))
-; 		  (not (sensors-alias? group-name)))
-; 	     (begin 
-; 	       (set! sensors-exit-status 1)
-; 	       (display sensors-program-short-name (current-error-port))
-; 	       (display ": error: unknown group name\n"
-; 			(current-error-port))))
-; 	    (else 
-; 	     (sensors-main cmd-args)))))
-;        (lambda (k args . opts)
-; 	 (set! sensors-exit-status 1)
-; 	 (display sensors-program-short-name (current-error-port))
-; 	 (display ": error: " (current-error-port))
-; 	 (display (cadr opts) (current-error-port))
-; 	 (display "\n" (current-error-port))))
-; (fi-exit sensors-exit-status)
-
+ (list "sensors" 
+       (string-append 
+	"Usage: sensors [--driver-poll-interval=USEC]\n"
+	"               [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n"
+	"               [--username=USERNAME] [--password=PASSWORD]\n"
+	"               [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n"
+	"               [--verbose] [--sdr-info] [--flush-cache]\n"
+	"               [--list-groups] [--all] [--group=GROUP]\n"
+	"               [--sensors=SENSORS-LIST] [--help] [--usage] [--version]\n"
+	"\n"
+	"          Displays current readings of sensor chips through BMC.")))

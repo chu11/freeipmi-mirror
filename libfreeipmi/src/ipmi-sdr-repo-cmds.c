@@ -394,8 +394,8 @@ ipmi_kcs_get_sdr (u_int16_t record_id,
 }
 
 int8_t 
-ipmi_cmd_get_repo_info2 (ipmi_device_t *dev, 
-			 fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
+			     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
@@ -417,8 +417,8 @@ ipmi_cmd_get_repo_info2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_repo_alloc_info2 (ipmi_device_t *dev, 
-			       fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
+				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
@@ -440,8 +440,8 @@ ipmi_cmd_get_repo_alloc_info2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_reserve_repo2 (ipmi_device_t *dev, 
-			fiid_obj_t obj_cmd_rs)
+ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
+			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
@@ -651,7 +651,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       fiid_obj_t local_obj_cmd_rs = NULL;
       
       FIID_OBJ_ALLOCA (local_obj_cmd_rs, tmpl_reserve_sdr_repo_rs);
-      ERR (ipmi_cmd_reserve_repo2 (dev, local_obj_cmd_rs) == 0);
+      ERR (ipmi_cmd_reserve_sdr_repo2 (dev, local_obj_cmd_rs) == 0);
       FIID_OBJ_GET (local_obj_cmd_rs,  
 		    tmpl_reserve_sdr_repo_rs, 
 		    "reservation_id", 

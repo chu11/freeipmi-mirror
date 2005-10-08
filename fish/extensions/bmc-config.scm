@@ -17,10 +17,6 @@
 ;;; 
 ;;; bmc-config.scm should be automatically loaded thru init.scm
 
-(use-modules (ice-9 getopt-long))
-
-(define bmc-config-exit-status 0)
-
 (fi-load "bc-common.scm")
 (fi-load "bc-user-section.scm")
 (fi-load "bc-lan-serial-channel-section.scm")
@@ -192,7 +188,7 @@
   (checkout-section misc_s (current-output-port)))
 
 (define (checkout-conf-to-file filename)
-  (if (string-null? filename)
+  (if (boolean? filename)
       (checkout-conf)
       (let ((fp (open-output-file filename)))
 	(checkout-section user1_s fp)
@@ -268,151 +264,77 @@
 	    (diff-conf-file fp)
 	    #f))))
 
-
-(define (bc-display-usage)
-  (display "bmc-config --usage --help --version  --checkout --commit --diff --filename=FILENAME --key-pair=KEY-PAIR\n\tBMC Configurator.\n"))
-
-(define (bc-display-help)
-  (begin 
-    (display "BMC Configurator.\n\n")
-    (display "Options:\n")
-    (display "  -u, --usage                Usage message\n") 
-    (display "  -h, --help                 Show help\n")
-    (display "  -V, --version              Show version\n")
-    (display "  -o, --checkout             Fetch configuration information from BMC.\n")
-    (display "  -i, --commit               Update configuration information to BMC\n")
-    (display "  -d, --diff                 Show differences with BMC\n")
-    (display "  -f FILENAME, --filename=FILENAME    Use this file for checkout/commit/diff\n")
-    (display "  -k \"KEY=VALUE\", --key-pair=\"KEY=VALUE\"    checkout/diff only this KEY/VALUE\n")
-))
-
-(define (bc-display-version)
-  (display (string-append 
-	    "BMC Configurator." 
-	    (fi-version)))
-  (newline))
-
-(define (bc-main args)
-  (let* ((option-spec '((usage    (single-char #\u) (value #f))
-			(help     (single-char #\h) (value #f))
-			(version  (single-char #\V) (value #f))
-			(checkout (single-char #\o) (value #f))
-			(commit   (single-char #\i) (value #f))
-			(diff     (single-char #\d) (value #f))
-			(filename (single-char #\f) (value #t))
-			(key-pair (single-char #\k) (value #t))))
-	 (options (getopt-long args option-spec))
-	 (usage-wanted         (option-ref options 'usage    #f))
-	 (help-wanted          (option-ref options 'help     #f))
-	 (version-wanted       (option-ref options 'version  #f))
-	 (checkout-wanted      (option-ref options 'checkout #f))
-	 (commit-wanted        (option-ref options 'commit   #f))
-	 (diff-wanted          (option-ref options 'diff     #f))
-	 (filename             (option-ref options 'filename ""))
-	 (key-pair-list   (if (option-ref options 'key-pair #f)
-			      (let ((klist '()))
-				(map (lambda (arg)
-				       (if (equal? (car arg) 'key-pair)
-					   (if (string-index (cdr arg) #\=) 
-					       (set! klist 
-						     (append 
-						      klist 
-						      (string-separate (cdr arg) #\=)))
-                                               (begin
-                                                 (set! usage-wanted #t)
-                                                 (set! bmc-config-exit-status -1)))))
-				     options)
-				klist)
-			      '()))
-; 	 (key-pair-list (if (option-ref options 'key-pair #f)
-; 			    (let ((klist '()))
-; 			      (map (lambda (arg)
-; 				     (if (equal? (car arg) 'key-pair)
-; 					 (begin 
-; 					   (display (cdr arg))
-; 					   (newline))))
-; 				   options)
-; 			      klist)
-; 			    '()))
-)
-    (cond 
-     ;; argument type check
-     (usage-wanted
-      (bc-display-usage))
-     (help-wanted
-      (bc-display-help))
-     (version-wanted
-      (bc-display-version))
-     (checkout-wanted 
-      (if (not (checkout-conf-to-file filename))
-	  (set! bmc-config-exit-status -1)))
-     (commit-wanted 
-      (if (and (string-null? filename) (null? key-pair-list))
-	  (bc-display-help)
-	  (begin 
-	    (if (not (string-null? filename))
-		(if (file-exists? filename)
-		    (let ((fp (open-input-file filename)))
-		      (if (validate-conf-file fp)
-			  (begin 
-			    (seek fp 0 SEEK_SET)
-			    (if (not (commit-conf-file fp))
-				(set! bmc-config-exit-status -1)))
-			  (set! bmc-config-exit-status -1))
-		      (close fp))))
-	    (if (not (null? key-pair-list))
-		(if (validate-key-pair-list key-pair-list)
-		    (if (not (commit-key-pair-list key-pair-list))
-			(set! bmc-config-exit-status -1))
-		    (set! bmc-config-exit-status -1))))))
-     (diff-wanted 
-      (if (and (string-null? filename) (null? key-pair-list))
-	  (bc-display-help)
-	  (begin 
-	    (if (not (string-null? filename))
-		(if (file-exists? filename)
-		    (let ((fp (open-input-file filename)))
-		      (if (validate-conf-file fp)
-			  (begin 
-			    (seek fp 0 SEEK_SET)
-			    (if (not (diff-conf-file fp))
-				(set! bmc-config-exit-status -1)))
-			  (set! bmc-config-exit-status -1))
-		      (close fp))))
-	    (if (not (null? key-pair-list))
-		(if (validate-key-pair-list key-pair-list)
-		    (if (not (diff-key-pair-list key-pair-list))
-			(set! bmc-config-exit-status -1))
-		    (set! bmc-config-exit-status -1))))))
-     (else 
-      (bc-display-help)))))
-
+(define (bmc-config-main cmd-args)
+  (cond 
+   ((bmc-config-get-help-option cmd-args)
+    (bmc-config-display-help))
+   ((bmc-config-get-usage-option cmd-args)
+    (bmc-config-display-usage))
+   ((bmc-config-get-version-option cmd-args)
+    (bmc-config-display-version))
+   (else 
+    (and (fi-ipmi-open cmd-args)
+	 (cond 
+	  ;; checkout
+	  ((bmc-config-get-checkout-option cmd-args)
+	   (if (not (checkout-conf-to-file 
+		     (bmc-config-get-filename-option cmd-args)))
+	       (set! bmc-config-exit-status -1)))
+	  ;; commit
+	  ((bmc-config-get-commit-option cmd-args)
+	   (let ((filename (bmc-config-get-filename-option cmd-args))
+		 (key-pair-list (bmc-config-get-key-pair-option cmd-args)))
+	     (begin 
+	       (if (string? filename)
+		   (if (file-exists? filename)
+		       (let ((fp (open-input-file filename)))
+			 (if (validate-conf-file fp)
+			     (begin 
+			       (seek fp 0 SEEK_SET)
+			       (if (not (commit-conf-file fp))
+				   (set! bmc-config-exit-status -1)))
+			     (set! bmc-config-exit-status -1))
+			 (close fp))))
+	       (if (list? key-pair-list)
+		   (if (validate-key-pair-list key-pair-list)
+		       (if (not (commit-key-pair-list key-pair-list))
+			   (set! bmc-config-exit-status -1))
+		       (set! bmc-config-exit-status -1))))))
+	  ;; diff
+	  ((bmc-config-get-diff-option cmd-args)
+	   (let ((filename (bmc-config-get-filename-option cmd-args))
+		 (key-pair-list (bmc-config-get-key-pair-option cmd-args)))
+	     (begin 
+	       (if (string? filename)
+		   (if (file-exists? filename)
+		       (let ((fp (open-input-file filename)))
+			 (if (validate-conf-file fp)
+			     (begin 
+			       (seek fp 0 SEEK_SET)
+			       (if (not (diff-conf-file fp))
+				   (set! bmc-config-exit-status -1)))
+			     (set! bmc-config-exit-status -1))
+			 (close fp))))
+	       (if (list? key-pair-list)
+		   (if (validate-key-pair-list key-pair-list)
+		       (if (not (diff-key-pair-list key-pair-list))
+			   (set! bmc-config-exit-status -1))
+		       (set! bmc-config-exit-status -1)))))))
+	 (fi-ipmi-close)))))
 
 (define (bmc-config args)
   "fish bmc-config main"
-  (set! args (list->strlist args))
-  (catch 'misc-error
-	 (lambda ()
-	   (bc-main (append '("bmc-config") args)))
-	 (lambda (k args . opts)
-	   (display "bmc-config: error: ")
-	   (display (cadr opts))
-	   (newline))))
+  (let ((cmd-args (bmc-config-argp (append (list "bmc-config") 
+					   (list->strlist args)))))
+    (if (list? cmd-args)
+	(bmc-config-main cmd-args))))
 
 (fi-register-command! 
- '("bmc-config" 
-   "bmc-config --usage --help --version --checkout --commit --diff --filename FILENAME --key-pair=\"KEY=VALUE\" ...\n\tGet and set BMC configurations."))
-
-;;; main starts here ;;;
-
-; (define fp (open-input-file "bc2.conf"))
-; (if (validate-conf-file fp)
-;     (begin 
-;       (display "bc2.conf is validated\n")
-;       (seek fp 0 SEEK_SET)
-;       (if (commit-conf-file fp)
-; 	  (display "bc2.conf is committed\n")
-; 	  (display "unable to commit file bc2.conf\n")))
-;     (display "fix the file and rerun\n"))
-; (close fp)
-
+ (list "bmc-config" 
+       (string-append 
+	"bmc-config [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
+	"           [--host=IPMIHOST] [--username=USERNAME]\n"
+	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
+	"           [--priv-level=PRIVILEGE-LEVEL] [--checkout] [--commit]\n"
+	"           [--diff] [--filename=FILENAME] [--key-pair=KEY-PAIR]\n"
+	"           [--help] [--usage] [--version]\n")))

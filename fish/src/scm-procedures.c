@@ -231,95 +231,15 @@ ex_sensors_get_group_list ()
   return (scm_group_list);
 }
 
-SCM 
-ex_sdr_get_repo_info ()
-{
-  SCM scm_repo_info_list;
-  
-  u_int8_t *data_rs = NULL;
-  
-  char version_string[17];
-  u_int8_t sdr_major_version;
-  u_int8_t sdr_minor_version;
-  
-  u_int64_t val;
-  time_t time;
-  
-  /* get_repo_info */
-  data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
-  if (ipmi_kcs_get_repo_info (data_rs) != 0)
-    return SCM_EOL;
-  
-  fiid_obj_get (data_rs, 
-		tmpl_get_sdr_repo_info_rs, 
-		"comp_code", 
-		&val);
-  if (val != 0)
-    return SCM_EOL;
-  
-  /* appending sdr version */
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"sdr_version_major",
-		&val);
-  sdr_major_version = val;
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"sdr_version_minor",
-		&val);
-  sdr_minor_version = val;
-  snprintf (version_string, 17, 
-	    "%d.%d", 
-	    sdr_major_version, sdr_minor_version);
-  scm_repo_info_list = gh_list (gh_str02scm (version_string), SCM_UNDEFINED);
-  
-  /* appending record-count */
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"record_count",
-		&val);
-  scm_repo_info_list = gh_append2 (scm_repo_info_list,
-				   gh_list (gh_long2scm (val),
-					    SCM_UNDEFINED));
-  
-  /* appending free_space */
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"free_space",
-		&val);
-  scm_repo_info_list = gh_append2 (scm_repo_info_list,
-				   gh_list (gh_long2scm (0x10000 - val),
-					    SCM_UNDEFINED));
-  
-  /* appending recent_addition_timestamp */
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"recent_addition_timestamp",
-		&val);
-  time = val;
-  scm_repo_info_list = gh_append2 (scm_repo_info_list,
-				   gh_list (gh_str02scm (ctime (&time)),
-					    SCM_UNDEFINED));
-  
-  /* appending recent_erase_timestamp */
-  fiid_obj_get (data_rs,
-		tmpl_get_sdr_repo_info_rs,
-		"recent_erase_timestamp",
-		&val);
-  time = val;
-  scm_repo_info_list = gh_append2 (scm_repo_info_list,
-				   gh_list (gh_str02scm (ctime (&time)),
-					    SCM_UNDEFINED));
-  return (scm_repo_info_list);
-}
-
 SCM
 ex_sel_get_first_entry_raw ()
 {
   u_int8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_first_entry (get_seld (), record_data) == 0)
+  if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
+				fi_get_seld (), 
+				record_data) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -334,7 +254,9 @@ ex_sel_get_next_entry_raw ()
   u_int8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_next_entry (get_seld (), record_data) == 0)
+  if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
+			       fi_get_seld (), 
+			       record_data) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -349,7 +271,9 @@ ex_sel_get_first_entry_hex ()
   u_int8_t record_data [SEL_RECORD_SIZE];
   u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
   
-  if (ipmi_sel_get_first_entry (get_seld (), record_data) == 0)
+  if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
+				fi_get_seld (), 
+				record_data) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -370,7 +294,9 @@ ex_sel_get_next_entry_hex ()
   u_int8_t record_data [SEL_RECORD_SIZE];
   u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
   
-  if (ipmi_sel_get_next_entry (get_seld (), record_data) == 0)
+  if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
+			       fi_get_seld (), 
+			       record_data) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -385,46 +311,12 @@ ex_sel_get_next_entry_hex ()
   else return SCM_BOOL_F;
 }
 
-SCM
-ex_sel_get_info ()
-{
-  sel_info_t info;
-
-  if (get_sel_info (&info) == 0)
-    {
-      char buf [1024];
-      struct tm tmtime;
-      char addtime [32];
-      char erasetime [32];
-      time_t bintime;
-
-      bintime = info.last_add_time;
-      gmtime_r (&bintime, &tmtime);
-      strftime (addtime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
-      bintime = info.last_erase_time;
-      gmtime_r (&bintime, &tmtime);
-      strftime (erasetime, 32, "%m/%d/%Y - %H:%M:%S", &tmtime);
-      snprintf (buf, 1024,
-                "Version                     IPMI v%lu.%lu\n"
-                "Number of Entries           %lu\n"
-                "Last Add Time               %s\n"
-                "Last Erase Time             %s\n"
-                "Free Space Remaining        %lu\n\n",
-                info.version_major, info.version_minor,
-                info.entry_count,
-                addtime, erasetime,
-                info.free_space);
-      return gh_str02scm (buf);
-    }
-  else return SCM_BOOL_F;
-}
-
-SCM
+SCM 
 ex_sel_get_info_binary ()
 {
   sel_info_t info;
-
-  if (get_sel_info (&info) == 0)
+  
+  if (get_sel_info (fi_get_ipmi_device (), &info) == 0)
     {
       SCM tail = SCM_EOL;
       
@@ -433,7 +325,7 @@ ex_sel_get_info_binary ()
       tail = gh_cons (info.flags & partial_add_sel_entry_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
       tail = gh_cons (info.flags & delete_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
       tail = gh_cons (info.flags & overflow_flag ? SCM_BOOL_T : SCM_BOOL_F, tail);
-
+      
       return gh_cons (gh_ulong2scm (info.version_major),
                       gh_cons (gh_ulong2scm (info.version_minor),
                                gh_cons (gh_ulong2scm (info.entry_count),
@@ -452,11 +344,10 @@ ex_sel_get_first_entry ()
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_first_entry (get_seld (), record_data) != 0)
-    {
-      /* fprintf (stderr, "ipmi_sel_get_first_entry failed\n"); */
-      return SCM_EOL;
-    }
+  if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
+				fi_get_seld (), 
+				record_data) != 0)
+    return SCM_EOL;
   
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
@@ -494,11 +385,10 @@ ex_sel_get_next_entry ()
   struct sel_record sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
-  if (ipmi_sel_get_next_entry (get_seld (), record_data) != 0)
-    {
-      /* fprintf (stderr, "ipmi_sel_get_next_entry failed\n"); */
-      return SCM_EOL;
-    }
+  if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
+			       fi_get_seld (), 
+			       record_data) != 0)
+    return SCM_EOL;
   
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
@@ -533,78 +423,35 @@ SCM
 ex_sel_delete_entry (SCM scm_record_id)
 {
   u_int16_t record_id;
-  fiid_obj_t obj_data_rs;
+  fiid_obj_t obj_cmd_rs;
   u_int16_t reservation_id;
-  u_int8_t status;
   u_int64_t val;
   
   record_id = gh_scm2long (scm_record_id);
   
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-      {
-	char err_msg[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed with %s\n", 
-		 err_msg);
-	return SCM_BOOL_F;
-      }
-    
-    fiid_obj_get (obj_data_rs, 
-		  tmpl_reserve_sel_rs, 
-		  "reservation_id", 
-		  &val);
-    reservation_id = val;
-  }
-  
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_delete_sel_entry_rs));
-    status = ipmi_kcs_delete_sel_entry (reservation_id, 
-					record_id, 
-					obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_delete_sel_entry() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) == IPMI_COMMAND_SUCCESS)
-      return SCM_BOOL_T;
-    
-    if (IPMI_COMP_CODE(obj_data_rs) == IPMI_SEL_OPERATION_NOT_SUPPORTED)
-      {
-	fprintf (stderr, 
-		 "error: delete operation not supported.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) == IPMI_SEL_ERASE_IN_PROGRESS)
-      {
-	fprintf (stderr, 
-		 "error: sel erase in progress.\n");
-	return SCM_BOOL_F;
-      }
-    
+  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
+			     obj_cmd_rs) != 0)
     {
-      char err_msg[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, 
-	       "error: ipmi_kcs_delete_sel_entry() failed with %s\n", 
-	       err_msg);
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
       return SCM_BOOL_F;
     }
-  }
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_reserve_sel_rs, 
+		"reservation_id", 
+		&val);
+  reservation_id = val;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_delete_sel_entry_rs);
+  if (ipmi_cmd_delete_sel_entry2 (fi_get_ipmi_device (), 
+				  reservation_id, 
+				  record_id, 
+				  obj_cmd_rs) != 0)
+    {
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_delete_sel_entry2()");
+      return SCM_BOOL_F;
+    }
   
   return SCM_BOOL_T;
 }
@@ -612,60 +459,33 @@ ex_sel_delete_entry (SCM scm_record_id)
 SCM 
 ex_sel_clear ()
 {
-  fiid_obj_t obj_data_rs;
+  fiid_obj_t obj_cmd_rs;
   u_int16_t reservation_id;
-  u_int8_t status;
   u_int64_t val;
   
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-      {
-	char err_msg[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed with %s\n", 
-		 err_msg);
-	return SCM_BOOL_F;
-      }
-    
-    fiid_obj_get (obj_data_rs, 
-		  tmpl_reserve_sel_rs, 
-		  "reservation_id", 
-		  &val);
-    reservation_id = val;
-  }
+  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
+			     obj_cmd_rs) != 0)
+    {
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
+      return SCM_BOOL_F;
+    }
   
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_clear_sel_rs));
-    status = ipmi_kcs_clear_sel (reservation_id, 
-				 IPMI_SEL_INITIATE_ERASE, 
-				 obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_clear_sel() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-      {
-	char err_msg[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, 
-		 "error: ipmi_kcs_clear_sel() failed with %s\n", 
-		 err_msg);
-	return SCM_BOOL_F;
-      }
-  }
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_reserve_sel_rs, 
+		"reservation_id", 
+		&val);
+  reservation_id = val;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs);
+  if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
+			   reservation_id, 
+			   IPMI_SEL_INITIATE_ERASE, 
+			   obj_cmd_rs) != 0)
+    {
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()");
+      return SCM_BOOL_F;
+    }
   
   return SCM_BOOL_T;
 }
@@ -673,62 +493,35 @@ ex_sel_clear ()
 SCM 
 ex_sel_get_clear_status ()
 {
-  fiid_obj_t obj_data_rs;
+  fiid_obj_t obj_cmd_rs;
   u_int16_t reservation_id;
-  u_int8_t status;
   u_int64_t val;
   
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_reserve_sel_rs));
-    status = ipmi_kcs_reserve_sel (obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-      {
-	char err_msg[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, 
-		 "error: ipmi_kcs_reserve_sel() failed with %s\n", 
-		 err_msg);
-	return SCM_BOOL_F;
-      }
-    
-    fiid_obj_get (obj_data_rs, 
-		  tmpl_reserve_sel_rs, 
-		  "reservation_id", 
-		  &val);
-    reservation_id = val;
-  }
+  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
+			     obj_cmd_rs) != 0)
+    {
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
+      return SCM_BOOL_F;
+    }
   
-  {
-    obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_clear_sel_rs));
-    status = ipmi_kcs_clear_sel (reservation_id, 
-				 IPMI_SEL_GET_ERASURE_STATUS, 
-				 obj_data_rs);
-    if (status != 0)
-      {
-	fprintf (stderr, 
-		 "error: ipmi_kcs_clear_sel() failed.\n");
-	return SCM_BOOL_F;
-      }
-    
-    if (IPMI_COMP_CODE(obj_data_rs) != IPMI_COMMAND_SUCCESS)
-      {
-	char err_msg[IPMI_ERR_STR_MAX_LEN];
-	ipmi_strerror_cmd_r (obj_data_rs, err_msg, IPMI_ERR_STR_MAX_LEN);
-	fprintf (stderr, 
-		 "error: ipmi_kcs_clear_sel() failed with %s\n", 
-		 err_msg);
-	return SCM_BOOL_F;
-      }
-  }
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_reserve_sel_rs, 
+		"reservation_id", 
+		&val);
+  reservation_id = val;
   
-  fiid_obj_get (obj_data_rs, 
+  fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs);
+  if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
+			   reservation_id, 
+			   IPMI_SEL_GET_ERASURE_STATUS, 
+			   obj_cmd_rs) != 0)
+    {
+      ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()");
+      return SCM_BOOL_F;
+    }
+  
+  fiid_obj_get (obj_cmd_rs, 
 		tmpl_clear_sel_rs, 
 		"erasure_progress", 
 		&val);
@@ -2407,7 +2200,10 @@ ex_get_sdr_record (SCM scm_record_id)
   
   memset (&sdr_record, 0, sizeof (struct sdr_record));
   
-  if (get_sdr_record (record_id, &next_record_id, &sdr_record))
+  if (get_sdr_record (fi_get_ipmi_device (), 
+		      record_id, 
+		      &next_record_id, 
+		      &sdr_record))
     return SCM_BOOL_F;
   
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2826,7 +2622,9 @@ ex_get_sensor_reading (SCM scm_sdr_record)
   scm2sdr_record (scm_sdr_record, &sdr_record);
   
   memset (&sensor_reading, 0, sizeof (struct sensor_reading));
-  if (get_sensor_reading (&sdr_record, &sensor_reading) != 0)
+  if (get_sensor_reading (fi_get_ipmi_device (), 
+			  &sdr_record, 
+			  &sensor_reading) != 0)
     return SCM_BOOL_F;
   
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
@@ -2881,7 +2679,7 @@ ex_get_sdr_repo_info ()
 {
   SCM scm_repo_info_list = SCM_EOL;
   
-  u_int8_t *data_rs = NULL;
+  u_int8_t *cmd_rs = NULL;
   
   char version_string[17];
   u_int8_t sdr_major_version;
@@ -2890,11 +2688,14 @@ ex_get_sdr_repo_info ()
   u_int64_t val;
   
   /* get_repo_info */
-  data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
-  if (ipmi_kcs_get_repo_info (data_rs) != 0)
-    return SCM_EOL;
+  fiid_obj_alloca (cmd_rs, tmpl_get_sdr_repo_info_rs);
+  if (ipmi_cmd_get_sdr_repo_info2 (fi_get_ipmi_device (), cmd_rs) != 0)
+    {
+      ipmi_error (cmd_rs, "ipmi_cmd_get_sdr_repo_info2()");
+      return SCM_EOL;
+    }
   
-  fiid_obj_get (data_rs, 
+  fiid_obj_get (cmd_rs, 
 		tmpl_get_sdr_repo_info_rs, 
 		"comp_code", 
 		&val);
@@ -2902,12 +2703,12 @@ ex_get_sdr_repo_info ()
     return SCM_EOL;
   
   /* appending sdr version */
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"sdr_version_major",
 		&val);
   sdr_major_version = val;
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"sdr_version_minor",
 		&val);
@@ -2919,7 +2720,7 @@ ex_get_sdr_repo_info ()
 					gh_str02scm ("sdr_version"), 
 					gh_str02scm (version_string));
   
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"record_count",
 		&val);
@@ -2927,7 +2728,7 @@ ex_get_sdr_repo_info ()
 					gh_str02scm ("record_count"), 
 					gh_long2scm (val));
   
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"free_space",
 		&val);
@@ -2935,7 +2736,7 @@ ex_get_sdr_repo_info ()
 					gh_str02scm ("free_space"), 
 					gh_long2scm (val));
   
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"recent_addition_timestamp",
 		&val);
@@ -2943,7 +2744,7 @@ ex_get_sdr_repo_info ()
 					gh_str02scm ("recent_addition_timestamp"), 
 					gh_ulong2scm (val));
   
-  fiid_obj_get (data_rs,
+  fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"recent_erase_timestamp",
 		&val);
@@ -2965,7 +2766,7 @@ ex_get_bmc_info ()
   fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
   if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      perror ("ipmi_cmd_get_dev_id()");
+      ipmi_error (cmd_rs, "ipmi_cmd_get_dev_id()");
     }
   
   fiid_obj_get (cmd_rs, 
