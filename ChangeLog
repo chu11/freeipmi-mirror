@@ -1,3 +1,8 @@
+2005-10-12  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record): Now ignores
+	ipmi_cmd_get_sensor_thresholds2() command error.
+
 2005-10-09  A Balamurugan  <bala@zresearch.com>
 
 	* freeipmi/libfreeipmi/src/ipmi-pef-cmds.c

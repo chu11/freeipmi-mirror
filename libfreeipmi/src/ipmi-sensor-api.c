@@ -644,9 +644,8 @@ get_sdr_record (ipmi_device_t *dev,
 					   sdr_record->record.sdr_full_record.sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_sensor_thresholds2()");
-	  ipmi_xfree (obj_sdr_record);
-	  return (-1);
+	  /* This is ok */
+	  break;
 	}
       
       fiid_obj_get (obj_cmd_rs, 
