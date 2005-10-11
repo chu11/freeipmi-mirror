@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.9 2005-10-06 10:41:10 balamurugan Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.10 2005-10-11 04:06:44 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -51,6 +51,7 @@ extern fiid_template_t tmpl_get_pef_conf_param_num_event_filters_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_event_filter_table_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_event_filter_data1_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_num_alert_policies_rs;
+extern fiid_template_t tmpl_get_pef_conf_param_num_alert_strings_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_alert_string_keys_rs;
 extern fiid_template_t tmpl_get_pef_conf_param_alert_strings_rs;
 
@@ -247,6 +248,11 @@ int8_t ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
 					     u_int8_t set_selector,
 					     u_int8_t block_selector, 
 					     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev, 
+					    u_int8_t parameter_type, 
+					    u_int8_t set_selector, 
+					    u_int8_t block_selector, 
+					    fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev, 
 					u_int8_t parameter_type, 
 					u_int8_t set_selector, 

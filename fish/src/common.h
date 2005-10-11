@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.1 2005-10-06 10:41:09 balamurugan Exp $ 
+   $Id: common.h,v 1.2 2005-10-11 04:06:44 balamurugan Exp $ 
 
    common.c - Common header definitions.
 
@@ -43,5 +43,8 @@
 #include "scm-procedures.h"
 #include "fi-commands.h"
 #include "fish.h"
+
+#define SET_SELECTOR      0x0
+#define BLOCK_SELECTOR    0x0
 
 #endif

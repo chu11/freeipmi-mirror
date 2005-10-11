@@ -35,7 +35,7 @@
 	 (fi-load "bmc-config.scm")
 	 (fi-load "sel.scm")
 	 (fi-load "bmc-info.scm")
-	 (fi-load "bc2.scm"))
+	 (fi-load "pef.scm"))
        (lambda (k args . opts)
 	 (display ">>--:>  >>--:>  >>--:> >>--:>\n")
 	 (display "~ ~   Cat ate the fish!!  ~ ~\n")

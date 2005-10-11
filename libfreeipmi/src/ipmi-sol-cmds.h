@@ -29,9 +29,6 @@
 #define IPMI_SOL_PAYLOAD_DISABLE    0x0
 #define IPMI_SOL_PAYLOAD_ENABLE     0x1
 
-#define IPMI_SOL_CONF_GET_PARAMETER             0x0
-#define IPMI_SOL_CONF_GET_PARAMETER_REVISION    0x1
-
 #ifdef __cplusplus
 extern "C" {
 #endif

@@ -18,9 +18,6 @@
 
 #include "common.h"
 
-#define SET_SELECTOR      0x0
-#define BLOCK_SELECTOR    0x0
-
 /* struct bmc_user */
 /* { */
 /*   u_int8_t userid; */
@@ -1010,7 +1007,7 @@ get_bmc_lan_conf_ip_addr_source (u_int8_t *ip_addr_source)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_source_rs));
   status = ipmi_lan_get_ip_addr_source (get_lan_channel_number (), 
-					IPMI_LAN_CONF_GET_PARAMETER, 
+					IPMI_GET_PARAMETER, 
 					SET_SELECTOR, 
 					BLOCK_SELECTOR, 
 					obj_data_rs);
@@ -1039,7 +1036,7 @@ get_bmc_lan_conf_ip_addr (char *ip_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_ip_addr_rs));
   status = ipmi_lan_get_ip_addr (get_lan_channel_number (), 
-				 IPMI_LAN_CONF_GET_PARAMETER, 
+				 IPMI_GET_PARAMETER, 
 				 SET_SELECTOR, 
 				 BLOCK_SELECTOR, 
 				 obj_data_rs);
@@ -1073,7 +1070,7 @@ get_bmc_lan_conf_mac_addr (char *mac_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   status = ipmi_lan_get_mac_addr (get_lan_channel_number (), 
-				  IPMI_LAN_CONF_GET_PARAMETER, 
+				  IPMI_GET_PARAMETER, 
 				  SET_SELECTOR, 
 				  BLOCK_SELECTOR, 
 				  obj_data_rs);
@@ -1109,7 +1106,7 @@ get_bmc_lan_conf_subnet_mask (char *subnet_mask)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_subnet_mask_rs));
   status = ipmi_lan_get_subnet_mask (get_lan_channel_number (), 
-				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     IPMI_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_data_rs);
@@ -1143,7 +1140,7 @@ get_bmc_lan_conf_default_gw_ip_addr (char *default_gw_ip_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
   status = ipmi_lan_get_gw1_ip_addr (get_lan_channel_number (), 
-				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     IPMI_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_data_rs);
@@ -1177,7 +1174,7 @@ get_bmc_lan_conf_default_gw_mac_addr (char *default_gw_mac_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   status = ipmi_lan_get_gw1_mac_addr (get_lan_channel_number (), 
-				      IPMI_LAN_CONF_GET_PARAMETER, 
+				      IPMI_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
 				      obj_data_rs);
@@ -1213,7 +1210,7 @@ get_bmc_lan_conf_backup_gw_ip_addr (char *backup_gw_ip_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gw_ip_addr_rs));
   status = ipmi_lan_get_gw2_ip_addr (get_lan_channel_number (), 
-				     IPMI_LAN_CONF_GET_PARAMETER, 
+				     IPMI_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_data_rs);
@@ -1247,7 +1244,7 @@ get_bmc_lan_conf_backup_gw_mac_addr (char *backup_gw_mac_addr)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_mac_addr_rs));
   status = ipmi_lan_get_gw2_mac_addr (get_lan_channel_number (), 
-				      IPMI_LAN_CONF_GET_PARAMETER, 
+				      IPMI_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
 				      obj_data_rs);
@@ -1286,7 +1283,7 @@ get_bmc_lan_conf_vlan_id (u_int8_t *vlan_id_flag,
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_vlan_id_rs));
   
   status = ipmi_lan_get_vlan_id (get_lan_channel_number (), 
-                                 IPMI_LAN_CONF_GET_PARAMETER, 
+                                 IPMI_GET_PARAMETER, 
                                  SET_SELECTOR, 
                                  BLOCK_SELECTOR, 
                                  obj_data_rs);
@@ -1335,7 +1332,7 @@ get_bmc_lan_conf_vlan_priority (u_int8_t *vlan_priority)
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_vlan_priority_rs));
   
   status = ipmi_lan_get_vlan_priority (get_lan_channel_number (), 
-                                       IPMI_LAN_CONF_GET_PARAMETER, 
+                                       IPMI_GET_PARAMETER, 
                                        SET_SELECTOR, 
                                        BLOCK_SELECTOR, 
                                        obj_data_rs);
@@ -1365,7 +1362,7 @@ get_bmc_lan_conf_auth_type_enables (struct bmc_auth_level *bmc_auth_level)
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_auth_type_enables_rs));
   
   status = ipmi_lan_get_auth_type_enables (get_lan_channel_number (), 
-					   IPMI_LAN_CONF_GET_PARAMETER, 
+					   IPMI_GET_PARAMETER, 
 					   SET_SELECTOR, 
 					   BLOCK_SELECTOR, 
 					   obj_data_rs);
@@ -1540,7 +1537,7 @@ get_bmc_lan_conf_arp_control (u_int8_t *enable_gratuitous_arps,
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_bmc_generated_arp_control_rs));
   
   status = ipmi_lan_get_arp (get_lan_channel_number (), 
-			     IPMI_LAN_CONF_GET_PARAMETER, 
+			     IPMI_GET_PARAMETER, 
 			     SET_SELECTOR, 
 			     BLOCK_SELECTOR, 
 			     obj_data_rs);
@@ -1575,7 +1572,7 @@ get_bmc_lan_conf_gratuitous_arp (u_int8_t *gratuitous_arp_interval)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_lan_conf_param_gratuitous_arp_interval_rs));
   status = ipmi_lan_get_gratuitous_arp_interval (get_lan_channel_number (), 
-						 IPMI_LAN_CONF_GET_PARAMETER, 
+						 IPMI_GET_PARAMETER, 
 						 SET_SELECTOR, 
 						 BLOCK_SELECTOR, 
 						 obj_data_rs);
@@ -1640,7 +1637,7 @@ get_bmc_serial_conf_conn_mode (u_int8_t *enable_basic_mode,
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_connmode_rs));
   
   status = ipmi_get_serial_connmode (get_serial_channel_number (), 
-				     IPMI_SERIAL_CONF_GET_PARAMETER, 
+				     IPMI_GET_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_data_rs);
@@ -1687,7 +1684,7 @@ get_bmc_serial_conf_page_blackout_interval (u_int8_t *page_blackout_interval)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_pageblackout_rs));
   status = ipmi_get_serial_page_blackout (get_serial_channel_number (), 
-					  IPMI_SERIAL_CONF_GET_PARAMETER, 
+					  IPMI_GET_PARAMETER, 
 					  SET_SELECTOR, 
 					  BLOCK_SELECTOR, 
 					  obj_data_rs);
@@ -1716,7 +1713,7 @@ get_bmc_serial_conf_call_retry_time (u_int8_t *call_retry_time)
   
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_retry_rs));
   status = ipmi_get_serial_retry_time (get_serial_channel_number (), 
-				       IPMI_SERIAL_CONF_GET_PARAMETER, 
+				       IPMI_GET_PARAMETER, 
 				       SET_SELECTOR, 
 				       BLOCK_SELECTOR, 
 				       obj_data_rs);
@@ -1748,7 +1745,7 @@ get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup,
   obj_data_rs = alloca (fiid_obj_len_bytes (tmpl_get_serial_conf_param_commbits_rs));
   
   status = ipmi_get_serial_comm_bits (get_serial_channel_number (), 
-				      IPMI_SERIAL_CONF_GET_PARAMETER, 
+				      IPMI_GET_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
 				      obj_data_rs);

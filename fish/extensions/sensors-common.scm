@@ -277,14 +277,13 @@
 						(list version-wanted))))
 	     ;; -v, --verbose option (10) sensor specific
 	     (if (list? sensors-cmd-args)
-		 (if verbose-wanted 
-		     (set! verbose-wanted (let ((vcount 0))
-					    (for-each (lambda (arg)
-							(if (equal? (car arg) 'verbose)
-							    (set! vcount 
-								  (+ vcount 1))))
-						      options)
-					    vcount))))
+		 (set! verbose-wanted (let ((vcount 0))
+					(for-each (lambda (arg)
+						    (if (equal? (car arg) 'verbose)
+							(set! vcount 
+							      (+ vcount 1))))
+						  options)
+					vcount)))
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list verbose-wanted))))

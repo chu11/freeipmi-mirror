@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.11 2005-10-06 10:41:09 balamurugan Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.12 2005-10-11 04:06:44 balamurugan Exp $  */
 
 #include "freeipmi.h"
 
@@ -37,15 +37,15 @@ fiid_template_t tmpl_get_pef_caps_rs =
     {4,  "pef_version_major"}, 
     {4,  "pef_version_minor"}, 
 
-    {1,  "get_pef_caps_alert_support"}, 
-    {1,  "get_pef_caps_powerdown_support"}, 
-    {1,  "get_pef_caps_reset_support"}, 
-    {1,  "get_pef_caps_powercycle_support"},
-    {1,  "get_pef_caps_oem_support"},
-    {1,  "get_pef_caps_diag_interrupt_support"},
+    {1,  "action_support.alert"}, 
+    {1,  "action_support.powerdown"}, 
+    {1,  "action_support.reset"}, 
+    {1,  "action_support.powercycle"},
+    {1,  "action_support.oem"},
+    {1,  "action_support.diag_interrupt"},
     {2,  "reserved"}, 
 
-    {8,  "get_pef_caps_filter_table_entries"}, 
+    {8,  "number_of_eft_entries"}, 
 
     {0,  ""}
   };
@@ -297,7 +297,7 @@ fiid_template_t tmpl_get_pef_conf_param_num_event_filters_rs =
 
     {8, "comp_code"},
 
-    {7, "pef_conf_param_num_event_filters"},
+    {7, "num_event_filters"},
     {1, "reserved"},
 
     {0, ""}
@@ -474,11 +474,23 @@ fiid_template_t tmpl_get_pef_conf_param_num_alert_policies_rs =
 
     {8, "comp_code"},
 
-    {7, "pef_conf_param_num_alert_policies"},
+    {7, "num_alert_policies"},
     {1, "reserved"},
 
     {0, ""}
   };    
+
+fiid_template_t tmpl_get_pef_conf_param_num_alert_strings_rs =
+  {
+    {8, "cmd"},
+
+    {8, "comp_code"},
+
+    {7, "num_alert_strings"},
+    {1, "reserved"},
+
+    {0, ""}
+  };
 
 fiid_template_t tmpl_set_pef_conf_param_alert_string_keys_rq =
   {
@@ -1384,7 +1396,7 @@ ipmi_kcs_get_pef_caps (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sel_info_rq);
+  obj_data_rq = fiid_obj_alloc (tmpl_get_pef_caps_rq);
   fill_kcs_get_pef_caps (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
 			 obj_data_rq, tmpl_get_pef_caps_rq, 
@@ -1799,6 +1811,36 @@ ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
 }
 
 int8_t 
+ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev, 
+				     u_int8_t parameter_type, 
+				     u_int8_t set_selector, 
+				     u_int8_t block_selector, 
+				     fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  
+  ERR (dev != NULL);
+  ERR (obj_cmd_rs != NULL);
+  
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
+  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
+				    IPMI_PEF_PARAM_NUM_ALERT_STRINGS, 
+				    parameter_type, 
+				    set_selector, 
+				    block_selector) == 0);
+  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
+  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
+  ERR (ipmi_cmd (dev, 
+		 obj_cmd_rq, 
+		 tmpl_get_pef_conf_param_rq, 
+		 obj_cmd_rs, 
+		 tmpl_get_pef_conf_param_num_alert_strings_rs) == 0);
+  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  
+  return (0);
+}
+
+int8_t 
 ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev, 
 				 u_int8_t parameter_type, 
 				 u_int8_t set_selector, 
@@ -2016,7 +2058,7 @@ ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
   ERR (dev != NULL);
   ERR (obj_cmd_rs != NULL);
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_info_rq);
+  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_caps_rq);
   ERR (fill_kcs_get_pef_caps (obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;

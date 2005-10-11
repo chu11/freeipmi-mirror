@@ -341,7 +341,7 @@ SCM
 ex_sel_get_first_entry ()
 {
   u_int8_t record_data[SEL_RECORD_SIZE];
-  struct sel_record sel_rec;
+  sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
@@ -382,7 +382,7 @@ SCM
 ex_sel_get_next_entry ()
 {
   u_int8_t record_data[SEL_RECORD_SIZE];
-  struct sel_record sel_rec;
+  sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
@@ -1876,8 +1876,8 @@ ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
 }
 
 /*********** new sensor procedures ***************/
-SCM 
-get_scm_sdr_full_record (struct sdr_full_record *record, 
+static SCM 
+get_scm_sdr_full_record (sdr_full_record_t *record, 
 			 SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -1992,8 +1992,8 @@ get_scm_sdr_full_record (struct sdr_full_record *record,
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_compact_record (struct sdr_compact_record *record, 
+static SCM 
+get_scm_sdr_compact_record (sdr_compact_record_t *record, 
 			    SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2033,8 +2033,8 @@ get_scm_sdr_compact_record (struct sdr_compact_record *record,
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_event_only_record (struct sdr_event_only_record *record, 
+static SCM 
+get_scm_sdr_event_only_record (sdr_event_only_record_t *record, 
 			       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2059,8 +2059,8 @@ get_scm_sdr_event_only_record (struct sdr_event_only_record *record,
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_entity_association_record (struct sdr_entity_association_record *record, 
+static SCM 
+get_scm_sdr_entity_association_record (sdr_entity_association_record_t *record, 
 				       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2073,8 +2073,8 @@ get_scm_sdr_entity_association_record (struct sdr_entity_association_record *rec
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_generic_device_locator_record (struct sdr_generic_device_locator_record *record, 
+static SCM 
+get_scm_sdr_generic_device_locator_record (sdr_generic_device_locator_record_t *record, 
 					   SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2114,8 +2114,8 @@ get_scm_sdr_generic_device_locator_record (struct sdr_generic_device_locator_rec
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_logical_fru_device_locator_record (struct sdr_logical_fru_device_locator_record *record, 
+static SCM 
+get_scm_sdr_logical_fru_device_locator_record (sdr_logical_fru_device_locator_record_t *record, 
 					       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2137,8 +2137,8 @@ get_scm_sdr_logical_fru_device_locator_record (struct sdr_logical_fru_device_loc
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_management_controller_device_locator_record (struct sdr_management_controller_device_locator_record *record, 
+static SCM 
+get_scm_sdr_management_controller_device_locator_record (sdr_management_controller_device_locator_record_t *record, 
 							 SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
@@ -2154,8 +2154,8 @@ get_scm_sdr_management_controller_device_locator_record (struct sdr_management_c
   return scm_sdr_record;
 }
 
-SCM 
-get_scm_sdr_oem_record (struct sdr_oem_record *record, 
+static SCM 
+get_scm_sdr_oem_record (sdr_oem_record_t *record, 
 			SCM scm_sdr_record)
 {
   char *oem_data = NULL;
@@ -2191,14 +2191,14 @@ get_scm_sdr_oem_record (struct sdr_oem_record *record,
 SCM 
 ex_get_sdr_record (SCM scm_record_id)
 {
-  struct sdr_record sdr_record;
+  sdr_record_t sdr_record;
   SCM scm_sdr_record = SCM_EOL;
   u_int16_t record_id = 0;
   u_int16_t next_record_id = 0;
   
   record_id = gh_scm2long (scm_record_id);
   
-  memset (&sdr_record, 0, sizeof (struct sdr_record));
+  memset (&sdr_record, 0, sizeof (sdr_record_t));
   
   if (get_sdr_record (fi_get_ipmi_device (), 
 		      record_id, 
@@ -2260,8 +2260,8 @@ ex_get_sdr_record (SCM scm_record_id)
   return scm_sdr_record;
 }
 
-void 
-scm2sdr_full_record (SCM scm_sdr_record, struct sdr_full_record *record)
+static void 
+scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
 {
   SCM scm_value;
   char *sensor_name_ptr = NULL;
@@ -2364,8 +2364,8 @@ scm2sdr_full_record (SCM scm_sdr_record, struct sdr_full_record *record)
   return;
 }
 
-void 
-scm2sdr_compact_record (SCM scm_sdr_record, struct sdr_compact_record *record)
+static void 
+scm2sdr_compact_record (SCM scm_sdr_record, sdr_compact_record_t *record)
 {
   SCM scm_value;
   char *sensor_name_ptr = NULL;
@@ -2399,8 +2399,8 @@ scm2sdr_compact_record (SCM scm_sdr_record, struct sdr_compact_record *record)
   return;
 }
 
-void 
-scm2sdr_event_only_record (SCM scm_sdr_record, struct sdr_event_only_record *record)
+static void 
+scm2sdr_event_only_record (SCM scm_sdr_record, sdr_event_only_record_t *record)
 {
   SCM scm_value;
   char *sensor_name_ptr = NULL;
@@ -2425,8 +2425,8 @@ scm2sdr_event_only_record (SCM scm_sdr_record, struct sdr_event_only_record *rec
   return;
 }
 
-void 
-scm2sdr_entity_association_record (SCM scm_sdr_record, struct sdr_entity_association_record *record)
+static void 
+scm2sdr_entity_association_record (SCM scm_sdr_record, sdr_entity_association_record_t *record)
 {
   SCM scm_value;
   
@@ -2439,8 +2439,8 @@ scm2sdr_entity_association_record (SCM scm_sdr_record, struct sdr_entity_associa
   return;
 }
 
-void 
-scm2sdr_generic_device_locator_record (SCM scm_sdr_record, struct sdr_generic_device_locator_record *record)
+static void 
+scm2sdr_generic_device_locator_record (SCM scm_sdr_record, sdr_generic_device_locator_record_t *record)
 {
   SCM scm_value;
   char *device_name_ptr = NULL;
@@ -2483,8 +2483,8 @@ scm2sdr_generic_device_locator_record (SCM scm_sdr_record, struct sdr_generic_de
   return;
 }
 
-void 
-scm2sdr_logical_fru_device_locator_record (SCM scm_sdr_record, struct sdr_logical_fru_device_locator_record *record)
+static void 
+scm2sdr_logical_fru_device_locator_record (SCM scm_sdr_record, sdr_logical_fru_device_locator_record_t *record)
 {
   SCM scm_value;
   char *device_name_ptr = NULL;
@@ -2509,8 +2509,8 @@ scm2sdr_logical_fru_device_locator_record (SCM scm_sdr_record, struct sdr_logica
   return;
 }
 
-void 
-scm2sdr_management_controller_device_locator_record (SCM scm_sdr_record, struct sdr_management_controller_device_locator_record *record)
+static void 
+scm2sdr_management_controller_device_locator_record (SCM scm_sdr_record, sdr_management_controller_device_locator_record_t *record)
 {
   SCM scm_value;
   char *device_name_ptr = NULL;
@@ -2529,8 +2529,8 @@ scm2sdr_management_controller_device_locator_record (SCM scm_sdr_record, struct 
   return;
 }
 
-void 
-scm2sdr_oem_record (SCM scm_sdr_record, struct sdr_oem_record *record)
+static void 
+scm2sdr_oem_record (SCM scm_sdr_record, sdr_oem_record_t *record)
 {
   SCM scm_value;
   SCM scm_oem_data_list;
@@ -2557,8 +2557,8 @@ scm2sdr_oem_record (SCM scm_sdr_record, struct sdr_oem_record *record)
   return;
 }
 
-int 
-scm2sdr_record (SCM scm_sdr_record, struct sdr_record *sdr_record)
+static int 
+scm2sdr_record (SCM scm_sdr_record, sdr_record_t *sdr_record)
 {
   SCM scm_value;
   
@@ -2613,15 +2613,15 @@ scm2sdr_record (SCM scm_sdr_record, struct sdr_record *sdr_record)
 SCM 
 ex_get_sensor_reading (SCM scm_sdr_record)
 {
-  struct sensor_reading sensor_reading;
-  struct sdr_record sdr_record;
+  sensor_reading_t sensor_reading;
+  sdr_record_t sdr_record;
   SCM scm_sensor_reading = SCM_EOL;
   int i;
   SCM scm_event_message_list = SCM_EOL;
   
   scm2sdr_record (scm_sdr_record, &sdr_record);
   
-  memset (&sensor_reading, 0, sizeof (struct sensor_reading));
+  memset (&sensor_reading, 0, sizeof (sensor_reading_t));
   if (get_sensor_reading (fi_get_ipmi_device (), 
 			  &sdr_record, 
 			  &sensor_reading) != 0)
@@ -3009,3 +3009,177 @@ ex_ipmi_close ()
   else 
     return SCM_BOOL_F;
 }
+
+SCM 
+ex_get_pef_info ()
+{
+  SCM scm_pef_info_list = SCM_EOL;
+  
+  u_int8_t *cmd_rs = NULL;
+  
+  char version_string[17];
+  u_int8_t pef_major_version;
+  u_int8_t pef_minor_version;
+  
+  u_int64_t val;
+  u_int8_t alert_support = 0;
+  
+  fiid_obj_alloca (cmd_rs, tmpl_get_pef_caps_rs);
+  if (ipmi_cmd_get_pef_caps2 (fi_get_ipmi_device (), cmd_rs) != 0)
+    {
+      ipmi_error (cmd_rs, "ipmi_cmd_get_pef_caps2()");
+      return SCM_BOOL_F;
+    }
+  
+  fiid_obj_get (cmd_rs,
+		tmpl_get_pef_caps_rs,
+		"pef_version_major",
+		&val);
+  pef_major_version = val;
+  fiid_obj_get (cmd_rs,
+		tmpl_get_pef_caps_rs,
+		"pef_version_minor",
+		&val);
+  pef_minor_version = val;
+  snprintf (version_string, 17, 
+	    "%d.%d", 
+	    pef_major_version, pef_minor_version);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("pef_version"), 
+				       gh_str02scm (version_string));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.alert", 
+		&val);
+  alert_support = val;
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("alert_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.powerdown", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("powerdown_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.reset", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("reset_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.powercycle", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("powercycle_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.oem", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("oem_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"action_support.diag_interrupt", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("diag_interrupt_support"), 
+				       gh_bool2scm (val));
+  
+  fiid_obj_get (cmd_rs, 
+		tmpl_get_pef_caps_rs, 
+		"number_of_eft_entries", 
+		&val);
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("eft_entries_count"), 
+				       gh_ulong2scm (val));
+  
+  if (alert_support)
+    {
+      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_event_filters_rs);
+      if (ipmi_cmd_get_pef_num_event_filters2 (fi_get_ipmi_device (), 
+					       IPMI_GET_PARAMETER, 
+					       SET_SELECTOR, 
+					       BLOCK_SELECTOR, 
+					       cmd_rs) != 0)
+	{
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_event_filters2()");
+	  return SCM_BOOL_F;
+	}
+      fiid_obj_get (cmd_rs, 
+		    tmpl_get_pef_conf_param_num_event_filters_rs, 
+		    "num_event_filters", 
+		    &val);
+    }
+  else 
+    {
+      val = 0;
+    }
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("num_event_filters"), 
+				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+  
+  if (alert_support)
+    {
+      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_policies_rs);
+      if (ipmi_cmd_get_pef_num_alert_policies2 (fi_get_ipmi_device (), 
+						IPMI_GET_PARAMETER, 
+						SET_SELECTOR, 
+						BLOCK_SELECTOR, 
+						cmd_rs) != 0)
+	{
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_policies2()");
+	  return SCM_BOOL_F;
+	}
+      fiid_obj_get (cmd_rs, 
+		    tmpl_get_pef_conf_param_num_alert_policies_rs, 
+		    "num_alert_policies", 
+		    &val);
+    }
+  else 
+    {
+      val = 0;
+    }
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("num_alert_policies"), 
+				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+  
+  if (alert_support)
+    {
+      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_strings_rs);
+      if (ipmi_cmd_get_pef_num_alert_strings2 (fi_get_ipmi_device (), 
+					       IPMI_GET_PARAMETER, 
+					       SET_SELECTOR, 
+					       BLOCK_SELECTOR, 
+					       cmd_rs) != 0)
+	{
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_strings2()");
+	  return SCM_BOOL_F;
+	}
+      fiid_obj_get (cmd_rs, 
+		    tmpl_get_pef_conf_param_num_alert_strings_rs, 
+		    "num_alert_strings", 
+		    &val);
+    }
+  else 
+    {
+      val = 0;
+    }
+  scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
+				       gh_str02scm ("num_alert_strings"), 
+				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+  
+  return (scm_pef_info_list);
+}
+

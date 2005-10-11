@@ -1,3 +1,33 @@
+2005-10-09  A Balamurugan  <bala@zresearch.com>
+
+	* freeipmi/libfreeipmi/src/ipmi-pef-cmds.c
+	(ipmi_cmd_get_pef_num_alert_strings2): New function.
+
+	* freeipmi/fish/src/extension.c (fi-get-pef-info): New export.
+
+	* freeipmi/fish/src/scm-procedures.c (ex_get_pef_info): New
+	function.
+
+	* freeipmi/fish/extensions/sensors-common.scm (sensors-argp): Bug
+	fix in verbose option parsing.
+
+	* freeipmi/fish/extensions/sensors.scm (sensors-display-sensors):
+	Bug fix in parsed command line args handling.
+
+	* freeipmi/fish/extensions/pef.scm: New file.
+
+	* freeipmi/fish/extensions/init.scm: Updated.
+
+	* freeipmi/fish/extensions/Makefile.am: like wise.
+
+	* freeipmi/fish/scripts/Makefile.am: like wise.
+
+	* freeipmi/fish/scripts/pef/ipmi-pef.in: New file.
+
+	* freeipmi/fish/scripts/pef/Makefile.am: like wise.
+
+	* freeipmi/configure.ac: Updated.
+
 2005-10-08  A Balamurugan  <bala@zresearch.com>
 
 	* freeipmi/libfreeipmi/src/freeipmi.h: Enables static function

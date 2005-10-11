@@ -6,7 +6,7 @@ EXTENSIONS =  init.scm shell.scm utils.scm discovery.scm \
 	bc-misc-section.scm bc-section.scm bmc-config.scm \
 	sensors-alias.scm sensors-simple-display.scm \
 	sensors-common.scm sensors-verbose-display.scm \
-	sensors-very-verbose-display.scm sdr.scm sensors.scm
+	sensors-very-verbose-display.scm sdr.scm sensors.scm pef.scm 
 
 Extensionsdir = $(datadir)/fish/extensions
 Extensions_DATA = $(EXTENSIONS)

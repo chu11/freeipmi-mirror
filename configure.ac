@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.25 2005-06-09 01:40:55 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.26 2005-10-11 04:06:44 balamurugan Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -21,7 +21,8 @@ AC_CONFIG_FILES([
 	fish/scripts/sensors/Makefile fish/scripts/sensors/ipmi-sensors
 	fish/scripts/bmc-config/Makefile fish/scripts/bmc-config/bmc-config 
 	fish/scripts/sel/Makefile fish/scripts/sel/ipmi-sel 
-	fish/scripts/bmc-info/Makefile fish/scripts/bmc-info/bmc-info
+	fish/scripts/bmc-info/Makefile fish/scripts/bmc-info/bmc-info 
+	fish/scripts/pef/Makefile fish/scripts/pef/ipmi-pef 
         libfreeipmi/Makefile libfreeipmi/src/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
         ipmipower/Makefile ipmipower/src/Makefile

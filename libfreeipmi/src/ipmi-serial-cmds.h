@@ -21,10 +21,6 @@
 #ifndef _IPMI_SERIAL_CMDS_H
 #define	_IPMI_SERIAL_CMDS_H
 
-#define IPMI_SERIAL_CONF_GET_PARAMETER             0x0
-#define IPMI_SERIAL_CONF_GET_PARAMETER_REVISION    0x1
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif

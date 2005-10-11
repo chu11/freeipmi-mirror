@@ -77,10 +77,10 @@
     (if (string? group-name)
 	(sensors-display-group-sensors sdr-record-list group-name 
 				       verbose-count all-option))
-    (if (not (null? sensor-list))
+    (if (list? sensor-list)
 	(sensors-display-sensor-list sdr-record-list sensor-list 
 				     verbose-count all-option))
-    (if (and (boolean? group-name) (null? sensor-list))
+    (if (and (boolean? group-name) (boolean? sensor-list))
 	(for-each 
 	 (lambda (sdr-record)
 	   (let ((record-id (assoc-ref sdr-record "record_id")))
