@@ -1,3 +1,8 @@
+2005-10-12  Anand Babu  <ab@zresearch.com>
+
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: new bmc
+	configuration wizzard. Thanks to Anand Avati <avati@zresearch.com>
+
 2005-10-12  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record): Now ignores
