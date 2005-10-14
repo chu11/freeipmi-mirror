@@ -53,6 +53,7 @@ release @value{VERSION} of the GNU FreeIPMI.
 * fish::                        FreeIPMI SHell.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
+* bmc-autoconfig::              Wizard-like frontend for bmc-config.
 * ipmi-sensors::                @acronym{IPMI} sensors utility.
 * ipmi-sel::                    @acronym{IPMI} System Event Log.
 * bmc-watchdog::                Watchdog daemon.
@@ -902,7 +903,7 @@ Section LAN_Conf_Auth
 EndSection
 @end example
 
-@node bmc-info, ipmi-sensors, bmc-config, Top
+@node bmc-info, bmc-autoconfig, bmc-config, Top
 @chapter bmc-info
 @pindex bmc-info
 @command{bmc-info} command displays BMC/@acronym{IPMI} version information and
@@ -944,7 +945,26 @@ Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
 debian-ia64:~# 
 @end example
 
-@node ipmi-sensors, ipmi-sel, bmc-info, Top
+@node bmc-autoconfig, ipmi-sensors, bmc-info, Top
+@chapter bmc-autoconfig
+@pindex bmc-autoconfig
+@command{bmc-autoconfig} utility is a wizard-like frontend to the
+@command{bmc-config} command, which has a curses/text based interfaced
+questionaire asking for IP/Netmask/Gateway to be committed.
+
+@section Command-line options
+@itemize @bullet
+@item -u, --usage @*
+      Show short usage message.
+
+@item -h, --help @*
+      Show help.
+
+@item -V, --version @*
+      Show version information.
+@end itemize
+
+@node ipmi-sensors, ipmi-sel, bmc-autoconfig, Top
 @chapter ipmi-sensors
 @pindex ipmi-sensors
 @command{ipmi-sensors} utility reports the monitored system health
