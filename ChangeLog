@@ -1,5 +1,9 @@
 2005-10-16  A Balamurugan  <bala@zresearch.com>
 
+	* fish/extensions/bmc-config.scm: Fixed bug in pef_conf_s.
+
+2005-10-16  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record): Better error
 	handling.
 

@@ -172,7 +172,8 @@
 			"Flow_Control" 
 			"Bit_Rate"))
 
-(define pef_conf_s '("Enable_PEF" 
+(define pef_conf_s '("PEF_Conf" 
+		     "Enable_PEF" 
 		     "Enable_PEF_Event_Messages" 
 		     "Enable_PEF_Startup_Delay" 
 		     "Enable_PEF_Alert_Startup_Delay" 
