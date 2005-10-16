@@ -24,6 +24,7 @@
 (fi-load "bc-lan-conf-auth-section.scm")
 (fi-load "bc-lan-conf-misc-section.scm")
 (fi-load "bc-serial-conf-section.scm")
+(fi-load "bc-pef-conf-section.scm")
 (fi-load "bc-misc-section.scm")
 (fi-load "bc-section.scm")
 
@@ -171,6 +172,19 @@
 			"Flow_Control" 
 			"Bit_Rate"))
 
+(define pef_conf_s '("Enable_PEF" 
+		     "Enable_PEF_Event_Messages" 
+		     "Enable_PEF_Startup_Delay" 
+		     "Enable_PEF_Alert_Startup_Delay" 
+		     "Enable_Alert_Action" 
+		     "Enable_Powerdowm_Action" 
+		     "Enable_Reset_Action" 
+		     "Enable_Powercycle_Action" 
+		     "Enable_OEM_Action" 
+		     "Enable_Diagnostic_Interrupt" 
+		     "PEF_Startup_Delay" 
+		     "PEF_Alert_Startup_Delay"))
+
 (define misc_s '("Misc" 
 		 "Power_Restore_Policy"))
 
@@ -185,6 +199,7 @@
   (checkout-section lan_conf_misc_s (current-output-port))
   (checkout-section serial_channel_s (current-output-port))
   (checkout-section serial_conf_s (current-output-port))
+  (checkout-section pef_conf_s (current-output-port))
   (checkout-section misc_s (current-output-port)))
 
 (define (checkout-conf-to-file filename)
@@ -201,6 +216,7 @@
 	(checkout-section lan_conf_misc_s fp)
 	(checkout-section serial_channel_s fp)
 	(checkout-section serial_conf_s fp)
+	(checkout-section pef_conf_s fp)
 	(checkout-section misc_s fp)
 	(close fp))))
 

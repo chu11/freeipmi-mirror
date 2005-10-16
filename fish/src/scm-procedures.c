@@ -1315,6 +1315,136 @@ ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy)
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
+SCM 
+ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable, 
+				 SCM scm_pef_event_msgs_enable, 
+				 SCM scm_pef_startup_delay_enable, 
+				 SCM scm_pef_alert_startup_delay_enable)
+{
+  u_int8_t pef_enable = 0;
+  u_int8_t pef_event_msgs_enable = 0;
+  u_int8_t pef_startup_delay_enable = 0;
+  u_int8_t pef_alert_startup_delay_enable = 0;
+  
+  if (get_pef_control (fi_get_ipmi_device (), 
+		       &pef_enable, 
+		       &pef_event_msgs_enable, 
+		       &pef_startup_delay_enable, 
+		       &pef_alert_startup_delay_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  if (scm_boolean_p (scm_pef_enable) == SCM_BOOL_T)
+    pef_enable = gh_scm2bool (scm_pef_enable);
+  if (scm_boolean_p (scm_pef_event_msgs_enable) == SCM_BOOL_T)
+    pef_event_msgs_enable = gh_scm2bool (scm_pef_event_msgs_enable);
+  if (scm_boolean_p (scm_pef_startup_delay_enable) == SCM_BOOL_T)
+    pef_startup_delay_enable = gh_scm2bool (scm_pef_startup_delay_enable);
+  if (scm_boolean_p (scm_pef_alert_startup_delay_enable) == SCM_BOOL_T)
+    pef_alert_startup_delay_enable = gh_scm2bool (scm_pef_alert_startup_delay_enable);
+  
+  if (set_pef_control (fi_get_ipmi_device (), 
+		       pef_enable, 
+		       pef_event_msgs_enable, 
+		       pef_startup_delay_enable, 
+		       pef_alert_startup_delay_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return SCM_BOOL_T;
+}
+
+SCM 
+ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable, 
+					       SCM scm_powerdown_action_enable, 
+					       SCM scm_reset_action_enable, 
+					       SCM scm_powercycle_action_enable, 
+					       SCM scm_oem_action_enable, 
+					       SCM scm_diag_interrupt_enable)
+{
+  u_int8_t alert_action_enable = 0;
+  u_int8_t powerdown_action_enable = 0;
+  u_int8_t reset_action_enable = 0;
+  u_int8_t powercycle_action_enable = 0;
+  u_int8_t oem_action_enable = 0;
+  u_int8_t diag_interrupt_enable = 0;
+
+  if (get_pef_global_action_control (fi_get_ipmi_device (), 
+				     &alert_action_enable, 
+				     &powerdown_action_enable, 
+				     &reset_action_enable, 
+				     &powercycle_action_enable, 
+				     &oem_action_enable, 
+				     &diag_interrupt_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  if (scm_boolean_p (scm_alert_action_enable) == SCM_BOOL_T)
+    alert_action_enable = gh_scm2bool (scm_alert_action_enable);
+  if (scm_boolean_p (scm_powerdown_action_enable) == SCM_BOOL_T)
+    powerdown_action_enable = gh_scm2bool (scm_powerdown_action_enable);
+  if (scm_boolean_p (scm_reset_action_enable) == SCM_BOOL_T)
+    reset_action_enable = gh_scm2bool (scm_reset_action_enable);
+  if (scm_boolean_p (scm_powercycle_action_enable) == SCM_BOOL_T)
+    powercycle_action_enable = gh_scm2bool (scm_powercycle_action_enable);
+  if (scm_boolean_p (scm_oem_action_enable) == SCM_BOOL_T)
+    oem_action_enable = gh_scm2bool (scm_oem_action_enable);
+  if (scm_boolean_p (scm_diag_interrupt_enable) == SCM_BOOL_T)
+    diag_interrupt_enable = gh_scm2bool (scm_diag_interrupt_enable);
+  
+  if (set_pef_global_action_control (fi_get_ipmi_device (), 
+				     alert_action_enable, 
+				     powerdown_action_enable, 
+				     reset_action_enable, 
+				     powercycle_action_enable, 
+				     oem_action_enable, 
+				     diag_interrupt_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return SCM_BOOL_T;
+}
+  
+SCM 
+ex_set_bmc_pef_conf_pef_startup_delay (SCM scm_pef_startup_delay)
+{
+  u_int8_t pef_startup_delay = 0;
+  
+  if (scm_integer_p (scm_pef_startup_delay) == SCM_BOOL_F)
+    return SCM_BOOL_F;
+  
+  pef_startup_delay = gh_scm2long (scm_pef_startup_delay);
+  if (set_pef_startup_delay (fi_get_ipmi_device (), 
+			     pef_startup_delay) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return SCM_BOOL_T;
+}
+
+SCM 
+ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay)
+{
+  u_int8_t pef_alert_startup_delay = 0;
+  
+  if (scm_integer_p (scm_pef_alert_startup_delay) == SCM_BOOL_F)
+    return SCM_BOOL_F;
+  
+  pef_alert_startup_delay = gh_scm2long (scm_pef_alert_startup_delay);
+  if (set_pef_alert_startup_delay (fi_get_ipmi_device (), 
+				   pef_alert_startup_delay) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return SCM_BOOL_T;
+}
+
 /**** get_XXXX functions *****/
 SCM 
 ex_get_bmc_username (SCM scm_userid)
@@ -1855,6 +1985,94 @@ ex_get_bmc_power_restore_policy ()
     return_list = gh_list (gh_long2scm (power_restore_policy), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_bmc_pef_conf_pef_control ()
+{
+  SCM scm_return_list = SCM_EOL;
+  u_int8_t pef_enable = 0;
+  u_int8_t pef_event_msgs_enable = 0;
+  u_int8_t pef_startup_delay_enable = 0;
+  u_int8_t pef_alert_startup_delay_enable = 0;
+  
+  if (get_pef_control (fi_get_ipmi_device (), 
+		       &pef_enable, 
+		       &pef_event_msgs_enable, 
+		       &pef_startup_delay_enable, 
+		       &pef_alert_startup_delay_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  scm_return_list = gh_list (gh_bool2scm (pef_enable), 
+			     gh_bool2scm (pef_event_msgs_enable), 
+			     gh_bool2scm (pef_startup_delay_enable), 
+			     gh_bool2scm (pef_alert_startup_delay_enable), 
+			     SCM_UNDEFINED);
+  
+  return scm_return_list;
+}
+
+SCM 
+ex_get_bmc_pef_conf_pef_global_action_control ()
+{
+  SCM scm_return_list = SCM_EOL;
+  u_int8_t alert_action_enable = 0;
+  u_int8_t powerdown_action_enable = 0;
+  u_int8_t reset_action_enable = 0;
+  u_int8_t powercycle_action_enable = 0;
+  u_int8_t oem_action_enable = 0;
+  u_int8_t diag_interrupt_enable = 0;
+  
+  if (get_pef_global_action_control (fi_get_ipmi_device (), 
+				     &alert_action_enable, 
+				     &powerdown_action_enable, 
+				     &reset_action_enable, 
+				     &powercycle_action_enable, 
+				     &oem_action_enable, 
+				     &diag_interrupt_enable) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  scm_return_list = gh_list (gh_bool2scm (alert_action_enable), 
+			     gh_bool2scm (powerdown_action_enable), 
+			     gh_bool2scm (reset_action_enable), 
+			     gh_bool2scm (powercycle_action_enable), 
+			     gh_bool2scm (oem_action_enable), 
+			     gh_bool2scm (diag_interrupt_enable), 
+			     SCM_UNDEFINED);
+  
+  return scm_return_list;
+}
+
+SCM 
+ex_get_bmc_pef_conf_pef_startup_delay ()
+{
+  u_int8_t pef_startup_delay = 0;
+  
+  if (get_pef_startup_delay (fi_get_ipmi_device (), 
+			     &pef_startup_delay) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return gh_ulong2scm (pef_startup_delay);
+}
+
+SCM 
+ex_get_bmc_pef_conf_pef_alert_startup_delay ()
+{
+  u_int8_t pef_alert_startup_delay = 0;
+  
+  if (get_pef_alert_startup_delay (fi_get_ipmi_device (), 
+				   &pef_alert_startup_delay) != 0)
+    {
+      return SCM_BOOL_F;
+    }
+  
+  return gh_ulong2scm (pef_alert_startup_delay);
 }
 
 /***********************************************************/

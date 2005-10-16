@@ -1,3 +1,39 @@
+2005-10-16  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record): Better error
+	handling.
+
+	* fish/src/bmc-conf2.c (set_pef_control,
+	set_pef_global_action_control, set_pef_startup_delay,
+	set_pef_alert_startup_delay, get_pef_control,
+	get_pef_global_action_control, get_pef_startup_delay,
+	get_pef_alert_startup_delay): New functions.
+
+	* fish/src/extension.c (install_new_procedures): New exports
+	fi-set-bmc-pef-conf-pef-control,
+	fi-set-bmc-pef-conf-pef-global-action-control,
+	fi-set-bmc-pef-conf-pef-startup-delay,
+	fi-set-bmc-pef-conf-pef-alert-startup-delay,
+	fi-get-bmc-pef-conf-pef-control,
+	fi-get-bmc-pef-conf-pef-global-action-control,
+	fi-get-bmc-pef-conf-pef-startup-delay and
+	fi-get-bmc-pef-conf-pef-alert-startup-delay.
+
+	* fish/src/scm-procedures.c (ex_set_bmc_pef_conf_pef_control,
+	ex_set_bmc_pef_conf_pef_global_action_control,
+	ex_set_bmc_pef_conf_pef_startup_delay,
+	ex_set_bmc_pef_conf_pef_alert_startup_delay,
+	ex_get_bmc_pef_conf_pef_control,
+	ex_get_bmc_pef_conf_pef_global_action_control,
+	ex_get_bmc_pef_conf_pef_startup_delay,
+	ex_get_bmc_pef_conf_pef_alert_startup_delay): New functions.
+
+	* fish/extensions/bc-section.scm: Added pef_conf section.
+
+	* fish/extensions/bmc-config.scm: Added pef_conf support.
+
+	* fish/extensions/Makefile.am: Updated.
+
 2005-10-13  Anand Babu  <ab@zresearch.com>
 
  	* fish/scripts/bmc-autoconfig/bmc-autoconfig: texi documentation

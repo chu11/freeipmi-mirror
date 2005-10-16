@@ -371,6 +371,15 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-power-restore-policy POWER-RESTORE-POLICY)
   */
   
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-control", 
+		    ex_set_bmc_pef_conf_pef_control, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-global-action-control", 
+		    ex_set_bmc_pef_conf_pef_global_action_control, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-startup-delay", 
+		    ex_set_bmc_pef_conf_pef_startup_delay, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-alert-startup-delay", 
+		    ex_set_bmc_pef_conf_pef_alert_startup_delay, 1, 0, 0);
+  
   gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID)
@@ -515,6 +524,15 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-get-bmc-power-restore-policy)
   */
+  
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-control", 
+		    ex_get_bmc_pef_conf_pef_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-global-action-control", 
+		    ex_get_bmc_pef_conf_pef_global_action_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-startup-delay", 
+		    ex_get_bmc_pef_conf_pef_startup_delay, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-alert-startup-delay", 
+		    ex_get_bmc_pef_conf_pef_alert_startup_delay, 0, 0, 0);
   
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
   /* 

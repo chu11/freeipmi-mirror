@@ -639,11 +639,18 @@ get_sdr_record (ipmi_device_t *dev,
       get_sdr_full_record (obj_sdr_record, 
 			   &(sdr_record->record.sdr_full_record));
       
+      if (ipmi_sensor_classify (sdr_record->record.sdr_full_record.event_reading_type) != 
+	  IPMI_SENSOR_CLASS_THRESHOLD)
+	{
+	  break;
+	}
+      
       fiid_obj_alloca (obj_cmd_rs, tmpl_get_sensor_thresholds_rs);
       if (ipmi_cmd_get_sensor_thresholds2 (dev, 
 					   sdr_record->record.sdr_full_record.sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
+	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_sensor_thresholds2()");
 	  /* This is ok */
 	  break;
 	}

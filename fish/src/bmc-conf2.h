@@ -131,6 +131,22 @@ u_int8_t set_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t dtr_hangup,
 						     u_int8_t flow_control, 
 						     u_int8_t bit_rate);
 
+int8_t set_pef_control (ipmi_device_t *dev, 
+			u_int8_t pef_enable, 
+			u_int8_t pef_event_msgs_enable, 
+			u_int8_t pef_startup_delay_enable, 
+			u_int8_t pef_alert_startup_delay_enable);
+int8_t set_pef_global_action_control (ipmi_device_t *dev, 
+				      u_int8_t alert_action_enable, 
+				      u_int8_t powerdown_action_enable, 
+				      u_int8_t reset_action_enable, 
+				      u_int8_t powercycle_action_enable, 
+				      u_int8_t oem_action_enable, 
+				      u_int8_t diag_interrupt_enable);
+int8_t set_pef_startup_delay (ipmi_device_t *dev, 
+			      u_int8_t pef_startup_delay);
+int8_t set_pef_alert_startup_delay (ipmi_device_t *dev, 
+				    u_int8_t pef_alert_startup_delay);
 
 
 u_int8_t set_bmc_power_restore_policy (u_int8_t power_restore_policy);
@@ -216,6 +232,23 @@ u_int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (u_int8_t *dtr_hangup,
 u_int8_t get_bmc_power_restore_policy (u_int8_t *power_restore_policy);
 u_int8_t get_bmc_lan_conf_vlan_id (u_int8_t *vlan_id_flag, u_int32_t *vlan_id);
 u_int8_t get_bmc_lan_conf_vlan_priority (u_int8_t *vlan_priority);
+
+int8_t get_pef_control (ipmi_device_t *dev, 
+			u_int8_t *pef_enable, 
+			u_int8_t *pef_event_msgs_enable, 
+			u_int8_t *pef_startup_delay_enable, 
+			u_int8_t *pef_alert_startup_delay_enable);
+int8_t get_pef_global_action_control (ipmi_device_t *dev, 
+				      u_int8_t *alert_action_enable, 
+				      u_int8_t *powerdown_action_enable, 
+				      u_int8_t *reset_action_enable, 
+				      u_int8_t *powercycle_action_enable, 
+				      u_int8_t *oem_action_enable, 
+				      u_int8_t *diag_interrupt_enable);
+int8_t get_pef_startup_delay (ipmi_device_t *dev, 
+			      u_int8_t *pef_startup_delay);
+int8_t get_pef_alert_startup_delay (ipmi_device_t *dev, 
+				    u_int8_t *pef_alert_startup_delay);
 
 /***********************************************************/
 u_int8_t check_bmc_user_password (u_int8_t userid, u_int8_t *password);

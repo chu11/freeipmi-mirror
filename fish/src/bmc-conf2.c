@@ -699,6 +699,90 @@ set_bmc_power_restore_policy (u_int8_t power_restore_policy)
   return status;
 }
 
+int8_t 
+set_pef_control (ipmi_device_t *dev, 
+		 u_int8_t pef_enable, 
+		 u_int8_t pef_event_msgs_enable, 
+		 u_int8_t pef_startup_delay_enable, 
+		 u_int8_t pef_alert_startup_delay_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_set_pef_conf_param_rs);
+  if (ipmi_cmd_set_pef_control2 (dev, 
+				 pef_enable, 
+				 pef_event_msgs_enable, 
+				 pef_startup_delay_enable, 
+				 pef_alert_startup_delay_enable, 
+				 obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
+int8_t 
+set_pef_global_action_control (ipmi_device_t *dev, 
+			       u_int8_t alert_action_enable, 
+			       u_int8_t powerdown_action_enable, 
+			       u_int8_t reset_action_enable, 
+			       u_int8_t powercycle_action_enable, 
+			       u_int8_t oem_action_enable, 
+			       u_int8_t diag_interrupt_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_set_pef_conf_param_rs);
+  if (ipmi_cmd_set_global_action_control2 (dev, 
+					   alert_action_enable, 
+					   powerdown_action_enable, 
+					   reset_action_enable, 
+					   powercycle_action_enable, 
+					   oem_action_enable, 
+					   diag_interrupt_enable, 
+					   obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
+int8_t 
+set_pef_startup_delay (ipmi_device_t *dev, 
+		       u_int8_t pef_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_set_pef_conf_param_rs);
+  if (ipmi_cmd_set_startup_delay2 (dev, 
+				   pef_startup_delay, 
+				   obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
+int8_t 
+set_pef_alert_startup_delay (ipmi_device_t *dev, 
+			     u_int8_t pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_set_pef_conf_param_rs);
+  if (ipmi_cmd_set_alert_startup_delay2 (dev, 
+					 pef_alert_startup_delay, 
+					 obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
 /* u_int8_t  */
 /* set_bmc_user_conf (struct bmc_user *bmc_user) */
 /* { */
@@ -1781,6 +1865,166 @@ u_int8_t
 get_bmc_power_restore_policy (u_int8_t *power_restore_policy)
 {
   return get_bmc_chassis_status (power_restore_policy);
+}
+
+int8_t 
+get_pef_control (ipmi_device_t *dev, 
+		 u_int8_t *pef_enable, 
+		 u_int8_t *pef_event_msgs_enable, 
+		 u_int8_t *pef_startup_delay_enable, 
+		 u_int8_t *pef_alert_startup_delay_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_pef_control_rs);
+  if (ipmi_cmd_get_pef_control2 (dev, 
+				 IPMI_GET_PARAMETER, 
+				 SET_SELECTOR, 
+				 BLOCK_SELECTOR, 
+				 obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_pef_control_rs, 
+		"enable_pef", 
+		&val);
+  *pef_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_pef_control_rs, 
+		"enable_pef_event_msgs", 
+		&val);
+  *pef_event_msgs_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_pef_control_rs, 
+		"enable_startup_delay", 
+		&val);
+  *pef_startup_delay_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_pef_control_rs, 
+		"enable_alert_startup_delay", 
+		&val);
+  *pef_alert_startup_delay_enable = val;
+  
+  return (0);
+}
+
+int8_t 
+get_pef_global_action_control (ipmi_device_t *dev, 
+			       u_int8_t *alert_action_enable, 
+			       u_int8_t *powerdown_action_enable, 
+			       u_int8_t *reset_action_enable, 
+			       u_int8_t *powercycle_action_enable, 
+			       u_int8_t *oem_action_enable, 
+			       u_int8_t *diag_interrupt_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_global_action_control_rs);
+  if (ipmi_cmd_get_pef_global_action_control2 (dev, 
+					       IPMI_GET_PARAMETER, 
+					       SET_SELECTOR, 
+					       BLOCK_SELECTOR, 
+					       obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_alert_action", 
+		&val);
+  *alert_action_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_powerdown_action", 
+		&val);
+  *powerdown_action_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_reset_action", 
+		&val);
+  *reset_action_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_powercycle_action", 
+		&val);
+  *powercycle_action_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_oem_action", 
+		&val);
+  *oem_action_enable = val;
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_global_action_control_rs, 
+		"enable_diag_interrupt", 
+		&val);
+  *diag_interrupt_enable = val;
+  
+  return (0);
+}
+
+int8_t 
+get_pef_startup_delay (ipmi_device_t *dev, 
+		       u_int8_t *pef_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_startup_delay_rs);
+  if (ipmi_cmd_get_pef_startup_delay2 (dev, 
+				       IPMI_GET_PARAMETER, 
+				       SET_SELECTOR, 
+				       BLOCK_SELECTOR, 
+				       obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_startup_delay_rs, 
+		"pef_startup_delay", 
+		&val);
+  *pef_startup_delay = val;
+  
+  return (0);
+}
+
+int8_t 
+get_pef_alert_startup_delay (ipmi_device_t *dev, 
+			     u_int8_t *pef_alert_startup_delay)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  u_int64_t val = 0;
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_alert_startup_delay_rs);
+  if (ipmi_cmd_get_pef_alert_startup_delay2 (dev, 
+					     IPMI_GET_PARAMETER, 
+					     SET_SELECTOR, 
+					     BLOCK_SELECTOR, 
+					     obj_cmd_rs) != 0)
+    {
+      return (-1);
+    }
+  
+  fiid_obj_get (obj_cmd_rs, 
+		tmpl_get_pef_conf_param_alert_startup_delay_rs, 
+		"pef_alert_startup_delay", 
+		&val);
+  *pef_alert_startup_delay = val;
+  
+  return (0);
 }
 
 /***********************************************************/

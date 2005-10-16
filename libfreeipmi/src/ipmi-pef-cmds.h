@@ -18,7 +18,7 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.10 2005-10-11 04:06:44 balamurugan Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.11 2005-10-16 01:04:04 balamurugan Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -76,44 +76,43 @@ enum which_event
   };
 typedef enum which_event which_event_t;
 
-enum event_filter_type
+enum filter_type 
   {
-    software_filter = 0,
-    factory_filter = 2,
+    IPMI_PEF_SOFTWARE_FILTER = 0x0,
+    IPMI_PEF_FACTORY_FILTER  = 0x2
   };
-typedef enum event_filter_type event_filter_type_t;
+typedef enum filter_type filter_type_t;
 
 struct event_filter_table_entry
 {
-  event_filter_type_t filter_type;
-  /* yes or no */
-  u_int8_t enabled;
-  /* actions flags */
-  u_int8_t alert;
-  u_int8_t poweroff;
-  u_int8_t reset;
-  u_int8_t powercycle;
-  u_int8_t oem;
-  u_int8_t diag_interrupt;
-
-  u_int8_t policy_number;
-
-  u_int8_t severity;
-  u_int8_t id;
-  u_int8_t channel;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_trigger;
-  u_int16_t data_offset_mask;
-  u_int8_t data1_and_mask;
-  u_int8_t data1_compare1_mask;
-  u_int8_t data1_compare2_mask;
-  u_int8_t data2_and_mask;
-  u_int8_t data2_compare1_mask;
-  u_int8_t data2_compare2_mask;
-  u_int8_t data3_and_mask;
-  u_int8_t data3_compare1_mask;
-  u_int8_t data3_compare2_mask;
+  u_int8_t      filter_number;
+  filter_type_t filter_type;
+  u_int8_t      filter_enable;
+  u_int8_t      event_filter_action_alert;
+  u_int8_t      event_filter_action_poweroff;
+  u_int8_t      event_filter_action_reset;
+  u_int8_t      event_filter_action_powercycle;
+  u_int8_t      event_filter_action_oem;
+  u_int8_t      event_filter_action_diag_interrupt;
+  u_int8_t      event_filter_action_group_control_operation;
+  u_int8_t      policy_number;
+  u_int8_t      group_control_selector;
+  u_int8_t      event_severity;
+  u_int8_t      generator_id_byte1;
+  u_int8_t      generator_id_byte2;
+  u_int8_t      sensor_type;
+  u_int8_t      sensor_number;
+  u_int8_t      event_reading_type;
+  u_int16_t     event_data1_offset_mask;
+  u_int8_t      event_data1_AND_mask;
+  u_int8_t      event_data1_compare1;
+  u_int8_t      event_data1_compare2;
+  u_int8_t      event_data2_AND_mask;
+  u_int8_t      event_data2_compare1;
+  u_int8_t      event_data2_compare2;
+  u_int8_t      event_data3_AND_mask;
+  u_int8_t      event_data3_compare1;
+  u_int8_t      event_data3_compare2;
 };
 typedef struct event_filter_table_entry event_filter_table_entry_t;
 
@@ -181,12 +180,12 @@ int8_t
 ipmi_kcs_set_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_event_filters);
 
 int8_t
-ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
-                                 const event_filter_table_entry_t* entry);
+ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
+                                 const event_filter_table_entry_t* eft_entry);
 
 int8_t
 ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
-                                 event_filter_type_t filter_type, u_int8_t enabled);
+                                 filter_type_t filter_type, u_int8_t enabled);
 
 int8_t
 ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_alert_policies);
@@ -216,12 +215,11 @@ int8_t ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev,
 					u_int8_t num_event_filters, 
 					fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev, 
-					 u_int8_t filter_number,
-					 const event_filter_table_entry_t *entry, 
+					 const event_filter_table_entry_t *eft_entry, 
 					 fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev, 
 					  u_int8_t filter_number,
-					  event_filter_type_t filter_type, 
+					  filter_type_t filter_type, 
 					  u_int8_t enabled, 
 					  fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev, 
