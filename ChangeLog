@@ -1,3 +1,57 @@
+2005-10-26  A Balamurugan  <bala@zresearch.com>
+
+	* fish/extensions/pef.scm: Code cleanup.
+
+	* fish/scripts/bmc-autoconfig/Makefile.am: Fixed a bug which
+	deletes source file.
+
+	* fish/src/bmc-conf2.c (set_bmc_username, set_bmc_enable_user,
+	set_bmc_user_password, set_bmc_user_lan_channel_access,
+	set_bmc_user_serial_channel_access,
+	set_bmc_lan_channel_volatile_access,
+	set_bmc_lan_channel_non_volatile_access,
+	set_bmc_lan_conf_ip_addr_source, set_bmc_lan_conf_ip_addr,
+	set_bmc_lan_conf_mac_addr, set_bmc_lan_conf_subnet_mask,
+	set_bmc_lan_conf_default_gw_ip_addr,
+	set_bmc_lan_conf_default_gw_mac_addr,
+	set_bmc_lan_conf_backup_gw_ip_addr,
+	set_bmc_lan_conf_backup_gw_mac_addr, set_bmc_lan_conf_vlan_id,
+	set_bmc_lan_conf_vlan_priority,
+	set_bmc_lan_conf_auth_type_enables, set_bmc_lan_conf_arp_control,
+	set_bmc_lan_conf_gratuitous_arp,
+	set_bmc_serial_channel_volatile_access,
+	set_bmc_serial_channel_non_volatile_access,
+	set_bmc_serial_conf_conn_mode,
+	set_bmc_serial_conf_page_blackout_interval,
+	set_bmc_serial_conf_call_retry_time,
+	set_bmc_serial_conf_ipmi_msg_comm_settings,
+	set_bmc_power_restore_policy, get_bmc_username,
+	get_bmc_user_lan_channel_access,
+	get_bmc_user_serial_channel_access,
+	get_bmc_lan_channel_volatile_access,
+	get_bmc_lan_channel_non_volatile_access,
+	get_bmc_lan_conf_ip_addr_source, get_bmc_lan_conf_ip_addr,
+	get_bmc_lan_conf_mac_addr, get_bmc_lan_conf_subnet_mask,
+	get_bmc_lan_conf_default_gw_ip_addr,
+	get_bmc_lan_conf_default_gw_mac_addr,
+	get_bmc_lan_conf_backup_gw_ip_addr,
+	get_bmc_lan_conf_backup_gw_mac_addr,
+	get_bmc_lan_conf_auth_type_enables, get_bmc_lan_conf_arp_control,
+	get_bmc_lan_conf_gratuitous_arp,
+	get_bmc_serial_channel_volatile_access,
+	get_bmc_serial_channel_non_volatile_access,
+	get_bmc_serial_conf_conn_mode,
+	get_bmc_serial_conf_page_blackout_interval,
+	get_bmc_serial_conf_call_retry_time,
+	get_bmc_serial_conf_ipmi_msg_comm_settings,
+	get_bmc_power_restore_policy, get_bmc_lan_conf_vlan_id,
+	get_bmc_lan_conf_vlan_priority, check_bmc_user_password): UDM
+	enabled.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c
+	(ipmi_cmd_lan_set_backup_gw_mac_addr2): Fixed function name typo
+	error.
+
 2005-10-16  A Balamurugan  <bala@zresearch.com>
 
 	* fish/extensions/bmc-config.scm: Fixed bug in pef_conf_s.

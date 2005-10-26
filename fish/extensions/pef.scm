@@ -23,14 +23,13 @@
 
 (define (pef-display-usage)
   (begin 
-    (display "Usage: ipmi-pef [-ic?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]\n")
-    (display "                [-a AUTHTYPE] [-l PRIVILEGE-LEVEL] [-d REC-LIST]\n")
-    (display "                [-x [FILE]] [--driver-poll-interval=USEC]\n")
+    (display "Usage: ipmi-pef [-i?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]\n")
+    (display "                [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
+    (display "                [--driver-poll-interval=USEC]\n")
     (display "                [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
     (display "                [--username=USERNAME] [--password=PASSWORD]\n")
     (display "                [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n")
-    (display "                [--info] [--delete=REC-LIST] [--delete-all]\n")
-    (display "                [--hex-dump=[FILE]] [--help] [--usage] [--version]\n")))
+    (display "                [--info] [--help] [--usage] [--version]\n")))
 
 (define (pef-display-help)
   (begin 
@@ -52,9 +51,6 @@
     (display "                             values are CALLBACK, USER, OPERATOR, ADMIN and\n")
     (display "                             OEM.\n")
     (display "  -i, --info                 Show general information about PEF.\n")
-    (display "  -d, --delete=REC-LIST      Delete given PEF records entry.\n")
-    (display "  -c, --delete-all           Delete all PEF entries.\n")
-    (display "  -x, --hex-dump[=FILE]      Hex-dump PEF entries optionally to FILE.\n")
     (display "  -?, --help                 Give this help list.\n")
     (display "      --usage                Give a short usage message.\n")
     (display "  -V, --version              Print program version.\n")
@@ -85,10 +81,7 @@
 				 (help          (single-char #\?)   (value #f))
 				 (usage         (single-char #\377) (value #f))
 				 (version       (single-char #\V)   (value #f))
-				 (info          (single-char #\i)   (value #f))
-				 (delete        (single-char #\d)   (value #t))
-				 (delete-all    (single-char #\c)   (value #f))
-				 (hex-dump      (single-char #\x)   (value optional))))
+				 (info          (single-char #\i)   (value #f))))
 		  (options (getopt-long args option-spec))
 		  (poll-interval  (option-ref options 'poll-interval #f))
 		  (sms-io-base    (option-ref options 'sms-io-base   #f))
@@ -101,9 +94,6 @@
 		  (usage-wanted   (option-ref options 'usage         #f))
 		  (version-wanted (option-ref options 'version       #f))
 		  (info-wanted    (option-ref options 'info          #f))
-		  (delete-list    (option-ref options 'delete        #f))
-		  (delete-all     (option-ref options 'delete-all    #f))
-		  (hex-dump-name  (option-ref options 'hex-dump      #f))
 		  (extra-args     (option-ref options '()            #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? pef-cmd-args))
@@ -242,32 +232,6 @@
 	     (if (list? pef-cmd-args)
 		 (set! pef-cmd-args (append pef-cmd-args 
 					    (list info-wanted))))
-	     ;; --delete-list (11) PEF specific
-	     (if (and (string? delete-list) (list? pef-cmd-args))
-		 (begin 
-		   (set! delete-list (sentence->tokens (string-replace 
-							delete-list 
-							#\, #\space)))
-		   (if (or (list? (member #f (map number? delete-list)))
-			   (null? delete-list))
-		       (begin 
-			 (display "Usage: ipmi-pef [OPTION...] \n"
-				  (current-error-port))
-			 (display "Try `ipmi-pef --help' or `ipmi-pef --usage' for more information.\n"
-				  (current-error-port))
-			 (set! pef-exit-status 64)
-			 (set! pef-cmd-args #f)))))
-	     (if (list? pef-cmd-args)
-		 (set! pef-cmd-args (append pef-cmd-args 
-					    (list delete-list))))
-	     ;; --delete-all (12) PEF specific
-	     (if (list? pef-cmd-args)
-		 (set! pef-cmd-args (append pef-cmd-args 
-					    (list delete-all))))
-	     ;; --hex-dump-name (13) PEF specific
-	     (if (list? pef-cmd-args)
-		 (set! pef-cmd-args (append pef-cmd-args 
-					    (list hex-dump-name))))
 	     pef-cmd-args))
 	 (lambda (k args . opts)
 	   (display "pef: error: " (current-error-port))
@@ -291,15 +255,6 @@
 
 (define (pef-get-info-option cmd-args)
   (list-ref cmd-args 10))
-
-(define (pef-get-delete-list-option cmd-args)
-  (list-ref cmd-args 11))
-
-(define (pef-get-delete-all-option cmd-args)
-  (list-ref cmd-args 12))
-
-(define (pef-get-hex-dump-option cmd-args)
-  (list-ref cmd-args 13))
 
 (define (pef-display-info pef-info)
   (if pef-info 
@@ -374,8 +329,7 @@
 	"Usage: pef [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
 	"           [--host=IPMIHOST] [--username=USERNAME]\n"
 	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
-	"           [--priv-level=PRIVILEGE-LEVEL] [--info] [--delete=REC-LIST]\n"
-	"           [--delete-all] [--hex-dump=[FILE]] [--help] [--usage]\n"
+	"           [--priv-level=PRIVILEGE-LEVEL] [--info] [--help] [--usage]\n"
 	"           [--version]\n"
 	"\n"
 	"          Platform Event Filtering utility.")))

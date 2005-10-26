@@ -541,7 +541,7 @@ ex_set_bmc_username (SCM scm_userid, SCM scm_username)
   userid = gh_scm2long (scm_userid);
   username = gh_scm2newstr (scm_username, NULL);
   
-  retval = set_bmc_username (userid, username);
+  retval = set_bmc_username (fi_get_ipmi_device (), userid, username);
   
   free (username);
   
@@ -558,7 +558,7 @@ ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status)
   userid = gh_scm2long (scm_userid);
   user_status = gh_scm2bool (scm_user_status);
   
-  retval = set_bmc_enable_user (userid, user_status);
+  retval = set_bmc_enable_user (fi_get_ipmi_device (), userid, user_status);
   
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -573,7 +573,7 @@ ex_set_bmc_user_password (SCM scm_userid, SCM scm_password)
   userid = gh_scm2long (scm_userid);
   password = gh_scm2newstr (scm_password, NULL);
   
-  retval = set_bmc_user_password (userid, password);
+  retval = set_bmc_user_password (fi_get_ipmi_device (), userid, password);
   
   free (password);
   
@@ -599,7 +599,8 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 /*   printf ("ex_ called\n"); */
   userid = gh_scm2long (scm_userid);
   
-  retval = get_bmc_user_lan_channel_access (userid, 
+  retval = get_bmc_user_lan_channel_access (fi_get_ipmi_device (), 
+					    userid, 
 					    &lan_enable_ipmi_msgs, 
 					    &lan_enable_link_auth, 
 					    &lan_enable_restrict_to_callback, 
@@ -638,7 +639,8 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 /*   printf ("priv_limit %d\n", lan_privilege_limit); */
 /*   printf ("session_limit %d\n", lan_session_limit); */
   
-  retval = set_bmc_user_lan_channel_access (userid, 
+  retval = set_bmc_user_lan_channel_access (fi_get_ipmi_device (), 
+					    userid, 
 					    lan_enable_ipmi_msgs, 
 					    lan_enable_link_auth, 
 					    lan_enable_restrict_to_callback, 
@@ -666,7 +668,8 @@ ex_set_bmc_user_serial_channel_access (SCM scm_userid,
   
   userid = gh_scm2long (scm_userid);
   
-  retval = get_bmc_user_serial_channel_access (userid, 
+  retval = get_bmc_user_serial_channel_access (fi_get_ipmi_device (), 
+					       userid, 
 					       &serial_enable_ipmi_msgs, 
 					       &serial_enable_link_auth, 
 					       &serial_enable_restrict_to_callback, 
@@ -691,7 +694,8 @@ ex_set_bmc_user_serial_channel_access (SCM scm_userid,
   if (scm_integer_p (scm_serial_session_limit) == SCM_BOOL_T)
     serial_session_limit = gh_scm2long (scm_serial_session_limit);
   
-  retval = set_bmc_user_serial_channel_access (userid, 
+  retval = set_bmc_user_serial_channel_access (fi_get_ipmi_device (), 
+					       userid, 
 					       serial_enable_ipmi_msgs, 
 					       serial_enable_link_auth, 
 					       serial_enable_restrict_to_callback, 
@@ -715,7 +719,8 @@ ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode,
   u_int8_t channel_privilege_limit;
   int retval;
   
-  retval = get_bmc_lan_channel_volatile_access (&access_mode, 
+  retval = get_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
+						&access_mode, 
 						&enable_user_level_auth, 
 						&enable_per_message_auth, 
 						&enable_pef_alerting, 
@@ -734,7 +739,8 @@ ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
-  retval = set_bmc_lan_channel_volatile_access (access_mode, 
+  retval = set_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
+						access_mode, 
 						enable_user_level_auth, 
 						enable_per_message_auth, 
 						enable_pef_alerting, 
@@ -756,7 +762,8 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
   u_int8_t channel_privilege_limit;
   int retval;
   
-  retval = get_bmc_lan_channel_non_volatile_access (&access_mode, 
+  retval = get_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
+						    &access_mode, 
 						    &enable_user_level_auth, 
 						    &enable_per_message_auth, 
 						    &enable_pef_alerting, 
@@ -775,7 +782,8 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
-  retval = set_bmc_lan_channel_non_volatile_access (access_mode, 
+  retval = set_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
+						    access_mode, 
 						    enable_user_level_auth, 
 						    enable_per_message_auth, 
 						    enable_pef_alerting, 
@@ -790,7 +798,7 @@ ex_set_bmc_lan_conf_ip_addr_source (SCM scm_ip_address_source)
   u_int8_t retval;
   
   ip_address_source = gh_scm2long (scm_ip_address_source);
-  retval = set_bmc_lan_conf_ip_addr_source (ip_address_source);
+  retval = set_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), ip_address_source);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -801,7 +809,7 @@ ex_set_bmc_lan_conf_ip_addr (SCM scm_ip_address)
   u_int8_t retval;
   
   ip_address = gh_scm2newstr (scm_ip_address, NULL);
-  retval = set_bmc_lan_conf_ip_addr (ip_address);
+  retval = set_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), ip_address);
   free (ip_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -813,7 +821,7 @@ ex_set_bmc_lan_conf_mac_addr (SCM scm_mac_address)
   u_int8_t retval;
   
   mac_address = gh_scm2newstr (scm_mac_address, NULL);
-  retval = set_bmc_lan_conf_mac_addr (mac_address);
+  retval = set_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), mac_address);
   free (mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -825,7 +833,7 @@ ex_set_bmc_lan_conf_subnet_mask (SCM scm_subnet_mask)
   u_int8_t retval;
   
   subnet_mask = gh_scm2newstr (scm_subnet_mask, NULL);
-  retval = set_bmc_lan_conf_subnet_mask (subnet_mask);
+  retval = set_bmc_lan_conf_subnet_mask (fi_get_ipmi_device (), subnet_mask);
   free (subnet_mask);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -837,7 +845,7 @@ ex_set_bmc_lan_conf_default_gw_ip_addr (SCM scm_gw_ip_address)
   u_int8_t retval;
   
   gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
-  retval = set_bmc_lan_conf_default_gw_ip_addr (gw_ip_address);
+  retval = set_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
   free (gw_ip_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -849,7 +857,7 @@ ex_set_bmc_lan_conf_default_gw_mac_addr (SCM scm_gw_mac_address)
   u_int8_t retval;
   
   gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
-  retval = set_bmc_lan_conf_default_gw_mac_addr (gw_mac_address);
+  retval = set_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
   free (gw_mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -861,7 +869,7 @@ ex_set_bmc_lan_conf_backup_gw_ip_addr (SCM scm_gw_ip_address)
   u_int8_t retval;
   
   gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
-  retval = set_bmc_lan_conf_backup_gw_ip_addr (gw_ip_address);
+  retval = set_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
   free (gw_ip_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -873,7 +881,7 @@ ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
   u_int8_t retval;
   
   gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
-  retval = set_bmc_lan_conf_backup_gw_mac_addr (gw_mac_address);
+  retval = set_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
   free (gw_mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -886,7 +894,8 @@ ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
   u_int32_t vlan_id;
   int retval;
   
-  retval = get_bmc_lan_conf_vlan_id (&vlan_id_flag, 
+  retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
+				     &vlan_id_flag, 
                                      &vlan_id);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -897,7 +906,8 @@ ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
   if (scm_integer_p (scm_vlan_id) == SCM_BOOL_T)
     vlan_id = gh_scm2long (scm_vlan_id);
   
-  retval = set_bmc_lan_conf_vlan_id (vlan_id_flag, 
+  retval = set_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
+				     vlan_id_flag, 
                                      vlan_id);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -908,7 +918,7 @@ ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority)
   u_int8_t vlan_priority;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_vlan_priority (&vlan_priority);
+  retval = get_bmc_lan_conf_vlan_priority (fi_get_ipmi_device (), &vlan_priority);
 
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -916,7 +926,7 @@ ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority)
   if (scm_integer_p (scm_vlan_priority) == SCM_BOOL_T)
     vlan_priority = gh_scm2long (scm_vlan_priority);
 
-  retval = set_bmc_lan_conf_vlan_priority (vlan_priority);
+  retval = set_bmc_lan_conf_vlan_priority (fi_get_ipmi_device (), vlan_priority);
 
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -931,7 +941,7 @@ ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none,
   struct bmc_auth_level auth_type_enables;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -953,7 +963,7 @@ ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none,
     auth_type_enables.callback.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -967,7 +977,7 @@ ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none,
   struct bmc_auth_level auth_type_enables;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -989,7 +999,7 @@ ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none,
     auth_type_enables.user.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1003,7 +1013,7 @@ ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none,
   struct bmc_auth_level auth_type_enables;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1025,7 +1035,7 @@ ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none,
     auth_type_enables.operator.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1039,7 +1049,7 @@ ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none,
   struct bmc_auth_level auth_type_enables;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1061,7 +1071,7 @@ ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none,
     auth_type_enables.admin.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1075,7 +1085,7 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
   struct bmc_auth_level auth_type_enables;
   u_int8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1097,7 +1107,7 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
     auth_type_enables.oem.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (&auth_type_enables);
+  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1109,7 +1119,8 @@ ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps,
   u_int8_t enable_arp_response;
   int retval;
   
-  retval = get_bmc_lan_conf_arp_control (&enable_gratuitous_arps, 
+  retval = get_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
+					 &enable_gratuitous_arps, 
 					 &enable_arp_response);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1120,7 +1131,8 @@ ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps,
   if (scm_boolean_p (scm_enable_arp_response) == SCM_BOOL_T)
     enable_arp_response = gh_scm2bool (scm_enable_arp_response);
   
-  retval = set_bmc_lan_conf_arp_control (enable_gratuitous_arps, 
+  retval = set_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
+					 enable_gratuitous_arps, 
 					 enable_arp_response);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -1132,7 +1144,8 @@ ex_set_bmc_lan_conf_gratuitous_arp (SCM scm_gratuitous_arp_interval)
   u_int8_t retval;
   
   gratuitous_arp_interval = gh_scm2long (scm_gratuitous_arp_interval);
-  retval = set_bmc_lan_conf_gratuitous_arp (gratuitous_arp_interval);
+  retval = set_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
+					    gratuitous_arp_interval);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1150,7 +1163,8 @@ ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode,
   u_int8_t channel_privilege_limit;
   int retval;
   
-  retval = get_bmc_serial_channel_volatile_access (&access_mode, 
+  retval = get_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
+						   &access_mode, 
 						   &enable_user_level_auth, 
 						   &enable_per_message_auth, 
 						   &enable_pef_alerting, 
@@ -1169,7 +1183,8 @@ ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
-  retval = set_bmc_serial_channel_volatile_access (access_mode, 
+  retval = set_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
+						   access_mode, 
 						   enable_user_level_auth, 
 						   enable_per_message_auth, 
 						   enable_pef_alerting, 
@@ -1191,7 +1206,8 @@ ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode,
   u_int8_t channel_privilege_limit;
   int retval;
   
-  retval = get_bmc_serial_channel_non_volatile_access (&access_mode, 
+  retval = get_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
+						       &access_mode, 
 						       &enable_user_level_auth, 
 						       &enable_per_message_auth, 
 						       &enable_pef_alerting, 
@@ -1210,7 +1226,8 @@ ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
-  retval = set_bmc_serial_channel_non_volatile_access (access_mode, 
+  retval = set_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
+						       access_mode, 
 						       enable_user_level_auth, 
 						       enable_per_message_auth, 
 						       enable_pef_alerting, 
@@ -1230,7 +1247,8 @@ ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode,
   u_int8_t connect_mode;
   int retval;
   
-  retval = get_bmc_serial_conf_conn_mode (&enable_basic_mode, 
+  retval = get_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
+					  &enable_basic_mode, 
 					  &enable_ppp_mode, 
 					  &enable_terminal_mode, 
 					  &connect_mode);
@@ -1246,7 +1264,8 @@ ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode,
   if (scm_integer_p (scm_enable_terminal_mode) == SCM_BOOL_T)
     connect_mode = gh_scm2bool (scm_connect_mode);
   
-  retval = set_bmc_serial_conf_conn_mode (enable_basic_mode, 
+  retval = set_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
+					  enable_basic_mode, 
 					  enable_ppp_mode, 
 					  enable_terminal_mode, 
 					  connect_mode);
@@ -1260,7 +1279,8 @@ ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval)
   int retval;
   
   page_blackout_interval = gh_scm2long (scm_page_blackout_interval);
-  retval = set_bmc_serial_conf_page_blackout_interval (page_blackout_interval);
+  retval = set_bmc_serial_conf_page_blackout_interval (fi_get_ipmi_device (), 
+						       page_blackout_interval);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1271,7 +1291,8 @@ ex_set_bmc_serial_conf_call_retry_time (SCM scm_call_retry_time)
   int retval;
   
   call_retry_time = gh_scm2long (scm_call_retry_time);
-  retval = set_bmc_serial_conf_call_retry_time (call_retry_time);
+  retval = set_bmc_serial_conf_call_retry_time (fi_get_ipmi_device (), 
+						call_retry_time);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1285,7 +1306,8 @@ ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
   u_int8_t bit_rate;
   int retval;
   
-  retval = get_bmc_serial_conf_ipmi_msg_comm_settings (&enable_dtr_hangup, 
+  retval = get_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
+						       &enable_dtr_hangup, 
 						       &flow_control, 
 						       &bit_rate);
   if (retval)
@@ -1298,7 +1320,8 @@ ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
   if (scm_integer_p (scm_bit_rate) == SCM_BOOL_T)
     bit_rate = gh_scm2long (scm_bit_rate);
   
-  retval = set_bmc_serial_conf_ipmi_msg_comm_settings (enable_dtr_hangup, 
+  retval = set_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
+						       enable_dtr_hangup, 
 						       flow_control, 
 						       bit_rate);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1311,7 +1334,8 @@ ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy)
   int retval;
   
   power_restore_policy = gh_scm2long (scm_power_restore_policy);
-  retval = set_bmc_power_restore_policy (power_restore_policy);
+  retval = set_bmc_power_restore_policy (fi_get_ipmi_device (), 
+					 power_restore_policy);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1456,7 +1480,7 @@ ex_get_bmc_username (SCM scm_userid)
   
   userid = gh_scm2long (scm_userid);
   memset (username, 0, 17);
-  if ((retval = get_bmc_username (userid, username)) == 0)
+  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username)) == 0)
     return_list = gh_list (gh_str02scm (username), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1475,7 +1499,8 @@ ex_get_bmc_user_lan_channel_access (SCM scm_userid)
   SCM return_list = SCM_EOL;
   
   userid = gh_scm2long (scm_userid);
-  if ((retval = get_bmc_user_lan_channel_access (userid, 
+  if ((retval = get_bmc_user_lan_channel_access (fi_get_ipmi_device (), 
+						 userid, 
 						 &lan_enable_ipmi_msgs, 
 						 &lan_enable_link_auth, 
 						 &lan_enable_restrict_to_callback, 
@@ -1506,7 +1531,8 @@ ex_get_bmc_user_serial_channel_access (SCM scm_userid)
   SCM return_list = SCM_EOL;
   
   userid = gh_scm2long (scm_userid);
-  if ((retval = get_bmc_user_serial_channel_access (userid, 
+  if ((retval = get_bmc_user_serial_channel_access (fi_get_ipmi_device (), 
+						    userid, 
 						    &serial_enable_ipmi_msgs, 
 						    &serial_enable_link_auth, 
 						    &serial_enable_restrict_to_callback, 
@@ -1535,7 +1561,8 @@ ex_get_bmc_lan_channel_volatile_access ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_channel_volatile_access (&access_mode, 
+  if ((retval = get_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
+						     &access_mode, 
 						     &enable_user_level_auth, 
 						     &enable_per_message_auth, 
 						     &enable_pef_alerting, 
@@ -1563,7 +1590,8 @@ ex_get_bmc_lan_channel_non_volatile_access ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_channel_non_volatile_access (&access_mode, 
+  if ((retval = get_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
+							 &access_mode, 
 							 &enable_user_level_auth, 
 							 &enable_per_message_auth, 
 							 &enable_pef_alerting, 
@@ -1587,7 +1615,8 @@ ex_get_bmc_lan_conf_ip_addr_source ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_ip_addr_source (&ip_address_source)) == 0)
+  if ((retval = get_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), 
+						 &ip_address_source)) == 0)
     return_list = gh_list (gh_long2scm (ip_address_source), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1600,7 +1629,8 @@ ex_get_bmc_lan_conf_ip_addr ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_ip_addr (ip_address)) == 0)
+  if ((retval = get_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), 
+					  ip_address)) == 0)
     return_list = gh_list (gh_str02scm (ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1613,7 +1643,8 @@ ex_get_bmc_lan_conf_mac_addr ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_mac_addr (mac_address)) == 0)
+  if ((retval = get_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), 
+					   mac_address)) == 0)
     return_list = gh_list (gh_str02scm (mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1626,7 +1657,8 @@ ex_get_bmc_lan_conf_subnet_mask ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_subnet_mask (subnet_mask)) == 0)
+  if ((retval = get_bmc_lan_conf_subnet_mask (fi_get_ipmi_device (), 
+					      subnet_mask)) == 0)
     return_list = gh_list (gh_str02scm (subnet_mask), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1639,7 +1671,8 @@ ex_get_bmc_lan_conf_default_gw_ip_addr ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_default_gw_ip_addr (gw_ip_address)) == 0)
+  if ((retval = get_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), 
+						     gw_ip_address)) == 0)
     return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1652,7 +1685,8 @@ ex_get_bmc_lan_conf_default_gw_mac_addr ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_default_gw_mac_addr (gw_mac_address)) == 0)
+  if ((retval = get_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), 
+						      gw_mac_address)) == 0)
     return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1665,7 +1699,8 @@ ex_get_bmc_lan_conf_backup_gw_ip_addr ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_backup_gw_ip_addr (gw_ip_address)) == 0)
+  if ((retval = get_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), 
+						    gw_ip_address)) == 0)
     return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1678,7 +1713,8 @@ ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (gw_mac_address)) == 0)
+  if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), 
+						     gw_mac_address)) == 0)
     return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1692,7 +1728,8 @@ ex_get_bmc_lan_conf_vlan_id ()
   int retval;
   SCM return_list = SCM_EOL;
 
-  if ((retval = get_bmc_lan_conf_vlan_id (&vlan_id_flag, &vlan_id)) == 0)
+  if ((retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
+					  &vlan_id_flag, &vlan_id)) == 0)
     return_list = gh_list (gh_bool2scm (vlan_id_flag), 
 			   gh_long2scm (vlan_id), 
 			   SCM_UNDEFINED);
@@ -1707,7 +1744,8 @@ ex_get_bmc_lan_conf_vlan_priority ()
   int retval;
   SCM return_list = SCM_EOL;
 
-  if ((retval = get_bmc_lan_conf_vlan_priority (&vlan_priority)) == 0)
+  if ((retval = get_bmc_lan_conf_vlan_priority (fi_get_ipmi_device (), 
+						&vlan_priority)) == 0)
     return_list = gh_list (gh_long2scm (vlan_priority), SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
@@ -1720,7 +1758,8 @@ ex_get_bmc_lan_conf_auth_type_callback_enables ()
   u_int8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
+						    &auth_type_enables)) == 0)
     {
       return_list = gh_list (gh_bool2scm (auth_type_enables.callback.type_none), 
 			     gh_bool2scm (auth_type_enables.callback.type_md2), 
@@ -1740,7 +1779,8 @@ ex_get_bmc_lan_conf_auth_type_user_enables ()
   u_int8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
+						    &auth_type_enables)) == 0)
     {
       return_list = gh_list (gh_bool2scm (auth_type_enables.user.type_none), 
 			     gh_bool2scm (auth_type_enables.user.type_md2), 
@@ -1760,7 +1800,8 @@ ex_get_bmc_lan_conf_auth_type_operator_enables ()
   u_int8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
+						    &auth_type_enables)) == 0)
     {
       return_list = gh_list (gh_bool2scm (auth_type_enables.operator.type_none), 
 			     gh_bool2scm (auth_type_enables.operator.type_md2), 
@@ -1780,7 +1821,8 @@ ex_get_bmc_lan_conf_auth_type_admin_enables ()
   u_int8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
+						    &auth_type_enables)) == 0)
     {
       return_list = gh_list (gh_bool2scm (auth_type_enables.admin.type_none), 
 			     gh_bool2scm (auth_type_enables.admin.type_md2), 
@@ -1800,7 +1842,8 @@ ex_get_bmc_lan_conf_auth_type_oem_enables ()
   u_int8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (&auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
+						    &auth_type_enables)) == 0)
     {
       return_list = gh_list (gh_bool2scm (auth_type_enables.oem.type_none), 
 			     gh_bool2scm (auth_type_enables.oem.type_md2), 
@@ -1821,7 +1864,8 @@ ex_get_bmc_lan_conf_arp_control ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_arp_control (&enable_gratuitous_arps, 
+  if ((retval = get_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
+					      &enable_gratuitous_arps, 
 					      &enable_arp_response)) == 0)
     {
       return_list = gh_list (gh_bool2scm (enable_gratuitous_arps), 
@@ -1839,7 +1883,8 @@ ex_get_bmc_lan_conf_gratuitous_arp ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_gratuitous_arp (&gratuitous_arp_interval)) == 0)
+  if ((retval = get_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
+						 &gratuitous_arp_interval)) == 0)
     return_list = gh_list (gh_long2scm (gratuitous_arp_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1856,7 +1901,8 @@ ex_get_bmc_serial_channel_volatile_access ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_channel_volatile_access (&access_mode, 
+  if ((retval = get_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
+							&access_mode, 
 							&enable_user_level_auth, 
 							&enable_per_message_auth, 
 							&enable_pef_alerting, 
@@ -1884,7 +1930,8 @@ ex_get_bmc_serial_channel_non_volatile_access ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_channel_non_volatile_access (&access_mode, 
+  if ((retval = get_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
+							    &access_mode, 
 							    &enable_user_level_auth, 
 							    &enable_per_message_auth, 
 							    &enable_pef_alerting, 
@@ -1911,7 +1958,8 @@ ex_get_bmc_serial_conf_conn_mode ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_conn_mode (&enable_basic_mode, 
+  if ((retval = get_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
+					       &enable_basic_mode, 
 					       &enable_ppp_mode, 
 					       &enable_terminal_mode, 
 					       &connect_mode)) == 0)
@@ -1933,7 +1981,8 @@ ex_get_bmc_serial_conf_page_blackout_interval ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_page_blackout_interval (&page_blackout_interval)) == 0)
+  if ((retval = get_bmc_serial_conf_page_blackout_interval (fi_get_ipmi_device (), 
+							    &page_blackout_interval)) == 0)
     return_list = gh_list (gh_long2scm (page_blackout_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1946,7 +1995,8 @@ ex_get_bmc_serial_conf_call_retry_time ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_call_retry_time (&call_retry_time)) == 0)
+  if ((retval = get_bmc_serial_conf_call_retry_time (fi_get_ipmi_device (), 
+						     &call_retry_time)) == 0)
     return_list = gh_list (gh_long2scm (call_retry_time), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1961,7 +2011,8 @@ ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_ipmi_msg_comm_settings (&enable_dtr_hangup, 
+  if ((retval = get_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
+							    &enable_dtr_hangup, 
 							    &flow_control, 
 							    &bit_rate)) == 0)
     {
@@ -1981,7 +2032,8 @@ ex_get_bmc_power_restore_policy ()
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_power_restore_policy (&power_restore_policy)) == 0)
+  if ((retval = get_bmc_power_restore_policy (fi_get_ipmi_device (), 
+					      &power_restore_policy)) == 0)
     return_list = gh_list (gh_long2scm (power_restore_policy), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -2086,7 +2138,7 @@ ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
   userid = gh_scm2long (scm_userid);
   password = gh_scm2newstr (scm_password, NULL);
   
-  retval = check_bmc_user_password (userid, password);
+  retval = check_bmc_user_password (fi_get_ipmi_device (), userid, password);
   
   free (password);
   

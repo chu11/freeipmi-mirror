@@ -1812,7 +1812,7 @@ ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_hackup_gw_mac_addr2 (ipmi_device_t *dev, 
+ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev, 
 				      u_int8_t channel_number,
 				      u_int64_t mac_addr,
 				      fiid_obj_t obj_cmd_rs)
