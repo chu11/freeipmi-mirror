@@ -1,3 +1,7 @@
+2005-10-28 Albert chu <chu11@llnl.gov>
+
+	* ipmipower/ipmipower.8.in: Fixed some wording for -a option.
+	
 2005-10-26  A Balamurugan  <bala@zresearch.com>
 
 	* fish/extensions/pef.scm: Code cleanup.

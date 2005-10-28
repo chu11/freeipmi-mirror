@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.9 2005-09-27 01:48:52 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.10 2005-10-28 15:54:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -135,7 +135,7 @@ The currently available authentication types are "auto", "none",
 "straight_passwd_key", "md2", and "md5".  If not specified, 
 .B ipmipower
 uses "auto" authentication, which will automatically select the most
-secure authentication mechanism from the remaining types.
+secure authentication mechanism available from the remote machine.
 .TP
 .I "-g, --on-if-off"
 The IPMI specification does not require the power cycle or hard reset
