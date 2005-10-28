@@ -54,6 +54,7 @@ ipmipower:
     failures.
   * local power off
   * chassis identify
+  * rolling windows of power control commands 
 
 ipmiping/rmcpping:
 ------------------
