@@ -1,3 +1,10 @@
+2005-10-29 A Balamurugan   <bala@zresearch.com>
+
+	* fish/extensions/bc-common.scm: Allows anyone of checkout,
+	commit, diff options.
+
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: Improved.
+
 2005-10-28 Albert chu <chu11@llnl.gov>
 
 	* ipmipower/ipmipower.8.in: Fixed some wording for -a option.

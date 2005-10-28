@@ -291,7 +291,7 @@
     (display "  -i, --commit               Update BMC configuration.\n")
     (display "  -d, --diff                 Show configuration differences with BMC.\n")
     (display "  -f, --filename=FILENAME    Use FILENAME in checkout, commit or diff.\n")
-    (display "  -k, --key-pair=KEY-PAIR    Use KEY-PAIR in checkout or diff.\n")
+    (display "  -k, --key-pair=KEY-PAIR    Use KEY-PAIR in commit or diff.\n")
     (display "  -?, --help                 Give this help list.\n")
     (display "      --usage                Give a short usage message.\n")
     (display "  -V, --version              Print program version.\n")
@@ -483,12 +483,32 @@
 						   (list checkout))))
 	     ;; --commit (11) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
-		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
-						   (list commit-wanted))))
+		 (begin 
+		   (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						     (list commit-wanted)))
+		   (if (and commit-wanted checkout)
+		       (begin 
+			 (display "bmc-config: any one of option checkout, commit or diff is allowed.\n")
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
 	     ;; --diff (12) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
-		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
-						   (list diff-wanted))))
+		 (begin 
+		   (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						     (list diff-wanted)))
+		   (if (and diff-wanted (or checkout commit-wanted))
+		       (begin 
+			 (display "bmc-config: any one of option checkout, commit or diff is allowed.\n")
+			 (display "Usage: bmc-config [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `bmc-config --help' or `bmc-config --usage' for more information.\n"
+				  (current-error-port))
+			 (set! bmc-config-exit-status 64)
+			 (set! bmc-config-cmd-args #f)))))
 	     ;; --filename (13) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
@@ -518,19 +538,21 @@
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list key-pairs))))
 	     ;; special check -- bmc-config specific
-	     ;; Followings option combinations are errors
+	     ;; Following option combinations are errors
 	     ;; * No checkout, commit or diff
 	     ;; * commit or diff without filename or key-pair
 	     ;; * filename without checkout, commit or diff
 	     ;; * key-pair without commit or diff
 	     (if (list? bmc-config-cmd-args)
-		 (if (or (not (or checkout commit-wanted diff-wanted))
-			 (and (or commit-wanted diff-wanted)
-			      (boolean? filename) (boolean? key-pairs))
-			 (and (string? filename)
-			      (not (or checkout commit-wanted diff-wanted)))
-			 (and (list? key-pairs)
-			      (not (or commit-wanted diff-wanted))))
+		 (if (and 
+		      (not (or help-wanted usage-wanted version-wanted))
+		      (or (not (or checkout commit-wanted diff-wanted))
+			  (and (or commit-wanted diff-wanted)
+			       (boolean? filename) (boolean? key-pairs))
+			  (and (string? filename)
+			       (not (or checkout commit-wanted diff-wanted)))
+			  (and (list? key-pairs)
+			       (not (or commit-wanted diff-wanted)))))
 		     (begin 
 		       (bmc-config-display-help)
 		       (set! bmc-config-exit-status 64)

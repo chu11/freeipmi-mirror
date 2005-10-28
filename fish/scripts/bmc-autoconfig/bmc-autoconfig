@@ -24,10 +24,9 @@ _init ()
     # autotool'ize these two?
     TEMPLATE_DIR="/var/lib/freeipmi";
     TEMPLATE="${TEMPLATE_DIR}/bmc-config-template";
-    VERSION="0.1";
+    VERSION="0.2.0";
+
     ME=$(basename ${0});
-    SUPPORT_EMAIL="freetalk-devel@gnu.org";
-    DESCRIPTION="${ME} is an autoconfiguration tool and wrapper around bmc-config"
 
     PROG=$(which dialog 2>/dev/null || which whiptail 2>/dev/null);
 
@@ -44,6 +43,61 @@ _init ()
     gw="0.0.0.0";
 
     return 0;
+}
+
+bmc_autoconfig_display_usage ()
+{
+    cat <<EOF
+Usage: ${ME} [-?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]
+                      [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]
+                      [--driver-poll-interval=USEC]
+                      [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]
+                      [--username=USERNAME] [--password=PASSWORD]
+                      [--auth-type=AUTHTYPE]
+                      [--priv-level=PRIVILEGE-LEVEL] [--help]
+                      [--usage] [--version]
+EOF
+}
+
+bmc_autoconfig_display_help ()
+{
+    cat <<EOF
+Usage: ${ME} [OPTION...] 
+${ME} is an autoconfiguration tool and wrapper around bmc-config.
+
+      --driver-poll-interval=USEC
+                             User USEC driver poll interval.
+      --sms-io-base=SMS-IO-BASE   SMS IO Base address.
+  -h, --host=IPMIHOST        Connect to IPMIHOST.
+  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME
+                             length is 16.
+  -p, --password=PASSWORD    Use PASSWORD instead of NULL.  Maximum PASSWORD
+                             length is 16.
+  -a, --auth-type=AUTHTYPE   Use AUTHTYPE instead of NONE.  Allowed values are
+                             NONE, MD2, MD5, PLAIN and OEM.
+  -l, --priv-level=PRIVILEGE-LEVEL
+                             Use this PRIVILEGE-LEVEL instead of USER.  Allowed
+                             values are CALLBACK, USER, OPERATOR, ADMIN and
+                             OEM.
+  -?, --help                 Give this help list.
+      --usage                Give a short usage message.
+  -V, --version              Print program version.
+
+Mandatory or optional arguments to long options are also mandatory or optional
+for any corresponding short options.
+
+Report bugs to <freeipmi-devel@gnu.org>.
+EOF
+}
+
+bmc_autoconfig_display_version ()
+{
+    cat <<EOF
+BMC Auto Configurator [${ME}-${VERSION}]
+Copyright (C) 2003-2005 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+EOF
 }
 
 show_message ()
@@ -143,25 +197,14 @@ accept_input ()
 main ()
 {
     case "${1}" in 
-	'--usage'|'-u')
-	    cat <<EOF
-Usage: ${ME} [-?V] [--help] [--usage] [--version]
-EOF
+	'--usage')
+	    bmc_autoconfig_display_usage
 	    ;;
-	'--help'|'-h')
-	    cat <<EOF
-Usage: ${ME} [OPTION...]
-${DESCRIPTION}
-
-  -h, --help          Give this help list
-  -u, --usage         Give a short usage message
-  -V, --version       Print program version
-
-Report bugs to ${SUPPORT_EMAIL}
-EOF
+	'--help'|'-?')
+	    bmc_autoconfig_display_help
 	    ;;
 	'--version'|'-V')
-	    echo ${ME} ${VERSION};
+	    bmc_autoconfig_display_version
 	    ;;
 	'')
 	    ip=$(accept_input get_ip_address validate_ip_address) &&
