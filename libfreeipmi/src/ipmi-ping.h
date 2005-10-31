@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.4.1 2005-10-31 21:34:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,6 +31,9 @@
 extern "C" {
 #endif
 
+#define IPMI_PING_VERSION_1_5    0
+#define IPMI_PING_VERSION_2_0    1
+
 /* Ipmi_Ping_CreatePacket
  * - Create a ping request packet and store it in the buffer
  * - Return length of packet created, or -1 on error.
@@ -38,6 +41,7 @@ extern "C" {
 typedef int (*Ipmi_Ping_CreatePacket)(char *buffer, 
                                       int buflen, 
                                       unsigned int seq_num_count, 
+                                      int version,
                                       int debug);
 
 /* Ipmi_Ping_ParsePacket
@@ -51,6 +55,7 @@ typedef int (*Ipmi_Ping_ParsePacket)(char *buffer,
                                      const char *from, 
                                      unsigned int seq_num_count, 
                                      int verbose, 
+                                     int version,
                                      int debug);
 
 /* Ipmi_Ping_LatePacket
@@ -71,11 +76,15 @@ typedef int (*Ipmi_Ping_EndResult)(const char *progname,
  */
 void ipmi_ping_err_exit(char *fmt, ...);
 
-/* ipmi_ping_common
- * - wrapper function for common ping utilities
+/* ipmi_ping_setup
+ * - setup ipmi ping code by parsing command line arguments
  */
-void ipmi_ping_main(int argc, char **argv,
-                    Ipmi_Ping_CreatePacket _create, 
+void ipmi_ping_setup(int argc, char **argv, char *options);
+
+/* ipmi_ping_loop
+ * - handle looping ping code
+ */
+void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create, 
                     Ipmi_Ping_ParsePacket _parse, 
                     Ipmi_Ping_LatePacket _late, 
                     Ipmi_Ping_EndResult _end);

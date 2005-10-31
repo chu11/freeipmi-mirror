@@ -115,6 +115,8 @@ extern "C" {
 
 #define IPMI_PASSWORD_OPERATION_TEST_FAILED    0x80
 
+#define IPMI_GET_IPMI_V20_EXTENDED_DATA          0x01
+
 #if 0
 #pragma pack(1)
 typedef struct ipmi_cmd_get_channel_auth_caps_rq
@@ -242,6 +244,8 @@ typedef struct ipmi_cmd_close_session_rs
 
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rq;
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rs;
+extern fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rq;
+extern fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rs;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rq;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rs;
 extern fiid_template_t tmpl_cmd_activate_session_rq;
@@ -255,6 +259,11 @@ extern fiid_template_t tmpl_get_channel_access_rs;
 
 int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
 				       fiid_obj_t obj_cmd);
+
+int8_t fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level, 
+                                           u_int8_t get_ipmi_v20_extended_data,
+                                           fiid_obj_t obj_cmd);
+
 int8_t ipmi_lan_get_channel_auth_caps (int sockfd, 
 				       struct sockaddr *hostaddr, 
 				       size_t hostaddr_len, 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.1.4.1 2005-10-31 21:34:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,6 +78,7 @@ int
 createpacket(char *buffer, 
              int buflen, 
              unsigned int seq_num_count, 
+             int version,
              int debug)
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -128,6 +129,7 @@ parsepacket(char *buffer,
             const char *from, 
             unsigned int seq_num_count, 
             int verbose, 
+            int version,
             int debug) 
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -221,10 +223,11 @@ endresult(const char *progname,
 int 
 main(int argc, char **argv) 
 {
-  ipmi_ping_main(argc, argv, 
-                 createpacket, 
-                 parsepacket, 
-                 latepacket, 
-                 endresult);
+#ifndef NDEBUG
+  ipmi_ping_setup(argc, argv, "hVc:i:I:t:vd");
+#else
+  ipmi_ping_setup(argc, argv, "hVc:i:I:t:v");
+#endif
+  ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */
 }

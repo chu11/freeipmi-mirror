@@ -54,6 +54,44 @@ fiid_template_t tmpl_cmd_get_channel_auth_caps_rs =
     {0, ""}
   };
 
+fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rq =
+  {
+    {8, "cmd"},
+    {4, "channel_num"},
+    {3, "reserved1"},
+    {1, "get_ipmi_v2.0_extended_data"},
+    {4, "max_priv_level"},
+    {4, "reserved2"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rs = 
+  {
+    {8, "cmd"},
+    {8, "comp_code"},
+    {8, "channel_num"},
+    {1, "auth_type.none"},
+    {1, "auth_type.md2"},
+    {1, "auth_type.md5"},
+    {1, "auth_type.reserved1"},
+    {1, "auth_type.straight_passwd_key"},
+    {1, "auth_type.oem_prop"},
+    {1, "auth_type.ipmi_v2.0_extended_capabilities_available"},
+    {1, "auth_type.reserved2"},
+    {1, "auth_status.anonymous_login"},
+    {1, "auth_status.null_username"},
+    {1, "auth_status.non_null_username"},
+    {1, "auth_status.user_level_auth"},
+    {1, "auth_status.per_message_auth"},
+    {3, "auth_status.reserved"},
+    {1, "channel_supports_ipmi_v1.5_connections"},
+    {1, "channel_supports_ipmi_v2.0_connections"},
+    {6, "reserved1"},
+    {24, "oem_id"},
+    {8, "oem_aux"},
+    {0, ""}
+  };
+
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
     {8, "cmd"},
@@ -366,6 +404,34 @@ fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level,
      issued on. */
 
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_rq, "max_priv_level", 
+		max_priv_level);
+  return (0);
+}
+
+int8_t 
+fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level, 
+                                    u_int8_t get_ipmi_v20_extended_data,
+                                    fiid_obj_t obj_cmd)
+{
+  if (!obj_cmd || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, "cmd", 
+		IPMI_CMD_GET_CHANNEL_AUTH_CAPS);
+
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, 
+                "get_ipmi_v2.0_extended_data", 
+		get_ipmi_v20_extended_data);
+
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq,
+		"channel_num", 0x0E); 
+  /* retrieve information for channel this request was
+     issued on. */
+
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, "max_priv_level", 
 		max_priv_level);
   return (0);
 }
