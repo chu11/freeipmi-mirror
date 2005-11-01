@@ -28,6 +28,7 @@ libfreeipmi:
   * Auto retries in ipmi_lan_cmd()
   * open_lan_session - modify to use best secure connection available
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
+  * Implement md2/md5/hmac/sha1/etc. with gcrypt
   
 fish:
 -----
@@ -55,6 +56,8 @@ ipmipower:
   * local power off
   * chassis identify
   * rolling windows of power control commands 
+  * randomize starting session sequence numbers
+  * Will some BMCs not accept retransmissions with same inbound_seq_num? (See IPMI 2.0 spec 6.12.10).
 
 ipmiping/rmcpping:
 ------------------
