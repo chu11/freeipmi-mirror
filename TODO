@@ -51,8 +51,7 @@ ipmipower:
   * There are probably port issues with mmap/mlock.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed even more?
-  * statistical monitoring to determine number of power control
-    failures.
+  * statistical monitoring to determine number of power control failures, dup packets, etc.
   * local power off
   * chassis identify
   * rolling windows of power control commands 
