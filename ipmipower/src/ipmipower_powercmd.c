@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.2 2005-11-02 21:03:08 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.3 2005-11-02 21:25:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -225,7 +225,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-                      
+                     
   if (pkt == AUTH_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTH_SENT;
   else if (pkt == SESS_REQ)
@@ -443,6 +443,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
   /* Must use >=, otherwise we could potentially spin */
   if (millisec_diff(&cur_time, &(ip->time_begin)) >= conf->timeout_len) 
     {
+      /* Don't bother outputting timeout if we have finished the power control operation */
       if (ip->protocol_state != PROTOCOL_STATE_CLOS_SENT)
         ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
       return 1;
