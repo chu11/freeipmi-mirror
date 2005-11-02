@@ -55,8 +55,6 @@ ipmipower:
   * local power off
   * chassis identify
   * rolling windows of power control commands 
-  * randomize starting session sequence numbers
-  * Will some BMCs not accept retransmissions with same inbound_seq_num? (See IPMI 2.0 spec 6.12.10).
 
 ipmiping/rmcpping:
 ------------------
