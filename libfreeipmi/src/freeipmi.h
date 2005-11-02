@@ -222,6 +222,7 @@ extern "C" {
 #include "ipmi-sensor-event-messages.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sel-api.h"
+#include "ipmi-lanplus-sessions.h"
 
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
@@ -328,6 +329,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #include <freeipmi/ipmi-sensor-api.h>
 #include <freeipmi/ipmi-sel-api.h>
+#include <freeipmi/ipmi-lanplus-sessions.h>
 #endif
 
 #ifdef __cplusplus

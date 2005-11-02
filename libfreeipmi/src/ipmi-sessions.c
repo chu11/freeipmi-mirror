@@ -44,7 +44,7 @@ fiid_template_t tmpl_hdr_session_auth_calc =
     {8,   "auth_type"},
     {32,  "session_seq_num"},
     {32,  "session_id"},
-    {256, "auth_calc_data"},
+    {256, "auth_calc_data"},    /* up to 256 bits */
     {8,   "ipmi_msg_len"},
     {0,   ""}
   };

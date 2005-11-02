@@ -334,3 +334,62 @@ ipmi_error (fiid_obj_t obj_cmd, const char *s)
 	   obj_cmd[0], 
 	   errmsg);
 }
+
+int8_t 
+mcpplus_status_strerror_r(u_int8_t rmcpplus_status_code,
+                          char *errstr,
+                          size_t len)
+{
+  if (errstr == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  switch (rmcpplus_status_code) 
+    {
+    case RMCPPLUS_STATUS_NO_ERRORS:
+      SNPRINTF_RETURN ("No errors.");
+    case RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION:
+      SNPRINTF_RETURN ("Insufficient resources to create a session.");
+    case RMCPPLUS_STATUS_INVALID_SESSION_ID:
+      SNPRINTF_RETURN ("Invalid Session ID.");
+    case RMCPPLUS_STATUS_INVALID_PAYLOAD_TYPE:
+      SNPRINTF_RETURN ("Invalid payload type.");
+    case RMCPPLUS_STATUS_INVALID_AUTHENTICATION_ALGORITHM:
+      SNPRINTF_RETURN ("Invalid authentication algorithm.");
+    case RMCPPLUS_STATUS_INVALID_INTEGRITY_ALGORITHM:
+      SNPRINTF_RETURN ("Invalid integrity algorithm.");
+    case RMCPPLUS_STATUS_NO_MATCHING_AUTHENTICATION_PAYLOAD:
+      SNPRINTF_RETURN ("No matching authentication payload.");
+    case RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD:
+      SNPRINTF_RETURN ("No mathing integrity payload.");
+    case RMCPPLUS_STATUS_INACTIVE_SESSION_ID:
+      SNPRINTF_RETURN ("Inactive Session ID");
+    case RMCPPLUS_STATUS_INVALID_ROLE:
+      SNPRINTF_RETURN ("Invalid role.");
+    case RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED:
+      SNPRINTF_RETURN ("Unauthorized role or privelege level requested.");
+    case RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME:
+      SNPRINTF_RETURN ("Insufficient resources to create a session "
+                       "at the requested time.");
+    case RMCPPLUS_STATUS_INVALID_NAME_LENGTH:
+      SNPRINTF_RETURN ("Invalid name length.");
+    case RMCPPLUS_STATUS_UNAUTHORIZED_NAME:
+      SNPRINTF_RETURN ("Unauthorized name.");
+    case RMCPPLUS_STATUS_UNAUTHORIZED_GUID:
+      SNPRINTF_RETURN ("Unauthorized GUID. (GUID that BMC submitted in "
+                       "RAKP Message 2 was not accepted by remote console).");
+    case RMCPPLUS_STATUS_INVALID_INTEGRITY_CHECK_VALUE:
+      SNPRINTF_RETURN ("Invalid integrity check value.");
+    case RMCPPLUS_STATUS_INVALID_CONFIDENTIALITY_ALGORITHM:
+      SNPRINTF_RETURN ("Invalid confidentiality algorithm.");
+    case RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS:
+      SNPRINTF_RETURN ("No Cipher Suite match with proposed security algorithms.");
+    case RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER:
+      SNPRINTF_RETURN ("Illegal or Unrecognized parameter.");
+    }
+
+  SNPRINTF_RETURN ("Unknown rmcp+ or rakp status code %02Xh.", 
+                   rmcpplus_status_code);
+}
