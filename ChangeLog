@@ -1,3 +1,46 @@
+2005-11-01 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
+
+	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(rmcpplus_status_strerror_r): New function.
+
+	* freeipmi.h: Added ipmi-lanplus-sessions.h.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (_setup),
+	ipmipower/src/ipmipower_check.c (_check_outbound_seq_num_),
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_create),
+	ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_recv_packet): Support a randomized initial outbound sequence
+	number.
+
+	* ipmipower/src/ipmipower_check.c (ipmipower_check_packet):
+	Re-order packet checks to fix corner case.
+
+	* ipmipower/src/ipmipower_powercmd.c (_send_packet): Always
+	increment ipmi_send_count and session_inbound_count.
+
+	* ipmipower/src/ipmipower_powercmd.c (_retry_packets): Fix up
+	comments due to fixes above.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Clean up some
+	code and comics.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+	(_check_requester_seq_num), ipmipower/src/ipmipower_connection.c
+	(_connection_setup), ipmipower/src/ipmipower_packet.c
+	(ipmipower_packet_create), ipmipower/src/ipmipower_powercmd.c
+	(_send_packet): Support randomized initial requester sequence
+	numbers.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_connection.c
+	(_connection_setup), ipmipower/src/ipmipower_ping.c
+	(ipmipower_ping_process_pings): Support randomized initial
+	rmcpping sequence numbers.
+	
 2005-10-31 Albert Chu <chu11@llnl.gov>
 
 	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
