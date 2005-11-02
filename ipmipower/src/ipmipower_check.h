@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.1 2004-05-11 17:04:41 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.1.4.1 2005-11-02 21:03:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,12 +30,13 @@
 #include "ipmipower.h"
 
 /* ipmipower_check_packet
- * - Checks a combination of the above checks.
+ * - Checks a combination of error checks.
  * - Only works with response packet types 
- * Returns 1 if all are proper, 0 if not
+ * Returns 1 if all indicated fields pass, 0 if not.  Individual field
+ *  success returned in parameters.
  */
 int ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
-			   int oseq, int sid, 
-                           int netfn, int rseq, int cmd, int cc);
+                           int *oseq, int *sid, int *netfn, int *rseq, 
+                           int *cmd, int *cc);
 
 #endif /* _IPMIPOWER_CHECKS_H */

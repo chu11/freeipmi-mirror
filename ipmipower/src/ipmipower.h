@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.1 2005-11-02 01:23:24 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.2 2005-11-02 21:03:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,6 +112,10 @@
  * - Requester Sequence Number is 6 bits, not 8 
  */
 #define IPMIPOWER_RSEQ_MAX             0x3F
+
+/* IPMI allowable sequence number range window
+ */
+#define IPMIPOWER_SEQ_NUM_WINDOW       8
 
 /* MISC */
 #define IPMI_PACKET_BUFLEN             1024
@@ -241,8 +245,9 @@ struct ipmipower_powercmd {
 
     struct timeval time_begin;
     unsigned int session_inbound_count;
-    unsigned int session_outbound_count;
     unsigned int initial_outbound_seq_num;
+    unsigned int highest_received_seq_num;
+    unsigned int previously_received_list;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;

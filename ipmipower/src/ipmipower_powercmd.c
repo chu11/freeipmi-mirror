@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.1 2005-11-02 01:23:24 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.2 2005-11-02 21:03:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,9 +167,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->session_outbound_count = 0;
-  /* ip->initial_outbound_seq_num = rand(); */
-  /* ip->initial_outbound_seq_num = 0xffffffff; */
+  ip->initial_outbound_seq_num = (unsigned int)rand();
+  ip->highest_received_seq_num = ip->initial_outbound_seq_num;
+  ip->previously_received_list = 0xFF;
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
@@ -256,10 +256,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     ip->protocol_state = PROTOCOL_STATE_CTRL_SENT;
 
   if (pkt == PRIV_REQ || pkt == CLOS_REQ || pkt == CHAS_REQ || pkt == CTRL_REQ) 
-    {
-      ip->session_inbound_count++;
-      ip->session_outbound_count++;
-    }
+    ip->session_inbound_count++;
 
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
 }
@@ -269,7 +266,9 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
  * Returns 0 if packet should be ignored, -1 if packet error was returned
  */
 static int 
-_bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
+_bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt, 
+            int oseq_flag, int sid_flag, int netfn_flag, 
+            int rseq_flag, int cmd_flag, int cc_flag) 
 {
   u_int8_t cc, netfn, cmd, rseq;
   u_int32_t sid, oseq;
@@ -277,7 +276,7 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* If everything else is correct besides completion code, packet
    * returned an error.
    */
-  if (ipmipower_check_packet(ip, pkt, 1, 1, 1, 1, 1, 0)) 
+  if (oseq_flag && sid_flag && netfn_flag && rseq_flag && cmd_flag && !cc_flag) 
     {
       ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
 
@@ -289,10 +288,7 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_response_data(ip, pkt, &oseq, &sid, &netfn, &rseq, &cmd, &cc);
 
-  /* We could reach this point for several reasons:
-   * - packet is corrupted
-   * - packet is a reply to a retransmission that we don't need
-   */
+  /* I guess the packet is corrupted or is a retransmission of something we don't need */
   dbg("_bad_packet(%s:%d): ignoring bad packet: oseq=%x sid=%x "
       "netfn=%x rseq=%x cmd=%x cc=%x",
       ip->ic->hostname, ip->protocol_state, oseq, sid, netfn, 
@@ -313,6 +309,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   char buffer[IPMI_PACKET_BUFLEN];
   u_int8_t *password;
   int check_authcode_retry_flag = 0;
+  int oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag;
 
   assert(PACKET_TYPE_VALID_RES(pkt));
 
@@ -405,7 +402,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_store(ip, pkt, buffer, len);
 
-  if (ipmipower_check_packet(ip, pkt, 1, 1, 1, 1, 1, 1)) 
+  if (ipmipower_check_packet(ip, pkt, &oseq_flag, &sid_flag, &netfn_flag, 
+                             &rseq_flag, &cmd_flag, &cc_flag))
     {
       ip->retry_count = 0;  /* important to reset */
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
@@ -413,90 +411,22 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      /* achu: We handle a few IPMI compliance bugs discovered in some
-       * vendor's hardware.
+      /* On some buggy BMCs, the outbound sequence number is incorrect
+       * when closing a session.  Since we're closing a session, I'll
+       * just go ahead and accept the response if the outbound sequence
+       * number is the only invalid check.
        */
-      
-      /* On some buggy BMCs the initial outbound sequence number on
-       * the activate session response is off by one.  When working
-       * around this, note that there is no need to check for a
-       * sequence number range on the activate session response
-       * packet.  The activate session response packet is supposed to
-       * contain a pre-defined initial outbound sequence number.
-       */
-      if (pkt == ACTV_RES)
+      if (pkt == CLOS_RES && sid_flag && netfn_flag && rseq_flag && cmd_flag && cc_flag)
         {
-          dbg("_recv_packet(%s:%d): vendor sequence number bug #1 re-check:",
+          dbg("_recv_packet(%s:%d): outbound count accepted",
               ip->ic->hostname, ip->protocol_state);
-
-          if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
-            {
-              u_int64_t pktoseq, myoseq;
-              
-              Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                           "session_seq_num", &pktoseq);
-
-              /* The outbound sequence number can wrap around
-               * here, but its ok since the BMC would wrap its
-               * sequence number around too and we would still be
-               * able to compare all the same.
-               */
-              myoseq = ip->initial_outbound_seq_num + ip->session_outbound_count;
-
-              dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                  ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-              
-              if ((myoseq + 1) == pktoseq)
-                {
-                  dbg("_recv_packet(%s:%d): outbound count adjusted",
-                      ip->ic->hostname, ip->protocol_state);
-                  ip->session_outbound_count += 1;
-                  ip->retry_count = 0;  /* important to reset */
-                  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                  return 1;
-                }
-            }
-        }
-
-      /* On some buggy BMCs, the outbound sequence number is identical
-       * to the inbound sequence number when closing a session.  This
-       * is despite what previous outbound sequence numbers were sent
-       * out of the BMC.
-       */
-      if (pkt == CLOS_RES)
-        {
-          dbg("_recv_packet(%s:%d): vendor sequence number bug #2 re-check:",
-              ip->ic->hostname, ip->protocol_state);
-          
-          if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
-            {
-              u_int64_t pktoseq, myoseq, initial_inbound_seq_num;
-
-              Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                           "session_seq_num", &pktoseq);
-
-              
-              Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
-                           "initial_inbound_seq_num", &initial_inbound_seq_num);
-              
-              myoseq = initial_inbound_seq_num + (ip->session_inbound_count - 1);
-              
-              dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                  ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-              
-              if (myoseq == pktoseq)
-                {
-                  dbg("_recv_packet(%s:%d): outbound count accepted",
-                      ip->ic->hostname, ip->protocol_state);
-                  ip->retry_count = 0;  /* important to reset */
-                  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                  return 1;
-                }
-            }
+          ip->retry_count = 0;  /* important to reset */
+          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+          return 1;
         }
     }
 
-  return _bad_packet(ip, pkt);
+  return _bad_packet(ip, pkt, oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag);
 }
 
 /* _has_timed_out

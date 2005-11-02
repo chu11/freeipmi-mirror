@@ -1,3 +1,17 @@
+2005-11-02  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+	(_check_outbound_seq_num), : Rework to use IPMI spec sequence
+	check algorithm.
+
+	* ipmipower/src/ipmipower_check.h, ipmipower/src/ipmipower_check.c
+	(ipmipower_check_packet): Re-work API to pass flags back to caller
+	with test results.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_send_packet, _recv_packet, _bad_packet): Fixed various code due
+	to above changes.
+	
 2005-11-01 Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,

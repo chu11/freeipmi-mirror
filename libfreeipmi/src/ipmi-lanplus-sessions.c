@@ -133,3 +133,4 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
     {512, "integrity_check_value"}, /* up to 64 bytes */
     {0,   ""}
   };
+
