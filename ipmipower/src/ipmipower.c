@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.4 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.4.2.1 2005-11-02 01:23:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -108,6 +108,8 @@ _setup(void)
   int i;
   struct rlimit rlim;
   
+  srand(Time(NULL));
+
   /* Make best effort to increase file descriptor limit, if it fails
    * for any reason, don't worry about it, its no big deal.
    */
@@ -140,9 +142,6 @@ _setup(void)
   err_syslog(1);
 
 #ifndef NDEBUG
-  /* Sometimes used to add random packet drop debugging code.  Just leave. */
-  srand(Time(NULL));
-
   if (strlen(conf->logfile)) 
     {
       conf->logfile_fd = open(conf->logfile, O_WRONLY | O_CREAT | O_APPEND,

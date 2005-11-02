@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.1 2004-05-11 17:04:58 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.1.4.1 2005-11-02 01:23:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,7 +115,7 @@ ipmipower_ping_process_pings(int *timeout)
           /* must increment count before setting message tag, so we
            * can check sequence number correctly later on 
            */
-          ics[i].ping_send_count++; 
+          ics[i].ping_seq_num_counter++; 
 
           if ((rmcp_hdr = fiid_obj_alloc(tmpl_hdr_rmcp)) == NULL)
             err_exit("fiid_obj_alloc: %s", strerror(errno));
@@ -125,7 +125,7 @@ ipmipower_ping_process_pings(int *timeout)
           if (fill_hdr_rmcp_asf(rmcp_hdr) < 0)
             err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
 
-          if (fill_cmd_asf_presence_ping((ics[i].ping_send_count % 
+          if (fill_cmd_asf_presence_ping((ics[i].ping_seq_num_counter % 
                                           (IPMIPOWER_PING_TAG_MAX + 1)), 
                                          rmcp_ping) < 0)
             err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));

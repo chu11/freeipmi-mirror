@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11 2005-03-18 22:18:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.1 2005-11-02 01:23:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,6 +168,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
   ip->session_outbound_count = 0;
+  /* ip->initial_outbound_seq_num = rand(); */
+  /* ip->initial_outbound_seq_num = 0xffffffff; */
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
@@ -215,21 +217,10 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
 
   assert(PACKET_TYPE_VALID_REQ(pkt));
 
-  /* Must set before ipmipower_packet_create, so reqeuster sequence
+  /* Must set before ipmipower_packet_create, so requester sequence
    * number is set properly.
-   *
-   * achu: We wouldn't normal increment this on packet retries, but
-   * it is required for the activate session command.  We MUST get
-   * the reply to the last activate session command, because we must
-   * get the proper initial inbound sequence number from the BMC.
-   *
-   * It is normally also needed on the get session challenge
-   * command, so we ensure we get the latest session id and
-   * challenge string from the BMC.  However, we have a work around
-   * in _retry_packets() already.
    */
-  if (!is_retry || pkt == ACTV_REQ)
-    ip->ic->ipmi_send_count++;
+  ip->ic->ipmi_requester_seq_num_counter++;
   
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
@@ -264,11 +255,9 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   else if (pkt == CTRL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CTRL_SENT;
 
-  if (pkt == PRIV_REQ || pkt == CLOS_REQ 
-      || pkt == CHAS_REQ || pkt == CTRL_REQ) 
+  if (pkt == PRIV_REQ || pkt == CLOS_REQ || pkt == CHAS_REQ || pkt == CTRL_REQ) 
     {
-      if (!is_retry)
-        ip->session_inbound_count++;
+      ip->session_inbound_count++;
       ip->session_outbound_count++;
     }
 
@@ -424,71 +413,84 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      /* achu: We handle a few remote BMC IPMI compliance bugs discovered
-       * in some vendor's hardware.
-       *
-       * On some buggy BMCs the initial outbound sequence number on
+      /* achu: We handle a few IPMI compliance bugs discovered in some
+       * vendor's hardware.
+       */
+      
+      /* On some buggy BMCs the initial outbound sequence number on
        * the activate session response is off by one.  When working
        * around this, note that there is no need to check for a
        * sequence number range on the activate session response
        * packet.  The activate session response packet is supposed to
        * contain a pre-defined initial outbound sequence number.
-       *
-       * On some buggy BMCs, the outbound sequence number is identical
-       * to the inbound sequence number when closing a session.  This
-       * is despite what previous outbound sequence numbers were sent
-       * out of the BMC.
        */
-      if (pkt == ACTV_RES || pkt == CLOS_RES)
+      if (pkt == ACTV_RES)
         {
-          dbg("_recv_packet(%s:%d): re-checking outbound sequence number:",
+          dbg("_recv_packet(%s:%d): vendor sequence number bug #1 re-check:",
               ip->ic->hostname, ip->protocol_state);
 
           if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
             {
               u_int64_t pktoseq, myoseq;
+              
+              Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
+                           "session_seq_num", &pktoseq);
+
+              /* The outbound sequence number can wrap around
+               * here, but its ok since the BMC would wrap its
+               * sequence number around too and we would still be
+               * able to compare all the same.
+               */
+              myoseq = ip->initial_outbound_seq_num + ip->session_outbound_count;
+
+              dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
+                  ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
+              
+              if ((myoseq + 1) == pktoseq)
+                {
+                  dbg("_recv_packet(%s:%d): outbound count adjusted",
+                      ip->ic->hostname, ip->protocol_state);
+                  ip->session_outbound_count += 1;
+                  ip->retry_count = 0;  /* important to reset */
+                  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+                  return 1;
+                }
+            }
+        }
+
+      /* On some buggy BMCs, the outbound sequence number is identical
+       * to the inbound sequence number when closing a session.  This
+       * is despite what previous outbound sequence numbers were sent
+       * out of the BMC.
+       */
+      if (pkt == CLOS_RES)
+        {
+          dbg("_recv_packet(%s:%d): vendor sequence number bug #2 re-check:",
+              ip->ic->hostname, ip->protocol_state);
+          
+          if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
+            {
+              u_int64_t pktoseq, myoseq, initial_inbound_seq_num;
 
               Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
                            "session_seq_num", &pktoseq);
 
-              if (pkt == ACTV_RES)
+              
+              Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
+                           "initial_inbound_seq_num", &initial_inbound_seq_num);
+              
+              myoseq = initial_inbound_seq_num + (ip->session_inbound_count - 1);
+              
+              dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
+                  ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
+              
+              if (myoseq == pktoseq)
                 {
-                  myoseq = IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM + ip->session_outbound_count;
-
-                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-
-                  if ((myoseq + 1) == pktoseq)
-                    {
-                      dbg("_recv_packet(%s:%d): outbound count adjusted",
-                          ip->ic->hostname, ip->protocol_state);
-                      ip->session_outbound_count += 1;
-                      ip->retry_count = 0;  /* important to reset */
-                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                      return 1;
-                    }
-                }
-
-              if (pkt == CLOS_RES)
-                {
-                  u_int64_t initial_inbound_seq_num;
-
-                  Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
-                               "initial_inbound_seq_num", &initial_inbound_seq_num);
-                  
-                  myoseq = initial_inbound_seq_num + (ip->session_inbound_count - 1);
-
-                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-
-                  if (myoseq == pktoseq)
-                    {
-                      dbg("_recv_packet(%s:%d): outbound count accepted",
-                          ip->ic->hostname, ip->protocol_state);
-                      ip->retry_count = 0;  /* important to reset */
-                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                      return 1;
-                    }
+                  dbg("_recv_packet(%s:%d): outbound count accepted",
+                      ip->ic->hostname, ip->protocol_state);
+                  ip->retry_count = 0;  /* important to reset */
+                  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+                  return 1;
                 }
             }
         }
@@ -530,7 +532,7 @@ _retry_packets(ipmipower_powercmd_t ip)
   int time_left;
   int retry_timeout_len;
 
-  /* Can't retransmit if any of the following are true */
+  /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
       || conf->retry_timeout_len == 0             /* no retransmissions */
       || ip->error_occurred == IPMIPOWER_TRUE)   /* we hit an error */
@@ -562,27 +564,20 @@ _retry_packets(ipmipower_powercmd_t ip)
        * (and likely other revisions too) of Intel tiger4 BMCs.  If
        * the reply from a previous Get Session Challenge request is
        * lost on the network, the following retransmission will make
-       * the BMC confused and it will respond to future request
-       * packets in a irregular way.
+       * the BMC confused and it will not respond to future packets.
        *
-       * The problem seems to exist only when the packet is
-       * transmitted from the same source port.  Therefore, the fix
+       * The problem seems to exist only when the retransmitted packet
+       * is transmitted from the same source port.  Therefore, the fix
        * is to send the retransmission from a different source port.
        * So we'll create a new socket, re-bind to an ephemereal port
-       * (guaranteeing us a brand new port), and store this new socket.
+       * (guaranteeing us a brand new port), and store this new
+       * socket.
        *
        * In the event we need to resend this packet multiple times, we
        * do not want the chance that old ports will be used again.
        * Therefore, we store the old file descriptrs (which are bound
        * to the old ports) on a list, and close all of them after
        * we have gotten past this phase of the protocol.
-       *
-       * Coincidently this fixes another problem.  Because the Get
-       * Session Challenge contains the Session ID and Challenge
-       * String, we would have to check requester sequence numbers to
-       * make sure we got the right Session ID and Challenge String.
-       * We can drop that check using this approach.  See comments
-       * above in _send_packet.
        */
       int new_fd, *old_fd;
       struct sockaddr_in srcaddr;

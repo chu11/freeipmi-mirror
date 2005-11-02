@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.1 2005-11-02 01:23:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,8 +116,6 @@
 /* MISC */
 #define IPMI_PACKET_BUFLEN             1024
 #define RMCP_PACKET_BUFLEN             1024
-
-#define IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM  0x00000001
 
 #define IPMIPOWER_HOSTLIST_BUFLEN      65536
 
@@ -244,6 +242,7 @@ struct ipmipower_powercmd {
     struct timeval time_begin;
     unsigned int session_inbound_count;
     unsigned int session_outbound_count;
+    unsigned int initial_outbound_seq_num;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
@@ -290,8 +289,8 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  unsigned int ipmi_send_count;
-  unsigned int ping_send_count;
+  unsigned int ipmi_requester_seq_num_counter;
+  unsigned int ping_seq_num_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;
