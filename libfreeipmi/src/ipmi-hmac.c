@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-hmac.c,v 1.3 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-hmac.c,v 1.3.2.1 2005-11-03 23:43:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -266,5 +266,5 @@ ipmi_hmac_finish(ipmi_hmac_t *ctx, u_int8_t *digest, unsigned int digestlen)
  cleanup:
   if (idigest)
     free(idigest);
-  return -1;
+  return ret;
 }

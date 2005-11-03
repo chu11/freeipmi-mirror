@@ -64,7 +64,16 @@
 	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
 	randomized initial starting sequence number.
 
+	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
+	bug.
+
 ------------------------------------------------------------
+
+2005-11-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
+	bug.
+	
 2005-11-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
