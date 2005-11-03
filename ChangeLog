@@ -14,6 +14,11 @@
 
 	* ipmipower/src/ipmipower.h: Update IPMIPOWER_MAXNODES from 1024
 	to 2048.
+
+	* libfreeipmi/src/ipmi-ping.c: Randomize starting sequence number.
+
+	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
+	randomized initial starting sequence number.
 	
 2005-11-01 Albert Chu <chu11@llnl.gov>
 

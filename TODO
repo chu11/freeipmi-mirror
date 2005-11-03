@@ -59,11 +59,6 @@ ipmipower:
 ipmiping/rmcpping:
 ------------------
   * argp
-  * Make starting sequence number random to reduce probability of
-    "confused" BMC known issue?
-  * Randomizing port on client can also fix the issue??
-  * Clean up code, common code betwen rmcpping/ipmiping is wierd due
-    to v2.0 additions.
 
 General:
 --------

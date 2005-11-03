@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.1 2005-10-31 21:34:46 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.2 2005-11-03 01:12:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,7 +74,7 @@ Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
 int 
 createpacket(char *buffer, 
              int buflen, 
-             unsigned int seq_num_count,
+             unsigned int seq_num,
              int version,
              int debug) 
 {
@@ -113,7 +113,7 @@ createpacket(char *buffer,
     ipmi_ping_err_exit("fill_hdr_session: %s", strerror(errno));
 
   if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
-                       seq_num_count % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
+                       seq_num % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_msg_hdr: %s", strerror(errno));
 
   if (version == IPMI_PING_VERSION_1_5)
@@ -158,7 +158,7 @@ int
 parsepacket(char *buffer, 
             int buflen, 
             const char *from,
-            unsigned int seq_num_count, 
+            unsigned int seq_num, 
             int verbose, 
             int version,
             int debug)
@@ -265,7 +265,7 @@ parsepacket(char *buffer,
   Fiid_obj_get(obj_msg_hdr, tmpl_lan_msg_hdr_rs, 
                "rq_seq", (u_int64_t *)&req_seq);
 
-  if (req_seq != seq_num_count % (IPMI_RQ_SEQ_MAX + 1)) 
+  if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
       retval = 0;
       goto cleanup;
@@ -343,10 +343,9 @@ parsepacket(char *buffer,
 }
 
 void 
-latepacket(unsigned int seq_num_count) 
+latepacket(unsigned int seq_num) 
 {
-  printf("response timed out: rq_seq=%u\n", 
-         seq_num_count % (IPMI_RQ_SEQ_MAX + 1));
+  printf("response timed out: rq_seq=%u\n", seq_num % (IPMI_RQ_SEQ_MAX + 1));
 }
 
 int

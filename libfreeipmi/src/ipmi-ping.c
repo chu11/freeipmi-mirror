@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.4.2.1 2005-10-31 21:34:46 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.4.2.2 2005-11-03 01:12:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -306,6 +306,8 @@ _setup(void)
   _destaddr.sin_addr = *((struct in_addr *)hptr->h_addr);
   temp = inet_ntoa(_destaddr.sin_addr);
   _strncpy(_dest_ip, temp, INET_ADDRSTRLEN);
+
+  srand(time(NULL));
 }
 
 static void 
@@ -313,7 +315,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
            Ipmi_Ping_ParsePacket _parse, 
            Ipmi_Ping_LatePacket _late) 
 {
-  unsigned int seq_num_count = 0;
+  unsigned int seq_num = rand();
   time_t last_send = 0;
   int ret;
 
@@ -340,7 +342,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
         }
       
       if ((len = _create((char *)buffer, IPMI_PING_MAX_PKT_LEN, 
-                         seq_num_count, _version, _debug)) < 0)
+                         seq_num, _version, _debug)) < 0)
         ipmi_ping_err_exit("_create failed: %s", strerror(errno));
         
       rv = ipmi_lan_sendto(_sockfd, buffer, len, 0, 
@@ -381,7 +383,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
                 ipmi_ping_err_exit("ipmi_recvfrom: %s", strerror(errno));
               
               if ((rv = _parse((char *)buffer, len, inet_ntoa(from.sin_addr), 
-                               seq_num_count, _verbose, _version, _debug)) < 0)
+                               seq_num, _verbose, _version, _debug)) < 0)
                 ipmi_ping_err_exit("_parse failed: %s", strerror(errno));
 
               /* If rv == 0, the sequence numbers don't match, so
@@ -398,9 +400,9 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
         }
       
       if (received == 0)
-        _late(seq_num_count);
+        _late(seq_num);
       
-      seq_num_count++;
+      seq_num++;
     }
   
   ret = _end_result(_progname, _dest, _pkt_sent, _pkt_recv);

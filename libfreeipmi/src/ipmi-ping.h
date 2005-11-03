@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1.4.1 2005-10-31 21:34:46 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.4.2 2005-11-03 01:12:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,7 +40,7 @@ extern "C" {
  */
 typedef int (*Ipmi_Ping_CreatePacket)(char *buffer, 
                                       int buflen, 
-                                      unsigned int seq_num_count, 
+                                      unsigned int seq_num, 
                                       int version,
                                       int debug);
 
@@ -53,7 +53,7 @@ typedef int (*Ipmi_Ping_CreatePacket)(char *buffer,
 typedef int (*Ipmi_Ping_ParsePacket)(char *buffer, 
                                      int buflen, 
                                      const char *from, 
-                                     unsigned int seq_num_count, 
+                                     unsigned int seq_num, 
                                      int verbose, 
                                      int version,
                                      int debug);
@@ -61,7 +61,7 @@ typedef int (*Ipmi_Ping_ParsePacket)(char *buffer,
 /* Ipmi_Ping_LatePacket
  * - Output info about timed out packet to stdout
  */
-typedef void (*Ipmi_Ping_LatePacket)(unsigned int seq_num_count);
+typedef void (*Ipmi_Ping_LatePacket)(unsigned int seq_num);
 
 /* Ipmi_Ping_EndResult
  * - Output final results to stdout and return exit code

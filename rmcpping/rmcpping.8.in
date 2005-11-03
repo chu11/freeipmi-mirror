@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: rmcpping.8.in,v 1.3 2005-03-13 04:19:53 ab Exp $
+\."$Id: rmcpping.8.in,v 1.3.2.1 2005-11-03 01:12:18 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,9 +30,10 @@ rmcpping \- send RMCP Ping to network hosts
 .B rmcpping [OPTIONS] destination
 .SH "DESCRIPTION"
 .B rmcpping
-uses the RMCP Ping request datagram to elicit an RMCP Pong response from a
-remote host.  The utility can be used to verify if a remote host supports
-RMCP or IPMI.
+uses the RMCP Ping request datagram to elicit an RMCP Pong response
+from a remote host.  The utility can be used to verify if a remote
+host supports RMCP or IPMI.  The initial starting sequence number will
+be randomized.
 
 .B rmcpping
 will return 0 to the environment if it receives atleast 1 response
