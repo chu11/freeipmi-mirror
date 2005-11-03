@@ -11,6 +11,9 @@
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
 	_send_packet, _recv_packet, _bad_packet): Fixed various code due
 	to above changes.
+
+	* ipmipower/src/ipmipower.h: Update IPMIPOWER_MAXNODES from 1024
+	to 2048.
 	
 2005-11-01 Albert Chu <chu11@llnl.gov>
 
