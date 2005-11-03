@@ -1,3 +1,70 @@
+------------------------------------------------------------
+2005-XX-XX  Albert Chu <chu11@llnl.gov>
+
+	* Merge in fixes from branch al_ipmi_2_0_branch.
+
+	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Added
+	support for ipmi 2.0 ping.
+	
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
+
+	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(rmcpplus_status_strerror_r): New function.
+
+	* freeipmi.h: Added ipmi-lanplus-sessions.h.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (_setup),
+	ipmipower/src/ipmipower_check.c (_check_outbound_seq_num_),
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_create),
+	ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_recv_packet): Support a randomized initial outbound sequence
+	number.
+
+	* ipmipower/src/ipmipower_powercmd.c (_send_packet): Always
+	increment ipmi_send_count and session_inbound_count.
+
+	* ipmipower/src/ipmipower_powercmd.c (_retry_packets): Fix up
+	comments due to fixes above.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+	(_check_requester_seq_num), ipmipower/src/ipmipower_connection.c
+	(_connection_setup), ipmipower/src/ipmipower_packet.c
+	(ipmipower_packet_create), ipmipower/src/ipmipower_powercmd.c
+	(_send_packet): Support randomized initial requester sequence
+	numbers.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_connection.c
+	(_connection_setup), ipmipower/src/ipmipower_ping.c
+	(ipmipower_ping_process_pings): Support randomized initial
+	rmcpping sequence numbers.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+	(_check_outbound_seq_num), : Rework to use IPMI spec sequence
+	check algorithm.
+
+	* ipmipower/src/ipmipower_check.h, ipmipower/src/ipmipower_check.c
+	(ipmipower_check_packet): Re-work API to pass flags back to caller
+	with test results.
+
+	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_send_packet, _recv_packet, _bad_packet): Fixed various code due
+	to above changes to ipmipower_check_packet.
+
+	* ipmipower/src/ipmipower.h: Change IPMIPOWER_MAXNODES from 1024
+	to 2048.
+
+	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
+	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
+	starting sequence number.
+
+	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
+	randomized initial starting sequence number.
+
+------------------------------------------------------------
 2005-11-02  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
@@ -10,9 +77,9 @@
 
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
 	_send_packet, _recv_packet, _bad_packet): Fixed various code due
-	to above changes.
+	to above changes to ipmipower_check_packet.
 
-	* ipmipower/src/ipmipower.h: Update IPMIPOWER_MAXNODES from 1024
+	* ipmipower/src/ipmipower.h: Change IPMIPOWER_MAXNODES from 1024
 	to 2048.
 
 	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
