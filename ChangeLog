@@ -70,6 +70,13 @@
 	* configure.ac, libfreeipmi/src/Makefile.am: Add libgcrypt in
 	build.
 
+	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
+	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
+	files.
+
+	* libfreeipmi/src/Makefile.am, freeipmi.h: Removed ipmi-hmac.c,
+	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+
 ------------------------------------------------------------
 
 2005-11-03  Albert Chu <chu11@llnl.gov>
@@ -79,6 +86,13 @@
 
 	* configure.ac, libfreeipmi/src/Makefile.am: Add libgcrypt in
 	build.
+
+	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
+	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
+	files.
+
+	* libfreeipmi/src/Makefile.am, freeipmi.h: Removed ipmi-hmac.c,
+	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 	
 2005-11-02  Albert Chu <chu11@llnl.gov>
 
