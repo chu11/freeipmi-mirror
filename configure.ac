@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.27 2005-10-12 13:34:33 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.27.2.1 2005-11-04 00:54:59 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -151,6 +151,11 @@ else
 fi
 
 dnl Checks for libraries.
+AC_CHECK_LIB([gcrypt], [gcry_md_open], [have_gcrypt=yes], [have_gcrypt=no])
+if test "x${have_gcrypt}" = "xno"; then
+   AC_MSG_ERROR([libgcrypt required to build libfreeipmi])
+   AC_MSG_NOTICE([Note: libgpg-error required for libgcrypt])
+fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_BIGENDIAN

@@ -67,12 +67,18 @@
 	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
 	bug.
 
+	* configure.ac, libfreeipmi/src/Makefile.am: Add libgcrypt in
+	build.
+
 ------------------------------------------------------------
 
 2005-11-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
 	bug.
+
+	* configure.ac, libfreeipmi/src/Makefile.am: Add libgcrypt in
+	build.
 	
 2005-11-02  Albert Chu <chu11@llnl.gov>
 
