@@ -3,6 +3,13 @@
 
 	* Merge in fixes from branch al_ipmi_2_0_branch.
 
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	(IPMI_GET_IPMI_V20_EXTENDED_DATA,
+	tmpl_cmd_get_channel_auth_caps_v20_rq,
+	tmpl_cmd_get_channel_auth_caps_v20_rs,
+	fill_cmd_get_channel_auth_caps_v20): New templates and functions.
+
 	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
 	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Added
 	support for ipmi 2.0 ping.
@@ -78,7 +85,11 @@
 	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
 ------------------------------------------------------------
+2005-11-04  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-interface.h: Added RMCPPLUS defines.  Made
+	appropriate adjustments to macros.
+	
 2005-11-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
@@ -162,6 +173,14 @@
 	rmcpping sequence numbers.
 	
 2005-10-31 Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	(IPMI_GET_IPMI_V20_EXTENDED_DATA,
+	tmpl_cmd_get_channel_auth_caps_v20_rq,
+	tmpl_cmd_get_channel_auth_caps_v20_rs,
+	fill_cmd_get_channel_auth_caps_v20): New defines, templates, and
+	functions.
 
 	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
 	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Added
