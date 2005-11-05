@@ -174,19 +174,19 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_in
   return (0);
 }
 
-int8_t
-fill_lanplus_trlr_session(fiid_template_t trlr_session, 
+int8t_
+fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
                           u_int8_t *auth_code_data,
                           u_int32_t auth_code_data_len,
                           fiid_obj_t obj_trlr)
 {
-  if (!(trlr_session && obj_trlr))
+  if (!(tmpl_trlr && obj_trlr))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_session);
+  FIID_OBJ_MEMSET (obj_trlr, '\0', tmpl_trlr);
 
   /* XXX hard part is done later in assemble, just copy in data,
    * follow fill_hdr_session 
