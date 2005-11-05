@@ -31,21 +31,34 @@
 #define IPMI_SESSION_AUTH_TYPE_MD5                 0x02
 #define IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
 #define IPMI_SESSION_AUTH_TYPE_OEM_PROP            0x05
+#define IPMI_SESSION_AUTH_TYPE_RMCPPLUS            0x06
 
 #define IPMI_SESSION_AUTH_TYPE_VALID(auth_type) \
         (((auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
           || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
           || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
           || (auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
-          || (auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP \
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_RMCPPLUS) ? 1 : 0) 
 
-#define IPMI_PRIV_LEVEL_RESERVED     0x00
-#define IPMI_PRIV_LEVEL_CALLBACK     0x01
-#define IPMI_PRIV_LEVEL_USER         0x02
-#define IPMI_PRIV_LEVEL_OPERATOR     0x03
-#define IPMI_PRIV_LEVEL_ADMIN        0x04
-#define IPMI_PRIV_LEVEL_OEM          0x05
-#define IPMI_PRIV_LEVEL_NO_ACCESS    0x0F
+#define IPMI_1_5_SESSION_AUTH_TYPE_VALID(auth_type) \
+        (((auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
+          || (auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0)
+
+#define IPMI_2_0_SESSION_AUTH_TYPE_VALID(auth_type) \
+        IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+
+#define IPMI_PRIV_LEVEL_RESERVED      0x00
+#define IPMI_PRIV_LEVEL_CALLBACK      0x01
+#define IPMI_PRIV_LEVEL_USER          0x02
+#define IPMI_PRIV_LEVEL_OPERATOR      0x03
+#define IPMI_PRIV_LEVEL_ADMIN         0x04
+#define IPMI_PRIV_LEVEL_OEM           0x05
+#define IPMI_PRIV_LEVEL_NO_ACCESS     0x0F
+#define IPMI_PRIV_LEVEL_HIGHEST_LEVEL 0x00 /* IPMI 2.0 */
 
 #define IPMI_PRIV_LEVEL_VALID(priv_level) \
         (((priv_level) == IPMI_PRIV_LEVEL_RESERVED \

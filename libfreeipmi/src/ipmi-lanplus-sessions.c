@@ -134,3 +134,33 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
     {0,   ""}
   };
 
+int8_t
+fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
+{
+  if (!IPMI_2_0_SESSION_AUTH_TYPE_VALID(auth_type)
+      || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
+      || !IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
+      || !(tmpl_session && tmpl_cmd && obj_hdr))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "auth_type", auth_type);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type", payload_type);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.authenticated", payload_authenticated);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.encrypted", payload_encrypted);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_iana", oem_iana);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_payload_id", oem_payload_id);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "session_id", session_id);
+  FIID_OBJ_SET (obj_hdr, tmpl_session, "session_seq_num", session_seq_num);
+
+  /* XXX need to calculate ipmi_msg_len */
+
+  return (0);
+}
+
+
+
+

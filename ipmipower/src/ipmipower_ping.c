@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.1.4.1 2005-11-02 01:23:24 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.1.4.2 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -107,9 +107,9 @@ ipmipower_ping_process_pings(int *timeout)
             
           if (conf->ping_consec_count) 
             {
-              if (ics[i].ping_last_packet_recv == 0)
+              if (ics[i].ping_last_packet_recv_flag == 0)
                 ics[i].ping_consec_count = 0;
-              ics[i].ping_last_packet_recv = 0;
+              ics[i].ping_last_packet_recv_flag = 0;
             }
             
           /* must increment count before setting message tag, so we
@@ -221,10 +221,10 @@ ipmipower_ping_process_pings(int *timeout)
                    * response was late, and we quickly receive two
                    * pong responses
                    */
-                  if (ics[i].ping_last_packet_recv == 0)
+                  if (ics[i].ping_last_packet_recv_flag == 0)
                     ics[i].ping_consec_count++;
                   
-                  ics[i].ping_last_packet_recv++;
+                  ics[i].ping_last_packet_recv_flag++;
                 }
               
               if (conf->ping_packet_count && conf->ping_percent) 

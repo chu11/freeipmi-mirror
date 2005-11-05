@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.2 2005-11-03 01:12:18 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.3 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -373,9 +373,9 @@ int
 main(int argc, char **argv) 
 {
 #ifndef NDEBUG
-  ipmi_ping_setup(argc, argv, "hVc:i:I:t:vr:d");
+  ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vr:s:d");
 #else
-  ipmi_ping_setup(argc, argv, "hVc:i:I:t:vr:");
+  ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vr:s:");
 #endif
   ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */

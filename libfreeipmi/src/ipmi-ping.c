@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.4.2.2 2005-11-03 01:12:18 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.4.2.3 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -34,12 +34,14 @@
 #define MAXHOSTNAMELEN 64
 #endif
 
-#define IPMI_PING_MAX_PKT_LEN    1024
-#define IPMI_PING_MAX_ERR_LEN    1024
+#define IPMI_PING_MAX_PKT_LEN      1024
+#define IPMI_PING_MAX_ERR_LEN      1024
 
-#define IPMI_PING_VERSION_1_5_STR "1.5"
+#define IPMI_PING_VERSION_1_5_STR  "1.5"
+#define IPMI_PING_VERSION_2_0_STR  "2.0"
 
-#define IPMI_PING_VERSION_2_0_STR "2.0"
+#define DEVURANDOM                "/dev/urandom"
+#define DEVRANDOM                 "/dev/random"
 
 /* getopt */
 extern char *optarg;
@@ -55,6 +57,7 @@ static int _timeout = 5;
 static int _verbose = 0;
 static int _debug = 0;
 static int _version = IPMI_PING_VERSION_1_5;
+static int _initial_seq_num = -1;
 
 /* globals */
 static int _sockfd = 0;
@@ -120,7 +123,7 @@ _output_usage(char *options)
   
   fprintf(stderr, "%s [OPTIONS] destination\n", _progname);
   if (strchr(options, 'c'))
-      fprintf(stderr, "  -c   count\n");
+    fprintf(stderr, "  -c   count\n");
   if (strchr(options, 'i'))
     fprintf(stderr, "  -i   interval in seconds\n");
   if (strchr(options, 'I'))
@@ -131,6 +134,8 @@ _output_usage(char *options)
     fprintf(stderr, "  -v   verbose output\n");
   if (strchr(options, 'r'))
     fprintf(stderr, "  -r   protocol version\n");
+  if (strchr(options, 's'))
+    fprintf(stderr, "  -s   starting sequence number\n");
 #ifndef NDEBUG
   if (strchr(options, 'd'))
     fprintf(stderr, "  -d   turn on debugging\n");
@@ -147,7 +152,11 @@ _output_version(void)
 }
 
 static void 
-_cmdline_parse(int argc, char **argv, char *options) 
+_cmdline_parse(int argc, 
+               char **argv, 
+               unsigned int min_seq_num,
+               unsigned int max_seq_num,
+               char *options) 
 {
   char c, *ptr;
  
@@ -196,6 +205,13 @@ _cmdline_parse(int argc, char **argv, char *options)
           _version = IPMI_PING_VERSION_2_0;
         else
           ipmi_ping_err_exit("invalid version");
+        break;
+      case 's':
+        _initial_seq_num = strtol(optarg, &ptr, 10);
+        if (ptr != (optarg + strlen(optarg)))
+          ipmi_ping_err_exit("initial sequence number invalid");
+        if (_initial_seq_num < min_seq_num || _initial_seq_num > max_seq_num)
+          ipmi_ping_err_exit("initial sequence number out of range");
         break;
 #ifndef NDEBUG
       case 'd':
@@ -310,12 +326,41 @@ _setup(void)
   srand(time(NULL));
 }
 
+static unsigned int
+_get_rand(void)
+{
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+  u_int32_t randval;
+  int fd, ret = -1;
+#if HAVE_DEVURANDOM
+  char *device = DEVURANDOM;
+#else
+  char *device = DEVRANDOM;
+#endif
+
+  if ((fd = open(device, O_RDONLY)) < 0)
+    goto cleanup;
+
+  if ((ret = read(fd, (char *)&randval, sizeof(u_int32_t))) < 0)
+    goto cleanup;
+
+ cleanup:
+  close(fd);
+  if (ret != sizeof(u_int32_t))
+      return rand();
+
+  return (unsigned int)randval;
+#else
+  return (unsigned int)rand();
+#endif
+}
+
 static void 
 _main_loop(Ipmi_Ping_CreatePacket _create, 
            Ipmi_Ping_ParsePacket _parse, 
            Ipmi_Ping_LatePacket _late) 
 {
-  unsigned int seq_num = rand();
+  unsigned int seq_num;
   time_t last_send = 0;
   int ret;
 
@@ -324,6 +369,11 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
          && _late != NULL
          && _progname != NULL 
          && _end_result != NULL);
+
+  if (_initial_seq_num < 0)
+    seq_num = _get_rand();
+  else
+    seq_num = _initial_seq_num;
 
   printf("%s %s (%s)\n", _progname, _dest, _dest_ip);
 
@@ -411,12 +461,16 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
 }
 
 void
-ipmi_ping_setup(int argc, char **argv, char *options)
+ipmi_ping_setup(int argc, 
+                char **argv, 
+                unsigned int min_seq_num,
+                unsigned int max_seq_num,
+                char *options)
 {
 #ifndef NDEBUG
-  char *valid_options = "hVciItvrd:";
+  char *valid_options = "hVciItvrsd:";
 #else
-  char *valid_options = "hVciItvr:";
+  char *valid_options = "hVciItvrs:";
 #endif
   char *ptr;
   char c;
@@ -440,7 +494,7 @@ ipmi_ping_setup(int argc, char **argv, char *options)
     }
 
   _err_init(argv[0]);
-  _cmdline_parse(argc, argv, options);
+  _cmdline_parse(argc, argv, min_seq_num, max_seq_num, options);
   _setup();
 }
 

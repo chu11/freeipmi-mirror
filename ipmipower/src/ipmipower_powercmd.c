@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.3 2005-11-02 21:25:21 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.4 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,7 +167,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->initial_outbound_seq_num = (unsigned int)rand();
+  ip->initial_outbound_seq_num = get_rand();
   ip->highest_received_seq_num = ip->initial_outbound_seq_num;
   ip->previously_received_list = 0xFF;
   ip->retry_count = 0;

@@ -1,8 +1,10 @@
 ------------------------------------------------------------
 2005-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	* Merge in fixes from branch al_ipmi_2_0_branch.
+	Collective fixes from branch al_ipmi_2_0_branch.
 
+	RMCPPING and IPMIPING
+	
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,
 	libfreeipmi/src/ipmi-msg-support-cmds.c
 	(IPMI_GET_IPMI_V20_EXTENDED_DATA,
@@ -14,6 +16,16 @@
 	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Added
 	support for ipmi 2.0 ping.
 	
+	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
+	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
+	starting sequence number by default.  Support -s option to allow
+	user to specify initial starting sequence number.
+
+	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
+	new -s option and default random initial sequence number.
+
+	LIBFREEIPMI
+	
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,
 	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
 
@@ -22,8 +34,24 @@
 	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
 	(rmcpplus_status_strerror_r): New function.
 
-	* freeipmi.h: Added ipmi-lanplus-sessions.h.
+	* libfreeipmi/src/ipmi-interface.h: Added
+	IPMI_SESSION_AUTH_TYPE_RMCPPLUS, IPMI_1_5_SESSION_AUTH_TYPE_VALID,
+	and adjusted macros appropriately.
+	
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt): Use
+	new IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
 
+	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
+	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
+	files.
+
+	* freeipmi.h: Added ipmi-lanplus-sessions.h.  Removed ipmi-hmac.c,
+	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+
+	IPMIPOWER
+	
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (_setup),
 	ipmipower/src/ipmipower_check.c (_check_outbound_seq_num_),
 	ipmipower/src/ipmipower_packet.c (ipmipower_packet_create),
@@ -37,6 +65,9 @@
 	* ipmipower/src/ipmipower_powercmd.c (_retry_packets): Fix up
 	comments due to fixes above.
 
+	* ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c
+	(get_rand): New function.
+	
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
 	(_check_requester_seq_num), ipmipower/src/ipmipower_connection.c
 	(_connection_setup), ipmipower/src/ipmipower_packet.c
@@ -64,27 +95,45 @@
 	* ipmipower/src/ipmipower.h: Change IPMIPOWER_MAXNODES from 1024
 	to 2048.
 
-	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
-	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
-	starting sequence number.
+	* ipmipower/: Various minor code cleanup.
 
-	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
-	randomized initial starting sequence number.
+	AUTOCONF/AUTOMAKE
 
-	* libfreeipmi/src/ipmi-hmac.c (ipmi_hmac_finish): Fix return value
-	bug.
+	* configure.ac: Add libgcrypt, /dev/urandom, /dev/random checks.
 
-	* configure.ac, libfreeipmi/src/Makefile.am: Add libgcrypt in
-	build.
-
-	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
-	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
-	files.
-
-	* libfreeipmi/src/Makefile.am, freeipmi.h: Removed ipmi-hmac.c,
-	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+	* libfreeipmi/src/Makefile.am: Added ipmi-lanplus-sessions.h and
+	ipmi-lanplus-sessions.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
+	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
 
 ------------------------------------------------------------
+
+2005-11-04  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
+	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
+	starting sequence number by default.  Support -s option to allow
+	user to specify initial starting sequence number.
+
+	* ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c
+	(get_rand): New function.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c,
+	ipmipower/src/ipmipower_connection.c: Use new get_rand() function.
+
+	* configure.ac: Add /dev/urandom, /dev/random checks.
+
+	* ipmipower/: Various minor code cleanup.
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.h: Added more check macros.
+
+	* libfreeipmi/src/ipmi-interface.h: Added
+	IPMI_SESSION_AUTH_TYPE_RMCPPLUS and
+	IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
+
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt): Use
+	new IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
 
 2005-11-03  Albert Chu <chu11@llnl.gov>
 

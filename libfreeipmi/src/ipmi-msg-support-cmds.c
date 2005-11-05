@@ -476,7 +476,7 @@ fill_cmd_get_session_challenge (u_int8_t auth_type,
    * termination in IPMI packet not required
    */
   if (!obj_cmd 
-      || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+      || !IPMI_1_5_SESSION_AUTH_TYPE_VALID(auth_type)
       || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
     {
       errno = EINVAL;

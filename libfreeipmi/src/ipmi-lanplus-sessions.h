@@ -37,6 +37,33 @@
 /* 20h - 27h - OEM */
 /* all other reserved */
 
+#define IPMI_PAYLOAD_TYPE_VALID(payload_type) \
+        (((payload_type) == IPMI_PAYLOAD_TYPE_IPMI \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_SOL \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1 \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2 \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3 \
+          || (payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
+
+/**************************
+ * IPMI 2.0 Payload Flags *
+ **************************/
+#define IPMI_PAYLOAD_FLAG_UNENCRYPTED                      0x0
+#define IPMI_PAYLOAD_FLAG_ENCRYPTED                        0x1
+#define IPMI_PAYLOAD_FLAG_UNAUTHENTICATED                  0x0
+#define IPMI_PAYLOAD_FLAG_AUTHENTICATED                    0x1
+
+#define IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_flag) \
+        (((payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED \
+         || (payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
+
+#define IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_flag) \
+        (((payload_flag) == IPMI_PAYLOAD_FLAG_UNENCRYPTED \
+         || (payload_flag) == IPMI_PAYLOAD_FLAG_ENCRYPTED) ? 1 : 0)
+
 /*********************************************
  * IPMI 2.0 Authentication Algorithm Numbers *
  *********************************************/

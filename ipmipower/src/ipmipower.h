@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.3 2005-11-03 00:20:57 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.4 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -245,8 +245,8 @@ struct ipmipower_powercmd {
 
     struct timeval time_begin;
     unsigned int session_inbound_count;
-    unsigned int initial_outbound_seq_num;
-    unsigned int highest_received_seq_num;
+    u_int32_t initial_outbound_seq_num;
+    u_int32_t highest_received_seq_num;
     unsigned int previously_received_list;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
@@ -294,15 +294,15 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  unsigned int ipmi_requester_seq_num_counter;
-  unsigned int ping_seq_num_counter;
+  u_int32_t ipmi_requester_seq_num_counter;
+  u_int32_t ping_seq_num_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;
   struct timeval last_ping_recv;
   
   link_state_t link_state;
-  unsigned int ping_last_packet_recv;
+  unsigned int ping_last_packet_recv_flag;
   unsigned int ping_packet_count_send;
   unsigned int ping_packet_count_recv;
   unsigned int ping_consec_count;

@@ -53,7 +53,7 @@ fiid_template_t tmpl_hdr_session_auth_calc =
 int8_t
 fill_hdr_session  (fiid_template_t tmpl_session, u_int8_t auth_type, u_int32_t inbound_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
 {
-  if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+  if (!IPMI_1_5_SESSION_AUTH_TYPE_VALID(auth_type)
       || !(tmpl_session && tmpl_cmd && obj_hdr))
     {
       errno = EINVAL;

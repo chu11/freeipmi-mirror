@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1.4.2 2005-11-03 01:12:18 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.4.3 2005-11-05 00:17:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,7 +79,11 @@ void ipmi_ping_err_exit(char *fmt, ...);
 /* ipmi_ping_setup
  * - setup ipmi ping code by parsing command line arguments
  */
-void ipmi_ping_setup(int argc, char **argv, char *options);
+void ipmi_ping_setup(int argc, 
+                     char **argv, 
+                     unsigned int min_seq_num,
+                     unsigned int max_seq_num,
+                     char *options);
 
 /* ipmi_ping_loop
  * - handle looping ping code

@@ -606,7 +606,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
     }
 
   fiid_obj_get(obj_hdr_session, tmpl_hdr_session, "auth_type", &auth_type);
-  if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type))
+  if (!IPMI_1_5_SESSION_AUTH_TYPE_VALID(auth_type))
     {
       errno = EINVAL;
       return -1;

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: rmcpping.8.in,v 1.3.2.1 2005-11-03 01:12:18 chu11 Exp $
+\."$Id: rmcpping.8.in,v 1.3.2.2 2005-11-05 00:17:43 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,8 +32,7 @@ rmcpping \- send RMCP Ping to network hosts
 .B rmcpping
 uses the RMCP Ping request datagram to elicit an RMCP Pong response
 from a remote host.  The utility can be used to verify if a remote
-host supports RMCP or IPMI.  The initial starting sequence number will
-be randomized.
+host supports RMCP or IPMI.  
 
 .B rmcpping
 will return 0 to the environment if it receives atleast 1 response
@@ -67,6 +66,10 @@ Time to wait for a response, in seconds. Default is 5 seconds.
 .TP
 .I "-v"
 Verbose output.
+.TP
+.I "-s"
+Specify an initial starting sequence number.  The default is to use a
+random initial sequence number.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-d"
