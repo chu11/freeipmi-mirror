@@ -174,7 +174,7 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_in
   return (0);
 }
 
-int8t_
+int8_t
 fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
                           u_int8_t *auth_code_data,
                           u_int32_t auth_code_data_len,
