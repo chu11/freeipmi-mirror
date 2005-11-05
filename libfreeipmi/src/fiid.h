@@ -98,6 +98,12 @@ do {                                                          \
   __FI_FIID_OBJ_GET (bytes, tmpl, field, val)
 #endif
 
+#define FIID_OBJ_MEMSET(obj, c, tmpl)                         \
+do {                                                          \
+     u_int8_t *__ptr = fiid_obj_memset (obj, c, tmpl);        \
+     ERR(ptr);                                                \ 
+} while(0)
+
 #define fiid_template_make(arg...) __fiid_template_make (1, arg, 0)
 
 typedef struct fiid_field

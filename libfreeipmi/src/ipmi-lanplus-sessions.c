@@ -35,7 +35,18 @@ fiid_template_t tmpl_lanplus_hdr_session =
     {0,   ""}
   };
 
+/* doesn't exist is session_id = 0h */
 fiid_template_t tmpl_lanplus_trlr_session = 
+  {
+    {32,  "integrity_pad"},     /* 0 to 32 bits to pad auth_calc_data to multiple of 4 bytes */
+    {8,   "pad_length"},
+    {8,   "next_header"},
+    {256, "auth_code"},         /* up to 256 bits */
+    {0,   ""}
+  };
+
+/* doesn't exist is session_id = 0h */
+fiid_template_t tmpl_lanplus_trlr_session_calc = 
   {
     {32,  "integrity_pad"},     /* 0 to 32 bits to pad auth_calc_data to multiple of 4 bytes */
     {8,   "pad_length"},
@@ -147,6 +158,8 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_in
       return (-1);
     }
 
+  FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_session);
+
   FIID_OBJ_SET (obj_hdr, tmpl_session, "auth_type", auth_type);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type", payload_type);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.authenticated", payload_authenticated);
@@ -161,6 +174,23 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_in
   return (0);
 }
 
+int8_t
+fill_lanplus_trlr_session(fiid_template_t trlr_session, 
+                          u_int8_t *auth_code_data,
+                          u_int32_t auth_code_data_len,
+                          fiid_obj_t obj_trlr)
+{
+  if (!(trlr_session && obj_trlr))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
+  FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_session);
 
+  /* XXX hard part is done later in assemble, just copy in data,
+   * follow fill_hdr_session 
+   */
 
+  return (0);
+}

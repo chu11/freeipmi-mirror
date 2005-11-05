@@ -25,6 +25,8 @@
 	new -s option and default random initial sequence number.
 
 	LIBFREEIPMI
+
+	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET macro.
 	
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,
 	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
@@ -134,6 +136,11 @@
 	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
 	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt): Use
 	new IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
+
+	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET macro.
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.c: Continued ipmi 2.0
+	implementation.
 
 2005-11-03  Albert Chu <chu11@llnl.gov>
 
