@@ -56,49 +56,6 @@ extern "C" {
 /* #define RMCP_ASF_PRESENCE_PONG_MESSAGE_TAG_MAX 0xFE 
    - Should be removed before release --ab@gnu.org.in */
 
-#if 0
-#pragma pack(1)
-typedef struct hdr_rmcp 
-{
-  u_int8_t ver;
-  u_int8_t reserved;
-  u_int8_t seq_num;
-  struct {
-    u_int8_t class:5;
-    u_int8_t reserved:2;
-    u_int8_t ack:1;
-  } msg_class;
-} hdr_rmcp_t;
-
-typedef struct rmcp_asf_presence_ping
-{
-  u_int32_t iana_enterprise_num;
-  u_int8_t msg_type;
-  u_int8_t msg_tag;
-  u_int8_t reserved;
-  u_int8_t data_len;
-} rmcp_asf_presence_ping_t;
-
-typedef struct rmcp_asf_presence_pong
-{
-  u_int32_t iana_enterprise_num;
-  u_int8_t msg_type;
-  u_int8_t msg_tag;
-  u_int8_t reserved1;
-  u_int8_t data_len;
-  u_int32_t oem_iana_enterprise_num;
-  u_int32_t oem_defined;
-  struct {
-    u_int8_t version:4;
-    u_int8_t reserved:3;
-    u_int8_t ipmi_supported:1;
-  } supported_entities;
-  u_int8_t supported_interactions;
-  u_int8_t reserved2[6];
-} rmcp_asf_presence_pong_t;
-#pragma pack(0)
-#endif
-
 extern fiid_template_t tmpl_hdr_rmcp;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;

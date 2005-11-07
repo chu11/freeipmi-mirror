@@ -25,27 +25,6 @@
 extern "C" {
 #endif
 
-#if 0
-#pragma pack(1)
-typedef struct ipmi_session
-{
-  u_int8_t auth_type;
-  u_int32_t session_seq_num;
-  u_int32_t session_id;
-  u_int8_t ipmi_msg_len;
-} ipmi_session_t;
-
-typedef struct ipmi_session_auth
-{
-  u_int8_t auth_type;
-  u_int32_t session_seq_num;
-  u_int32_t session_id;
-  u_int8_t auth_code[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-  u_int8_t ipmi_msg_len;
-} ipmi_session_auth_t;
-#pragma pack(0)
-#endif
-
 extern fiid_template_t tmpl_hdr_session;
 extern fiid_template_t tmpl_hdr_session_auth;
 extern fiid_template_t tmpl_hdr_session_auth_calc;

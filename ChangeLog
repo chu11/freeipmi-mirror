@@ -1,3 +1,12 @@
+2005-11-07  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/msg-support-cmds.h,
+	libfreeipmi/src/ipmi-sessions.h, libfreeipmi/src/rmcp.h: Remove
+	all #if 0'd out code that was still lingering from late 2003
+	development.
+	
 2005-11-06  Anand Babu  <ab@zresearch.com>
 
 	* fish/src/extension.c: Depricated Guile APIs are with newer ones.
