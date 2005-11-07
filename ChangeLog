@@ -1,3 +1,15 @@
+2005-11-06  Anand Babu  <ab@zresearch.com>
+
+	* fish/src/extension.c: Depricated Guile APIs are with newer ones.
+	scm_create_hook with (scm_c_define
+	(scm_make_hook)), gh_new_procedure with scm_c_define_gsubr,
+	gh_str02scm with scm_makfrom0str, gh_list with scm_listify,
+	gh_list_p by SCM_NFALSEP, gh_append2 with (scm_append
+	(scm_listify)), gh_cons with scm_cons, gh_ulong2scm with
+	scm_ulong2num, gh_long2scm with scm_long2num, gh_scm2bool with
+	SCM_NFALSEP, gh_bool2scm with SCM_BOOL, gh_double2scm with
+	scm_make_real, gh_char2scm with SCM_MAKE_CHAR.
+
 2005-10-29 A Balamurugan   <bala@zresearch.com>
 
 	* fish/extensions/bc-common.scm: Allows anyone of checkout,
