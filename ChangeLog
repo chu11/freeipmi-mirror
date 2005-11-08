@@ -114,6 +114,15 @@
 
 ------------------------------------------------------------
 
+2005-11-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-suppoert-cmds.c
+	(fill_cmd_get_channel_auth_caps_v20): Require user to pass in BMC
+	channel number.
+
+	* ipmiping/src/ipmiping.c (createpacket): Updated for new API.
+	
 2005-11-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c

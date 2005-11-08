@@ -410,11 +410,14 @@ fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
 }
 
 int8_t 
-fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level, 
+fill_cmd_get_channel_auth_caps_v20 (u_int8_t channel_num,
+                                    u_int8_t max_priv_level, 
                                     u_int8_t get_ipmi_v20_extended_data,
                                     fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
+  if (!obj_cmd 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_num)
+      || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
     {
       errno = EINVAL;
       return (-1);
@@ -422,18 +425,17 @@ fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level,
   
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, "cmd", 
 		IPMI_CMD_GET_CHANNEL_AUTH_CAPS);
+  
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq,
+		"channel_num", channel_num); 
+  
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, "max_priv_level", 
+		max_priv_level);
 
   FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, 
                 "get_ipmi_v2.0_extended_data", 
 		get_ipmi_v20_extended_data);
-
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq,
-		"channel_num", 0x0E); 
-  /* retrieve information for channel this request was
-     issued on. */
-
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rq, "max_priv_level", 
-		max_priv_level);
+  
   return (0);
 }
 

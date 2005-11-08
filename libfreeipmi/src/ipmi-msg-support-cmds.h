@@ -117,6 +117,7 @@ extern "C" {
 #define IPMI_PASSWORD_OPERATION_TEST_FAILED    0x80
 
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA          0x01
+
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rq;
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rs;
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rq;
@@ -136,7 +137,8 @@ int8_t fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
                                        u_int8_t max_priv_level, 
                                        fiid_obj_t obj_cmd);
 
-int8_t fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level, 
+int8_t fill_cmd_get_channel_auth_caps_v20 (u_int8_t channel_num,
+                                           u_int8_t max_priv_level, 
                                            u_int8_t get_ipmi_v20_extended_data,
                                            fiid_obj_t obj_cmd);
 
