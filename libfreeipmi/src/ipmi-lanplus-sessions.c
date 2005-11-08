@@ -275,7 +275,7 @@ fill_lanplus_open_session (u_int8_t message_tag,
                            u_int8_t confidentiality_payload_algorithm,
                            fiid_obj_t obj_cmd)
 {
-  if (!(tmpl_trlr && obj_trlr))
+  if (!(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
