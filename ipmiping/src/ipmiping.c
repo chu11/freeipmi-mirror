@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.3 2005-11-08 14:23:44 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.4 2005-11-08 17:23:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -108,8 +108,8 @@ createpacket(char *buffer,
                        seq_num_count % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_msg_hdr: %s", strerror(errno));
 
-  if (fill_cmd_get_channel_auth_caps(IPMI_PRIV_LEVEL_USER, 
-                                     IPMI_CHANNEL_CURRENT_CHANNEL,
+  if (fill_cmd_get_channel_auth_caps(IPMI_CHANNEL_CURRENT_CHANNEL,
+                                     IPMI_PRIV_LEVEL_USER, 
                                      obj_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_get_channel_auth_caps: %s", strerror(errno));
 

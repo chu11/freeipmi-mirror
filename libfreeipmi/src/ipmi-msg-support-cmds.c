@@ -348,8 +348,8 @@ fiid_template_t tmpl_get_channel_info_rs =
 
 
 int8_t 
-fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
-                                u_int8_t channel_num,
+fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
+                                u_int8_t max_priv_level, 
 				fiid_obj_t obj_cmd)
 {
   if (!obj_cmd 
@@ -390,8 +390,8 @@ ipmi_lan_get_channel_auth_caps (int sockfd,
   memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_channel_auth_caps_rq));
   ERR (obj_cmd_rq);
 
-  ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, 
-                                       IPMI_CHANNEL_CURRENT_CHANNEL, 
+  ERR (fill_cmd_get_channel_auth_caps (IPMI_CHANNEL_CURRENT_CHANNEL, 
+                                       IPMI_PRIV_LEVEL_USER, 
                                        obj_cmd_rq) != -1);
 
   ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
@@ -1372,9 +1372,9 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
 		   *(local_dev.io.outofband.rs.tmpl_hdr_session_ptr));
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_channel_auth_caps_rq);
-  ERR (fill_cmd_get_channel_auth_caps (IPMI_PRIV_LEVEL_USER, 
-                                       IPMI_CHANNEL_CURRENT_CHANNEL,
-				       obj_cmd_rq) == 0);
+  ERR (fill_cmd_get_channel_auth_caps (IPMI_CHANNEL_CURRENT_CHANNEL,
+                                       IPMI_PRIV_LEVEL_USER, 
+                                       obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
   local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
