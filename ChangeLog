@@ -109,6 +109,19 @@
 
 ------------------------------------------------------------
 
+2005-11-07  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
+	(ipmipower_powercmd_queue, _process_ipmi_packets, _retry_packets):
+	Don't retransmit on a close-session timeout.  There's no need to
+	and it is actually a bad idea.
+
+	* ipmipower/src/ipmipower_connection.c: Add #include file to
+	remove compile warning.
+	
+	* libfreeipmi/src/ipmi-lanplus-sessions.c: Continued ipmi 2.0
+	implementation.
+
 2005-11-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,

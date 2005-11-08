@@ -31,34 +31,40 @@ fiid_template_t tmpl_lanplus_hdr_session =
     {16,  "oem_payload_id"},    /* only if payload = 02h */
     {32,  "session_id"},        /* 0h outside of a session */
     {32,  "session_seq_num"},   /* 0h outside of a session, seperate #'s if authenticated or unauthenticated session */
-    {16,   "ipmi_msg_len"},
+    {16,   "ipmi_msg_len"},     /* len = payload or len = payload + trailer??, I dunno, the spec sucks */
     {0,   ""}
   };
 
-/* doesn't exist is session_id = 0h */
+/* doesn't exist if session_id = 0h */
 fiid_template_t tmpl_lanplus_trlr_session = 
   {
-    {32,  "integrity_pad"},     /* 0 to 32 bits to pad auth_calc_data to multiple of 4 bytes */
+    {32,  "integrity_pad"},     /* 0 to 32 bits */
     {8,   "pad_length"},
     {8,   "next_header"},
     {256, "auth_code"},         /* up to 256 bits */
+    {32,  "auth_code_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
 
-/* doesn't exist is session_id = 0h */
+/* doesn't exist if session_id = 0h */
 fiid_template_t tmpl_lanplus_trlr_session_calc = 
   {
-    {32,  "integrity_pad"},     /* 0 to 32 bits to pad auth_calc_data to multiple of 4 bytes */
+    {32,  "integrity_pad"},     /* 0 to 32 bits to pad integrity data to multiple of 4 bytes */
     {8,   "pad_length"},
     {8,   "next_header"},
     {256, "auth_calc_data"},    /* up to 256 bits */
+    {32,  "auth_calc_data_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
+/* note: the ipmi spec wording is terrible.  Apparently, the integrity
+ * pad is to ensure that the entire ipmi packet is a multiple of 4,
+ * not just the integrity field.  Sigh ... I duno, we'll see
+ */
 
 fiid_template_t tmpl_lanplus_open_session_rq = 
   {
     {8,   "message_tag"},        
-    {4,   "requested_maximum_privilege_leve"},
+    {4,   "requested_maximum_privilege_level"},
     {4,   "reserved1"},
     {16,  "reserved2"},
     {32,  "remote_console_session_id"}, /* random num */
@@ -169,7 +175,7 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_in
   FIID_OBJ_SET (obj_hdr, tmpl_session, "session_id", session_id);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "session_seq_num", session_seq_num);
 
-  /* XXX need to calculate ipmi_msg_len */
+  /* ipmi_msg_len will be calculated during packet assembly */
 
   return (0);
 }
@@ -180,6 +186,9 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
                           u_int32_t auth_code_data_len,
                           fiid_obj_t obj_trlr)
 {
+  int32_t field_len;
+  char *field_str, *field_str_len;
+
   if (!(tmpl_trlr && obj_trlr))
     {
       errno = EINVAL;
@@ -188,9 +197,92 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
 
   FIID_OBJ_MEMSET (obj_trlr, '\0', tmpl_trlr);
 
-  /* XXX hard part is done later in assemble, just copy in data,
-   * follow fill_hdr_session 
+  /* Unlike fill_hdr_session in IPMI 1.5, we only need to copy data.
+   * No checking is required.  The difficult part of computing hashes
+   * and checking for correct input is done during the packet
+   * assembly.  Padding will calculations will also be done during
+   * packet assembly.
    */
+
+  FIID_OBJ_SET (obj_trlr, tmpl_trlr, "next_header", IPMI_NEXT_HEADER);
+
+  if (auth_code_data && auth_code_data_len > 0)
+    {
+      if (fiid_obj_field_lookup(tmpl_trlr, "auth_code"))
+        {
+          if (!fiid_obj_field_lookup(tmpl_trlr, "auth_code_len"))
+            {
+              errno = EINVAL;
+              return (-1);
+            }
+
+          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr, "auth_code")) < 0)
+            return (-1);
+
+          field_str = "auth_code";
+          field_str_len = "auth_code_len";
+        }
+      else if (fiid_obj_field_lookup (tmpl_trlr, "auth_calc_data"))
+        {
+          if (!fiid_obj_field_lookup(tmpl_trlr, "auth_calc_data_len"))
+            {
+              errno = EINVAL;
+              return (-1);
+            }
+
+          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr, "auth_calc_data")) < 0)
+            return (-1);         
+
+          field_str = "auth_calc_data";
+          field_str_len = "auth_calc_data_len";
+        }
+      else
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      if (auth_code_data_len > field_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+          
+      ERR_EXIT (fiid_obj_set_data (obj_trlr,
+                                   tmpl_trlr,
+                                   field_str,
+                                   auth_code_data,
+                                   auth_code_data_len) == 0);
+      FIID_OBJ_SET (obj_trlr, tmpl_trlr, field_str_len, auth_code_data_len);
+
+    }
 
   return (0);
 }
+
+int8_t
+fill_lanplus_open_session (u_int8_t message_tag,
+                           u_int8_t requested_maximum_privilege_level,
+                           u_int32_t remote_console_session_id,
+                           u_int8_t authentication_payload_type,
+                           u_int8_t authentication_payload_length,
+                           u_int8_t authentication_payload_algorithm,
+                           u_int8_t integrity_payload_type,
+                           u_int8_t integrity_payload_length,
+                           u_int8_t integrity_payload_algorithm,
+                           u_int8_t confidentiality_payload_type,
+                           u_int8_t confidentiality_payload_length,
+                           u_int8_t confidentiality_payload_algorithm,
+                           fiid_obj_t obj_cmd)
+{
+  if (!(tmpl_trlr && obj_trlr))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  
+
+  return (0);
+}
+

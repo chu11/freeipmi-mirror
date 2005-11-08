@@ -96,6 +96,13 @@
 /* 30h - 3Fh - OEM */
 /* all other reserved */
 
+/***********************
+ * IPMI 2.0 Misc Flags *                       
+ ***********************/
+
+#define IPMI_NEXT_HEADER                                  0x07
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -105,9 +112,14 @@ extern fiid_template_t tmpl_trlr_session_v20;
 extern fiid_template_t tmpl_open_session_rq;
 extern fiid_template_t tmpl_open_session_rs;
 
-int8_t rmcpplus_status_strerror_r(u_int8_t rmcpplus_status_code, 
-                                  char *errstr, 
-                                  size_t len);
+extern fiid_template_t tmpl_lanplus_rakp_message_1;
+extern fiid_template_t tmpl_lanplus_rakp_message_2;
+extern fiid_template_t tmpl_lanplus_rakp_message_3;
+extern fiid_template_t tmpl_lanplus_rakp_message_4;
+
+int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr);
+
+int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
 
 #ifdef __cplusplus
 }

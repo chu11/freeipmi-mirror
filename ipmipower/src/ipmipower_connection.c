@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.3.2.3 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.3.2.4 2005-11-08 16:55:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,7 @@
 #include <netdb.h>
 
 #include "ipmipower_connection.h"
+#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 extern int h_errno;

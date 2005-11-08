@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.4 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.5 2005-11-08 16:55:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -186,6 +186,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   else
     ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
 
+  ip->close_timeout = 0;
   ip->ic = ic;
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
@@ -546,7 +547,21 @@ _retry_packets(ipmipower_powercmd_t ip)
   else if (ip->protocol_state == PROTOCOL_STATE_CTRL_SENT)
     _send_packet(ip, CTRL_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT)
-    _send_packet(ip, CLOS_REQ, 1);
+    /* 
+     * It's pointless to retransmit a close-session.  
+     *
+     * 1) The power control operation has already completed.
+     *
+     * 2) There is no guarantee the remote BMC will respond.  If the
+     * previous close session response was dropped by the network,
+     * then the session has already been closed by the BMC.  Any
+     * retransmission will send a session id that is unknown to the
+     * BMC, and they will either respond with an error or ignore the
+     * packet.
+     *
+     * _send_packet(ip, CLOS_REQ, 1); 
+     */
+    ip->close_timeout++;
 
   return 1;
 }
@@ -850,6 +865,20 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT) 
     {
+      /* achu: Note that it's possible we're timing out too early and
+       * the close session response will still arrive.  It's no
+       * matter.  If we are in non-interactive mode, the file
+       * descriptor will be closed and the packet lost.  If we are in
+       * interactive mode, the next power control command will call
+       * 'ipmipower_connection_clear' and get rid of the packet if it
+       * is sitting on a buffer.
+       */
+      if (ip->close_timeout)
+        {
+          dbg("_process_ipmi_packets: close session timeout, skip retransmission");
+          goto finish_up;
+        }
+
       if (!_recv_packet(ip, CLOS_RES)) 
         goto done;
  
