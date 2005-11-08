@@ -111,38 +111,6 @@ extern "C" {
    fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rs, "rq_seq") +   \
    fiid_obj_len_bytes (tmpl_cmd))
    
-#if 0  
-#pragma pack(1)
-typedef struct ipmi_lan_msg_rq
-{
-  struct {
-    u_int8_t slave_addr;
-    net_fn_t net_fn;
-  } rs;
-  ipmi_chksum_t chksum;
-  struct {
-    u_int8_t slave_addr;
-    u_int8_t lun:2;
-    u_int8_t rq_seq:6;
-  } rq;
-} ipmi_lan_msg_rq_t;
-
-typedef struct ipmi_lan_msg_rs
-{
-  struct {
-    u_int8_t slave_addr;
-    net_fn_t net_fn;
-  } rq;
-  ipmi_chksum_t chksum;
-  struct {
-    u_int8_t slave_addr;
-    u_int8_t lun:2;
-    u_int8_t rq_seq:6;
-  } rs;
-} ipmi_lan_msg_rs_t;
-#pragma pack(0)
-#endif
-
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;

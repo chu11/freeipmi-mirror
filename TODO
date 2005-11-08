@@ -28,6 +28,7 @@ libfreeipmi:
   * Auto retries in ipmi_lan_cmd()
   * open_lan_session - modify to use best secure connection available
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
+  * Implement md2/md5/hmac/sha1/etc. with gcrypt
   
 fish:
 -----
@@ -50,11 +51,11 @@ ipmipower:
   * There are probably port issues with mmap/mlock.
   * Add readline or similar functionality in interactive mode.
   * Multithread to increase speed even more?
-  * statistical monitoring to determine number of power control
-    failures.
+  * statistical monitoring to determine number of power control failures, dup packets, etc.
   * local power off
   * chassis identify
   * rolling windows of power control commands 
+  * privilege option - pick user, operator, admin
 
 ipmiping/rmcpping:
 ------------------

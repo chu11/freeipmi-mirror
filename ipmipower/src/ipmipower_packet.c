@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.8.2.1 2005-11-02 01:23:24 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8.2.2 2005-11-08 17:32:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -283,7 +283,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-      if (fill_cmd_get_channel_auth_caps(ip->privilege, ip->auth_req) < 0)
+      if (fill_cmd_get_channel_auth_caps(IPMI_CHANNEL_CURRENT_CHANNEL,
+                                         ip->privilege, 
+                                         ip->auth_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_channel_auth_caps: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));

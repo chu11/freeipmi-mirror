@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.3 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.4 2005-11-08 17:32:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -118,7 +118,9 @@ createpacket(char *buffer,
 
   if (version == IPMI_PING_VERSION_1_5)
     {
-      if (fill_cmd_get_channel_auth_caps(IPMI_PRIV_LEVEL_USER, obj_cmd) < 0)
+      if (fill_cmd_get_channel_auth_caps(IPMI_CHANNEL_CURRENT_CHANNEL,
+                                         IPMI_PRIV_LEVEL_USER, 
+                                         obj_cmd) < 0)
         ipmi_ping_err_exit("fill_cmd_get_channel_auth_caps: %s", strerror(errno));
     }
   else

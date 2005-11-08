@@ -102,6 +102,7 @@ extern "C" {
 #define IPMI_CHANNEL_SINGLE_SESSION    0x1
 #define IPMI_CHANNEL_MULTI_SESSION     0x2
 #define IPMI_CHANNEL_SESSION_BASED     0x3
+#define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(channel_number) \
@@ -116,132 +117,6 @@ extern "C" {
 #define IPMI_PASSWORD_OPERATION_TEST_FAILED    0x80
 
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA          0x01
-
-#if 0
-#pragma pack(1)
-typedef struct ipmi_cmd_get_channel_auth_caps_rq
-{
-  u_int8_t cmd;
-  struct {
-    u_int8_t channel_num;
-    u_int8_t max_priv_level:4;
-    u_int8_t reserved:4;
-  } data;
-} ipmi_cmd_get_channel_auth_caps_rq_t;
-
-typedef struct ipmi_cmd_get_channel_auth_caps_rs
-{
-  u_int8_t cmd;
-  u_int8_t comp_code;
-  struct {
-    u_int8_t channel_num;
-    struct {
-      u_int8_t none:1;
-      u_int8_t md2:1;
-      u_int8_t md5:1;
-      u_int8_t reserved1:1;
-      u_int8_t straight_passwd_key:1;
-      u_int8_t oem_prop:1;
-      u_int8_t reserved2:2;
-    } auth_type;
-    struct {
-      u_int8_t anonymous_login:1;
-      u_int8_t null_username:1;
-      u_int8_t non_null_username:1;
-      u_int8_t user_level_auth:1;
-      u_int8_t per_message_auth:1;
-      u_int8_t reserved:3;
-    } auth_status;
-    u_int8_t reserved;
-    u_int8_t oem_id[IPMI_OEM_ID_LEN];
-    u_int8_t oem_aux;
-  } data;
-} ipmi_cmd_get_channel_auth_caps_rs_t;
-
-typedef struct ipmi_cmd_get_session_challenge_rq
-{
-  u_int8_t cmd;
-  struct {
-    u_int8_t auth_type:4;
-    u_int8_t reserved:4;
-    u_int8_t username[IPMI_SESSION_MAX_USERNAME_LEN];
-  } data;
-} ipmi_cmd_get_session_challenge_rq_t;
-
-typedef struct ipmi_cmd_get_session_challenge_rs
-{
-  u_int8_t cmd;
-  u_int8_t comp_code;
-  struct {
-    u_int32_t tmp_session_id; /* LS byte first */
-    u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
-  } data;
-} ipmi_cmd_get_session_challenge_rs_t;
-
-typedef struct ipmi_cmd_activate_session_rq
-{
-  u_int8_t cmd;
-  struct {
-    u_int8_t auth_type:4;
-    u_int8_t reserved1:4;
-    u_int8_t max_priv_level:4;
-    u_int8_t reserved2:4;
-    u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
-    u_int32_t initial_outbound_seq_num;
-  } data;
-} ipmi_cmd_activate_session_rq_t;
-
-typedef struct ipmi_cmd_activate_session_rs
-{
-  u_int8_t cmd;
-  u_int8_t comp_code;
-  struct {
-    u_int8_t auth_type:4;
-    u_int8_t reserved1:4;
-    u_int32_t session_id; 
-    u_int32_t initial_inbound_seq_num;
-    u_int8_t max_priv_level:4;
-    u_int8_t reserved2:4;
-  } data;
-} ipmi_cmd_activate_session_rs_t;
-
-typedef struct ipmi_cmd_set_session_priv_level_rq
-{
-  u_int8_t cmd;
-  struct {
-    u_int8_t priv_level:4;
-    u_int8_t reserved:4;
-  } data;
-} ipmi_cmd_set_session_priv_level_rq_t;
-
-typedef struct ipmi_cmd_set_session_priv_level_rs
-{
-  u_int8_t cmd;
-  u_int8_t comp_code;
-  struct {
-    u_int8_t new_priv_level:4;
-    u_int8_t reserved:4;
-  } data;
-} ipmi_cmd_set_session_priv_level_rs_t;
-
-typedef struct ipmi_cmd_close_session_rq
-{
-  u_int8_t cmd;
-  struct {
-    u_int32_t session_id;
-  } data;
-} ipmi_cmd_close_session_rq_t;
-
-typedef struct ipmi_cmd_close_session_rs
-{
-  u_int8_t cmd;
-  u_int8_t comp_code;
-  struct {
-  } data;
-} ipmi_cmd_close_session_rs_t;
-#pragma pack(0)
-#endif
-
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rq;
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_rs;
 extern fiid_template_t tmpl_cmd_get_channel_auth_caps_v20_rq;
@@ -257,8 +132,9 @@ extern fiid_template_t tmpl_cmd_close_session_rs;
 extern fiid_template_t tmpl_get_channel_access_rq;
 extern fiid_template_t tmpl_get_channel_access_rs;
 
-int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
-				       fiid_obj_t obj_cmd);
+int8_t fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
+                                       u_int8_t max_priv_level, 
+                                       fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_get_channel_auth_caps_v20 (u_int8_t max_priv_level, 
                                            u_int8_t get_ipmi_v20_extended_data,

@@ -45,7 +45,7 @@ ex_set_some_thing_x (SCM scm_some_thing)
 SCM
 ex_version (void)
 {
-  return (gh_str02scm (PACKAGE_VERSION));
+  return (scm_makfrom0str (PACKAGE_VERSION));
 }
 
 
@@ -88,7 +88,7 @@ ex_load (SCM scm_filename)
 SCM
 ex_get_sysconfig_dir (void)
 {
-  return (gh_str02scm (PATH_CFG));
+  return (scm_makfrom0str (PATH_CFG));
 }
 
 SCM
@@ -174,19 +174,19 @@ ex_get_script_command_line ()
   int argc;
   char **argv;
   
-  scm_arg_list  = gh_list (SCM_UNDEFINED);
+  scm_arg_list  = scm_listify (SCM_UNDEFINED);
   argc = get_script_argc ();
   argv = get_script_argv ();
   
   for (i = 0; i < argc; i++)
     {
-      if (gh_list_p (scm_arg_list) != 1)
-          scm_arg_list = gh_list (gh_str02scm (argv[i]), SCM_UNDEFINED);
+      if (SCM_NFALSEP (scm_list_p (scm_arg_list)) != 1)
+          scm_arg_list = scm_listify (scm_makfrom0str (argv[i]), SCM_UNDEFINED);
       else 
         {
-          scm_arg_list = gh_append2 (scm_arg_list, 
-				     gh_list (gh_str02scm (argv[i]), 
-					      SCM_UNDEFINED));
+          scm_arg_list = scm_append (scm_listify (scm_arg_list, 
+				     scm_listify (scm_makfrom0str (argv[i]), 
+					      SCM_UNDEFINED)));
         }
     }
   
@@ -196,7 +196,7 @@ ex_get_script_command_line ()
 SCM 
 ex_get_default_sdr_repo_cache_filename (void)
 {
-  return (gh_str02scm (FI_DEFAULT_SDR_REPO_CACHE_FILENAME));
+  return (scm_makfrom0str (FI_DEFAULT_SDR_REPO_CACHE_FILENAME));
 }
 
 SCM 
@@ -205,27 +205,23 @@ ex_sensors_get_group_list ()
   SCM scm_group_list;
   int i;
   
-  scm_group_list = gh_list (SCM_UNDEFINED);
+  scm_group_list = scm_listify (SCM_UNDEFINED);
   
   for (i = 0; ipmi_sensor_types[i]; i++)
     {
-      if (gh_list_p (scm_group_list) != 1)
-	scm_group_list = gh_list (gh_str02scm (ipmi_sensor_types[i]), SCM_UNDEFINED);
+      if (SCM_NFALSEP (scm_list_p (scm_group_list)) != 1)
+	scm_group_list = scm_listify (scm_makfrom0str (ipmi_sensor_types[i]), SCM_UNDEFINED);
       else 
         {
-          scm_group_list = gh_append2 (scm_group_list, 
-				       gh_list (gh_str02scm (ipmi_sensor_types[i]), 
-						SCM_UNDEFINED));
+          scm_group_list = scm_append (scm_listify (scm_group_list, scm_listify (scm_makfrom0str (ipmi_sensor_types[i]), SCM_UNDEFINED)));
         }
     }
   
-  if (gh_list_p (scm_group_list) != 1)
-    scm_group_list = gh_list (gh_str02scm (ipmi_oem_sensor_type), SCM_UNDEFINED);
+  if (SCM_NFALSEP (scm_list_p (scm_group_list)) != 1)
+    scm_group_list = scm_listify (scm_makfrom0str (ipmi_oem_sensor_type), SCM_UNDEFINED);
   else 
     {
-      scm_group_list = gh_append2 (scm_group_list, 
-				   gh_list (gh_str02scm (ipmi_oem_sensor_type), 
-					    SCM_UNDEFINED));
+      scm_group_list = scm_append (scm_listify (scm_group_list, scm_listify (scm_makfrom0str (ipmi_oem_sensor_type), SCM_UNDEFINED)));
     }
 
   return (scm_group_list);
@@ -243,7 +239,7 @@ ex_sel_get_first_entry_raw ()
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
-        scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
+        scm_sel_record = scm_cons (scm_ulong2num (record_data[i]), scm_sel_record);
     }
   return scm_sel_record;
 }
@@ -260,7 +256,7 @@ ex_sel_get_next_entry_raw ()
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
-        scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
+        scm_sel_record = scm_cons (scm_ulong2num (record_data[i]), scm_sel_record);
     }
   return scm_sel_record;
 }
@@ -283,7 +279,7 @@ ex_sel_get_first_entry_hex ()
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
                 record_data[12], record_data[13], record_data[14], record_data[15]);
-      return gh_str02scm (hex_data);
+      return scm_makfrom0str (hex_data);
     }
   else return SCM_BOOL_F;
 }
@@ -306,7 +302,7 @@ ex_sel_get_next_entry_hex ()
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
                 record_data[12], record_data[13], record_data[14], record_data[15]);
-      return gh_str02scm (hex_data);
+      return scm_makfrom0str (hex_data);
     }
   else return SCM_BOOL_F;
 }
@@ -320,19 +316,19 @@ ex_sel_get_info_binary ()
     {
       SCM tail = SCM_EOL;
       
-      tail = gh_cons (info.flags & get_sel_alloc_info_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
-      tail = gh_cons (info.flags & reserve_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
-      tail = gh_cons (info.flags & partial_add_sel_entry_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
-      tail = gh_cons (info.flags & delete_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
-      tail = gh_cons (info.flags & overflow_flag ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = scm_cons (info.flags & get_sel_alloc_info_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = scm_cons (info.flags & reserve_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = scm_cons (info.flags & partial_add_sel_entry_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = scm_cons (info.flags & delete_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail);
+      tail = scm_cons (info.flags & overflow_flag ? SCM_BOOL_T : SCM_BOOL_F, tail);
       
-      return gh_cons (gh_ulong2scm (info.version_major),
-                      gh_cons (gh_ulong2scm (info.version_minor),
-                               gh_cons (gh_ulong2scm (info.entry_count),
-                                        gh_cons (gh_ulong2scm (info.last_add_time),
-                                                 gh_cons (gh_ulong2scm (info.last_erase_time),
-                                                          gh_cons (gh_ulong2scm (info.free_space),
-                                                                   tail))))));
+      return scm_cons (scm_ulong2num (info.version_major),
+		       scm_cons (scm_ulong2num (info.version_minor),
+				scm_cons (scm_ulong2num (info.entry_count),
+					 scm_cons (scm_ulong2num (info.last_add_time),
+						  scm_cons (scm_ulong2num (info.last_erase_time),
+							    scm_cons (scm_ulong2num (info.free_space),
+								      tail))))));
     }
   else return SCM_BOOL_F;
 }
@@ -352,22 +348,22 @@ ex_sel_get_first_entry ()
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
   
-  scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.timestamp), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.sensor_info), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_message), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_data2_message), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_data3_message), 
-					SCM_UNDEFINED));
+  scm_sel_record = scm_listify (scm_long2num (sel_rec.record_id), SCM_UNDEFINED);
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.timestamp), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.sensor_info), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_message), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_data2_message), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_data3_message), 
+					SCM_UNDEFINED)));
   
   if (sel_rec.timestamp) free (sel_rec.timestamp);
   if (sel_rec.sensor_info) free (sel_rec.sensor_info);
@@ -393,22 +389,22 @@ ex_sel_get_next_entry ()
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
   
-  scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.timestamp), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.sensor_info), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_message), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_data2_message), 
-					SCM_UNDEFINED));
-  scm_sel_record = gh_append2 (scm_sel_record, 
-			       gh_list (gh_str02scm (sel_rec.event_data3_message), 
-					SCM_UNDEFINED));
+  scm_sel_record = scm_listify (scm_long2num (sel_rec.record_id), SCM_UNDEFINED);
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.timestamp), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.sensor_info), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_message), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_data2_message), 
+					SCM_UNDEFINED)));
+  scm_sel_record = scm_append (scm_listify (scm_sel_record, 
+			       scm_listify (scm_makfrom0str (sel_rec.event_data3_message), 
+					SCM_UNDEFINED)));
   
   if (sel_rec.timestamp) free (sel_rec.timestamp);
   if (sel_rec.sensor_info) free (sel_rec.sensor_info);
@@ -525,7 +521,7 @@ ex_sel_get_clear_status ()
 		tmpl_clear_sel_rs, 
 		"erasure_progress", 
 		&val);
-  return (gh_long2scm (val));
+  return (scm_long2num (val));
 }
 
 /***
@@ -556,7 +552,7 @@ ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status)
   int retval;
   
   userid = gh_scm2long (scm_userid);
-  user_status = gh_scm2bool (scm_user_status);
+  user_status = SCM_NFALSEP (scm_user_status);
   
   retval = set_bmc_enable_user (fi_get_ipmi_device (), userid, user_status);
   
@@ -618,13 +614,13 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 /*   printf ("session_limit %d\n", lan_session_limit); */
   
   if (scm_boolean_p (scm_lan_enable_ipmi_msgs) == SCM_BOOL_T)
-    lan_enable_ipmi_msgs = gh_scm2bool (scm_lan_enable_ipmi_msgs);
+    lan_enable_ipmi_msgs = SCM_NFALSEP (scm_lan_enable_ipmi_msgs);
   
   if (scm_boolean_p (scm_lan_enable_link_auth) == SCM_BOOL_T)
-    lan_enable_link_auth = gh_scm2bool (scm_lan_enable_link_auth);
+    lan_enable_link_auth = SCM_NFALSEP (scm_lan_enable_link_auth);
   
   if (scm_boolean_p (scm_lan_enable_restrict_to_callback) == SCM_BOOL_T)
-    lan_enable_restrict_to_callback = gh_scm2bool (scm_lan_enable_restrict_to_callback);
+    lan_enable_restrict_to_callback = SCM_NFALSEP (scm_lan_enable_restrict_to_callback);
   
   if (scm_integer_p (scm_lan_privilege_limit) == SCM_BOOL_T)
     lan_privilege_limit = gh_scm2long (scm_lan_privilege_limit);
@@ -680,13 +676,13 @@ ex_set_bmc_user_serial_channel_access (SCM scm_userid,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_serial_enable_ipmi_msgs) == SCM_BOOL_T)
-    serial_enable_ipmi_msgs = gh_scm2bool (scm_serial_enable_ipmi_msgs);
+    serial_enable_ipmi_msgs = SCM_NFALSEP (scm_serial_enable_ipmi_msgs);
   
   if (scm_boolean_p (scm_serial_enable_link_auth) == SCM_BOOL_T)
-    serial_enable_link_auth = gh_scm2bool (scm_serial_enable_link_auth);
+    serial_enable_link_auth = SCM_NFALSEP (scm_serial_enable_link_auth);
   
   if (scm_boolean_p (scm_serial_enable_restrict_to_callback) == SCM_BOOL_T)
-    serial_enable_restrict_to_callback = gh_scm2bool (scm_serial_enable_restrict_to_callback);
+    serial_enable_restrict_to_callback = SCM_NFALSEP (scm_serial_enable_restrict_to_callback);
   
   if (scm_integer_p (scm_serial_privilege_limit) == SCM_BOOL_T)
     serial_privilege_limit = gh_scm2long (scm_serial_privilege_limit);
@@ -731,11 +727,11 @@ ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
-    enable_user_level_auth = gh_scm2bool (scm_enable_user_level_auth);
+    enable_user_level_auth = SCM_NFALSEP (scm_enable_user_level_auth);
   if (scm_boolean_p (scm_enable_per_message_auth) == SCM_BOOL_T)
-    enable_per_message_auth = gh_scm2bool (scm_enable_per_message_auth);
+    enable_per_message_auth = SCM_NFALSEP (scm_enable_per_message_auth);
   if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+    enable_pef_alerting = SCM_NFALSEP (scm_enable_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
@@ -774,11 +770,11 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
-    enable_user_level_auth = gh_scm2bool (scm_enable_user_level_auth);
+    enable_user_level_auth = SCM_NFALSEP (scm_enable_user_level_auth);
   if (scm_boolean_p (scm_enable_per_message_auth) == SCM_BOOL_T)
-    enable_per_message_auth = gh_scm2bool (scm_enable_per_message_auth);
+    enable_per_message_auth = SCM_NFALSEP (scm_enable_per_message_auth);
   if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+    enable_pef_alerting = SCM_NFALSEP (scm_enable_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
@@ -901,7 +897,7 @@ ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_vlan_id_flag) == SCM_BOOL_T)
-    vlan_id_flag = gh_scm2bool (scm_vlan_id_flag);
+    vlan_id_flag = SCM_NFALSEP (scm_vlan_id_flag);
 
   if (scm_integer_p (scm_vlan_id) == SCM_BOOL_T)
     vlan_id = gh_scm2long (scm_vlan_id);
@@ -947,21 +943,21 @@ ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.callback.type_none = gh_scm2bool (scm_auth_type_none);
+    auth_type_enables.callback.type_none = SCM_NFALSEP (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.callback.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    auth_type_enables.callback.type_md2 = SCM_NFALSEP (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.callback.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    auth_type_enables.callback.type_md5 = SCM_NFALSEP (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
     auth_type_enables.callback.type_straight_password = 
-      gh_scm2bool (scm_auth_type_straight_password);
+      SCM_NFALSEP (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
     auth_type_enables.callback.type_oem_proprietary = 
-      gh_scm2bool (scm_auth_type_oem_proprietary);
+      SCM_NFALSEP (scm_auth_type_oem_proprietary);
   
   retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -983,21 +979,21 @@ ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.user.type_none = gh_scm2bool (scm_auth_type_none);
+    auth_type_enables.user.type_none = SCM_NFALSEP (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.user.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    auth_type_enables.user.type_md2 = SCM_NFALSEP (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.user.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    auth_type_enables.user.type_md5 = SCM_NFALSEP (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
     auth_type_enables.user.type_straight_password = 
-      gh_scm2bool (scm_auth_type_straight_password);
+      SCM_NFALSEP (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
     auth_type_enables.user.type_oem_proprietary = 
-      gh_scm2bool (scm_auth_type_oem_proprietary);
+      SCM_NFALSEP (scm_auth_type_oem_proprietary);
   
   retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1019,21 +1015,21 @@ ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.operator.type_none = gh_scm2bool (scm_auth_type_none);
+    auth_type_enables.operator.type_none = SCM_NFALSEP (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.operator.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    auth_type_enables.operator.type_md2 = SCM_NFALSEP (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.operator.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    auth_type_enables.operator.type_md5 = SCM_NFALSEP (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
     auth_type_enables.operator.type_straight_password = 
-      gh_scm2bool (scm_auth_type_straight_password);
+      SCM_NFALSEP (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
     auth_type_enables.operator.type_oem_proprietary = 
-      gh_scm2bool (scm_auth_type_oem_proprietary);
+      SCM_NFALSEP (scm_auth_type_oem_proprietary);
   
   retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1055,21 +1051,21 @@ ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.admin.type_none = gh_scm2bool (scm_auth_type_none);
+    auth_type_enables.admin.type_none = SCM_NFALSEP (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.admin.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    auth_type_enables.admin.type_md2 = SCM_NFALSEP (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.admin.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    auth_type_enables.admin.type_md5 = SCM_NFALSEP (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
     auth_type_enables.admin.type_straight_password = 
-      gh_scm2bool (scm_auth_type_straight_password);
+      SCM_NFALSEP (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
     auth_type_enables.admin.type_oem_proprietary = 
-      gh_scm2bool (scm_auth_type_oem_proprietary);
+      SCM_NFALSEP (scm_auth_type_oem_proprietary);
   
   retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1091,21 +1087,21 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.oem.type_none = gh_scm2bool (scm_auth_type_none);
+    auth_type_enables.oem.type_none = SCM_NFALSEP (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.oem.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    auth_type_enables.oem.type_md2 = SCM_NFALSEP (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.oem.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    auth_type_enables.oem.type_md5 = SCM_NFALSEP (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
     auth_type_enables.oem.type_straight_password = 
-      gh_scm2bool (scm_auth_type_straight_password);
+      SCM_NFALSEP (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
     auth_type_enables.oem.type_oem_proprietary = 
-      gh_scm2bool (scm_auth_type_oem_proprietary);
+      SCM_NFALSEP (scm_auth_type_oem_proprietary);
   
   retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
@@ -1126,10 +1122,10 @@ ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_enable_gratuitous_arps) == SCM_BOOL_T)
-    enable_gratuitous_arps = gh_scm2bool (scm_enable_gratuitous_arps);
+    enable_gratuitous_arps = SCM_NFALSEP (scm_enable_gratuitous_arps);
   
   if (scm_boolean_p (scm_enable_arp_response) == SCM_BOOL_T)
-    enable_arp_response = gh_scm2bool (scm_enable_arp_response);
+    enable_arp_response = SCM_NFALSEP (scm_enable_arp_response);
   
   retval = set_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
 					 enable_gratuitous_arps, 
@@ -1175,11 +1171,11 @@ ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
-    enable_user_level_auth = gh_scm2bool (scm_enable_user_level_auth);
+    enable_user_level_auth = SCM_NFALSEP (scm_enable_user_level_auth);
   if (scm_boolean_p (scm_enable_per_message_auth) == SCM_BOOL_T)
-    enable_per_message_auth = gh_scm2bool (scm_enable_per_message_auth);
+    enable_per_message_auth = SCM_NFALSEP (scm_enable_per_message_auth);
   if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+    enable_pef_alerting = SCM_NFALSEP (scm_enable_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
@@ -1218,11 +1214,11 @@ ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode,
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
   if (scm_boolean_p (scm_enable_user_level_auth) == SCM_BOOL_T)
-    enable_user_level_auth = gh_scm2bool (scm_enable_user_level_auth);
+    enable_user_level_auth = SCM_NFALSEP (scm_enable_user_level_auth);
   if (scm_boolean_p (scm_enable_per_message_auth) == SCM_BOOL_T)
-    enable_per_message_auth = gh_scm2bool (scm_enable_per_message_auth);
+    enable_per_message_auth = SCM_NFALSEP (scm_enable_per_message_auth);
   if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+    enable_pef_alerting = SCM_NFALSEP (scm_enable_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
@@ -1256,13 +1252,13 @@ ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_enable_basic_mode) == SCM_BOOL_T)
-    enable_basic_mode = gh_scm2bool (scm_enable_basic_mode);
+    enable_basic_mode = SCM_NFALSEP (scm_enable_basic_mode);
   if (scm_boolean_p (scm_enable_ppp_mode) == SCM_BOOL_T)
-    enable_ppp_mode = gh_scm2bool (scm_enable_ppp_mode);
+    enable_ppp_mode = SCM_NFALSEP (scm_enable_ppp_mode);
   if (scm_boolean_p (scm_enable_terminal_mode) == SCM_BOOL_T)
-    enable_terminal_mode = gh_scm2bool (scm_enable_terminal_mode);
+    enable_terminal_mode = SCM_NFALSEP (scm_enable_terminal_mode);
   if (scm_integer_p (scm_enable_terminal_mode) == SCM_BOOL_T)
-    connect_mode = gh_scm2bool (scm_connect_mode);
+    connect_mode = SCM_NFALSEP (scm_connect_mode);
   
   retval = set_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
 					  enable_basic_mode, 
@@ -1314,7 +1310,7 @@ ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_enable_dtr_hangup) == SCM_BOOL_T)
-    enable_dtr_hangup = gh_scm2bool (scm_enable_dtr_hangup);
+    enable_dtr_hangup = SCM_NFALSEP (scm_enable_dtr_hangup);
   if (scm_integer_p (scm_flow_control) == SCM_BOOL_T)
     flow_control = gh_scm2long (scm_flow_control);
   if (scm_integer_p (scm_bit_rate) == SCM_BOOL_T)
@@ -1360,13 +1356,13 @@ ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable,
     }
   
   if (scm_boolean_p (scm_pef_enable) == SCM_BOOL_T)
-    pef_enable = gh_scm2bool (scm_pef_enable);
+    pef_enable = SCM_NFALSEP (scm_pef_enable);
   if (scm_boolean_p (scm_pef_event_msgs_enable) == SCM_BOOL_T)
-    pef_event_msgs_enable = gh_scm2bool (scm_pef_event_msgs_enable);
+    pef_event_msgs_enable = SCM_NFALSEP (scm_pef_event_msgs_enable);
   if (scm_boolean_p (scm_pef_startup_delay_enable) == SCM_BOOL_T)
-    pef_startup_delay_enable = gh_scm2bool (scm_pef_startup_delay_enable);
+    pef_startup_delay_enable = SCM_NFALSEP (scm_pef_startup_delay_enable);
   if (scm_boolean_p (scm_pef_alert_startup_delay_enable) == SCM_BOOL_T)
-    pef_alert_startup_delay_enable = gh_scm2bool (scm_pef_alert_startup_delay_enable);
+    pef_alert_startup_delay_enable = SCM_NFALSEP (scm_pef_alert_startup_delay_enable);
   
   if (set_pef_control (fi_get_ipmi_device (), 
 		       pef_enable, 
@@ -1407,17 +1403,17 @@ ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable,
     }
   
   if (scm_boolean_p (scm_alert_action_enable) == SCM_BOOL_T)
-    alert_action_enable = gh_scm2bool (scm_alert_action_enable);
+    alert_action_enable = SCM_NFALSEP (scm_alert_action_enable);
   if (scm_boolean_p (scm_powerdown_action_enable) == SCM_BOOL_T)
-    powerdown_action_enable = gh_scm2bool (scm_powerdown_action_enable);
+    powerdown_action_enable = SCM_NFALSEP (scm_powerdown_action_enable);
   if (scm_boolean_p (scm_reset_action_enable) == SCM_BOOL_T)
-    reset_action_enable = gh_scm2bool (scm_reset_action_enable);
+    reset_action_enable = SCM_NFALSEP (scm_reset_action_enable);
   if (scm_boolean_p (scm_powercycle_action_enable) == SCM_BOOL_T)
-    powercycle_action_enable = gh_scm2bool (scm_powercycle_action_enable);
+    powercycle_action_enable = SCM_NFALSEP (scm_powercycle_action_enable);
   if (scm_boolean_p (scm_oem_action_enable) == SCM_BOOL_T)
-    oem_action_enable = gh_scm2bool (scm_oem_action_enable);
+    oem_action_enable = SCM_NFALSEP (scm_oem_action_enable);
   if (scm_boolean_p (scm_diag_interrupt_enable) == SCM_BOOL_T)
-    diag_interrupt_enable = gh_scm2bool (scm_diag_interrupt_enable);
+    diag_interrupt_enable = SCM_NFALSEP (scm_diag_interrupt_enable);
   
   if (set_pef_global_action_control (fi_get_ipmi_device (), 
 				     alert_action_enable, 
@@ -1480,9 +1476,10 @@ ex_get_bmc_username (SCM scm_userid)
   
   userid = gh_scm2long (scm_userid);
   memset (username, 0, 17);
+
   if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username)) == 0)
-    return_list = gh_list (gh_str02scm (username), SCM_UNDEFINED);
-  
+    return_list = scm_listify (scm_makfrom0str (username), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 
@@ -1507,11 +1504,11 @@ ex_get_bmc_user_lan_channel_access (SCM scm_userid)
 						 &lan_privilege_limit, 
 						 &lan_session_limit)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (lan_enable_ipmi_msgs), 
-			     gh_bool2scm (lan_enable_link_auth), 
-			     gh_bool2scm (lan_enable_restrict_to_callback), 
-			     gh_long2scm (lan_privilege_limit), 
-			     gh_long2scm (lan_session_limit), 
+      return_list = scm_listify (SCM_BOOL (lan_enable_ipmi_msgs), 
+			     SCM_BOOL (lan_enable_link_auth), 
+			     SCM_BOOL (lan_enable_restrict_to_callback), 
+			     scm_long2num (lan_privilege_limit), 
+			     scm_long2num (lan_session_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1539,11 +1536,11 @@ ex_get_bmc_user_serial_channel_access (SCM scm_userid)
 						    &serial_privilege_limit, 
 						    &serial_session_limit)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (serial_enable_ipmi_msgs), 
-			     gh_bool2scm (serial_enable_link_auth), 
-			     gh_bool2scm (serial_enable_restrict_to_callback), 
-			     gh_long2scm (serial_privilege_limit), 
-			     gh_long2scm (serial_session_limit), 
+      return_list = scm_listify (SCM_BOOL (serial_enable_ipmi_msgs), 
+			     SCM_BOOL (serial_enable_link_auth), 
+			     SCM_BOOL (serial_enable_restrict_to_callback), 
+			     scm_long2num (serial_privilege_limit), 
+			     scm_long2num (serial_session_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1568,11 +1565,11 @@ ex_get_bmc_lan_channel_volatile_access ()
 						     &enable_pef_alerting, 
 						     &channel_privilege_limit)) == 0)
     {
-      return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_auth), 
-			     gh_bool2scm (enable_per_message_auth), 
-			     gh_bool2scm (enable_pef_alerting), 
-			     gh_long2scm (channel_privilege_limit), 
+      return_list = scm_listify (scm_long2num (access_mode), 
+			     SCM_BOOL (enable_user_level_auth), 
+			     SCM_BOOL (enable_per_message_auth), 
+			     SCM_BOOL (enable_pef_alerting), 
+			     scm_long2num (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1597,11 +1594,11 @@ ex_get_bmc_lan_channel_non_volatile_access ()
 							 &enable_pef_alerting, 
 							 &channel_privilege_limit)) == 0)
     {
-      return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_auth), 
-			     gh_bool2scm (enable_per_message_auth), 
-			     gh_bool2scm (enable_pef_alerting), 
-			     gh_long2scm (channel_privilege_limit), 
+      return_list = scm_listify (scm_long2num (access_mode), 
+			     SCM_BOOL (enable_user_level_auth), 
+			     SCM_BOOL (enable_per_message_auth), 
+			     SCM_BOOL (enable_pef_alerting), 
+			     scm_long2num (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1617,7 +1614,7 @@ ex_get_bmc_lan_conf_ip_addr_source ()
   
   if ((retval = get_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), 
 						 &ip_address_source)) == 0)
-    return_list = gh_list (gh_long2scm (ip_address_source), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (ip_address_source), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1631,8 +1628,8 @@ ex_get_bmc_lan_conf_ip_addr ()
   
   if ((retval = get_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), 
 					  ip_address)) == 0)
-    return_list = gh_list (gh_str02scm (ip_address), SCM_UNDEFINED);
-  
+    return_list = scm_listify (scm_makfrom0str (ip_address), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 
@@ -1645,8 +1642,8 @@ ex_get_bmc_lan_conf_mac_addr ()
   
   if ((retval = get_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), 
 					   mac_address)) == 0)
-    return_list = gh_list (gh_str02scm (mac_address), SCM_UNDEFINED);
-  
+    return_list = scm_listify (scm_makfrom0str (mac_address), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 
@@ -1659,7 +1656,7 @@ ex_get_bmc_lan_conf_subnet_mask ()
   
   if ((retval = get_bmc_lan_conf_subnet_mask (fi_get_ipmi_device (), 
 					      subnet_mask)) == 0)
-    return_list = gh_list (gh_str02scm (subnet_mask), SCM_UNDEFINED);
+    return_list = scm_listify (scm_makfrom0str (subnet_mask), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1673,7 +1670,7 @@ ex_get_bmc_lan_conf_default_gw_ip_addr ()
   
   if ((retval = get_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), 
 						     gw_ip_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+    return_list = scm_listify (scm_makfrom0str (gw_ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1687,8 +1684,8 @@ ex_get_bmc_lan_conf_default_gw_mac_addr ()
   
   if ((retval = get_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), 
 						      gw_mac_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
-  
+    return_list = scm_listify (scm_makfrom0str (gw_mac_address), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 
@@ -1701,7 +1698,7 @@ ex_get_bmc_lan_conf_backup_gw_ip_addr ()
   
   if ((retval = get_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), 
 						    gw_ip_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+    return_list = scm_listify (scm_makfrom0str (gw_ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1715,7 +1712,7 @@ ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
   
   if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), 
 						     gw_mac_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
+    return_list = scm_listify (scm_makfrom0str (gw_mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1730,8 +1727,8 @@ ex_get_bmc_lan_conf_vlan_id ()
 
   if ((retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
 					  &vlan_id_flag, &vlan_id)) == 0)
-    return_list = gh_list (gh_bool2scm (vlan_id_flag), 
-			   gh_long2scm (vlan_id), 
+    return_list = scm_listify (SCM_BOOL (vlan_id_flag), 
+			   scm_long2num (vlan_id), 
 			   SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
@@ -1746,7 +1743,7 @@ ex_get_bmc_lan_conf_vlan_priority ()
 
   if ((retval = get_bmc_lan_conf_vlan_priority (fi_get_ipmi_device (), 
 						&vlan_priority)) == 0)
-    return_list = gh_list (gh_long2scm (vlan_priority), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (vlan_priority), SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1761,11 +1758,11 @@ ex_get_bmc_lan_conf_auth_type_callback_enables ()
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
 						    &auth_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.callback.type_none), 
-			     gh_bool2scm (auth_type_enables.callback.type_md2), 
-			     gh_bool2scm (auth_type_enables.callback.type_md5), 
-			     gh_bool2scm (auth_type_enables.callback.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.callback.type_oem_proprietary), 
+      return_list = scm_listify (SCM_BOOL (auth_type_enables.callback.type_none), 
+			     SCM_BOOL (auth_type_enables.callback.type_md2), 
+			     SCM_BOOL (auth_type_enables.callback.type_md5), 
+			     SCM_BOOL (auth_type_enables.callback.type_straight_password), 
+			     SCM_BOOL (auth_type_enables.callback.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1782,11 +1779,11 @@ ex_get_bmc_lan_conf_auth_type_user_enables ()
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
 						    &auth_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.user.type_none), 
-			     gh_bool2scm (auth_type_enables.user.type_md2), 
-			     gh_bool2scm (auth_type_enables.user.type_md5), 
-			     gh_bool2scm (auth_type_enables.user.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.user.type_oem_proprietary), 
+      return_list = scm_listify (SCM_BOOL (auth_type_enables.user.type_none), 
+			     SCM_BOOL (auth_type_enables.user.type_md2), 
+			     SCM_BOOL (auth_type_enables.user.type_md5), 
+			     SCM_BOOL (auth_type_enables.user.type_straight_password), 
+			     SCM_BOOL (auth_type_enables.user.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1803,11 +1800,11 @@ ex_get_bmc_lan_conf_auth_type_operator_enables ()
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
 						    &auth_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.operator.type_none), 
-			     gh_bool2scm (auth_type_enables.operator.type_md2), 
-			     gh_bool2scm (auth_type_enables.operator.type_md5), 
-			     gh_bool2scm (auth_type_enables.operator.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.operator.type_oem_proprietary), 
+      return_list = scm_listify (SCM_BOOL (auth_type_enables.operator.type_none), 
+			     SCM_BOOL (auth_type_enables.operator.type_md2), 
+			     SCM_BOOL (auth_type_enables.operator.type_md5), 
+			     SCM_BOOL (auth_type_enables.operator.type_straight_password), 
+			     SCM_BOOL (auth_type_enables.operator.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1824,11 +1821,11 @@ ex_get_bmc_lan_conf_auth_type_admin_enables ()
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
 						    &auth_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.admin.type_none), 
-			     gh_bool2scm (auth_type_enables.admin.type_md2), 
-			     gh_bool2scm (auth_type_enables.admin.type_md5), 
-			     gh_bool2scm (auth_type_enables.admin.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.admin.type_oem_proprietary), 
+      return_list = scm_listify (SCM_BOOL (auth_type_enables.admin.type_none), 
+			     SCM_BOOL (auth_type_enables.admin.type_md2), 
+			     SCM_BOOL (auth_type_enables.admin.type_md5), 
+			     SCM_BOOL (auth_type_enables.admin.type_straight_password), 
+			     SCM_BOOL (auth_type_enables.admin.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1845,11 +1842,11 @@ ex_get_bmc_lan_conf_auth_type_oem_enables ()
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
 						    &auth_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.oem.type_none), 
-			     gh_bool2scm (auth_type_enables.oem.type_md2), 
-			     gh_bool2scm (auth_type_enables.oem.type_md5), 
-			     gh_bool2scm (auth_type_enables.oem.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.oem.type_oem_proprietary), 
+      return_list = scm_listify (SCM_BOOL (auth_type_enables.oem.type_none), 
+			     SCM_BOOL (auth_type_enables.oem.type_md2), 
+			     SCM_BOOL (auth_type_enables.oem.type_md5), 
+			     SCM_BOOL (auth_type_enables.oem.type_straight_password), 
+			     SCM_BOOL (auth_type_enables.oem.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1868,8 +1865,8 @@ ex_get_bmc_lan_conf_arp_control ()
 					      &enable_gratuitous_arps, 
 					      &enable_arp_response)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_gratuitous_arps), 
-			     gh_bool2scm (enable_arp_response), 
+      return_list = scm_listify (SCM_BOOL (enable_gratuitous_arps), 
+			     SCM_BOOL (enable_arp_response), 
 			     SCM_UNDEFINED);
     }
   
@@ -1885,7 +1882,7 @@ ex_get_bmc_lan_conf_gratuitous_arp ()
   
   if ((retval = get_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
 						 &gratuitous_arp_interval)) == 0)
-    return_list = gh_list (gh_long2scm (gratuitous_arp_interval), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (gratuitous_arp_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1908,11 +1905,11 @@ ex_get_bmc_serial_channel_volatile_access ()
 							&enable_pef_alerting, 
 							&channel_privilege_limit)) == 0)
     {
-      return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_auth), 
-			     gh_bool2scm (enable_per_message_auth), 
-			     gh_bool2scm (enable_pef_alerting), 
-			     gh_long2scm (channel_privilege_limit), 
+      return_list = scm_listify (scm_long2num (access_mode), 
+			     SCM_BOOL (enable_user_level_auth), 
+			     SCM_BOOL (enable_per_message_auth), 
+			     SCM_BOOL (enable_pef_alerting), 
+			     scm_long2num (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1937,11 +1934,11 @@ ex_get_bmc_serial_channel_non_volatile_access ()
 							    &enable_pef_alerting, 
 							    &channel_privilege_limit)) == 0)
     {
-      return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_auth), 
-			     gh_bool2scm (enable_per_message_auth), 
-			     gh_bool2scm (enable_pef_alerting), 
-			     gh_long2scm (channel_privilege_limit), 
+      return_list = scm_listify (scm_long2num (access_mode), 
+			     SCM_BOOL (enable_user_level_auth), 
+			     SCM_BOOL (enable_per_message_auth), 
+			     SCM_BOOL (enable_pef_alerting), 
+			     scm_long2num (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
   
@@ -1964,10 +1961,10 @@ ex_get_bmc_serial_conf_conn_mode ()
 					       &enable_terminal_mode, 
 					       &connect_mode)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_basic_mode), 
-			     gh_bool2scm (enable_ppp_mode), 
-			     gh_bool2scm (enable_terminal_mode), 
-			     gh_long2scm (connect_mode), 
+      return_list = scm_listify (SCM_BOOL (enable_basic_mode), 
+			     SCM_BOOL (enable_ppp_mode), 
+			     SCM_BOOL (enable_terminal_mode), 
+			     scm_long2num (connect_mode), 
 			     SCM_UNDEFINED);
     }
   
@@ -1983,7 +1980,7 @@ ex_get_bmc_serial_conf_page_blackout_interval ()
   
   if ((retval = get_bmc_serial_conf_page_blackout_interval (fi_get_ipmi_device (), 
 							    &page_blackout_interval)) == 0)
-    return_list = gh_list (gh_long2scm (page_blackout_interval), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (page_blackout_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1997,7 +1994,7 @@ ex_get_bmc_serial_conf_call_retry_time ()
   
   if ((retval = get_bmc_serial_conf_call_retry_time (fi_get_ipmi_device (), 
 						     &call_retry_time)) == 0)
-    return_list = gh_list (gh_long2scm (call_retry_time), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (call_retry_time), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -2016,9 +2013,9 @@ ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
 							    &flow_control, 
 							    &bit_rate)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_dtr_hangup), 
-			     gh_long2scm (flow_control), 
-			     gh_long2scm (bit_rate), 
+      return_list = scm_listify (SCM_BOOL (enable_dtr_hangup), 
+			     scm_long2num (flow_control), 
+			     scm_long2num (bit_rate), 
 			     SCM_UNDEFINED);
     }
   
@@ -2034,7 +2031,7 @@ ex_get_bmc_power_restore_policy ()
   
   if ((retval = get_bmc_power_restore_policy (fi_get_ipmi_device (), 
 					      &power_restore_policy)) == 0)
-    return_list = gh_list (gh_long2scm (power_restore_policy), SCM_UNDEFINED);
+    return_list = scm_listify (scm_long2num (power_restore_policy), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -2057,10 +2054,10 @@ ex_get_bmc_pef_conf_pef_control ()
       return SCM_BOOL_F;
     }
   
-  scm_return_list = gh_list (gh_bool2scm (pef_enable), 
-			     gh_bool2scm (pef_event_msgs_enable), 
-			     gh_bool2scm (pef_startup_delay_enable), 
-			     gh_bool2scm (pef_alert_startup_delay_enable), 
+  scm_return_list = scm_listify (SCM_BOOL (pef_enable), 
+			     SCM_BOOL (pef_event_msgs_enable), 
+			     SCM_BOOL (pef_startup_delay_enable), 
+			     SCM_BOOL (pef_alert_startup_delay_enable), 
 			     SCM_UNDEFINED);
   
   return scm_return_list;
@@ -2088,12 +2085,12 @@ ex_get_bmc_pef_conf_pef_global_action_control ()
       return SCM_BOOL_F;
     }
   
-  scm_return_list = gh_list (gh_bool2scm (alert_action_enable), 
-			     gh_bool2scm (powerdown_action_enable), 
-			     gh_bool2scm (reset_action_enable), 
-			     gh_bool2scm (powercycle_action_enable), 
-			     gh_bool2scm (oem_action_enable), 
-			     gh_bool2scm (diag_interrupt_enable), 
+  scm_return_list = scm_listify (SCM_BOOL (alert_action_enable), 
+			     SCM_BOOL (powerdown_action_enable), 
+			     SCM_BOOL (reset_action_enable), 
+			     SCM_BOOL (powercycle_action_enable), 
+			     SCM_BOOL (oem_action_enable), 
+			     SCM_BOOL (diag_interrupt_enable), 
 			     SCM_UNDEFINED);
   
   return scm_return_list;
@@ -2110,7 +2107,7 @@ ex_get_bmc_pef_conf_pef_startup_delay ()
       return SCM_BOOL_F;
     }
   
-  return gh_ulong2scm (pef_startup_delay);
+  return scm_ulong2num (pef_startup_delay);
 }
 
 SCM 
@@ -2124,7 +2121,7 @@ ex_get_bmc_pef_conf_pef_alert_startup_delay ()
       return SCM_BOOL_F;
     }
   
-  return gh_ulong2scm (pef_alert_startup_delay);
+  return scm_ulong2num (pef_alert_startup_delay);
 }
 
 /***********************************************************/
@@ -2151,113 +2148,113 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 			 SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_lower_non_recoverable_threshold"), 
+				    scm_makfrom0str ("readable_lower_non_recoverable_threshold"), 
 				    (record->readable_lower_non_recoverable_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_upper_non_recoverable_threshold"), 
+				    scm_makfrom0str ("readable_upper_non_recoverable_threshold"), 
 				    (record->readable_upper_non_recoverable_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_lower_critical_threshold"), 
+				    scm_makfrom0str ("readable_lower_critical_threshold"), 
 				    (record->readable_lower_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_upper_critical_threshold"), 
+				    scm_makfrom0str ("readable_upper_critical_threshold"), 
 				    (record->readable_upper_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_lower_non_critical_threshold"), 
+				    scm_makfrom0str ("readable_lower_non_critical_threshold"), 
 				    (record->readable_lower_non_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("readable_upper_non_critical_threshold"), 
+				    scm_makfrom0str ("readable_upper_non_critical_threshold"), 
 				    (record->readable_upper_non_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("b"), 
-				    gh_long2scm (record->b));
+				    scm_makfrom0str ("b"), 
+				    scm_long2num (record->b));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("m"), 
-				    gh_long2scm (record->m));
+				    scm_makfrom0str ("m"), 
+				    scm_long2num (record->m));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("r_exponent"), 
-				    gh_long2scm (record->r_exponent));
+				    scm_makfrom0str ("r_exponent"), 
+				    scm_long2num (record->r_exponent));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("b_exponent"), 
-				    gh_long2scm (record->b_exponent));
+				    scm_makfrom0str ("b_exponent"), 
+				    scm_long2num (record->b_exponent));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("linear"), 
-				    gh_long2scm (record->linear));
+				    scm_makfrom0str ("linear"), 
+				    scm_long2num (record->linear));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("analog_data_format"), 
-				    gh_long2scm (record->analog_data_format));
+				    scm_makfrom0str ("analog_data_format"), 
+				    scm_long2num (record->analog_data_format));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    scm_makfrom0str ("slave_system_software_id"), 
+				    scm_long2num (record->slave_system_software_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_number"), 
-				    gh_long2scm (record->sensor_number));
+				    scm_makfrom0str ("sensor_number"), 
+				    scm_long2num (record->sensor_number));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_type"), 
-				    gh_long2scm (record->sensor_type));
+				    scm_makfrom0str ("sensor_type"), 
+				    scm_long2num (record->sensor_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("group_name"), 
-				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+				    scm_makfrom0str ("group_name"), 
+				    scm_makfrom0str (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    scm_makfrom0str ("event_reading_type"), 
+				    scm_long2num (record->event_reading_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_unit"), 
-				    gh_long2scm (record->sensor_unit));
+				    scm_makfrom0str ("sensor_unit"), 
+				    scm_long2num (record->sensor_unit));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("unit_short_string"), 
-				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+				    scm_makfrom0str ("unit_short_string"), 
+				    scm_makfrom0str (ipmi_sensor_units_short[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("unit_string"), 
-				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
+				    scm_makfrom0str ("unit_string"), 
+				    scm_makfrom0str (ipmi_sensor_units[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("nominal_reading"), 
-				    gh_double2scm (record->nominal_reading));
+				    scm_makfrom0str ("nominal_reading"), 
+				    scm_make_real (record->nominal_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("normal_min"), 
-				    gh_double2scm (record->normal_min));
+				    scm_makfrom0str ("normal_min"), 
+				    scm_make_real (record->normal_min));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("normal_max"), 
-				    gh_double2scm (record->normal_max));
+				    scm_makfrom0str ("normal_max"), 
+				    scm_make_real (record->normal_max));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_min_reading"), 
-				    gh_double2scm (record->sensor_min_reading));
+				    scm_makfrom0str ("sensor_min_reading"), 
+				    scm_make_real (record->sensor_min_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_max_reading"), 
-				    gh_double2scm (record->sensor_max_reading));
+				    scm_makfrom0str ("sensor_max_reading"), 
+				    scm_make_real (record->sensor_max_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("negative_hysteresis"), 
-				    gh_long2scm (record->negative_hysteresis));
+				    scm_makfrom0str ("negative_hysteresis"), 
+				    scm_long2num (record->negative_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("positive_hysteresis"), 
-				    gh_long2scm (record->positive_hysteresis));
+				    scm_makfrom0str ("positive_hysteresis"), 
+				    scm_long2num (record->positive_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("lower_non_recoverable_threshold"), 
-				    gh_double2scm (record->lower_non_recoverable_threshold));
+				    scm_makfrom0str ("lower_non_recoverable_threshold"), 
+				    scm_make_real (record->lower_non_recoverable_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("upper_non_recoverable_threshold"), 
-				    gh_double2scm (record->upper_non_recoverable_threshold));
+				    scm_makfrom0str ("upper_non_recoverable_threshold"), 
+				    scm_make_real (record->upper_non_recoverable_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("lower_critical_threshold"), 
-				    gh_double2scm (record->lower_critical_threshold));
+				    scm_makfrom0str ("lower_critical_threshold"), 
+				    scm_make_real (record->lower_critical_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("upper_critical_threshold"), 
-				    gh_double2scm (record->upper_critical_threshold));
+				    scm_makfrom0str ("upper_critical_threshold"), 
+				    scm_make_real (record->upper_critical_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("lower_non_critical_threshold"), 
-				    gh_double2scm (record->lower_non_critical_threshold));
+				    scm_makfrom0str ("lower_non_critical_threshold"), 
+				    scm_make_real (record->lower_non_critical_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("upper_non_critical_threshold"), 
-				    gh_double2scm (record->upper_non_critical_threshold));
+				    scm_makfrom0str ("upper_non_critical_threshold"), 
+				    scm_make_real (record->upper_non_critical_threshold));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_name"), 
-				    gh_str02scm (record->sensor_name));
+				    scm_makfrom0str ("sensor_name"), 
+				    scm_makfrom0str (record->sensor_name));
   
   return scm_sdr_record;
 }
@@ -2267,38 +2264,38 @@ get_scm_sdr_compact_record (sdr_compact_record_t *record,
 			    SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    scm_makfrom0str ("slave_system_software_id"), 
+				    scm_long2num (record->slave_system_software_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_number"), 
-				    gh_long2scm (record->sensor_number));
+				    scm_makfrom0str ("sensor_number"), 
+				    scm_long2num (record->sensor_number));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_type"), 
-				    gh_long2scm (record->sensor_type));
+				    scm_makfrom0str ("sensor_type"), 
+				    scm_long2num (record->sensor_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("group_name"), 
-				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+				    scm_makfrom0str ("group_name"), 
+				    scm_makfrom0str (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    scm_makfrom0str ("event_reading_type"), 
+				    scm_long2num (record->event_reading_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_unit"), 
-				    gh_long2scm (record->sensor_unit));
+				    scm_makfrom0str ("sensor_unit"), 
+				    scm_long2num (record->sensor_unit));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("unit_short_string"), 
-				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+				    scm_makfrom0str ("unit_short_string"), 
+				    scm_makfrom0str (ipmi_sensor_units_short[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("unit_string"), 
-				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
+				    scm_makfrom0str ("unit_string"), 
+				    scm_makfrom0str (ipmi_sensor_units[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("negative_hysteresis"), 
-				    gh_long2scm (record->negative_hysteresis));
+				    scm_makfrom0str ("negative_hysteresis"), 
+				    scm_long2num (record->negative_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("positive_hysteresis"), 
-				    gh_long2scm (record->positive_hysteresis));
+				    scm_makfrom0str ("positive_hysteresis"), 
+				    scm_long2num (record->positive_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_name"), 
-				    gh_str02scm (record->sensor_name));
+				    scm_makfrom0str ("sensor_name"), 
+				    scm_makfrom0str (record->sensor_name));
   
   return scm_sdr_record;
 }
@@ -2308,23 +2305,23 @@ get_scm_sdr_event_only_record (sdr_event_only_record_t *record,
 			       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    scm_makfrom0str ("slave_system_software_id"), 
+				    scm_long2num (record->slave_system_software_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_number"), 
-				    gh_long2scm (record->sensor_number));
+				    scm_makfrom0str ("sensor_number"), 
+				    scm_long2num (record->sensor_number));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_type"), 
-				    gh_long2scm (record->sensor_type));
+				    scm_makfrom0str ("sensor_type"), 
+				    scm_long2num (record->sensor_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("group_name"), 
-				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
+				    scm_makfrom0str ("group_name"), 
+				    scm_makfrom0str (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    scm_makfrom0str ("event_reading_type"), 
+				    scm_long2num (record->event_reading_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("sensor_name"), 
-				    gh_str02scm (record->sensor_name));
+				    scm_makfrom0str ("sensor_name"), 
+				    scm_makfrom0str (record->sensor_name));
   
   return scm_sdr_record;
 }
@@ -2334,11 +2331,11 @@ get_scm_sdr_entity_association_record (sdr_entity_association_record_t *record,
 				       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("container_entity_id"), 
-				    gh_long2scm (record->container_entity_id));
+				    scm_makfrom0str ("container_entity_id"), 
+				    scm_long2num (record->container_entity_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("container_entity_instance"), 
-				    gh_long2scm (record->container_entity_instance));
+				    scm_makfrom0str ("container_entity_instance"), 
+				    scm_long2num (record->container_entity_instance));
   
   return scm_sdr_record;
 }
@@ -2348,38 +2345,38 @@ get_scm_sdr_generic_device_locator_record (sdr_generic_device_locator_record_t *
 					   SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("direct_access_address"), 
-				    gh_long2scm (record->direct_access_address));
+				    scm_makfrom0str ("direct_access_address"), 
+				    scm_long2num (record->direct_access_address));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("channel_number"), 
-				    gh_long2scm (record->channel_number));
+				    scm_makfrom0str ("channel_number"), 
+				    scm_long2num (record->channel_number));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_slave_address"), 
-				    gh_long2scm (record->device_slave_address));
+				    scm_makfrom0str ("device_slave_address"), 
+				    scm_long2num (record->device_slave_address));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("private_bus_id"), 
-				    gh_long2scm (record->private_bus_id));
+				    scm_makfrom0str ("private_bus_id"), 
+				    scm_long2num (record->private_bus_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("lun_master_write_read_command"), 
-				    gh_long2scm (record->lun_master_write_read_command));
+				    scm_makfrom0str ("lun_master_write_read_command"), 
+				    scm_long2num (record->lun_master_write_read_command));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("address_span"), 
-				    gh_long2scm (record->address_span));
+				    scm_makfrom0str ("address_span"), 
+				    scm_long2num (record->address_span));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_type"), 
-				    gh_long2scm (record->device_type));
+				    scm_makfrom0str ("device_type"), 
+				    scm_long2num (record->device_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_type_modifier"), 
-				    gh_long2scm (record->device_type_modifier));
+				    scm_makfrom0str ("device_type_modifier"), 
+				    scm_long2num (record->device_type_modifier));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("entity_id"), 
-				    gh_long2scm (record->entity_id));
+				    scm_makfrom0str ("entity_id"), 
+				    scm_long2num (record->entity_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("entity_instance"), 
-				    gh_long2scm (record->entity_instance));
+				    scm_makfrom0str ("entity_instance"), 
+				    scm_long2num (record->entity_instance));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_name"), 
-				    gh_str02scm (record->device_name));
+				    scm_makfrom0str ("device_name"), 
+				    scm_makfrom0str (record->device_name));
   
   return scm_sdr_record;
 }
@@ -2389,20 +2386,20 @@ get_scm_sdr_logical_fru_device_locator_record (sdr_logical_fru_device_locator_re
 					       SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_type"), 
-				    gh_long2scm (record->device_type));
+				    scm_makfrom0str ("device_type"), 
+				    scm_long2num (record->device_type));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_type_modifier"), 
-				    gh_long2scm (record->device_type_modifier));
+				    scm_makfrom0str ("device_type_modifier"), 
+				    scm_long2num (record->device_type_modifier));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("fru_entity_id"), 
-				    gh_long2scm (record->fru_entity_id));
+				    scm_makfrom0str ("fru_entity_id"), 
+				    scm_long2num (record->fru_entity_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("fru_entity_instance"), 
-				    gh_long2scm (record->fru_entity_instance));
+				    scm_makfrom0str ("fru_entity_instance"), 
+				    scm_long2num (record->fru_entity_instance));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_name"), 
-				    gh_str02scm (record->device_name));
+				    scm_makfrom0str ("device_name"), 
+				    scm_makfrom0str (record->device_name));
   
   return scm_sdr_record;
 }
@@ -2412,14 +2409,14 @@ get_scm_sdr_management_controller_device_locator_record (sdr_management_controll
 							 SCM scm_sdr_record)
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("entity_id"), 
-				    gh_long2scm (record->entity_id));
+				    scm_makfrom0str ("entity_id"), 
+				    scm_long2num (record->entity_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("entity_instance"), 
-				    gh_long2scm (record->entity_instance));
+				    scm_makfrom0str ("entity_instance"), 
+				    scm_long2num (record->entity_instance));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("device_name"), 
-				    gh_str02scm (record->device_name));
+				    scm_makfrom0str ("device_name"), 
+				    scm_makfrom0str (record->device_name));
   
   return scm_sdr_record;
 }
@@ -2433,8 +2430,8 @@ get_scm_sdr_oem_record (sdr_oem_record_t *record,
   int i;
   
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("manufacturer_id"), 
-				    gh_long2scm (record->manufacturer_id));
+				    scm_makfrom0str ("manufacturer_id"), 
+				    scm_long2num (record->manufacturer_id));
   
   for (i = 0; i < record->oem_data_length; i++)
     {
@@ -2450,8 +2447,8 @@ get_scm_sdr_oem_record (sdr_oem_record_t *record,
     }
   
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("oem_data"), 
-				    gh_str02scm (oem_data));
+				    scm_makfrom0str ("oem_data"), 
+				    scm_makfrom0str (oem_data));
   
   free (oem_data);
   
@@ -2477,12 +2474,12 @@ ex_get_sdr_record (SCM scm_record_id)
     return SCM_BOOL_F;
   
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("record_id"), 
-				    gh_long2scm (sdr_record.record_id));
+				    scm_makfrom0str ("record_id"), 
+				    scm_long2num (sdr_record.record_id));
   
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
-				    gh_str02scm ("record_type"), 
-				    gh_long2scm (sdr_record.record_type));
+				    scm_makfrom0str ("record_type"), 
+				    scm_long2num (sdr_record.record_type));
   
   switch (sdr_record.record_type)
     {
@@ -2523,7 +2520,7 @@ ex_get_sdr_record (SCM scm_record_id)
       }
     }
   
-  scm_sdr_record = gh_list (gh_long2scm (next_record_id), 
+  scm_sdr_record = scm_listify (scm_long2num (next_record_id), 
 			    scm_sdr_record, 
 			    SCM_UNDEFINED);
   
@@ -2536,100 +2533,100 @@ scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
   SCM scm_value;
   char *sensor_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("b"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("b"));
   record->b = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("m"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("m"));
   record->m = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("r_exponent"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("r_exponent"));
   record->r_exponent = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("b_exponent"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("b_exponent"));
   record->b_exponent = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("linear"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("linear"));
   record->linear = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("analog_data_format"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("analog_data_format"));
   record->analog_data_format = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("slave_system_software_id"));
   record->slave_system_software_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_type"));
   record->sensor_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("event_reading_type"));
   record->event_reading_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_unit"));
   record->sensor_unit = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("nominal_reading"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("nominal_reading"));
   record->nominal_reading = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_min"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("normal_min"));
   record->normal_min = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_max"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("normal_max"));
   record->normal_max = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_min_reading"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_min_reading"));
   record->sensor_min_reading = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_max_reading"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_max_reading"));
   record->sensor_max_reading = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("negative_hysteresis"));
   record->negative_hysteresis = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("positive_hysteresis"));
   record->positive_hysteresis = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_non_recoverable_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("lower_non_recoverable_threshold"));
   record->lower_non_recoverable_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_non_recoverable_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("upper_non_recoverable_threshold"));
   record->upper_non_recoverable_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_critical_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("lower_critical_threshold"));
   record->lower_critical_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_critical_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("upper_critical_threshold"));
   record->upper_critical_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_non_critical_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("lower_non_critical_threshold"));
   record->lower_non_critical_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("upper_non_critical_threshold"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("upper_non_critical_threshold"));
   record->upper_non_critical_threshold = gh_scm2double (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_name"));
   sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->sensor_name, sensor_name_ptr, 16);
   free (sensor_name_ptr);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_critical_threshold"));
-  record->readable_lower_critical_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_lower_critical_threshold"));
+  record->readable_lower_critical_threshold = SCM_NFALSEP (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_critical_threshold"));
-  record->readable_upper_critical_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_upper_critical_threshold"));
+  record->readable_upper_critical_threshold = SCM_NFALSEP (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_critical_threshold"));
-  record->readable_lower_non_critical_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_lower_non_critical_threshold"));
+  record->readable_lower_non_critical_threshold = SCM_NFALSEP (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_critical_threshold"));
-  record->readable_upper_non_critical_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_upper_non_critical_threshold"));
+  record->readable_upper_non_critical_threshold = SCM_NFALSEP (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_recoverable_threshold"));
-  record->readable_lower_non_recoverable_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_lower_non_recoverable_threshold"));
+  record->readable_lower_non_recoverable_threshold = SCM_NFALSEP (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_recoverable_threshold"));
-  record->readable_upper_non_recoverable_threshold = gh_scm2bool (scm_value);
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("readable_upper_non_recoverable_threshold"));
+  record->readable_upper_non_recoverable_threshold = SCM_NFALSEP (scm_value);
   
   return;
 }
@@ -2640,28 +2637,28 @@ scm2sdr_compact_record (SCM scm_sdr_record, sdr_compact_record_t *record)
   SCM scm_value;
   char *sensor_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("slave_system_software_id"));
   record->slave_system_software_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_type"));
   record->sensor_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("event_reading_type"));
   record->event_reading_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_unit"));
   record->sensor_unit = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("negative_hysteresis"));
   record->negative_hysteresis = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("positive_hysteresis"));
   record->positive_hysteresis = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_name"));
   sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->sensor_name, sensor_name_ptr, 16);
   free (sensor_name_ptr);
@@ -2675,19 +2672,19 @@ scm2sdr_event_only_record (SCM scm_sdr_record, sdr_event_only_record_t *record)
   SCM scm_value;
   char *sensor_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("slave_system_software_id"));
   record->slave_system_software_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_type"));
   record->sensor_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("event_reading_type"));
   record->event_reading_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("sensor_name"));
   sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->sensor_name, sensor_name_ptr, 16);
   free (sensor_name_ptr);
@@ -2700,10 +2697,10 @@ scm2sdr_entity_association_record (SCM scm_sdr_record, sdr_entity_association_re
 {
   SCM scm_value;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("container_entity_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("container_entity_id"));
   record->container_entity_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("container_entity_instance"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("container_entity_instance"));
   record->container_entity_instance = gh_scm2long (scm_value);
   
   return;
@@ -2715,37 +2712,37 @@ scm2sdr_generic_device_locator_record (SCM scm_sdr_record, sdr_generic_device_lo
   SCM scm_value;
   char *device_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("direct_access_address"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("direct_access_address"));
   record->direct_access_address = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("channel_number"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("channel_number"));
   record->channel_number = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_slave_address"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_slave_address"));
   record->device_slave_address = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("private_bus_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("private_bus_id"));
   record->private_bus_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lun_master_write_read_command"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("lun_master_write_read_command"));
   record->lun_master_write_read_command = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("address_span"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("address_span"));
   record->address_span = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_type"));
   record->device_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type_modifier"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_type_modifier"));
   record->device_type_modifier = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("entity_id"));
   record->entity_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_instance"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("entity_instance"));
   record->entity_instance = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_name"));
   device_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->device_name, device_name_ptr, 16);
   free (device_name_ptr);
@@ -2759,19 +2756,19 @@ scm2sdr_logical_fru_device_locator_record (SCM scm_sdr_record, sdr_logical_fru_d
   SCM scm_value;
   char *device_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_type"));
   record->device_type = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_type_modifier"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_type_modifier"));
   record->device_type_modifier = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("fru_entity_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("fru_entity_id"));
   record->fru_entity_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("fru_entity_instance"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("fru_entity_instance"));
   record->fru_entity_instance = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_name"));
   device_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->device_name, device_name_ptr, 16);
   free (device_name_ptr);
@@ -2785,13 +2782,13 @@ scm2sdr_management_controller_device_locator_record (SCM scm_sdr_record, sdr_man
   SCM scm_value;
   char *device_name_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("entity_id"));
   record->entity_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("entity_instance"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("entity_instance"));
   record->entity_instance = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("device_name"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("device_name"));
   device_name_ptr = gh_scm2newstr (scm_value, NULL);
   strncpy (record->device_name, device_name_ptr, 16);
   free (device_name_ptr);
@@ -2807,18 +2804,18 @@ scm2sdr_oem_record (SCM scm_sdr_record, sdr_oem_record_t *record)
   int i;
   char *oem_data_ptr = NULL;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("manufacturer_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("manufacturer_id"));
   record->manufacturer_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("oem_data"));
-  scm_oem_data_list = scm_string_split (scm_value, gh_char2scm (' '));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("oem_data"));
+  scm_oem_data_list = scm_string_split (scm_value, SCM_MAKE_CHAR (' '));
   
   scm_value = scm_length (scm_oem_data_list);
   record->oem_data_length = gh_scm2long (scm_value);
   
   for (i = 0; i < record->oem_data_length; i++)
     {
-      scm_value = scm_list_ref (scm_oem_data_list, gh_long2scm (i));
+      scm_value = scm_list_ref (scm_oem_data_list, scm_long2num (i));
       oem_data_ptr = gh_scm2newstr (scm_value, NULL);
       record->oem_data[i] = strtol (oem_data_ptr, NULL, 16);
       free (oem_data_ptr);
@@ -2832,10 +2829,10 @@ scm2sdr_record (SCM scm_sdr_record, sdr_record_t *sdr_record)
 {
   SCM scm_value;
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("record_id"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("record_id"));
   sdr_record->record_id = gh_scm2long (scm_value);
   
-  scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("record_type"));
+  scm_value = scm_assoc_ref (scm_sdr_record, scm_makfrom0str ("record_type"));
   sdr_record->record_type = gh_scm2long (scm_value);
   
   switch (sdr_record->record_type)
@@ -2898,18 +2895,18 @@ ex_get_sensor_reading (SCM scm_sdr_record)
     return SCM_BOOL_F;
   
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("current_reading"), 
-					gh_double2scm (sensor_reading.current_reading));
+					scm_makfrom0str ("current_reading"), 
+					scm_make_real (sensor_reading.current_reading));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("reading_availability_flag"), 
+					scm_makfrom0str ("reading_availability_flag"), 
 					(sensor_reading.reading_availability_flag ? 
 					 SCM_BOOL_F : SCM_BOOL_T));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("sensor_scanning_flag"), 
+					scm_makfrom0str ("sensor_scanning_flag"), 
 					(sensor_reading.sensor_scanning_flag ? 
 					 SCM_BOOL_T : SCM_BOOL_F));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("event_messages_flag"), 
+					scm_makfrom0str ("event_messages_flag"), 
 					(sensor_reading.event_messages_flag ? 
 					 SCM_BOOL_T : SCM_BOOL_F));
   if (sensor_reading.event_message_list != NULL)
@@ -2919,13 +2916,13 @@ ex_get_sensor_reading (SCM scm_sdr_record)
 	   i++)
 	{
 	  scm_event_message_list = 
-	    gh_append2 (scm_event_message_list, 
-			gh_list (gh_str02scm (sensor_reading.event_message_list[i]), 
-				 SCM_UNDEFINED));
+	    scm_append (scm_listify (scm_event_message_list, 
+			scm_listify (scm_makfrom0str (sensor_reading.event_message_list[i]), 
+				 SCM_UNDEFINED)));
 	}
     }
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
-					gh_str02scm ("event_message_list"), 
+					scm_makfrom0str ("event_message_list"), 
 					scm_event_message_list);
   
   if (sensor_reading.event_message_list != NULL)
@@ -2941,7 +2938,7 @@ ex_get_sensor_reading (SCM scm_sdr_record)
 SCM 
 ex_get_sdr_cache_filename ()
 {
-  return gh_str02scm (get_sdr_cache_filename ());
+  return scm_makfrom0str (get_sdr_cache_filename ());
 }
 
 SCM 
@@ -2987,40 +2984,40 @@ ex_get_sdr_repo_info ()
 	    "%d.%d", 
 	    sdr_major_version, sdr_minor_version);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
-					gh_str02scm ("sdr_version"), 
-					gh_str02scm (version_string));
+					scm_makfrom0str ("sdr_version"), 
+					scm_makfrom0str (version_string));
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"record_count",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
-					gh_str02scm ("record_count"), 
-					gh_long2scm (val));
+					scm_makfrom0str ("record_count"), 
+					scm_long2num (val));
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"free_space",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
-					gh_str02scm ("free_space"), 
-					gh_long2scm (val));
+					scm_makfrom0str ("free_space"), 
+					scm_long2num (val));
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"recent_addition_timestamp",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
-					gh_str02scm ("recent_addition_timestamp"), 
-					gh_ulong2scm (val));
+					scm_makfrom0str ("recent_addition_timestamp"), 
+					scm_ulong2num (val));
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
 		"recent_erase_timestamp",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
-					gh_str02scm ("recent_erase_timestamp"), 
-					gh_ulong2scm (val));
+					scm_makfrom0str ("recent_erase_timestamp"), 
+					scm_ulong2num (val));
   
   return (scm_repo_info_list);
 }
@@ -3044,24 +3041,24 @@ ex_get_bmc_info ()
 		"dev_id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_id"), 
-				       gh_long2scm ((unsigned int) val));
+				       scm_makfrom0str ("dev_id"), 
+				       scm_long2num ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"dev_rev.rev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_revision"), 
-				       gh_long2scm ((unsigned int) val));
+				       scm_makfrom0str ("dev_revision"), 
+				       scm_long2num ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"dev_rev.sdr_support", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sdr_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("sdr_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   {
     char version_string[17];
@@ -3079,8 +3076,8 @@ ex_get_bmc_info ()
 	      "%d.%d", 
 	      (int) major, (int) minor);
     scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-					 gh_str02scm ("firmware_revision"), 
-					 gh_str02scm (version_string));
+					 scm_makfrom0str ("firmware_revision"), 
+					 scm_makfrom0str (version_string));
   }
   
   fiid_obj_get (cmd_rs, 
@@ -3088,8 +3085,8 @@ ex_get_bmc_info ()
 		"firmware_rev1.dev_available", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("dev_availability"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("dev_availability"), 
+				       SCM_BOOL ((unsigned int) val));
   {
     char version_string[17];
     u_int64_t major, minor;
@@ -3106,8 +3103,8 @@ ex_get_bmc_info ()
 	      "%d.%d", 
 	      (int) major, (int) minor);
     scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-					 gh_str02scm ("ipmi_version"), 
-					 gh_str02scm (version_string));
+					 scm_makfrom0str ("ipmi_version"), 
+					 scm_makfrom0str (version_string));
   }
   
   fiid_obj_get (cmd_rs, 
@@ -3115,88 +3112,88 @@ ex_get_bmc_info ()
 		"additional_dev_support.sensor_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sensor_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("sensor_dev_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.sdr_repo_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sdr_repo_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("sdr_repo_dev_support"), 
+				       SCM_BOOL ((unsigned int) val));
 
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.sel_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("sel_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("sel_dev_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.fru_inventory_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("fru_inventory_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("fru_inventory_dev_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.ipmb_evnt_receiver", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("ipmb_event_receiver_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("ipmb_event_receiver_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.ipmb_evnt_generator", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("ipmb_event_generator_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("ipmb_event_generator_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.bridge", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("bridge_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("bridge_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"additional_dev_support.chassis_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("chassis_dev_support"), 
-				       gh_bool2scm ((unsigned int) val));
+				       scm_makfrom0str ("chassis_dev_support"), 
+				       SCM_BOOL ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"manf_id.id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("manufacturer_id"), 
-				       gh_long2scm ((unsigned int) val));
+				       scm_makfrom0str ("manufacturer_id"), 
+				       scm_long2num ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"prod_id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("product_id"), 
-				       gh_long2scm ((unsigned int) val));
+				       scm_makfrom0str ("product_id"), 
+				       scm_long2num ((unsigned int) val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
 		"aux_firmware_rev_info", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
-				       gh_str02scm ("aux_firmware_rev_info"), 
-				       gh_long2scm ((unsigned int) val));
+				       scm_makfrom0str ("aux_firmware_rev_info"), 
+				       scm_long2num ((unsigned int) val));
   
   return scm_bmc_info_list;
 }
@@ -3207,13 +3204,13 @@ ex_ipmi_open (SCM scm_arg_list)
   SCM scm_value;
   struct arguments arguments;
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (0));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (0));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.poll_interval = IPMI_POLL_INTERVAL_USECS;
   else 
     arguments.poll_interval = gh_scm2int (scm_value);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (1));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (1));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     {
 #ifdef __ia64__
@@ -3225,31 +3222,31 @@ ex_ipmi_open (SCM scm_arg_list)
   else 
     arguments.poll_interval = gh_scm2int (scm_value);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (2));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (2));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.host = NULL;
   else 
     arguments.host = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (3));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (3));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.username = NULL;
   else 
     arguments.username = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (4));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.password = NULL;
   else 
     arguments.password = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (5));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
   else 
     arguments.auth_type = gh_scm2int (scm_value);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
+  scm_value = scm_list_ref (scm_arg_list, scm_long2num (6));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     arguments.priv_level = IPMI_PRIV_LEVEL_USER;
   else 
@@ -3315,8 +3312,8 @@ ex_get_pef_info ()
 	    "%d.%d", 
 	    pef_major_version, pef_minor_version);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("pef_version"), 
-				       gh_str02scm (version_string));
+				       scm_makfrom0str ("pef_version"), 
+				       scm_makfrom0str (version_string));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
@@ -3324,56 +3321,56 @@ ex_get_pef_info ()
 		&val);
   alert_support = val;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("alert_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("alert_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"action_support.powerdown", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("powerdown_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("powerdown_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"action_support.reset", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("reset_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("reset_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"action_support.powercycle", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("powercycle_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("powercycle_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"action_support.oem", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("oem_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("oem_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"action_support.diag_interrupt", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("diag_interrupt_support"), 
-				       gh_bool2scm (val));
+				       scm_makfrom0str ("diag_interrupt_support"), 
+				       SCM_BOOL (val));
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
 		"number_of_eft_entries", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("eft_entries_count"), 
-				       gh_ulong2scm (val));
+				       scm_makfrom0str ("eft_entries_count"), 
+				       scm_ulong2num (val));
   
   if (alert_support)
     {
@@ -3397,8 +3394,8 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_event_filters"), 
-				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+				       scm_makfrom0str ("num_event_filters"), 
+				       (val ? scm_ulong2num (val) : SCM_BOOL_F));
   
   if (alert_support)
     {
@@ -3422,8 +3419,8 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_alert_policies"), 
-				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+				       scm_makfrom0str ("num_alert_policies"), 
+				       (val ? scm_ulong2num (val) : SCM_BOOL_F));
   
   if (alert_support)
     {
@@ -3447,8 +3444,8 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_alert_strings"), 
-				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
+				       scm_makfrom0str ("num_alert_strings"), 
+				       (val ? scm_ulong2num (val) : SCM_BOOL_F));
   
   return (scm_pef_info_list);
 }
