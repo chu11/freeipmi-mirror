@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.5 2005-11-08 16:55:07 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.6 2005-11-08 23:50:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,7 @@
 #define IPMIPOWER_MAX_CONNECTION_BUF       1024*4
 
 #define IPMIPOWER_MINNODES                 1
-#define IPMIPOWER_MAXNODES                 2048  
+#define IPMIPOWER_MAXNODES                 1024
 
 #define IPMIPOWER_TIMEOUT_MIN              1000   /* 1 second */
 #define IPMIPOWER_TIMEOUT_MAX              120000 /* 120 seconds */

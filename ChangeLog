@@ -1,7 +1,8 @@
 ------------------------------------------------------------
 2005-XX-XX  Albert Chu <chu11@llnl.gov>
 
-	Collective fixes from branch al_ipmi_2_0_branch.
+	Collective fixes from branch al_ipmi_2_0_branch.  See ChangeLog in
+	branch for detailed day by day changes.
 
 	LIBFREEIPMI
 
@@ -103,9 +104,6 @@
 	_send_packet, _recv_packet, _bad_packet): Fixed various code due
 	to above changes to ipmipower_check_packet.
 
-	* ipmipower/src/ipmipower.h: Change IPMIPOWER_MAXNODES from 1024
-	to 2048.
-
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
 	(ipmipower_powercmd_queue, _process_ipmi_packets, _retry_packets):
 	Don't retransmit on a close-session timeout.  There's no need to
@@ -148,6 +146,8 @@
 	implementation.
 
 	* libfreeipmi/src/fiid.h: Added FIID_OBJ_SET_DATA macro.
+
+	* Merged changes from HEAD tag al_ipmi_2_0_head_merge_1.
 
 2005-11-07  Albert Chu <chu11@llnl.gov>
 
@@ -223,9 +223,6 @@
 	* ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
 	_send_packet, _recv_packet, _bad_packet): Fixed various code due
 	to above changes to ipmipower_check_packet.
-
-	* ipmipower/src/ipmipower.h: Change IPMIPOWER_MAXNODES from 1024
-	to 2048.
 
 	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
 	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
