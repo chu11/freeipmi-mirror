@@ -111,7 +111,7 @@ fiid_template_t tmpl_lanplus_rakp_message_1 =
     {32,  "managed_system_session_id"},
     {128, "remote_console_random_number"},
     {4,   "requested_maximum_privilege_level"},
-    {1,   "username_lookup"},
+    {1,   "nameonly_lookup"},
     {3,   "reserved2"},
     {16,  "reserved3"},
     {8,   "username_length"},
@@ -128,6 +128,7 @@ fiid_template_t tmpl_lanplus_rakp_message_2 =
     {128, "managed_system_random_number"},
     {128, "managed_system_guid"},
     {512, "key_exchange_authentication_code"}, /* up to 64 bytes */
+    {32,  "key_exchange_authentication_code_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
 
@@ -138,6 +139,7 @@ fiid_template_t tmpl_lanplus_rakp_message_3 =
     {16,  "reserved1"},
     {32,  "managed_system_session_id"},
     {512, "key_exchange_authentication_code"}, /* up to 64 bytes */
+    {32,  "key_exchange_authentication_code_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
 
@@ -148,6 +150,7 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
     {16,  "reserved1"},
     {32,  "management_console_session_id"},
     {512, "integrity_check_value"}, /* up to 64 bytes */
+    {32,  "integrity_check_value_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
 
@@ -189,7 +192,7 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
   int32_t field_len;
   char *field_str, *field_str_len;
 
-  if (!(tmpl_trlr && obj_trlr))
+  if (!tmpl_trlr || !obj_trlr)
     {
       errno = EINVAL;
       return (-1);
@@ -200,8 +203,8 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
   /* Unlike fill_hdr_session in IPMI 1.5, we only need to copy data.
    * No checking is required.  The difficult part of computing hashes
    * and checking for correct input is done during the packet
-   * assembly.  Padding will calculations will also be done during
-   * packet assembly.
+   * assembly.  Padding calculations will also be done during packet
+   * assembly.
    */
 
   FIID_OBJ_SET (obj_trlr, tmpl_trlr, "next_header", IPMI_NEXT_HEADER);
@@ -248,11 +251,11 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
           return (-1);
         }
           
-      ERR_EXIT (fiid_obj_set_data (obj_trlr,
-                                   tmpl_trlr,
-                                   field_str,
-                                   auth_code_data,
-                                   auth_code_data_len) == 0);
+      FIID_OBJ_SET_DATA (obj_trlr,
+                         tmpl_trlr,
+                         field_str,
+                         auth_code_data,
+                         auth_code_data_len);
       FIID_OBJ_SET (obj_trlr, tmpl_trlr, field_str_len, auth_code_data_len);
 
     }
@@ -264,25 +267,184 @@ int8_t
 fill_lanplus_open_session (u_int8_t message_tag,
                            u_int8_t requested_maximum_privilege_level,
                            u_int32_t remote_console_session_id,
-                           u_int8_t authentication_payload_type,
-                           u_int8_t authentication_payload_length,
-                           u_int8_t authentication_payload_algorithm,
-                           u_int8_t integrity_payload_type,
-                           u_int8_t integrity_payload_length,
-                           u_int8_t integrity_payload_algorithm,
-                           u_int8_t confidentiality_payload_type,
-                           u_int8_t confidentiality_payload_length,
-                           u_int8_t confidentiality_payload_algorithm,
+                           u_int8_t authentication_algorithm,
+                           u_int8_t integrity_algorithm,
+                           u_int8_t confidentiality_algorithm,
                            fiid_obj_t obj_cmd)
 {
-  if (!(obj_cmd))
+  if (!obj_cmd
+      || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
+      || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_open_session_rq);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_open_session_rq, 
+                "message_tag", 
+                message_tag);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_open_session_rq, 
+                "requested_maximum_privilege_level", 
+                requested_maximum_privilege_level);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq, 
+                "remote_console_session_id",
+                remote_console_session_id);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "authentication_payload.payload_type",
+                IPMI_AUTHENTICATION_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "authentication_payload.payload_length",
+                IPMI_AUTHENTICATION_PAYLOAD_LEN);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq, 
+                "authentication_payload.authentication_algorithm",
+                authentication_algorithm);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "integrity_payload.payload_type",
+                IPMI_INTEGRITY_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "integrity_payload.payload_length",
+                IPMI_INTEGRITY_PAYLOAD_LEN);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq, 
+                "integrity_payload.integrity_algorithm",
+                integrity_algorithm);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "confidentiality_payload.payload_type",
+                IPMI_CONFIDENTIALITY_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq,
+                "confidentiality_payload.payload_length",
+                IPMI_CONFIDENTIALITY_PAYLOAD_LEN);
+  FIID_OBJ_SET (obj_cmd,
+                tmpl_lanplus_open_session_rq, 
+                "confidentiality_payload.confidentiality_algorithm",
+                confidentiality_algorithm);
+
+  return (0);
+}
+
+int8_t
+fill_lanplus_rakp_message_1(u_int8_t message_tag,
+                            u_int32_t managed_system_session_id,
+                            u_int8_t *remote_console_random_number,
+                            u_int32_t remote_console_random_number_len,
+                            u_int8_t requested_maximum_privilege_level,
+                            u_int8_t nameonly_lookup_flag,
+                            u_int8_t *username,
+                            u_int32_t username_len,
+                            fiid_obj_t obj_cmd)
+{
+  if (!obj_cmd
+      || !remote_console_random_number
+      || remote_console_random_number_len > IPMI_MAX_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
+      || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
+      || !IPMI_USERNAME_LOOKUP_VALID(nameonly_lookup_flag)
+      || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_rakp_message_1);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_1, 
+                "message_tag", 
+                message_tag);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_1, 
+                "managed_system_session_id", 
+                managed_system_session_id);
+  FIID_OBJ_SET_DATA (obj_cmd,
+                     tmpl_lanplus_rakp_message_1, 
+                     "remote_console_random_number",
+                     remote_console_random_number,
+                     remote_console_random_number_len);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_1, 
+                "requested_maximum_privilege_level", 
+                requested_maximum_privilege_level);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_1, 
+                "nameonly_lookup", 
+                nameonly_lookup_flag);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_1, 
+                "username_length", 
+                username_len);
+  FIID_OBJ_SET_DATA (obj_cmd,
+                     tmpl_lanplus_rakp_message_1, 
+                     "username",
+                     username,
+                     username_len);
   
-
   return (0);
 }
 
+int8_t
+fill_lanplus_rakp_message_3(u_int8_t message_tag,
+                            u_int8_t rmcpplus_status_code,
+                            u_int32_t managed_system_session_id,
+                            u_int8_t *key_exchange_authentication_code,
+                            u_int32_t key_exchange_authentication_code_len,
+                            fiid_obj_t obj_cmd)
+{
+  if (!obj_cmd || !RMCPPLUS_STATUS_VALID(rmcpplus_status_code))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_rakp_message_3);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_3, 
+                "message_tag", 
+                message_tag);
+  FIID_OBJ_SET (obj_cmd, 
+                tmpl_lanplus_rakp_message_3, 
+                "managed_system_session_id", 
+                managed_system_session_id);
+
+  if (key_exchange_authentication_code && key_exchange_authentication_code_len > 0)
+    {
+      u_int32_t field_len;
+
+      if ((field_len = fiid_obj_field_len_bytes(tmpl_lanplus_rakp_message_3, 
+                                                "key_exchange_authentication_code")) < 0)
+        return (-1);
+      
+      if (key_exchange_authentication_code_len > field_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      FIID_OBJ_SET_DATA (obj_cmd,
+                         tmpl_lanplus_rakp_message_3,
+                         "key_exchange_authentication_code",
+                         key_exchange_authentication_code,
+                         key_exchange_authentication_code_len);
+      FIID_OBJ_SET (obj_cmd,
+                    tmpl_lanplus_rakp_message_3,
+                    "key_exchange_authentication_code_len",
+                    key_exchange_authentication_code_len);
+    }
+  else
+    FIID_OBJ_SET (obj_cmd,
+                  tmpl_lanplus_rakp_message_3,
+                  "key_exchange_authentication_code_len",
+                  0);
+
+  return (0);
+}

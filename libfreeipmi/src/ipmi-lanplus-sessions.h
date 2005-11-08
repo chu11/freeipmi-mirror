@@ -74,6 +74,11 @@
 /* C0h - FFh - OEM */
 /* all other reserved */
 
+#define IPMI_AUTHENTICATION_ALGORITHM_VALID(algorithm) \
+        (((algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \
+          || (algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
+          || (algorithm) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5) ? 1 : 0)
+
 /****************************************
  * IPMI 2.0 Integrity Algorithm Numbers *
  ****************************************/
@@ -84,6 +89,12 @@
 #define IPMI_INTEGRITY_ALGORITHM_MD5_128                  0x03
 /* C0h - FFh - OEM */
 /* all other reserved */
+
+#define IPMI_INTEGRITY_ALGORITHM_VALID(algorithm) \
+        (((algorithm) ==  IPMI_INTEGRITY_ALGORITHM_NONE \
+          || (algorithm) ==  IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
+          || (algorithm) ==  IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
+          || (algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128) ? 1 : 0)
 
 /**********************************************
  * IPMI 2.0 Confidentiality Algorithm Numbers *
@@ -96,13 +107,34 @@
 /* 30h - 3Fh - OEM */
 /* all other reserved */
 
-/***********************
- * IPMI 2.0 Misc Flags *                       
- ***********************/
+#define IPMI_CONFIDENTIALITY_ALGORITHM_VALID(algorithm) \
+        (((algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
+          || (algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
+          || (algorithm) ==  IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
+          || (algorithm) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40) ? 1 : 0)
+
+/***************************************
+ * IPMI 2.0 Misc Flags and Definitions *                       
+ ***************************************/
+
+#define IPMI_AUTHENTICATION_PAYLOAD_TYPE                  0x00
+#define IPMI_AUTHENTICATION_PAYLOAD_LEN                   0x08
+#define IPMI_INTEGRITY_PAYLOAD_TYPE                       0x01
+#define IPMI_INTEGRITY_PAYLOAD_LEN                        0x08
+#define IPMI_CONFIDENTIALITY_PAYLOAD_TYPE                 0x02
+#define IPMI_CONFIDENTIALITY_PAYLOAD_LEN                  0x08
+
+#define IPMI_USERNAME_PRIVILEGE_LOOKUP                    0x0
+#define IPMI_NAMEONLY_LOOKUP                              0x1
+
+#define IPMI_USERNAME_LOOKUP_VALID(username_lookup_flag) \
+        (((username_lookup_flag) == IPMI_USERNAME_PRIVILEGE_LOOKUP \
+         || (username_lookup_flag) == IPMI_NAMEONLY_LOOKUP) ? 1 : 0)
+
+#define IPMI_MAX_REMOTE_CONSOLE_RANDOM_NUMBER_LEN         16
 
 #define IPMI_NEXT_HEADER                                  0x07
-
-
+ 
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -121,9 +153,12 @@ int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_typ
 
 int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
 
+int8_t fill_lanplus_open_session (u_int8_t message_tag, u_int8_t requested_maximum_privilege_level, u_int32_t remote_console_session_id, u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, fiid_obj_t obj_msg);
+
+int8_t fill_lanplus_rakp_message_1(u_int8_t message_tag, u_int32_t managed_system_session_id, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t requested_maximum_privilege_level, u_int8_t nameonly_lookup_flag, u_int8_t *username, u_int32_t username_len, fiid_obj_t obj_msg);
+
 #ifdef __cplusplus
 }
 #endif
-
 
 #endif

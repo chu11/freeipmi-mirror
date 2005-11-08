@@ -5,8 +5,9 @@
 
 	LIBFREEIPMI
 
-	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET macro.
-	
+	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET and
+	FIID_OBJ_SET_DATA macros.
+
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,
 	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
 
@@ -142,6 +143,12 @@
 	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband): Use
 	IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
 	
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c: Continued ipmi 2.0
+	implementation.
+
+	* libfreeipmi/src/fiid.h: Added FIID_OBJ_SET_DATA macro.
+
 2005-11-07  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
