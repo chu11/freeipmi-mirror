@@ -6,6 +6,8 @@
 	libfreeipmi/src/ipmi-sessions.h, libfreeipmi/src/rmcp.h: Remove
 	all #if 0'd out code that was still lingering from late 2003
 	development.
+
+	* fish/scripts/bmc-autoconfig/Makefile.am: Dist out bmc-autoconfig.
 	
 2005-11-06  Anand Babu  <ab@zresearch.com>
 
