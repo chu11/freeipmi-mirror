@@ -87,7 +87,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_SESSION_AUTH_TYPE_VALID (auth_type) == 0)
+  if (IPMI_1_5_SESSION_AUTH_TYPE_VALID (auth_type) == 0)
     {
       errno = EINVAL;
       return (-1);
@@ -107,7 +107,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_PRIV_LEVEL_VALID (priv_level) == 0)
+  if (IPMI_1_5_PRIV_LEVEL_VALID (priv_level) == 0)
     {
       errno = EINVAL;
       return (-1);

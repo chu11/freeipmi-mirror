@@ -61,8 +61,15 @@
 #define IPMI_PRIV_LEVEL_HIGHEST_LEVEL 0x00 /* IPMI 2.0 */
 
 #define IPMI_PRIV_LEVEL_VALID(priv_level) \
-        (((priv_level) == IPMI_PRIV_LEVEL_RESERVED \
+        (((priv_level) == IPMI_PRIV_LEVEL_HIGHEST_LEVEL \
           || (priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
+          || (priv_level) == IPMI_PRIV_LEVEL_USER \
+          || (priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
+          || (priv_level) == IPMI_PRIV_LEVEL_ADMIN \
+          || (priv_level) == IPMI_PRIV_LEVEL_OEM) ? 1 : 0)
+
+#define IPMI_1_5_PRIV_LEVEL_VALID(priv_level) \
+        (((priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
           || (priv_level) == IPMI_PRIV_LEVEL_USER \
           || (priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
           || (priv_level) == IPMI_PRIV_LEVEL_ADMIN \

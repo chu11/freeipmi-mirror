@@ -3,6 +3,42 @@
 
 	Collective fixes from branch al_ipmi_2_0_branch.
 
+	LIBFREEIPMI
+
+	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET macro.
+	
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
+
+	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(rmcpplus_status_strerror_r): New function.
+
+	* libfreeipmi/src/ipmi-interface.h: Added
+	IPMI_SESSION_AUTH_TYPE_RMCPPLUS, IPMI_1_5_SESSION_AUTH_TYPE_VALID,
+	and IPMI_1_5_PRIV_LEVEL_VALID macros.  Adjusted
+	IPMI_SESSION_AUTH_TYPE_VALID and IPMI_PRIV_LEVEL_VALID for ipmi
+	2.0 appropriately.
+	
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
+	ipmi_open_outofband): Use new IPMI_1_5_SESSION_AUTH_TYPE_VALID
+	macro.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_get_channel_auth_caps, fill_cmd_activate_session,
+	fill_cmd_set_session_priv_level), libfreeipmi/src/ipmi-interface.c
+	(ipmi_open_outofband): Use new IPMI_1_5_PRIV_LEVEL_VALID.
+	
+	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
+	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
+	files.
+
+	* freeipmi.h: Added ipmi-lanplus-sessions.h.  Removed ipmi-hmac.c,
+	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+
 	RMCPPING and IPMIPING
 	
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,
@@ -23,34 +59,6 @@
 
 	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
 	new -s option and default random initial sequence number.
-
-	LIBFREEIPMI
-
-	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET macro.
-	
-	* libfreeipmi/src/ipmi-lanplus-sessions.h,
-	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
-
-	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
-
-	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
-	(rmcpplus_status_strerror_r): New function.
-
-	* libfreeipmi/src/ipmi-interface.h: Added
-	IPMI_SESSION_AUTH_TYPE_RMCPPLUS, IPMI_1_5_SESSION_AUTH_TYPE_VALID,
-	and adjusted macros appropriately.
-	
-	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
-	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
-	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt): Use
-	new IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
-
-	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
-	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
-	files.
-
-	* freeipmi.h: Added ipmi-lanplus-sessions.h.  Removed ipmi-hmac.c,
-	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
 	IPMIPOWER
 	
@@ -122,6 +130,17 @@
 	channel number.
 
 	* ipmiping/src/ipmiping.c (createpacket): Updated for new API.
+
+	* libfreeipmi/src/ipmi-interface.h: Added IPMI_1_5_PRIV_LEVEL_VALID.
+	Adjusted IPMI_PRIV_LEVEL_VALID for ipmi 2.0 appropriately.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_get_channel_auth_caps, fill_cmd_activate_session,
+	fill_cmd_set_session_priv_level), libfreeipmi/src/ipmi-interface.c
+	(ipmi_open_outofband): Use new IPMI_1_5_PRIV_LEVEL_VALID.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_outofband): Use
+	IPMI_1_5_SESSION_AUTH_TYPE_VALID macro.
 	
 2005-11-07  Albert Chu <chu11@llnl.gov>
 

@@ -392,7 +392,7 @@ fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
 {
   if (!obj_cmd 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_num)
-      || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
+      || !IPMI_1_5_PRIV_LEVEL_VALID(max_priv_level))
     {
       errno = EINVAL;
       return (-1);
@@ -551,7 +551,7 @@ fill_cmd_activate_session (u_int8_t auth_type,
 			   fiid_obj_t obj_cmd)
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
-      || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
+      || !IPMI_1_5_PRIV_LEVEL_VALID(max_priv_level)
       || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
       || !obj_cmd)
     {
@@ -619,7 +619,7 @@ int8_t
 fill_cmd_set_session_priv_level (u_int8_t priv_level, 
 				 fiid_obj_t obj_cmd)
 {
-  if (!IPMI_PRIV_LEVEL_VALID(priv_level)
+  if (!IPMI_1_5_PRIV_LEVEL_VALID(priv_level)
       || obj_cmd == NULL)
     {
       errno = EINVAL;
