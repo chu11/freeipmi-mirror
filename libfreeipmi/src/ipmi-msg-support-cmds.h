@@ -102,6 +102,7 @@ extern "C" {
 #define IPMI_CHANNEL_SINGLE_SESSION    0x1
 #define IPMI_CHANNEL_MULTI_SESSION     0x2
 #define IPMI_CHANNEL_SESSION_BASED     0x3
+#define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(channel_number) \
@@ -129,6 +130,7 @@ extern fiid_template_t tmpl_get_channel_access_rq;
 extern fiid_template_t tmpl_get_channel_access_rs;
 
 int8_t fill_cmd_get_channel_auth_caps (u_int8_t max_priv_level, 
+                                       u_int8_t channel_num,
 				       fiid_obj_t obj_cmd);
 int8_t ipmi_lan_get_channel_auth_caps (int sockfd, 
 				       struct sockaddr *hostaddr, 

@@ -1,3 +1,19 @@
+2005-11-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Add
+	IPMI_CHANNEL_CURRENT_CHANNEL.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_get_channel_auth_caps): Require user to pass in BMC
+	channel number.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_get_channel_auth_caps, ipmi_lan_get_channel_auth_caps2),
+	ipmiping/src/ipmiping.c (createpacket),
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_create):
+	Support change in API.
+
 2005-11-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-chassis-cmds.h,
@@ -8,7 +24,7 @@
 	development.
 
 	* fish/scripts/bmc-autoconfig/Makefile.am: Dist out bmc-autoconfig.
-	
+
 2005-11-06  Anand Babu  <ab@zresearch.com>
 
 	* fish/src/extension.c: Depricated Guile APIs are with newer ones.
