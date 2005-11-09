@@ -1,3 +1,70 @@
+2005-11-09  Albert Chu <chu11@llnl.gov>
+
+        Merge in various changes from branch al_ipmi_2_0_branch that
+        aren't IPMI 2.0 related.
+
+        * libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET and
+        FIID_OBJ_SET_DATA macros.
+
+        * libfreeipmi/src/ipmi-chassis-cmds.h,
+        libfreeipmi/src/ipmi-chassis-cmds.c: Support IPMI Chassis Identify
+        command.
+
+        * libfreeipmi/src/ipmi-chassis-cmds.h,
+        libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+        New function.
+
+        * ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (_setup),
+        ipmipower/src/ipmipower_check.c (_check_outbound_seq_num_),
+        ipmipower/src/ipmipower_packet.c (ipmipower_packet_create),
+        ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+        _recv_packet): Support a randomized initial outbound sequence
+        number.
+
+        * ipmipower/src/ipmipower_powercmd.c (_send_packet): Always
+        increment ipmi_send_count and session_inbound_count.
+
+        * ipmipower/src/ipmipower_powercmd.c (_retry_packets): Fix up
+        comments due to fixes above.
+
+        * ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c
+        (get_rand): New function.
+
+        * ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+        (_check_requester_seq_num), ipmipower/src/ipmipower_connection.c
+        (_connection_setup), ipmipower/src/ipmipower_packet.c
+        (ipmipower_packet_create), ipmipower/src/ipmipower_powercmd.c
+        (_send_packet): Support randomized initial requester sequence
+        numbers.
+
+        * ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_connection.c
+        (_connection_setup), ipmipower/src/ipmipower_ping.c
+        (ipmipower_ping_process_pings): Support randomized initial
+        rmcpping sequence numbers.
+
+        * ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+        (_check_outbound_seq_num), : Rework to use IPMI spec sequence
+        check algorithm.
+
+        * ipmipower/src/ipmipower_check.h, ipmipower/src/ipmipower_check.c
+        (ipmipower_check_packet): Re-work API to pass flags back to caller
+        with test results.
+
+        * ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+        _send_packet, _recv_packet, _bad_packet): Fixed various code due
+        to above changes to ipmipower_check_packet.
+
+        * ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
+        (ipmipower_powercmd_queue, _process_ipmi_packets, _retry_packets):
+        Don't retransmit on a close-session timeout.  There's no need to
+        and it may not work.
+
+        * ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_check.c,
+        ipmipower/src/ipmipower_powercmd.c: Add additional comments,
+        notes, and details on IPMI compliance workarounds.
+
+        * ipmipower/: Various minor code cleanup.
+	
 2005-11-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.h: Add
