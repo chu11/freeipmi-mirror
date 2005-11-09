@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.6.2.3 2005-11-09 20:57:21 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.6.2.4 2005-11-09 22:29:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
