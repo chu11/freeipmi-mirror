@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.6 2005-03-18 22:06:55 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.7 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -40,73 +40,125 @@
 #include "ipmipower_wrappers.h"      
 
 static int 
-_check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt) 
+_check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
+  u_int32_t shift_num, wrap_val, max_seq_num = 0xFFFFFFFF;
   u_int64_t pktoseq = 0;
-  u_int64_t myoseq;
   int retval = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
   
-  myoseq = IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM + ip->session_outbound_count;
-  
+  /* achu: This algorithm is more or less from Appendix A of the IPMI
+   * spec.  It may not be entirely necessary for ipmipower, since the
+   * requester sequence number puts packets into lock-step mode.  Oh
+   * well.
+   *
+   * I know that technically I could remove a lot of code here if I
+   * just let unsigned ints be unsigned ints (i.e. 0x00 - 0xff = 1).
+   * I dunno, I like to see all of the code actually written out b/c
+   * it makes more sense to the casual code reviewer.  Maybe I'll
+   * change it later.
+   */
+
+  /* Outbound sequence numbers have not started yet */ 
   if (pkt == AUTH_RES || pkt == SESS_RES)
-    /* Outbound sequence numbers have not started yet */ 
     return 1;
-  else 
-    Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                 "session_seq_num", &pktoseq);
+
+  Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc, 
+               "session_seq_num", &pktoseq);
   
-  if (pktoseq == myoseq)
-    retval++;
-  else if (ip->retry_count > 0) 
+  if (pkt == ACTV_RES)
     {
-      /* If packets were retransmitted, we won't know for sure what
-       * the outbound sequence number will be.  It will be in a
-       * potential range.  We'll check the range, then re-sync our
-       * outbound sequence number to match the BMC outbound sequence
-       * number.
+      /* achu: On some buggy BMCs the initial outbound sequence number on
+       * the activate session response is off by one.  So we just accept
+       * whatever sequence number they give us even if it isn't the
+       * initial outbound sequence number.
        */
-      
-      if (myoseq >= ip->retry_count /* normal case */
-          && pktoseq < myoseq
-          && pktoseq >= (myoseq - ip->retry_count)) 
+      ip->highest_received_seq_num = pktoseq;
+      return 1;
+    }
+  
+  /* Drop duplicate packet */
+  if (pktoseq == ip->highest_received_seq_num)
+    goto out;
+
+  /* Check if sequence number is greater than highest received and is
+   * within range 
+   */
+  if (ip->highest_received_seq_num > (max_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+    {
+      wrap_val = IPMIPOWER_SEQ_NUM_WINDOW - (max_seq_num - ip->highest_received_seq_num) - 1;
+
+      if (pktoseq > ip->highest_received_seq_num || pktoseq <= wrap_val)
         {
-          retval++;
-          ip->session_outbound_count -= (myoseq - pktoseq);
-          dbg("_check_outbound_seq_num(%s:%d): oseq in range, "
-              "oseq: %d, expected: %d",
-              ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
-        }
-      else 			/* seq-num wrap-around case */
-        {
-          u_int32_t max = 0xffffffff;
-          u_int32_t num = max - (ip->retry_count - myoseq);
-          if (pktoseq < myoseq || pktoseq > num) 
-            {
-              retval++;
-              if (pktoseq < myoseq)
-                ip->session_outbound_count -= (myoseq - pktoseq);
-              else
-                ip->session_outbound_count -= (myoseq + (max - num));
-              dbg("_check_outbound_seq_num(%s:%d): oseq in range, "
-                  "oseq: %d, expected: %d",
-                  ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
-            }
+          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
+            shift_num = pktoseq - ip->highest_received_seq_num;
           else
-            dbg("_check_outbound_seq_num(%s:%d): oseq: %d, "
-                "expected: %d",
-                ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
+            shift_num = pktoseq + (max_seq_num - ip->highest_received_seq_num) + 1;
+          
+          ip->highest_received_seq_num = pktoseq;
+          ip->previously_received_list <<= shift_num;
+          ip->previously_received_list |= (0x1 << (shift_num - 1));
+          retval++;
         }
     }
   else
     {
-      dbg("_check_outbound_seq_num(%s:%d): oseq: %d, "
-          "expected: %d",
-          ip->ic->hostname, ip->protocol_state, pktoseq, myoseq);
+      if (pktoseq > ip->highest_received_seq_num
+          && (pktoseq - ip->highest_received_seq_num) <= IPMIPOWER_SEQ_NUM_WINDOW)
+        {
+          shift_num = (pktoseq - ip->highest_received_seq_num);
+          ip->highest_received_seq_num = pktoseq;
+          ip->previously_received_list <<= shift_num;
+          ip->previously_received_list |= (0x1 << (shift_num - 1));
+          retval++;
+        }
     }
-
+  
+  /* Check if sequence number is lower than highest received, is
+   * within range, and hasn't been seen yet
+   */
+  if (ip->highest_received_seq_num < IPMIPOWER_SEQ_NUM_WINDOW)
+    {
+      u_int32_t wrap_val = max_seq_num - (IPMIPOWER_SEQ_NUM_WINDOW - ip->highest_received_seq_num) + 1;
+      
+      if (pktoseq < ip->highest_received_seq_num || pktoseq >= wrap_val)
+        {
+          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
+            shift_num = ip->highest_received_seq_num + (max_seq_num - pktoseq) + 1;
+          else
+            shift_num = ip->highest_received_seq_num - pktoseq;
+          
+          /* Duplicate packet check*/
+          if (ip->previously_received_list & (0x1 << (shift_num - 1)))
+            goto out;
+          
+          ip->previously_received_list |= (0x1 << (shift_num - 1));
+          retval++;
+        }
+    }
+  else
+    {
+      if (pktoseq < ip->highest_received_seq_num
+          && pktoseq >= (ip->highest_received_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+        {
+          shift_num = ip->highest_received_seq_num - pktoseq;
+          
+          /* Duplicate packet check*/
+          if (ip->previously_received_list & (0x1 << (shift_num - 1)))
+            goto out;
+          
+          ip->previously_received_list |= (0x1 << (shift_num - 1));
+          retval++;
+        }
+    }
+  
+ out:
+  if (!retval)
+    dbg("_check_outbound_seq_num(%s:%d): pktoseq: %u, high: %u",
+        ip->ic->hostname, ip->protocol_state, pktoseq, ip->highest_received_seq_num);
+  
   return retval;
 }
 
@@ -129,10 +181,13 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    "session_id", &actv_res_session_id);
     }
   
-  /* achu: On some motherboards, the remote BMC returns zeroes for the
-   * session id instead of the actual session id.  To work around this
-   * problem, we'll assume the session id is correct if it is equal to
-   * zero.
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Tyan S2882 w/ m3289 BMC
+   *
+   * The remote BMC returns zeroes for the session id instead of the
+   * actual session id.  To work around this problem, we'll assume the
+   * session id is correct if it is equal to zero.
    */
 
   if (session_id != actv_res_session_id && session_id != 0)
@@ -176,7 +231,7 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  myrseq = ip->ic->ipmi_send_count % (IPMIPOWER_RSEQ_MAX + 1);
+  myrseq = ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1);
 
   Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, "rq_seq", &pktrseq);
 
@@ -243,25 +298,25 @@ _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
 
 int 
 ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
-                       int oseq, int sid, int netfn, int rseq, 
-                       int cmd, int cc) 
+                       int *oseq, int *sid, int *netfn, int *rseq, 
+                       int *cmd, int *cc)
 {
   int e = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-    
-  if (oseq && !_check_outbound_seq_num(ip, pkt)) 
+
+  if (oseq && !(*oseq = _check_outbound_seq_num(ip, pkt)))
     e++;
-  if (sid && !_check_session_id(ip, pkt))
+  if (sid && !(*sid = _check_session_id(ip, pkt)))
     e++;
-  if (netfn && !_check_network_function(ip, pkt)) 
+  if (netfn && !(*netfn = _check_network_function(ip, pkt)))
     e++;
-  if (rseq && !_check_requester_seq_num(ip, pkt)) 
+  if (rseq && !(*rseq = _check_requester_seq_num(ip, pkt)))
     e++;
-  if (cmd && !_check_command(ip, pkt)) 
+  if (cmd && !(*cmd = _check_command(ip, pkt)))
     e++;
-  if (cc & !_check_completion_code(ip, pkt)) 
+  if (cc && !(*cc = _check_completion_code(ip, pkt))) 
     e++;
   
   if (e)

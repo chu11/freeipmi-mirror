@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.10 2005-10-28 15:54:31 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.11 2005-11-09 22:24:12 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -459,6 +459,39 @@ used in conjunction with powerman,
 .B ipmipower 
 has been used to consistently power control a 1024-node cluster in
 under 0.5 s.
+
+.SH "WORKAROUNDS"
+As can be expected, with so many different vendors implementing their
+own IPMI solutions, different vendors may implement their IPMI
+protocols slightly differently.  The following lists the handful of
+compliance issues discovered and the workarounds currently used in .B
+ipmipower. They are listed in the order of implementation.  Therefore,
+earlier implemented workarounds may have solved problems for other
+vendors.
+
+Note that the following only indicates the hardware that a problem was
+discovered on.  Newer versions of a vendors firmware may fix the
+problems indicated below.
+
+Intel SR870BN4: BMCs would not respond to retransmissions of a Get
+Session Challenge Request if a previous Get Session Challenge response
+was lost.  Resolved by sending retransmitted Get Session Challenge
+requests from a different source port.
+
+Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
+packet responses return empty session IDs to the client.  Resolved by
+accepting empty session IDs.  This problem is apparently fixed in 
+later firmware releases.
+
+Dell PowerEdge 2850: When Per-Message Authentication is disabled,
+packet responses contain non-null authentication data.  Resolved by
+accepting null or non-null authentication data under this corner case.
+
+Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
+activate session response and close session response packets have
+invalid sequence numbers.  Specific workaround no longer required in
+later revisions of 
+.B ipmipower.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

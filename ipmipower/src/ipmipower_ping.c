@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.1 2004-05-11 17:04:58 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.2 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -107,15 +107,15 @@ ipmipower_ping_process_pings(int *timeout)
             
           if (conf->ping_consec_count) 
             {
-              if (ics[i].ping_last_packet_recv == 0)
+              if (ics[i].ping_last_packet_recv_flag == 0)
                 ics[i].ping_consec_count = 0;
-              ics[i].ping_last_packet_recv = 0;
+              ics[i].ping_last_packet_recv_flag = 0;
             }
             
           /* must increment count before setting message tag, so we
            * can check sequence number correctly later on 
            */
-          ics[i].ping_send_count++; 
+          ics[i].ping_seq_num_counter++; 
 
           if ((rmcp_hdr = fiid_obj_alloc(tmpl_hdr_rmcp)) == NULL)
             err_exit("fiid_obj_alloc: %s", strerror(errno));
@@ -125,7 +125,7 @@ ipmipower_ping_process_pings(int *timeout)
           if (fill_hdr_rmcp_asf(rmcp_hdr) < 0)
             err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
 
-          if (fill_cmd_asf_presence_ping((ics[i].ping_send_count % 
+          if (fill_cmd_asf_presence_ping((ics[i].ping_seq_num_counter % 
                                           (IPMIPOWER_PING_TAG_MAX + 1)), 
                                          rmcp_ping) < 0)
             err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
@@ -221,10 +221,10 @@ ipmipower_ping_process_pings(int *timeout)
                    * response was late, and we quickly receive two
                    * pong responses
                    */
-                  if (ics[i].ping_last_packet_recv == 0)
+                  if (ics[i].ping_last_packet_recv_flag == 0)
                     ics[i].ping_consec_count++;
                   
-                  ics[i].ping_last_packet_recv++;
+                  ics[i].ping_last_packet_recv_flag++;
                 }
               
               if (conf->ping_packet_count && conf->ping_percent) 

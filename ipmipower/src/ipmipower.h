@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.9 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,7 @@
 #define IPMIPOWER_MAX_CONNECTION_BUF       1024*4
 
 #define IPMIPOWER_MINNODES                 1
-#define IPMIPOWER_MAXNODES                 1024  
+#define IPMIPOWER_MAXNODES                 1024
 
 #define IPMIPOWER_TIMEOUT_MIN              1000   /* 1 second */
 #define IPMIPOWER_TIMEOUT_MAX              120000 /* 120 seconds */
@@ -113,11 +113,13 @@
  */
 #define IPMIPOWER_RSEQ_MAX             0x3F
 
+/* IPMI allowable sequence number range window
+ */
+#define IPMIPOWER_SEQ_NUM_WINDOW       8
+
 /* MISC */
 #define IPMI_PACKET_BUFLEN             1024
 #define RMCP_PACKET_BUFLEN             1024
-
-#define IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM  0x00000001
 
 #define IPMIPOWER_HOSTLIST_BUFLEN      65536
 
@@ -243,12 +245,15 @@ struct ipmipower_powercmd {
 
     struct timeval time_begin;
     unsigned int session_inbound_count;
-    unsigned int session_outbound_count;
+    u_int32_t initial_outbound_seq_num;
+    u_int32_t highest_received_seq_num;
+    unsigned int previously_received_list;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
     u_int8_t authtype;
     u_int8_t privilege;
+    u_int8_t close_timeout;
 
     struct ipmipower_connection *ic;
   
@@ -290,15 +295,15 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  unsigned int ipmi_send_count;
-  unsigned int ping_send_count;
+  u_int32_t ipmi_requester_seq_num_counter;
+  u_int32_t ping_seq_num_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;
   struct timeval last_ping_recv;
   
   link_state_t link_state;
-  unsigned int ping_last_packet_recv;
+  unsigned int ping_last_packet_recv_flag;
   unsigned int ping_packet_count_send;
   unsigned int ping_packet_count_recv;
   unsigned int ping_consec_count;

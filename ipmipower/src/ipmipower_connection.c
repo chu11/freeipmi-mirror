@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.3 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.4 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,6 +46,7 @@
 #include <netdb.h>
 
 #include "ipmipower_connection.h"
+#include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
 
 extern int h_errno;
@@ -142,15 +143,15 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   ic->ping_out = Cbuf_create(IPMIPOWER_MIN_CONNECTION_BUF, 
                              IPMIPOWER_MAX_CONNECTION_BUF);
 
-  ic->ipmi_send_count = 0;
-  ic->ping_send_count = 0;
+  ic->ipmi_requester_seq_num_counter = get_rand();
+  ic->ping_seq_num_counter = get_rand();
   memset(&ic->last_ipmi_send, '\0', sizeof(struct timeval));
   memset(&ic->last_ping_send, '\0', sizeof(struct timeval));
   memset(&ic->last_ipmi_recv, '\0', sizeof(struct timeval));
   memset(&ic->last_ping_recv, '\0', sizeof(struct timeval));
 
   ic->link_state = LINK_GOOD; /* assumed good to begin with */
-  ic->ping_last_packet_recv = 0;
+  ic->ping_last_packet_recv_flag = 0;
   ic->ping_packet_count_send = 0;
   ic->ping_packet_count_recv = 0;
   ic->ping_consec_count = 0;

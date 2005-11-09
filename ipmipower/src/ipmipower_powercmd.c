@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11 2005-03-18 22:18:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.12 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,7 +167,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->session_outbound_count = 0;
+  ip->initial_outbound_seq_num = get_rand();
+  ip->highest_received_seq_num = ip->initial_outbound_seq_num;
+  ip->previously_received_list = 0xFF;
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
@@ -184,6 +186,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   else
     ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
 
+  ip->close_timeout = 0;
   ip->ic = ic;
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
@@ -215,26 +218,15 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
 
   assert(PACKET_TYPE_VALID_REQ(pkt));
 
-  /* Must set before ipmipower_packet_create, so reqeuster sequence
+  /* Must set before ipmipower_packet_create, so requester sequence
    * number is set properly.
-   *
-   * achu: We wouldn't normal increment this on packet retries, but
-   * it is required for the activate session command.  We MUST get
-   * the reply to the last activate session command, because we must
-   * get the proper initial inbound sequence number from the BMC.
-   *
-   * It is normally also needed on the get session challenge
-   * command, so we ensure we get the latest session id and
-   * challenge string from the BMC.  However, we have a work around
-   * in _retry_packets() already.
    */
-  if (!is_retry || pkt == ACTV_REQ)
-    ip->ic->ipmi_send_count++;
+  ip->ic->ipmi_requester_seq_num_counter++;
   
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-                      
+                     
   if (pkt == AUTH_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTH_SENT;
   else if (pkt == SESS_REQ)
@@ -243,8 +235,11 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     {
       ip->protocol_state = PROTOCOL_STATE_ACTV_SENT;
 
-      /* Close all sockets that were saved during the Get Session
-       * Challenge phase of the IPMI protocol.
+      /* IPMI Workaround (achu)
+       *
+       * Close all sockets that were saved during the Get Session
+       * Challenge phase of the IPMI protocol.  See comments in
+       * _retry_packets().
        */
       if (list_count(ip->sockets_to_close) > 0) {
 	int *fd;
@@ -264,13 +259,8 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   else if (pkt == CTRL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CTRL_SENT;
 
-  if (pkt == PRIV_REQ || pkt == CLOS_REQ 
-      || pkt == CHAS_REQ || pkt == CTRL_REQ) 
-    {
-      if (!is_retry)
-        ip->session_inbound_count++;
-      ip->session_outbound_count++;
-    }
+  if (pkt == PRIV_REQ || pkt == CLOS_REQ || pkt == CHAS_REQ || pkt == CTRL_REQ) 
+    ip->session_inbound_count++;
 
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
 }
@@ -280,7 +270,9 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
  * Returns 0 if packet should be ignored, -1 if packet error was returned
  */
 static int 
-_bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
+_bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt, 
+            int oseq_flag, int sid_flag, int netfn_flag, 
+            int rseq_flag, int cmd_flag, int cc_flag) 
 {
   u_int8_t cc, netfn, cmd, rseq;
   u_int32_t sid, oseq;
@@ -288,7 +280,7 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* If everything else is correct besides completion code, packet
    * returned an error.
    */
-  if (ipmipower_check_packet(ip, pkt, 1, 1, 1, 1, 1, 0)) 
+  if (oseq_flag && sid_flag && netfn_flag && rseq_flag && cmd_flag && !cc_flag) 
     {
       ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
 
@@ -300,10 +292,7 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_response_data(ip, pkt, &oseq, &sid, &netfn, &rseq, &cmd, &cc);
 
-  /* We could reach this point for several reasons:
-   * - packet is corrupted
-   * - packet is a reply to a retransmission that we don't need
-   */
+  /* I guess the packet is corrupted or is a retransmission of something we don't need */
   dbg("_bad_packet(%s:%d): ignoring bad packet: oseq=%x sid=%x "
       "netfn=%x rseq=%x cmd=%x cc=%x",
       ip->ic->hostname, ip->protocol_state, oseq, sid, netfn, 
@@ -324,6 +313,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   char buffer[IPMI_PACKET_BUFLEN];
   u_int8_t *password;
   int check_authcode_retry_flag = 0;
+  int oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag;
 
   assert(PACKET_TYPE_VALID_RES(pkt));
 
@@ -376,11 +366,16 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-  /* achu: When per-message authentication is disabled, and we send a
-   * message to a remote machine with auth-type none, some
-   * motherboards will respond with a message with the auth-type used
-   * in the activate session stage. So here's our second
-   * session-authcode check attempt under these circumstances.
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Dell PowerEdge 2850
+   *
+   * When per-message authentication is disabled, and we send a
+   * message to a remote machine with auth-type none, the Dell
+   * motherboard will respond with a message with the auth-type used
+   * in the activate session stage and the appropriate authcode. So
+   * here is our second session-authcode check attempt under these
+   * circumstances.
    */
   if (!ret && check_authcode_retry_flag)
     {
@@ -405,6 +400,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
                                             strlen(conf->password))) < 0)
         err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      if (ret)
+        dbg("_recv_packet(%s:%d): permsgauth authcode re-check passed",
+            ip->ic->hostname, ip->protocol_state);
     }
 
   if (!ret)
@@ -416,85 +415,40 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_store(ip, pkt, buffer, len);
 
-  if (ipmipower_check_packet(ip, pkt, 1, 1, 1, 1, 1, 1)) 
+  if (ipmipower_check_packet(ip, pkt, &oseq_flag, &sid_flag, &netfn_flag, 
+                             &rseq_flag, &cmd_flag, &cc_flag))
     {
       ip->retry_count = 0;  /* important to reset */
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
       return 1;
     }
-  else
+
+  /* IPMI Workaround (achu)
+   *
+   * Disocvered on Intel SE7520JR2 with National Semiconductor PC87431M mBMC
+   *
+   * Note: Later changes in ipmipower have removed the need for these
+   * workarounds.  I still note them for convenience.
+   *
+   * The initial outbound sequence number on activate session response
+   * is off by one.  The activate session response packet is supposed
+   * to contain the initial outbound sequence number passed during the
+   * request.  The outbound sequence number on a close session reponse
+   * may also be incorrect.
+   */
+
+  /* achu: If this is the close session response, go ahead and just
+   * accept the packet under most circumstances.  We'll just close the
+   * session anyways.
+   */
+  if (pkt == CLOS_RES && sid_flag && netfn_flag && cmd_flag)
     {
-      /* achu: We handle a few remote BMC IPMI compliance bugs discovered
-       * in some vendor's hardware.
-       *
-       * On some buggy BMCs the initial outbound sequence number on
-       * the activate session response is off by one.  When working
-       * around this, note that there is no need to check for a
-       * sequence number range on the activate session response
-       * packet.  The activate session response packet is supposed to
-       * contain a pre-defined initial outbound sequence number.
-       *
-       * On some buggy BMCs, the outbound sequence number is identical
-       * to the inbound sequence number when closing a session.  This
-       * is despite what previous outbound sequence numbers were sent
-       * out of the BMC.
-       */
-      if (pkt == ACTV_RES || pkt == CLOS_RES)
-        {
-          dbg("_recv_packet(%s:%d): re-checking outbound sequence number:",
-              ip->ic->hostname, ip->protocol_state);
-
-          if (ipmipower_check_packet(ip, pkt, 0, 1, 1, 1, 1, 1))
-            {
-              u_int64_t pktoseq, myoseq;
-
-              Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                           "session_seq_num", &pktoseq);
-
-              if (pkt == ACTV_RES)
-                {
-                  myoseq = IPMIPOWER_INITIAL_OUTBOUND_SEQ_NUM + ip->session_outbound_count;
-
-                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-
-                  if ((myoseq + 1) == pktoseq)
-                    {
-                      dbg("_recv_packet(%s:%d): outbound count adjusted",
-                          ip->ic->hostname, ip->protocol_state);
-                      ip->session_outbound_count += 1;
-                      ip->retry_count = 0;  /* important to reset */
-                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                      return 1;
-                    }
-                }
-
-              if (pkt == CLOS_RES)
-                {
-                  u_int64_t initial_inbound_seq_num;
-
-                  Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
-                               "initial_inbound_seq_num", &initial_inbound_seq_num);
-                  
-                  myoseq = initial_inbound_seq_num + (ip->session_inbound_count - 1);
-
-                  dbg("_recv_packet(%s:%d): myoseq=%d pktoseq=%d:",
-                      ip->ic->hostname, ip->protocol_state, myoseq, pktoseq);
-
-                  if (myoseq == pktoseq)
-                    {
-                      dbg("_recv_packet(%s:%d): outbound count accepted",
-                          ip->ic->hostname, ip->protocol_state);
-                      ip->retry_count = 0;  /* important to reset */
-                      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-                      return 1;
-                    }
-                }
-            }
-        }
+      ip->retry_count = 0;  /* important to reset */
+      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+      return 1;
     }
 
-  return _bad_packet(ip, pkt);
+  return _bad_packet(ip, pkt, oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag);
 }
 
 /* _has_timed_out
@@ -511,6 +465,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
   /* Must use >=, otherwise we could potentially spin */
   if (millisec_diff(&cur_time, &(ip->time_begin)) >= conf->timeout_len) 
     {
+      /* Don't bother outputting timeout if we have finished the power control operation */
       if (ip->protocol_state != PROTOCOL_STATE_CLOS_SENT)
         ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
       return 1;
@@ -530,7 +485,7 @@ _retry_packets(ipmipower_powercmd_t ip)
   int time_left;
   int retry_timeout_len;
 
-  /* Can't retransmit if any of the following are true */
+  /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
       || conf->retry_timeout_len == 0             /* no retransmissions */
       || ip->error_occurred == IPMIPOWER_TRUE)   /* we hit an error */
@@ -558,31 +513,26 @@ _retry_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, AUTH_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_SESS_SENT) 
     {
-      /* achu: There is a bug in the firmware revision 0.20 and 0.27
-       * (and likely other revisions too) of Intel tiger4 BMCs.  If
-       * the reply from a previous Get Session Challenge request is
-       * lost on the network, the following retransmission will make
-       * the BMC confused and it will respond to future request
-       * packets in a irregular way.
+      /* IPMI Workaround (achu)
        *
-       * The problem seems to exist only when the packet is
-       * transmitted from the same source port.  Therefore, the fix
+       * Discovered on Intel Tiger4 (SR870BN4)
+       *
+       * If the reply from a previous Get Session Challenge request is
+       * lost on the network, the following retransmission will make
+       * the BMC confused and it will not respond to future packets.
+       *
+       * The problem seems to exist only when the retransmitted packet
+       * is transmitted from the same source port.  Therefore, the fix
        * is to send the retransmission from a different source port.
        * So we'll create a new socket, re-bind to an ephemereal port
-       * (guaranteeing us a brand new port), and store this new socket.
+       * (guaranteeing us a brand new port), and store this new
+       * socket.
        *
        * In the event we need to resend this packet multiple times, we
-       * do not want the chance that old ports will be used again.
-       * Therefore, we store the old file descriptrs (which are bound
-       * to the old ports) on a list, and close all of them after
-       * we have gotten past this phase of the protocol.
-       *
-       * Coincidently this fixes another problem.  Because the Get
-       * Session Challenge contains the Session ID and Challenge
-       * String, we would have to check requester sequence numbers to
-       * make sure we got the right Session ID and Challenge String.
-       * We can drop that check using this approach.  See comments
-       * above in _send_packet.
+       * do not want the chance that old ports will be used again.  We
+       * store the old file descriptrs (which are bound to the old
+       * ports) on a list, and close all of them after we have gotten
+       * past the Get Session Challenge phase of the protocol.
        */
       int new_fd, *old_fd;
       struct sockaddr_in srcaddr;
@@ -620,7 +570,21 @@ _retry_packets(ipmipower_powercmd_t ip)
   else if (ip->protocol_state == PROTOCOL_STATE_CTRL_SENT)
     _send_packet(ip, CTRL_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT)
-    _send_packet(ip, CLOS_REQ, 1);
+    /* 
+     * It's pointless to retransmit a close-session.  
+     *
+     * 1) The power control operation has already completed.
+     *
+     * 2) There is no guarantee the remote BMC will respond.  If the
+     * previous close session response was dropped by the network,
+     * then the session has already been closed by the BMC.  Any
+     * retransmission will send a session id that is unknown to the
+     * BMC, and they will either respond with an error or ignore the
+     * packet.
+     *
+     * _send_packet(ip, CLOS_REQ, 1); 
+     */
+    ip->close_timeout++;
 
   return 1;
 }
@@ -924,6 +888,20 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT) 
     {
+      /* achu: Note that it's possible we're timing out too early and
+       * the close session response will still arrive.  It's no
+       * matter.  If we are in non-interactive mode, the file
+       * descriptor will be closed and the packet lost.  If we are in
+       * interactive mode, the next power control command will call
+       * 'ipmipower_connection_clear' and get rid of the packet if it
+       * is sitting on a buffer.
+       */
+      if (ip->close_timeout)
+        {
+          dbg("_process_ipmi_packets: close session timeout, skip retransmission");
+          goto finish_up;
+        }
+
       if (!_recv_packet(ip, CLOS_RES)) 
         goto done;
  

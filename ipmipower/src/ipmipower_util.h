@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.1 2004-05-11 17:05:09 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.2 2005-11-09 22:24:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,6 +26,13 @@
 
 #ifndef _IPMIPOWER_UTIL_H
 #define _IPMIPOWER_UTIL_H
+
+/* 
+ * get_rand
+ * - something better than rand()
+ * 
+ */
+unsigned int get_rand(void);
 
 /* millisec_add
  * - Add ms milliseconds to old, store new result in new
