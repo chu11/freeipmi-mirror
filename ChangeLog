@@ -120,7 +120,20 @@
 	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
 
 ------------------------------------------------------------
+2005-11-09  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c: Support IPMI Chassis Identify
+	command.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	New function.
+
+	* ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_check.c,
+	ipmipower/src/ipmipower_powercmd.c: Add additional comments,
+	notes, and details on IPMI compliance workarounds.
+	
 2005-11-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,

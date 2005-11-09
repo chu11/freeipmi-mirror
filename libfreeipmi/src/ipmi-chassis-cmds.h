@@ -48,6 +48,9 @@ extern "C" {
 #define IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR    0x04
 #define IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN 0x05
 
+#define IPMI_CHASSIS_FORCE_IDENTIFY_OFF      0x0
+#define IPMI_CHASSIS_FORCE_IDENTIFY_ON       0x1
+
 extern fiid_template_t tmpl_set_power_restore_policy_rq;
 extern fiid_template_t tmpl_set_power_restore_policy_rs;
 extern fiid_template_t tmpl_cmd_chassis_ctrl_rq;
@@ -70,6 +73,11 @@ int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 					   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
 				     fiid_obj_t obj_cmd_rs);
+
+int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
+                                  u_int8_t identify_interval,
+                                  u_int8_t force_identify_flag,
+                                  fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

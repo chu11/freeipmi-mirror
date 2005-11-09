@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.5 2005-11-08 16:55:07 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.6 2005-11-09 20:57:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -235,8 +235,11 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     {
       ip->protocol_state = PROTOCOL_STATE_ACTV_SENT;
 
-      /* Close all sockets that were saved during the Get Session
-       * Challenge phase of the IPMI protocol.
+      /* IPMI Workaround (achu)
+       *
+       * Close all sockets that were saved during the Get Session
+       * Challenge phase of the IPMI protocol.  See comments in
+       * _retry_packets().
        */
       if (list_count(ip->sockets_to_close) > 0) {
 	int *fd;
@@ -363,11 +366,16 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-  /* achu: When per-message authentication is disabled, and we send a
-   * message to a remote machine with auth-type none, some
-   * motherboards will respond with a message with the auth-type used
-   * in the activate session stage. So here's our second
-   * session-authcode check attempt under these circumstances.
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Dell PowerEdge 2850
+   *
+   * When per-message authentication is disabled, and we send a
+   * message to a remote machine with auth-type none, the Dell
+   * motherboard will respond with a message with the auth-type used
+   * in the activate session stage and the appropriate authcode. So
+   * here is our second session-authcode check attempt under these
+   * circumstances.
    */
   if (!ret && check_authcode_retry_flag)
     {
@@ -392,6 +400,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
                                             strlen(conf->password))) < 0)
         err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      if (ret)
+        dbg("_recv_packet(%s:%d): permsgauth authcode re-check passed",
+            ip->ic->hostname, ip->protocol_state);
     }
 
   if (!ret)
@@ -410,21 +422,30 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
       return 1;
     }
-  else
+
+  /* IPMI Workaround (achu)
+   *
+   * Disocvered on Intel SE7520JR2 with National Semiconductor PC87431M mBMC
+   *
+   * Note: Later changes in ipmipower have removed the need for these
+   * workarounds.  I still note them for convenience.
+   *
+   * The initial outbound sequence number on activate session response
+   * is off by one.  The activate session response packet is supposed
+   * to contain the initial outbound sequence number passed during the
+   * request.  The outbound sequence number on a close session reponse
+   * may also be incorrect.
+   */
+
+  /* achu: If this is the close session response, go ahead and just
+   * accept the packet under most circumstances.  We'll just close the
+   * session anyways.
+   */
+  if (pkt == CLOS_RES && sid_flag && netfn_flag && cmd_flag)
     {
-      /* On some buggy BMCs, the outbound sequence number is incorrect
-       * when closing a session.  Since we're closing a session, I'll
-       * just go ahead and accept the response if the outbound sequence
-       * number is the only invalid check.
-       */
-      if (pkt == CLOS_RES && sid_flag && netfn_flag && rseq_flag && cmd_flag && cc_flag)
-        {
-          dbg("_recv_packet(%s:%d): outbound count accepted",
-              ip->ic->hostname, ip->protocol_state);
-          ip->retry_count = 0;  /* important to reset */
-          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          return 1;
-        }
+      ip->retry_count = 0;  /* important to reset */
+      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+      return 1;
     }
 
   return _bad_packet(ip, pkt, oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag);
@@ -492,9 +513,11 @@ _retry_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, AUTH_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_SESS_SENT) 
     {
-      /* achu: There is a bug in the firmware revision 0.20 and 0.27
-       * (and likely other revisions too) of Intel tiger4 BMCs.  If
-       * the reply from a previous Get Session Challenge request is
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Intel Tiger4 (SR870BN4)
+       *
+       * If the reply from a previous Get Session Challenge request is
        * lost on the network, the following retransmission will make
        * the BMC confused and it will not respond to future packets.
        *
@@ -506,10 +529,10 @@ _retry_packets(ipmipower_powercmd_t ip)
        * socket.
        *
        * In the event we need to resend this packet multiple times, we
-       * do not want the chance that old ports will be used again.
-       * Therefore, we store the old file descriptrs (which are bound
-       * to the old ports) on a list, and close all of them after
-       * we have gotten past this phase of the protocol.
+       * do not want the chance that old ports will be used again.  We
+       * store the old file descriptrs (which are bound to the old
+       * ports) on a list, and close all of them after we have gotten
+       * past the Get Session Challenge phase of the protocol.
        */
       int new_fd, *old_fd;
       struct sockaddr_in srcaddr;

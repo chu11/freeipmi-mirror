@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.6.2.2 2005-11-02 21:03:08 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.6.2.3 2005-11-09 20:57:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -181,10 +181,13 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    "session_id", &actv_res_session_id);
     }
   
-  /* achu: On some motherboards, the remote BMC returns zeroes for the
-   * session id instead of the actual session id.  To work around this
-   * problem, we'll assume the session id is correct if it is equal to
-   * zero.
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on Tyan S2882 w/ m3289 BMC
+   *
+   * The remote BMC returns zeroes for the session id instead of the
+   * actual session id.  To work around this problem, we'll assume the
+   * session id is correct if it is equal to zero.
    */
 
   if (session_id != actv_res_session_id && session_id != 0)
