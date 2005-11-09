@@ -1,5 +1,5 @@
 /* 
-   ipmi-chassis-cmds.c - IPMI Chassis Commands
+   Ipmi-chassis-cmds.c - IPMI Chassis Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -87,6 +87,37 @@ fiid_template_t tmpl_cmd_chassis_ctrl_rq =
    to performing the selected control action if necessary. 
 */
 fiid_template_t tmpl_cmd_chassis_ctrl_rs =
+  {
+    {8, "cmd"},
+    {8, "comp_code"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_cmd_chassis_identify_rq = 
+  {
+    {8, "cmd"},
+    {7, "reserved"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_cmd_chassis_identify_interval_rq = 
+  {
+    {8, "cmd"},
+    {8, "identify_interval"},
+    {7, "reserved"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_cmd_chassis_identify_interval_force_rq = 
+  {
+    {8, "cmd"},
+    {8, "identify_interval"},
+    {1, "force_identify"},
+    {7, "reserved"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_cmd_chassis_identify_rs = 
   {
     {8, "cmd"},
     {8, "comp_code"},
@@ -225,3 +256,29 @@ ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
   return (0);
 }
 
+int8_t
+fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
+                           u_int8_t identify_interval, 
+                           u_int8_t force_identify_flag,
+                           fiid_obj_t obj_cmd)
+{
+  if (!tmpl_identify_cmd
+      || (force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_OFF
+          && force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_ON)
+      || !obj_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, "cmd",
+		IPMI_CMD_CHASSIS_IDENTIFY);
+  if (fiid_obj_field_lookup(tmpl_identify_cmd, "identify_interval"))
+    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, 
+                  "identify_interval", identify_interval);
+  if (fiid_obj_field_lookup(tmpl_identify_cmd, "force_identify"))
+    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd,
+                  "force_identify", force_identify_flag);
+
+  return 0;
+}  
