@@ -70,7 +70,7 @@
 ------------------------------------------------------------
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
-	* Merge in various changes from branch al_ipmi_2_0_branch that
+	Merge in various changes from branch al_ipmi_2_0_branch that
 	aren't IPMI 2.0 related.
 
 	* libfreeipmi/src/fiid.h: New FIID_OBJ_MEMSET and
