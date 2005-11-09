@@ -34,6 +34,14 @@
 	fill_cmd_set_session_priv_level), libfreeipmi/src/ipmi-interface.c
 	(ipmi_open_outofband): Use new IPMI_1_5_PRIV_LEVEL_VALID.
 	
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c: Support IPMI Chassis Identify
+	command.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	New function.
+
 	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
 	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
 	files.
@@ -108,6 +116,10 @@
 	(ipmipower_powercmd_queue, _process_ipmi_packets, _retry_packets):
 	Don't retransmit on a close-session timeout.  There's no need to
 	and it may not work.
+
+	* ipmipower/ipmipower.8.in, ipmipower/src/ipmipower_check.c,
+	ipmipower/src/ipmipower_powercmd.c: Add additional comments,
+	notes, and details on IPMI compliance workarounds.
 
 	* ipmipower/: Various minor code cleanup.
 
