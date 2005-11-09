@@ -1,5 +1,5 @@
 /* 
-   ipmi-chassis-cmds.c - IPMI Chassis Commands
+   Ipmi-chassis-cmds.c - IPMI Chassis Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -276,7 +276,7 @@ fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
   if (fiid_obj_field_lookup(tmpl_identify_cmd, "identify_interval"))
     FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, 
                   "identify_interval", identify_interval);
-  if (fiid_obj_field_lookup(tmpl-cmd, "force_identify"))
+  if (fiid_obj_field_lookup(tmpl_identify_cmd, "force_identify"))
     FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd,
                   "force_identify", force_identify_flag);
 
