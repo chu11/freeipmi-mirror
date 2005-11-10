@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-hmac.h,v 1.2 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-hmac.h,v 1.3 2005-11-10 22:26:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,8 +35,8 @@ typedef enum {
   IPMI_HMAC_SHA1 = 0,
   IPMI_HMAC_MD5 = 1
 } ipmi_hmac_type_t;
-#define IPMI_HMAC_TYPE_VALID(t)    ((t) >= IPMI_HMAC_SHA1 && \
-                                   (t) <= IPMI_HMAC_MD5)
+#define IPMI_HMAC_TYPE_VALID(__t)    ((__t) >= IPMI_HMAC_SHA1 && \
+                                      (__t) <= IPMI_HMAC_MD5)
 
 typedef struct __hmac {
   u_int32_t magic;

@@ -62,40 +62,40 @@ extern "C" {
 #define IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND                   0
 #define IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND                      1
 
-#define IPMI_WATCHDOG_LOG_VALID(x) \
-        (((x) == IPMI_WATCHDOG_LOG_ENABLE \
-          || (x) == IPMI_WATCHDOG_LOG_DISABLE) ? 1 : 0)
+#define IPMI_WATCHDOG_LOG_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_LOG_ENABLE \
+          || (__x) == IPMI_WATCHDOG_LOG_DISABLE) ? 1 : 0)
 
-#define IPMI_WATCHDOG_STOP_TIMER_VALID(x) \
-        (((x) == IPMI_WATCHDOG_STOP_TIMER_ENABLE \
-          || (x) == IPMI_WATCHDOG_STOP_TIMER_DISABLE) ? 1 : 0)
+#define IPMI_WATCHDOG_STOP_TIMER_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_STOP_TIMER_ENABLE \
+          || (__x) == IPMI_WATCHDOG_STOP_TIMER_DISABLE) ? 1 : 0)
 
-#define IPMI_WATCHDOG_TIMER_USE_VALID(x) \
-        (((x) == IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2 \
-          || (x) == IPMI_WATCHDOG_TIMER_USE_BIOS_POST \
-          || (x) == IPMI_WATCHDOG_TIMER_USE_OS_LOAD \
-          || (x) == IPMI_WATCHDOG_TIMER_USE_SMS_OS \
-          || (x) == IPMI_WATCHDOG_TIMER_USE_OEM) ? 1 : 0)
+#define IPMI_WATCHDOG_TIMER_USE_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2 \
+          || (__x) == IPMI_WATCHDOG_TIMER_USE_BIOS_POST \
+          || (__x) == IPMI_WATCHDOG_TIMER_USE_OS_LOAD \
+          || (__x) == IPMI_WATCHDOG_TIMER_USE_SMS_OS \
+          || (__x) == IPMI_WATCHDOG_TIMER_USE_OEM) ? 1 : 0)
 
-#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(x) \
-        (((x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE \
-          || (x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI \
-          || (x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI \
-          || (x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT) ? 1 : 0)
+#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE \
+          || (__x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI \
+          || (__x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI \
+          || (__x) == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT) ? 1 : 0)
 
-#define IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(x) \
-        (((x) == IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION \
-          || (x) == IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET \
-          || (x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN \
-          || (x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE) ? 1 : 0)
+#define IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION \
+          || (__x) == IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET \
+          || (__x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN \
+          || (__x) == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE) ? 1 : 0)
 
-#define IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(x) \
-        (((x) == IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND \
-          || (x) == IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
+#define IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND \
+          || (__x) == IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
 
-#define IPMI_WATCHDOG_ARP_RESPONSE_VALID(x) \
-        (((x) == IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND \
-          || (x) == IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND) ? 1 : 0)
+#define IPMI_WATCHDOG_ARP_RESPONSE_VALID(__x) \
+        (((__x) == IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND \
+          || (__x) == IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND) ? 1 : 0)
 
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_reset_watchdog_timer_rs;

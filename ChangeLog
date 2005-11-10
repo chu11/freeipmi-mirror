@@ -17,6 +17,11 @@
 	error output typo.
 
 	* ipmipower/src/ipmipower.h: Fix potential macro bugs.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-interface.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-watchdog.h: Fix potential macro bugs.
 	
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
