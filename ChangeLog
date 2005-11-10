@@ -1,5 +1,8 @@
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmi-privilege.h, ipmipower/src/ipmi-privilege.c:
+	New files.
+
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (main),
 	ipmipower/src/ipmipower_config.c (ipmipower_config_setup,
 	ipmipower_config_cmdline_parse, _cb_privilege, _cb_outputtype),
@@ -15,6 +18,9 @@
 
 	* ipmipower/src/ipmipower_auth.c (ipmipower_ipmi_auth_type): Fix
 	error output typo.
+
+	* ipmipower/src/Makefile.am: Add ipmipower-privilege.h and
+	ipmipower-privilege.c.
 
 	* ipmipower/src/ipmipower.h: Fix potential macro bugs.
 
