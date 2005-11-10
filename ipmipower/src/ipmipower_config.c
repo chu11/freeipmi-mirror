@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.6 2005-01-21 18:15:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.7 2005-11-10 01:10:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,6 +79,7 @@ ipmipower_config_setup(void)
   conf->authtype = AUTH_TYPE_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
+  conf->force_permsg_auth = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -103,6 +104,7 @@ ipmipower_config_setup(void)
   conf->password_set = IPMIPOWER_FALSE;
   conf->authtype_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
+  conf->force_permsg_auth = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -210,9 +212,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:goDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:go:PDIRLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:got:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:go:Pt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -235,6 +237,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"authtype",            1, NULL, 'a'},  
       {"on-if-off",           0, NULL, 'g'},
       {"outputtype",          1, NULL, 'o'},
+      {"force-permsg-auth",   0, NULL, 'P'},
 #ifndef NDEBUG
       {"debug",               0, NULL, 'D'},
       {"ipmidump",            0, NULL, 'I'},
@@ -327,6 +330,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'o':       /* --outputtype */
           conf->outputtype = ipmipower_output_index(optarg);
           conf->outputtype_set = IPMIPOWER_TRUE;
+          break;
+        case 'P':       /* --force-permsg-auth */
+          conf->force_permsg_auth = IPMIPOWER_TRUE;
+          conf->force_permsg_auth_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -532,9 +539,10 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, authtype_flag, 
-    on_if_off_flag, outputtype_flag, timeout_flag, retry_timeout_flag, 
-    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
-    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
+    on_if_off_flag, outputtype_flag, force_permsg_auth_flag, 
+    timeout_flag, retry_timeout_flag, retry_backoff_count_flag, 
+    ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
+    ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -550,6 +558,9 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
        1, 0, &outputtype_flag, NULL, 0},
+      {"force_permsg_auth", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &force_permsg_auth_flag, &(conf->force_permsg_auth), 
+       conf->force_permsg_auth_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

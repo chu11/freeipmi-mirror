@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.11 2005-11-09 22:24:12 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.12 2005-11-10 01:10:28 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -155,6 +155,14 @@ uses newline output.  Hostrange output can be used to shorten output if
 the number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation.
+.TP
+.I "-P, --force-permsg-auth"
+Forces 
+.B ipmipower
+to use IPMI per message authentication regardless of what is
+advertised by the remote machine.  This option has been specifically
+implemented to get around a compliance issue discovered on an IBM
+eServer 325.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -333,9 +341,15 @@ quit
 .TP
 .I "authtype str"
 specify a new authentication type, auto, none, straight_passwd_key, md2, or md5.
+.I "on-if-off [on|off]"
+toggle on-if-off functionality.
 .TP
 .I "outputtype str"
 specify a new output type, none, newline, or hostrange.
+.I "force-permsg-auth [on|off]"
+toggle force-permsg-auth functionality.
+.TP
+.I "force
 .if @WITH_DEBUG@ \{
 .TP
 .I "debug [on|off]"
@@ -464,14 +478,19 @@ under 0.5 s.
 As can be expected, with so many different vendors implementing their
 own IPMI solutions, different vendors may implement their IPMI
 protocols slightly differently.  The following lists the handful of
-compliance issues discovered and the workarounds currently used in .B
-ipmipower. They are listed in the order of implementation.  Therefore,
-earlier implemented workarounds may have solved problems for other
-vendors.
+compliance issues discovered and the workarounds currently used in 
+.B ipmipower. 
+
+When possible, the workarounds have been implemented so they will be
+transparent to the user.  However, some may require command line
+options be set.  The workarounds listed below are listed in the order
+of their implementation.  Therefore, workarounds implemented earlier
+may have solved problems for other vendors.
 
 Note that the following only indicates the hardware that a problem was
 discovered on.  Newer versions of a vendors firmware may fix the
-problems indicated below.
+problems indicated below.  Similar machines from vendors may or may
+not exhibit the same problems.
 
 Intel SR870BN4: BMCs would not respond to retransmissions of a Get
 Session Challenge Request if a previous Get Session Challenge response
@@ -492,6 +511,11 @@ activate session response and close session response packets have
 invalid sequence numbers.  Specific workaround no longer required in
 later revisions of 
 .B ipmipower.
+
+IBM eServer 325: The remote BMC will advertise that Per Message
+Authentication is disabled, but actually require it for the protocol.
+In order to work around this issue, the -P (--force-permsg-auth)
+option must be set.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

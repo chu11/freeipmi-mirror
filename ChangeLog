@@ -1,5 +1,21 @@
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_config.c
+	(ipmipower_config_setup, ipmipower_config_cmdline_parse,
+	ipmipower_config_conffile_parse),
+	ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets),
+	ipmipower/src/ipmipower_prompt.c (_cmd_advanced, _cmd_config):
+	Support new --force-permsg-auth option and equivalent interactive
+	mode and config file options.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
+	Document support for force-permsg-auth.
+
+	* ipmipower/ipmipower.8.in: Add forgotten documentation of
+	on-if-off option in interactive mode.
+	
+2005-11-09  Albert Chu <chu11@llnl.gov>
+
         Merge in various changes from branch al_ipmi_2_0_branch that
         aren't IPMI 2.0 related.
 

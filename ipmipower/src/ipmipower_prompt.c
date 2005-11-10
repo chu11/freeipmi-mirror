@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.6 2005-01-21 18:15:05 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.7 2005-11-10 01:10:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,54 +63,56 @@ static void
 _cmd_help(void) 
 {
   cbuf_printf(ttyout, 
-              "hostnames [str]        - set a new set of hostnames\n"
-              "username [str]         - set a new username (no str for null)\n"
-              "password [str]         - set a new password (no str for null)\n"
-              "on [node]              - turn on all nodes, or listed node\n"
-              "off [node]             - turn off all nodes, or listed node\n"
-              "cycle [node]           - power cycle all nodes, or listed node\n"
-              "reset [node]           - hard reset all nodes, or listed node\n"
-              "stat [node]            - list power of all nodes, or listed node\n"
-              "pulse [node]           - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
-              "soft [node]            - soft shutdown all nodes, or listed nodes\n"
-              "help                   - output this help menu\n"
-              "advanced               - output advanced help menu\n"
-              "network                - output network help menu\n"
-              "version                - output ipmipower version\n"
-              "quit                   - quit program\n");
+              "hostnames [str]           - set a new set of hostnames\n"
+              "username [str]            - set a new username (no str for null)\n"
+              "password [str]            - set a new password (no str for null)\n"
+              "on [node]                 - turn on all nodes, or listed node\n"
+              "off [node]                - turn off all nodes, or listed node\n"
+              "cycle [node]              - power cycle all nodes, or listed node\n"
+              "reset [node]              - hard reset all nodes, or listed node\n"
+              "stat [node]               - list power of all nodes, or listed node\n"
+              "pulse [node]              - send pulse diagnostic interrupt to all nodes, or listed nodes\n"
+              "soft [node]               - soft shutdown all nodes, or listed nodes\n"
+              "help                      - output this help menu\n"
+              "advanced                  - output advanced help menu\n"
+              "network                   - output network help menu\n"
+              "version                   - output ipmipower version\n"
+              "quit                      - quit program\n");
 }
 
 static void 
 _cmd_advanced(void) 
 {
   cbuf_printf(ttyout, 
-              "authtype str            - set a new authentication type\n"
-              "on-if-off [on|off]      - toggle on-if-off functionality\n"
-              "outputtype str          - set a new output type\n");
+              "authtype str               - set a new authentication type\n"
+              "on-if-off [on|off]         - toggle on-if-off functionality\n"
+              "outputtype str             - set a new output type\n"
+              "force-permsg-auth [on|off] - toggle force-permsg-auth functionality\n");
+  
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "debug [on|off]          - toggle debug to stderr\n"
-              "ipmidump [on|off]       - toggle IPMI dump output\n"
-              "rmcpdump [on|off]       - toggle RMCP dump output\n"
-	      "log [on|off]            - toggle logging\n"
-	      "logfile [str]           - set a new logfile (no str for default)\n");
+              "debug [on|off]             - toggle debug to stderr\n"
+              "ipmidump [on|off]          - toggle IPMI dump output\n"
+              "rmcpdump [on|off]          - toggle RMCP dump output\n"
+	      "log [on|off]               - toggle logging\n"
+	      "logfile [str]              - set a new logfile (no str for default)\n");
 #endif /* ifndef NDEBUG */
   cbuf_printf(ttyout,
-              "config                  - output current configuration\n");
+              "config                     - output current configuration\n");
 } 
 
 static void
 _cmd_network(void)
 {
   cbuf_printf(ttyout, 
-              "timeout len             - set a new timeout length\n"
-              "retry-timeout len       - set a new retry timeout length\n"
-              "retry-backoff-count num - set a new retry backoff count\n"
-              "ping-interval len       - set a new ping interval length\n"
-              "ping-timeout len        - set a new ping timeout length\n"
-              "ping-packet-count num   - set a new ping packet count\n"
-              "ping-percent num        - set a new ping percent number\n"
-              "ping-consec-count num   - set a new ping consec count\n");
+              "timeout len                - set a new timeout length\n"
+              "retry-timeout len          - set a new retry timeout length\n"
+              "retry-backoff-count num    - set a new retry backoff count\n"
+              "ping-interval len          - set a new ping interval length\n"
+              "ping-timeout len           - set a new ping timeout length\n"
+              "ping-packet-count num      - set a new ping packet count\n"
+              "ping-percent num           - set a new ping percent number\n"
+              "ping-consec-count num      - set a new ping consec count\n");
 }
 
 static void 
@@ -523,6 +525,8 @@ _cmd_config(void)
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:          %s\n",
               ipmipower_output_string(conf->outputtype));
+  cbuf_printf(ttyout, "Force-Permsg_auth:   %s\n",
+              (conf->force_permsg_auth) ? "enabled" : "disabled");
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:               %s\n", 
               (conf->debug) ? "on" : "off");
@@ -684,6 +688,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)
               _cmd_outputtype(argv);
+            else if (strcmp(argv[0], "force-permsg-auth") == 0)
+              _cmd_set_flag(argv, &conf->force_permsg_auth, "force-permsg-auth");
 #ifndef NDEBUG
             else if (strcmp(argv[0], "debug") == 0) 
 	      {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.12 2005-11-09 22:24:12 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.13 2005-11-10 01:10:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -765,10 +765,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      if (!auth_status_per_message_auth)
-        ip->permsgauth_enabled = IPMIPOWER_TRUE;
+      if (!conf->force_permsg_auth)
+        {
+          if (!auth_status_per_message_auth)
+            ip->permsgauth_enabled = IPMIPOWER_TRUE;
+          else
+            ip->permsgauth_enabled = IPMIPOWER_FALSE;
+        }
       else
-        ip->permsgauth_enabled = IPMIPOWER_FALSE;
+        ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
       _send_packet(ip, SESS_REQ, 0);
     }

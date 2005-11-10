@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.4 2005-03-13 04:19:53 ab Exp $
+\."$Id: ipmipower.conf.5.in,v 1.5 2005-11-10 01:10:28 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,6 +100,9 @@ Specify the default outputtype type to use.
 .B Ipmipower 
 currently supports the following output types: "none", "newline", and
 "hostrange".
+.TP
+.I force-permsg-auth enable|disable
+Specify if force-permsg-auth is enabled or disabled by default.
 .TP
 .I timeout ms
 Specify the timeout in ms.
