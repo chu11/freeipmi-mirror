@@ -28,6 +28,8 @@
 	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-interface.h,
 	libfreeipmi/src/ipmi-msg-support-cmds.h,
 	libfreeipmi/src/ipmi-watchdog.h: Fix potential macro bugs.
+
+	* freeipmi.spec.in: Update with new files.
 	
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
