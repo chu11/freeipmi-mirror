@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.7 2005-11-10 01:10:28 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.8 2005-11-10 22:17:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,6 +51,7 @@
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
+#include "ipmipower_privilege.h"
 #include "ipmipower_wrappers.h"
 
 extern cbuf_t ttyout;
@@ -85,6 +86,7 @@ _cmd_advanced(void)
 {
   cbuf_printf(ttyout, 
               "authtype str               - set a new authentication type\n"
+              "privilege str              - set a new privilege type\n"
               "on-if-off [on|off]         - toggle on-if-off functionality\n"
               "outputtype str             - set a new output type\n"
               "force-permsg-auth [on|off] - toggle force-permsg-auth functionality\n");
@@ -196,6 +198,13 @@ _cmd_power(char **argv, power_cmd_t cmd)
   if (conf->hosts == NULL) 
     {
       cbuf_printf(ttyout, "no hostnames configured\n");
+      return;
+    }
+
+  /* Check for correct privilege type */
+  if (conf->privilege == PRIVILEGE_TYPE_USER && POWER_CMD_REQUIRES_OPERATOR(cmd))
+    {
+      cbuf_printf(ttyout, "power operation requires atleast operator privilege");
       return;
     }
 
@@ -320,6 +329,27 @@ _cmd_authtype(char **argv)
   else
     cbuf_printf(ttyout, "authtype must be specified: %s\n",
                 ipmipower_auth_list());
+}
+
+static void 
+_cmd_privilege(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      privilege_type_t priv = ipmipower_privilege_index(argv[1]);
+      if (priv == PRIVILEGE_TYPE_INVALID)
+        cbuf_printf(ttyout, "%s invalid privilege\n", argv[1]);
+      else 
+        {
+          conf->privilege = priv;
+          cbuf_printf(ttyout, "privilege is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "privilege must be specified: %s\n",
+                ipmipower_privilege_list());
 }
 
 static void 
@@ -520,7 +550,8 @@ _cmd_config(void)
 
   cbuf_printf(ttyout, "Authtype:            %s\n", 
               ipmipower_auth_string(conf->authtype));
-
+  cbuf_printf(ttyout, "Privilege:           %s\n", 
+              ipmipower_privilege_string(conf->privilege));
   cbuf_printf(ttyout, "On-If-Off:           %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:          %s\n",
@@ -684,6 +715,8 @@ ipmipower_prompt_process_cmdline(void)
               quit = 1;
             else if (strcmp(argv[0], "authtype") == 0)
               _cmd_authtype(argv);
+            else if (strcmp(argv[0], "privilege") == 0)
+              _cmd_privilege(argv);
             else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.12 2005-11-10 01:10:28 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.13 2005-11-10 22:17:02 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,10 +31,10 @@ ipmipower \- IPMI power control utility
 .I "[OPTIONS]"
 .SH "DESCRIPTION"
 .B ipmipower
-allows users to remotely power on, off, cycle, hard reset, status
-query, pulse diagnostic interrupt, or initiate a soft-shutdown of the
-OS via ACPI through the IPMI over LAN protocol.  See IPMI over LAN
-below for more information on IPMI.
+allows users to remotely power on, off, cycle, hard reset, get a power
+status query, perform a pulse diagnostic interrupt, or initiate a
+soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
+See IPMI over LAN below for more information on IPMI.
 
 When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
 or --soft) is specified on the command line,
@@ -136,6 +136,17 @@ The currently available authentication types are "auto", "none",
 .B ipmipower
 uses "auto" authentication, which will automatically select the most
 secure authentication mechanism available from the remote machine.
+.TP
+.I "-l, --privilege str"
+Sets the privilege type to use with 
+.B ipmipower.  
+The currently available privilege types are "auto", "user",
+"operator", and "admin".  If not specified,
+.B ipmipower
+uses "auto", which will automatically select the minimal privilege
+required for the power control operation selected.  Atleast the
+"operator" is required for --on, --off, --cycle, --reset, --pulse, or
+--soft.  The "user" privilege is sufficient for --stat.
 .TP
 .I "-g, --on-if-off"
 The IPMI specification does not require the power cycle or hard reset
@@ -341,6 +352,9 @@ quit
 .TP
 .I "authtype str"
 specify a new authentication type, auto, none, straight_passwd_key, md2, or md5.
+.TP
+.I "privilege str"
+specify a new privilege type, auto, user, operator or admin.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP
@@ -522,7 +536,7 @@ Most often, problems with ipmipower involve a misconfiguration of the
 remote machine's BMC.  Double check to make sure the following are
 configured properly in the remote machine's BMC: IP address, MAC
 address, subnet mask, username(s), password(s), allowed authentication
-type(s), atleast OPERATOR privilege level for the user(s), enabled LAN
+type(s), atleast OPERATOR privilege level for one user, enabled LAN
 activity.
 
 When powering on a powered off machine, the client must have a means

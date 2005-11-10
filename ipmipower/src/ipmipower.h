@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.10 2005-11-10 01:10:28 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.11 2005-11-10 22:17:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,8 +142,15 @@ typedef enum { POWER_CMD_NONE             = 0x00,
                POWER_CMD_POWER_STATUS     = 0x05,
                POWER_CMD_PULSE_DIAG_INTR  = 0x06, 
                POWER_CMD_SOFT_SHUTDOWN_OS = 0x07} power_cmd_t;
-#define POWER_CMD_VALID(c)             (c > POWER_CMD_NONE && \
-                                        c <= POWER_CMD_SOFT_SHUTDOWN_OS)
+#define POWER_CMD_VALID(__c)             ((__c) > POWER_CMD_NONE && \
+                                          (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
+
+#define POWER_CMD_REQUIRES_OPERATOR(__c) ((__c) == POWER_CMD_POWER_OFF \
+                                          || (__c) == POWER_CMD_POWER_ON \
+                                          || (__c) == POWER_CMD_POWER_CYCLE \
+                                          || (__c) == POWER_CMD_POWER_RESET \
+                                          || (__c) == POWER_CMD_PULSE_DIAG_INTR \
+                                          || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
@@ -159,12 +166,12 @@ typedef enum { AUTH_REQ = 0x11, AUTH_RES = 0x21,
 #define PACKET_TYPE_REQ_MASK           0x10
 #define PACKET_TYPE_RES_MASK           0x20
 #define PACKET_TYPE_PKT_MASK           0x07
-#define PACKET_TYPE_VALID_REQ(p)       ((p & PACKET_TYPE_REQ_MASK) && \
-                                        (p & PACKET_TYPE_PKT_MASK))
-#define PACKET_TYPE_VALID_RES(p)       ((p & PACKET_TYPE_RES_MASK) && \
-                                        (p & PACKET_TYPE_PKT_MASK))
-#define PACKET_TYPE_VALID_PKT(p)       (PACKET_TYPE_VALID_REQ(p) || \
-                                        PACKET_TYPE_VALID_RES(p))
+#define PACKET_TYPE_VALID_REQ(__p)       (((__p) & PACKET_TYPE_REQ_MASK) && \
+                                          ((__p) & PACKET_TYPE_PKT_MASK))
+#define PACKET_TYPE_VALID_RES(__p)       (((__p) & PACKET_TYPE_RES_MASK) && \
+                                          ((__p) & PACKET_TYPE_PKT_MASK))
+#define PACKET_TYPE_VALID_PKT(__p)       (PACKET_TYPE_VALID_REQ(__p) || \
+                                          PACKET_TYPE_VALID_RES(__p))
 
 /* Protocol States */
 typedef enum { PROTOCOL_STATE_START     = 0x00,
@@ -176,21 +183,21 @@ typedef enum { PROTOCOL_STATE_START     = 0x00,
                PROTOCOL_STATE_CTRL_SENT = 0x06,
                PROTOCOL_STATE_CLOS_SENT = 0x07,
                PROTOCOL_STATE_END       = 0x08 } protocol_state_t;
-#define PROTOCOL_STATE_VALID(s)       (s >= PROTOCOL_STATE_START && \
-                                       s <= PROTOCOL_STATE_END)
+#define PROTOCOL_STATE_VALID(__s)       ((__s) >= PROTOCOL_STATE_START && \
+                                         (__s) <= PROTOCOL_STATE_END)
 
 /* Discovery States */
 typedef enum { STATE_DISCOVERED     = 0x01,
                STATE_UNDISCOVERED   = 0x02,
                STATE_BADCONNECTION  = 0x03} discover_state_t;
-#define DISCOVER_STATE_VALID(s)       (s >= STATE_DISCOVERED && \
-                                       s <= STATE_BADCONNECTION)
+#define DISCOVER_STATE_VALID(__s)       ((__s) >= STATE_DISCOVERED && \
+                                         (__s) <= STATE_BADCONNECTION)
 
 /* Link States */
 typedef enum { LINK_GOOD = 0x01,
                LINK_BAD  = 0x02} link_state_t;
-#define LINK_STATE_VALID(s)           (s >= LINK_GOOD && \
-                                       s <= LINK_BAD)
+#define LINK_STATE_VALID(__s)           ((__s) >= LINK_GOOD && \
+                                         (__s) <= LINK_BAD)
 
 /* Authentication Types */
 typedef enum { AUTH_TYPE_INVALID             = 0x00,
@@ -199,18 +206,29 @@ typedef enum { AUTH_TYPE_INVALID             = 0x00,
                AUTH_TYPE_STRAIGHT_PASSWD_KEY = 0x03,
                AUTH_TYPE_MD2                 = 0x04,
                AUTH_TYPE_MD5                 = 0x05 } auth_type_t;
-#define AUTH_TYPE_VALID(a)            (a >= AUTH_TYPE_NONE && \
-                                       a <= AUTH_TYPE_MD5)
-#define AUTH_TYPE_VALID_OR_AUTO(a)    (a >= AUTH_TYPE_AUTO && \
-				       a <= AUTH_TYPE_MD5)
+#define AUTH_TYPE_VALID(__a)            ((__a) >= AUTH_TYPE_NONE && \
+                                         (__a) <= AUTH_TYPE_MD5)
+#define AUTH_TYPE_VALID_OR_AUTO(__a)    ((__a) >= AUTH_TYPE_AUTO && \
+				         (__a) <= AUTH_TYPE_MD5)
+
+/* Privilege Types */
+typedef enum { PRIVILEGE_TYPE_INVALID   = 0x00,
+	       PRIVILEGE_TYPE_AUTO      = 0x01,
+               PRIVILEGE_TYPE_USER      = 0x02,
+               PRIVILEGE_TYPE_OPERATOR  = 0x03,
+               PRIVILEGE_TYPE_ADMIN     = 0x04 } privilege_type_t;
+#define PRIVILEGE_TYPE_VALID(__p)            ((__p) >= PRIVILEGE_TYPE_USER && \
+                                              (__p) <= PRIVILEGE_TYPE_ADMIN)
+#define PRIVILEGE_TYPE_VALID_OR_AUTO(__p)    ((__p) >= PRIVILEGE_TYPE_AUTO && \
+				              (__p) <= PRIVILEGE_TYPE_ADMIN)
 
 /* Output Types */
 typedef enum { OUTPUT_TYPE_INVALID   = 0,
                OUTPUT_TYPE_NONE      = 1,
                OUTPUT_TYPE_NEWLINE   = 2,
                OUTPUT_TYPE_HOSTRANGE = 3} output_type_t;
-#define OUTPUT_TYPE_VALID(o)          (o >= OUTPUT_TYPE_NONE && \
-                                       o <= OUTPUT_TYPE_HOSTRANGE)
+#define OUTPUT_TYPE_VALID(__o)          ((__o) >= OUTPUT_TYPE_NONE && \
+                                         (__o) <= OUTPUT_TYPE_HOSTRANGE)
 
 /* Msg Types */
 typedef enum { MSG_TYPE_SUCCESS                 =  0,
@@ -223,16 +241,17 @@ typedef enum { MSG_TYPE_SUCCESS                 =  0,
                MSG_TYPE_PRIVILEGE               =  7,
                MSG_TYPE_OPERATION               =  8,
                MSG_TYPE_AUTHTYPE                =  9,
-	       MSG_TYPE_AUTHAUTO                = 10,
-               MSG_TYPE_TIMEDOUT                = 11,
-               MSG_TYPE_NOTDISCOVERED           = 12,
-               MSG_TYPE_BADCONNECTION           = 13,
-               MSG_TYPE_UNKNOWNNODE             = 14,
-               MSG_TYPE_RESOURCES               = 15,
-               MSG_TYPE_BMCBUSY                 = 16,
-               MSG_TYPE_BMCERROR                = 17 } msg_type_t;
-#define MSG_TYPE_VALID(m)             (m >= MSG_TYPE_SUCCESS && \
-                                       m <= MSG_TYPE_BMCERROR)
+	       MSG_TYPE_AUTO                    = 10,
+               MSG_TYPE_GIVEN_PRIVILEGE         = 11,
+               MSG_TYPE_TIMEDOUT                = 12,
+               MSG_TYPE_NOTDISCOVERED           = 13,
+               MSG_TYPE_BADCONNECTION           = 14,
+               MSG_TYPE_UNKNOWNNODE             = 15,
+               MSG_TYPE_RESOURCES               = 16,
+               MSG_TYPE_BMCBUSY                 = 17,
+               MSG_TYPE_BMCERROR                = 18 } msg_type_t;
+#define MSG_TYPE_VALID(__m)             ((__m) >= MSG_TYPE_SUCCESS && \
+                                         (__m) <= MSG_TYPE_BMCERROR)
 #define MSG_TYPE_NUM                  (MSG_TYPE_BMCERROR+1)
 
 
@@ -326,6 +345,7 @@ struct ipmipower_config
   char              configfile[MAXPATHLEN+1];
 
   auth_type_t       authtype;
+  privilege_type_t  privilege;
   ipmipower_bool_t  on_if_off;
   output_type_t     outputtype;
   ipmipower_bool_t  force_permsg_auth;
@@ -351,6 +371,7 @@ struct ipmipower_config
   ipmipower_bool_t  username_set;
   ipmipower_bool_t  password_set;
   ipmipower_bool_t  authtype_set;
+  ipmipower_bool_t  privilege_set;
   ipmipower_bool_t  on_if_off_set;
   ipmipower_bool_t  force_permsg_auth_set;
   ipmipower_bool_t  outputtype_set;

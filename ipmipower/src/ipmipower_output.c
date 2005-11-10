@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.6 2004-11-16 01:28:12 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.7 2005-11-10 22:17:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,7 +55,8 @@ static char *ipmipower_outputs[] =
     "cannot obtain proper privilege level",
     "invalid operation",
     "invalid authtype",
-    "no standardized authtype available",
+    "usable authtype/privilege combination not found",
+    "cannot authenticate at given privilege",
     "timed out",
     "not discovered",
     "bad connection",

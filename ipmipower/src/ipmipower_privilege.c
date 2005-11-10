@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.4 2005-11-10 22:17:02 chu11 Exp $
+ *  $Id: ipmipower_privilege.c,v 1.1 2005-11-10 22:17:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,84 +38,76 @@
 #endif
 #include <assert.h>
 
-#include "ipmipower_auth.h"
+#include "ipmipower_privilege.h"
 #include "ipmipower_wrappers.h"
 
-auth_type_t 
-ipmipower_auth_index(char *str) 
+privilege_type_t 
+ipmipower_privilege_index(char *str) 
 {
   assert(str != NULL);
 
   if (!strcasecmp(str, "auto"))
-    return AUTH_TYPE_AUTO;
-  else if (!strcasecmp(str, "none"))
-    return AUTH_TYPE_NONE;
-  else if (!strcasecmp(str, "straight_passwd_key"))
-    return AUTH_TYPE_STRAIGHT_PASSWD_KEY;
-  else if (!strcasecmp(str, "md2"))
-    return AUTH_TYPE_MD2;
-  else if (!strcasecmp(str, "md5"))
-    return AUTH_TYPE_MD5;
+    return PRIVILEGE_TYPE_AUTO;
+  else if (!strcasecmp(str, "user"))
+    return PRIVILEGE_TYPE_USER;
+  else if (!strcasecmp(str, "operator"))
+    return PRIVILEGE_TYPE_OPERATOR;
+  else if (!strcasecmp(str, "admin"))
+    return PRIVILEGE_TYPE_ADMIN;
   else 
-    return AUTH_TYPE_INVALID;
+    return PRIVILEGE_TYPE_INVALID;
 }
 
 char *
-ipmipower_auth_string(auth_type_t at) 
+ipmipower_privilege_string(privilege_type_t priv) 
 {
-  assert(AUTH_TYPE_VALID_OR_AUTO(at));
+  assert(PRIVILEGE_TYPE_VALID_OR_AUTO(priv));
 
-  switch(at) 
+  switch(priv) 
     {
-    case AUTH_TYPE_AUTO:
+    case PRIVILEGE_TYPE_AUTO:
       return "auto";
       break;
-    case AUTH_TYPE_NONE:
-      return "none";
+    case PRIVILEGE_TYPE_USER:
+      return "user";
       break;
-    case AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      return "straight_passwd_key";
+    case PRIVILEGE_TYPE_OPERATOR:
+      return "operator";
       break;
-    case AUTH_TYPE_MD2:
-      return "md2";
-      break;
-    case AUTH_TYPE_MD5:
-      return "md5";
+    case PRIVILEGE_TYPE_ADMIN:
+      return "admin";
       break;
     default:
-      err_exit("ipmipower_auth_string: Invalid Auth Type: %d\n", at);
+      err_exit("ipmipower_privilege_string: Invalid Privilege Type: %d\n", priv);
     }
   
   return NULL;                  /* NOT_REACHED */
 }
 
 char *
-ipmipower_auth_list(void) 
+ipmipower_privilege_list(void) 
 {
-  return "auto, none, straight_passwd_key, md2, md5";
+  return "auto, user, operator, admin";
 }
 
 u_int8_t
-ipmipower_ipmi_auth_type(auth_type_t at)
+ipmipower_ipmi_privilege_type(privilege_type_t priv)
 {
-  assert(AUTH_TYPE_VALID(at));
+  assert(PRIVILEGE_TYPE_VALID(priv));
 
-  switch(at) 
+  switch(priv) 
     {
-    case AUTH_TYPE_NONE:
-      return IPMI_SESSION_AUTH_TYPE_NONE;
+    case PRIVILEGE_TYPE_USER:
+      return IPMI_PRIV_LEVEL_USER;
       break;
-    case AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      return IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
+    case PRIVILEGE_TYPE_OPERATOR:
+      return IPMI_PRIV_LEVEL_OPERATOR;
       break;
-    case AUTH_TYPE_MD2:
-      return IPMI_SESSION_AUTH_TYPE_MD2;
-      break;
-    case AUTH_TYPE_MD5:
-      return IPMI_SESSION_AUTH_TYPE_MD5;
+    case PRIVILEGE_TYPE_ADMIN:
+      return IPMI_PRIV_LEVEL_ADMIN;
       break;
     default:
-      err_exit("ipmipower_ipmi_auth_type: Invalid Auth Type: %d\n", at);
+      err_exit("ipmipower_ipmi_privilege_type: Invalid Privilege Type: %d\n", priv);
     }
   
   return 0;                  /* NOT_REACHED */

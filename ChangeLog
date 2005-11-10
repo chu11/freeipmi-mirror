@@ -1,3 +1,23 @@
+2005-11-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (main),
+	ipmipower/src/ipmipower_config.c (ipmipower_config_setup,
+	ipmipower_config_cmdline_parse, _cb_privilege, _cb_outputtype),
+	ipmipower/src/ipmipower_output.c (ipmipower_outputs),
+	ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_process_ipmi_packets), ipmipower/src/ipmipower_prompt.c
+	(_cmd_advanced, _cmd_power, _cmd_privilege, _cmd_config): Support
+	new --privilege option and equivalent interactive mode and config
+	file options.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
+	Document support for privilege option.
+
+	* ipmipower/src/ipmipower_auth.c (ipmipower_ipmi_auth_type): Fix
+	error output typo.
+
+	* ipmipower/src/ipmipower.h: Fix potential macro bugs.
+	
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_config.c

@@ -55,7 +55,6 @@ ipmipower:
   * local power off
   * chassis identify
   * rolling windows of power control commands 
-  * privilege option - pick user, operator, admin
 
 ipmiping/rmcpping:
 ------------------
