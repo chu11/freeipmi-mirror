@@ -192,9 +192,9 @@ has a contiguous range of possible values. */
 #define RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER                                0x12
 /* Reserved - all others */
 
-#define RMCPPLUS_STATUS_VALID(status) \
-        (((status) >= RMCPPLUS_STATUS_NO_ERRORS \
-          && (status) <= RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER) ? 1 : 0)
+#define RMCPPLUS_STATUS_VALID(__status) \
+        (((__status) >= RMCPPLUS_STATUS_NO_ERRORS \
+          && (__status) <= RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER) ? 1 : 0)
 
 #if defined (FREEIPMI_LIBRARY)
 #   if defined (ERR_OUT)

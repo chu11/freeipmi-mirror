@@ -68,6 +68,11 @@
 	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
 	
 ------------------------------------------------------------
+2005-11-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-interface.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.h: Fix potential macro bugs.
+	
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-chassis-cmds.h,
