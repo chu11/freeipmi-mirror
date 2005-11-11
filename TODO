@@ -23,38 +23,18 @@ libfreeipmi:
   * ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
     seeking.  Will probably require a "load and create" wrapper
     function of some sort.
-  * Feature to allow atomicity of multiple IPMI commands in a row.
-    May or may not be possible.  Think about it.
   * Auto retries in ipmi_lan_cmd()
   * open_lan_session - modify to use best secure connection available
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
-  * Implement md2/md5/hmac/sha1/etc. with gcrypt
   
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
-  * kcs-raw or something similar in fish
-  * wrapper scripts to do proprietary crap
-  * don't hang if there is no bmc on the system, die/quit appropriately
-
-bmc-watchdog:
--------------
-  * Require Timer use to be SMS/OS?
-  * argp
 
 ipmipower:
 ----------
-  * argp
   * statistical monitoring to determine number of power control failures, dup packets, etc.
-  * chassis identify
-
-ipmiping/rmcpping:
-------------------
-  * argp
-  * Make starting sequence number random to reduce probability of
-    "confused" BMC known issue?
-  * Randomizing port on client can also fix the issue??
 
 General:
 --------
