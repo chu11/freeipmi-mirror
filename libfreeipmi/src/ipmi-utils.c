@@ -28,6 +28,8 @@
    yield 0.
 */
 
+#include <gcrypt.h>
+
 #include "freeipmi.h"
 
 ipmi_chksum_t
@@ -118,11 +120,17 @@ ipmi_is_root ()
 unsigned int
 ipmi_get_random_seed (void)
 {
+#if HAVE_DEVURANDOM || HAVE_DEVRANDOM
   unsigned int seed;
   int fd;
   
+#if HAVE_DEVURANDOM
   if ((fd = open ("/dev/urandom", O_RDONLY)) == -1)
     goto fail_over_seed;
+#else
+  if ((fd = open ("/dev/random", O_RDONLY)) == -1)
+    goto fail_over_seed;
+#endif
   
   if (read (fd, &seed, sizeof (seed)) < sizeof (seed))
     goto fail_over_seed;
@@ -131,7 +139,45 @@ ipmi_get_random_seed (void)
   return (seed);
 
  fail_over_seed:
+#endif
   return ((unsigned int) time (0));
+}
+
+int
+ipmi_get_random(char *buf, unsigned int buflen)
+{
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+  int fd, rv;
+#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
+
+  if (!buf)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (!buflen)
+    return (0);
+  
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+#if HAVE_DEVURANDOM
+  if ((fd = open("/dev/urandom", O_RDONLY)) < 0)
+    goto gcrypt_rand;
+#else  /* !HAVE_DEVURANDOM */
+  if ((fd = open ("/dev/random", O_RDONLY)) < 0)
+    goto gcrypt_rand;
+#endif /* !HAVE_DEVURANDOM */
+
+  if ((rv = read(fd, buf, buflen)) < buflen)
+    goto gcrypt_rand;
+
+  close(fd);
+  return rv;
+#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
+
+ gcrypt_rand:
+  gcry_randomize((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
+  return buflen;
 }
 
 int

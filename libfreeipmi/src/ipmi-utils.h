@@ -58,6 +58,7 @@ int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
 int ipmi_input_timeout (int fd, unsigned int seconds);
 int ipmi_is_root ();
 unsigned int ipmi_get_random_seed (void);
+int ipmi_get_random (char *buf, unsigned int buflen);
 int ipmi_open_free_udp_port (void);
 int ipmi_ioremap (u_int64_t physical_addr, size_t physical_addr_len, void **virtual_addr, void **mapped_addr, size_t *mapped_addr_len);
 int ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len);

@@ -38,6 +38,9 @@
 	* freeipmi.h: Added ipmi-lanplus-sessions.h.  Removed ipmi-hmac.c,
 	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
+	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
+	#define checks for /dev/urandom and /dev/random.
+
 	RMCPPING and IPMIPING
 	
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,
@@ -68,6 +71,17 @@
 	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
 	
 ------------------------------------------------------------
+2005-11-11  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
+	#define checks for /dev/urandom and /dev/random.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_get_random): New function.
+
+	* libfreeipmi/src/ipmi-error.h (RMCPPLUS_STATUS_VALID): Re-work to
+	remove compiler warnings.
+	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-interface.h,
