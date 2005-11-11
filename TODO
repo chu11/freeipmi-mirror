@@ -18,13 +18,6 @@ Al's TODO list
 libfreeipmi:
 ------------
   * IPMI 1.5 Errata - Get Chassis Status 
-  * Consider encapsulating length, ids, types in fiid_obj_t
-    and fiid_template_t down the road.
-  * ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
-    seeking.  Will probably require a "load and create" wrapper
-    function of some sort.
-  * Auto retries in ipmi_lan_cmd()
-  * open_lan_session - modify to use best secure connection available
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   
 fish:
@@ -38,14 +31,10 @@ ipmipower:
 
 General:
 --------
-  * Testsuite for Freeipmi and IPMI conformance test.
-  * New tools?
-    - SEL collector/logger thingie for clusters
-    - tool/script to detect busted BMC/IORiser
-  * config file for KCS port, register spacing, etc.
+  * sel aggregator
 
-Autoconf issues:
-----------------
+Autoconf/Portability
+--------------------
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
   * bittypes.h and inttypes.h for u_int32_t, etc.
