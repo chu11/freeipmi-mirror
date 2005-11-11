@@ -41,6 +41,9 @@
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
 	#define checks for /dev/urandom and /dev/random.
 
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_get_random): New function.
+
 	RMCPPING and IPMIPING
 	
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,
@@ -62,6 +65,11 @@
 	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
 	new -s option and default random initial sequence number.
 
+	IPMIPOWER
+
+	* ipmipower/src/ipmipower_util.c (get_rand): Utilize
+	ipmi_get_random.
+
 	AUTOCONF/AUTOMAKE
 
 	* configure.ac: Add libgcrypt, /dev/urandom, /dev/random checks.
@@ -81,6 +89,9 @@
 
 	* libfreeipmi/src/ipmi-error.h (RMCPPLUS_STATUS_VALID): Re-work to
 	remove compiler warnings.
+
+	* ipmipower/src/ipmipower_util.c (get_rand): Utilize
+	ipmi_get_random.
 	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
