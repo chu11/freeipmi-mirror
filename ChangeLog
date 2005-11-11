@@ -1,3 +1,9 @@
+2005-11-11  Albert Chu <chu11@llnl.gov>
+
+	* fish/src/extensions.c, fish/src/scm-procedures.c: Revert changes
+	made on 11/06/05.  Changes cause many things to break under
+	RHEL3/RHEL4.
+	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmi-privilege.h, ipmipower/src/ipmi-privilege.c:
