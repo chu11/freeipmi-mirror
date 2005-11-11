@@ -392,7 +392,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      dev->io.outofband.password, 
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_update_data (&ctx, 
-			      &(dev->io.outofband.session_id), 
+			      (u_int8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
 	if (ipmi_cmd == IPMI_CMD_ACTIVATE_SESSION)
 	  {
@@ -412,7 +412,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 				  dev->io.outofband.rq.obj_msg_trlr, 
 				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
 	    ipmi_md2_update_data (&ctx, 
-				  &(dev->io.outofband.session_seq_num), 
+				  (u_int8_t *)&(dev->io.outofband.session_seq_num), 
 				  sizeof (dev->io.outofband.session_seq_num));
 	  }
 	ipmi_md2_update_data (&ctx, 
@@ -441,7 +441,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      dev->io.outofband.password, 
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_update_data (&ctx, 
-			      &(dev->io.outofband.session_id), 
+			      (u_int8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
 	if (ipmi_cmd == IPMI_CMD_ACTIVATE_SESSION)
 	  {
@@ -461,7 +461,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 				  dev->io.outofband.rq.obj_msg_trlr, 
 				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
 	    ipmi_md5_update_data (&ctx, 
-				  &(dev->io.outofband.session_seq_num), 
+				  (u_int8_t *)&(dev->io.outofband.session_seq_num), 
 				  sizeof (dev->io.outofband.session_seq_num));
 	  }
 	ipmi_md5_update_data (&ctx, 

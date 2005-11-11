@@ -3,6 +3,9 @@
 	* fish/src/extensions.c, fish/src/scm-procedures.c: Revert changes
 	made on 11/06/05.  Changes cause many things to break under
 	RHEL3/RHEL4.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	compiler warnings.
 	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
