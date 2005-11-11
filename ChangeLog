@@ -77,7 +77,11 @@
 	* libfreeipmi/src/Makefile.am: Added ipmi-lanplus-sessions.h and
 	ipmi-lanplus-sessions.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
 	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
+
+	MISC
 	
+	* freeipmi.spec.in: Add gcrypt dependencies.
+
 ------------------------------------------------------------
 2005-11-11  Albert Chu <chu11@llnl.gov>
 
@@ -92,6 +96,8 @@
 
 	* ipmipower/src/ipmipower_util.c (get_rand): Utilize
 	ipmi_get_random.
+
+	* freeipmi.spec.in: Add gcrypt dependencies.
 	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
