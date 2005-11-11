@@ -28,6 +28,7 @@ Platform Management Interface (IPMI v1.5) specification.
 Summary: Development package for FreeIPMI
 Group: Development/System
 Requires: freeipmi = %{version}-%{release}
+Requires: guile
 %description devel
 Development package for FreeIPMI.  This package includes the FreeIPMI
 header files and static libraries.

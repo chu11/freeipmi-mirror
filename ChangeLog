@@ -6,6 +6,8 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
 	compiler warnings.
+
+	* freeipmi.spec.in: Add guile dependency.
 	
 2005-11-10  Albert Chu <chu11@llnl.gov>
 
