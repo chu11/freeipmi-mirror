@@ -1,3 +1,12 @@
+2005-11-14  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for --delete-range option.
+	
+	* freeipmi/doc/freeipmi.texi: doc for --delete-range option.
+
+	* fish/ipmi-sel.8.in: like wise.
+
 2005-11-11  Albert Chu <chu11@llnl.gov>
 
 	* fish/src/extensions.c, fish/src/scm-procedures.c: Revert changes
