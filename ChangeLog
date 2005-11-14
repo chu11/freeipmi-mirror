@@ -1,3 +1,11 @@
+2005-11-14  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_lan_open_session):
+	Revert some 2005-08-27 changes.  Replace password with
+	auth_code_data and auth_code_data_len parameters for consistency
+	with other function calls.  Fix segfaulting corner case.
+	
 2005-11-14  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>

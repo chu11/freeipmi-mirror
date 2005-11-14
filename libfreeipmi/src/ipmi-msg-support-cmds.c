@@ -606,7 +606,8 @@ ipmi_lan_open_session (int sockfd,
 		       size_t hostaddr_len, 
 		       u_int8_t auth_type, 
 		       char *username, 
-		       char *password, 
+                       u_int8_t *auth_code_data,
+                       u_int32_t auth_code_data_len,
 		       u_int32_t initial_outbound_seq_num, 
 		       u_int8_t priv_level, 
 		       u_int32_t *session_seq_num, 
@@ -616,10 +617,8 @@ ipmi_lan_open_session (int sockfd,
   fiid_obj_t obj_cmd_rs;
   u_int64_t temp_session_id, temp_session_seq_num;
   u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
-  int password_len = strlen (password);
 
-  if ((password_len > IPMI_USER_PASSWORD_MAX_LENGTH) || 
-      (rq_seq == NULL))
+  if (rq_seq == NULL)
     {
       errno = EINVAL;
       return (-1);
@@ -656,7 +655,7 @@ ipmi_lan_open_session (int sockfd,
 
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
-				 auth_type, *session_id, password, password_len,
+				 auth_type, *session_id, auth_code_data, auth_code_data_len,
 				 priv_level, challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN,
 				 initial_outbound_seq_num, *rq_seq, obj_cmd_rs) == -1)
     goto error;
@@ -678,7 +677,7 @@ ipmi_lan_open_session (int sockfd,
   obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
-				       password, password_len, priv_level,
+				       auth_code_data, auth_code_data_len, priv_level,
 				       *rq_seq,  obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
