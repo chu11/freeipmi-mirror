@@ -19,15 +19,13 @@ libfreeipmi:
 ------------
   * IPMI 1.5 Errata - Get Chassis Status 
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
+  * Templates must be encapsulated further
+  * fiid_obj_t must hold additional info
   
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
-
-ipmipower:
-----------
-  * statistical monitoring to determine number of power control failures, dup packets, etc.
 
 General:
 --------
@@ -55,7 +53,6 @@ Later on:
 =========
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
-  * Extra documentation on bmc-config
   * Code auditing
     - Templates/API/etc: Some say "username" some have "user_name".
     - Lots of functions don't check input parameters, i.e. null buffers
