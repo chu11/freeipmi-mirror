@@ -83,6 +83,13 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-11-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c (ipmi_generate_sik,
+	ipmi_generate_k1, ipmi_generate_k2, ipmi_generate_k3,
+	__ipmi_generate_k, __ipmi_init_gcrypt): New functions.
+	
 2005-11-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
