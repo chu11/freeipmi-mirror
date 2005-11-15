@@ -86,9 +86,9 @@
 2005-11-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,
-	libfreeipmi/src/ipmi-lanplus-sessions.c (ipmi_generate_sik,
-	ipmi_generate_k1, ipmi_generate_k2, ipmi_generate_k3,
-	__ipmi_generate_k, __ipmi_init_gcrypt): New functions.
+	libfreeipmi/src/ipmi-lanplus-sessions.c (ipmi_calculate_sik,
+	ipmi_calculate_k1, ipmi_calculate_k2, ipmi_calculate_k3,
+	__ipmi_calculate_k, __ipmi_init_gcrypt): New functions.
 	
 2005-11-11  Albert Chu <chu11@llnl.gov>
 

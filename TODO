@@ -21,6 +21,7 @@ libfreeipmi:
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * Templates must be encapsulated further
   * fiid_obj_t must hold additional info
+  * secure mem-buffers
   
 fish:
 -----

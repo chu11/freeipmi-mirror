@@ -184,20 +184,20 @@ __ipmi_init_gcrypt(void)
 
   if (!gcry_check_version(GCRYPT_VERSION))
     {
-      /* XXX: need a logging mechanism */
+      ipmi_debug("gcry_check_version");
       return (-1);
     }
 
   /* XXX: We copy digests to insecure memory, so not an issue for now */
-  if ((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)))
+  if ((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
     {
-      /* XXX: gcry_strerror(e) */
+      ipmi_debug("gcry_control: %s", gcry_strerror(e));
       return (-1);
     }
 
-  if ((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)))
+  if ((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR)
     {
-      /* XXX: gcry_strerror(e) */
+      ipmi_debug("gcry_control: %s", gcry_strerror(e));
       return (-1);
     }
 
@@ -206,18 +206,18 @@ __ipmi_init_gcrypt(void)
 }
 
 int32_t 
-ipmi_generate_sik(u_int8_t authentication_algorithm,
-                  u_int8_t *key,
-                  u_int32_t key_len,
-                  u_int8_t *remote_console_random_number,
-                  u_int32_t remote_console_random_number_len,
-                  u_int8_t *managed_system_random_number,
-                  u_int32_t managed_system_random_number_len,
-                  u_int8_t requested_privilege_level,
-                  u_int8_t *username,
-                  u_int8_t username_len,
-                  u_int8_t *sik,
-                  u_int32_t sik_len)
+ipmi_calculate_sik(u_int8_t authentication_algorithm,
+                   u_int8_t *key,
+                   u_int32_t key_len,
+                   u_int8_t *remote_console_random_number,
+                   u_int32_t remote_console_random_number_len,
+                   u_int8_t *managed_system_random_number,
+                   u_int32_t managed_system_random_number_len,
+                   u_int8_t requested_privilege_level,
+                   u_int8_t *username,
+                   u_int8_t username_len,
+                   u_int8_t *sik,
+                   u_int32_t sik_len)
 {
   /* key can be NULL, indicating a empty key */
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
@@ -274,25 +274,26 @@ ipmi_generate_sik(u_int8_t authentication_algorithm,
       if (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len)
         {
           /* achu: Oh crap, something is really wrong */
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_get_algo_dlen");
           return (-1);
         }
 
-      if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)))
+      /* XXX in secure memory? */
+      if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
         {
-          /* XXX: gcry_strerror(e) */
+          ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
           return (-1);
         }
       
       if (!h)
         {
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_open: NULL handle return");
           return (-1);
         }
 
-      if ((e = gcry_md_setkey(h, key, key_len)))
+      if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
         {
-          /* XXX: gcry_strerror(e) */
+          ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
           return (-1);
         }
 
@@ -307,7 +308,7 @@ ipmi_generate_sik(u_int8_t authentication_algorithm,
 
       if (!(digestPtr = gcry_md_read(h, gcry_hash_algorithm)))
         {
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_read: NULL data return");
           return (-1);
         }
 
@@ -327,13 +328,13 @@ ipmi_generate_sik(u_int8_t authentication_algorithm,
 }
 
 int32_t
-__ipmi_generate_k(u_int8_t authentication_algorithm,
-                  u_int8_t *sik_key,
-                  u_int32_t sik_key_len,
-                  u_int8_t *k,
-                  u_int32_t k_len,
-                  u_int8_t *constant,
-                  u_int32_t constant_len)
+__ipmi_calculate_k(u_int8_t authentication_algorithm,
+                   u_int8_t *sik_key,
+                   u_int32_t sik_key_len,
+                   u_int8_t *k,
+                   u_int32_t k_len,
+                   u_int8_t *constant,
+                   u_int32_t constant_len)
 {
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !sik_key
@@ -392,33 +393,34 @@ __ipmi_generate_k(u_int8_t authentication_algorithm,
       if (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len)
         {
           /* achu: Oh crap, something is really wrong */
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_get_algo_dlen");
           return (-1);
         }
       
-      if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)))
+      /* XXX in secure memory? */
+      if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
         {
-          /* XXX: gcry_strerror(e) */
+          ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
           return (-1);
         }
       
       if (!h)
         {
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_open: NULL handle return");
           return (-1);
         }
 
-      if ((e = gcry_md_setkey(h, sik_key, sik_key_len)))
+      if ((e = gcry_md_setkey(h, sik_key, sik_key_len)) != GPG_ERR_NO_ERROR)
         {
-          /* XXX: gcry_strerror(e) */
+          ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
           return (-1);
         }
 
       /* XXX: achu, I believe the constant you pass in is the
        * digest_len, atleast according to 13.32, "constants are
        * constructed using a hexadecimal octet value repeated up to
-       * teh HMAC block size in length starting with the constant
-       * 01h", but this spec is k00ky, who knows.
+       * the HMAC block size in length starting with the constant
+       * 01h", So I hope that I'm right.
        */
       gcry_md_write(h, (void *)constant, digest_len);
 
@@ -426,7 +428,7 @@ __ipmi_generate_k(u_int8_t authentication_algorithm,
 
       if (!(digestPtr = gcry_md_read(h, gcry_hash_algorithm)))
         {
-          /* XXX: need a logging mechanism */
+          ipmi_debug("gcry_md_read: NULL data return");
           return (-1);
         }
 
@@ -446,11 +448,11 @@ __ipmi_generate_k(u_int8_t authentication_algorithm,
 }
 
 int32_t
-ipmi_generate_k1(u_int8_t authentication_algorithm,
-                 u_int8_t *sik_key,
-                 u_int32_t sik_key_len,
-                 u_int8_t *k1,
-                 u_int32_t k1_len)
+ipmi_calculate_k1(u_int8_t authentication_algorithm,
+                  u_int8_t *sik_key,
+                  u_int32_t sik_key_len,
+                  u_int8_t *k1,
+                  u_int32_t k1_len)
 
 {
   u_int8_t constant[IPMI_KEY_CONSTANT_LEN] = { 0x01, 0x01, 0x01, 0x01, 0x01, 
@@ -458,49 +460,49 @@ ipmi_generate_k1(u_int8_t authentication_algorithm,
                                                0x01, 0x01, 0x01, 0x01, 0x01, 
                                                0x01, 0x01, 0x01, 0x01, 0x01}; 
   
-  return __ipmi_generate_k(authentication_algorithm,
-                           sik_key,
-                           sik_key_len,
-                           k1,
-                           k1_len,
-                           constant,
-                           IPMI_KEY_CONSTANT_LEN);                          
+  return __ipmi_calculate_k(authentication_algorithm,
+                            sik_key,
+                            sik_key_len,
+                            k1,
+                            k1_len,
+                            constant,
+                            IPMI_KEY_CONSTANT_LEN);                          
 }
 
 int32_t
-ipmi_generate_k2(u_int8_t authentication_algorithm,
-                 u_int8_t *sik_key,
-                 u_int32_t sik_key_len,
-                 u_int8_t *k1,
-                 u_int32_t k1_len)
+ipmi_calculate_k2(u_int8_t authentication_algorithm,
+                  u_int8_t *sik_key,
+                  u_int32_t sik_key_len,
+                  u_int8_t *k1,
+                  u_int32_t k1_len)
 
 {
   u_int8_t constant[IPMI_KEY_CONSTANT_LEN] = { 0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02}; 
-  return __ipmi_generate_k(authentication_algorithm,
-                           sik_key,
-                           sik_key_len,
-                           k1,
-                           k1_len,
-                           constant,
-                           IPMI_KEY_CONSTANT_LEN);  
+  return __ipmi_calculate_k(authentication_algorithm,
+                            sik_key,
+                            sik_key_len,
+                            k1,
+                            k1_len,
+                            constant,
+                            IPMI_KEY_CONSTANT_LEN);  
 }
 
 int32_t
-ipmi_generate_k3(u_int8_t authentication_algorithm,
-                 u_int8_t *sik_key,
-                 u_int32_t sik_key_len,
-                 u_int8_t *k1,
-                 u_int32_t k1_len)
+ipmi_calculate_k3(u_int8_t authentication_algorithm,
+                  u_int8_t *sik_key,
+                  u_int32_t sik_key_len,
+                  u_int8_t *k1,
+                  u_int32_t k1_len)
 
 {
   u_int8_t constant[IPMI_KEY_CONSTANT_LEN] = { 0x03, 0x03, 0x03, 0x03, 0x03, 
                                                0x03, 0x03, 0x03, 0x03, 0x03, 
                                                0x03, 0x03, 0x03, 0x03, 0x03, 
                                                0x03, 0x03, 0x03, 0x03, 0x03}; 
-  return __ipmi_generate_k(authentication_algorithm,
+  return __ipmi_calculate_k(authentication_algorithm,
                            sik_key,
                            sik_key_len,
                            k1,
@@ -618,16 +620,17 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
   return (0);
 }
 
-#if 0
 int8_t
 fill_lanplus_payload(fiid_obj_t obj_cmd,
                      fiid_template_t tmpl_cmd,
+                     u_int8_t authentication_algorithm,
                      u_int8_t confidentiality_algorithm,
-                     u_int8_t *confidentiality_key,
-                     u_int32_t confidentiality_key_len,
+                     u_int8_t *sik,
+                     u_int32_t sik_len,
                      fiid_obj_t obj_payload)
 {
-  if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
       || !obj_cmd
       || !tmpl_cmd
       || obj_payload)
@@ -667,7 +670,47 @@ fill_lanplus_payload(fiid_obj_t obj_cmd,
     }
   else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
     {
-      /* achu: Confidentiality Key for AES_CBS_128 is  */
+      /* achu: Confidentiality Key for AES_CBS_128 is K2 */
+      gcry_md_hd_t h;
+      gcry_error_t e;
+      u_int8_t *digestPtr;
+      u_int8_t gcry_hash_algorithm;
+      u_int32_t digest_len;
+      u_int8_t k2[IPMI_KEY_CONSTANT_LEN];
+      int32_t k2_len;
+      u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
+      int32_t iv_len;
+
+      if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+        digest_len = IPMI_RAKP_HMAC_SHA1_DIGEST_LEN;
+      else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+        digest_len = IPMI_RAKP_HMAC_SHA1_DIGEST_LEN;
+      
+      if ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+           || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+          && (!sik || sik_len < digest_len))
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      if ((k2_len = ipmi_calculate_k2(authentication_algorithm, 
+                                      sik, 
+                                      sik_len, 
+                                      k2, 
+                                      IPMI_KEY_CONSTANT_LEN)) < 0)
+        {
+          ipmi_debug("ipmi_calculate_k2");
+          return (-1);
+        }
+      
+      if (k2_len != digest_len)
+        {
+          ipmi_debug("digest_len incorrect");
+          return (-1);
+        }
+      
+      ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)
     }
   else
     {
@@ -676,9 +719,9 @@ fill_lanplus_payload(fiid_obj_t obj_cmd,
       return (-1);
     }
 
+  /* NOT REACHED */
   return (0);
 }
-#endif /* 0 */
 
 int8_t
 fill_lanplus_open_session (u_int8_t message_tag,
