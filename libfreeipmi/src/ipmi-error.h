@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#define IPMI_ERR_STR_MAX_LEN                 0x0400
+#define IPMI_ERR_STR_MAX_LEN                 0x0800
 
 /* Command Completed Normally. */
 #define IPMI_COMMAND_SUCCESS                 0x00

@@ -1,3 +1,8 @@
+2005-11-15  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(ipmi_debug): New function.
+	
 2005-11-14  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,

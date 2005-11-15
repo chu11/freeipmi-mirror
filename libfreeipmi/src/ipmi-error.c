@@ -334,3 +334,4 @@ ipmi_error (fiid_obj_t obj_cmd, const char *s)
 	   obj_cmd[0], 
 	   errmsg);
 }
+
