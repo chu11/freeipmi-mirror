@@ -393,3 +393,4 @@ mcpplus_status_strerror_r(u_int8_t rmcpplus_status_code,
   SNPRINTF_RETURN ("Unknown rmcp+ or rakp status code %02Xh.", 
                    rmcpplus_status_code);
 }
+

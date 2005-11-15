@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.4 2005-03-13 04:19:53 ab Exp $
+\."$Id: ipmipower.conf.5.in,v 1.4.2.1 2005-11-15 19:28:16 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -80,26 +80,35 @@ hostnames host[1-3] foo1,bar1
 
 At most 64 hostnames or hostname ranges can be separted by whitespace. 
 .TP
-.I username username
+.I username str
 Specify the default username to use.
 .TP
-.I password pw
+.I password str
 Specify the default password to use.
 .TP
-.I authtype authtype
+.I authtype str
 Specify the default authentication type to use.  
 .B Ipmipower 
 currently supports the following authentication types:
 "auto", "none", "straight_passwd_key", "md2", and "md5".
 .TP
+.I privilege str
+Specify the default  type to use.  
+.B Ipmipower 
+currently supports the following privilege types: "auto", "user",
+"operator", and "admin".
+.TP
 .I on-if-off enable|disable
 Specify if on-if-off is enabled or disabled by default.
 .TP
-.I outputtype outputtype
+.I outputtype str
 Specify the default outputtype type to use.  
 .B Ipmipower 
 currently supports the following output types: "none", "newline", and
 "hostrange".
+.TP
+.I force-permsg-auth enable|disable
+Specify if force-permsg-auth is enabled or disabled by default.
 .TP
 .I timeout ms
 Specify the timeout in ms.

@@ -293,6 +293,88 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2005-11-15  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(ipmi_debug): New function.
+	
+2005-11-14  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_lan_open_session):
+	Revert some 2005-08-27 changes.  Replace password with
+	auth_code_data and auth_code_data_len parameters for consistency
+	with other function calls.  Fix segfaulting corner case.
+	
+2005-11-14  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for --delete-range option.
+	
+	* freeipmi/doc/freeipmi.texi: doc for --delete-range option.
+
+	* fish/ipmi-sel.8.in: like wise.
+
+2005-11-11  Albert Chu <chu11@llnl.gov>
+
+	* fish/src/extensions.c, fish/src/scm-procedures.c: Revert changes
+	made on 11/06/05.  Changes cause many things to break under
+	RHEL3/RHEL4.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	compiler warnings.
+
+	* freeipmi.spec.in: Add guile dependency.
+	
+2005-11-10  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmi-privilege.h, ipmipower/src/ipmi-privilege.c:
+	New files.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower.c (main),
+	ipmipower/src/ipmipower_config.c (ipmipower_config_setup,
+	ipmipower_config_cmdline_parse, _cb_privilege, _cb_outputtype),
+	ipmipower/src/ipmipower_output.c (ipmipower_outputs),
+	ipmipower/src/ipmipower_powercmd.c (ipmipower_powercmd_queue,
+	_process_ipmi_packets), ipmipower/src/ipmipower_prompt.c
+	(_cmd_advanced, _cmd_power, _cmd_privilege, _cmd_config): Support
+	new --privilege option and equivalent interactive mode and config
+	file options.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
+	Document support for privilege option.
+
+	* ipmipower/src/ipmipower_auth.c (ipmipower_ipmi_auth_type): Fix
+	error output typo.
+
+	* ipmipower/src/Makefile.am: Add ipmipower-privilege.h and
+	ipmipower-privilege.c.
+
+	* ipmipower/src/ipmipower.h: Fix potential macro bugs.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-interface.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-watchdog.h: Fix potential macro bugs.
+
+	* freeipmi.spec.in: Update with new files.
+	
+2005-11-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_config.c
+	(ipmipower_config_setup, ipmipower_config_cmdline_parse,
+	ipmipower_config_conffile_parse),
+	ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets),
+	ipmipower/src/ipmipower_prompt.c (_cmd_advanced, _cmd_config):
+	Support new --force-permsg-auth option and equivalent interactive
+	mode and config file options.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
+	Document support for force-permsg-auth.
+
+	* ipmipower/ipmipower.8.in: Add forgotten documentation of
+	on-if-off option in interactive mode.
+	
 2005-11-09  Albert Chu <chu11@llnl.gov>
 
         Merge in various changes from branch al_ipmi_2_0_branch that

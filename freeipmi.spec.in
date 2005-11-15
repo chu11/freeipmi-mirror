@@ -29,6 +29,7 @@ Platform Management Interface (IPMI v1.5) specification.
 Summary: Development package for FreeIPMI
 Group: Development/System
 Requires: freeipmi = %{version}-%{release}
+Requires: guile
 %description devel
 Development package for FreeIPMI.  This package includes the FreeIPMI
 header files and static libraries.
@@ -172,8 +173,10 @@ fi
 %config(noreplace) %{_sysconfdir}/fish/fish.scm
 %config(noreplace) %{_sysconfdir}/fish/ipmi-sensors-conf.scm
 %{_sbindir}/fish
+%{_sbindir}/bmc-autoconfig
 %{_sbindir}/bmc-config
 %{_sbindir}/bmc-info
+%{_sbindir}/ipmi-pef
 %{_sbindir}/ipmi-sel
 %{_sbindir}/ipmi-sensors
 %{_mandir}/man8/bmc-config.8*

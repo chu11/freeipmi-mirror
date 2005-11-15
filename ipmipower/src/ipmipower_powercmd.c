@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.7 2005-11-09 22:29:31 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.8 2005-11-15 19:28:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,12 +47,13 @@
 #endif
 
 #include "ipmipower.h"
+#include "ipmipower_auth.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
+#include "ipmipower_privilege.h"
 #include "ipmipower_check.h"
 #include "ipmipower_util.h"
-#include "ipmipower_auth.h"
 #include "ipmipower_wrappers.h"
 
 extern cbuf_t ttyout;
@@ -178,13 +179,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Response is received 
    */
 
-  /* Following are default minimum privileges according to the IPMI
-   * specification 
-   */
-  if (cmd == POWER_CMD_POWER_STATUS)
-    ip->privilege = IPMI_PRIV_LEVEL_USER;
+  if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+    {
+      /* Following are default minimum privileges according to the IPMI
+       * specification 
+       */
+      if (cmd == POWER_CMD_POWER_STATUS)
+        ip->privilege = IPMI_PRIV_LEVEL_USER;
+      else
+        ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+    }
   else
-    ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+    ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
 
   ip->close_timeout = 0;
   ip->ic = ic;
@@ -695,7 +701,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
           else if (auth_type_none)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
-	  else
+	  else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
 	    {
               /* achu: It may not seem possible to get to this point
                * since the check for anonymous_login, null_username,
@@ -708,7 +714,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                 {
                   /* Time to give up */
 #ifndef NDEBUG	      
-                  ipmipower_output(MSG_TYPE_AUTHAUTO, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_AUTO, ip->ic->hostname);
 #else
                   ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
@@ -716,6 +722,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                 }
               else
                 authtype_try_higher_priv = 1;
+            }
+          else
+            {
+#ifndef NDEBUG	      
+                  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);
+#else
+                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+                  return -1;
             }
         }
       else
@@ -765,10 +780,15 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      if (!auth_status_per_message_auth)
-        ip->permsgauth_enabled = IPMIPOWER_TRUE;
+      if (!conf->force_permsg_auth)
+        {
+          if (!auth_status_per_message_auth)
+            ip->permsgauth_enabled = IPMIPOWER_TRUE;
+          else
+            ip->permsgauth_enabled = IPMIPOWER_FALSE;
+        }
       else
-        ip->permsgauth_enabled = IPMIPOWER_FALSE;
+        ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
       _send_packet(ip, SESS_REQ, 0);
     }

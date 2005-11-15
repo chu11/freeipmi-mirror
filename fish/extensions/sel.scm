@@ -89,7 +89,8 @@
 				 (info          (single-char #\i)   (value #f))
 				 (delete        (single-char #\d)   (value #t))
 				 (delete-all    (single-char #\c)   (value #f))
-				 (hex-dump      (single-char #\x)   (value optional))))
+				 (hex-dump      (single-char #\x)   (value optional))
+				 (delete-range  (single-char #\r)   (value #t))))
 		  (options (getopt-long args option-spec))
 		  (poll-interval  (option-ref options 'poll-interval #f))
 		  (sms-io-base    (option-ref options 'sms-io-base   #f))
@@ -105,6 +106,7 @@
 		  (delete-list    (option-ref options 'delete        #f))
 		  (delete-all     (option-ref options 'delete-all    #f))
 		  (hex-dump-name  (option-ref options 'hex-dump      #f))
+		  (delete-range   (option-ref options 'delete-range  #f))
 		  (extra-args     (option-ref options '()            #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? sel-cmd-args))
@@ -269,7 +271,28 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list hex-dump-name))))
-	     sel-cmd-args))
+
+	     ;; --delete-range (14)
+	     (if (and (string? delete-range) (list? sel-cmd-args))
+		 (begin 
+		   (set! delete-range (sentence->tokens (string-replace 
+							delete-range 
+							#\- #\space)))
+		   (if (or (list? (member #f (map number? delete-range)))
+			   (null? delete-range)
+			   (not (= (length delete-range) 2))
+			   (> (car delete-range) (cadr delete-range)))
+		       (begin 
+			 (display "Usage: ipmi-sel [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sel-exit-status 64)
+			 (set! sel-cmd-args #f)))))
+	     (if (list? sel-cmd-args)
+		 (set! sel-cmd-args (append sel-cmd-args 
+					    (list delete-range))))
+	   sel-cmd-args))
 	 (lambda (k args . opts)
 	   (display "sel: error: " (current-error-port))
 	   (display (cadr opts) (current-error-port))
@@ -301,6 +324,9 @@
 
 (define (sel-get-hex-dump-option cmd-args)
   (list-ref cmd-args 13))
+
+(define (sel-get-delete-range-option cmd-args)
+  (list-ref cmd-args 14))
 
 (define (sel-display-entry sel)
   (display (list-ref sel 0)) (display ":")
@@ -382,6 +408,12 @@
         (display "Get SEL Allocation Information Command Supported  ")
         (display (if (list-ref info 10) "Yes\n" "No\n")))))
 
+(define (range->list tuple_list)
+  (cond ((= (car tuple_list) (cadr tuple_list)) (cdr tuple_list))
+        (else (append (list (car tuple_list))
+                      (range->list (list (+ 1 (car tuple_list))
+                                         (cadr tuple_list)))))))
+
 (define (sel-main cmd-args)
   (cond 
    ((sel-get-help-option cmd-args)
@@ -407,6 +439,9 @@
 	     (fi-sel-clear))
 	    ((sel-get-delete-list-option cmd-args)
 	     (sel-delete-record-list (sel-get-delete-list-option cmd-args)))
+            ((sel-get-delete-range-option cmd-args)
+             (sel-delete-record-list (range->list 
+				      (sel-get-delete-range-option cmd-args))))
 	    (else 
 	     (sel-display-all-entry)))
 	   (fi-ipmi-close))))))
@@ -425,7 +460,7 @@
 	"           [--host=IPMIHOST] [--username=USERNAME]\n"
 	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
 	"           [--priv-level=PRIVILEGE-LEVEL] [--info] [--delete=REC-LIST]\n"
-	"           [--delete-all] [--hex-dump=[FILE]] [--help] [--usage]\n"
-	"           [--version]\n"
+	"           [--delete-all] [--delete-range=START-END] [--hex-dump=[FILE]]\n"
+        "           [--help] [--usage] [--version]\n"
 	"\n"
 	"          Used to view and delete SEL entries.")))

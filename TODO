@@ -18,59 +18,21 @@ Al's TODO list
 libfreeipmi:
 ------------
   * IPMI 1.5 Errata - Get Chassis Status 
-  * Consider encapsulating length, ids, types in fiid_obj_t
-    and fiid_template_t down the road.
-  * ipmi_sdr_repo_cache_seek: Add hash/array pointers to avoid
-    seeking.  Will probably require a "load and create" wrapper
-    function of some sort.
-  * Feature to allow atomicity of multiple IPMI commands in a row.
-    May or may not be possible.  Think about it.
-  * Auto retries in ipmi_lan_cmd()
-  * open_lan_session - modify to use best secure connection available
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
-  * Implement md2/md5/hmac/sha1/etc. with gcrypt
+  * Templates must be encapsulated further
+  * fiid_obj_t must hold additional info
   
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
-  * kcs-raw or something similar in fish
-  * wrapper scripts to do proprietary crap
-  * don't hang if there is no bmc on the system, die/quit appropriately
-
-bmc-watchdog:
--------------
-  * Require Timer use to be SMS/OS?
-  * argp
-
-ipmipower:
-----------
-  * argp
-  * Output warning/error/message/something in autoconf if ipmipower
-    cannot be compiled with locked pages??
-  * There are probably port issues with mmap/mlock.
-  * Add readline or similar functionality in interactive mode.
-  * Multithread to increase speed even more?
-  * statistical monitoring to determine number of power control failures, dup packets, etc.
-  * local power off
-  * chassis identify
-  * rolling windows of power control commands 
-  * privilege option - pick user, operator, admin
-
-ipmiping/rmcpping:
-------------------
-  * argp
 
 General:
 --------
-  * Testsuite for Freeipmi and IPMI conformance test.
-  * New tools?
-    - SEL collector/logger thingie for clusters
-    - tool/script to detect busted BMC/IORiser
-  * config file for KCS port, register spacing, etc.
+  * sel aggregator
 
-Autoconf issues:
-----------------
+Autoconf/Portability
+--------------------
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
   * bittypes.h and inttypes.h for u_int32_t, etc.
@@ -91,7 +53,6 @@ Later on:
 =========
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
-  * Extra documentation on bmc-config
   * Code auditing
     - Templates/API/etc: Some say "username" some have "user_name".
     - Lots of functions don't check input parameters, i.e. null buffers

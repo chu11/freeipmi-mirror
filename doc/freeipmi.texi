@@ -3008,6 +3008,9 @@ you view and manage system event log.
 
 @item -d REC-LIST, ---delete=@var{rec-list} @*
       Delete this specific list of @var{rec-list} records in the SEL.
+
+@item -r START-END, ---delete-range=START-END @*
+      Delete all records in the range of START to END in the SEL.
 @end itemize
 
 @node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel

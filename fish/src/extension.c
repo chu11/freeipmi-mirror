@@ -65,9 +65,7 @@ install_new_hooks (void)
      can (define name (make-hook n_args))
    */
 
-  ex_fish_ready_hook = scm_make_hook (0);
-  scm_c_define ("fi-fish-ready-hook", ex_fish_ready_hook); 
-  
+  ex_fish_ready_hook = scm_create_hook ("fi-fish-ready-hook", 0);
   /* hook: fi-fish-ready-hook
      is called from
      file: fish.c
@@ -83,119 +81,134 @@ void
 install_new_procedures (void)
 {
   /* installing general procedures */
-  scm_c_define_gsubr ("fi-load", 1, 0, 0, ex_load);
+  gh_new_procedure ("fi-load", ex_load, 1, 0, 0);
   /* example scheme expression
      (fi-load "discover.scm")
   */
 
-  scm_c_define_gsubr ("fi-register-command!", 1, 0, 0, ex_register_command_x);
+  gh_new_procedure ("fi-register-command!",
+		    ex_register_command_x, 1, 0, 0);
   /* example scheme expression
      (fi-register-command  "ping")
   */
 
-  scm_c_define_gsubr ("fi-unregister-command!", 1, 0, 0, ex_unregister_command_x);
+  gh_new_procedure ("fi-unregister-command!",
+		    ex_unregister_command_x, 1, 0, 0);
   /* example scheme expression
      (fi-unregister-command  "ping")
   */
 
-  scm_c_define_gsubr ("fi-version", 0, 0, 0, ex_version);
+  gh_new_procedure ("fi-version", ex_version, 0, 0, 0);
   /* example scheme expression
      (display (fi-version))
   */
 
-  scm_c_define_gsubr ("fi-toggle!", 1, 0, 0, ex_toggle_x);
+  gh_new_procedure ("fi-toggle!", ex_toggle_x, 1, 0, 0);
   /* example scheme expression
      (fi-bell-toggle! 'bell)
   */
 
-  scm_c_define_gsubr ("fi-get-sysconfig-dir", 0, 0, 0, ex_get_sysconfig_dir);
+  gh_new_procedure ("fi-get-sysconfig-dir",
+		    ex_get_sysconfig_dir, 0, 0, 0);
   /* example scheme expression
      (display (fi-get-sysconfig-dir))
   */
 
-  scm_c_define_gsubr ("fi-set-prompt!", 1, 0, 0, ex_set_prompt_x);
+  gh_new_procedure ("fi-set-prompt!", ex_set_prompt_x, 1, 0, 0);
   /* example scheme expression
      ;; set prompt string
      (fi-set-prompt! "~qp~> ")
   */
 
   /* installing hook related procedures */
-  scm_c_define_gsubr ("fi-hook-return", 0, 0, 0, ex_hook_return);
+  gh_new_procedure ("fi-hook-return", ex_hook_return, 0, 0, 0);
   /* example scheme expression
      (fi-hook-return)
   */
 
-  scm_c_define_gsubr ("fi-exit", 1, 0, 0, ex_exit);
+  gh_new_procedure ("fi-exit", ex_exit, 1, 0, 0);
   /* example scheme expression
      (fi-exit 0)
   */
 
-  scm_c_define_gsubr ("fi-quit", 0, 0, 0, ex_quit);
+  gh_new_procedure ("fi-quit", ex_quit, 0, 0, 0);
   /* example scheme expression
      (fi-quit)
   */
 
-  scm_c_define_gsubr ("fi-set-sms-io-base!", 1, 0, 0, ex_set_sms_io_base);
+  gh_new_procedure ("fi-set-sms-io-base!", ex_set_sms_io_base, 1, 0, 0);
   /* example scheme expression
      (fi-set-sms-io-base! #x0CA2)
   */
 
-  scm_c_define_gsubr ("fi-set-default-driver-poll-interval", 1, 0, 0, ex_set_driver_poll_interval);
+  gh_new_procedure ("fi-set-default-driver-poll-interval", 
+		    ex_set_driver_poll_interval, 1, 0, 0);
   /* example scheme expression
      (fi-set-default-driver-poll-interval 100)
   */
 
-  scm_c_define_gsubr ("fi-ping", 2, 0, 0, ex_ipmi_ping);
+  gh_new_procedure ("fi-ping", ex_ipmi_ping, 2, 0, 0);
   /* example scheme expression
      (fi-ping "ipmi.gnu.org" timeout)
   */
 
-  scm_c_define_gsubr ("fi-command-line", 0, 0, 0, ex_get_script_command_line);
+  gh_new_procedure ("fi-command-line", ex_get_script_command_line, 0, 0, 0);
   /* example scheme expression
      (display (fi-command-line))
   */
   
-  scm_c_define_gsubr ("fi-sensors-get-default-cache-filename", 0, 0, 0, ex_get_default_sdr_repo_cache_filename);
+  gh_new_procedure ("fi-sensors-get-default-cache-filename", 
+		    ex_get_default_sdr_repo_cache_filename, 0, 0, 0);
   /* example scheme expression
      (display (fi-sensors-get-default-cache-filename))
   */
   
-  scm_c_define_gsubr ("fi-sensors-get-group-list", 0, 0, 0, ex_sensors_get_group_list);
+  gh_new_procedure ("fi-sensors-get-group-list", ex_sensors_get_group_list, 0, 0, 0);
   /* example scheme expression
      (display (fi-sensors-get-group-list))
   */
   
-  scm_c_define_gsubr ("fi-sel-get-first-entry", 0, 0, 0, ex_sel_get_first_entry);
+  gh_new_procedure ("fi-sel-get-first-entry", 
+		    ex_sel_get_first_entry, 0, 0, 0);
   /* example scheme expression
      (display (fi-sel-get-first-entry))
   */
   
-  scm_c_define_gsubr ("fi-sel-get-next-entry", 0, 0, 0, ex_sel_get_next_entry);
+  gh_new_procedure ("fi-sel-get-next-entry", 
+		    ex_sel_get_next_entry, 0, 0, 0);
   /* example scheme expression
      (display (fi-sel-get-next-entry))
   */
   
-  scm_c_define_gsubr ("fi-sel-get-first-entry-raw", 0, 0, 0, ex_sel_get_first_entry_raw);
+  gh_new_procedure ("fi-sel-get-first-entry-raw", 
+		    ex_sel_get_first_entry_raw, 0, 0, 0);
   
-  scm_c_define_gsubr ("fi-sel-get-next-entry-raw", 0, 0, 0, ex_sel_get_next_entry_raw);
+  gh_new_procedure ("fi-sel-get-next-entry-raw", 
+		    ex_sel_get_next_entry_raw, 0, 0, 0);
   
-  scm_c_define_gsubr ("fi-sel-get-first-entry-hex", 0, 0, 0, ex_sel_get_first_entry_hex);
+  gh_new_procedure ("fi-sel-get-first-entry-hex", 
+		    ex_sel_get_first_entry_hex, 0, 0, 0);
   
-  scm_c_define_gsubr ("fi-sel-get-next-entry-hex", 0, 0, 0, ex_sel_get_next_entry_hex);
+  gh_new_procedure ("fi-sel-get-next-entry-hex", 
+		    ex_sel_get_next_entry_hex, 0, 0, 0);
   
-  scm_c_define_gsubr ("fi-sel-get-info-binary", 0, 0, 0, ex_sel_get_info_binary);
+  gh_new_procedure ("fi-sel-get-info-binary",
+                    ex_sel_get_info_binary, 0, 0, 0);
 
-  scm_c_define_gsubr ("fi-sel-delete-entry", 1, 0, 0, ex_sel_delete_entry);
+  gh_new_procedure ("fi-sel-delete-entry", 
+		    ex_sel_delete_entry, 1, 0, 0);
   /* example scheme expression
      (display (fi-sel-delete-entry 44))
   */
   
-  scm_c_define_gsubr ("fi-sel-clear", 0, 0, 0, ex_sel_clear);
+  gh_new_procedure ("fi-sel-clear", 
+		    ex_sel_clear, 0, 0, 0);
   /* example scheme expression
      (display (fi-sel-clear))
   */
   
-  scm_c_define_gsubr ("fi-sel-get-clear-status", 0, 0, 0, ex_sel_get_clear_status);
+  gh_new_procedure ("fi-sel-get-clear-status", 
+		    ex_sel_get_clear_status, 0, 0, 0);
   /* example scheme expression
      (display (fi-sel-get-clear-status))
   */
@@ -203,345 +216,353 @@ install_new_procedures (void)
   /***
    *** bmc-conf2 extension functions
    ***/
-  scm_c_define_gsubr ("fi-set-bmc-username", 2, 0, 0, ex_set_bmc_username);
+  gh_new_procedure ("fi-set-bmc-username", ex_set_bmc_username, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID USERNAME)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-enable-user", 2, 0, 0, ex_set_bmc_enable_user);
+  gh_new_procedure ("fi-set-bmc-enable-user", ex_set_bmc_enable_user, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-enable-user USERID BOOLEAN)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-user-password", 2, 0, 0, ex_set_bmc_user_password);
+  gh_new_procedure ("fi-set-bmc-user-password", ex_set_bmc_user_password, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-user-password USERID PASSWORD)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-user-lan-channel-access", 6, 0, 0, ex_set_bmc_user_lan_channel_access);
+  gh_new_procedure ("fi-set-bmc-user-lan-channel-access", ex_set_bmc_user_lan_channel_access, 6, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-user-lan-channel-access USERID ENABLE-IPMI-MSGS ENABLE-LINK-AUTH ENABLE-RESTRICT-TO-CALLBACK PRIVILEGE-LIMIT SESSION-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-user-serial-channel-access", 6, 0, 0, ex_set_bmc_user_serial_channel_access);
+  gh_new_procedure ("fi-set-bmc-user-serial-channel-access", ex_set_bmc_user_serial_channel_access, 6, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-user-serial-channel-access USERID ENABLE-IPMI-MSGS ENABLE-LINK-AUTH ENABLE-RESTRICT-TO-CALLBACK PRIVILEGE-LIMIT SESSION-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-channel-volatile-access", 5, 0, 0, ex_set_bmc_lan_channel_volatile_access);
+  gh_new_procedure ("fi-set-bmc-lan-channel-volatile-access", ex_set_bmc_lan_channel_volatile_access, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-channel-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-channel-non-volatile-access", 5, 0, 0, ex_set_bmc_lan_channel_non_volatile_access);
+  gh_new_procedure ("fi-set-bmc-lan-channel-non-volatile-access", ex_set_bmc_lan_channel_non_volatile_access, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-ip-address-source", 1, 0, 0, ex_set_bmc_lan_conf_ip_addr_source);
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address-source", ex_set_bmc_lan_conf_ip_addr_source, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-ip-address-source IP-ADDRESS-SOURCE)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-ip-address", 1, 0, 0, ex_set_bmc_lan_conf_ip_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address", ex_set_bmc_lan_conf_ip_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-ip-address IP-ADDRESS)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-mac-address", 1, 0, 0, ex_set_bmc_lan_conf_mac_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-mac-address", ex_set_bmc_lan_conf_mac_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-mac-address MAC-ADDRESS)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-subnet-mask", 1, 0, 0, ex_set_bmc_lan_conf_subnet_mask);
+  gh_new_procedure ("fi-set-bmc-lan-conf-subnet-mask", ex_set_bmc_lan_conf_subnet_mask, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-subnet-mask SUBNET-MASK)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-default-gateway-ip-address", 1, 0, 0, ex_set_bmc_lan_conf_default_gw_ip_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-ip-address", ex_set_bmc_lan_conf_default_gw_ip_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-ip-address IP-ADDRESS)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-default-gateway-mac-address", 1, 0, 0, ex_set_bmc_lan_conf_default_gw_mac_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-mac-address", ex_set_bmc_lan_conf_default_gw_mac_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-mac-address MAC-ADDRESS)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-backup-gateway-ip-address", 1, 0, 0, ex_set_bmc_lan_conf_backup_gw_ip_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-ip-address", ex_set_bmc_lan_conf_backup_gw_ip_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-ip-address IP-ADDRESS)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-backup-gateway-mac-address", 1, 0, 0, ex_set_bmc_lan_conf_backup_gw_mac_addr);
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-mac-address", ex_set_bmc_lan_conf_backup_gw_mac_addr, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-mac-address MAC-ADDRESS)
   */
 
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-vlan-id", 2, 0, 0, ex_set_bmc_lan_conf_vlan_id);
+  gh_new_procedure ("fi-set-bmc-lan-conf-vlan-id", ex_set_bmc_lan_conf_vlan_id, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-vlan-id VLAN_ID_FLAG VLAN_ID)
   */
 
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-vlan-priority", 1, 0, 0, ex_set_bmc_lan_conf_vlan_priority);
+  gh_new_procedure ("fi-set-bmc-lan-conf-vlan-priority", ex_set_bmc_lan_conf_vlan_priority, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-vlan-priority VLAN_PRIORITY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-auth-type-callback-enables", 5, 0, 0, ex_set_bmc_lan_conf_auth_type_callback_enables);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-callback-enables", ex_set_bmc_lan_conf_auth_type_callback_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-callback-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-auth-type-user-enables", 5, 0, 0, ex_set_bmc_lan_conf_auth_type_user_enables);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-user-enables", ex_set_bmc_lan_conf_auth_type_user_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-user-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-auth-type-operator-enables", 5, 0, 0, ex_set_bmc_lan_conf_auth_type_operator_enables);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-operator-enables", ex_set_bmc_lan_conf_auth_type_operator_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-operator-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-auth-type-admin-enables", 5, 0, 0, ex_set_bmc_lan_conf_auth_type_admin_enables);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-admin-enables", ex_set_bmc_lan_conf_auth_type_admin_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-admin-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-auth-type-oem-enables", 5, 0, 0, ex_set_bmc_lan_conf_auth_type_oem_enables);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-oem-enables", ex_set_bmc_lan_conf_auth_type_oem_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-oem-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-arp-control", 2, 0, 0, ex_set_bmc_lan_conf_arp_control);
+  gh_new_procedure ("fi-set-bmc-lan-conf-arp-control", ex_set_bmc_lan_conf_arp_control, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-arp-control ENABLE-GRATUITOUS-ARPS ENABLE-ARP-RESPONSE)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-lan-conf-gratuitous-arp", 1, 0, 0, ex_set_bmc_lan_conf_gratuitous_arp);
+  gh_new_procedure ("fi-set-bmc-lan-conf-gratuitous-arp", ex_set_bmc_lan_conf_gratuitous_arp, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-gratuitous-arp ARP-INTERVAL)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-channel-volatile-access", 5, 0, 0, ex_set_bmc_serial_channel_volatile_access);
+  gh_new_procedure ("fi-set-bmc-serial-channel-volatile-access", ex_set_bmc_serial_channel_volatile_access, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-channel-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-channel-non-volatile-access", 5, 0, 0, ex_set_bmc_serial_channel_non_volatile_access);
+  gh_new_procedure ("fi-set-bmc-serial-channel-non-volatile-access", ex_set_bmc_serial_channel_non_volatile_access, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-conf-conn-mode", 4, 0, 0, ex_set_bmc_serial_conf_conn_mode);
+  gh_new_procedure ("fi-set-bmc-serial-conf-conn-mode", ex_set_bmc_serial_conf_conn_mode, 4, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-conf-conn-mode BASIC-MODE PPP-MODE TERMINAL-MODE CONNECT-MODE)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-conf-page-blackout-interval", 1, 0, 0, ex_set_bmc_serial_conf_page_blackout_interval);
+  gh_new_procedure ("fi-set-bmc-serial-conf-page-blackout-interval", ex_set_bmc_serial_conf_page_blackout_interval, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-conf-page-blackout-interval PAGE-BLACKOUT-INTERVAL)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-conf-call-retry-time", 1, 0, 0, ex_set_bmc_serial_conf_call_retry_time);
+  gh_new_procedure ("fi-set-bmc-serial-conf-call-retry-time", ex_set_bmc_serial_conf_call_retry_time, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-conf-call-retry-time CALL-RETRY-TIME)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-serial-conf-ipmi-msg-comm-settings", 3, 0, 0, ex_set_bmc_serial_conf_ipmi_msg_comm_settings);
+  gh_new_procedure ("fi-set-bmc-serial-conf-ipmi-msg-comm-settings", ex_set_bmc_serial_conf_ipmi_msg_comm_settings, 3, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-serial-conf-ipmi-msg-comm-settings DTR-HANGUP FLOW-CONTROL BIT-RATE)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-power-restore-policy", 1, 0, 0, ex_set_bmc_power_restore_policy);
+  gh_new_procedure ("fi-set-bmc-power-restore-policy", ex_set_bmc_power_restore_policy, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-power-restore-policy POWER-RESTORE-POLICY)
   */
   
-  scm_c_define_gsubr ("fi-set-bmc-pef-conf-pef-control", 1, 0, 0, ex_set_bmc_pef_conf_pef_control);
-  scm_c_define_gsubr ("fi-set-bmc-pef-conf-pef-global-action-control", 1, 0, 0, ex_set_bmc_pef_conf_pef_global_action_control);
-  scm_c_define_gsubr ("fi-set-bmc-pef-conf-pef-startup-delay", 1, 0, 0, ex_set_bmc_pef_conf_pef_startup_delay);
-  scm_c_define_gsubr ("fi-set-bmc-pef-conf-pef-alert-startup-delay", 1, 0, 0, ex_set_bmc_pef_conf_pef_alert_startup_delay);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-control", 
+		    ex_set_bmc_pef_conf_pef_control, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-global-action-control", 
+		    ex_set_bmc_pef_conf_pef_global_action_control, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-startup-delay", 
+		    ex_set_bmc_pef_conf_pef_startup_delay, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-alert-startup-delay", 
+		    ex_set_bmc_pef_conf_pef_alert_startup_delay, 1, 0, 0);
   
-  scm_c_define_gsubr ("fi-get-bmc-username", 1, 0, 0, ex_get_bmc_username);
+  gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-user-lan-channel-access", 1, 0, 0, ex_get_bmc_user_lan_channel_access);
+  gh_new_procedure ("fi-get-bmc-user-lan-channel-access", ex_get_bmc_user_lan_channel_access, 1, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-user-lan-channel-access USERID)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-user-serial-channel-access", 1, 0, 0, ex_get_bmc_user_serial_channel_access);
+  gh_new_procedure ("fi-get-bmc-user-serial-channel-access", ex_get_bmc_user_serial_channel_access, 1, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-user-serial-channel-access USERID)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-channel-volatile-access", 0, 0, 0, ex_get_bmc_lan_channel_volatile_access);
+  gh_new_procedure ("fi-get-bmc-lan-channel-volatile-access", ex_get_bmc_lan_channel_volatile_access, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-channel-volatile-access)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-channel-non-volatile-access", 0, 0, 0, ex_get_bmc_lan_channel_non_volatile_access);
+  gh_new_procedure ("fi-get-bmc-lan-channel-non-volatile-access", ex_get_bmc_lan_channel_non_volatile_access, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-channel-non-volatile-access)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-ip-address-source", 0, 0, 0, ex_get_bmc_lan_conf_ip_addr_source);
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address-source", ex_get_bmc_lan_conf_ip_addr_source, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-ip-address-source)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-ip-address", 0, 0, 0, ex_get_bmc_lan_conf_ip_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address", ex_get_bmc_lan_conf_ip_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-ip-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-mac-address", 0, 0, 0, ex_get_bmc_lan_conf_mac_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-mac-address", ex_get_bmc_lan_conf_mac_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-mac-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-subnet-mask", 0, 0, 0, ex_get_bmc_lan_conf_subnet_mask);
+  gh_new_procedure ("fi-get-bmc-lan-conf-subnet-mask", ex_get_bmc_lan_conf_subnet_mask, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-subnet-mask)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-default-gateway-ip-address", 0, 0, 0, ex_get_bmc_lan_conf_default_gw_ip_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-ip-address", ex_get_bmc_lan_conf_default_gw_ip_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-ip-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-default-gateway-mac-address", 0, 0, 0, ex_get_bmc_lan_conf_default_gw_mac_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-mac-address", ex_get_bmc_lan_conf_default_gw_mac_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-mac-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-backup-gateway-ip-address", 0, 0, 0, ex_get_bmc_lan_conf_backup_gw_ip_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-ip-address", ex_get_bmc_lan_conf_backup_gw_ip_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-ip-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-backup-gateway-mac-address", 0, 0, 0, ex_get_bmc_lan_conf_backup_gw_mac_addr);
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-mac-address", ex_get_bmc_lan_conf_backup_gw_mac_addr, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-mac-address)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-vlan-id", 0, 0, 0, ex_get_bmc_lan_conf_vlan_id);
+  gh_new_procedure ("fi-get-bmc-lan-conf-vlan-id", ex_get_bmc_lan_conf_vlan_id, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-vlan-id)
   */
 
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-vlan-priority", 0, 0, 0, ex_get_bmc_lan_conf_vlan_priority);
+  gh_new_procedure ("fi-get-bmc-lan-conf-vlan-priority", ex_get_bmc_lan_conf_vlan_priority, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-vlan-priority)
   */
 
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-auth-type-callback-enables", 0, 0, 0, ex_get_bmc_lan_conf_auth_type_callback_enables);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-callback-enables", ex_get_bmc_lan_conf_auth_type_callback_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-callback-enables)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-auth-type-user-enables", 0, 0, 0, ex_get_bmc_lan_conf_auth_type_user_enables);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-user-enables", ex_get_bmc_lan_conf_auth_type_user_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-user-enables)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-auth-type-operator-enables", 0, 0, 0, ex_get_bmc_lan_conf_auth_type_operator_enables);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-operator-enables", ex_get_bmc_lan_conf_auth_type_operator_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-operator-enables)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-auth-type-admin-enables", 0, 0, 0, ex_get_bmc_lan_conf_auth_type_admin_enables);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-admin-enables", ex_get_bmc_lan_conf_auth_type_admin_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-admin-enables)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-auth-type-oem-enables", 0, 0, 0, ex_get_bmc_lan_conf_auth_type_oem_enables);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-oem-enables", ex_get_bmc_lan_conf_auth_type_oem_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-oem-enables)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-arp-control", 0, 0, 0, ex_get_bmc_lan_conf_arp_control);
+  gh_new_procedure ("fi-get-bmc-lan-conf-arp-control", ex_get_bmc_lan_conf_arp_control, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-arp-control)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-lan-conf-gratuitous-arp", 0, 0, 0, ex_get_bmc_lan_conf_gratuitous_arp);
+  gh_new_procedure ("fi-get-bmc-lan-conf-gratuitous-arp", ex_get_bmc_lan_conf_gratuitous_arp, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-gratuitous-arp)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-channel-volatile-access", 0, 0, 0, ex_get_bmc_serial_channel_volatile_access);
+  gh_new_procedure ("fi-get-bmc-serial-channel-volatile-access", ex_get_bmc_serial_channel_volatile_access, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-channel-volatile-access)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-channel-non-volatile-access", 0, 0, 0, ex_get_bmc_serial_channel_non_volatile_access);
+  gh_new_procedure ("fi-get-bmc-serial-channel-non-volatile-access", ex_get_bmc_serial_channel_non_volatile_access, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-channel-non-volatile-access)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-conf-conn-mode", 0, 0, 0, ex_get_bmc_serial_conf_conn_mode);
+  gh_new_procedure ("fi-get-bmc-serial-conf-conn-mode", ex_get_bmc_serial_conf_conn_mode, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-conf-conn-mode)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-conf-page-blackout-interval", 0, 0, 0, ex_get_bmc_serial_conf_page_blackout_interval);
+  gh_new_procedure ("fi-get-bmc-serial-conf-page-blackout-interval", ex_get_bmc_serial_conf_page_blackout_interval, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-conf-page-blackout-interval)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-conf-call-retry-time", 0, 0, 0, ex_get_bmc_serial_conf_call_retry_time);
+  gh_new_procedure ("fi-get-bmc-serial-conf-call-retry-time", ex_get_bmc_serial_conf_call_retry_time, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-conf-call-retry-time)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-serial-conf-ipmi-msg-comm-settings", 0, 0, 0, ex_get_bmc_serial_conf_ipmi_msg_comm_settings);
+  gh_new_procedure ("fi-get-bmc-serial-conf-ipmi-msg-comm-settings", ex_get_bmc_serial_conf_ipmi_msg_comm_settings, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-serial-conf-ipmi-msg-comm-settings)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-power-restore-policy", 0, 0, 0, ex_get_bmc_power_restore_policy);
+  gh_new_procedure ("fi-get-bmc-power-restore-policy", ex_get_bmc_power_restore_policy, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-power-restore-policy)
   */
   
-  scm_c_define_gsubr ("fi-get-bmc-pef-conf-pef-control", 0, 0, 0, ex_get_bmc_pef_conf_pef_control);
-  scm_c_define_gsubr ("fi-get-bmc-pef-conf-pef-global-action-control", 0, 0, 0, ex_get_bmc_pef_conf_pef_global_action_control);
-  scm_c_define_gsubr ("fi-get-bmc-pef-conf-pef-startup-delay", 0, 0, 0, ex_get_bmc_pef_conf_pef_startup_delay);
-  scm_c_define_gsubr ("fi-get-bmc-pef-conf-pef-alert-startup-delay", 0, 0, 0, ex_get_bmc_pef_conf_pef_alert_startup_delay);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-control", 
+		    ex_get_bmc_pef_conf_pef_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-global-action-control", 
+		    ex_get_bmc_pef_conf_pef_global_action_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-startup-delay", 
+		    ex_get_bmc_pef_conf_pef_startup_delay, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-alert-startup-delay", 
+		    ex_get_bmc_pef_conf_pef_alert_startup_delay, 0, 0, 0);
   
-  scm_c_define_gsubr ("fi-check-bmc-user-password", 2, 0, 0, ex_check_bmc_user_password);
+  gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
   /* 
      syntax in scheme: (fi-check-bmc-user-password USERID PASSWORD)
   */
   
-  scm_c_define_gsubr ("fi-get-sdr-record", 1, 0, 0, ex_get_sdr_record);
+  gh_new_procedure ("fi-get-sdr-record", ex_get_sdr_record, 1, 0, 0);
   /* 
      syntax in scheme: (fi-get-sdr-record)
   */
   
-  scm_c_define_gsubr ("fi-get-sensor-reading", 1, 0, 0, ex_get_sensor_reading);
+  gh_new_procedure ("fi-get-sensor-reading", ex_get_sensor_reading, 1, 0, 0);
   /* 
      syntax in scheme: (fi-get-sensor-reading)
   */
   
-  scm_c_define_gsubr ("fi-get-sdr-cache-filename", 0, 0, 0, ex_get_sdr_cache_filename);
+  gh_new_procedure ("fi-get-sdr-cache-filename", ex_get_sdr_cache_filename, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-sdr-cache-filename)
   */
   
-  scm_c_define_gsubr ("fi-get-sdr-repo-info", 0, 0, 0, ex_get_sdr_repo_info);
+  gh_new_procedure ("fi-get-sdr-repo-info", ex_get_sdr_repo_info, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-sdr-repo-info)
   */
   
-  scm_c_define_gsubr ("fi-ipmi-open", 1, 0, 0, ex_ipmi_open);
-  scm_c_define_gsubr ("fi-ipmi-close", 0, 0, 0, ex_ipmi_close);
-  scm_c_define_gsubr ("fi-cmd-get-dev-id-display", 0, 0, 0, ex_cmd_get_dev_id_display);
-  scm_c_define_gsubr ("fi-get-pef-info", 0, 0, 0, ex_get_pef_info); 
+  gh_new_procedure ("fi-ipmi-open", ex_ipmi_open, 1, 0, 0);
+  gh_new_procedure ("fi-ipmi-close", ex_ipmi_close, 0, 0, 0);
+  gh_new_procedure ("fi-cmd-get-dev-id-display", ex_cmd_get_dev_id_display, 0, 0, 0);
+  gh_new_procedure ("fi-get-pef-info", ex_get_pef_info, 0, 0, 0);
   
 }
 

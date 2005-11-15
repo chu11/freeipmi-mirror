@@ -34,7 +34,7 @@ int8_t fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int3
 int8_t fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd);
 u_int8_t ipmi_kcs_print_state (int fd, u_int8_t state);
 
-
+void ipmi_debug(const char *fmt, ...);
 
 #ifdef __cplusplus
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.6 2005-01-21 18:15:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.6.2.1 2005-11-15 19:28:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,6 +41,7 @@
 #include "ipmipower_config.h"
 #include "ipmipower_auth.h"
 #include "ipmipower_output.h"
+#include "ipmipower_privilege.h"
 #include "ipmipower_util.h"
 #include "ipmipower_wrappers.h"
       
@@ -77,8 +78,10 @@ ipmipower_config_setup(void)
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
   conf->authtype = AUTH_TYPE_AUTO;
+  conf->privilege = PRIVILEGE_TYPE_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
+  conf->force_permsg_auth = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -102,7 +105,9 @@ ipmipower_config_setup(void)
   conf->username_set = IPMIPOWER_FALSE;
   conf->password_set = IPMIPOWER_FALSE;
   conf->authtype_set = IPMIPOWER_FALSE;
+  conf->privilege_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
+  conf->force_permsg_auth = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -125,6 +130,9 @@ _config_common_checks(char *str)
     
   if (conf->authtype == AUTH_TYPE_INVALID) 
     err_exit("%s: invalid authtype", str);
+
+  if (conf->privilege == PRIVILEGE_TYPE_INVALID)
+    err_exit("%s: invalid privilege", str);
 
   if (conf->outputtype == OUTPUT_TYPE_INVALID) 
     err_exit("%s: invalid outputtype", str);
@@ -210,9 +218,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:goDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PDIRLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:got:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:go:Pt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -233,8 +241,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"config",              1, NULL, 'C'}, 
 
       {"authtype",            1, NULL, 'a'},  
+      {"privilege",           1, NULL, 'l'},
       {"on-if-off",           0, NULL, 'g'},
       {"outputtype",          1, NULL, 'o'},
+      {"force-permsg-auth",   0, NULL, 'P'},
 #ifndef NDEBUG
       {"debug",               0, NULL, 'D'},
       {"ipmidump",            0, NULL, 'I'},
@@ -320,6 +330,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->authtype = ipmipower_auth_index(optarg);
           conf->authtype_set = IPMIPOWER_TRUE;
           break;
+        case 'l':       /* --privilege */
+          conf->privilege = ipmipower_privilege_index(optarg);
+          conf->privilege_set = IPMIPOWER_TRUE;
+          break;
         case 'g':       /* --on-if-off */
           conf->on_if_off = !conf->on_if_off;
           conf->on_if_off_set = IPMIPOWER_TRUE;
@@ -327,6 +341,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'o':       /* --outputtype */
           conf->outputtype = ipmipower_output_index(optarg);
           conf->outputtype_set = IPMIPOWER_TRUE;
+          break;
+        case 'P':       /* --force-permsg-auth */
+          conf->force_permsg_auth = IPMIPOWER_TRUE;
+          conf->force_permsg_auth_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -456,6 +474,19 @@ _cb_authtype(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_privilege(conffile_t cf, struct conffile_data *data,
+              char *optionname, int option_type, void *option_ptr, 
+              int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->privilege_set == IPMIPOWER_TRUE)
+      return 0;
+
+  /* Incorrect privilege checked in _config_common_checks */
+  conf->privilege = ipmipower_privilege_index(data->string);
+  return 0;
+}
+
+static int 
 _cb_outputtype(conffile_t cf, struct conffile_data *data,
                char *optionname, int option_type, void *option_ptr, 
                int option_data, void *app_ptr, int app_data) 
@@ -532,9 +563,10 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, authtype_flag, 
-    on_if_off_flag, outputtype_flag, timeout_flag, retry_timeout_flag, 
-    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
-    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
+    privilege_flag, on_if_off_flag, outputtype_flag, force_permsg_auth_flag, 
+    timeout_flag, retry_timeout_flag, retry_backoff_count_flag, 
+    ping_interval_flag, ping_timeout_flag, ping_packet_count_flag, 
+    ping_percent_flag, ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -546,10 +578,15 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &password_flag, NULL, 0},
       {"authtype", CONFFILE_OPTION_STRING, -1, _cb_authtype, 
        1, 0, &authtype_flag, NULL, 0},
+      {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
+       1, 0, &privilege_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
        1, 0, &outputtype_flag, NULL, 0},
+      {"force_permsg_auth", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &force_permsg_auth_flag, &(conf->force_permsg_auth), 
+       conf->force_permsg_auth_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

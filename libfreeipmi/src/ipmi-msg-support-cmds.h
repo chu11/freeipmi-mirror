@@ -105,9 +105,9 @@ extern "C" {
 #define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_CHANNEL_NUMBER_VALID(channel_number) \
-        (((channel_number+1) >= 0x1 \
-          && (channel_number-1) <= 0xE) ? 1 : 0)
+#define IPMI_CHANNEL_NUMBER_VALID(__channel_number) \
+        (((__channel_number+1) >= 0x1 \
+          && (__channel_number-1) <= 0xE) ? 1 : 0)
 
 #define IPMI_PASSWORD_OPERATION_DISABLE_USER     0x0
 #define IPMI_PASSWORD_OPERATION_ENABLE_USER      0x1
@@ -200,7 +200,8 @@ int8_t ipmi_lan_open_session (int sockfd,
 			      size_t hostaddr_len, 
 			      u_int8_t auth_type, 
 			      char *username, 
-			      char *password, 
+                              u_int8_t *auth_code_data,
+                              u_int32_t auth_code_data_len,
 			      u_int32_t initial_outbound_seq_num, 
 			      u_int8_t priv_level, 
 			      u_int32_t *session_seq_num, 

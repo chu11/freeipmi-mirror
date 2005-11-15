@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.10.2.2 2005-11-09 22:29:31 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.10.2.3 2005-11-15 19:28:16 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,10 +31,10 @@ ipmipower \- IPMI power control utility
 .I "[OPTIONS]"
 .SH "DESCRIPTION"
 .B ipmipower
-allows users to remotely power on, off, cycle, hard reset, status
-query, pulse diagnostic interrupt, or initiate a soft-shutdown of the
-OS via ACPI through the IPMI over LAN protocol.  See IPMI over LAN
-below for more information on IPMI.
+allows users to remotely power on, off, cycle, hard reset, get a power
+status query, perform a pulse diagnostic interrupt, or initiate a
+soft-shutdown of the OS via ACPI through the IPMI over LAN protocol.
+See IPMI over LAN below for more information on IPMI.
 
 When a power command (--on, --off, --cycle, --reset, --stat, --pulse,
 or --soft) is specified on the command line,
@@ -137,6 +137,17 @@ The currently available authentication types are "auto", "none",
 uses "auto" authentication, which will automatically select the most
 secure authentication mechanism available from the remote machine.
 .TP
+.I "-l, --privilege str"
+Sets the privilege type to use with 
+.B ipmipower.  
+The currently available privilege types are "auto", "user",
+"operator", and "admin".  If not specified,
+.B ipmipower
+uses "auto", which will automatically select the minimal privilege
+required for the power control operation selected.  Atleast the
+"operator" is required for --on, --off, --cycle, --reset, --pulse, or
+--soft.  The "user" privilege is sufficient for --stat.
+.TP
 .I "-g, --on-if-off"
 The IPMI specification does not require the power cycle or hard reset
 commands to turn on a machine that is currently powered off.  This
@@ -155,6 +166,14 @@ uses newline output.  Hostrange output can be used to shorten output if
 the number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation.
+.TP
+.I "-P, --force-permsg-auth"
+Forces 
+.B ipmipower
+to use IPMI per message authentication regardless of what is
+advertised by the remote machine.  This option has been specifically
+implemented to get around a compliance issue discovered on an IBM
+eServer 325.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -334,8 +353,17 @@ quit
 .I "authtype str"
 specify a new authentication type, auto, none, straight_passwd_key, md2, or md5.
 .TP
+.I "privilege str"
+specify a new privilege type, auto, user, operator or admin.
+.I "on-if-off [on|off]"
+toggle on-if-off functionality.
+.TP
 .I "outputtype str"
 specify a new output type, none, newline, or hostrange.
+.I "force-permsg-auth [on|off]"
+toggle force-permsg-auth functionality.
+.TP
+.I "force
 .if @WITH_DEBUG@ \{
 .TP
 .I "debug [on|off]"
@@ -464,14 +492,19 @@ under 0.5 s.
 As can be expected, with so many different vendors implementing their
 own IPMI solutions, different vendors may implement their IPMI
 protocols slightly differently.  The following lists the handful of
-compliance issues discovered and the workarounds currently used in .B
-ipmipower. They are listed in the order of implementation.  Therefore,
-earlier implemented workarounds may have solved problems for other
-vendors.
+compliance issues discovered and the workarounds currently used in 
+.B ipmipower. 
+
+When possible, the workarounds have been implemented so they will be
+transparent to the user.  However, some may require command line
+options be set.  The workarounds listed below are listed in the order
+of their implementation.  Therefore, workarounds implemented earlier
+may have solved problems for other vendors.
 
 Note that the following only indicates the hardware that a problem was
 discovered on.  Newer versions of a vendors firmware may fix the
-problems indicated below.
+problems indicated below.  Similar machines from vendors may or may
+not exhibit the same problems.
 
 Intel SR870BN4: BMCs would not respond to retransmissions of a Get
 Session Challenge Request if a previous Get Session Challenge response
@@ -493,12 +526,17 @@ invalid sequence numbers.  Specific workaround no longer required in
 later revisions of 
 .B ipmipower.
 
+IBM eServer 325: The remote BMC will advertise that Per Message
+Authentication is disabled, but actually require it for the protocol.
+In order to work around this issue, the -P (--force-permsg-auth)
+option must be set.
+
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
 remote machine's BMC.  Double check to make sure the following are
 configured properly in the remote machine's BMC: IP address, MAC
 address, subnet mask, username(s), password(s), allowed authentication
-type(s), atleast OPERATOR privilege level for the user(s), enabled LAN
+type(s), atleast OPERATOR privilege level for one user, enabled LAN
 activity.
 
 When powering on a powered off machine, the client must have a means

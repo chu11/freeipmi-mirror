@@ -26,11 +26,11 @@
 #define IPMI_POWER_RESTORE_POLICY_RESTORE_POWER                     0x1
 #define IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWER_OFF             0x0
 
-#define IPMI_POWER_RESTORE_POLICY_VALID(policy)                         \
-((policy == IPMI_POWER_RESTORE_POLICY_NO_CHANGE ||                      \
-  policy == IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_MAINS || \
-  policy == IPMI_POWER_RESTORE_POLICY_RESTORE_POWER ||                  \
-  policy == IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWER_OFF) ? 1 : 0)
+#define IPMI_POWER_RESTORE_POLICY_VALID(__policy)                           \
+(((__policy) == IPMI_POWER_RESTORE_POLICY_NO_CHANGE ||                      \
+  (__policy) == IPMI_POWER_RESTORE_POLICY_ALWAYS_POWER_UP_AFTER_AC_MAINS || \
+  (__policy) == IPMI_POWER_RESTORE_POLICY_RESTORE_POWER ||                  \
+  (__policy) == IPMI_POWER_RESTORE_POLICY_ALWAYS_STAY_POWER_OFF) ? 1 : 0)
 
 #ifdef __cplusplus
 extern "C" {

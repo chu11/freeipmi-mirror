@@ -40,6 +40,10 @@ Delete all entries in SEL.
 .PP
 .B # ipmi-sel --info
 .PP
+Delete range of entries 12 to 42.
+.PP
+.B # ipmi-sel --delete-range 12-42
+.PP
 Show SEL version and general information.
 .PP
 .B # ipmi-sel --hex-dump

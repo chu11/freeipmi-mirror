@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.3 2004-12-15 17:03:57 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.3.2.1 2005-11-15 19:28:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,7 +115,7 @@ ipmipower_ipmi_auth_type(auth_type_t at)
       return IPMI_SESSION_AUTH_TYPE_MD5;
       break;
     default:
-      err_exit("ipmipower_ipmi_auth-type: Invalid Auth Type: %d\n", at);
+      err_exit("ipmipower_ipmi_auth_type: Invalid Auth Type: %d\n", at);
     }
   
   return 0;                  /* NOT_REACHED */
