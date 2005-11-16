@@ -587,6 +587,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   u_int8_t *auth_code_field_ptr = NULL;
   u_int8_t *msg_data_ptr = NULL;
   u_int32_t msg_data_count = 0;
+  u_int32_t obj_len;
   ipmi_chksum_t chksum;
 
   if (!(obj_hdr_rmcp && obj_hdr_session && tmpl_hdr_session && 
@@ -622,23 +623,27 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   memset (pkt, 0, pkt_len);
 
   indx = 0;
-  memcpy (pkt, obj_hdr_rmcp, fiid_obj_len_bytes (tmpl_hdr_rmcp));
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
+  obj_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
+  memcpy (pkt, obj_hdr_rmcp, obj_len);
+  indx += obj_len;
 
+  obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type");
   memcpy (pkt + indx, 
           obj_hdr_session + fiid_obj_field_start_bytes (tmpl_hdr_session, "auth_type"), 
-          fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type"));
-  indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type");
+          obj_len);
+  indx += obj_len;
   
+  obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "session_seq_num");
   memcpy (pkt + indx, 
           obj_hdr_session + fiid_obj_field_start_bytes (tmpl_hdr_session, "session_seq_num"), 
-          fiid_obj_field_len_bytes (tmpl_hdr_session, "session_seq_num"));
-  indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "session_seq_num");
+          obj_len);
+  indx += obj_len;
 
+  obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id");
   memcpy (pkt + indx, 
           obj_hdr_session + fiid_obj_field_start_bytes (tmpl_hdr_session, "session_id"), 
-          fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id"));
-  indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id");
+          obj_len);
+  indx += obj_len;
 
   /* auth_code generated last.  Save pointers for later calculate */
   if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
@@ -650,25 +655,29 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       indx += IPMI_SESSION_MAX_AUTH_CODE_LEN;
     }
     
+  obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len");
   memcpy (pkt + indx, 
           obj_hdr_session + fiid_obj_field_start_bytes (tmpl_hdr_session, "ipmi_msg_len"), 
-          fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len"));
-  indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len");
+          obj_len);
+  indx += obj_len;
 
   msg_data_ptr = (pkt + indx);
-  memcpy (pkt + indx, obj_msg_hdr, fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq));
-  indx += fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq);
-  msg_data_count += fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq);
+  obj_len = fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq);
+  memcpy (pkt + indx, obj_msg_hdr, obj_len);
+  indx += obj_len;
+  msg_data_count += obj_len;
 
-  memcpy (pkt + indx, obj_cmd, fiid_obj_len_bytes (tmpl_cmd));
-  indx += fiid_obj_len_bytes (tmpl_cmd);
-  msg_data_count += fiid_obj_len_bytes (tmpl_cmd);
+  obj_len = fiid_obj_len_bytes (tmpl_cmd);
+  memcpy (pkt + indx, obj_cmd, obj_len);
+  indx += obj_len;
+  msg_data_count += obj_len;
 
   chksum = ipmi_chksum (pkt + IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_INDX (auth_type), 
                         IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_LEN (tmpl_cmd));
-  memcpy (pkt + indx, &chksum, fiid_obj_len_bytes (tmpl_lan_msg_trlr));
-  indx += fiid_obj_len_bytes (tmpl_lan_msg_trlr);
-  msg_data_count += fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+  obj_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+  memcpy (pkt + indx, &chksum, obj_len);
+  indx += obj_len;
+  msg_data_count += obj_len;
 
   /* Auth type must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated
@@ -789,7 +798,8 @@ assemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
 			u_int32_t pkt_len)
 {
   u_int32_t index, required_len;
-  
+  u_int32_t obj_len;
+
   if (!(dev && 
 	obj_cmd && 
 	tmpl_cmd && 
@@ -809,31 +819,36 @@ assemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
   memset (pkt, 0, pkt_len);
   
   index = 0;
-  
+
+  obj_len = fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
   memcpy (pkt, 
 	  dev->io.outofband.rq.obj_hdr_rmcp, 
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
-  index += fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
+	  obj_len);
+  index += obj_len;
   
+  obj_len = fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
   memcpy ((pkt + index), 
           dev->io.outofband.rq.obj_hdr_session,
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr)));
-  index += fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+	  obj_len);
+  index += obj_len;
   
+  obj_len = fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
   memcpy ((pkt + index), 
 	  dev->io.outofband.rq.obj_msg_hdr,
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
-  index += fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
+	  obj_len);
+  index += obj_len;
   
+  obj_len = fiid_obj_len_bytes (tmpl_cmd);
   memcpy ((pkt + index), 
 	  obj_cmd,
-	  fiid_obj_len_bytes (tmpl_cmd));
-  index += fiid_obj_len_bytes (tmpl_cmd);
+	  obj_len);
+  index += obj_len;
   
+  obj_len = fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
   memcpy ((pkt + index), 
 	  dev->io.outofband.rq.obj_msg_trlr,
-	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
-  index += fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
+	  obj_len);
+  index += obj_len;
   
   return index;
 }
@@ -866,6 +881,7 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
 {
   u_int8_t auth_type;
   u_int32_t auth_type_offset, indx;
+  u_int32_t obj_len, obj_rmcp_hdr_len;
 
   if (!(pkt && tmpl_hdr_session && tmpl_cmd))
     {
@@ -883,12 +899,13 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
     }
 
   indx = 0;
+  obj_rmcp_hdr_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
   if (obj_hdr_rmcp)
     {
       memcpy (obj_hdr_rmcp, pkt + indx,
-	      FREEIPMI_MIN(pkt_len - indx, fiid_obj_len_bytes (tmpl_hdr_rmcp)));
+	      FREEIPMI_MIN(pkt_len - indx, obj_rmcp_hdr_len));
     }
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
+  indx += obj_rmcp_hdr_len;
 
   if (pkt_len <= indx)
     return 0;
@@ -900,39 +917,37 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
       return 0;
     }
 
-  auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) +
-    fiid_obj_field_start_bytes (tmpl_hdr_session, "auth_type");
+  auth_type_offset = obj_rmcp_hdr_len + fiid_obj_field_start_bytes (tmpl_hdr_session, "auth_type");
   auth_type = pkt[auth_type_offset];
 
   if (obj_hdr_session)
     {
+      obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type");
       memcpy (obj_hdr_session + 
 	      fiid_obj_field_start_bytes (tmpl_hdr_session, "auth_type"), 
 	      pkt + indx, 
-	      FREEIPMI_MIN ((pkt_len - indx), 
-			    fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type")));
-      indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_type");
+	      FREEIPMI_MIN ((pkt_len - indx), obj_len));
+      indx += obj_len;
       
       if (pkt_len <= indx)
         return 0;
 
+      obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "session_seq_num");
       memcpy (obj_hdr_session + 
 	      fiid_obj_field_start_bytes (tmpl_hdr_session, "session_seq_num"), 
 	      pkt + indx, 
-	      FREEIPMI_MIN ((pkt_len - indx), 
-			    fiid_obj_field_len_bytes (tmpl_hdr_session, 
-						      "session_seq_num")));
-      indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "session_seq_num");
+	      FREEIPMI_MIN ((pkt_len - indx), obj_len));
+      indx += obj_len;
 
       if (pkt_len <= indx)
         return 0;
 
+      obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id");
       memcpy (obj_hdr_session + 
 	      fiid_obj_field_start_bytes (tmpl_hdr_session, "session_id"), 
 	      pkt + indx,
-	      FREEIPMI_MIN ((pkt_len - indx), 
-			    fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id")));
-      indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "session_id");
+	      FREEIPMI_MIN ((pkt_len - indx), obj_len));
+      indx += obj_len;
 
       if (pkt_len <= indx)
         return 0;
@@ -941,20 +956,18 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
         {
           if (fiid_obj_field_lookup (tmpl_hdr_session, "auth_code")) 
             {
-	      ERR_EXIT(fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_code") == 
-		       IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_code");
+	      ERR_EXIT(obj_len == IPMI_SESSION_MAX_AUTH_CODE_LEN);
               memcpy (obj_hdr_session + 
 		      fiid_obj_field_start_bytes (tmpl_hdr_session, "auth_code"), 
 		      pkt + indx, 
-		      FREEIPMI_MIN ((pkt_len - indx), 
-				    fiid_obj_field_len_bytes (tmpl_hdr_session,
-							      "auth_code")));
-              indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_code");
+		      FREEIPMI_MIN ((pkt_len - indx), obj_len));
+              indx += obj_len;
             }
 	  else if (fiid_obj_field_lookup (tmpl_hdr_session, "auth_calc_data"))
 	    {
-	      ERR_EXIT(fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_calc_data") >= 
-		       IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_calc_data");
+	      ERR_EXIT(obj_len >= IPMI_SESSION_MAX_AUTH_CODE_LEN);
 
 	      /* Must copy IPMI_SESSION_MAX_AUTH_CODE_LEN,
 	      auth_calc_data may be > IPMI_SESSION_MAX_AUTH_CODE_LEN
@@ -975,11 +988,12 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
             }
         }
       
+      obj_len = fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len");
       memcpy (obj_hdr_session +
 	      fiid_obj_field_start_bytes (tmpl_hdr_session, "ipmi_msg_len"),
 	      pkt + indx,
-	      fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len"));
-      indx += fiid_obj_field_len_bytes (tmpl_hdr_session, "ipmi_msg_len");
+	      obj_len);
+      indx += obj_len;
     }
   else
     {
@@ -994,32 +1008,32 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
   if (pkt_len <= indx)
     return 0;
 
+  obj_len = fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs);
   if (obj_msg_hdr)
     memcpy (obj_msg_hdr,
 	    pkt + indx,
-	    FREEIPMI_MIN((pkt_len - indx),
-			 fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs)));
-  indx += fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs);
+	    FREEIPMI_MIN((pkt_len - indx), obj_len));
+  indx += obj_len;
 
   if (pkt_len <= indx)
     return 0;
 
+  obj_len = fiid_obj_len_bytes (tmpl_cmd);
   if (obj_cmd)
     memcpy (obj_cmd,
 	    pkt + indx,
-	    FREEIPMI_MIN((pkt_len - indx),
-			 fiid_obj_len_bytes (tmpl_cmd)));
-  indx += fiid_obj_len_bytes (tmpl_cmd);
+	    FREEIPMI_MIN((pkt_len - indx), obj_len));
+  indx += obj_len;
 
   if (pkt_len <= indx)
     return 0;
 
+  obj_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
   if (obj_msg_trlr)
     memcpy (obj_msg_trlr,
 	    pkt + indx,
-	    FREEIPMI_MIN((pkt_len - indx),
-			 fiid_obj_len_bytes (tmpl_lan_msg_trlr)));
-  indx += fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+	    FREEIPMI_MIN((pkt_len - indx), obj_len));
+  indx += obj_len;
   
   return 0;
 }

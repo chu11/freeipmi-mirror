@@ -140,7 +140,8 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_
 int8_t
 unassemble_rmcp_pkt (void *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
 {
-  u_int32_t indx = 0;
+  u_int32_t obj_len, indx = 0;
+
   if (!(pkt && tmpl_cmd))
     {
       errno = EINVAL;
@@ -148,16 +149,18 @@ unassemble_rmcp_pkt (void *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd, fii
     }
 
   indx = 0;
+  obj_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
   if (obj_hdr)
-    memcpy (obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_hdr_rmcp)));
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
+    memcpy (obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_len));
+  indx += obj_len;
 
   if (pkt_len <= indx)
     return 0;
 
+  obj_len = fiid_obj_len_bytes (tmpl_cmd);
   if (obj_cmd)
-    memcpy (obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_cmd)));
-  indx += fiid_obj_len_bytes (tmpl_cmd);
+    memcpy (obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_len));
+  indx += obj_len;
  
   return 0;
 }

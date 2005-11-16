@@ -1,3 +1,10 @@
+2005-11-16  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/rmcp.c (unassemble_rmcp_pkt),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
+	assemble_ipmi_lan_pkt2, unassemble_ipmi_lan_pkt): Clean up code to
+	minimize looping through templates.
+	
 2005-11-15  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
