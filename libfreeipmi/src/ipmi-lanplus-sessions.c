@@ -271,12 +271,7 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
       if (__ipmi_init_gcrypt() < 0)
         return (-1);
 
-      if (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len)
-        {
-          /* achu: Oh crap, something is really wrong */
-          ipmi_debug("gcry_md_get_algo_dlen");
-          return (-1);
-        }
+      ERR_EXIT (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len);
 
       /* XXX in secure memory? */
       if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
@@ -390,12 +385,7 @@ __ipmi_calculate_k(u_int8_t authentication_algorithm,
       if (__ipmi_init_gcrypt() < 0)
         return (-1);
 
-      if (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len)
-        {
-          /* achu: Oh crap, something is really wrong */
-          ipmi_debug("gcry_md_get_algo_dlen");
-          return (-1);
-        }
+      ERR_EXIT (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len);
       
       /* XXX in secure memory? */
       if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
@@ -623,14 +613,12 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
 int8_t
 fill_lanplus_payload(fiid_obj_t obj_cmd,
                      fiid_template_t tmpl_cmd,
-                     u_int8_t authentication_algorithm,
                      u_int8_t confidentiality_algorithm,
-                     u_int8_t *sik,
-                     u_int32_t sik_len,
+                     u_int8_t *key,
+                     u_int32_t key_len,
                      fiid_obj_t obj_payload)
 {
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+  if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
       || !obj_cmd
       || !tmpl_cmd
       || obj_payload)
@@ -671,15 +659,17 @@ fill_lanplus_payload(fiid_obj_t obj_cmd,
   else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
     {
       /* achu: Confidentiality Key for AES_CBS_128 is K2 */
-      gcry_md_hd_t h;
+      gcry_cipher_hd_t h;
       gcry_error_t e;
-      u_int8_t *digestPtr;
-      u_int8_t gcry_hash_algorithm;
-      u_int32_t digest_len;
-      u_int8_t k2[IPMI_KEY_CONSTANT_LEN];
-      int32_t k2_len;
       u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
       int32_t iv_len;
+      u_int8_t obj_cmd_cpy[IPMI_MAX_MSG_LEN];
+      u_int32_t obj_cmd_len;
+      u_int8_t pad_len;
+      size_t cipher_keylen, cipher_blklen;
+
+#if 0
+      /* Save for later */
 
       if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
         digest_len = IPMI_RAKP_HMAC_SHA1_DIGEST_LEN;
@@ -688,7 +678,7 @@ fill_lanplus_payload(fiid_obj_t obj_cmd,
       
       if ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
            || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-          && (!sik || sik_len < digest_len))
+          && (!key || key_len < digest_len))
         {
           errno = EINVAL;
           return (-1);
@@ -704,13 +694,138 @@ fill_lanplus_payload(fiid_obj_t obj_cmd,
           return (-1);
         }
       
-      if (k2_len != digest_len)
+      if (k2_len != digest_len || k2_len < IPMI_AES_CBC_128_KEY_LEN)
         {
-          ipmi_debug("digest_len incorrect");
+          ipmi_debug("k2_len bad: %d", k2_len);
           return (-1);
         }
+
+#endif
+
+      if (key_len < IPMI_AES_CBC_128_KEY_LEN)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
+                                     GCRYCTL_GET_KEYLEN,
+                                     NULL,
+                                     &cipher_keylen)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+          return (-1);
+        }
+
+      ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
+
+      if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
+                                     GCRYCTL_GET_BLKLEN,
+                                     NULL,
+                                     &cipher_blklen)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+          return (-1);
+        }
+
+      ERR_EXIT (cipher_blklen != IPMI_AES_CBC_128_BLOCK_LEN);
+     
+      if ((iv_len = ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)) < 0)
+        {
+          ipmi_debug("ipmi_get_random: %s", strerror(errno));
+          return (-1);
+        }
+
+      if (iv_len != IPMI_AES_CBC_128_IV_LEN)
+        {
+          ipmi_debug("ipmi_get_random: Invalid bytes returned: %d", iv_len);
+          return (-1);
+        }
+
+      if ((e = gcry_cipher_open(&h, 
+                                GCRY_CIPHER_AES,
+                                GCRY_CIPHER_MODE_CBC,
+                                0) != GPG_ERR_NO_ERROR))
+        {
+          ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
+          return (-1);
+        }
+
+      if ((e = gcry_cipher_setkey(h, 
+                                  (void *)key, 
+                                  IPMI_AES_CBC_128_KEY_LEN)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
+          return (-1);
+        }
+
+      if ((e = gcry_cipher_setiv(h, (void *)iv, IPMI_AES_CBC_128_IV_LEN)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
+          return (-1);
+        }
+  
+      ERR_EXIT ((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) > IPMI_MAX_MSG_LEN);
+      memcpy(obj_cmd_cpy, obj_cmd, obj_cmd_len);
+
+      /* Pad the data appropriately */
+
+      pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((obj_cmd_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
       
-      ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)
+      ERR_EXIT ((obj_cmd_len + pad_len + 1) > IPMI_MAX_MSG_LEN);
+
+      if (pad_len)
+        {
+          int i;
+          for (i = 0; i < pad_len; i++)
+            obj_cmd_cpy[obj_cmd_len + i] = i + 1;
+          obj_cmd_cpy[obj_cmd_len + pad_len] = pad_len;
+        }
+
+      if ((e = gcry_cipher_encrypt(h, 
+                                   (void *)obj_cmd_cpy,
+                                   obj_cmd_len + pad_len + 1,
+                                   NULL,
+                                   0)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
+          return (-1);
+        }
+                                  
+      gcry_cipher_close(h);
+
+      FIID_OBJ_SET_DATA (obj_payload,
+                         tmpl_lanplus_payload,
+                         "confidentiality_header",
+                         iv,
+                         IPMI_AES_CBC_128_IV_LEN);
+      
+      FIID_OBJ_SET (obj_payload, 
+                    tmpl_lanplus_payload, 
+                    "confidentiality_header_len",
+                    IPMI_AES_CBC_128_IV_LEN);
+      
+      FIID_OBJ_SET_DATA (obj_payload,
+                         tmpl_lanplus_payload,
+                         "payload_data",
+                         obj_cmd_cpy,
+                         obj_cmd_len);
+      
+      FIID_OBJ_SET (obj_payload,
+                    tmpl_lanplus_payload,
+                    "payload_data_len",
+                    obj_cmd_len);
+
+      FIID_OBJ_SET_DATA (obj_payload,
+                         tmpl_lanplus_payload,
+                         "confidentiality_trailer",
+                         obj_cmd_cpy + obj_cmd_len,
+                         pad_len + 1);
+      
+      FIID_OBJ_SET (obj_payload, 
+                    tmpl_lanplus_payload, 
+                    "confidentiality_trailer_len",
+                    pad_len + 1);
     }
   else
     {
