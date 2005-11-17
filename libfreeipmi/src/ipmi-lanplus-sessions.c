@@ -1454,19 +1454,21 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                   return (-1);
                 }
 
-              if (integrity_key_len < digest_len)
+              if (gcry_flags & GCRY_MD_FLAG_HMAC)
                 {
-                  errno = EINVAL;
-                  return (-1);
+                  if (integrity_key_len < digest_len)
+                    {
+                      errno = EINVAL;
+                      return (-1);
+                    }
+
+                  if ((e = gcry_md_setkey(h, integrity_key, digest_len)) != GPG_ERR_NO_ERROR)
+                    {
+                      ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
+                      return (-1);
+                    }
                 }
 
-              if ((e = gcry_md_setkey(h, integrity_key, digest_len)) != GPG_ERR_NO_ERROR)
-                {
-                  ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
-                  return (-1);
-                }
-              
-              /* XXX what if there is no password?? */
               FIID_OBJ_GET (obj_lanplus_trlr_session,
                             tmpl_trlr_session,
                             "auth_calc_len",
@@ -1497,7 +1499,6 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
               msg_len += digest_len;
              
               gcry_md_close(h);
-
             }
         }
     }
