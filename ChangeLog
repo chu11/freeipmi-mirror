@@ -1,3 +1,7 @@
+2005-11-17  Albert Chu  <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.c (main): Fix compiler warning.
+	
 2005-11-17  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>

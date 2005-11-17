@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.6 2005-11-10 22:17:02 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.7 2005-11-17 23:36:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -458,10 +458,7 @@ main(int argc, char *argv[])
       if (conf->privilege_set
           && conf->privilege == PRIVILEGE_TYPE_USER 
           && POWER_CMD_REQUIRES_OPERATOR(conf->powercmd))
-          {
-            err_exit("power operation requires atleast operator privilege");
-            return;
-          }
+        err_exit("power operation requires atleast operator privilege");
 
       for (i = 0; i <  conf->hosts_count; i++) 
         {
