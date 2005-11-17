@@ -1,3 +1,12 @@
+2005-11-17  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for --delete-event-id option. Closing 
+	
+	* freeipmi/doc/freeipmi.texi: doc for --delete-event-id option.
+
+	* fish/ipmi-sel.8.in: like wise.
+
 2005-11-16  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/rmcp.c (unassemble_rmcp_pkt),

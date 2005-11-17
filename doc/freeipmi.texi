@@ -3011,6 +3011,9 @@ you view and manage system event log.
 
 @item -r START-END, ---delete-range=START-END @*
       Delete all records in the range of START to END in the SEL.
+
+@item ---delete-event-id=ID @*
+      Delete all records which have the event as @var{ID}.
 @end itemize
 
 @node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel

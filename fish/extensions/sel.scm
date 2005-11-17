@@ -91,6 +91,7 @@
 				 (delete-all    (single-char #\c)   (value #f))
 				 (hex-dump      (single-char #\x)   (value optional))
 				 (delete-range  (single-char #\r)   (value #t))))
+				 ;;(delete-event-id (single-char #\e) (value #t))))
 		  (options (getopt-long args option-spec))
 		  (poll-interval  (option-ref options 'poll-interval #f))
 		  (sms-io-base    (option-ref options 'sms-io-base   #f))
@@ -107,6 +108,7 @@
 		  (delete-all     (option-ref options 'delete-all    #f))
 		  (hex-dump-name  (option-ref options 'hex-dump      #f))
 		  (delete-range   (option-ref options 'delete-range  #f))
+		  (delete-event-id (option-ref options 'delete-event-id #f))
 		  (extra-args     (option-ref options '()            #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? sel-cmd-args))
@@ -272,7 +274,7 @@
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list hex-dump-name))))
 
-	     ;; --delete-range (14)
+	     ;; --delete-range (14) SEL specific
 	     (if (and (string? delete-range) (list? sel-cmd-args))
 		 (begin 
 		   (set! delete-range (sentence->tokens (string-replace 
@@ -292,6 +294,26 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-range))))
+
+	     ; --delete-event-id ID (15) SEL specific
+	     (if (and (string? delete-event-id)
+		      (list? sel-cmd-args)
+		      (not (string->number delete-event-id)))
+		 (begin
+		   (display "Usage: ipmi-sel [OPTION...] \n"
+			    (current-error-port))
+		   (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+			    (current-error-port))
+		   (set! sel-exit-status 64)
+		   (set! sel-cmd-args #f)))
+	     (if (list? sel-cmd-args)
+		 (begin
+		   (and (string? delete-event-id)
+			(set! delete-event-id (string->number
+					       delete-event-id)))
+		   (set! sel-cmd-args (append sel-cmd-args
+					    (list delete-event-id)))))
+
 	   sel-cmd-args))
 	 (lambda (k args . opts)
 	   (display "sel: error: " (current-error-port))
@@ -328,6 +350,9 @@
 (define (sel-get-delete-range-option cmd-args)
   (list-ref cmd-args 14))
 
+(define (sel-get-delete-event-id-option cmd-args)
+  (list-ref cmd-args 15))
+
 (define (sel-display-entry sel)
   (display (list-ref sel 0)) (display ":")
   (display (list-ref sel 1)) (display ":")
@@ -358,6 +383,19 @@
 		(sel-display-entry (fi-sel-get-next-entry)))))))
     (sel-display-entry (fi-sel-get-first-entry))))
 
+(define (sel-get-record-list)
+  (letrec
+      ((remaining-records (lambda ()
+			    (let ((entry (fi-sel-get-next-entry-raw)))
+			      (cond ((null? entry) '())
+				    (else (append (list entry)
+						  (remaining-records))))))))
+    (let ((first-entry (fi-sel-get-first-entry-raw)))
+      (append (list (if (null? first-entry) '() first-entry))
+	  (if (null? first-entry) '() (remaining-records))))))
+
+(define (sel-record-foreach call-me)
+  (map call-me (sel-get-record-list)))
 
 (define (sel-delete-record-list delete-list)
   (if (not (null? delete-list))
@@ -442,6 +480,15 @@
             ((sel-get-delete-range-option cmd-args)
              (sel-delete-record-list (range->list 
 				      (sel-get-delete-range-option cmd-args))))
+	    ((sel-get-delete-event-id-option cmd-args)
+	     (sel-record-foreach (lambda (a-sel)
+				   (and (= (length a-sel) 16)
+					(= (list-ref a-sel 11) 
+					   (sel-get-delete-event-id-option 
+					    cmd-args))
+					(fi-sel-delete-entry 
+					 (+ (list-ref a-sel 0)
+					    (* 256 (list-ref a-sel 1))))))))
 	    (else 
 	     (sel-display-all-entry)))
 	   (fi-ipmi-close))))))
