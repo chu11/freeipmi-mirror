@@ -152,8 +152,12 @@
 #define IPMI_INTEGRITY_PAD_MULTIPLE                       4
 #define IPMI_INTEGRITY_PAD_DATA                           0xFF
 
-#define IPMI_MAX_MSG_LEN                                  65536
+#define IPMI_MAX_PAYLOAD_LEN                              65536
 /* achu: b/c ipmi_msg_len is 2 bytes */
+
+#define IPMI_MAX_K_UID_LEN                                20
+#define IPMI_MAX_K_G_LEN                                  20
+#define IPMI_MAX_SIK_KEY_LEN                              20
  
 #ifdef __cplusplus
 extern "C" {

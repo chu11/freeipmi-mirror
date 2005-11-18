@@ -183,19 +183,19 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
     {0,   ""}
   };
 
-static int __gcrypt_initialized = 0;
+static int _gcrypt_initialized = 0;
 
 /* 
  * XXX: Check for thread issues in general later on, gcrypt maybe needs
  * some stuff done.
  *
  */
-int8_t
-__ipmi_init_gcrypt(void)
+static int8_t
+_ipmi_init_gcrypt(void)
 {
   gcry_error_t e;
 
-  if (__gcrypt_initialized)
+  if (_gcrypt_initialized)
     return (0);
 
   if (!gcry_check_version(GCRYPT_VERSION))
@@ -217,7 +217,7 @@ __ipmi_init_gcrypt(void)
       return (-1);
     }
 
-  __gcrypt_initialized++;
+  _gcrypt_initialized++;
   return (0);
 }
 
@@ -256,6 +256,7 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
       /* XXX: achu: Ummm, I don't think there is a SIK?? I'm confused */
+      memset(sik, '\0', sik_len);
       return (0);
     }
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -284,12 +285,11 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
           return (-1);
         }
 
-      if (__ipmi_init_gcrypt() < 0)
+      if (_ipmi_init_gcrypt() < 0)
         return (-1);
 
       ERR_EXIT (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len);
 
-      /* XXX in secure memory? */
       if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
         {
           ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
@@ -302,6 +302,7 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
           return (-1);
         }
 
+      key_len = (key_len > IPMI_MAX_SIK_KEY_LEN) ? IPMI_MAX_SIK_KEY_LEN : key_len;
       if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
         {
           ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
@@ -338,14 +339,172 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
   return (0);
 }
 
-int32_t
-__ipmi_calculate_k(u_int8_t authentication_algorithm,
-                   u_int8_t *sik_key,
-                   u_int32_t sik_key_len,
-                   u_int8_t *k,
-                   u_int32_t k_len,
-                   u_int8_t *constant,
-                   u_int32_t constant_len)
+static int32_t
+_calculate_k_rakp_none(u_int8_t *k,
+                  u_int32_t k_len,
+                  u_int8_t *constant,
+                  u_int32_t constant_len)
+{
+  if (!k
+      || !k_len
+      || !constant
+      || !constant_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  /* XXX: achu: The spec is confusing, I hope I'm right about this */
+  if (k_len < IPMI_KEY_CONSTANT_LEN || constant_len < IPMI_KEY_CONSTANT_LEN)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  memcpy(k, constant, IPMI_KEY_CONSTANT_LEN);
+  return (IPMI_KEY_CONSTANT_LEN);
+}
+
+static int32_t
+_calculate_k_rakp_hmac(u_int32_t gcry_md_algorithm,
+                       u_int32_t expected_digest_len,
+                       u_int8_t *sik_key,
+                       u_int32_t sik_key_len,
+                       u_int8_t *k,
+                       u_int32_t k_len,
+                       u_int8_t *constant,
+                       u_int32_t constant_len)
+{
+  gcry_md_hd_t h;
+  gcry_error_t e;
+  u_int8_t *digestPtr;
+  u_int32_t gcry_md_digest_len;
+
+  if (!(gcry_md_algorithm == GCRY_MD_SHA1 || gcry_md_algorithm == GCRY_MD_MD5)
+      || !sik_key
+      || !sik_key_len
+      || !k
+      || !k_len
+      || !constant
+      || !constant_len
+      || k_len < expected_digest_len 
+      || constant_len < expected_digest_len 
+      || sik_key_len < expected_digest_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    } 
+
+  if (_ipmi_init_gcrypt() < 0)
+    return (-1);
+
+  ERR_EXIT ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) == expected_digest_len);
+      
+  if ((e = gcry_md_open(&h, gcry_md_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
+      return (-1);
+    }
+      
+  if (!h)
+    {
+      ipmi_debug("gcry_md_open: NULL handle return");
+      return (-1);
+    }
+
+  if ((e = gcry_md_setkey(h, sik_key, gcry_md_digest_len)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
+      return (-1);
+    }
+
+  /* XXX: achu: I believe the length of the constant you pass in
+   * is the digest_len, atleast according to IPMI 2.0 Spec Section
+   * 13.32, "constants are constructed using a hexadecimal octet
+   * value repeated up to the HMAC block size in length starting
+   * with the constant 01h".
+   */
+  gcry_md_write(h, (void *)constant, gcry_md_digest_len);
+  
+  gcry_md_final(h);
+
+  if (!(digestPtr = gcry_md_read(h, gcry_md_algorithm)))
+    {
+      ipmi_debug("gcry_md_read: NULL data return");
+      return (-1);
+    }
+  
+  memcpy(k, digestPtr, gcry_md_digest_len);
+  gcry_md_close(h);
+  return (gcry_md_digest_len);
+}
+
+static int32_t
+_calculate_k_rakp_hmac_sha1(u_int8_t *sik_key,
+                            u_int32_t sik_key_len,
+                            u_int8_t *k,
+                            u_int32_t k_len,
+                            u_int8_t *constant,
+                            u_int32_t constant_len)
+{
+  if (!sik_key
+      || !sik_key_len
+      || !k
+      || !k_len
+      || !constant
+      || !constant_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return _calculate_k_rakp_hmac(GCRY_MD_SHA1,
+                                IPMI_HMAC_SHA1_DIGEST_LEN,
+                                sik_key,
+                                sik_key_len,
+                                k,
+                                k_len,
+                                constant,
+                                constant_len);
+}
+
+static int32_t
+_calculate_k_rakp_hmac_md5(u_int8_t *sik_key,
+                           u_int32_t sik_key_len,
+                           u_int8_t *k,
+                           u_int32_t k_len,
+                           u_int8_t *constant,
+                           u_int32_t constant_len)
+{
+  if (!sik_key
+      || !sik_key_len
+      || !k
+      || !k_len
+      || !constant
+      || !constant_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return _calculate_k_rakp_hmac(GCRY_MD_MD5,
+                                IPMI_HMAC_MD5_DIGEST_LEN,
+                                sik_key,
+                                sik_key_len,
+                                k,
+                                k_len,
+                                constant,
+                                constant_len);
+}
+
+static int32_t
+_ipmi_calculate_k(u_int8_t authentication_algorithm,
+                  u_int8_t *sik_key,
+                  u_int32_t sik_key_len,
+                  u_int8_t *k,
+                  u_int32_t k_len,
+                  u_int8_t *constant,
+                  u_int32_t constant_len)
 {
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !sik_key
@@ -360,88 +519,21 @@ __ipmi_calculate_k(u_int8_t authentication_algorithm,
     }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
-    {
-      /* XXX: achu: I think this is right, I'm confused, the spec stinks */
-      if (k_len < IPMI_KEY_CONSTANT_LEN
-          || constant_len < IPMI_KEY_CONSTANT_LEN)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-      
-      memcpy(k, constant, IPMI_KEY_CONSTANT_LEN);
-      return (IPMI_KEY_CONSTANT_LEN);
-    }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-           || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-    {
-      gcry_md_hd_t h;
-      gcry_error_t e;
-      u_int8_t *digestPtr;
-      u_int8_t gcry_hash_algorithm;
-      u_int32_t digest_len;
-
-      if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
-        {
-          gcry_hash_algorithm = GCRY_MD_SHA1;
-          digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
-        }
-      else
-        {
-          gcry_hash_algorithm = GCRY_MD_MD5;
-          digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
-        }
-      
-      if (k_len < digest_len || constant_len < digest_len || sik_key_len < digest_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      if (__ipmi_init_gcrypt() < 0)
-        return (-1);
-
-      ERR_EXIT (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len);
-      
-      /* XXX in secure memory? */
-      if ((e = gcry_md_open(&h, gcry_hash_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
-          return (-1);
-        }
-      
-      if (!h)
-        {
-          ipmi_debug("gcry_md_open: NULL handle return");
-          return (-1);
-        }
-
-      if ((e = gcry_md_setkey(h, sik_key, digest_len)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
-          return (-1);
-        }
-
-      /* XXX: achu, I believe the constant you pass in is the
-       * digest_len, atleast according to 13.32, "constants are
-       * constructed using a hexadecimal octet value repeated up to
-       * the HMAC block size in length starting with the constant
-       * 01h", So I hope that I'm right.
-       */
-      gcry_md_write(h, (void *)constant, digest_len);
-
-      gcry_md_final(h);
-
-      if (!(digestPtr = gcry_md_read(h, gcry_hash_algorithm)))
-        {
-          ipmi_debug("gcry_md_read: NULL data return");
-          return (-1);
-        }
-
-      memcpy(k, digestPtr, digest_len);
-      gcry_md_close(h);
-      return (digest_len);
-    }
+    return _calculate_k_rakp_none(k, k_len, constant, constant_len);
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+    return _calculate_k_rakp_hmac_sha1(sik_key, 
+                                       sik_key_len, 
+                                       k, 
+                                       k_len, 
+                                       constant, 
+                                       constant_len);
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+    return _calculate_k_rakp_hmac_md5(sik_key, 
+                                      sik_key_len, 
+                                      k, 
+                                      k_len, 
+                                      constant, 
+                                      constant_len);
   else
     {
       /* achu: Even though the algorithm is legit, we don't support it yet :-( */
@@ -466,13 +558,13 @@ ipmi_calculate_k1(u_int8_t authentication_algorithm,
                                                0x01, 0x01, 0x01, 0x01, 0x01, 
                                                0x01, 0x01, 0x01, 0x01, 0x01}; 
   
-  return __ipmi_calculate_k(authentication_algorithm,
-                            sik_key,
-                            sik_key_len,
-                            k1,
-                            k1_len,
-                            constant,
-                            IPMI_KEY_CONSTANT_LEN);                          
+  return _ipmi_calculate_k(authentication_algorithm,
+                           sik_key,
+                           sik_key_len,
+                           k1,
+                           k1_len,
+                           constant,
+                           IPMI_KEY_CONSTANT_LEN);                          
 }
 
 int32_t
@@ -487,13 +579,13 @@ ipmi_calculate_k2(u_int8_t authentication_algorithm,
                                                0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02}; 
-  return __ipmi_calculate_k(authentication_algorithm,
-                            sik_key,
-                            sik_key_len,
-                            k1,
-                            k1_len,
-                            constant,
-                            IPMI_KEY_CONSTANT_LEN);  
+  return _ipmi_calculate_k(authentication_algorithm,
+                           sik_key,
+                           sik_key_len,
+                           k1,
+                           k1_len,
+                           constant,
+                           IPMI_KEY_CONSTANT_LEN);  
 }
 
 int8_t
@@ -801,18 +893,210 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
   return (0);
 }
 
-static int8_t
+static int32_t
+_construct_payload_none(fiid_obj_t obj_cmd,
+                        fiid_template_t tmpl_cmd,
+                        fiid_obj_t obj_payload)
+{
+  int32_t obj_cmd_len;
+
+  if (!obj_cmd
+      || !tmpl_cmd
+      || !obj_payload)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_SET (obj_payload, 
+                tmpl_lanplus_payload, 
+                "confidentiality_header_len",
+                0);
+
+  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+
+  FIID_OBJ_SET_DATA (obj_payload,
+                     tmpl_lanplus_payload,
+                     "payload_data",
+                     obj_cmd,
+                     obj_cmd_len);
+  
+  FIID_OBJ_SET (obj_payload,
+                tmpl_lanplus_payload,
+                "payload_data_len",
+                obj_cmd_len);
+
+  FIID_OBJ_SET (obj_payload, 
+                tmpl_lanplus_payload, 
+                "confidentiality_trailer_len",
+                0);
+
+  return obj_cmd_len;
+}
+
+static int32_t
+_construct_payload_aes_cbc_128(fiid_obj_t obj_cmd,
+                               fiid_template_t tmpl_cmd,
+                               u_int8_t *confidentiality_key,
+                               u_int32_t confidentiality_key_len,
+                               fiid_obj_t obj_payload)
+{
+  gcry_cipher_hd_t h;
+  gcry_error_t e;
+  u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
+  int32_t iv_len, obj_cmd_len;
+  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  u_int8_t pad_len;
+  size_t cipher_keylen, cipher_blklen;
+
+  /* Note: Confidentiality Key for AES_CBS_128 is K2 */
+
+  if (!obj_cmd
+      || !tmpl_cmd
+      || !confidentiality_key
+      || (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
+      || !obj_payload)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
+                                 GCRYCTL_GET_KEYLEN,
+                                 NULL,
+                                 &cipher_keylen)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+      return (-1);
+    }
+  
+  ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
+  
+  if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
+                                 GCRYCTL_GET_BLKLEN,
+                                 NULL,
+                                 &cipher_blklen)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+      return (-1);
+    }
+  
+  ERR_EXIT (cipher_blklen == IPMI_AES_CBC_128_BLOCK_LEN);
+     
+  if ((iv_len = ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)) < 0)
+    {
+      ipmi_debug("ipmi_get_random: %s", strerror(errno));
+      return (-1);
+    }
+  
+  if (iv_len != IPMI_AES_CBC_128_IV_LEN)
+    {
+      ipmi_debug("ipmi_get_random: Invalid bytes returned: %d", iv_len);
+      return (-1);
+    }
+  
+  if ((e = gcry_cipher_open(&h, 
+                            GCRY_CIPHER_AES,
+                            GCRY_CIPHER_MODE_CBC,
+                            0) != GPG_ERR_NO_ERROR))
+    {
+      ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
+      return (-1);
+    }
+  
+  if ((e = gcry_cipher_setkey(h, 
+                              (void *)confidentiality_key, 
+                              IPMI_AES_CBC_128_KEY_LEN)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
+      return (-1);
+    }
+
+  if ((e = gcry_cipher_setiv(h, (void *)iv, IPMI_AES_CBC_128_IV_LEN)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
+      return (-1);
+    }
+  
+  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+  ERR_EXIT (!(obj_cmd_len > IPMI_MAX_PAYLOAD_LEN));
+  memcpy(payload_buf, obj_cmd, obj_cmd_len);
+
+  /* Pad the data appropriately */
+
+  /* +1 is for the pad length field */
+  pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((obj_cmd_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
+      
+  ERR_EXIT ((obj_cmd_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LEN);
+  
+  if (pad_len)
+    {
+      int i;
+      for (i = 0; i < pad_len; i++)
+        payload_buf[obj_cmd_len + i] = i + 1;
+      payload_buf[obj_cmd_len + pad_len] = pad_len;
+    }
+
+  if ((e = gcry_cipher_encrypt(h, 
+                               (void *)payload_buf,
+                               obj_cmd_len + pad_len + 1, /* +1 for pad length field */
+                               NULL,
+                               0)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
+      return (-1);
+    }
+      
+  gcry_cipher_close(h);
+
+  FIID_OBJ_SET_DATA (obj_payload,
+                     tmpl_lanplus_payload,
+                     "confidentiality_header",
+                     iv,
+                     IPMI_AES_CBC_128_IV_LEN);
+      
+  FIID_OBJ_SET (obj_payload, 
+                tmpl_lanplus_payload, 
+                "confidentiality_header_len",
+                iv_len);
+  
+  FIID_OBJ_SET_DATA (obj_payload,
+                     tmpl_lanplus_payload,
+                     "payload_data",
+                     payload_buf,
+                     obj_cmd_len);
+      
+  FIID_OBJ_SET (obj_payload,
+                tmpl_lanplus_payload,
+                "payload_data_len",
+                obj_cmd_len);
+
+  FIID_OBJ_SET_DATA (obj_payload,
+                     tmpl_lanplus_payload,
+                     "confidentiality_trailer",
+                     payload_buf + obj_cmd_len,
+                     pad_len + 1);
+      
+  FIID_OBJ_SET (obj_payload, 
+                tmpl_lanplus_payload, 
+                "confidentiality_trailer_len",
+                pad_len + 1);
+  
+  return (iv_len + obj_cmd_len + pad_len + 1);
+}
+
+static int32_t
 _construct_payload(u_int8_t confidentiality_algorithm,
                    fiid_obj_t obj_cmd,
                    fiid_template_t tmpl_cmd,
-                   u_int8_t *key,
-                   u_int32_t key_len,
+                   u_int8_t *confidentiality_key,
+                   u_int32_t confidentiality_key_len,
                    fiid_obj_t obj_payload)
 {
   if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
       || !obj_cmd
       || !tmpl_cmd
-      || obj_payload)
+      || !obj_payload)
     {
       errno = EINVAL;
       return (-1);
@@ -821,169 +1105,15 @@ _construct_payload(u_int8_t confidentiality_algorithm,
   FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_lanplus_payload);
 
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-    {
-      u_int32_t obj_cmd_len;
-
-      FIID_OBJ_SET (obj_payload, 
-                    tmpl_lanplus_payload, 
-                    "confidentiality_header_len",
-                    0);
-
-      obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
-
-      FIID_OBJ_SET_DATA (obj_payload,
-                         tmpl_lanplus_payload,
-                         "payload_data",
-                         obj_cmd,
-                         obj_cmd_len);
-      
-      FIID_OBJ_SET (obj_payload,
-                    tmpl_lanplus_payload,
-                    "payload_data_len",
-                    obj_cmd_len);
-
-      FIID_OBJ_SET (obj_payload, 
-                    tmpl_lanplus_payload, 
-                    "confidentiality_trailer_len",
-                    0);
-    }
+    return _construct_payload_none(obj_cmd,
+                                   tmpl_cmd,
+                                   obj_payload);
   else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-    {
-      /* achu: Confidentiality Key for AES_CBS_128 is K2 */
-      gcry_cipher_hd_t h;
-      gcry_error_t e;
-      u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
-      int32_t iv_len;
-      u_int8_t obj_cmd_cpy[IPMI_MAX_MSG_LEN];
-      u_int32_t obj_cmd_len;
-      u_int8_t pad_len;
-      size_t cipher_keylen, cipher_blklen;
-
-      if (!key || key_len < IPMI_AES_CBC_128_KEY_LEN)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
-                                     GCRYCTL_GET_KEYLEN,
-                                     NULL,
-                                     &cipher_keylen)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
-          return (-1);
-        }
-
-      ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
-
-      if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
-                                     GCRYCTL_GET_BLKLEN,
-                                     NULL,
-                                     &cipher_blklen)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
-          return (-1);
-        }
-
-      ERR_EXIT (cipher_blklen != IPMI_AES_CBC_128_BLOCK_LEN);
-     
-      if ((iv_len = ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)) < 0)
-        {
-          ipmi_debug("ipmi_get_random: %s", strerror(errno));
-          return (-1);
-        }
-
-      if (iv_len != IPMI_AES_CBC_128_IV_LEN)
-        {
-          ipmi_debug("ipmi_get_random: Invalid bytes returned: %d", iv_len);
-          return (-1);
-        }
-
-      if ((e = gcry_cipher_open(&h, 
-                                GCRY_CIPHER_AES,
-                                GCRY_CIPHER_MODE_CBC,
-                                0) != GPG_ERR_NO_ERROR))
-        {
-          ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
-          return (-1);
-        }
-
-      if ((e = gcry_cipher_setkey(h, 
-                                  (void *)key, 
-                                  IPMI_AES_CBC_128_KEY_LEN)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
-          return (-1);
-        }
-
-      if ((e = gcry_cipher_setiv(h, (void *)iv, IPMI_AES_CBC_128_IV_LEN)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
-          return (-1);
-        }
-  
-      ERR_EXIT ((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) > IPMI_MAX_MSG_LEN);
-      memcpy(obj_cmd_cpy, obj_cmd, obj_cmd_len);
-
-      /* Pad the data appropriately */
-
-      pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((obj_cmd_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
-      
-      ERR_EXIT ((obj_cmd_len + pad_len + 1) > IPMI_MAX_MSG_LEN);
-
-      if (pad_len)
-        {
-          int i;
-          for (i = 0; i < pad_len; i++)
-            obj_cmd_cpy[obj_cmd_len + i] = i + 1;
-          obj_cmd_cpy[obj_cmd_len + pad_len] = pad_len;
-        }
-
-      if ((e = gcry_cipher_encrypt(h, 
-                                   (void *)obj_cmd_cpy,
-                                   obj_cmd_len + pad_len + 1,
-                                   NULL,
-                                   0)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
-          return (-1);
-        }
-                                  
-      gcry_cipher_close(h);
-
-      FIID_OBJ_SET_DATA (obj_payload,
-                         tmpl_lanplus_payload,
-                         "confidentiality_header",
-                         iv,
-                         IPMI_AES_CBC_128_IV_LEN);
-      
-      FIID_OBJ_SET (obj_payload, 
-                    tmpl_lanplus_payload, 
-                    "confidentiality_header_len",
-                    IPMI_AES_CBC_128_IV_LEN);
-      
-      FIID_OBJ_SET_DATA (obj_payload,
-                         tmpl_lanplus_payload,
-                         "payload_data",
-                         obj_cmd_cpy,
-                         obj_cmd_len);
-      
-      FIID_OBJ_SET (obj_payload,
-                    tmpl_lanplus_payload,
-                    "payload_data_len",
-                    obj_cmd_len);
-
-      FIID_OBJ_SET_DATA (obj_payload,
-                         tmpl_lanplus_payload,
-                         "confidentiality_trailer",
-                         obj_cmd_cpy + obj_cmd_len,
-                         pad_len + 1);
-      
-      FIID_OBJ_SET (obj_payload, 
-                    tmpl_lanplus_payload, 
-                    "confidentiality_trailer_len",
-                    pad_len + 1);
-    }
+    return _construct_payload_aes_cbc_128(obj_cmd,
+                                          tmpl_cmd,
+                                          confidentiality_key,
+                                          confidentiality_key_len,
+                                          obj_payload);
   else
     {
       /* achu: Even though the algorithm is legit, we don't support it yet :-( */
@@ -1013,7 +1143,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                            u_int32_t pkt_len)
 {
   u_int32_t msg_len = 0;
-  int32_t obj_rmcp_hdr_len, obj_len, obj_field_start;
+  int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_field_start;
   u_int64_t payload_type, payload_authenticated, payload_encrypted, field_len, session_id;
   int32_t payload_len;
   fiid_obj_t obj_payload = NULL;
@@ -1071,6 +1201,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
 
   memset(pkt, '\0', pkt_len);
 
+  /* 
+   * Copy RMCP header into packet
+   */
   msg_len = 0;
   ERR_EXIT (!((obj_rmcp_hdr_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
   if (obj_rmcp_hdr_len > (pkt_len - msg_len))
@@ -1081,7 +1214,8 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   memcpy (pkt, obj_hdr_rmcp, obj_rmcp_hdr_len);
   msg_len += obj_rmcp_hdr_len;
   
-  /* Copy over Auth Type and Payload Type
+  /* 
+   * Copy Auth Type and Payload Type into packet
    *
    * Determine length by determining the start of the OEM IANA
    */
@@ -1099,9 +1233,13 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
-      /* Copy over OEM IANA and OEM Payload ID */
+      /* 
+       * Copy OEM IANA and OEM Payload ID into packet
+       */
 
-      ERR_EXIT (!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
+      ERR_EXIT (!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
+      ERR_EXIT (!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_payload_id")) < 0));
+      obj_len = obj_len_1 + obj_len_2;
       if (obj_len > (pkt_len - msg_len))
         {
           errno = ENOSPC;
@@ -1112,22 +1250,14 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
               obj_lanplus_hdr_session + obj_field_start,
               obj_len);
       msg_len += obj_len;
-
-      ERR_EXIT (!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_payload_id")) < 0));
-      if (obj_len > (pkt_len - msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
-      ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "oem_payload_id")) < 0));
-      memcpy (pkt + msg_len,
-              obj_lanplus_hdr_session + obj_field_start,
-              obj_len);
-      msg_len += obj_len;
     }
 
-  /* Copy over Session ID and Session Sequence Number */
-  ERR_EXIT(!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
+  /* 
+   * Copy Session ID and Session Sequence Number into packet 
+   */
+  ERR_EXIT(!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
+  ERR_EXIT(!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_seq_num")) < 0));
+  obj_len = obj_len_1 + obj_len_2;
   if (obj_len > (pkt_len - msg_len))
     {
       errno = ENOSPC;
@@ -1139,17 +1269,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
           obj_len);
   msg_len += obj_len;
 
-  ERR_EXIT(!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_seq_num")) < 0));
-  if (obj_len > (pkt_len - msg_len))
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
-  ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "session_seq_num")) < 0));
-  memcpy (pkt + msg_len,
-          obj_lanplus_hdr_session + obj_field_start,
-          obj_len);
-  msg_len += obj_len;
+  /* 
+   * Construct/Encrypt Payload and copy into packet
+   */
 
   FIID_OBJ_ALLOCA (obj_payload, tmpl_lanplus_payload);
 
@@ -1164,8 +1286,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       return (-1);
     }
   
-  /* Set payload length */
-  fiid_obj_alloca(obj_hdr_session_temp, tmpl_lanplus_hdr_session);
+  FIID_OBJ_ALLOCA (obj_hdr_session_temp, tmpl_lanplus_hdr_session);
   if (!obj_hdr_session_temp)
     {
       errno = ENOMEM;
@@ -1176,7 +1297,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 tmpl_lanplus_hdr_session,
                 "ipmi_payload_len",
                 payload_len);
-
+  
   ERR_EXIT (!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "ipmi_payload_len")) < 0));
   if (obj_len > (pkt_len - msg_len))
     {
@@ -1437,7 +1558,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                   digest_len = IPMI_MD5_DIGEST_LEN;
                 }
 
-              if (__ipmi_init_gcrypt() < 0)
+              if (_ipmi_init_gcrypt() < 0)
                 return (-1);
 
               ERR_EXIT (gcry_md_get_algo_dlen(gcry_hash_algorithm) != digest_len);

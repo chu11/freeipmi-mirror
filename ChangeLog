@@ -58,6 +58,11 @@
 	rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Added support for
 	ipmi 2.0 ping.
 
+	* libfreeipmi/src/ipmi-ping.c (_get_rand): Removed function.
+
+	* libfreeipmi/src/ipmi-ping.c (_main_loop): Use ipmi_get_random
+	rather than _get_rand.
+
 	IPMIPOWER
 
 	* ipmipower/src/ipmipower_util.c (get_rand): Utilize
@@ -65,7 +70,7 @@
 
 	AUTOCONF/AUTOMAKE
 
-	* configure.ac: Add libgcrypt, /dev/urandom, /dev/random checks.
+	* configure.ac: Add libgcrypt check.
 
 	* libfreeipmi/src/Makefile.am: Added ipmi-lanplus-sessions.h and
 	ipmi-lanplus-sessions.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
@@ -78,8 +83,17 @@
 ------------------------------------------------------------
 2005-11-18  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-lanplus-sessions.c: Various bug fixes and
+	code cleanup.
+
 	* libfreeipmi/src/ipmi-lanplus-sessions.c
-	(assemble_ipmi_lanplus_pkt): Fixed various bugs.
+	(_construct_payload_none, _construct_payload_aes_cbc_128): New
+	function.
+
+	* libfreeipmi/src/ipmi-ping.c (_get_rand): Removed function.
+
+	* libfreeipmi/src/ipmi-ping.c (_main_loop): Use ipmi_get_random
+	rather than _get_rand.
 	
 2005-11-17  Albert Chu <chu11@llnl.gov>
 
