@@ -158,6 +158,8 @@
 #define IPMI_MAX_K_UID_LEN                                20
 #define IPMI_MAX_K_G_LEN                                  20
 #define IPMI_MAX_SIK_KEY_LEN                              20
+
+#define IPMI_MAX_KEY_DATA_LEN                             1024
  
 #ifdef __cplusplus
 extern "C" {
