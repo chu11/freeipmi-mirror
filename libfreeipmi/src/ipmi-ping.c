@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.4.2.3 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.4.2.4 2005-11-18 01:38:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,6 +39,9 @@
 
 #define IPMI_PING_VERSION_1_5_STR  "1.5"
 #define IPMI_PING_VERSION_2_0_STR  "2.0"
+
+#define DEVURANDOM                "/dev/urandom"
+#define DEVRANDOM                 "/dev/random"
 
 #define DEVURANDOM                "/dev/urandom"
 #define DEVRANDOM                 "/dev/random"
@@ -117,7 +120,7 @@ _strncpy(char *dest, char *src, unsigned int len)
 }
 
 static void 
-_output_usage(char *options) 
+_output_usage(char *options)
 {
   assert(_progname != NULL);
   
@@ -153,13 +156,13 @@ _output_version(void)
 
 static void 
 _cmdline_parse(int argc, 
-               char **argv, 
+               char **argv,
                unsigned int min_seq_num,
                unsigned int max_seq_num,
-               char *options) 
+               char *options)
 {
   char c, *ptr;
- 
+  
   /* Turn off error messages */
   opterr = 0;
 
@@ -331,24 +334,24 @@ _get_rand(void)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
   u_int32_t randval;
-  int fd, ret = -1;
+  int fd, ret = -1; 
 #if HAVE_DEVURANDOM
   char *device = DEVURANDOM;
-#else
+#else 
   char *device = DEVRANDOM;
 #endif
-
+  
   if ((fd = open(device, O_RDONLY)) < 0)
     goto cleanup;
-
+  
   if ((ret = read(fd, (char *)&randval, sizeof(u_int32_t))) < 0)
     goto cleanup;
-
+  
  cleanup:
   close(fd);
   if (ret != sizeof(u_int32_t))
-      return rand();
-
+    return rand();
+  
   return (unsigned int)randval;
 #else
   return (unsigned int)rand();
@@ -360,7 +363,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
            Ipmi_Ping_ParsePacket _parse, 
            Ipmi_Ping_LatePacket _late) 
 {
-  unsigned int seq_num;
+  unsigned int seq_num = 0;
   time_t last_send = 0;
   int ret;
 
@@ -461,8 +464,8 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
 }
 
 void
-ipmi_ping_setup(int argc, 
-                char **argv, 
+ipmi_ping_setup(int argc,
+                char **argv,
                 unsigned int min_seq_num,
                 unsigned int max_seq_num,
                 char *options)
@@ -492,25 +495,26 @@ ipmi_ping_setup(int argc,
         }
       ptr++;
     }
-
+  
   _err_init(argv[0]);
   _cmdline_parse(argc, argv, min_seq_num, max_seq_num, options);
   _setup();
 }
 
-void
+void 
 ipmi_ping_loop(Ipmi_Ping_CreatePacket _create,
                Ipmi_Ping_ParsePacket _parse,
                Ipmi_Ping_LatePacket _late,
                Ipmi_Ping_EndResult _end)
 {
-  if (!_create || !_parse || !_late || !_end )
+  if (!_create || !_parse || !_late || !_end)
     {
       fprintf(stderr, "ipmi_ping_loop: called improperly\n");
       exit(1);
     }
   
   _end_result = _end;
+
   _main_loop(_create, _parse, _late);
   
   return;                     /* NOT REACHED */

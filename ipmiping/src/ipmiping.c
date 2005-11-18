@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.5 2005-11-08 18:16:37 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.6 2005-11-18 01:38:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

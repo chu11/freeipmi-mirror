@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1.4.3 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.4.4 2005-11-18 01:38:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,22 +75,22 @@ typedef int (*Ipmi_Ping_EndResult)(const char *progname,
  * - exit with GNU style exit output
  */
 void ipmi_ping_err_exit(char *fmt, ...);
-
+  
 /* ipmi_ping_setup
  * - setup ipmi ping code by parsing command line arguments
  */
-void ipmi_ping_setup(int argc, 
-                     char **argv, 
+void ipmi_ping_setup(int argc,
+                     char **argv,
                      unsigned int min_seq_num,
                      unsigned int max_seq_num,
                      char *options);
-
+  
 /* ipmi_ping_loop
  * - handle looping ping code
  */
-void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create, 
-                    Ipmi_Ping_ParsePacket _parse, 
-                    Ipmi_Ping_LatePacket _late, 
+void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create,
+                    Ipmi_Ping_ParsePacket _parse,
+                    Ipmi_Ping_LatePacket _late,
                     Ipmi_Ping_EndResult _end);
 
 #ifdef __cplusplus

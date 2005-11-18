@@ -54,16 +54,9 @@
 	fill_cmd_get_channel_auth_caps_v20): New templates and functions.
 
 	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
-	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Added
-	support for ipmi 2.0 ping.
-	
-	* libfreeipmi/src/ipmi-ping.c, libfreeipmi/src/ipmi-ping.h,
-	rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Randomize
-	starting sequence number by default.  Support -s option to allow
-	user to specify initial starting sequence number.
-
-	* rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Make note of
-	new -s option and default random initial sequence number.
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c,
+	rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Added support for
+	ipmi 2.0 ping.
 
 	IPMIPOWER
 
@@ -309,6 +302,41 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2005-11-17  Albert Chu  <chu11@llnl.gov>
+	
+        Merge in rmcpping/ipmiping changes from branch al_ipmi_2_0_branch
+	that aren't IPMI 2.0 related.
+
+	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Various
+	changes to support new -s option and randomized starting sequence
+	numbers.
+
+	* configure.ac: Add checks of /dev/urandom and /dev/random.
+
+	* ipmiping/ipmiping.8.in, rmcpping/rmcpping.8.in: Document new
+	options and info.
+	
+2005-11-17  Albert Chu  <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.c (main): Fix compiler warning.
+
+2005-11-17  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for --delete-event-id option. Closing 
+	
+	* freeipmi/doc/freeipmi.texi: doc for --delete-event-id option.
+
+	* fish/ipmi-sel.8.in: like wise.
+
+2005-11-16  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/rmcp.c (unassemble_rmcp_pkt),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
+	assemble_ipmi_lan_pkt2, unassemble_ipmi_lan_pkt): Clean up code to
+	minimize looping through templates.
+	
 2005-11-15  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
