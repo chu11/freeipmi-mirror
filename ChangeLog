@@ -1,7 +1,22 @@
 2005-11-17  Albert Chu  <chu11@llnl.gov>
+	
+        Merge in rmcpping/ipmiping changes from branch al_ipmi_2_0_branch
+	that aren't IPMI 2.0 related.
+
+	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c: Various
+	changes to support new -s option and randomized starting sequence
+	numbers.
+
+	* configure.ac: Add checks of /dev/urandom and /dev/random.
+
+	* ipmiping/ipmiping.8.in, rmcpping/rmcpping.8.in: Document new
+	options and info.
+	
+2005-11-17  Albert Chu  <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.c (main): Fix compiler warning.
-	
+
 2005-11-17  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>

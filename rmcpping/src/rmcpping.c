@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.2 2005-11-18 01:25:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,7 +77,7 @@ Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
 int 
 createpacket(char *buffer, 
              int buflen, 
-             unsigned int seq_num_count, 
+             unsigned int seq_num, 
              int debug)
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -98,7 +98,7 @@ createpacket(char *buffer,
   if (fill_hdr_rmcp_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
 
-  if (fill_cmd_asf_presence_ping(seq_num_count % (RMCP_MSG_TAG_MAX + 1), 
+  if (fill_cmd_asf_presence_ping(seq_num % (RMCP_MSG_TAG_MAX + 1), 
                                  obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
 
@@ -126,7 +126,7 @@ int
 parsepacket(char *buffer, 
             int buflen, 
             const char *from, 
-            unsigned int seq_num_count, 
+            unsigned int seq_num, 
             int verbose, 
             int debug) 
 {
@@ -167,7 +167,7 @@ parsepacket(char *buffer,
 
   Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
                "msg_tag", (u_int64_t *)&msg_tag);
-  if (msg_tag != (seq_num_count % (RMCP_MSG_TAG_MAX + 1)))
+  if (msg_tag != (seq_num % (RMCP_MSG_TAG_MAX + 1)))
     {
       retval = 0;
       goto cleanup;
@@ -191,10 +191,9 @@ parsepacket(char *buffer,
 }
 
 void 
-latepacket(unsigned int seq_num_count) 
+latepacket(unsigned int seq_num) 
 {
-  printf("pong timed out: msg_tag=%u\n", 
-         seq_num_count % (RMCP_MSG_TAG_MAX + 1));
+  printf("pong timed out: msg_tag=%u\n", seq_num % (RMCP_MSG_TAG_MAX + 1));
 }
 
 int
@@ -221,10 +220,11 @@ endresult(const char *progname,
 int 
 main(int argc, char **argv) 
 {
-  ipmi_ping_main(argc, argv, 
-                 createpacket, 
-                 parsepacket, 
-                 latepacket, 
-                 endresult);
+#ifndef NDEBUG
+  ipmi_ping_setup(argc, argv, 0, RMCP_MSG_TAG_MAX, "hVc:i:I:t:vs:d");
+#else
+  ipmi_ping_setup(argc, argv, 0, RMCP_MSG_TAG_MAX, "hVc:i:I:t:vs:");
+#endif
+  ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */
 }

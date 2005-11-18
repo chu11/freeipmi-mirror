@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1 2004-05-13 17:32:57 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.2 2005-11-18 01:25:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,7 +37,7 @@ extern "C" {
  */
 typedef int (*Ipmi_Ping_CreatePacket)(char *buffer, 
                                       int buflen, 
-                                      unsigned int seq_num_count, 
+                                      unsigned int seq_num, 
                                       int debug);
 
 /* Ipmi_Ping_ParsePacket
@@ -49,14 +49,14 @@ typedef int (*Ipmi_Ping_CreatePacket)(char *buffer,
 typedef int (*Ipmi_Ping_ParsePacket)(char *buffer, 
                                      int buflen, 
                                      const char *from, 
-                                     unsigned int seq_num_count, 
+                                     unsigned int seq_num, 
                                      int verbose, 
                                      int debug);
 
 /* Ipmi_Ping_LatePacket
  * - Output info about timed out packet to stdout
  */
-typedef void (*Ipmi_Ping_LatePacket)(unsigned int seq_num_count);
+typedef void (*Ipmi_Ping_LatePacket)(unsigned int seq_num);
 
 /* Ipmi_Ping_EndResult
  * - Output final results to stdout and return exit code
@@ -70,14 +70,22 @@ typedef int (*Ipmi_Ping_EndResult)(const char *progname,
  * - exit with GNU style exit output
  */
 void ipmi_ping_err_exit(char *fmt, ...);
-
-/* ipmi_ping_common
- * - wrapper function for common ping utilities
+  
+/* ipmi_ping_setup
+ * - setup ipmi ping code by parsing command line arguments
  */
-void ipmi_ping_main(int argc, char **argv,
-                    Ipmi_Ping_CreatePacket _create, 
-                    Ipmi_Ping_ParsePacket _parse, 
-                    Ipmi_Ping_LatePacket _late, 
+void ipmi_ping_setup(int argc,
+                     char **argv,
+                     unsigned int min_seq_num,
+                     unsigned int max_seq_num,
+                     char *options);
+  
+/* ipmi_ping_loop
+ * - handle looping ping code
+ */
+void ipmi_ping_loop(Ipmi_Ping_CreatePacket _create,
+                    Ipmi_Ping_ParsePacket _parse,
+                    Ipmi_Ping_LatePacket _late,
                     Ipmi_Ping_EndResult _end);
 
 #ifdef __cplusplus

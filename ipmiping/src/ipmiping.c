@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.4 2005-11-08 17:23:27 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.5 2005-11-18 01:25:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,7 +74,7 @@ Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
 int 
 createpacket(char *buffer, 
              int buflen, 
-             unsigned int seq_num_count,
+             unsigned int seq_num,
              int debug) 
 {
   fiid_obj_t obj_hdr_rmcp = NULL;
@@ -105,7 +105,7 @@ createpacket(char *buffer,
     ipmi_ping_err_exit("fill_hdr_session: %s", strerror(errno));
 
   if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
-                       seq_num_count % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
+                       seq_num % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_msg_hdr: %s", strerror(errno));
 
   if (fill_cmd_get_channel_auth_caps(IPMI_CHANNEL_CURRENT_CHANNEL,
@@ -142,8 +142,9 @@ int
 parsepacket(char *buffer, 
             int buflen, 
             const char *from,
-            unsigned int seq_num_count, 
-            int verbose, int debug)
+            unsigned int seq_num, 
+            int verbose, 
+            int debug)
 {
   fiid_obj_t obj_hdr_rmcp = NULL;
   fiid_obj_t obj_hdr_session = NULL;
@@ -239,7 +240,7 @@ parsepacket(char *buffer,
   Fiid_obj_get(obj_msg_hdr, tmpl_lan_msg_hdr_rs, 
                "rq_seq", (u_int64_t *)&req_seq);
 
-  if (req_seq != seq_num_count % (IPMI_RQ_SEQ_MAX + 1)) 
+  if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
       retval = 0;
       goto cleanup;
@@ -294,10 +295,9 @@ parsepacket(char *buffer,
 }
 
 void 
-latepacket(unsigned int seq_num_count) 
+latepacket(unsigned int seq_num) 
 {
-  printf("response timed out: rq_seq=%u\n", 
-         seq_num_count % (IPMI_RQ_SEQ_MAX + 1));
+  printf("response timed out: rq_seq=%u\n", seq_num % (IPMI_RQ_SEQ_MAX + 1));
 }
 
 int
@@ -324,10 +324,12 @@ endresult(const char *progname,
 int 
 main(int argc, char **argv) 
 {
-  ipmi_ping_main(argc, argv, 
-                 createpacket, 
-                 parsepacket, 
-                 latepacket, 
-                 endresult);
+#ifndef NDEBUG
+  ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vs:d");
+#else
+  ipmi_ping_setup(argc, argv, 0, IPMI_RQ_SEQ_MAX, "hVc:i:I:t:vs:");
+#endif
+  ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
+
   exit(1);                    /* NOT REACHED */
 }
