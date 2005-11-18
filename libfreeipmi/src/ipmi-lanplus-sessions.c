@@ -1478,6 +1478,11 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc")) < 0));
                   gcry_md_write(h, (void *)(obj_lanplus_trlr_session + obj_field_start), field_len);
                 }
+
+              gcry_md_write(h, (void *)(pkt + obj_rmcp_hdr_len), msg_len - obj_rmcp_hdr_len);
+
+              if (field_len)
+                gcry_md_write(h, (void *)(obj_lanplus_trlr_session + obj_field_start), field_len);
               
               gcry_md_final(h);
 
