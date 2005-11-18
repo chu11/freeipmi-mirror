@@ -94,6 +94,10 @@
 	(assemble_ipmi_lanplus_pkt): Initial commit of this function,
 	which atleast compiles.
 
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi/src/ipmi-lanplus-sessions.c (fill_lanplus_sessions):
+	Renamed _construct_payload.  Made static and uncallable.
+
 2005-11-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,

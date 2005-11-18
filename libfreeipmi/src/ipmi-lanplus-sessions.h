@@ -183,8 +183,6 @@ int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_typ
 
 int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
 
-int8_t fill_lanplus_payload(u_int8_t confidentiality_algorithm, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *sik, u_int32_t sik_len, fiid_obj_t obj_payload);
-
 int8_t fill_lanplus_open_session (u_int8_t message_tag, u_int8_t requested_maximum_privilege_level, u_int32_t remote_console_session_id, u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, fiid_obj_t obj_msg);
 
 int8_t fill_lanplus_rakp_message_1(u_int8_t message_tag, u_int32_t managed_system_session_id, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t requested_maximum_privilege_level, u_int8_t nameonly_lookup_flag, u_int8_t *username, u_int32_t username_len, fiid_obj_t obj_msg);
