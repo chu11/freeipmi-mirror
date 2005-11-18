@@ -1456,7 +1456,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
         obj_auth_len = IPMI_MD5_128_AUTHCODE_LEN;
       else
         {
-          /* Legit integrity algorithm, but not supported */
+          /* achu: Even though the algorithm is legit, we don't support it yet :-( */
           errno = EINVAL;
           return (-1);
         }
@@ -1475,6 +1475,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       
       pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - (((msg_len - obj_rmcp_hdr_len) + pad_length_field_len + next_header_field_len + obj_auth_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
       
+      /* 
+       * Copy pad into packet
+       */
       if (pad_len)
         {
           if (pad_len > (pkt_len - msg_len))
@@ -1488,6 +1491,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
           msg_len += pad_len;
         }
 
+      /* 
+       * Copy pad length into packet
+       */
       if (pad_length_field_len > (pkt_len - msg_len))
         {
           errno = ENOSPC;
@@ -1499,6 +1505,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
               pad_length_field_len);
       msg_len += pad_length_field_len;
 
+      /* 
+       * Copy next header field into packet
+       */
       if (next_header_field_len > (pkt_len - msg_len))
         {
           errno = ENOSPC;
@@ -1562,12 +1571,12 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                    || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
                    || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
             {
-              gcry_md_hd_t h;
-              gcry_error_t e;
-              u_int8_t *digestPtr;
-              u_int8_t gcry_md_algorithm;
-              u_int8_t gcry_flags;
-              u_int32_t digest_len;
+              unsigned int gcry_md_algorithm, gcry_md_flags, gcry_md_digest_len, 
+                expected_digest_len, hash_data_len, integrity_digest_len;
+              u_int8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
+              u_int64_t auth_calc_len = 0;
+              u_int32_t auth_calc_field_start = 0;
+              u_int8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
 
               if (!integrity_key || !integrity_key_len)
                 {
@@ -1578,89 +1587,95 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
               if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
                 {
                   gcry_md_algorithm = GCRY_MD_SHA1;
-                  gcry_flags = GCRY_MD_FLAG_HMAC;
-                  digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
+                  gcry_md_flags = GCRY_MD_FLAG_HMAC;
+                  expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
                 }
               else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
                 {
                   gcry_md_algorithm = GCRY_MD_MD5;
-                  gcry_flags = GCRY_MD_FLAG_HMAC;
-                  digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
+                  gcry_md_flags = GCRY_MD_FLAG_HMAC;
+                  expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
                 }
               else
                 {
                   gcry_md_algorithm = GCRY_MD_MD5;
-                  gcry_flags = 0;
-                  digest_len = IPMI_MD5_DIGEST_LEN;
+                  gcry_md_flags = 0;
+                  expected_digest_len = IPMI_MD5_DIGEST_LEN;
                 }
 
-              if (_ipmi_init_gcrypt() < 0)
-                return (-1);
-
-              ERR_EXIT (gcry_md_get_algo_dlen(gcry_md_algorithm) != digest_len);
-
-              if ((e = gcry_md_open(&h, gcry_md_algorithm, GCRY_MD_FLAG_HMAC)) != GPG_ERR_NO_ERROR)
-                {
-                  ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
-                  return (-1);
-                }
-
-              if (!h)
-                {
-                  ipmi_debug("gcry_md_open: NULL handle return");
-                  return (-1);
-                }
-
-              if (gcry_flags & GCRY_MD_FLAG_HMAC)
-                {
-                  if (integrity_key_len < digest_len)
-                    {
-                      errno = EINVAL;
-                      return (-1);
-                    }
-
-                  if ((e = gcry_md_setkey(h, integrity_key, digest_len)) != GPG_ERR_NO_ERROR)
-                    {
-                      ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
-                      return (-1);
-                    }
-                }
-
-              FIID_OBJ_GET (obj_lanplus_trlr_session,
-                            tmpl_trlr_session,
-                            "auth_calc_len",
-                            &field_len);
-              if (field_len)
-                {
-                  ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc")) < 0));
-                  gcry_md_write(h, (void *)(obj_lanplus_trlr_session + obj_field_start), field_len);
-                }
-
-              gcry_md_write(h, (void *)(pkt + obj_rmcp_hdr_len), msg_len - obj_rmcp_hdr_len);
-
-              if (field_len)
-                gcry_md_write(h, (void *)(obj_lanplus_trlr_session + obj_field_start), field_len);
+              ERR_EXIT ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) == expected_digest_len);
               
-              gcry_md_final(h);
-
-              if (!(digestPtr = gcry_md_read(h, gcry_md_algorithm)))
+              if (gcry_md_flags == GCRY_MD_FLAG_HMAC && (integrity_key_len < gcry_md_digest_len))
                 {
-                  ipmi_debug("gcry_md_read: NULL data return");
+                  errno = EINVAL;
                   return (-1);
                 }
 
-              if (digest_len > (pkt_len - msg_len))
+              memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LEN);
+
+              hash_data_len = 0;
+
+              if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+                {
+                  /* XXX: achu: Is this correct?  Should this be 0 padded to 16/20 bytes??*/
+                  FIID_OBJ_GET (obj_lanplus_trlr_session,
+                                tmpl_trlr_session,
+                                "auth_calc_len",
+                                &auth_calc_len);
+                  if (auth_calc_len)
+                    {
+                      ERR_EXIT (!((auth_calc_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc")) < 0));
+                      memcpy(hash_data + hash_data_len, 
+                             (void *)(obj_lanplus_trlr_session + auth_calc_field_start), 
+                             auth_calc_len);
+                      hash_data_len += auth_calc_len;
+                    }
+                }
+
+              memcpy(hash_data + hash_data_len,
+                     (void *)(pkt + obj_rmcp_hdr_len),
+                     msg_len - obj_rmcp_hdr_len);
+              hash_data_len += msg_len - obj_rmcp_hdr_len;
+
+              if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_calc_len)
+                {
+                  /* XXX: achu: Is this correct?  Should this be 0 padded to 16/20 bytes??*/
+                  memcpy(hash_data + hash_data_len, 
+                         (void *)(obj_lanplus_trlr_session + auth_calc_field_start), 
+                         auth_calc_len);
+                  hash_data_len += auth_calc_len;
+                }
+
+               if ((integrity_digest_len = _ipmi_gcrypt_hash(gcry_md_algorithm,
+                                                             gcry_md_flags,
+                                                             gcry_md_digest_len,
+                                                             integrity_key,
+                                                             gcry_md_digest_len,
+                                                             hash_data,
+                                                             hash_data_len,
+                                                             integrity_digest,
+                                                             IPMI_MAX_PAYLOAD_LEN)) < 0)
+                 {
+                   ipmi_debug("_ipmi_gcrypt_hash: %s", strerror(errno));
+                   return (-1);
+                 }
+
+               if (integrity_digest_len != gcry_md_digest_len)
+                 {
+                   ipmi_debug("_ipmi_gcrypt_hash: invalid digest length returned");
+                   return (-1);
+                 }
+
+              if (integrity_digest_len > (pkt_len - msg_len))
                 {
                   errno = ENOSPC;
                   return (-1);
                 }
-
+              
               memcpy(pkt + msg_len, 
-                     digestPtr, 
-                     digest_len);
-              msg_len += digest_len;
-             
-              gcry_md_close(h);
+                     integrity_digest,
+                     integrity_digest_len);
+              msg_len += integrity_digest_len;
             }
         }
     }
