@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.4.2.4 2005-11-18 01:38:06 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.4.2.5 2005-11-18 01:40:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,9 +39,6 @@
 
 #define IPMI_PING_VERSION_1_5_STR  "1.5"
 #define IPMI_PING_VERSION_2_0_STR  "2.0"
-
-#define DEVURANDOM                "/dev/urandom"
-#define DEVRANDOM                 "/dev/random"
 
 #define DEVURANDOM                "/dev/urandom"
 #define DEVRANDOM                 "/dev/random"

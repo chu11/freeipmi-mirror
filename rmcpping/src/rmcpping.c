@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.1.4.3 2005-11-05 00:17:43 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.1.4.4 2005-11-18 01:38:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
