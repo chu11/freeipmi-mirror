@@ -81,7 +81,6 @@ fiid_template_t tmpl_lanplus_open_session_rq =
     {4,   "reserved1"},
     {16,  "reserved2"},
     {32,  "remote_console_session_id"}, /* random num */
-
     {8,   "authentication_payload.payload_type"},
     {16,  "reserved3"},
     {8,   "authentication_payload.payload_length"}, /* 08h ?? */
@@ -930,9 +929,9 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
 }
 
 static int32_t
-_construct_payload_none(fiid_obj_t obj_cmd,
-                        fiid_template_t tmpl_cmd,
-                        fiid_obj_t obj_payload)
+_construct_payload_confidentiality_none(fiid_obj_t obj_cmd,
+                                        fiid_template_t tmpl_cmd,
+                                        fiid_obj_t obj_payload)
 {
   int32_t obj_cmd_len;
 
@@ -971,11 +970,11 @@ _construct_payload_none(fiid_obj_t obj_cmd,
 }
 
 static int32_t
-_construct_payload_aes_cbc_128(fiid_obj_t obj_cmd,
-                               fiid_template_t tmpl_cmd,
-                               u_int8_t *confidentiality_key,
-                               u_int32_t confidentiality_key_len,
-                               fiid_obj_t obj_payload)
+_construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
+                                               fiid_template_t tmpl_cmd,
+                                               u_int8_t *confidentiality_key,
+                                               u_int32_t confidentiality_key_len,
+                                               fiid_obj_t obj_payload)
 {
   gcry_cipher_hd_t h;
   gcry_error_t e;
@@ -1141,15 +1140,15 @@ _construct_payload(u_int8_t confidentiality_algorithm,
   FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_lanplus_payload);
 
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-    return _construct_payload_none(obj_cmd,
-                                   tmpl_cmd,
-                                   obj_payload);
+    return _construct_payload_confidentiality_none(obj_cmd,
+                                                   tmpl_cmd,
+                                                   obj_payload);
   else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-    return _construct_payload_aes_cbc_128(obj_cmd,
-                                          tmpl_cmd,
-                                          confidentiality_key,
-                                          confidentiality_key_len,
-                                          obj_payload);
+    return _construct_payload_confidentiality_aes_cbc_128(obj_cmd,
+                                                          tmpl_cmd,
+                                                          confidentiality_key,
+                                                          confidentiality_key_len,
+                                                          obj_payload);
   else
     {
       /* achu: Even though the algorithm is legit, we don't support it yet :-( */
@@ -1178,9 +1177,9 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                            u_int8_t *pkt,
                            u_int32_t pkt_len)
 {
-  u_int32_t msg_len = 0;
+  unsigned int pkt_msg_len = 0;
   int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_field_start;
-  u_int64_t payload_type, payload_authenticated, payload_encrypted, field_len, session_id;
+  u_int64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id;
   int32_t payload_len;
   fiid_obj_t obj_payload = NULL;
   fiid_obj_t obj_hdr_session_temp = NULL;
@@ -1240,15 +1239,15 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   /* 
    * Copy RMCP header into packet
    */
-  msg_len = 0;
+  pkt_msg_len = 0;
   ERR_EXIT (!((obj_rmcp_hdr_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
-  if (obj_rmcp_hdr_len > (pkt_len - msg_len))
+  if (obj_rmcp_hdr_len > (pkt_len - pkt_msg_len))
     {
       errno = ENOSPC;
       return (-1);
     }
   memcpy (pkt, obj_hdr_rmcp, obj_rmcp_hdr_len);
-  msg_len += obj_rmcp_hdr_len;
+  pkt_msg_len += obj_rmcp_hdr_len;
   
   /* 
    * Copy Auth Type and Payload Type into packet
@@ -1256,16 +1255,16 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
    * Determine length by determining the start of the OEM IANA
    */
   ERR_EXIT (!((obj_len = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
-  if (obj_len > (pkt_len - msg_len))
+  if (obj_len > (pkt_len - pkt_msg_len))
     {
       errno = ENOSPC;
       return (-1);
     }
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "auth_type")) < 0));
-  memcpy (pkt + msg_len, 
+  memcpy (pkt + pkt_msg_len, 
           obj_lanplus_hdr_session + obj_field_start,
           obj_len);
-  msg_len += obj_len;  
+  pkt_msg_len += obj_len;  
 
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
@@ -1276,16 +1275,16 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       ERR_EXIT (!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
       ERR_EXIT (!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_payload_id")) < 0));
       obj_len = obj_len_1 + obj_len_2;
-      if (obj_len > (pkt_len - msg_len))
+      if (obj_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_lanplus_hdr_session + obj_field_start,
               obj_len);
-      msg_len += obj_len;
+      pkt_msg_len += obj_len;
     }
 
   /* 
@@ -1294,16 +1293,16 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   ERR_EXIT(!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
   ERR_EXIT(!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_seq_num")) < 0));
   obj_len = obj_len_1 + obj_len_2;
-  if (obj_len > (pkt_len - msg_len))
+  if (obj_len > (pkt_len - pkt_msg_len))
     {
       errno = ENOSPC;
       return (-1);
     }
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
-  memcpy (pkt + msg_len,
+  memcpy (pkt + pkt_msg_len,
           obj_lanplus_hdr_session + obj_field_start,
           obj_len);
-  msg_len += obj_len;
+  pkt_msg_len += obj_len;
 
   /* 
    * Construct/Encrypt Payload and copy into packet
@@ -1335,69 +1334,69 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 payload_len);
   
   ERR_EXIT (!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "ipmi_payload_len")) < 0));
-  if (obj_len > (pkt_len - msg_len))
+  if (obj_len > (pkt_len - pkt_msg_len))
     {
       errno = ENOSPC;
       return (-1);
     }
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "ipmi_payload_len")) < 0));
-  memcpy (pkt + msg_len,
+  memcpy (pkt + pkt_msg_len,
           obj_hdr_session_temp + obj_field_start,
           obj_len);
-  msg_len += obj_len;
+  pkt_msg_len += obj_len;
 
   FIID_OBJ_GET (obj_payload,
                 tmpl_lanplus_payload,
                 "confidentiality_header_len",
-                &field_len);
-  if (field_len)
+                &obj_field_len);
+  if (obj_field_len)
     {
-      if (field_len > (pkt_len - msg_len))
+      if (obj_field_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "confidentiality_header")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
-              field_len);
-      msg_len += field_len;
+              obj_field_len);
+      pkt_msg_len += obj_field_len;
     }
 
   FIID_OBJ_GET (obj_payload,
                 tmpl_lanplus_payload,
                 "payload_len",
-                &field_len);
-  if (field_len)
+                &obj_field_len);
+  if (obj_field_len)
     {
-      if (field_len > (pkt_len - msg_len))
+      if (obj_field_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "payload")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
-              field_len);
-      msg_len += field_len;
+              obj_field_len);
+      pkt_msg_len += obj_field_len;
     }
 
   FIID_OBJ_GET (obj_payload,
                 tmpl_lanplus_payload,
                 "confidentiality_trailer_len",
-                &field_len);
-  if (field_len)
+                &obj_field_len);
+  if (obj_field_len)
     {
-      if (field_len > (pkt_len - msg_len))
+      if (obj_field_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "confidentiality_trailer")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
-              field_len);
-      msg_len += field_len;
+              obj_field_len);
+      pkt_msg_len += obj_field_len;
     }
 
   /* no trailer if session_id == 0 or payload unauthenticated 
@@ -1473,51 +1472,51 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
           return (-1);
         }
       
-      pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - (((msg_len - obj_rmcp_hdr_len) + pad_length_field_len + next_header_field_len + obj_auth_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
+      pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - (((pkt_msg_len - obj_rmcp_hdr_len) + pad_length_field_len + next_header_field_len + obj_auth_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
       
       /* 
        * Copy pad into packet
        */
       if (pad_len)
         {
-          if (pad_len > (pkt_len - msg_len))
+          if (pad_len > (pkt_len - pkt_msg_len))
             {
               errno = ENOSPC;
               return (-1);
             }
           ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "integrity_pad")) < 0));
           ERR_EXIT (pad_len < IPMI_INTEGRITY_PAD_MULTIPLE);
-          memcpy (pkt + msg_len, pad_bytes, pad_len);
-          msg_len += pad_len;
+          memcpy (pkt + pkt_msg_len, pad_bytes, pad_len);
+          pkt_msg_len += pad_len;
         }
 
       /* 
        * Copy pad length into packet
        */
-      if (pad_length_field_len > (pkt_len - msg_len))
+      if (pad_length_field_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "pad_length")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_lanplus_trlr_session + obj_field_start,
               pad_length_field_len);
-      msg_len += pad_length_field_len;
+      pkt_msg_len += pad_length_field_len;
 
       /* 
        * Copy next header field into packet
        */
-      if (next_header_field_len > (pkt_len - msg_len))
+      if (next_header_field_len > (pkt_len - pkt_msg_len))
         {
           errno = ENOSPC;
           return (-1);
         }
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "next_header")) < 0));
-      memcpy (pkt + msg_len,
+      memcpy (pkt + pkt_msg_len,
               obj_lanplus_trlr_session + obj_field_start,
               next_header_field_len);
-      msg_len += next_header_field_len;
+      pkt_msg_len += next_header_field_len;
 
       if (!strcmp(auth_field, "auth_code"))
         {
@@ -1529,19 +1528,19 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
           FIID_OBJ_GET (obj_lanplus_trlr_session,
                         tmpl_trlr_session,
                         "auth_code_len",
-                        &field_len);
-          if (field_len)
+                        &obj_field_len);
+          if (obj_field_len)
             {
-              if (field_len > (pkt_len - msg_len))
+              if (obj_field_len > (pkt_len - pkt_msg_len))
                 {
                   errno = ENOSPC;
                   return (-1);
                 }
               ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "auth_code")) < 0));
-              memcpy (pkt + msg_len,
+              memcpy (pkt + pkt_msg_len,
                       obj_lanplus_trlr_session + obj_field_start,
-                      field_len);
-              msg_len += field_len;
+                      obj_field_len);
+              pkt_msg_len += obj_field_len;
             }
         }
       else
@@ -1555,16 +1554,16 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                */
               if (obj_auth_len)
                 {
-                  if (obj_auth_len > (pkt_len - msg_len))
+                  if (obj_auth_len > (pkt_len - pkt_msg_len))
                     {
                       errno = ENOSPC;
                       return (-1);
                     }
                   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "auth_calc")) < 0));
-                  memcpy (pkt + msg_len,
+                  memcpy (pkt + pkt_msg_len,
                           obj_lanplus_trlr_session + obj_field_start,
                           obj_auth_len);
-                  msg_len += obj_auth_len;
+                  pkt_msg_len += obj_auth_len;
                 }
             }
           else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
@@ -1634,8 +1633,8 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
 
               memcpy(hash_data + hash_data_len,
                      (void *)(pkt + obj_rmcp_hdr_len),
-                     msg_len - obj_rmcp_hdr_len);
-              hash_data_len += msg_len - obj_rmcp_hdr_len;
+                     pkt_msg_len - obj_rmcp_hdr_len);
+              hash_data_len += pkt_msg_len - obj_rmcp_hdr_len;
 
               if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_calc_len)
                 {
@@ -1666,19 +1665,19 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                    return (-1);
                  }
 
-              if (integrity_digest_len > (pkt_len - msg_len))
+              if (integrity_digest_len > (pkt_len - pkt_msg_len))
                 {
                   errno = ENOSPC;
                   return (-1);
                 }
               
-              memcpy(pkt + msg_len, 
+              memcpy(pkt + pkt_msg_len, 
                      integrity_digest,
                      integrity_digest_len);
-              msg_len += integrity_digest_len;
+              pkt_msg_len += integrity_digest_len;
             }
         }
     }
 
-  return (msg_len);
+  return (pkt_msg_len);
 }
