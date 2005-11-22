@@ -83,7 +83,8 @@
 ------------------------------------------------------------
 2005-11-22  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/ipmi-lanplus-sessions.c: Fixed lan package bugs.
+	* libfreeipmi/src/ipmi-lanplus-sessions.c: Fixed lan packet
+	packaging bugs.
 	
 2005-11-18  Albert Chu <chu11@llnl.gov>
 
