@@ -1,3 +1,12 @@
+2005-11-21  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.h
+	(IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_LEN,
+	IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_LEN): Fixed bug in macros that
+	incorrectly calculated chksum data lengths.  Bugs never occurred
+	in libfreeipmi b/c buffers were memset and the chksums were adding
+	pointless 0's.
+	
 2005-11-17  Albert Chu  <chu11@llnl.gov>
 	
         Merge in rmcpping/ipmiping changes from branch al_ipmi_2_0_branch
