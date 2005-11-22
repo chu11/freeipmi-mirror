@@ -91,9 +91,9 @@
 /* all other reserved */
 
 #define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm) \
-        (((__algorithm) ==  IPMI_INTEGRITY_ALGORITHM_NONE \
-          || (__algorithm) ==  IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
-          || (__algorithm) ==  IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
+        (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE \
+          || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
+          || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
           || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_MD5_128) ? 1 : 0)
 
 /**********************************************
@@ -185,7 +185,7 @@ int32_t ipmi_calculate_k1(u_int8_t authentication_algorithm, u_int8_t *sik_key, 
 
 int32_t ipmi_calculate_k2(u_int8_t authentication_algorithm, u_int8_t *sik_key, u_int32_t sik_key_len, u_int8_t *k2, u_int32_t k2_len);
 
-int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr);
+int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_obj_t obj_hdr);
 
 int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
 
