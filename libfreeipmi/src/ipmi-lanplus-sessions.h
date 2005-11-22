@@ -193,7 +193,7 @@ int8_t fill_lanplus_open_session (u_int8_t message_tag, u_int8_t requested_maxim
 
 int8_t fill_lanplus_rakp_message_1(u_int8_t message_tag, u_int32_t managed_system_session_id, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t requested_maximum_privilege_level, u_int8_t nameonly_lookup_flag, u_int8_t *username, u_int32_t username_len, fiid_obj_t obj_msg);
 
-int32_t assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, u_int8_t *integrity_key, u_int32_t integrity_key_len, u_int8_t *confidentiality_key, u_int32_t confidentiality_key_len, fiid_obj_t obj_hdr_rmcp, fiid_obj_t obj_lanplus_hdr_session, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, fiid_obj_t obj_lanplus_trlr_session, fiid_template_t tmpl_trlr_session, u_int8_t *pkt, u_int32_t pkt_len);
+int32_t assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, u_int8_t *integrity_key, u_int32_t integrity_key_len, u_int8_t *confidentiality_key, u_int32_t confidentiality_key_len, fiid_obj_t obj_hdr_rmcp, fiid_obj_t obj_lanplus_hdr_session, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, fiid_obj_t obj_lanplus_trlr_session, fiid_template_t tmpl_trlr_session, u_int8_t *pkt, u_int32_t pkt_len);
 
 #ifdef __cplusplus
 }

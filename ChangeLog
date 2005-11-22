@@ -81,6 +81,10 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-11-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.c: Fixed lan package bugs.
+	
 2005-11-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.c: Various bug fixes and

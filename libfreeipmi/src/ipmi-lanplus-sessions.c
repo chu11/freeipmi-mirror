@@ -182,6 +182,15 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
     {0,   ""}
   };
 
+#define _BUF_SPACE_CHECK(__copy_in_len, __buf_space_left) \
+do { \
+   if ((__copy_in_len) > (__buf_space_left)) \
+     { \
+       errno = ENOSPC; \
+       return (-1); \
+     } \
+}  while (0) 
+
 static int _gcrypt_initialized = 0;
 
 /* 
@@ -244,7 +253,7 @@ _ipmi_gcrypt_hash(int gcry_md_algorithm,
       || !digest_len
       || digest_len < expected_digest_len)
     {
-      errno = EINVAL;
+      ipmi_debug("_ipmi_gcrypt_hash: Invalid parameters");
       return (-1);
     }
     
@@ -411,19 +420,14 @@ _calculate_k_rakp_none(u_int8_t *k,
   if (!k
       || !k_len
       || !constant
-      || !constant_len)
+      || !constant_len
+      /* XXX: achu: The spec is confusing, I hope I'm right about this */
+      || (k_len < IPMI_KEY_CONSTANT_LEN || constant_len < IPMI_KEY_CONSTANT_LEN))
     {
-      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_none: Invalid parameters");
       return (-1);
     }
-
-  /* XXX: achu: The spec is confusing, I hope I'm right about this */
-  if (k_len < IPMI_KEY_CONSTANT_LEN || constant_len < IPMI_KEY_CONSTANT_LEN)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
+ 
   memcpy(k, constant, IPMI_KEY_CONSTANT_LEN);
   return (IPMI_KEY_CONSTANT_LEN);
 }
@@ -451,7 +455,7 @@ _calculate_k_rakp_hmac(u_int32_t gcry_md_algorithm,
       || constant_len < expected_digest_len 
       || sik_key_len < expected_digest_len)
     {
-      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_hmac: Invalid parameters");
       return (-1);
     } 
 
@@ -489,7 +493,7 @@ _calculate_k_rakp_hmac_sha1(u_int8_t *sik_key,
       || !constant
       || !constant_len)
     {
-      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_hmac_sha1: Invalid parameters");
       return (-1);
     }
 
@@ -518,7 +522,7 @@ _calculate_k_rakp_hmac_md5(u_int8_t *sik_key,
       || !constant
       || !constant_len)
     {
-      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_hmac_md5: Invalid parameters");
       return (-1);
     }
 
@@ -549,7 +553,7 @@ _ipmi_calculate_k(u_int8_t authentication_algorithm,
       || !constant
       || !constant_len)
     {
-      errno = EINVAL;
+      ipmi_debug("_ipmi_calculate_k: Invalid parameters");
       return (-1);
     }
 
@@ -741,7 +745,7 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
 
   return (0);
 }
-
+                             
 int8_t
 fill_lanplus_open_session (u_int8_t message_tag,
                            u_int8_t requested_maximum_privilege_level,
@@ -929,48 +933,110 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
 }
 
 static int32_t
-_construct_payload_confidentiality_none(fiid_obj_t obj_cmd,
+_construct_payload_buf(fiid_obj_t obj_msg_hdr,
+                       fiid_obj_t obj_cmd,
+                       fiid_template_t tmpl_cmd,
+                       u_int8_t *payload_buf,
+                       u_int32_t payload_buf_len)
+{
+  int32_t obj_msg_hdr_len, obj_cmd_len, obj_trlr_len, chksum_start_offset,
+    chksum_block_len;
+  u_int32_t payload_len;
+  ipmi_chksum_t chksum;
+
+  if (!obj_msg_hdr
+      || !obj_cmd
+      || !tmpl_cmd
+      || !payload_buf
+      || !payload_buf_len)
+    {
+      ipmi_debug("_construct_payload_buf: Invalid parameters");
+      return (-1);
+    }
+
+  memset(payload_buf, '\0', payload_buf_len);
+
+  ERR_EXIT (!((obj_msg_hdr_len = fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq)) < 0));
+  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+  ERR_EXIT (!((obj_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr)) < 0));
+
+  payload_len = obj_msg_hdr_len + obj_cmd_len + obj_trlr_len;
+
+  ERR_EXIT (!(payload_len > IPMI_MAX_PAYLOAD_LEN));
+
+  if (payload_len > payload_buf_len)
+    {
+      ipmi_debug("_construct_payload_buf: buffer short");
+      return (-1);
+    }
+
+  ERR_EXIT (!((chksum_start_offset = fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rq, "chksum1")) < 0));
+  chksum_block_len = obj_msg_hdr_len - chksum_start_offset + obj_cmd_len;
+  
+  memcpy(payload_buf, obj_msg_hdr, obj_msg_hdr_len);
+  memcpy(payload_buf + obj_msg_hdr_len, obj_cmd, obj_cmd_len);
+
+  chksum = ipmi_chksum (payload_buf + chksum_start_offset, chksum_block_len);
+
+  memcpy(payload_buf + obj_msg_hdr_len + obj_cmd_len, &chksum, obj_trlr_len);
+  
+  return payload_len;
+}
+
+static int32_t
+_construct_payload_confidentiality_none(fiid_obj_t obj_msg_hdr,
+                                        fiid_obj_t obj_cmd,
                                         fiid_template_t tmpl_cmd,
                                         fiid_obj_t obj_payload)
 {
-  int32_t obj_cmd_len;
+  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  int32_t payload_len;
 
-  if (!obj_cmd
+  if (!obj_msg_hdr
+      || !obj_cmd
       || !tmpl_cmd
       || !obj_payload)
     {
-      errno = EINVAL;
+      ipmi_debug("_construct_payload_confidentiality_none: Invalid parameters");
       return (-1);
     }
+
+  FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_lanplus_payload);
 
   FIID_OBJ_SET (obj_payload, 
                 tmpl_lanplus_payload, 
                 "confidentiality_header_len",
                 0);
 
-  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+  if ((payload_len = _construct_payload_buf(obj_msg_hdr, 
+                                            obj_cmd, 
+                                            tmpl_cmd, 
+                                            payload_buf, 
+                                            IPMI_MAX_PAYLOAD_LEN)) < 0)
+    return (-1);
 
   FIID_OBJ_SET_DATA (obj_payload,
                      tmpl_lanplus_payload,
                      "payload_data",
-                     obj_cmd,
-                     obj_cmd_len);
+                     payload_buf,
+                     payload_len);
   
   FIID_OBJ_SET (obj_payload,
                 tmpl_lanplus_payload,
                 "payload_data_len",
-                obj_cmd_len);
+                payload_len);
 
   FIID_OBJ_SET (obj_payload, 
                 tmpl_lanplus_payload, 
                 "confidentiality_trailer_len",
                 0);
 
-  return obj_cmd_len;
+  return payload_len;
 }
 
 static int32_t
-_construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
+_construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
+                                               fiid_obj_t obj_cmd,
                                                fiid_template_t tmpl_cmd,
                                                u_int8_t *confidentiality_key,
                                                u_int32_t confidentiality_key_len,
@@ -979,20 +1045,22 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
   gcry_cipher_hd_t h;
   gcry_error_t e;
   u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
-  int32_t iv_len, obj_cmd_len;
+  int32_t iv_len;
   u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   u_int8_t pad_len;
+  u_int32_t payload_len;
   size_t cipher_keylen, cipher_blklen;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
-  if (!obj_cmd
+  if (!obj_msg_hdr
+      || !obj_cmd
       || !tmpl_cmd
       || !confidentiality_key
       || (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
       || !obj_payload)
     {
-      errno = EINVAL;
+      ipmi_debug("_construct_payload_confidentiality_aes_cbc_128: Invalid parameters");
       return (-1);
     }
 
@@ -1053,28 +1121,31 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
       return (-1);
     }
   
-  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
-  ERR_EXIT (!(obj_cmd_len > IPMI_MAX_PAYLOAD_LEN));
-  memcpy(payload_buf, obj_cmd, obj_cmd_len);
+  if ((payload_len = _construct_payload_buf(obj_msg_hdr, 
+                                            obj_cmd, 
+                                            tmpl_cmd, 
+                                            payload_buf, 
+                                            IPMI_MAX_PAYLOAD_LEN)) < 0)
+    return (-1);
 
   /* Pad the data appropriately */
 
   /* +1 is for the pad length field */
-  pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((obj_cmd_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
+  pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((payload_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
       
-  ERR_EXIT ((obj_cmd_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LEN);
+  ERR_EXIT ((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LEN);
   
   if (pad_len)
     {
       int i;
       for (i = 0; i < pad_len; i++)
-        payload_buf[obj_cmd_len + i] = i + 1;
-      payload_buf[obj_cmd_len + pad_len] = pad_len;
+        payload_buf[payload_len + i] = i + 1;
+      payload_buf[payload_len + pad_len] = pad_len;
     }
 
   if ((e = gcry_cipher_encrypt(h, 
                                (void *)payload_buf,
-                               obj_cmd_len + pad_len + 1, /* +1 for pad length field */
+                               payload_len + pad_len + 1, /* +1 for pad length field */
                                NULL,
                                0)) != GPG_ERR_NO_ERROR)
     {
@@ -1083,6 +1154,8 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
     }
       
   gcry_cipher_close(h);
+
+  FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_lanplus_payload);
 
   FIID_OBJ_SET_DATA (obj_payload,
                      tmpl_lanplus_payload,
@@ -1099,17 +1172,17 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
                      tmpl_lanplus_payload,
                      "payload_data",
                      payload_buf,
-                     obj_cmd_len);
+                     payload_len);
       
   FIID_OBJ_SET (obj_payload,
                 tmpl_lanplus_payload,
                 "payload_data_len",
-                obj_cmd_len);
+                payload_len);
 
   FIID_OBJ_SET_DATA (obj_payload,
                      tmpl_lanplus_payload,
                      "confidentiality_trailer",
-                     payload_buf + obj_cmd_len,
+                     payload_buf + payload_len,
                      pad_len + 1);
       
   FIID_OBJ_SET (obj_payload, 
@@ -1117,11 +1190,12 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_cmd,
                 "confidentiality_trailer_len",
                 pad_len + 1);
   
-  return (iv_len + obj_cmd_len + pad_len + 1);
+  return (iv_len + payload_len + pad_len + 1);
 }
 
 static int32_t
 _construct_payload(u_int8_t confidentiality_algorithm,
+                   fiid_obj_t obj_msg_hdr,
                    fiid_obj_t obj_cmd,
                    fiid_template_t tmpl_cmd,
                    u_int8_t *confidentiality_key,
@@ -1129,22 +1203,25 @@ _construct_payload(u_int8_t confidentiality_algorithm,
                    fiid_obj_t obj_payload)
 {
   if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+      || !obj_msg_hdr
       || !obj_cmd
       || !tmpl_cmd
       || !obj_payload)
     {
-      errno = EINVAL;
+      ipmi_debug("_construct_payload: Invalid parameters");
       return (-1);
     }
 
   FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_lanplus_payload);
 
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-    return _construct_payload_confidentiality_none(obj_cmd,
+    return _construct_payload_confidentiality_none(obj_msg_hdr,
+                                                   obj_cmd,
                                                    tmpl_cmd,
                                                    obj_payload);
   else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-    return _construct_payload_confidentiality_aes_cbc_128(obj_cmd,
+    return _construct_payload_confidentiality_aes_cbc_128(obj_msg_hdr,
+                                                          obj_cmd,
                                                           tmpl_cmd,
                                                           confidentiality_key,
                                                           confidentiality_key_len,
@@ -1160,6 +1237,94 @@ _construct_payload(u_int8_t confidentiality_algorithm,
   return (0);
 }
 
+static int8_t
+_construct_trlr_session_pad(u_int8_t integrity_algorithm,
+                            u_int32_t ipmi_msg_len,
+                            int8_t *pad_len_ptr,
+                            int8_t *pad_length_field_len_ptr,
+                            int8_t *next_header_field_len_ptr,
+                            fiid_template_t tmpl_trlr_session,
+                            fiid_obj_t obj_lanplus_trlr_session)
+{
+  u_int64_t obj_auth_len;
+  int8_t pad_len, pad_length_field_len, next_header_field_len;
+  u_int8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
+                                                     IPMI_INTEGRITY_PAD_DATA,
+                                                     IPMI_INTEGRITY_PAD_DATA,
+                                                     IPMI_INTEGRITY_PAD_DATA};
+  if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+      || !pad_len_ptr
+      || !pad_length_field_len_ptr
+      || !next_header_field_len_ptr
+      || !tmpl_trlr_session 
+      || !obj_lanplus_trlr_session
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "integrity_pad")
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "pad_length")
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "next_header"))
+    {
+      ipmi_debug("_construct_trlr_session_pad: Invalid parameters");
+      return (-1);
+    }
+
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE) 
+    {
+      char *auth_field_len;
+
+      if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
+        auth_field_len = "auth_code_len";
+      else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc"))
+        auth_field_len = "auth_calc_len";
+      else
+        {
+          /* Bad template */
+          errno = EINVAL;
+          return (-1);
+        }
+
+      FIID_OBJ_GET (obj_lanplus_trlr_session,
+                    tmpl_lanplus_trlr_session,
+                    auth_field_len,
+                    &obj_auth_len);
+    }
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+    obj_auth_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+    obj_auth_len = IPMI_HMAC_MD5_128_AUTHCODE_LEN;
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+    obj_auth_len = IPMI_MD5_128_AUTHCODE_LEN;
+  else
+    {
+      /* achu: Even though the algorithm is legit, we don't support it yet :-( */
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  ERR_EXIT (!((pad_length_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "pad_length")) < 0)); 
+  ERR_EXIT (!((next_header_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "next_header")) < 0));
+  
+  pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - ((ipmi_msg_len + pad_length_field_len + next_header_field_len + obj_auth_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
+
+  ERR_EXIT (!((fiid_obj_memset_field(obj_lanplus_trlr_session, '\0', tmpl_trlr_session, "integrity_pad")) < 0));
+
+  if (pad_len)
+    FIID_OBJ_SET_DATA (obj_lanplus_trlr_session,
+                       tmpl_trlr_session,
+                       "integrity_pad",
+                       pad_bytes,
+                       pad_len);
+  
+  FIID_OBJ_SET (obj_lanplus_trlr_session,
+                tmpl_trlr_session,
+                "pad_length",
+                pad_len);
+  
+  *pad_len_ptr = pad_len;
+  *pad_length_field_len_ptr = pad_length_field_len;
+  *next_header_field_len_ptr = next_header_field_len;
+
+  return (0);
+}
+    
 int32_t
 assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                            u_int8_t integrity_algorithm,
@@ -1170,6 +1335,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                            u_int32_t confidentiality_key_len,
                            fiid_obj_t obj_hdr_rmcp,
                            fiid_obj_t obj_lanplus_hdr_session,
+                           fiid_obj_t obj_msg_hdr,
                            fiid_obj_t obj_cmd,
                            fiid_template_t tmpl_cmd,
                            fiid_obj_t obj_lanplus_trlr_session,
@@ -1187,6 +1353,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !obj_hdr_rmcp
       || !obj_lanplus_hdr_session
+      || !obj_msg_hdr
       || !obj_cmd
       || !tmpl_cmd
       || !pkt
@@ -1206,11 +1373,6 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       errno = EINVAL;
       return (-1);
     }
-
-  FIID_OBJ_GET (obj_lanplus_hdr_session,
-                tmpl_lanplus_hdr_session,
-                "session_id",
-                &session_id);
 
   FIID_OBJ_GET (obj_lanplus_hdr_session,
                 tmpl_lanplus_hdr_session,
@@ -1234,6 +1396,21 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       return (-1);
     }
 
+  FIID_OBJ_GET (obj_lanplus_hdr_session,
+                tmpl_lanplus_hdr_session,
+                "session_id",
+                &session_id);
+
+  if (session_id 
+      && payload_authenticated
+      && (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+          || !obj_lanplus_trlr_session 
+          || !tmpl_trlr_session))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   memset(pkt, '\0', pkt_len);
 
   /* 
@@ -1241,11 +1418,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
    */
   pkt_msg_len = 0;
   ERR_EXIT (!((obj_rmcp_hdr_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
-  if (obj_rmcp_hdr_len > (pkt_len - pkt_msg_len))
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+  _BUF_SPACE_CHECK(obj_rmcp_hdr_len, (pkt_len - pkt_msg_len));
   memcpy (pkt, obj_hdr_rmcp, obj_rmcp_hdr_len);
   pkt_msg_len += obj_rmcp_hdr_len;
   
@@ -1255,11 +1428,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
    * Determine length by determining the start of the OEM IANA
    */
   ERR_EXIT (!((obj_len = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
-  if (obj_len > (pkt_len - pkt_msg_len))
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+  _BUF_SPACE_CHECK(obj_len, (pkt_len - pkt_msg_len));
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "auth_type")) < 0));
   memcpy (pkt + pkt_msg_len, 
           obj_lanplus_hdr_session + obj_field_start,
@@ -1275,11 +1444,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       ERR_EXIT (!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
       ERR_EXIT (!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "oem_payload_id")) < 0));
       obj_len = obj_len_1 + obj_len_2;
-      if (obj_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(obj_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "oem_iana")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_lanplus_hdr_session + obj_field_start,
@@ -1293,11 +1458,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   ERR_EXIT(!((obj_len_1 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
   ERR_EXIT(!((obj_len_2 = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "session_seq_num")) < 0));
   obj_len = obj_len_1 + obj_len_2;
-  if (obj_len > (pkt_len - pkt_msg_len))
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+  _BUF_SPACE_CHECK(obj_len, (pkt_len - pkt_msg_len));
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "session_id")) < 0));
   memcpy (pkt + pkt_msg_len,
           obj_lanplus_hdr_session + obj_field_start,
@@ -1307,10 +1468,10 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
   /* 
    * Construct/Encrypt Payload and copy into packet
    */
-
   FIID_OBJ_ALLOCA (obj_payload, tmpl_lanplus_payload);
 
   if ((payload_len = _construct_payload(confidentiality_algorithm,
+                                        obj_msg_hdr,
                                         obj_cmd,
                                         tmpl_cmd,
                                         confidentiality_key,
@@ -1334,11 +1495,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 payload_len);
   
   ERR_EXIT (!((obj_len = fiid_obj_field_len_bytes (tmpl_lanplus_hdr_session, "ipmi_payload_len")) < 0));
-  if (obj_len > (pkt_len - pkt_msg_len))
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+  _BUF_SPACE_CHECK(obj_len, (pkt_len - pkt_msg_len));
   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_hdr_session, "ipmi_payload_len")) < 0));
   memcpy (pkt + pkt_msg_len,
           obj_hdr_session_temp + obj_field_start,
@@ -1351,11 +1508,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 &obj_field_len);
   if (obj_field_len)
     {
-      if (obj_field_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(obj_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "confidentiality_header")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
@@ -1369,11 +1522,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 &obj_field_len);
   if (obj_field_len)
     {
-      if (obj_field_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(obj_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "payload")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
@@ -1387,11 +1536,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                 &obj_field_len);
   if (obj_field_len)
     {
-      if (obj_field_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(obj_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "confidentiality_trailer")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
@@ -1399,91 +1544,44 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       pkt_msg_len += obj_field_len;
     }
 
-  /* no trailer if session_id == 0 or payload unauthenticated 
-   *
-   * Remember De Morgan's law
-   *
-   * !(!session_id || !payload_authenticated)
-   */
   if (session_id && payload_authenticated)
     {
+      int32_t lanplus_trlr_session_len;
       u_int64_t obj_auth_len;
-      u_int8_t pad_len;
-      u_int32_t pad_length_field_len, next_header_field_len;
-      char *auth_field;
-      char *auth_field_len;
+      u_int8_t pad_len, pad_length_field_len, next_header_field_len;
+      fiid_obj_t obj_lanplus_trlr_session_temp;
       u_int8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
                                                          IPMI_INTEGRITY_PAD_DATA,
                                                          IPMI_INTEGRITY_PAD_DATA,
                                                          IPMI_INTEGRITY_PAD_DATA};
 
-      if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-          || !obj_lanplus_trlr_session 
-          || !tmpl_trlr_session)
+      if (!fiid_obj_field_lookup (tmpl_trlr_session, "integrity_pad")
+          || !fiid_obj_field_lookup (tmpl_trlr_session, "pad_length")
+          || !fiid_obj_field_lookup (tmpl_trlr_session, "next_header"))
         {
           errno = EINVAL;
           return (-1);
         }
 
-      if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
-        {
-          auth_field = "auth_code";
-          auth_field_len = "auth_code_len";
-        }
-      else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc"))
-        {
-          auth_field = "auth_calc";
-          auth_field_len = "auth_calc_len";
-        }
-      else
-        {
-          /* Bad template */
-          errno = EINVAL;
-          return (-1);
-        }
+      FIID_OBJ_ALLOCA (obj_lanplus_trlr_session_temp, tmpl_trlr_session);
+      ERR_EXIT (!((lanplus_trlr_session_len = fiid_obj_len_bytes (tmpl_trlr_session)) < 0));
+      memcpy(obj_lanplus_trlr_session_temp, obj_lanplus_trlr_session, lanplus_trlr_session_len);
 
-      if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE) 
-        FIID_OBJ_GET (obj_lanplus_trlr_session,
-                      tmpl_lanplus_trlr_session,
-                      auth_field_len,
-                      &obj_auth_len);
-      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
-        obj_auth_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
-      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
-        obj_auth_len = IPMI_HMAC_MD5_128_AUTHCODE_LEN;
-      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
-        obj_auth_len = IPMI_MD5_128_AUTHCODE_LEN;
-      else
-        {
-          /* achu: Even though the algorithm is legit, we don't support it yet :-( */
-          errno = EINVAL;
-          return (-1);
-        }
+      if (_construct_trlr_session_pad(integrity_algorithm,
+                                      (pkt_msg_len - obj_rmcp_hdr_len),
+                                      &pad_len,
+                                      &pad_length_field_len,
+                                      &next_header_field_len,
+                                      tmpl_trlr_session,
+                                      obj_lanplus_trlr_session_temp) < 0)
+        return (-1);
 
-      if ((pad_length_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "pad_length")) < 0)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-  
-      if ((next_header_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "next_header")) < 0)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-      
-      pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - (((pkt_msg_len - obj_rmcp_hdr_len) + pad_length_field_len + next_header_field_len + obj_auth_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
-      
       /* 
        * Copy pad into packet
        */
       if (pad_len)
         {
-          if (pad_len > (pkt_len - pkt_msg_len))
-            {
-              errno = ENOSPC;
-              return (-1);
-            }
+          _BUF_SPACE_CHECK(pad_len, (pkt_len - pkt_msg_len));
           ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "integrity_pad")) < 0));
           ERR_EXIT (pad_len < IPMI_INTEGRITY_PAD_MULTIPLE);
           memcpy (pkt + pkt_msg_len, pad_bytes, pad_len);
@@ -1493,11 +1591,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       /* 
        * Copy pad length into packet
        */
-      if (pad_length_field_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(pad_length_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "pad_length")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_lanplus_trlr_session + obj_field_start,
@@ -1507,18 +1601,14 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
       /* 
        * Copy next header field into packet
        */
-      if (next_header_field_len > (pkt_len - pkt_msg_len))
-        {
-          errno = ENOSPC;
-          return (-1);
-        }
+      _BUF_SPACE_CHECK(next_header_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "next_header")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_lanplus_trlr_session + obj_field_start,
               next_header_field_len);
       pkt_msg_len += next_header_field_len;
 
-      if (!strcmp(auth_field, "auth_code"))
+      if (fiid_obj_field_lookup(tmpl_trlr_session, "auth_code"))
         {
           /* XXX: achu: i don't know if this is right, do we copy in
            * just the length of the auth_code, like if the password is
@@ -1531,11 +1621,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                         &obj_field_len);
           if (obj_field_len)
             {
-              if (obj_field_len > (pkt_len - pkt_msg_len))
-                {
-                  errno = ENOSPC;
-                  return (-1);
-                }
+              _BUF_SPACE_CHECK(obj_field_len, (pkt_len - pkt_msg_len));
               ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "auth_code")) < 0));
               memcpy (pkt + pkt_msg_len,
                       obj_lanplus_trlr_session + obj_field_start,
@@ -1554,11 +1640,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                */
               if (obj_auth_len)
                 {
-                  if (obj_auth_len > (pkt_len - pkt_msg_len))
-                    {
-                      errno = ENOSPC;
-                      return (-1);
-                    }
+                  _BUF_SPACE_CHECK(obj_auth_len, (pkt_len - pkt_msg_len));
                   ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_lanplus_payload, "auth_calc")) < 0));
                   memcpy (pkt + pkt_msg_len,
                           obj_lanplus_trlr_session + obj_field_start,
@@ -1665,12 +1747,7 @@ assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm,
                    return (-1);
                  }
 
-              if (integrity_digest_len > (pkt_len - pkt_msg_len))
-                {
-                  errno = ENOSPC;
-                  return (-1);
-                }
-              
+               _BUF_SPACE_CHECK(integrity_digest_len, (pkt_len - pkt_msg_len));
               memcpy(pkt + pkt_msg_len, 
                      integrity_digest,
                      integrity_digest_len);
