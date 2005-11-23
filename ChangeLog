@@ -6,8 +6,7 @@
 
 	LIBFREEIPMI
 
-	* libfreeipmi/src/ipmi-lanplus-sessions.h,
-	libfreeipmi/src/ipmi-lanplus-sessions.c: New files.
+	* libfreeipmi/src/ipmi-rmcpplus.h, libfreeipmi/src/ipmi-rmcpplus.c: New files.
 
 	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
 
@@ -35,8 +34,9 @@
 	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
 	files.
 
-	* freeipmi.h: Added ipmi-lanplus-sessions.h.  Removed ipmi-hmac.c,
-	ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+	* libfreeipmi/src/freeipmi.h: Added ipmi-rmcpplus.h,
+	ipmi-rmcpplus-sessions.h, ipmi-rmcpplus-util.h.  Removed
+	ipmi-hmac.c, ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
 	#define checks for /dev/urandom and /dev/random.
@@ -72,15 +72,38 @@
 
 	* configure.ac: Add libgcrypt check.
 
-	* libfreeipmi/src/Makefile.am: Added ipmi-lanplus-sessions.h and
-	ipmi-lanplus-sessions.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
-	ipmi-sha1.c, ipmi-sha1.h.  Add libgcrypt into build.
-
+	* libfreeipmi/src/Makefile.am: Added ipmi-rmcpplus.h,
+	ipmi-rmcpplus.c, ipmi-rmcpplus-sessions.h,
+	ipmi-rmcpplus-sessions.c, ipmi-rmcpplus-util.h,
+	ipmi-rmcpplus-util.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
+	ipmi-sha1.c, ipmi-sha1.h.  Added libgcrypt into build.
+	
 	MISC
 	
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-11-23  Albert Chu <chu11@llnl.gov>
+
+	Code Re-org
+
+	* libfreeipmi/src/ipmi-lanplus-sessions.h,
+	libfreeipmi-src/ipmi-lanplus-sessions.c: Removed files.
+
+	* libfreeipmi/src/ipmi-rmcpplus.h,
+	libfreeipmi/src/ipmi-rmcpplus.c,libfreeipmi/src/ipmi-rmcpplus-sessions.h,
+	libfreeipmi/src/ipmi-rmcpplus-sessions.c,
+	libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c : New files.
+
+	* libfreeipmi/src/freeipmi.h: Updated for header file changes
+	appropriately.
+
+	* libfreeipmi/src/Makefile.am: Updated for file changes
+	appropriately.
+
+	* Globally change lanplus -> rmcpplus.
+	
 2005-11-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.c: Fixed lan packet

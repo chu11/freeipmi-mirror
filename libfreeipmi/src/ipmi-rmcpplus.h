@@ -1,5 +1,5 @@
 /*
-   ipmi-lanplus-sessions.h - IPMI LAN Commands
+   ipmi-rmcpplus.h - IPMI LAN Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef _IPMI_LANPLUS_SESSIONS_H
-#define _IPMI_LANPLUS_SESSIONS_H
+#ifndef _IPMI_RMCPPLUS_H
+#define _IPMI_RMCPPLUS_H
 
 /**************************
  * IPMI 2.0 Payload Types *
@@ -179,12 +179,6 @@ extern fiid_template_t tmpl_lanplus_rakp_message_2;
 extern fiid_template_t tmpl_lanplus_rakp_message_3;
 extern fiid_template_t tmpl_lanplus_rakp_message_4;
 
-int32_t ipmi_calculate_sik(u_int8_t authentication_algorithm, u_int8_t *key, u_int32_t key_len, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t *managed_system_random_number, u_int32_t managed_system_random_number_len, u_int8_t requested_privilege_level, u_int8_t *username, u_int8_t username_len, u_int8_t *sik, u_int32_t sik_len);
-
-int32_t ipmi_calculate_k1(u_int8_t authentication_algorithm, u_int8_t *sik_key, u_int32_t sik_key_len, u_int8_t *k1, u_int32_t k1_len);
-
-int32_t ipmi_calculate_k2(u_int8_t authentication_algorithm, u_int8_t *sik_key, u_int32_t sik_key_len, u_int8_t *k2, u_int32_t k2_len);
-
 int8_t fill_lanplus_hdr_session (fiid_template_t tmpl_session, u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_obj_t obj_hdr);
 
 int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
@@ -192,8 +186,6 @@ int8_t fill_lanplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_
 int8_t fill_lanplus_open_session (u_int8_t message_tag, u_int8_t requested_maximum_privilege_level, u_int32_t remote_console_session_id, u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, fiid_obj_t obj_msg);
 
 int8_t fill_lanplus_rakp_message_1(u_int8_t message_tag, u_int32_t managed_system_session_id, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t requested_maximum_privilege_level, u_int8_t nameonly_lookup_flag, u_int8_t *username, u_int32_t username_len, fiid_obj_t obj_msg);
-
-int32_t assemble_ipmi_lanplus_pkt (u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, u_int8_t *integrity_key, u_int32_t integrity_key_len, u_int8_t *confidentiality_key, u_int32_t confidentiality_key_len, fiid_obj_t obj_hdr_rmcp, fiid_obj_t obj_lanplus_hdr_session, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, fiid_obj_t obj_lanplus_trlr_session, fiid_template_t tmpl_trlr_session, u_int8_t *pkt, u_int32_t pkt_len);
 
 #ifdef __cplusplus
 }
