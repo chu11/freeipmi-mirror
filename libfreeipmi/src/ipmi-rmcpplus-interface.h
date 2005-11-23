@@ -1,5 +1,5 @@
 /*
-   ipmi-rmcpplus-sessions.h - IPMI LAN Commands
+   ipmi-rmcpplus-interface.h - IPMI LAN Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef _IPMI_RMCPPLUS_SESSIONS_H
-#define _IPMI_RMCPPLUS_SESSIONS_H
+#ifndef _IPMI_RMCPPLUS_INTERFACE_H
+#define _IPMI_RMCPPLUS_INTERFACE_H
  
 #ifdef __cplusplus
 extern "C" {

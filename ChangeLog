@@ -85,7 +85,7 @@
 ------------------------------------------------------------
 2005-11-23  Albert Chu <chu11@llnl.gov>
 
-	Code Re-org
+	IPMI 2.0 code cleanup and re-organization
 
 	* libfreeipmi/src/ipmi-lanplus-sessions.h,
 	libfreeipmi-src/ipmi-lanplus-sessions.c: Removed files.
