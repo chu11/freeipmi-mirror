@@ -35,7 +35,7 @@
 	files.
 
 	* libfreeipmi/src/freeipmi.h: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus-sessions.h, ipmi-rmcpplus-util.h.  Removed
+	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-util.h.  Removed
 	ipmi-hmac.c, ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
@@ -73,8 +73,8 @@
 	* configure.ac: Add libgcrypt check.
 
 	* libfreeipmi/src/Makefile.am: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus.c, ipmi-rmcpplus-sessions.h,
-	ipmi-rmcpplus-sessions.c, ipmi-rmcpplus-util.h,
+	ipmi-rmcpplus.c, ipmi-rmcpplus-interface.h,
+	ipmi-rmcpplus-interface.c, ipmi-rmcpplus-util.h,
 	ipmi-rmcpplus-util.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
 	ipmi-sha1.c, ipmi-sha1.h.  Added libgcrypt into build.
 	
@@ -91,8 +91,8 @@
 	libfreeipmi-src/ipmi-lanplus-sessions.c: Removed files.
 
 	* libfreeipmi/src/ipmi-rmcpplus.h,
-	libfreeipmi/src/ipmi-rmcpplus.c,libfreeipmi/src/ipmi-rmcpplus-sessions.h,
-	libfreeipmi/src/ipmi-rmcpplus-sessions.c,
+	libfreeipmi/src/ipmi-rmcpplus.c,libfreeipmi/src/ipmi-rmcpplus-interface.h,
+	libfreeipmi/src/ipmi-rmcpplus-interface.c,
 	libfreeipmi/src/ipmi-rmcpplus-util.h,
 	libfreeipmi/src/ipmi-rmcpplus-util.c : New files.
 
