@@ -697,8 +697,8 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         {
-          unsigned int gcry_md_algorithm, gcry_md_flags, gcry_md_digest_len, 
-            expected_digest_len, hash_data_len, integrity_digest_len;
+          int hash_algorithm, hash_flags, crypt_digest_len;
+          unsigned int expected_digest_len, hash_data_len, integrity_digest_len;
           u_int8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
           u_int64_t auth_calc_len = 0;
           u_int32_t auth_calc_field_start = 0;
@@ -712,38 +712,41 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
               return (-1);
             }
 
-          if (ipmi_init_gcrypt() < 0)
+          if (ipmi_init_crypt() < 0)
             return (-1);
           
           if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
             {
-              gcry_md_algorithm = GCRY_MD_SHA1;
-              gcry_md_flags = GCRY_MD_FLAG_HMAC;
+              hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+              hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
               expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
             }
           else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
             {
-              gcry_md_algorithm = GCRY_MD_MD5;
-              gcry_md_flags = GCRY_MD_FLAG_HMAC;
+              hash_algorithm = IPMI_CRYPT_HASH_MD5;
+              hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
               expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
             }
           else
             {
-              gcry_md_algorithm = GCRY_MD_MD5;
-              gcry_md_flags = 0;
+              hash_algorithm = IPMI_CRYPT_HASH_MD5;
+              hash_flags = 0;
               expected_digest_len = IPMI_MD5_DIGEST_LEN;
             }
           
-          ERR_EXIT ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) == expected_digest_len);
-          
-          if (gcry_md_flags == GCRY_MD_FLAG_HMAC && (integrity_key_len < gcry_md_digest_len))
+          if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+            return (-1);
+
+          ERR_EXIT (crypt_digest_len == expected_digest_len);
+         
+          if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && (integrity_key_len < gcry_md_digest_len))
             {
               errno = EINVAL;
               return (-1);
             }
 
-          if (integrity_key_len > gcry_md_digest_len)
-            integrity_key_len = gcry_md_digest_len;
+          if (integrity_key_len > crypt_digest_len)
+            integrity_key_len = crypt_digest_len;
 
           memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LEN);
           
@@ -779,23 +782,22 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
               hash_data_len += auth_calc_len;
             }
           
-          if ((integrity_digest_len = ipmi_gcrypt_hash(gcry_md_algorithm,
-                                                       gcry_md_flags,
-                                                       gcry_md_digest_len,
-                                                       integrity_key,
-                                                       integrity_key_len,
-                                                       hash_data,
-                                                       hash_data_len,
-                                                       integrity_digest,
-                                                       IPMI_MAX_PAYLOAD_LEN)) < 0)
+          if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+                                                      hash_flags,
+                                                      integrity_key,
+                                                      integrity_key_len,
+                                                      hash_data,
+                                                      hash_data_len,
+                                                      integrity_digest,
+                                                      IPMI_MAX_PAYLOAD_LEN)) < 0)
             {
-              ipmi_debug("ipmi_gcrypt_hash: %s", strerror(errno));
+              ipmi_debug("ipmi_crypt_hash: %s", strerror(errno));
               return (-1);
             }
           
-          if (integrity_digest_len != gcry_md_digest_len)
+          if (integrity_digest_len != crypt_digest_len)
             {
-              ipmi_debug("ipmi_gcrypt_hash: invalid digest length returned");
+              ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
               return (-1);
             }
 

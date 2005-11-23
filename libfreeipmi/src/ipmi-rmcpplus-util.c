@@ -30,7 +30,7 @@ static int _gcrypt_initialized = 0;
  *
  */
 int8_t
-ipmi_init_gcrypt(void)
+ipmi_init_crypt(void)
 {
   gcry_error_t e;
   
@@ -61,9 +61,27 @@ ipmi_init_gcrypt(void)
 }
 
 int32_t
-ipmi_gcrypt_hash(int gcry_md_algorithm,
-                unsigned int gcry_md_flags,
-                unsigned int expected_digest_len,
+ipmi_crypt_hash_digest_len(int hash_algorithm)
+{
+  int gcry_md_algorithm;
+
+  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
+    gcry_md_algorithm = GCRY_MD_SHA1;
+  else
+    gcry_md_algorithm = GCRY_MD_MD5;
+
+  return gcry_md_get_algo_dlen(gcry_md_algorithm);
+}
+
+int32_t
+ipmi_crypt_hash(int hash_algorithm,
+                int hash_flags,
                 u_int8_t *key,
                 u_int32_t key_len,
                 u_int8_t *hash_data,
@@ -73,26 +91,37 @@ ipmi_gcrypt_hash(int gcry_md_algorithm,
 {
   gcry_md_hd_t h;
   gcry_error_t e;
+  int gcry_md_algorithm, gcry_md_flags = 0;
   unsigned int gcry_md_digest_len;
   u_int8_t *digestPtr;
 
-  if (!(gcry_md_algorithm == GCRY_MD_SHA1 || gcry_md_algorithm == GCRY_MD_MD5)
-      || !(!gcry_md_flags || gcry_md_flags == GCRY_MD_FLAG_HMAC)
+  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm)
       || (hash_data && !hash_data_len)
       || !digest
-      || !digest_len
-      || digest_len < expected_digest_len)
+      || !digest_len)
     {
       errno = EINVAL;
       return (-1);
     }
     
-  if (ipmi_init_gcrypt() < 0)
+  if (ipmi_init_crypt() < 0)
     return (-1);
 
-  ERR_EXIT ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) != expected_digest_len);
+  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
+    gcry_md_algorithm = GCRY_MD_SHA1;
+  else
+    gcry_md_algorithm = GCRY_MD_MD5;
 
-  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
+  if (hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC)
+    gcry_md_flags |= GCRY_MD_FLAG_HMAC;
+
+  if ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) > digest_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_EARR_NO_ERROR)
     {
       ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
       return (-1);
@@ -104,7 +133,7 @@ ipmi_gcrypt_hash(int gcry_md_algorithm,
       return (-1);
     }
 
-  if (gcry_md_flags == GCRY_MD_FLAG_HMAC && key && key_len)
+  if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
     {
       if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
         {
@@ -168,23 +197,35 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
            || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
-      int gcry_md_algorithm;
-      unsigned int gcry_md_flags, expected_digest_len, hash_data_len;
+      int hash_algorithm, hash_flags, expected_digest_len, crypt_digest_len, 
+        computed_digest_len;
+      unsigned int hash_data_len;
       u_int8_t hash_data[IPMI_MAX_KEY_DATA_LEN];
       
       if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
         {
-          gcry_md_algorithm = GCRY_MD_SHA1;
-          gcry_md_flags = GCRY_MD_FLAG_HMAC;
+          hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+          hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
           expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
         }
       else
         {
-          gcry_md_algorithm = GCRY_MD_MD5;
-          gcry_md_flags = GCRY_MD_FLAG_HMAC;
+          hash_algorithm = IPMI_CRYPT_HASH_MD5;
+          hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
           expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
         }
-      
+
+      if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+        return (-1);
+
+      ERR_EXIT (crypt_digest_len == expected_digest_len);
+
+      if (sik_len < expected_digest_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
       key_len = (key_len > IPMI_MAX_SIK_KEY_LEN) ? IPMI_MAX_SIK_KEY_LEN : key_len;
 
       memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LEN);
@@ -220,15 +261,23 @@ ipmi_calculate_sik(u_int8_t authentication_algorithm,
           hash_data_len += username_len;
         }
 
-      return ipmi_gcrypt_hash(gcry_md_algorithm,
-                              gcry_md_flags,
-                              expected_digest_len,
-                              key,
-                              key_len,
-                              hash_data,
-                              hash_data_len,
-                              sik,
-                              sik_len);
+      if ((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
+                                                  hash_flags,
+                                                  key,
+                                                  key_len,
+                                                  hash_data,
+                                                  hash_data_len,
+                                                  sik,
+                                                  sik_len)) < 0)
+        return (-1);
+
+      if (computed_digest_len != crypt_digest_len)
+        {
+          ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
+          return (-1);
+        }
+
+      return (computed_digest_len);
     }
   else
     {
@@ -266,8 +315,8 @@ _calculate_k_rakp_none(u_int8_t *k,
 }
 
 static int32_t
-_calculate_k_rakp_hmac(u_int32_t gcry_md_algorithm,
-                       u_int32_t expected_digest_len,
+_calculate_k_rakp_hmac(int hash_algorithm,
+                       unsigned int expected_digest_len,
                        u_int8_t *sik_key,
                        u_int32_t sik_key_len,
                        u_int8_t *k,
@@ -275,9 +324,10 @@ _calculate_k_rakp_hmac(u_int32_t gcry_md_algorithm,
                        u_int8_t *constant,
                        u_int32_t constant_len)
 {
-  unsigned int gcry_md_digest_len;
-
-  if (!(gcry_md_algorithm == GCRY_MD_SHA1 || gcry_md_algorithm == GCRY_MD_MD5)
+  int computed_digest_len;
+  unsigned int crypt_digest_len;
+  
+  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm)
       || !sik_key
       || !sik_key_len
       || !k
@@ -293,23 +343,43 @@ _calculate_k_rakp_hmac(u_int32_t gcry_md_algorithm,
       return (-1);
     } 
 
-  ERR_EXIT ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) == expected_digest_len);
-      
+  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+    {
+      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_hmac: ipmi_crypt_hash_digest_len");
+      return (-1);
+    }
+
+  if (crypt_digest_len != expected_digest_len)
+    {
+      errno = EINVAL;
+      ipmi_debug("_calculate_k_rakp_hmac: Invalid parameters");
+      return (-1);
+    }
+
   /* XXX: achu: I believe the length of the constant you pass in
    * is the digest_len, atleast according to IPMI 2.0 Spec Section
    * 13.32, "constants are constructed using a hexadecimal octet
    * value repeated up to the HMAC block size in length starting
    * with the constant 01h".
    */
-  return ipmi_gcrypt_hash(gcry_md_algorithm,
-                          GCRY_MD_FLAG_HMAC,
-                          gcry_md_digest_len,
-                          sik_key,
-                          gcry_md_digest_len,
-                          constant,
-                          gcry_md_digest_len,
-                          k,
-                          k_len);
+  if ((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
+                                              GCRY_MD_FLAG_HMAC,
+                                              sik_key,
+                                              crypt_digest_len,
+                                              constant,
+                                              crypt_digest_len,
+                                              k,
+                                              k_len)) < 0)
+    return (-1);
+
+  if (computed_digest_len != crypt_digest_len)
+    {
+      ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
+      return (-1);
+    }
+
+  return (computed_digest_len);
 }
 
 static int32_t
@@ -332,7 +402,7 @@ _calculate_k_rakp_hmac_sha1(u_int8_t *sik_key,
       return (-1);
     }
 
-  return _calculate_k_rakp_hmac(GCRY_MD_SHA1,
+  return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_SHA1,
                                 IPMI_HMAC_SHA1_DIGEST_LEN,
                                 sik_key,
                                 sik_key_len,
@@ -362,7 +432,7 @@ _calculate_k_rakp_hmac_md5(u_int8_t *sik_key,
       return (-1);
     }
 
-  return _calculate_k_rakp_hmac(GCRY_MD_MD5,
+  return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_MD5,
                                 IPMI_HMAC_MD5_DIGEST_LEN,
                                 sik_key,
                                 sik_key_len,
