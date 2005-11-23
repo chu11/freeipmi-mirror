@@ -1,5 +1,5 @@
 /*
-   ipmi-lanplus-sessions.h - IPMI LAN Commands
+   ipmi-rmcpplus-util.h - IPMI LAN Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

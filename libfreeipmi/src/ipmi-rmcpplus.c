@@ -20,7 +20,7 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_lanplus_hdr_session = 
+fiid_template_t tmpl_rmcpplus_hdr_session = 
   {
     {4,   "auth_type"},         /* 06h for rmcpplus */
     {4,   "reserved"},
@@ -36,7 +36,7 @@ fiid_template_t tmpl_lanplus_hdr_session =
   };
 
 /* doesn't exist if session_id = 0h */
-fiid_template_t tmpl_lanplus_trlr_session = 
+fiid_template_t tmpl_rmcpplus_trlr_session = 
   {
     {32,  "integrity_pad"},     /* 0 to 32 bits */
     {8,   "pad_length"},
@@ -47,7 +47,7 @@ fiid_template_t tmpl_lanplus_trlr_session =
   };
 
 /* doesn't exist if session_id = 0h */
-fiid_template_t tmpl_lanplus_trlr_session_calc = 
+fiid_template_t tmpl_rmcpplus_trlr_session_calc = 
   {
     {32,  "integrity_pad"},     /* 0 to 32 bits to pad integrity data to multiple of 4 bytes */
     {8,   "pad_length"},
@@ -61,7 +61,7 @@ fiid_template_t tmpl_lanplus_trlr_session_calc =
  * not just the integrity field.  Sigh ... I duno, we'll see
  */
 
-fiid_template_t tmpl_lanplus_payload = 
+fiid_template_t tmpl_rmcpplus_payload = 
   {
     {512,    "confidentiality_header"},  /* up to 512 bits */
     {32,     "confidentiality_header_len"}, /* XXX not in IPMI 2.0 spec */
@@ -72,7 +72,7 @@ fiid_template_t tmpl_lanplus_payload =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_open_session_rq = 
+fiid_template_t tmpl_rmcpplus_open_session_rq = 
   {
     {8,   "message_tag"},        
     {4,   "requested_maximum_privilege_level"},
@@ -100,7 +100,7 @@ fiid_template_t tmpl_lanplus_open_session_rq =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_open_session_rs = 
+fiid_template_t tmpl_rmcpplus_open_session_rs = 
   {
     {8,   "message_tag"},
     {8,   "rmcpplus_status_code"},
@@ -130,7 +130,7 @@ fiid_template_t tmpl_lanplus_open_session_rs =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_rakp_message_1 = 
+fiid_template_t tmpl_rmcpplus_rakp_message_1 = 
   {
     {8,   "message_tag"},
     {24,  "reserved1"},
@@ -145,7 +145,7 @@ fiid_template_t tmpl_lanplus_rakp_message_1 =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_rakp_message_2 = 
+fiid_template_t tmpl_rmcpplus_rakp_message_2 = 
   {
     {8,   "message_tag"},
     {8,   "rmcpplus_status_code"},
@@ -158,7 +158,7 @@ fiid_template_t tmpl_lanplus_rakp_message_2 =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_rakp_message_3 = 
+fiid_template_t tmpl_rmcpplus_rakp_message_3 = 
   {
     {8,   "message_tag"},
     {8,   "rmcpplus_status_code"},
@@ -169,7 +169,7 @@ fiid_template_t tmpl_lanplus_rakp_message_3 =
     {0,   ""}
   };
 
-fiid_template_t tmpl_lanplus_rakp_message_4 = 
+fiid_template_t tmpl_rmcpplus_rakp_message_4 = 
   {
     {8,   "message_tag"},
     {8,   "rmcpplus_status_code"},
@@ -181,16 +181,16 @@ fiid_template_t tmpl_lanplus_rakp_message_4 =
   };
 
 int8_t
-fill_lanplus_hdr_session (fiid_template_t tmpl_session, 
-                          u_int8_t auth_type, 
-                          u_int8_t payload_type, 
-                          u_int8_t payload_authenticated, 
-                          u_int8_t payload_encrypted, 
-                          u_int32_t oem_iana, 
-                          u_int16_t oem_payload_id, 
-                          u_int32_t session_id, 
-                          u_int32_t session_seq_num, 
-                          fiid_obj_t obj_hdr)
+fill_rmcpplus_hdr_session (fiid_template_t tmpl_session, 
+                           u_int8_t auth_type, 
+                           u_int8_t payload_type, 
+                           u_int8_t payload_authenticated, 
+                           u_int8_t payload_encrypted, 
+                           u_int32_t oem_iana, 
+                           u_int16_t oem_payload_id, 
+                           u_int32_t session_id, 
+                           u_int32_t session_seq_num, 
+                           fiid_obj_t obj_hdr)
 {
   if (!IPMI_2_0_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
@@ -219,10 +219,10 @@ fill_lanplus_hdr_session (fiid_template_t tmpl_session,
 }
 
 int8_t
-fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
-                          u_int8_t *auth_code_data,
-                          u_int32_t auth_code_data_len,
-                          fiid_obj_t obj_trlr)
+fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
+                           u_int8_t *auth_code_data,
+                           u_int32_t auth_code_data_len,
+                           fiid_obj_t obj_trlr)
 {
   int32_t field_len;
   char *field_str, *field_str_len;
@@ -299,13 +299,13 @@ fill_lanplus_trlr_session(fiid_template_t tmpl_trlr,
 }
                              
 int8_t
-fill_lanplus_open_session (u_int8_t message_tag,
-                           u_int8_t requested_maximum_privilege_level,
-                           u_int32_t remote_console_session_id,
-                           u_int8_t authentication_algorithm,
-                           u_int8_t integrity_algorithm,
-                           u_int8_t confidentiality_algorithm,
-                           fiid_obj_t obj_cmd)
+fill_rmcpplus_open_session (u_int8_t message_tag,
+                            u_int8_t requested_maximum_privilege_level,
+                            u_int32_t remote_console_session_id,
+                            u_int8_t authentication_algorithm,
+                            u_int8_t integrity_algorithm,
+                            u_int8_t confidentiality_algorithm,
+                            fiid_obj_t obj_cmd)
 {
   if (!obj_cmd
       || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
@@ -317,53 +317,53 @@ fill_lanplus_open_session (u_int8_t message_tag,
       return (-1);
     }
   
-  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_open_session_rq);
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_rmcpplus_open_session_rq);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "message_tag", 
                 message_tag);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "requested_maximum_privilege_level", 
                 requested_maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "remote_console_session_id",
                 remote_console_session_id);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "authentication_payload.payload_type",
                 IPMI_AUTHENTICATION_PAYLOAD_TYPE);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "authentication_payload.payload_length",
                 IPMI_AUTHENTICATION_PAYLOAD_LEN);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "authentication_payload.authentication_algorithm",
                 authentication_algorithm);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "integrity_payload.payload_type",
                 IPMI_INTEGRITY_PAYLOAD_TYPE);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "integrity_payload.payload_length",
                 IPMI_INTEGRITY_PAYLOAD_LEN);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "integrity_payload.integrity_algorithm",
                 integrity_algorithm);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "confidentiality_payload.payload_type",
                 IPMI_CONFIDENTIALITY_PAYLOAD_TYPE);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq,
+                tmpl_rmcpplus_open_session_rq,
                 "confidentiality_payload.payload_length",
                 IPMI_CONFIDENTIALITY_PAYLOAD_LEN);
   FIID_OBJ_SET (obj_cmd,
-                tmpl_lanplus_open_session_rq, 
+                tmpl_rmcpplus_open_session_rq, 
                 "confidentiality_payload.confidentiality_algorithm",
                 confidentiality_algorithm);
 
@@ -371,15 +371,15 @@ fill_lanplus_open_session (u_int8_t message_tag,
 }
 
 int8_t
-fill_lanplus_rakp_message_1(u_int8_t message_tag,
-                            u_int32_t managed_system_session_id,
-                            u_int8_t *remote_console_random_number,
-                            u_int32_t remote_console_random_number_len,
-                            u_int8_t requested_maximum_privilege_level,
-                            u_int8_t nameonly_lookup_flag,
-                            u_int8_t *username,
-                            u_int32_t username_len,
-                            fiid_obj_t obj_cmd)
+fill_rmcpplus_rakp_message_1(u_int8_t message_tag,
+                             u_int32_t managed_system_session_id,
+                             u_int8_t *remote_console_random_number,
+                             u_int32_t remote_console_random_number_len,
+                             u_int8_t requested_maximum_privilege_level,
+                             u_int8_t nameonly_lookup_flag,
+                             u_int8_t *username,
+                             u_int32_t username_len,
+                             fiid_obj_t obj_cmd)
 {
   if (!obj_cmd
       || !remote_console_random_number
@@ -392,34 +392,34 @@ fill_lanplus_rakp_message_1(u_int8_t message_tag,
       return (-1);
     }
 
-  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_rakp_message_1);
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_rmcpplus_rakp_message_1);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_1, 
+                tmpl_rmcpplus_rakp_message_1, 
                 "message_tag", 
                 message_tag);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_1, 
+                tmpl_rmcpplus_rakp_message_1, 
                 "managed_system_session_id", 
                 managed_system_session_id);
   FIID_OBJ_SET_DATA (obj_cmd,
-                     tmpl_lanplus_rakp_message_1, 
+                     tmpl_rmcpplus_rakp_message_1, 
                      "remote_console_random_number",
                      remote_console_random_number,
                      remote_console_random_number_len);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_1, 
+                tmpl_rmcpplus_rakp_message_1, 
                 "requested_maximum_privilege_level", 
                 requested_maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_1, 
+                tmpl_rmcpplus_rakp_message_1, 
                 "nameonly_lookup", 
                 nameonly_lookup_flag);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_1, 
+                tmpl_rmcpplus_rakp_message_1, 
                 "username_length", 
                 username_len);
   FIID_OBJ_SET_DATA (obj_cmd,
-                     tmpl_lanplus_rakp_message_1, 
+                     tmpl_rmcpplus_rakp_message_1, 
                      "username",
                      username,
                      username_len);
@@ -428,12 +428,12 @@ fill_lanplus_rakp_message_1(u_int8_t message_tag,
 }
 
 int8_t
-fill_lanplus_rakp_message_3(u_int8_t message_tag,
-                            u_int8_t rmcpplus_status_code,
-                            u_int32_t managed_system_session_id,
-                            u_int8_t *key_exchange_authentication_code,
-                            u_int32_t key_exchange_authentication_code_len,
-                            fiid_obj_t obj_cmd)
+fill_rmcpplus_rakp_message_3(u_int8_t message_tag,
+                             u_int8_t rmcpplus_status_code,
+                             u_int32_t managed_system_session_id,
+                             u_int8_t *key_exchange_authentication_code,
+                             u_int32_t key_exchange_authentication_code_len,
+                             fiid_obj_t obj_cmd)
 {
   if (!obj_cmd || !RMCPPLUS_STATUS_VALID(rmcpplus_status_code))
     {
@@ -441,13 +441,13 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
       return (-1);
     }
 
-  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_lanplus_rakp_message_3);
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_rmcpplus_rakp_message_3);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_3, 
+                tmpl_rmcpplus_rakp_message_3, 
                 "message_tag", 
                 message_tag);
   FIID_OBJ_SET (obj_cmd, 
-                tmpl_lanplus_rakp_message_3, 
+                tmpl_rmcpplus_rakp_message_3, 
                 "managed_system_session_id", 
                 managed_system_session_id);
 
@@ -455,7 +455,7 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
     {
       u_int32_t field_len;
 
-      if ((field_len = fiid_obj_field_len_bytes(tmpl_lanplus_rakp_message_3, 
+      if ((field_len = fiid_obj_field_len_bytes(tmpl_rmcpplus_rakp_message_3, 
                                                 "key_exchange_authentication_code")) < 0)
         return (-1);
       
@@ -466,18 +466,18 @@ fill_lanplus_rakp_message_3(u_int8_t message_tag,
         }
 
       FIID_OBJ_SET_DATA (obj_cmd,
-                         tmpl_lanplus_rakp_message_3,
+                         tmpl_rmcpplus_rakp_message_3,
                          "key_exchange_authentication_code",
                          key_exchange_authentication_code,
                          key_exchange_authentication_code_len);
       FIID_OBJ_SET (obj_cmd,
-                    tmpl_lanplus_rakp_message_3,
+                    tmpl_rmcpplus_rakp_message_3,
                     "key_exchange_authentication_code_len",
                     key_exchange_authentication_code_len);
     }
   else
     FIID_OBJ_SET (obj_cmd,
-                  tmpl_lanplus_rakp_message_3,
+                  tmpl_rmcpplus_rakp_message_3,
                   "key_exchange_authentication_code_len",
                   0);
 

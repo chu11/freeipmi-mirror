@@ -1,5 +1,5 @@
 /* 
-   ipmi-lanplus-sessions.c - IPMI Session Handler
+   ipmi-rmcpplus-util.c - IPMI Session Handler
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
