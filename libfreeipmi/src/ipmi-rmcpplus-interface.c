@@ -739,7 +739,7 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
 
           ERR_EXIT (crypt_digest_len == expected_digest_len);
          
-          if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && (integrity_key_len < gcry_md_digest_len))
+          if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && (integrity_key_len < crypt_digest_len))
             {
               errno = EINVAL;
               return (-1);

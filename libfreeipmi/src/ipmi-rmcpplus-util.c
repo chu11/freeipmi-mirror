@@ -121,7 +121,7 @@ ipmi_crypt_hash(int hash_algorithm,
       return (-1);
     }
 
-  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_EARR_NO_ERROR)
+  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
     {
       ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
       return (-1);
