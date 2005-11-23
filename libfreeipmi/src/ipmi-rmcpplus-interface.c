@@ -20,8 +20,6 @@
 
 #include "freeipmi.h"
 
-#include <gcrypt.h>
-
 #define _BUF_SPACE_CHECK(__copy_in_len, __buf_space_left) \
 do { \
    if ((__copy_in_len) > (__buf_space_left)) \
@@ -282,14 +280,12 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
                                                u_int32_t confidentiality_key_len,
                                                fiid_obj_t obj_payload)
 {
-  gcry_cipher_hd_t h;
-  gcry_error_t e;
   u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
   int32_t iv_len;
   u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   u_int8_t pad_len;
   u_int32_t payload_len;
-  size_t cipher_keylen, cipher_blklen;
+  int cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
@@ -297,7 +293,6 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       || !obj_cmd
       || !tmpl_cmd
       || !confidentiality_key
-      || (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
       || !obj_payload)
     {
       errno = EINVAL;
@@ -305,27 +300,22 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       return (-1);
     }
 
-  if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
-                                 GCRYCTL_GET_KEYLEN,
-                                 NULL,
-                                 &cipher_keylen)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
-      return (-1);
-    }
-  
+  if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    return (-1);
+
   ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
-  
-  if ((e = gcry_cipher_algo_info(GCRY_CIPHER_AES, 
-                                 GCRYCTL_GET_BLKLEN,
-                                 NULL,
-                                 &cipher_blklen)) != GPG_ERR_NO_ERROR)
+
+  if (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
     {
-      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+      errno = EINVAL;
       return (-1);
     }
-  
-  ERR_EXIT (cipher_blklen == IPMI_AES_CBC_128_BLOCK_LEN);
+  confidentiality_key_len = IPMI_AES_CBC_128_KEY_LEN;
+
+  if ((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0)
+    return (-1);
+   
+  ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LEN);
      
   if ((iv_len = ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LEN)) < 0)
     {
@@ -339,30 +329,7 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       ipmi_debug("ipmi_get_random: Invalid bytes returned: %d", iv_len);
       return (-1);
     }
-  
-  if ((e = gcry_cipher_open(&h, 
-                            GCRY_CIPHER_AES,
-                            GCRY_CIPHER_MODE_CBC,
-                            0) != GPG_ERR_NO_ERROR))
-    {
-      ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
-      return (-1);
-    }
-  
-  if ((e = gcry_cipher_setkey(h, 
-                              (void *)confidentiality_key, 
-                              IPMI_AES_CBC_128_KEY_LEN)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
-      return (-1);
-    }
-
-  if ((e = gcry_cipher_setiv(h, (void *)iv, IPMI_AES_CBC_128_IV_LEN)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
-      return (-1);
-    }
-  
+    
   if ((payload_len = _construct_payload_buf_cmd_tmpl(obj_msg_hdr, 
                                                      obj_cmd, 
                                                      tmpl_cmd, 
@@ -385,17 +352,21 @@ _construct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       payload_buf[payload_len + pad_len] = pad_len;
     }
 
-  if ((e = gcry_cipher_encrypt(h, 
-                               (void *)payload_buf,
-                               payload_len + pad_len + 1, /* +1 for pad length field */
-                               NULL,
-                               0)) != GPG_ERR_NO_ERROR)
+  if ((encrypt_len = ipmi_crypt_cipher_encrypt(IPMI_CRYPT_CIPHER_AES,
+                                               IPMI_CRYPT_CIPHER_MODE_CBC,
+                                               confidentiality_key,
+                                               confidentiality_key_len,
+                                               iv,
+                                               iv_len,
+                                               payload_buf,
+                                               payload_len + pad_len + 1)) < 0) /* +1 for pad length field */
+       return (-1);
+
+  if (encrypt_len != (payload_len + pad_len + 1))
     {
-      ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
+      ipmi_debug("ipmi_crypt_cipher_encrypt: Invalid encryption length");
       return (-1);
     }
-      
-  gcry_cipher_close(h);
 
   FIID_OBJ_MEMSET (obj_payload, '\0', tmpl_rmcpplus_payload);
 
@@ -712,9 +683,6 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
               return (-1);
             }
 
-          if (ipmi_init_crypt() < 0)
-            return (-1);
-          
           if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
             {
               hash_algorithm = IPMI_CRYPT_HASH_SHA1;

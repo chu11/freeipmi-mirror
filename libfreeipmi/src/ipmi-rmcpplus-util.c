@@ -61,25 +61,6 @@ ipmi_init_crypt(void)
 }
 
 int32_t
-ipmi_crypt_hash_digest_len(int hash_algorithm)
-{
-  int gcry_md_algorithm;
-
-  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
-    gcry_md_algorithm = GCRY_MD_SHA1;
-  else
-    gcry_md_algorithm = GCRY_MD_MD5;
-
-  return gcry_md_get_algo_dlen(gcry_md_algorithm);
-}
-
-int32_t
 ipmi_crypt_hash(int hash_algorithm,
                 int hash_flags,
                 u_int8_t *key,
@@ -95,7 +76,7 @@ ipmi_crypt_hash(int hash_algorithm,
   unsigned int gcry_md_digest_len;
   u_int8_t *digestPtr;
 
-  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm)
+  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
       || (hash_data && !hash_data_len)
       || !digest
       || !digest_len)
@@ -156,6 +137,218 @@ ipmi_crypt_hash(int hash_algorithm,
   memcpy(digest, digestPtr, gcry_md_digest_len);
   gcry_md_close(h);
   return (gcry_md_digest_len);
+}
+
+int32_t
+ipmi_crypt_hash_digest_len(int hash_algorithm)
+{
+  int gcry_md_algorithm;
+
+  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (ipmi_init_crypt() < 0)
+    return (-1);
+
+  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
+    gcry_md_algorithm = GCRY_MD_SHA1;
+  else
+    gcry_md_algorithm = GCRY_MD_MD5;
+
+  return gcry_md_get_algo_dlen(gcry_md_algorithm);
+}
+
+int32_t
+ipmi_crypt_cipher_encrypt(int cipher_algorithm,
+                          int cipher_mode,
+                          u_int8_t *key,
+                          u_int32_t key_len,
+                          u_int8_t *iv,
+                          u_int32_t iv_len,
+                          u_int8_t *data,
+                          u_int32_t data_len)
+{
+  int gcry_cipher_algorithm, gcry_cipher_mode = 0;
+  int cipher_keylen, cipher_blocklen;
+  int expected_cipher_key_len, expected_cipher_block_len;
+  gcry_cipher_hd_t h;
+  gcry_error_t e;
+
+  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm)
+      || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
+      || !data
+      || !data_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
+    {
+      if (!iv || !iv_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      gcry_cipher_algorithm = GCRY_CIPHER_AES;
+      expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LEN;
+      expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LEN;
+    }
+  else
+    {
+      errno = EINVAL;
+      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
+      return (-1);
+    }
+
+  if (cipher_mode == IPMI_CRYPT_CIPHER_MODE_NONE)
+    gcry_cipher_mode = GCRY_CIPHER_MODE_NONE;
+  else
+    gcry_cipher_mode = GCRY_CIPHER_MODE_CBC;
+
+  if ((cipher_keylen = ipmi_crypt_cipher_key_len(cipher_algorithm)) < 0)
+    {
+      ipmi_debug("ipmi_crypt_cipher_encrypt: ipmi_crypt_cipher_key_len");
+      return (-1);
+    }
+  
+  if ((cipher_blocklen = ipmi_crypt_cipher_block_len(cipher_algorithm)) < 0)
+    {
+      ipmi_debug("ipmi_crypt_cipher_encrypt: ipmi_crypt_cipher_block_len");
+      return (-1);
+    }
+
+  if (cipher_keylen < expected_cipher_key_len
+      || cipher_blocklen != expected_cipher_block_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
+    {
+      if (iv_len < cipher_blocklen)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+      iv_len = cipher_blocklen;
+
+      if (key && key_len > expected_cipher_key_len)
+        key_len = expected_cipher_key_len;
+    }
+
+  if (ipmi_init_crypt() < 0)
+    return (-1);
+
+  if ((e = gcry_cipher_open(&h,
+                            gcry_cipher_algorithm,
+                            gcry_cipher_mode,
+                            0) != GPG_ERR_NO_ERROR))
+    {
+      ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
+      return (-1);
+    }
+  
+  if (key && key_len)
+    {
+      if ((e = gcry_cipher_setkey(h,
+                                  (void *)key,
+                                  key_len)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
+          return (-1);
+        }
+    }
+
+  if (iv && iv_len)
+    {
+      if ((e = gcry_cipher_setiv(h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
+          return (-1);
+        }
+    }
+
+  if ((e = gcry_cipher_encrypt(h,
+                               (void *)data,
+                               data_len,
+                               NULL,
+                               0)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
+      return (-1);
+    }
+
+  gcry_cipher_close(h);
+
+  return (data_len);
+}
+
+static int32_t
+_ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
+{
+  int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
+  gcry_error_t e;
+  size_t len;
+
+  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (!IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info))
+    {
+      errno = EINVAL;
+      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
+      return (-1);
+    }
+  
+  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
+    gcry_cipher_algorithm = GCRY_CIPHER_AES;
+  else
+    {
+      errno = EINVAL;
+      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
+      return (-1);
+    }
+
+  if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LEN)
+    gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;
+  else
+    gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
+
+  if (ipmi_init_crypt() < 0)
+    return (-1);
+
+  if ((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
+                                 gcry_crypt_cipher_info_what,
+                                 NULL,
+                                 &len)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
+      return (-1);
+    }
+
+  return (len);
+}
+                        
+
+int32_t
+ipmi_crypt_cipher_key_len(int cipher_algorithm)
+{
+  return _ipmi_crypt_cipher_info(cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LEN);
+}
+
+int32_t 
+ipmi_crypt_cipher_block_len(int cipher_algorithm)
+{
+  return _ipmi_crypt_cipher_info(cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LEN);
 }
 
 int32_t 
@@ -327,7 +520,7 @@ _calculate_k_rakp_hmac(int hash_algorithm,
   int computed_digest_len;
   unsigned int crypt_digest_len;
   
-  if (!IPMI_CRYPT_HASH_VALID(hash_algorithm)
+  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
       || !sik_key
       || !sik_key_len
       || !k

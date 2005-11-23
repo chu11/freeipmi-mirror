@@ -25,20 +25,45 @@
 extern "C" {
 #endif
 
-#define IPMI_CRYPT_HASH_SHA1       0x00
-#define IPMI_CRYPT_HASH_MD5        0x01
+#define IPMI_CRYPT_HASH_SHA1             0x00
+#define IPMI_CRYPT_HASH_MD5              0x01
 
-#define IPMI_CRYPT_HASH_VALID(__hash_algorithm) \
+#define IPMI_CRYPT_HASH_ALGORITHM_VALID(__hash_algorithm) \
         (((__hash_algorithm) == IPMI_CRYPT_HASH_SHA1 \
           || (__hash_algorithm) == IPMI_CRYPT_HASH_MD5) ? 1 : 0)
 
-#define IPMI_CRYPT_HASH_FLAGS_HMAC 0x01
+#define IPMI_CRYPT_HASH_FLAGS_HMAC       0x01
+
+#define IPMI_CRYPT_CIPHER_AES            0x00
+
+#define IPMI_CRYPT_CIPHER_ALGORITHM_VALID(__cipher_algorithm) \
+        (((__cipher_algorithm) == IPMI_CRYPT_CIPHER_AES) ? 1 : 0)
+
+#define IPMI_CRYPT_CIPHER_MODE_NONE      0x00
+#define IPMI_CRYPT_CIPHER_MODE_CBC       0x01
+
+#define IPMI_CRYPT_CIPHER_MODE_VALID(__cipher_mode) \
+        (((__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_NONE \
+          || (__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_CBC) ? 1 : 0)
+
+#define IPMI_CRYPT_CIPHER_INFO_KEY_LEN   0x00
+#define IPMI_CRYPT_CIPHER_INFO_BLOCK_LEN 0x01
+
+#define IPMI_CRYPT_CIPHER_INFO_VALID(__cipher_info) \
+        (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LEN \
+          || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LEN) ? 1 : 0)
 
 int8_t ipmi_init_crypt(void);
 
 int32_t ipmi_crypt_hash(int hash_algorithm, int hash_flags, u_int8_t *key, u_int32_t key_len, u_int8_t *hash_data, u_int32_t hash_data_len, u_int8_t *digest, u_int32_t digest_len);
 
 int32_t ipmi_crypt_hash_digest_len(int hash_algorithm);
+
+int32_t ipmi_crypt_cipher_encrypt(int cipher_algorithm, int cipher_mode, u_int8_t *key, u_int32_t key_len, u_int8_t *iv, u_int32_t iv_len, u_int8_t *data, u_int32_t data_len);
+
+int32_t ipmi_crypt_cipher_key_len(int cipher_algorithm);
+
+int32_t ipmi_crypt_cipher_block_len(int cipher_algorithm);
 
 int32_t ipmi_calculate_sik(u_int8_t authentication_algorithm, u_int8_t *key, u_int32_t key_len, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t *managed_system_random_number, u_int32_t managed_system_random_number_len, u_int8_t requested_privilege_level, u_int8_t *username, u_int8_t username_len, u_int8_t *sik, u_int32_t sik_len);
 
