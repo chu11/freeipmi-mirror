@@ -236,7 +236,15 @@ ipmi_crypt_cipher_encrypt(int cipher_algorithm,
           errno = EINVAL;
           return (-1);
         }
-      iv_len = cipher_blocklen;
+
+      if (data_len % cipher_blocklen != 0)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      if (iv_len > cipher_blocklen)
+        iv_len = cipher_blocklen;
 
       if (key && key_len > expected_cipher_key_len)
         key_len = expected_cipher_key_len;

@@ -83,6 +83,12 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-11-30  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c
+	(ipmi_crypt_cipher_encrypt): Added proper cipher blocklength check
+	for AES.
+	
 2005-11-23  Albert Chu <chu11@llnl.gov>
 
 	IPMI 2.0 code cleanup and re-organization
