@@ -61,6 +61,8 @@ int32_t ipmi_crypt_hash_digest_len(int hash_algorithm);
 
 int32_t ipmi_crypt_cipher_encrypt(int cipher_algorithm, int cipher_mode, u_int8_t *key, u_int32_t key_len, u_int8_t *iv, u_int32_t iv_len, u_int8_t *data, u_int32_t data_len);
 
+int32_t ipmi_crypt_cipher_decrypt(int cipher_algorithm, int cipher_mode, u_int8_t *key, u_int32_t key_len, u_int8_t *iv, u_int32_t iv_len, u_int8_t *data, u_int32_t data_len);
+
 int32_t ipmi_crypt_cipher_key_len(int cipher_algorithm);
 
 int32_t ipmi_crypt_cipher_block_len(int cipher_algorithm);

@@ -161,15 +161,16 @@ ipmi_crypt_hash_digest_len(int hash_algorithm)
   return gcry_md_get_algo_dlen(gcry_md_algorithm);
 }
 
-int32_t
-ipmi_crypt_cipher_encrypt(int cipher_algorithm,
-                          int cipher_mode,
-                          u_int8_t *key,
-                          u_int32_t key_len,
-                          u_int8_t *iv,
-                          u_int32_t iv_len,
-                          u_int8_t *data,
-                          u_int32_t data_len)
+static int32_t
+_cipher_crypt(int cipher_algorithm,
+              int cipher_mode,
+              u_int8_t *key,
+              u_int32_t key_len,
+              u_int8_t *iv,
+              u_int32_t iv_len,
+              u_int8_t *data,
+              u_int32_t data_len,
+              int encrypt_flag)
 {
   int gcry_cipher_algorithm, gcry_cipher_mode = 0;
   int cipher_keylen, cipher_blocklen;
@@ -282,19 +283,76 @@ ipmi_crypt_cipher_encrypt(int cipher_algorithm,
         }
     }
 
-  if ((e = gcry_cipher_encrypt(h,
-                               (void *)data,
-                               data_len,
-                               NULL,
-                               0)) != GPG_ERR_NO_ERROR)
+  if (encrypt_flag)
     {
-      ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
-      return (-1);
+      if ((e = gcry_cipher_encrypt(h,
+                                   (void *)data,
+                                   data_len,
+                                   NULL,
+                                   0)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
+          return (-1);
+        }
+    }
+  else
+    {
+      if ((e = gcry_cipher_decrypt(h,
+                                   (void *)data,
+                                   data_len,
+                                   NULL,
+                                   0)) != GPG_ERR_NO_ERROR)
+        {
+          ipmi_debug("gcry_cipher_decrypt: %s", gcry_strerror(e));
+          return (-1);
+        }
     }
 
   gcry_cipher_close(h);
 
   return (data_len);
+}
+
+int32_t
+ipmi_crypt_cipher_encrypt(int cipher_algorithm,
+                          int cipher_mode,
+                          u_int8_t *key,
+                          u_int32_t key_len,
+                          u_int8_t *iv,
+                          u_int32_t iv_len,
+                          u_int8_t *data,
+                          u_int32_t data_len)
+{
+  return _cipher_crypt(cipher_algorithm,
+                       cipher_mode,
+                       key,
+                       key_len,
+                       iv,
+                       iv_len,
+                       data,
+                       data_len,
+                       1);
+}
+
+int32_t
+ipmi_crypt_cipher_decrypt(int cipher_algorithm,
+                          int cipher_mode,
+                          u_int8_t *key,
+                          u_int32_t key_len,
+                          u_int8_t *iv,
+                          u_int32_t iv_len,
+                          u_int8_t *data,
+                          u_int32_t data_len)
+{
+  return _cipher_crypt(cipher_algorithm,
+                       cipher_mode,
+                       key,
+                       key_len,
+                       iv,
+                       iv_len,
+                       data,
+                       data_len,
+                       0);
 }
 
 static int32_t

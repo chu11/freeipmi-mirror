@@ -83,6 +83,18 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c (ipmi_crypt_cipher_decrypt):
+	New function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c (_cipher_crypt): New function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c
+	(ipmi_crypt_cipher_encrypt): Use new common _cipher_crypt
+	function.
+
 2005-11-30  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.c
