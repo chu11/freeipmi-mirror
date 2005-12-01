@@ -6,7 +6,12 @@
 
 	LIBFREEIPMI
 
-	* libfreeipmi/src/ipmi-rmcpplus.h, libfreeipmi/src/ipmi-rmcpplus.c: New files.
+	* libfreeipmi/src/ipmi-rmcpplus.h,
+	libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/src/ipmi-rmcpplus-interface.h,
+	libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c: New files.
 
 	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
 
