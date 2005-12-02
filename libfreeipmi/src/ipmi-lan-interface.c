@@ -881,7 +881,7 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
 {
   u_int8_t auth_type;
   u_int32_t auth_type_offset, indx;
-  u_int32_t obj_len, obj_rmcp_hdr_len;
+  u_int32_t obj_cmd_len, obj_len, obj_rmcp_hdr_len, obj_msg_trlr_len;
 
   if (!(pkt && tmpl_hdr_session && tmpl_cmd))
     {
@@ -1018,12 +1018,22 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
   if (pkt_len <= indx)
     return 0;
 
-  obj_len = fiid_obj_len_bytes (tmpl_cmd);
+  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
+  obj_msg_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+
+  if ((pkt_len - indx) <= obj_cmd_len)
+    {
+      if ((pkt_len - indx) > obj_msg_trlr_len)
+        obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
+      else
+        obj_cmd_len = (pkt_len - indx);
+    }
+
   if (obj_cmd)
     memcpy (obj_cmd,
-	    pkt + indx,
-	    FREEIPMI_MIN((pkt_len - indx), obj_len));
-  indx += obj_len;
+            pkt + indx,
+            FREEIPMI_MIN((pkt_len - indx), obj_cmd_len));
+  indx += obj_cmd_len;
 
   if (pkt_len <= indx)
     return 0;
@@ -1032,8 +1042,8 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
   if (obj_msg_trlr)
     memcpy (obj_msg_trlr,
 	    pkt + indx,
-	    FREEIPMI_MIN((pkt_len - indx), obj_len));
-  indx += obj_len;
+	    FREEIPMI_MIN((pkt_len - indx), obj_msg_trlr_len));
+  indx += obj_msg_trlr_len;
   
   return 0;
 }

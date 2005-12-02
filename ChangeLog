@@ -1,4 +1,10 @@
-2005-12-05  Albert Chu  <chu11@llnl.gov>
+2005-12-02  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt),
+	libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_lan): Fill in lan
+	trailer even when packet is shorter than expected.
+	
+2005-12-01  Albert Chu  <chu11@llnl.gov>
 
 	* fish/bmc-config.conf.5.in: Fixed typos.
 	

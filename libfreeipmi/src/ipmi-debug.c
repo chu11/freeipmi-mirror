@@ -195,6 +195,7 @@ int8_t
 fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
   u_int32_t indx = 0;
+  int32_t obj_cmd_len, obj_msg_trlr_len;
   u_int8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefixbuf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *prefix_ptr;
@@ -299,25 +300,32 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
   if (pkt_len <= indx)
     return 0;
 
+  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
+  obj_msg_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+
   /* Dump command data */
 
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_cmd))
+  if ((pkt_len - indx) <= obj_cmd_len)
     {
+      if ((pkt_len - indx) > obj_msg_trlr_len)
+        obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
+      else
+        obj_cmd_len = (pkt_len - indx);
       ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
+      memcpy(buf, pkt + indx, obj_cmd_len); 
       ERR_OUT(fiid_obj_dump_perror (fd, prefix, cmd_hdr, NULL, buf, tmpl_cmd) != -1);
     }
   else 
     ERR_OUT(fiid_obj_dump_perror (fd, prefix, cmd_hdr, NULL, pkt + indx, tmpl_cmd) != -1);
-  indx += fiid_obj_len_bytes (tmpl_cmd);
+  indx += obj_cmd_len;
 
   if (pkt_len <= indx)
     return 0;
 
   /* Dump trailer */
 
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_lan_msg_trlr))
+  if ((pkt_len - indx) < obj_msg_trlr_len)
     {
       ERR_EXIT(fiid_obj_len_bytes(tmpl_lan_msg_trlr) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
@@ -326,7 +334,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
     }
   else 
     ERR_OUT(fiid_obj_dump_perror (fd, prefix, trlr_hdr, NULL, pkt + indx, tmpl_lan_msg_trlr) != -1);
-  indx += fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+  indx += obj_msg_trlr_len;
 
   if (pkt_len <= indx)
     return 0;
