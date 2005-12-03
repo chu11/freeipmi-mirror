@@ -196,7 +196,14 @@ fill_rmcpplus_hdr_session (fiid_template_t tmpl_session,
       || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
       || !IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
       || !IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
-      || !(tmpl_session && obj_hdr))
+      || !(tmpl_session && obj_hdr)
+      || ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+           || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+          && (payload_authenticated || payload_encrypted || session_id || session_seq_num)))
     {
       errno = EINVAL;
       return (-1);
@@ -208,8 +215,11 @@ fill_rmcpplus_hdr_session (fiid_template_t tmpl_session,
   FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type", payload_type);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.authenticated", payload_authenticated);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.encrypted", payload_encrypted);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_iana", oem_iana);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_payload_id", oem_payload_id);
+  if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
+    {
+      FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_iana", oem_iana);
+      FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_payload_id", oem_payload_id);
+    }
   FIID_OBJ_SET (obj_hdr, tmpl_session, "session_id", session_id);
   FIID_OBJ_SET (obj_hdr, tmpl_session, "session_seq_num", session_seq_num);
 
