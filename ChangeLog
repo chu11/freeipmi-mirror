@@ -1,3 +1,8 @@
+2005-12-05  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for [BUG#14926 fish assumes user has a home directory].
+
 2005-12-05  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c

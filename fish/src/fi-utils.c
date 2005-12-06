@@ -138,12 +138,23 @@ get_home_directory (void)
   uid_t user_id;
   setpwent ();
   user_id = getuid ();
+  char * username = "unknownuser";
+  char * dir;
+
   while ((current_passwd = getpwent ()))
     {
-      if (current_passwd->pw_uid == user_id)
-	return current_passwd->pw_dir;
+      if (current_passwd->pw_uid == user_id) {
+	username = current_passwd->pw_name ? current_passwd->pw_name :
+	  username;
+	if (access (current_passwd->pw_dir, R_OK|W_OK|X_OK)) 
+	  break;
+	else
+	  return current_passwd->pw_dir;
+      } 
     }
-  return NULL;
+  dir = calloc (strlen ("/tmp") + 1 + strlen (username) + 1, 1);
+  sprintf (dir, "/tmp/%s", username);
+  return mkdir (dir, 0755) ? NULL : dir;
 }
 
 char *
