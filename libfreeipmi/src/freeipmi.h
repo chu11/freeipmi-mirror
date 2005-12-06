@@ -54,11 +54,22 @@ extern "C" {
 #include <limits.h>
 #include <syslog.h>
 
-#if defined(__FreeBSD__)
-# include <machine/cpufunc.h>
-# include <machine/sysarch.h>
-#else
-# include <sys/io.h>
+#ifndef _OS2_
+#  if (defined(__GLIBC__) && __GLIBC__ >= 2)
+#    include <sys/io.h>
+#  elif defined (__OpenBSD__) || defined (__NetBSD__)
+#    include <machine/pio.h>/* inb/outb */
+#    include <machine/sysarch.h>/* sysarch call */
+#  elif defined (__FreeBSD__)
+#    include <machine/cpufunc.h>
+#    include <machine/sysarch.h>
+#  elif defined (PPC)
+#    include <asm/io.h>
+#  else
+#    ifdef _AXP_
+#       include <sys/io.h>
+#    endif
+#  endif   
 #endif
 
 #ifdef HAVE_CONFIG_H

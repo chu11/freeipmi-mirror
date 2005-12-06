@@ -1,7 +1,10 @@
 2005-12-05  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
-	patch for [BUG#14926 fish assumes user has a home directory].
+	patch for bug [#14926 fish assumes user has a home directory].
+
+	* libfreeipmi/src/freeipmi.h: More tests for sys/io.h header
+	inclusing. Closing bug [#11209 overview: Uses ys/io.h].
 
 2005-12-05  Albert Chu  <chu11@llnl.gov>
 
