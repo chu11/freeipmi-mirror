@@ -88,6 +88,13 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.h,
+	libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(unassemble_ipmi_rmcpplus_pkt): Complete initial development of
+	unassemble rmcpplus interface.
+	
 2005-12-02  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus.c (_construct_payload_special,

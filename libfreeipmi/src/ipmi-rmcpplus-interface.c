@@ -789,6 +789,7 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
   return (0);
 }
 
+/* XXX: Need equivalent that takes payload object rather than command object? */
 int32_t
 assemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
                             u_int8_t integrity_algorithm,
@@ -1595,6 +1596,7 @@ _deconstruct_payload(u_int8_t payload_type,
   return (0);
 }
 
+/* XXX: How check correctness of payload? */
 int32_t
 unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
                               u_int8_t integrity_algorithm,
@@ -1616,9 +1618,8 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
 {
   unsigned int pkt_index = 0;
   int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_len_3, obj_field_start;
-  u_int64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num, ipmi_payload_len;
+  u_int64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num, ipmi_payload_len;
   fiid_obj_t obj_rmcpplus_hdr_session_temp;
-  fiid_obj_t obj_hdr_session_temp = NULL;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !pkt
@@ -1778,15 +1779,32 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
   if (pkt_len <= pkt_index)
     return 0;
   
-  if (session_id && payload_authenticated)
+  if (session_id && payload_authenticated && obj_rmcpplus_trlr_session)
     {
-#if 0
-      int32_t rmcpplus_trlr_session_len;
-      u_int8_t pad_len, pad_length_field_len, next_header_field_len;
-      fiid_obj_t obj_rmcpplus_trlr_session_temp;
-      u_int8_t auth_code_buf[IPMI_MAX_PAYLOAD_LEN];
-      int32_t auth_code_len;
+      int32_t pad_length_field_len, next_header_field_len;
+      u_int32_t authcode_len;
+      u_int64_t pad_length;
+      char *auth_field, *auth_field_len;
 
+      if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+        {
+          /* achu: There shouldn't be any integrity data */
+          errno = EINVAL;
+          return (-1);
+        }
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+        authcode_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+        authcode_len = IPMI_HMAC_MD5_128_AUTHCODE_LEN;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+        authcode_len = IPMI_MD5_128_AUTHCODE_LEN;
+      else
+        {
+          /* achu: Even though the algorithm is legit, we don't support it yet :-( */
+          errno = EINVAL;
+          return (-1);
+        }
+      
       if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
           || !fiid_obj_field_lookup (tmpl_trlr_session, "integrity_pad")
           || !fiid_obj_field_lookup (tmpl_trlr_session, "pad_length")
@@ -1796,74 +1814,75 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
           return (-1);
         }
 
-      FIID_OBJ_ALLOCA (obj_rmcpplus_trlr_session_temp, tmpl_trlr_session);
-      ERR_EXIT (!((rmcpplus_trlr_session_len = fiid_obj_len_bytes (tmpl_trlr_session)) < 0));
-      memcpy(obj_rmcpplus_trlr_session_temp, obj_rmcpplus_trlr_session, rmcpplus_trlr_session_len);
+      ERR_EXIT (!((pad_length_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "pad_length")) < 0)); 
+      ERR_EXIT (!((next_header_field_len = fiid_obj_field_len_bytes (tmpl_trlr_session, "next_header")) < 0));
 
-      if (_construct_trlr_session_pad(integrity_algorithm,
-                                      (pkt_msg_len - obj_rmcp_hdr_len),
-                                      &pad_len,
-                                      &pad_length_field_len,
-                                      &next_header_field_len,
-                                      obj_rmcpplus_trlr_session_temp,
-                                      tmpl_trlr_session) < 0)
-        return (-1);
-
-      /* 
-       * Copy pad into packet
-       */
-      if (pad_len)
+      /* achu: There needs to be atleast the next_header and pad_len fields */
+      if (pkt_len < (authcode_len + pad_length_field_len + next_header_field_len))
         {
-          _BUF_SPACE_CHECK(pad_len, (pkt_len - pkt_msg_len));
-          ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "integrity_pad")) < 0));
-          ERR_EXIT (pad_len < IPMI_INTEGRITY_PAD_MULTIPLE);
-          memcpy (pkt + pkt_msg_len, obj_rmcpplus_trlr_session_temp + obj_field_start, pad_len);
-          pkt_msg_len += pad_len;
+          errno = EINVAL;
+          return (-1);
         }
 
-      /* 
-       * Copy pad length into packet
-       */
-      _BUF_SPACE_CHECK(pad_length_field_len, (pkt_len - pkt_msg_len));
-      ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "pad_length")) < 0));
-      memcpy (pkt + pkt_msg_len,
-              obj_rmcpplus_trlr_session + obj_field_start,
-              pad_length_field_len);
-      pkt_msg_len += pad_length_field_len;
 
-      /* 
-       * Copy next header field into packet
-       */
-      _BUF_SPACE_CHECK(next_header_field_len, (pkt_len - pkt_msg_len));
-      ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "next_header")) < 0));
-      memcpy (pkt + pkt_msg_len,
-              obj_rmcpplus_trlr_session + obj_field_start,
-              next_header_field_len);
-      pkt_msg_len += next_header_field_len;
+      if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
+        {
+          auth_field = "auth_code";
+          auth_field_len = "auth_code_len";
+        }
+      else
+        {
+          auth_field = "auth_calc";
+          auth_field = "auth_calc_len";
+        }
 
-      /* achu: Note that the integrity code is all data prior to the authcode, so this 
-       * call must be done after the pad, pad length, and next header are copied into 
-       * the pkt buffer.
-       */
-      if ((auth_code_len = _construct_trlr_session_auth_code(integrity_algorithm,
-                                                             integrity_key,
-                                                             integrity_key_len,
-                                                             obj_rmcpplus_trlr_session,
-                                                             tmpl_trlr_session,
-                                                             pkt + obj_rmcp_hdr_len,
-                                                             pkt_msg_len - obj_rmcp_hdr_len,
-                                                             auth_code_buf,
-                                                             IPMI_MAX_PAYLOAD_LEN)) < 0)
+      if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
+                            tmpl_trlr_session,
+                            auth_field,
+                            pkt + pkt_index + ((pkt_len - pkt_index) - authcode_len),
+                            authcode_len) < 0)
         return (-1);
 
-      if (auth_code_len)
+      if (fiid_obj_set(obj_rmcpplus_trlr_session,
+                       tmpl_trlr_session,
+                       auth_field_len,
+                       authcode_len) < 0)
+        return (-1);
+                        
+      if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
+                            tmpl_trlr_session,
+                            "next_header",
+                            pkt + pkt_index + ((pkt_len - pkt_index) - authcode_len - next_header_field_len),
+                            next_header_field_len) < 0)
+        return (-1);
+      
+      if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
+                            tmpl_trlr_session,
+                            "pad_length",
+                            pkt + pkt_index + ((pkt_len - pkt_index) - authcode_len - next_header_field_len - pad_length_field_len),
+                            pad_length_field_len) < 0)
+        return (-1);
+      
+      if (fiid_obj_get(obj_rmcpplus_trlr_session,
+                       tmpl_trlr_session,
+                       "pad_length",
+                       &pad_length) < 0)
+        return (-1);
+
+      if (pad_length != (pkt_index + authcode_len + pad_length_field_len + next_header_field_len))
         {
-          _BUF_SPACE_CHECK(auth_code_len, (pkt_len - pkt_msg_len));
-          memcpy(pkt + pkt_msg_len, auth_code_buf, auth_code_len);
-          pkt_msg_len += auth_code_len;
+          errno = EINVAL;
+          return (-1);
         }
-#endif
+
+      if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
+                            tmpl_trlr_session,
+                            "integrity_pad",
+                            pkt + pkt_index,
+                            pad_length) < 0)
+        return (-1);
     }
-  return (pkt_len);
+
+  return (0);
 }
 
