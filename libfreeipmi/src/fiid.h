@@ -196,7 +196,8 @@ void fiid_template_free (fiid_field_t *tmpl_dynamic);
 int8_t fiid_obj_get_data (fiid_obj_t obj, 
 			  fiid_template_t tmpl, 
 			  u_int8_t *field, 
-			  u_int8_t *data);
+			  u_int8_t *data,
+                          u_int32_t data_len);
 int8_t fiid_obj_set_data (fiid_obj_t obj, 
 			  fiid_template_t tmpl, 
 			  u_int8_t *field, 

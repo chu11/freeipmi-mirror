@@ -207,7 +207,8 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, u_int16_t record_id)
 int8_t 
 ipmi_kcs_get_sensor_record_header (u_int16_t record_id, 
 				   fiid_obj_t obj_data_rs, 
-				   u_int8_t *sensor_record_header)
+				   u_int8_t *sensor_record_header,
+                                   u_int32_t sensor_record_header_len)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -236,7 +237,8 @@ ipmi_kcs_get_sensor_record_header (u_int16_t record_id,
   fiid_obj_get_data (obj_var_len_data_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "record_data", 
-		     sensor_record_header);
+		     sensor_record_header,
+                     sensor_record_header_len);
   
   free (tmpl_var_len_get_sdr_rs);
   free (obj_var_len_data_rs);
@@ -284,7 +286,8 @@ ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id,
 			u_int8_t record_offset, 
 			u_int8_t bytes_read, 
 			fiid_obj_t obj_data_rs, 
-			u_int8_t *sensor_record_chunk) 
+			u_int8_t *sensor_record_chunk,
+                        u_int32_t sensor_record_chunk_len) 
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -312,7 +315,8 @@ ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id,
   fiid_obj_get_data (obj_var_len_data_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "record_data", 
-		     sensor_record_chunk);
+		     sensor_record_chunk,
+                     sensor_record_chunk_len);
   
   free (tmpl_var_len_get_sdr_rs);
   free (obj_var_len_data_rs);
@@ -375,7 +379,8 @@ ipmi_kcs_get_sdr (u_int16_t record_id,
 				  record_offset, 
 				  bytes_read, 
 				  obj_data_rs, 
-				  record_data) != 0)
+				  record_data,
+                                  16) != 0)
 	return -1;
       
       /* 	  printf ("received record_offset: %d, received bytes: %d\n", record_offset, bytes_read); */
@@ -522,11 +527,13 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "sdr_rs", 
-		     obj_cmd_rs);
+		     obj_cmd_rs,
+                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "header_data", 
-		     sensor_record_header);
+		     sensor_record_header,
+                     fiid_obj_len_bytes(tmpl_sdr_sensor_record_header));
   
   ipmi_xfree (tmpl_var_len_get_sdr_rs);
   
@@ -542,7 +549,8 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 			 u_int8_t record_offset, 
 			 u_int8_t bytes_read, 
 			 fiid_obj_t obj_cmd_rs, 
-			 u_int8_t *sensor_record_chunk)
+			 u_int8_t *sensor_record_chunk,
+                         u_int32_t sensor_record_chunk_len)
 {
   fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
   
@@ -596,11 +604,13 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "sdr_rs", 
-		     obj_cmd_rs);
+		     obj_cmd_rs,
+                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
 		     "chunk_data", 
-		     sensor_record_chunk);
+		     sensor_record_chunk,
+                     sensor_record_chunk_len);
   
   ipmi_xfree (tmpl_var_len_get_sdr_rs);
   
@@ -674,7 +684,8 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 				    record_offset, 
 				    bytes_read, 
 				    obj_cmd_rs, 
-				    chunk_data) == 0);
+				    chunk_data,
+                                    16) == 0);
       
       memcpy (record_data + record_offset, chunk_data, bytes_read);
     }

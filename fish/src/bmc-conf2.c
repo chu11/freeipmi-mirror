@@ -921,7 +921,8 @@ get_bmc_channel_access (ipmi_device_t *dev,
 int8_t 
 get_bmc_username (ipmi_device_t *dev, 
 		  u_int8_t userid, 
-		  u_int8_t *username)
+		  u_int8_t *username,
+                  u_int32_t username_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -942,7 +943,8 @@ get_bmc_username (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_user_name_rs, 
 		     "user_name", 
-		     username);
+		     username,
+                     username_len);
   
   return (0);
 }
@@ -1069,7 +1071,8 @@ get_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_ip_addr_rs, 
 		     "ip_addr", 
-		     ip_addr_bytes);
+		     ip_addr_bytes,
+                     4);
   sprintf (ip_addr, 
 	   "%u.%u.%u.%u", 
 	   ip_addr_bytes[0], 
@@ -1101,7 +1104,8 @@ get_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
 		     "mac_addr", 
-		     mac_addr_bytes);
+		     mac_addr_bytes,
+                     6);
   sprintf (mac_addr, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
 	   mac_addr_bytes[0], 
@@ -1135,7 +1139,8 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_subnet_mask_rs, 
 		     "subnet_mask", 
-		     subnet_mask_bytes);
+		     subnet_mask_bytes,
+                     4);
   sprintf (subnet_mask, 
 	   "%u.%u.%u.%u", 
 	   subnet_mask_bytes[0], 
@@ -1167,7 +1172,8 @@ get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
 		     "ip_addr", 
-		     ip_addr_bytes);
+		     ip_addr_bytes,
+                     4);
   sprintf (default_gw_ip_addr, 
 	   "%u.%u.%u.%u", 
 	   ip_addr_bytes[0], 
@@ -1199,7 +1205,8 @@ get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
 		     "mac_addr", 
-		     mac_addr_bytes);
+		     mac_addr_bytes,
+                     6);
   sprintf (default_gw_mac_addr, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
 	   mac_addr_bytes[0], 
@@ -1233,7 +1240,8 @@ get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
 		     "ip_addr", 
-		     ip_addr_bytes);
+		     ip_addr_bytes,
+                     4);
   sprintf (backup_gw_ip_addr, 
 	   "%u.%u.%u.%u", 
 	   ip_addr_bytes[0], 
@@ -1265,7 +1273,8 @@ get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
 		     "mac_addr", 
-		     mac_addr_bytes);
+		     mac_addr_bytes,
+                     6);
   sprintf (backup_gw_mac_addr, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
 	   mac_addr_bytes[0], 

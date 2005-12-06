@@ -649,7 +649,7 @@ ipmi_lan_open_session (int sockfd,
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
 		"tmp_session_id", &temp_session_id);
   *session_id = temp_session_id;
-  fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, "challenge_str", challenge_str);
+  fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, "challenge_str", challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN);
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
@@ -1546,7 +1546,8 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   ERR (fiid_obj_get_data (obj_cmd_rs, 
 			  tmpl_cmd_get_session_challenge_rs, 
 			  "challenge_str", 
-			  challenge_str) == 0);
+			  challenge_str,
+                          IPMI_SESSION_CHALLENGE_STR_LEN) == 0);
   memcpy (dev->io.outofband.challenge_string, 
 	  challenge_str, 
 	  IPMI_SESSION_CHALLENGE_STR_LEN);

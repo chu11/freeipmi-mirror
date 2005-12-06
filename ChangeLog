@@ -1,3 +1,12 @@
+2005-12-05  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_get_data): Add len parameter for data buffer.
+
+	* fish/src, libfreeipmi/src: Various changes to support change in
+	fiid_obj_get_data, in particular passing lengths of buffers to
+	various functions.
+	
 2005-12-02  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt),

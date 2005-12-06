@@ -562,7 +562,7 @@ ipmi_acpi_get_table (u_int64_t table_address, char *signature,
     return (-1);
   
   fiid_obj_get_data (obj_acpi_table_hdr, tmpl_acpi_table_hdr, 
-		     "signature", table_signature);
+		     "signature", table_signature, table_signature_length);
   if (strcmp (table_signature, signature) != 0)
     return (-1);
   

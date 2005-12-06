@@ -74,7 +74,9 @@ ipmi_sdr_records_write (FILE *fp)
     {
       // printf ("writing %d\n", record_id);
       if (ipmi_kcs_get_sensor_record_header (record_id, 
-					     data_rs, record_header) != 0)
+					     data_rs, 
+                                             record_header,
+                                             5) != 0)
 	return (-1);
       
       fiid_obj_get (data_rs, 

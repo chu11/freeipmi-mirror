@@ -24,7 +24,8 @@
 int 
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			  sel_descriptor_t *seld, 
-			  u_int8_t *record_data)
+			  u_int8_t *record_data,
+                          u_int32_t record_data_len)
 {
   fiid_obj_t obj_cmd_rs;
   u_int64_t val;
@@ -48,7 +49,8 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_sel_entry_rs, 
 		     "record_data", 
-		     record_data);
+		     record_data,
+                     record_data_len);
   
   return 0;
 }
@@ -56,7 +58,8 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 int 
 ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			 sel_descriptor_t *seld, 
-			 u_int8_t *record_data)
+			 u_int8_t *record_data,
+                         u_int32_t record_data_len)
 {
   fiid_obj_t obj_cmd_rs;
   u_int64_t val;
@@ -82,7 +85,8 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_sel_entry_rs, 
 		     "record_data", 
-		     record_data);
+		     record_data,
+                     record_data_len);
   
   return 0;
 }

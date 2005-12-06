@@ -1091,23 +1091,28 @@ unassemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
   fiid_obj_get_data (pkt, 
 		     tmpl_lan_packet, 
 		     "RMCP_HDR", 
-		     dev->io.outofband.rs.obj_hdr_rmcp);
+		     dev->io.outofband.rs.obj_hdr_rmcp,
+                     rmcp_length);
   fiid_obj_get_data (pkt, 
 		     tmpl_lan_packet, 
 		     "SESSION_HDR", 
-		     dev->io.outofband.rs.obj_hdr_session);
+		     dev->io.outofband.rs.obj_hdr_session,
+                     session_length);
   fiid_obj_get_data (pkt, 
 		     tmpl_lan_packet, 
 		     "MSG_HDR", 
-		     dev->io.outofband.rs.obj_msg_hdr);
+		     dev->io.outofband.rs.obj_msg_hdr,
+                     hdr_length);
   fiid_obj_get_data (pkt, 
 		     tmpl_lan_packet, 
 		     "COMMAND_DATA", 
-		     obj_cmd);
+		     obj_cmd,
+                     cmd_length);
   fiid_obj_get_data (pkt, 
 		     tmpl_lan_packet, 
 		     "TRLR_HDR", 
-		     dev->io.outofband.rs.obj_msg_trlr);
+		     dev->io.outofband.rs.obj_msg_trlr,
+                     trlr_length);
   
   free (tmpl_lan_packet);
   
