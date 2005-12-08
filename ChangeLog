@@ -1,3 +1,8 @@
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-debug.c (ipmi_debug): Fix several compile
+	bugs when compiling with syslogging or tracing.
+	
 2005-12-08  Anand Babu  <ab@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Now returns default

@@ -492,13 +492,13 @@ ipmi_debug(const char *fmt, ...)
   dbglen = snprintf (dbgstr, IPMI_ERR_STR_MAX_LEN, 
                      "%s: %d: %s: ", __FILE__, __LINE__, __PRETTY_FUNCTION__);
   errlen = vsnprintf (errstr, IPMI_ERR_STR_MAX_LEN, fmt, ap);
-  strncat(dbgstr, errmsg, IPMI_ERR_STR_MAX_LEN - dbglen - 1);
+  strncat(dbgstr, errstr, IPMI_ERR_STR_MAX_LEN - dbglen - 1);
   syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), dbgstr);
 #endif /* !IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
   fprintf (stderr, 
-           "%s: %d: %s: ", __FILE__, __LINE__, __PRETTY_FUNCTION);
+           "%s: %d: %s: ", __FILE__, __LINE__, __PRETTY_FUNCTION__);
   vfprintf (stderr, fmt, ap);
   fprintf (stderr, "\n");
   fflush (stderr);
