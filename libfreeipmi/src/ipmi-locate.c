@@ -35,6 +35,7 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
       smbios_get_dev_info,
       NULL
     };
+
   int i;
   ipmi_locate_info_t* pinfo2;
   
@@ -45,9 +46,28 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
       pinfo2 = (*things_to_try[i])(type, pinfo);
       
       if (pinfo2 != NULL)
-	return pinfo2;
+	return (pinfo2);
     }
 
-/*   errno = ENODEV; */
-  return NULL;
+  switch (type){
+  case IPMI_INTERFACE_KCS:
+    pinfo->interface_type = IPMI_INTERFACE_KCS;
+    pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+    pinfo->base_addr.bmc_iobase_addr = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+    return (pinfo);
+  case IPMI_INTERFACE_SMIC:
+    pinfo->interface_type = IPMI_INTERFACE_SMIC;
+    pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+    pinfo->base_addr.bmc_iobase_addr = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
+    return (pinfo);
+  case IPMI_INTERFACE_SSIF:
+    pinfo->interface_type = IPMI_INTERFACE_SSIF;
+    pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+    pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
+    return (pinfo);
+  case IPMI_INTERFACE_BT:
+  default:
+    return (NULL);
+  }
+  return (NULL);
 }

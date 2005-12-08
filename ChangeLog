@@ -1,3 +1,11 @@
+2005-12-08  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Now returns default
+	settings as a last resort.
+	
+	* libfreeipmi/src/ipmi-ssif-interface.h:
+	Added IPMI_SSIF_SMBUS_SLAVE_ADDR definition.
+
 2005-12-05  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
