@@ -307,6 +307,83 @@ fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
 
   return (0);
 }
+
+int8_t
+fill_rmcpplus_payload(u_int8_t *confidentiality_header,
+                      u_int32_t confidentiality_header_len,
+                      u_int8_t *payload_data,
+                      u_int32_t payload_data_len,
+                      u_int8_t *confidentiality_trailer,
+                      u_int32_t confidentiality_trailer_len,
+                      fiid_obj_t obj_cmd)
+{
+  if (!obj_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_rmcpplus_payload);
+  
+  if (confidentiality_header)
+    {
+      int32_t max_len;
+
+      ERR_EXIT (!((max_len = fiid_obj_field_len_bytes(tmpl_rmcpplus_payload, "confidentiality_header")) < 0));
+
+      if (confidentiality_header_len > max_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      FIID_OBJ_SET_DATA(obj_cmd,
+                        tmpl_rmcpplus_payload,
+                        "confidentiality_header",
+                        confidentiality_header,
+                        confidentiality_header_len);
+    }
+
+  if (payload_data)
+    {
+      int32_t max_len;
+
+      ERR_EXIT (!((max_len = fiid_obj_field_len_bytes(tmpl_rmcpplus_payload, "payload_data")) < 0));
+
+      if (payload_data_len > max_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      FIID_OBJ_SET_DATA(obj_cmd,
+                        tmpl_rmcpplus_payload,
+                        "payload_data",
+                        payload_data,
+                        payload_data_len);
+    }
+
+  if (confidentiality_trailer)
+    {
+      int32_t max_len;
+
+      ERR_EXIT (!((max_len = fiid_obj_field_len_bytes(tmpl_rmcpplus_payload, "confidentiality_trailer")) < 0));
+
+      if (confidentiality_trailer_len > max_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      FIID_OBJ_SET_DATA(obj_cmd,
+                        tmpl_rmcpplus_payload,
+                        "confidentiality_trailer",
+                        confidentiality_trailer,
+                        confidentiality_trailer_len);
+    }
+
+  return (0);
+}
                              
 int8_t
 fill_rmcpplus_open_session (u_int8_t message_tag,
