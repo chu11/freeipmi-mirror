@@ -1,6 +1,13 @@
 2005-12-08  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_session_challenge2),
+	libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Revert
+	buffer length changes from earlier.  Ends up not being necessary.
+	
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(ipmi_cmd_get_session_challenge2): Fix buffer length copying bug.
 
 	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix

@@ -1411,9 +1411,10 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
   ERR (fill_cmd_get_session_challenge (dev->io.outofband.auth_type, 
-				       (dev->io.outofband.username) ? (dev->io.outofband.username) : NULL, 
-				       (dev->io.outofband.username) ? strlen(dev->io.outofband.username) : 0,
+				       dev->io.outofband.username,
+				       IPMI_SESSION_MAX_USERNAME_LEN,
 				       obj_cmd_rq) == 0);
+
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
   local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;

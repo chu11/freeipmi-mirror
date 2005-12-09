@@ -376,36 +376,20 @@ fill_hdr_session2 (ipmi_device_t *dev,
        *
        * Please see fill_hdr_session().
        */
-      ERR_EXIT (fiid_obj_memset_field (dev->io.outofband.rq.obj_hdr_session, 
-				       '\0',
-				       *(dev->io.outofband.rq.tmpl_hdr_session_ptr),
-				       "auth_code") == 0);
-      if (dev->io.outofband.password)
-	ERR (fiid_obj_set_data (dev->io.outofband.rq.obj_hdr_session, 
-				*(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
-				"auth_code", 
-				dev->io.outofband.password, 
-				strlen(dev->io.outofband.password)) != -1);
+      ERR (fiid_obj_set_data (dev->io.outofband.rq.obj_hdr_session, 
+			      *(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
+			      "auth_code", 
+			      dev->io.outofband.password, 
+			      IPMI_SESSION_MAX_AUTH_CODE_LEN) != -1);
       break;
     case IPMI_SESSION_AUTH_TYPE_MD2:
       {
 	ipmi_md2_t ctx;
 	u_int8_t digest[IPMI_MD2_DIGEST_LEN];
-	u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-	
-        /* Must zero extend password.  No null termination is required.
-         * Also, must memcpy instead of strcpy, password need not be
-         * 1 word
-         */
-	memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	if (dev->io.outofband.password)
-	  memcpy(pwbuf,
-		 dev->io.outofband.password,
-		 strlen(dev->io.outofband.password));
 	
 	ipmi_md2_init (&ctx);
 	ipmi_md2_update_data (&ctx, 
-			      pwbuf, 
+			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_update_data (&ctx, 
 			      (u_int8_t *)&(dev->io.outofband.session_id), 
@@ -423,7 +407,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
 			      sizeof (dev->io.outofband.session_seq_num));
 	ipmi_md2_update_data (&ctx, 
-			      pwbuf,
+			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_finish (&ctx, digest, IPMI_MD2_DIGEST_LEN);
 	
@@ -442,21 +426,10 @@ fill_hdr_session2 (ipmi_device_t *dev,
       {
 	ipmi_md5_t ctx;
 	u_int8_t digest[IPMI_MD5_DIGEST_LEN];
-	u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-	
-        /* Must zero extend password.  No null termination is required.
-         * Also, must memcpy instead of strcpy, password need not be
-         * 1 word
-         */
-	memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	if (dev->io.outofband.password)
-	  memcpy(pwbuf,
-		 dev->io.outofband.password,
-		 strlen(dev->io.outofband.password));
 	
 	ipmi_md5_init (&ctx);
 	ipmi_md5_update_data (&ctx, 
-			      pwbuf,
+			      dev->io.outofband.password,	      
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_update_data (&ctx, 
 			      (u_int8_t *)&(dev->io.outofband.session_id), 
@@ -474,7 +447,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
 			      sizeof (dev->io.outofband.session_seq_num));
 	ipmi_md5_update_data (&ctx, 
-			      pwbuf,
+			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_finish (&ctx, digest, IPMI_MD5_DIGEST_LEN);
 	
@@ -1434,6 +1407,17 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 				 tmpl_cmd_rq, 
 				 pkt, 
 				 pkt_len) != -1);
+
+printf("DEBUGGING:\n");
+
+	fiid_obj_dump_lan(STDERR_FILENO,
+			NULL,
+			NULL,
+			pkt,
+			pkt_len,
+			*(dev->io.outofband.rs.tmpl_hdr_session_ptr),
+			*(dev->io.outofband.rs.tmpl_msg_hdr_ptr),
+			tmpl_cmd_rq);
 
     dev->io.outofband.session_seq_num++;
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
