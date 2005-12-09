@@ -1,6 +1,6 @@
 SUBDIRS = examples
 
-EXTRA_DIST = BUGS freeipmi-hackers-intro.sxi ipmi-network-layout.fig ipmi-over-ts2000.texi 
+EXTRA_DIST = BUGS freeipmi-hackers-intro.odp ipmi-network-layout.fig ipmi-over-ts2000.texi 
 
 #  build and install the .info pages
 info_TEXINFOS = freeipmi.texi
