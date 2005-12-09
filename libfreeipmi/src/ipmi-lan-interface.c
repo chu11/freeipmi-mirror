@@ -1408,6 +1408,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 				 pkt, 
 				 pkt_len) != -1);
 
+#if 0
 printf("DEBUGGING:\n");
 
 	fiid_obj_dump_lan(STDERR_FILENO,
@@ -1418,6 +1419,7 @@ printf("DEBUGGING:\n");
 			*(dev->io.outofband.rs.tmpl_hdr_session_ptr),
 			*(dev->io.outofband.rs.tmpl_msg_hdr_ptr),
 			tmpl_cmd_rq);
+#endif
 
     dev->io.outofband.session_seq_num++;
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
