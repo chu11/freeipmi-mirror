@@ -1517,6 +1517,7 @@ _deconstruct_payload_buf_cmd_tmpl(fiid_obj_t obj_msg_hdr,
 static int32_t
 _deconstruct_payload_special(u_int8_t payload_type,
                              u_int8_t authentication_algorithm,
+                             fiid_obj_t obj_payload,
                              fiid_obj_t obj_msg_hdr,
                              fiid_obj_t obj_cmd,
                              fiid_obj_t obj_msg_trlr,
@@ -1566,6 +1567,22 @@ _deconstruct_payload_special(u_int8_t payload_type,
                                                           pkt,
                                                           ipmi_payload_len)) < 0)
         return (-1);
+
+      if (obj_payload)
+        {
+          FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
+
+          FIID_OBJ_SET_DATA(obj_payload,
+                            tmpl_rmcpplus_payload,
+                            "payload_data",
+                            pkt,
+                            ipmi_payload_len);
+
+          FIID_OBJ_SET(obj_payload,
+                       tmpl_rmcpplus_payload,
+                       "payload_data_len",
+                       ipmi_payload_len);
+        }
 
       if (!obj_cmd)
         return (0);
@@ -1631,6 +1648,22 @@ _deconstruct_payload_special(u_int8_t payload_type,
                                                           ipmi_payload_len)) < 0)
         return (-1);
 
+      if (obj_payload)
+        {
+          FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
+          
+          FIID_OBJ_SET_DATA(obj_payload,
+                            tmpl_rmcpplus_payload,
+                            "payload_data",
+                            pkt,
+                            ipmi_payload_len);
+          
+          FIID_OBJ_SET(obj_payload,
+                       tmpl_rmcpplus_payload,
+                       "payload_data_len",
+                       ipmi_payload_len);
+        }
+
       if (!obj_cmd)
         return (0);
 
@@ -1682,7 +1715,8 @@ _deconstruct_payload_special(u_int8_t payload_type,
 }
 
 static int32_t
-_deconstruct_payload_confidentiality_none(fiid_obj_t obj_msg_hdr,
+_deconstruct_payload_confidentiality_none(fiid_obj_t obj_payload,
+                                          fiid_obj_t obj_msg_hdr,
                                           fiid_obj_t obj_cmd,
                                           fiid_obj_t obj_msg_trlr,
                                           fiid_template_t tmpl_cmd,
@@ -1711,11 +1745,28 @@ _deconstruct_payload_confidentiality_none(fiid_obj_t obj_msg_hdr,
                                                        ipmi_payload_len)) < 0)
     return (-1);
   
+  if (obj_payload)
+    {
+      FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
+      
+      FIID_OBJ_SET_DATA(obj_payload,
+                        tmpl_rmcpplus_payload,
+                        "payload_data",
+                        pkt,
+                        ipmi_payload_len);
+
+      FIID_OBJ_SET(obj_payload,
+                   tmpl_rmcpplus_payload,
+                   "payload_data_len",
+                   ipmi_payload_len);
+    }
+
   return (0);
 }
 
 static int32_t
-_deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
+_deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_payload,
+                                                 fiid_obj_t obj_msg_hdr,
                                                  fiid_obj_t obj_cmd,
                                                  fiid_obj_t obj_msg_trlr,
                                                  fiid_template_t tmpl_cmd,
@@ -1728,7 +1779,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
   int32_t iv_len;
   u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   u_int8_t pad_len;
-  int cipher_keylen, cipher_blocklen, i;
+  int cipher_keylen, cipher_blocklen;
   int32_t payload_data_len, decrypt_len, cmd_data_len, obj_cmd_len, pkt_index = 0;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
@@ -1774,10 +1825,26 @@ _deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       return (-1);
     }
 
+  if (obj_payload)
+    FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
+
   memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LEN);
   pkt_index += IPMI_AES_CBC_128_BLOCK_LEN;
-
   memcpy(payload_buf, pkt + pkt_index, payload_data_len);
+
+  if (obj_payload)
+    {
+      FIID_OBJ_SET_DATA(obj_payload,
+                        tmpl_rmcpplus_payload,
+                        "confidentiality_header",
+                        iv,
+                        IPMI_AES_CBC_128_BLOCK_LEN);
+      
+      FIID_OBJ_SET(obj_payload,
+                   tmpl_rmcpplus_payload,
+                   "confidentiality_header_len",
+                   IPMI_AES_CBC_128_BLOCK_LEN);
+    }
 
   if ((decrypt_len = ipmi_crypt_cipher_decrypt(IPMI_CRYPT_CIPHER_AES,
                                                IPMI_CRYPT_CIPHER_MODE_CBC,
@@ -1811,15 +1878,42 @@ _deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_msg_hdr,
       return (-1);
     }
 
-  /* XXX: Is this right to check and return -1 here? */
-  for (i = 0; i < pad_len; i++)
+  if (obj_payload)
     {
-      if (payload_buf[cmd_data_len + i] != i + 1)
+      FIID_OBJ_SET_DATA(obj_payload,
+                        tmpl_rmcpplus_payload,
+                        "payload_data",
+                        payload_buf,
+                        cmd_data_len);
+      
+      FIID_OBJ_SET(obj_payload,
+                   tmpl_rmcpplus_payload,
+                   "payload_data_len",
+                   cmd_data_len);
+
+      FIID_OBJ_SET_DATA(obj_payload,
+                        tmpl_rmcpplus_payload,
+                        "confidentiality_trailer",
+                        payload_buf + cmd_data_len,
+                        pad_len + 1);
+
+      FIID_OBJ_SET(obj_payload,
+                   tmpl_rmcpplus_payload,
+                   "confidentiality_trailer_len",
+                   pad_len + 1);
+
+      /* achu: User is responsible for checking if padding is not corrupt  */
+#if 0
+      for (i = 0; i < pad_len; i++)
         {
-          errno = EINVAL;
-          ipmi_debug("_deconstruct_payload_confidentiality_aes_cbc_128: invalid pad data");
-          return (-1);
+          if (payload_buf[cmd_data_len + i] != i + 1)
+            {
+              errno = EINVAL;
+              ipmi_debug("_deconstruct_payload_confidentiality_aes_cbc_128: invalid pad data");
+              return (-1);
+            }
         }
+#endif
     }
   
   if ((obj_cmd_len = _deconstruct_payload_buf_cmd_tmpl(obj_msg_hdr, 
@@ -1837,6 +1931,7 @@ static int32_t
 _deconstruct_payload(u_int8_t payload_type,
                      u_int8_t authentication_algorithm,
                      u_int8_t confidentiality_algorithm,
+                     fiid_obj_t obj_payload,
                      fiid_obj_t obj_msg_hdr,
                      fiid_obj_t obj_cmd,
                      fiid_obj_t obj_msg_trlr,
@@ -1867,6 +1962,7 @@ _deconstruct_payload(u_int8_t payload_type,
     {
       return _deconstruct_payload_special(payload_type,
                                           authentication_algorithm,
+                                          obj_payload,
                                           obj_msg_hdr,
                                           obj_cmd,
                                           obj_msg_trlr,
@@ -1877,14 +1973,16 @@ _deconstruct_payload(u_int8_t payload_type,
   else
     {
       if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
-        return _deconstruct_payload_confidentiality_none(obj_msg_hdr,
+        return _deconstruct_payload_confidentiality_none(obj_payload,
+                                                         obj_msg_hdr,
                                                          obj_cmd,
                                                          obj_msg_trlr,
                                                          tmpl_cmd,
                                                          pkt,
                                                          ipmi_payload_len);
       else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-        return _deconstruct_payload_confidentiality_aes_cbc_128(obj_msg_hdr,
+        return _deconstruct_payload_confidentiality_aes_cbc_128(obj_payload,
+                                                                obj_msg_hdr,
                                                                 obj_cmd,
                                                                 obj_msg_trlr,
                                                                 tmpl_cmd,
@@ -1917,6 +2015,7 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
                               u_int32_t pkt_len,
                               fiid_obj_t obj_hdr_rmcp,
                               fiid_obj_t obj_rmcpplus_hdr_session,
+                              fiid_obj_t obj_payload,
                               fiid_obj_t obj_msg_hdr,
                               fiid_obj_t obj_cmd,
                               fiid_obj_t obj_msg_trlr,
@@ -2070,6 +2169,7 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
   if (_deconstruct_payload(payload_type,
                            authentication_algorithm,
                            confidentiality_algorithm,
+                           obj_payload,
                            obj_msg_hdr,
                            obj_cmd,
                            obj_msg_trlr,

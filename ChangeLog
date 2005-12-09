@@ -92,6 +92,13 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus.h, libfreeipmi/src/ipmi-rmcpplus.c
 	(fill_rmcpplus_payload):  New function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(unassemble_ipmi_rmcpplus_pkt, _deconstruct_payload,
+	_deconstruct_payload_buf_cmd_tmpl,
+	_deconstruct_payload_confidentiality_aes,
+	_deconstruct_payload_special, _deconstruct_payload_special):
+	Support unassembly of payload.
 	
 2005-12-05  Albert Chu <chu11@llnl.gov>
 
