@@ -345,7 +345,6 @@ fill_hdr_session2 (ipmi_device_t *dev,
 {
   u_int8_t *auth_code = NULL;
   u_int8_t auth_code_length = 0;
-  u_int64_t ipmi_cmd = 0;
   
   if (dev == NULL || tmpl_cmd == NULL)
     {
@@ -353,11 +352,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  FIID_OBJ_GET (obj_cmd, 
-		tmpl_cmd, 
-		"cmd", 
-		&ipmi_cmd);
-  
+ 
   FIID_OBJ_SET (dev->io.outofband.rq.obj_hdr_session, 
 		*(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
 		"auth_type", 
@@ -376,47 +371,59 @@ fill_hdr_session2 (ipmi_device_t *dev,
     case IPMI_SESSION_AUTH_TYPE_NONE:
       break;
     case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      ERR (fiid_obj_set_data (dev->io.outofband.rq.obj_hdr_session, 
-			      *(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
-			      "auth_code", 
-			      dev->io.outofband.password, 
-			      IPMI_SESSION_MAX_AUTH_CODE_LEN) != -1);
+      /* XXX: Bala, you assume that the template always passed in
+       * is contains a field called "auth_code" which is incorrect.
+       *
+       * Please see fill_hdr_session().
+       */
+      ERR_EXIT (fiid_obj_memset_field (dev->io.outofband.rq.obj_hdr_session, 
+				       '\0',
+				       *(dev->io.outofband.rq.tmpl_hdr_session_ptr),
+				       "auth_code") == 0);
+      if (dev->io.outofband.password)
+	ERR (fiid_obj_set_data (dev->io.outofband.rq.obj_hdr_session, 
+				*(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
+				"auth_code", 
+				dev->io.outofband.password, 
+				strlen(dev->io.outofband.password)) != -1);
       break;
     case IPMI_SESSION_AUTH_TYPE_MD2:
       {
 	ipmi_md2_t ctx;
 	u_int8_t digest[IPMI_MD2_DIGEST_LEN];
+	u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+	
+        /* Must zero extend password.  No null termination is required.
+         * Also, must memcpy instead of strcpy, password need not be
+         * 1 word
+         */
+	memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
+	if (dev->io.outofband.password)
+	  memcpy(pwbuf,
+		 dev->io.outofband.password,
+		 strlen(dev->io.outofband.password));
 	
 	ipmi_md2_init (&ctx);
 	ipmi_md2_update_data (&ctx, 
-			      dev->io.outofband.password, 
+			      pwbuf, 
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_update_data (&ctx, 
 			      (u_int8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
-	if (ipmi_cmd == IPMI_CMD_ACTIVATE_SESSION)
-	  {
-	    ipmi_md2_update_data (&ctx, 
-				  dev->io.outofband.challenge_string, 
-				  IPMI_SESSION_CHALLENGE_STR_LEN);
-	  }
-	else 
-	  {
-	    ipmi_md2_update_data (&ctx, 
-				  dev->io.outofband.rq.obj_msg_hdr, 
-				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
-	    ipmi_md2_update_data (&ctx, 
-				  obj_cmd, 
-				  fiid_obj_len_bytes (tmpl_cmd));
-	    ipmi_md2_update_data (&ctx, 
-				  dev->io.outofband.rq.obj_msg_trlr, 
-				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
-	    ipmi_md2_update_data (&ctx, 
-				  (u_int8_t *)&(dev->io.outofband.session_seq_num), 
-				  sizeof (dev->io.outofband.session_seq_num));
-	  }
 	ipmi_md2_update_data (&ctx, 
-			      dev->io.outofband.password, 
+			      dev->io.outofband.rq.obj_msg_hdr, 
+			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
+	ipmi_md2_update_data (&ctx, 
+			      obj_cmd, 
+			      fiid_obj_len_bytes (tmpl_cmd));
+	ipmi_md2_update_data (&ctx, 
+			      dev->io.outofband.rq.obj_msg_trlr, 
+			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
+	ipmi_md2_update_data (&ctx, 
+			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
+			      sizeof (dev->io.outofband.session_seq_num));
+	ipmi_md2_update_data (&ctx, 
+			      pwbuf,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_finish (&ctx, digest, IPMI_MD2_DIGEST_LEN);
 	
@@ -435,37 +442,39 @@ fill_hdr_session2 (ipmi_device_t *dev,
       {
 	ipmi_md5_t ctx;
 	u_int8_t digest[IPMI_MD5_DIGEST_LEN];
+	u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+	
+        /* Must zero extend password.  No null termination is required.
+         * Also, must memcpy instead of strcpy, password need not be
+         * 1 word
+         */
+	memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
+	if (dev->io.outofband.password)
+	  memcpy(pwbuf,
+		 dev->io.outofband.password,
+		 strlen(dev->io.outofband.password));
 	
 	ipmi_md5_init (&ctx);
 	ipmi_md5_update_data (&ctx, 
-			      dev->io.outofband.password, 
+			      pwbuf,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_update_data (&ctx, 
 			      (u_int8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
-	if (ipmi_cmd == IPMI_CMD_ACTIVATE_SESSION)
-	  {
-	    ipmi_md5_update_data (&ctx, 
-				  dev->io.outofband.challenge_string, 
-				  IPMI_SESSION_CHALLENGE_STR_LEN);
-	  }
-	else 
-	  {
-	    ipmi_md5_update_data (&ctx, 
-				  dev->io.outofband.rq.obj_msg_hdr, 
-				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
-	    ipmi_md5_update_data (&ctx, 
-				  obj_cmd, 
-				  fiid_obj_len_bytes (tmpl_cmd));
-	    ipmi_md5_update_data (&ctx, 
-				  dev->io.outofband.rq.obj_msg_trlr, 
-				  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
-	    ipmi_md5_update_data (&ctx, 
-				  (u_int8_t *)&(dev->io.outofband.session_seq_num), 
-				  sizeof (dev->io.outofband.session_seq_num));
-	  }
 	ipmi_md5_update_data (&ctx, 
-			      dev->io.outofband.password, 
+			      dev->io.outofband.rq.obj_msg_hdr, 
+			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
+	ipmi_md5_update_data (&ctx, 
+			      obj_cmd, 
+			      fiid_obj_len_bytes (tmpl_cmd));
+	ipmi_md5_update_data (&ctx, 
+			      dev->io.outofband.rq.obj_msg_trlr, 
+			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
+	ipmi_md5_update_data (&ctx, 
+			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
+			      sizeof (dev->io.outofband.session_seq_num));
+	ipmi_md5_update_data (&ctx, 
+			      pwbuf,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_finish (&ctx, digest, IPMI_MD5_DIGEST_LEN);
 	
@@ -1425,7 +1434,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 				 tmpl_cmd_rq, 
 				 pkt, 
 				 pkt_len) != -1);
-    
+
     dev->io.outofband.session_seq_num++;
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
     
@@ -1463,6 +1472,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 				   pkt_len, 
 				   obj_cmd_rs, 
 				   tmpl_cmd_rs) != -1);
+
     ERR (ipmi_lan_validate_checksum (dev, 
 				     obj_cmd_rs, 
 				     tmpl_cmd_rs) == 0);

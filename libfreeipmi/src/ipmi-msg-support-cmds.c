@@ -1395,7 +1395,7 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 {
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq = NULL;
-  
+
   ERR (dev != NULL);
   ERR (obj_cmd_rs != NULL);
   
@@ -1411,8 +1411,8 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
   ERR (fill_cmd_get_session_challenge (dev->io.outofband.auth_type, 
-				       dev->io.outofband.username, 
-				       IPMI_SESSION_MAX_USERNAME_LEN, 
+				       (dev->io.outofband.username) ? (dev->io.outofband.username) : NULL, 
+				       (dev->io.outofband.username) ? strlen(dev->io.outofband.username) : 0,
 				       obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
@@ -1551,7 +1551,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   memcpy (dev->io.outofband.challenge_string, 
 	  challenge_str, 
 	  IPMI_SESSION_CHALLENGE_STR_LEN);
-  
+
   FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_activate_session_rs);
   ERR (ipmi_cmd_activate_session2 (dev, obj_cmd_rs) == 0);
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 

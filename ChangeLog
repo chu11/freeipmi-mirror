@@ -1,3 +1,12 @@
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_session_challenge2): Fix buffer length copying bug.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	buffer length copying bugs.  Fixed incorrect MD2/MD5 calculation
+	bugs.
+	
 2005-12-08  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-raw/Makefile.am: New file.
@@ -23,7 +32,7 @@
 
 	* libfreeipmi/src/ipmi-debug.c (ipmi_debug): Fix several compile
 	bugs when compiling with syslogging or tracing.
-	
+
 2005-12-08  Anand Babu  <ab@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Now returns default
