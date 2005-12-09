@@ -2,7 +2,7 @@ if COND_FISH
   MAYBE_FISH = fish
 endif
 
-SUBDIRS = doc libfreeipmi bmc-watchdog ipmipower ipmiping rmcpping garpd $(MAYBE_FISH)
+SUBDIRS = doc libfreeipmi bmc-watchdog ipmipower ipmi-raw ipmiping rmcpping garpd $(MAYBE_FISH)
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
