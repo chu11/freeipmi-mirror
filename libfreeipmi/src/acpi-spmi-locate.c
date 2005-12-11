@@ -791,6 +791,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
       return (NULL);
     }
   
+  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
+
   if ((obj_acpi_table_hdr = fiid_obj_alloc (tmpl_acpi_table_hdr)) == NULL)
     return (NULL);
 

@@ -1,3 +1,12 @@
+2005-12-11  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/defaults-locate.c,h: new files. Re-implemented
+	defaults as a fake driver. 
+	* libfreeipmi/src/ipmi-locate.c: Changed the driver probing
+	order to smbios, acpi, pci and defaults. Added locate_driver_type
+	field to locate_info to identify which driver probed the data for
+	us.
+
 2005-12-08  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c

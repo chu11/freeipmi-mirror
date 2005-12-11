@@ -191,8 +191,9 @@ extern "C" {
 #include "ipmi-error.h"
 #include "ipmi-locate.h"
 #include "smbios-locate.h"
-#include "pci-locate.h"
 #include "acpi-spmi-locate.h"
+#include "pci-locate.h"
+#include "defaults-locate.h"
 #include "rmcp.h"
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
@@ -299,6 +300,7 @@ extern char *__progname;
 #include <freeipmi/smbios-locate.h>
 #include <freeipmi/acpi-spmi-locate.h>
 #include <freeipmi/pci-locate.h>
+#include <freeipmi/defaults-locate.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
