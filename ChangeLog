@@ -3,6 +3,9 @@
 	* configure.ac: Revert 2005-12-11 changes.
 
 	* libfreeipmi/src/fiid.h (FIID_OBJ_GET_DATA): New macro.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): Fix
+	compile warning.
 	
 2005-12-11  Anand Babu  <ab@zresearch.com>
 
