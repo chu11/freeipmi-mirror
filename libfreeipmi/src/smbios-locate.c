@@ -306,6 +306,8 @@ smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
   if (bufp == NULL)
     return (NULL);
 
+  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_SMBIOS;
+
   version = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_VER_OFFSET];
   pinfo->ipmi_ver_major = (version >> 4) & 0xf;
   pinfo->ipmi_ver_minor = version & 0xf;

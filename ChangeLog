@@ -88,6 +88,14 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-12  Albert Chu <chu11@llnl.gov>
+
+	* Merge in latest from HEAD.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c (check_rmcpplus_payload_pad):
+	New function.
+
 2005-12-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus.h, libfreeipmi/src/ipmi-rmcpplus.c
@@ -403,6 +411,110 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2005-12-12  Albert Chu  <chu11@llnl.gov>
+
+	* configure.ac: Revert 2005-12-11 changes.
+
+	* libfreeipmi/src/fiid.h (FIID_OBJ_GET_DATA): New macro.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): Fix
+	compile warning.
+	
+2005-12-11  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/defaults-locate.c,h: new files. Re-implemented
+	defaults as a fake driver. 
+	* libfreeipmi/src/ipmi-locate.c: Changed the driver probing
+	order to smbios, acpi, pci and defaults. Added locate_driver_type
+	field to locate_info to identify which driver probed the data for
+	us.
+
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_session_challenge2),
+	libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Revert
+	buffer length changes from earlier.  Ends up not being necessary.
+	
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_session_challenge2): Fix buffer length copying bug.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	buffer length copying bugs.  Fixed incorrect MD2/MD5 calculation
+	bugs.
+	
+2005-12-08  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-raw/Makefile.am: New file.
+
+	* ipmi-raw/ipmi-raw.8: New file.
+
+	* ipmi-raw/src/Makefile.am: New file.
+
+	* ipmi-raw/src/ipmi-raw-argp.[ch]: New files.
+
+	* ipmi-raw/src/ipmi-raw.c: New file.
+
+	* Makefile.am: Updated.
+
+	* configure.ac: Updated.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): Updated.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): Added
+	new function.
+
+2005-12-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-debug.c (ipmi_debug): Fix several compile
+	bugs when compiling with syslogging or tracing.
+
+2005-12-08  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/ipmi-locate.c (ipmi_locate): Now returns default
+	settings as a last resort.
+	
+	* libfreeipmi/src/ipmi-ssif-interface.h:
+	Added IPMI_SSIF_SMBUS_SLAVE_ADDR definition.
+
+2005-12-05  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sel.scm: Anand Avati's <avati@zresearch.com>
+	patch for bug [#14926 fish assumes user has a home directory].
+
+	* libfreeipmi/src/freeipmi.h: More tests for sys/io.h header
+	inclusing. Closing bug [#11209 overview: Uses ys/io.h].
+
+2005-12-05  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_get_data): Add len parameter for data buffer.
+
+	* fish/src, libfreeipmi/src: Various changes to support change in
+	fiid_obj_get_data, in particular passing lengths of buffers to
+	various functions.
+	
+2005-12-02  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt),
+	libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_lan): Fill in lan
+	trailer even when packet is shorter than expected.
+	
+2005-12-01  Albert Chu  <chu11@llnl.gov>
+
+	* fish/bmc-config.conf.5.in: Fixed typos.
+	
+2005-11-21  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.h
+	(IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_LEN,
+	IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_LEN): Fixed bug in macros that
+	incorrectly calculated chksum data lengths.  Bugs never occurred
+	in libfreeipmi b/c buffers were memset and the chksums were adding
+	pointless 0's.
+	
 2005-11-17  Albert Chu  <chu11@llnl.gov>
 	
         Merge in rmcpping/ipmiping changes from branch al_ipmi_2_0_branch

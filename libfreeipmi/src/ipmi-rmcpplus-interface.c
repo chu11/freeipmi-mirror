@@ -1903,17 +1903,6 @@ _deconstruct_payload_confidentiality_aes_cbc_128(fiid_obj_t obj_payload,
                    pad_len + 1);
 
       /* achu: User is responsible for checking if padding is not corrupt  */
-#if 0
-      for (i = 0; i < pad_len; i++)
-        {
-          if (payload_buf[cmd_data_len + i] != i + 1)
-            {
-              errno = EINVAL;
-              ipmi_debug("_deconstruct_payload_confidentiality_aes_cbc_128: invalid pad data");
-              return (-1);
-            }
-        }
-#endif
     }
   
   if ((obj_cmd_len = _deconstruct_payload_buf_cmd_tmpl(obj_msg_hdr, 
@@ -2002,7 +1991,6 @@ _deconstruct_payload(u_int8_t payload_type,
   return (0);
 }
 
-/* XXX: How check correctness of payload? */
 int32_t
 unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
                               u_int8_t integrity_algorithm,

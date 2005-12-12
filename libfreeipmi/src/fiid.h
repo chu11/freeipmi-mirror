@@ -121,6 +121,29 @@ do {                                                          \
   __FI_FIID_OBJ_GET (bytes, tmpl, field, val)
 #endif
 
+#define __LFI_FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)   \
+do {                                                                \
+    if (fiid_obj_get_data (bytes, tmpl, field, val, val_len) == -1) \
+      return (-1);                                                  \
+} while (0)
+
+#define __FI_FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)     \
+do {                                                                 \
+    if (fiid_obj_get_data (bytes, tmpl, field, &val, val_len) == -1) \
+    {                                                                \
+      err (1, "fiid_obj_get_data (%p, %p, \"%s\", %p) error",        \
+	   bytes, tmpl, field, val);                                 \
+    }                                                                \
+} while (0)
+
+#if defined (FREEIPMI_LIBRARY)                                
+#define FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)  \
+  __LFI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
+#else
+#define FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)  \
+  __FI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
+#endif
+
 #define FIID_OBJ_MEMSET(obj, c, tmpl)                         \
 do {                                                          \
      u_int8_t *__ptr = fiid_obj_memset (obj, c, tmpl);        \
@@ -196,7 +219,8 @@ void fiid_template_free (fiid_field_t *tmpl_dynamic);
 int8_t fiid_obj_get_data (fiid_obj_t obj, 
 			  fiid_template_t tmpl, 
 			  u_int8_t *field, 
-			  u_int8_t *data);
+			  u_int8_t *data,
+                          u_int32_t data_len);
 int8_t fiid_obj_set_data (fiid_obj_t obj, 
 			  fiid_template_t tmpl, 
 			  u_int8_t *field, 

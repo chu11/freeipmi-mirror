@@ -403,6 +403,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
+      return ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
 	break;
     case IPMI_DEVICE_KCS:
       return ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
@@ -410,10 +411,10 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     case IPMI_DEVICE_BT:
     case IPMI_DEVICE_SSIF:
     default:
-	errno = EINVAL;
-	return (-1);
+      errno = EINVAL;
+      return (-1);
     }
-
+  
   return (0);
 }
 

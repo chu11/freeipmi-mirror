@@ -519,7 +519,8 @@ int8_t
 fiid_obj_get_data (fiid_obj_t obj, 
 		   fiid_template_t tmpl, 
 		   u_int8_t *field, 
-		   u_int8_t *data)
+		   u_int8_t *data,
+                   u_int32_t data_len)
 {
   int field_index; 
   int len;
@@ -534,6 +535,13 @@ fiid_obj_get_data (fiid_obj_t obj,
   ERR (field_index != -1);
   len = fiid_obj_field_len_bytes (tmpl, field);
   ERR (len != -1);
+
+  if (len > data_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   memcpy (data, (obj + field_index), len);
   
   return 0;

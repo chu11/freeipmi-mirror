@@ -27,6 +27,7 @@
 #ifndef IPMI_SSIF_INTERFACE_H
 #define IPMI_SSIF_INTERFACE_H
 
+#define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20
 /* function error codes */
 #define IPMI_SSIF_SUCCESS         0x00
 #define IPMI_SSIF_UNDEF_ERROR     0xFFFF

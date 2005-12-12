@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.h,v 1.1 2005-12-09 01:11:32 balamurugan Exp $ 
+   $Id: ipmi-raw-argp.h,v 1.1.2.1 2005-12-12 22:50:43 chu11 Exp $ 
    
    ipmi-raw-argp.h - ipmi-raw command line argument parser.
    

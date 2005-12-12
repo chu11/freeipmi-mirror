@@ -30,11 +30,13 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
   
   static ipmi_locate_func things_to_try[] =
     {
-      pci_get_dev_info,
-      acpi_spmi_get_dev_info,
       smbios_get_dev_info,
+      acpi_spmi_get_dev_info,
+      pci_get_dev_info,
+      defaults_get_dev_info,
       NULL
     };
+
   int i;
   ipmi_locate_info_t* pinfo2;
   
@@ -45,9 +47,9 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
       pinfo2 = (*things_to_try[i])(type, pinfo);
       
       if (pinfo2 != NULL)
-	return pinfo2;
+	return (pinfo2);
     }
 
-/*   errno = ENODEV; */
-  return NULL;
+  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
+  return (NULL);
 }

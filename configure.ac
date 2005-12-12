@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.27.2.3 2005-11-18 01:38:05 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.27.2.4 2005-12-12 22:50:43 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -27,6 +27,7 @@ AC_CONFIG_FILES([
         libfreeipmi/Makefile libfreeipmi/src/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
         ipmipower/Makefile ipmipower/src/Makefile
+        ipmi-raw/Makefile ipmi-raw/src/Makefile
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
 	garpd/Makefile garpd/src/Makefile garpd/garpd.8
@@ -96,7 +97,7 @@ AC_SUBST(WITH_DEBUG)
 dnl See if they want to build fish.
 AC_ARG_ENABLE([fish],
               AC_HELP_STRING([--disable-fish], [don't build the fish IPMI shell]))
-AM_CONDITIONAL([COND_FISH], [test x"${enable_fish}" != "xno"])
+AM_CONDITIONAL([FISH], [test x"${enable_fish}" != "xno"])
 if test "x${enable_fish}" = "x" ; then
    enable_fish=yes
 fi

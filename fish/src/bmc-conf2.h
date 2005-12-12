@@ -147,7 +147,8 @@ int8_t set_bmc_power_restore_policy (ipmi_device_t *dev,
 /***********************************************************/
 int8_t get_bmc_username (ipmi_device_t *dev, 
 			 u_int8_t userid, 
-			 u_int8_t *username);
+			 u_int8_t *username,
+			 u_int32_t username_len);
 int8_t get_bmc_user_lan_channel_access (ipmi_device_t *dev, 
 					u_int8_t userid, 
 					u_int8_t *enable_ipmi_msgs, 

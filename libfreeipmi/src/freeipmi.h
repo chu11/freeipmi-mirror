@@ -54,11 +54,22 @@ extern "C" {
 #include <limits.h>
 #include <syslog.h>
 
-#if defined(__FreeBSD__)
-# include <machine/cpufunc.h>
-# include <machine/sysarch.h>
-#else
-# include <sys/io.h>
+#ifndef _OS2_
+#  if (defined(__GLIBC__) && __GLIBC__ >= 2)
+#    include <sys/io.h>
+#  elif defined (__OpenBSD__) || defined (__NetBSD__)
+#    include <machine/pio.h>/* inb/outb */
+#    include <machine/sysarch.h>/* sysarch call */
+#  elif defined (__FreeBSD__)
+#    include <machine/cpufunc.h>
+#    include <machine/sysarch.h>
+#  elif defined (PPC)
+#    include <asm/io.h>
+#  else
+#    ifdef _AXP_
+#       include <sys/io.h>
+#    endif
+#  endif   
 #endif
 
 #ifdef HAVE_CONFIG_H
@@ -180,8 +191,9 @@ extern "C" {
 #include "ipmi-error.h"
 #include "ipmi-locate.h"
 #include "smbios-locate.h"
-#include "pci-locate.h"
 #include "acpi-spmi-locate.h"
+#include "pci-locate.h"
+#include "defaults-locate.h"
 #include "rmcp.h"
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
@@ -289,6 +301,7 @@ extern char *__progname;
 #include <freeipmi/smbios-locate.h>
 #include <freeipmi/acpi-spmi-locate.h>
 #include <freeipmi/pci-locate.h>
+#include <freeipmi/defaults-locate.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>

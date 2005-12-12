@@ -31,6 +31,17 @@ extern "C" {
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
 
+enum ipmi_locate_driver_type
+{
+  IPMI_LOCATE_DRIVER_NONE = 0,
+  IPMI_LOCATE_DRIVER_DEFAULTS = 1,
+  IPMI_LOCATE_DRIVER_SMBIOS = 2,
+  IPMI_LOCATE_DRIVER_ACPI = 3,
+  IPMI_LOCATE_DRIVER_PCI = 4,
+};
+typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
+
+#define IPMI_LOCATE_DRIVER
 /* USE ipmi_interface_type_t INSTEAD --Anand Babu */
 /* #define IPMI_INTERFACE_RESERVED   0x00 */
 /* #define IPMI_INTERFACE_KCS        0x01 */
@@ -59,6 +70,8 @@ struct ipmi_locate_info
 {
   u_int8_t ipmi_ver_major;
   u_int8_t ipmi_ver_minor;
+  ipmi_locate_driver_type_t locate_driver_type;
+  u_int8_t locate_driver;
   /* u_int8_t interface_type;  *//* KCS, SMIC, BT, SSIF */
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char *bmc_i2c_dev_name;

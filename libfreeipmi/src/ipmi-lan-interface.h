@@ -84,9 +84,8 @@ extern "C" {
    fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rq, "chksum1"))
 
 #define IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_LEN(tmpl_cmd)            \
-  (fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rq, "rq_addr") + \
-   fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rq, "rq_lun") +  \
-   fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rq, "rq_seq") +  \
+  (fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq) -                  \
+   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rq, "chksum1") + \
    fiid_obj_len_bytes (tmpl_cmd)) 
    
 #define IPMI_LAN_PKT_RS_CHKSUM1_BLOCK_LEN                      \
@@ -106,9 +105,8 @@ extern "C" {
    fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, "chksum1"))
 
 #define IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_LEN(tmpl_cmd)             \
-  (fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rs, "rq_addr") +  \
-   fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rs, "rq_lun") +   \
-   fiid_obj_field_len_bytes (tmpl_lan_msg_hdr_rs, "rq_seq") +   \
+  (fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs) -                   \
+   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, "chksum1") +  \
    fiid_obj_len_bytes (tmpl_cmd))
    
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
@@ -175,6 +173,11 @@ int8_t ipmi_lan_cmd2 (ipmi_device_t *dev,
 		      fiid_template_t tmpl_cmd_rq, 
 		      fiid_obj_t obj_cmd_rs, 
 		      fiid_template_t tmpl_cmd_rs);
+int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
+			  u_int8_t *buf_rq, 
+			  size_t buf_rq_len, 
+			  u_int8_t *buf_rs, 
+			  size_t *buf_rs_len);
 
 int8_t ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
 			      fiid_obj_t obj_msg_hdr, 

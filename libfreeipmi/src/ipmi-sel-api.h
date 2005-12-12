@@ -55,10 +55,12 @@ typedef struct sel_info sel_info_t;
 
 int ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			      sel_descriptor_t *seld, 
-			      u_int8_t *record_data);
+			      u_int8_t *record_data,
+                              u_int32_t record_data_len);
 int ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			     sel_descriptor_t *seld, 
-			     u_int8_t *record_data);
+			     u_int8_t *record_data,
+                             u_int32_t record_data_len);
 int get_sel_info (ipmi_device_t *dev, 
 		  sel_info_t *pinfo);
 

@@ -73,6 +73,8 @@ int32_t ipmi_calculate_k1(u_int8_t authentication_algorithm, u_int8_t *sik_key, 
 
 int32_t ipmi_calculate_k2(u_int8_t authentication_algorithm, u_int8_t *sik_key, u_int32_t sik_key_len, u_int8_t *k2, u_int32_t k2_len);
 
+int32_t check_rmcpplus_payload_pad(u_int8_t confidentiality_algorithm, fiid_obj_t obj_payload);
+
 #ifdef __cplusplus
 }
 #endif

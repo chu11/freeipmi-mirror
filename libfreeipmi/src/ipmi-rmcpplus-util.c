@@ -792,3 +792,68 @@ ipmi_calculate_k2(u_int8_t authentication_algorithm,
                            constant,
                            IPMI_KEY_CONSTANT_LEN);  
 }
+
+int32_t
+check_rmcpplus_payload_pad(u_int8_t confidentiality_algorithm,
+                           fiid_obj_t obj_payload)
+{
+  if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+      || !obj_payload)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+    /* No padding */
+    return (1);
+  else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+    {
+      u_int8_t confidentiality_trailer[IPMI_MAX_PAYLOAD_LEN];
+      u_int64_t confidentiality_trailer_len;
+      int8_t pad_len;
+      int i;
+
+      FIID_OBJ_GET(obj_payload,
+                   tmpl_rmcpplus_payload,
+                   "confidentiality_trailer_len",
+                   &confidentiality_trailer_len);
+
+      FIID_OBJ_GET_DATA(obj_payload,
+                        tmpl_rmcpplus_payload,
+                        "confidentiality_trailer",
+                        confidentiality_trailer,
+                        IPMI_MAX_PAYLOAD_LEN);
+
+      if (!confidentiality_trailer_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      pad_len = confidentiality_trailer[confidentiality_trailer_len - 1];
+
+      if ((confidentiality_trailer_len - 1) != pad_len)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      for (i = 0; i < pad_len; i++)
+        {
+          if (confidentiality_trailer[i] != i + 1)
+            return (0);
+        }
+
+      return (1);
+    }
+  else
+    {
+      /* achu: Even though the algorithm is legit, we don't support it yet :-( */
+      errno = EINVAL;
+      return (-1);
+    }
+
+  /* NOT REACHED */
+  return (0);
+}
