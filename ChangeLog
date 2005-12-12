@@ -1,3 +1,9 @@
+2005-12-12  Albert Chu  <chu11@llnl.gov>
+
+	* configure.ac: Revert 2005-12-11 changes.
+
+	* libfreeipmi/src/fiid.h (FIID_OBJ_GET_DATA): New macro.
+	
 2005-12-11  Anand Babu  <ab@zresearch.com>
 
 	* libfreeipmi/src/defaults-locate.c,h: new files. Re-implemented

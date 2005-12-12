@@ -1587,7 +1587,6 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     int32_t pkt_len;
     int32_t bytes_received;
     int32_t pkt_hdrs_size;
-    int32_t msg_size;
     
     pkt_hdrs_size = 
       (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) + 
