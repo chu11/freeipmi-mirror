@@ -206,7 +206,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
     "IPMI Session Header:\n"
     "--------------------";
   char *msg_hdr =
-    "IPMI Message header:\n"
+    "IPMI Message Header:\n"
     "--------------------";
   char *cmd_hdr =
     "IPMI Command Data:\n"
