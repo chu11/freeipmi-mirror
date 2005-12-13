@@ -493,23 +493,8 @@ _calculate_auth_code_len(u_int8_t integrity_algorithm,
   
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE) 
     {
-      char *auth_field_len;
-
-      if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
-        auth_field_len = "auth_code_len";
-      else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc"))
-        auth_field_len = "auth_calc_len";
-      else
-        {
-          /* Bad template */
-          errno = EINVAL;
-          return (-1);
-        }
-      
-      FIID_OBJ_GET (obj_rmcpplus_trlr_session,
-                    tmpl_rmcpplus_trlr_session,
-                    auth_field_len,
-                    &auth_code_len);
+      /* No authcode */
+      return 0;
     }
   else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
     auth_code_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
@@ -656,16 +641,9 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
     {
       if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE) 
         {
-          /* XXX: achu: Do we zero pad the auth_code?  The spec doesn't
-           * say.
-           */
-          if (auth_code_len)
-            {
-              ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc")) < 0));
-              memcpy (auth_code_buf, obj_rmcpplus_trlr_session + obj_field_start, auth_code_len);
-            }
-          
-          return (auth_code_len);
+          errno = EINVAL;
+          ipmi_debug("_construct_trlr_session_auth_code: invalid state, auth_code_len should be 0");
+          return (-1);
         }
       else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
@@ -2183,11 +2161,7 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
       char *auth_field, *auth_field_len;
 
       if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-        {
-          /* achu: There shouldn't be any integrity data */
-          errno = EINVAL;
-          return (-1);
-        }
+        authcode_len = 0;
       else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
         authcode_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
       else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
@@ -2220,7 +2194,6 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
           return (-1);
         }
 
-
       if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
         {
           auth_field = "auth_code";
@@ -2232,12 +2205,15 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
           auth_field = "auth_calc_len";
         }
 
-      if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
-                            tmpl_trlr_session,
-                            auth_field,
-                            pkt + pkt_index + ((pkt_len - pkt_index) - authcode_len),
-                            authcode_len) < 0)
-        return (-1);
+      if (authcode_len)
+        {
+          if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
+                                tmpl_trlr_session,
+                                auth_field,
+                                pkt + pkt_index + ((pkt_len - pkt_index) - authcode_len),
+                                authcode_len) < 0)
+            return (-1);
+        }
 
       if (fiid_obj_set(obj_rmcpplus_trlr_session,
                        tmpl_trlr_session,

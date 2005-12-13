@@ -857,3 +857,51 @@ check_rmcpplus_payload_pad(u_int8_t confidentiality_algorithm,
   /* NOT REACHED */
   return (0);
 }
+
+int32_t
+check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session,
+                            fiid_obj_t obj_rmcpplus_trlr_session)
+{
+  u_int8_t integrity_pad[IPMI_MAX_PAYLOAD_LEN];
+  u_int64_t pad_length;
+  int i;
+    
+  if (!tmpl_rmcpplus_trlr_session 
+      || !obj_rmcpplus_trlr_session
+      || !fiid_obj_field_lookup(tmpl_rmcpplus_trlr_session, "integrity_pad")
+      || !fiid_obj_field_lookup(tmpl_rmcpplus_trlr_session, "pad_length"))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+
+  FIID_OBJ_GET(obj_rmcpplus_trlr_session,
+               tmpl_rmcpplus_trlr_session,
+               "pad_length",
+               &pad_length);
+
+  if (!pad_length)
+    return (1);
+
+  if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET_DATA(obj_rmcpplus_trlr_session,
+                    tmpl_rmcpplus_trlr_session,
+                    "integrity_pad",
+                    integrity_pad,
+                    IPMI_MAX_PAYLOAD_LEN);
+  
+  for (i = 0; i < pad_length; i++)
+    {
+      if (integrity_pad[i] != IPMI_INTEGRITY_PAD_DATA)
+        return (0);
+    }
+  
+  return (1);
+}
+

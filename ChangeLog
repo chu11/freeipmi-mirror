@@ -93,8 +93,13 @@
 	* Merge in latest from HEAD.
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
-	libfreeipmi/src/ipmi-rmcpplus-util.c (check_rmcpplus_payload_pad):
-	New function.
+	libfreeipmi/src/ipmi-rmcpplus-util.c (check_rmcpplus_payload_pad,
+	check_rmcpplus_integrity_pad): New function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_calculate_auth_code_len, _construct_trlr_session_auth_code,
+	unassemble_ipmi_rmcpplus_pkt): Re-worked due to better
+	understanding of what integrity algorithm none actually means.
 
 2005-12-09  Albert Chu <chu11@llnl.gov>
 

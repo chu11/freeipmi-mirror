@@ -75,6 +75,8 @@ int32_t ipmi_calculate_k2(u_int8_t authentication_algorithm, u_int8_t *sik_key, 
 
 int32_t check_rmcpplus_payload_pad(u_int8_t confidentiality_algorithm, fiid_obj_t obj_payload);
 
+int32_t check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session, fiid_obj_t obj_rmcpplus_trlr_session);
+
 #ifdef __cplusplus
 }
 #endif
