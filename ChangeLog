@@ -88,6 +88,29 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-14  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_payload_buf_cmd_buf, _construct_payload_buf_cmd_tmpl,
+	_deconstruct_payload_buf_cmd_buf,
+	_deconstruct_payload_buf_cmd_tmpl): Removed functions.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_payload_buf, _deconstruct_payload_buf): Reworked to
+	handle template parameters.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_payload, _construct_payload_special,
+	_deconstruct_payload, _deconstruct_payload_special): Fixed to
+	construct special packets correctly.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_payload_confidentiality_none,
+	_construct_payload_confidentiality_aes_cbc_128,
+	_deconstruct-payload_confidentiality_none,
+	_deconstruct_payload_confidentiality_aes_cbc_128): Modify for
+	function name changes.
+	
 2005-12-12  Albert Chu <chu11@llnl.gov>
 
 	* Merge in latest from HEAD.

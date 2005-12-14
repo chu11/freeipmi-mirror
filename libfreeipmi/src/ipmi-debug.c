@@ -422,7 +422,6 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pk
   return 0;
 }
 
-
 u_int8_t
 ipmi_kcs_print_state (int fd, u_int8_t state)
 {
