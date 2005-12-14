@@ -236,7 +236,7 @@ ipmi_set_serial_connmode (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_serial_conf_param_connmode_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_connmode_rq);
   ERR (fill_set_serial_connmode (obj_data_rq, 
 				 channel_number, 
 				 basic_mode_enable, 
@@ -293,7 +293,7 @@ ipmi_set_serial_page_blackout_interval (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_serial_conf_param_pageblackout_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_pageblackout_rq);
   ERR (fill_set_serial_page_blackout_interval (obj_data_rq, 
 					       channel_number, 
 					       page_blackout_interval) == 0);
@@ -347,7 +347,7 @@ ipmi_set_serial_retry_time (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_serial_conf_param_retry_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_retry_rq);
   ERR (fill_set_serial_retry_time (obj_data_rq, 
 				   channel_number, 
 				   retry_time) == 0);
@@ -415,7 +415,7 @@ ipmi_set_serial_comm_bits (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_serial_conf_param_commbits_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_commbits_rq);
   ERR (fill_set_serial_comm_bits (obj_data_rq, 
 				  channel_number, 
 				  dtr_hangup,
@@ -486,7 +486,7 @@ ipmi_get_serial_connmode (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_serial_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_data_rq, 
 				   IPMI_SERIAL_PARAM_CONNECTION_MODE, 
 				   channel_number, 
@@ -510,7 +510,7 @@ ipmi_get_serial_page_blackout (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_serial_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_data_rq, 
 				   IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
 				   channel_number, 
@@ -534,7 +534,7 @@ ipmi_get_serial_retry_time (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_serial_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_data_rq, 
 				   IPMI_SERIAL_PARAM_RETRY_TIME, 
 				   channel_number, 
@@ -558,7 +558,7 @@ ipmi_get_serial_comm_bits (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_serial_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_data_rq, 
 				   IPMI_SERIAL_PARAM_COMM_BITS, 
 				   channel_number, 

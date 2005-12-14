@@ -156,7 +156,7 @@ ipmi_kcs_get_sel_info (fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sel_info_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_info_rq);
   fill_kcs_get_sel_info (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sel_info_rq, 
@@ -181,7 +181,7 @@ ipmi_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sel_alloc_info_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_alloc_info_rq);
   fill_kcs_get_sel_alloc_info (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sel_alloc_info_rq, 
@@ -206,7 +206,7 @@ ipmi_kcs_reserve_sel (fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_reserve_sel_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_reserve_sel_rq);
   fill_kcs_reserve_sel (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_reserve_sel_rq, 
@@ -242,7 +242,7 @@ ipmi_kcs_get_sel_entry (u_int16_t record_id, fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sel_entry_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_entry_rq);
   fill_kcs_get_sel_entry (obj_data_rq, record_id);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_get_sel_entry_rq, 
@@ -282,7 +282,7 @@ ipmi_kcs_delete_sel_entry (u_int16_t reservation_id,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_delete_sel_entry_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_delete_sel_entry_rq);
   fill_kcs_delete_sel_entry (obj_data_rq, reservation_id, record_id);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_delete_sel_entry_rq, 
@@ -335,7 +335,7 @@ ipmi_kcs_clear_sel (u_int16_t reservation_id,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_clear_sel_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_clear_sel_rq);
   fill_kcs_clear_sel (obj_data_rq, reservation_id, opcode);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
 			 obj_data_rq, tmpl_clear_sel_rq, 

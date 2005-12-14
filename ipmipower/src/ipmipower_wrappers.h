@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.2 2004-05-11 17:46:10 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.3 2005-12-14 01:48:49 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,10 +76,10 @@ int Cbuf_peek_and_drop(cbuf_t buf, void *buffer, int len);
  */
 int Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len);
 
-/* Fiid_obj_alloc
+/* Fiid_obj_calloc
  * - Allocate a fiid object
  */
-void * Fiid_obj_alloc(fiid_template_t tmpl);
+void * Fiid_obj_calloc(fiid_template_t tmpl);
 
 /* Fiid_obj_memset
  * - Memset a fiid object 

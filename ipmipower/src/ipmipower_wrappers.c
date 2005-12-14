@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.2 2005-01-27 01:11:54 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.3 2005-12-14 01:48:49 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -161,13 +161,13 @@ Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len)
 }
 
 void * 
-Fiid_obj_alloc(fiid_template_t tmpl) 
+Fiid_obj_calloc(fiid_template_t tmpl) 
 {
   void *ptr;
   assert(tmpl != NULL);
 
-  if ((ptr = fiid_obj_alloc(tmpl)) == NULL)
-    err_exit("Fiid_obj_alloc: %s", strerror(errno));
+  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
+    err_exit("Fiid_obj_calloc: %s", strerror(errno));
   return ptr;
 }
 

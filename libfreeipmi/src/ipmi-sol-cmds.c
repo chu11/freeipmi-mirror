@@ -106,7 +106,7 @@ ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_sol_conf_param_sol_enable_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_sol_conf_param_sol_enable_rq);
   fill_sol_conf_sol_enable_disable (obj_data_rq, 
 				    channel_number, 
 				    sol_payload);
@@ -191,7 +191,7 @@ ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sol_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sol_conf_param_rq);
   fill_get_sol_conf_param (obj_data_rq, 
 			   IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
 			   channel_number, 

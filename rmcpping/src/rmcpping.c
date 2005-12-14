@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.2 2005-11-18 01:25:03 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.3 2005-12-14 01:48:50 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,14 +46,14 @@
 #define RMCP_MSG_TAG_MAX  0xFE
 
 void *
-Fiid_obj_alloc(fiid_template_t tmpl)
+Fiid_obj_calloc(fiid_template_t tmpl)
 {
   void *ptr;
  
   assert(tmpl != NULL);
  
-  if ((ptr = fiid_obj_alloc(tmpl)) == NULL)
-    ipmi_ping_err_exit("fiid_obj_alloc: %s", strerror(errno));
+  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
+    ipmi_ping_err_exit("fiid_obj_calloc: %s", strerror(errno));
  
   return ptr;
 }
@@ -92,8 +92,8 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = Fiid_obj_alloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = Fiid_obj_alloc(tmpl_cmd_asf_presence_ping);
+  obj_rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
 
   if (fill_hdr_rmcp_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -140,8 +140,8 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = Fiid_obj_alloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = Fiid_obj_alloc(tmpl_cmd_asf_presence_pong);
+  obj_rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
 
 #ifndef NDEBUG
   if (debug)

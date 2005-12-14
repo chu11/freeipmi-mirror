@@ -148,7 +148,7 @@ ipmi_set_power_restore_policy (u_int8_t power_restore_policy,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_power_restore_policy_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_power_restore_policy_rq);
   fill_cmd_set_power_restore_policy (obj_data_rq, power_restore_policy);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_CHASSIS_RQ, 
 			 obj_data_rq, tmpl_set_power_restore_policy_rq, 
@@ -177,7 +177,7 @@ ipmi_get_chassis_status (fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_cmd_get_chassis_status_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_cmd_get_chassis_status_rq);
   fill_cmd_get_chassis_status (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_CHASSIS_RQ, 
 			 obj_data_rq, tmpl_cmd_get_chassis_status_rq, 

@@ -163,7 +163,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
   dev->io.outofband.rq.obj_hdr_rmcp = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
@@ -171,7 +171,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_rmcp = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
@@ -180,7 +180,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_hdr_session = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rq.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
@@ -188,7 +188,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_session = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rs.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
@@ -197,7 +197,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_hdr = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -205,7 +205,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_hdr = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rs.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -214,7 +214,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_trlr = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rq.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -222,7 +222,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_trlr = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rs.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -330,7 +330,7 @@ ipmi_open_inband (ipmi_device_t *dev,
   dev->io.inband.rs.tmpl_hdr_ptr = &tmpl_inband_hdr;
   
   dev->io.inband.rq.obj_hdr = 
-    fiid_obj_alloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
   if (dev->io.inband.rq.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
@@ -338,7 +338,7 @@ ipmi_open_inband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.inband.rs.obj_hdr = 
-    fiid_obj_alloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
   if (dev->io.inband.rs.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.5 2005-11-18 01:25:03 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.6 2005-12-14 01:48:49 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -43,14 +43,14 @@
 #define IPMI_RQ_SEQ_MAX  0x3F
 
 void *
-Fiid_obj_alloc(fiid_template_t tmpl)
+Fiid_obj_calloc(fiid_template_t tmpl)
 {
   void *ptr;
 
   assert(tmpl != NULL);
 
-  if ((ptr = fiid_obj_alloc(tmpl)) == NULL)
-    ipmi_ping_err_exit("fiid_obj_alloc: %s", strerror(errno));
+  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
+    ipmi_ping_err_exit("fiid_obj_calloc: %s", strerror(errno));
 
   return ptr;
 }
@@ -91,10 +91,10 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_alloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_alloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_alloc(tmpl_lan_msg_hdr_rq);
-  obj_cmd = Fiid_obj_alloc(tmpl_cmd_get_channel_auth_caps_rq);
+  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rq);
+  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rq);
     
   if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
@@ -164,11 +164,11 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_alloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_alloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_alloc(tmpl_lan_msg_hdr_rs);
-  obj_cmd = Fiid_obj_alloc(tmpl_cmd_get_channel_auth_caps_rs);
-  obj_msg_trlr = Fiid_obj_alloc(tmpl_lan_msg_trlr);
+  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rs);
+  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rs);
+  obj_msg_trlr = Fiid_obj_calloc(tmpl_lan_msg_trlr);
 
 #ifndef NDEBUG
   if (debug)

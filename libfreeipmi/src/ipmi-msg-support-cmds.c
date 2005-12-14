@@ -625,7 +625,7 @@ ipmi_lan_open_session (int sockfd,
     }
 
   *rq_seq = 0;
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_channel_auth_caps_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_channel_auth_caps_rs);
   if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
@@ -636,7 +636,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_session_challenge_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_session_challenge_rs);
   if (ipmi_lan_get_session_challenge (sockfd, hostaddr, hostaddr_len, 
 				      auth_type, username, *rq_seq, obj_cmd_rs) == -1)
     goto error;
@@ -653,7 +653,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_activate_session_rs);
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
 				 auth_type, *session_id, auth_code_data, auth_code_data_len,
 				 priv_level, challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN,
@@ -674,7 +674,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_set_session_priv_level_rs);
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
 				       auth_code_data, auth_code_data_len, priv_level,
@@ -827,7 +827,7 @@ ipmi_kcs_set_channel_access (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_channel_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_channel_access_rq);
   ERR (fill_kcs_set_channel_access (obj_data_rq, 
 				    channel_number, 
 				    ipmi_messaging_access_mode, 
@@ -896,7 +896,7 @@ ipmi_kcs_set_user_name (u_int8_t user_id,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_name_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_name_rq);
   ERR (fill_kcs_set_user_name (obj_data_rq, user_id, 
 			       user_name, 
 			       (user_name) ? strlen(user_name) : 0) == 0);
@@ -930,7 +930,7 @@ ipmi_kcs_get_user_name (u_int8_t user_id,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_user_name_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_user_name_rq);
   ERR (fill_kcs_get_user_name (obj_data_rq, user_id) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_name_rq, 
@@ -999,7 +999,7 @@ ipmi_kcs_set_user_password (u_int8_t user_id,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_password_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_password_rq);
   ERR (fill_kcs_set_user_password (obj_data_rq, user_id, operation, 
 				   user_password, 
 				   (user_password) ? strlen(user_password) : 0) == 0);
@@ -1088,7 +1088,7 @@ ipmi_kcs_set_user_access (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_access_rq);
   ERR (fill_kcs_set_user_access (obj_data_rq, 
 				 channel_number,
 				 user_id,
@@ -1142,7 +1142,7 @@ ipmi_kcs_get_user_access (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_user_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_user_access_rq);
   ERR (fill_kcs_get_user_access (obj_data_rq, channel_number, user_id) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_access_rq, 
@@ -1190,7 +1190,7 @@ ipmi_kcs_get_channel_access (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_channel_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_access_rq);
   ERR (fill_kcs_get_channel_access (obj_data_rq, channel_number, channel_access_set_flag) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_access_rq, 
@@ -1229,7 +1229,7 @@ ipmi_kcs_get_channel_info (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_channel_info_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_info_rq);
   ERR (fill_kcs_get_channel_info (obj_data_rq, channel_number) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_info_rq, 

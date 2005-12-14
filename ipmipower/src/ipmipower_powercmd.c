@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.14 2005-11-10 22:17:03 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.15 2005-12-14 01:48:49 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -140,28 +140,28 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
   memset(ip, '\0', sizeof(struct ipmipower_powercmd));
     
-  ip->rmcp_req = Fiid_obj_alloc(tmpl_hdr_rmcp); 
-  ip->rmcp_res = Fiid_obj_alloc(tmpl_hdr_rmcp); 
-  ip->session_req = Fiid_obj_alloc(tmpl_hdr_session_auth_calc); 
-  ip->session_res = Fiid_obj_alloc(tmpl_hdr_session_auth_calc); 
-  ip->msg_req = Fiid_obj_alloc(tmpl_lan_msg_hdr_rq); 
-  ip->msg_res = Fiid_obj_alloc(tmpl_lan_msg_hdr_rs); 
-  ip->trlr_res = Fiid_obj_alloc(tmpl_lan_msg_trlr); 
+  ip->rmcp_req = Fiid_obj_calloc(tmpl_hdr_rmcp); 
+  ip->rmcp_res = Fiid_obj_calloc(tmpl_hdr_rmcp); 
+  ip->session_req = Fiid_obj_calloc(tmpl_hdr_session_auth_calc); 
+  ip->session_res = Fiid_obj_calloc(tmpl_hdr_session_auth_calc); 
+  ip->msg_req = Fiid_obj_calloc(tmpl_lan_msg_hdr_rq); 
+  ip->msg_res = Fiid_obj_calloc(tmpl_lan_msg_hdr_rs); 
+  ip->trlr_res = Fiid_obj_calloc(tmpl_lan_msg_trlr); 
 
-  ip->auth_req = Fiid_obj_alloc(tmpl_cmd_get_channel_auth_caps_rq); 
-  ip->auth_res = Fiid_obj_alloc(tmpl_cmd_get_channel_auth_caps_rs); 
-  ip->sess_req = Fiid_obj_alloc(tmpl_cmd_get_session_challenge_rq); 
-  ip->sess_res = Fiid_obj_alloc(tmpl_cmd_get_session_challenge_rs); 
-  ip->actv_req = Fiid_obj_alloc(tmpl_cmd_activate_session_rq); 
-  ip->actv_res = Fiid_obj_alloc(tmpl_cmd_activate_session_rs); 
-  ip->priv_req = Fiid_obj_alloc(tmpl_cmd_set_session_priv_level_rq); 
-  ip->priv_res = Fiid_obj_alloc(tmpl_cmd_set_session_priv_level_rs); 
-  ip->clos_req = Fiid_obj_alloc(tmpl_cmd_close_session_rq); 
-  ip->clos_res = Fiid_obj_alloc(tmpl_cmd_close_session_rs); 
-  ip->chas_req = Fiid_obj_alloc(tmpl_cmd_get_chassis_status_rq); 
-  ip->chas_res = Fiid_obj_alloc(tmpl_cmd_get_chassis_status_rs); 
-  ip->ctrl_req = Fiid_obj_alloc(tmpl_cmd_chassis_ctrl_rq); 
-  ip->ctrl_res = Fiid_obj_alloc(tmpl_cmd_chassis_ctrl_rs); 
+  ip->auth_req = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rq); 
+  ip->auth_res = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rs); 
+  ip->sess_req = Fiid_obj_calloc(tmpl_cmd_get_session_challenge_rq); 
+  ip->sess_res = Fiid_obj_calloc(tmpl_cmd_get_session_challenge_rs); 
+  ip->actv_req = Fiid_obj_calloc(tmpl_cmd_activate_session_rq); 
+  ip->actv_res = Fiid_obj_calloc(tmpl_cmd_activate_session_rs); 
+  ip->priv_req = Fiid_obj_calloc(tmpl_cmd_set_session_priv_level_rq); 
+  ip->priv_res = Fiid_obj_calloc(tmpl_cmd_set_session_priv_level_rs); 
+  ip->clos_req = Fiid_obj_calloc(tmpl_cmd_close_session_rq); 
+  ip->clos_res = Fiid_obj_calloc(tmpl_cmd_close_session_rs); 
+  ip->chas_req = Fiid_obj_calloc(tmpl_cmd_get_chassis_status_rq); 
+  ip->chas_res = Fiid_obj_calloc(tmpl_cmd_get_chassis_status_rs); 
+  ip->ctrl_req = Fiid_obj_calloc(tmpl_cmd_chassis_ctrl_rq); 
+  ip->ctrl_res = Fiid_obj_calloc(tmpl_cmd_chassis_ctrl_rs); 
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;

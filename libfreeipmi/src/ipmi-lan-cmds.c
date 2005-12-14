@@ -469,7 +469,7 @@ ipmi_lan_set_arp (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
   ERR (fill_lan_set_arp (obj_data_rq, 
 			 channel_number, 
 			 bmc_generated_gratuitous_arps_flag, 
@@ -524,7 +524,7 @@ ipmi_lan_set_gratuitous_arp_interval (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
   ERR (fill_lan_set_gratuitous_arp_interval (obj_data_rq, 
 					     channel_number, 
 					     gratuitous_arp_interval) == 0);
@@ -606,7 +606,7 @@ ipmi_lan_set_auth_type_enables (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_auth_type_enables_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_auth_type_enables_rq);
   ERR (fill_lan_set_auth_type_enables (obj_data_rq, 
 				       channel_number, 
 				       max_privilege_auth_type_callback_level, 
@@ -664,7 +664,7 @@ ipmi_lan_set_ip_addr_source (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_source_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_source_rq);
   ERR (fill_lan_set_ip_addr_source (obj_data_rq, 
 				    channel_number, 
 				    ip_addr_source) == 0);
@@ -719,7 +719,7 @@ ipmi_lan_set_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_IP_ADDR, 
 			     channel_number, 
@@ -739,7 +739,7 @@ ipmi_lan_set_gw1_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_DEFAULT_GATEWAY_IP_ADDR, 
 			     channel_number, 
@@ -759,7 +759,7 @@ ipmi_lan_set_gw2_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_BACKUP_GATEWAY_IP_ADDR, 
 			     channel_number, 
@@ -837,7 +837,7 @@ ipmi_lan_set_vlan_id (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_id_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_vlan_id_rq);
   ERR (fill_lan_set_vlan_id (obj_data_rq, 
 			     channel_number,
                              vlan_id_flag,
@@ -892,7 +892,7 @@ ipmi_lan_set_vlan_priority (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_priority_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_vlan_priority_rq);
   ERR (fill_lan_set_vlan_priority (obj_data_rq, 
                                    channel_number,
                                    vlan_priority) == 0);
@@ -946,7 +946,7 @@ ipmi_lan_set_subnet_mask (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_subnet_mask_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_subnet_mask_rq);
   ERR (fill_lan_set_subnet_mask (obj_data_rq, 
 				 channel_number, 
 				 subnet_mask) == 0);
@@ -1001,7 +1001,7 @@ ipmi_lan_set_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_MAC_ADDR, 
 			      channel_number, 
@@ -1021,7 +1021,7 @@ ipmi_lan_set_gw1_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDR, 
 			      channel_number, 
@@ -1041,7 +1041,7 @@ ipmi_lan_set_gw2_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDR, 
 			      channel_number, 
@@ -1111,7 +1111,7 @@ ipmi_lan_get_arp (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
 				channel_number, 
@@ -1135,7 +1135,7 @@ ipmi_lan_get_gratuitous_arp_interval (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
 				channel_number, 
@@ -1159,7 +1159,7 @@ ipmi_lan_get_auth_type_enables (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_AUTH_TYPE_ENABLES, 
 				channel_number, 
@@ -1183,7 +1183,7 @@ ipmi_lan_get_ip_addr_source (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_IP_ADDR_SOURCE, 
 				channel_number, 
@@ -1207,7 +1207,7 @@ ipmi_lan_get_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_IP_ADDR, 
 				channel_number, 
@@ -1231,7 +1231,7 @@ ipmi_lan_get_gw1_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_DEFAULT_GATEWAY_IP_ADDR, 
 				channel_number, 
@@ -1255,7 +1255,7 @@ ipmi_lan_get_gw2_ip_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BACKUP_GATEWAY_IP_ADDR, 
 				channel_number, 
@@ -1279,7 +1279,7 @@ ipmi_lan_get_subnet_mask (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_SUBNET_MASK, 
 				channel_number, 
@@ -1303,7 +1303,7 @@ ipmi_lan_get_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_MAC_ADDR, 
 				channel_number, 
@@ -1327,7 +1327,7 @@ ipmi_lan_get_gw1_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDR, 
 				channel_number, 
@@ -1351,7 +1351,7 @@ ipmi_lan_get_gw2_mac_addr (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDR, 
 				channel_number, 
@@ -1375,7 +1375,7 @@ ipmi_lan_get_vlan_id (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_VLAN_ID,
 				channel_number, 
@@ -1399,7 +1399,7 @@ ipmi_lan_get_vlan_priority (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_VLAN_PRIORITY,
 				channel_number, 
@@ -1458,7 +1458,7 @@ ipmi_suspend_bmc_arps (u_int8_t channel_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_suspend_bmc_arps_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_suspend_bmc_arps_rq);
   ERR (fill_suspend_bmc_arps (obj_data_rq, 
 			      channel_number, 
 			      gratuitous_arp_suspend, 

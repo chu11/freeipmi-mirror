@@ -207,7 +207,7 @@ fiid_obj_block_len_bytes (fiid_template_t tmpl,
 }
 
 fiid_obj_t 
-fiid_obj_alloc (fiid_template_t tmpl)
+fiid_obj_calloc (fiid_template_t tmpl)
 {
   int len;
   
@@ -587,7 +587,7 @@ fiid_obj_dup (fiid_obj_t src_obj, fiid_template_t tmpl)
       return NULL;
     }
   
-  dest_obj = fiid_obj_alloc (tmpl);
+  dest_obj = fiid_obj_calloc (tmpl);
   if (dest_obj != NULL)
     {
       int len;

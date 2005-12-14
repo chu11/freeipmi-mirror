@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.2 2005-11-09 22:24:12 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.3 2005-12-14 01:48:49 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,10 +117,10 @@ ipmipower_ping_process_pings(int *timeout)
            */
           ics[i].ping_seq_num_counter++; 
 
-          if ((rmcp_hdr = fiid_obj_alloc(tmpl_hdr_rmcp)) == NULL)
-            err_exit("fiid_obj_alloc: %s", strerror(errno));
-          if ((rmcp_ping = fiid_obj_alloc(tmpl_cmd_asf_presence_ping)) == NULL)
-            err_exit("fiid_obj_alloc: %s", strerror(errno));
+          if ((rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp)) == NULL)
+            err_exit("fiid_obj_calloc: %s", strerror(errno));
+          if ((rmcp_ping = fiid_obj_calloc(tmpl_cmd_asf_presence_ping)) == NULL)
+            err_exit("fiid_obj_calloc: %s", strerror(errno));
           
           if (fill_hdr_rmcp_asf(rmcp_hdr) < 0)
             err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -169,11 +169,11 @@ ipmipower_ping_process_pings(int *timeout)
           fiid_obj_t rmcp_pong = NULL;
           u_int64_t msg_type, ipmi_supported;
           
-          if ((rmcp_hdr = fiid_obj_alloc(tmpl_hdr_rmcp)) == NULL)
-            err_exit("fiid_obj_alloc: %s", strerror(errno));
+          if ((rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp)) == NULL)
+            err_exit("fiid_obj_calloc: %s", strerror(errno));
           
-          if ((rmcp_pong = fiid_obj_alloc(tmpl_cmd_asf_presence_pong)) == NULL)
-            err_exit("fiid_obj_alloc: %s", strerror(errno));
+          if ((rmcp_pong = fiid_obj_calloc(tmpl_cmd_asf_presence_pong)) == NULL)
+            err_exit("fiid_obj_calloc: %s", strerror(errno));
             
 #ifndef NDEBUG
           if (conf->rmcpdump) 

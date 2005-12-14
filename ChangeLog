@@ -1,3 +1,9 @@
+2005-12-13  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/fiid.c: fiid_obj_alloc ->
+	fiid_obj_calloc. Updated across the codebase. fiid_obj_alloc and
+	fiid_obj_malloc is now a macro to fiid_obj_calloc.
+
 2005-12-12  Albert Chu  <chu11@llnl.gov>
 
 	* configure.ac: Revert 2005-12-11 changes.

@@ -745,7 +745,7 @@ ipmi_kcs_get_threshold_reading (u_int8_t sensor_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_threshold_reading_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sensor_threshold_reading_rq);
   fill_kcs_get_threshold_reading (obj_data_rq, sensor_number);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_threshold_reading_rq, 
@@ -777,7 +777,7 @@ ipmi_kcs_get_discrete_reading (u_int8_t sensor_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_discrete_reading_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sensor_discrete_reading_rq);
   fill_kcs_get_discrete_reading (obj_data_rq, sensor_number);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_discrete_reading_rq, 
@@ -809,7 +809,7 @@ ipmi_kcs_get_sensor_thresholds (u_int8_t sensor_number,
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sensor_thresholds_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sensor_thresholds_rq);
   fill_kcs_get_sensor_thresholds (obj_data_rq, sensor_number);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ, 
 			 obj_data_rq, tmpl_get_sensor_thresholds_rq, 
