@@ -239,8 +239,7 @@ ex_sel_get_first_entry_raw ()
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data,
-                                SEL_RECORD_SIZE) == 0)
+				record_data, SEL_RECORD_SIZE) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -257,8 +256,8 @@ ex_sel_get_next_entry_raw ()
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data,
-                               SEL_RECORD_SIZE) == 0)
+			       record_data, SEL_RECORD_SIZE) == 0)
+
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -275,8 +274,7 @@ ex_sel_get_first_entry_hex ()
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data,
-                                SEL_RECORD_SIZE) == 0)
+				record_data, SEL_RECORD_SIZE) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -299,8 +297,7 @@ ex_sel_get_next_entry_hex ()
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data,
-                               SEL_RECORD_SIZE) == 0)
+			       record_data, SEL_RECORD_SIZE) == 0)
     {
       snprintf (hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -350,8 +347,7 @@ ex_sel_get_first_entry ()
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data,
-                                SEL_RECORD_SIZE) != 0)
+				record_data, SEL_RECORD_SIZE) != 0)
     return SCM_EOL;
   
   if (get_sel_record (record_data, &sel_rec) != 0)
@@ -392,8 +388,7 @@ ex_sel_get_next_entry ()
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data,
-                               SEL_RECORD_SIZE) != 0)
+			       record_data, SEL_RECORD_SIZE) != 0)
     return SCM_EOL;
   
   if (get_sel_record (record_data, &sel_rec) != 0)
@@ -1480,15 +1475,16 @@ SCM
 ex_get_bmc_username (SCM scm_userid)
 {
   u_int8_t userid;
-  char username[17];
+  char username[IPMI_SESSION_MAX_USERNAME_LEN+1];
   int retval;
   SCM return_list = SCM_EOL;
   
   userid = gh_scm2long (scm_userid);
-  memset (username, 0, 17);
-  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username, 17)) == 0)
-    return_list = gh_list (gh_str02scm (username), SCM_UNDEFINED);
-  
+  memset (username, 0, IPMI_SESSION_MAX_USERNAME_LEN+1);
+
+  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username, IPMI_SESSION_MAX_USERNAME_LEN+1)) == 0)
+    return_list = scm_listify (scm_makfrom0str (username), SCM_UNDEFINED);
+
   return (retval ? SCM_BOOL_F : return_list);
 }
 

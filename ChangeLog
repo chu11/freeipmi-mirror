@@ -12,7 +12,6 @@
 	fish/src/scm-procedures.c: merged the changes from old commit that
 	replaced gh_ with scm_ functions.
 	
-	
 2005-12-12  Albert Chu  <chu11@llnl.gov>
 
 	* configure.ac: Revert 2005-12-11 changes.
