@@ -3,7 +3,16 @@
 	* libfreeipmi/src/fiid.c: fiid_obj_alloc ->
 	fiid_obj_calloc. Updated across the codebase. fiid_obj_alloc and
 	fiid_obj_malloc is now a macro to fiid_obj_calloc.
+	
+	*fish/src/extension.c: once again replaced the depricated gh_
+	functions to make hook using scm functions. But this time, I use
+	scm_permanent_object to prevent the GC from freeing the hook
+	variable. This should fix the bug.
 
+	fish/src/scm-procedures.c: merged the changes from old commit that
+	replaced gh_ with scm_ functions.
+	
+	
 2005-12-12  Albert Chu  <chu11@llnl.gov>
 
 	* configure.ac: Revert 2005-12-11 changes.
