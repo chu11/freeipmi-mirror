@@ -8,6 +8,8 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus.h,
 	libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/src/ipmi-rmcpplus-debug.h,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
 	libfreeipmi/src/ipmi-rmcpplus-util.h,
@@ -110,6 +112,15 @@
 	_deconstruct-payload_confidentiality_none,
 	_deconstruct_payload_confidentiality_aes_cbc_128): Modify for
 	function name changes.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt, unassemble_ipmi_rmcpplus_pkt,
+	_construct_payload, _deconstruct_payload): Add additional checks.
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.h,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c: New files.
+
+	* libfreeipmi/src/Makefile.am: Add new files.
 	
 2005-12-12  Albert Chu <chu11@llnl.gov>
 
