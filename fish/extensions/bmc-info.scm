@@ -85,7 +85,7 @@
 		  (poll-interval  (option-ref options 'driver-poll-interval #f))
 		  (sms-io-base    (option-ref options 'sms-io-base   #f))
 		  (host           (option-ref options 'host          #f))
-		  (username       (option-ref options 'usernmae      #f))
+		  (username       (option-ref options 'username      #f))
 		  (password       (option-ref options 'password      #f))
 		  (auth-type      (option-ref options 'auth-type     #f))
 		  (priv-level     (option-ref options 'priv-level    #f))
@@ -139,7 +139,7 @@
 	     ;; --username (3)
 	     (if (and (string? username) (list? bmc-info-cmd-args))
 		 (begin 
-		   (if (not (= (string-length username) 16))
+		   (if (> (string-length username) 16)
 		       (begin 
 			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
@@ -153,7 +153,7 @@
 	     ;; --password (4)
 	     (if (and (string? password) (list? bmc-info-cmd-args))
 		 (begin 
-		   (if (not (= (string-length password) 16))
+		   (if (> (string-length password) 16)
 		       (begin 
 			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))

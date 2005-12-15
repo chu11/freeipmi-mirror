@@ -23,7 +23,7 @@
 /**********************************************************/
 /***********      event message functions   ***************/
 /**********************************************************/
-char *
+static char *
 get_01_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -57,7 +57,7 @@ get_01_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_02_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -73,7 +73,7 @@ get_02_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_03_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -87,7 +87,7 @@ get_03_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_04_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -101,7 +101,7 @@ get_04_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_05_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -115,7 +115,7 @@ get_05_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_06_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -129,7 +129,7 @@ get_06_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_07_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -157,7 +157,7 @@ get_07_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_08_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -171,7 +171,7 @@ get_08_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_09_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -185,7 +185,7 @@ get_09_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_0A_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -213,7 +213,7 @@ get_0A_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_0B_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -239,7 +239,7 @@ get_0B_generic_event_message (u_int16_t offset)
   return NULL;
 }
 
-char *
+static char *
 get_0C_generic_event_message (u_int16_t offset)
 {
   switch (offset)
@@ -260,31 +260,31 @@ get_0C_generic_event_message (u_int16_t offset)
 /**********************************************************/
 /***********      event message functions   ***************/
 /**********************************************************/
-char *
+static char *
 get_01_event_message (int offset)
 {
   return strdup ("Temperature");
 }
 
-char *
+static char *
 get_02_event_message (int offset)
 {
   return strdup ("Voltage");
 }
 
-char *
+static char *
 get_03_event_message (int offset)
 {
   return strdup ("Current");
 }
 
-char *
+static char *
 get_04_event_message (int offset)
 {
   return strdup ("Fan");
 }
 
-char *
+static char *
 get_05_event_message (int offset)
 {
   switch (offset)
@@ -308,7 +308,7 @@ get_05_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_06_event_message (int offset)
 {
   switch (offset)
@@ -330,7 +330,7 @@ get_06_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_07_event_message (int offset)
 {
   switch (offset)
@@ -362,7 +362,7 @@ get_07_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_08_event_message (int offset)
 {
   switch (offset)
@@ -386,7 +386,7 @@ get_08_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_09_event_message (int offset)
 {
   switch (offset)
@@ -412,7 +412,7 @@ get_09_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_0C_event_message (int offset)
 {
   switch (offset)
@@ -440,7 +440,7 @@ get_0C_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_0F_event_message (int offset)
 {
   switch (offset)
@@ -456,7 +456,7 @@ get_0F_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_10_event_message (int offset)
 {
   switch (offset)
@@ -478,7 +478,7 @@ get_10_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_11_event_message (int offset)
 {
   switch (offset)
@@ -504,7 +504,7 @@ get_11_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_12_event_message (int offset)
 {
   switch (offset)
@@ -526,7 +526,7 @@ get_12_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_13_event_message (int offset)
 {
   switch (offset)
@@ -556,7 +556,7 @@ get_13_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_14_event_message (int offset)
 {
   switch (offset)
@@ -576,7 +576,7 @@ get_14_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_19_event_message (int offset)
 {
   switch (offset)
@@ -589,7 +589,7 @@ get_19_event_message (int offset)
 }
 
 
-char *
+static char *
 get_1D_event_message (int offset)
 {
   switch (offset)
@@ -609,7 +609,7 @@ get_1D_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_1E_event_message (int offset)
 {
   switch (offset)
@@ -629,7 +629,7 @@ get_1E_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_1F_event_message (int offset)
 {
   switch (offset)
@@ -653,7 +653,7 @@ get_1F_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_20_event_message (int offset)
 {
   switch (offset)
@@ -667,7 +667,7 @@ get_20_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_21_event_message (int offset)
 {
   switch (offset)
@@ -697,7 +697,7 @@ get_21_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_22_event_message (int offset)
 {
   switch (offset)
@@ -735,7 +735,7 @@ get_22_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_23_event_message (int offset)
 {
   switch (offset)
@@ -755,7 +755,7 @@ get_23_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_24_event_message (int offset)
 {
   switch (offset)
@@ -773,7 +773,7 @@ get_24_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_25_event_message (int offset)
 {
   switch (offset)
@@ -789,7 +789,7 @@ get_25_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_27_event_message (int offset)
 {
   switch (offset)
@@ -803,7 +803,7 @@ get_27_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_28_event_message (int offset)
 {
   switch (offset)
@@ -821,7 +821,7 @@ get_28_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_29_event_message (int offset)
 {
   switch (offset)
@@ -837,7 +837,7 @@ get_29_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_2A_event_message (int offset)
 {
   switch (offset)
@@ -851,7 +851,7 @@ get_2A_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_2B_event_message (int offset)
 {
   switch (offset)
@@ -877,7 +877,7 @@ get_2B_event_message (int offset)
   return NULL;
 }
 
-char *
+static char *
 get_2C_event_message (int offset)
 {
   switch (offset)
@@ -906,7 +906,7 @@ get_2C_event_message (int offset)
 /**********************************************************/
 /***********  event_data2 message functions  **************/
 /**********************************************************/
-char *
+static char *
 get_05_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x04)
@@ -919,7 +919,7 @@ get_05_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_0F_event_data2_message (int offset, u_int8_t event_data)
 {
   switch (offset)
@@ -1020,7 +1020,7 @@ get_0F_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_10_event_data2_message (int offset, u_int8_t event_data)
 {
   switch (offset)
@@ -1042,7 +1042,7 @@ get_10_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_12_event_data2_message (int offset, u_int8_t event_data)
 {
   switch (offset)
@@ -1257,7 +1257,7 @@ get_12_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_19_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x00)
@@ -1296,7 +1296,7 @@ get_19_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_21_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x09)
@@ -1337,7 +1337,7 @@ get_21_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_23_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x08)
@@ -1412,7 +1412,7 @@ get_23_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_2A_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x01)
@@ -1436,7 +1436,7 @@ get_2A_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_2B_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x07)
@@ -1497,7 +1497,7 @@ get_2B_event_data2_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_2C_event_data2_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x07)
@@ -1564,7 +1564,7 @@ get_2C_event_data2_message (int offset, u_int8_t event_data)
 /**********************************************************/
 /***********  event_data3 message functions  **************/
 /**********************************************************/
-char *
+static char *
 get_08_event_data3_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x06)
@@ -1592,7 +1592,7 @@ get_08_event_data3_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_0C_event_data3_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x08)
@@ -1605,7 +1605,7 @@ get_0C_event_data3_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_10_event_data3_message (int offset, u_int8_t event_data)
 {
   switch (offset)
@@ -1651,7 +1651,7 @@ get_10_event_data3_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_19_event_data3_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x00)
@@ -1692,7 +1692,7 @@ get_19_event_data3_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_21_event_data3_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x09)
@@ -1705,7 +1705,7 @@ get_21_event_data3_message (int offset, u_int8_t event_data)
   return NULL;
 }
 
-char *
+static char *
 get_2A_event_data3_message (int offset, u_int8_t event_data)
 {
   if (offset == 0x01)
