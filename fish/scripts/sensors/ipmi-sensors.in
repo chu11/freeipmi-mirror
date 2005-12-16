@@ -1,6 +1,0 @@
-#! @prefix@/sbin/fish -s
-!#
-(let ((cmd-args (sensors-argp (fi-command-line))))
-  (if (list? cmd-args)
-      (sensors-main cmd-args)))
-(fi-exit sensors-exit-status)
