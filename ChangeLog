@@ -1,3 +1,8 @@
+2005-12-16  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): added
+	debugging code when invalid packet data is received.
+
 2005-12-16  Anand Babu  <ab@zresearch.com>
 
 	* lot of .c,.h files: Applying Anand Avati's <avati@zresearch.com>

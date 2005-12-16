@@ -1451,14 +1451,85 @@ printf("DEBUGGING:\n");
 					0, 
 					(struct sockaddr *) &from, 
 					&fromlen);
-    ERR (bytes_received >= pkt_len);
+    
+    if (bytes_received > pkt_len)
+      {
+	int i;
+	
+	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	fprintf (stderr, 
+		 "received packet size: %d\n" 
+		 "expected packet size: %d\n", 
+		 bytes_received, 
+		 pkt_len);
+	fprintf (stderr, "packet data:\n");
+	for (i = 0; i < bytes_received; i++)
+	  fprintf (stderr, "%02X ", pkt[i]);
+	fprintf (stderr, "\n");
+	
+	return (-1);
+      }
+    
+    if (bytes_received < pkt_len)
+      {
+	int min_len = 0;
+	
+	min_len = (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) + 
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) + 
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
+		   2 + /* This means, CMD + COMP_CODE */
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
+	
+	if (bytes_received < min_len)
+	  {
+	    int i;
+	    
+	    fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	    fprintf (stderr, 
+		     "received packet size: %d\n" 
+		     "expected packet size: %d\n" 
+		     "minimum packet size: %d\n", 
+		     bytes_received, 
+		     pkt_len, 
+		     min_len);
+	    fprintf (stderr, "packet data:\n");
+	    for (i = 0; i < bytes_received; i++)
+	      fprintf (stderr, "%02X ", pkt[i]);
+	    fprintf (stderr, "\n");
+	    
+	    return (-1);
+	  }
+	
+	{
+	  int i;
+	  int trlr_len = 0;
+	  int fill_len = 0;
+	  int trlr_start = 0;
+	  uint8_t *tmp_buf = NULL;
+	  
+	  trlr_len = fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+	  trlr_start = bytes_received - trlr_len;
+	  tmp_buf = alloca (trlr_len);
+	  memcpy (tmp_buf, &pkt[trlr_start], trlr_len);
+	  
+	  fill_len = (pkt_len - bytes_received);
+	  for (i = 0; i < fill_len; i++)
+	    pkt[trlr_start + i] = 0;
+	  
+	  memcpy (&pkt[trlr_start + fill_len], 
+		  tmp_buf, 
+		  trlr_len);
+	  
+	  bytes_received += fill_len;
+	}
+      }
     
     ERR (unassemble_ipmi_lan_pkt2 (dev, 
 				   pkt, 
 				   pkt_len, 
 				   obj_cmd_rs, 
 				   tmpl_cmd_rs) != -1);
-
+    
     ERR (ipmi_lan_validate_checksum (dev, 
 				     obj_cmd_rs, 
 				     tmpl_cmd_rs) == 0);
