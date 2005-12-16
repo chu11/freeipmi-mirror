@@ -133,6 +133,7 @@
 
 #define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN             16
 #define IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN             16
+#define IPMI_MANAGED_SYSTEM_GUID_LEN                      16
 
 #define IPMI_NEXT_HEADER                                  0x07
 
@@ -140,6 +141,7 @@
 
 #define IPMI_HMAC_SHA1_DIGEST_LEN                         20
 #define IPMI_HMAC_MD5_DIGEST_LEN                          16
+#define IPMI_HMAC_SHA1_96_DIGEST_LEN                      12
 
 #define IPMI_AES_CBC_128_IV_LEN                           16
 #define IPMI_AES_CBC_128_KEY_LEN                          16

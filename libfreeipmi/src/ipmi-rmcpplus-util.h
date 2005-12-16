@@ -76,6 +76,10 @@ int32_t ipmi_calculate_k2(u_int8_t authentication_algorithm, u_int8_t *sik_key, 
 int32_t check_rmcpplus_payload_pad(u_int8_t confidentiality_algorithm, fiid_obj_t obj_payload);
 
 int32_t check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session, fiid_obj_t obj_rmcpplus_trlr_session);
+   
+int32_t check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentication_algorithm, u_int8_t *authentication_key, u_int32_t authentication_key_len, u_int32_t remote_console_session_id, u_int32_t managed_system_session_id, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int8_t *managed_system_random_number, u_int32_t managed_system_random_number_len, u_int8_t *managed_system_guid, u_int32_t managed_system_guid_len, u_int8_t name_only_lookup, u_int8_t requested_maximum_privilege_level, u_int8_t *username, u_int8_t username_length, u_int8_t *key_exchange_authentication_code, u_int32_t key_exchange_authentication_code_len);
+
+int32_t check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algorithm, u_int8_t *sik_key, u_int32_t sik_key_len, u_int8_t *remote_console_random_number, u_int32_t remote_console_random_number_len, u_int32_t managed_system_session_id, u_int8_t *managed_system_guid, u_int32_t managed_system_guid_len, u_int8_t *integrity_check_value, u_int32_t integrity_check_value_len);
 
 #ifdef __cplusplus
 }

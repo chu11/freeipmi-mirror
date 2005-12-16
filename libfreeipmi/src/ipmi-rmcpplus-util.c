@@ -114,6 +114,7 @@ ipmi_crypt_hash(int hash_algorithm,
       return (-1);
     }
 
+  /* XXX need to check length? */
   if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
     {
       if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
@@ -265,6 +266,7 @@ _cipher_crypt(int cipher_algorithm,
   
   if (key && key_len)
     {
+      /* XXX need to check length? */
       if ((e = gcry_cipher_setkey(h,
                                   (void *)key,
                                   key_len)) != GPG_ERR_NO_ERROR)
@@ -905,3 +907,231 @@ check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session,
   return (1);
 }
 
+int32_t
+check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentication_algorithm,
+                                                               u_int8_t *authentication_key,
+                                                               u_int32_t authentication_key_len,
+                                                               u_int32_t remote_console_session_id,
+                                                               u_int32_t managed_system_session_id,
+                                                               u_int8_t *remote_console_random_number,
+                                                               u_int32_t remote_console_random_number_len,
+                                                               u_int8_t *managed_system_random_number,
+                                                               u_int32_t managed_system_random_number_len,
+                                                               u_int8_t *managed_system_guid,
+                                                               u_int32_t managed_system_guid_len,
+                                                               u_int8_t name_only_lookup,
+                                                               u_int8_t requested_maximum_privilege_level,
+                                                               u_int8_t *username,
+                                                               u_int8_t username_length,
+                                                               u_int8_t *key_exchange_authentication_code,
+                                                               u_int32_t key_exchange_authentication_code_len)
+{
+  u_int8_t priv_byte = 0;
+  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  u_int32_t buf_index = 0;
+  u_int8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  u_int8_t hash_algorithm, hash_flags;
+  int32_t digest_len;
+
+  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !remote_console_random_number
+      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
+      || !managed_system_random_number
+      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN
+      || !managed_system_guid
+      || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LEN
+      || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
+      || (username && username_length > IPMI_USER_NAME_MAX_LENGTH)
+      || (!username && username_length)
+      || !key_exchange_authentication_code
+      || !key_exchange_authentication_code_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
+    return (1);
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+    {
+      if (key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LEN)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+    }
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+    {
+      if (key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LEN)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      hash_algorithm = IPMI_CRYPT_HASH_MD5;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+    }
+  else
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
+  buf[buf_index] = (remote_console_session_id & 0x000000ff);
+  buf_index++;
+  buf[buf_index] = (remote_console_session_id & 0x0000ff00) >> 8;
+  buf_index++;
+  buf[buf_index] = (remote_console_session_id & 0x00ff0000) >> 16;
+  buf_index++;
+  buf[buf_index] = (remote_console_session_id & 0xff000000) >> 24;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x000000ff);
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x0000ff00) >> 8;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x00ff0000) >> 16;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0xff000000) >> 24;
+  buf_index++;
+  memcpy(buf + buf_index, remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN);
+  buf_index += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN;
+  memcpy(buf + buf_index, managed_system_random_number, IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN);
+  buf_index += IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN;
+  memcpy(buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LEN);
+  buf_index += IPMI_MANAGED_SYSTEM_GUID_LEN;
+  /* This part of the spec is wierd, gotta hack it out */
+  if (name_only_lookup)
+    priv_byte |= 0x10;
+  priv_byte |= (requested_maximum_privilege_level & 0xF);
+  buf[buf_index] = priv_byte;
+  buf_index++;
+  buf[buf_index] = username_length;
+  buf_index++;
+  memcpy(buf + buf_index, username, username_length);
+  buf_index++;
+
+  /* XXX need new len */
+  if ((digest_len = ipmi_crypt_hash(hash_algorithm,
+                                    hash_flags,
+                                    authentication_key,
+                                    authentication_key_len,
+                                    buf,
+                                    buf_index,
+                                    digest,
+                                    IPMI_MAX_PAYLOAD_LEN)) < 0)
+    return (-1);
+
+  if (key_exchange_authentication_code_len < digest_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (memcmp(digest, key_exchange_authentication_code, digest_len) ? 0 : 1);
+}
+
+int32_t 
+check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algorithm,
+                                                    u_int8_t *sik_key,
+                                                    u_int32_t sik_key_len,
+                                                    u_int8_t *remote_console_random_number,
+                                                    u_int32_t remote_console_random_number_len,
+                                                    u_int32_t managed_system_session_id,
+                                                    u_int8_t *managed_system_guid,
+                                                    u_int32_t managed_system_guid_len,
+                                                    u_int8_t *integrity_check_value,
+                                                    u_int32_t integrity_check_value_len)
+{
+  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  u_int32_t buf_index = 0;
+  u_int8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  u_int8_t hash_algorithm, hash_flags;
+  int32_t digest_len;
+  int32_t compare_len;
+
+  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !sik_key
+      || !sik_key_len
+      || !remote_console_random_number
+      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
+      || !managed_system_guid
+      || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LEN
+      || !integrity_check_value
+      || integrity_check_value_len < IPMI_HMAC_SHA1_96_AUTHCODE_LEN)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  
+  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
+    return (1);
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+    {
+      if (sik_key_len < IPMI_HMAC_SHA1_DIGEST_LEN)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      /* achu: For some reason they want SHA1_96 for this check, sigh */
+      compare_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
+
+      hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+    }
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+    {
+      if (sik_key_len < IPMI_HMAC_MD5_DIGEST_LEN)
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
+      compare_len = IPMI_HMAC_MD5_DIGEST_LEN;
+
+      hash_algorithm = IPMI_CRYPT_HASH_MD5;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+    }
+  else
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
+  memcpy(buf + buf_index, remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN);
+  buf_index += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN;
+  buf[buf_index] = (managed_system_session_id & 0x000000ff);
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x0000ff00) >> 8;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x00ff0000) >> 16;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0xff000000) >> 24;
+  buf_index++;
+  memcpy(buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LEN);
+  buf_index += IPMI_MANAGED_SYSTEM_GUID_LEN;
+
+  /* XXX need new len */
+  if ((digest_len = ipmi_crypt_hash(hash_algorithm,
+                                    hash_flags,
+                                    sik_key,
+                                    sik_key_len,
+                                    buf,
+                                    buf_index,
+                                    digest,
+                                    IPMI_MAX_PAYLOAD_LEN)) < 0)
+    return (-1);
+
+  if (digest_len < compare_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (memcmp(digest, integrity_check_value, compare_len) ? 0 : 1);
+}
