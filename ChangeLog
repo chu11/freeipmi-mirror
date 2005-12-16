@@ -95,7 +95,14 @@
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
 	libfreeipmi/src/ipmi-rmcpplus-util.c
 	(check_rmcpplus_rakp_message_2_key_exchange_authentication_code,
-	check_rmcpplus_rakp_message_4_integrity_check_value);
+	check_rmcpplus_rakp_message_4_integrity_check_value,
+	ipmi_calculate_rakp_3_key_exchange_authentication_code); New
+	functions.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c (check_rmcpplus_payload_pad,
+	check_rmcpplus_integriy_pad): Change return code type from int32_t
+	to int8_t.
 	
 2005-12-14  Albert Chu <chu11@llnl.gov>
 
