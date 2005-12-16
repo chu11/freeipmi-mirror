@@ -23,8 +23,8 @@
 
 /* FIXME: This whole set of global variables should go. It is replaced
           by ipmi_device_t structure. -- Anand Babu */
-/* static u_int64_t     kcs_poll_count; */
-/* static u_int16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT; */
+/* static uint64_t     kcs_poll_count; */
+/* static uint16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT; */
 /* static int           kcs_reg_space   = IPMI_REG_SPACE_DEFAULT; */
 /* static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS; */
 static int           kcs_mutex_semid = 0;
@@ -56,8 +56,8 @@ ipmi_enable_old_kcs_init (ipmi_device_t *dev)
 }
 
 int
-ipmi_kcs_io_init (u_int16_t sms_io_base, 
-		  u_int8_t reg_space, 
+ipmi_kcs_io_init (uint16_t sms_io_base, 
+		  uint8_t reg_space, 
 		  unsigned long sleep_usecs)
 {
   return (ipmi_open_inband (&_dev, IPMI_DEVICE_KCS, IPMI_MODE_DEFAULT));
@@ -95,8 +95,8 @@ ipmi_kcs_io_init (u_int16_t sms_io_base,
 /* FIXME: this function has to go --Anand Babu */
 #if 0
 int
-ipmi_kcs_open (u_int16_t sms_io_base, 
-	       u_int8_t reg_space, 
+ipmi_kcs_open (uint16_t sms_io_base, 
+	       uint8_t reg_space, 
 	       unsigned long sleep_usecs)
 {
   if (sms_io_base < 1)
@@ -113,8 +113,8 @@ ipmi_kcs_open (u_int16_t sms_io_base,
 #endif
 
 int8_t
-fill_hdr_ipmi_kcs (u_int8_t lun, 
-		   u_int8_t fn, 
+fill_hdr_ipmi_kcs (uint8_t lun, 
+		   uint8_t fn, 
 		   fiid_obj_t obj_hdr)
 {
   if ((lun > IPMI_BMC_IPMB_LUN_OEM_LUN2) ||
@@ -134,10 +134,10 @@ int8_t
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
 		       fiid_obj_t obj_cmd, 
 		       fiid_template_t tmpl_cmd, 
-		       u_int8_t *pkt, 
-		       u_int32_t pkt_len)
+		       uint8_t *pkt, 
+		       uint32_t pkt_len)
 {
-  u_int32_t obj_cmd_len, obj_hdr_len;
+  uint32_t obj_cmd_len, obj_hdr_len;
   if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
     {
       errno = EINVAL;
@@ -158,13 +158,13 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr,
 }
 
 int8_t 
-unassemble_ipmi_kcs_pkt (u_int8_t *pkt, 
-			 u_int32_t pkt_len, 
+unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
+			 uint32_t pkt_len, 
 			 fiid_obj_t obj_hdr, 
 			 fiid_obj_t obj_cmd, 
 			 fiid_template_t tmpl_cmd)
 {
-  u_int32_t indx = 0;
+  uint32_t indx = 0;
 
   if (pkt == NULL)
     {
@@ -256,7 +256,7 @@ ipmi_kcs_start_write (ipmi_device_t *dev)
  * Write byte to inound data port.
  */
 void
-ipmi_kcs_write_byte (ipmi_device_t *dev, u_int8_t byte)
+ipmi_kcs_write_byte (ipmi_device_t *dev, uint8_t byte)
 {
   _OUTB (byte, IPMI_KCS_REG_DATAIN (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
 }
@@ -280,7 +280,7 @@ ipmi_kcs_get_abort (ipmi_device_t *dev)
 }
 
 int8_t
-ipmi_kcs_test_if_state (ipmi_device_t *dev, u_int8_t status)
+ipmi_kcs_test_if_state (ipmi_device_t *dev, uint8_t status)
 {
   if ((ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_STATE) == 
       (status & IPMI_KCS_STATUS_REG_STATE))
@@ -306,10 +306,10 @@ ipmi_kcs_clear_obf (ipmi_device_t *dev)
  */
 ssize_t
 ipmi_kcs_read (ipmi_device_t *dev, 
-	       u_int8_t* bytes, 
-	       u_int32_t bytes_len)
+	       uint8_t* bytes, 
+	       uint32_t bytes_len)
 {
-  u_int8_t *p = bytes;
+  uint8_t *p = bytes;
   int len = 0;
 
   if ((bytes == NULL) || (bytes_len == 0))
@@ -361,11 +361,11 @@ ipmi_kcs_read (ipmi_device_t *dev,
  */
 ssize_t
 ipmi_kcs_write (ipmi_device_t *dev, 
-		u_int8_t *bytes, 
-		u_int32_t  bytes_len)
+		uint8_t *bytes, 
+		uint32_t  bytes_len)
 {
-  u_int8_t *buf=bytes;
-  u_int32_t bytes_count = 0;
+  uint8_t *buf=bytes;
+  uint32_t bytes_count = 0;
 
   IPMI_MUTEX_LOCK (ipmi_kcs_get_mutex_semid ());
 
@@ -438,11 +438,11 @@ ipmi_kcs_write (ipmi_device_t *dev,
  */
 ssize_t
 ipmi_kcs_write_interruptible (ipmi_device_t *dev, 
-			      u_int8_t *bytes, 
-			      u_int32_t  bytes_len)
+			      uint8_t *bytes, 
+			      uint32_t  bytes_len)
 {
-  u_int8_t *buf=bytes;
-  u_int32_t bytes_count = 0;
+  uint8_t *buf=bytes;
+  uint32_t bytes_count = 0;
   int ret;
   
   ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
@@ -513,8 +513,8 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_kcs_cmd (u_int8_t lun, 
-	      u_int8_t fn, 
+ipmi_kcs_cmd (uint8_t lun, 
+	      uint8_t fn, 
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_template_t tmpl_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs, 
@@ -529,8 +529,8 @@ ipmi_kcs_cmd (u_int8_t lun,
     }
   { /* Request Block */
     fiid_obj_t obj_hdr_rq = NULL;
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, obj_cmd_rq_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, obj_cmd_rq_len, bytes_len;
     
     obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rq_len > 0);
@@ -552,8 +552,8 @@ ipmi_kcs_cmd (u_int8_t lun,
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rs_len != -1);
@@ -591,8 +591,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     }
   
   { 
-    u_int8_t *pkt;
-    u_int32_t pkt_len;
+    uint8_t *pkt;
+    uint32_t pkt_len;
     
     pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rq.tmpl_hdr_ptr)) + 
       fiid_obj_len_bytes (tmpl_cmd_rq);
@@ -612,8 +612,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
   }
   
   { 
-    u_int8_t *pkt;
-    u_int32_t pkt_len;
+    uint8_t *pkt;
+    uint32_t pkt_len;
     
     pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
       fiid_obj_len_bytes (tmpl_cmd_rs);
@@ -637,8 +637,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
 
 
 int8_t
-ipmi_kcs_cmd_interruptible (u_int8_t lun, 
-			    u_int8_t fn, 
+ipmi_kcs_cmd_interruptible (uint8_t lun, 
+			    uint8_t fn, 
 			    fiid_obj_t obj_cmd_rq, 
 			    fiid_template_t tmpl_cmd_rq, 
 			    fiid_obj_t obj_cmd_rs, 
@@ -654,8 +654,8 @@ ipmi_kcs_cmd_interruptible (u_int8_t lun,
     }
   { /* Request Block */
     fiid_obj_t obj_hdr_rq = NULL;
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, obj_cmd_rq_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, obj_cmd_rq_len, bytes_len;
     
     obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rq_len > 0);
@@ -680,8 +680,8 @@ ipmi_kcs_cmd_interruptible (u_int8_t lun,
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rs_len != -1);
@@ -706,11 +706,11 @@ ipmi_kcs_cmd_interruptible (u_int8_t lun,
 }
 
 int8_t
-ipmi_kcs_cmd_raw (u_int8_t lun, 
-		  u_int8_t fn, 
-		  u_int8_t *buf_rq, 
+ipmi_kcs_cmd_raw (uint8_t lun, 
+		  uint8_t fn, 
+		  uint8_t *buf_rq, 
 		  size_t buf_rq_len, 
-		  u_int8_t *buf_rs, 
+		  uint8_t *buf_rs, 
 		  size_t *buf_rs_len)
 {
   ipmi_device_t *dev = &_dev;
@@ -723,8 +723,8 @@ ipmi_kcs_cmd_raw (u_int8_t lun,
     }
 
   { /* Request Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, bytes_len;
     
     obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rq_len > 0);
@@ -740,8 +740,8 @@ ipmi_kcs_cmd_raw (u_int8_t lun,
     ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
   }
   { /* Response Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, bytes_read, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rs_len != -1);
@@ -754,7 +754,7 @@ ipmi_kcs_cmd_raw (u_int8_t lun,
     ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
     if (bytes_read > obj_hdr_rs_len)
       {
-        u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
+        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
         if (rs_len <= *buf_rs_len)
           *buf_rs_len = rs_len;
         
@@ -770,9 +770,9 @@ ipmi_kcs_cmd_raw (u_int8_t lun,
 
 int8_t
 ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, 
-		   u_int8_t *buf_rq, 
+		   uint8_t *buf_rq, 
 		   size_t buf_rq_len, 
-		   u_int8_t *buf_rs, 
+		   uint8_t *buf_rs, 
 		   size_t *buf_rs_len)
 {
   if (!(dev && buf_rq && buf_rq_len > 0 
@@ -783,8 +783,8 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
     }
 
   { /* Request Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, bytes_len;
     
     obj_hdr_rq_len = fiid_obj_len_bytes (*dev->io.inband.rq.tmpl_hdr_ptr);
     ERR (obj_hdr_rq_len > 0);
@@ -801,8 +801,8 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
     ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
   }
   { /* Response Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, bytes_read, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (*dev->io.inband.rs.tmpl_hdr_ptr);
     ERR (obj_hdr_rs_len != -1);
@@ -815,7 +815,7 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
     ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
     if (bytes_read > obj_hdr_rs_len)
       {
-        u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
+        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
         if (rs_len <= *buf_rs_len)
           *buf_rs_len = rs_len;
         
@@ -830,12 +830,12 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
 }
 
 int8_t
-ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, 
-				u_int8_t fn, 
-				u_int8_t *buf_rq, 
-				u_int32_t buf_rq_len, 
-				u_int8_t *buf_rs, 
-				u_int32_t *buf_rs_len)
+ipmi_kcs_cmd_raw_interruptible (uint8_t lun, 
+				uint8_t fn, 
+				uint8_t *buf_rq, 
+				uint32_t buf_rq_len, 
+				uint8_t *buf_rs, 
+				uint32_t *buf_rs_len)
 {
   int ret;
   ipmi_device_t *dev = &_dev;
@@ -847,8 +847,8 @@ ipmi_kcs_cmd_raw_interruptible (u_int8_t lun,
     }
 
   { /* Request Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rq_len, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, bytes_len;
     
     obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rq_len > 0);
@@ -867,8 +867,8 @@ ipmi_kcs_cmd_raw_interruptible (u_int8_t lun,
     ERR ((!(ret == -1 && errno != EAGAIN)));
   }
   { /* Response Block */
-    u_int8_t *bytes = NULL; 
-    u_int32_t obj_hdr_rs_len, bytes_read, bytes_len;
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
     ERR (obj_hdr_rs_len != -1);
@@ -881,7 +881,7 @@ ipmi_kcs_cmd_raw_interruptible (u_int8_t lun,
     ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
     if (bytes_read > obj_hdr_rs_len)
       {
-        u_int32_t rs_len = bytes_read - obj_hdr_rs_len;
+        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
         if (rs_len <= *buf_rs_len)
           *buf_rs_len = rs_len;
         

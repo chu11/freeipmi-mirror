@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.h,v 1.3 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-md5.h,v 1.4 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,22 +36,22 @@ extern "C" {
 #define IPMI_MD5_DIGEST_LEN      16
 
 typedef struct __md5 {
-  u_int32_t magic;
+  uint32_t magic;
   unsigned int mlen;
   unsigned int bytes_mod_64;
-  u_int32_t bit_count[2];
-  u_int32_t a;
-  u_int32_t b;
-  u_int32_t c;
-  u_int32_t d;
-  u_int8_t m[IPMI_MD5_BLOCK_LEN];
+  uint32_t bit_count[2];
+  uint32_t a;
+  uint32_t b;
+  uint32_t c;
+  uint32_t d;
+  uint8_t m[IPMI_MD5_BLOCK_LEN];
 } ipmi_md5_t;
 
 int ipmi_md5_init(ipmi_md5_t *ctx);
 
-int ipmi_md5_update_data(ipmi_md5_t *ctx, u_int8_t *buf, unsigned int buflen);
+int ipmi_md5_update_data(ipmi_md5_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int ipmi_md5_finish(ipmi_md5_t *ctx, u_int8_t *digest, unsigned int digestlen);
+int ipmi_md5_finish(ipmi_md5_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #ifdef __cplusplus
 }

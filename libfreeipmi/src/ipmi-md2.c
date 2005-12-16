@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.4 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-md2.c,v 1.5 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,7 +114,7 @@ static void
 _ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx) 
 {
   int j, k;
-  u_int8_t c, t;
+  uint8_t c, t;
 
   /* Update X */
 
@@ -156,7 +156,7 @@ _ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx)
 }
 
 int 
-ipmi_md2_update_data(ipmi_md2_t *ctx, u_int8_t *buf, unsigned int buflen) 
+ipmi_md2_update_data(ipmi_md2_t *ctx, uint8_t *buf, unsigned int buflen) 
 {
 
   if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC || buf == NULL) 
@@ -212,7 +212,7 @@ _ipmi_md2_append_padding_and_checksum(ipmi_md2_t *ctx)
 }
 
 int 
-ipmi_md2_finish(ipmi_md2_t *ctx, u_int8_t *digest, unsigned int digestlen) 
+ipmi_md2_finish(ipmi_md2_t *ctx, uint8_t *digest, unsigned int digestlen) 
 {
   
   if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC 

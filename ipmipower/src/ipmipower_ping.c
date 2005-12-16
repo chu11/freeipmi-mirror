@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.3 2005-12-14 01:48:49 ab Exp $
+ *  $Id: ipmipower_ping.c,v 1.4 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -167,7 +167,7 @@ ipmipower_ping_process_pings(int *timeout)
         {
           fiid_obj_t rmcp_hdr = NULL;
           fiid_obj_t rmcp_pong = NULL;
-          u_int64_t msg_type, ipmi_supported;
+          uint64_t msg_type, ipmi_supported;
           
           if ((rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp)) == NULL)
             err_exit("fiid_obj_calloc: %s", strerror(errno));

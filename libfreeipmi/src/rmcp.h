@@ -60,18 +60,18 @@ extern fiid_template_t tmpl_hdr_rmcp;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;
 
-int8_t fill_hdr_rmcp (u_int8_t message_class, fiid_obj_t obj_hdr);
+int8_t fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr);
 int8_t fill_hdr_rmcp_ipmi (fiid_obj_t obj_hdr);
 int8_t fill_hdr_rmcp_asf (fiid_obj_t obj_hdr);
 /* MSG_TAG:
    achu: Consecutive ping messages should use different message tags,
    ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
    optionally discard duplicate messages.  */
-int8_t fill_cmd_asf_presence_ping(u_int8_t msg_tag, fiid_obj_t obj_cmd);
-int8_t assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *pkt, u_int32_t pkt_len);
-int8_t unassemble_rmcp_pkt (void *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd);
-int8_t ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, u_int32_t msg_tag, fiid_obj_t pong);
-int8_t ipmi_rmcp_msg_tag_chk (u_int8_t msg_tag, fiid_obj_t pong);
+int8_t fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd);
+int8_t assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, uint8_t *pkt, uint32_t pkt_len);
+int8_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd);
+int8_t ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong);
+int8_t ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong);
 
 #ifdef __cplusplus
 }

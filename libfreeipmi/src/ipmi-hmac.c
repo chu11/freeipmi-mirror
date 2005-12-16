@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-hmac.c,v 1.3 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-hmac.c,v 1.4 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,25 +29,25 @@
 #define IPMI_HMAC_MAGIC  0xabba00ba
 
 typedef int (*H_INIT)(void *ctx);
-typedef int (*H_UPDATE_DATA)(void *ctx, u_int8_t *buf, unsigned int buflen);
-typedef int (*H_FINISH)(void *ctx, u_int8_t *digest, unsigned int digestlen);
+typedef int (*H_UPDATE_DATA)(void *ctx, uint8_t *buf, unsigned int buflen);
+typedef int (*H_FINISH)(void *ctx, uint8_t *digest, unsigned int digestlen);
 
 typedef struct __hmac_h_info {
   H_INIT h_init;
   H_UPDATE_DATA h_update_data;
   H_FINISH h_finish;
-  u_int32_t block_len;
-  u_int32_t digest_len;
+  uint32_t block_len;
+  uint32_t digest_len;
   void *ipad_ctx;
   void *opad_ctx;
 } ipmi_hmac_h_info_t;
 
 int 
-ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned int keylen)
+ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, uint8_t *key, unsigned int keylen)
 {
-  u_int8_t *ipad = NULL;
-  u_int8_t *opad = NULL;
-  u_int8_t *hashed_key = NULL;
+  uint8_t *ipad = NULL;
+  uint8_t *opad = NULL;
+  uint8_t *hashed_key = NULL;
   int i, save_errno;
   ipmi_hmac_h_info_t *h_info = NULL;
 
@@ -105,12 +105,12 @@ ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned 
       break;
     }
 
-  ipad = (u_int8_t *)malloc(h_info->block_len + 1);
+  ipad = (uint8_t *)malloc(h_info->block_len + 1);
   if (!ipad)
     goto cleanup;
   memset(ipad, '\0', h_info->block_len + 1);
 
-  opad = (u_int8_t *)malloc(h_info->block_len + 1);
+  opad = (uint8_t *)malloc(h_info->block_len + 1);
   if (!opad)
     goto cleanup;
   memset(opad, '\0', h_info->block_len + 1);
@@ -123,7 +123,7 @@ ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned 
   
   if (keylen > h_info->block_len)
     {
-      hashed_key = (u_int8_t *)malloc(h_info->digest_len + 1);
+      hashed_key = (uint8_t *)malloc(h_info->digest_len + 1);
       if (!hashed_key)
         goto cleanup;
       memset(hashed_key, '\0', h_info->digest_len + 1);
@@ -195,7 +195,7 @@ ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned 
 }
 
 int 
-ipmi_hmac_update_data(ipmi_hmac_t *ctx, u_int8_t *buf, unsigned int buflen) 
+ipmi_hmac_update_data(ipmi_hmac_t *ctx, uint8_t *buf, unsigned int buflen) 
 {
   ipmi_hmac_h_info_t *h_info;
 
@@ -218,9 +218,9 @@ ipmi_hmac_update_data(ipmi_hmac_t *ctx, u_int8_t *buf, unsigned int buflen)
 }
 
 int 
-ipmi_hmac_finish(ipmi_hmac_t *ctx, u_int8_t *digest, unsigned int digestlen) 
+ipmi_hmac_finish(ipmi_hmac_t *ctx, uint8_t *digest, unsigned int digestlen) 
 {
-  u_int8_t *idigest = NULL;
+  uint8_t *idigest = NULL;
   int ret = -1;
   ipmi_hmac_h_info_t *h_info;
 
@@ -233,7 +233,7 @@ ipmi_hmac_finish(ipmi_hmac_t *ctx, u_int8_t *digest, unsigned int digestlen)
     }
   h_info = ctx->h_info;
 
-  idigest = (u_int8_t *)malloc(h_info->digest_len + 1);
+  idigest = (uint8_t *)malloc(h_info->digest_len + 1);
   if (!idigest)
     goto cleanup;
   memset(idigest, '\0', h_info->digest_len + 1);

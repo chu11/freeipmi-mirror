@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.15 2005-12-14 01:48:49 ab Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.16 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -280,8 +280,8 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
             int oseq_flag, int sid_flag, int netfn_flag, 
             int rseq_flag, int cmd_flag, int cc_flag) 
 {
-  u_int8_t cc, netfn, cmd, rseq;
-  u_int32_t sid, oseq;
+  uint8_t cc, netfn, cmd, rseq;
+  uint32_t sid, oseq;
 
   /* If everything else is correct besides completion code, packet
    * returned an error.
@@ -317,7 +317,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   int ret, at, len = 0;
   char buffer[IPMI_PACKET_BUFLEN];
-  u_int8_t *password;
+  uint8_t *password;
   int check_authcode_retry_flag = 0;
   int oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag;
 
@@ -357,7 +357,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (at != IPMI_SESSION_AUTH_TYPE_NONE)
     {
       if (strlen(conf->password))
-        password = (u_int8_t *)conf->password;
+        password = (uint8_t *)conf->password;
       else
         password = NULL;
     }
@@ -392,7 +392,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       if (at != IPMI_SESSION_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
-            password = (u_int8_t *)conf->password;
+            password = (uint8_t *)conf->password;
           else
             password = NULL;
         }
@@ -626,7 +626,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, AUTH_REQ, 0);
   else if (ip->protocol_state == PROTOCOL_STATE_AUTH_SENT) 
     {
-      u_int64_t auth_type_none, auth_type_md2, auth_type_md5, 
+      uint64_t auth_type_none, auth_type_md2, auth_type_md5, 
         auth_type_straight_passwd_key, auth_status_anonymous_login, 
         auth_status_null_username, auth_status_non_null_username, 
         auth_status_per_message_auth;
@@ -851,7 +851,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CHAS_SENT) 
     {
-      u_int64_t power_state;
+      uint64_t power_state;
 
       if ((rv = _recv_packet(ip, CHAS_RES)) != 1) 
         {

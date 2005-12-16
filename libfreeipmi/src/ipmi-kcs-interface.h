@@ -93,34 +93,34 @@ void ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev);
 int8_t ipmi_kcs_read_byte (ipmi_device_t *dev);
 void ipmi_kcs_read_next (ipmi_device_t *dev);
 void ipmi_kcs_start_write (ipmi_device_t *dev);
-void ipmi_kcs_write_byte (ipmi_device_t *dev, u_int8_t byte);
+void ipmi_kcs_write_byte (ipmi_device_t *dev, uint8_t byte);
 void ipmi_kcs_end_write (ipmi_device_t *dev);
 void ipmi_kcs_get_abort (ipmi_device_t *dev);
-int8_t ipmi_kcs_test_if_state (ipmi_device_t *dev, u_int8_t status);
+int8_t ipmi_kcs_test_if_state (ipmi_device_t *dev, uint8_t status);
 void ipmi_kcs_clear_obf (ipmi_device_t *dev);
 
 /* High level calls */
 void ipmi_enable_old_kcs_init (ipmi_device_t *dev);
-int ipmi_kcs_io_init (u_int16_t sms_io_base, 
-		      u_int8_t reg_space, 
+int ipmi_kcs_io_init (uint16_t sms_io_base, 
+		      uint8_t reg_space, 
 		      unsigned long sleep_usecs);
-int ipmi_kcs_open (u_int16_t sms_io_base, 
-		   u_int8_t reg_space, 
+int ipmi_kcs_open (uint16_t sms_io_base, 
+		   uint8_t reg_space, 
 		   unsigned long sleep_usecs);
 
 ssize_t ipmi_kcs_read (ipmi_device_t *dev, 
-		       u_int8_t *bytes, 
-		       u_int32_t bytes_len);
+		       uint8_t *bytes, 
+		       uint32_t bytes_len);
 ssize_t ipmi_kcs_write (ipmi_device_t *dev, 
-			u_int8_t *bytes, 
-			u_int32_t bytes_len);
+			uint8_t *bytes, 
+			uint32_t bytes_len);
 
 /* BMC treats "write followed by a read" as one transaction. It is
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
-int8_t ipmi_kcs_cmd (u_int8_t lun, 
-		     u_int8_t fn, 
+int8_t ipmi_kcs_cmd (uint8_t lun, 
+		     uint8_t fn, 
 		     fiid_obj_t obj_cmd_rq, 
 		     fiid_template_t tmpl_cmd_rq, 
 		     fiid_obj_t obj_cmd_rs, 
@@ -130,40 +130,40 @@ int8_t ipmi_kcs_cmd2 (ipmi_device_t *dev,
 		      fiid_template_t tmpl_cmd_rq, 
 		      fiid_obj_t obj_cmd_rs, 
 		      fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_interruptible (u_int8_t lun, 
-				   u_int8_t fn, 
+int8_t ipmi_kcs_cmd_interruptible (uint8_t lun, 
+				   uint8_t fn, 
 				   fiid_obj_t obj_cmd_rq, 
 				   fiid_template_t tmpl_cmd_rq, 
 				   fiid_obj_t obj_cmd_rs, 
 				   fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_raw (u_int8_t lun, 
-			 u_int8_t fn, 
-			 u_int8_t *buf_cmd_rq, 
+int8_t ipmi_kcs_cmd_raw (uint8_t lun, 
+			 uint8_t fn, 
+			 uint8_t *buf_cmd_rq, 
 			 size_t buf_rq_len, 
-			 u_int8_t *buf_cmd_rs, 
+			 uint8_t *buf_cmd_rs, 
 			 size_t *buf_rs_len);
 int8_t ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, 
-			  u_int8_t *buf_rq, 
+			  uint8_t *buf_rq, 
 			  size_t buf_rq_len, 
-			  u_int8_t *buf_rs, 
+			  uint8_t *buf_rs, 
 			  size_t *buf_rs_len);
-int8_t ipmi_kcs_cmd_raw_interruptible (u_int8_t lun, 
-				       u_int8_t fn, 
-				       u_int8_t *buf_cmd_rq, 
-				       u_int32_t buf_rq_len, 
-				       u_int8_t *buf_cmd_rs, 
-				       u_int32_t *buf_rs_len);
+int8_t ipmi_kcs_cmd_raw_interruptible (uint8_t lun, 
+				       uint8_t fn, 
+				       uint8_t *buf_cmd_rq, 
+				       uint32_t buf_rq_len, 
+				       uint8_t *buf_cmd_rs, 
+				       uint32_t *buf_rs_len);
 
-int8_t fill_hdr_ipmi_kcs (u_int8_t lun, 
-			  u_int8_t fn, 
+int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
+			  uint8_t fn, 
 			  fiid_obj_t obj_hdr);
 int8_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
 			      fiid_obj_t obj_cmd, 
 			      fiid_template_t tmpl_cmd, 
-			      u_int8_t *pkt, 
-			      u_int32_t pkt_len);
-int8_t unassemble_ipmi_kcs_pkt (u_int8_t *pkt, 
-				u_int32_t pkt_len, 
+			      uint8_t *pkt, 
+			      uint32_t pkt_len);
+int8_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
+				uint32_t pkt_len, 
 				fiid_obj_t obj_hdr, 
 				fiid_obj_t obj_cmd, 
 				fiid_template_t tmpl_cmd);

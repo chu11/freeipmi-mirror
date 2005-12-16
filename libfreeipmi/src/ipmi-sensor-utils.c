@@ -27,7 +27,7 @@ ipmi_sensor_decode_value_old (char r_exponent,
 			      int b, 
 			      int linear, 
 			      int is_signed, 
-			      u_int64_t raw_data)
+			      uint64_t raw_data)
 {
   double fval = 0.0;
   
@@ -50,8 +50,8 @@ ipmi_sensor_decode_value (char r_exponent,
 			  short m, 
 			  short b, 
 			  char linear, 
-			  u_int8_t analog_data_format, 
-			  u_int8_t raw_data)
+			  uint8_t analog_data_format, 
+			  uint8_t raw_data)
 {
   double dval = 0.0;
   
@@ -91,17 +91,17 @@ ipmi_sensor_decode_value (char r_exponent,
 }
 
 void 
-ipmi_sensor_get_decode_params_old (u_int8_t *sensor_record, 
+ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
 				   int *is_signed, char *r_exponent, char *b_exponent, 
-				   u_int64_t *linear, int *b, int *m)
+				   uint64_t *linear, int *b, int *m)
 {
-  u_int64_t val;
+  uint64_t val;
   
-  u_int64_t m_ls;
-  u_int64_t m_ms;
+  uint64_t m_ls;
+  uint64_t m_ms;
   
-  u_int64_t b_ls;
-  u_int64_t b_ms;
+  uint64_t b_ls;
+  uint64_t b_ms;
   
 /*   ipmi_sensor_get_decode_params_own (sensor_record); */
   
@@ -159,21 +159,21 @@ ipmi_sensor_get_decode_params_old (u_int8_t *sensor_record,
 }
 
 void 
-ipmi_sensor_get_decode_params (u_int8_t *sensor_record, 
-			       u_int8_t *analog_data_format, 
+ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
+			       uint8_t *analog_data_format, 
 			       char *r_exponent, 
 			       char *b_exponent, 
 			       char *linear, 
 			       short *b, 
 			       short *m)
 {
-  u_int64_t val;
+  uint64_t val;
   
-  u_int64_t m_ls;
-  u_int64_t m_ms;
+  uint64_t m_ls;
+  uint64_t m_ms;
   
-  u_int64_t b_ls;
-  u_int64_t b_ms;
+  uint64_t b_ls;
+  uint64_t b_ms;
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
@@ -221,7 +221,7 @@ ipmi_sensor_get_decode_params (u_int8_t *sensor_record,
                 tmpl_sdr_full_sensor_record,
                 "sensor_unit_analog_data_format",
                 &val);
-  *analog_data_format = (u_int8_t) val;
+  *analog_data_format = (uint8_t) val;
 
   return;
 }

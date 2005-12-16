@@ -81,14 +81,14 @@ struct ipmi_device
 {
   ipmi_driver_type_t type;
   ipmi_mode_t        mode;
-  u_int8_t           net_fn;
-  u_int8_t           lun;
+  uint8_t           net_fn;
+  uint8_t           lun;
   union 
   {
     struct 
     {
       unsigned long      poll_interval_usecs;
-      u_int8_t           retry_count:4;
+      uint8_t           retry_count:4;
       ipmi_locate_info_t locate_info;
       char               *dev_name;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
@@ -113,15 +113,15 @@ struct ipmi_device
       struct sockaddr    remote_host;
       unsigned int       remote_host_len;
       
-      u_int8_t           auth_type;
-      u_int8_t           challenge_string[IPMI_SESSION_CHALLENGE_STR_LEN];
-      u_int32_t          session_id;
-      u_int32_t          session_seq_num;
-      u_int8_t           rq_seq;
+      uint8_t           auth_type;
+      uint8_t           challenge_string[IPMI_SESSION_CHALLENGE_STR_LEN];
+      uint32_t          session_id;
+      uint32_t          session_seq_num;
+      uint8_t           rq_seq;
       
-      u_int8_t           username[IPMI_SESSION_MAX_USERNAME_LEN];
-      u_int8_t           password[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-      u_int8_t           priv_level;
+      uint8_t           username[IPMI_SESSION_MAX_USERNAME_LEN];
+      uint8_t           password[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+      uint8_t           priv_level;
       
       struct 
       {
@@ -159,10 +159,10 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 ipmi_mode_t mode, 
 			 struct sockaddr *remote_host, 
 			 size_t remote_host_len, 
-			 u_int8_t auth_type, 
+			 uint8_t auth_type, 
 			 char *username, 
 			 char *password, 
-			 u_int8_t priv_level);
+			 uint8_t priv_level);
 int ipmi_close (ipmi_device_t *dev);
 int ipmi_cmd (ipmi_device_t *dev, 
 	      fiid_obj_t obj_cmd_rq, 
@@ -170,9 +170,9 @@ int ipmi_cmd (ipmi_device_t *dev,
 	      fiid_obj_t obj_cmd_rs, 
 	      fiid_template_t tmpl_cmd_rs);
 int ipmi_cmd_raw (ipmi_device_t *dev, 
-		  u_int8_t *in, 
+		  uint8_t *in, 
 		  size_t in_len, 
-		  u_int8_t *out, 
+		  uint8_t *out, 
 		  size_t *out_len);
 
 #endif /* _IPMI_INTERFACE_H */

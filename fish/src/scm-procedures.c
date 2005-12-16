@@ -234,7 +234,7 @@ ex_sensors_get_group_list ()
 SCM
 ex_sel_get_first_entry_raw ()
 {
-  u_int8_t record_data[SEL_RECORD_SIZE];
+  uint8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
@@ -251,7 +251,7 @@ ex_sel_get_first_entry_raw ()
 SCM
 ex_sel_get_next_entry_raw ()
 {
-  u_int8_t record_data[SEL_RECORD_SIZE];
+  uint8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
@@ -269,8 +269,8 @@ ex_sel_get_next_entry_raw ()
 SCM
 ex_sel_get_first_entry_hex ()
 {
-  u_int8_t record_data [SEL_RECORD_SIZE];
-  u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
+  uint8_t record_data [SEL_RECORD_SIZE];
+  uint8_t hex_data [SEL_HEX_RECORD_SIZE];
   
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
@@ -292,8 +292,8 @@ ex_sel_get_first_entry_hex ()
 SCM
 ex_sel_get_next_entry_hex ()
 {
-  u_int8_t record_data [SEL_RECORD_SIZE];
-  u_int8_t hex_data [SEL_HEX_RECORD_SIZE];
+  uint8_t record_data [SEL_RECORD_SIZE];
+  uint8_t hex_data [SEL_HEX_RECORD_SIZE];
   
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
@@ -341,7 +341,7 @@ ex_sel_get_info_binary ()
 SCM 
 ex_sel_get_first_entry ()
 {
-  u_int8_t record_data[SEL_RECORD_SIZE];
+  uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
@@ -382,7 +382,7 @@ ex_sel_get_first_entry ()
 SCM 
 ex_sel_get_next_entry ()
 {
-  u_int8_t record_data[SEL_RECORD_SIZE];
+  uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
   
@@ -423,10 +423,10 @@ ex_sel_get_next_entry ()
 SCM 
 ex_sel_delete_entry (SCM scm_record_id)
 {
-  u_int16_t record_id;
+  uint16_t record_id;
   fiid_obj_t obj_cmd_rs;
-  u_int16_t reservation_id;
-  u_int64_t val;
+  uint16_t reservation_id;
+  uint64_t val;
   
   record_id = gh_scm2long (scm_record_id);
   
@@ -461,8 +461,8 @@ SCM
 ex_sel_clear ()
 {
   fiid_obj_t obj_cmd_rs;
-  u_int16_t reservation_id;
-  u_int64_t val;
+  uint16_t reservation_id;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
@@ -495,8 +495,8 @@ SCM
 ex_sel_get_clear_status ()
 {
   fiid_obj_t obj_cmd_rs;
-  u_int16_t reservation_id;
-  u_int64_t val;
+  uint16_t reservation_id;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
@@ -535,8 +535,8 @@ ex_sel_get_clear_status ()
 SCM 
 ex_set_bmc_username (SCM scm_userid, SCM scm_username)
 {
-  u_int8_t userid;
-  u_int8_t *username = NULL;
+  uint8_t userid;
+  uint8_t *username = NULL;
   int retval;
   
   userid = gh_scm2long (scm_userid);
@@ -552,7 +552,7 @@ ex_set_bmc_username (SCM scm_userid, SCM scm_username)
 SCM 
 ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status)
 {
-  u_int8_t userid;
+  uint8_t userid;
   int user_status;
   int retval;
   
@@ -567,8 +567,8 @@ ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status)
 SCM 
 ex_set_bmc_user_password (SCM scm_userid, SCM scm_password)
 {
-  u_int8_t userid;
-  u_int8_t *password = NULL;
+  uint8_t userid;
+  uint8_t *password = NULL;
   int retval;
   
   userid = gh_scm2long (scm_userid);
@@ -589,12 +589,12 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 				    SCM scm_lan_privilege_limit, 
 				    SCM scm_lan_session_limit)
 {
-  u_int8_t userid;
-  u_int8_t lan_enable_ipmi_msgs;
-  u_int8_t lan_enable_link_auth;
-  u_int8_t lan_enable_restrict_to_callback;
-  u_int8_t lan_privilege_limit;
-  u_int8_t lan_session_limit;
+  uint8_t userid;
+  uint8_t lan_enable_ipmi_msgs;
+  uint8_t lan_enable_link_auth;
+  uint8_t lan_enable_restrict_to_callback;
+  uint8_t lan_privilege_limit;
+  uint8_t lan_session_limit;
   int retval;
   
 /*   printf ("ex_ called\n"); */
@@ -659,12 +659,12 @@ ex_set_bmc_user_serial_channel_access (SCM scm_userid,
 				       SCM scm_serial_privilege_limit, 
 				       SCM scm_serial_session_limit)
 {
-  u_int8_t userid;
-  u_int8_t serial_enable_ipmi_msgs;
-  u_int8_t serial_enable_link_auth;
-  u_int8_t serial_enable_restrict_to_callback;
-  u_int8_t serial_privilege_limit;
-  u_int8_t serial_session_limit;
+  uint8_t userid;
+  uint8_t serial_enable_ipmi_msgs;
+  uint8_t serial_enable_link_auth;
+  uint8_t serial_enable_restrict_to_callback;
+  uint8_t serial_privilege_limit;
+  uint8_t serial_session_limit;
   int retval;
   
   userid = gh_scm2long (scm_userid);
@@ -713,11 +713,11 @@ ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode,
 					SCM scm_enable_pef_alerting, 
 					SCM scm_channel_privilege_limit)
 {
-  u_int8_t access_mode; 
-  u_int8_t enable_user_level_auth; 
-  u_int8_t enable_per_message_auth; 
-  u_int8_t enable_pef_alerting; 
-  u_int8_t channel_privilege_limit;
+  uint8_t access_mode; 
+  uint8_t enable_user_level_auth; 
+  uint8_t enable_per_message_auth; 
+  uint8_t enable_pef_alerting; 
+  uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
@@ -756,11 +756,11 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
 					    SCM scm_enable_pef_alerting, 
 					    SCM scm_channel_privilege_limit)
 {
-  u_int8_t access_mode; 
-  u_int8_t enable_user_level_auth; 
-  u_int8_t enable_per_message_auth; 
-  u_int8_t enable_pef_alerting; 
-  u_int8_t channel_privilege_limit;
+  uint8_t access_mode; 
+  uint8_t enable_user_level_auth; 
+  uint8_t enable_per_message_auth; 
+  uint8_t enable_pef_alerting; 
+  uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
@@ -795,8 +795,8 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
 SCM 
 ex_set_bmc_lan_conf_ip_addr_source (SCM scm_ip_address_source)
 {
-  u_int8_t ip_address_source;
-  u_int8_t retval;
+  uint8_t ip_address_source;
+  uint8_t retval;
   
   ip_address_source = gh_scm2long (scm_ip_address_source);
   retval = set_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), ip_address_source);
@@ -807,7 +807,7 @@ SCM
 ex_set_bmc_lan_conf_ip_addr (SCM scm_ip_address)
 {
   char *ip_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   ip_address = gh_scm2newstr (scm_ip_address, NULL);
   retval = set_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), ip_address);
@@ -819,7 +819,7 @@ SCM
 ex_set_bmc_lan_conf_mac_addr (SCM scm_mac_address)
 {
   char *mac_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   mac_address = gh_scm2newstr (scm_mac_address, NULL);
   retval = set_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), mac_address);
@@ -831,7 +831,7 @@ SCM
 ex_set_bmc_lan_conf_subnet_mask (SCM scm_subnet_mask)
 {
   char *subnet_mask;
-  u_int8_t retval;
+  uint8_t retval;
   
   subnet_mask = gh_scm2newstr (scm_subnet_mask, NULL);
   retval = set_bmc_lan_conf_subnet_mask (fi_get_ipmi_device (), subnet_mask);
@@ -843,7 +843,7 @@ SCM
 ex_set_bmc_lan_conf_default_gw_ip_addr (SCM scm_gw_ip_address)
 {
   char *gw_ip_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
   retval = set_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
@@ -855,7 +855,7 @@ SCM
 ex_set_bmc_lan_conf_default_gw_mac_addr (SCM scm_gw_mac_address)
 {
   char *gw_mac_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
   retval = set_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
@@ -867,7 +867,7 @@ SCM
 ex_set_bmc_lan_conf_backup_gw_ip_addr (SCM scm_gw_ip_address)
 {
   char *gw_ip_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
   retval = set_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
@@ -879,7 +879,7 @@ SCM
 ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
 {
   char *gw_mac_address;
-  u_int8_t retval;
+  uint8_t retval;
   
   gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
   retval = set_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
@@ -891,8 +891,8 @@ SCM
 ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag, 
                              SCM scm_vlan_id)
 {
-  u_int8_t vlan_id_flag;
-  u_int32_t vlan_id;
+  uint8_t vlan_id_flag;
+  uint32_t vlan_id;
   int retval;
   
   retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
@@ -916,8 +916,8 @@ ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
 SCM 
 ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority)
 {
-  u_int8_t vlan_priority;
-  u_int8_t retval;
+  uint8_t vlan_priority;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_vlan_priority (fi_get_ipmi_device (), &vlan_priority);
 
@@ -940,7 +940,7 @@ ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none,
 						SCM scm_auth_type_oem_proprietary)
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
@@ -976,7 +976,7 @@ ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none,
 					    SCM scm_auth_type_oem_proprietary)
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
@@ -1012,7 +1012,7 @@ ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none,
 						SCM scm_auth_type_oem_proprietary)
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
@@ -1048,7 +1048,7 @@ ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none,
 					     SCM scm_auth_type_oem_proprietary)
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
@@ -1084,7 +1084,7 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
 					   SCM scm_auth_type_oem_proprietary)
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   
   retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
   
@@ -1116,8 +1116,8 @@ SCM
 ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps, 
 				 SCM scm_enable_arp_response)
 {
-  u_int8_t enable_gratuitous_arps;
-  u_int8_t enable_arp_response;
+  uint8_t enable_gratuitous_arps;
+  uint8_t enable_arp_response;
   int retval;
   
   retval = get_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
@@ -1141,8 +1141,8 @@ ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps,
 SCM 
 ex_set_bmc_lan_conf_gratuitous_arp (SCM scm_gratuitous_arp_interval)
 {
-  u_int8_t gratuitous_arp_interval;
-  u_int8_t retval;
+  uint8_t gratuitous_arp_interval;
+  uint8_t retval;
   
   gratuitous_arp_interval = gh_scm2long (scm_gratuitous_arp_interval);
   retval = set_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
@@ -1157,11 +1157,11 @@ ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode,
 					   SCM scm_enable_pef_alerting, 
 					   SCM scm_channel_privilege_limit)
 {
-  u_int8_t access_mode; 
-  u_int8_t enable_user_level_auth; 
-  u_int8_t enable_per_message_auth; 
-  u_int8_t enable_pef_alerting; 
-  u_int8_t channel_privilege_limit;
+  uint8_t access_mode; 
+  uint8_t enable_user_level_auth; 
+  uint8_t enable_per_message_auth; 
+  uint8_t enable_pef_alerting; 
+  uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
@@ -1200,11 +1200,11 @@ ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode,
 					       SCM scm_enable_pef_alerting, 
 					       SCM scm_channel_privilege_limit)
 {
-  u_int8_t access_mode; 
-  u_int8_t enable_user_level_auth; 
-  u_int8_t enable_per_message_auth; 
-  u_int8_t enable_pef_alerting; 
-  u_int8_t channel_privilege_limit;
+  uint8_t access_mode; 
+  uint8_t enable_user_level_auth; 
+  uint8_t enable_per_message_auth; 
+  uint8_t enable_pef_alerting; 
+  uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
@@ -1242,10 +1242,10 @@ ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode,
 				  SCM scm_enable_terminal_mode, 
 				  SCM scm_connect_mode)
 {
-  u_int8_t enable_basic_mode; 
-  u_int8_t enable_ppp_mode;
-  u_int8_t enable_terminal_mode;
-  u_int8_t connect_mode;
+  uint8_t enable_basic_mode; 
+  uint8_t enable_ppp_mode;
+  uint8_t enable_terminal_mode;
+  uint8_t connect_mode;
   int retval;
   
   retval = get_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
@@ -1276,7 +1276,7 @@ ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode,
 SCM 
 ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval)
 {
-  u_int8_t page_blackout_interval;
+  uint8_t page_blackout_interval;
   int retval;
   
   page_blackout_interval = gh_scm2long (scm_page_blackout_interval);
@@ -1288,7 +1288,7 @@ ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval)
 SCM 
 ex_set_bmc_serial_conf_call_retry_time (SCM scm_call_retry_time)
 {
-  u_int8_t call_retry_time;
+  uint8_t call_retry_time;
   int retval;
   
   call_retry_time = gh_scm2long (scm_call_retry_time);
@@ -1302,9 +1302,9 @@ ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
 					       SCM scm_flow_control, 
 					       SCM scm_bit_rate)
 {
-  u_int8_t enable_dtr_hangup;
-  u_int8_t flow_control;
-  u_int8_t bit_rate;
+  uint8_t enable_dtr_hangup;
+  uint8_t flow_control;
+  uint8_t bit_rate;
   int retval;
   
   retval = get_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
@@ -1331,7 +1331,7 @@ ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup,
 SCM 
 ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy)
 {
-  u_int8_t power_restore_policy;
+  uint8_t power_restore_policy;
   int retval;
   
   power_restore_policy = gh_scm2long (scm_power_restore_policy);
@@ -1346,10 +1346,10 @@ ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable,
 				 SCM scm_pef_startup_delay_enable, 
 				 SCM scm_pef_alert_startup_delay_enable)
 {
-  u_int8_t pef_enable = 0;
-  u_int8_t pef_event_msgs_enable = 0;
-  u_int8_t pef_startup_delay_enable = 0;
-  u_int8_t pef_alert_startup_delay_enable = 0;
+  uint8_t pef_enable = 0;
+  uint8_t pef_event_msgs_enable = 0;
+  uint8_t pef_startup_delay_enable = 0;
+  uint8_t pef_alert_startup_delay_enable = 0;
   
   if (get_pef_control (fi_get_ipmi_device (), 
 		       &pef_enable, 
@@ -1389,12 +1389,12 @@ ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable,
 					       SCM scm_oem_action_enable, 
 					       SCM scm_diag_interrupt_enable)
 {
-  u_int8_t alert_action_enable = 0;
-  u_int8_t powerdown_action_enable = 0;
-  u_int8_t reset_action_enable = 0;
-  u_int8_t powercycle_action_enable = 0;
-  u_int8_t oem_action_enable = 0;
-  u_int8_t diag_interrupt_enable = 0;
+  uint8_t alert_action_enable = 0;
+  uint8_t powerdown_action_enable = 0;
+  uint8_t reset_action_enable = 0;
+  uint8_t powercycle_action_enable = 0;
+  uint8_t oem_action_enable = 0;
+  uint8_t diag_interrupt_enable = 0;
 
   if (get_pef_global_action_control (fi_get_ipmi_device (), 
 				     &alert_action_enable, 
@@ -1437,7 +1437,7 @@ ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable,
 SCM 
 ex_set_bmc_pef_conf_pef_startup_delay (SCM scm_pef_startup_delay)
 {
-  u_int8_t pef_startup_delay = 0;
+  uint8_t pef_startup_delay = 0;
   
   if (scm_integer_p (scm_pef_startup_delay) == SCM_BOOL_F)
     return SCM_BOOL_F;
@@ -1455,7 +1455,7 @@ ex_set_bmc_pef_conf_pef_startup_delay (SCM scm_pef_startup_delay)
 SCM 
 ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay)
 {
-  u_int8_t pef_alert_startup_delay = 0;
+  uint8_t pef_alert_startup_delay = 0;
   
   if (scm_integer_p (scm_pef_alert_startup_delay) == SCM_BOOL_F)
     return SCM_BOOL_F;
@@ -1474,7 +1474,7 @@ ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay)
 SCM 
 ex_get_bmc_username (SCM scm_userid)
 {
-  u_int8_t userid;
+  uint8_t userid;
   char username[IPMI_SESSION_MAX_USERNAME_LEN+1];
   int retval;
   SCM return_list = SCM_EOL;
@@ -1491,12 +1491,12 @@ ex_get_bmc_username (SCM scm_userid)
 SCM 
 ex_get_bmc_user_lan_channel_access (SCM scm_userid)
 {
-  u_int8_t userid;
-  u_int8_t lan_enable_ipmi_msgs = 0;
-  u_int8_t lan_enable_link_auth = 0;
-  u_int8_t lan_enable_restrict_to_callback = 0;
-  u_int8_t lan_privilege_limit = 0;
-  u_int8_t lan_session_limit = 0;
+  uint8_t userid;
+  uint8_t lan_enable_ipmi_msgs = 0;
+  uint8_t lan_enable_link_auth = 0;
+  uint8_t lan_enable_restrict_to_callback = 0;
+  uint8_t lan_privilege_limit = 0;
+  uint8_t lan_session_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1523,12 +1523,12 @@ ex_get_bmc_user_lan_channel_access (SCM scm_userid)
 SCM 
 ex_get_bmc_user_serial_channel_access (SCM scm_userid)
 {
-  u_int8_t userid;
-  u_int8_t serial_enable_ipmi_msgs = 0;
-  u_int8_t serial_enable_link_auth = 0;
-  u_int8_t serial_enable_restrict_to_callback = 0;
-  u_int8_t serial_privilege_limit = 0;
-  u_int8_t serial_session_limit = 0;
+  uint8_t userid;
+  uint8_t serial_enable_ipmi_msgs = 0;
+  uint8_t serial_enable_link_auth = 0;
+  uint8_t serial_enable_restrict_to_callback = 0;
+  uint8_t serial_privilege_limit = 0;
+  uint8_t serial_session_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1555,11 +1555,11 @@ ex_get_bmc_user_serial_channel_access (SCM scm_userid)
 SCM 
 ex_get_bmc_lan_channel_volatile_access ()
 {
-  u_int8_t access_mode = 0;
-  u_int8_t enable_user_level_auth = 0;
-  u_int8_t enable_per_message_auth = 0;
-  u_int8_t enable_pef_alerting = 0;
-  u_int8_t channel_privilege_limit = 0;
+  uint8_t access_mode = 0;
+  uint8_t enable_user_level_auth = 0;
+  uint8_t enable_per_message_auth = 0;
+  uint8_t enable_pef_alerting = 0;
+  uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1584,11 +1584,11 @@ ex_get_bmc_lan_channel_volatile_access ()
 SCM 
 ex_get_bmc_lan_channel_non_volatile_access ()
 {
-  u_int8_t access_mode = 0;
-  u_int8_t enable_user_level_auth = 0;
-  u_int8_t enable_per_message_auth = 0;
-  u_int8_t enable_pef_alerting = 0;
-  u_int8_t channel_privilege_limit = 0;
+  uint8_t access_mode = 0;
+  uint8_t enable_user_level_auth = 0;
+  uint8_t enable_per_message_auth = 0;
+  uint8_t enable_pef_alerting = 0;
+  uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1613,7 +1613,7 @@ ex_get_bmc_lan_channel_non_volatile_access ()
 SCM 
 ex_get_bmc_lan_conf_ip_addr_source ()
 {
-  u_int8_t ip_address_source = 0;
+  uint8_t ip_address_source = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1725,8 +1725,8 @@ ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
 SCM
 ex_get_bmc_lan_conf_vlan_id ()
 {
-  u_int8_t vlan_id_flag = 0;
-  u_int32_t vlan_id = 0;
+  uint8_t vlan_id_flag = 0;
+  uint32_t vlan_id = 0;
   int retval;
   SCM return_list = SCM_EOL;
 
@@ -1742,7 +1742,7 @@ ex_get_bmc_lan_conf_vlan_id ()
 SCM
 ex_get_bmc_lan_conf_vlan_priority ()
 {
-  u_int8_t vlan_priority = 0;
+  uint8_t vlan_priority = 0;
   int retval;
   SCM return_list = SCM_EOL;
 
@@ -1757,7 +1757,7 @@ SCM
 ex_get_bmc_lan_conf_auth_type_callback_enables ()
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
@@ -1778,7 +1778,7 @@ SCM
 ex_get_bmc_lan_conf_auth_type_user_enables ()
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
@@ -1799,7 +1799,7 @@ SCM
 ex_get_bmc_lan_conf_auth_type_operator_enables ()
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
@@ -1820,7 +1820,7 @@ SCM
 ex_get_bmc_lan_conf_auth_type_admin_enables ()
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
@@ -1841,7 +1841,7 @@ SCM
 ex_get_bmc_lan_conf_auth_type_oem_enables ()
 {
   struct bmc_auth_level auth_type_enables;
-  u_int8_t retval;
+  uint8_t retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
@@ -1861,8 +1861,8 @@ ex_get_bmc_lan_conf_auth_type_oem_enables ()
 SCM 
 ex_get_bmc_lan_conf_arp_control ()
 {
-  u_int8_t enable_gratuitous_arps;
-  u_int8_t enable_arp_response;
+  uint8_t enable_gratuitous_arps;
+  uint8_t enable_arp_response;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1881,7 +1881,7 @@ ex_get_bmc_lan_conf_arp_control ()
 SCM 
 ex_get_bmc_lan_conf_gratuitous_arp ()
 {
-  u_int8_t gratuitous_arp_interval;
+  uint8_t gratuitous_arp_interval;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1895,11 +1895,11 @@ ex_get_bmc_lan_conf_gratuitous_arp ()
 SCM 
 ex_get_bmc_serial_channel_volatile_access ()
 {
-  u_int8_t access_mode = 0;
-  u_int8_t enable_user_level_auth = 0;
-  u_int8_t enable_per_message_auth = 0;
-  u_int8_t enable_pef_alerting = 0;
-  u_int8_t channel_privilege_limit = 0;
+  uint8_t access_mode = 0;
+  uint8_t enable_user_level_auth = 0;
+  uint8_t enable_per_message_auth = 0;
+  uint8_t enable_pef_alerting = 0;
+  uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1924,11 +1924,11 @@ ex_get_bmc_serial_channel_volatile_access ()
 SCM 
 ex_get_bmc_serial_channel_non_volatile_access ()
 {
-  u_int8_t access_mode = 0;
-  u_int8_t enable_user_level_auth = 0;
-  u_int8_t enable_per_message_auth = 0;
-  u_int8_t enable_pef_alerting = 0;
-  u_int8_t channel_privilege_limit = 0;
+  uint8_t access_mode = 0;
+  uint8_t enable_user_level_auth = 0;
+  uint8_t enable_per_message_auth = 0;
+  uint8_t enable_pef_alerting = 0;
+  uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1953,10 +1953,10 @@ ex_get_bmc_serial_channel_non_volatile_access ()
 SCM 
 ex_get_bmc_serial_conf_conn_mode ()
 {
-  u_int8_t enable_basic_mode = 0;
-  u_int8_t enable_ppp_mode = 0;
-  u_int8_t enable_terminal_mode = 0;
-  u_int8_t connect_mode = 0;
+  uint8_t enable_basic_mode = 0;
+  uint8_t enable_ppp_mode = 0;
+  uint8_t enable_terminal_mode = 0;
+  uint8_t connect_mode = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1979,7 +1979,7 @@ ex_get_bmc_serial_conf_conn_mode ()
 SCM 
 ex_get_bmc_serial_conf_page_blackout_interval ()
 {
-  u_int8_t page_blackout_interval = 0;
+  uint8_t page_blackout_interval = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -1993,7 +1993,7 @@ ex_get_bmc_serial_conf_page_blackout_interval ()
 SCM 
 ex_get_bmc_serial_conf_call_retry_time ()
 {
-  u_int8_t call_retry_time = 0;
+  uint8_t call_retry_time = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -2007,9 +2007,9 @@ ex_get_bmc_serial_conf_call_retry_time ()
 SCM 
 ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
 {
-  u_int8_t enable_dtr_hangup = 0;
-  u_int8_t flow_control = 0;
-  u_int8_t bit_rate = 0;
+  uint8_t enable_dtr_hangup = 0;
+  uint8_t flow_control = 0;
+  uint8_t bit_rate = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -2030,7 +2030,7 @@ ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
 SCM 
 ex_get_bmc_power_restore_policy ()
 {
-  u_int8_t power_restore_policy = 0;
+  uint8_t power_restore_policy = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
@@ -2045,10 +2045,10 @@ SCM
 ex_get_bmc_pef_conf_pef_control ()
 {
   SCM scm_return_list = SCM_EOL;
-  u_int8_t pef_enable = 0;
-  u_int8_t pef_event_msgs_enable = 0;
-  u_int8_t pef_startup_delay_enable = 0;
-  u_int8_t pef_alert_startup_delay_enable = 0;
+  uint8_t pef_enable = 0;
+  uint8_t pef_event_msgs_enable = 0;
+  uint8_t pef_startup_delay_enable = 0;
+  uint8_t pef_alert_startup_delay_enable = 0;
   
   if (get_pef_control (fi_get_ipmi_device (), 
 		       &pef_enable, 
@@ -2072,12 +2072,12 @@ SCM
 ex_get_bmc_pef_conf_pef_global_action_control ()
 {
   SCM scm_return_list = SCM_EOL;
-  u_int8_t alert_action_enable = 0;
-  u_int8_t powerdown_action_enable = 0;
-  u_int8_t reset_action_enable = 0;
-  u_int8_t powercycle_action_enable = 0;
-  u_int8_t oem_action_enable = 0;
-  u_int8_t diag_interrupt_enable = 0;
+  uint8_t alert_action_enable = 0;
+  uint8_t powerdown_action_enable = 0;
+  uint8_t reset_action_enable = 0;
+  uint8_t powercycle_action_enable = 0;
+  uint8_t oem_action_enable = 0;
+  uint8_t diag_interrupt_enable = 0;
   
   if (get_pef_global_action_control (fi_get_ipmi_device (), 
 				     &alert_action_enable, 
@@ -2104,7 +2104,7 @@ ex_get_bmc_pef_conf_pef_global_action_control ()
 SCM 
 ex_get_bmc_pef_conf_pef_startup_delay ()
 {
-  u_int8_t pef_startup_delay = 0;
+  uint8_t pef_startup_delay = 0;
   
   if (get_pef_startup_delay (fi_get_ipmi_device (), 
 			     &pef_startup_delay) != 0)
@@ -2118,7 +2118,7 @@ ex_get_bmc_pef_conf_pef_startup_delay ()
 SCM 
 ex_get_bmc_pef_conf_pef_alert_startup_delay ()
 {
-  u_int8_t pef_alert_startup_delay = 0;
+  uint8_t pef_alert_startup_delay = 0;
   
   if (get_pef_alert_startup_delay (fi_get_ipmi_device (), 
 				   &pef_alert_startup_delay) != 0)
@@ -2133,8 +2133,8 @@ ex_get_bmc_pef_conf_pef_alert_startup_delay ()
 SCM 
 ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
 {
-  u_int8_t userid;
-  u_int8_t *password = NULL;
+  uint8_t userid;
+  uint8_t *password = NULL;
   int retval;
   
   userid = gh_scm2long (scm_userid);
@@ -2465,8 +2465,8 @@ ex_get_sdr_record (SCM scm_record_id)
 {
   sdr_record_t sdr_record;
   SCM scm_sdr_record = SCM_EOL;
-  u_int16_t record_id = 0;
-  u_int16_t next_record_id = 0;
+  uint16_t record_id = 0;
+  uint16_t next_record_id = 0;
   
   record_id = gh_scm2long (scm_record_id);
   
@@ -2951,13 +2951,13 @@ ex_get_sdr_repo_info ()
 {
   SCM scm_repo_info_list = SCM_EOL;
   
-  u_int8_t *cmd_rs = NULL;
+  uint8_t *cmd_rs = NULL;
   
   char version_string[17];
-  u_int8_t sdr_major_version;
-  u_int8_t sdr_minor_version;
+  uint8_t sdr_major_version;
+  uint8_t sdr_minor_version;
   
-  u_int64_t val;
+  uint64_t val;
   
   /* get_repo_info */
   fiid_obj_alloca (cmd_rs, tmpl_get_sdr_repo_info_rs);
@@ -3033,7 +3033,7 @@ ex_get_bmc_info ()
   SCM scm_bmc_info_list = SCM_EOL;
   
   fiid_obj_t cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
   if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
@@ -3067,7 +3067,7 @@ ex_get_bmc_info ()
   
   {
     char version_string[17];
-    u_int64_t major, minor;
+    uint64_t major, minor;
     
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
@@ -3094,7 +3094,7 @@ ex_get_bmc_info ()
 				       gh_bool2scm ((unsigned int) val));
   {
     char version_string[17];
-    u_int64_t major, minor;
+    uint64_t major, minor;
     
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
@@ -3287,14 +3287,14 @@ ex_get_pef_info ()
 {
   SCM scm_pef_info_list = SCM_EOL;
   
-  u_int8_t *cmd_rs = NULL;
+  uint8_t *cmd_rs = NULL;
   
   char version_string[17];
-  u_int8_t pef_major_version;
-  u_int8_t pef_minor_version;
+  uint8_t pef_major_version;
+  uint8_t pef_minor_version;
   
-  u_int64_t val;
-  u_int8_t alert_support = 0;
+  uint64_t val;
+  uint8_t alert_support = 0;
   
   fiid_obj_alloca (cmd_rs, tmpl_get_pef_caps_rs);
   if (ipmi_cmd_get_pef_caps2 (fi_get_ipmi_device (), cmd_rs) != 0)

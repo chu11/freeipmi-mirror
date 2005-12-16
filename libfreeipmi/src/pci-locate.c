@@ -63,10 +63,10 @@ typedef enum pci_address_mem_type pci_address_mem_type_t;
 
 struct pci_class_regs
 {
-  u_int8_t pci_class;
-  u_int8_t pci_subclass;
-  u_int8_t pci_prog_interface;
-  u_int8_t pci_rev;
+  uint8_t pci_class;
+  uint8_t pci_subclass;
+  uint8_t pci_prog_interface;
+  uint8_t pci_rev;
 };
 
 typedef struct pci_class_regs pci_class_regs_t;
@@ -79,7 +79,7 @@ typedef struct pci_class_regs pci_class_regs_t;
 /* return : pregs if successful, otherwise NULL */
 
 static pci_class_regs_t*
-pci_get_regs (u_int8_t bus, u_int8_t dev, u_int16_t func, pci_class_regs_t* pregs)
+pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 {
   FILE* fp;
   char fname[128];
@@ -118,7 +118,7 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
   unsigned dev;
   unsigned func;
   unsigned irq;
-  u_int64_t base_addr[6];
+  uint64_t base_addr[6];
   char buf[512];
   FILE* fp_devices;
   int items;
@@ -134,7 +134,7 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
     items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
 		    &dfn, &vendor, &irq,
 		    &base_addr[0], &base_addr[1], &base_addr[2], &base_addr[3], &base_addr[4], &base_addr[5]);
-    pinfo->intr_num = (u_int16_t)irq;
+    pinfo->intr_num = (uint16_t)irq;
     if (items == 9)
       {
 	bus = dfn >> 8U;

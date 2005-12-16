@@ -175,7 +175,7 @@ ipmi_kcs_reserve_repo (fiid_obj_t obj_data_rs)
 }
 
 int8_t 
-fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, u_int16_t record_id)
+fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
@@ -205,10 +205,10 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, u_int16_t record_id)
 }
 
 int8_t 
-ipmi_kcs_get_sensor_record_header (u_int16_t record_id, 
+ipmi_kcs_get_sensor_record_header (uint16_t record_id, 
 				   fiid_obj_t obj_data_rs, 
-				   u_int8_t *sensor_record_header,
-                                   u_int32_t sensor_record_header_len)
+				   uint8_t *sensor_record_header,
+                                   uint32_t sensor_record_header_len)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -248,10 +248,10 @@ ipmi_kcs_get_sensor_record_header (u_int16_t record_id,
 
 int8_t 
 fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq, 
-			u_int16_t reservation_id, 
-			u_int16_t record_id, 
-			u_int8_t record_offset, 
-			u_int8_t bytes_read)
+			uint16_t reservation_id, 
+			uint16_t record_id, 
+			uint8_t record_offset, 
+			uint8_t bytes_read)
 {
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
@@ -281,13 +281,13 @@ fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id, 
-			u_int16_t record_id, 
-			u_int8_t record_offset, 
-			u_int8_t bytes_read, 
+ipmi_kcs_get_sdr_chunk (uint16_t reservation_id, 
+			uint16_t record_id, 
+			uint8_t record_offset, 
+			uint8_t bytes_read, 
 			fiid_obj_t obj_data_rs, 
-			u_int8_t *sensor_record_chunk,
-                        u_int32_t sensor_record_chunk_len) 
+			uint8_t *sensor_record_chunk,
+                        uint32_t sensor_record_chunk_len) 
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -325,18 +325,18 @@ ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id,
 }
 
 int8_t 
-ipmi_kcs_get_sdr (u_int16_t record_id, 
-		  u_int8_t record_length, 
-		  u_int8_t *sensor_record, 
-		  u_int8_t *comp_code)
+ipmi_kcs_get_sdr (uint16_t record_id, 
+		  uint8_t record_length, 
+		  uint8_t *sensor_record, 
+		  uint8_t *comp_code)
 {
-  u_int8_t record_offset; 
-  u_int8_t bytes_read;
+  uint8_t record_offset; 
+  uint8_t bytes_read;
   
-  u_int64_t val;
-  u_int16_t reservation_id;
-  u_int8_t data_rs[21];
-  u_int8_t record_data[16];
+  uint64_t val;
+  uint16_t reservation_id;
+  uint8_t data_rs[21];
+  uint8_t record_data[16];
   fiid_obj_t obj_data_rs = (fiid_obj_t) data_rs;
   
   reservation_id = 0x0;
@@ -351,7 +351,7 @@ ipmi_kcs_get_sdr (u_int16_t record_id,
 		    tmpl_reserve_sdr_repo_rs, 
 		    "comp_code", 
 		    &val);
-      *comp_code = (u_int8_t) val;
+      *comp_code = (uint8_t) val;
       
       if (*comp_code != IPMI_KCS_STATUS_SUCCESS)
 	return -1;
@@ -360,7 +360,7 @@ ipmi_kcs_get_sdr (u_int16_t record_id,
 		    tmpl_reserve_sdr_repo_rs, 
 		    "reservation_id", 
 		    &val);
-      reservation_id = (u_int16_t) val;
+      reservation_id = (uint16_t) val;
       /*       printf ("Reservation ID: %X\n", reservation_id); */
     }
   
@@ -388,7 +388,7 @@ ipmi_kcs_get_sdr (u_int16_t record_id,
 		    tmpl_get_sdr_rs, 
 		    "comp_code", 
 		    &val);
-      *comp_code = (u_int8_t) val;
+      *comp_code = (uint8_t) val;
       if (*comp_code != IPMI_KCS_STATUS_SUCCESS)
 	return -1;
       
@@ -469,7 +469,7 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
 
 static int8_t 
 ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev, 
-				    u_int16_t record_id, 
+				    uint16_t record_id, 
 				    fiid_obj_t obj_cmd_rs, 
 				    fiid_obj_t sensor_record_header)
 {
@@ -544,13 +544,13 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
 static int8_t 
 ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev, 
-			 u_int16_t reservation_id, 
-			 u_int16_t record_id, 
-			 u_int8_t record_offset, 
-			 u_int8_t bytes_read, 
+			 uint16_t reservation_id, 
+			 uint16_t record_id, 
+			 uint8_t record_offset, 
+			 uint8_t bytes_read, 
 			 fiid_obj_t obj_cmd_rs, 
-			 u_int8_t *sensor_record_chunk,
-                         u_int32_t sensor_record_chunk_len)
+			 uint8_t *sensor_record_chunk,
+                         uint32_t sensor_record_chunk_len)
 {
   fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
   
@@ -621,18 +621,18 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-		   u_int16_t record_id, 
+		   uint16_t record_id, 
 		   fiid_obj_t obj_cmd_rs, 
 		   fiid_obj_t *sensor_record)
 {
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
-  u_int8_t record_length = 0;
-  u_int16_t reservation_id = 0;
-  u_int8_t record_offset = 0;
-  u_int8_t bytes_read = 0;
+  uint8_t record_length = 0;
+  uint16_t reservation_id = 0;
+  uint8_t record_offset = 0;
+  uint8_t bytes_read = 0;
   
-  u_int8_t chunk_data[16];
+  uint8_t chunk_data[16];
   
   fiid_obj_t record_data = NULL;
   
@@ -666,7 +666,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 		    tmpl_reserve_sdr_repo_rs, 
 		    "reservation_id", 
 		    &val);
-      reservation_id = (u_int16_t) val;
+      reservation_id = (uint16_t) val;
     }
   
   record_data = alloca (record_length);

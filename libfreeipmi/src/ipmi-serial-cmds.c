@@ -174,11 +174,11 @@ fiid_template_t tmpl_get_serial_conf_param_commbits_rs =
 
 int 
 fill_set_serial_connmode (fiid_obj_t obj_data_rq, 
-			  u_int8_t channel_number, 
-			  u_int8_t basic_mode_enable,
-			  u_int8_t ppp_mode_enable,
-			  u_int8_t terminal_mode_enable,
-			  u_int8_t direct)
+			  uint8_t channel_number, 
+			  uint8_t basic_mode_enable,
+			  uint8_t ppp_mode_enable,
+			  uint8_t terminal_mode_enable,
+			  uint8_t direct)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -226,11 +226,11 @@ fill_set_serial_connmode (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_connmode (u_int8_t channel_number, 
-			  u_int8_t basic_mode_enable,
-			  u_int8_t ppp_mode_enable,
-			  u_int8_t terminal_mode_enable,
-			  u_int8_t direct,
+ipmi_set_serial_connmode (uint8_t channel_number, 
+			  uint8_t basic_mode_enable,
+			  uint8_t ppp_mode_enable,
+			  uint8_t terminal_mode_enable,
+			  uint8_t direct,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -252,8 +252,8 @@ ipmi_set_serial_connmode (u_int8_t channel_number,
 
 int8_t 
 fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq, 
-					u_int8_t channel_number, 
-					u_int8_t page_blackout_interval)
+					uint8_t channel_number, 
+					uint8_t page_blackout_interval)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -286,8 +286,8 @@ fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_page_blackout_interval (u_int8_t channel_number, 
-					u_int8_t page_blackout_interval, 
+ipmi_set_serial_page_blackout_interval (uint8_t channel_number, 
+					uint8_t page_blackout_interval, 
 					fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -306,8 +306,8 @@ ipmi_set_serial_page_blackout_interval (u_int8_t channel_number,
 
 int8_t 
 fill_set_serial_retry_time (fiid_obj_t obj_data_rq, 
-			    u_int8_t channel_number, 
-			    u_int8_t retry_time)
+			    uint8_t channel_number, 
+			    uint8_t retry_time)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -340,8 +340,8 @@ fill_set_serial_retry_time (fiid_obj_t obj_data_rq,
 }	    
 
 int8_t 
-ipmi_set_serial_retry_time (u_int8_t channel_number, 
-			    u_int8_t retry_time, 
+ipmi_set_serial_retry_time (uint8_t channel_number, 
+			    uint8_t retry_time, 
 			    fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -360,10 +360,10 @@ ipmi_set_serial_retry_time (u_int8_t channel_number,
 
 int8_t 
 fill_set_serial_comm_bits (fiid_obj_t obj_data_rq, 
-			   u_int8_t channel_number, 
-                           u_int8_t dtr_hangup,
-                           u_int8_t flow_control,
-                           u_int8_t bit_rate)
+			   uint8_t channel_number, 
+                           uint8_t dtr_hangup,
+                           uint8_t flow_control,
+                           uint8_t bit_rate)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -406,10 +406,10 @@ fill_set_serial_comm_bits (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_comm_bits (u_int8_t channel_number, 
-                           u_int8_t dtr_hangup,
-                           u_int8_t flow_control,
-                           u_int8_t bit_rate,
+ipmi_set_serial_comm_bits (uint8_t channel_number, 
+                           uint8_t dtr_hangup,
+                           uint8_t flow_control,
+                           uint8_t bit_rate,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -430,11 +430,11 @@ ipmi_set_serial_comm_bits (u_int8_t channel_number,
 
 int8_t 
 fill_get_serial_conf_param (fiid_obj_t obj_data_rq, 
-			    u_int8_t parameter_selector, 
-			    u_int8_t channel_number,
-			    u_int8_t parameter_type,
-			    u_int8_t set_selector,
-			    u_int8_t block_selector)
+			    uint8_t parameter_selector, 
+			    uint8_t channel_number,
+			    uint8_t parameter_type,
+			    uint8_t set_selector,
+			    uint8_t block_selector)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -477,10 +477,10 @@ fill_get_serial_conf_param (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_get_serial_connmode (u_int8_t channel_number,
-                          u_int8_t parameter_type,
-                          u_int8_t set_selector,
-                          u_int8_t block_selector,
+ipmi_get_serial_connmode (uint8_t channel_number,
+                          uint8_t parameter_type,
+                          uint8_t set_selector,
+                          uint8_t block_selector,
                           fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -501,10 +501,10 @@ ipmi_get_serial_connmode (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_get_serial_page_blackout (u_int8_t channel_number,
-			       u_int8_t parameter_type,
-			       u_int8_t set_selector,
-			       u_int8_t block_selector,
+ipmi_get_serial_page_blackout (uint8_t channel_number,
+			       uint8_t parameter_type,
+			       uint8_t set_selector,
+			       uint8_t block_selector,
 			       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -525,10 +525,10 @@ ipmi_get_serial_page_blackout (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_get_serial_retry_time (u_int8_t channel_number,
-			    u_int8_t parameter_type,
-			    u_int8_t set_selector,
-			    u_int8_t block_selector,
+ipmi_get_serial_retry_time (uint8_t channel_number,
+			    uint8_t parameter_type,
+			    uint8_t set_selector,
+			    uint8_t block_selector,
 			    fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -549,10 +549,10 @@ ipmi_get_serial_retry_time (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_get_serial_comm_bits (u_int8_t channel_number,
-			   u_int8_t parameter_type,
-			   u_int8_t set_selector,
-			   u_int8_t block_selector,
+ipmi_get_serial_comm_bits (uint8_t channel_number,
+			   uint8_t parameter_type,
+			   uint8_t set_selector,
+			   uint8_t block_selector,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
@@ -574,11 +574,11 @@ ipmi_get_serial_comm_bits (u_int8_t channel_number,
 
 int8_t 
 ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number, 
-			       u_int8_t basic_mode_enable,
-			       u_int8_t ppp_mode_enable,
-			       u_int8_t terminal_mode_enable,
-			       u_int8_t direct,
+			       uint8_t channel_number, 
+			       uint8_t basic_mode_enable,
+			       uint8_t ppp_mode_enable,
+			       uint8_t terminal_mode_enable,
+			       uint8_t direct,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -607,8 +607,8 @@ ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev, 
-					     u_int8_t channel_number, 
-					     u_int8_t page_blackout_interval, 
+					     uint8_t channel_number, 
+					     uint8_t page_blackout_interval, 
 					     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -634,8 +634,8 @@ ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number, 
-				 u_int8_t retry_time, 
+				 uint8_t channel_number, 
+				 uint8_t retry_time, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -661,10 +661,10 @@ ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev, 
-				u_int8_t channel_number, 
-				u_int8_t dtr_hangup,
-				u_int8_t flow_control,
-				u_int8_t bit_rate,
+				uint8_t channel_number, 
+				uint8_t dtr_hangup,
+				uint8_t flow_control,
+				uint8_t bit_rate,
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -692,10 +692,10 @@ ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number,
-			       u_int8_t parameter_type,
-			       u_int8_t set_selector,
-			       u_int8_t block_selector,
+			       uint8_t channel_number,
+			       uint8_t parameter_type,
+			       uint8_t set_selector,
+			       uint8_t block_selector,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -724,10 +724,10 @@ ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev, 
-				    u_int8_t channel_number,
-				    u_int8_t parameter_type,
-				    u_int8_t set_selector,
-				    u_int8_t block_selector,
+				    uint8_t channel_number,
+				    uint8_t parameter_type,
+				    uint8_t set_selector,
+				    uint8_t block_selector,
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -756,10 +756,10 @@ ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number,
-				 u_int8_t parameter_type,
-				 u_int8_t set_selector,
-				 u_int8_t block_selector,
+				 uint8_t channel_number,
+				 uint8_t parameter_type,
+				 uint8_t set_selector,
+				 uint8_t block_selector,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -788,10 +788,10 @@ ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev, 
-				u_int8_t channel_number,
-				u_int8_t parameter_type,
-				u_int8_t set_selector,
-				u_int8_t block_selector,
+				uint8_t channel_number,
+				uint8_t parameter_type,
+				uint8_t set_selector,
+				uint8_t block_selector,
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

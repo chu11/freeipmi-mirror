@@ -53,21 +53,21 @@ extern fiid_template_t tmpl_get_sdr_rs;
 int8_t ipmi_kcs_get_repo_info (fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_reserve_repo (fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_sensor_record_header (u_int16_t record_id, 
+int8_t ipmi_kcs_get_sensor_record_header (uint16_t record_id, 
 					  fiid_obj_t obj_data_rs, 
-					  u_int8_t *sensor_record_header,
-                                          u_int32_t sensor_record_header_len);
-int8_t ipmi_kcs_get_sdr_chunk (u_int16_t reservation_id, 
-			       u_int16_t record_id, 
-			       u_int8_t record_offset, 
-			       u_int8_t bytes_read, 
+					  uint8_t *sensor_record_header,
+                                          uint32_t sensor_record_header_len);
+int8_t ipmi_kcs_get_sdr_chunk (uint16_t reservation_id, 
+			       uint16_t record_id, 
+			       uint8_t record_offset, 
+			       uint8_t bytes_read, 
 			       fiid_obj_t obj_data_rs, 
-			       u_int8_t *sensor_record_chunk,
-                               u_int32_t sensor_record_chunk_len);
-int8_t ipmi_kcs_get_sdr (u_int16_t record_id, 
-			 u_int8_t record_length, 
-			 u_int8_t *sensor_record, 
-			 u_int8_t *comp_code);
+			       uint8_t *sensor_record_chunk,
+                               uint32_t sensor_record_chunk_len);
+int8_t ipmi_kcs_get_sdr (uint16_t record_id, 
+			 uint8_t record_length, 
+			 uint8_t *sensor_record, 
+			 uint8_t *comp_code);
 
 int8_t ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
 				    fiid_obj_t obj_cmd_rs);
@@ -76,7 +76,7 @@ int8_t ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
 				   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-			  u_int16_t record_id, 
+			  uint16_t record_id, 
 			  fiid_obj_t obj_cmd_rs, 
 			  fiid_obj_t *sensor_record);
 

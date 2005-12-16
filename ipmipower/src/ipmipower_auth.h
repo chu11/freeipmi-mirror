@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.h,v 1.1 2004-05-11 17:04:40 chu11 Exp $
+ *  $Id: ipmipower_auth.h,v 1.2 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,6 +48,6 @@ char *ipmipower_auth_list(void);
 /* ipmipower_ipmi_auth_type
  * - Return IPMI auth type according to auth_type_t type
  */
-u_int8_t ipmipower_ipmi_auth_type(auth_type_t at);
+uint8_t ipmipower_ipmi_auth_type(auth_type_t at);
 
 #endif /* _IPMIPOWER_AUTH_H */

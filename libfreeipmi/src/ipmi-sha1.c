@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-sha1.c,v 1.4 2005-10-06 10:41:10 balamurugan Exp $
+ *  $Id: ipmi-sha1.c,v 1.5 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,7 +26,7 @@
 
 #include "freeipmi.h"
 
-static u_int8_t padding[64] =
+static uint8_t padding[64] =
   {
     0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -100,8 +100,8 @@ _K(unsigned int t)
 static void 
 _ipmi_sha1_update_digest(ipmi_sha1_t *ctx) 
 {
-  u_int32_t W[IPMI_SHA1_ROUNDS_LEN];
-  u_int32_t A, B, C, D, E, TEMP;
+  uint32_t W[IPMI_SHA1_ROUNDS_LEN];
+  uint32_t A, B, C, D, E, TEMP;
   int t;
 
   /* Note there are no endian issues here, compiler is required to
@@ -140,7 +140,7 @@ _ipmi_sha1_update_digest(ipmi_sha1_t *ctx)
 }
 
 int 
-ipmi_sha1_update_data(ipmi_sha1_t *ctx, u_int8_t *buf, unsigned int buflen) 
+ipmi_sha1_update_data(ipmi_sha1_t *ctx, uint8_t *buf, unsigned int buflen) 
 {
 
   if (ctx == NULL || ctx->magic != IPMI_SHA1_MAGIC || buf == NULL) 
@@ -186,8 +186,8 @@ ipmi_sha1_update_data(ipmi_sha1_t *ctx, u_int8_t *buf, unsigned int buflen)
 static void 
 _ipmi_sha1_append_padding(ipmi_sha1_t *ctx) 
 {
-  u_int8_t lenpad[IPMI_SHA1_PADDING_LEN];
-  u_int64_t len = ctx->len * 8;
+  uint8_t lenpad[IPMI_SHA1_PADDING_LEN];
+  uint64_t len = ctx->len * 8;
 
   /* Must grab length buffer before update with pad data, we don't
    * want to update length with pad data.  Length is appended low
@@ -207,7 +207,7 @@ _ipmi_sha1_append_padding(ipmi_sha1_t *ctx)
   if (ctx->mlen >= 56)
     {
       /* Not enough space to hold 64 bit length of message */
-      u_int8_t zeroes[IPMI_SHA1_BLOCK_LEN - IPMI_SHA1_PADDING_LEN];
+      uint8_t zeroes[IPMI_SHA1_BLOCK_LEN - IPMI_SHA1_PADDING_LEN];
 
       ipmi_sha1_update_data(ctx, padding, IPMI_SHA1_BLOCK_LEN - ctx->mlen);
       memset(zeroes, '\0', IPMI_SHA1_BLOCK_LEN - IPMI_SHA1_PADDING_LEN);
@@ -221,7 +221,7 @@ _ipmi_sha1_append_padding(ipmi_sha1_t *ctx)
 }
 
 int 
-ipmi_sha1_finish(ipmi_sha1_t *ctx, u_int8_t *digest, unsigned int digestlen) 
+ipmi_sha1_finish(ipmi_sha1_t *ctx, uint8_t *digest, unsigned int digestlen) 
 {
   
   if (ctx == NULL || ctx->magic != IPMI_SHA1_MAGIC 

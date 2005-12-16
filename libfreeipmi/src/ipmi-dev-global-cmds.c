@@ -97,7 +97,7 @@ int8_t
 ipmi_kcs_get_dev_id (fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq = NULL;
-  u_int32_t obj_data_len;
+  uint32_t obj_data_len;
   
   obj_data_len = fiid_obj_len_bytes (tmpl_cmd_get_dev_id_rq);
   ERR (obj_data_len > 0);

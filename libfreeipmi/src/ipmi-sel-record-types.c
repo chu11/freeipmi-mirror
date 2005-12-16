@@ -82,7 +82,7 @@ fiid_template_t tmpl_sel_non_timestamped_oem_record =
   };
 
 int 
-ipmi_get_sel_record_type (u_int8_t record_type)
+ipmi_get_sel_record_type (uint8_t record_type)
 {
   if (record_type == 0x02)
     return IPMI_SEL_SYSTEM_EVENT_RECORD;
@@ -98,24 +98,24 @@ ipmi_get_sel_record_type (u_int8_t record_type)
 }
 
 static int 
-get_sel_system_event_record (u_int8_t *record_data, sel_record_t *sel_record)
+get_sel_system_event_record (uint8_t *record_data, sel_record_t *sel_record)
 {
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int8_t ipmb_slave_addr_sys_soft_id_flag;
-  u_int8_t ipmb_slave_addr_sys_soft_id;
-  u_int8_t channel_number;
-  u_int8_t sensor_type;
-  u_int8_t sensor_number;
-  u_int8_t event_type_code;
-  u_int8_t assertion_deassertion_event;
-  u_int8_t event_reading_code_offset;
-  u_int8_t event_data2_flag;
-  u_int8_t event_data3_flag;
-  u_int8_t event_data2;
-  u_int8_t event_data3;
+  uint16_t record_id;
+  uint32_t timestamp;
+  uint8_t ipmb_slave_addr_sys_soft_id_flag;
+  uint8_t ipmb_slave_addr_sys_soft_id;
+  uint8_t channel_number;
+  uint8_t sensor_type;
+  uint8_t sensor_number;
+  uint8_t event_type_code;
+  uint8_t assertion_deassertion_event;
+  uint8_t event_reading_code_offset;
+  uint8_t event_data2_flag;
+  uint8_t event_data3_flag;
+  uint8_t event_data2;
+  uint8_t event_data3;
   
-  u_int64_t val;
+  uint64_t val;
   
   
   fiid_obj_get (record_data, 
@@ -323,13 +323,13 @@ get_sel_system_event_record (u_int8_t *record_data, sel_record_t *sel_record)
 }
 
 static int 
-get_sel_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_record)
+get_sel_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_record)
 {
-  u_int16_t record_id;
-  u_int32_t timestamp;
-  u_int32_t manufacturer_id;
-  u_int64_t oem_defined;
-  u_int64_t val;
+  uint16_t record_id;
+  uint32_t timestamp;
+  uint32_t manufacturer_id;
+  uint64_t oem_defined;
+  uint64_t val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
@@ -379,12 +379,12 @@ get_sel_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_record)
 }
 
 static int 
-get_sel_non_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_record)
+get_sel_non_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_record)
 {
-  u_int16_t record_id;
-  u_int8_t *oem_defined;
+  uint16_t record_id;
+  uint8_t *oem_defined;
   int8_t oem_defined_index;
-  u_int64_t val;
+  uint64_t val;
   int i;
   char *str = NULL;
   char *tmp_str = NULL;
@@ -435,10 +435,10 @@ get_sel_non_timestamped_oem_record (u_int8_t *record_data, sel_record_t *sel_rec
 }
 
 int 
-get_sel_record (u_int8_t *record_data, sel_record_t *sel_record)
+get_sel_record (uint8_t *record_data, sel_record_t *sel_record)
 {
-  u_int8_t record_type;
-  u_int64_t val;
+  uint8_t record_type;
+  uint64_t val;
   
   fiid_obj_get (record_data,
 		tmpl_sel_record_header,

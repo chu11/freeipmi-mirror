@@ -38,7 +38,7 @@ typedef unsigned long ULONG;
 extern int errno;
 
 static inline int32_t
-ipmi_i2c_smbus_access (int file, char read_write, u_int8_t command, int size, 
+ipmi_i2c_smbus_access (int file, char read_write, uint8_t command, int size, 
 		       union ipmi_i2c_smbus_data *data)
 {
 	struct ipmi_i2c_smbus_ioctl_data args;
@@ -54,7 +54,7 @@ ipmi_i2c_smbus_access (int file, char read_write, u_int8_t command, int size,
 linux/i2c-dev.h:i2c_smbus_read_block_data. It is duplicated here to
 reduce dependencies. -- Anand Babu */
 static inline int32_t
-ipmi_i2c_smbus_read_block_data (int file, u_int8_t command, u_int8_t *values)
+ipmi_i2c_smbus_read_block_data (int file, uint8_t command, uint8_t *values)
 {
 	union ipmi_i2c_smbus_data data;
 	int i;
@@ -72,7 +72,7 @@ ipmi_i2c_smbus_read_block_data (int file, u_int8_t command, u_int8_t *values)
 linux/i2c-dev.h:i2c_smbus_write_block_data. It is duplicated here to
 reduce dependencies. -- Anand Babu */
 static inline int32_t
-ipmi_i2c_smbus_write_block_data (int file, u_int8_t command, u_int8_t length, u_int8_t *values)
+ipmi_i2c_smbus_write_block_data (int file, uint8_t command, uint8_t length, uint8_t *values)
 {
 	union ipmi_i2c_smbus_data data;
 	int i;
@@ -86,7 +86,7 @@ ipmi_i2c_smbus_write_block_data (int file, u_int8_t command, u_int8_t length, u_
 }
 
 int
-ipmi_ssif_io_init (char *i2c_device, u_int8_t ipmb_addr, int *i2c_fd)
+ipmi_ssif_io_init (char *i2c_device, uint8_t ipmb_addr, int *i2c_fd)
 {
   int fd;
 

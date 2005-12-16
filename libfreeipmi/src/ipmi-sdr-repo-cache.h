@@ -31,10 +31,10 @@ typedef struct sdr_repo_cache
 {
   int fd;
   size_t file_length;
-  u_int8_t *cache_start;
-  u_int8_t *cache_curr;
-  u_int16_t cache_curr_rec_no;
-  u_int32_t total_records;
+  uint8_t *cache_start;
+  uint8_t *cache_curr;
+  uint16_t cache_curr_rec_no;
+  uint32_t total_records;
 } sdr_repo_cache_t;
 
 int ipmi_sdr_repo_info_write (FILE *fp);
@@ -42,14 +42,14 @@ int ipmi_sdr_records_write (FILE *fp);
 int ipmi_sdr_cache_create (char *sdr_cache_file);
 int ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file);
 int ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_no);
+int ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no);
 int ipmi_sdr_repo_cache_first (sdr_repo_cache_t *sdr_repo_cache);
 int ipmi_sdr_repo_cache_next (sdr_repo_cache_t *sdr_repo_cache);
 int ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache);
 int ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache);
 const char *ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache);
 int ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
-                                         u_int8_t *buffer,
+                                         uint8_t *buffer,
                                          size_t len);
 
 #ifdef __cplusplus

@@ -30,9 +30,9 @@ extern "C" {
 /* IPMI KCS Interface */
 int8_t fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl);
 int8_t fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl);
-int8_t fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
-int8_t fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd);
-u_int8_t ipmi_kcs_print_state (int fd, u_int8_t state);
+int8_t fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
+int8_t fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd);
+uint8_t ipmi_kcs_print_state (int fd, uint8_t state);
 
 void ipmi_debug(const char *fmt, ...);
 

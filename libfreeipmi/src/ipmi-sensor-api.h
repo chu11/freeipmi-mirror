@@ -29,21 +29,21 @@ struct sdr_full_record
   short m;
   char r_exponent;
   char b_exponent;
-  u_int8_t linear;
-  u_int8_t analog_data_format;
+  uint8_t linear;
+  uint8_t analog_data_format;
   /* ************************* */
-  u_int8_t slave_system_software_id;
-  u_int8_t sensor_number;
-  u_int8_t sensor_type;
-  u_int8_t event_reading_type;
-  u_int8_t sensor_unit;
+  uint8_t slave_system_software_id;
+  uint8_t sensor_number;
+  uint8_t sensor_type;
+  uint8_t event_reading_type;
+  uint8_t sensor_unit;
   double nominal_reading;
   double normal_min;
   double normal_max;
   double sensor_min_reading;
   double sensor_max_reading;
-  u_int8_t negative_hysteresis;
-  u_int8_t positive_hysteresis;
+  uint8_t negative_hysteresis;
+  uint8_t positive_hysteresis;
   double lower_non_recoverable_threshold;
   double upper_non_recoverable_threshold;
   double lower_critical_threshold;
@@ -52,92 +52,92 @@ struct sdr_full_record
   double upper_non_critical_threshold;
   char sensor_name[17];
   /*      threshold masks      */
-  u_int8_t readable_lower_critical_threshold;
-  u_int8_t readable_upper_critical_threshold;
-  u_int8_t readable_lower_non_critical_threshold;
-  u_int8_t readable_upper_non_critical_threshold;
-  u_int8_t readable_lower_non_recoverable_threshold;
-  u_int8_t readable_upper_non_recoverable_threshold;
+  uint8_t readable_lower_critical_threshold;
+  uint8_t readable_upper_critical_threshold;
+  uint8_t readable_lower_non_critical_threshold;
+  uint8_t readable_upper_non_critical_threshold;
+  uint8_t readable_lower_non_recoverable_threshold;
+  uint8_t readable_upper_non_recoverable_threshold;
   /* ************************* */
 };
 typedef struct sdr_full_record sdr_full_record_t;
 
 struct sdr_compact_record
 {
-  u_int8_t slave_system_software_id;
-  u_int8_t sensor_number;
-  u_int8_t sensor_type;
-  u_int8_t event_reading_type;
-  u_int8_t sensor_unit;
-  u_int8_t negative_hysteresis;
-  u_int8_t positive_hysteresis;
+  uint8_t slave_system_software_id;
+  uint8_t sensor_number;
+  uint8_t sensor_type;
+  uint8_t event_reading_type;
+  uint8_t sensor_unit;
+  uint8_t negative_hysteresis;
+  uint8_t positive_hysteresis;
   char sensor_name[17];
 };
 typedef struct sdr_compact_record sdr_compact_record_t;
 
 struct sdr_event_only_record
 {
-  u_int8_t slave_system_software_id;
-  u_int8_t sensor_number;
-  u_int8_t sensor_type;
-  u_int8_t event_reading_type;
+  uint8_t slave_system_software_id;
+  uint8_t sensor_number;
+  uint8_t sensor_type;
+  uint8_t event_reading_type;
   char sensor_name[17];
 };
 typedef struct sdr_event_only_record sdr_event_only_record_t;
 
 struct sdr_entity_association_record
 {
-  u_int8_t container_entity_id;
-  u_int8_t container_entity_instance;
+  uint8_t container_entity_id;
+  uint8_t container_entity_instance;
 };
 typedef struct sdr_entity_association_record sdr_entity_association_record_t;
 
 struct sdr_generic_device_locator_record
 {
-  u_int8_t direct_access_address;
-  u_int8_t channel_number;
-  u_int8_t device_slave_address;
-  u_int8_t private_bus_id;
-  u_int8_t lun_master_write_read_command;
-  u_int8_t address_span;
-  u_int8_t device_type;
-  u_int8_t device_type_modifier;
-  u_int8_t entity_id;
-  u_int8_t entity_instance;
+  uint8_t direct_access_address;
+  uint8_t channel_number;
+  uint8_t device_slave_address;
+  uint8_t private_bus_id;
+  uint8_t lun_master_write_read_command;
+  uint8_t address_span;
+  uint8_t device_type;
+  uint8_t device_type_modifier;
+  uint8_t entity_id;
+  uint8_t entity_instance;
   char device_name[17];
 };
 typedef struct sdr_generic_device_locator_record sdr_generic_device_locator_record_t;
 
 struct sdr_logical_fru_device_locator_record
 {
-  u_int8_t device_type;
-  u_int8_t device_type_modifier;
-  u_int8_t fru_entity_id;
-  u_int8_t fru_entity_instance;
+  uint8_t device_type;
+  uint8_t device_type_modifier;
+  uint8_t fru_entity_id;
+  uint8_t fru_entity_instance;
   char device_name[17];
 };
 typedef struct sdr_logical_fru_device_locator_record sdr_logical_fru_device_locator_record_t;
 
 struct sdr_management_controller_device_locator_record
 {
-  u_int8_t entity_id;
-  u_int8_t entity_instance;
+  uint8_t entity_id;
+  uint8_t entity_instance;
   char device_name[17];
 };
 typedef struct sdr_management_controller_device_locator_record sdr_management_controller_device_locator_record_t;
 
 struct sdr_oem_record
 {
-  u_int32_t manufacturer_id;
-  u_int8_t oem_data_length;
-  u_int8_t oem_data[55];
+  uint32_t manufacturer_id;
+  uint8_t oem_data_length;
+  uint8_t oem_data[55];
 };
 typedef struct sdr_oem_record sdr_oem_record_t;
 
 struct sdr_record 
 {
-  u_int16_t record_id;
-  u_int8_t record_type;
+  uint16_t record_id;
+  uint8_t record_type;
   union 
   {
     sdr_full_record_t sdr_full_record;
@@ -155,35 +155,35 @@ typedef struct sdr_record sdr_record_t;
 struct sensor_reading
 {
   double current_reading;
-  u_int8_t reading_availability_flag;
-  u_int8_t sensor_scanning_flag;
-  u_int8_t event_messages_flag;
+  uint8_t reading_availability_flag;
+  uint8_t sensor_scanning_flag;
+  uint8_t event_messages_flag;
   char **event_message_list;
 };
 typedef struct sensor_reading sensor_reading_t;
 
-void get_sdr_full_record (u_int8_t *sdr_record_data, 
+void get_sdr_full_record (uint8_t *sdr_record_data, 
 			  sdr_full_record_t *sdr_full_record);
-void get_sdr_compact_record (u_int8_t *sdr_record_data, 
+void get_sdr_compact_record (uint8_t *sdr_record_data, 
 			     sdr_compact_record_t *sdr_compact_record);
-void get_sdr_event_only_record (u_int8_t *sdr_record_data, 
+void get_sdr_event_only_record (uint8_t *sdr_record_data, 
 				sdr_event_only_record_t *sdr_event_only_record);
-void get_sdr_entity_association_record (u_int8_t *sdr_record_data, 
+void get_sdr_entity_association_record (uint8_t *sdr_record_data, 
 					sdr_entity_association_record_t *sdr_entity_association_record);
-void get_sdr_generic_device_locator_record (u_int8_t *sdr_record_data, 
+void get_sdr_generic_device_locator_record (uint8_t *sdr_record_data, 
 					    sdr_generic_device_locator_record_t *sdr_generic_device_locator_record);
-void get_sdr_logical_fru_device_locator_record (u_int8_t *sdr_record_data, 
+void get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data, 
 						sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record);
-void get_sdr_management_controller_device_locator_record (u_int8_t *sdr_record_data, 
+void get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data, 
 							  sdr_management_controller_device_locator_record_t *sdr_management_controller_device_locator_record);
-void get_sdr_oem_record (u_int8_t *sdr_record_data, 
+void get_sdr_oem_record (uint8_t *sdr_record_data, 
 			 sdr_oem_record_t *sdr_oem_record);
 
-u_int8_t get_sdr_record (ipmi_device_t *dev, 
-			 u_int16_t record_id, 
-			 u_int16_t *next_record_id, 
+uint8_t get_sdr_record (ipmi_device_t *dev, 
+			 uint16_t record_id, 
+			 uint16_t *next_record_id, 
 			 sdr_record_t *sdr_record);
-u_int8_t get_sensor_reading (ipmi_device_t *dev, 
+uint8_t get_sensor_reading (ipmi_device_t *dev, 
 			     sdr_record_t *sdr_record, 
 			     sensor_reading_t *sensor_reading);
 #endif

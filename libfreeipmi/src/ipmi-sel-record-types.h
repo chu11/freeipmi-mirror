@@ -48,7 +48,7 @@ enum ipmi_sel_record_type
 
 struct sel_record
 {
-  u_int16_t record_id;
+  uint16_t record_id;
   char *timestamp;
   char *sensor_info;
   char *event_message;
@@ -67,8 +67,8 @@ extern fiid_template_t tmpl_threshold_event_data;
 extern fiid_template_t tmpl_discrete_event_data;
 extern fiid_template_t tmpl_oem_event_data;
 
-int ipmi_get_sel_record_type (u_int8_t record_type);
-int get_sel_record (u_int8_t *record_data, sel_record_t *sel_record);
+int ipmi_get_sel_record_type (uint8_t record_type);
+int get_sel_record (uint8_t *record_data, sel_record_t *sel_record);
 
 #ifdef __cplusplus
 }

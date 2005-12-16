@@ -114,9 +114,9 @@ extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;
 
 
-int8_t fill_lan_msg_hdr (u_int8_t net_fn, 
-			 u_int8_t rs_lun, 
-			 u_int8_t rq_seq, 
+int8_t fill_lan_msg_hdr (uint8_t net_fn, 
+			 uint8_t rs_lun, 
+			 uint8_t rq_seq, 
 			 fiid_obj_t obj_msg);
 
 int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
@@ -125,11 +125,11 @@ int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 			       fiid_obj_t obj_msg_hdr, 
 			       fiid_obj_t obj_cmd, 
 			       fiid_template_t tmpl_cmd, 
-			       u_int8_t *pkt, 
-			       u_int32_t pkt_len);
+			       uint8_t *pkt, 
+			       uint32_t pkt_len);
 
-int8_t unassemble_ipmi_lan_pkt (u_int8_t *pkt, 
-				u_int32_t pkt_len, 
+int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt, 
+				uint32_t pkt_len, 
 				fiid_template_t tmpl_hdr_session, 
 				fiid_template_t tmpl_cmd, 
 				fiid_obj_t obj_hdr_rmcp, 
@@ -152,17 +152,17 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_cmd (u_int32_t sockfd, 
+int8_t ipmi_lan_cmd (uint32_t sockfd, 
 		     struct sockaddr *hostaddr, 
 		     size_t hostaddr_len, 
-		     u_int8_t auth_type, 
-		     u_int32_t session_seq_num, 
-		     u_int32_t session_id, 
-		     u_int8_t *auth_code_data, 
-		     u_int32_t auth_code_data_len, 
-		     u_int8_t net_fn, 
-		     u_int8_t lun, 
-		     u_int8_t rq_seq, 
+		     uint8_t auth_type, 
+		     uint32_t session_seq_num, 
+		     uint32_t session_id, 
+		     uint8_t *auth_code_data, 
+		     uint32_t auth_code_data_len, 
+		     uint8_t net_fn, 
+		     uint8_t lun, 
+		     uint8_t rq_seq, 
 		     fiid_obj_t obj_cmd_rq, 
 		     fiid_template_t tmpl_cmd_rq, 
 		     fiid_obj_t obj_cmd_rs, 
@@ -174,20 +174,20 @@ int8_t ipmi_lan_cmd2 (ipmi_device_t *dev,
 		      fiid_obj_t obj_cmd_rs, 
 		      fiid_template_t tmpl_cmd_rs);
 int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
-			  u_int8_t *buf_rq, 
+			  uint8_t *buf_rq, 
 			  size_t buf_rq_len, 
-			  u_int8_t *buf_rs, 
+			  uint8_t *buf_rs, 
 			  size_t *buf_rs_len);
 
 int8_t ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
 			      fiid_obj_t obj_msg_hdr, 
-			      u_int8_t net_fn);
+			      uint8_t net_fn);
 
 int8_t ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
 			      fiid_obj_t obj_msg_hdr, 
-			      u_int8_t rq_seq);
+			      uint8_t rq_seq);
 
-int8_t ipmi_lan_check_chksum (u_int8_t *pkt, u_int64_t pkt_len);
+int8_t ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len);
 
 #ifdef __cplusplus
 }

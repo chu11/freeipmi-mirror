@@ -51,7 +51,7 @@ fiid_template_t tmpl_hdr_session_auth_calc =
 
 
 int8_t
-fill_hdr_session  (fiid_template_t tmpl_session, u_int8_t auth_type, u_int32_t inbound_seq_num, u_int32_t session_id, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
+fill_hdr_session  (fiid_template_t tmpl_session, uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !(tmpl_session && tmpl_cmd && obj_hdr))
@@ -144,9 +144,9 @@ fill_hdr_session  (fiid_template_t tmpl_session, u_int8_t auth_type, u_int32_t i
 }
 
 int8_t 
-check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, u_int32_t session_seq_num)
+check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, uint32_t session_seq_num)
 {
-  u_int64_t session_seq_num_recv;
+  uint64_t session_seq_num_recv;
 
   if (!(tmpl_hdr_session && obj_hdr_session))
     {
@@ -166,9 +166,9 @@ check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t 
 }
 
 int8_t 
-check_hdr_session_session_id (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, u_int32_t session_id)
+check_hdr_session_session_id (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, uint32_t session_id)
 {
-  u_int64_t session_id_recv;
+  uint64_t session_id_recv;
 
   if (!(tmpl_hdr_session && obj_hdr_session))
     {
@@ -188,11 +188,11 @@ check_hdr_session_session_id (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_h
 }
 
 int8_t 
-check_hdr_session_authcode (u_int8_t *pkt, u_int64_t pkt_len, fiid_template_t tmpl_hdr_session, u_int8_t auth_type, u_int8_t *auth_code_data, u_int32_t auth_code_data_len)
+check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl_hdr_session, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len)
 {
-  u_int8_t auth_type_recv;
-  u_int32_t auth_type_offset, auth_code_offset;
-  u_int8_t auth_code_buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+  uint8_t auth_type_recv;
+  uint32_t auth_type_offset, auth_code_offset;
+  uint8_t auth_code_buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
 
   if (!(tmpl_hdr_session && pkt && auth_code_data_len <= IPMI_SESSION_MAX_AUTH_CODE_LEN))
     {
@@ -241,8 +241,8 @@ check_hdr_session_authcode (u_int8_t *pkt, u_int64_t pkt_len, fiid_template_t tm
       if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
 	  || auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
 	{
-	  u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-	  u_int32_t session_id_offset, session_seq_num_offset, data_offset;
+	  uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+	  uint32_t session_id_offset, session_seq_num_offset, data_offset;
           
           session_id_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, "session_id");
           session_seq_num_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, "session_seq_num");

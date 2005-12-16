@@ -106,10 +106,10 @@ main (int argc, char **argv)
   char *line = NULL;
   size_t n = 0;
   
-  u_int8_t *bytes_rq = NULL;
+  uint8_t *bytes_rq = NULL;
   int send_len;
   
-  u_int8_t bytes_rs[512];
+  uint8_t bytes_rs[512];
   int rcvd_len;
   
   fi_argp_parse (argc, argv);

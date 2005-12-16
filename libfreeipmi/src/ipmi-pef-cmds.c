@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.14 2005-12-14 01:48:50 ab Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.15 2005-12-16 08:48:40 ab Exp $  */
 
 #include "freeipmi.h"
 
@@ -575,9 +575,9 @@ fiid_template_t tmpl_alert_immediate_rs =
   };
 
 static int8_t
-fill_kcs_alert_immediate (fiid_obj_t obj_data_rq, u_int8_t channel_number,
-                          u_int8_t destination_selector, u_int8_t string_selector,
-                          u_int8_t string_enable)
+fill_kcs_alert_immediate (fiid_obj_t obj_data_rq, uint8_t channel_number,
+                          uint8_t destination_selector, uint8_t string_selector,
+                          uint8_t string_enable)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_alert_immediate_rq,
@@ -603,10 +603,10 @@ fill_kcs_alert_immediate (fiid_obj_t obj_data_rq, u_int8_t channel_number,
 }
 
 static int8_t
-fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, u_int8_t parameter_selector,
-                             u_int8_t parameter_type,
-                             u_int8_t set_selector,
-                             u_int8_t block_selector)
+fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, uint8_t parameter_selector,
+                             uint8_t parameter_type,
+                             uint8_t set_selector,
+                             uint8_t block_selector)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_pef_conf_param_rq, 
@@ -637,9 +637,9 @@ fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, u_int8_t parameter_selector
 }
 
 static int8_t
-fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, u_int8_t enable_pef,
-                          u_int8_t enable_pef_event_msgs, u_int8_t enable_startup_delay,
-                          u_int8_t enable_alert_startup_delay)
+fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, uint8_t enable_pef,
+                          uint8_t enable_pef_event_msgs, uint8_t enable_startup_delay,
+                          uint8_t enable_alert_startup_delay)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_pef_control_rq,
@@ -665,9 +665,9 @@ fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, u_int8_t enable_pef,
 }
 
 int8_t
-ipmi_kcs_set_pef_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t enable_pef,
-                          u_int8_t enable_pef_event_msgs, u_int8_t enable_startup_delay,
-                          u_int8_t enable_alert_startup_delay)
+ipmi_kcs_set_pef_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t enable_pef,
+                          uint8_t enable_pef_event_msgs, uint8_t enable_startup_delay,
+                          uint8_t enable_alert_startup_delay)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -683,10 +683,10 @@ ipmi_kcs_set_pef_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_
 }
 
 static int8_t
-fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, u_int8_t enable_alert,
-                                    u_int8_t enable_powerdown, u_int8_t enable_reset,
-                                    u_int8_t enable_powercycle, u_int8_t enable_oem,
-                                    u_int8_t enable_diag_interrupt)
+fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, uint8_t enable_alert,
+                                    uint8_t enable_powerdown, uint8_t enable_reset,
+                                    uint8_t enable_powercycle, uint8_t enable_oem,
+                                    uint8_t enable_diag_interrupt)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_global_action_control_rq,
@@ -724,10 +724,10 @@ fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, u_int8_t enable_aler
 }
 
 int8_t
-ipmi_kcs_set_global_action_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t enable_alert,
-                                    u_int8_t enable_powerdown, u_int8_t enable_reset,
-                                    u_int8_t enable_powercycle, u_int8_t enable_oem,
-                                    u_int8_t enable_diag_interrupt)
+ipmi_kcs_set_global_action_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t enable_alert,
+                                    uint8_t enable_powerdown, uint8_t enable_reset,
+                                    uint8_t enable_powercycle, uint8_t enable_oem,
+                                    uint8_t enable_diag_interrupt)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -743,7 +743,7 @@ ipmi_kcs_set_global_action_control (u_int16_t sms_io_base, fiid_obj_t obj_data_r
 }
 
 static int8_t
-fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, u_int8_t startup_delay)
+fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, uint8_t startup_delay)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_startup_delay_rq,
@@ -761,7 +761,7 @@ fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, u_int8_t startup_delay)
 }
 
 int8_t
-ipmi_kcs_set_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t startup_delay)
+ipmi_kcs_set_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t startup_delay)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -776,7 +776,7 @@ ipmi_kcs_set_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int
 }
 
 static int8_t
-fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, u_int8_t alert_startup_delay)
+fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, uint8_t alert_startup_delay)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_alert_startup_delay_rq,
@@ -794,7 +794,7 @@ fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, u_int8_t alert_startup
 }
 
 int8_t
-ipmi_kcs_set_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t alert_startup_delay)
+ipmi_kcs_set_alert_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t alert_startup_delay)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -809,7 +809,7 @@ ipmi_kcs_set_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 static int8_t
-fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, u_int8_t num_event_filters)
+fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, uint8_t num_event_filters)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_num_event_filters_rq,
@@ -827,7 +827,7 @@ fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, u_int8_t num_event_filte
 }
 
 int8_t
-ipmi_kcs_set_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_event_filters)
+ipmi_kcs_set_num_event_filters (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t num_event_filters)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -969,7 +969,7 @@ fill_kcs_set_filter_table_entry (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
+ipmi_kcs_set_filter_table_entry (uint16_t sms_io_base, fiid_obj_t obj_data_rs, 
                                  const event_filter_table_entry_t *eft_entry)
 {
   int8_t status;
@@ -985,8 +985,8 @@ ipmi_kcs_set_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 static int8_t
-fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, u_int8_t filter_number,
-                                 filter_type_t filter_type, u_int8_t enabled)
+fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, uint8_t filter_number,
+                                 filter_type_t filter_type, uint8_t enabled)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_event_filter_data1_rq,
@@ -1012,8 +1012,8 @@ fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, u_int8_t filter_number,
 }
 
 int8_t
-ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t filter_number,
-                                 filter_type_t filter_type, u_int8_t enabled)
+ipmi_kcs_set_filter_table_data1 (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t filter_number,
+                                 filter_type_t filter_type, uint8_t enabled)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -1028,7 +1028,7 @@ ipmi_kcs_set_filter_table_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
 }
 
 static int8_t
-fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, u_int8_t num_alert_policies)
+fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, uint8_t num_alert_policies)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_pef_conf_param_num_alert_policies_rq,
@@ -1046,7 +1046,7 @@ fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, u_int8_t num_alert_poli
 }
 
 int8_t
-ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t num_alert_policies)
+ipmi_kcs_set_num_alert_policies (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t num_alert_policies)
 {
   int8_t status;
   fiid_obj_t obj_data_rq;
@@ -1062,8 +1062,8 @@ ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
 
 /* This function is not used yet.  When you find it useful, uncomment them */
 /* static int8_t */
-/* fill_kcs_set_alert_string_keys (fiid_obj_t obj_data_rq, u_int8_t string_selector, */
-/*                                 u_int8_t filter_number, u_int8_t string_set_number) */
+/* fill_kcs_set_alert_string_keys (fiid_obj_t obj_data_rq, uint8_t string_selector, */
+/*                                 uint8_t filter_number, uint8_t string_set_number) */
 /* { */
 /*   FIID_OBJ_SET (obj_data_rq, */
 /*                 tmpl_set_pef_conf_param_alert_string_keys_rq, */
@@ -1089,9 +1089,9 @@ ipmi_kcs_set_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
 /* } */
 
 int8_t
-ipmi_kcs_alert_immediate (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                          u_int8_t channel_number, u_int8_t destination_selector,
-                          u_int8_t string_selector, u_int8_t string_enable)
+ipmi_kcs_alert_immediate (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                          uint8_t channel_number, uint8_t destination_selector,
+                          uint8_t string_selector, uint8_t string_enable)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1107,9 +1107,9 @@ ipmi_kcs_alert_immediate (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 int8_t
-ipmi_kcs_get_pef_alert_string (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                               u_int8_t parameter_type, u_int8_t set_selector,
-                               u_int8_t block_selector)
+ipmi_kcs_get_pef_alert_string (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                               uint8_t parameter_type, uint8_t set_selector,
+                               uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1128,9 +1128,9 @@ ipmi_kcs_get_pef_alert_string (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 int8_t
-ipmi_kcs_get_pef_alert_string_keys (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                    u_int8_t parameter_type, u_int8_t set_selector,
-                                    u_int8_t block_selector)
+ipmi_kcs_get_pef_alert_string_keys (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                    uint8_t parameter_type, uint8_t set_selector,
+                                    uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1149,9 +1149,9 @@ ipmi_kcs_get_pef_alert_string_keys (u_int16_t sms_io_base, fiid_obj_t obj_data_r
 }
 
 int8_t
-ipmi_kcs_get_pef_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                     u_int8_t parameter_type, u_int8_t set_selector,
-                                     u_int8_t block_selector)
+ipmi_kcs_get_pef_num_alert_policies (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                     uint8_t parameter_type, uint8_t set_selector,
+                                     uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1170,8 +1170,8 @@ ipmi_kcs_get_pef_num_alert_policies (u_int16_t sms_io_base, fiid_obj_t obj_data_
 }
 
 int8_t
-ipmi_kcs_get_pef_filter_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                           u_int8_t parameter_type, u_int8_t set_selector, u_int8_t block_selector)
+ipmi_kcs_get_pef_filter_data1 (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                           uint8_t parameter_type, uint8_t set_selector, uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1190,8 +1190,8 @@ ipmi_kcs_get_pef_filter_data1 (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 int8_t
-ipmi_kcs_get_pef_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                          u_int8_t parameter_type, u_int8_t set_selector, u_int8_t block_selector)
+ipmi_kcs_get_pef_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                          uint8_t parameter_type, uint8_t set_selector, uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1210,9 +1210,9 @@ ipmi_kcs_get_pef_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 int8_t
-ipmi_kcs_get_pef_global_action_control (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                        u_int8_t parameter_type, u_int8_t set_selector,
-                                        u_int8_t block_selector)
+ipmi_kcs_get_pef_global_action_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                        uint8_t parameter_type, uint8_t set_selector,
+                                        uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1231,9 +1231,9 @@ ipmi_kcs_get_pef_global_action_control (u_int16_t sms_io_base, fiid_obj_t obj_da
 }
 
 int8_t
-ipmi_kcs_get_pef_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                u_int8_t parameter_type, u_int8_t set_selector,
-                                u_int8_t block_selector)
+ipmi_kcs_get_pef_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                uint8_t parameter_type, uint8_t set_selector,
+                                uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1252,9 +1252,9 @@ ipmi_kcs_get_pef_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
 }
 
 int8_t
-ipmi_kcs_get_pef_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                      u_int8_t parameter_type, u_int8_t set_selector,
-                                      u_int8_t block_selector)
+ipmi_kcs_get_pef_alert_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                      uint8_t parameter_type, uint8_t set_selector,
+                                      uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1273,9 +1273,9 @@ ipmi_kcs_get_pef_alert_startup_delay (u_int16_t sms_io_base, fiid_obj_t obj_data
 }
 
 int8_t
-ipmi_kcs_get_pef_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                    u_int8_t parameter_type, u_int8_t set_selector,
-                                    u_int8_t block_selector)
+ipmi_kcs_get_pef_num_event_filters (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                    uint8_t parameter_type, uint8_t set_selector,
+                                    uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1294,9 +1294,9 @@ ipmi_kcs_get_pef_num_event_filters (u_int16_t sms_io_base, fiid_obj_t obj_data_r
 }
 
 int8_t
-ipmi_kcs_get_pef_filter_table_entry (u_int16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                 u_int8_t parameter_type, u_int8_t set_selector,
-                                 u_int8_t block_selector)
+ipmi_kcs_get_pef_filter_table_entry (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
+                                 uint8_t parameter_type, uint8_t set_selector,
+                                 uint8_t block_selector)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1325,7 +1325,7 @@ fill_kcs_get_pef_caps (fiid_obj_t obj_data_rq)
 }
 
 static int8_t
-fill_kcs_arm_pef_postpone_timer (fiid_obj_t obj_data_rq, u_int8_t countdown)
+fill_kcs_arm_pef_postpone_timer (fiid_obj_t obj_data_rq, uint8_t countdown)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_arm_pef_postpone_timer_rq,
@@ -1339,7 +1339,7 @@ fill_kcs_arm_pef_postpone_timer (fiid_obj_t obj_data_rq, u_int8_t countdown)
 }
 
 static int8_t
-fill_kcs_set_last_processed_event (fiid_obj_t obj_data_rq, which_event_t which, u_int16_t id)
+fill_kcs_set_last_processed_event (fiid_obj_t obj_data_rq, which_event_t which, uint16_t id)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_set_last_processed_event_rq,
@@ -1367,9 +1367,9 @@ fill_kcs_get_last_proessed_event (fiid_obj_t obj_data_rq)
 }
 
 static int8_t
-fill_kcs_pet_ack (fiid_obj_t obj_data_rq, u_int16_t sequence_number, u_int32_t timestamp,
-                  u_int8_t source_type, u_int8_t sensor_device, u_int8_t sensor_number,
-                  u_int32_t event_data)
+fill_kcs_pet_ack (fiid_obj_t obj_data_rq, uint16_t sequence_number, uint32_t timestamp,
+                  uint8_t source_type, uint8_t sensor_device, uint8_t sensor_number,
+                  uint32_t event_data)
 {
   FIID_OBJ_SET (obj_data_rq,
                 tmpl_pet_ack_rq,
@@ -1403,7 +1403,7 @@ fill_kcs_pet_ack (fiid_obj_t obj_data_rq, u_int16_t sequence_number, u_int32_t t
 }
 
 int8_t 
-ipmi_kcs_get_pef_caps (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
+ipmi_kcs_get_pef_caps (uint16_t sms_io_base, fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
@@ -1418,7 +1418,7 @@ ipmi_kcs_get_pef_caps (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
 }
 
 int8_t
-ipmi_kcs_arm_pef_postpone_timer (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int8_t countdown)
+ipmi_kcs_arm_pef_postpone_timer (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t countdown)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1433,7 +1433,7 @@ ipmi_kcs_arm_pef_postpone_timer (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, 
 }  
 
 int8_t
-ipmi_kcs_set_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, which_event_t which, u_int16_t id)
+ipmi_kcs_set_last_processed_event (uint16_t sms_io_base, fiid_obj_t obj_data_rs, which_event_t which, uint16_t id)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1448,7 +1448,7 @@ ipmi_kcs_set_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs
 }
 
 int8_t
-ipmi_kcs_get_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs)
+ipmi_kcs_get_last_processed_event (uint16_t sms_io_base, fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1463,9 +1463,9 @@ ipmi_kcs_get_last_processed_event (u_int16_t sms_io_base, fiid_obj_t obj_data_rs
 }
 
 int8_t
-ipmi_kcs_pet_ack (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int16_t sequence_number,
-                  u_int32_t timestamp, u_int8_t source_type, u_int8_t sensor_device,
-                  u_int8_t sensor_number, u_int32_t event_data)
+ipmi_kcs_pet_ack (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint16_t sequence_number,
+                  uint32_t timestamp, uint8_t source_type, uint8_t sensor_device,
+                  uint8_t sensor_number, uint32_t event_data)
 {
   fiid_obj_t obj_data_rq;
   int8_t status;
@@ -1482,10 +1482,10 @@ ipmi_kcs_pet_ack (u_int16_t sms_io_base, fiid_obj_t obj_data_rs, u_int16_t seque
 
 int8_t 
 ipmi_cmd_set_pef_control2 (ipmi_device_t *dev, 
-			   u_int8_t enable_pef, 
-			   u_int8_t enable_pef_event_msgs, 
-			   u_int8_t enable_startup_delay, 
-			   u_int8_t enable_alert_startup_delay, 
+			   uint8_t enable_pef, 
+			   uint8_t enable_pef_event_msgs, 
+			   uint8_t enable_startup_delay, 
+			   uint8_t enable_alert_startup_delay, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1513,12 +1513,12 @@ ipmi_cmd_set_pef_control2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev, 
-				     u_int8_t enable_alert,
-				     u_int8_t enable_powerdown, 
-				     u_int8_t enable_reset,
-				     u_int8_t enable_powercycle, 
-				     u_int8_t enable_oem,
-				     u_int8_t enable_diag_interrupt, 
+				     uint8_t enable_alert,
+				     uint8_t enable_powerdown, 
+				     uint8_t enable_reset,
+				     uint8_t enable_powercycle, 
+				     uint8_t enable_oem,
+				     uint8_t enable_diag_interrupt, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1548,7 +1548,7 @@ ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev, 
-			     u_int8_t startup_delay, 
+			     uint8_t startup_delay, 
 			     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1572,7 +1572,7 @@ ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev, 
-				   u_int8_t alert_startup_delay, 
+				   uint8_t alert_startup_delay, 
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1597,7 +1597,7 @@ ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev, 
-				 u_int8_t num_event_filters, 
+				 uint8_t num_event_filters, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1647,9 +1647,9 @@ ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev, 
-				   u_int8_t filter_number,
+				   uint8_t filter_number,
 				   filter_type_t filter_type, 
-				   u_int8_t enabled, 
+				   uint8_t enabled, 
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1676,7 +1676,7 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev, 
-				  u_int8_t num_alert_policies, 
+				  uint8_t num_alert_policies, 
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1701,10 +1701,10 @@ ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
-			   u_int8_t channel_number, 
-			   u_int8_t destination_selector,
-			   u_int8_t string_selector, 
-			   u_int8_t string_enable, 
+			   uint8_t channel_number, 
+			   uint8_t destination_selector,
+			   uint8_t string_selector, 
+			   uint8_t string_enable, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1732,9 +1732,9 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
-				u_int8_t parameter_type, 
-				u_int8_t set_selector,
-				u_int8_t block_selector, 
+				uint8_t parameter_type, 
+				uint8_t set_selector,
+				uint8_t block_selector, 
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1762,9 +1762,9 @@ ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
-				     u_int8_t parameter_type, 
-				     u_int8_t set_selector,
-				     u_int8_t block_selector, 
+				     uint8_t parameter_type, 
+				     uint8_t set_selector,
+				     uint8_t block_selector, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1792,9 +1792,9 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
-				      u_int8_t parameter_type, 
-				      u_int8_t set_selector,
-				      u_int8_t block_selector, 
+				      uint8_t parameter_type, 
+				      uint8_t set_selector,
+				      uint8_t block_selector, 
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1822,9 +1822,9 @@ ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev, 
-				     u_int8_t parameter_type, 
-				     u_int8_t set_selector, 
-				     u_int8_t block_selector, 
+				     uint8_t parameter_type, 
+				     uint8_t set_selector, 
+				     uint8_t block_selector, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1852,9 +1852,9 @@ ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev, 
-				 u_int8_t parameter_type, 
-				 u_int8_t set_selector, 
-				 u_int8_t block_selector, 
+				 uint8_t parameter_type, 
+				 uint8_t set_selector, 
+				 uint8_t block_selector, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1882,9 +1882,9 @@ ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_control2 (ipmi_device_t *dev, 
-			   u_int8_t parameter_type, 
-			   u_int8_t set_selector, 
-			   u_int8_t block_selector, 
+			   uint8_t parameter_type, 
+			   uint8_t set_selector, 
+			   uint8_t block_selector, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -1912,9 +1912,9 @@ ipmi_cmd_get_pef_control2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev, 
-					 u_int8_t parameter_type, 
-					 u_int8_t set_selector,
-					 u_int8_t block_selector, 
+					 uint8_t parameter_type, 
+					 uint8_t set_selector,
+					 uint8_t block_selector, 
 					 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -1942,9 +1942,9 @@ ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev, 
-				 u_int8_t parameter_type, 
-				 u_int8_t set_selector,
-				 u_int8_t block_selector, 
+				 uint8_t parameter_type, 
+				 uint8_t set_selector,
+				 uint8_t block_selector, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -1972,9 +1972,9 @@ ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev, 
-				       u_int8_t parameter_type, 
-				       u_int8_t set_selector,
-				       u_int8_t block_selector, 
+				       uint8_t parameter_type, 
+				       uint8_t set_selector,
+				       uint8_t block_selector, 
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -2002,9 +2002,9 @@ ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev, 
-				     u_int8_t parameter_type, 
-				     u_int8_t set_selector,
-				     u_int8_t block_selector, 
+				     uint8_t parameter_type, 
+				     uint8_t set_selector,
+				     uint8_t block_selector, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -2032,9 +2032,9 @@ ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev, 
-				      u_int8_t parameter_type, 
-				      u_int8_t set_selector,
-				      u_int8_t block_selector, 
+				      uint8_t parameter_type, 
+				      uint8_t set_selector,
+				      uint8_t block_selector, 
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
@@ -2084,7 +2084,7 @@ ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 
 int8_t 
 ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev, 
-				  u_int8_t countdown, 
+				  uint8_t countdown, 
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2110,7 +2110,7 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev, 
 				    which_event_t which, 
-				    u_int16_t id, 
+				    uint16_t id, 
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2158,12 +2158,12 @@ ipmi_cmd_get_last_processed_event2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 
 int8_t 
 ipmi_cmd_pet_ack2 (ipmi_device_t *dev, 
-		   u_int16_t sequence_number, 
-		   u_int32_t timestamp, 
-		   u_int8_t source_type, 
-		   u_int8_t sensor_device, 
-		   u_int8_t sensor_number, 
-		   u_int32_t event_data, 
+		   uint16_t sequence_number, 
+		   uint32_t timestamp, 
+		   uint8_t source_type, 
+		   uint8_t sensor_device, 
+		   uint8_t sensor_number, 
+		   uint32_t event_data, 
 		   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

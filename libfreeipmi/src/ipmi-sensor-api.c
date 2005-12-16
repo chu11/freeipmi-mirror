@@ -22,10 +22,10 @@
 #include "freeipmi.h"
 
 void 
-get_sdr_full_record (u_int8_t *sdr_record_data, 
+get_sdr_full_record (uint8_t *sdr_record_data, 
 		     sdr_full_record_t *sdr_full_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
@@ -33,10 +33,10 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
   short m;
   char r_exponent;
   char b_exponent;
-  u_int8_t linear;
-  u_int8_t analog_data_format;
+  uint8_t linear;
+  uint8_t analog_data_format;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_full_sensor_record, 
 		"record_length", 
@@ -250,14 +250,14 @@ get_sdr_full_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_compact_record (u_int8_t *sdr_record_data, 
+get_sdr_compact_record (uint8_t *sdr_record_data, 
 			sdr_compact_record_t *sdr_compact_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_compact_sensor_record, 
 		"record_length", 
@@ -318,14 +318,14 @@ get_sdr_compact_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_event_only_record (u_int8_t *sdr_record_data, 
+get_sdr_event_only_record (uint8_t *sdr_record_data, 
 			   sdr_event_only_record_t *sdr_event_only_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_event_only_sensor_record, 
 		"record_length", 
@@ -368,10 +368,10 @@ get_sdr_event_only_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_entity_association_record (u_int8_t *sdr_record_data, 
+get_sdr_entity_association_record (uint8_t *sdr_record_data, 
 				   sdr_entity_association_record_t *sdr_entity_association_record)
 {
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_entity_association_sensor_record, 
@@ -389,14 +389,14 @@ get_sdr_entity_association_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_generic_device_locator_record (u_int8_t *sdr_record_data, 
+get_sdr_generic_device_locator_record (uint8_t *sdr_record_data, 
 				       sdr_generic_device_locator_record_t *sdr_generic_device_locator_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_generic_device_locator_sensor_record, 
 		"record_length", 
@@ -475,14 +475,14 @@ get_sdr_generic_device_locator_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_logical_fru_device_locator_record (u_int8_t *sdr_record_data, 
+get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data, 
 					   sdr_logical_fru_device_locator_record_t *sdr_logical_fru_device_locator_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_logical_fru_device_locator_sensor_record, 
 		"record_length", 
@@ -525,14 +525,14 @@ get_sdr_logical_fru_device_locator_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_management_controller_device_locator_record (u_int8_t *sdr_record_data, 
+get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data, 
 						     sdr_management_controller_device_locator_record_t *sdr_management_controller_device_locator_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_management_controller_device_locator_sensor_record, 
 		"record_length", 
@@ -562,14 +562,14 @@ get_sdr_management_controller_device_locator_record (u_int8_t *sdr_record_data,
 }
 
 void 
-get_sdr_oem_record (u_int8_t *sdr_record_data, 
+get_sdr_oem_record (uint8_t *sdr_record_data, 
 		    sdr_oem_record_t *sdr_oem_record)
 {
-  u_int64_t val;
+  uint64_t val;
   int i;
   int c;
   
-  u_int8_t record_length;
+  uint8_t record_length;
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_oem_record, 
 		"record_length", 
@@ -593,15 +593,15 @@ get_sdr_oem_record (u_int8_t *sdr_record_data,
   return;
 }
 
-u_int8_t 
+uint8_t 
 get_sdr_record (ipmi_device_t *dev, 
-		u_int16_t record_id, 
-		u_int16_t *next_record_id, 
+		uint16_t record_id, 
+		uint16_t *next_record_id, 
 		sdr_record_t *sdr_record)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_obj_t obj_sdr_record = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sdr_rs);
   if (ipmi_cmd_get_sdr2 (dev, 
@@ -734,7 +734,7 @@ get_sdr_record (ipmi_device_t *dev,
   return 0;
 }
 
-u_int8_t 
+uint8_t 
 get_sensor_reading (ipmi_device_t *dev, 
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
@@ -778,19 +778,19 @@ get_sensor_reading (ipmi_device_t *dev,
       {0,  ""}
     };
   
-  u_int8_t slave_sys_soft_id;
-  u_int8_t event_reading_type;
-  u_int8_t sensor_number;
-  u_int8_t sensor_type;
+  uint8_t slave_sys_soft_id;
+  uint8_t event_reading_type;
+  uint8_t sensor_number;
+  uint8_t sensor_type;
   short b = 0;
   short m = 0;
   char r_exponent = 0;
   char b_exponent = 0;
-  u_int8_t linear = 0;
-  u_int8_t analog_data_format = 0;
+  uint8_t linear = 0;
+  uint8_t analog_data_format = 0;
   
   fiid_obj_t obj_cmd_rs; 
-  u_int64_t val;
+  uint64_t val;
   
   switch (sdr_record->record_type)
     {
@@ -847,7 +847,7 @@ get_sensor_reading (ipmi_device_t *dev,
 								      b, 
 								      linear, 
 								      analog_data_format, 
-								      (u_int8_t) val);
+								      (uint8_t) val);
 	}
       else 
 	{
@@ -899,7 +899,7 @@ get_sensor_reading (ipmi_device_t *dev,
 								      b, 
 								      linear, 
 								      analog_data_format, 
-								      (u_int8_t) val);
+								      (uint8_t) val);
 	}
       else 
 	{
@@ -951,7 +951,7 @@ get_sensor_reading (ipmi_device_t *dev,
 								      b, 
 								      linear, 
 								      analog_data_format, 
-								      (u_int8_t) val);
+								      (uint8_t) val);
 	}
       else 
 	{
@@ -1020,7 +1020,7 @@ get_sensor_reading (ipmi_device_t *dev,
 	char *event_message = NULL;
 	asprintf (&event_message, 
 		  "OEM State = %04Xh", 
-		  (u_int16_t) val);
+		  (uint16_t) val);
 	sensor_reading->event_message_list = (char **) malloc (sizeof (char *) * 2);
 	sensor_reading->event_message_list[0] = event_message;
 	sensor_reading->event_message_list[1] = NULL;

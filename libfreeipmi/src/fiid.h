@@ -94,7 +94,7 @@ do {                                                                \
 
 #define __LFI_FIID_OBJ_GET(bytes, tmpl, field, val)           \
 do {                                                          \
-    u_int64_t _val = 0, *_val_ptr;                            \
+    uint64_t _val = 0, *_val_ptr;                            \
     _val_ptr = val;                                           \
     if (fiid_obj_get (bytes, tmpl, field, &_val) == -1)       \
       return (-1);                                            \
@@ -103,7 +103,7 @@ do {                                                          \
 
 #define __FI_FIID_OBJ_GET(bytes, tmpl, field, val)            \
 do {                                                          \
-    u_int64_t _val = 0, *_val_ptr;                            \
+    uint64_t _val = 0, *_val_ptr;                            \
     _val_ptr = val;                                           \
     if (fiid_obj_get (bytes, tmpl, field, &_val) == -1)       \
     {                                                         \
@@ -146,7 +146,7 @@ do {                                                                 \
 
 #define FIID_OBJ_MEMSET(obj, c, tmpl)                         \
 do {                                                          \
-     u_int8_t *__ptr = fiid_obj_memset (obj, c, tmpl);        \
+     uint8_t *__ptr = fiid_obj_memset (obj, c, tmpl);        \
      ERR(__ptr);                                              \
 } while(0)
 
@@ -154,14 +154,14 @@ do {                                                          \
 
 typedef struct fiid_field
 {
-  u_int32_t len;
+  uint32_t len;
   char key[FIID_FIELD_MAX];
 } fiid_field_t;
 
 /* typedef fiid_field_t fiid_template_t[]; */
 typedef fiid_field_t const fiid_template_t[];
 typedef fiid_field_t const fiid_tmpl_t[];
-typedef u_int8_t *fiid_obj_t;
+typedef uint8_t *fiid_obj_t;
 /* FIID Template for testing. 
 fiid_template_t tmpl_test =
   {
@@ -177,22 +177,22 @@ fiid_template_t tmpl_test =
 
 int32_t fiid_obj_len (fiid_template_t tmpl);
 int32_t fiid_obj_len_bytes (fiid_template_t tmpl);
-int32_t fiid_obj_field_start_end (fiid_template_t tmpl, u_int8_t *field, 
-				  u_int32_t *start, u_int32_t *end);
-int8_t fiid_obj_field_lookup (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_start (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_start_bytes (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_end (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_end_bytes (fiid_template_t tmpl, u_int8_t *field);
-int32_t fiid_obj_field_len (fiid_template_t tmpl, u_int8_t *field);
+int32_t fiid_obj_field_start_end (fiid_template_t tmpl, uint8_t *field, 
+				  uint32_t *start, uint32_t *end);
+int8_t fiid_obj_field_lookup (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_obj_field_start (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_obj_field_start_bytes (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_obj_field_end (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_obj_field_end_bytes (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_obj_field_len (fiid_template_t tmpl, uint8_t *field);
 int32_t fiid_obj_field_len_bytes (fiid_template_t tmpl, 
-				  u_int8_t *field);
+				  uint8_t *field);
 int32_t fiid_obj_block_len (fiid_template_t tmpl, 
-			    u_int8_t *field_start, 
-			    u_int8_t *field_end);
+			    uint8_t *field_start, 
+			    uint8_t *field_end);
 int32_t fiid_obj_block_len_bytes (fiid_template_t tmpl, 
-				  u_int8_t *field_start, 
-				  u_int8_t *field_end);
+				  uint8_t *field_start, 
+				  uint8_t *field_end);
 
 fiid_obj_t fiid_obj_calloc (fiid_template_t tmpl);
 #define fiid_obj_malloc fiid_obj_calloc
@@ -201,19 +201,19 @@ fiid_obj_t fiid_obj_calloc (fiid_template_t tmpl);
 
 fiid_obj_t fiid_obj_memset (fiid_obj_t obj, int c, fiid_template_t tmpl);
 int8_t fiid_obj_memset_field (fiid_obj_t obj, int c, 
-			      fiid_template_t tmpl, u_int8_t *field);
+			      fiid_template_t tmpl, uint8_t *field);
 void fiid_obj_free (fiid_obj_t obj);
 int8_t fiid_obj_set (fiid_obj_t obj, fiid_template_t tmpl, 
-		     u_int8_t *field, u_int64_t val);
+		     uint8_t *field, uint64_t val);
 int8_t fiid_obj_get (fiid_obj_t obj, fiid_template_t tmpl, 
-		     u_int8_t *field, u_int64_t *val);
-fiid_field_t *__fiid_template_make (u_int8_t dummy, ...);
+		     uint8_t *field, uint64_t *val);
+fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
 int8_t fiid_obj_get_data (fiid_obj_t obj, fiid_template_t tmpl, 
-			  u_int8_t *field, 
-			  u_int8_t *data, u_int32_t data_len);
+			  uint8_t *field, 
+			  uint8_t *data, uint32_t data_len);
 int8_t fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, 
-			  u_int8_t *field, u_int8_t *data, u_int32_t data_len);
+			  uint8_t *field, uint8_t *data, uint32_t data_len);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj, fiid_template_t tmpl);
 
 #ifdef __cplusplus

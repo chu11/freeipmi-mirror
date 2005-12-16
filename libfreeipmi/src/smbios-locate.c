@@ -88,7 +88,7 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
 
 
 int
-ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space)
+ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space)
 {
   extern int errno;
   if (!(reg_space))
@@ -129,14 +129,14 @@ ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space)
    0 = not really a SMBIOS entry structure
    1 = yes, a real SMBIOS entry structure */ 
 static int
-is_ipmi_entry (u_int8_t* sigp)
+is_ipmi_entry (uint8_t* sigp)
 {
   static const char smbios_entry_sig[4] = { '_', 'S', 'M', '_' };
   static const char smbios_entry_anchor[5] = { '_', 'D', 'M', 'I', '_' };
-  u_int32_t csum_computed;
-  u_int8_t csum_given;
-  u_int8_t entry_len;
-  u_int8_t* bp;
+  uint32_t csum_computed;
+  uint8_t csum_given;
+  uint8_t entry_len;
+  uint8_t* bp;
 
   if (memcmp (sigp, smbios_entry_sig, sizeof (smbios_entry_sig)) != 0)
     return 0;
@@ -169,7 +169,7 @@ is_ipmi_entry (u_int8_t* sigp)
    0 = not a IPMI device info structure for TYPE
    1 = yes, IPMI device info structure for TYPE */
 static int
-is_ipmi_dev_info (ipmi_interface_type_t type, u_int8_t* dev_info_p)
+is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
 {
   if (*dev_info_p != IPMI_SMBIOS_IPMI_DEV_INFO_SIG)
     return 0;
@@ -188,11 +188,11 @@ is_ipmi_dev_info (ipmi_interface_type_t type, u_int8_t* dev_info_p)
    totallen = length of area to unmap
    RETURNS:
    pointer to area of physical memory at physmem */
-static u_int8_t*
-map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
+static uint8_t*
+map_physmem (uint32_t physaddr, size_t len, void** startp, size_t* totallen)
 {
-  u_int32_t startaddr;
-  u_int32_t pad;
+  uint32_t startaddr;
+  uint32_t pad;
   int mem_fd;
 
   if (startp == NULL || totallen == NULL)
@@ -209,7 +209,7 @@ map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
       close (mem_fd);
 
       if (*startp != MAP_FAILED)
-	return ((u_int8_t*)(*startp) + pad);
+	return ((uint8_t*)(*startp) + pad);
     }
   return NULL;	  
 }
@@ -220,37 +220,37 @@ map_physmem (u_int32_t physaddr, size_t len, void** startp, size_t* totallen)
    RETURNS:
    pointer to the device info structure in heap (caller responsible
    for freeing */
-static u_int8_t*
+static uint8_t*
 copy_impi_dev_info (ipmi_interface_type_t type)
 {
   int status;
-  u_int8_t* result = NULL;
+  uint8_t* result = NULL;
   void* map_entry;
   size_t map_entry_len;
-  u_int8_t* pmem_entry; 
+  uint8_t* pmem_entry; 
 
   status = 1;
   pmem_entry = map_physmem (IPMI_SMBIOS_AREA_START, IPMI_SMBIOS_AREA_LEN, &map_entry, &map_entry_len);
   if (pmem_entry != NULL)
     {
-      u_int8_t* sigp;
+      uint8_t* sigp;
       for (sigp = pmem_entry; sigp - pmem_entry < IPMI_SMBIOS_AREA_LEN; sigp += IPMI_SMBIOS_AREA_ALIGN)
 	{
 	  if (is_ipmi_entry (sigp))
 	    {
-	      u_int16_t s_table_len;
-	      u_int8_t* pmem_table;
+	      uint16_t s_table_len;
+	      uint8_t* pmem_table;
 	      void* map_table;
 	      size_t map_table_len;
 
-	      s_table_len = *(u_int16_t*)(sigp + IPMI_SMBIOS_ENTRY_TLEN_OFFSET);
-	      pmem_table = map_physmem (*(u_int32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
+	      s_table_len = *(uint16_t*)(sigp + IPMI_SMBIOS_ENTRY_TLEN_OFFSET);
+	      pmem_table = map_physmem (*(uint32_t*)(sigp + IPMI_SMBIOS_ENTRY_PTR_OFFSET), s_table_len,
 					&map_table, &map_table_len);
 	      if (pmem_table != NULL)
 		{
-		  u_int8_t* dev_info_p;
+		  uint8_t* dev_info_p;
 		  size_t size;
-		  u_int8_t* var_info_p;
+		  uint8_t* var_info_p;
 
 		  dev_info_p = pmem_table;
 		  size = dev_info_p[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET];
@@ -297,10 +297,10 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 ipmi_locate_info_t*
 smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
-  u_int8_t* bufp;
-  u_int8_t version;
-  u_int64_t addr;
-  u_int64_t strobed;
+  uint8_t* bufp;
+  uint8_t version;
+  uint64_t addr;
+  uint64_t strobed;
 
   bufp = copy_impi_dev_info (type);
   if (bufp == NULL)
@@ -320,12 +320,12 @@ smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
       return (NULL);
     }
 
-  strobed = addr = *(u_int64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
+  strobed = addr = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
 
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
     {
-      u_int8_t modifier;
-      u_int8_t lsb;
+      uint8_t modifier;
+      uint8_t lsb;
       int reg_space_boundary;
 
       modifier = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET];

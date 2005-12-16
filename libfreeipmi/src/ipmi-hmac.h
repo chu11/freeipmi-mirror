@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-hmac.h,v 1.3 2005-11-10 22:26:48 chu11 Exp $
+ *  $Id: ipmi-hmac.h,v 1.4 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,16 +39,16 @@ typedef enum {
                                       (__t) <= IPMI_HMAC_MD5)
 
 typedef struct __hmac {
-  u_int32_t magic;
+  uint32_t magic;
   void *h_info;
 } ipmi_hmac_t;
 
 
-int ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, u_int8_t *key, unsigned int keylen);
+int ipmi_hmac_init(ipmi_hmac_t *ctx, ipmi_hmac_type_t type, uint8_t *key, unsigned int keylen);
 
-int ipmi_hmac_update_data(ipmi_hmac_t *ctx, u_int8_t *buf, unsigned int buflen);
+int ipmi_hmac_update_data(ipmi_hmac_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int ipmi_hmac_finish(ipmi_hmac_t *ctx, u_int8_t *digest, unsigned int digestlen);
+int ipmi_hmac_finish(ipmi_hmac_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #ifdef __cplusplus
 }

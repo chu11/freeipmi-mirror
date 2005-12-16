@@ -24,7 +24,7 @@
 /***********      event message functions   ***************/
 /**********************************************************/
 static char *
-get_01_generic_event_message (u_int16_t offset)
+get_01_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -58,7 +58,7 @@ get_01_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_02_generic_event_message (u_int16_t offset)
+get_02_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -74,7 +74,7 @@ get_02_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_03_generic_event_message (u_int16_t offset)
+get_03_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -88,7 +88,7 @@ get_03_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_04_generic_event_message (u_int16_t offset)
+get_04_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -102,7 +102,7 @@ get_04_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_05_generic_event_message (u_int16_t offset)
+get_05_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -116,7 +116,7 @@ get_05_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_06_generic_event_message (u_int16_t offset)
+get_06_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -130,7 +130,7 @@ get_06_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_07_generic_event_message (u_int16_t offset)
+get_07_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -158,7 +158,7 @@ get_07_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_08_generic_event_message (u_int16_t offset)
+get_08_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -172,7 +172,7 @@ get_08_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_09_generic_event_message (u_int16_t offset)
+get_09_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -186,7 +186,7 @@ get_09_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_0A_generic_event_message (u_int16_t offset)
+get_0A_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -214,7 +214,7 @@ get_0A_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_0B_generic_event_message (u_int16_t offset)
+get_0B_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -240,7 +240,7 @@ get_0B_generic_event_message (u_int16_t offset)
 }
 
 static char *
-get_0C_generic_event_message (u_int16_t offset)
+get_0C_generic_event_message (uint16_t offset)
 {
   switch (offset)
     {
@@ -907,7 +907,7 @@ get_2C_event_message (int offset)
 /***********  event_data2 message functions  **************/
 /**********************************************************/
 static char *
-get_05_event_data2_message (int offset, u_int8_t event_data)
+get_05_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x04)
     {
@@ -920,7 +920,7 @@ get_05_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_0F_event_data2_message (int offset, u_int8_t event_data)
+get_0F_event_data2_message (int offset, uint8_t event_data)
 {
   switch (offset)
     {
@@ -1021,7 +1021,7 @@ get_0F_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_10_event_data2_message (int offset, u_int8_t event_data)
+get_10_event_data2_message (int offset, uint8_t event_data)
 {
   switch (offset)
     {
@@ -1043,7 +1043,7 @@ get_10_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_12_event_data2_message (int offset, u_int8_t event_data)
+get_12_event_data2_message (int offset, uint8_t event_data)
 {
   switch (offset)
     {
@@ -1055,9 +1055,9 @@ get_12_event_data2_message (int offset, u_int8_t event_data)
 	    {4, "log_entry_action"}, 
 	    {0, ""}
 	  };
-	u_int64_t val;
-	u_int8_t log_type;
-	u_int8_t log_entry_action;
+	uint64_t val;
+	uint8_t log_type;
+	uint8_t log_entry_action;
 	char *str = NULL;
 	char *str1 = NULL;
 	char *str2 = NULL;
@@ -1123,13 +1123,13 @@ get_12_event_data2_message (int offset, u_int8_t event_data)
 	    {2, "reserved"}, 
 	    {0, ""}
 	  };
-	u_int64_t val;
-	u_int8_t alert;
-	u_int8_t power_off;
-	u_int8_t reset;
-	u_int8_t power_cycle;
-	u_int8_t oem_action;
-	u_int8_t diagnostic_interrupt;
+	uint64_t val;
+	uint8_t alert;
+	uint8_t power_off;
+	uint8_t reset;
+	uint8_t power_cycle;
+	uint8_t oem_action;
+	uint8_t diagnostic_interrupt;
 	char *str = NULL;
 	char *tmp_str = NULL;
 	
@@ -1235,9 +1235,9 @@ get_12_event_data2_message (int offset, u_int8_t event_data)
 	    {1, "first_second"}, 
 	    {0, ""}
 	  };
-	u_int64_t val;
-	u_int8_t timestamp_clock_type;
-	u_int8_t first_second;
+	uint64_t val;
+	uint8_t timestamp_clock_type;
+	uint8_t first_second;
 	char *str = NULL;
 	
 	fiid_obj_get (&event_data, tmpl_event_data2, "timestamp_clock_type", &val);
@@ -1258,7 +1258,7 @@ get_12_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_19_event_data2_message (int offset, u_int8_t event_data)
+get_19_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x00)
     {
@@ -1297,7 +1297,7 @@ get_19_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_21_event_data2_message (int offset, u_int8_t event_data)
+get_21_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x09)
     {
@@ -1307,7 +1307,7 @@ get_21_event_data2_message (int offset, u_int8_t event_data)
 	  {1, "reserved"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
+      uint64_t val;
       
       fiid_obj_get (&event_data, tmpl_event_data2, "slot_connector_type", &val);
       
@@ -1338,7 +1338,7 @@ get_21_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_23_event_data2_message (int offset, u_int8_t event_data)
+get_23_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x08)
     {
@@ -1348,9 +1348,9 @@ get_23_event_data2_message (int offset, u_int8_t event_data)
 	  {4, "interrupt_type"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
-      u_int8_t timer_at_expiration;
-      u_int8_t interrupt_type;
+      uint64_t val;
+      uint8_t timer_at_expiration;
+      uint8_t interrupt_type;
       char *str = NULL;
       char *str1 = NULL;
       char *str2 = NULL;
@@ -1413,7 +1413,7 @@ get_23_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_2A_event_data2_message (int offset, u_int8_t event_data)
+get_2A_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x01)
     {
@@ -1423,7 +1423,7 @@ get_2A_event_data2_message (int offset, u_int8_t event_data)
 	  {2, "reserved"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
+      uint64_t val;
       char *str = NULL;
       
       fiid_obj_get (&event_data, tmpl_event_data2, "timer_at_expiration", &val);
@@ -1437,7 +1437,7 @@ get_2A_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_2B_event_data2_message (int offset, u_int8_t event_data)
+get_2B_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x07)
     {
@@ -1498,7 +1498,7 @@ get_2B_event_data2_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_2C_event_data2_message (int offset, u_int8_t event_data)
+get_2C_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x07)
     {
@@ -1508,9 +1508,9 @@ get_2C_event_data2_message (int offset, u_int8_t event_data)
 	  {4, "cause_of_state_change"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
-      u_int8_t previous_state_offset;
-      u_int8_t cause_of_state_change;
+      uint64_t val;
+      uint8_t previous_state_offset;
+      uint8_t cause_of_state_change;
       char *str = NULL;
       
       fiid_obj_get (&event_data, tmpl_event_data2, "previous_state_offset", &val);
@@ -1565,7 +1565,7 @@ get_2C_event_data2_message (int offset, u_int8_t event_data)
 /***********  event_data3 message functions  **************/
 /**********************************************************/
 static char *
-get_08_event_data3_message (int offset, u_int8_t event_data)
+get_08_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x06)
     {
@@ -1575,7 +1575,7 @@ get_08_event_data3_message (int offset, u_int8_t event_data)
 	  {4, "reserved"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
+      uint64_t val;
       
       fiid_obj_get (&event_data, tmpl_event_data3, "event_type", &val);
       switch (val)
@@ -1593,7 +1593,7 @@ get_08_event_data3_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_0C_event_data3_message (int offset, u_int8_t event_data)
+get_0C_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x08)
     {
@@ -1606,7 +1606,7 @@ get_0C_event_data3_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_10_event_data3_message (int offset, u_int8_t event_data)
+get_10_event_data3_message (int offset, uint8_t event_data)
 {
   switch (offset)
     {
@@ -1620,10 +1620,10 @@ get_10_event_data3_message (int offset, u_int8_t event_data)
 	    {2, "reserved"}, 
 	    {0, ""}
 	  };
-	u_int64_t val;
-	u_int8_t event_offset;
-	u_int8_t assertion_deassertion_event;
-	u_int8_t logging_disabled_all_events;
+	uint64_t val;
+	uint8_t event_offset;
+	uint8_t assertion_deassertion_event;
+	uint8_t logging_disabled_all_events;
 	char *str = NULL;
 	
 	fiid_obj_get (&event_data, tmpl_event_data3, "event_offset", &val);
@@ -1652,7 +1652,7 @@ get_10_event_data3_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_19_event_data3_message (int offset, u_int8_t event_data)
+get_19_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x00)
     {
@@ -1693,7 +1693,7 @@ get_19_event_data3_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_21_event_data3_message (int offset, u_int8_t event_data)
+get_21_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x09)
     {
@@ -1706,7 +1706,7 @@ get_21_event_data3_message (int offset, u_int8_t event_data)
 }
 
 static char *
-get_2A_event_data3_message (int offset, u_int8_t event_data)
+get_2A_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x01)
     {
@@ -1717,9 +1717,9 @@ get_2A_event_data3_message (int offset, u_int8_t event_data)
 	  {2, "reserved"}, 
 	  {0, ""}
 	};
-      u_int64_t val;
-      u_int8_t channel_number;
-      u_int8_t deactivation_cause;
+      uint64_t val;
+      uint8_t channel_number;
+      uint8_t deactivation_cause;
       char *str = NULL;
       
       fiid_obj_get (&event_data, tmpl_event_data3, "channel_number", &val);
@@ -1749,7 +1749,7 @@ get_2A_event_data3_message (int offset, u_int8_t event_data)
 
 /***************************************************/
 char *
-ipmi_get_generic_event_message (u_int8_t event_reading_type, u_int16_t offset)
+ipmi_get_generic_event_message (uint8_t event_reading_type, uint16_t offset)
 {
   switch (event_reading_type)
     {
@@ -1813,7 +1813,7 @@ ipmi_get_event_message (int sensor_type_code, int offset)
 }
 
 char *
-ipmi_get_event_data2_message (int sensor_type_code, int offset, u_int8_t event_data)
+ipmi_get_event_data2_message (int sensor_type_code, int offset, uint8_t event_data)
 {
   switch (sensor_type_code)
     {
@@ -1833,7 +1833,7 @@ ipmi_get_event_data2_message (int sensor_type_code, int offset, u_int8_t event_d
 }
 
 char *
-ipmi_get_event_data3_message (int sensor_type_code, int offset, u_int8_t event_data)
+ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_data)
 {
   switch (sensor_type_code)
     {
@@ -1849,13 +1849,13 @@ ipmi_get_event_data3_message (int sensor_type_code, int offset, u_int8_t event_d
 }
 
 char **
-ipmi_get_generic_event_message_list (u_int8_t event_reading_type, u_int16_t sensor_state)
+ipmi_get_generic_event_message_list (uint8_t event_reading_type, uint16_t sensor_state)
 {
   char **event_message_list = NULL;
   char *message_list[16];
   int i = 0;
-  u_int16_t offset;
-  u_int16_t bit; 
+  uint16_t offset;
+  uint16_t bit; 
   
   for (offset = 0; offset < 16; offset++)
     {
@@ -1880,13 +1880,13 @@ ipmi_get_generic_event_message_list (u_int8_t event_reading_type, u_int16_t sens
 }
 
 char **
-ipmi_get_event_message_list (int sensor_type_code, u_int16_t sensor_state)
+ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state)
 {
   char **event_message_list = NULL;
   char *message_list[16];
   int i = 0;
-  u_int16_t offset;
-  u_int16_t bit; 
+  uint16_t offset;
+  uint16_t bit; 
   
   for (offset = 0; offset < 16; offset++)
     {

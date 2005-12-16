@@ -107,9 +107,9 @@ extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
 
 int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd);
-int8_t fill_cmd_set_watchdog_timer (u_int8_t timer_use, u_int8_t stop_timer, u_int8_t log, u_int8_t timeout_action, u_int8_t pre_timeout_interrupt, u_int8_t pre_timeout_interval, u_int8_t timer_use_expiration_flag_bios_frb2, u_int8_t timer_use_expiration_flag_bios_post, u_int8_t timer_use_expiration_flag_os_load, u_int8_t timer_use_expiration_flag_sms_os, u_int8_t timer_use_expiration_flag_oem, u_int8_t initial_countdown_value_ls_byte, u_int8_t initial_countdown_value_ms_byte, fiid_obj_t obj_cmd);
+int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use, uint8_t stop_timer, uint8_t log, uint8_t timeout_action, uint8_t pre_timeout_interrupt, uint8_t pre_timeout_interval, uint8_t timer_use_expiration_flag_bios_frb2, uint8_t timer_use_expiration_flag_bios_post, uint8_t timer_use_expiration_flag_os_load, uint8_t timer_use_expiration_flag_sms_os, uint8_t timer_use_expiration_flag_oem, uint8_t initial_countdown_value_ls_byte, uint8_t initial_countdown_value_ms_byte, fiid_obj_t obj_cmd);
 int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd);
-int8_t fill_cmd_suspend_bmc_arps (u_int8_t channel_number, u_int8_t gratuitous_arp_suspend, u_int8_t arp_response_suspend, fiid_obj_t obj_cmd);
+int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number, uint8_t gratuitous_arp_suspend, uint8_t arp_response_suspend, fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

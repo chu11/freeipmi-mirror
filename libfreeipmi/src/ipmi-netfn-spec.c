@@ -21,10 +21,10 @@
 #include "freeipmi.h"
 
 /* Assemble NetFn/LUN byte for IMPI command */
-u_int8_t
+uint8_t
 ipmi_netfn2byte (net_fn_t net_fn)
 {
-  u_int8_t netfn_byte=0;
+  uint8_t netfn_byte=0;
   /* 2 LS bits are LUN; rest are NetFn */
   netfn_byte = (net_fn.fn<<2);
   netfn_byte += net_fn.lun;

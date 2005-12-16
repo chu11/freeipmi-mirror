@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.3 2005-12-14 01:48:49 ab Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.4 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -190,7 +190,7 @@ Fiid_obj_free(fiid_obj_t obj)
 }
 
 void
-Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t *val)
+Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, uint8_t *field, uint64_t *val)
 {
   assert(obj !=NULL && tmpl !=NULL && field != NULL && val !=NULL);
 
@@ -199,7 +199,7 @@ Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, u_int8_t *field, u_int64_t *v
 }
 
 void 
-Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd) 
+Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd) 
 {
   assert(pkt != NULL && tmpl_session != NULL && tmpl_msg_hdr != NULL 
          && tmpl_cmd != NULL);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.7 2005-11-17 23:36:58 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.8 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,7 +47,7 @@
 #  include <time.h>
 # endif
 #endif
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/resource.h>
 #if HAVE_FCNTL_H

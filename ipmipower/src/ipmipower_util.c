@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.2 2005-11-09 22:24:12 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.3 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,7 @@
 #endif
 #include <errno.h>
 #include <assert.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #if HAVE_FCNTL_H
@@ -64,11 +64,11 @@
 #define DEVURANDOM              "/dev/urandom"
 #define DEVRANDOM               "/dev/random"
 
-u_int32_t
+uint32_t
 get_rand(void)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
-  u_int32_t randval;
+  uint32_t randval;
   int fd, ret = -1;
 #if HAVE_DEVURANDOM
   char *device = DEVURANDOM;
@@ -82,7 +82,7 @@ get_rand(void)
       goto cleanup;
     }
 
-  if ((ret = read(fd, (char *)&randval, sizeof(u_int32_t))) < 0)
+  if ((ret = read(fd, (char *)&randval, sizeof(uint32_t))) < 0)
     {
       dbg("get_rand: read: %s: %s", device, strerror(errno));
       goto cleanup;
@@ -90,7 +90,7 @@ get_rand(void)
 
  cleanup:
   close(fd);
-  if (ret != sizeof(u_int32_t))
+  if (ret != sizeof(uint32_t))
     {
       dbg("get_rand: read len: %d", ret);
       return rand();

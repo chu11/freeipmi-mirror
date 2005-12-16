@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.11 2005-11-09 22:24:12 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.12 2005-12-16 08:48:40 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,7 @@
 #endif
 #include <errno.h>
 #include <assert.h>
-#include <sys/types.h>
+#include <stdint.h>
 
 #include "ipmipower_packet.h"
 #include "ipmipower_auth.h"
@@ -250,7 +250,7 @@ int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
-  u_int8_t at;
+  uint8_t at;
   int len = 0;
   fiid_obj_t obj;
 
@@ -300,7 +300,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == SESS_REQ)
     {
-      u_int8_t *username;
+      uint8_t *username;
 
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, 
                            IPMI_SESSION_AUTH_TYPE_NONE, 
@@ -316,7 +316,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
       if (strlen(conf->username))
-        username = (u_int8_t *)conf->username;
+        username = (uint8_t *)conf->username;
       else
         username = NULL;
 
@@ -338,11 +338,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == ACTV_REQ)
     {
-      u_int64_t tmp_session_id;
-      u_int8_t *password;
+      uint64_t tmp_session_id;
+      uint8_t *password;
 
       if (strlen(conf->password))
-        password = (u_int8_t *)conf->password;
+        password = (uint8_t *)conf->password;
       else
         password = NULL;
 
@@ -351,7 +351,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, ip->authtype, 
                            0,
-                           (u_int32_t)tmp_session_id, 
+                           (uint32_t)tmp_session_id, 
                            password,
                            strlen(conf->password), 
                            tmpl_cmd_activate_session_rq, ip->session_req) < 0)
@@ -383,10 +383,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == PRIV_REQ)
     {
-      u_int64_t initial_inbound_seq_num;
-      u_int64_t session_id;
-      u_int8_t *password;
-      u_int8_t priv;
+      uint64_t initial_inbound_seq_num;
+      uint64_t session_id;
+      uint8_t *password;
+      uint8_t priv;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
@@ -396,7 +396,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (at != IPMI_SESSION_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
-            password = (u_int8_t *)conf->password;
+            password = (uint8_t *)conf->password;
           else
             password = NULL;
         }
@@ -424,7 +424,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
-                           (u_int32_t)session_id, 
+                           (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
                            tmpl_cmd_set_session_priv_level_rq, 
@@ -453,9 +453,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == CLOS_REQ)
     {
-      u_int64_t initial_inbound_seq_num;
-      u_int64_t session_id;
-      u_int8_t *password;
+      uint64_t initial_inbound_seq_num;
+      uint64_t session_id;
+      uint8_t *password;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
@@ -465,7 +465,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (at != IPMI_SESSION_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
-            password = (u_int8_t *)conf->password;
+            password = (uint8_t *)conf->password;
           else
             password = NULL;
         }
@@ -479,7 +479,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
-                           (u_int32_t)session_id, 
+                           (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
                            tmpl_cmd_close_session_rq, 
@@ -493,7 +493,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-      if (fill_cmd_close_session((u_int32_t)session_id, ip->clos_req) < 0)
+      if (fill_cmd_close_session((uint32_t)session_id, ip->clos_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_close_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -508,9 +508,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == CHAS_REQ)
     {
-      u_int64_t initial_inbound_seq_num;
-      u_int64_t session_id;
-      u_int8_t *password;
+      uint64_t initial_inbound_seq_num;
+      uint64_t session_id;
+      uint8_t *password;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_SESSION_AUTH_TYPE_NONE; 
@@ -520,7 +520,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (at != IPMI_SESSION_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
-            password = (u_int8_t *)conf->password;
+            password = (uint8_t *)conf->password;
           else
             password = NULL;
         }
@@ -534,7 +534,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
-                           (u_int32_t)session_id, 
+                           (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
                            tmpl_cmd_get_chassis_status_rq, 
@@ -563,10 +563,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == CTRL_REQ) 
     {
-      u_int8_t command = 0;
-      u_int64_t initial_inbound_seq_num;
-      u_int64_t session_id;
-      u_int8_t *password;
+      uint8_t command = 0;
+      uint64_t initial_inbound_seq_num;
+      uint64_t session_id;
+      uint8_t *password;
 
       assert(ip->cmd == POWER_CMD_POWER_OFF 
              || ip->cmd == POWER_CMD_POWER_ON  
@@ -583,7 +583,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (at != IPMI_SESSION_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
-            password = (u_int8_t *)conf->password;
+            password = (uint8_t *)conf->password;
           else
             password = NULL;
         }
@@ -610,7 +610,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
-                           (u_int32_t)session_id, 
+                           (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
                            tmpl_cmd_chassis_ctrl_rq, 
@@ -643,14 +643,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
 void 
 ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
-                               u_int32_t *session_seq_num, 
-                               u_int32_t *session_id,
-                               u_int8_t *network_function, 
-                               u_int8_t *requester_seq_num,
-                               u_int8_t *command, 
-                               u_int8_t *completion_code) 
+                               uint32_t *session_seq_num, 
+                               uint32_t *session_id,
+                               uint8_t *network_function, 
+                               uint8_t *requester_seq_num,
+                               uint8_t *command, 
+                               uint8_t *completion_code) 
 {
-  u_int64_t sseq, sid, netfn, rseq, cmd, cc;
+  uint64_t sseq, sid, netfn, rseq, cmd, cc;
   fiid_obj_t obj;
 
   assert(ip != NULL);
@@ -686,7 +686,7 @@ ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
 msg_type_t
 ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int8_t cc;
+  uint8_t cc;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));

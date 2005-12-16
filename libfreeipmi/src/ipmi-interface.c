@@ -57,10 +57,10 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		     ipmi_mode_t mode, 
 		     struct sockaddr *remote_host, 
 		     size_t remote_host_len, 
-		     u_int8_t auth_type, 
+		     uint8_t auth_type, 
 		     char *username, 
 		     char *password, 
-		     u_int8_t priv_level)
+		     uint8_t priv_level)
 {
   int status;
   
@@ -389,9 +389,9 @@ ipmi_cmd (ipmi_device_t *dev,
 
 int 
 ipmi_cmd_raw (ipmi_device_t *dev, 
-	      u_int8_t *in, 
+	      uint8_t *in, 
 	      size_t in_len, 
-	      u_int8_t *out, 
+	      uint8_t *out, 
 	      size_t *out_len)
 {
   if (dev == NULL)

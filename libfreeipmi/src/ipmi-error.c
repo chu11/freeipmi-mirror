@@ -29,8 +29,8 @@ do				   \
 } while (0)
 
 int8_t 
-ipmi_strerror_r (u_int8_t cmd, 
-		 u_int8_t comp_code, 
+ipmi_strerror_r (uint8_t cmd, 
+		 uint8_t comp_code, 
 		 char *errstr, 
 		 size_t len)
 {
@@ -263,7 +263,7 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 		     char *errstr, 
 		     size_t len)
 {
-  u_int8_t cmd, comp_code;
+  uint8_t cmd, comp_code;
   
   if (obj_cmd == NULL || errstr == NULL)
     {
@@ -278,7 +278,7 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 }
 
 int8_t 
-ipmi_kcs_strstatus_r (u_int8_t status_code, 
+ipmi_kcs_strstatus_r (uint8_t status_code, 
 		      char *errstr, 
 		      size_t len)
 {

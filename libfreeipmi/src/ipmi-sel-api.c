@@ -24,11 +24,11 @@
 int 
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			  sel_descriptor_t *seld, 
-			  u_int8_t *record_data,
-                          u_int32_t record_data_len)
+			  uint8_t *record_data,
+                          uint32_t record_data_len)
 {
   fiid_obj_t obj_cmd_rs;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_entry_rs);
   if (ipmi_cmd_get_sel_entry2 (dev, 
@@ -58,11 +58,11 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 int 
 ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			 sel_descriptor_t *seld, 
-			 u_int8_t *record_data,
-                         u_int32_t record_data_len)
+			 uint8_t *record_data,
+                         uint32_t record_data_len)
 {
   fiid_obj_t obj_cmd_rs;
-  u_int64_t val;
+  uint64_t val;
   
   if (seld->next_record_id == IPMI_SEL_LAST_ENTRY)
     return (-1);
@@ -95,7 +95,7 @@ int
 get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
 {
   fiid_obj_t obj_cmd_rs;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_info_rs);
   if (ipmi_cmd_get_sel_info2 (dev, obj_cmd_rs) != 0)
