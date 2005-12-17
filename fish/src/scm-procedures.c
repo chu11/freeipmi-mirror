@@ -3225,7 +3225,7 @@ ex_ipmi_open (SCM scm_arg_list)
 #endif
     }
   else 
-    arguments.poll_interval = gh_scm2int (scm_value);
+    arguments.sms_io_base = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (2));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
@@ -3257,10 +3257,27 @@ ex_ipmi_open (SCM scm_arg_list)
   else 
     arguments.priv_level = gh_scm2int (scm_value);
   
-  arguments.quiet = 0;
-  arguments.brief = 0;
-  arguments.verbose = 0;
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (7));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.quiet = 0;
+  else 
+    arguments.quiet = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (8));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.brief = 0;
+  else 
+    arguments.brief = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    arguments.verbose = 0;
+  else 
+    arguments.verbose = gh_scm2int (scm_value);
+  
   arguments.script_file = NULL;
+  
+  fi_set_arguments (&arguments);
   
   if (fi_ipmi_open (&arguments) == 0)
     {

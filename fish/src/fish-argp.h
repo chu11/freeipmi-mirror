@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.h,v 1.1 2005-10-06 10:41:09 balamurugan Exp $ 
+   $Id: fish-argp.h,v 1.2 2005-12-17 01:25:33 balamurugan Exp $ 
    
    fish-argp.h - fish command line argument parser.
    
@@ -57,6 +57,7 @@ struct arguments
 void fi_show_version (FILE *stream, struct argp_state *state);
 void fi_argp_parse (int argc, char **argv);
 struct arguments *fi_get_arguments ();
+int fi_set_arguments (struct arguments *args);
 void fi_get_script_args (int *argc, char ***argv);
 
 int get_script_argc ();

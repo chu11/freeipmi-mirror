@@ -123,23 +123,26 @@ fi_ipmi_close ()
 static char *
 get_ipmi_host_ip_address ()
 {
-  /* if IN-BAND */
-  return strdup ("127.0.0.1");
+  struct arguments *args = NULL;
   
-  /* if OUT-OF-BAND */
-  {
-    char hostname[] = {"localhost"};
-    struct hostent *hostinfo = NULL;
-    struct in_addr *in_addr = NULL;
-    
-    hostinfo = gethostbyname (hostname);
-    if (hostinfo == NULL)
-      return NULL;
-    
-    in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
-    
-    return strdup (inet_ntoa (*in_addr));
-  }
+  args = fi_get_arguments ();
+  if (args->host != NULL) /* OUT-OF-BAND */
+    {
+      struct hostent *hostinfo = NULL;
+      struct in_addr *in_addr = NULL;
+      
+      hostinfo = gethostbyname (args->host);
+      if (hostinfo == NULL)
+	return NULL;
+      
+      in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
+      
+      return strdup (inet_ntoa (*in_addr));
+    }
+  else /* IN-BAND */
+    {
+      return strdup ("127.0.0.1");
+    }
 }
 
 char *
