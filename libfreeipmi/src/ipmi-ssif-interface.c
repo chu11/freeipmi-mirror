@@ -99,6 +99,7 @@ ipmi_ssif_io_init (char *i2c_device, uint8_t ipmb_addr, int *i2c_fd)
    if ((fd = open (i2c_device, O_RDWR)) < 0)
      return (-1);
 
+   /* zresearch webserver ipmb_addr: 0x341A */
    if (ioctl (fd, IPMI_I2C_SLAVE, ipmb_addr) < 0)
      return (-1);
 
@@ -135,3 +136,158 @@ ipmi_ssif_io_exit (int i2c_fd)
 {
   return (close (i2c_fd));
 }
+
+int 
+ipmi_ssif_cmd2 (ipmi_device_t *dev, 
+	       fiid_obj_t obj_cmd_rq, 
+	       fiid_template_t tmpl_cmd_rq, 
+	       fiid_obj_t obj_cmd_rs, 
+	       fiid_template_t tmpl_cmd_rs)
+{
+  if (!(dev && tmpl_cmd_rq && obj_cmd_rq && tmpl_cmd_rs && obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  { 
+    uint8_t *pkt;
+    uint32_t pkt_len;
+    
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rq.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rq);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
+    
+    ERR (fill_hdr_ipmi_kcs (dev->lun, 
+			    dev->net_fn, 
+			    dev->io.inband.rq.obj_hdr) == 0);
+    ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, 
+				obj_cmd_rq, 
+				tmpl_cmd_rq, 
+				pkt, 
+				pkt_len) > 0);
+    
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, pkt, pkt_len) != -1);
+  }
+  
+  { 
+    uint8_t *pkt;
+    uint32_t pkt_len;
+    uint32_t bytes_read = 0;
+    
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rs);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
+    
+    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, pkt, &bytes_read) != -1);
+    if (bytes_read != pkt_len)
+      {
+	int i;
+	
+	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	fprintf (stderr, 
+		 "received packet size: %d\n" 
+		 "expected packet size: %d\n", 
+		 bytes_read, 
+		 pkt_len);
+	fprintf (stderr, "packet data:\n");
+	for (i = 0; i < bytes_read; i++)
+	  fprintf (stderr, "%02X ", pkt[i]);
+	fprintf (stderr, "\n");
+	
+	return (-1);
+      }
+    ERR (unassemble_ipmi_kcs_pkt (pkt, 
+				  pkt_len, 
+				  dev->io.inband.rs.obj_hdr, 
+				  obj_cmd_rs, 
+				  tmpl_cmd_rs) != -1);
+  }
+  
+  return (0);
+}
+
+int8_t 
+ipmi_ssif_cmd_raw2 (ipmi_device_t *dev, 
+		    uint8_t *buf_rq, 
+		    size_t buf_rq_len, 
+		    uint8_t *buf_rs, 
+		    size_t *buf_rs_len)
+{
+  if (!(dev && buf_rq && buf_rq_len > 0 
+        && buf_rs && buf_rs_len && *buf_rs_len > 0))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  { /* Request Block */
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rq_len, bytes_len;
+    
+    obj_hdr_rq_len = fiid_obj_len_bytes (*dev->io.inband.rq.tmpl_hdr_ptr);
+    ERR (obj_hdr_rq_len > 0);
+    
+    bytes_len = obj_hdr_rq_len + buf_rq_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+    
+    /*     ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1); */
+    memcpy(bytes, dev->io.inband.rq.obj_hdr, obj_hdr_rq_len);
+    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
+    
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, bytes, bytes_len) != -1);
+  }
+  
+  { 
+    /* Response Block */
+    uint8_t *bytes = NULL; 
+    uint32_t obj_hdr_rs_len, bytes_len;
+    uint32_t bytes_read = 0;
+    
+    obj_hdr_rs_len = fiid_obj_len_bytes (*dev->io.inband.rs.tmpl_hdr_ptr);
+    ERR (obj_hdr_rs_len != -1);
+    
+    bytes_len = obj_hdr_rs_len + *buf_rs_len;
+    bytes = alloca (bytes_len);
+    memset (bytes, 0, bytes_len);
+    ERR (bytes);
+    
+    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, bytes, &bytes_read) != -1);
+    if (bytes_read != bytes_len)
+      {
+	int i;
+	
+	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	fprintf (stderr, 
+		 "received packet size: %d\n" 
+		 "expected packet size: %d\n", 
+		 bytes_read, 
+		 bytes_len);
+	fprintf (stderr, "packet data:\n");
+	for (i = 0; i < bytes_read; i++)
+	  fprintf (stderr, "%02X ", bytes[i]);
+	fprintf (stderr, "\n");
+      }
+    if (bytes_read > obj_hdr_rs_len)
+      {
+        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
+        if (rs_len <= *buf_rs_len)
+          *buf_rs_len = rs_len;
+        
+        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
+      }
+    else
+      /* achu: the cmd and comp_code should always be returned, so
+       * hopefully we never ever reach this point */
+      *buf_rs_len = 0;
+  }
+  
+  return (0);
+}
+

@@ -79,7 +79,7 @@ struct ipmi_locate_info
   union {
     uint64_t bmc_iobase_addr;
     uint64_t bmc_membase_addr;
-    uint8_t  bmc_smbus_slave_addr:7;
+    uint8_t  bmc_smbus_slave_addr:7; /* ipmb_addr */
   } base_addr;
   uint8_t reg_space; /* Register spacing in bytes */
 };

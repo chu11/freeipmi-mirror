@@ -92,6 +92,7 @@ struct ipmi_device
       ipmi_locate_info_t locate_info;
       char               *dev_name;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
+      int                ipmb_addr;
       int                mutex_semid;
       
       struct 
