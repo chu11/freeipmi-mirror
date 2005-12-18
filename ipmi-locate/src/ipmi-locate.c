@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.1 2005-12-17 21:28:09 balamurugan Exp $ 
+   $Id: ipmi-locate.c,v 1.2 2005-12-18 00:10:10 balamurugan Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -101,6 +101,8 @@ smbios_probe_display ()
   extern int errno;
   ipmi_locate_info_t *pinfo;
   
+  pinfo = (ipmi_locate_info_t *) alloca (sizeof (ipmi_locate_info_t));
+  
   printf ("Probing KCS device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
   if (smbios_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
@@ -158,6 +160,8 @@ acpi_probe_display ()
   extern int errno;
   ipmi_locate_info_t *pinfo;
   
+  pinfo = (ipmi_locate_info_t *) alloca (sizeof (ipmi_locate_info_t));
+  
   printf ("Probing KCS device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
   if (acpi_spmi_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
@@ -214,6 +218,8 @@ pci_probe_display ()
 {
   extern int errno;
   ipmi_locate_info_t *pinfo;
+  
+  pinfo = (ipmi_locate_info_t *) alloca (sizeof (ipmi_locate_info_t));
   
   printf ("Probing KCS device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));

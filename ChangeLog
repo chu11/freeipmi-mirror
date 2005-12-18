@@ -1,5 +1,10 @@
 2005-12-17  A Balamurugan  <bala@zresearch.com>
 
+	* ipmi-locate/src/ipmi-locate.c: Fixed a bug which uses
+	unallocated memory.
+
+2005-12-17  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-locate/ipmi-locate.8: Added man page.
 
 2005-12-17  A Balamurugan  <bala@zresearch.com>
