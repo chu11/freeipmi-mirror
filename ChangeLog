@@ -1,3 +1,11 @@
+2005-12-18  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd_raw2):
+	Rewritten.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd_raw2): like
+	wise.
+
 2005-12-17  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-locate/src/ipmi-locate.c: Fixed a bug which uses

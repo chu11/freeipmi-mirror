@@ -781,51 +781,20 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
       errno = EINVAL;
       return (-1);
     }
-
-  { /* Request Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rq_len, bytes_len;
-    
-    obj_hdr_rq_len = fiid_obj_len_bytes (*dev->io.inband.rq.tmpl_hdr_ptr);
-    ERR (obj_hdr_rq_len > 0);
-
-    bytes_len = obj_hdr_rq_len + buf_rq_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-
-/*     ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1); */
-    memcpy(bytes, dev->io.inband.rq.obj_hdr, obj_hdr_rq_len);
-    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
-
-    ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
+  
+  { 
+    /* Request Block */
+    ERR (ipmi_kcs_write (dev, buf_rq, buf_rq_len) != -1);
   }
-  { /* Response Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
+  
+  { 
+    /* Response Block */
+    uint32_t bytes_read = 0;
     
-    obj_hdr_rs_len = fiid_obj_len_bytes (*dev->io.inband.rs.tmpl_hdr_ptr);
-    ERR (obj_hdr_rs_len != -1);
-
-    bytes_len = obj_hdr_rs_len + *buf_rs_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-    
-    ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
-    if (bytes_read > obj_hdr_rs_len)
-      {
-        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
-        if (rs_len <= *buf_rs_len)
-          *buf_rs_len = rs_len;
-        
-        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
-      }
-    else
-      /* achu: the cmd and comp_code should always be returned, so
-       * hopefully we never ever reach this point */
-      *buf_rs_len = 0;
+    ERR ((bytes_read = ipmi_kcs_read (dev, buf_rs, *buf_rs_len)) != -1);
+    *buf_rs_len = bytes_read;
   }
+  
   return (0);
 }
 
