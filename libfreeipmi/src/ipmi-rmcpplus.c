@@ -191,8 +191,7 @@ fill_rmcpplus_hdr_session (u_int8_t auth_type,
                            u_int32_t session_seq_num, 
                            fiid_obj_t obj_hdr)
 {
-  if (!IPMI_2_0_SESSION_AUTH_TYPE_VALID(auth_type)
-      || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
       || !IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
       || !IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
       || ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
@@ -209,7 +208,7 @@ fill_rmcpplus_hdr_session (u_int8_t auth_type,
 
   FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_rmcpplus_hdr_session);
 
-  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "auth_type", auth_type);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "auth_type", IPMI_SESSION_AUTH_TYPE_RMCPPLUS);
   FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type", payload_type);
   FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type.authenticated", payload_authenticated);
   FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type.encrypted", payload_encrypted);

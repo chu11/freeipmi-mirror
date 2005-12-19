@@ -181,7 +181,7 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_2;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_3;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
 
-int8_t fill_rmcpplus_hdr_session (u_int8_t auth_type, u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_obj_t obj_hdr);
+int8_t fill_rmcpplus_hdr_session (u_int8_t payload_type, u_int8_t payload_authenticated, u_int8_t payload_encrypted, u_int32_t oem_iana, u_int16_t oem_payload_id, u_int32_t session_id, u_int32_t session_seq_num, fiid_obj_t obj_hdr);
 
 int8_t fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr, u_int8_t *auth_code_data, u_int32_t auth_code_data_len, fiid_obj_t obj_trlr);
 
