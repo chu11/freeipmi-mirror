@@ -90,6 +90,15 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-19  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_trlr_session_auth_code): Fixed bug.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c
+	(check_rmcpplus_session_trlr): New function.
+	
 2005-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,

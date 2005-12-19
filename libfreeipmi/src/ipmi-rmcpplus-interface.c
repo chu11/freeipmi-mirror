@@ -672,15 +672,6 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
 
           ERR_EXIT (crypt_digest_len == expected_digest_len);
          
-          if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && (integrity_key_len < crypt_digest_len))
-            {
-              errno = EINVAL;
-              return (-1);
-            }
-
-          if (integrity_key_len > crypt_digest_len)
-            integrity_key_len = crypt_digest_len;
-
           memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LEN);
           
           hash_data_len = 0;

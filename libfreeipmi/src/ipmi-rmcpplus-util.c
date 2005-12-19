@@ -1250,3 +1250,103 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
 
   return (memcmp(digest, integrity_check_value, compare_len) ? 0 : 1);
 }
+
+int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
+                                   u_int8_t *pkt,
+                                   u_int32_t pkt_len,
+                                   u_int8_t *integrity_key,
+                                   u_int32_t integrity_key_len,
+                                   u_int8_t *auth_code_data,
+                                   u_int32_t auth_code_data_len)
+{
+  int32_t rmcp_header_len;
+  int hash_algorithm, hash_flags, crypt_digest_len;
+  unsigned int expected_digest_len, hash_data_len, integrity_digest_len;
+  u_int8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
+  u_int8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
+
+  if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+      || !pkt
+      || !pkt_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+    return (1);
+
+  ERR_EXIT (!((rmcp_header_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
+
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+    {
+      hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+      expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
+    }
+  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+    {
+      hash_algorithm = IPMI_CRYPT_HASH_MD5;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+      expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
+    }
+  else
+    {
+      hash_algorithm = IPMI_CRYPT_HASH_MD5;
+      hash_flags = 0;
+      expected_digest_len = IPMI_MD5_DIGEST_LEN;
+    }
+
+  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
+    return (-1);
+  
+  ERR_EXIT (crypt_digest_len == expected_digest_len);
+
+  /* Packet is too short, packet must be bogus :-) */
+  if (pkt_len <= (rmcp_header_len + crypt_digest_len))
+    return (0);
+
+  memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LEN);
+
+  hash_data_len = 0;
+  
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_code_data && auth_code_data_len)
+    {
+      memcpy(hash_data + hash_data_len,
+             auth_code_data,
+             auth_code_data_len);
+      hash_data_len += auth_code_data_len;
+    }
+
+  memcpy(hash_data + hash_data_len, pkt + rmcp_header_len, pkt_len - rmcp_header_len - crypt_digest_len);
+  hash_data_len += pkt_len - rmcp_header_len - crypt_digest_len;
+
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_code_data && auth_code_data_len)
+    {
+      memcpy(hash_data + hash_data_len,
+             auth_code_data,
+             auth_code_data_len);
+      hash_data_len += auth_code_data_len;
+    }
+
+  if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+                                              hash_flags,
+                                              integrity_key,
+                                              integrity_key_len,
+                                              hash_data,
+                                              hash_data_len,
+                                              integrity_digest,
+                                              IPMI_MAX_PAYLOAD_LEN)) < 0)
+    {
+      ipmi_debug("ipmi_crypt_hash: %s", strerror(errno));
+      return (-1);
+    }
+
+  if (integrity_digest_len != crypt_digest_len)
+    {
+      ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
+      return (-1);
+    }
+
+  return (memcmp(integrity_digest, pkt + (pkt_len - crypt_digest_len), crypt_digest_len) ? 0 : 1);
+}
