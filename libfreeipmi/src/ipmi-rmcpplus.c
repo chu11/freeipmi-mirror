@@ -181,8 +181,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
   };
 
 int8_t
-fill_rmcpplus_hdr_session (fiid_template_t tmpl_session, 
-                           u_int8_t auth_type, 
+fill_rmcpplus_hdr_session (u_int8_t auth_type, 
                            u_int8_t payload_type, 
                            u_int8_t payload_authenticated, 
                            u_int8_t payload_encrypted, 
@@ -196,7 +195,6 @@ fill_rmcpplus_hdr_session (fiid_template_t tmpl_session,
       || !IPMI_PAYLOAD_TYPE_VALID(payload_type)
       || !IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
       || !IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
-      || !(tmpl_session && obj_hdr)
       || ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
            || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
@@ -209,19 +207,19 @@ fill_rmcpplus_hdr_session (fiid_template_t tmpl_session,
       return (-1);
     }
 
-  FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_session);
+  FIID_OBJ_MEMSET (obj_hdr, '\0', tmpl_rmcpplus_hdr_session);
 
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "auth_type", auth_type);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type", payload_type);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.authenticated", payload_authenticated);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "payload_type.encrypted", payload_encrypted);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "auth_type", auth_type);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type", payload_type);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type.authenticated", payload_authenticated);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "payload_type.encrypted", payload_encrypted);
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
-      FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_iana", oem_iana);
-      FIID_OBJ_SET (obj_hdr, tmpl_session, "oem_payload_id", oem_payload_id);
+      FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "oem_iana", oem_iana);
+      FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "oem_payload_id", oem_payload_id);
     }
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "session_id", session_id);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, "session_seq_num", session_seq_num);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "session_id", session_id);
+  FIID_OBJ_SET (obj_hdr, tmpl_rmcpplus_hdr_session, "session_seq_num", session_seq_num);
 
   /* ipmi_payload_len will be calculated during packet assembly */
 

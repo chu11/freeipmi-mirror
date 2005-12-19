@@ -98,7 +98,11 @@
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
 	libfreeipmi/src/ipmi-rmcpplus-util.c
 	(check_rmcpplus_session_trlr): New function.
-	
+
+	* libfreeipmi/src/ipmi-rmcpplus.h,
+	libfreeipmi/src/ipmi-rmcpplus.c
+	(fill_rmcpplus_hdr_session): Modify interface.
+
 2005-12-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
