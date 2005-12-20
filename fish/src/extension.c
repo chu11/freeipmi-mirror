@@ -65,7 +65,9 @@ install_new_hooks (void)
      can (define name (make-hook n_args))
    */
 
-  ex_fish_ready_hook = scm_create_hook ("fi-fish-ready-hook", 0);
+  ex_fish_ready_hook = scm_permanent_object (scm_make_hook (SCM_INUM0));
+  scm_c_define ("fi-fish-ready-hook", ex_fish_ready_hook); 
+
   /* hook: fi-fish-ready-hook
      is called from
      file: fish.c

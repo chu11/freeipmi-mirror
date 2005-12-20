@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.4.2.6 2005-11-18 22:09:02 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.4.2.7 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -326,6 +326,35 @@ _setup(void)
   srand(time(NULL));
 }
 
+static unsigned int
+_get_rand(void)
+{
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+  uint32_t randval;
+  int fd, ret = -1; 
+#if HAVE_DEVURANDOM
+  char *device = DEVURANDOM;
+#else 
+  char *device = DEVRANDOM;
+#endif
+  
+  if ((fd = open(device, O_RDONLY)) < 0)
+    goto cleanup;
+  
+  if ((ret = read(fd, (char *)&randval, sizeof(uint32_t))) < 0)
+    goto cleanup;
+  
+ cleanup:
+  close(fd);
+  if (ret != sizeof(uint32_t))
+    return rand();
+  
+  return (unsigned int)randval;
+#else
+  return (unsigned int)rand();
+#endif
+}
+
 static void 
 _main_loop(Ipmi_Ping_CreatePacket _create, 
            Ipmi_Ping_ParsePacket _parse, 
@@ -359,7 +388,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
   while (_count == -1 || (_pkt_sent < _count)) 
     {
       int rv, len, received = 0;
-      u_int8_t buffer[IPMI_PING_MAX_PKT_LEN];
+      uint8_t buffer[IPMI_PING_MAX_PKT_LEN];
       time_t now;
 
       /* wait if necessary */

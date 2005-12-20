@@ -22,13 +22,13 @@ static int dev_opened = false;
 
 static sel_descriptor_t seld;
 
-u_int8_t channel_info_list_initialized = false;
+uint8_t channel_info_list_initialized = false;
 channel_info channel_info_list[8];
 
 /* achu: caching to make bmc-config work more quickly */
-static u_int8_t lan_channel_number_initialized = false;
+static uint8_t lan_channel_number_initialized = false;
 static int8_t lan_channel_number;
-static u_int8_t serial_channel_number_initialized = false;
+static uint8_t serial_channel_number_initialized = false;
 static int8_t serial_channel_number;
 
 static unsigned int rmcp_msg_tag = 0;
@@ -123,23 +123,26 @@ fi_ipmi_close ()
 static char *
 get_ipmi_host_ip_address ()
 {
-  /* if IN-BAND */
-  return strdup ("127.0.0.1");
+  struct arguments *args = NULL;
   
-  /* if OUT-OF-BAND */
-  {
-    char hostname[] = {"localhost"};
-    struct hostent *hostinfo = NULL;
-    struct in_addr *in_addr = NULL;
-    
-    hostinfo = gethostbyname (hostname);
-    if (hostinfo == NULL)
-      return NULL;
-    
-    in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
-    
-    return strdup (inet_ntoa (*in_addr));
-  }
+  args = fi_get_arguments ();
+  if (args->host != NULL) /* OUT-OF-BAND */
+    {
+      struct hostent *hostinfo = NULL;
+      struct in_addr *in_addr = NULL;
+      
+      hostinfo = gethostbyname (args->host);
+      if (hostinfo == NULL)
+	return NULL;
+      
+      in_addr = (struct in_addr *) hostinfo->h_addr_list[0];
+      
+      return strdup (inet_ntoa (*in_addr));
+    }
+  else /* IN-BAND */
+    {
+      return strdup ("127.0.0.1");
+    }
 }
 
 char *
@@ -166,10 +169,10 @@ get_sdr_cache_filename ()
 channel_info *
 get_channel_info_list ()
 {
-  u_int8_t *data_rs = NULL; 
-  u_int8_t i;
-  u_int8_t ci;
-  u_int64_t val;
+  uint8_t *data_rs = NULL; 
+  uint8_t i;
+  uint8_t ci;
+  uint64_t val;
   
   if (channel_info_list_initialized)
     return (channel_info_list);
@@ -186,21 +189,21 @@ get_channel_info_list ()
 		    tmpl_get_channel_info_rs, 
 		    "actual_channel_number", 
 		    &val);
-      channel_info_list[ci].channel_number = (u_int8_t) val;
+      channel_info_list[ci].channel_number = (uint8_t) val;
       
       fiid_obj_get (data_rs, 
 		    tmpl_get_channel_info_rs, 
 		    "channel_medium_type", 
 		    &val);
       channel_info_list[ci].medium_type = 
-	channel_info_list[ci].actual_medium_type = (u_int8_t) val;
+	channel_info_list[ci].actual_medium_type = (uint8_t) val;
       
       fiid_obj_get (data_rs, 
 		    tmpl_get_channel_info_rs, 
 		    "channel_protocol_type", 
 		    &val);
       channel_info_list[ci].protocol_type = 
-	channel_info_list[ci].actual_protocol_type = (u_int8_t) val;
+	channel_info_list[ci].actual_protocol_type = (uint8_t) val;
       
       if (channel_info_list[ci].actual_medium_type >= 0x0D && 
 	  channel_info_list[ci].actual_medium_type <= 0x5F)
@@ -251,13 +254,13 @@ get_serial_channel_number ()
   return serial_channel_number;
 }
 
-u_int8_t 
+uint8_t 
 get_lan_channel_number_known ()
 {
   return 7;
 }
 
-u_int8_t 
+uint8_t 
 get_serial_channel_number_known ()
 {
   return 1;
@@ -267,7 +270,7 @@ static int
 display_channel_info ()
 {
   channel_info *channel_list;
-  u_int8_t i;
+  uint8_t i;
   
   channel_list = get_channel_info_list ();
   
@@ -367,7 +370,7 @@ int
 display_get_dev_id ()
 {
   fiid_obj_t cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
   if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
@@ -396,7 +399,7 @@ display_get_dev_id ()
     fprintf (stdout, "                   [SDR Support]\n");
   
   {
-    u_int64_t maj, min;
+    uint64_t maj, min;
     FIID_OBJ_GET (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
 		  "firmware_rev1.major_rev", 
@@ -425,7 +428,7 @@ display_get_dev_id ()
     }
   
   {
-    u_int64_t ms, ls;
+    uint64_t ms, ls;
     FIID_OBJ_GET (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
 		  "ipmi_ver.ms_bits", 
@@ -497,7 +500,7 @@ display_get_dev_id ()
     fprintf (stdout, "                   [Chassis Device]\n");
   
   {
-    u_int64_t manf_id, prod_id;
+    uint64_t manf_id, prod_id;
     
     FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
     fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manf_id);
@@ -516,7 +519,7 @@ display_get_dev_id ()
 	  case IPMI_PROD_ID_SR870BN4:
 	  default:
 	    {
-	      u_int64_t bc_maj, bc_min, pia_maj, pia_min;
+	      uint64_t bc_maj, bc_min, pia_maj, pia_min;
 	      FIID_OBJ_GET (cmd_rs,
 			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
 			    "aux_firmware_rev_info.boot_code.major",

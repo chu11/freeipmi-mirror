@@ -28,19 +28,19 @@ double ipmi_sensor_decode_value_old (char r_exponent,
 				     int b, 
 				     int linear, 
 				     int is_signed, 
-				     u_int64_t raw_data);
+				     uint64_t raw_data);
 double ipmi_sensor_decode_value (char r_exponent, 
 				 char b_exponent, 
 				 short m, 
 				 short b, 
 				 char linear, 
-				 u_int8_t is_signed, 
-				 u_int8_t raw_data);
-void ipmi_sensor_get_decode_params_old (u_int8_t *sensor_record, 
+				 uint8_t is_signed, 
+				 uint8_t raw_data);
+void ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
 				    int *is_signed, char *r_exponent, char *b_exponent, 
-				    u_int64_t *linear, int *b, int *m);
-void ipmi_sensor_get_decode_params (u_int8_t *sensor_record, 
-				    u_int8_t *is_signed, 
+				    uint64_t *linear, int *b, int *m);
+void ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
+				    uint8_t *is_signed, 
 				    char *r_exponent, 
 				    char *b_exponent, 
 				    char *linear, 

@@ -774,7 +774,7 @@ const char *const *const ipmi_event_reading_type_code_desc_ptr[] =
 
 
 int 
-ipmi_sensor_classify (u_int8_t event_reading_type_code)
+ipmi_sensor_classify (uint8_t event_reading_type_code)
 {
   if (event_reading_type_code == 0x01)
     return IPMI_SENSOR_CLASS_THRESHOLD;
@@ -818,7 +818,7 @@ ipmi_sensor_threshold_health_check (double sensor_reading,
 				    double normal_max, 
 				    fiid_obj_t data_rs)
 {
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_get (data_rs, 
 		tmpl_get_sensor_threshold_reading_rs, 
@@ -884,7 +884,7 @@ ipmi_sensor_threshold_health_check (double sensor_reading,
 int 
 ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
 {
-  u_int64_t val;
+  uint64_t val;
   char key[65];
   int i;
   struct ipmi_discrete_desc *discrete_sensor_desc;
@@ -896,8 +896,8 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
     {
     case IPMI_SENSOR_TYPE_PROCESSOR:
       {
-	u_int8_t processor_present_flag = 0;
-	u_int8_t terminator_present_flag = 0;
+	uint8_t processor_present_flag = 0;
+	uint8_t terminator_present_flag = 0;
 	
 	for (i = 0; discrete_sensor_desc[i].message != NULL; i++)
 	  {
@@ -940,8 +940,8 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
       }
     case IPMI_SENSOR_TYPE_SLOT_CONNECTOR:
       {
-	u_int8_t device_installed_flag = 0;
-	u_int8_t power_off_flag = 0;
+	uint8_t device_installed_flag = 0;
+	uint8_t power_off_flag = 0;
 	
 	for (i = 0; discrete_sensor_desc[i].message != NULL; i++)
 	  {

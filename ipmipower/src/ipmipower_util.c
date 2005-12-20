@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.1.4.3 2005-11-11 21:35:37 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.1.4.4 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,7 +35,7 @@
 #endif
 #include <errno.h>
 #include <assert.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
 #if HAVE_FCNTL_H
@@ -64,7 +64,7 @@
 #define DEVURANDOM              "/dev/urandom"
 #define DEVRANDOM               "/dev/random"
 
-u_int32_t
+uint32_t
 get_rand(void)
 {
   u_int32_t val;

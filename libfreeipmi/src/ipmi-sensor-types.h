@@ -287,7 +287,7 @@ extern const char *const ipmi_event_reading_type_code_11_desc[];
 extern const char *const *const ipmi_event_reading_type_code_desc_ptr[];
 
 
-int ipmi_sensor_classify (u_int8_t event_reading_type_code);
+int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 int ipmi_is_oem_reserved_sensor_type (int sensor_type);
 

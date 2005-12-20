@@ -114,9 +114,9 @@ _output_str(int fd, char *prefix, char *str)
 } 
 
 int8_t
-_output_byte_array(int fd, char *prefix, u_int8_t *buf, u_int32_t buf_len)
+_output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 {
-  u_int32_t count = 0;
+  uint32_t count = 0;
 
   if (!buf || !buf_len)
     return 0;
@@ -140,7 +140,7 @@ int8_t
 fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl)
 {
   int i;
-  u_int64_t val=0;
+  uint64_t val=0;
   char prefixbuf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *prefix_ptr;
 
@@ -161,7 +161,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
       if (tmpl[i].len <= 64)
 	{
 	  FIID_OBJ_GET (obj, tmpl, (char *) tmpl[i].key, &val);	
-	  _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix_ptr, (u_int64_t) val, tmpl[i].key, tmpl[i].len));
+	  _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix_ptr, (uint64_t) val, tmpl[i].key, tmpl[i].len));
         } 
       else
         {
@@ -192,11 +192,11 @@ fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
 }
 
 int8_t
-fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
-  u_int32_t indx = 0;
+  uint32_t indx = 0;
   int32_t obj_cmd_len, obj_msg_trlr_len;
-  u_int8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
+  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefixbuf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *prefix_ptr;
   char *rmcp_hdr = 
@@ -206,7 +206,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
     "IPMI Session Header:\n"
     "--------------------";
   char *msg_hdr =
-    "IPMI Message header:\n"
+    "IPMI Message Header:\n"
     "--------------------";
   char *cmd_hdr =
     "IPMI Command Data:\n"
@@ -258,8 +258,8 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
     }
   else 
     {
-      u_int8_t auth_type;
-      u_int32_t auth_type_offset;
+      uint8_t auth_type;
+      uint32_t auth_type_offset;
 
       auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_session, "auth_type");
       auth_type = pkt[auth_type_offset];
@@ -344,17 +344,17 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt
   if (_output_str(fd, prefix_ptr, extra_hdr) < 0)
     return (-1);
   
-  if (_output_byte_array(fd, prefix_ptr, (u_int8_t *)pkt+indx, (pkt_len - indx)) < 0)
+  if (_output_byte_array(fd, prefix_ptr, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
     return (-1);
 
   return 0;
 }
 
 int8_t 
-fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd)
+fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
-  u_int32_t indx = 0;
-  u_int8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
+  uint32_t indx = 0;
+  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefixbuf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *prefix_ptr;
   char *rmcp_hdr = 
@@ -416,14 +416,14 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, u_int8_t *pkt, u_int32_t pk
   if (_output_str(fd, prefix_ptr, extra_hdr) < 0)
     return (-1);
   
-  if (_output_byte_array(fd, prefix_ptr, (u_int8_t *)pkt+indx, (pkt_len - indx)) < 0)
+  if (_output_byte_array(fd, prefix_ptr, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
     return (-1);
 
   return 0;
 }
 
-u_int8_t
-ipmi_kcs_print_state (int fd, u_int8_t state)
+uint8_t
+ipmi_kcs_print_state (int fd, uint8_t state)
 {
     /* we assume we have already ioperm'd the space */
     _dprintf (fd, "Current KCS state: 0x%x : ", state);
@@ -455,7 +455,7 @@ ipmi_kcs_print_state (int fd, u_int8_t state)
 }
 
 int
-ipmi_smic_print_flags (int fd, u_int8_t state)
+ipmi_smic_print_flags (int fd, uint8_t state)
 {
     _dprintf (fd, "Current SMIC flags: %#x : ", state);
     if(state & IPMI_SMIC_RX_DATA_RDY) 

@@ -126,7 +126,7 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
 
 int8_t 
 fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
-                                   u_int8_t power_restore_policy)
+                                   uint8_t power_restore_policy)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_power_restore_policy_rq, 
@@ -142,13 +142,13 @@ fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_power_restore_policy (u_int8_t power_restore_policy, 
+ipmi_set_power_restore_policy (uint8_t power_restore_policy, 
 			       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_power_restore_policy_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_power_restore_policy_rq);
   fill_cmd_set_power_restore_policy (obj_data_rq, power_restore_policy);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_CHASSIS_RQ, 
 			 obj_data_rq, tmpl_set_power_restore_policy_rq, 
@@ -177,7 +177,7 @@ ipmi_get_chassis_status (fiid_obj_t obj_data_rs)
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_cmd_get_chassis_status_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_cmd_get_chassis_status_rq);
   fill_cmd_get_chassis_status (obj_data_rq);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_CHASSIS_RQ, 
 			 obj_data_rq, tmpl_cmd_get_chassis_status_rq, 
@@ -187,7 +187,7 @@ ipmi_get_chassis_status (fiid_obj_t obj_data_rs)
 }
 
 int8_t
-fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd)
+fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
   if (chassis_ctrl > IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN
       || obj_cmd == NULL)
@@ -205,7 +205,7 @@ fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd)
 
 int8_t 
 ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
-				    u_int8_t power_restore_policy, 
+				    uint8_t power_restore_policy, 
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -258,8 +258,8 @@ ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
 
 int8_t
 fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                           u_int8_t identify_interval, 
-                           u_int8_t force_identify_flag,
+                           uint8_t identify_interval, 
+                           uint8_t force_identify_flag,
                            fiid_obj_t obj_cmd)
 {
   if (!tmpl_identify_cmd

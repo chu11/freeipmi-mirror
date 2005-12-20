@@ -71,8 +71,8 @@ fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs =
 
 int8_t 
 fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq, 
-				  u_int8_t channel_number, 
-				  u_int8_t sol_payload)
+				  uint8_t channel_number, 
+				  uint8_t sol_payload)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_sol_conf_param_sol_enable_rq, 
@@ -98,15 +98,15 @@ fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base, 
-				  u_int8_t channel_number, 
-				  u_int8_t sol_payload, 
+ipmi_sol_conf_sol_enable_disable (uint16_t sms_io_base, 
+				  uint8_t channel_number, 
+				  uint8_t sol_payload, 
 				  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_sol_conf_param_sol_enable_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_sol_conf_param_sol_enable_rq);
   fill_sol_conf_sol_enable_disable (obj_data_rq, 
 				    channel_number, 
 				    sol_payload);
@@ -118,8 +118,8 @@ ipmi_sol_conf_sol_enable_disable (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_sol_conf_sol_enable (u_int16_t sms_io_base, 
-			  u_int8_t channel_number, 
+ipmi_sol_conf_sol_enable (uint16_t sms_io_base, 
+			  uint8_t channel_number, 
 			  fiid_obj_t obj_data_rs)
 {
   return ipmi_sol_conf_sol_enable_disable (sms_io_base, 
@@ -129,8 +129,8 @@ ipmi_sol_conf_sol_enable (u_int16_t sms_io_base,
 }
 
 int8_t 
-ipmi_sol_conf_sol_disable (u_int16_t sms_io_base, 
-			   u_int8_t channel_number, 
+ipmi_sol_conf_sol_disable (uint16_t sms_io_base, 
+			   uint8_t channel_number, 
 			   fiid_obj_t obj_data_rs)
 {
   return ipmi_sol_conf_sol_enable_disable (sms_io_base, 
@@ -141,11 +141,11 @@ ipmi_sol_conf_sol_disable (u_int16_t sms_io_base,
 
 int8_t 
 fill_get_sol_conf_param (fiid_obj_t obj_data_rq, 
-			 u_int8_t parameter_selector, 
-			 u_int8_t channel_number,
-			 u_int8_t parameter_type,
-			 u_int8_t set_selector,
-			 u_int8_t block_selector)
+			 uint8_t parameter_selector, 
+			 uint8_t channel_number,
+			 uint8_t parameter_type,
+			 uint8_t set_selector,
+			 uint8_t block_selector)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
@@ -181,17 +181,17 @@ fill_get_sol_conf_param (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
-			      u_int8_t channel_number,
-			      u_int8_t parameter_type,
-			      u_int8_t set_selector,
-			      u_int8_t block_selector,
+ipmi_sol_conf_get_sol_enable (uint16_t sms_io_base,
+			      uint8_t channel_number,
+			      uint8_t parameter_type,
+			      uint8_t set_selector,
+			      uint8_t block_selector,
 			      fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_sol_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_sol_conf_param_rq);
   fill_get_sol_conf_param (obj_data_rq, 
 			   IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
 			   channel_number, 
@@ -207,8 +207,8 @@ ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base,
 
 int8_t 
 ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number, 
-				       u_int8_t sol_payload, 
+				       uint8_t channel_number, 
+				       uint8_t sol_payload, 
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -234,7 +234,7 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number, 
+			       uint8_t channel_number, 
 			       fiid_obj_t obj_cmd_rs)
 {
   return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
@@ -245,7 +245,7 @@ ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
-				u_int8_t channel_number, 
+				uint8_t channel_number, 
 				fiid_obj_t obj_cmd_rs)
 {
   return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
@@ -256,10 +256,10 @@ ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
-				   u_int8_t channel_number,
-				   u_int8_t parameter_type,
-				   u_int8_t set_selector,
-				   u_int8_t block_selector,
+				   uint8_t channel_number,
+				   uint8_t parameter_type,
+				   uint8_t set_selector,
+				   uint8_t block_selector,
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

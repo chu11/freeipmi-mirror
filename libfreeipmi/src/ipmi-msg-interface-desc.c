@@ -33,7 +33,7 @@ const char *ipmi_system_software_type_desc[] =
   };
 
 int 
-ipmi_get_system_software_type (u_int8_t system_software_id)
+ipmi_get_system_software_type (uint8_t system_software_id)
 {
   /* To avoid "warning: comparison is always true due to limited range of data type" */
   if ((system_software_id + 1) >= 1 && system_software_id <= 0x0F)

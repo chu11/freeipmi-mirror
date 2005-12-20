@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.4 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-md5.c,v 1.4.2.1 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,7 +26,7 @@
 
 #include "freeipmi.h"
 
-static u_int8_t padding[64] = 
+static uint8_t padding[64] = 
   {
     0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -44,10 +44,10 @@ static u_int8_t padding[64] =
   for (i = 1; i <= 64; i++) 
     {
       double n = 4294967296 * ((sin(i) > 0) ? sin(i) : (sin(i) * -1));
-      printf("0x%08X\n", (u_int32_t)n);
+      printf("0x%08X\n", (uint32_t)n);
     }
 */
-static u_int32_t T[64] = 
+static uint32_t T[64] = 
   {
     0xD76AA478, 0xE8C7B756, 0x242070DB, 0xC1BDCEEE,
     0xF57C0FAF, 0x4787C62A, 0xA8304613, 0xFD469501,
@@ -136,18 +136,18 @@ ipmi_md5_init(ipmi_md5_t *ctx)
 static void 
 _ipmi_md5_update_digest(ipmi_md5_t *ctx) 
 {
-  u_int32_t AA, BB, CC, DD;
-  u_int32_t X[IPMI_MD5_BLOCK_WORDS_LEN];
+  uint32_t AA, BB, CC, DD;
+  uint32_t X[IPMI_MD5_BLOCK_WORDS_LEN];
   int j;
   
   /* Note there are no endian issues here, compiler is required to
    * handle shifts correctly
    */
   for (j = 0; j < IPMI_MD5_BLOCK_WORDS_LEN; j++)
-    X[j] = ((u_int32_t)M[j*4]  
-            | ((u_int32_t)M[j*4+1] << 8) 
-            | ((u_int32_t)M[j*4+2] << 16) 
-            | ((u_int32_t)M[j*4+3] << 24)); 
+    X[j] = ((uint32_t)M[j*4]  
+            | ((uint32_t)M[j*4+1] << 8) 
+            | ((uint32_t)M[j*4+2] << 16) 
+            | ((uint32_t)M[j*4+3] << 24)); 
   
   AA = A;
   BB = B;
@@ -236,7 +236,7 @@ static void
 _ipmi_md5_update_count(ipmi_md5_t *ctx, unsigned int buflen) 
 {
 
-  /* Use two u_int32_t integers to hold our 64 bit count.
+  /* Use two uint32_t integers to hold our 64 bit count.
    * bit_count[1] holds the 4 lower order bytes.  bit_count[0] holds
    * the 4 higher order bytes.
    */
@@ -254,7 +254,7 @@ _ipmi_md5_update_count(ipmi_md5_t *ctx, unsigned int buflen)
 }
 
 int 
-ipmi_md5_update_data(ipmi_md5_t *ctx, u_int8_t *buf, unsigned int buflen) 
+ipmi_md5_update_data(ipmi_md5_t *ctx, uint8_t *buf, unsigned int buflen) 
 {
 
   if (ctx == NULL || ctx->magic != IPMI_MD5_MAGIC || buf == NULL) 
@@ -335,7 +335,7 @@ _ipmi_md5_append_padding_and_length(ipmi_md5_t *ctx)
 }
 
 int 
-ipmi_md5_finish(ipmi_md5_t *ctx, u_int8_t *digest, unsigned int digestlen)
+ipmi_md5_finish(ipmi_md5_t *ctx, uint8_t *digest, unsigned int digestlen)
 {
 
   if (ctx == NULL || ctx->magic != IPMI_MD5_MAGIC 

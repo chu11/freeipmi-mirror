@@ -55,13 +55,13 @@ extern fiid_template_t tmpl_clear_sel_rs;
 int8_t ipmi_kcs_get_sel_info (fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rs);
 int8_t ipmi_kcs_reserve_sel (fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_sel_entry (u_int16_t record_id, fiid_obj_t obj_data_rs);
+int8_t ipmi_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rs);
 
-int8_t ipmi_kcs_delete_sel_entry (u_int16_t reservation_id, 
-				  u_int16_t record_id, 
+int8_t ipmi_kcs_delete_sel_entry (uint16_t reservation_id, 
+				  uint16_t record_id, 
 				  fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_clear_sel (u_int16_t reservation_id, 
-			   u_int8_t opcode, 
+int8_t ipmi_kcs_clear_sel (uint16_t reservation_id, 
+			   uint8_t opcode, 
 			   fiid_obj_t obj_data_rs);
 
 int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
@@ -71,15 +71,15 @@ int8_t ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_reserve_sel2 (ipmi_device_t *dev, 
 			      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev, 
-				u_int16_t record_id, 
+				uint16_t record_id, 
 				fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev, 
-				   u_int16_t reservation_id, 
-				   u_int16_t record_id, 
+				   uint16_t reservation_id, 
+				   uint16_t record_id, 
 				   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_clear_sel2 (ipmi_device_t *dev, 
-			    u_int16_t reservation_id, 
-			    u_int8_t opcode, 
+			    uint16_t reservation_id, 
+			    uint8_t opcode, 
 			    fiid_obj_t obj_cmd_rs);
 
 

@@ -410,11 +410,11 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
     {0,  ""}
   };
 
-u_int8_t 
-ipmi_acpi_table_chksum (u_int8_t *buffer, size_t len)
+uint8_t 
+ipmi_acpi_table_chksum (uint8_t *buffer, size_t len)
 {
   int i = 0;
-  u_int8_t sum = 0;
+  uint8_t sum = 0;
   
   if (buffer == NULL)
     return 0;
@@ -426,10 +426,10 @@ ipmi_acpi_table_chksum (u_int8_t *buffer, size_t len)
 }
 
 int 
-ipmi_acpi_get_rsdp (u_int64_t rsdp_window_base_addr, size_t rsdp_window_size, 
+ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size, 
 		    fiid_obj_t obj_acpi_rsdp_descriptor)
 {
-  u_int8_t *memdata = NULL;
+  uint8_t *memdata = NULL;
   int acpi_rsdp_descriptor_len;
   int i;
   
@@ -465,12 +465,12 @@ ipmi_acpi_get_rsdp (u_int64_t rsdp_window_base_addr, size_t rsdp_window_size,
 	  
 	  /* check this RSDP has RSDT/XSDT */
 	  {
-	    u_int64_t val;
-	    u_int8_t revision;
-	    u_int64_t rsdt_xsdt_address;
+	    uint64_t val;
+	    uint8_t revision;
+	    uint64_t rsdt_xsdt_address;
 	    char *rsdt_xsdt_signature;
-	    u_int8_t *rsdt_xsdt_table = NULL;
-	    u_int32_t rsdt_xsdt_table_length;
+	    uint8_t *rsdt_xsdt_table = NULL;
+	    uint32_t rsdt_xsdt_table_length;
 	    
 	    fiid_obj_get (obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor, 
 			  "revision", &val);
@@ -531,18 +531,18 @@ ipmi_acpi_get_rsdp (u_int64_t rsdp_window_base_addr, size_t rsdp_window_size,
 }
 
 int 
-ipmi_acpi_get_table (u_int64_t table_address, char *signature, 
-		     u_int8_t **acpi_table, u_int32_t *acpi_table_length)
+ipmi_acpi_get_table (uint64_t table_address, char *signature, 
+		     uint8_t **acpi_table, uint32_t *acpi_table_length)
 {
-  u_int64_t val;
+  uint64_t val;
   
-  u_int8_t table_signature_length;
+  uint8_t table_signature_length;
   char *table_signature;
   
   fiid_obj_t obj_acpi_table_hdr;
-  u_int32_t acpi_table_hdr_length;
-  u_int32_t table_length = 0;
-  u_int8_t *table;
+  uint32_t acpi_table_hdr_length;
+  uint32_t table_length = 0;
+  uint8_t *table;
   
   if (signature == NULL || acpi_table == NULL || acpi_table_length == NULL)
     return (-1);
@@ -590,27 +590,27 @@ ipmi_acpi_get_table (u_int64_t table_address, char *signature,
 int 
 ipmi_acpi_get_firmware_table (char *signature, int table_instance, 
 			      fiid_obj_t obj_acpi_table_hdr, 
-			      u_int8_t **sign_table_data, 
-			      u_int32_t *sign_table_data_length)
+			      uint8_t **sign_table_data, 
+			      uint32_t *sign_table_data_length)
 {
-  u_int64_t val;
+  uint64_t val;
   
-  u_int32_t acpi_table_hdr_length;
+  uint32_t acpi_table_hdr_length;
   
   fiid_obj_t obj_acpi_rsdp_descriptor;
-  u_int64_t rsdt_xsdt_address;
+  uint64_t rsdt_xsdt_address;
   char *rsdt_xsdt_signature;
-  u_int8_t revision;
+  uint8_t revision;
   
-  u_int8_t *rsdt_xsdt_table;
-  u_int32_t rsdt_xsdt_table_length;
-  u_int8_t *rsdt_xsdt_table_data;
-  u_int32_t rsdt_xsdt_table_data_length;
+  uint8_t *rsdt_xsdt_table;
+  uint32_t rsdt_xsdt_table_length;
+  uint8_t *rsdt_xsdt_table_data;
+  uint32_t rsdt_xsdt_table_data_length;
   int acpi_table_count;
-  u_int8_t *acpi_table;
-  u_int32_t acpi_table_length;
+  uint8_t *acpi_table;
+  uint32_t acpi_table_length;
   
-  u_int64_t table_address;
+  uint64_t table_address;
   int signature_table_count;
   int i;
   
@@ -723,17 +723,17 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
 }
 
 int 
-ipmi_acpi_get_spmi_table (u_int8_t interface_type,
+ipmi_acpi_get_spmi_table (uint8_t interface_type,
 			  fiid_obj_t obj_acpi_table_hdr,
 			  fiid_obj_t obj_acpi_spmi_table_descriptor)
 {
-  u_int64_t val;
-  u_int8_t table_interface_type;
+  uint64_t val;
+  uint8_t table_interface_type;
   
-  u_int8_t *table_data = NULL;
-  u_int32_t table_data_length = 0;
+  uint8_t *table_data = NULL;
+  uint32_t table_data_length = 0;
   
-  u_int32_t copy_length;
+  uint32_t copy_length;
   int instance;
   
   obj_acpi_table_hdr = alloca (fiid_obj_len_bytes (tmpl_acpi_table_hdr));
@@ -793,10 +793,10 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
   
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
-  if ((obj_acpi_table_hdr = fiid_obj_alloc (tmpl_acpi_table_hdr)) == NULL)
+  if ((obj_acpi_table_hdr = fiid_obj_calloc (tmpl_acpi_table_hdr)) == NULL)
     return (NULL);
 
-  if ((obj_acpi_spmi_table_descriptor = fiid_obj_alloc (tmpl_acpi_spmi_table_descriptor)) == NULL)
+  if ((obj_acpi_spmi_table_descriptor = fiid_obj_calloc (tmpl_acpi_spmi_table_descriptor)) == NULL)
     {
       ipmi_xfree (obj_acpi_table_hdr);
       return (NULL);
@@ -817,7 +817,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
        that implements previous versions of this spec. */
     /*
     {
-      u_int64_t ipmi_legacy;
+      uint64_t ipmi_legacy;
       fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "ipmi_legacy", &ipmi_legacy);
       if (ipmi_legacy != 1)
 	{
@@ -829,7 +829,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
 
   /* IPMI version */
   {
-    u_int64_t ipmi_ver_maj, ipmi_ver_min;
+    uint64_t ipmi_ver_maj, ipmi_ver_min;
     fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "specification_revision.major", &ipmi_ver_maj);
     fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "specification_revision.minor", &ipmi_ver_min);
     pinfo->ipmi_ver_major = ipmi_ver_maj;
@@ -837,7 +837,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
   }  
   /* Interface type - KCS, SMIC, SSIF, BT */
   {
-    u_int64_t interface_type;
+    uint64_t interface_type;
     fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "interface_type", &interface_type);
     switch (interface_type)
       {
@@ -862,8 +862,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
   
   /* Address space id (memory mapped, IO mapped, SMBus) and IO base address */
   {
-    u_int64_t addr_space_id;
-    u_int64_t base_addr;
+    uint64_t addr_space_id;
+    uint64_t base_addr;
 
     fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "base_address.address_space_id", &addr_space_id);
 
@@ -901,7 +901,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
   
   /* Register spacing */
   {
-    u_int64_t reg_bit_width;
+    uint64_t reg_bit_width;
     fiid_obj_get (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor, "base_address.register_bit_width", &reg_bit_width);
     pinfo->reg_space = (reg_bit_width / 8);
   }

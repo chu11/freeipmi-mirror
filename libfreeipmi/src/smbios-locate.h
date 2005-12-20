@@ -58,7 +58,7 @@
 #define IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND   0x02
 #define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
-int ipmi_smbios_reg_space (u_int8_t reg_space_boundary, u_int8_t *reg_space);
+int ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space);
 ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
 
 #endif

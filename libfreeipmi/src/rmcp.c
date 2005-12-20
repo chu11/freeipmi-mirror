@@ -60,9 +60,9 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
   };
 
 int8_t
-fill_hdr_rmcp (u_int8_t message_class, fiid_obj_t obj_hdr) 
+fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr) 
 {
-  u_int32_t hdr_len;
+  uint32_t hdr_len;
   if (obj_hdr == NULL)
     {
       errno = EINVAL;
@@ -95,7 +95,7 @@ fill_hdr_rmcp_asf (fiid_obj_t obj_hdr)
 }
 
 int8_t
-fill_cmd_asf_presence_ping(u_int8_t msg_tag, fiid_obj_t obj_cmd)
+fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
 {
   if (obj_cmd == NULL)
     {
@@ -112,9 +112,9 @@ fill_cmd_asf_presence_ping(u_int8_t msg_tag, fiid_obj_t obj_cmd)
 }
 
 int8_t
-assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, u_int8_t *pkt, u_int32_t pkt_len)
+assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, uint8_t *pkt, uint32_t pkt_len)
 {
-  u_int32_t obj_cmd_len, obj_hdr_len;
+  uint32_t obj_cmd_len, obj_hdr_len;
   
   if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
     {
@@ -138,9 +138,9 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_
 }  
 
 int8_t
-unassemble_rmcp_pkt (void *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
+unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
 {
-  u_int32_t obj_len, indx = 0;
+  uint32_t obj_len, indx = 0;
 
   if (!(pkt && tmpl_cmd))
     {
@@ -166,12 +166,12 @@ unassemble_rmcp_pkt (void *pkt, u_int32_t pkt_len, fiid_template_t tmpl_cmd, fii
 }
 
 int8_t
-ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, u_int32_t msg_tag, fiid_obj_t pong)
+ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong)
 {
   int status = 0;
   fiid_obj_t obj_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
-  u_int8_t *pkt = NULL;;
+  uint8_t *pkt = NULL;;
 
   if (!(sockfd && hostaddr && pong))
     {
@@ -180,7 +180,7 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
     }
   
   {/* asf_presence_ping request */
-    u_int32_t pkt_len = 0;
+    uint32_t pkt_len = 0;
 
     obj_hdr = alloca (fiid_obj_len_bytes (tmpl_hdr_rmcp));
     memset (obj_hdr, 0, fiid_obj_len_bytes (tmpl_hdr_rmcp));
@@ -207,7 +207,7 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
   {/* asf_presence_ping response */ 
     struct sockaddr_in from, *hostaddr_in;
     socklen_t fromlen;
-    u_int32_t  pkt_len;
+    uint32_t  pkt_len;
     pkt_len = fiid_obj_len_bytes (tmpl_hdr_rmcp) + 
       fiid_obj_len_bytes (tmpl_cmd_asf_presence_pong);
     pkt = alloca (pkt_len);
@@ -249,9 +249,9 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
 }
 
 int8_t
-ipmi_rmcp_msg_tag_chk (u_int8_t msg_tag, fiid_obj_t pong)
+ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
 {
-  u_int64_t val;
+  uint64_t val;
   if (!pong)
     return -1;
 

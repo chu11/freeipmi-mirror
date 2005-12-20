@@ -33,9 +33,9 @@
 #include "freeipmi.h"
 
 ipmi_chksum_t
-ipmi_chksum (u_int8_t *buf, u_int64_t len)
+ipmi_chksum (uint8_t *buf, uint64_t len)
 {
-  register u_int64_t i = 0;
+  register uint64_t i = 0;
   register ipmi_chksum_t chksum = 0;
  
   if (buf == NULL || len == 0)
@@ -48,7 +48,7 @@ ipmi_chksum (u_int8_t *buf, u_int64_t len)
 }
 
 int8_t
-ipmi_chksum_test (u_int8_t *buf, u_int64_t len) 
+ipmi_chksum_test (uint8_t *buf, uint64_t len) 
 {
   ipmi_chksum_t chksum_val;
   ipmi_chksum_t chksum_calc;
@@ -226,12 +226,12 @@ ipmi_open_free_udp_port (void)
 
 
 int 
-ipmi_ioremap (u_int64_t physical_addr, size_t physical_addr_len, 
+ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len, 
 	      void **virtual_addr, 
 	      void **mapped_addr, size_t *mapped_addr_len)
 {
-  u_int64_t startaddr;
-  u_int32_t pad;
+  uint64_t startaddr;
+  uint32_t pad;
   int mem_fd;
   extern int errno;
   
@@ -269,9 +269,9 @@ ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
 }
 
 int 
-ipmi_get_physical_mem_data (u_int64_t physical_address, 
+ipmi_get_physical_mem_data (uint64_t physical_address, 
 			    size_t length, 
-			    u_int8_t *data)
+			    uint8_t *data)
 {
   void *virtual_addr = NULL;
   void *mapped_addr = NULL;

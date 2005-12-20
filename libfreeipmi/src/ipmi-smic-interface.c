@@ -26,7 +26,7 @@
 static int ipmi_smic_dev_io_fd = -1;
 #endif
 
-static u_int64_t smic_poll_count;
+static uint64_t smic_poll_count;
 static unsigned long smic_sleep_usecs = IPMI_SMIC_SLEEP_USECS;
 
 fiid_template_t tmpl_hdr_smic =
@@ -36,14 +36,14 @@ fiid_template_t tmpl_hdr_smic =
     {0, ""}
   };
 
-u_int64_t 
+uint64_t 
 ipmi_smic_get_poll_count ()
 {
   return smic_poll_count;
 }
 
 int
-ipmi_smic_io_init (u_int8_t sms_io_base, unsigned long sleep_usecs)
+ipmi_smic_io_init (uint8_t sms_io_base, unsigned long sleep_usecs)
 {
   smic_sleep_usecs = sleep_usecs;
 
@@ -64,21 +64,21 @@ ipmi_smic_io_init (u_int8_t sms_io_base, unsigned long sleep_usecs)
 }
 
 /* Examine flags register. */
-u_int8_t 
-ipmi_smic_get_flags (u_int16_t sms_io_base)
+uint8_t 
+ipmi_smic_get_flags (uint16_t sms_io_base)
 {
   return _INB (IPMI_SMIC_REG_FLAGS (sms_io_base));
 }
 
-u_int8_t
-ipmi_smic_get_status (u_int16_t sms_io_base)
+uint8_t
+ipmi_smic_get_status (uint16_t sms_io_base)
 {
   return _INB (IPMI_SMIC_REG_STATUS (sms_io_base));
 }
 
 /* Basic spin loops. */
 void 
-ipmi_smic_wait_for_not_busy (u_int16_t sms_io_base) 
+ipmi_smic_wait_for_not_busy (uint16_t sms_io_base) 
 {
   while(ipmi_smic_get_flags(sms_io_base) & IPMI_SMIC_BUSY)
     {
@@ -87,7 +87,7 @@ ipmi_smic_wait_for_not_busy (u_int16_t sms_io_base)
 }
 
 void 
-ipmi_smic_wait_for_rx_ready (u_int16_t sms_io_base)
+ipmi_smic_wait_for_rx_ready (uint16_t sms_io_base)
 {
   while(!(ipmi_smic_get_flags (sms_io_base) & IPMI_SMIC_RX_DATA_RDY))
     {
@@ -96,7 +96,7 @@ ipmi_smic_wait_for_rx_ready (u_int16_t sms_io_base)
 }
 
 void 
-ipmi_smic_wait_for_tx_ready (u_int16_t sms_io_base)
+ipmi_smic_wait_for_tx_ready (uint16_t sms_io_base)
 {
   while(!(ipmi_smic_get_flags(sms_io_base) & IPMI_SMIC_TX_DATA_RDY))
     {
@@ -105,7 +105,7 @@ ipmi_smic_wait_for_tx_ready (u_int16_t sms_io_base)
 }
 
 void 
-ipmi_smic_wait_for_idle (u_int16_t sms_io_base)
+ipmi_smic_wait_for_idle (uint16_t sms_io_base)
 {
   while (ipmi_smic_get_flags (sms_io_base) & IPMI_SMIC_BUSY)
     {
@@ -116,7 +116,7 @@ ipmi_smic_wait_for_idle (u_int16_t sms_io_base)
 /* Flag manipulations. */
 
 void 
-ipmi_smic_set_busy (u_int16_t sms_io_base)
+ipmi_smic_set_busy (uint16_t sms_io_base)
 {
     _OUTB (IPMI_SMIC_BUSY, IPMI_SMIC_REG_FLAGS (sms_io_base));
 }
@@ -124,7 +124,7 @@ ipmi_smic_set_busy (u_int16_t sms_io_base)
 /* Basic functions for writing bytes. */
 
 void 
-ipmi_smic_write_start (u_int16_t sms_io_base, u_int8_t data)
+ipmi_smic_write_start (uint16_t sms_io_base, uint8_t data)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     _OUTB (IPMI_SMIC_CC_SMS_WR_START, IPMI_SMIC_REG_CONTROL (sms_io_base));
@@ -134,7 +134,7 @@ ipmi_smic_write_start (u_int16_t sms_io_base, u_int8_t data)
 }
 
 void 
-ipmi_smic_write_next (u_int16_t sms_io_base, u_int8_t data)
+ipmi_smic_write_next (uint16_t sms_io_base, uint8_t data)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     ipmi_smic_wait_for_tx_ready (sms_io_base);
@@ -144,7 +144,7 @@ ipmi_smic_write_next (u_int16_t sms_io_base, u_int8_t data)
     ipmi_smic_wait_for_idle (sms_io_base);
 }
 void 
-ipmi_smic_write_end (u_int16_t sms_io_base, u_int8_t data)
+ipmi_smic_write_end (uint16_t sms_io_base, uint8_t data)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     ipmi_smic_wait_for_tx_ready (sms_io_base);
@@ -156,8 +156,8 @@ ipmi_smic_write_end (u_int16_t sms_io_base, u_int8_t data)
 
 /* Basic functions for doing reads. */
 
-u_int8_t
-ipmi_smic_read_start (u_int16_t sms_io_base)
+uint8_t
+ipmi_smic_read_start (uint16_t sms_io_base)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     ipmi_smic_wait_for_rx_ready (sms_io_base);
@@ -167,8 +167,8 @@ ipmi_smic_read_start (u_int16_t sms_io_base)
     return _INB (IPMI_SMIC_REG_DATA (sms_io_base));
 }
 
-u_int8_t
-ipmi_smic_read_next (u_int16_t sms_io_base)
+uint8_t
+ipmi_smic_read_next (uint16_t sms_io_base)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     ipmi_smic_wait_for_rx_ready (sms_io_base);
@@ -179,7 +179,7 @@ ipmi_smic_read_next (u_int16_t sms_io_base)
 }
 
 void
-ipmi_smic_read_end (u_int16_t sms_io_base)
+ipmi_smic_read_end (uint16_t sms_io_base)
 {
     ipmi_smic_wait_for_idle (sms_io_base);
     _OUTB (IPMI_SMIC_CC_SMS_RD_END, IPMI_SMIC_REG_CONTROL (sms_io_base));
@@ -190,11 +190,11 @@ ipmi_smic_read_end (u_int16_t sms_io_base)
 /* API read function. */
 
 int
-ipmi_smic_write (u_int16_t sms_io_base, u_int8_t* data, int len)
+ipmi_smic_write (uint16_t sms_io_base, uint8_t* data, int len)
 {
     int outlen=0;
     int x=0;
-    u_int8_t* p=data;
+    uint8_t* p=data;
     
     /* In case someone isn't paying attention */
     if(len < 2)
@@ -249,11 +249,11 @@ ipmi_smic_write (u_int16_t sms_io_base, u_int8_t* data, int len)
 /* API read function. */
 
 int
-ipmi_smic_read (u_int16_t sms_io_base, u_int8_t* data, int len)
+ipmi_smic_read (uint16_t sms_io_base, uint8_t* data, int len)
 {
     int outlen=0;
     int x=0;
-    u_int8_t* p=data;
+    uint8_t* p=data;
 
     /* In case someone isn't paying attention */
     if(len < 2)

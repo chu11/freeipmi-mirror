@@ -262,20 +262,20 @@ do {                                                                    \
 } while (0)
 #endif /* FREEIPMI_LIBRARY */
 
-int8_t ipmi_strerror_r (u_int8_t cmd, 
-			u_int8_t comp_code, 
+int8_t ipmi_strerror_r (uint8_t cmd, 
+			uint8_t comp_code, 
 			char *errstr, 
 			size_t len);
 int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd, 
 			    char *errstr, 
 			    size_t len);
-int8_t ipmi_kcs_strstatus_r (u_int8_t status_code, 
+int8_t ipmi_kcs_strstatus_r (uint8_t status_code, 
 			     char *errstr, 
 			     size_t len);
 void ipmi_error (fiid_obj_t obj_cmd, 
 		 const char *s);
 
-int8_t rmcpplus_status_strerror_r(u_int8_t rmcpplus_status_code,
+int8_t rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
                                   char *errstr,
                                   size_t len);
 

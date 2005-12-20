@@ -386,8 +386,8 @@ fiid_template_t tmpl_get_channel_info_rs =
 
 
 int8_t 
-fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
-                                u_int8_t max_priv_level, 
+fill_cmd_get_channel_auth_caps (uint8_t channel_num,
+                                uint8_t max_priv_level, 
 				fiid_obj_t obj_cmd)
 {
   if (!obj_cmd 
@@ -410,9 +410,9 @@ fill_cmd_get_channel_auth_caps (u_int8_t channel_num,
 }
 
 int8_t 
-fill_cmd_get_channel_auth_caps_v20 (u_int8_t channel_num,
-                                    u_int8_t max_priv_level, 
-                                    u_int8_t get_ipmi_v20_extended_data,
+fill_cmd_get_channel_auth_caps_v20 (uint8_t channel_num,
+                                    uint8_t max_priv_level, 
+                                    uint8_t get_ipmi_v20_extended_data,
                                     fiid_obj_t obj_cmd)
 {
   if (!obj_cmd 
@@ -443,7 +443,7 @@ int8_t
 ipmi_lan_get_channel_auth_caps (int sockfd, 
 				struct sockaddr *hostaddr, 
 				size_t hostaddr_len, 
-				u_int8_t rq_seq, 
+				uint8_t rq_seq, 
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
@@ -472,9 +472,9 @@ ipmi_lan_get_channel_auth_caps (int sockfd,
 }
 
 int8_t 
-fill_cmd_get_session_challenge (u_int8_t auth_type, 
+fill_cmd_get_session_challenge (uint8_t auth_type, 
 				char *username, 
-				u_int32_t username_len, 
+				uint32_t username_len, 
 				fiid_obj_t obj_cmd)
 {
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
@@ -515,9 +515,9 @@ int8_t
 ipmi_lan_get_session_challenge (int sockfd, 
 				struct sockaddr *hostaddr, 
 				size_t hostaddr_len, 
-				u_int8_t auth_type, 
+				uint8_t auth_type, 
 				char *username, 
-				u_int8_t rq_seq, 
+				uint8_t rq_seq, 
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
@@ -543,11 +543,11 @@ ipmi_lan_get_session_challenge (int sockfd,
 }
 
 int8_t 
-fill_cmd_activate_session (u_int8_t auth_type, 
-			   u_int8_t max_priv_level, 
-			   u_int8_t *challenge_str, 
-			   u_int32_t challenge_str_len, 
-			   u_int32_t initial_outbound_seq_num, 
+fill_cmd_activate_session (uint8_t auth_type, 
+			   uint8_t max_priv_level, 
+			   uint8_t *challenge_str, 
+			   uint32_t challenge_str_len, 
+			   uint32_t initial_outbound_seq_num, 
 			   fiid_obj_t obj_cmd)
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
@@ -581,15 +581,15 @@ int8_t
 ipmi_lan_activate_session (int sockfd, 
 			   struct sockaddr *hostaddr, 
 			   size_t hostaddr_len, 
-			   u_int8_t auth_type, 
-			   u_int32_t tmp_session_id, 
-			   u_int8_t *auth_code_data, 
-			   u_int32_t auth_code_data_len, 
-			   u_int8_t max_priv_level, 
-			   u_int8_t *challenge_str, 
-			   u_int32_t challenge_str_len, 
-			   u_int32_t initial_outbound_seq_num, 
-			   u_int8_t rq_seq, 
+			   uint8_t auth_type, 
+			   uint32_t tmp_session_id, 
+			   uint8_t *auth_code_data, 
+			   uint32_t auth_code_data_len, 
+			   uint8_t max_priv_level, 
+			   uint8_t *challenge_str, 
+			   uint32_t challenge_str_len, 
+			   uint32_t initial_outbound_seq_num, 
+			   uint8_t rq_seq, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
@@ -616,7 +616,7 @@ ipmi_lan_activate_session (int sockfd,
 }
 
 int8_t 
-fill_cmd_set_session_priv_level (u_int8_t priv_level, 
+fill_cmd_set_session_priv_level (uint8_t priv_level, 
 				 fiid_obj_t obj_cmd)
 {
   if (!IPMI_1_5_PRIV_LEVEL_VALID(priv_level)
@@ -637,13 +637,13 @@ int8_t
 ipmi_lan_set_session_priv_level (int sockfd, 
 				 struct sockaddr *hostaddr, 
 				 size_t hostaddr_len, 
-				 u_int8_t auth_type, 
-				 u_int32_t session_seq_num, 
-				 u_int32_t session_id, 
-				 u_int8_t *auth_code_data, 
-				 u_int32_t auth_code_data_len, 
-				 u_int8_t priv_level, 
-				 u_int8_t rq_seq, 
+				 uint8_t auth_type, 
+				 uint32_t session_seq_num, 
+				 uint32_t session_id, 
+				 uint8_t *auth_code_data, 
+				 uint32_t auth_code_data_len, 
+				 uint8_t priv_level, 
+				 uint8_t rq_seq, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
@@ -672,19 +672,19 @@ int8_t
 ipmi_lan_open_session (int sockfd, 
 		       struct sockaddr *hostaddr, 
 		       size_t hostaddr_len, 
-		       u_int8_t auth_type, 
+		       uint8_t auth_type, 
 		       char *username, 
-                       u_int8_t *auth_code_data,
-                       u_int32_t auth_code_data_len,
-		       u_int32_t initial_outbound_seq_num, 
-		       u_int8_t priv_level, 
-		       u_int32_t *session_seq_num, 
-		       u_int32_t *session_id, 
-		       u_int8_t *rq_seq)
+                       uint8_t *auth_code_data,
+                       uint32_t auth_code_data_len,
+		       uint32_t initial_outbound_seq_num, 
+		       uint8_t priv_level, 
+		       uint32_t *session_seq_num, 
+		       uint32_t *session_id, 
+		       uint8_t *rq_seq)
 {
   fiid_obj_t obj_cmd_rs;
-  u_int64_t temp_session_id, temp_session_seq_num;
-  u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+  uint64_t temp_session_id, temp_session_seq_num;
+  uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
 
   if (rq_seq == NULL)
     {
@@ -693,7 +693,7 @@ ipmi_lan_open_session (int sockfd,
     }
 
   *rq_seq = 0;
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_channel_auth_caps_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_channel_auth_caps_rs);
   if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, *rq_seq, obj_cmd_rs) == -1)
     goto error;
   if (!ipmi_comp_test (obj_cmd_rs))
@@ -704,7 +704,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_get_session_challenge_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_session_challenge_rs);
   if (ipmi_lan_get_session_challenge (sockfd, hostaddr, hostaddr_len, 
 				      auth_type, username, *rq_seq, obj_cmd_rs) == -1)
     goto error;
@@ -721,7 +721,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_activate_session_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_activate_session_rs);
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
 				 auth_type, *session_id, auth_code_data, auth_code_data_len,
 				 priv_level, challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN,
@@ -742,7 +742,7 @@ ipmi_lan_open_session (int sockfd,
   ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_alloc (tmpl_cmd_set_session_priv_level_rs);
+  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_set_session_priv_level_rs);
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
 				       auth_code_data, auth_code_data_len, priv_level,
@@ -765,7 +765,7 @@ ipmi_lan_open_session (int sockfd,
 }
 
 int8_t 
-fill_cmd_close_session (u_int32_t close_session_id, 
+fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd)
 {
   if (obj_cmd == NULL)
@@ -785,13 +785,13 @@ int8_t
 ipmi_lan_close_session (int sockfd, 
 			struct sockaddr *hostaddr, 
 			size_t hostaddr_len, 
-			u_int8_t auth_type, 
-			u_int32_t session_seq_num, 
-			u_int32_t session_id, 
-			u_int8_t *auth_code_data, 
-			u_int32_t auth_code_data_len, 
-			u_int8_t rq_seq, 
-			u_int32_t close_session_id, 
+			uint8_t auth_type, 
+			uint32_t session_seq_num, 
+			uint32_t session_id, 
+			uint8_t *auth_code_data, 
+			uint32_t auth_code_data_len, 
+			uint8_t rq_seq, 
+			uint32_t close_session_id, 
 			fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq;
@@ -817,14 +817,14 @@ ipmi_lan_close_session (int sockfd,
 
 int8_t 
 fill_kcs_set_channel_access (fiid_obj_t obj_data_rq, 
-			     u_int8_t channel_number, 
-			     u_int8_t ipmi_messaging_access_mode, 
-			     u_int8_t user_level_authentication, 
-			     u_int8_t per_message_authentication, 
-			     u_int8_t pef_alerting, 
-			     u_int8_t channel_access_set_flag, 
-			     u_int8_t channel_privilege_level_limit, 
-			     u_int8_t channel_privilege_level_limit_set_flag)
+			     uint8_t channel_number, 
+			     uint8_t ipmi_messaging_access_mode, 
+			     uint8_t user_level_authentication, 
+			     uint8_t per_message_authentication, 
+			     uint8_t pef_alerting, 
+			     uint8_t channel_access_set_flag, 
+			     uint8_t channel_privilege_level_limit, 
+			     uint8_t channel_privilege_level_limit_set_flag)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -882,20 +882,20 @@ fill_kcs_set_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_channel_access (u_int8_t channel_number, 
-			     u_int8_t ipmi_messaging_access_mode, 
-			     u_int8_t user_level_authentication, 
-			     u_int8_t per_message_authentication, 
-			     u_int8_t pef_alerting, 
-			     u_int8_t channel_access_set_flag, 
-			     u_int8_t channel_privilege_level_limit, 
-			     u_int8_t channel_privilege_level_limit_set_flag, 
+ipmi_kcs_set_channel_access (uint8_t channel_number, 
+			     uint8_t ipmi_messaging_access_mode, 
+			     uint8_t user_level_authentication, 
+			     uint8_t per_message_authentication, 
+			     uint8_t pef_alerting, 
+			     uint8_t channel_access_set_flag, 
+			     uint8_t channel_privilege_level_limit, 
+			     uint8_t channel_privilege_level_limit_set_flag, 
 			     fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_channel_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_channel_access_rq);
   ERR (fill_kcs_set_channel_access (obj_data_rq, 
 				    channel_number, 
 				    ipmi_messaging_access_mode, 
@@ -914,7 +914,7 @@ ipmi_kcs_set_channel_access (u_int8_t channel_number,
 
 int8_t 
 fill_kcs_set_user_name (fiid_obj_t obj_data_rq, 
-			u_int8_t user_id, 
+			uint8_t user_id, 
 			char *user_name,
                         unsigned int user_name_len)
 {
@@ -957,14 +957,14 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_user_name (u_int8_t user_id, 
+ipmi_kcs_set_user_name (uint8_t user_id, 
 			char *user_name, 
 			fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_name_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_name_rq);
   ERR (fill_kcs_set_user_name (obj_data_rq, user_id, 
 			       user_name, 
 			       (user_name) ? strlen(user_name) : 0) == 0);
@@ -976,7 +976,7 @@ ipmi_kcs_set_user_name (u_int8_t user_id,
 }
 
 int8_t 
-fill_kcs_get_user_name (fiid_obj_t obj_data_rq, u_int8_t user_id) 
+fill_kcs_get_user_name (fiid_obj_t obj_data_rq, uint8_t user_id) 
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_user_name_rq, 
@@ -992,13 +992,13 @@ fill_kcs_get_user_name (fiid_obj_t obj_data_rq, u_int8_t user_id)
 }
 
 int8_t 
-ipmi_kcs_get_user_name (u_int8_t user_id, 
+ipmi_kcs_get_user_name (uint8_t user_id, 
 			fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_user_name_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_user_name_rq);
   ERR (fill_kcs_get_user_name (obj_data_rq, user_id) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_name_rq, 
@@ -1009,8 +1009,8 @@ ipmi_kcs_get_user_name (u_int8_t user_id,
 
 int8_t 
 fill_kcs_set_user_password (fiid_obj_t obj_data_rq, 
-			    u_int8_t user_id, 
-			    u_int8_t operation, 
+			    uint8_t user_id, 
+			    uint8_t operation, 
 			    char *user_password,
                             unsigned int user_password_len)
 {
@@ -1059,15 +1059,15 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_user_password (u_int8_t user_id, 
-			    u_int8_t operation, 
+ipmi_kcs_set_user_password (uint8_t user_id, 
+			    uint8_t operation, 
 			    char *user_password,
 			    fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_password_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_password_rq);
   ERR (fill_kcs_set_user_password (obj_data_rq, user_id, operation, 
 				   user_password, 
 				   (user_password) ? strlen(user_password) : 0) == 0);
@@ -1080,13 +1080,13 @@ ipmi_kcs_set_user_password (u_int8_t user_id,
 
 int8_t 
 fill_kcs_set_user_access (fiid_obj_t obj_data_rq, 
-			  u_int8_t channel_number,
-			  u_int8_t user_id,
-			  u_int8_t restrict_to_callback,
-			  u_int8_t enable_link_auth,
-			  u_int8_t enable_ipmi_msgs,
-			  u_int8_t user_privilege_level_limit,
-			  u_int8_t user_session_number_limit)
+			  uint8_t channel_number,
+			  uint8_t user_id,
+			  uint8_t restrict_to_callback,
+			  uint8_t enable_link_auth,
+			  uint8_t enable_ipmi_msgs,
+			  uint8_t user_privilege_level_limit,
+			  uint8_t user_session_number_limit)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1144,19 +1144,19 @@ fill_kcs_set_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_set_user_access (u_int8_t channel_number,
-			  u_int8_t user_id,
-			  u_int8_t restrict_to_callback,
-			  u_int8_t enable_link_auth,
-			  u_int8_t enable_ipmi_msgs,
-			  u_int8_t user_privilege_level_limit,
-			  u_int8_t user_session_number_limit, 
+ipmi_kcs_set_user_access (uint8_t channel_number,
+			  uint8_t user_id,
+			  uint8_t restrict_to_callback,
+			  uint8_t enable_link_auth,
+			  uint8_t enable_ipmi_msgs,
+			  uint8_t user_privilege_level_limit,
+			  uint8_t user_session_number_limit, 
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_user_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_user_access_rq);
   ERR (fill_kcs_set_user_access (obj_data_rq, 
 				 channel_number,
 				 user_id,
@@ -1174,8 +1174,8 @@ ipmi_kcs_set_user_access (u_int8_t channel_number,
 
 int8_t
 fill_kcs_get_user_access (fiid_obj_t obj_data_rq, 
-			  u_int8_t channel_number,
-			  u_int8_t user_id)
+			  uint8_t channel_number,
+			  uint8_t user_id)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1203,14 +1203,14 @@ fill_kcs_get_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_get_user_access (u_int8_t channel_number,
-			  u_int8_t user_id,
+ipmi_kcs_get_user_access (uint8_t channel_number,
+			  uint8_t user_id,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_user_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_user_access_rq);
   ERR (fill_kcs_get_user_access (obj_data_rq, channel_number, user_id) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_user_access_rq, 
@@ -1222,8 +1222,8 @@ ipmi_kcs_get_user_access (u_int8_t channel_number,
 
 int8_t
 fill_kcs_get_channel_access (fiid_obj_t obj_data_rq, 
-			     u_int8_t channel_number,
-			     u_int8_t channel_access_set_flag)
+			     uint8_t channel_number,
+			     uint8_t channel_access_set_flag)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1251,14 +1251,14 @@ fill_kcs_get_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_get_channel_access (u_int8_t channel_number,
-			     u_int8_t channel_access_set_flag,
+ipmi_kcs_get_channel_access (uint8_t channel_number,
+			     uint8_t channel_access_set_flag,
 			     fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_channel_access_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_access_rq);
   ERR (fill_kcs_get_channel_access (obj_data_rq, channel_number, channel_access_set_flag) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_access_rq, 
@@ -1268,7 +1268,7 @@ ipmi_kcs_get_channel_access (u_int8_t channel_number,
 }
 
 int8_t 
-fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, u_int8_t channel_number)
+fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1291,13 +1291,13 @@ fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, u_int8_t channel_number)
 }
 
 int8_t 
-ipmi_kcs_get_channel_info (u_int8_t channel_number,
+ipmi_kcs_get_channel_info (uint8_t channel_number,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_channel_info_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_info_rq);
   ERR (fill_kcs_get_channel_info (obj_data_rq, channel_number) == 0);
   status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
 			 obj_data_rq, tmpl_get_channel_info_rq, 
@@ -1307,9 +1307,9 @@ ipmi_kcs_get_channel_info (u_int8_t channel_number,
 }
 
 int8_t
-ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t cmd)
+ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd)
 {
-  u_int64_t cmd_recv;
+  uint64_t cmd_recv;
 
   if (!(obj_cmd && tmpl_cmd))
     {
@@ -1329,9 +1329,9 @@ ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t cmd)
 }
 
 int8_t
-ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t comp_code)
+ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code)
 {
-  u_int64_t comp_code_recv;
+  uint64_t comp_code_recv;
 
   if (!(obj_cmd && tmpl_cmd))
     {
@@ -1354,10 +1354,10 @@ ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, u_int8_t comp
  * 0h - Fh.
  */
 static int8_t
-_search_for_medium_channel_number (u_int8_t channel_medium_type)
+_search_for_medium_channel_number (uint8_t channel_medium_type)
 {
   fiid_obj_t data_rs;
-  u_int64_t val;
+  uint64_t val;
   int i;
   
   FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_info_rs);
@@ -1375,7 +1375,7 @@ _search_for_medium_channel_number (u_int8_t channel_medium_type)
 		    tmpl_get_channel_info_rs, 
 		    "channel_medium_type", 
 		    &val);
-      if ((u_int8_t)val == channel_medium_type)
+      if ((uint8_t)val == channel_medium_type)
 	{
 	  FIID_OBJ_GET (data_rs, 
 			tmpl_get_channel_info_rs, 
@@ -1389,12 +1389,12 @@ _search_for_medium_channel_number (u_int8_t channel_medium_type)
 }
 
 int8_t 
-ipmi_get_channel_number (u_int8_t channel_medium_type)
+ipmi_get_channel_number (uint8_t channel_medium_type)
 {
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
       fiid_obj_t obj_data_rs;
-      u_int64_t manf_id, prod_id;
+      uint64_t manf_id, prod_id;
   
       FIID_OBJ_ALLOCA (obj_data_rs, tmpl_cmd_get_dev_id_rs);
   
@@ -1501,7 +1501,7 @@ int8_t
 ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
 			    fiid_obj_t obj_cmd_rs)
 {
-  u_int32_t initial_outbound_seq_num = 0;
+  uint32_t initial_outbound_seq_num = 0;
   fiid_obj_t obj_cmd_rq = NULL;
   
   ERR (dev != NULL);
@@ -1566,10 +1566,10 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
-  u_int64_t supported_auth_type = 0;
-  u_int64_t temp_session_id = 0;
-  u_int8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
-  u_int64_t temp_session_seq_num = 0;
+  uint64_t supported_auth_type = 0;
+  uint64_t temp_session_id = 0;
+  uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+  uint64_t temp_session_seq_num = 0;
   
   dev->io.outofband.rq_seq = 0;
   
@@ -1664,14 +1664,14 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_channel_access2 (ipmi_device_t *dev, 
-			      u_int8_t channel_number, 
-			      u_int8_t ipmi_messaging_access_mode, 
-			      u_int8_t user_level_authentication, 
-			      u_int8_t per_message_authentication, 
-			      u_int8_t pef_alerting, 
-			      u_int8_t channel_access_set_flag, 
-			      u_int8_t channel_privilege_level_limit, 
-			      u_int8_t channel_privilege_level_limit_set_flag, 
+			      uint8_t channel_number, 
+			      uint8_t ipmi_messaging_access_mode, 
+			      uint8_t user_level_authentication, 
+			      uint8_t per_message_authentication, 
+			      uint8_t pef_alerting, 
+			      uint8_t channel_access_set_flag, 
+			      uint8_t channel_privilege_level_limit, 
+			      uint8_t channel_privilege_level_limit_set_flag, 
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1703,7 +1703,7 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
-			 u_int8_t user_id, 
+			 uint8_t user_id, 
 			 char *user_name, 
 			 fiid_obj_t obj_cmd_rs)
 {
@@ -1731,7 +1731,7 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
-			 u_int8_t user_id, 
+			 uint8_t user_id, 
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1755,8 +1755,8 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
-			     u_int8_t user_id, 
-			     u_int8_t operation, 
+			     uint8_t user_id, 
+			     uint8_t operation, 
 			     char *user_password,
 			     fiid_obj_t obj_cmd_rs)
 {
@@ -1785,13 +1785,13 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number,
-			   u_int8_t user_id,
-			   u_int8_t restrict_to_callback,
-			   u_int8_t enable_link_auth,
-			   u_int8_t enable_ipmi_msgs,
-			   u_int8_t user_privilege_level_limit,
-			   u_int8_t user_session_number_limit, 
+			   uint8_t channel_number,
+			   uint8_t user_id,
+			   uint8_t restrict_to_callback,
+			   uint8_t enable_link_auth,
+			   uint8_t enable_ipmi_msgs,
+			   uint8_t user_privilege_level_limit,
+			   uint8_t user_session_number_limit, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1822,8 +1822,8 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number,
-			   u_int8_t user_id,
+			   uint8_t channel_number,
+			   uint8_t user_id,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1847,8 +1847,8 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
-			      u_int8_t channel_number,
-			      u_int8_t channel_access_set_flag,
+			      uint8_t channel_number,
+			      uint8_t channel_access_set_flag,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1874,7 +1874,7 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
-			    u_int8_t channel_number,
+			    uint8_t channel_number,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

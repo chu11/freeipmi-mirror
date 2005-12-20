@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege.c,v 1.1.2.1 2005-11-15 19:28:16 chu11 Exp $
+ *  $Id: ipmipower_privilege.c,v 1.1.2.2 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,7 @@ ipmipower_privilege_list(void)
   return "auto, user, operator, admin";
 }
 
-u_int8_t
+uint8_t
 ipmipower_ipmi_privilege_type(privilege_type_t priv)
 {
   assert(PRIVILEGE_TYPE_VALID(priv));

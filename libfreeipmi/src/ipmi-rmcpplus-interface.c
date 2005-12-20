@@ -31,13 +31,13 @@ do { \
 
 static int32_t
 _construct_payload_buf(fiid_obj_t obj_msg_hdr,
-                       u_int8_t *obj_cmd,
+                       uint8_t *obj_cmd,
                        fiid_template_t tmpl_cmd,
-                       u_int8_t *payload_buf,
-                       u_int32_t payload_buf_len)
+                       uint8_t *payload_buf,
+                       uint32_t payload_buf_len)
 {
   int32_t obj_msg_hdr_len, obj_msg_trlr_len, chksum_start_offset, chksum_block_len;
-  u_int32_t payload_len;
+  uint32_t payload_len;
   ipmi_chksum_t chksum;
   int32_t obj_cmd_len;
 
@@ -84,15 +84,15 @@ _construct_payload_buf(fiid_obj_t obj_msg_hdr,
 }
 
 static int32_t
-_construct_payload_special(u_int8_t payload_type,
-                           u_int8_t authentication_algorithm,
+_construct_payload_special(uint8_t payload_type,
+                           uint8_t authentication_algorithm,
                            fiid_obj_t obj_cmd,
                            fiid_template_t tmpl_cmd,
                            fiid_obj_t obj_payload)
 {
-  u_int8_t obj_cmd_buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t obj_cmd_buf[IPMI_MAX_PAYLOAD_LEN];
   int32_t obj_cmd_len;
-  u_int64_t obj_field_len;
+  uint64_t obj_field_len;
   int32_t obj_data_len, obj_field_start;
 
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
@@ -209,7 +209,7 @@ _construct_payload_confidentiality_none(fiid_obj_t obj_msg_hdr,
                                         fiid_template_t tmpl_cmd,
                                         fiid_obj_t obj_payload)
 {
-  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   int32_t payload_len;
 
   if (!obj_msg_hdr
@@ -256,19 +256,19 @@ _construct_payload_confidentiality_none(fiid_obj_t obj_msg_hdr,
 }
 
 static int32_t
-_construct_payload_confidentiality_aes_cbc_128(u_int8_t payload_encrypted,
+_construct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
                                                fiid_obj_t obj_msg_hdr,
                                                fiid_obj_t obj_cmd,
                                                fiid_template_t tmpl_cmd,
-                                               u_int8_t *confidentiality_key,
-                                               u_int32_t confidentiality_key_len,
+                                               uint8_t *confidentiality_key,
+                                               uint32_t confidentiality_key_len,
                                                fiid_obj_t obj_payload)
 {
-  u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
+  uint8_t iv[IPMI_AES_CBC_128_IV_LEN];
   int32_t iv_len;
-  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
-  u_int8_t pad_len;
-  u_int32_t payload_len;
+  uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t pad_len;
+  uint32_t payload_len;
   int cipher_keylen, cipher_blocklen, encrypt_len;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
@@ -392,15 +392,15 @@ _construct_payload_confidentiality_aes_cbc_128(u_int8_t payload_encrypted,
 }
 
 static int32_t
-_construct_payload(u_int8_t payload_type,
-                   u_int8_t payload_encrypted,
-                   u_int8_t authentication_algorithm,
-                   u_int8_t confidentiality_algorithm,
+_construct_payload(uint8_t payload_type,
+                   uint8_t payload_encrypted,
+                   uint8_t authentication_algorithm,
+                   uint8_t confidentiality_algorithm,
                    fiid_obj_t obj_msg_hdr,
                    fiid_obj_t obj_cmd,
                    fiid_template_t tmpl_cmd,
-                   u_int8_t *confidentiality_key,
-                   u_int32_t confidentiality_key_len,
+                   uint8_t *confidentiality_key,
+                   uint32_t confidentiality_key_len,
                    fiid_obj_t obj_payload)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
@@ -461,11 +461,11 @@ _construct_payload(u_int8_t payload_type,
 }
 
 static int32_t
-_calculate_auth_code_len(u_int8_t integrity_algorithm, 
+_calculate_auth_code_len(uint8_t integrity_algorithm, 
                          fiid_obj_t obj_rmcpplus_trlr_session,
                          fiid_template_t tmpl_trlr_session)
 {
-  u_int64_t auth_code_len;
+  uint64_t auth_code_len;
 
   if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
       || !tmpl_trlr_session)
@@ -497,8 +497,8 @@ _calculate_auth_code_len(u_int8_t integrity_algorithm,
 }
 
 static int8_t
-_construct_trlr_session_pad(u_int8_t integrity_algorithm,
-                            u_int32_t ipmi_msg_len,
+_construct_trlr_session_pad(uint8_t integrity_algorithm,
+                            uint32_t ipmi_msg_len,
                             int8_t *pad_len_ptr,
                             int8_t *pad_length_field_len_ptr,
                             int8_t *next_header_field_len_ptr,
@@ -507,7 +507,7 @@ _construct_trlr_session_pad(u_int8_t integrity_algorithm,
 {
   int32_t auth_code_len;
   int8_t pad_len, pad_length_field_len, next_header_field_len;
-  u_int8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
+  uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
                                                      IPMI_INTEGRITY_PAD_DATA,
                                                      IPMI_INTEGRITY_PAD_DATA,
                                                      IPMI_INTEGRITY_PAD_DATA};
@@ -559,18 +559,18 @@ _construct_trlr_session_pad(u_int8_t integrity_algorithm,
 }
 
 static int32_t
-_construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
-                                  u_int8_t *integrity_key,
-                                  u_int32_t integrity_key_len,
+_construct_trlr_session_auth_code(uint8_t integrity_algorithm,
+                                  uint8_t *integrity_key,
+                                  uint32_t integrity_key_len,
                                   fiid_obj_t obj_rmcpplus_trlr_session,
                                   fiid_template_t tmpl_trlr_session,
-                                  u_int8_t *pkt_data,
-                                  u_int32_t pkt_data_len,
-                                  u_int8_t *auth_code_buf,
-                                  u_int32_t auth_code_buf_len)
+                                  uint8_t *pkt_data,
+                                  uint32_t pkt_data_len,
+                                  uint8_t *auth_code_buf,
+                                  uint32_t auth_code_buf_len)
 {
   int32_t obj_field_start, auth_code_len;
-  u_int64_t obj_field_len;
+  uint64_t obj_field_len;
 
   if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
       || !obj_rmcpplus_trlr_session
@@ -635,10 +635,10 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
         {
           int hash_algorithm, hash_flags, crypt_digest_len;
           unsigned int expected_digest_len, hash_data_len, integrity_digest_len;
-          u_int8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
-          u_int64_t auth_calc_len = 0;
-          u_int32_t auth_calc_field_start = 0;
-          u_int8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
+          uint8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
+          uint64_t auth_calc_len = 0;
+          uint32_t auth_calc_field_start = 0;
+          uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
           
           /* Note: Integrity Key for HMAC_SHA1_95 and HMAC_MD5_128 is K1 */
 
@@ -743,13 +743,13 @@ _construct_trlr_session_auth_code(u_int8_t integrity_algorithm,
 }
 
 int32_t
-assemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
-                            u_int8_t integrity_algorithm,
-                            u_int8_t confidentiality_algorithm,
-                            u_int8_t *integrity_key,
-                            u_int32_t integrity_key_len,
-                            u_int8_t *confidentiality_key,
-                            u_int32_t confidentiality_key_len,
+assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
+                            uint8_t integrity_algorithm,
+                            uint8_t confidentiality_algorithm,
+                            uint8_t *integrity_key,
+                            uint32_t integrity_key_len,
+                            uint8_t *confidentiality_key,
+                            uint32_t confidentiality_key_len,
                             fiid_obj_t obj_hdr_rmcp,
                             fiid_obj_t obj_rmcpplus_hdr_session,
                             fiid_obj_t obj_msg_hdr,
@@ -757,12 +757,12 @@ assemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
                             fiid_template_t tmpl_cmd,
                             fiid_obj_t obj_rmcpplus_trlr_session,
                             fiid_template_t tmpl_trlr_session,
-                            u_int8_t *pkt,
-                            u_int32_t pkt_len)
+                            uint8_t *pkt,
+                            uint32_t pkt_len)
 {
   unsigned int pkt_msg_len = 0;
   int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_field_start;
-  u_int64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num;
+  uint64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num;
   int32_t payload_len;
   fiid_obj_t obj_payload = NULL;
   fiid_obj_t obj_hdr_session_temp = NULL;
@@ -969,9 +969,9 @@ assemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
   if (session_id && payload_authenticated)
     {
       int32_t rmcpplus_trlr_session_len;
-      u_int8_t pad_len, pad_length_field_len, next_header_field_len;
+      uint8_t pad_len, pad_length_field_len, next_header_field_len;
       fiid_obj_t obj_rmcpplus_trlr_session_temp;
-      u_int8_t auth_code_buf[IPMI_MAX_PAYLOAD_LEN];
+      uint8_t auth_code_buf[IPMI_MAX_PAYLOAD_LEN];
       int32_t auth_code_len;
 
       if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
@@ -1055,13 +1055,13 @@ assemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
 }
 
 int32_t
-assemble_ipmi_rmcpplus_pkt_with_payload (u_int8_t authentication_algorithm,
-                                         u_int8_t integrity_algorithm,
-                                         u_int8_t confidentiality_algorithm,
-                                         u_int8_t *integrity_key,
-                                         u_int32_t integrity_key_len,
-                                         u_int8_t *confidentiality_key,
-                                         u_int32_t confidentiality_key_len,
+assemble_ipmi_rmcpplus_pkt_with_payload (uint8_t authentication_algorithm,
+                                         uint8_t integrity_algorithm,
+                                         uint8_t confidentiality_algorithm,
+                                         uint8_t *integrity_key,
+                                         uint32_t integrity_key_len,
+                                         uint8_t *confidentiality_key,
+                                         uint32_t confidentiality_key_len,
                                          fiid_obj_t obj_hdr_rmcp,
                                          fiid_obj_t obj_rmcpplus_hdr_session,
                                          fiid_obj_t obj_msg_hdr,
@@ -1069,12 +1069,12 @@ assemble_ipmi_rmcpplus_pkt_with_payload (u_int8_t authentication_algorithm,
                                          fiid_template_t tmpl_cmd,
                                          fiid_obj_t obj_rmcpplus_trlr_session,
                                          fiid_template_t tmpl_trlr_session,
-                                         u_int8_t *pkt,
-                                         u_int32_t pkt_len)
+                                         uint8_t *pkt,
+                                         uint32_t pkt_len)
 {
   unsigned int pkt_msg_len = 0;
   int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_field_start;
-  u_int64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num;
+  uint64_t obj_field_len, payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num;
   int32_t payload_len;
   fiid_obj_t obj_payload = NULL;
   fiid_obj_t obj_hdr_session_temp = NULL;
@@ -1281,9 +1281,9 @@ assemble_ipmi_rmcpplus_pkt_with_payload (u_int8_t authentication_algorithm,
   if (session_id && payload_authenticated)
     {
       int32_t rmcpplus_trlr_session_len;
-      u_int8_t pad_len, pad_length_field_len, next_header_field_len;
+      uint8_t pad_len, pad_length_field_len, next_header_field_len;
       fiid_obj_t obj_rmcpplus_trlr_session_temp;
-      u_int8_t auth_code_buf[IPMI_MAX_PAYLOAD_LEN];
+      uint8_t auth_code_buf[IPMI_MAX_PAYLOAD_LEN];
       int32_t auth_code_len;
 
       if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
@@ -1368,11 +1368,11 @@ assemble_ipmi_rmcpplus_pkt_with_payload (u_int8_t authentication_algorithm,
 
 static int32_t
 _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
-                         u_int8_t *obj_cmd_buf,
+                         uint8_t *obj_cmd_buf,
                          fiid_template_t tmpl_cmd,
                          fiid_obj_t obj_msg_trlr,
-                         u_int8_t *pkt,
-                         u_int32_t lan_msg_len)
+                         uint8_t *pkt,
+                         uint32_t lan_msg_len)
 {
   int32_t obj_msg_hdr_len, obj_msg_trlr_len, obj_cmd_buf_len, obj_cmd_len;
   unsigned int pkt_index = 0;
@@ -1429,18 +1429,18 @@ _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
   return obj_cmd_len;
 }
 static int32_t
-_deconstruct_payload_special(u_int8_t payload_type,
-                             u_int8_t authentication_algorithm,
+_deconstruct_payload_special(uint8_t payload_type,
+                             uint8_t authentication_algorithm,
                              fiid_obj_t obj_payload,
                              fiid_obj_t obj_msg_hdr,
                              fiid_obj_t obj_cmd,
                              fiid_obj_t obj_msg_trlr,
                              fiid_template_t tmpl_cmd,
-                             u_int8_t *pkt,
-                             u_int32_t ipmi_payload_len)
+                             uint8_t *pkt,
+                             uint32_t ipmi_payload_len)
 {
   int32_t obj_len, obj_cmd_len, cmd_index = 0;
-  u_int64_t obj_field_len;
+  uint64_t obj_field_len;
   int32_t obj_data_len, obj_field_start;
   
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
@@ -1641,8 +1641,8 @@ _deconstruct_payload_confidentiality_none(fiid_obj_t obj_payload,
                                           fiid_obj_t obj_cmd,
                                           fiid_obj_t obj_msg_trlr,
                                           fiid_template_t tmpl_cmd,
-                                          u_int8_t *pkt,
-                                          u_int32_t ipmi_payload_len)
+                                          uint8_t *pkt,
+                                          uint32_t ipmi_payload_len)
 {
   int32_t obj_cmd_len;
 
@@ -1686,21 +1686,21 @@ _deconstruct_payload_confidentiality_none(fiid_obj_t obj_payload,
 }
 
 static int32_t
-_deconstruct_payload_confidentiality_aes_cbc_128(u_int8_t payload_encrypted,
+_deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
                                                  fiid_obj_t obj_payload,
                                                  fiid_obj_t obj_msg_hdr,
                                                  fiid_obj_t obj_cmd,
                                                  fiid_obj_t obj_msg_trlr,
                                                  fiid_template_t tmpl_cmd,
-                                                 u_int8_t *confidentiality_key,
-                                                 u_int32_t confidentiality_key_len,
-                                                 u_int8_t *pkt,
-                                                 u_int32_t ipmi_payload_len)
+                                                 uint8_t *confidentiality_key,
+                                                 uint32_t confidentiality_key_len,
+                                                 uint8_t *pkt,
+                                                 uint32_t ipmi_payload_len)
 {
-  u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
+  uint8_t iv[IPMI_AES_CBC_128_IV_LEN];
   int32_t iv_len;
-  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
-  u_int8_t pad_len;
+  uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
   int32_t payload_data_len, decrypt_len, cmd_data_len, obj_cmd_len, pkt_index = 0;
 
@@ -1840,19 +1840,19 @@ _deconstruct_payload_confidentiality_aes_cbc_128(u_int8_t payload_encrypted,
 }
 
 static int32_t
-_deconstruct_payload(u_int8_t payload_type,
-                     u_int8_t payload_encrypted,
-                     u_int8_t authentication_algorithm,
-                     u_int8_t confidentiality_algorithm,
+_deconstruct_payload(uint8_t payload_type,
+                     uint8_t payload_encrypted,
+                     uint8_t authentication_algorithm,
+                     uint8_t confidentiality_algorithm,
                      fiid_obj_t obj_payload,
                      fiid_obj_t obj_msg_hdr,
                      fiid_obj_t obj_cmd,
                      fiid_obj_t obj_msg_trlr,
                      fiid_template_t tmpl_cmd,
-                     u_int8_t *confidentiality_key,
-                     u_int32_t confidentiality_key_len,
-                     u_int8_t *pkt,
-                     u_int32_t ipmi_payload_len)
+                     uint8_t *confidentiality_key,
+                     uint32_t confidentiality_key_len,
+                     uint8_t *pkt,
+                     uint32_t ipmi_payload_len)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
       || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
@@ -1918,15 +1918,15 @@ _deconstruct_payload(u_int8_t payload_type,
 }
 
 int32_t
-unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
-                              u_int8_t integrity_algorithm,
-                              u_int8_t confidentiality_algorithm,
-                              u_int8_t *integrity_key,
-                              u_int32_t integrity_key_len,
-                              u_int8_t *confidentiality_key,
-                              u_int32_t confidentiality_key_len,
-                              u_int8_t *pkt,
-                              u_int32_t pkt_len,
+unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
+                              uint8_t integrity_algorithm,
+                              uint8_t confidentiality_algorithm,
+                              uint8_t *integrity_key,
+                              uint32_t integrity_key_len,
+                              uint8_t *confidentiality_key,
+                              uint32_t confidentiality_key_len,
+                              uint8_t *pkt,
+                              uint32_t pkt_len,
                               fiid_obj_t obj_hdr_rmcp,
                               fiid_obj_t obj_rmcpplus_hdr_session,
                               fiid_obj_t obj_payload,
@@ -1939,7 +1939,7 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
 {
   unsigned int pkt_index = 0;
   int32_t obj_rmcp_hdr_len, obj_len, obj_len_1, obj_len_2, obj_len_3, obj_field_start;
-  u_int64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num, ipmi_payload_len;
+  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num, ipmi_payload_len;
   fiid_obj_t obj_rmcpplus_hdr_session_temp;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
@@ -2107,8 +2107,8 @@ unassemble_ipmi_rmcpplus_pkt (u_int8_t authentication_algorithm,
   if (session_id && payload_authenticated && obj_rmcpplus_trlr_session)
     {
       int32_t pad_length_field_len, next_header_field_len;
-      u_int32_t authcode_len;
-      u_int64_t pad_length;
+      uint32_t authcode_len;
+      uint64_t pad_length;
       char *auth_field, *auth_field_len;
 
       if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.h,v 1.2 2004-10-28 07:33:59 ab Exp $
+ *  $Id: wrappers.h,v 1.2.2.1 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -28,11 +28,11 @@
 #define WRAPPERS_H
 
 #ifdef __FreeBSD__
-#include <sys/types.h>
+#include <stdint.h>
 #endif
 #include <regex.h>
 #include <netdb.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/poll.h>

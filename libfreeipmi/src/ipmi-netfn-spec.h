@@ -55,11 +55,11 @@ extern "C" {
 
 typedef struct net_fn
 {
-  u_int8_t lun:2;
-  u_int8_t fn:6;
+  uint8_t lun:2;
+  uint8_t fn:6;
 } net_fn_t;
 
-u_int8_t ipmi_netfn2byte (net_fn_t net_fn);
+uint8_t ipmi_netfn2byte (net_fn_t net_fn);
 
 #ifdef __cplusplus
 }

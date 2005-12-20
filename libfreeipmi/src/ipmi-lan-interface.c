@@ -55,14 +55,14 @@ fiid_template_t tmpl_lan_msg_trlr =
   };
 
 int 
-get_rq_checksum1 (ipmi_device_t *dev, u_int8_t *checksum)
+get_rq_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
 {
   *checksum = ipmi_chksum (dev->io.outofband.rq.obj_msg_hdr, 2);
   return (0);
 }
 
 int 
-get_rs_checksum1 (ipmi_device_t *dev, u_int8_t *checksum)
+get_rs_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
 {
   *checksum = ipmi_chksum (dev->io.outofband.rs.obj_msg_hdr, 2);
   return (0);
@@ -72,13 +72,13 @@ int
 get_rq_checksum2 (ipmi_device_t *dev, 
 		  fiid_obj_t obj_cmd, 
 		  fiid_template_t tmpl_cmd, 
-		  u_int8_t *checksum)
+		  uint8_t *checksum)
 {
   fiid_field_t *tmpl_var_checksum2_data = NULL;
   fiid_obj_t var_checksum2_data = NULL;
   int var_checksum2_data_length = 0;
   int cmd_length = 0;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   ERR ((cmd_length = fiid_obj_len_bytes (tmpl_cmd)) != -1);
   
@@ -162,13 +162,13 @@ int
 get_rs_checksum2 (ipmi_device_t *dev, 
 		  fiid_obj_t obj_cmd, 
 		  fiid_template_t tmpl_cmd, 
-		  u_int8_t *checksum)
+		  uint8_t *checksum)
 {
   fiid_field_t *tmpl_var_checksum2_data = NULL;
   fiid_obj_t var_checksum2_data = NULL;
   int var_checksum2_data_length = 0;
   int cmd_length = 0;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   ERR ((cmd_length = fiid_obj_len_bytes (tmpl_cmd)) != -1);
   
@@ -249,9 +249,9 @@ get_rs_checksum2 (ipmi_device_t *dev,
 }
 
 int8_t 
-fill_lan_msg_hdr (u_int8_t net_fn, 
-		  u_int8_t rs_lun, 
-		  u_int8_t rq_seq, 
+fill_lan_msg_hdr (uint8_t net_fn, 
+		  uint8_t rs_lun, 
+		  uint8_t rq_seq, 
 		  fiid_obj_t obj_msg)
 {
   if ((net_fn > IPMI_NET_FN_TRANSPORT_RS)
@@ -277,7 +277,7 @@ fill_lan_msg_hdr (u_int8_t net_fn,
 int8_t 
 fill_lan_msg_hdr2 (ipmi_device_t *dev)
 {
-  u_int8_t checksum = 0;
+  uint8_t checksum = 0;
   
   if (dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
@@ -323,7 +323,7 @@ fill_lan_msg_trlr2 (ipmi_device_t *dev,
 		    fiid_obj_t obj_cmd, 
 		    fiid_template_t tmpl_cmd)
 {
-  u_int8_t checksum = 0;
+  uint8_t checksum = 0;
   
   ERR (get_rq_checksum2 (dev, 
 			 obj_cmd, 
@@ -343,8 +343,8 @@ fill_hdr_session2 (ipmi_device_t *dev,
 		   fiid_obj_t obj_cmd, 
 		   fiid_template_t tmpl_cmd)
 {
-  u_int8_t *auth_code = NULL;
-  u_int8_t auth_code_length = 0;
+  uint8_t *auth_code = NULL;
+  uint8_t auth_code_length = 0;
   
   if (dev == NULL || tmpl_cmd == NULL)
     {
@@ -385,14 +385,14 @@ fill_hdr_session2 (ipmi_device_t *dev,
     case IPMI_SESSION_AUTH_TYPE_MD2:
       {
 	ipmi_md2_t ctx;
-	u_int8_t digest[IPMI_MD2_DIGEST_LEN];
+	uint8_t digest[IPMI_MD2_DIGEST_LEN];
 	
 	ipmi_md2_init (&ctx);
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md2_update_data (&ctx, 
-			      (u_int8_t *)&(dev->io.outofband.session_id), 
+			      (uint8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_hdr, 
@@ -404,7 +404,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      dev->io.outofband.rq.obj_msg_trlr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
 	ipmi_md2_update_data (&ctx, 
-			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
+			      (uint8_t *)&(dev->io.outofband.session_seq_num), 
 			      sizeof (dev->io.outofband.session_seq_num));
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.password,
@@ -425,14 +425,14 @@ fill_hdr_session2 (ipmi_device_t *dev,
     case IPMI_SESSION_AUTH_TYPE_MD5:
       {
 	ipmi_md5_t ctx;
-	u_int8_t digest[IPMI_MD5_DIGEST_LEN];
+	uint8_t digest[IPMI_MD5_DIGEST_LEN];
 	
 	ipmi_md5_init (&ctx);
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.password,	      
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	ipmi_md5_update_data (&ctx, 
-			      (u_int8_t *)&(dev->io.outofband.session_id), 
+			      (uint8_t *)&(dev->io.outofband.session_id), 
 			      sizeof (dev->io.outofband.session_id));
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_hdr, 
@@ -444,7 +444,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
 			      dev->io.outofband.rq.obj_msg_trlr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
 	ipmi_md5_update_data (&ctx, 
-			      (u_int8_t *)&(dev->io.outofband.session_seq_num), 
+			      (uint8_t *)&(dev->io.outofband.session_seq_num), 
 			      sizeof (dev->io.outofband.session_seq_num));
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.password,
@@ -481,11 +481,11 @@ fill_hdr_session2 (ipmi_device_t *dev,
 }
 
 int32_t 
-_ipmi_lan_pkt_size (u_int8_t auth_type, 
+_ipmi_lan_pkt_size (uint8_t auth_type, 
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_template_t tmpl_cmd)
 {
-  u_int32_t msg_len;
+  uint32_t msg_len;
   
   msg_len = fiid_obj_len_bytes (tmpl_hdr_rmcp) +
     fiid_obj_len_bytes (tmpl_lan_msg) +
@@ -507,7 +507,7 @@ _ipmi_lan_pkt_size (u_int8_t auth_type,
 }
 
 int32_t 
-_ipmi_lan_pkt_rq_size (u_int8_t auth_type, 
+_ipmi_lan_pkt_rq_size (uint8_t auth_type, 
 		       fiid_template_t tmpl_cmd)
 {
   return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rq, tmpl_cmd);
@@ -525,7 +525,7 @@ _ipmi_lan_pkt_rq_size2 (ipmi_device_t *dev,
 }
 
 int32_t 
-_ipmi_lan_pkt_rs_size (u_int8_t auth_type, 
+_ipmi_lan_pkt_rs_size (uint8_t auth_type, 
 		       fiid_template_t tmpl_cmd)
 {
   return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rs, tmpl_cmd);
@@ -561,15 +561,15 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 		       fiid_obj_t obj_msg_hdr, 
 		       fiid_obj_t obj_cmd, 
 		       fiid_template_t tmpl_cmd, 
-		       u_int8_t *pkt, 
-		       u_int32_t pkt_len)
+		       uint8_t *pkt, 
+		       uint32_t pkt_len)
 {
-  u_int64_t auth_type;
-  u_int32_t indx, required_len;
-  u_int8_t *auth_code_field_ptr = NULL;
-  u_int8_t *msg_data_ptr = NULL;
-  u_int32_t msg_data_count = 0;
-  u_int32_t obj_len;
+  uint64_t auth_type;
+  uint32_t indx, required_len;
+  uint8_t *auth_code_field_ptr = NULL;
+  uint8_t *msg_data_ptr = NULL;
+  uint32_t msg_data_count = 0;
+  uint32_t obj_len;
   ipmi_chksum_t chksum;
 
   if (!(obj_hdr_rmcp && obj_hdr_session && tmpl_hdr_session && 
@@ -595,7 +595,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return -1;
     }
   
-  required_len = _ipmi_lan_pkt_rq_size((u_int8_t)auth_type, tmpl_cmd);
+  required_len = _ipmi_lan_pkt_rq_size((uint8_t)auth_type, tmpl_cmd);
   if (pkt_len < required_len) 
     {
       errno = EMSGSIZE;
@@ -691,7 +691,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
           else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
                    || auth_type == IPMI_SESSION_AUTH_TYPE_MD5) 
             {
-              u_int8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+              uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
 
               ERR_EXIT(fiid_obj_field_len_bytes (tmpl_hdr_session, "auth_calc_data") >= IPMI_SESSION_MAX_AUTH_CODE_LEN);
               ERR_EXIT(IPMI_SESSION_MAX_AUTH_CODE_LEN == IPMI_MD2_DIGEST_LEN);
@@ -710,7 +710,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
               if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2)
                 {
                   ipmi_md2_t ctx;
-                  u_int8_t digest[IPMI_MD2_DIGEST_LEN];
+                  uint8_t digest[IPMI_MD2_DIGEST_LEN];
              
                   ipmi_md2_init(&ctx);
                   ipmi_md2_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
@@ -735,7 +735,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
               else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
                 {
                   ipmi_md5_t ctx;
-                  u_int8_t digest[IPMI_MD5_DIGEST_LEN];
+                  uint8_t digest[IPMI_MD5_DIGEST_LEN];
                               
                   ipmi_md5_init(&ctx);
                   ipmi_md5_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
@@ -776,11 +776,11 @@ int32_t
 assemble_ipmi_lan_pkt2 (ipmi_device_t *dev, 
 			fiid_obj_t obj_cmd, 
 			fiid_template_t tmpl_cmd, 
-			u_int8_t *pkt, 
-			u_int32_t pkt_len)
+			uint8_t *pkt, 
+			uint32_t pkt_len)
 {
-  u_int32_t index, required_len;
-  u_int32_t obj_len;
+  uint32_t index, required_len;
+  uint32_t obj_len;
 
   if (!(dev && 
 	obj_cmd && 
@@ -851,8 +851,8 @@ Optional Arguments : (pass NULL to ignore)
 */
 
 int8_t 
-unassemble_ipmi_lan_pkt (u_int8_t *pkt, 
-			 u_int32_t pkt_len, 
+unassemble_ipmi_lan_pkt (uint8_t *pkt, 
+			 uint32_t pkt_len, 
 			 fiid_template_t tmpl_hdr_session, 
 			 fiid_template_t tmpl_cmd, 
 			 fiid_obj_t obj_hdr_rmcp, 
@@ -861,9 +861,9 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
 			 fiid_obj_t obj_cmd, 
 			 fiid_obj_t obj_msg_trlr)
 {
-  u_int8_t auth_type;
-  u_int32_t auth_type_offset, indx;
-  u_int32_t obj_cmd_len, obj_len, obj_rmcp_hdr_len, obj_msg_trlr_len;
+  uint8_t auth_type;
+  uint32_t auth_type_offset, indx;
+  uint32_t obj_cmd_len, obj_len, obj_rmcp_hdr_len, obj_msg_trlr_len;
 
   if (!(pkt && tmpl_hdr_session && tmpl_cmd))
     {
@@ -1032,8 +1032,8 @@ unassemble_ipmi_lan_pkt (u_int8_t *pkt,
 
 int8_t 
 unassemble_ipmi_lan_pkt2 (ipmi_device_t *dev, 
-			  u_int8_t *pkt, 
-			  u_int32_t pkt_len, 
+			  uint8_t *pkt, 
+			  uint32_t pkt_len, 
 			  fiid_obj_t obj_cmd, 
 			  fiid_template_t tmpl_cmd)
 {
@@ -1106,8 +1106,8 @@ ipmi_lan_validate_checksum (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd, 
 			    fiid_template_t tmpl_cmd)
 {
-  u_int8_t checksum = 0;
-  u_int64_t val = 0;
+  uint8_t checksum = 0;
+  uint64_t val = 0;
   
   checksum = 0;
   ERR (get_rs_checksum1 (dev, &checksum) == 0);
@@ -1231,17 +1231,17 @@ ipmi_lan_recvfrom (int sockfd,
 }
 
 int8_t 
-ipmi_lan_cmd (u_int32_t sockfd, 
+ipmi_lan_cmd (uint32_t sockfd, 
 	      struct sockaddr *hostaddr, 
 	      size_t hostaddr_len, 
-	      u_int8_t auth_type, 
-	      u_int32_t session_seq_num, 
-	      u_int32_t session_id, 
-	      u_int8_t *auth_code_data, 
-	      u_int32_t auth_code_data_len, 
-	      u_int8_t net_fn, 
-	      u_int8_t lun, 
-	      u_int8_t rq_seq, 
+	      uint8_t auth_type, 
+	      uint32_t session_seq_num, 
+	      uint32_t session_id, 
+	      uint8_t *auth_code_data, 
+	      uint32_t auth_code_data_len, 
+	      uint8_t net_fn, 
+	      uint8_t lun, 
+	      uint8_t rq_seq, 
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_template_t tmpl_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs, 
@@ -1274,8 +1274,8 @@ ipmi_lan_cmd (u_int32_t sockfd,
     fiid_obj_t obj_hdr_rmcp;
     fiid_obj_t obj_hdr_session;
     fiid_obj_t obj_msg_hdr;
-    u_int8_t *pkt;
-    u_int32_t pkt_len;
+    uint8_t *pkt;
+    uint32_t pkt_len;
     int status = 0;
 
     FIID_OBJ_ALLOCA (obj_hdr_rmcp, tmpl_hdr_rmcp);
@@ -1310,8 +1310,8 @@ ipmi_lan_cmd (u_int32_t sockfd,
     struct sockaddr_in from;
     socklen_t fromlen;
     fiid_obj_t obj_hdr_session;
-    u_int8_t *pkt;
-    u_int32_t _pkt_len = 1024;
+    uint8_t *pkt;
+    uint32_t _pkt_len = 1024;
     int32_t pkt_len;
 
     FIID_OBJ_ALLOCA (obj_hdr_session, *tmpl_hdr_session_ptr);
@@ -1385,8 +1385,8 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
   
   {
-    u_int8_t *pkt;
-    u_int32_t pkt_len;
+    uint8_t *pkt;
+    uint32_t pkt_len;
     int status = 0;
     
     pkt_len = _ipmi_lan_pkt_rq_size2 (dev, tmpl_cmd_rq);
@@ -1434,8 +1434,8 @@ printf("DEBUGGING:\n");
     struct sockaddr_in from;
     socklen_t fromlen = 0;
     
-    u_int8_t *pkt = NULL;
-    u_int32_t pkt_max_size = 1024;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_max_size = 1024;
     int32_t bytes_received = 0;
     int32_t pkt_len;
     
@@ -1451,14 +1451,85 @@ printf("DEBUGGING:\n");
 					0, 
 					(struct sockaddr *) &from, 
 					&fromlen);
-    ERR (bytes_received >= pkt_len);
+    
+    if (bytes_received > pkt_len)
+      {
+	int i;
+	
+	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	fprintf (stderr, 
+		 "received packet size: %d\n" 
+		 "expected packet size: %d\n", 
+		 bytes_received, 
+		 pkt_len);
+	fprintf (stderr, "packet data:\n");
+	for (i = 0; i < bytes_received; i++)
+	  fprintf (stderr, "%02X ", pkt[i]);
+	fprintf (stderr, "\n");
+	
+	return (-1);
+      }
+    
+    if (bytes_received < pkt_len)
+      {
+	int min_len = 0;
+	
+	min_len = (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) + 
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) + 
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
+		   2 + /* This means, CMD + COMP_CODE */
+		   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
+	
+	if (bytes_received < min_len)
+	  {
+	    int i;
+	    
+	    fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	    fprintf (stderr, 
+		     "received packet size: %d\n" 
+		     "expected packet size: %d\n" 
+		     "minimum packet size: %d\n", 
+		     bytes_received, 
+		     pkt_len, 
+		     min_len);
+	    fprintf (stderr, "packet data:\n");
+	    for (i = 0; i < bytes_received; i++)
+	      fprintf (stderr, "%02X ", pkt[i]);
+	    fprintf (stderr, "\n");
+	    
+	    return (-1);
+	  }
+	
+	{
+	  int i;
+	  int trlr_len = 0;
+	  int fill_len = 0;
+	  int trlr_start = 0;
+	  uint8_t *tmp_buf = NULL;
+	  
+	  trlr_len = fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+	  trlr_start = bytes_received - trlr_len;
+	  tmp_buf = alloca (trlr_len);
+	  memcpy (tmp_buf, &pkt[trlr_start], trlr_len);
+	  
+	  fill_len = (pkt_len - bytes_received);
+	  for (i = 0; i < fill_len; i++)
+	    pkt[trlr_start + i] = 0;
+	  
+	  memcpy (&pkt[trlr_start + fill_len], 
+		  tmp_buf, 
+		  trlr_len);
+	  
+	  bytes_received += fill_len;
+	}
+      }
     
     ERR (unassemble_ipmi_lan_pkt2 (dev, 
 				   pkt, 
 				   pkt_len, 
 				   obj_cmd_rs, 
 				   tmpl_cmd_rs) != -1);
-
+    
     ERR (ipmi_lan_validate_checksum (dev, 
 				     obj_cmd_rs, 
 				     tmpl_cmd_rs) == 0);
@@ -1508,8 +1579,8 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
 	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
   
   {
-    u_int8_t *pkt;
-    u_int32_t pkt_len;
+    uint8_t *pkt;
+    uint32_t pkt_len;
     int status = 0;
     
     pkt_len = _ipmi_lan_pkt_rq_size2 (dev, tmpl_cmd_rq);
@@ -1545,9 +1616,9 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
 
 int8_t 
 ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
-		   u_int8_t *buf_rq, 
+		   uint8_t *buf_rq, 
 		   size_t buf_rq_len, 
-		   u_int8_t *buf_rs, 
+		   uint8_t *buf_rs, 
 		   size_t *buf_rs_len)
 {
   if (!(dev && 
@@ -1582,8 +1653,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     struct sockaddr_in from;
     socklen_t fromlen = 0;
     
-    u_int8_t *pkt = NULL;
-    u_int32_t pkt_max_size = 1024;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_max_size = 1024;
     int32_t pkt_len;
     int32_t bytes_received;
     int32_t pkt_hdrs_size;
@@ -1641,9 +1712,9 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 int8_t 
 ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
 		       fiid_obj_t obj_msg_hdr, 
-		       u_int8_t net_fn)
+		       uint8_t net_fn)
 {
-  u_int64_t net_fn_recv;
+  uint64_t net_fn_recv;
 
   if (!(obj_msg_hdr && tmpl_msg_hdr))
     {
@@ -1665,9 +1736,9 @@ ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr,
 int8_t 
 ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
 		       fiid_obj_t obj_msg_hdr, 
-		       u_int8_t rq_seq)
+		       uint8_t rq_seq)
 {
-  u_int64_t rq_seq_recv;
+  uint64_t rq_seq_recv;
 
   if (!(obj_msg_hdr && tmpl_msg_hdr))
     {
@@ -1687,10 +1758,10 @@ ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr,
 }
 
 int8_t 
-ipmi_lan_check_chksum (u_int8_t *pkt, u_int64_t pkt_len)
+ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 {
-  u_int8_t auth_type;
-  u_int32_t auth_type_offset, required_len;
+  uint8_t auth_type;
+  uint32_t auth_type_offset, required_len;
 
   if (pkt == NULL)
     {

@@ -39,7 +39,7 @@ extern "C" {
 #include <sys/stat.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-#include <sys/types.h>
+#include <stdint.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/ioctl.h>
@@ -77,7 +77,7 @@ extern "C" {
 #  include <string.h>
 #  include <stdarg.h>
 # else
-#  include <sys/types.h>
+#  include <stdint.h>
 #  ifndef HAVE_MEMCPY
     static void*
     memcpy (void *dest, const void *src, size_t n)

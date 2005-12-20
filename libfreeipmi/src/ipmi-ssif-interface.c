@@ -38,7 +38,7 @@ typedef unsigned long ULONG;
 extern int errno;
 
 static inline int32_t
-ipmi_i2c_smbus_access (int file, char read_write, u_int8_t command, int size, 
+ipmi_i2c_smbus_access (int file, char read_write, uint8_t command, int size, 
 		       union ipmi_i2c_smbus_data *data)
 {
 	struct ipmi_i2c_smbus_ioctl_data args;
@@ -54,7 +54,7 @@ ipmi_i2c_smbus_access (int file, char read_write, u_int8_t command, int size,
 linux/i2c-dev.h:i2c_smbus_read_block_data. It is duplicated here to
 reduce dependencies. -- Anand Babu */
 static inline int32_t
-ipmi_i2c_smbus_read_block_data (int file, u_int8_t command, u_int8_t *values)
+ipmi_i2c_smbus_read_block_data (int file, uint8_t command, uint8_t *values)
 {
 	union ipmi_i2c_smbus_data data;
 	int i;
@@ -72,7 +72,7 @@ ipmi_i2c_smbus_read_block_data (int file, u_int8_t command, u_int8_t *values)
 linux/i2c-dev.h:i2c_smbus_write_block_data. It is duplicated here to
 reduce dependencies. -- Anand Babu */
 static inline int32_t
-ipmi_i2c_smbus_write_block_data (int file, u_int8_t command, u_int8_t length, u_int8_t *values)
+ipmi_i2c_smbus_write_block_data (int file, uint8_t command, uint8_t length, uint8_t *values)
 {
 	union ipmi_i2c_smbus_data data;
 	int i;
@@ -86,7 +86,7 @@ ipmi_i2c_smbus_write_block_data (int file, u_int8_t command, u_int8_t length, u_
 }
 
 int
-ipmi_ssif_io_init (char *i2c_device, u_int8_t ipmb_addr, int *i2c_fd)
+ipmi_ssif_io_init (char *i2c_device, uint8_t ipmb_addr, int *i2c_fd)
 {
   int fd;
 
@@ -99,6 +99,7 @@ ipmi_ssif_io_init (char *i2c_device, u_int8_t ipmb_addr, int *i2c_fd)
    if ((fd = open (i2c_device, O_RDWR)) < 0)
      return (-1);
 
+   /* zresearch webserver ipmb_addr: 0x341A */
    if (ioctl (fd, IPMI_I2C_SLAVE, ipmb_addr) < 0)
      return (-1);
 
@@ -135,3 +136,109 @@ ipmi_ssif_io_exit (int i2c_fd)
 {
   return (close (i2c_fd));
 }
+
+int 
+ipmi_ssif_cmd2 (ipmi_device_t *dev, 
+	       fiid_obj_t obj_cmd_rq, 
+	       fiid_template_t tmpl_cmd_rq, 
+	       fiid_obj_t obj_cmd_rs, 
+	       fiid_template_t tmpl_cmd_rs)
+{
+  if (!(dev && tmpl_cmd_rq && obj_cmd_rq && tmpl_cmd_rs && obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  { 
+    uint8_t *pkt;
+    uint32_t pkt_len;
+    
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rq.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rq);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
+    
+    ERR (fill_hdr_ipmi_kcs (dev->lun, 
+			    dev->net_fn, 
+			    dev->io.inband.rq.obj_hdr) == 0);
+    ERR (assemble_ipmi_kcs_pkt (dev->io.inband.rq.obj_hdr, 
+				obj_cmd_rq, 
+				tmpl_cmd_rq, 
+				pkt, 
+				pkt_len) > 0);
+    
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, pkt, pkt_len) != -1);
+  }
+  
+  { 
+    uint8_t *pkt;
+    uint32_t pkt_len;
+    uint32_t bytes_read = 0;
+    
+    pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
+      fiid_obj_len_bytes (tmpl_cmd_rs);
+    pkt = alloca (pkt_len);
+    memset (pkt, 0, pkt_len);
+    ERR (pkt);
+    
+    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, pkt, &bytes_read) != -1);
+    if (bytes_read != pkt_len)
+      {
+	int i;
+	
+	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
+	fprintf (stderr, 
+		 "received packet size: %d\n" 
+		 "expected packet size: %d\n", 
+		 bytes_read, 
+		 pkt_len);
+	fprintf (stderr, "packet data:\n");
+	for (i = 0; i < bytes_read; i++)
+	  fprintf (stderr, "%02X ", pkt[i]);
+	fprintf (stderr, "\n");
+	
+	return (-1);
+      }
+    ERR (unassemble_ipmi_kcs_pkt (pkt, 
+				  pkt_len, 
+				  dev->io.inband.rs.obj_hdr, 
+				  obj_cmd_rs, 
+				  tmpl_cmd_rs) != -1);
+  }
+  
+  return (0);
+}
+
+int8_t 
+ipmi_ssif_cmd_raw2 (ipmi_device_t *dev, 
+		    uint8_t *buf_rq, 
+		    size_t buf_rq_len, 
+		    uint8_t *buf_rs, 
+		    size_t *buf_rs_len)
+{
+  if (!(dev && buf_rq && buf_rq_len > 0 
+        && buf_rs && buf_rs_len && *buf_rs_len > 0))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  { 
+    /* Request Block */
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, buf_rq, buf_rq_len) != -1);
+  }
+  
+  { 
+    /* Response Block */
+    uint32_t bytes_read = 0;
+    
+    ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.dev_fd, 
+				       buf_rs, *buf_rs_len)) != -1);
+    *buf_rs_len = bytes_read;
+  }
+  
+  return (0);
+}
+

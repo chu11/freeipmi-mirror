@@ -90,9 +90,9 @@
 
 
 union ipmi_i2c_smbus_data {
-  u_int8_t byte;
-  u_int16_t word;
-  u_int8_t block[IPMI_I2C_SMBUS_BLOCK_MAX + 3]; /* block[0] is used for length */
+  uint8_t byte;
+  uint16_t word;
+  uint8_t block[IPMI_I2C_SMBUS_BLOCK_MAX + 3]; /* block[0] is used for length */
                           /* one more for read length in block process call */
 	                                            /* and one more for PEC */
 };
@@ -101,7 +101,7 @@ union ipmi_i2c_smbus_data {
 /* This is the structure as used in the I2C_SMBUS ioctl call */
 struct ipmi_i2c_smbus_ioctl_data {
 	char read_write;
-	u_int8_t command;
+	uint8_t command;
 	int size;
 	union ipmi_i2c_smbus_data *data;
 };
@@ -118,7 +118,7 @@ struct ipmi_i2c_smbus_ioctl_data {
 *     retuns zero otherwise
 *
 *******************************************************************************/
-int ipmi_ssif_io_init (char *i2c_device, u_int8_t ipmb_addr, int *i2c_fd);
+int ipmi_ssif_io_init (char *i2c_device, uint8_t ipmb_addr, int *i2c_fd);
 
 
 /*******************************************************************************
@@ -163,5 +163,15 @@ size_t ipmi_ssif_read (int i2c_fd, char *buf, size_t *len);
 *******************************************************************************/
 size_t ipmi_ssif_exit (int i2c_fd);
 
+int ipmi_ssif_cmd2 (ipmi_device_t *dev, 
+		    fiid_obj_t obj_cmd_rq, 
+		    fiid_template_t tmpl_cmd_rq, 
+		    fiid_obj_t obj_cmd_rs, 
+		    fiid_template_t tmpl_cmd_rs);
+int8_t ipmi_ssif_cmd_raw2 (ipmi_device_t *dev, 
+			   uint8_t *buf_rq, 
+			   size_t buf_rq_len, 
+			   uint8_t *buf_rs, 
+			   size_t *buf_rs_len);
 
 #endif /* IPMI_SSIF_INTERFACE_H */

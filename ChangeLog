@@ -90,6 +90,12 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-20  Albert Chu <chu11@llnl.gov>
+
+	* Merge in latest from HEAD.
+
+	* Fix various ISO C99 issues.
+	
 2005-12-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-interface.c
@@ -477,6 +483,115 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2005-12-18  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd_raw2):
+	Rewritten.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd_raw2): like
+	wise.
+
+2005-12-17  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-locate/src/ipmi-locate.c: Fixed a bug which uses
+	unallocated memory.
+
+2005-12-17  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-locate/ipmi-locate.8: Added man page.
+
+2005-12-17  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-locate: New tool to probe and display ipmi devices.
+
+	* configure.ac: Updated.
+
+	* Makefile.am: Updated.
+
+2005-12-17  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-interface.c
+	(ipmi_open_inband,ipmi_cmd,ipmi_cmd_raw,ipmi_inband_close): Added
+	SSIF inband support in UDM.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c
+	(ipmi_ssif_cmd2,ipmi_ssif_cmd_raw2): Added functions.
+
+2005-12-16  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/fish-argp.c (fi_set_arguments): new function.
+
+	* fish/src/ipmi-wrapper.c (get_ipmi_host_ip_address): Improved.
+
+	* fish/src/scm-procedures.c (ex_ipmi_open): Improved.
+
+2005-12-16  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): added
+	debugging code when invalid packet data is received.
+
+2005-12-16  Anand Babu  <ab@zresearch.com>
+
+	* lot of .c,.h files: Applying Anand Avati's <avati@zresearch.com>
+	patch for ISO C99: 7.18 Integer types <stdint.h> compliance. This
+	also closes Bastian Blank <waldi@debian.org>'s bug #11210
+	overview: Uses nonstandard datatypes.
+
+2005-12-14  A Balamurugan  <bala@zresearch.com>
+
+	* fish/extensions/bc-common.scm: Fixed command line argument
+	parsing bug.
+
+	* fish/extensions/bmc-info.scm: like wise.
+
+	* fish/extensions/pef.scm: like wise.
+
+	* fish/extensions/sel.scm: like wise.
+
+	* fish/extensions/sensors-common.scm: like wise.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_01_generic_event_message, get_02_generic_event_message,
+	get_03_generic_event_message, get_04_generic_event_message,
+	get_05_generic_event_message, get_06_generic_event_message,
+	get_07_generic_event_message, get_08_generic_event_message,
+	get_09_generic_event_message, get_0A_generic_event_message,
+	get_0B_generic_event_message, get_0C_generic_event_message,
+	get_01_event_message, get_02_event_message, get_03_event_message,
+	get_04_event_message, get_05_event_message, get_06_event_message,
+	get_07_event_message, get_08_event_message, get_09_event_message,
+	get_0C_event_message, get_0F_event_message, get_10_event_message,
+	get_11_event_message, get_12_event_message, get_13_event_message,
+	get_14_event_message, get_19_event_message, get_1D_event_message,
+	get_1E_event_message, get_1F_event_message, get_20_event_message,
+	get_21_event_message, get_22_event_message, get_23_event_message,
+	get_24_event_message, get_25_event_message, get_27_event_message,
+	get_28_event_message, get_29_event_message, get_2A_event_message,
+	get_2B_event_message, get_2C_event_message,
+	get_05_event_data2_message, get_0F_event_data2_message,
+	get_10_event_data2_message, get_12_event_data2_message,
+	get_19_event_data2_message, get_21_event_data2_message,
+	get_23_event_data2_message, get_2A_event_data2_message,
+	get_2B_event_data2_message, get_2C_event_data2_message,
+	get_08_event_data3_message, get_0C_event_data3_message,
+	get_10_event_data3_message, get_19_event_data3_message,
+	get_21_event_data3_message, get_2A_event_data3_message): Become
+	static functions.
+
+2005-12-13  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/fiid.c: fiid_obj_alloc ->
+	fiid_obj_calloc. Updated across the codebase. fiid_obj_alloc and
+	fiid_obj_malloc is now a macro to fiid_obj_calloc.
+	
+	*fish/src/extension.c: once again replaced the depricated gh_
+	functions to make hook using scm functions. But this time, I use
+	scm_permanent_object to prevent the GC from freeing the hook
+	variable. This should fix the bug.
+
+	fish/src/scm-procedures.c: merged the changes from old commit that
+	replaced gh_ with scm_ functions.
+	
 2005-12-12  Albert Chu  <chu11@llnl.gov>
 
 	* configure.ac: Revert 2005-12-11 changes.

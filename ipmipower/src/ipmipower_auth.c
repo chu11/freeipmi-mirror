@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.3.2.1 2005-11-15 19:28:16 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.3.2.2 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -95,7 +95,7 @@ ipmipower_auth_list(void)
   return "auto, none, straight_passwd_key, md2, md5";
 }
 
-u_int8_t
+uint8_t
 ipmipower_ipmi_auth_type(auth_type_t at)
 {
   assert(AUTH_TYPE_VALID(at));

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.8 2005-11-15 19:28:16 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.9 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -264,15 +264,15 @@ struct ipmipower_powercmd {
 
     struct timeval time_begin;
     unsigned int session_inbound_count;
-    u_int32_t initial_outbound_seq_num;
-    u_int32_t highest_received_seq_num;
+    uint32_t initial_outbound_seq_num;
+    uint32_t highest_received_seq_num;
     unsigned int previously_received_list;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
-    u_int8_t authtype;
-    u_int8_t privilege;
-    u_int8_t close_timeout;
+    uint8_t authtype;
+    uint8_t privilege;
+    uint8_t close_timeout;
 
     struct ipmipower_connection *ic;
   
@@ -314,8 +314,8 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  u_int32_t ipmi_requester_seq_num_counter;
-  u_int32_t ping_seq_num_counter;
+  uint32_t ipmi_requester_seq_num_counter;
+  uint32_t ping_seq_num_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;

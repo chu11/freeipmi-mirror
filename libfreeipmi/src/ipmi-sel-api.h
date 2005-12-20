@@ -26,8 +26,8 @@
 
 struct sel_descriptor
 {
-  u_int16_t first_record_id;
-  u_int16_t next_record_id;
+  uint16_t first_record_id;
+  uint16_t next_record_id;
 };
 typedef struct sel_descriptor sel_descriptor_t;
 
@@ -55,12 +55,12 @@ typedef struct sel_info sel_info_t;
 
 int ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			      sel_descriptor_t *seld, 
-			      u_int8_t *record_data,
-                              u_int32_t record_data_len);
+			      uint8_t *record_data,
+                              uint32_t record_data_len);
 int ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			     sel_descriptor_t *seld, 
-			     u_int8_t *record_data,
-                             u_int32_t record_data_len);
+			     uint8_t *record_data,
+                             uint32_t record_data_len);
 int get_sel_info (ipmi_device_t *dev, 
 		  sel_info_t *pinfo);
 

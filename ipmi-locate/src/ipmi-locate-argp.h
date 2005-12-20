@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate-argp.h,v 1.1 2005-12-17 21:28:09 balamurugan Exp $ 
+   $Id: ipmi-locate-argp.h,v 1.1.2.1 2005-12-20 19:05:00 chu11 Exp $ 
    
    ipmi-locate-argp.h - command line argument parser.
    

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.6.2.4 2005-11-09 22:29:31 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.6.2.5 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,8 +42,8 @@
 static int 
 _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  u_int32_t shift_num, wrap_val, max_seq_num = 0xFFFFFFFF;
-  u_int64_t pktoseq = 0;
+  uint32_t shift_num, wrap_val, max_seq_num = 0xFFFFFFFF;
+  uint64_t pktoseq = 0;
   int retval = 0;
 
   assert(ip != NULL);
@@ -121,7 +121,7 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
    */
   if (ip->highest_received_seq_num < IPMIPOWER_SEQ_NUM_WINDOW)
     {
-      u_int32_t wrap_val = max_seq_num - (IPMIPOWER_SEQ_NUM_WINDOW - ip->highest_received_seq_num) + 1;
+      uint32_t wrap_val = max_seq_num - (IPMIPOWER_SEQ_NUM_WINDOW - ip->highest_received_seq_num) + 1;
       
       if (pktoseq < ip->highest_received_seq_num || pktoseq >= wrap_val)
         {
@@ -165,8 +165,8 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int64_t session_id = 0;
-  u_int64_t actv_res_session_id = 0;
+  uint64_t session_id = 0;
+  uint64_t actv_res_session_id = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -202,8 +202,8 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int64_t netfn = 0;
-  u_int64_t expected_netfn;
+  uint64_t netfn = 0;
+  uint64_t expected_netfn;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -225,8 +225,8 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int64_t pktrseq = 0;
-  u_int64_t myrseq = 0;
+  uint64_t pktrseq = 0;
+  uint64_t myrseq = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -245,8 +245,8 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int64_t cmd = 0;
-  u_int64_t expected_cmd = -1;
+  uint64_t cmd = 0;
+  uint64_t expected_cmd = -1;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -280,7 +280,7 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  u_int64_t cc = 0;
+  uint64_t cc = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));

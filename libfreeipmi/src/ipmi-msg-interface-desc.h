@@ -80,14 +80,14 @@ extern const char *ipmi_system_software_type_desc[];
 /* #pragma pack(1) */
 /* typedef struct net_fn */
 /* { */
-/*   u_int8_t lun:2; */
-/*   u_int8_t fn:6; */
+/*   uint8_t lun:2; */
+/*   uint8_t fn:6; */
 /* } net_fn_t; */
 /* #pragma pack(0) */
 
-u_int8_t ipmi_netfn2byte (net_fn_t net_fn);
+uint8_t ipmi_netfn2byte (net_fn_t net_fn);
 
-int ipmi_get_system_software_type (u_int8_t system_software_id);
+int ipmi_get_system_software_type (uint8_t system_software_id);
 
 #ifdef __cplusplus
 }

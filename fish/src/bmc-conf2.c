@@ -20,13 +20,13 @@
 
 static int8_t 
 set_bmc_user_access (ipmi_device_t *dev, 
-		     u_int8_t userid, 
-		     u_int8_t channel_number, 
-		     u_int8_t enable_ipmi_msgs, 
-		     u_int8_t enable_link_auth, 
-		     u_int8_t enable_restrict_to_callback, 
-		     u_int8_t privilege_limit, 
-		     u_int8_t session_limit)
+		     uint8_t userid, 
+		     uint8_t channel_number, 
+		     uint8_t enable_ipmi_msgs, 
+		     uint8_t enable_link_auth, 
+		     uint8_t enable_restrict_to_callback, 
+		     uint8_t privilege_limit, 
+		     uint8_t session_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -49,13 +49,13 @@ set_bmc_user_access (ipmi_device_t *dev,
 
 static int8_t 
 set_bmc_channel_access (ipmi_device_t *dev, 
-			u_int8_t channel_number, 
-			u_int8_t set_option, 
-			u_int8_t access_mode, 
-			u_int8_t enable_user_level_auth, 
-			u_int8_t enable_per_message_auth, 
-			u_int8_t enable_pef_alerting, 
-			u_int8_t channel_privilege_limit)
+			uint8_t channel_number, 
+			uint8_t set_option, 
+			uint8_t access_mode, 
+			uint8_t enable_user_level_auth, 
+			uint8_t enable_per_message_auth, 
+			uint8_t enable_pef_alerting, 
+			uint8_t channel_privilege_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -81,8 +81,8 @@ set_bmc_channel_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_username (ipmi_device_t *dev, 
-		  u_int8_t userid, 
-		  u_int8_t *username)
+		  uint8_t userid, 
+		  uint8_t *username)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -103,11 +103,11 @@ set_bmc_username (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_enable_user (ipmi_device_t *dev, 
-		     u_int8_t userid, 
+		     uint8_t userid, 
 		     int user_status)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t password[IPMI_USER_PASSWORD_MAX_LENGTH];
+  uint8_t password[IPMI_USER_PASSWORD_MAX_LENGTH];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_set_user_password_rs);
   memset (password, 0, IPMI_USER_PASSWORD_MAX_LENGTH);
@@ -126,8 +126,8 @@ set_bmc_enable_user (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_user_password (ipmi_device_t *dev, 
-		       u_int8_t userid, 
-		       u_int8_t *password)
+		       uint8_t userid, 
+		       uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -146,12 +146,12 @@ set_bmc_user_password (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_user_lan_channel_access (ipmi_device_t *dev, 
-				 u_int8_t userid, 
-				 u_int8_t lan_enable_ipmi_msgs, 
-				 u_int8_t lan_enable_link_auth, 
-				 u_int8_t lan_enable_restrict_to_callback, 
-				 u_int8_t lan_privilege_limit, 
-				 u_int8_t lan_session_limit)
+				 uint8_t userid, 
+				 uint8_t lan_enable_ipmi_msgs, 
+				 uint8_t lan_enable_link_auth, 
+				 uint8_t lan_enable_restrict_to_callback, 
+				 uint8_t lan_privilege_limit, 
+				 uint8_t lan_session_limit)
 {
   return set_bmc_user_access (dev, 
 			      userid, 
@@ -165,12 +165,12 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_user_serial_channel_access (ipmi_device_t *dev, 
-				    u_int8_t userid, 
-				    u_int8_t serial_enable_ipmi_msgs, 
-				    u_int8_t serial_enable_link_auth, 
-				    u_int8_t serial_enable_restrict_to_callback, 
-				    u_int8_t serial_privilege_limit, 
-				    u_int8_t serial_session_limit)
+				    uint8_t userid, 
+				    uint8_t serial_enable_ipmi_msgs, 
+				    uint8_t serial_enable_link_auth, 
+				    uint8_t serial_enable_restrict_to_callback, 
+				    uint8_t serial_privilege_limit, 
+				    uint8_t serial_session_limit)
 {
   return set_bmc_user_access (dev, 
 			      userid, 
@@ -184,11 +184,11 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
-				     u_int8_t access_mode, 
-				     u_int8_t enable_user_level_auth, 
-				     u_int8_t enable_per_message_auth, 
-				     u_int8_t enable_pef_alerting, 
-				     u_int8_t channel_privilege_limit)
+				     uint8_t access_mode, 
+				     uint8_t enable_user_level_auth, 
+				     uint8_t enable_per_message_auth, 
+				     uint8_t enable_pef_alerting, 
+				     uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
@@ -202,11 +202,11 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
-					 u_int8_t access_mode, 
-					 u_int8_t enable_user_level_auth, 
-					 u_int8_t enable_per_message_auth, 
-					 u_int8_t enable_pef_alerting, 
-					 u_int8_t channel_privilege_limit)
+					 uint8_t access_mode, 
+					 uint8_t enable_user_level_auth, 
+					 uint8_t enable_per_message_auth, 
+					 uint8_t enable_pef_alerting, 
+					 uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
@@ -220,7 +220,7 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-				 u_int8_t ip_addr_source)
+				 uint8_t ip_addr_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -243,7 +243,7 @@ set_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  u_int64_t ip_address = 0;
+  uint64_t ip_address = 0;
   
   sscanf (ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
   ip_address = bits_merge (ip_address, 0,  8,  b1);
@@ -270,7 +270,7 @@ set_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  u_int64_t mac_address = 0;
+  uint64_t mac_address = 0;
   
   sscanf (mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6);
   mac_address = bits_merge (mac_address, 0,  8,  b1);
@@ -299,7 +299,7 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  u_int64_t subnetmask = 0;
+  uint64_t subnetmask = 0;
   
   sscanf (subnet_mask, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
   subnetmask = bits_merge (subnetmask, 0,  8,  b1);
@@ -326,7 +326,7 @@ set_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  u_int64_t ip_address = 0;
+  uint64_t ip_address = 0;
   
   sscanf (default_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
   ip_address = bits_merge (ip_address, 0,  8,  b1);
@@ -353,7 +353,7 @@ set_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  u_int64_t mac_address = 0;
+  uint64_t mac_address = 0;
   
   sscanf (default_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
@@ -383,7 +383,7 @@ set_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  u_int64_t ip_address = 0;
+  uint64_t ip_address = 0;
   
   sscanf (backup_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
   ip_address = bits_merge (ip_address, 0,  8,  b1);
@@ -410,7 +410,7 @@ set_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  u_int64_t mac_address = 0;
+  uint64_t mac_address = 0;
   
   sscanf (backup_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
@@ -435,8 +435,8 @@ set_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
-			  u_int8_t vlan_id_flag, 
-			  u_int32_t vlan_id)
+			  uint8_t vlan_id_flag, 
+			  uint32_t vlan_id)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -455,7 +455,7 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
-				u_int8_t vlan_priority)
+				uint8_t vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -477,11 +477,11 @@ set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
-  u_int8_t auth_type_callback_level = 0;
-  u_int8_t auth_type_user_level = 0;
-  u_int8_t auth_type_operator_level = 0;
-  u_int8_t auth_type_admin_level = 0;
-  u_int8_t auth_type_oem_level = 0;
+  uint8_t auth_type_callback_level = 0;
+  uint8_t auth_type_user_level = 0;
+  uint8_t auth_type_operator_level = 0;
+  uint8_t auth_type_admin_level = 0;
+  uint8_t auth_type_oem_level = 0;
   
   if (bmc_auth_level->callback.type_none)
     auth_type_callback_level = BIT_SET (auth_type_callback_level, 0);
@@ -556,8 +556,8 @@ set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-			      u_int8_t enable_gratuitous_arps, 
-			      u_int8_t enable_arp_response)
+			      uint8_t enable_gratuitous_arps, 
+			      uint8_t enable_arp_response)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -576,7 +576,7 @@ set_bmc_lan_conf_arp_control (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-				 u_int8_t gratuitous_arp_interval)
+				 uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -594,11 +594,11 @@ set_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
-					u_int8_t access_mode, 
-					u_int8_t enable_user_level_auth, 
-					u_int8_t enable_per_message_auth, 
-					u_int8_t enable_pef_alerting, 
-					u_int8_t channel_privilege_limit)
+					uint8_t access_mode, 
+					uint8_t enable_user_level_auth, 
+					uint8_t enable_per_message_auth, 
+					uint8_t enable_pef_alerting, 
+					uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
@@ -612,11 +612,11 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
-					    u_int8_t access_mode, 
-					    u_int8_t enable_user_level_auth, 
-					    u_int8_t enable_per_message_auth, 
-					    u_int8_t enable_pef_alerting, 
-					    u_int8_t channel_privilege_limit)
+					    uint8_t access_mode, 
+					    uint8_t enable_user_level_auth, 
+					    uint8_t enable_per_message_auth, 
+					    uint8_t enable_pef_alerting, 
+					    uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
@@ -630,10 +630,10 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-			       u_int8_t enable_basic_mode, 
-			       u_int8_t enable_ppp_mode, 
-			       u_int8_t enable_terminal_mode, 
-			       u_int8_t connect_mode)
+			       uint8_t enable_basic_mode, 
+			       uint8_t enable_ppp_mode, 
+			       uint8_t enable_terminal_mode, 
+			       uint8_t connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -654,7 +654,7 @@ set_bmc_serial_conf_conn_mode (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
-					    u_int8_t page_blackout_interval)
+					    uint8_t page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -672,7 +672,7 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-				     u_int8_t call_retry_time)
+				     uint8_t call_retry_time)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -690,9 +690,9 @@ set_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-					    u_int8_t dtr_hangup, 
-					    u_int8_t flow_control, 
-					    u_int8_t bit_rate)
+					    uint8_t dtr_hangup, 
+					    uint8_t flow_control, 
+					    uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -712,7 +712,7 @@ set_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_power_restore_policy (ipmi_device_t *dev, 
-			      u_int8_t power_restore_policy)
+			      uint8_t power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -729,10 +729,10 @@ set_bmc_power_restore_policy (ipmi_device_t *dev,
 
 int8_t 
 set_pef_control (ipmi_device_t *dev, 
-		 u_int8_t pef_enable, 
-		 u_int8_t pef_event_msgs_enable, 
-		 u_int8_t pef_startup_delay_enable, 
-		 u_int8_t pef_alert_startup_delay_enable)
+		 uint8_t pef_enable, 
+		 uint8_t pef_event_msgs_enable, 
+		 uint8_t pef_startup_delay_enable, 
+		 uint8_t pef_alert_startup_delay_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -752,12 +752,12 @@ set_pef_control (ipmi_device_t *dev,
 
 int8_t 
 set_pef_global_action_control (ipmi_device_t *dev, 
-			       u_int8_t alert_action_enable, 
-			       u_int8_t powerdown_action_enable, 
-			       u_int8_t reset_action_enable, 
-			       u_int8_t powercycle_action_enable, 
-			       u_int8_t oem_action_enable, 
-			       u_int8_t diag_interrupt_enable)
+			       uint8_t alert_action_enable, 
+			       uint8_t powerdown_action_enable, 
+			       uint8_t reset_action_enable, 
+			       uint8_t powercycle_action_enable, 
+			       uint8_t oem_action_enable, 
+			       uint8_t diag_interrupt_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -779,7 +779,7 @@ set_pef_global_action_control (ipmi_device_t *dev,
 
 int8_t 
 set_pef_startup_delay (ipmi_device_t *dev, 
-		       u_int8_t pef_startup_delay)
+		       uint8_t pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -796,7 +796,7 @@ set_pef_startup_delay (ipmi_device_t *dev,
 
 int8_t 
 set_pef_alert_startup_delay (ipmi_device_t *dev, 
-			     u_int8_t pef_alert_startup_delay)
+			     uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -813,16 +813,16 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
 
 static int8_t 
 get_bmc_user_access (ipmi_device_t *dev, 
-		     u_int8_t userid, 
-		     u_int8_t channel_number, 
-		     u_int8_t *enable_ipmi_msgs, 
-		     u_int8_t *enable_link_auth, 
-		     u_int8_t *enable_restrict_to_callback, 
-		     u_int8_t *privilege_limit, 
-		     u_int8_t *session_limit)
+		     uint8_t userid, 
+		     uint8_t channel_number, 
+		     uint8_t *enable_ipmi_msgs, 
+		     uint8_t *enable_link_auth, 
+		     uint8_t *enable_restrict_to_callback, 
+		     uint8_t *privilege_limit, 
+		     uint8_t *session_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_user_access_rs);
   if (ipmi_cmd_get_user_access2 (dev, 
@@ -837,25 +837,25 @@ get_bmc_user_access (ipmi_device_t *dev,
 		tmpl_get_user_access_rs, 
 		"user_privilege_level_limit", 
 		&val);
-  *privilege_limit = (u_int8_t) val;
+  *privilege_limit = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
 		"user_flags.enable_ipmi_msgs", 
 		&val);
-  *enable_ipmi_msgs = (u_int8_t) val;
+  *enable_ipmi_msgs = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
 		"user_flags.enable_link_auth", 
 		&val);
-  *enable_link_auth = (u_int8_t) val;
+  *enable_link_auth = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
 		"user_flags.restrict_to_callback", 
 		&val);
-  *enable_restrict_to_callback = (u_int8_t) val;
+  *enable_restrict_to_callback = (uint8_t) val;
   
   *session_limit = 0;
   
@@ -864,16 +864,16 @@ get_bmc_user_access (ipmi_device_t *dev,
 
 static int8_t 
 get_bmc_channel_access (ipmi_device_t *dev, 
-			u_int8_t channel_number, 
-			u_int8_t access_type, 
-			u_int8_t *access_mode, 
-			u_int8_t *user_level_auth, 
-			u_int8_t *per_message_auth, 
-			u_int8_t *pef_alerting, 
-			u_int8_t *privilege_limit)
+			uint8_t channel_number, 
+			uint8_t access_type, 
+			uint8_t *access_mode, 
+			uint8_t *user_level_auth, 
+			uint8_t *per_message_auth, 
+			uint8_t *pef_alerting, 
+			uint8_t *privilege_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_channel_access_rs);
   if (ipmi_cmd_get_channel_access2 (dev, 
@@ -920,9 +920,9 @@ get_bmc_channel_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_username (ipmi_device_t *dev, 
-		  u_int8_t userid, 
-		  u_int8_t *username,
-                  u_int32_t username_len)
+		  uint8_t userid, 
+		  uint8_t *username,
+                  uint32_t username_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
@@ -951,12 +951,12 @@ get_bmc_username (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_user_lan_channel_access (ipmi_device_t *dev, 
-				 u_int8_t userid, 
-				 u_int8_t *enable_ipmi_msgs, 
-				 u_int8_t *enable_link_auth, 
-				 u_int8_t *enable_restrict_to_callback, 
-				 u_int8_t *privilege_limit, 
-				 u_int8_t *session_limit)
+				 uint8_t userid, 
+				 uint8_t *enable_ipmi_msgs, 
+				 uint8_t *enable_link_auth, 
+				 uint8_t *enable_restrict_to_callback, 
+				 uint8_t *privilege_limit, 
+				 uint8_t *session_limit)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
@@ -970,12 +970,12 @@ get_bmc_user_lan_channel_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_user_serial_channel_access (ipmi_device_t *dev, 
-				    u_int8_t userid, 
-				    u_int8_t *enable_ipmi_msgs, 
-				    u_int8_t *enable_link_auth, 
-				    u_int8_t *enable_restrict_to_callback, 
-				    u_int8_t *privilege_limit, 
-				    u_int8_t *session_limit)
+				    uint8_t userid, 
+				    uint8_t *enable_ipmi_msgs, 
+				    uint8_t *enable_link_auth, 
+				    uint8_t *enable_restrict_to_callback, 
+				    uint8_t *privilege_limit, 
+				    uint8_t *session_limit)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
@@ -989,11 +989,11 @@ get_bmc_user_serial_channel_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
-				     u_int8_t *access_mode, 
-				     u_int8_t *user_level_auth, 
-				     u_int8_t *per_message_auth, 
-				     u_int8_t *pef_alerting, 
-				     u_int8_t *privilege_limit)
+				     uint8_t *access_mode, 
+				     uint8_t *user_level_auth, 
+				     uint8_t *per_message_auth, 
+				     uint8_t *pef_alerting, 
+				     uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
@@ -1007,11 +1007,11 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
-					 u_int8_t *access_mode, 
-					 u_int8_t *user_level_auth, 
-					 u_int8_t *per_message_auth, 
-					 u_int8_t *pef_alerting, 
-					 u_int8_t *privilege_limit)
+					 uint8_t *access_mode, 
+					 uint8_t *user_level_auth, 
+					 uint8_t *per_message_auth, 
+					 uint8_t *pef_alerting, 
+					 uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
@@ -1025,10 +1025,10 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-				 u_int8_t *ip_addr_source)
+				 uint8_t *ip_addr_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_ip_addr_source_rs);
   if (ipmi_cmd_lan_get_ip_addr_source2 (dev, 
@@ -1055,7 +1055,7 @@ get_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
 			  char *ip_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t ip_addr_bytes[4];
+  uint8_t ip_addr_bytes[4];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_ip_addr_rs);
   if (ipmi_cmd_lan_get_ip_addr2 (dev, 
@@ -1088,7 +1088,7 @@ get_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
 			   char *mac_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t mac_addr_bytes[6];
+  uint8_t mac_addr_bytes[6];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_mac_addr2 (dev, 
@@ -1123,7 +1123,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t subnet_mask_bytes[4];
+  uint8_t subnet_mask_bytes[4];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_subnet_mask_rs);
   if (ipmi_cmd_lan_get_subnet_mask2 (dev, 
@@ -1156,7 +1156,7 @@ get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
 				     char *default_gw_ip_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t ip_addr_bytes[4];
+  uint8_t ip_addr_bytes[4];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   if (ipmi_cmd_lan_get_default_gw_ip_addr2 (dev, 
@@ -1189,7 +1189,7 @@ get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
 				      char *default_gw_mac_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t mac_addr_bytes[6];
+  uint8_t mac_addr_bytes[6];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_default_gw_mac_addr2 (dev, 
@@ -1224,7 +1224,7 @@ get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
 				    char *backup_gw_ip_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t ip_addr_bytes[4];
+  uint8_t ip_addr_bytes[4];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   if (ipmi_cmd_lan_get_backup_gw_ip_addr2 (dev, 
@@ -1257,7 +1257,7 @@ get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
 				     char *backup_gw_mac_addr)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int8_t mac_addr_bytes[6];
+  uint8_t mac_addr_bytes[6];
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_backup_gw_mac_addr2 (dev, 
@@ -1289,12 +1289,12 @@ get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
-			  u_int8_t *vlan_id_flag, 
-			  u_int32_t *vlan_id)
+			  uint8_t *vlan_id_flag, 
+			  uint32_t *vlan_id)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t ls_val, ms_val, val;
-  u_int8_t *ptr;
+  uint64_t ls_val, ms_val, val;
+  uint8_t *ptr;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_vlan_id_rs);
   if (ipmi_cmd_lan_get_vlan_id2 (dev, 
@@ -1317,7 +1317,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 		"vlan_id_ms", 
 		&ms_val);
   
-  ptr = (u_int8_t *)vlan_id;
+  ptr = (uint8_t *)vlan_id;
 #if WORDS_BIGENDIAN
   ptr[3] = ls_val;
   ptr[2] = ms_val;
@@ -1337,10 +1337,10 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
-				u_int8_t *vlan_priority)
+				uint8_t *vlan_priority)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_vlan_priority_rs);
   if (ipmi_cmd_lan_get_vlan_priority2 (dev, 
@@ -1367,7 +1367,7 @@ get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 				    struct bmc_auth_level *bmc_auth_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_auth_type_enables_rs);
   if (ipmi_cmd_lan_get_auth_type_enables2 (dev, 
@@ -1535,11 +1535,11 @@ get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-			      u_int8_t *enable_gratuitous_arps, 
-			      u_int8_t *enable_arp_response)
+			      uint8_t *enable_gratuitous_arps, 
+			      uint8_t *enable_arp_response)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_bmc_generated_arp_control_rs);
   if (ipmi_cmd_lan_get_arp2 (dev, 
@@ -1569,10 +1569,10 @@ get_bmc_lan_conf_arp_control (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-				 u_int8_t *gratuitous_arp_interval)
+				 uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gratuitous_arp_interval_rs);
   if (ipmi_cmd_lan_get_gratuitous_arp_interval2 (dev, 
@@ -1596,11 +1596,11 @@ get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
-					u_int8_t *access_mode, 
-					u_int8_t *user_level_auth, 
-					u_int8_t *per_message_auth, 
-					u_int8_t *pef_alerting, 
-					u_int8_t *privilege_limit)
+					uint8_t *access_mode, 
+					uint8_t *user_level_auth, 
+					uint8_t *per_message_auth, 
+					uint8_t *pef_alerting, 
+					uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
@@ -1614,11 +1614,11 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
-					    u_int8_t *access_mode, 
-					    u_int8_t *user_level_auth, 
-					    u_int8_t *per_message_auth, 
-					    u_int8_t *pef_alerting, 
-					    u_int8_t *privilege_limit)
+					    uint8_t *access_mode, 
+					    uint8_t *user_level_auth, 
+					    uint8_t *per_message_auth, 
+					    uint8_t *pef_alerting, 
+					    uint8_t *privilege_limit)
 {
   return get_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
@@ -1632,13 +1632,13 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-			       u_int8_t *enable_basic_mode, 
-			       u_int8_t *enable_ppp_mode, 
-			       u_int8_t *enable_terminal_mode, 
-			       u_int8_t *connect_mode)
+			       uint8_t *enable_basic_mode, 
+			       uint8_t *enable_ppp_mode, 
+			       uint8_t *enable_terminal_mode, 
+			       uint8_t *connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_connmode_rs);
   if (ipmi_cmd_get_serial_connmode2 (dev, 
@@ -1680,10 +1680,10 @@ get_bmc_serial_conf_conn_mode (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
-					    u_int8_t *page_blackout_interval)
+					    uint8_t *page_blackout_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_pageblackout_rs);
   if (ipmi_cmd_get_serial_page_blackout2 (dev, 
@@ -1707,10 +1707,10 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-				     u_int8_t *call_retry_time)
+				     uint8_t *call_retry_time)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_retry_rs);
   if (ipmi_cmd_get_serial_retry_time2 (dev, 
@@ -1734,12 +1734,12 @@ get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-					    u_int8_t *dtr_hangup, 
-					    u_int8_t *flow_control, 
-					    u_int8_t *bit_rate)
+					    uint8_t *dtr_hangup, 
+					    uint8_t *flow_control, 
+					    uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_commbits_rs);
   if (ipmi_cmd_get_serial_comm_bits2 (dev, 
@@ -1775,10 +1775,10 @@ get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_power_restore_policy (ipmi_device_t *dev, 
-			      u_int8_t *power_restore_policy)
+			      uint8_t *power_restore_policy)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val;
+  uint64_t val;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_cmd_get_chassis_status_rs);
   if (ipmi_cmd_get_chassis_status2 (dev, obj_cmd_rs) != 0)
@@ -1797,13 +1797,13 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
 
 int8_t 
 get_pef_control (ipmi_device_t *dev, 
-		 u_int8_t *pef_enable, 
-		 u_int8_t *pef_event_msgs_enable, 
-		 u_int8_t *pef_startup_delay_enable, 
-		 u_int8_t *pef_alert_startup_delay_enable)
+		 uint8_t *pef_enable, 
+		 uint8_t *pef_event_msgs_enable, 
+		 uint8_t *pef_startup_delay_enable, 
+		 uint8_t *pef_alert_startup_delay_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_pef_control_rs);
   if (ipmi_cmd_get_pef_control2 (dev, 
@@ -1844,15 +1844,15 @@ get_pef_control (ipmi_device_t *dev,
 
 int8_t 
 get_pef_global_action_control (ipmi_device_t *dev, 
-			       u_int8_t *alert_action_enable, 
-			       u_int8_t *powerdown_action_enable, 
-			       u_int8_t *reset_action_enable, 
-			       u_int8_t *powercycle_action_enable, 
-			       u_int8_t *oem_action_enable, 
-			       u_int8_t *diag_interrupt_enable)
+			       uint8_t *alert_action_enable, 
+			       uint8_t *powerdown_action_enable, 
+			       uint8_t *reset_action_enable, 
+			       uint8_t *powercycle_action_enable, 
+			       uint8_t *oem_action_enable, 
+			       uint8_t *diag_interrupt_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_global_action_control_rs);
   if (ipmi_cmd_get_pef_global_action_control2 (dev, 
@@ -1905,10 +1905,10 @@ get_pef_global_action_control (ipmi_device_t *dev,
 
 int8_t 
 get_pef_startup_delay (ipmi_device_t *dev, 
-		       u_int8_t *pef_startup_delay)
+		       uint8_t *pef_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_startup_delay_rs);
   if (ipmi_cmd_get_pef_startup_delay2 (dev, 
@@ -1931,10 +1931,10 @@ get_pef_startup_delay (ipmi_device_t *dev,
 
 int8_t 
 get_pef_alert_startup_delay (ipmi_device_t *dev, 
-			     u_int8_t *pef_alert_startup_delay)
+			     uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  u_int64_t val = 0;
+  uint64_t val = 0;
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_alert_startup_delay_rs);
   if (ipmi_cmd_get_pef_alert_startup_delay2 (dev, 
@@ -1958,8 +1958,8 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
 /***********************************************************/
 int8_t 
 check_bmc_user_password (ipmi_device_t *dev, 
-			 u_int8_t userid, 
-			 u_int8_t *password)
+			 uint8_t userid, 
+			 uint8_t *password)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   

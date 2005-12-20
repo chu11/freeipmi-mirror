@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.c,v 1.1 2005-10-06 10:41:09 balamurugan Exp $ 
+   $Id: fish-argp.c,v 1.1.2.1 2005-12-20 19:04:59 chu11 Exp $ 
    
    fish-argp.c - fish command line argument parser.
    
@@ -96,7 +96,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
       arguments->verbose = 1;
       break;
     case SCRIPT_FILE_KEY:
-      arguments->script_file = arg;
+      arguments->script_file = strdup (arg);
       script_arg_start_index = state->next;
       /* consume rest of args */
       state->next = state->argc;
@@ -108,19 +108,19 @@ parse_opt (int key, char *arg, struct argp_state *state)
       arguments->sms_io_base = atol (arg);
       break;
     case HOST_KEY:
-      arguments->host = arg;
+      arguments->host = strdup (arg);
       break;
     case USERNAME_KEY:
       if (strlen (arg) > 16)
 	argp_usage (state);
       else 
-	arguments->username = arg;
+	arguments->username = strdup (arg);
       break;
     case PASSWORD_KEY:
       if (strlen (arg) > 16)
 	argp_usage (state);
       else 
-	arguments->password = arg;
+	arguments->password = strdup (arg);
       break;
     case AUTH_TYPE_KEY:
       if (strcasecmp (arg, "none") == 0)
@@ -265,6 +265,50 @@ struct arguments *
 fi_get_arguments ()
 {
   return &arguments;
+}
+
+int 
+fi_set_arguments (struct arguments *args)
+{
+  arguments.quiet = args->quiet;
+  arguments.brief = args->brief;
+  arguments.verbose = args->verbose;
+  
+  if (arguments.script_file)
+    xfree (arguments.script_file);
+  if (args->script_file)
+    arguments.script_file = strdup (args->script_file);
+  else 
+    arguments.script_file = NULL;
+  
+  arguments.poll_interval = args->poll_interval;
+  arguments.sms_io_base = args->sms_io_base;
+  
+  if (arguments.host)
+    xfree (arguments.host);
+  if (args->host)
+    arguments.host = strdup (args->host);
+  else 
+    arguments.host = NULL;
+  
+  if (arguments.username)
+    xfree (arguments.username);
+  if (args->username)
+    arguments.username = strdup (args->username);
+  else 
+    arguments.username = NULL;
+  
+  if (arguments.password)
+    xfree (arguments.password);
+  if (args->password)
+    arguments.password = strdup (args->password);
+  else 
+    arguments.password = NULL;
+  
+  arguments.auth_type = args->auth_type;
+  arguments.priv_level = args->priv_level;
+  
+  return (0);
 }
 
 void 

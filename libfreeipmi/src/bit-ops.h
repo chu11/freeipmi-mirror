@@ -34,7 +34,7 @@ extern "C" {
 #define BIT_5 0x20  
 #define BIT_6 0x40
 #define BIT_7 0x80
-#define BIT(n) ((u_int64_t) powl(2, n))
+#define BIT(n) ((uint64_t) powl(2, n))
 
 #define TOBOOL(arg) (!(!(arg)))
 #define BIT_SET(arg, posn) (arg | (1L << posn))
@@ -56,7 +56,7 @@ extern "C" {
 #define BITS_ROUND_BYTES(bits_count) ((bits_count / 8) + ((bits_count % 8) ? 1 : 0))
 
 
-typedef	u_int8_t bitstr_t;
+typedef	uint8_t bitstr_t;
 /* internal macros */
 				/* byte of the bitstring bit is in */
 #define	_BITSTR_BYTE(bit) \
@@ -156,8 +156,8 @@ typedef	u_int8_t bitstr_t;
 	*(value) = _value; \
 }
 
-u_int64_t bits_extract (u_int64_t bits, u_int8_t start, u_int8_t end);
-u_int64_t bits_merge (u_int64_t bits, u_int8_t start, u_int8_t end, u_int64_t val);
+uint64_t bits_extract (uint64_t bits, uint8_t start, uint8_t end);
+uint64_t bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val);
 
 #ifdef __cplusplus
 }

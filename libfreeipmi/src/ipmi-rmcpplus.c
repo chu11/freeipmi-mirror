@@ -181,13 +181,13 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
   };
 
 int8_t
-fill_rmcpplus_hdr_session (u_int8_t payload_type, 
-                           u_int8_t payload_authenticated, 
-                           u_int8_t payload_encrypted, 
-                           u_int32_t oem_iana, 
-                           u_int16_t oem_payload_id, 
-                           u_int32_t session_id, 
-                           u_int32_t session_seq_num, 
+fill_rmcpplus_hdr_session (uint8_t payload_type, 
+                           uint8_t payload_authenticated, 
+                           uint8_t payload_encrypted, 
+                           uint32_t oem_iana, 
+                           uint16_t oem_payload_id, 
+                           uint32_t session_id, 
+                           uint32_t session_seq_num, 
                            fiid_obj_t obj_hdr)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
@@ -226,8 +226,8 @@ fill_rmcpplus_hdr_session (u_int8_t payload_type,
 
 int8_t
 fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
-                           u_int8_t *auth_code_data,
-                           u_int32_t auth_code_data_len,
+                           uint8_t *auth_code_data,
+                           uint32_t auth_code_data_len,
                            fiid_obj_t obj_trlr)
 {
   int32_t field_len;
@@ -305,12 +305,12 @@ fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
 }
 
 int8_t
-fill_rmcpplus_payload(u_int8_t *confidentiality_header,
-                      u_int32_t confidentiality_header_len,
-                      u_int8_t *payload_data,
-                      u_int32_t payload_data_len,
-                      u_int8_t *confidentiality_trailer,
-                      u_int32_t confidentiality_trailer_len,
+fill_rmcpplus_payload(uint8_t *confidentiality_header,
+                      uint32_t confidentiality_header_len,
+                      uint8_t *payload_data,
+                      uint32_t payload_data_len,
+                      uint8_t *confidentiality_trailer,
+                      uint32_t confidentiality_trailer_len,
                       fiid_obj_t obj_cmd)
 {
   if (!obj_cmd)
@@ -382,12 +382,12 @@ fill_rmcpplus_payload(u_int8_t *confidentiality_header,
 }
                              
 int8_t
-fill_rmcpplus_open_session (u_int8_t message_tag,
-                            u_int8_t requested_maximum_privilege_level,
-                            u_int32_t remote_console_session_id,
-                            u_int8_t authentication_algorithm,
-                            u_int8_t integrity_algorithm,
-                            u_int8_t confidentiality_algorithm,
+fill_rmcpplus_open_session (uint8_t message_tag,
+                            uint8_t requested_maximum_privilege_level,
+                            uint32_t remote_console_session_id,
+                            uint8_t authentication_algorithm,
+                            uint8_t integrity_algorithm,
+                            uint8_t confidentiality_algorithm,
                             fiid_obj_t obj_cmd)
 {
   if (!obj_cmd
@@ -454,14 +454,14 @@ fill_rmcpplus_open_session (u_int8_t message_tag,
 }
 
 int8_t
-fill_rmcpplus_rakp_message_1(u_int8_t message_tag,
-                             u_int32_t managed_system_session_id,
-                             u_int8_t *remote_console_random_number,
-                             u_int32_t remote_console_random_number_len,
-                             u_int8_t requested_maximum_privilege_level,
-                             u_int8_t nameonly_lookup_flag,
-                             u_int8_t *username,
-                             u_int32_t username_len,
+fill_rmcpplus_rakp_message_1(uint8_t message_tag,
+                             uint32_t managed_system_session_id,
+                             uint8_t *remote_console_random_number,
+                             uint32_t remote_console_random_number_len,
+                             uint8_t requested_maximum_privilege_level,
+                             uint8_t nameonly_lookup_flag,
+                             uint8_t *username,
+                             uint32_t username_len,
                              fiid_obj_t obj_cmd)
 {
   if (!obj_cmd
@@ -511,11 +511,11 @@ fill_rmcpplus_rakp_message_1(u_int8_t message_tag,
 }
 
 int8_t
-fill_rmcpplus_rakp_message_3(u_int8_t message_tag,
-                             u_int8_t rmcpplus_status_code,
-                             u_int32_t managed_system_session_id,
-                             u_int8_t *key_exchange_authentication_code,
-                             u_int32_t key_exchange_authentication_code_len,
+fill_rmcpplus_rakp_message_3(uint8_t message_tag,
+                             uint8_t rmcpplus_status_code,
+                             uint32_t managed_system_session_id,
+                             uint8_t *key_exchange_authentication_code,
+                             uint32_t key_exchange_authentication_code_len,
                              fiid_obj_t obj_cmd)
 {
   if (!obj_cmd || !RMCPPLUS_STATUS_VALID(rmcpplus_status_code))
@@ -536,7 +536,7 @@ fill_rmcpplus_rakp_message_3(u_int8_t message_tag,
 
   if (key_exchange_authentication_code && key_exchange_authentication_code_len > 0)
     {
-      u_int32_t field_len;
+      uint32_t field_len;
 
       if ((field_len = fiid_obj_field_len_bytes(tmpl_rmcpplus_rakp_message_3, 
                                                 "key_exchange_authentication_code")) < 0)

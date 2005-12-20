@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.h,v 1.3 2005-10-06 10:41:09 balamurugan Exp $
+ *  $Id: ipmi-md2.h,v 1.3.2.1 2005-12-20 19:05:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,19 +39,19 @@ extern "C" {
 #define IPMI_MD2_ROUNDS_LEN  18
 
 typedef struct __md2 {
-  u_int32_t magic;
-  u_int8_t l;
+  uint32_t magic;
+  uint8_t l;
   unsigned int mlen;
-  u_int8_t x[IPMI_MD2_BUFFER_LEN];
-  u_int8_t c[IPMI_MD2_CHKSUM_LEN];
-  u_int8_t m[IPMI_MD2_BLOCK_LEN];
+  uint8_t x[IPMI_MD2_BUFFER_LEN];
+  uint8_t c[IPMI_MD2_CHKSUM_LEN];
+  uint8_t m[IPMI_MD2_BLOCK_LEN];
 } ipmi_md2_t;
 
 int ipmi_md2_init(ipmi_md2_t *ctx);
 
-int ipmi_md2_update_data(ipmi_md2_t *ctx, u_int8_t *buf, unsigned int buflen);
+int ipmi_md2_update_data(ipmi_md2_t *ctx, uint8_t *buf, unsigned int buflen);
 
-int ipmi_md2_finish(ipmi_md2_t *ctx, u_int8_t *digest, unsigned int digestlen);
+int ipmi_md2_finish(ipmi_md2_t *ctx, uint8_t *digest, unsigned int digestlen);
 
 #ifdef __cplusplus
 }

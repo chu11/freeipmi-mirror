@@ -29,8 +29,8 @@
    (number->string (bit-extract #b1101101010 4 9) 2)
              => "10110"
 */
-u_int64_t
-bits_extract (u_int64_t bits, u_int8_t start, u_int8_t end)
+uint64_t
+bits_extract (uint64_t bits, uint8_t start, uint8_t end)
 {
   bits >>= start;
   bits <<= ((63 - (end - 1)) + start);
@@ -41,11 +41,11 @@ bits_extract (u_int64_t bits, u_int8_t start, u_int8_t end)
 /* Merges the val composed of the START (inclusive) through END
    (exclusive) bits of N.  The STARTth bit becomes the 0-th bit in the result.
 */
-u_int64_t
-bits_merge (u_int64_t bits, u_int8_t start, u_int8_t end, u_int64_t val)
+uint64_t
+bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val)
 {
-  u_int64_t lsb_ones = 0xFFFFFFFFFFFFFFULL;
-  u_int64_t msb_ones = 0xFFFFFFFFFFFFFFULL;
+  uint64_t lsb_ones = 0xFFFFFFFFFFFFFFULL;
+  uint64_t msb_ones = 0xFFFFFFFFFFFFFFULL;
   
   if (start)
     {

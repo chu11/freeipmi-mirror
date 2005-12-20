@@ -75,7 +75,7 @@
  *   Computes an 8 bit checksum of the buffer(length) and returns it.
  *
  ******************************************************************************/
-u_int8_t ipmi_acpi_table_chksum (u_int8_t *buffer, size_t len);
+uint8_t ipmi_acpi_table_chksum (uint8_t *buffer, size_t len);
 
 
 /*******************************************************************************
@@ -101,7 +101,7 @@ u_int8_t ipmi_acpi_table_chksum (u_int8_t *buffer, size_t len);
  *   assertion #421).
  *
  ******************************************************************************/
-int ipmi_acpi_get_rsdp (u_int64_t rsdp_window_base_addr, size_t rsdp_window_size, 
+int ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size, 
 			fiid_obj_t obj_acpi_rsdp_descriptor);
 
 
@@ -124,8 +124,8 @@ int ipmi_acpi_get_rsdp (u_int64_t rsdp_window_base_addr, size_t rsdp_window_size
  *   Retrieve any ACPI table (including header) pointed by table address.
  *
  ******************************************************************************/
-int ipmi_acpi_get_table (u_int64_t table_address, char *signature, 
-			 u_int8_t **acpi_table, u_int32_t *acpi_table_length);
+int ipmi_acpi_get_table (uint64_t table_address, char *signature, 
+			 uint8_t **acpi_table, uint32_t *acpi_table_length);
 
 
 /*******************************************************************************
@@ -152,8 +152,8 @@ int ipmi_acpi_get_table (u_int64_t table_address, char *signature,
  ******************************************************************************/
 int ipmi_acpi_get_firmware_table (char *signature, int table_instance, 
 				  fiid_obj_t obj_acpi_table_hdr,
-				  u_int8_t **sign_table_data, 
-				  u_int32_t *sign_table_data_length);
+				  uint8_t **sign_table_data, 
+				  uint32_t *sign_table_data_length);
 
 
 /*******************************************************************************
@@ -175,7 +175,7 @@ int ipmi_acpi_get_firmware_table (char *signature, int table_instance,
  *   Get SPMI table for the given interface type.
  *
  ******************************************************************************/
-int ipmi_acpi_get_spmi_table (u_int8_t interface_type,
+int ipmi_acpi_get_spmi_table (uint8_t interface_type,
 			      fiid_obj_t obj_acpi_table_hdr,
 			      fiid_obj_t obj_acpi_spmi_table_descriptor);
 

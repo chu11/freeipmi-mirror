@@ -421,9 +421,9 @@ fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs =
 
 int8_t 
 fill_lan_set_arp (fiid_obj_t obj_data_rq, 
-		  u_int8_t channel_number, 
-		  u_int8_t bmc_generated_gratuitous_arps_flag, 
-		  u_int8_t bmc_generated_arp_responses_flag)
+		  uint8_t channel_number, 
+		  uint8_t bmc_generated_gratuitous_arps_flag, 
+		  uint8_t bmc_generated_arp_responses_flag)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -461,15 +461,15 @@ fill_lan_set_arp (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_arp (u_int8_t channel_number, 
-		  u_int8_t bmc_generated_gratuitous_arps_flag, 
-		  u_int8_t bmc_generated_arp_responses_flag, 
+ipmi_lan_set_arp (uint8_t channel_number, 
+		  uint8_t bmc_generated_gratuitous_arps_flag, 
+		  uint8_t bmc_generated_arp_responses_flag, 
 		  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
   ERR (fill_lan_set_arp (obj_data_rq, 
 			 channel_number, 
 			 bmc_generated_gratuitous_arps_flag, 
@@ -483,8 +483,8 @@ ipmi_lan_set_arp (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_gratuitous_arp_interval (fiid_obj_t obj_data_rq, 
-				      u_int8_t channel_number, 
-				      u_int8_t gratuitous_arp_interval)
+				      uint8_t channel_number, 
+				      uint8_t gratuitous_arp_interval)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -517,14 +517,14 @@ fill_lan_set_gratuitous_arp_interval (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_gratuitous_arp_interval (u_int8_t channel_number, 
-				      u_int8_t gratuitous_arp_interval, 
+ipmi_lan_set_gratuitous_arp_interval (uint8_t channel_number, 
+				      uint8_t gratuitous_arp_interval, 
 				      fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
   ERR (fill_lan_set_gratuitous_arp_interval (obj_data_rq, 
 					     channel_number, 
 					     gratuitous_arp_interval) == 0);
@@ -537,12 +537,12 @@ ipmi_lan_set_gratuitous_arp_interval (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq, 
-				u_int8_t channel_number, 
-				u_int8_t max_privilege_auth_type_callback_level, 
-				u_int8_t max_privilege_auth_type_user_level, 
-				u_int8_t max_privilege_auth_type_operator_level, 
-				u_int8_t max_privilege_auth_type_admin_level, 
-				u_int8_t max_privilege_auth_type_oem_level)
+				uint8_t channel_number, 
+				uint8_t max_privilege_auth_type_callback_level, 
+				uint8_t max_privilege_auth_type_user_level, 
+				uint8_t max_privilege_auth_type_operator_level, 
+				uint8_t max_privilege_auth_type_admin_level, 
+				uint8_t max_privilege_auth_type_oem_level)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -595,18 +595,18 @@ fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_auth_type_enables (u_int8_t channel_number, 
-				u_int8_t max_privilege_auth_type_callback_level, 
-				u_int8_t max_privilege_auth_type_user_level, 
-				u_int8_t max_privilege_auth_type_operator_level, 
-				u_int8_t max_privilege_auth_type_admin_level, 
-				u_int8_t max_privilege_auth_type_oem_level, 
+ipmi_lan_set_auth_type_enables (uint8_t channel_number, 
+				uint8_t max_privilege_auth_type_callback_level, 
+				uint8_t max_privilege_auth_type_user_level, 
+				uint8_t max_privilege_auth_type_operator_level, 
+				uint8_t max_privilege_auth_type_admin_level, 
+				uint8_t max_privilege_auth_type_oem_level, 
 				fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_auth_type_enables_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_auth_type_enables_rq);
   ERR (fill_lan_set_auth_type_enables (obj_data_rq, 
 				       channel_number, 
 				       max_privilege_auth_type_callback_level, 
@@ -623,8 +623,8 @@ ipmi_lan_set_auth_type_enables (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_ip_addr_source (fiid_obj_t obj_data_rq, 
-			     u_int8_t channel_number, 
-			     u_int8_t ip_addr_source)
+			     uint8_t channel_number, 
+			     uint8_t ip_addr_source)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -657,14 +657,14 @@ fill_lan_set_ip_addr_source (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_ip_addr_source (u_int8_t channel_number,
-			     u_int8_t ip_addr_source,
+ipmi_lan_set_ip_addr_source (uint8_t channel_number,
+			     uint8_t ip_addr_source,
 			     fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_source_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_source_rq);
   ERR (fill_lan_set_ip_addr_source (obj_data_rq, 
 				    channel_number, 
 				    ip_addr_source) == 0);
@@ -677,9 +677,9 @@ ipmi_lan_set_ip_addr_source (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_ip_addr (fiid_obj_t obj_data_rq, 
-		      u_int8_t parameter_selector, 
-		      u_int8_t channel_number, 
-		      u_int32_t ip_addr)
+		      uint8_t parameter_selector, 
+		      uint8_t channel_number, 
+		      uint32_t ip_addr)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -712,14 +712,14 @@ fill_lan_set_ip_addr (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_ip_addr (u_int8_t channel_number,
-		      u_int32_t ip_addr,
+ipmi_lan_set_ip_addr (uint8_t channel_number,
+		      uint32_t ip_addr,
 		      fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_IP_ADDR, 
 			     channel_number, 
@@ -732,14 +732,14 @@ ipmi_lan_set_ip_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_set_gw1_ip_addr (u_int8_t channel_number,
-			  u_int32_t ip_addr,
+ipmi_lan_set_gw1_ip_addr (uint8_t channel_number,
+			  uint32_t ip_addr,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_DEFAULT_GATEWAY_IP_ADDR, 
 			     channel_number, 
@@ -752,14 +752,14 @@ ipmi_lan_set_gw1_ip_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_set_gw2_ip_addr (u_int8_t channel_number,
-			  u_int32_t ip_addr,
+ipmi_lan_set_gw2_ip_addr (uint8_t channel_number,
+			  uint32_t ip_addr,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_ip_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_data_rq, 
 			     IPMI_LAN_PARAM_BACKUP_GATEWAY_IP_ADDR, 
 			     channel_number, 
@@ -773,11 +773,11 @@ ipmi_lan_set_gw2_ip_addr (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_vlan_id (fiid_obj_t obj_data_rq, 
-                      u_int8_t channel_number, 
-                      u_int8_t vlan_id_flag,
-                      u_int32_t vlan_id)
+                      uint8_t channel_number, 
+                      uint8_t vlan_id_flag,
+                      uint32_t vlan_id)
 {
-  u_int8_t *ptr, ls, ms;
+  uint8_t *ptr, ls, ms;
 
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -806,7 +806,7 @@ fill_lan_set_vlan_id (fiid_obj_t obj_data_rq,
 		"vlan_id_flag", 
 		vlan_id_flag);
 
-  ptr = (u_int8_t *)&vlan_id;
+  ptr = (uint8_t *)&vlan_id;
 #if WORDS_BIGENDIAN
   ls = ptr[3];
   ms = ptr[2];
@@ -829,15 +829,15 @@ fill_lan_set_vlan_id (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_vlan_id (u_int8_t channel_number,
-                      u_int8_t vlan_id_flag,
-                      u_int32_t vlan_id,
+ipmi_lan_set_vlan_id (uint8_t channel_number,
+                      uint8_t vlan_id_flag,
+                      uint32_t vlan_id,
                       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_id_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_vlan_id_rq);
   ERR (fill_lan_set_vlan_id (obj_data_rq, 
 			     channel_number,
                              vlan_id_flag,
@@ -851,8 +851,8 @@ ipmi_lan_set_vlan_id (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_vlan_priority (fiid_obj_t obj_data_rq, 
-                            u_int8_t channel_number, 
-                            u_int8_t vlan_priority)
+                            uint8_t channel_number, 
+                            uint8_t vlan_priority)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -885,14 +885,14 @@ fill_lan_set_vlan_priority (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_vlan_priority (u_int8_t channel_number,
-                            u_int32_t vlan_priority,
+ipmi_lan_set_vlan_priority (uint8_t channel_number,
+                            uint32_t vlan_priority,
                             fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_vlan_priority_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_vlan_priority_rq);
   ERR (fill_lan_set_vlan_priority (obj_data_rq, 
                                    channel_number,
                                    vlan_priority) == 0);
@@ -905,8 +905,8 @@ ipmi_lan_set_vlan_priority (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_subnet_mask (fiid_obj_t obj_data_rq, 
-			  u_int8_t channel_number, 
-			  u_int32_t subnet_mask)
+			  uint8_t channel_number, 
+			  uint32_t subnet_mask)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -939,14 +939,14 @@ fill_lan_set_subnet_mask (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_subnet_mask (u_int8_t channel_number,
-			  u_int32_t subnet_mask,
+ipmi_lan_set_subnet_mask (uint8_t channel_number,
+			  uint32_t subnet_mask,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_subnet_mask_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_subnet_mask_rq);
   ERR (fill_lan_set_subnet_mask (obj_data_rq, 
 				 channel_number, 
 				 subnet_mask) == 0);
@@ -959,9 +959,9 @@ ipmi_lan_set_subnet_mask (u_int8_t channel_number,
 
 int8_t 
 fill_lan_set_mac_addr (fiid_obj_t obj_data_rq, 
-		       u_int8_t parameter_selector, 
-		       u_int8_t channel_number, 
-		       u_int64_t mac_addr)
+		       uint8_t parameter_selector, 
+		       uint8_t channel_number, 
+		       uint64_t mac_addr)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -994,14 +994,14 @@ fill_lan_set_mac_addr (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_set_mac_addr (u_int8_t channel_number,
-		       u_int64_t mac_addr,
+ipmi_lan_set_mac_addr (uint8_t channel_number,
+		       uint64_t mac_addr,
 		       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_MAC_ADDR, 
 			      channel_number, 
@@ -1014,14 +1014,14 @@ ipmi_lan_set_mac_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_set_gw1_mac_addr (u_int8_t channel_number,
-			   u_int64_t mac_addr,
+ipmi_lan_set_gw1_mac_addr (uint8_t channel_number,
+			   uint64_t mac_addr,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDR, 
 			      channel_number, 
@@ -1034,14 +1034,14 @@ ipmi_lan_set_gw1_mac_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_set_gw2_mac_addr (u_int8_t channel_number,
-			   u_int64_t mac_addr,
+ipmi_lan_set_gw2_mac_addr (uint8_t channel_number,
+			   uint64_t mac_addr,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_set_lan_conf_param_mac_addr_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_data_rq, 
 			      IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDR, 
 			      channel_number, 
@@ -1055,11 +1055,11 @@ ipmi_lan_set_gw2_mac_addr (u_int8_t channel_number,
 
 int8_t 
 fill_get_lan_conf_param (fiid_obj_t obj_data_rq, 
-			 u_int8_t parameter_selector, 
-			 u_int8_t channel_number,
-			 u_int8_t parameter_type,
-			 u_int8_t set_selector,
-			 u_int8_t block_selector)
+			 uint8_t parameter_selector, 
+			 uint8_t channel_number,
+			 uint8_t parameter_type,
+			 uint8_t set_selector,
+			 uint8_t block_selector)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1102,16 +1102,16 @@ fill_get_lan_conf_param (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_lan_get_arp (u_int8_t channel_number, 
-		  u_int8_t parameter_type, 
-		  u_int8_t set_selector, 
-		  u_int8_t block_selector, 
+ipmi_lan_get_arp (uint8_t channel_number, 
+		  uint8_t parameter_type, 
+		  uint8_t set_selector, 
+		  uint8_t block_selector, 
 		  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
 				channel_number, 
@@ -1126,16 +1126,16 @@ ipmi_lan_get_arp (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_gratuitous_arp_interval (u_int8_t channel_number, 
-				      u_int8_t parameter_type, 
-				      u_int8_t set_selector, 
-				      u_int8_t block_selector, 
+ipmi_lan_get_gratuitous_arp_interval (uint8_t channel_number, 
+				      uint8_t parameter_type, 
+				      uint8_t set_selector, 
+				      uint8_t block_selector, 
 				      fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
 				channel_number, 
@@ -1150,16 +1150,16 @@ ipmi_lan_get_gratuitous_arp_interval (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_auth_type_enables (u_int8_t channel_number, 
-				u_int8_t parameter_type, 
-				u_int8_t set_selector, 
-				u_int8_t block_selector, 
+ipmi_lan_get_auth_type_enables (uint8_t channel_number, 
+				uint8_t parameter_type, 
+				uint8_t set_selector, 
+				uint8_t block_selector, 
 				fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_AUTH_TYPE_ENABLES, 
 				channel_number, 
@@ -1174,16 +1174,16 @@ ipmi_lan_get_auth_type_enables (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_ip_addr_source (u_int8_t channel_number, 
-			     u_int8_t parameter_type, 
-			     u_int8_t set_selector, 
-			     u_int8_t block_selector, 
+ipmi_lan_get_ip_addr_source (uint8_t channel_number, 
+			     uint8_t parameter_type, 
+			     uint8_t set_selector, 
+			     uint8_t block_selector, 
 			     fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_IP_ADDR_SOURCE, 
 				channel_number, 
@@ -1198,16 +1198,16 @@ ipmi_lan_get_ip_addr_source (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_ip_addr (u_int8_t channel_number,
-		      u_int8_t parameter_type,
-		      u_int8_t set_selector,
-		      u_int8_t block_selector,
+ipmi_lan_get_ip_addr (uint8_t channel_number,
+		      uint8_t parameter_type,
+		      uint8_t set_selector,
+		      uint8_t block_selector,
 		      fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_IP_ADDR, 
 				channel_number, 
@@ -1222,16 +1222,16 @@ ipmi_lan_get_ip_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_gw1_ip_addr (u_int8_t channel_number,
-			  u_int8_t parameter_type,
-			  u_int8_t set_selector,
-			  u_int8_t block_selector,
+ipmi_lan_get_gw1_ip_addr (uint8_t channel_number,
+			  uint8_t parameter_type,
+			  uint8_t set_selector,
+			  uint8_t block_selector,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_DEFAULT_GATEWAY_IP_ADDR, 
 				channel_number, 
@@ -1246,16 +1246,16 @@ ipmi_lan_get_gw1_ip_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_gw2_ip_addr (u_int8_t channel_number,
-			  u_int8_t parameter_type,
-			  u_int8_t set_selector,
-			  u_int8_t block_selector,
+ipmi_lan_get_gw2_ip_addr (uint8_t channel_number,
+			  uint8_t parameter_type,
+			  uint8_t set_selector,
+			  uint8_t block_selector,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BACKUP_GATEWAY_IP_ADDR, 
 				channel_number, 
@@ -1270,16 +1270,16 @@ ipmi_lan_get_gw2_ip_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_subnet_mask (u_int8_t channel_number,
-			  u_int8_t parameter_type,
-			  u_int8_t set_selector,
-			  u_int8_t block_selector,
+ipmi_lan_get_subnet_mask (uint8_t channel_number,
+			  uint8_t parameter_type,
+			  uint8_t set_selector,
+			  uint8_t block_selector,
 			  fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_SUBNET_MASK, 
 				channel_number, 
@@ -1294,16 +1294,16 @@ ipmi_lan_get_subnet_mask (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_mac_addr (u_int8_t channel_number,
-		       u_int8_t parameter_type,
-		       u_int8_t set_selector,
-		       u_int8_t block_selector,
+ipmi_lan_get_mac_addr (uint8_t channel_number,
+		       uint8_t parameter_type,
+		       uint8_t set_selector,
+		       uint8_t block_selector,
 		       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_MAC_ADDR, 
 				channel_number, 
@@ -1318,16 +1318,16 @@ ipmi_lan_get_mac_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_gw1_mac_addr (u_int8_t channel_number,
-			   u_int8_t parameter_type,
-			   u_int8_t set_selector,
-			   u_int8_t block_selector,
+ipmi_lan_get_gw1_mac_addr (uint8_t channel_number,
+			   uint8_t parameter_type,
+			   uint8_t set_selector,
+			   uint8_t block_selector,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDR, 
 				channel_number, 
@@ -1342,16 +1342,16 @@ ipmi_lan_get_gw1_mac_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_gw2_mac_addr (u_int8_t channel_number,
-			   u_int8_t parameter_type,
-			   u_int8_t set_selector,
-			   u_int8_t block_selector,
+ipmi_lan_get_gw2_mac_addr (uint8_t channel_number,
+			   uint8_t parameter_type,
+			   uint8_t set_selector,
+			   uint8_t block_selector,
 			   fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDR, 
 				channel_number, 
@@ -1366,16 +1366,16 @@ ipmi_lan_get_gw2_mac_addr (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_vlan_id (u_int8_t channel_number, 
-                      u_int8_t parameter_type, 
-                      u_int8_t set_selector, 
-                      u_int8_t block_selector, 
+ipmi_lan_get_vlan_id (uint8_t channel_number, 
+                      uint8_t parameter_type, 
+                      uint8_t set_selector, 
+                      uint8_t block_selector, 
                       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_VLAN_ID,
 				channel_number, 
@@ -1390,16 +1390,16 @@ ipmi_lan_get_vlan_id (u_int8_t channel_number,
 }
 
 int8_t 
-ipmi_lan_get_vlan_priority (u_int8_t channel_number, 
-                            u_int8_t parameter_type, 
-                            u_int8_t set_selector, 
-                            u_int8_t block_selector, 
+ipmi_lan_get_vlan_priority (uint8_t channel_number, 
+                            uint8_t parameter_type, 
+                            uint8_t set_selector, 
+                            uint8_t block_selector, 
                             fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_get_lan_conf_param_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_data_rq, 
 				IPMI_LAN_PARAM_VLAN_PRIORITY,
 				channel_number, 
@@ -1415,9 +1415,9 @@ ipmi_lan_get_vlan_priority (u_int8_t channel_number,
 
 int8_t 
 fill_suspend_bmc_arps (fiid_obj_t obj_data_rq, 
-		       u_int8_t channel_number, 
-		       u_int8_t gratuitous_arp_suspend, 
-		       u_int8_t arp_response_suspend)
+		       uint8_t channel_number, 
+		       uint8_t gratuitous_arp_suspend, 
+		       uint8_t arp_response_suspend)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1450,15 +1450,15 @@ fill_suspend_bmc_arps (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_suspend_bmc_arps (u_int8_t channel_number, 
-		       u_int8_t gratuitous_arp_suspend, 
-		       u_int8_t arp_response_suspend, 
+ipmi_suspend_bmc_arps (uint8_t channel_number, 
+		       uint8_t gratuitous_arp_suspend, 
+		       uint8_t arp_response_suspend, 
 		       fiid_obj_t obj_data_rs)
 {
   fiid_obj_t obj_data_rq; 
   int8_t status;
   
-  obj_data_rq = fiid_obj_alloc (tmpl_suspend_bmc_arps_rq);
+  obj_data_rq = fiid_obj_calloc (tmpl_suspend_bmc_arps_rq);
   ERR (fill_suspend_bmc_arps (obj_data_rq, 
 			      channel_number, 
 			      gratuitous_arp_suspend, 
@@ -1472,9 +1472,9 @@ ipmi_suspend_bmc_arps (u_int8_t channel_number,
 
 int8_t 
 ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev, 
-		       u_int8_t channel_number, 
-		       u_int8_t bmc_generated_gratuitous_arps_flag, 
-		       u_int8_t bmc_generated_arp_responses_flag, 
+		       uint8_t channel_number, 
+		       uint8_t bmc_generated_gratuitous_arps_flag, 
+		       uint8_t bmc_generated_arp_responses_flag, 
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1501,8 +1501,8 @@ ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number, 
-				       u_int8_t gratuitous_arp_interval, 
+				       uint8_t channel_number, 
+				       uint8_t gratuitous_arp_interval, 
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1528,12 +1528,12 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
-				     u_int8_t channel_number, 
-				     u_int8_t max_privilege_auth_type_callback_level, 
-				     u_int8_t max_privilege_auth_type_user_level, 
-				     u_int8_t max_privilege_auth_type_operator_level, 
-				     u_int8_t max_privilege_auth_type_admin_level, 
-				     u_int8_t max_privilege_auth_type_oem_level, 
+				     uint8_t channel_number, 
+				     uint8_t max_privilege_auth_type_callback_level, 
+				     uint8_t max_privilege_auth_type_user_level, 
+				     uint8_t max_privilege_auth_type_operator_level, 
+				     uint8_t max_privilege_auth_type_admin_level, 
+				     uint8_t max_privilege_auth_type_oem_level, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1563,8 +1563,8 @@ ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev, 
-				  u_int8_t channel_number, 
-				  u_int8_t ip_addr_source, 
+				  uint8_t channel_number, 
+				  uint8_t ip_addr_source, 
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1590,8 +1590,8 @@ ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number, 
-			   u_int32_t ip_addr, 
+			   uint8_t channel_number, 
+			   uint32_t ip_addr, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1618,8 +1618,8 @@ ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev, 
-				      u_int8_t channel_number, 
-				      u_int32_t ip_addr, 
+				      uint8_t channel_number, 
+				      uint32_t ip_addr, 
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1646,8 +1646,8 @@ ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev, 
-				     u_int8_t channel_number, 
-				     u_int32_t ip_addr, 
+				     uint8_t channel_number, 
+				     uint32_t ip_addr, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1674,9 +1674,9 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number, 
-			   u_int8_t vlan_id_flag, 
-			   u_int32_t vlan_id, 
+			   uint8_t channel_number, 
+			   uint8_t vlan_id_flag, 
+			   uint32_t vlan_id, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1703,8 +1703,8 @@ ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number,
-				 u_int32_t vlan_priority,
+				 uint8_t channel_number,
+				 uint32_t vlan_priority,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1730,8 +1730,8 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number, 
-			       u_int32_t subnet_mask, 
+			       uint8_t channel_number, 
+			       uint32_t subnet_mask, 
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1757,8 +1757,8 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev, 
-			    u_int8_t channel_number,
-			    u_int64_t mac_addr,
+			    uint8_t channel_number,
+			    uint64_t mac_addr,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1785,8 +1785,8 @@ ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number,
-				       u_int64_t mac_addr,
+				       uint8_t channel_number,
+				       uint64_t mac_addr,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1813,8 +1813,8 @@ ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev, 
-				      u_int8_t channel_number,
-				      u_int64_t mac_addr,
+				      uint8_t channel_number,
+				      uint64_t mac_addr,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1841,10 +1841,10 @@ ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev, 
-		       u_int8_t channel_number, 
-		       u_int8_t parameter_type, 
-		       u_int8_t set_selector, 
-		       u_int8_t block_selector, 
+		       uint8_t channel_number, 
+		       uint8_t parameter_type, 
+		       uint8_t set_selector, 
+		       uint8_t block_selector, 
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1873,10 +1873,10 @@ ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-					   u_int8_t channel_number, 
-					   u_int8_t parameter_type, 
-					   u_int8_t set_selector, 
-					   u_int8_t block_selector, 
+					   uint8_t channel_number, 
+					   uint8_t parameter_type, 
+					   uint8_t set_selector, 
+					   uint8_t block_selector, 
 					   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1905,10 +1905,10 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev, 
-				     u_int8_t channel_number, 
-				     u_int8_t parameter_type, 
-				     u_int8_t set_selector, 
-				     u_int8_t block_selector, 
+				     uint8_t channel_number, 
+				     uint8_t parameter_type, 
+				     uint8_t set_selector, 
+				     uint8_t block_selector, 
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1937,10 +1937,10 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev, 
-				  u_int8_t channel_number, 
-				  u_int8_t parameter_type, 
-				  u_int8_t set_selector, 
-				  u_int8_t block_selector, 
+				  uint8_t channel_number, 
+				  uint8_t parameter_type, 
+				  uint8_t set_selector, 
+				  uint8_t block_selector, 
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -1969,10 +1969,10 @@ ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number,
-			   u_int8_t parameter_type,
-			   u_int8_t set_selector,
-			   u_int8_t block_selector,
+			   uint8_t channel_number,
+			   uint8_t parameter_type,
+			   uint8_t set_selector,
+			   uint8_t block_selector,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2001,10 +2001,10 @@ ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev, 
-				      u_int8_t channel_number,
-				      u_int8_t parameter_type,
-				      u_int8_t set_selector,
-				      u_int8_t block_selector,
+				      uint8_t channel_number,
+				      uint8_t parameter_type,
+				      uint8_t set_selector,
+				      uint8_t block_selector,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2033,10 +2033,10 @@ ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev, 
-				     u_int8_t channel_number,
-				     u_int8_t parameter_type,
-				     u_int8_t set_selector,
-				     u_int8_t block_selector,
+				     uint8_t channel_number,
+				     uint8_t parameter_type,
+				     uint8_t set_selector,
+				     uint8_t block_selector,
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2065,10 +2065,10 @@ ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev, 
-			       u_int8_t channel_number,
-			       u_int8_t parameter_type,
-			       u_int8_t set_selector,
-			       u_int8_t block_selector,
+			       uint8_t channel_number,
+			       uint8_t parameter_type,
+			       uint8_t set_selector,
+			       uint8_t block_selector,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2097,10 +2097,10 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev, 
-			    u_int8_t channel_number,
-			    u_int8_t parameter_type,
-			    u_int8_t set_selector,
-			    u_int8_t block_selector,
+			    uint8_t channel_number,
+			    uint8_t parameter_type,
+			    uint8_t set_selector,
+			    uint8_t block_selector,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2129,10 +2129,10 @@ ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number,
-				       u_int8_t parameter_type,
-				       u_int8_t set_selector,
-				       u_int8_t block_selector,
+				       uint8_t channel_number,
+				       uint8_t parameter_type,
+				       uint8_t set_selector,
+				       uint8_t block_selector,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2161,10 +2161,10 @@ ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev, 
-				      u_int8_t channel_number,
-				      u_int8_t parameter_type,
-				      u_int8_t set_selector,
-				      u_int8_t block_selector,
+				      uint8_t channel_number,
+				      uint8_t parameter_type,
+				      uint8_t set_selector,
+				      uint8_t block_selector,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2193,10 +2193,10 @@ ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev, 
-			   u_int8_t channel_number, 
-			   u_int8_t parameter_type, 
-			   u_int8_t set_selector, 
-			   u_int8_t block_selector, 
+			   uint8_t channel_number, 
+			   uint8_t parameter_type, 
+			   uint8_t set_selector, 
+			   uint8_t block_selector, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2225,10 +2225,10 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev, 
-				 u_int8_t channel_number, 
-				 u_int8_t parameter_type, 
-				 u_int8_t set_selector, 
-				 u_int8_t block_selector, 
+				 uint8_t channel_number, 
+				 uint8_t parameter_type, 
+				 uint8_t set_selector, 
+				 uint8_t block_selector, 
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -2257,9 +2257,9 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev, 
-			    u_int8_t channel_number, 
-			    u_int8_t gratuitous_arp_suspend, 
-			    u_int8_t arp_response_suspend, 
+			    uint8_t channel_number, 
+			    uint8_t gratuitous_arp_suspend, 
+			    uint8_t arp_response_suspend, 
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;

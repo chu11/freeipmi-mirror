@@ -57,10 +57,10 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		     ipmi_mode_t mode, 
 		     struct sockaddr *remote_host, 
 		     size_t remote_host_len, 
-		     u_int8_t auth_type, 
+		     uint8_t auth_type, 
 		     char *username, 
 		     char *password, 
-		     u_int8_t priv_level)
+		     uint8_t priv_level)
 {
   int status;
   
@@ -163,7 +163,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
   dev->io.outofband.rq.obj_hdr_rmcp = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
@@ -171,7 +171,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_rmcp = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
@@ -180,7 +180,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_hdr_session = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rq.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
@@ -188,7 +188,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_session = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rs.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
@@ -197,7 +197,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_hdr = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -205,7 +205,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_hdr = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rs.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -214,7 +214,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_trlr = 
-    fiid_obj_alloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rq.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -222,7 +222,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_trlr = 
-    fiid_obj_alloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rs.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -269,6 +269,46 @@ ipmi_open_inband (ipmi_device_t *dev,
     {
     case IPMI_DEVICE_KCS:
       ERR (ipmi_locate (IPMI_INTERFACE_KCS, &(dev->io.inband.locate_info)) != NULL);
+      dev->type = driver_type;
+      dev->mode = mode;
+      dev->io.inband.poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
+      
+      /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
+	 If we cant find the bass address, we better exit. -- Anand Babu */
+      if (dev->io.inband.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+	{
+	  memset (dev, 0, sizeof (ipmi_device_t));
+	  errno = ENODEV;
+	  return (-1);
+	}
+      
+#ifdef __FreeBSD__
+#ifdef USE_IOPERM
+      /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
+      if (i386_set_ioperm (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, 
+			   0x02, 0x01) != 0)
+	{
+	  memset (dev, 0, sizeof (ipmi_device_t));
+	  return (-1);
+	}
+#else
+      /* Opening /dev/io raises IOPL bits for current process. */
+      /* XXX This fd will remain open until exit as there is no
+       * uninitialization routine. */
+      dev->io.inband.dev_fd = open ("/dev/io", O_RDONLY);
+      if (dev->io.inband.dev_fd < 0)
+	{
+	  memset (dev, 0, sizeof (ipmi_device_t));
+	  return (-1);
+	}
+#endif
+#else
+      if (iopl (3) < 0)
+	{
+	  memset (dev, 0, sizeof (ipmi_device_t));
+	  return (-1);
+	}
+#endif
       break;
     case IPMI_DEVICE_SMIC:
       ERR (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) != NULL);
@@ -278,59 +318,26 @@ ipmi_open_inband (ipmi_device_t *dev,
       return (-1);
     case IPMI_DEVICE_SSIF:
       ERR (ipmi_locate (IPMI_INTERFACE_SSIF, &(dev->io.inband.locate_info)) != NULL);
+      dev->io.inband.dev_name = dev->io.inband.locate_info.bmc_i2c_dev_name;
+      /* dev->io.inband.ipmb_addr = dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr; */
+      dev->io.inband.ipmb_addr = 0x341A;
+      dev->type = driver_type;
+      dev->mode = mode;
+      ERR (ipmi_ssif_io_init (dev->io.inband.dev_name, 
+			      dev->io.inband.ipmb_addr, 
+			      &(dev->io.inband.dev_fd)) != 0);
       break;
     default:
       errno = EINVAL;
       return (-1);
     }
   
-  dev->type = driver_type;
-  dev->mode = mode;
-  dev->io.inband.poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
-  
-  /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
-     If we cant find the bass address, we better exit. -- Anand Babu */
-  if (dev->io.inband.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
-    {
-      memset (dev, 0, sizeof (ipmi_device_t));
-      errno = ENODEV;
-      return (-1);
-    }
-  
-#ifdef __FreeBSD__
-#ifdef USE_IOPERM
-  /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
-  if (i386_set_ioperm (dev->private.locate_info.base_addr.bmc_iobase_addr, 
-		       0x02, 0x01) != 0)
-    {
-      memset (dev, 0, sizeof (ipmi_device_t));
-      return (-1);
-    }
-#else
-  /* Opening /dev/io raises IOPL bits for current process. */
-  /* XXX This fd will remain open until exit as there is no
-   * uninitialization routine. */
-  dev->private.dev_fd = open ("/dev/io", O_RDONLY);
-  if (dev->private.dev_fd < 0)
-    {
-      memset (dev, 0, sizeof (ipmi_device_t));
-      return (-1);
-    }
-#endif
-#else
-  if (iopl (3) < 0)
-    {
-      memset (dev, 0, sizeof (ipmi_device_t));
-      return (-1);
-    }
-#endif
-  
   /* Prepare in-band headers */
   dev->io.inband.rq.tmpl_hdr_ptr = &tmpl_inband_hdr;
   dev->io.inband.rs.tmpl_hdr_ptr = &tmpl_inband_hdr;
   
   dev->io.inband.rq.obj_hdr = 
-    fiid_obj_alloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
   if (dev->io.inband.rq.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
@@ -338,7 +345,7 @@ ipmi_open_inband (ipmi_device_t *dev,
       return (-1);
     }
   dev->io.inband.rs.obj_hdr = 
-    fiid_obj_alloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
+    fiid_obj_calloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
   if (dev->io.inband.rs.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
@@ -376,9 +383,14 @@ ipmi_cmd (ipmi_device_t *dev,
 			    tmpl_cmd_rq, 
 			    obj_cmd_rs, 
 			    tmpl_cmd_rs);
+    case IPMI_DEVICE_SSIF:
+      return ipmi_ssif_cmd2 (dev, 
+			     obj_cmd_rq, 
+			     tmpl_cmd_rq, 
+			     obj_cmd_rs, 
+			     tmpl_cmd_rs);
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
-    case IPMI_DEVICE_SSIF:
     default:
       errno = EINVAL;
       return (-1);
@@ -389,9 +401,9 @@ ipmi_cmd (ipmi_device_t *dev,
 
 int 
 ipmi_cmd_raw (ipmi_device_t *dev, 
-	      u_int8_t *in, 
+	      uint8_t *in, 
 	      size_t in_len, 
-	      u_int8_t *out, 
+	      uint8_t *out, 
 	      size_t *out_len)
 {
   if (dev == NULL)
@@ -407,9 +419,10 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	break;
     case IPMI_DEVICE_KCS:
       return ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
+    case IPMI_DEVICE_SSIF:
+      return ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
-    case IPMI_DEVICE_SSIF:
     default:
       errno = EINVAL;
       return (-1);
@@ -438,11 +451,32 @@ ipmi_outofband_close (ipmi_device_t *dev)
 static int 
 ipmi_inband_close (ipmi_device_t *dev)
 {
+  if (dev == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  switch (dev->type)
+    {
+    case IPMI_DEVICE_KCS:
 #ifdef __FreeBSD__
 #ifndef USE_IOPERM
-  close (dev->private.dev_fd);
+      close (dev->io.inband.dev_fd);
 #endif
 #endif
+      break;
+    case IPMI_DEVICE_SMIC:
+      break;
+    case IPMI_DEVICE_BT:
+      break;
+    case IPMI_DEVICE_SSIF:
+      ipmi_ssif_io_exit (dev->io.inband.dev_fd);
+      break;
+    default:
+      errno = EINVAL;
+      return (-1);
+    }
   
   ipmi_inband_free (dev);
   

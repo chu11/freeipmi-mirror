@@ -23,8 +23,8 @@
 int 
 ipmi_sdr_repo_info_write (FILE *fp)
 {
-  u_int8_t *data_rs = NULL;
-  u_int64_t val;
+  uint8_t *data_rs = NULL;
+  uint64_t val;
   
   if (fp == NULL)
     {
@@ -55,13 +55,13 @@ ipmi_sdr_repo_info_write (FILE *fp)
 int 
 ipmi_sdr_records_write (FILE *fp)
 {
-  u_int16_t record_id;
-  u_int8_t data_rs[4] = {0, 0, 0, 0};
-  u_int8_t record_header[5];
-  u_int8_t *sensor_record = NULL;
-  u_int64_t val;
-  u_int8_t record_length;
-  u_int8_t comp_code;
+  uint16_t record_id;
+  uint8_t data_rs[4] = {0, 0, 0, 0};
+  uint8_t record_header[5];
+  uint8_t *sensor_record = NULL;
+  uint64_t val;
+  uint8_t record_length;
+  uint8_t comp_code;
   
   if (fp == NULL)
     {
@@ -90,7 +90,7 @@ ipmi_sdr_records_write (FILE *fp)
 		    tmpl_sdr_sensor_record_header, 
 		    "record_length", 
 		    &val);
-      record_length = (u_int8_t) val;
+      record_length = (uint8_t) val;
       
       record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
       
@@ -165,7 +165,7 @@ int
 ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file)
 {
   struct stat buf;
-  u_int64_t val;
+  uint64_t val;
   
   if (!(sdr_repo_cache && sdr_cache_file))
     {
@@ -183,7 +183,7 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
   
   sdr_repo_cache->file_length = buf.st_size;
   
-  sdr_repo_cache->cache_start = (u_int8_t *) mmap (NULL, 
+  sdr_repo_cache->cache_start = (uint8_t *) mmap (NULL, 
 						   sdr_repo_cache->file_length, 
 						   PROT_READ, 
 						   MAP_PRIVATE, 
@@ -197,7 +197,7 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
 		tmpl_get_sdr_repo_info_rs, 
 		"record_count", 
 		&val);
-  sdr_repo_cache->total_records = (u_int32_t) val;
+  sdr_repo_cache->total_records = (uint32_t) val;
   
   sdr_repo_cache->cache_curr = sdr_repo_cache->cache_start + 
     fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs);
@@ -236,7 +236,7 @@ ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 int 
-ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, u_int16_t rec_no)
+ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
 {
   int i;
   
@@ -307,7 +307,7 @@ ipmi_sdr_repo_cache_next (sdr_repo_cache_t *sdr_repo_cache)
 int 
 ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
 {
-  u_int64_t val;
+  uint64_t val;
   
   if (sdr_repo_cache == NULL)
     {
@@ -359,7 +359,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
 int 
 ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 {
-  u_int64_t record_type, val;
+  uint64_t record_type, val;
   
   if (sdr_repo_cache == NULL)
     {
@@ -391,8 +391,8 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 const char *
 ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 {
-  u_int8_t sensor_type;
-  u_int64_t val;
+  uint8_t sensor_type;
+  uint64_t val;
   
   if (sdr_repo_cache == NULL)
     {
@@ -430,12 +430,12 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 
 int
 ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
-                                     u_int8_t *buffer,
+                                     uint8_t *buffer,
                                      size_t len)
 {
-  u_int64_t val;
-  u_int32_t record_length;
-  u_int8_t record_type;
+  uint64_t val;
+  uint32_t record_length;
+  uint8_t record_type;
 
   if (sdr_repo_cache == NULL
       || buffer == NULL)

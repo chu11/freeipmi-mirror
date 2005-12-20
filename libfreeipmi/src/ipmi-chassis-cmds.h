@@ -59,24 +59,24 @@ extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 
 int8_t fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
-                                          u_int8_t power_restore_policy);
-int8_t ipmi_set_power_restore_policy (u_int8_t power_restore_policy, 
+                                          uint8_t power_restore_policy);
+int8_t ipmi_set_power_restore_policy (uint8_t power_restore_policy, 
 				      fiid_obj_t obj_data_rs);
 
 int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
 int8_t ipmi_get_chassis_status (fiid_obj_t obj_data_rs);
 
-int8_t fill_cmd_chassis_ctrl (u_int8_t chassis_ctrl, fiid_obj_t obj_cmd);
+int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
 int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
-					   u_int8_t power_restore_policy, 
+					   uint8_t power_restore_policy, 
 					   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
 				     fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                                  u_int8_t identify_interval,
-                                  u_int8_t force_identify_flag,
+                                  uint8_t identify_interval,
+                                  uint8_t force_identify_flag,
                                   fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus

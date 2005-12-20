@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-int32_t fiid_obj_dump_rmcpplus (int fd, char *prefix, char *hdr, u_int8_t authentication_algorithm, u_int8_t integrity_algorithm, u_int8_t confidentiality_algorithm, u_int8_t *integrity_key, u_int32_t integrity_key_len, u_int8_t *confidentiality_key, u_int32_t confidentiality_key_len, u_int8_t *pkt, u_int32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd, fiid_template_t tmpl_trlr_session);
+int32_t fiid_obj_dump_rmcpplus (int fd, char *prefix, char *hdr, uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd, fiid_template_t tmpl_trlr_session);
 
 #ifdef __cplusplus
 }

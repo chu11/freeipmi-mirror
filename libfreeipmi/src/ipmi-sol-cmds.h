@@ -40,36 +40,36 @@ extern fiid_template_t tmpl_set_sol_conf_param_sol_disable_rs;
 extern fiid_template_t tmpl_get_sol_conf_param_rq;
 extern fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs;
 
-int8_t ipmi_sol_conf_sol_enable (u_int16_t sms_io_base, 
-				 u_int8_t channel_number, 
+int8_t ipmi_sol_conf_sol_enable (uint16_t sms_io_base, 
+				 uint8_t channel_number, 
 				 fiid_obj_t obj_data_rs);
 
-int8_t ipmi_sol_conf_sol_disable (u_int16_t sms_io_base, 
-				  u_int8_t channel_number, 
+int8_t ipmi_sol_conf_sol_disable (uint16_t sms_io_base, 
+				  uint8_t channel_number, 
 				  fiid_obj_t obj_data_rs);
 
-int8_t ipmi_sol_conf_get_sol_enable (u_int16_t sms_io_base, 
-				     u_int8_t channel_number, 
-				     u_int8_t parameter_type, 
-				     u_int8_t set_selector, 
-				     u_int8_t block_selector, 
+int8_t ipmi_sol_conf_get_sol_enable (uint16_t sms_io_base, 
+				     uint8_t channel_number, 
+				     uint8_t parameter_type, 
+				     uint8_t set_selector, 
+				     uint8_t block_selector, 
 				     fiid_obj_t obj_data_rs);
 
 int8_t ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
-					      u_int8_t channel_number, 
-					      u_int8_t sol_payload, 
+					      uint8_t channel_number, 
+					      uint8_t sol_payload, 
 					      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
-				      u_int8_t channel_number, 
+				      uint8_t channel_number, 
 				      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
-				       u_int8_t channel_number, 
+				       uint8_t channel_number, 
 				       fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
-					  u_int8_t channel_number,
-					  u_int8_t parameter_type,
-					  u_int8_t set_selector,
-					  u_int8_t block_selector,
+					  uint8_t channel_number,
+					  uint8_t parameter_type,
+					  uint8_t set_selector,
+					  uint8_t block_selector,
 					  fiid_obj_t obj_cmd_rs);
 
 

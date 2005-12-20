@@ -24,19 +24,19 @@ static int32_t
 _dump_rmcpplus_hdr_session(int fd, 
                            char *prefix, 
                            char *session_hdr, 
-                           u_int8_t *pkt, 
-                           u_int32_t pkt_len,
-                           u_int64_t *payload_type,
-                           u_int64_t *payload_authenticated,
-                           u_int64_t *payload_encrypted,
-                           u_int64_t *session_id,
-                           u_int64_t *ipmi_payload_len)
+                           uint8_t *pkt, 
+                           uint32_t pkt_len,
+                           uint64_t *payload_type,
+                           uint64_t *payload_authenticated,
+                           uint64_t *payload_encrypted,
+                           uint64_t *session_id,
+                           uint64_t *ipmi_payload_len)
 {
-  u_int32_t session_hdr_len = 0;
+  uint32_t session_hdr_len = 0;
   int32_t obj_len, obj_len_1, obj_len_2, obj_len_3, obj_field_start;
   fiid_obj_t obj_rmcpplus_hdr_session_temp;
   fiid_field_t *tmpl_rmcpplus_hdr_session_dump;
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
 
   if (!pkt
       || !payload_type
@@ -159,8 +159,8 @@ _dump_rmcpplus_payload_object(int fd,
                               fiid_obj_t obj_payload)
 {
   fiid_field_t *tmpl_rmcpplus_payload_dump;
-  u_int64_t confidentiality_header_len, payload_data_len, confidentiality_trailer_len;
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint64_t confidentiality_header_len, payload_data_len, confidentiality_trailer_len;
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   int32_t obj_field_start;
   int32_t buf_index = 0;
 
@@ -247,10 +247,10 @@ _dump_rmcpplus_payload_data(int fd,
                             char *trlr_hdr,
                             fiid_template_t tmpl_msg_hdr,
                             fiid_template_t tmpl_cmd,
-                            u_int8_t *pkt,
-                            u_int32_t ipmi_payload_len)
+                            uint8_t *pkt,
+                            uint32_t ipmi_payload_len)
 {
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   int32_t pkt_index = 0;
 
   if (!tmpl_msg_hdr
@@ -316,14 +316,14 @@ _dump_rmcpplus_payload_special(int fd,
                                char *prefix,
                                char *payload_hdr,
                                char *cmd_hdr,
-                               u_int8_t payload_type,
-                               u_int8_t authentication_algorithm,
+                               uint8_t payload_type,
+                               uint8_t authentication_algorithm,
                                fiid_template_t tmpl_msg_hdr,
                                fiid_template_t tmpl_cmd,
-                               u_int8_t *pkt,
-                               u_int32_t ipmi_payload_len)
+                               uint8_t *pkt,
+                               uint32_t ipmi_payload_len)
 {
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   fiid_obj_t obj_payload;
   int32_t cmd_index = 0;
   int32_t obj_data_len, obj_field_len;
@@ -606,8 +606,8 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                             char *trlr_hdr,
                                             fiid_template_t tmpl_msg_hdr,
                                             fiid_template_t tmpl_cmd,
-                                            u_int8_t *pkt,
-                                            u_int32_t ipmi_payload_len)
+                                            uint8_t *pkt,
+                                            uint32_t ipmi_payload_len)
 {
   fiid_obj_t obj_payload;
 
@@ -665,15 +665,15 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    char *trlr_hdr,
                                                    fiid_template_t tmpl_msg_hdr,
                                                    fiid_template_t tmpl_cmd,
-                                                   u_int8_t *confidentiality_key,
-                                                   u_int32_t confidentiality_key_len,
-                                                   u_int8_t *pkt,
+                                                   uint8_t *confidentiality_key,
+                                                   uint32_t confidentiality_key_len,
+                                                   uint8_t *pkt,
                                                    int32_t ipmi_payload_len)
 {
-  u_int8_t iv[IPMI_AES_CBC_128_IV_LEN];
+  uint8_t iv[IPMI_AES_CBC_128_IV_LEN];
   int32_t iv_len;
-  u_int8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
-  u_int8_t pad_len;
+  uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
   int32_t payload_data_len, decrypt_len, cmd_data_len, pkt_index = 0;
   fiid_obj_t obj_payload;
@@ -829,15 +829,15 @@ _dump_rmcpplus_payload(int fd,
                        char *msg_hdr,
                        char *cmd_hdr,
                        char *trlr_hdr,
-                       u_int8_t payload_type,
-                       u_int8_t authentication_algorithm,
-                       u_int8_t confidentiality_algorithm,
+                       uint8_t payload_type,
+                       uint8_t authentication_algorithm,
+                       uint8_t confidentiality_algorithm,
                        fiid_template_t tmpl_msg_hdr, 
                        fiid_template_t tmpl_cmd,
-                       u_int8_t *confidentiality_key,
-                       u_int32_t confidentiality_key_len,
-                       u_int8_t *pkt, 
-                       u_int32_t ipmi_payload_len)
+                       uint8_t *confidentiality_key,
+                       uint32_t confidentiality_key_len,
+                       uint8_t *pkt, 
+                       uint32_t ipmi_payload_len)
 {
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
       || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
@@ -914,13 +914,13 @@ static int32_t
 _dump_rmcpplus_session_trlr(int fd,
                             char *prefix,
                             char *session_trlr_hdr,
-                            u_int8_t integrity_algorithm,
+                            uint8_t integrity_algorithm,
                             fiid_template_t tmpl_trlr_session,
-                            u_int8_t *pkt,
-                            u_int32_t pkt_len)
+                            uint8_t *pkt,
+                            uint32_t pkt_len)
 {
   int32_t pad_length_field_len, next_header_field_len, pad_length, authcode_len;
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   int32_t pkt_index = 0;
   char *auth_field;
   fiid_field_t *tmpl_rmcpplus_session_trlr_dump;
@@ -1022,23 +1022,23 @@ int32_t
 fiid_obj_dump_rmcpplus (int fd, 
                         char *prefix, 
                         char *hdr, 
-                        u_int8_t authentication_algorithm,
-                        u_int8_t integrity_algorithm,
-                        u_int8_t confidentiality_algorithm,
-                        u_int8_t *integrity_key,
-                        u_int32_t integrity_key_len,
-                        u_int8_t *confidentiality_key,
-                        u_int32_t confidentiality_key_len,
-                        u_int8_t *pkt, 
-                        u_int32_t pkt_len, 
+                        uint8_t authentication_algorithm,
+                        uint8_t integrity_algorithm,
+                        uint8_t confidentiality_algorithm,
+                        uint8_t *integrity_key,
+                        uint32_t integrity_key_len,
+                        uint8_t *confidentiality_key,
+                        uint32_t confidentiality_key_len,
+                        uint8_t *pkt, 
+                        uint32_t pkt_len, 
                         fiid_template_t tmpl_msg_hdr, 
                         fiid_template_t tmpl_cmd,
                         fiid_template_t tmpl_trlr_session)
 {
-  u_int32_t pkt_index = 0;
+  uint32_t pkt_index = 0;
   int32_t obj_rmcp_hdr_len, obj_len;
-  u_int64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;
-  u_int8_t buf[IPMI_MAX_PAYLOAD_LEN];
+  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   char prefixbuf[IPMI_MAX_PAYLOAD_LEN];
   char *prefix_ptr;
   char *rmcp_hdr = 
