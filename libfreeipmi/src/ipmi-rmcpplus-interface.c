@@ -943,7 +943,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   FIID_OBJ_GET (obj_payload,
                 tmpl_rmcpplus_payload,
-                "payload_len",
+                "payload_data_len",
                 &obj_field_len);
   if (obj_field_len)
     {

@@ -101,6 +101,9 @@
 	libfreeipmi/src/ipmi-rmcpplus-interface.c
 	(_construct_trlr_session_auth_code): Fix integrity digest len
 	bugs.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt): Fix typo bug.
 	
 2005-12-19  Albert Chu <chu11@llnl.gov>
 
