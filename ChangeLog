@@ -95,6 +95,12 @@
 	* Merge in latest from HEAD.
 
 	* Fix various ISO C99 issues.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c
+	(check_rmcpplus_session_trlr),
+	libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_trlr_session_auth_code): Fix integrity digest len
+	bugs.
 	
 2005-12-19  Albert Chu <chu11@llnl.gov>
 
