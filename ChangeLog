@@ -1,3 +1,8 @@
+2005-12-20  Albert Chu <chu11@llnl.gov
+
+	* libfreeipmi/src/freeipmi.h (ERR, ERR_OUT, ERR_EXIT): Define even
+	if FREEIPMI_LIBRARY is not defined.
+	
 2005-12-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd_raw2):
