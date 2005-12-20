@@ -634,7 +634,7 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
                || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         {
           int hash_algorithm, hash_flags, crypt_digest_len;
-          unsigned int expected_digest_len, hash_data_len, integrity_digest_len;
+          unsigned int expected_digest_len, copy_digest_len, hash_data_len, integrity_digest_len;
           uint8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
           uint64_t auth_calc_len = 0;
           uint32_t auth_calc_field_start = 0;
@@ -653,18 +653,21 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
               hash_algorithm = IPMI_CRYPT_HASH_SHA1;
               hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
               expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
+              copy_digest_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
             }
           else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
             {
               hash_algorithm = IPMI_CRYPT_HASH_MD5;
               hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
               expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
+              copy_digest_len = IPMI_HMAC_MD5_128_AUTHCODE_LEN;
             }
           else
             {
               hash_algorithm = IPMI_CRYPT_HASH_MD5;
               hash_flags = 0;
               expected_digest_len = IPMI_MD5_DIGEST_LEN;
+              copy_digest_len = IPMI_MD5_128_AUTHCODE_LEN;
             }
           
           if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
@@ -732,7 +735,7 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
               return (-1);
             }
 
-          memcpy(auth_code_buf, integrity_digest, integrity_digest_len);
+          memcpy(auth_code_buf, integrity_digest, copy_digest_len);
           
           return (integrity_digest_len);
         }

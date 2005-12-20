@@ -1261,7 +1261,7 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
 {
   int32_t rmcp_header_len;
   int hash_algorithm, hash_flags, crypt_digest_len;
-  unsigned int expected_digest_len, hash_data_len, integrity_digest_len;
+  unsigned int expected_digest_len, compare_digest_len, hash_data_len, integrity_digest_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
   uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
 
@@ -1283,18 +1283,21 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LEN;
+      compare_digest_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
     }
   else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LEN;
+      compare_digest_len = IPMI_HMAC_MD5_128_AUTHCODE_LEN;
     }
   else
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
       expected_digest_len = IPMI_MD5_DIGEST_LEN;
+      compare_digest_len = IPMI_MD5_128_AUTHCODE_LEN;
     }
 
   if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
@@ -1303,7 +1306,7 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
   ERR_EXIT (crypt_digest_len == expected_digest_len);
 
   /* Packet is too short, packet must be bogus :-) */
-  if (pkt_len <= (rmcp_header_len + crypt_digest_len))
+  if (pkt_len <= (rmcp_header_len + compare_digest_len))
     return (0);
 
   memset(hash_data, '\0', IPMI_MAX_PAYLOAD_LEN);
@@ -1318,7 +1321,7 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
       hash_data_len += auth_code_data_len;
     }
 
-  memcpy(hash_data + hash_data_len, pkt + rmcp_header_len, pkt_len - rmcp_header_len - crypt_digest_len);
+  memcpy(hash_data + hash_data_len, pkt + rmcp_header_len, pkt_len - rmcp_header_len - compare_digest_len);
   hash_data_len += pkt_len - rmcp_header_len - crypt_digest_len;
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_code_data && auth_code_data_len)
@@ -1348,5 +1351,5 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
       return (-1);
     }
 
-  return (memcmp(integrity_digest, pkt + (pkt_len - crypt_digest_len), crypt_digest_len) ? 0 : 1);
+  return (memcmp(integrity_digest, pkt + (pkt_len - compare_digest_len), compare_digest_len) ? 0 : 1);
 }
