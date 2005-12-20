@@ -225,7 +225,7 @@ fill_rmcpplus_hdr_session (uint8_t payload_type,
 }
 
 int8_t
-fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
+fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr_session,
                            uint8_t *auth_code_data,
                            uint32_t auth_code_data_len,
                            fiid_obj_t obj_trlr)
@@ -233,13 +233,13 @@ fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
   int32_t field_len;
   char *field_str, *field_str_len;
 
-  if (!tmpl_trlr || !obj_trlr)
+  if (!tmpl_trlr_session || !obj_trlr)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_MEMSET (obj_trlr, '\0', tmpl_trlr);
+  FIID_OBJ_MEMSET (obj_trlr, '\0', tmpl_trlr_session);
 
   /* Unlike fill_hdr_session in IPMI 1.5, we only need to copy data.
    * No checking is required.  The difficult part of computing hashes
@@ -248,33 +248,33 @@ fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
    * assembly.
    */
 
-  FIID_OBJ_SET (obj_trlr, tmpl_trlr, "next_header", IPMI_NEXT_HEADER);
+  FIID_OBJ_SET (obj_trlr, tmpl_trlr_session, "next_header", IPMI_NEXT_HEADER);
 
   if (auth_code_data && auth_code_data_len > 0)
     {
-      if (fiid_obj_field_lookup(tmpl_trlr, "auth_code"))
+      if (fiid_obj_field_lookup(tmpl_trlr_session, "auth_code"))
         {
-          if (!fiid_obj_field_lookup(tmpl_trlr, "auth_code_len"))
+          if (!fiid_obj_field_lookup(tmpl_trlr_session, "auth_code_len"))
             {
               errno = EINVAL;
               return (-1);
             }
 
-          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr, "auth_code")) < 0)
+          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr_session, "auth_code")) < 0)
             return (-1);
 
           field_str = "auth_code";
           field_str_len = "auth_code_len";
         }
-      else if (fiid_obj_field_lookup (tmpl_trlr, "auth_calc_data"))
+      else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc_data"))
         {
-          if (!fiid_obj_field_lookup(tmpl_trlr, "auth_calc_data_len"))
+          if (!fiid_obj_field_lookup(tmpl_trlr_session, "auth_calc_data_len"))
             {
               errno = EINVAL;
               return (-1);
             }
 
-          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr, "auth_calc_data")) < 0)
+          if ((field_len = fiid_obj_field_len_bytes(tmpl_trlr_session, "auth_calc_data")) < 0)
             return (-1);         
 
           field_str = "auth_calc_data";
@@ -293,11 +293,11 @@ fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr,
         }
           
       FIID_OBJ_SET_DATA (obj_trlr,
-                         tmpl_trlr,
+                         tmpl_trlr_session,
                          field_str,
                          auth_code_data,
                          auth_code_data_len);
-      FIID_OBJ_SET (obj_trlr, tmpl_trlr, field_str_len, auth_code_data_len);
+      FIID_OBJ_SET (obj_trlr, tmpl_trlr_session, field_str_len, auth_code_data_len);
 
     }
 
