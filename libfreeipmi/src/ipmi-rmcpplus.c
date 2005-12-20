@@ -181,8 +181,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
   };
 
 int8_t
-fill_rmcpplus_hdr_session (u_int8_t auth_type, 
-                           u_int8_t payload_type, 
+fill_rmcpplus_hdr_session (u_int8_t payload_type, 
                            u_int8_t payload_authenticated, 
                            u_int8_t payload_encrypted, 
                            u_int32_t oem_iana, 
