@@ -136,6 +136,8 @@ _construct_payload_special(uint8_t payload_type,
                     tmpl_rmcpplus_payload, 
                     "confidentiality_trailer_len",
                     0);
+
+      return (obj_cmd_len);
     }
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
     {
@@ -191,6 +193,8 @@ _construct_payload_special(uint8_t payload_type,
                     tmpl_rmcpplus_payload, 
                     "confidentiality_trailer_len",
                     0);
+
+      return (obj_cmd_len);
     }
   else
     {
@@ -948,7 +952,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   if (obj_field_len)
     {
       _BUF_SPACE_CHECK(obj_field_len, (pkt_len - pkt_msg_len));
-      ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_payload, "payload")) < 0));
+      ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_payload, "payload_data")) < 0));
       memcpy (pkt + pkt_msg_len,
               obj_payload + obj_field_start,
               obj_field_len);
@@ -1371,13 +1375,13 @@ assemble_ipmi_rmcpplus_pkt_with_payload (uint8_t authentication_algorithm,
 
 static int32_t
 _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
-                         uint8_t *obj_cmd_buf,
+                         fiid_obj_t obj_cmd,
                          fiid_template_t tmpl_cmd,
                          fiid_obj_t obj_msg_trlr,
                          uint8_t *pkt,
                          uint32_t lan_msg_len)
 {
-  int32_t obj_msg_hdr_len, obj_msg_trlr_len, obj_cmd_buf_len, obj_cmd_len;
+  int32_t obj_msg_hdr_len, obj_msg_trlr_len, obj_cmd_len, obj_cmd_copy_len;
   unsigned int pkt_index = 0;
 
   if (!pkt || !lan_msg_len)
@@ -1390,7 +1394,7 @@ _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
   obj_cmd_len = 0;
 
   ERR_EXIT (!((obj_msg_hdr_len = fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs)) < 0));
-  ERR_EXIT (!((obj_cmd_buf_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+  ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
   ERR_EXIT (!((obj_msg_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr)) < 0));
 
   if (obj_msg_hdr)
@@ -1402,7 +1406,7 @@ _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
     }
   pkt_index += obj_msg_hdr_len;
 
-  if (pkt_index <= lan_msg_len)
+  if (pkt_index >= lan_msg_len)
     return 0;
   
   /* achu: Whatever is in between the header and the trailer is the
@@ -1410,26 +1414,36 @@ _deconstruct_payload_buf(fiid_obj_t obj_msg_hdr,
    */
 
   if ((lan_msg_len - pkt_index) > obj_msg_trlr_len)
-    obj_cmd_len = (lan_msg_len - pkt_index) - obj_msg_trlr_len;
+    obj_cmd_copy_len = (lan_msg_len - pkt_index) - obj_msg_trlr_len;
   else
-    obj_cmd_len = (lan_msg_len - pkt_index);
+    obj_cmd_copy_len = (lan_msg_len - pkt_index);
 
-  if (obj_cmd_len > obj_cmd_buf_len)
+  if (obj_cmd_copy_len > obj_cmd_len)
     {
       errno = ENOSPC;
       ipmi_debug("_deconstruct_payload_buf: buffer short");
       return (-1);
     }
 
-  memcpy(obj_cmd_buf, pkt + pkt_index, obj_cmd_len);
-  pkt_index += obj_cmd_len;
+  if (obj_cmd)
+    {
+      FIID_OBJ_MEMSET (obj_cmd, '\0', tmpl_cmd);
+      memcpy (obj_cmd,
+              pkt + pkt_index,
+              FREEIPMI_MIN ((lan_msg_len - pkt_index), obj_cmd_copy_len));
+    }
+  pkt_index += obj_cmd_copy_len;
 
-  if (pkt_index <= lan_msg_len)
-    return obj_cmd_len;
+  if (pkt_index >= lan_msg_len)
+    return 0;
+  
+  if (obj_msg_trlr)
+    {
+      FIID_OBJ_MEMSET (obj_msg_trlr, '\0', tmpl_lan_msg_trlr);
+      memcpy(obj_msg_trlr, pkt + pkt_index, obj_msg_trlr_len);
+    }
 
-  memcpy(obj_msg_trlr, pkt + pkt_index, obj_msg_trlr_len);
-
-  return obj_cmd_len;
+  return (0);
 }
 static int32_t
 _deconstruct_payload_special(uint8_t payload_type,
@@ -1647,8 +1661,6 @@ _deconstruct_payload_confidentiality_none(fiid_obj_t obj_payload,
                                           uint8_t *pkt,
                                           uint32_t ipmi_payload_len)
 {
-  int32_t obj_cmd_len;
-
   if ((obj_cmd && !tmpl_cmd)
       || !pkt
       || !ipmi_payload_len)
@@ -1661,12 +1673,12 @@ _deconstruct_payload_confidentiality_none(fiid_obj_t obj_payload,
   /* achu: No encryption, so ipmi_payload_len is the length of 
    * the msg_hdr, cmd, and msg_trlr.
    */
-  if ((obj_cmd_len = _deconstruct_payload_buf(obj_msg_hdr,
-                                              obj_cmd,
-                                              tmpl_cmd,
-                                              obj_msg_trlr,
-                                              pkt,
-                                              ipmi_payload_len)) < 0)
+  if (_deconstruct_payload_buf(obj_msg_hdr,
+			       obj_cmd,
+			       tmpl_cmd,
+			       obj_msg_trlr,
+			       pkt,
+			       ipmi_payload_len) < 0)
     return (-1);
   
   if (obj_payload)
@@ -1705,7 +1717,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
-  int32_t payload_data_len, decrypt_len, cmd_data_len, obj_cmd_len, pkt_index = 0;
+  int32_t payload_data_len, decrypt_len, cmd_data_len, pkt_index = 0;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
@@ -1831,12 +1843,12 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
       /* achu: User is responsible for checking if padding is not corrupt  */
     }
   
-  if ((obj_cmd_len = _deconstruct_payload_buf(obj_msg_hdr, 
-                                              obj_cmd, 
-                                              tmpl_cmd, 
-                                              obj_msg_trlr,
-                                              payload_buf,
-                                              cmd_data_len)) < 0)
+  if (_deconstruct_payload_buf(obj_msg_hdr, 
+			       obj_cmd, 
+			       tmpl_cmd, 
+			       obj_msg_trlr,
+			       payload_buf,
+			       cmd_data_len) < 0)
     return (-1);
 
   return (0);
@@ -2096,7 +2108,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                            tmpl_cmd,
                            confidentiality_key,
                            confidentiality_key_len,
-                           pkt,
+                           pkt + pkt_index,
                            FREEIPMI_MIN ((pkt_len - pkt_index), ipmi_payload_len)) < 0)
     {
       ipmi_debug("_deconstruct_payload: %s", strerror(errno));

@@ -36,7 +36,6 @@ _dump_rmcpplus_hdr_session(int fd,
   int32_t obj_len, obj_len_1, obj_len_2, obj_len_3, obj_field_start;
   fiid_obj_t obj_rmcpplus_hdr_session_temp;
   fiid_field_t *tmpl_rmcpplus_hdr_session_dump;
-  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
 
   if (!pkt
       || !payload_type
@@ -92,6 +91,7 @@ _dump_rmcpplus_hdr_session(int fd,
   obj_len = obj_len_1 + obj_len_2 + obj_len_3;
   ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_hdr_session, "session_id")) < 0));
   ERR_EXIT(obj_len < IPMI_MAX_PAYLOAD_LEN);
+
   memcpy (obj_rmcpplus_hdr_session_temp + obj_field_start,
           pkt + session_hdr_len,
           FREEIPMI_MIN ((pkt_len - session_hdr_len), obj_len));
@@ -121,32 +121,26 @@ _dump_rmcpplus_hdr_session(int fd,
                 ipmi_payload_len);
 
  output:
-  if (*payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT) 
+  if (*payload_type != IPMI_PAYLOAD_TYPE_OEM_EXPLICIT) 
     {
       if (!(tmpl_rmcpplus_hdr_session_dump = fiid_template_make(4,   "auth_type",
                                                                 4,   "reserved",
+                                                                6,   "payload_type",
                                                                 1,   "payload_type.authenticated",
                                                                 1,   "payload_type.encrypted",
                                                                 32,  "session_id",
                                                                 32,  "session_seq_num",
                                                                 16,   "ipmi_payload_len")))
+								
+							       
         return (-1);
     }
   else
     tmpl_rmcpplus_hdr_session_dump = (fiid_field_t *)&tmpl_rmcpplus_hdr_session[0];
 
-  obj_len = fiid_obj_len_bytes (tmpl_rmcpplus_hdr_session_dump);
-  if ((pkt_len - session_hdr_len) < obj_len)
-    {
-      ERR_EXIT(obj_len < IPMI_MAX_PAYLOAD_LEN);
-      memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
-      memcpy(buf, pkt, (pkt_len - session_hdr_len)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix, session_hdr, NULL, buf, tmpl_rmcpplus_hdr_session_dump) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix, session_hdr, NULL, pkt + session_hdr_len, tmpl_rmcpplus_hdr_session_dump) != -1);
+  ERR_OUT(fiid_obj_dump_perror (fd, prefix, session_hdr, NULL, pkt, tmpl_rmcpplus_hdr_session_dump) != -1);
 
-  if (*payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
+  if (*payload_type != IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     fiid_template_free(tmpl_rmcpplus_hdr_session_dump);
 
   return (session_hdr_len);
@@ -236,7 +230,7 @@ _dump_rmcpplus_payload_object(int fd,
 
   fiid_template_free(tmpl_rmcpplus_payload_dump);
 
-  return (-1);
+  return (0);
 }
 
 static int32_t

@@ -90,6 +90,16 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_payload_special, assemble_ipmi_rmcpplus_pkt,
+	_deconstruct_payload_buf, _deconstruct_payload_special,
+	_deconstruct_payload_confidentiality_aes_cbc_128,
+	unassemble_ipmi_rmcpplus_pkt),
+	libfreeipmi/src/ipmi-rmcpplus-debug.c
+	(_dump_rmcpplus_hdr_session): Fix various bugs.
+	
 2005-12-20  Albert Chu <chu11@llnl.gov>
 
 	* Merge in latest from HEAD.
@@ -103,7 +113,7 @@
 	bugs.
 
 	* libfreeipmi/src/ipmi-rmcpplus-interface.c
-	(assemble_ipmi_rmcpplus_pkt): Fix typo bug.
+	(assemble_ipmi_rmcpplus_pkt): Fix typo bugs.
 	
 2005-12-19  Albert Chu <chu11@llnl.gov>
 
