@@ -973,8 +973,8 @@ check_rmcpplus_payload_pad(uint8_t confidentiality_algorithm,
 }
 
 int8_t
-check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session,
-                            fiid_obj_t obj_rmcpplus_trlr_session)
+check_rmcpplus_integrity_pad(fiid_template_t tmpl_rmcpplus_trlr_session,
+                             fiid_obj_t obj_rmcpplus_trlr_session)
 {
   uint8_t integrity_pad[IPMI_MAX_PAYLOAD_LEN];
   uint64_t pad_length;

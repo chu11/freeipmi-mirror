@@ -77,7 +77,7 @@ int32_t ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentica
 
 int8_t check_rmcpplus_payload_pad(uint8_t confidentiality_algorithm, fiid_obj_t obj_payload);
 
-int8_t check_rmcpplus_integriy_pad(fiid_template_t tmpl_rmcpplus_trlr_session, fiid_obj_t obj_rmcpplus_trlr_session);
+int8_t check_rmcpplus_integrity_pad(fiid_template_t tmpl_rmcpplus_trlr_session, fiid_obj_t obj_rmcpplus_trlr_session);
    
 int8_t check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentication_algorithm, uint8_t *authentication_key, uint32_t authentication_key_len, uint32_t remote_console_session_id, uint32_t managed_system_session_id, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t *managed_system_random_number, uint32_t managed_system_random_number_len, uint8_t *managed_system_guid, uint32_t managed_system_guid_len, uint8_t name_only_lookup, uint8_t requested_maximum_privilege_level, uint8_t *username, uint8_t username_length, uint8_t *key_exchange_authentication_code, uint32_t key_exchange_authentication_code_len);
 
