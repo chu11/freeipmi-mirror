@@ -665,7 +665,6 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    int32_t ipmi_payload_len)
 {
   uint8_t iv[IPMI_AES_CBC_128_IV_LEN];
-  int32_t iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
@@ -688,7 +687,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
     return (-1);
   
-  ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
+  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LEN));
   
   if (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
     {
@@ -716,14 +715,12 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
       return (-1);
     }
 
-  if (obj_payload)
-    FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
-
   memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LEN);
   pkt_index += IPMI_AES_CBC_128_BLOCK_LEN;
   memcpy(payload_buf, pkt + pkt_index, payload_data_len);
 
   FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
+  FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
   FIID_OBJ_SET_DATA(obj_payload,
                     tmpl_rmcpplus_payload,
@@ -741,7 +738,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                confidentiality_key,
                                                confidentiality_key_len,
                                                iv,
-                                               iv_len,
+					       IPMI_AES_CBC_128_BLOCK_LEN,
                                                payload_buf,
                                                payload_data_len)) < 0)
     return (-1);
@@ -768,39 +765,34 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
       return (-1);
     }
   
-  if (obj_payload)
-    {
-      FIID_OBJ_SET_DATA(obj_payload,
-                        tmpl_rmcpplus_payload,
-                        "payload_data",
-                        payload_buf,
-                        cmd_data_len);
+  FIID_OBJ_SET_DATA(obj_payload,
+		    tmpl_rmcpplus_payload,
+		    "payload_data",
+		    payload_buf,
+		    cmd_data_len);
 
-      FIID_OBJ_SET(obj_payload,
-                   tmpl_rmcpplus_payload,
-                   "payload_data_len",
-                   cmd_data_len);
+  FIID_OBJ_SET(obj_payload,
+	       tmpl_rmcpplus_payload,
+	       "payload_data_len",
+	       cmd_data_len);
 
-      FIID_OBJ_SET_DATA(obj_payload,
-                        tmpl_rmcpplus_payload,
-                        "confidentiality_trailer",
-                        payload_buf + cmd_data_len,
-                        pad_len + 1);
+  FIID_OBJ_SET_DATA(obj_payload,
+		    tmpl_rmcpplus_payload,
+		    "confidentiality_trailer",
+		    payload_buf + cmd_data_len,
+		    pad_len + 1);
 
-      FIID_OBJ_SET(obj_payload,
-                   tmpl_rmcpplus_payload,
-                   "confidentiality_trailer_len",
-                   pad_len + 1);
-
-      /* achu: User is responsible for checking if padding is not corrupt  */
-    }
-
+  FIID_OBJ_SET(obj_payload,
+	       tmpl_rmcpplus_payload,
+	       "confidentiality_trailer_len",
+	       pad_len + 1);
+  
   if (_dump_rmcpplus_payload_object(fd,
                                     prefix,
                                     payload_hdr,
                                     obj_payload) < 0)
     return (-1);
-
+  
   if (_dump_rmcpplus_payload_data(fd,
                                   prefix,
                                   msg_hdr,
@@ -812,8 +804,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                   cmd_data_len) < 0)
     return (-1);
 
-  return (0);
-  
+  return (0);  
 }
 
 static int32_t
@@ -962,7 +953,7 @@ _dump_rmcpplus_session_trlr(int fd,
   if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
     auth_field = "auth_code";
   else
-    auth_field = "auth_calc";
+    auth_field = "auth_calc_data";
 
   memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
   if (pad_length)
@@ -974,32 +965,32 @@ _dump_rmcpplus_session_trlr(int fd,
   if (pad_length_field_len)
     {
       memcpy(buf + pkt_index, pkt + pkt_index, pad_length_field_len); 
-      pkt_index += pad_length;
+      pkt_index += pad_length_field_len;
     }
 
   if (next_header_field_len)
     {
       memcpy(buf + pkt_index, pkt + pkt_index, next_header_field_len);
-      pkt_index += pad_length;
+      pkt_index += next_header_field_len;
     }
   
   if (authcode_len)
     {
       memcpy(buf + pkt_index, pkt + pkt_index, authcode_len);
-      pkt_index += pad_length;
+      pkt_index += authcode_len;
     }
   
   if (pad_length)
     {
-      if (!(tmpl_rmcpplus_session_trlr_dump = fiid_template_make((pad_length_field_len * 8),   "pad_length",
+      if (!(tmpl_rmcpplus_session_trlr_dump = fiid_template_make((pad_length *8),              "integrity_pad",
+                                                                 (pad_length_field_len * 8),   "pad_length",
                                                                  (next_header_field_len * 8),  "next_header",
                                                                  (authcode_len * 8),           auth_field)))
         return (-1);
     }
   else
     {
-      if (!(tmpl_rmcpplus_session_trlr_dump = fiid_template_make((pad_length *8),              "integrity_pad",
-                                                                 (pad_length_field_len * 8),   "pad_length",
+      if (!(tmpl_rmcpplus_session_trlr_dump = fiid_template_make((pad_length_field_len * 8),   "pad_length",
                                                                  (next_header_field_len * 8),  "next_header",
                                                                  (authcode_len * 8),           auth_field)))
         return (-1);
@@ -1108,7 +1099,7 @@ fiid_obj_dump_rmcpplus (int fd,
 
     return (-1);
   pkt_index += obj_len;
-       
+
   if (pkt_len <= pkt_index)
     return 0;
 
@@ -1130,6 +1121,7 @@ fiid_obj_dump_rmcpplus (int fd,
                              pkt + pkt_index, 
                              ipmi_payload_len) < 0)
     return (-1);
+
   pkt_index += ipmi_payload_len;
 
   if (pkt_len <= pkt_index)
@@ -1152,6 +1144,7 @@ fiid_obj_dump_rmcpplus (int fd,
       if (pkt_len <= pkt_index)
         return 0;
     }
+
 
   /* Dump extra stuff if packet is longer than expected */
   if ((pkt_len - pkt_index) > 0)

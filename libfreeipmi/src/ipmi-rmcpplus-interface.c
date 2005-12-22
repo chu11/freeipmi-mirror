@@ -292,7 +292,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
     return (-1);
 
-  ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
+  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LEN));
 
   if (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
     {
@@ -331,7 +331,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   /* +1 is for the pad length field */
   pad_len = IPMI_AES_CBC_128_BLOCK_LEN - ((payload_len + 1) % IPMI_AES_CBC_128_BLOCK_LEN);
       
-  ERR_EXIT ((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LEN);
+  ERR_EXIT (!((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LEN));
   
   if (pad_len)
     {
@@ -688,12 +688,12 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
               /* XXX: achu: Do we zero pad?  I don't know. */
               FIID_OBJ_GET (obj_rmcpplus_trlr_session,
                             tmpl_trlr_session,
-                            "auth_calc_len",
+                            "auth_calc_data_len",
                             &auth_calc_len);
 
               if (auth_calc_len)
                 {
-                  ERR_EXIT (!((auth_calc_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc")) < 0));
+                  ERR_EXIT (!((auth_calc_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "auth_calc_data")) < 0));
                   memcpy(hash_data + hash_data_len, 
                          (void *)(obj_rmcpplus_trlr_session + auth_calc_field_start), 
                          auth_calc_len);
@@ -741,7 +741,7 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
 
           memcpy(auth_code_buf, integrity_digest, copy_digest_len);
           
-          return (integrity_digest_len);
+          return (copy_digest_len);
         }
     }
 
@@ -1021,17 +1021,17 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       _BUF_SPACE_CHECK(pad_length_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "pad_length")) < 0));
       memcpy (pkt + pkt_msg_len,
-              obj_rmcpplus_trlr_session + obj_field_start,
+              obj_rmcpplus_trlr_session_temp + obj_field_start,
               pad_length_field_len);
       pkt_msg_len += pad_length_field_len;
 
-      /* 
+       /* 
        * Copy next header field into packet
        */
       _BUF_SPACE_CHECK(next_header_field_len, (pkt_len - pkt_msg_len));
       ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes (tmpl_trlr_session, "next_header")) < 0));
       memcpy (pkt + pkt_msg_len,
-              obj_rmcpplus_trlr_session + obj_field_start,
+              obj_rmcpplus_trlr_session_temp + obj_field_start,
               next_header_field_len);
       pkt_msg_len += next_header_field_len;
 
@@ -1042,7 +1042,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       if ((auth_code_len = _construct_trlr_session_auth_code(integrity_algorithm,
                                                              integrity_key,
                                                              integrity_key_len,
-                                                             obj_rmcpplus_trlr_session,
+                                                             obj_rmcpplus_trlr_session_temp,
                                                              tmpl_trlr_session,
                                                              pkt + obj_rmcp_hdr_len,
                                                              pkt_msg_len - obj_rmcp_hdr_len,
@@ -1713,7 +1713,6 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
                                                  uint32_t ipmi_payload_len)
 {
   uint8_t iv[IPMI_AES_CBC_128_IV_LEN];
-  int32_t iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LEN];
   uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
@@ -1735,7 +1734,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   if ((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0)
     return (-1);
 
-  ERR_EXIT (cipher_keylen < IPMI_AES_CBC_128_KEY_LEN);
+  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LEN));
 
   if (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LEN)
     {
@@ -1757,14 +1756,12 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
 
   payload_data_len = ipmi_payload_len - IPMI_AES_CBC_128_BLOCK_LEN;
 
+  /* XXX: Is it ok to check this? */
   if (payload_data_len <= 0)
     {
       errno = EINVAL;
       return (-1);
     }
-
-  if (obj_payload)
-    FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
   memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LEN);
   pkt_index += IPMI_AES_CBC_128_BLOCK_LEN;
@@ -1772,6 +1769,8 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
 
   if (obj_payload)
     {
+      FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
+
       FIID_OBJ_SET_DATA(obj_payload,
                         tmpl_rmcpplus_payload,
                         "confidentiality_header",
@@ -1789,7 +1788,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
                                                confidentiality_key,
                                                confidentiality_key_len,
                                                iv,
-                                               iv_len,
+					       IPMI_AES_CBC_128_BLOCK_LEN,
                                                payload_buf,
                                                payload_data_len)) < 0)
       return (-1);
@@ -2168,8 +2167,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         }
       else
         {
-          auth_field = "auth_calc";
-          auth_field = "auth_calc_len";
+          auth_field = "auth_calc_data";
+          auth_field_len = "auth_calc_data_len";
         }
 
       if (authcode_len)
@@ -2208,7 +2207,14 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                        &pad_length) < 0)
         return (-1);
 
-      if (pad_length != (pkt_index + authcode_len + pad_length_field_len + next_header_field_len))
+      if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
+	{
+	  errno = EINVAL;
+	  return (-1);
+	}
+      
+      /* XXX: need to remove this check? */
+      if (pad_length != (pkt_len - pkt_index - authcode_len - pad_length_field_len - next_header_field_len))
         {
           errno = EINVAL;
           return (-1);

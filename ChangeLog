@@ -90,6 +90,17 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2005-12-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c
+	(_dump_rmcpplus_payload_confidentiality_aes_cbc_128,
+	_dump_rmcpplus_session_trlr),
+	libfreeipmi/src/Attic/ipmi-rmcpplus-interface.c
+	(_construct_payload_confidentiality_aes_cbc_128,
+	_construct_trlr_session_auth_code, assemble_ipmi_rmcpplus_pkt,
+	_deconstruct_payload_confidentiality_aes_cbc_128,
+	unassemble_ipmi_rmcpplus_pkt): Fix various bugs.
+	
 2005-12-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-interface.c
