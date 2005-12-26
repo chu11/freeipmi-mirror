@@ -51,14 +51,14 @@ fi_ipmi_open (struct arguments *args)
   if (dev_opened)
     return 0;
   
-  if (args->host != NULL)
+  if (args->common.host != NULL)
     {
       struct hostent *hostinfo;
       struct sockaddr_in host;
       
       host.sin_family = AF_INET;
       host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (args->host);
+      hostinfo = gethostbyname (args->common.host);
       if (hostinfo == NULL)
 	{
 	  perror ("gethostbyname()");
@@ -71,10 +71,10 @@ fi_ipmi_open (struct arguments *args)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       args->auth_type, 
-			       args->username, 
-			       args->password, 
-			       args->priv_level) != 0)
+			       args->common.auth_type, 
+			       args->common.username, 
+			       args->common.password, 
+			       args->common.priv_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -126,12 +126,12 @@ get_ipmi_host_ip_address ()
   struct arguments *args = NULL;
   
   args = fi_get_arguments ();
-  if (args->host != NULL) /* OUT-OF-BAND */
+  if (args->common.host != NULL) /* OUT-OF-BAND */
     {
       struct hostent *hostinfo = NULL;
       struct in_addr *in_addr = NULL;
       
-      hostinfo = gethostbyname (args->host);
+      hostinfo = gethostbyname (args->common.host);
       if (hostinfo == NULL)
 	return NULL;
       

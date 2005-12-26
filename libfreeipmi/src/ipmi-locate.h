@@ -60,6 +60,7 @@ enum ipmi_interface_type
   IPMI_INTERFACE_SSIF = 4,
   /* Note: If you add a new interface here, don't forget to update
   "IPMI_INTERFACE_MAX" macro below. */
+  IPMI_INTERFACE_LAN = 0xF
 };
 typedef enum ipmi_interface_type ipmi_interface_type_t;
 

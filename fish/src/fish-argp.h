@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.h,v 1.2 2005-12-17 01:25:33 balamurugan Exp $ 
+   $Id: fish-argp.h,v 1.3 2005-12-26 08:06:57 balamurugan Exp $ 
    
    fish-argp.h - fish command line argument parser.
    
@@ -23,35 +23,12 @@
 #ifndef _FISH_ARGP_H
 #define _FISH_ARGP_H
 
-enum argp_option_keys
-  { 
-    QUIET_KEY = 'q', 
-    VERBOSE_KEY = 'v', 
-    SCRIPT_FILE_KEY = 's', 
-    DUMMY_KEY = 129, 
-    BRIEF_KEY, 
-    POLL_INTERVAL_KEY, 
-    SMS_IO_BASE_KEY, 
-    HOST_KEY = 'h', 
-    USERNAME_KEY = 'u', 
-    PASSWORD_KEY = 'p', 
-    AUTH_TYPE_KEY = 'a', 
-    PRIV_LEVEL_KEY = 'l'
-  };
+#define SCRIPT_FILE_KEY     's'
 
-struct arguments
+struct arguments 
 {
-  int quiet;
-  int brief;
-  int verbose;
+  struct common_cmd_args common;
   char *script_file;
-  int poll_interval;
-  unsigned int sms_io_base;
-  char *host;
-  char *username;
-  char *password;
-  int auth_type;
-  int priv_level;
 };
 
 void fi_show_version (FILE *stream, struct argp_state *state);
@@ -62,7 +39,5 @@ void fi_get_script_args (int *argc, char ***argv);
 
 int get_script_argc ();
 char **get_script_argv ();
-void fi_set_sms_io_base (unsigned int io_base);
-void set_driver_poll_interval (int driver_poll_interval_value);
 
 #endif

@@ -138,17 +138,6 @@ install_new_procedures (void)
      (fi-quit)
   */
 
-  gh_new_procedure ("fi-set-sms-io-base!", ex_set_sms_io_base, 1, 0, 0);
-  /* example scheme expression
-     (fi-set-sms-io-base! #x0CA2)
-  */
-
-  gh_new_procedure ("fi-set-default-driver-poll-interval", 
-		    ex_set_driver_poll_interval, 1, 0, 0);
-  /* example scheme expression
-     (fi-set-default-driver-poll-interval 100)
-  */
-
   gh_new_procedure ("fi-ping", ex_ipmi_ping, 2, 0, 0);
   /* example scheme expression
      (fi-ping "ipmi.gnu.org" timeout)

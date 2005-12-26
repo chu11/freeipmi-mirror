@@ -30,14 +30,12 @@ SCM ex_unregister_command_x (SCM command);
 SCM ex_set_prompt_x (SCM scm_prompt);
 SCM ex_exit (SCM scm_status);
 SCM ex_quit ();
-SCM ex_set_sms_io_base (SCM scm_sms_io_base);
 
 SCM ex_load (SCM scm_filename);
 SCM ex_get_sysconfig_dir (void);
 
 SCM ex_ipmi_ping (SCM scm_host, SCM scm_timeout);
 
-SCM ex_set_driver_poll_interval (SCM scm_driver_poll_interval);
 SCM ex_get_script_command_line ();
 
 SCM ex_get_default_sdr_repo_cache_filename (void);

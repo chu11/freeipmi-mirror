@@ -28,6 +28,8 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include <freeipmi/freeipmi.h>
 
+#include "argp-common.h"
+
 const char *argp_program_version = "udm-test 0.1.0";
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
@@ -40,137 +42,26 @@ static char args_doc[] = "";
 /* The options we understand. */
 static struct argp_option options[] = 
   {
-    {"hostname",   'h', "IPMIHOST", 0, 
-     "Connect to IPMIHOST"},
-    {"username",   'u', "USERNAME", 0, 
-     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16"},
-    {"password",   'p', "PASSWORD", 0, 
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16"},
-    {"auth-type",  'a', "AUTHTYPE", 0, 
-     "Use AUTHTYPE instead of NONE.  "
-     "Allowed values are NONE, MD2, MD5, PLAIN and OEM"},
-    {"priv-level", 'l', "PRIVILEGE-LEVEL", 0, 
-     "Use this PRIVILEGE-LEVEL instead of USER.  "
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM"},
+    ARGP_COMMON_OPTIONS, 
     { 0 }
   };
 
 /* Used by `main' to communicate with `parse_opt'. */
 struct arguments
 {
-  char *hostname;
-  char *username;
-  char *password;
-  int auth_type;
-  int priv_level;
+  struct common_cmd_args common;
 };
 
 /* Parse a single option. */
-static error_t
+static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
   /* Get the INPUT argument from `argp_parse', which we
      know is a pointer to our arguments structure. */
-  struct arguments *arguments = state->input;
+  struct arguments *cmd_args = state->input;
   
-  switch (key)
-    {
-    case 'h':
-      arguments->hostname = arg;
-      break;
-      
-    case 'u': /* 16 chars max */
-      if (strlen (arg) > 16)
-	argp_usage (state);
-      else 
-	arguments->username = arg;
-      
-      break;
-      
-    case 'p': /* 16 chars max */
-      if (strlen (arg) > 16)
-	argp_usage (state);
-      else 
-	arguments->password = arg;
-      
-      break;
-      
-    case 'a': /* values 0,1,2,4,5 = none,md2,md5,straight,oem */
-      if (strcasecmp (arg, "none") == 0)
-	{
-	  arguments->auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-	}
-      else 
-	if (strcasecmp (arg, "md2") == 0)
-	  {
-	    arguments->auth_type = IPMI_SESSION_AUTH_TYPE_MD2;
-	  }
-	else 
-	  if (strcasecmp (arg, "md5") == 0)
-	    {
-	      arguments->auth_type = IPMI_SESSION_AUTH_TYPE_MD5;
-	    }
-	  else 
-	    if (strcasecmp (arg, "plain") == 0)
-	      {
-		arguments->auth_type = IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
-	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  arguments->auth_type = IPMI_SESSION_AUTH_TYPE_OEM_PROP;
-		}
-	      else 
-		{
-		  argp_usage (state);
-		}
-      
-      break;
-      
-    case 'l': /* range 1 to 5 = callback,user,operator,admin,oem */
-      if (strcasecmp (arg, "callback") == 0)
-	{
-	  arguments->priv_level = IPMI_PRIV_LEVEL_CALLBACK;
-	}
-      else 
-	if (strcasecmp (arg, "user") == 0)
-	  {
-	    arguments->priv_level = IPMI_PRIV_LEVEL_USER;
-	  }
-	else 
-	  if (strcasecmp (arg, "operator") == 0)
-	    {
-	      arguments->priv_level = IPMI_PRIV_LEVEL_OPERATOR;
-	    }
-	  else 
-	    if (strcasecmp (arg, "admin") == 0)
-	      {
-		arguments->priv_level = IPMI_PRIV_LEVEL_ADMIN;
-	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  arguments->priv_level = IPMI_PRIV_LEVEL_OEM;
-		}
-	      else 
-		{
-		  argp_usage (state);
-		}
-      
-      break;
-      
-    case ARGP_KEY_ARG:
-      /* Too many arguments. */
-      argp_usage (state);
-      break;
-      
-    case ARGP_KEY_END:
-      break;
-      
-    default:
-      return ARGP_ERR_UNKNOWN;
-    }
-  return 0;
+  return common_parse_opt (key, arg, state, 
+			   &(cmd_args->common));
 }
 
 /* Our argp parser. */
@@ -179,7 +70,7 @@ static struct argp argp = { options, parse_opt, args_doc, doc };
 int 
 main (int argc, char **argv)
 {
-  struct arguments arguments;
+  struct arguments cmd_args;
   
   ipmi_device_t dev;
   
@@ -188,22 +79,17 @@ main (int argc, char **argv)
   
   fiid_obj_t obj_cmd_rs;
   
-  /* Default values. */
-  arguments.hostname = NULL;
-  arguments.username = NULL;
-  arguments.password = NULL;
-  arguments.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-  arguments.priv_level = IPMI_PRIV_LEVEL_USER;
+  init_common_cmd_args (&(cmd_args.common));
   
   /* Parse our arguments; every option seen by `parse_opt' will
      be reflected in `arguments'. */
-  argp_parse (&argp, argc, argv, 0, 0, &arguments);
+  argp_parse (&argp, argc, argv, 0, 0, &cmd_args);
   
-  if (arguments.hostname != NULL)
+  if (cmd_args.common.host != NULL)
     {
       host.sin_family = AF_INET;
       host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (arguments.hostname);
+      hostinfo = gethostbyname (cmd_args.common.host);
       if (hostinfo == NULL)
 	{
 	  perror ("gethostbyname()");
@@ -216,10 +102,10 @@ main (int argc, char **argv)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       arguments.auth_type, 
-			       arguments.username, 
-			       arguments.password, 
-			       arguments.priv_level) != 0)
+			       cmd_args.common.auth_type, 
+			       cmd_args.common.username, 
+			       cmd_args.common.password, 
+			       cmd_args.common.priv_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -228,7 +114,7 @@ main (int argc, char **argv)
   else 
     {
       if (ipmi_open_inband (&dev, 
-			    IPMI_DEVICE_KCS, 
+			    cmd_args.common.driver_type, 
 			    IPMI_MODE_DEFAULT) != 0)
 	{
 	  perror ("ipmi_open_inband()");

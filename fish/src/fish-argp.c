@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.c,v 1.2 2005-12-17 01:25:33 balamurugan Exp $ 
+   $Id: fish-argp.c,v 1.3 2005-12-26 08:06:57 balamurugan Exp $ 
    
    fish-argp.c - fish command line argument parser.
    
@@ -22,7 +22,7 @@
 
 #include "common.h"
 
-static struct arguments arguments;
+static struct arguments cmd_args;
 static int script_arg_start_index = 0;
 static int script_argc = 0;
 static char **script_argv = NULL;
@@ -30,157 +30,41 @@ static char **script_argv = NULL;
 static error_t parse_opt (int key, char *arg, struct argp_state *state);
 
 static char version_doc[] = 
-N_("FreeIPMI Shell [fish-" PACKAGE_VERSION "]\n"
-   "Copyright (C) 2003-2005 FreeIPMI Core Team\n"
-   "This program is free software; you may redistribute it under the terms of\n"
-   "the GNU General Public License.  This program has absolutely no warranty.");
+"FreeIPMI Shell [fish-" PACKAGE_VERSION "]\n"
+"Copyright (C) 2003-2005 FreeIPMI Core Team\n"
+"This program is free software; you may redistribute it under the terms of\n"
+"the GNU General Public License.  This program has absolutely no warranty.";
 
 void (*argp_program_version_hook) (FILE *, struct argp_state *) = fi_show_version;
 const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
-static char doc[] = N_("Free IPMI SHell - an extensible console based shell "
-		       "for managing large number of IPMI compatible systems.");
+static char doc[] = "Free IPMI SHell - an extensible console based shell "
+"for managing large number of IPMI compatible systems.";
 
-static char args_doc[] = N_("");
+static char args_doc[] = "";
 
 static struct argp_option options[] = 
   {
-    { "quiet",                QUIET_KEY,         NULL,          0, 
-      N_("Inhibit usual output."), 0 },
-    { "silent",               0,                 NULL,          OPTION_ALIAS, 
-      NULL, 0 },
-    { "brief",                BRIEF_KEY,         NULL,          0, 
-      N_("Shorten output."), 0 },
-    { "verbose",              VERBOSE_KEY,       NULL,          0, 
-      N_("Print more information."), 0 },
-    { "script-file",          SCRIPT_FILE_KEY,   "SCRIPT-FILE", 0, 
-      N_("Load and execute given SCRIPT-FILE."), 0 },
-    { "driver-poll-interval", POLL_INTERVAL_KEY, "USEC",        0, 
-      N_("User USEC driver poll interval."), 0 }, 
-    { "sms-io-base",          SMS_IO_BASE_KEY,   "SMS-IO-BASE", 0, 
-      N_("SMS IO Base address."), 0}, 
-    { "host",                 HOST_KEY,          "IPMIHOST",    0, 
-      N_("Connect to IPMIHOST."), 0},
-    { "username",             USERNAME_KEY,      "USERNAME",    0, 
-      N_("Use USERNAME instead of NULL.  Maximum USERNAME length is 16."), 0},
-    { "password",             PASSWORD_KEY,      "PASSWORD",    0, 
-      N_("Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16."), 0},
-    { "auth-type",            AUTH_TYPE_KEY,     "AUTHTYPE",    0, 
-      N_("Use AUTHTYPE instead of NONE.  "
-	 "Allowed values are NONE, MD2, MD5, PLAIN and OEM."), 0},
-    { "priv-level",           PRIV_LEVEL_KEY,    "PRIVILEGE-LEVEL", 0, 
-      N_("Use this PRIVILEGE-LEVEL instead of USER.  "
-	 "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM."), 0},
-    { NULL, 0, NULL, 0, NULL, 0 }
+    ARGP_COMMON_OPTIONS, 
+    {"script-file", SCRIPT_FILE_KEY, "SCRIPT-FILE", 0, 
+     "Load and execute given SCRIPT-FILE."}, 
+    { 0 }
   };
 
-static struct argp argp = 
-{
-  options, parse_opt, args_doc, doc, NULL, NULL, NULL
-};
+static struct argp argp = { options, parse_opt, args_doc, doc };
 
 static error_t 
 parse_opt (int key, char *arg, struct argp_state *state)
 {
-  struct arguments *arguments = state->input;
+  struct arguments *args = state->input;
   
   switch (key)
     {
-    case QUIET_KEY:
-      arguments->quiet = 1;
-      break;
-    case BRIEF_KEY:
-      arguments->brief = 1;
-      break;
-    case VERBOSE_KEY:
-      arguments->verbose = 1;
-      break;
     case SCRIPT_FILE_KEY:
-      arguments->script_file = strdup (arg);
+      args->script_file = strdup (arg);
       script_arg_start_index = state->next;
       /* consume rest of args */
       state->next = state->argc;
-      break;
-    case POLL_INTERVAL_KEY:
-      arguments->poll_interval = atol (arg);
-      break;
-    case SMS_IO_BASE_KEY:
-      arguments->sms_io_base = atol (arg);
-      break;
-    case HOST_KEY:
-      arguments->host = strdup (arg);
-      break;
-    case USERNAME_KEY:
-      if (strlen (arg) > 16)
-	argp_usage (state);
-      else 
-	arguments->username = strdup (arg);
-      break;
-    case PASSWORD_KEY:
-      if (strlen (arg) > 16)
-	argp_usage (state);
-      else 
-	arguments->password = strdup (arg);
-      break;
-    case AUTH_TYPE_KEY:
-      if (strcasecmp (arg, "none") == 0)
-	{
-	  arguments->auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-	}
-      else 
-	if (strcasecmp (arg, "md2") == 0)
-	  {
-	    arguments->auth_type = IPMI_SESSION_AUTH_TYPE_MD2;
-	  }
-	else 
-	  if (strcasecmp (arg, "md5") == 0)
-	    {
-	      arguments->auth_type = IPMI_SESSION_AUTH_TYPE_MD5;
-	    }
-	  else 
-	    if (strcasecmp (arg, "plain") == 0)
-	      {
-		arguments->auth_type = IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
-	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  arguments->auth_type = IPMI_SESSION_AUTH_TYPE_OEM_PROP;
-		}
-	      else 
-		{
-		  argp_usage (state);
-		}
-      break;
-    case PRIV_LEVEL_KEY:
-      if (strcasecmp (arg, "callback") == 0)
-	{
-	  arguments->priv_level = IPMI_PRIV_LEVEL_CALLBACK;
-	}
-      else 
-	if (strcasecmp (arg, "user") == 0)
-	  {
-	    arguments->priv_level = IPMI_PRIV_LEVEL_USER;
-	  }
-	else 
-	  if (strcasecmp (arg, "operator") == 0)
-	    {
-	      arguments->priv_level = IPMI_PRIV_LEVEL_OPERATOR;
-	    }
-	  else 
-	    if (strcasecmp (arg, "admin") == 0)
-	      {
-		arguments->priv_level = IPMI_PRIV_LEVEL_ADMIN;
-	      }
-	    else 
-	      if (strcasecmp (arg, "oem") == 0)
-		{
-		  arguments->priv_level = IPMI_PRIV_LEVEL_OEM;
-		}
-	      else 
-		{
-		  argp_usage (state);
-		}
       break;
     case ARGP_KEY_ARG:
       /* Too many arguments. */
@@ -189,7 +73,8 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case ARGP_KEY_END:
       break;
     default:
-      return ARGP_ERR_UNKNOWN;
+      return common_parse_opt (key, arg, state,
+                               &(args->common));
     }
   
   return 0;
@@ -232,23 +117,10 @@ fi_show_version (FILE *stream, struct argp_state *state)
 void 
 fi_argp_parse (int argc, char **argv)
 {
-  arguments.quiet = 0;
-  arguments.brief = 0;
-  arguments.verbose = 0;
-  arguments.script_file = NULL;
-  arguments.poll_interval = IPMI_POLL_INTERVAL_USECS;
-#ifdef __ia64__
-  arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_SR870BN4;
-#else
-  arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-#endif
-  arguments.host = NULL;
-  arguments.username = NULL;
-  arguments.password = NULL;
-  arguments.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-  arguments.priv_level = IPMI_PRIV_LEVEL_USER;
+  init_common_cmd_args (&(cmd_args.common));
+  cmd_args.script_file = NULL;
   
-  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &arguments);
+  argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
   
   if (script_arg_start_index != 0)
     {
@@ -264,49 +136,53 @@ fi_argp_parse (int argc, char **argv)
 struct arguments *
 fi_get_arguments ()
 {
-  return &arguments;
+  return &cmd_args;
 }
 
 int 
 fi_set_arguments (struct arguments *args)
 {
-  arguments.quiet = args->quiet;
-  arguments.brief = args->brief;
-  arguments.verbose = args->verbose;
+  cmd_args.common.disable_auto_probe = args->common.disable_auto_probe;
+  cmd_args.common.driver_type = args->common.driver_type;
+  cmd_args.common.driver_address = args->common.driver_address;
   
-  if (arguments.script_file)
-    xfree (arguments.script_file);
+  if (cmd_args.common.driver_device)
+    xfree (cmd_args.common.driver_device);
+  if (args->common.driver_device)
+    cmd_args.common.driver_device = strdup (args->common.driver_device);
+  else 
+    cmd_args.common.driver_device = NULL;
+  
+  if (cmd_args.common.host)
+    xfree (cmd_args.common.host);
+  if (args->common.host)
+    cmd_args.common.host = strdup (args->common.host);
+  else 
+    cmd_args.common.host = NULL;
+  
+  if (cmd_args.common.username)
+    xfree (cmd_args.common.username);
+  if (args->common.username)
+    cmd_args.common.username = strdup (args->common.username);
+  else 
+    cmd_args.common.username = NULL;
+  
+  if (cmd_args.common.password)
+    xfree (cmd_args.common.password);
+  if (args->common.password)
+    cmd_args.common.password = strdup (args->common.password);
+  else 
+    cmd_args.common.password = NULL;
+  
+  cmd_args.common.auth_type = args->common.auth_type;
+  cmd_args.common.priv_level = args->common.priv_level;
+  
+  if (cmd_args.script_file)
+    xfree (cmd_args.script_file);
   if (args->script_file)
-    arguments.script_file = strdup (args->script_file);
+    cmd_args.script_file = strdup (args->script_file);
   else 
-    arguments.script_file = NULL;
-  
-  arguments.poll_interval = args->poll_interval;
-  arguments.sms_io_base = args->sms_io_base;
-  
-  if (arguments.host)
-    xfree (arguments.host);
-  if (args->host)
-    arguments.host = strdup (args->host);
-  else 
-    arguments.host = NULL;
-  
-  if (arguments.username)
-    xfree (arguments.username);
-  if (args->username)
-    arguments.username = strdup (args->username);
-  else 
-    arguments.username = NULL;
-  
-  if (arguments.password)
-    xfree (arguments.password);
-  if (args->password)
-    arguments.password = strdup (args->password);
-  else 
-    arguments.password = NULL;
-  
-  arguments.auth_type = args->auth_type;
-  arguments.priv_level = args->priv_level;
+    cmd_args.script_file = NULL;
   
   return (0);
 }
@@ -328,17 +204,5 @@ char **
 get_script_argv ()
 {
   return script_argv;
-}
-
-void 
-fi_set_sms_io_base (unsigned int io_base)
-{
-  arguments.sms_io_base = io_base;
-}
-
-void
-set_driver_poll_interval (int driver_poll_interval_value)
-{
-  arguments.poll_interval = driver_poll_interval_value;
 }
 

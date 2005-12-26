@@ -349,9 +349,12 @@
 (fi-register-command! 
  (list "bmc-config" 
        (string-append 
-	"bmc-config [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
-	"           [--host=IPMIHOST] [--username=USERNAME]\n"
+	"bmc-config [--no-probing] [--driver-type=IPMIDRIVER]\n"
+	"           [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"           [--hostname=IPMIHOST] [--username=USERNAME]\n"
 	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
 	"           [--priv-level=PRIVILEGE-LEVEL] [--checkout] [--commit]\n"
 	"           [--diff] [--filename=FILENAME] [--key-pair=KEY-PAIR]\n"
-	"           [--help] [--usage] [--version]\n")))
+	"           [--help] [--usage] [--version]\n"
+	"\n"
+	"   Displays information about BMC.")))

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.h,v 1.1 2005-12-09 01:11:32 balamurugan Exp $ 
+   $Id: ipmi-raw-argp.h,v 1.2 2005-12-26 08:06:57 balamurugan Exp $ 
    
    ipmi-raw-argp.h - ipmi-raw command line argument parser.
    
@@ -23,37 +23,12 @@
 #ifndef _IPMI_RAW_ARGP_H
 #define _IPMI_RAW_ARGP_H
 
-enum argp_option_keys
-  { 
-    QUIET_KEY = 'q', 
-    VERBOSE_KEY = 'v', 
-    DUMMY_KEY = 129, 
-    BRIEF_KEY, 
-    POLL_INTERVAL_KEY, 
-    SMS_IO_BASE_KEY, 
-    HOST_KEY = 'h', 
-    USERNAME_KEY = 'u', 
-    PASSWORD_KEY = 'p', 
-    AUTH_TYPE_KEY = 'a', 
-    PRIV_LEVEL_KEY = 'l'
-  };
-
 struct arguments
 {
-  int quiet;
-  int brief;
-  int verbose;
-  int poll_interval;
-  unsigned int sms_io_base;
-  char *host;
-  char *username;
-  char *password;
-  int auth_type;
-  int priv_level;
+  struct common_cmd_args common;
 };
 
-void fi_show_version (FILE *stream, struct argp_state *state);
-void fi_argp_parse (int argc, char **argv);
-struct arguments *fi_get_arguments ();
+void ipmi_raw_argp_parse (int argc, char **argv);
+struct arguments *ipmi_raw_get_arguments ();
 
 #endif

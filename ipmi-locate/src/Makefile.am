@@ -3,7 +3,7 @@ ipmi_locate_SOURCES=ipmi-locate-argp.c ipmi-locate.c
  
 ipmi_locate_LDADD = ../../libfreeipmi/src/libfreeipmi.la
  
-noinst_HEADERS=ipmi-locate-argp.h common.h
+noinst_HEADERS=ipmi-locate-argp.h
  
 AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \

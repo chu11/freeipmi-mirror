@@ -24,23 +24,29 @@
 
 (define (sel-display-usage)
   (begin 
-    (display "Usage: ipmi-sel [-ic?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]\n")
-    (display "                [-a AUTHTYPE] [-l PRIVILEGE-LEVEL] [-d REC-LIST]\n")
-    (display "                [-x [FILE]] [--driver-poll-interval=USEC]\n")
-    (display "                [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
-    (display "                [--username=USERNAME] [--password=PASSWORD]\n")
-    (display "                [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n")
-    (display "                [--info] [--delete=REC-LIST] [--delete-all]\n")
-    (display "                [--hex-dump=[FILE]] [--help] [--usage] [--version]\n")))
+    (display "Usage: ipmi-sel [-ic?V] [-D IPMIDRIVER] [-h IPMIHOST] [-u USERNAME]\n")
+    (display "                [-p PASSWORD] [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
+    (display "                [-d REC-LIST] [-x [FILE]] [--no-probing]\n")
+    (display "                [--driver-type=IPMIDRIVER]\n")
+    (display "                [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n")
+    (display "                [--hostname=IPMIHOST] [--username=USERNAME]\n")
+    (display "                [--password=PASSWORD] [--auth-type=AUTHTYPE]\n")
+    (display "                [--priv-level=PRIVILEGE-LEVEL] [--info]\n")
+    (display "                [--delete=REC-LIST] [--delete-all] [--hex-dump=[FILE]]\n")
+    (display "                [--help] [--usage] [--version]\n")))
 
 (define (sel-display-help)
   (begin 
     (display "Usage: ipmi-sel [OPTION...] \n")
     (display "IPMI System Event Logger is used to view and delete SEL entries.\n")
     (display "\n")
-    (display "      --driver-poll-interval=USEC\n")
-    (display "                             User USEC driver poll interval.\n")
-    (display "      --sms-io-base=SMS-IO-BASE   SMS IO Base address.\n")
+    (display "      --no-probing           Do not probe IPMI devices.\n")
+    (display "  -D, --driver-type=IPMIDRIVER   Use this IPMIDRIVER instead of auto selection.\n")
+    (display "                              Allowed values are KCS, SMIC, SSIF and LAN.\n")
+    (display "      --driver-address=DRIVERADDR\n")
+    (display "                             Use this DRIVERADDR address instead of probed\n")
+    (display "                             one.\n")
+    (display "      --driver-device=DEVICE Use this DEVICE for IPMI driver\n")
     (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
     (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
     (display "                             length is 16.\n")
@@ -76,40 +82,44 @@
   (catch 'misc-error 
 	 (lambda () 
 	   (let* ((sel-cmd-args '())
-		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
-				 (sms-io-base   (single-char #\204) (value #t))
-				 (host          (single-char #\h)   (value #t))
-				 (username      (single-char #\u)   (value #t))
-				 (password      (single-char #\p)   (value #t))
-				 (auth-type     (single-char #\a)   (value #t))
-				 (priv-level    (single-char #\l)   (value #t))
-				 (help          (single-char #\?)   (value #f))
-				 (usage         (single-char #\377) (value #f))
-				 (version       (single-char #\V)   (value #f))
-				 (info          (single-char #\i)   (value #f))
-				 (delete        (single-char #\d)   (value #t))
-				 (delete-all    (single-char #\c)   (value #f))
-				 (hex-dump      (single-char #\x)   (value optional))
-				 (delete-range  (single-char #\r)   (value #t))))
+		  (option-spec '((no-probing     (single-char #\202) (value #f))
+				 (driver-type    (single-char #\D)   (value #t))
+				 (driver-address (single-char #\203) (value #t))
+				 (driver-device  (single-char #\204) (value #t))
+				 (host           (single-char #\h)   (value #t))
+				 (username       (single-char #\u)   (value #t))
+				 (password       (single-char #\p)   (value #t))
+				 (auth-type      (single-char #\a)   (value #t))
+				 (priv-level     (single-char #\l)   (value #t))
+				 (help           (single-char #\?)   (value #f))
+				 (usage          (single-char #\377) (value #f))
+				 (version        (single-char #\V)   (value #f))
+				 (info           (single-char #\i)   (value #f))
+				 (delete         (single-char #\d)   (value #t))
+				 (delete-all     (single-char #\c)   (value #f))
+				 (hex-dump       (single-char #\x)   (value optional))
+				 (delete-range   (single-char #\r)   (value #t))))
 				 ;;(delete-event-id (single-char #\e) (value #t))))
 		  (options (getopt-long args option-spec))
-		  (poll-interval  (option-ref options 'poll-interval #f))
-		  (sms-io-base    (option-ref options 'sms-io-base   #f))
-		  (host           (option-ref options 'host          #f))
-		  (username       (option-ref options 'username      #f))
-		  (password       (option-ref options 'password      #f))
-		  (auth-type      (option-ref options 'auth-type     #f))
-		  (priv-level     (option-ref options 'priv-level    #f))
-		  (help-wanted    (option-ref options 'help          #f))
-		  (usage-wanted   (option-ref options 'usage         #f))
-		  (version-wanted (option-ref options 'version       #f))
-		  (info-wanted    (option-ref options 'info          #f))
-		  (delete-list    (option-ref options 'delete        #f))
-		  (delete-all     (option-ref options 'delete-all    #f))
-		  (hex-dump-name  (option-ref options 'hex-dump      #f))
-		  (delete-range   (option-ref options 'delete-range  #f))
+		  (no-probing     (option-ref options 'no-probing     #f))
+		  (driver-type    (option-ref options 'driver-type    #f))
+		  (driver-address (option-ref options 'driver-address #f))
+		  (driver-device  (option-ref options 'driver-device  #f))
+		  (host           (option-ref options 'host           #f))
+		  (username       (option-ref options 'username       #f))
+		  (password       (option-ref options 'password       #f))
+		  (auth-type      (option-ref options 'auth-type      #f))
+		  (priv-level     (option-ref options 'priv-level     #f))
+		  (help-wanted    (option-ref options 'help           #f))
+		  (usage-wanted   (option-ref options 'usage          #f))
+		  (version-wanted (option-ref options 'version        #f))
+		  (info-wanted    (option-ref options 'info           #f))
+		  (delete-list    (option-ref options 'delete         #f))
+		  (delete-all     (option-ref options 'delete-all     #f))
+		  (hex-dump-name  (option-ref options 'hex-dump       #f))
+		  (delete-range   (option-ref options 'delete-range   #f))
 		  (delete-event-id (option-ref options 'delete-event-id #f))
-		  (extra-args     (option-ref options '()            #f)))
+		  (extra-args     (option-ref options '()             #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? sel-cmd-args))
 		 (begin 
@@ -119,70 +129,88 @@
 			    (current-error-port))
 		   (set! sel-exit-status 64)
 		   (set! sel-cmd-args #f)))
-	     ;; --driver-poll-interval (0)
-	     (if (and (string? poll-interval) (list? sel-cmd-args))
+	     ;; --no-probing (0)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list no-probing))))
+	     ;; --driver-type (1)
+	     (if (and (string? driver-type) (list? bmc-info-cmd-args))
+		 (cond 
+		  ((string-ci=? driver-type "lan")
+		   (set! driver-type 1))
+		  ((string-ci=? driver-type "kcs")
+		   (set! driver-type 2))
+		  ((string-ci=? driver-type "smic")
+		   (set! driver-type 3))
+		  ((string-ci=? driver-type "bt")
+		   (set! driver-type 4))
+		  ((string-ci=? driver-type "ssif")
+		   (set! driver-type 5))
+		  (else 
+		   (begin 
+		     (display "Usage: bmc-info [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			      (current-error-port))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
+		 (set! driver-type 0))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-type))))
+	     ;; driver-address (2)
+	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! poll-interval (string->number poll-interval))
-		   (if (boolean? poll-interval)
+		   (set! driver-address (string->number driver-address))
+		   (if (boolean? driver-address)
 		       (begin 
-			 (display "Usage: ipmi-sel [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sel-exit-status 64)
-			 (set! sel-cmd-args #f)))))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list poll-interval))))
-	     ;; --sms-io-base (1)
-	     (if (and (string? sms-io-base) (list? sel-cmd-args))
-		 (begin 
-		   (set! sms-io-base (string->number sms-io-base))
-		   (if (boolean? sms-io-base)
-		       (begin 
-			 (display "Usage: ipmi-sel [OPTION...] \n"
-				  (current-error-port))
-			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
-				  (current-error-port))
-			 (set! sel-exit-status 64)
-			 (set! sel-cmd-args #f)))))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list sms-io-base))))
-	     ;; --host (2)
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list host))))
-	     ;; --username (3)
-	     (if (and (string? username) (list? sel-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-address))))
+	     ;; --driver-device (3)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-device))))
+	     ;; --host (4)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list host))))
+	     ;; --username (5)
+	     (if (and (string? username) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
-			 (display "Usage: ipmi-sel [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sel-exit-status 64)
-			 (set! sel-cmd-args #f)))))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list username))))
-	     ;; --password (4)
-	     (if (and (string? password) (list? sel-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list username))))
+	     ;; --password (6)
+	     (if (and (string? password) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
-			 (display "Usage: ipmi-sel [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sel-exit-status 64)
-			 (set! sel-cmd-args #f)))))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list password))))
-	     ;; --auth-type (5)
-	     (if (and (string? auth-type) (list? sel-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list password))))
+	     ;; --auth-type (7)
+	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
 		   (set! auth-type 0))
@@ -196,18 +224,18 @@
 		   (set! auth-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: ipmi-sel [OPTION...] \n"
+		     (display "Usage: bmc-info [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
-		     (set! sel-exit-status 64)
-		     (set! sel-cmd-args #f))))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
 		 (set! auth-type 0))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list auth-type))))
-	     ;; --priv-level (6)
-	     (if (and (string? priv-level) (list? sel-cmd-args))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list auth-type))))
+	     ;; --priv-level (8)
+	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
 		   (set! priv-level 1))
@@ -221,33 +249,33 @@
 		   (set! priv-level 5))
 		  (else 
 		   (begin 
-		     (display "Usage: ipmi-sel [OPTION...] \n"
+		     (display "Usage: bmc-info [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
-		     (set! sel-exit-status 64)
-		     (set! sel-cmd-args #f))))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
 		 (set! priv-level 2))
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list priv-level))))
-	     ;; --help (7)
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list help-wanted))))
-	     ;; --usage (8)
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list usage-wanted))))
-	     ;; --version (9)
-	     (if (list? sel-cmd-args)
-		 (set! sel-cmd-args (append sel-cmd-args 
-					    (list version-wanted))))
-	     ;; --info (10) SEL specific
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list priv-level))))
+	     ;; --help (9)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list help-wanted))))
+	     ;; --usage (10)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list usage-wanted))))
+	     ;; --version (11)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list version-wanted))))
+	     ;; --info (12) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list info-wanted))))
-	     ;; --delete-list (11) SEL specific
+	     ;; --delete-list (13) SEL specific
 	     (if (and (string? delete-list) (list? sel-cmd-args))
 		 (begin 
 		   (set! delete-list (sentence->tokens (string-replace 
@@ -265,16 +293,16 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-list))))
-	     ;; --delete-all (12) SEL specific
+	     ;; --delete-all (14) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-all))))
-	     ;; --hex-dump-name (13) SEL specific
+	     ;; --hex-dump-name (15) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list hex-dump-name))))
 
-	     ;; --delete-range (14) SEL specific
+	     ;; --delete-range (16) SEL specific
 	     (if (and (string? delete-range) (list? sel-cmd-args))
 		 (begin 
 		   (set! delete-range (sentence->tokens (string-replace 
@@ -295,7 +323,7 @@
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-range))))
 
-	     ; --delete-event-id ID (15) SEL specific
+	     ; --delete-event-id ID (17) SEL specific
 	     (if (and (string? delete-event-id)
 		      (list? sel-cmd-args)
 		      (not (string->number delete-event-id)))
@@ -327,31 +355,31 @@
 	   #f)))
 
 (define (sel-get-help-option cmd-args)
-  (list-ref cmd-args 7))
-
-(define (sel-get-usage-option cmd-args)
-  (list-ref cmd-args 8))
-
-(define (sel-get-version-option cmd-args)
   (list-ref cmd-args 9))
 
-(define (sel-get-info-option cmd-args)
+(define (sel-get-usage-option cmd-args)
   (list-ref cmd-args 10))
 
-(define (sel-get-delete-list-option cmd-args)
+(define (sel-get-version-option cmd-args)
   (list-ref cmd-args 11))
 
-(define (sel-get-delete-all-option cmd-args)
+(define (sel-get-info-option cmd-args)
   (list-ref cmd-args 12))
 
-(define (sel-get-hex-dump-option cmd-args)
+(define (sel-get-delete-list-option cmd-args)
   (list-ref cmd-args 13))
 
-(define (sel-get-delete-range-option cmd-args)
+(define (sel-get-delete-all-option cmd-args)
   (list-ref cmd-args 14))
 
-(define (sel-get-delete-event-id-option cmd-args)
+(define (sel-get-hex-dump-option cmd-args)
   (list-ref cmd-args 15))
+
+(define (sel-get-delete-range-option cmd-args)
+  (list-ref cmd-args 16))
+
+(define (sel-get-delete-event-id-option cmd-args)
+  (list-ref cmd-args 17))
 
 (define (sel-display-entry sel)
   (display (list-ref sel 0)) (display ":")
@@ -503,11 +531,12 @@
 (fi-register-command! 
  (list "sel" 
        (string-append 
-	"Usage: sel [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
-	"           [--host=IPMIHOST] [--username=USERNAME]\n"
-	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
-	"           [--priv-level=PRIVILEGE-LEVEL] [--info] [--delete=REC-LIST]\n"
-	"           [--delete-all] [--delete-range=START-END] [--hex-dump=[FILE]]\n"
-        "           [--help] [--usage] [--version]\n"
+	"sel [--no-probing] [--driver-type=IPMIDRIVER]\n"
+	"    [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"    [--hostname=IPMIHOST] [--username=USERNAME] [--password=PASSWORD]\n"
+	"    [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL] [--info]\n"
+	"    [--delete=REC-LIST] [--delete-all] [--hex-dump=[FILE]] [--help]\n"
+	"    [--usage] [--version]\n"
 	"\n"
-	"          Used to view and delete SEL entries.")))
+	"    Used to view and delete SEL entries.")))
+
