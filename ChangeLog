@@ -1,3 +1,9 @@
+2005-12-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/freeipmi.h (ERR, ERR_OUT, ERR_EXIT): Revert
+	changes from 2005-12-20.  Remembered why they were removed in the
+	first place.
+
 2005-12-26  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (fi_ipmi_open): autoprobe inband devices
@@ -60,12 +66,12 @@
 	* ipmi-raw/src/ipmi-raw-argp.c: uses argp-common.[ch].
 
 	* ipmi-raw/src/ipmi-raw.c: like wise.
-
+	
 2005-12-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/freeipmi.h (ERR, ERR_OUT, ERR_EXIT): Define even
 	if FREEIPMI_LIBRARY is not defined.
-	
+
 2005-12-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd_raw2):

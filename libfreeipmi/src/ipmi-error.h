@@ -175,9 +175,7 @@ do {                                                                    \
   if (!(expr))                                                          \
       return (-1);                                                      \
 } while (0)
-#else  /* !FREEIPMI_LIBRARY */
-#define ERR_OUT
-#endif /* !FREEIPMI_LIBRARY */
+#endif /* FREEIPMI_LIBRARY */
 
 #if defined (IPMI_SYSLOG)
 #define __IPMI_SYSLOG                                                   \
@@ -216,9 +214,7 @@ do {                                                                    \
       return (-1);                                                      \
     }                                                                   \
 } while (0)
-#else  /* !FREEIPMI_LIBRARY */
-#define ERR
-#endif /* !FREEIPMI_LIBRARY */
+#endif /* FREEIPMI_LIBRARY */
 
 #if defined (FREEIPMI_LIBRARY)
 #   if defined (ERR_EXIT)
@@ -236,9 +232,7 @@ do {                                                                    \
       exit(1);                                                          \
     }                                                                   \
 } while (0)
-#else /* !FREEIPMI_LIBRARY */
-#define ERR_EXIT
-#endif /* !FREEIPMI_LIBRARY */
+#endif /* FREEIPMI_LIBRARY */
 
 int8_t ipmi_strerror_r (uint8_t cmd, 
 			uint8_t comp_code, 
