@@ -144,15 +144,39 @@ main (int argc, char **argv)
     }
   else 
     {
-      if (ipmi_open_inband (&dev, 
-			    args->common.disable_auto_probe, 
-			    args->common.driver_type, 
-			    args->common.driver_address, 
-			    args->common.driver_device, 
-			    IPMI_MODE_DEFAULT) != 0)
+      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  perror ("ipmi_open_inband()");
-	  exit (EXIT_FAILURE);
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				IPMI_DEVICE_KCS, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) != 0)
+	    {
+	      if (ipmi_open_inband (&dev, 
+				    args->common.disable_auto_probe, 
+				    IPMI_DEVICE_SSIF, 
+				    args->common.driver_address, 
+				    args->common.driver_device, 
+				    IPMI_MODE_DEFAULT) != 0)
+		{
+		  perror ("ipmi_open_inband()");
+		  return (-1);
+		}
+	    }
+	}
+      else 
+	{
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				args->common.driver_type, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) != 0)
+	    {
+	      perror ("ipmi_open_inband()");
+	      return (-1);
+	    }
 	}
     }
   
