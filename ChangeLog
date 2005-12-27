@@ -5,7 +5,15 @@
 	first place.
 
 	* libfreeipmi/src/ipmi-debug.c (_set_prefix_str, _output_str,
-	_output_byte_array): Make functions static.
+	_output_byte_array): Make functions static.  Modified setup and
+	output logic.
+
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(fiid_obj_dump_setup): New function.
+
+	* libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_rmcp,
+	fiid_obj_dump_lan, fiid_obj_dump_perror): Fix up for setup
+	changes.
 
 2005-12-26  A Balamurugan  <bala@zresearch.com>
 
