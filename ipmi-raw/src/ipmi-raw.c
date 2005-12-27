@@ -145,7 +145,10 @@ main (int argc, char **argv)
   else 
     {
       if (ipmi_open_inband (&dev, 
+			    args->common.disable_auto_probe, 
 			    args->common.driver_type, 
+			    args->common.driver_address, 
+			    args->common.driver_device, 
 			    IPMI_MODE_DEFAULT) != 0)
 	{
 	  perror ("ipmi_open_inband()");

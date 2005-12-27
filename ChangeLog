@@ -1,3 +1,14 @@
+2005-12-26  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/ipmi-wrapper.c (fi_ipmi_open): updated to new command
+	line arguments.
+
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_inband): like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (): like wise.
+
 2005-12-25  A Balamurugan  <bala@zresearch.com>
 
 	* common/src/argp-common.[ch]: New files.

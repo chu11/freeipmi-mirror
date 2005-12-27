@@ -60,7 +60,7 @@ ipmi_kcs_io_init (uint16_t sms_io_base,
 		  uint8_t reg_space, 
 		  unsigned long sleep_usecs)
 {
-  return (ipmi_open_inband (&_dev, IPMI_DEVICE_KCS, IPMI_MODE_DEFAULT));
+  return (ipmi_open_inband (&_dev, 0, IPMI_DEVICE_KCS, 0, NULL, IPMI_MODE_DEFAULT));
 
 #if 0
   if (sms_io_base < 1)
