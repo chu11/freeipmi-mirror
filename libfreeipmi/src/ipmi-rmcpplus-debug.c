@@ -1075,10 +1075,10 @@ fiid_obj_dump_rmcpplus (int fd,
     {
       memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
       memcpy(buf, pkt + pkt_index, (pkt_len - pkt_index)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
+      ERR_OUT(fiid_obj_dump_perror (fd, prefix_ptr, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix, rmcp_hdr, NULL, pkt + pkt_index, tmpl_hdr_rmcp) != -1);
+    ERR_OUT(fiid_obj_dump_perror (fd, prefix_ptr, rmcp_hdr, NULL, pkt + pkt_index, tmpl_hdr_rmcp) != -1);
   pkt_index += obj_rmcp_hdr_len;
 
   if (pkt_len <= pkt_index)
@@ -1087,7 +1087,7 @@ fiid_obj_dump_rmcpplus (int fd,
   /* Dump rmcpplus session header */
 
   if ((obj_len = _dump_rmcpplus_hdr_session(fd,
-                                            prefix,
+                                            prefix_ptr,
                                             session_hdr,
                                             pkt + pkt_index,
                                             pkt_len - pkt_index,
@@ -1106,7 +1106,7 @@ fiid_obj_dump_rmcpplus (int fd,
   /* Dump Payload */
 
   if (_dump_rmcpplus_payload(fd, 
-                             prefix, 
+                             prefix_ptr, 
                              payload_hdr, 
                              msg_hdr,
                              cmd_hdr,
@@ -1132,7 +1132,7 @@ fiid_obj_dump_rmcpplus (int fd,
   if (session_id && payload_authenticated)
     {
       if ((obj_len = _dump_rmcpplus_session_trlr(fd,
-                                                 prefix,
+                                                 prefix_ptr,
                                                  session_trlr_hdr,
                                                  integrity_algorithm,
                                                  tmpl_trlr_session,
@@ -1154,7 +1154,7 @@ fiid_obj_dump_rmcpplus (int fd,
       if (!(tmpl_extra = fiid_template_make((pkt_len - pkt_index) * 8, "extra")))
         return (-1);
 
-      ERR_OUT(fiid_obj_dump_perror(fd, prefix, extra_hdr, NULL, pkt + pkt_index, tmpl_extra) != -1);
+      ERR_OUT(fiid_obj_dump_perror(fd, prefix_ptr, extra_hdr, NULL, pkt + pkt_index, tmpl_extra) != -1);
 
       fiid_template_free(tmpl_extra);
     }
