@@ -128,12 +128,12 @@
 (fi-register-command! 
  (list "sensors" 
        (string-append 
-	"Usage: sensors [--driver-poll-interval=USEC]\n"
-	"               [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n"
-	"               [--username=USERNAME] [--password=PASSWORD]\n"
-	"               [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n"
-	"               [--verbose] [--sdr-info] [--flush-cache]\n"
-	"               [--list-groups] [--all] [--group=GROUP]\n"
-	"               [--sensors=SENSORS-LIST] [--help] [--usage] [--version]\n"
+	"sensors [--no-probing] [--driver-type=IPMIDRIVER]\n"
+	"        [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"        [--hostname=IPMIHOST] [--username=USERNAME]\n"
+	"        [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
+	"        [--priv-level=PRIVILEGE-LEVEL] [--verbose] [--sdr-info]\n"
+	"        [--flush-cache] [--list-groups] [--all] [--group=GROUP]\n"
+	"        [--sensors=SENSORS-LIST] [--help] [--usage] [--version]\n"
 	"\n"
-	"          Displays current readings of sensor chips through BMC.")))
+	"        Displays current readings of sensor chips through BMC.")))

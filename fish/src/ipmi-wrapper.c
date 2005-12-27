@@ -51,14 +51,15 @@ fi_ipmi_open (struct arguments *args)
   if (dev_opened)
     return 0;
   
-  if (args->host != NULL)
+  if (args->common.host != NULL || 
+      args->common.driver_type == IPMI_DEVICE_LAN)
     {
       struct hostent *hostinfo;
       struct sockaddr_in host;
       
       host.sin_family = AF_INET;
       host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (args->host);
+      hostinfo = gethostbyname (args->common.host);
       if (hostinfo == NULL)
 	{
 	  perror ("gethostbyname()");
@@ -71,10 +72,10 @@ fi_ipmi_open (struct arguments *args)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       args->auth_type, 
-			       args->username, 
-			       args->password, 
-			       args->priv_level) != 0)
+			       args->common.auth_type, 
+			       args->common.username, 
+			       args->common.password, 
+			       args->common.priv_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -88,14 +89,48 @@ fi_ipmi_open (struct arguments *args)
 		   "Warning: You are NOT root; "
 		   "inband access may NOT work\n");
 	}
-      if (ipmi_open_inband (&dev, 
-			    IPMI_DEVICE_KCS, 
-			    IPMI_MODE_DEFAULT) != 0)
+      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  perror ("ipmi_open_inband()");
-	  return (-1);
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				IPMI_DEVICE_KCS, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) == 0)
+	    {
+	      ipmi_enable_old_kcs_init (&dev);
+	    }
+	  else 
+	    {
+	      if (ipmi_open_inband (&dev, 
+				    args->common.disable_auto_probe, 
+				    IPMI_DEVICE_SSIF, 
+				    args->common.driver_address, 
+				    args->common.driver_device, 
+				    IPMI_MODE_DEFAULT) != 0)
+		{
+		  perror ("ipmi_open_inband()");
+		  return (-1);
+		}
+	    }
 	}
-      ipmi_enable_old_kcs_init (&dev);
+      else 
+	{
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				args->common.driver_type, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) != 0)
+	    {
+	      perror ("ipmi_open_inband()");
+	      return (-1);
+	    }
+	  if (args->common.driver_type == IPMI_DEVICE_KCS)
+	    {
+	      ipmi_enable_old_kcs_init (&dev);
+	    }
+	}
     }
   
   dev_opened = true;
@@ -126,12 +161,12 @@ get_ipmi_host_ip_address ()
   struct arguments *args = NULL;
   
   args = fi_get_arguments ();
-  if (args->host != NULL) /* OUT-OF-BAND */
+  if (args->common.host != NULL) /* OUT-OF-BAND */
     {
       struct hostent *hostinfo = NULL;
       struct in_addr *in_addr = NULL;
       
-      hostinfo = gethostbyname (args->host);
+      hostinfo = gethostbyname (args->common.host);
       if (hostinfo == NULL)
 	return NULL;
       

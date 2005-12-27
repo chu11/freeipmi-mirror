@@ -21,6 +21,8 @@ libfreeipmi:
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * Templates must be encapsulated further
   * fiid_obj_t must hold additional info
+  * fiid macros - make debugging better, many are useless right now
+  * only make those symbols exportable that should be exportable
   * gcrypt: secure mem-buffers
   * gcrypt: thread issues
   

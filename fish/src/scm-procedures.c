@@ -127,20 +127,6 @@ ex_quit ()
 }
 
 SCM 
-ex_set_sms_io_base (SCM scm_sms_io_base)
-{
-  fi_set_sms_io_base (gh_scm2int (scm_sms_io_base));
-  return (SCM_UNSPECIFIED);
-}
-
-SCM
-ex_set_driver_poll_interval (SCM scm_driver_poll_interval)
-{
-  set_driver_poll_interval (gh_scm2long (scm_driver_poll_interval));
-  return (SCM_UNSPECIFIED);
-}
-
-SCM 
 ex_ipmi_ping (SCM scm_host, SCM scm_timeout)
 {
   char *host = NULL;
@@ -3207,83 +3193,77 @@ SCM
 ex_ipmi_open (SCM scm_arg_list)
 {
   SCM scm_value;
-  struct arguments arguments;
+  struct arguments args;
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (0));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.poll_interval = IPMI_POLL_INTERVAL_USECS;
+    args.common.disable_auto_probe = 0;
   else 
-    arguments.poll_interval = gh_scm2int (scm_value);
+    args.common.disable_auto_probe = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (1));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    {
-#ifdef __ia64__
-      arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_SR870BN4;
-#else
-      arguments.sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-#endif
-    }
+    args.common.driver_type = IPMI_DEVICE_UNKNOWN;
   else 
-    arguments.sms_io_base = gh_scm2int (scm_value);
+    args.common.driver_type = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (2));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.host = NULL;
+    args.common.driver_address = 0;
   else 
-    arguments.host = gh_scm2newstr (scm_value, NULL);
+    args.common.driver_address = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (3));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.username = NULL;
+    args.common.driver_device = NULL;
   else 
-    arguments.username = gh_scm2newstr (scm_value, NULL);
+    args.common.driver_device = gh_scm2newstr (scm_value, NULL);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.password = NULL;
+    args.common.host = NULL;
   else 
-    arguments.password = gh_scm2newstr (scm_value, NULL);
+    args.common.host = gh_scm2newstr (scm_value, NULL);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
+    args.common.username = NULL;
   else 
-    arguments.auth_type = gh_scm2int (scm_value);
+    args.common.username = gh_scm2newstr (scm_value, NULL);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.priv_level = IPMI_PRIV_LEVEL_USER;
+    args.common.password = NULL;
   else 
-    arguments.priv_level = gh_scm2int (scm_value);
+    args.common.password = gh_scm2newstr (scm_value, NULL);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (7));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.quiet = 0;
+    args.common.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
   else 
-    arguments.quiet = gh_scm2int (scm_value);
+    args.common.auth_type = gh_scm2int (scm_value);
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (8));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.brief = 0;
+    args.common.priv_level = IPMI_PRIV_LEVEL_USER;
   else 
-    arguments.brief = gh_scm2int (scm_value);
+    args.common.priv_level = gh_scm2int (scm_value);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9));
-  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
-    arguments.verbose = 0;
-  else 
-    arguments.verbose = gh_scm2int (scm_value);
+/*   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9)); */
+/*   if (scm_boolean_p (scm_value) == SCM_BOOL_T) */
+/*     args.script_file = 0; */
+/*   else  */
+/*     args.script_file = gh_scm2newstr (scm_value, NULL); */
+  args.script_file = NULL;
   
-  arguments.script_file = NULL;
+  fi_set_arguments (&args);
   
-  fi_set_arguments (&arguments);
-  
-  if (fi_ipmi_open (&arguments) == 0)
+  if (fi_ipmi_open (&args) == 0)
     {
-      xfree (arguments.host);
-      xfree (arguments.username);
-      xfree (arguments.password);
+      xfree (args.common.driver_device);
+      xfree (args.common.host);
+      xfree (args.common.username);
+      xfree (args.common.password);
       return SCM_BOOL_T;
     }
   else 

@@ -104,18 +104,19 @@ struct ipmi_device
 {
   ipmi_driver_type_t type;
   ipmi_mode_t        mode;
-  uint8_t           net_fn;
-  uint8_t           lun;
+  uint8_t            net_fn;
+  uint8_t            lun;
   union 
   {
     struct 
     {
-      unsigned long      poll_interval_usecs;
-      uint8_t           retry_count:4;
+      unsigned long      poll_interval_usecs; /* obsolete entry */
+      int                disable_auto_probe;
+      uint16_t           driver_address; /* also known as sms_io_base/ipmb_addr */
+      char               *driver_device; /* also known as dev_name */
+      uint8_t            retry_count:4;
       ipmi_locate_info_t locate_info;
-      char               *dev_name;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
-      int                ipmb_addr;
       int                mutex_semid;
       
       struct 
@@ -176,7 +177,10 @@ struct ipmi_device
 typedef struct ipmi_device ipmi_device_t;
 
 int ipmi_open_inband (ipmi_device_t *dev, 
+		      int disable_auto_probe, 
 		      ipmi_driver_type_t driver_type, 
+		      uint16_t driver_address, 
+		      char *driver_device, 
 		      ipmi_mode_t mode);
 int ipmi_open_outofband (ipmi_device_t *dev, 
 			 ipmi_driver_type_t driver_type, 

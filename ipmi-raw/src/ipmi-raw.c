@@ -28,6 +28,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 #include "freeipmi.h"
 
+#include "argp-common.h"
 #include "ipmi-raw-argp.h"
 
 static int 
@@ -112,14 +113,14 @@ main (int argc, char **argv)
   uint8_t bytes_rs[512];
   int rcvd_len;
   
-  fi_argp_parse (argc, argv);
-  args = fi_get_arguments ();
+  ipmi_raw_argp_parse (argc, argv);
+  args = ipmi_raw_get_arguments ();
   
-  if (args->host != NULL)
+  if (args->common.host != NULL)
     {
       host.sin_family = AF_INET;
       host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (args->host);
+      hostinfo = gethostbyname (args->common.host);
       if (hostinfo == NULL)
 	{
 	  perror ("gethostbyname()");
@@ -132,10 +133,10 @@ main (int argc, char **argv)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       args->auth_type, 
-			       args->username, 
-			       args->password, 
-			       args->priv_level) != 0)
+			       args->common.auth_type, 
+			       args->common.username, 
+			       args->common.password, 
+			       args->common.priv_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -143,12 +144,39 @@ main (int argc, char **argv)
     }
   else 
     {
-      if (ipmi_open_inband (&dev, 
-			    IPMI_DEVICE_KCS, 
-			    IPMI_MODE_DEFAULT) != 0)
+      if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
-	  perror ("ipmi_open_inband()");
-	  exit (EXIT_FAILURE);
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				IPMI_DEVICE_KCS, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) != 0)
+	    {
+	      if (ipmi_open_inband (&dev, 
+				    args->common.disable_auto_probe, 
+				    IPMI_DEVICE_SSIF, 
+				    args->common.driver_address, 
+				    args->common.driver_device, 
+				    IPMI_MODE_DEFAULT) != 0)
+		{
+		  perror ("ipmi_open_inband()");
+		  return (-1);
+		}
+	    }
+	}
+      else 
+	{
+	  if (ipmi_open_inband (&dev, 
+				args->common.disable_auto_probe, 
+				args->common.driver_type, 
+				args->common.driver_address, 
+				args->common.driver_device, 
+				IPMI_MODE_DEFAULT) != 0)
+	    {
+	      perror ("ipmi_open_inband()");
+	      return (-1);
+	    }
 	}
     }
   
@@ -166,11 +194,11 @@ main (int argc, char **argv)
 	  bytes_rq = NULL;
 	}
       send_len = 0;
-      rcvd_len = 0;
+      rcvd_len = 512;
       
       if (getline (&line, &n, stdin) == -1)
 	{
-	  perror ("getline()");
+	  /* perror ("getline()"); */
 	  break;
 	}
       

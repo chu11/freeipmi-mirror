@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate-argp.h,v 1.1.2.1 2005-12-20 19:05:00 chu11 Exp $ 
+   $Id: ipmi-locate-argp.h,v 1.1.2.2 2005-12-27 21:38:11 chu11 Exp $ 
    
    ipmi-locate-argp.h - command line argument parser.
    
@@ -20,27 +20,9 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#ifndef _FISH_ARGP_H
-#define _FISH_ARGP_H
+#ifndef _IPMI_LOCATE_ARGP_H
+#define _IPMI_LOCATE_ARGP_H
 
-enum argp_option_keys
-  { 
-    QUIET_KEY = 'q', 
-    VERBOSE_KEY = 'v', 
-    DUMMY_KEY = 129, 
-    BRIEF_KEY
-  };
-
-struct arguments
-{
-  int quiet;
-  int brief;
-  int verbose;
-};
-
-void fi_show_version (FILE *stream, struct argp_state *state);
-void fi_argp_parse (int argc, char **argv);
-struct arguments *fi_get_arguments ();
-int fi_set_arguments (struct arguments *args);
+void ipmi_locate_argp_parse (int argc, char **argv);
 
 #endif

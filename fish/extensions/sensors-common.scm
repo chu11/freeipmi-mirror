@@ -47,11 +47,12 @@
 
 (define (sensors-display-usage)
   (begin 
-    (display "Usage: ipmi-sensors [-iflv?V] [-h IPMIHOST] [-u USERNAME]\n")
-    (display "                    [-p PASSWORD] [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
-    (display "                    [-g GROUP] [-s SENSORS-LIST]\n")
-    (display "                    [--driver-poll-interval=USEC]\n")
-    (display "                    [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
+    (display "Usage: ipmi-sensors [-iflv?V] [-D IPMIDRIVER] [-h IPMIHOST]\n")
+    (display "                    [-u USERNAME] [-p PASSWORD] [-a AUTHTYPE]\n")
+    (display "                    [-l PRIVILEGE-LEVEL] [-g GROUP] [-s SENSORS-LIST]\n")
+    (display "                    [--no-probing] [--driver-type=IPMIDRIVER]\n")
+    (display "                    [--driver-address=DRIVERADDR]\n")
+    (display "                    [--driver-device=DEVICE] [--hostname=IPMIHOST]\n")
     (display "                    [--username=USERNAME] [--password=PASSWORD]\n")
     (display "                    [--auth-type=AUTHTYPE]\n")
     (display "                    [--priv-level=PRIVILEGE-LEVEL] [--verbose]\n")
@@ -64,9 +65,13 @@
     (display "Usage: ipmi-sensors [OPTION...] \n")
     (display "ipmi-sensors displays current readings of sensor chips through BMC.\n")
     (display "\n")
-    (display "      --driver-poll-interval=USEC\n")
-    (display "                             User USEC driver poll interval.\n")
-    (display "      --sms-io-base=SMS-IO-BASE   SMS IO Base address.\n")
+    (display "      --no-probing           Do not probe IPMI devices.\n")
+    (display "  -D, --driver-type=IPMIDRIVER   Use this IPMIDRIVER instead of auto selection.\n")
+    (display "                              Allowed values are KCS, SMIC, SSIF and LAN.\n")
+    (display "      --driver-address=DRIVERADDR\n")
+    (display "                             Use this DRIVERADDR address instead of probed\n")
+    (display "                             one.\n")
+    (display "      --driver-device=DEVICE Use this DEVICE for IPMI driver\n")
     (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
     (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
     (display "                             length is 16.\n")
@@ -106,42 +111,46 @@
   (catch 'misc-error 
 	 (lambda () 
 	   (let* ((sensors-cmd-args '())
-		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
-				 (sms-io-base   (single-char #\204) (value #t))
-				 (host          (single-char #\h)   (value #t))
-				 (username      (single-char #\u)   (value #t))
-				 (password      (single-char #\p)   (value #t))
-				 (auth-type     (single-char #\a)   (value #t))
-				 (priv-level    (single-char #\l)   (value #t))
-				 (help          (single-char #\?)   (value #f))
-				 (usage         (single-char #\377) (value #f))
-				 (version       (single-char #\V)   (value #f))
-				 (verbose       (single-char #\v)   (value #f))
-				 (sdr-info      (single-char #\i)   (value #f))
-				 (flush-cache   (single-char #\f)   (value #f))
-				 (list-groups   (single-char #\l)   (value #f))
-				 (all           (single-char #\376) (value #f))
-				 (group         (single-char #\g)   (value #t))
-				 (sensors       (single-char #\s)   (value #t))))
+		  (option-spec '((no-probing     (single-char #\202) (value #f))
+				 (driver-type    (single-char #\D)   (value #t))
+				 (driver-address (single-char #\203) (value #t))
+				 (driver-device  (single-char #\204) (value #t))
+				 (host           (single-char #\h)   (value #t))
+				 (username       (single-char #\u)   (value #t))
+				 (password       (single-char #\p)   (value #t))
+				 (auth-type      (single-char #\a)   (value #t))
+				 (priv-level     (single-char #\l)   (value #t))
+				 (help           (single-char #\?)   (value #f))
+				 (usage          (single-char #\377) (value #f))
+				 (version        (single-char #\V)   (value #f))
+				 (verbose        (single-char #\v)   (value #f))
+				 (sdr-info       (single-char #\i)   (value #f))
+				 (flush-cache    (single-char #\f)   (value #f))
+				 (list-groups    (single-char #\l)   (value #f))
+				 (all            (single-char #\376) (value #f))
+				 (group          (single-char #\g)   (value #t))
+				 (sensors        (single-char #\s)   (value #t))))
 		  (options (getopt-long args option-spec))
-		  (poll-interval  (option-ref options 'driver-poll-interval #f))
-		  (sms-io-base    (option-ref options 'sms-io-base   #f))
-		  (host           (option-ref options 'host          #f))
-		  (username       (option-ref options 'username      #f))
-		  (password       (option-ref options 'password      #f))
-		  (auth-type      (option-ref options 'auth-type     #f))
-		  (priv-level     (option-ref options 'priv-level    #f))
-		  (help-wanted    (option-ref options 'help          #f))
-		  (usage-wanted   (option-ref options 'usage         #f))
-		  (version-wanted (option-ref options 'version       #f))
-		  (verbose-wanted (option-ref options 'verbose       #f))
-		  (sdr-info       (option-ref options 'sdr-info      #f))
-		  (flush-cache    (option-ref options 'flush-cache   #f))
-		  (list-groups    (option-ref options 'list-groups   #f))
-		  (all-wanted     (option-ref options 'all           #f))
-		  (group-name     (option-ref options 'group         #f))
-		  (sensors-list   (option-ref options 'sensors       #f))
-		  (extra-args     (option-ref options '()            #f)))
+		  (no-probing     (option-ref options 'no-probing     #f))
+		  (driver-type    (option-ref options 'driver-type    #f))
+		  (driver-address (option-ref options 'driver-address #f))
+		  (driver-device  (option-ref options 'driver-device  #f))
+		  (host           (option-ref options 'host           #f))
+		  (username       (option-ref options 'username       #f))
+		  (password       (option-ref options 'password       #f))
+		  (auth-type      (option-ref options 'auth-type      #f))
+		  (priv-level     (option-ref options 'priv-level     #f))
+		  (help-wanted    (option-ref options 'help           #f))
+		  (usage-wanted   (option-ref options 'usage          #f))
+		  (version-wanted (option-ref options 'version        #f))
+		  (verbose-wanted (option-ref options 'verbose        #f))
+		  (sdr-info       (option-ref options 'sdr-info       #f))
+		  (flush-cache    (option-ref options 'flush-cache    #f))
+		  (list-groups    (option-ref options 'list-groups    #f))
+		  (all-wanted     (option-ref options 'all            #f))
+		  (group-name     (option-ref options 'group          #f))
+		  (sensors-list   (option-ref options 'sensors        #f))
+		  (extra-args     (option-ref options '()             #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? sensors-cmd-args))
 		 (begin 
@@ -151,70 +160,88 @@
 			    (current-error-port))
 		   (set! sensors-exit-status 64)
 		   (set! sensors-cmd-args #f)))
-	     ;; --driver-poll-interval (0)
-	     (if (and (string? poll-interval) (list? sensors-cmd-args))
+	     ;; --no-probing (0)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list no-probing))))
+	     ;; --driver-type (1)
+	     (if (and (string? driver-type) (list? bmc-info-cmd-args))
+		 (cond 
+		  ((string-ci=? driver-type "lan")
+		   (set! driver-type 1))
+		  ((string-ci=? driver-type "kcs")
+		   (set! driver-type 2))
+		  ((string-ci=? driver-type "smic")
+		   (set! driver-type 3))
+		  ((string-ci=? driver-type "bt")
+		   (set! driver-type 4))
+		  ((string-ci=? driver-type "ssif")
+		   (set! driver-type 5))
+		  (else 
+		   (begin 
+		     (display "Usage: bmc-info [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			      (current-error-port))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
+		 (set! driver-type 0))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-type))))
+	     ;; driver-address (2)
+	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! poll-interval (string->number poll-interval))
-		   (if (boolean? poll-interval)
+		   (set! driver-address (string->number driver-address))
+		   (if (boolean? driver-address)
 		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sensors-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list poll-interval))))
-	     ;; --sms-io-base (1)
-	     (if (and (string? sms-io-base) (list? sensors-cmd-args))
-		 (begin 
-		   (set! sms-io-base (string->number sms-io-base))
-		   (if (boolean? sms-io-base)
-		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
-				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
-				  (current-error-port))
-			 (set! sensors-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list sms-io-base))))
-	     ;; --host (2)
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list host))))
-	     ;; --username (3)
-	     (if (and (string? username) (list? sensors-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-address))))
+	     ;; --driver-device (3)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-device))))
+	     ;; --host (4)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list host))))
+	     ;; --username (5)
+	     (if (and (string? username) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sensors-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list username))))
-	     ;; --password (4)
-	     (if (and (string? password) (list? sensors-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list username))))
+	     ;; --password (6)
+	     (if (and (string? password) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
+			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
-			 (set! sensors-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list password))))
-	     ;; --auth-type (5)
-	     (if (and (string? auth-type) (list? sensors-cmd-args))
+			 (set! bmc-info-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list password))))
+	     ;; --auth-type (7)
+	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
 		   (set! auth-type 0))
@@ -228,18 +255,18 @@
 		   (set! auth-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: ipmi-sensors [OPTION...] \n"
+		     (display "Usage: bmc-info [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
-		     (set! sensors-exit-status 64)
-		     (set! sensors-cmd-args #f))))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
 		 (set! auth-type 0))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list auth-type))))
-	     ;; --priv-level (6)
-	     (if (and (string? priv-level) (list? sensors-cmd-args))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list auth-type))))
+	     ;; --priv-level (8)
+	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
 		   (set! priv-level 1))
@@ -253,29 +280,29 @@
 		   (set! priv-level 5))
 		  (else 
 		   (begin 
-		     (display "Usage: ipmi-sensors [OPTION...] \n"
+		     (display "Usage: bmc-info [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
-		     (set! sensors-exit-status 64)
-		     (set! sensors-cmd-args #f))))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
 		 (set! priv-level 2))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list priv-level))))
-	     ;; --help (7)
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list help-wanted))))
-	     ;; --usage (8)
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list usage-wanted))))
-	     ;; --version (9)
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
-						(list version-wanted))))
-	     ;; -v, --verbose option (10) sensor specific
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list priv-level))))
+	     ;; --help (9)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list help-wanted))))
+	     ;; --usage (10)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list usage-wanted))))
+	     ;; --version (11)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list version-wanted))))
+	     ;; -v, --verbose option (12) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! verbose-wanted (let ((vcount 0))
 					(for-each (lambda (arg)
@@ -287,27 +314,27 @@
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list verbose-wanted))))
-	     ;; -i, --sdr-info option (11) sensor specific
+	     ;; -i, --sdr-info option (13) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list sdr-info))))
-	     ;; -f, --flush-cache option (12) sensor specific
+	     ;; -f, --flush-cache option (14) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list flush-cache))))
-	     ;; -l, --list-groups option (13) sensor specific
+	     ;; -l, --list-groups option (15) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list list-groups))))
-	     ;; -a, --all option (14) sensor specific
+	     ;; -a, --all option (16) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list all-wanted))))
-	     ;; -g, --group option (15) sensor specific
+	     ;; -g, --group option (17) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
 						(list group-name))))
-	     ;; -s, --sensors option (16) sensor specific
+	     ;; -s, --sensors option (18) sensor specific
 	     (if (and (string? sensors-list) (list? sensors-cmd-args))
 		 (begin 
 		   (set! sensors-list (sentence->tokens (string-replace 
@@ -338,34 +365,34 @@
 	   #f)))
 
 (define (sensors-get-help-option cmd-args)
-  (list-ref cmd-args 7))
-
-(define (sensors-get-usage-option cmd-args)
-  (list-ref cmd-args 8))
-
-(define (sensors-get-version-option cmd-args)
   (list-ref cmd-args 9))
 
-(define (sensors-get-verbose-option cmd-args)
+(define (sensors-get-usage-option cmd-args)
   (list-ref cmd-args 10))
 
-(define (sensors-get-sdr-info-option cmd-args)
+(define (sensors-get-version-option cmd-args)
   (list-ref cmd-args 11))
 
-(define (sensors-get-flush-cache-option cmd-args)
+(define (sensors-get-verbose-option cmd-args)
   (list-ref cmd-args 12))
 
-(define (sensors-get-list-group-option cmd-args)
+(define (sensors-get-sdr-info-option cmd-args)
   (list-ref cmd-args 13))
 
-(define (sensors-get-all-option cmd-args)
+(define (sensors-get-flush-cache-option cmd-args)
   (list-ref cmd-args 14))
 
-(define (sensors-get-group-option cmd-args)
+(define (sensors-get-list-group-option cmd-args)
   (list-ref cmd-args 15))
 
-(define (sensors-get-sensors-option cmd-args)
+(define (sensors-get-all-option cmd-args)
   (list-ref cmd-args 16))
+
+(define (sensors-get-group-option cmd-args)
+  (list-ref cmd-args 17))
+
+(define (sensors-get-sensors-option cmd-args)
+  (list-ref cmd-args 18))
 
 (define (sensors-display-alias)
   (if (defined? 'sensors-alias-list)

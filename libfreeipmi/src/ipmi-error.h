@@ -203,7 +203,7 @@ do {                                                                    \
   if (!(expr))                                                          \
       return (-1);                                                      \
 } while (0)
-#endif
+#endif /* FREEIPMI_LIBRARY */
 
 #if defined (IPMI_SYSLOG)
 #define __IPMI_SYSLOG                                                   \

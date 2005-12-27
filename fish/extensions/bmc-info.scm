@@ -24,22 +24,27 @@
 
 (define (bmc-info-display-usage)
   (begin 
-    (display "Usage: bmc-info [-?V] [-h IPMIHOST] [-u USERNAME] [-p PASSWORD]\n")
-    (display "                [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
-    (display "                [--driver-poll-interval=USEC]\n")
-    (display "                [--sms-io-base=SMS-IO-BASE] [--host=IPMIHOST]\n")
-    (display "                [--username=USERNAME] [--password=PASSWORD]\n")
-    (display "                [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n")
-    (display "                [--help] [--usage] [--version]\n")))
+    (display "Usage: bmc-info [-?V] [-D IPMIDRIVER] [-h IPMIHOST] [-u USERNAME]\n")
+    (display "                [-p PASSWORD] [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
+    (display "                [--no-probing] [--driver-type=IPMIDRIVER]\n")
+    (display "                [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n")
+    (display "                [--hostname=IPMIHOST] [--username=USERNAME]\n")
+    (display "                [--password=PASSWORD] [--auth-type=AUTHTYPE]\n")
+    (display "                [--priv-level=PRIVILEGE-LEVEL] [--help] [--usage]\n")
+    (display "                [--version]\n")))
 
 (define (bmc-info-display-help)
   (begin 
     (display "Usage: bmc-info [OPTION...] \n")
     (display "bmc-info displays information about BMC.\n")
     (display "\n")
-    (display "      --driver-poll-interval=USEC\n")
-    (display "                             User USEC driver poll interval.\n")
-    (display "      --sms-io-base=SMS-IO-BASE   SMS IO Base address.\n")
+    (display "      --no-probing           Do not probe IPMI devices.\n")
+    (display "  -D, --driver-type=IPMIDRIVER   Use this IPMIDRIVER instead of auto selection.\n")
+    (display "                              Allowed values are KCS, SMIC, SSIF and LAN.\n")
+    (display "      --driver-address=DRIVERADDR\n")
+    (display "                             Use this DRIVERADDR address instead of probed\n")
+    (display "                             one.\n")
+    (display "      --driver-device=DEVICE Use this DEVICE for IPMI driver\n")
     (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
     (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
     (display "                             length is 16.\n")
@@ -71,28 +76,32 @@
   (catch 'misc-error 
 	 (lambda () 
 	   (let* ((bmc-info-cmd-args '())
-		  (option-spec '((driver-poll-interval (single-char #\203) (value #t))
-				 (sms-io-base   (single-char #\204) (value #t))
-				 (host          (single-char #\h)   (value #t))
-				 (username      (single-char #\u)   (value #t))
-				 (password      (single-char #\p)   (value #t))
-				 (auth-type     (single-char #\a)   (value #t))
-				 (priv-level    (single-char #\l)   (value #t))
-				 (help          (single-char #\?)   (value #f))
-				 (usage         (single-char #\377) (value #f))
-				 (version       (single-char #\V)   (value #f))))
+		  (option-spec '((no-probing     (single-char #\202) (value #f))
+				 (driver-type    (single-char #\D)   (value #t))
+				 (driver-address (single-char #\203) (value #t))
+				 (driver-device  (single-char #\204) (value #t))
+				 (host           (single-char #\h)   (value #t))
+				 (username       (single-char #\u)   (value #t))
+				 (password       (single-char #\p)   (value #t))
+				 (auth-type      (single-char #\a)   (value #t))
+				 (priv-level     (single-char #\l)   (value #t))
+				 (help           (single-char #\?)   (value #f))
+				 (usage          (single-char #\377) (value #f))
+				 (version        (single-char #\V)   (value #f))))
 		  (options (getopt-long args option-spec))
-		  (poll-interval  (option-ref options 'driver-poll-interval #f))
-		  (sms-io-base    (option-ref options 'sms-io-base   #f))
-		  (host           (option-ref options 'host          #f))
-		  (username       (option-ref options 'username      #f))
-		  (password       (option-ref options 'password      #f))
-		  (auth-type      (option-ref options 'auth-type     #f))
-		  (priv-level     (option-ref options 'priv-level    #f))
-		  (help-wanted    (option-ref options 'help          #f))
-		  (usage-wanted   (option-ref options 'usage         #f))
-		  (version-wanted (option-ref options 'version       #f))
-		  (extra-args     (option-ref options '()            #f)))
+		  (no-probing     (option-ref options 'no-probing     #f))
+		  (driver-type    (option-ref options 'driver-type    #f))
+		  (driver-address (option-ref options 'driver-address #f))
+		  (driver-device  (option-ref options 'driver-device  #f))
+		  (host           (option-ref options 'host           #f))
+		  (username       (option-ref options 'username       #f))
+		  (password       (option-ref options 'password       #f))
+		  (auth-type      (option-ref options 'auth-type      #f))
+		  (priv-level     (option-ref options 'priv-level     #f))
+		  (help-wanted    (option-ref options 'help           #f))
+		  (usage-wanted   (option-ref options 'usage          #f))
+		  (version-wanted (option-ref options 'version        #f))
+		  (extra-args     (option-ref options '()             #f)))
 	     ;; extra arguments
 	     (if (and (not (null? extra-args)) (list? bmc-info-cmd-args))
 		 (begin 
@@ -102,11 +111,40 @@
 			    (current-error-port))
 		   (set! bmc-info-exit-status 64)
 		   (set! bmc-info-cmd-args #f)))
-	     ;; --driver-poll-interval (0)
-	     (if (and (string? poll-interval) (list? bmc-info-cmd-args))
+	     ;; --no-probing (0)
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list no-probing))))
+	     ;; --driver-type (1)
+	     (if (and (string? driver-type) (list? bmc-info-cmd-args))
+		 (cond 
+		  ((string-ci=? driver-type "lan")
+		   (set! driver-type 1))
+		  ((string-ci=? driver-type "kcs")
+		   (set! driver-type 2))
+		  ((string-ci=? driver-type "smic")
+		   (set! driver-type 3))
+		  ((string-ci=? driver-type "bt")
+		   (set! driver-type 4))
+		  ((string-ci=? driver-type "ssif")
+		   (set! driver-type 5))
+		  (else 
+		   (begin 
+		     (display "Usage: bmc-info [OPTION...] \n"
+			      (current-error-port))
+		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			      (current-error-port))
+		     (set! bmc-info-exit-status 64)
+		     (set! bmc-info-cmd-args #f))))
+		 (set! driver-type 0))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list driver-type))))
+	     ;; driver-address (2)
+	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! poll-interval (string->number poll-interval))
-		   (if (boolean? poll-interval)
+		   (set! driver-address (string->number driver-address))
+		   (if (boolean? driver-address)
 		       (begin 
 			 (display "Usage: bmc-info [OPTION...] \n"
 				  (current-error-port))
@@ -116,27 +154,16 @@
 			 (set! bmc-info-cmd-args #f)))))
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list poll-interval))))
-	     ;; --sms-io-base (1)
-	     (if (and (string? sms-io-base) (list? bmc-info-cmd-args))
-		 (begin 
-		   (set! sms-io-base (string->number sms-io-base))
-		   (if (boolean? sms-io-base)
-		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
-				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
-				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
+						 (list driver-address))))
+	     ;; --driver-device (3)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list sms-io-base))))
-	     ;; --host (2)
+						 (list driver-device))))
+	     ;; --host (4)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list host))))
-	     ;; --username (3)
+	     ;; --username (5)
 	     (if (and (string? username) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
@@ -150,7 +177,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list username))))
-	     ;; --password (4)
+	     ;; --password (6)
 	     (if (and (string? password) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
@@ -164,7 +191,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list password))))
-	     ;; --auth-type (5)
+	     ;; --auth-type (7)
 	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
@@ -189,7 +216,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list auth-type))))
-	     ;; --priv-level (6)
+	     ;; --priv-level (8)
 	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
@@ -214,15 +241,15 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list priv-level))))
-	     ;; --help (7)
+	     ;; --help (9)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list help-wanted))))
-	     ;; --usage (8)
+	     ;; --usage (10)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list usage-wanted))))
-	     ;; --version (9)
+	     ;; --version (11)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list version-wanted))))
@@ -239,13 +266,13 @@
 	   #f)))
 
 (define (bmc-info-get-help-option cmd-args)
-  (list-ref cmd-args 7))
+  (list-ref cmd-args 9))
 
 (define (bmc-info-get-usage-option cmd-args)
-  (list-ref cmd-args 8))
+  (list-ref cmd-args 10))
 
 (define (bmc-info-get-version-option cmd-args)
-  (list-ref cmd-args 9))
+  (list-ref cmd-args 11))
 
 (define (bmc-info-main cmd-args)
   (cond 
@@ -270,10 +297,11 @@
 (fi-register-command! 
  (list "bmc-info" 
        (string-append 
-	"bmc-info [--driver-poll-interval=USEC] [--sms-io-base=SMS-IO-BASE]\n"
-	"         [--host=IPMIHOST] [--username=USERNAME] [--password=PASSWORD]\n"
-	"         [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL]\n"
-	"         [--help] [--usage] [--version]\n"
+	"bmc-info [--no-probing] [--driver-type=IPMIDRIVER]\n"
+	"         [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"         [--hostname=IPMIHOST] [--username=USERNAME]\n"
+	"         [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
+	"         [--priv-level=PRIVILEGE-LEVEL] [--help] [--usage] [--version]\n"
 	"\n"
 	"   Displays information about BMC.")))
 

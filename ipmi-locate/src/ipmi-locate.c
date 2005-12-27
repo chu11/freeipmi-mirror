@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.2.2.1 2005-12-20 19:05:00 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.2.2.2 2005-12-27 21:38:11 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -20,7 +20,11 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-#include "common.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "freeipmi.h"
+#include "ipmi-locate-argp.h"
 
 void 
 display_ipmi_locate_info (ipmi_locate_info_t *info)
@@ -276,10 +280,6 @@ int
 main (int argc, char **argv)
 {
   struct rlimit resource_limit;
-  struct arguments *arguments;
-  int retval = 0;
-  
-  textdomain (PACKAGE);
   
   /* generate core dump on seg-fault */
   resource_limit.rlim_cur =
@@ -290,13 +290,11 @@ main (int argc, char **argv)
       exit (EXIT_FAILURE);
     }
   
-  fi_argp_parse (argc, argv);
+  ipmi_locate_argp_parse (argc, argv);
   
-  arguments = fi_get_arguments ();
-  
-  smbios_probe_display ();  
-  acpi_probe_display ();  
-  pci_probe_display ();  
+  smbios_probe_display ();
+  acpi_probe_display ();
+  pci_probe_display ();
   
   return (0);
 }

@@ -1024,8 +1024,7 @@ fiid_obj_dump_rmcpplus (int fd,
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;
   uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
-  char prefixbuf[IPMI_MAX_PAYLOAD_LEN];
-  char *prefix_ptr;
+  char prefix_buf[IPMI_MAX_PAYLOAD_LEN];
   char *rmcp_hdr = 
     "RMCP Header:\n"
     "------------";
@@ -1060,12 +1059,7 @@ fiid_obj_dump_rmcpplus (int fd,
       return (-1);
     }
 
-  /* XXX: Need a wrapper to fix warnings */
-
-  prefix_ptr = prefix;
-  _set_prefix_str(prefixbuf, IPMI_MAX_PAYLOAD_LEN, &prefix_ptr);
-
-  if (_output_str(fd, prefix_ptr, hdr) < 0)
+  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_MAX_PAYLOAD_LEN) < 0)
     return (-1);
 
   /* Dump rmcp header */
@@ -1075,10 +1069,10 @@ fiid_obj_dump_rmcpplus (int fd,
     {
       memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
       memcpy(buf, pkt + pkt_index, (pkt_len - pkt_index)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_ptr, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
+      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_ptr, rmcp_hdr, NULL, pkt + pkt_index, tmpl_hdr_rmcp) != -1);
+    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + pkt_index, tmpl_hdr_rmcp) != -1);
   pkt_index += obj_rmcp_hdr_len;
 
   if (pkt_len <= pkt_index)
@@ -1087,7 +1081,7 @@ fiid_obj_dump_rmcpplus (int fd,
   /* Dump rmcpplus session header */
 
   if ((obj_len = _dump_rmcpplus_hdr_session(fd,
-                                            prefix_ptr,
+                                            prefix_buf,
                                             session_hdr,
                                             pkt + pkt_index,
                                             pkt_len - pkt_index,
@@ -1106,7 +1100,7 @@ fiid_obj_dump_rmcpplus (int fd,
   /* Dump Payload */
 
   if (_dump_rmcpplus_payload(fd, 
-                             prefix_ptr, 
+                             prefix_buf, 
                              payload_hdr, 
                              msg_hdr,
                              cmd_hdr,
@@ -1132,7 +1126,7 @@ fiid_obj_dump_rmcpplus (int fd,
   if (session_id && payload_authenticated)
     {
       if ((obj_len = _dump_rmcpplus_session_trlr(fd,
-                                                 prefix_ptr,
+                                                 prefix_buf,
                                                  session_trlr_hdr,
                                                  integrity_algorithm,
                                                  tmpl_trlr_session,
@@ -1154,7 +1148,7 @@ fiid_obj_dump_rmcpplus (int fd,
       if (!(tmpl_extra = fiid_template_make((pkt_len - pkt_index) * 8, "extra")))
         return (-1);
 
-      ERR_OUT(fiid_obj_dump_perror(fd, prefix_ptr, extra_hdr, NULL, pkt + pkt_index, tmpl_extra) != -1);
+      ERR_OUT(fiid_obj_dump_perror(fd, prefix_buf, extra_hdr, NULL, pkt + pkt_index, tmpl_extra) != -1);
 
       fiid_template_free(tmpl_extra);
     }

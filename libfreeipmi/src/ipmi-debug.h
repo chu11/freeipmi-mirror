@@ -27,7 +27,7 @@ extern "C" {
 
 #define IPMI_DEBUG_DEFAULT_FD   STDERR_FILENO
   
-/* IPMI KCS Interface */
+int8_t fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len);
 int8_t fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl);
 int8_t fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl);
 int8_t fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);

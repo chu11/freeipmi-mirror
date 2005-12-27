@@ -1,7 +1,7 @@
 /* 
-   $Id: common.h,v 1.2 2005-10-11 04:06:44 balamurugan Exp $ 
+   $Id: common.h,v 1.2.2.1 2005-12-27 21:38:11 chu11 Exp $ 
 
-   common.c - Common header definitions.
+   common.h - Common header definitions.
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -31,6 +31,8 @@
 #include <guile/gh.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
+#include "argp-common.h"
 
 #include "xmalloc.h"
 #include "fish-argp.h"
