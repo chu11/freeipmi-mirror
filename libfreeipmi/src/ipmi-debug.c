@@ -72,7 +72,7 @@ _dprintf(int fd, char *fmt, ...)
   return rv;
 }
 
-void
+static void
 _set_prefix_str(char *prefixbuf, unsigned int buflen, char **prefix)
 {
   if (*prefix && buflen > 3)
@@ -89,7 +89,7 @@ _set_prefix_str(char *prefixbuf, unsigned int buflen, char **prefix)
     *prefix = "";		/* output "nothing" */
 }
 
-int8_t
+static int8_t
 _output_str(int fd, char *prefix, char *str)
 {
   /* achu: Yeah, I know this is slow.  Figure out something better
@@ -113,7 +113,7 @@ _output_str(int fd, char *prefix, char *str)
   return 0;
 } 
 
-int8_t
+static int8_t
 _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 {
   uint32_t count = 0;
