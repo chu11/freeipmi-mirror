@@ -340,7 +340,7 @@ _dump_rmcpplus_payload_special(int fd,
       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     {
       /* These can all be treated the same b/c there are no variable length fields */
-      FIID_OBJ_ALLOCA(obj_payload, tmpl_cmd);
+      FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
 
       FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
@@ -393,7 +393,7 @@ _dump_rmcpplus_payload_special(int fd,
       
       obj_field_len = 0;
 
-      FIID_OBJ_ALLOCA(obj_payload, tmpl_cmd);
+      FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
 
       FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
@@ -462,7 +462,7 @@ _dump_rmcpplus_payload_special(int fd,
       
       obj_field_len = 0;
 
-      FIID_OBJ_ALLOCA(obj_payload, tmpl_cmd);
+      FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
 
       FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
@@ -504,7 +504,7 @@ _dump_rmcpplus_payload_special(int fd,
       if (!(tmpl_rmcpplus_rakp_message_3_dump = fiid_template_make(8,   "message_tag",
                                                                    8,   "rmcpplus_status_code",
                                                                    16,  "reserved1",
-                                                                   128, "managed_system_session_id",
+                                                                   32, "managed_system_session_id",
                                                                    (obj_field_len * 8), "key_exchange_authentication_code")))
         return (-1);
       
@@ -529,7 +529,7 @@ _dump_rmcpplus_payload_special(int fd,
       
       obj_field_len = 0;
 
-      FIID_OBJ_ALLOCA(obj_payload, tmpl_cmd);
+      FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
 
       FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
 
@@ -843,7 +843,11 @@ _dump_rmcpplus_payload(int fd,
    * Note: We don't check consider RAKP1 or RAKP3 special b/c
    * they are requests, not responses
    */
-  if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+  if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+      || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+      || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+      || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+      || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
     {
       return _dump_rmcpplus_payload_special(fd,
