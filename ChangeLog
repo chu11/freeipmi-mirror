@@ -94,6 +94,10 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c (fiid_obj_dump_rmcpplus):
 	Fix prefix output bugs and compiler warnings.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c (_calculate_k_rakp_none,
+	_ipmi_calculate_k, check_rmcpplus_session_trlr): Various minor bug
+	fixes.
 	
 2005-12-23  Albert Chu <chu11@llnl.gov>
 

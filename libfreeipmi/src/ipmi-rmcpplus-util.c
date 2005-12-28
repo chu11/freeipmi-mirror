@@ -572,7 +572,7 @@ _calculate_k_rakp_none(uint8_t *k,
     }
  
   memset(k, '\0', k_len);
-  return (0);
+  return (k_len);
 }
 
 static int32_t
@@ -713,8 +713,9 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                   uint32_t constant_len)
 {
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-      || !sik_key
-      || !sik_key_len
+      || ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	   || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	  && (!sik_key || !sik_key_len))
       || !k
       || !k_len
       || !constant
@@ -758,7 +759,6 @@ ipmi_calculate_k1(uint8_t authentication_algorithm,
                   uint32_t sik_key_len,
                   uint8_t *k1,
                   uint32_t k1_len)
-
 {
   uint8_t constant[IPMI_KEY_CONSTANT_LEN] = { 0x01, 0x01, 0x01, 0x01, 0x01, 
                                                0x01, 0x01, 0x01, 0x01, 0x01, 
@@ -780,7 +780,6 @@ ipmi_calculate_k2(uint8_t authentication_algorithm,
                   uint32_t sik_key_len,
                   uint8_t *k1,
                   uint32_t k1_len)
-
 {
   uint8_t constant[IPMI_KEY_CONSTANT_LEN] = { 0x02, 0x02, 0x02, 0x02, 0x02, 
                                                0x02, 0x02, 0x02, 0x02, 0x02, 
@@ -1322,7 +1321,7 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
     }
 
   memcpy(hash_data + hash_data_len, pkt + rmcp_header_len, pkt_len - rmcp_header_len - compare_digest_len);
-  hash_data_len += pkt_len - rmcp_header_len - crypt_digest_len;
+  hash_data_len += pkt_len - rmcp_header_len - compare_digest_len;
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_code_data && auth_code_data_len)
     {
