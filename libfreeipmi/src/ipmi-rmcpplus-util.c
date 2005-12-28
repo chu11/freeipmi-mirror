@@ -1125,7 +1125,7 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
   if (username && username_length)
     {
       memcpy(buf + buf_index, username, username_length);
-      buf_index++;
+      buf_index += username_length;
     }
 
   /* XXX need new len */
