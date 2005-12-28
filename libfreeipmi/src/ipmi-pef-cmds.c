@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.15 2005-12-16 08:48:40 ab Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.16 2005-12-28 21:17:35 balamurugan Exp $  */
 
 #include "freeipmi.h"
 
@@ -1499,9 +1499,9 @@ ipmi_cmd_set_pef_control2 (ipmi_device_t *dev,
 				 enable_pef_event_msgs,
 				 enable_startup_delay, 
 				 enable_alert_startup_delay) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_pef_control_rq,
 		 obj_cmd_rs, 
@@ -1534,9 +1534,9 @@ ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev,
 					   enable_powercycle, 
 					   enable_oem, 
 					   enable_diag_interrupt) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_global_action_control_rq,
 		 obj_cmd_rs, 
@@ -1558,9 +1558,9 @@ ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_startup_delay_rq);
   ERR (fill_kcs_set_startup_delay (obj_cmd_rq, startup_delay) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_startup_delay_rq,
 		 obj_cmd_rs, 
@@ -1583,9 +1583,9 @@ ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_alert_startup_delay_rq);
   ERR (fill_kcs_set_alert_startup_delay (obj_cmd_rq, 
 					 alert_startup_delay) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_alert_startup_delay_rq,
 		 obj_cmd_rs, 
@@ -1608,9 +1608,9 @@ ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_event_filters_rq);
   ERR (fill_kcs_set_num_event_filters (obj_cmd_rq, 
 				       num_event_filters) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_num_event_filters_rq, 
 		 obj_cmd_rs, 
@@ -1633,9 +1633,9 @@ ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_event_filter_table_rq);
   ERR (fill_kcs_set_filter_table_entry (obj_cmd_rq, 
 					eft_entry) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_event_filter_table_rq, 
 		 obj_cmd_rs, 
@@ -1662,9 +1662,9 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
 					filter_number, 
 					filter_type, 
 					enabled) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_event_filter_data1_rq,
 		 obj_cmd_rs, 
@@ -1687,9 +1687,9 @@ ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_alert_policies_rq);
   ERR (fill_kcs_set_num_alert_policies (obj_cmd_rq, 
 					num_alert_policies) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_pef_conf_param_num_alert_policies_rq,
 		 obj_cmd_rs, 
@@ -1718,9 +1718,9 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
 				 destination_selector,
 				 string_selector, 
 				 string_enable) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_alert_immediate_rq,
 		 obj_cmd_rs, 
@@ -1748,9 +1748,9 @@ ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
 				    parameter_type,
 				    set_selector,
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq,
 		 obj_cmd_rs, 
@@ -1778,9 +1778,9 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
 				    parameter_type,
 				    set_selector,
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -1808,9 +1808,9 @@ ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
 				    parameter_type,
 				    set_selector,
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq,
 		 obj_cmd_rs, 
@@ -1838,9 +1838,9 @@ ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -1868,9 +1868,9 @@ ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev,
 				    parameter_type,
 				    set_selector,
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq,
 		 obj_cmd_rs, 
@@ -1898,9 +1898,9 @@ ipmi_cmd_get_pef_control2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -1928,9 +1928,9 @@ ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -1958,9 +1958,9 @@ ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -1988,9 +1988,9 @@ ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -2018,9 +2018,9 @@ ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -2048,9 +2048,9 @@ ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev,
 				    parameter_type, 
 				    set_selector, 
 				    block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -2070,9 +2070,9 @@ ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_caps_rq);
   ERR (fill_kcs_get_pef_caps (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_pef_caps_rq, 
 		 obj_cmd_rs, 
@@ -2095,9 +2095,9 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_arm_pef_postpone_timer_rq);
   ERR (fill_kcs_arm_pef_postpone_timer (obj_cmd_rq, 
 					countdown) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_arm_pef_postpone_timer_rq, 
 		 obj_cmd_rs, 
@@ -2122,9 +2122,9 @@ ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev,
   ERR (fill_kcs_set_last_processed_event (obj_cmd_rq, 
 					  which, 
 					  id) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_last_processed_event_rq, 
 		 obj_cmd_rs, 
@@ -2144,9 +2144,9 @@ ipmi_cmd_get_last_processed_event2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_last_processed_event_rq);
   ERR (fill_kcs_get_last_proessed_event (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_last_processed_event_rq, 
 		 obj_cmd_rs, 
@@ -2179,9 +2179,9 @@ ipmi_cmd_pet_ack2 (ipmi_device_t *dev,
 			 sensor_device, 
 			 sensor_number, 
 			 event_data) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_pet_ack_rq,
 		 obj_cmd_rs, 

@@ -1,3 +1,23 @@
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
+	* fish/extensions/bc-common.scm, fish/extensions/pef.scm,
+	fish/extensions/sel.scm, fish/extensions/sensors-common.scm: fixed
+	argument parsing bug.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd): accepts lun, net_fn
+	as arguments.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: adopts changes in ipmi_cmd().
+
 2005-12-27  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (fi_ipmi_open): initialize dev before

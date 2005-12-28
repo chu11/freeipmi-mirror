@@ -355,9 +355,9 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_info_rq);
   ERR (fill_kcs_get_sel_info (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sel_info_rq, 
 		 obj_cmd_rs, 
@@ -378,9 +378,9 @@ ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_alloc_info_rq);
   ERR (fill_kcs_get_sel_alloc_info (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sel_alloc_info_rq, 
 		 obj_cmd_rs, 
@@ -401,9 +401,9 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_reserve_sel_rq);
   ERR (fill_kcs_reserve_sel (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_reserve_sel_rq, 
 		 obj_cmd_rs, 
@@ -425,9 +425,9 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_entry_rq);
   ERR (fill_kcs_get_sel_entry (obj_cmd_rq, record_id) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sel_entry_rq, 
 		 obj_cmd_rs, 
@@ -452,9 +452,9 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
   ERR (fill_kcs_delete_sel_entry (obj_cmd_rq, 
 				  reservation_id, 
 				  record_id) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_delete_sel_entry_rq, 
 		 obj_cmd_rs, 
@@ -479,9 +479,9 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
   ERR (fill_kcs_clear_sel (obj_cmd_rq, 
 			   reservation_id, 
 			   opcode) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_clear_sel_rq, 
 		 obj_cmd_rs, 

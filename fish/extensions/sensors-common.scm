@@ -47,7 +47,7 @@
 
 (define (sensors-display-usage)
   (begin 
-    (display "Usage: ipmi-sensors [-iflv?V] [-D IPMIDRIVER] [-h IPMIHOST]\n")
+    (display "Usage: ipmi-sensors [-ifLv?V] [-D IPMIDRIVER] [-h IPMIHOST]\n")
     (display "                    [-u USERNAME] [-p PASSWORD] [-a AUTHTYPE]\n")
     (display "                    [-l PRIVILEGE-LEVEL] [-g GROUP] [-s SENSORS-LIST]\n")
     (display "                    [--no-probing] [--driver-type=IPMIDRIVER]\n")
@@ -87,7 +87,7 @@
     (display "                             more verbosity.\n") 
     (display "  -i, --sdr-info             Show SDR Information.\n") 
     (display "  -f, --flush-cache          Flush sensor cache.\n") 
-    (display "  -l, --list-groups          List sensor groups.\n") 
+    (display "  -L, --list-groups          List sensor groups.\n") 
     (display "      --all                  Display all sensors (Ignore sensors ignore-list).\n")
     (display "  -g, --group=GROUP          Show sensors belongs to this GROUP.\n")
     (display "  -s, --sensors=SENSORS-LIST Show listed sensors.\n")
@@ -126,7 +126,7 @@
 				 (verbose        (single-char #\v)   (value #f))
 				 (sdr-info       (single-char #\i)   (value #f))
 				 (flush-cache    (single-char #\f)   (value #f))
-				 (list-groups    (single-char #\l)   (value #f))
+				 (list-groups    (single-char #\L)   (value #f))
 				 (all            (single-char #\376) (value #f))
 				 (group          (single-char #\g)   (value #t))
 				 (sensors        (single-char #\s)   (value #t))))
@@ -161,11 +161,11 @@
 		   (set! sensors-exit-status 64)
 		   (set! sensors-cmd-args #f)))
 	     ;; --no-probing (0)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list no-probing))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list no-probing))))
 	     ;; --driver-type (1)
-	     (if (and (string? driver-type) (list? bmc-info-cmd-args))
+	     (if (and (string? driver-type) (list? sensors-cmd-args))
 		 (cond 
 		  ((string-ci=? driver-type "lan")
 		   (set! driver-type 1))
@@ -184,13 +184,13 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! sensors-cmd-args #f))))
 		 (set! driver-type 0))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-type))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list driver-type))))
 	     ;; driver-address (2)
-	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
+	     (if (and (string? driver-address) (list? sensors-cmd-args))
 		 (begin 
 		   (set! driver-address (string->number driver-address))
 		   (if (boolean? driver-address)
@@ -200,20 +200,20 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-address))))
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list driver-address))))
 	     ;; --driver-device (3)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-device))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list driver-device))))
 	     ;; --host (4)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list host))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list host))))
 	     ;; --username (5)
-	     (if (and (string? username) (list? bmc-info-cmd-args))
+	     (if (and (string? username) (list? sensors-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
@@ -222,12 +222,12 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list username))))
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list username))))
 	     ;; --password (6)
-	     (if (and (string? password) (list? bmc-info-cmd-args))
+	     (if (and (string? password) (list? sensors-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
@@ -236,12 +236,12 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list password))))
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list password))))
 	     ;; --auth-type (7)
-	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
+	     (if (and (string? auth-type) (list? sensors-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
 		   (set! auth-type 0))
@@ -260,13 +260,13 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! sensors-cmd-args #f))))
 		 (set! auth-type 0))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list auth-type))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list auth-type))))
 	     ;; --priv-level (8)
-	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
+	     (if (and (string? priv-level) (list? sensors-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
 		   (set! priv-level 1))
@@ -285,23 +285,23 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! sensors-cmd-args #f))))
 		 (set! priv-level 2))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list priv-level))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list priv-level))))
 	     ;; --help (9)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list help-wanted))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list help-wanted))))
 	     ;; --usage (10)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list usage-wanted))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list usage-wanted))))
 	     ;; --version (11)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list version-wanted))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list version-wanted))))
 	     ;; -v, --verbose option (12) sensor specific
 	     (if (list? sensors-cmd-args)
 		 (set! verbose-wanted (let ((vcount 0))

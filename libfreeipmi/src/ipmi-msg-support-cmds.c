@@ -1376,9 +1376,9 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
                                        obj_cmd_rq) == 0);
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
-  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (&local_dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_channel_auth_caps_rq, 
 		 obj_cmd_rs, 
@@ -1417,9 +1417,9 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  local_dev.lun = IPMI_BMC_IPMB_LUN_BMC;
-  local_dev.net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (&local_dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_session_challenge_rq, 
 		 obj_cmd_rs, 
@@ -1455,9 +1455,9 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 				  IPMI_SESSION_CHALLENGE_STR_LEN, 
 				  initial_outbound_seq_num, 
 				  obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_activate_session_rq, 
 		 obj_cmd_rs, 
@@ -1481,9 +1481,9 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_set_session_priv_level_rq);
   ERR (fill_cmd_set_session_priv_level (dev->io.outofband.priv_level, 
 					obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_set_session_priv_level_rq, 
 		 obj_cmd_rs, 
@@ -1582,9 +1582,9 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_close_session_rq);
   ERR (fill_cmd_close_session (dev->io.outofband.session_id, 
 			       obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_close_session_rq, 
 		 obj_cmd_rs, 
@@ -1621,9 +1621,9 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 				    channel_access_set_flag, 
 				    channel_privilege_level_limit, 
 				    channel_privilege_level_limit_set_flag) == 0); 
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_channel_access_rq, 
 		 obj_cmd_rs, 
@@ -1649,9 +1649,9 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
 			       user_id, 
 			       user_name, 
 			       ((user_name) ? strlen (user_name) : 0)) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_user_name_rq, 
 		 obj_cmd_rs, 
@@ -1673,9 +1673,9 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_name_rq);
   ERR (fill_kcs_get_user_name (obj_cmd_rq, user_id) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_user_name_rq, 
 		 obj_cmd_rs, 
@@ -1703,9 +1703,9 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 				   operation, 
 				   user_password, 
 				   ((user_password) ? strlen(user_password) : 0)) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_user_password_rq, 
 		 obj_cmd_rs, 
@@ -1740,9 +1740,9 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 				 enable_ipmi_msgs,
 				 user_privilege_level_limit,
 				 user_session_number_limit) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_user_access_rq, 
 		 obj_cmd_rs, 
@@ -1765,9 +1765,9 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_access_rq);
   ERR (fill_kcs_get_user_access (obj_cmd_rq, channel_number, user_id) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_user_access_rq, 
 		 obj_cmd_rs, 
@@ -1792,9 +1792,9 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
   ERR (fill_kcs_get_channel_access (obj_cmd_rq, 
 				    channel_number, 
 				    channel_access_set_flag) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_channel_access_rq, 
 		 obj_cmd_rs, 
@@ -1816,9 +1816,9 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_channel_info_rq);
   ERR (fill_kcs_get_channel_info (obj_cmd_rq, channel_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_channel_info_rq, 
 		 obj_cmd_rs, 

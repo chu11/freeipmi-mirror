@@ -593,9 +593,9 @@ ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
 				 ppp_mode_enable, 
 				 terminal_mode_enable, 
 				 direct) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_serial_conf_param_connmode_rq, 
 		 obj_cmd_rs, 
@@ -620,9 +620,9 @@ ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev,
   ERR (fill_set_serial_page_blackout_interval (obj_cmd_rq, 
 					       channel_number, 
 					       page_blackout_interval) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_serial_conf_param_pageblackout_rq, 
 		 obj_cmd_rs, 
@@ -647,9 +647,9 @@ ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev,
   ERR (fill_set_serial_retry_time (obj_cmd_rq, 
 				   channel_number, 
 				   retry_time) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_serial_conf_param_retry_rq, 
 		 obj_cmd_rs, 
@@ -678,9 +678,9 @@ ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev,
 				  dtr_hangup,
 				  flow_control,
 				  bit_rate) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_serial_conf_param_commbits_rq, 
 		 obj_cmd_rs, 
@@ -710,9 +710,9 @@ ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev,
 				   parameter_type, 
 				   set_selector, 
 				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_serial_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -742,9 +742,9 @@ ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev,
 				   parameter_type, 
 				   set_selector, 
 				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_serial_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -774,9 +774,9 @@ ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev,
 				   parameter_type, 
 				   set_selector, 
 				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_serial_conf_param_rq, 
 		 obj_cmd_rs, 
@@ -806,9 +806,9 @@ ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev,
 				   parameter_type, 
 				   set_selector, 
 				   block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_serial_conf_param_rq, 
 		 obj_cmd_rs, 

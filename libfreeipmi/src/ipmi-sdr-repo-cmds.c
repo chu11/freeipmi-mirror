@@ -409,9 +409,9 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sdr_repo_info_rq);
   ERR (fill_kcs_get_repo_info (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sdr_repo_info_rq, 
 		 obj_cmd_rs, 
@@ -432,9 +432,9 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sdr_repo_alloc_info_rq);
   ERR (fill_kcs_get_repo_alloc_info (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sdr_repo_alloc_info_rq, 
 		 obj_cmd_rs, 
@@ -455,9 +455,9 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_reserve_sdr_repo_rq);
   ERR (fill_kcs_reserve_repo (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_STORAGE_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_reserve_sdr_repo_rq, 
 		 obj_cmd_rs, 
@@ -513,9 +513,9 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
       ipmi_xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
 		tmpl_get_sdr_rq, 
 		local_obj_cmd_rs, 
@@ -589,9 +589,9 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
       ipmi_xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_STORAGE_RQ;
   if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
 		tmpl_get_sdr_rq, 
 		local_obj_cmd_rs, 

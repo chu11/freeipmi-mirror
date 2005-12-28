@@ -364,11 +364,11 @@
 		   (set! bmc-config-exit-status 64)
 		   (set! bmc-config-cmd-args #f)))
 	     ;; --no-probing (0)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list no-probing))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list no-probing))))
 	     ;; --driver-type (1)
-	     (if (and (string? driver-type) (list? bmc-info-cmd-args))
+	     (if (and (string? driver-type) (list? bmc-config-cmd-args))
 		 (cond 
 		  ((string-ci=? driver-type "lan")
 		   (set! driver-type 1))
@@ -387,13 +387,13 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! bmc-config-cmd-args #f))))
 		 (set! driver-type 0))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-type))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list driver-type))))
 	     ;; driver-address (2)
-	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
+	     (if (and (string? driver-address) (list? bmc-config-cmd-args))
 		 (begin 
 		   (set! driver-address (string->number driver-address))
 		   (if (boolean? driver-address)
@@ -403,20 +403,20 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-address))))
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list driver-address))))
 	     ;; --driver-device (3)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list driver-device))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list driver-device))))
 	     ;; --host (4)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list host))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list host))))
 	     ;; --username (5)
-	     (if (and (string? username) (list? bmc-info-cmd-args))
+	     (if (and (string? username) (list? bmc-config-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
@@ -425,12 +425,12 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list username))))
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list username))))
 	     ;; --password (6)
-	     (if (and (string? password) (list? bmc-info-cmd-args))
+	     (if (and (string? password) (list? bmc-config-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
@@ -439,12 +439,12 @@
 			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 				  (current-error-port))
 			 (set! bmc-info-exit-status 64)
-			 (set! bmc-info-cmd-args #f)))))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list password))))
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list password))))
 	     ;; --auth-type (7)
-	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
+	     (if (and (string? auth-type) (list? bmc-config-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
 		   (set! auth-type 0))
@@ -463,13 +463,13 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! bmc-config-cmd-args #f))))
 		 (set! auth-type 0))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list auth-type))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list auth-type))))
 	     ;; --priv-level (8)
-	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
+	     (if (and (string? priv-level) (list? bmc-config-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
 		   (set! priv-level 1))
@@ -488,23 +488,23 @@
 		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
 			      (current-error-port))
 		     (set! bmc-info-exit-status 64)
-		     (set! bmc-info-cmd-args #f))))
+		     (set! bmc-config-cmd-args #f))))
 		 (set! priv-level 2))
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list priv-level))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list priv-level))))
 	     ;; --help (9)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list help-wanted))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list help-wanted))))
 	     ;; --usage (10)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list usage-wanted))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list usage-wanted))))
 	     ;; --version (11)
-	     (if (list? bmc-info-cmd-args)
-		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
-						 (list version-wanted))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list version-wanted))))
 	     ;; --checkout (12) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 

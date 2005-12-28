@@ -384,6 +384,8 @@ ipmi_open_inband (ipmi_device_t *dev,
 
 int 
 ipmi_cmd (ipmi_device_t *dev, 
+	  uint8_t lun, 
+	  uint8_t net_fn, 
 	  fiid_obj_t obj_cmd_rq, 
 	  fiid_template_t tmpl_cmd_rq, 
 	  fiid_obj_t obj_cmd_rs, 
@@ -394,6 +396,9 @@ ipmi_cmd (ipmi_device_t *dev,
       errno = EINVAL;
       return (-1);
     }
+  
+  dev->lun = lun;
+  dev->net_fn = net_fn;
   
   switch (dev->type)
     {

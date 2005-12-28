@@ -221,9 +221,9 @@ ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_power_restore_policy_rq);
   ERR (fill_cmd_set_power_restore_policy (obj_cmd_rq, 
 					  power_restore_policy) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_CHASSIS_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_power_restore_policy_rq, 
 		 obj_cmd_rs, 
@@ -244,9 +244,9 @@ ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
   ERR (fill_cmd_get_chassis_status (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_CHASSIS_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_CHASSIS_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_chassis_status_rq, 
 		 obj_cmd_rs, 
