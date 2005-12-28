@@ -70,8 +70,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  memset (dev, 0, sizeof (ipmi_device_t));
-  
   if (!(remote_host && remote_host_len))
     {
       errno = EINVAL;
@@ -153,7 +151,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
 	       __FILE__, __LINE__, __PRETTY_FUNCTION__);
     default:
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       errno = EINVAL;
       return (-1);
     }
@@ -167,7 +164,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_rmcp = 
@@ -175,7 +171,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   
@@ -184,7 +179,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rq.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_session = 
@@ -192,7 +186,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rs.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   
@@ -201,7 +194,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_hdr = 
@@ -209,7 +201,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rs.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   
@@ -218,7 +209,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rq.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_trlr = 
@@ -226,7 +216,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if (dev->io.outofband.rs.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   
@@ -234,7 +223,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
     {
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   /* Note that ipmi_lan_open_session itself calls ipmi_lan_cmd many
@@ -245,7 +233,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
       if (dev->io.outofband.local_sockfd)
 	close (dev->io.outofband.local_sockfd);
       ipmi_outofband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   
@@ -265,8 +252,6 @@ ipmi_open_inband (ipmi_device_t *dev,
       errno = EINVAL;
       return (-1);
     }
-  
-  memset (dev, 0, sizeof (ipmi_device_t));
   
   switch (driver_type)
     {
@@ -302,7 +287,6 @@ ipmi_open_inband (ipmi_device_t *dev,
 	 If we cant find the bass address, we better exit. -- Anand Babu */
       if (dev->io.inband.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
 	{
-	  memset (dev, 0, sizeof (ipmi_device_t));
 	  errno = ENODEV;
 	  return (-1);
 	}
@@ -313,7 +297,6 @@ ipmi_open_inband (ipmi_device_t *dev,
       if (i386_set_ioperm (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, 
 			   0x02, 0x01) != 0)
 	{
-	  memset (dev, 0, sizeof (ipmi_device_t));
 	  return (-1);
 	}
 #else
@@ -323,14 +306,12 @@ ipmi_open_inband (ipmi_device_t *dev,
       dev->io.inband.dev_fd = open ("/dev/io", O_RDONLY);
       if (dev->io.inband.dev_fd < 0)
 	{
-	  memset (dev, 0, sizeof (ipmi_device_t));
 	  return (-1);
 	}
 #endif
 #else
       if (iopl (3) < 0)
 	{
-	  memset (dev, 0, sizeof (ipmi_device_t));
 	  return (-1);
 	}
 #endif
@@ -388,7 +369,6 @@ ipmi_open_inband (ipmi_device_t *dev,
   if (dev->io.inband.rq.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   dev->io.inband.rs.obj_hdr = 
@@ -396,7 +376,6 @@ ipmi_open_inband (ipmi_device_t *dev,
   if (dev->io.inband.rs.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
-      memset (dev, 0, sizeof (ipmi_device_t));
       return (-1);
     }
   

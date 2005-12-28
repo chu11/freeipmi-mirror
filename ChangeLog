@@ -1,3 +1,17 @@
+2005-12-27  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/ipmi-wrapper.c (fi_ipmi_open): initialize dev before
+	calling udm open functions.
+
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_io_init): like
+	wise.
+
+	* libfreeipmi/src/ipmi-interface.c
+	(ipmi_open_outofband,ipmi_open_inband): no memset of dev
+	arguments.
+
 2005-12-27  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/freeipmi.h (ERR, ERR_OUT, ERR_EXIT): Revert
