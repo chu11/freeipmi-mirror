@@ -95,6 +95,12 @@
 	* libfreeipmi/src/ipmi-rcmpplus-debug.c
 	(_dump_rmcpplus_payload_special, _dump_rmcpplus_payload): Various
 	bug fixes.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c
+	(check_rmcpplus_payload_type, check_rmcpplus_status_code): New
+	functions.
+
+	* Minor cosmetic changes for consistency through code.
 	
 2005-12-27  Albert Chu <chu11@llnl.gov>
 

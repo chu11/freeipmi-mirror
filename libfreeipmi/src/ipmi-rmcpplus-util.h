@@ -83,7 +83,9 @@ int8_t check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t aut
 
 int8_t check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algorithm, uint8_t *sik_key, uint32_t sik_key_len, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint32_t managed_system_session_id, uint8_t *managed_system_guid, uint32_t managed_system_guid_len, uint8_t *integrity_check_value, uint32_t integrity_check_value_len);
 
-  int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm, uint8_t *pkt, uint32_t pkt_len, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *auth_code_data, uint32_t auth_code_data_len);
+int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm, uint8_t *pkt, uint32_t pkt_len, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *auth_code_data, uint32_t auth_code_data_len);
+
+int8_t check_rmcpplus_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t payload_type);
 
 #ifdef __cplusplus
 }

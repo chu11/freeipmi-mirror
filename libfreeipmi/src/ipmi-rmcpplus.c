@@ -137,7 +137,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_1 =
     {32,  "managed_system_session_id"},
     {128, "remote_console_random_number"},
     {4,   "requested_maximum_privilege_level"},
-    {1,   "nameonly_lookup"},
+    {1,   "name_only_lookup"},
     {3,   "reserved2"},
     {16,  "reserved3"},
     {8,   "username_length"},
@@ -459,7 +459,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                              uint8_t *remote_console_random_number,
                              uint32_t remote_console_random_number_len,
                              uint8_t requested_maximum_privilege_level,
-                             uint8_t nameonly_lookup_flag,
+                             uint8_t name_only_lookup_flag,
                              uint8_t *username,
                              uint32_t username_len,
                              fiid_obj_t obj_cmd)
@@ -468,7 +468,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
       || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
-      || !IPMI_USERNAME_LOOKUP_VALID(nameonly_lookup_flag)
+      || !IPMI_USERNAME_LOOKUP_VALID(name_only_lookup_flag)
       || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
     {
       errno = EINVAL;
@@ -495,8 +495,8 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                 requested_maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, 
                 tmpl_rmcpplus_rakp_message_1, 
-                "nameonly_lookup", 
-                nameonly_lookup_flag);
+                "name_only_lookup", 
+                name_only_lookup_flag);
   FIID_OBJ_SET (obj_cmd, 
                 tmpl_rmcpplus_rakp_message_1, 
                 "username_length", 

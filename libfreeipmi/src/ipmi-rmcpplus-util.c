@@ -1352,3 +1352,48 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
 
   return (memcmp(integrity_digest, pkt + (pkt_len - compare_digest_len), compare_digest_len) ? 0 : 1);
 }
+
+int8_t
+check_rmcpplus_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t payload_type)
+{
+  uint64_t val;
+
+  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
+      || !obj_rmcpplus_hdr_session)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_rmcpplus_hdr_session,
+               tmpl_rmcpplus_hdr_session,
+               "payload_type",
+               &val);
+
+  return ((payload_type == val) ? 1 : 0);
+}
+
+int8_t
+check_rmcpplus_status_code(fiid_template_t tmpl_cmd,
+                           fiid_obj_t obj_cmd,
+                           uint8_t status_code)
+{
+  uint64_t val;
+
+  if (!tmpl_cmd
+      || fiid_obj_field_lookup(tmpl_cmd, "rmcpplus_status_code") != 1
+      || !obj_cmd
+      || !RMCPPLUS_STATUS_VALID(status_code))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_cmd,
+               tmpl_cmd,
+               "rmcpplus_status_code",
+               &val);
+
+  return ((status_code == val) ? 1 : 0);
+}
+                            

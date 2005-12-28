@@ -125,11 +125,11 @@
 #define IPMI_CONFIDENTIALITY_PAYLOAD_LEN                  0x08
 
 #define IPMI_USERNAME_PRIVILEGE_LOOKUP                    0x0
-#define IPMI_NAMEONLY_LOOKUP                              0x1
+#define IPMI_NAME_ONLY_LOOKUP                             0x1
 
 #define IPMI_USERNAME_LOOKUP_VALID(__username_lookup_flag) \
         (((__username_lookup_flag) == IPMI_USERNAME_PRIVILEGE_LOOKUP \
-         || (__username_lookup_flag) == IPMI_NAMEONLY_LOOKUP) ? 1 : 0)
+         || (__username_lookup_flag) == IPMI_NAME_ONLY_LOOKUP) ? 1 : 0)
 
 #define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN             16
 #define IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN             16
@@ -189,7 +189,7 @@ int8_t fill_rmcpplus_payload(uint8_t *confidentiality_header, uint32_t confident
 
 int8_t fill_rmcpplus_open_session (uint8_t message_tag, uint8_t requested_maximum_privilege_level, uint32_t remote_console_session_id, uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, fiid_obj_t obj_msg);
 
-int8_t fill_rmcpplus_rakp_message_1(uint8_t message_tag, uint32_t managed_system_session_id, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t requested_maximum_privilege_level, uint8_t nameonly_lookup_flag, uint8_t *username, uint32_t username_len, fiid_obj_t obj_msg);
+int8_t fill_rmcpplus_rakp_message_1(uint8_t message_tag, uint32_t managed_system_session_id, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t requested_maximum_privilege_level, uint8_t name_only_lookup_flag, uint8_t *username, uint32_t username_len, fiid_obj_t obj_msg);
 
 int8_t fill_rmcpplus_rakp_message_3(uint8_t message_tag, uint8_t rmcpplus_status_code, uint32_t managed_system_session_id, uint8_t *key_exchange_authentication_code, uint32_t key_exchange_authentication_code_len, fiid_obj_t obj_cmd);
 
