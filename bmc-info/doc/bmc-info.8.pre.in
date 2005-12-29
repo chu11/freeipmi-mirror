@@ -4,6 +4,7 @@ bmc-info \- manual page for bmc-info.  BMC Info @PACKAGE_VERSION@
 .SH DESCRIPTION
 Displays BMC Information.
 .SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common.man>
 .TP
 \fB\-u\fR, \fB\-\-usage\fR
 Usage message

@@ -1,3 +1,13 @@
+2005-12-29  Anand Babu  <ab@zresearch.com>
+
+	* bmc-info/doc/Makefile.am: Man pages are now pre-processed to
+	include common arguments file using cpp.
+	(man.N.pre.in --autoconf--> man.N.pre --cpp--> man.N).
+	
+	* bmc-info/doc/bmc-info.8.in: Replaced by bmc-info.8.pre.in
+
+	* configure.ac: produces bmc-info.8.pre.
+
 2005-12-28  A Balamurugan  <bala@zresearch.com>
 
 	* common/doc/argp-common.man: added new file.
