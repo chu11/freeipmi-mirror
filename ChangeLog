@@ -99,7 +99,8 @@
 	parameter inputs and adjust code appropriately.
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.c
-	(check_rmcpplus_rakp_message_2_key_exchange_authentication_code),
+	(check_rmcpplus_rakp_message_2_key_exchange_authentication_code,
+	check_rmcpplus_rakp_message_4_integrity_value),
 	libfreeipmi/src/ipmi-rmcpplus-interface.c
 	(_deconstruct_payload_special): Fix several bugs.
 	

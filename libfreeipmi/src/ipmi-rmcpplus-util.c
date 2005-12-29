@@ -1044,6 +1044,7 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
   int32_t digest_len;
   int32_t obj_field_start;
   uint64_t key_exchange_authentication_code_len;
+  int32_t compare_len;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !remote_console_random_number
@@ -1065,23 +1066,13 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
     return (1);
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      if (key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LEN)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
+      compare_len = IPMI_HMAC_SHA1_DIGEST_LEN;
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
-      if (key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LEN)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
+      compare_len = IPMI_HMAC_MD5_DIGEST_LEN;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
@@ -1090,14 +1081,17 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
       errno = EINVAL;
       return (-1);
     }
-
-  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_2, "key_exchange_authentication_code")) < 0));
   
   FIID_OBJ_GET(obj_msg,
                tmpl_rmcpplus_rakp_message_2,
                "key_exchange_authentication_code_len",
                &key_exchange_authentication_code_len);
+      
+  if (key_exchange_authentication_code_len < compare_len)
+    return (0);
 
+  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_2, "key_exchange_authentication_code")) < 0));
+  
   memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
   buf[buf_index] = (remote_console_session_id & 0x000000ff);
   buf_index++;
@@ -1147,10 +1141,7 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
     return (-1);
 
   if (key_exchange_authentication_code_len != digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (0);
 
   return (memcmp(digest, obj_msg + obj_field_start, digest_len) ? 0 : 1);
 }
@@ -1221,18 +1212,15 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
       return (-1);
     }
 
-  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_4, "integrity_check_value")) < 0));
-  
   FIID_OBJ_GET(obj_msg,
                tmpl_rmcpplus_rakp_message_4,
                "integrity_check_value_len",
                &integrity_check_value_len);
   
   if (integrity_check_value_len != compare_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (0);
+
+  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_4, "integrity_check_value")) < 0));  
 
   memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
   memcpy(buf + buf_index, remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN);
