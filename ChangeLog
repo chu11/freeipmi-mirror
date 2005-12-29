@@ -1,5 +1,18 @@
 2005-12-28  A Balamurugan  <bala@zresearch.com>
 
+	* fish/bmc-info.8.in, fish/scripts/bmc-info/Makefile.am,
+	fish/scripts/bmc-info/bmc-info.in: removed.
+
+	* bmc-info/Makefile.am, bmc-info/doc/Makefile.am,
+	bmc-info/doc/bmc-info.8.in, bmc-info/src/Makefile.am,
+	bmc-info/src/bmc-info-argp.c, bmc-info/src/bmc-info-argp.h,
+	bmc-info/src/bmc-info.c: now bmc-info is in C.
+
+	* Makefile.am, configure.ac, fish/Makefile.am,
+	fish/scripts/Makefile.am: updated.
+
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
 	* fish/extensions/bc-common.scm, fish/extensions/pef.scm,
 	fish/extensions/sel.scm, fish/extensions/sensors-common.scm: fixed
 	argument parsing bug.

@@ -1,6 +1,6 @@
 SUBDIRS = src extensions scripts
 
-dist_man_MANS = bmc-config.8 bmc-info.8 fish.8 ipmi-sel.8 ipmi-sensors.8 bmc-config.conf.5
+dist_man_MANS = bmc-config.8 fish.8 ipmi-sel.8 ipmi-sensors.8 bmc-config.conf.5
 
 CLEANFILES = 
 DISTCLEANFILES = .deps/*.P
