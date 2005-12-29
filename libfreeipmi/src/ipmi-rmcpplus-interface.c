@@ -1504,6 +1504,10 @@ _deconstruct_payload_special(uint8_t payload_type,
         return (0);
 
       ERR_EXIT (!((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0));
+      
+      if (ipmi_payload_len < obj_cmd_len)
+	obj_cmd_len = ipmi_payload_len;
+
       memcpy (obj_cmd, pkt + cmd_index, obj_cmd_len);
 
       return (0);
@@ -1542,6 +1546,9 @@ _deconstruct_payload_special(uint8_t payload_type,
         return (0);
 
       ERR_EXIT (!((obj_data_len = fiid_obj_field_end_bytes (tmpl_cmd, "managed_system_guid")) < 0));
+
+      if (ipmi_payload_len < obj_data_len)
+	obj_data_len = ipmi_payload_len;
 
       memcpy (obj_cmd, pkt, obj_data_len);
       cmd_index += obj_data_len;
@@ -1607,8 +1614,8 @@ _deconstruct_payload_special(uint8_t payload_type,
 
       ERR_EXIT (!((obj_data_len = fiid_obj_field_end_bytes (tmpl_cmd, "remote_console_session_id")) < 0));
 
-      if (obj_cmd_len < obj_data_len)
-        obj_data_len = obj_cmd_len;
+      if (ipmi_payload_len < obj_data_len)
+	obj_data_len = ipmi_payload_len;
 
       memcpy (obj_cmd, pkt, obj_data_len);
       cmd_index += obj_data_len;
