@@ -1,0 +1,42 @@
+.TP
+\fB\-\-no\-probing\fR
+Do not probe IPMI devices.
+.TP
+\fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
+Use this IPMIDRIVER instead of auto selection.
+Allowed values are KCS, SMIC, SSIF and LAN.
+.TP
+\fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
+Use this DRIVERADDR address instead of probed
+one.
+.HP
+\fB\-\-driver\-device\fR=\fIDEVICE\fR Use this DEVICE for IPMI driver.
+.TP
+\fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
+Connect to IPMIHOST.
+.TP
+\fB\-u\fR, \fB\-\-username\fR=\fIUSERNAME\fR
+Use USERNAME instead of NULL.  Maximum USERNAME
+length is 16.
+.TP
+\fB\-p\fR, \fB\-\-password\fR=\fIPASSWORD\fR
+Use PASSWORD instead of NULL.  Maximum PASSWORD
+length is 16.
+.TP
+\fB\-a\fR, \fB\-\-auth\-type\fR=\fIAUTHTYPE\fR
+Use AUTHTYPE instead of NONE.  Allowed values are
+NONE, MD2, MD5, PLAIN and OEM.
+.TP
+\fB\-l\fR, \fB\-\-priv\-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Use this PRIVILEGE\-LEVEL instead of USER.  Allowed
+values are CALLBACK, USER, OPERATOR, ADMIN and
+OEM.
+.TP
+\-?, \fB\-\-help\fR
+Give this help list
+.TP
+\fB\-\-usage\fR
+Give a short usage message
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print program version

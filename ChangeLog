@@ -1,5 +1,11 @@
 2005-12-28  A Balamurugan  <bala@zresearch.com>
 
+	* common/doc/argp-common.man: added new file.
+
+	* bmc-info/doc/Makefile.am: updated.
+
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
 	* fish/bmc-info.8.in, fish/scripts/bmc-info/Makefile.am,
 	fish/scripts/bmc-info/bmc-info.in: removed.
 
