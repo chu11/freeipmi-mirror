@@ -169,16 +169,22 @@ fiid_template_t tmpl_rmcpplus_rakp_message_3 =
     {0,   ""}
   };
 
+/* achu: The IPMI 2.0 Spec version 1.0 lists the 4th field as
+ * "management_console_session_id", * not "managed_system_session_id"
+ * or "remote_console_session_id".  I'm assuming this is a typo and
+ * that "remote_console_session_id" is what is really meant.
+ */
 fiid_template_t tmpl_rmcpplus_rakp_message_4 = 
   {
     {8,   "message_tag"},
     {8,   "rmcpplus_status_code"},
     {16,  "reserved1"},
-    {32,  "management_console_session_id"},
+    {32,  "remote_console_session_id"},
     {512, "integrity_check_value"}, /* up to 64 bytes */
     {32,  "integrity_check_value_len"}, /* XXX not in IPMI 2.0 spec */
     {0,   ""}
   };
+
 
 int8_t
 fill_rmcpplus_hdr_session (uint8_t payload_type, 

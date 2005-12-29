@@ -92,10 +92,17 @@
 ------------------------------------------------------------
 2005-12-28  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-rmcpplus.c (tmpl_rmcpplus_rakp_message_4):
+	Renamed field based on IPMI 2.0 specification typo belief.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_deconstruct_payload_special),
+	libfreeipmi/src/ipmi-rmcpplus-debug.c
+	(_dump_rmcpplus_payload_special): Rework based on typo fix belief.
+
 	* libfreeipmi/src/ipmi-rcmpplus-debug.c
 	(_dump_rmcpplus_payload_special, _dump_rmcpplus_payload,
-	check_rmcpplus_rakp_message_2_key_exchange_authentication_code):
-	Various bug fixes.
+	check_rmcpplus_rakp_message_2_key_exchange_authentication_code): Various bug fixes.
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.c
 	(check_rmcpplus_payload_type, check_rmcpplus_status_code): New

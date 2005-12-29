@@ -519,7 +519,7 @@ _dump_rmcpplus_payload_special(int fd,
 
       if (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
           || !fiid_obj_field_lookup (tmpl_cmd, "rmcpplus_status_code")
-          || !fiid_obj_field_lookup (tmpl_cmd, "management_console_session_id")
+          || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_session_id")
           || !fiid_obj_field_lookup (tmpl_cmd, "integrity_check_value")
           || !fiid_obj_field_lookup (tmpl_cmd, "integrity_check_value_len"))
         {
@@ -550,7 +550,7 @@ _dump_rmcpplus_payload_special(int fd,
                                         obj_payload) < 0)
         return (-1);
 
-      ERR_EXIT (!((obj_data_len = fiid_obj_field_end_bytes (tmpl_cmd, "managed_system_session_id")) < 0));
+      ERR_EXIT (!((obj_data_len = fiid_obj_field_end_bytes (tmpl_cmd, "remote_console_session_id")) < 0));
       
       if (obj_data_len > ipmi_payload_len)
         obj_data_len = ipmi_payload_len;
@@ -571,7 +571,7 @@ _dump_rmcpplus_payload_special(int fd,
       if (!(tmpl_rmcpplus_rakp_message_4_dump = fiid_template_make(8,   "message_tag",
                                                                    8,   "rmcpplus_status_code",
                                                                    16,  "reserved1",
-                                                                   128, "management_console_session_id",
+                                                                   32, "remote_console_session_id",
                                                                    (obj_field_len * 8), "integrity_check_value")))
         return (-1);
       
