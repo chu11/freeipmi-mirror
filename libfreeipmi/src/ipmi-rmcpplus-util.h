@@ -87,6 +87,11 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm, uint8_t *pkt, uin
 
 int8_t check_rmcpplus_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t payload_type);
 
+int8_t check_rmcpplus_message_tag(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint8_t message_tag);
+
+int8_t check_rmcpplus_remote_console_session_id(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint32_t remote_console_session_id);
+
+
 #ifdef __cplusplus
 }
 #endif

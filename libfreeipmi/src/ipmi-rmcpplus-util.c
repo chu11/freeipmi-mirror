@@ -1397,3 +1397,46 @@ check_rmcpplus_status_code(fiid_template_t tmpl_cmd,
   return ((status_code == val) ? 1 : 0);
 }
                             
+int8_t 
+check_rmcpplus_message_tag(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint8_t message_tag)
+{
+  uint64_t val;
+
+  if (!tmpl_rmcpplus_msg
+      || fiid_obj_field_lookup(tmpl_rmcpplus_msg, "message_tag") != 1
+      || !obj_msg)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_msg,
+               tmpl_rmcpplus_msg,
+               "message_tag",
+               &val);
+
+  return ((message_tag == val) ? 1 : 0);
+}
+
+int8_t 
+check_rmcpplus_remote_console_session_id(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint32_t remote_console_session_id)
+{
+  uint64_t val;
+
+  if (!tmpl_rmcpplus_msg
+      || fiid_obj_field_lookup(tmpl_rmcpplus_msg, "remote_console_session_id") != 1
+      || !obj_msg)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_msg,
+               tmpl_rmcpplus_msg,
+               "remote_console_session_id",
+               &val);
+
+  return ((remote_console_session_id == val) ? 1 : 0);
+}
+
+

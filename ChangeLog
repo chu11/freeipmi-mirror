@@ -105,8 +105,9 @@
 	check_rmcpplus_rakp_message_2_key_exchange_authentication_code): Various bug fixes.
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.c
-	(check_rmcpplus_payload_type, check_rmcpplus_status_code): New
-	functions.
+	(check_rmcpplus_payload_type, check_rmcpplus_status_code,
+	check_rmcpplus_message_tag,
+	check_rmcpplus_remote_console_session_id): New functions.
 
 	* Minor cosmetic changes for consistency through code.
 	
