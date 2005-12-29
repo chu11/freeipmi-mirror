@@ -1034,8 +1034,7 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
                                                                uint8_t requested_maximum_privilege_level,
                                                                uint8_t *username,
                                                                uint8_t username_length,
-                                                               uint8_t *key_exchange_authentication_code,
-                                                               uint32_t key_exchange_authentication_code_len)
+                                                               fiid_obj_t obj_msg)
 {
   uint8_t priv_byte = 0;
   uint8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
@@ -1043,6 +1042,8 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
   uint8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len;
+  int32_t obj_field_start;
+  uint64_t key_exchange_authentication_code_len;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !remote_console_random_number
@@ -1054,8 +1055,7 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
       || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
       || (username && username_length > IPMI_USER_NAME_MAX_LENGTH)
       || (!username && username_length)
-      || !key_exchange_authentication_code
-      || !key_exchange_authentication_code_len)
+      || !obj_msg)
     {
       errno = EINVAL;
       return -1;
@@ -1090,6 +1090,13 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
       errno = EINVAL;
       return (-1);
     }
+
+  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_2, "key_exchange_authentication_code")) < 0));
+  
+  FIID_OBJ_GET(obj_msg,
+               tmpl_rmcpplus_rakp_message_2,
+               "key_exchange_authentication_code_len",
+               &key_exchange_authentication_code_len);
 
   memset(buf, '\0', IPMI_MAX_PAYLOAD_LEN);
   buf[buf_index] = (remote_console_session_id & 0x000000ff);
@@ -1139,13 +1146,13 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
                                     IPMI_MAX_PAYLOAD_LEN)) < 0)
     return (-1);
 
-  if (key_exchange_authentication_code_len < digest_len)
+  if (key_exchange_authentication_code_len != digest_len)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  return (memcmp(digest, key_exchange_authentication_code, digest_len) ? 0 : 1);
+  return (memcmp(digest, obj_msg + obj_field_start, digest_len) ? 0 : 1);
 }
 
 int8_t 
@@ -1157,8 +1164,7 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
                                                     uint32_t managed_system_session_id,
                                                     uint8_t *managed_system_guid,
                                                     uint32_t managed_system_guid_len,
-                                                    uint8_t *integrity_check_value,
-                                                    uint32_t integrity_check_value_len)
+                                                    fiid_obj_t obj_msg)
 {
   uint8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
   uint32_t buf_index = 0;
@@ -1166,6 +1172,8 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len;
   int32_t compare_len;
+  int32_t obj_field_start;
+  uint64_t integrity_check_value_len;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !sik_key
@@ -1174,8 +1182,7 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
       || !managed_system_guid
       || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LEN
-      || !integrity_check_value
-      || integrity_check_value_len < IPMI_HMAC_SHA1_96_AUTHCODE_LEN)
+      || !obj_msg)
     {
       errno = EINVAL;
       return -1;
@@ -1193,7 +1200,6 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
 
       /* achu: For some reason they want SHA1_96 for this check, sigh */
       compare_len = IPMI_HMAC_SHA1_96_AUTHCODE_LEN;
-
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
@@ -1206,11 +1212,23 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
         }
 
       compare_len = IPMI_HMAC_MD5_DIGEST_LEN;
-
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
   else
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  ERR_EXIT(!((obj_field_start = fiid_obj_field_start_bytes (tmpl_rmcpplus_rakp_message_4, "integrity_check_value")) < 0));
+  
+  FIID_OBJ_GET(obj_msg,
+               tmpl_rmcpplus_rakp_message_4,
+               "integrity_check_value_len",
+               &integrity_check_value_len);
+  
+  if (integrity_check_value_len != compare_len)
     {
       errno = EINVAL;
       return (-1);
@@ -1247,7 +1265,7 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
       return (-1);
     }
 
-  return (memcmp(digest, integrity_check_value, compare_len) ? 0 : 1);
+  return (memcmp(digest, obj_msg + obj_field_start, compare_len) ? 0 : 1);
 }
 
 int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
@@ -1438,5 +1456,3 @@ check_rmcpplus_remote_console_session_id(fiid_template_t tmpl_rmcpplus_msg, fiid
 
   return ((remote_console_session_id == val) ? 1 : 0);
 }
-
-
