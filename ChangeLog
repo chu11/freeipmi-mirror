@@ -95,14 +95,17 @@
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
 	libfreeipmi/src/ipmi-rmcpplus-util.c
 	(check_rmcpplus_rakp_message_2_key_exchange_authentication_code,
-	check_rmcpplus_rakp_message_4_integrity_check_value): Alter
-	parameter inputs and adjust code appropriately.
+	check_rmcpplus_rakp_message_4_integrity_check_value,
+	check_rmcpplus_session_trlr): Alter parameter inputs and adjust
+	code appropriately.
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.c
 	(check_rmcpplus_rakp_message_2_key_exchange_authentication_code,
-	check_rmcpplus_rakp_message_4_integrity_value),
+	check_rmcpplus_rakp_message_4_integrity_value, ),
 	libfreeipmi/src/ipmi-rmcpplus-interface.c
-	(_deconstruct_payload_special): Fix several bugs.
+	(_deconstruct_payload_special, unassemble_ipmi_rmcpplus_pkt),
+	libfreeipmi/src/ipmi-rmcpplus.c (fill_rmcpplus_rakp_message_1):
+	Fix several bugs.
 	
 2005-12-28  Albert Chu <chu11@llnl.gov>
 

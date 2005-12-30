@@ -507,11 +507,12 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                 tmpl_rmcpplus_rakp_message_1, 
                 "username_length", 
                 username_len);
-  FIID_OBJ_SET_DATA (obj_cmd,
-                     tmpl_rmcpplus_rakp_message_1, 
-                     "username",
-                     username,
-                     username_len);
+  if (username)
+    FIID_OBJ_SET_DATA (obj_cmd,
+		       tmpl_rmcpplus_rakp_message_1, 
+		       "username",
+		       username,
+		       username_len);
   
   return (0);
 }

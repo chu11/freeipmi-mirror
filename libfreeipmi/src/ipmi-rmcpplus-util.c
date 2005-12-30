@@ -1256,32 +1256,41 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
   return (memcmp(digest, obj_msg + obj_field_start, compare_len) ? 0 : 1);
 }
 
-int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
-                                   uint8_t *pkt,
-                                   uint32_t pkt_len,
-                                   uint8_t *integrity_key,
-                                   uint32_t integrity_key_len,
-                                   uint8_t *auth_code_data,
-                                   uint32_t auth_code_data_len)
+int8_t 
+check_rmcpplus_session_trlr(int8_t integrity_algorithm,
+                            uint8_t *pkt,
+                            uint32_t pkt_len,
+                            uint8_t *integrity_key,
+                            uint32_t integrity_key_len,
+                            uint8_t *auth_code_data,
+                            uint32_t auth_code_data_len,
+                            fiid_template_t tmpl_trlr_session,
+                            fiid_obj_t obj_rmcpplus_trlr_session)
 {
   int32_t rmcp_header_len;
   int hash_algorithm, hash_flags, crypt_digest_len;
   unsigned int expected_digest_len, compare_digest_len, hash_data_len, integrity_digest_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LEN];
   uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LEN];
-
+  int32_t obj_field_start;
+  uint64_t auth_len;
+  char *auth_field, *auth_field_len;
+  
   if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
       || !pkt
-      || !pkt_len)
+      || !pkt_len
+      || !tmpl_trlr_session
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "integrity_pad")
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "pad_length")
+      || !fiid_obj_field_lookup (tmpl_trlr_session, "next_header")
+      || !obj_rmcpplus_trlr_session)
     {
       errno = EINVAL;
       return (-1);
     }
-
+  
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
     return (1);
-
-  ERR_EXIT (!((rmcp_header_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
     {
@@ -1305,10 +1314,41 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
       compare_digest_len = IPMI_MD5_128_AUTHCODE_LEN;
     }
 
+  if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
+    {
+      auth_field = "auth_code";
+      auth_field_len = "auth_code_len";
+    }
+  else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc_data"))
+    {
+      auth_field = "auth_calc_data";
+      auth_field_len = "auth_calc_data_len";
+    }
+  else
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
   if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
     return (-1);
-  
+     
   ERR_EXIT (crypt_digest_len == expected_digest_len);
+  
+  ERR_EXIT (!((rmcp_header_len = fiid_obj_len_bytes(tmpl_hdr_rmcp)) < 0));
+
+  ERR_EXIT (!((obj_field_start = fiid_obj_field_start_bytes(tmpl_trlr_session, auth_field)) < 0));
+
+  FIID_OBJ_GET (obj_rmcpplus_trlr_session,
+                tmpl_trlr_session,
+                auth_field_len,
+                &auth_len);
+
+  if (!auth_len)
+    return (1);
+
+  if (auth_len != compare_digest_len)
+    return (0);
 
   /* Packet is too short, packet must be bogus :-) */
   if (pkt_len <= (rmcp_header_len + compare_digest_len))
@@ -1356,7 +1396,7 @@ int8_t check_rmcpplus_session_trlr(int8_t integrity_algorithm,
       return (-1);
     }
 
-  return (memcmp(integrity_digest, pkt + (pkt_len - compare_digest_len), compare_digest_len) ? 0 : 1);
+  return (memcmp(integrity_digest, obj_rmcpplus_trlr_session + obj_field_start, compare_digest_len) ? 0 : 1);
 }
 
 int8_t

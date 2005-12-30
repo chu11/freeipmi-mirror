@@ -2166,18 +2166,23 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           errno = EINVAL;
           return (-1);
         }
-
+      
       if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_code"))
         {
           auth_field = "auth_code";
           auth_field_len = "auth_code_len";
         }
-      else
+      else if (fiid_obj_field_lookup (tmpl_trlr_session, "auth_calc_data"))
         {
           auth_field = "auth_calc_data";
           auth_field_len = "auth_calc_data_len";
         }
-
+      else
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+      
       if (authcode_len)
         {
           if (fiid_obj_set_data(obj_rmcpplus_trlr_session,
@@ -2234,6 +2239,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             pad_length) < 0)
         return (-1);
     }
+  else if (obj_rmcpplus_trlr_session)
+    FIID_OBJ_MEMSET(obj_rmcpplus_trlr_session, '\0', tmpl_trlr_session);
 
   return (0);
 }
