@@ -4,6 +4,8 @@
 
 	* ipmi-raw/doc/ipmi-raw.8.pre.in: removed comment line that
 	conflicted with some versions of cpp.
+
+	* Tagged Release-0_2_0-beta0
 	
 2005-12-30  A Balamurugan  <bala@zresearch.com>
 
