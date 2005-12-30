@@ -4,15 +4,7 @@ ipmi-sel \- manual page for ipmi-sel.  IPMI System Event Logger version @PACKAGE
 .SH DESCRIPTION
 IPMI System Event Logger is used to view and delete SEL entries.
 .SH OPTIONS
-.TP
-\fB\-u\fR, \fB\-\-usage\fR
-Usage message
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Show help
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Show version
+#include <@top_srcdir@/common/doc/argp-common.man>
 .TP
 \fB\-i\fR, \fB\-\-info\fR
 Show SEL info

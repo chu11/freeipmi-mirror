@@ -1,4 +1,4 @@
-MANS_CPP=bmc-info.8
+MANS_CPP=ipmi-raw.8
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	cpp -P -I. -x c $@.pre -o $@
 

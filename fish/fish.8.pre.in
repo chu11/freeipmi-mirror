@@ -7,30 +7,11 @@ GNU FreeIPMI \- manual page for FreeIPMI Shell [fish-@PACKAGE_VERSION@]
 .SH DESCRIPTION
 Free IPMI SHell - an extensible console based shell for managing large number
 of IPMI compatible systems.
-.TP
-\fB\-\-brief\fR
-Shorten output
-.TP
-\fB\-q\fR, \fB\-\-quiet\fR, \fB\-\-silent\fR
-Inhibit usual output
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common.man>
 .TP
 \fB\-s\fR, \fB\-\-script\-file\fR=\fISCRIPT\-FILE\fR
 Load and execute given SCRIPT-FILE
-.TP
-\fB\-v\fR, \fB\-\-verbose\fR
-Print more information
-.TP
--?, \fB\-\-help\fR
-Give this help list
-.TP
-\fB\-\-usage\fR
-Give a short usage message
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Print program version
-.PP
-Mandatory or optional arguments to long options are also mandatory or optional
-for any corresponding short options.
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

@@ -1,3 +1,23 @@
+2005-12-30  A Balamurugan  <bala@zresearch.com>
+
+	* fish/bmc-config.8.pre.in: fish/bmc-config.8.in is renamed and
+	updated.
+
+	* fish/fish.8.pre.in: fish/fish.8.in is renamed and updated.
+
+	* fish/ipmi-sel.8.pre.in: fish/ipmi-sel.8.in is renamed and
+	updated.
+
+	* fish/ipmi-sensors.8.pre.in: fish/ipmi-sensors.8.in is renamed
+	and updated.
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: ipmi-raw/ipmi-raw.8 is renamed
+	and moved and updated.
+
+	* configure.ac, bmc-info/doc/Makefile.am,
+	bmc-info/doc/bmc-info.8.pre.in, fish/Makefile.am,
+	ipmi-raw/Makefile.am: updated.
+
 2005-12-29  Anand Babu  <ab@zresearch.com>
 
 	* bmc-info/doc/Makefile.am: Man pages are now pre-processed to

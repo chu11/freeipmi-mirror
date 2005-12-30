@@ -4,15 +4,7 @@ bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAG
 .SH DESCRIPTION
 IPMI BMC Configurator is used to get and set BMC configurations
 .SH OPTIONS
-.TP
-\fB\-u\fR, \fB\-\-usage\fR
-Usage message
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Show help
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Show version
+#include <@top_srcdir@/common/doc/argp-common.man>
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from BMC.

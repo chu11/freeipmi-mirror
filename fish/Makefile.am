@@ -1,9 +1,14 @@
 SUBDIRS = src extensions scripts
 
-dist_man_MANS = bmc-config.8 fish.8 ipmi-sel.8 ipmi-sensors.8 bmc-config.conf.5
+MANS_CPP = bmc-config.8 fish.8 ipmi-sel.8 ipmi-sensors.8
 
-CLEANFILES = 
-DISTCLEANFILES = .deps/*.P
+$(MANS_CPP): $(MANS_CPP:%=%.pre)
+	cpp -P -I. -x c $@.pre -o $@
+
+dist_man_MANS = $(MANS_CPP) bmc-config.conf.5
+
+CLEANFILES = $(MANS_CPP)
+DISTCLEANFILES = $(MANS_CPP) $(MANS_CPP:%=%.pre) .deps/*.P
 
 #  if you write a self-test script named `chk', uncomment the
 #  following and add `chk' to the EXTRA_DIST list

@@ -4,15 +4,7 @@ ipmi-sensors \- manual page for sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION
 IPMI Sensors displays current readings of sensors chips through BMC
 .SH OPTIONS
-.TP
-\fB\-u\fR, \fB\-\-usage\fR
-Usage message
-.TP
-\fB\-h\fR, \fB\-\-help\fR
-Show help
-.TP
-\fB\-V\fR, \fB\-\-version\fR
-Show version
+#include <@top_srcdir@/common/doc/argp-common.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Verbose sensor output
@@ -29,11 +21,8 @@ Show SDR Info
 \fB\-f\fR, \fB\-\-flush\-cache\fR
 Flush sensor cache
 .TP
-\fB\-l\fR, \fB\-\-list\-groups\fR
+\fB\-L\fR, \fB\-\-list\-groups\fR
 List sensor groups
-.TP
-\fB\-p\fR, \fB\-\-prof\fR
-Profile sensor
 .TP
 \fB\-g\fR GROUP-NAME, \fB\-\-group\fR=\fIGROUP\-NAME\fR
 List sensors from group
