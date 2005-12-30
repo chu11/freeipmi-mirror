@@ -1,3 +1,10 @@
+2005-12-30  Anand Babu  <ab@zresearch.com>
+
+	* common: Added proper makefiles for this tree.
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: removed comment line that
+	conflicted with some versions of cpp.
+	
 2005-12-30  A Balamurugan  <bala@zresearch.com>
 
 	* fish/bmc-config.8.pre.in: fish/bmc-config.8.in is renamed and
