@@ -104,8 +104,8 @@ struct ipmi_device
 {
   ipmi_driver_type_t type;
   ipmi_mode_t        mode;
-  uint8_t            net_fn;
   uint8_t            lun;
+  uint8_t            net_fn;
   union 
   {
     struct 
@@ -193,6 +193,8 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 uint8_t priv_level);
 int ipmi_close (ipmi_device_t *dev);
 int ipmi_cmd (ipmi_device_t *dev, 
+	      uint8_t lun, 
+	      uint8_t net_fn, 
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_template_t tmpl_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs, 

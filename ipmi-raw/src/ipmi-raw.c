@@ -128,6 +128,7 @@ main (int argc, char **argv)
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
       
+      memset (&dev, 0, sizeof (ipmi_device_t));
       if (ipmi_open_outofband (&dev, 
 			       IPMI_DEVICE_LAN, 
 			       IPMI_MODE_DEFAULT, 
@@ -144,6 +145,7 @@ main (int argc, char **argv)
     }
   else 
     {
+      memset (&dev, 0, sizeof (ipmi_device_t));
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
 	  if (ipmi_open_inband (&dev, 

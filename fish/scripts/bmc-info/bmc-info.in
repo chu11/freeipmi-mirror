@@ -1,8 +1,0 @@
-#! @prefix@/sbin/fish -s
-!#
-
-(let ((cmd-args (bmc-info-argp (fi-command-line))))
-  (if (list? cmd-args)
-      (bmc-info-main cmd-args)))
-(fi-exit bmc-info-exit-status)
-

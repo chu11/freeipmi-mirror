@@ -560,6 +560,109 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2005-01-03  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Updated with appropriate new files.
+
+	* doc/freeipmi-faq.texi: Fixed some typos, added a little more
+	info.
+	
+2006-01-02  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi-faq.texi: FAQ by Albert Chu <chu11@llnl.gov>.
+
+2005-12-30  Anand Babu  <ab@zresearch.com>
+
+	* common: Added proper makefiles for this tree.
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: removed comment line that
+	conflicted with some versions of cpp.
+
+	* Tagged Release-0_2_0-beta0
+	
+2005-12-30  A Balamurugan  <bala@zresearch.com>
+
+	* fish/bmc-config.8.pre.in: fish/bmc-config.8.in is renamed and
+	updated.
+
+	* fish/fish.8.pre.in: fish/fish.8.in is renamed and updated.
+
+	* fish/ipmi-sel.8.pre.in: fish/ipmi-sel.8.in is renamed and
+	updated.
+
+	* fish/ipmi-sensors.8.pre.in: fish/ipmi-sensors.8.in is renamed
+	and updated.
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: ipmi-raw/ipmi-raw.8 is renamed
+	and moved and updated.
+
+	* configure.ac, bmc-info/doc/Makefile.am,
+	bmc-info/doc/bmc-info.8.pre.in, fish/Makefile.am,
+	ipmi-raw/Makefile.am: updated.
+
+2005-12-29  Anand Babu  <ab@zresearch.com>
+
+	* bmc-info/doc/Makefile.am: Man pages are now pre-processed to
+	include common arguments file using cpp.
+	(man.N.pre.in --autoconf--> man.N.pre --cpp--> man.N).
+	
+	* bmc-info/doc/bmc-info.8.in: Replaced by bmc-info.8.pre.in
+
+	* configure.ac: produces bmc-info.8.pre.
+
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
+	* common/doc/argp-common.man: added new file.
+
+	* bmc-info/doc/Makefile.am: updated.
+
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
+	* fish/bmc-info.8.in, fish/scripts/bmc-info/Makefile.am,
+	fish/scripts/bmc-info/bmc-info.in: removed.
+
+	* bmc-info/Makefile.am, bmc-info/doc/Makefile.am,
+	bmc-info/doc/bmc-info.8.in, bmc-info/src/Makefile.am,
+	bmc-info/src/bmc-info-argp.c, bmc-info/src/bmc-info-argp.h,
+	bmc-info/src/bmc-info.c: now bmc-info is in C.
+
+	* Makefile.am, configure.ac, fish/Makefile.am,
+	fish/scripts/Makefile.am: updated.
+
+2005-12-28  A Balamurugan  <bala@zresearch.com>
+
+	* fish/extensions/bc-common.scm, fish/extensions/pef.scm,
+	fish/extensions/sel.scm, fish/extensions/sensors-common.scm: fixed
+	argument parsing bug.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd): accepts lun, net_fn
+	as arguments.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: adopts changes in ipmi_cmd().
+
+2005-12-27  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/ipmi-wrapper.c (fi_ipmi_open): initialize dev before
+	calling udm open functions.
+
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_io_init): like
+	wise.
+
+	* libfreeipmi/src/ipmi-interface.c
+	(ipmi_open_outofband,ipmi_open_inband): no memset of dev
+	arguments.
+
 2005-12-27  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/freeipmi.h (ERR, ERR_OUT, ERR_EXIT): Revert

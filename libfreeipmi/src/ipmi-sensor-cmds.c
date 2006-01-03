@@ -831,9 +831,9 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_threshold_reading_rq);
   ERR (fill_kcs_get_threshold_reading (obj_cmd_rq, 
 				       sensor_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sensor_threshold_reading_rq, 
 		 obj_cmd_rs, 
@@ -856,9 +856,9 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_discrete_reading_rq);
   ERR (fill_kcs_get_discrete_reading (obj_cmd_rq, 
 				      sensor_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sensor_discrete_reading_rq, 
 		 obj_cmd_rs, 
@@ -881,9 +881,9 @@ ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev,
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
   ERR (fill_kcs_get_sensor_thresholds (obj_cmd_rq, 
 				       sensor_number) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_SENSOR_EVENT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sensor_thresholds_rq, 
 		 obj_cmd_rs, 

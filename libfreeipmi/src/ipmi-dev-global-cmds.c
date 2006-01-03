@@ -122,9 +122,9 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_dev_id_rq);
   ERR (fill_cmd_get_dev_id (obj_cmd_rq) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_APP_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_APP_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_cmd_get_dev_id_rq, 
 		 obj_cmd_rs, 

@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.27.2.5 2005-12-20 19:04:59 chu11 Exp $])
+AC_INIT([freeipmi],[0.2.0-beta0],[freeipmi-devel@gnu.org])
+AC_REVISION([$Id: configure.ac,v 1.27.2.6 2006-01-03 19:06:17 chu11 Exp $])
 AM_INIT_AUTOMAKE
 
 dnl We require a modern autoconf.
@@ -14,21 +14,24 @@ AM_CONFIG_HEADER([config.h])
 
 dnl define output files
 AC_CONFIG_FILES([
-        Makefile doc/Makefile doc/examples/Makefile fish/Makefile 
-	fish/bmc-config.8 fish/bmc-info.8 fish/fish.8 fish/ipmi-sel.8
-	fish/ipmi-sensors.8 fish/bmc-config.conf.5 
+        Makefile doc/Makefile doc/examples/Makefile 
+	common/Makefile common/doc/Makefile common/src/Makefile
+	fish/Makefile fish/bmc-config.8.pre fish/fish.8.pre fish/ipmi-sel.8.pre
+	fish/ipmi-sensors.8.pre fish/bmc-config.conf.5 
 	fish/src/Makefile fish/extensions/Makefile fish/scripts/Makefile
 	fish/scripts/sensors/Makefile fish/scripts/sensors/ipmi-sensors
 	fish/scripts/bmc-config/Makefile fish/scripts/bmc-config/bmc-config 
 	fish/scripts/bmc-autoconfig/Makefile
 	fish/scripts/sel/Makefile fish/scripts/sel/ipmi-sel 
-	fish/scripts/bmc-info/Makefile fish/scripts/bmc-info/bmc-info 
 	fish/scripts/pef/Makefile fish/scripts/pef/ipmi-pef 
         libfreeipmi/Makefile libfreeipmi/src/Makefile
         bmc-watchdog/Makefile bmc-watchdog/src/Makefile
         ipmipower/Makefile ipmipower/src/Makefile
-        ipmi-raw/Makefile ipmi-raw/src/Makefile
+        ipmi-raw/Makefile ipmi-raw/src/Makefile 
+	ipmi-raw/doc/Makefile ipmi-raw/doc/ipmi-raw.8.pre
         ipmi-locate/Makefile ipmi-locate/src/Makefile
+        bmc-info/Makefile bmc-info/src/Makefile
+	bmc-info/doc/Makefile bmc-info/doc/bmc-info.8.pre
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
 	garpd/Makefile garpd/src/Makefile garpd/garpd.8

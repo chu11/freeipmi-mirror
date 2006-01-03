@@ -220,9 +220,9 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
   ERR (fill_sol_conf_sol_enable_disable (obj_cmd_rq, 
 					 channel_number, 
 					 sol_payload) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_set_sol_conf_param_sol_enable_rq, 
 		 obj_cmd_rs, 
@@ -274,9 +274,9 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
 				parameter_type, 
 				set_selector, 
 				block_selector) == 0);
-  dev->lun = IPMI_BMC_IPMB_LUN_BMC;
-  dev->net_fn = IPMI_NET_FN_TRANSPORT_RQ;
   ERR (ipmi_cmd (dev, 
+		 IPMI_BMC_IPMB_LUN_BMC, 
+		 IPMI_NET_FN_TRANSPORT_RQ, 
 		 obj_cmd_rq, 
 		 tmpl_get_sol_conf_param_rq, 
 		 obj_cmd_rs, 

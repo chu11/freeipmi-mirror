@@ -1,6 +1,3 @@
-SUBDIRS = src
-
-dist_man_MANS = ipmi-raw.8
-
+SUBDIRS = src doc
 CLEANFILES = *~
 DISTCLEANFILES = .deps/*.P
