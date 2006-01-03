@@ -1167,8 +1167,6 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
   uint64_t integrity_check_value_len;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-      || !sik_key
-      || !sik_key_len
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN
       || !managed_system_guid
@@ -1183,7 +1181,7 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
     return (1);
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      if (sik_key_len < IPMI_HMAC_SHA1_DIGEST_LEN)
+      if (!sik_key || sik_key_len < IPMI_HMAC_SHA1_DIGEST_LEN)
         {
           errno = EINVAL;
           return (-1);
@@ -1196,7 +1194,7 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
     }
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
-      if (sik_key_len < IPMI_HMAC_MD5_DIGEST_LEN)
+      if (!sik_key || sik_key_len < IPMI_HMAC_MD5_DIGEST_LEN)
         {
           errno = EINVAL;
           return (-1);

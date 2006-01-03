@@ -90,6 +90,11 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2006-01-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c
+	(check_rmcpplus_rakp_message_4_integrity_check_value): Fixed bug.
+	
 2005-12-29  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
