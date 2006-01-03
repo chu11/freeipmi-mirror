@@ -1,3 +1,8 @@
+2006-01-03  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw_send,
+	ipmi_lan_cmd_raw2): fixed bugs.
+
 2006-01-03  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated with appropriate new files.

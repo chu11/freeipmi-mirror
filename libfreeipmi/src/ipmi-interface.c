@@ -437,7 +437,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	      uint8_t *out, 
 	      size_t *out_len)
 {
-  if (dev == NULL)
+  if (dev == NULL || in_len < 2)
     {
       errno = EINVAL;
       return (-1);
@@ -447,7 +447,6 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     {
     case IPMI_DEVICE_LAN:
       return ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
-	break;
     case IPMI_DEVICE_KCS:
       return ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
     case IPMI_DEVICE_SSIF:

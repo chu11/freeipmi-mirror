@@ -1543,15 +1543,6 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rq, 
 		       fiid_template_t tmpl_cmd_rq)
 {
-  if (!(dev && 
-	dev->io.outofband.local_sockfd && 
-	tmpl_cmd_rq && 
-	obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
   memset (dev->io.outofband.rq.obj_hdr_rmcp, 
 	  0, 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
@@ -1626,21 +1617,43 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 	buf_rq && 
 	buf_rq_len && 
 	buf_rs && 
-	buf_rs_len))
+	buf_rs_len && 
+	*buf_rs_len))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  buf_rs_len = 0;
+  *buf_rs_len = 0;
   
   {
+    uint64_t val = 0;
+    
+    fiid_template_t tmpl_hdr_cmd = 
+      {
+	{2, "lun"},
+	{6, "net_fn"},
+	{0, ""}
+      };
+    
+    FIID_OBJ_GET ((fiid_obj_t) buf_rq, tmpl_hdr_cmd, "lun", &val);
+    dev->lun = val;
+    FIID_OBJ_GET ((fiid_obj_t) buf_rq, tmpl_hdr_cmd, "net_fn", &val);
+    dev->net_fn = val;
+  }
+  
+  {
+    fiid_obj_t obj_cmd_rq = NULL;
+    size_t obj_cmd_rq_len = 0;
     fiid_field_t *tmpl_var_cmd_rq = NULL;
     int8_t retval = 0;
     
-    tmpl_var_cmd_rq = fiid_template_make (buf_rq_len, "COMMAND_RQ_DATA");
+    obj_cmd_rq = (fiid_obj_t) (buf_rq + 1);
+    obj_cmd_rq_len = buf_rq_len - 1;
+    
+    tmpl_var_cmd_rq = fiid_template_make ((obj_cmd_rq_len * 8), "COMMAND_RQ_DATA");
     retval = ipmi_lan_cmd_raw_send (dev, 
-				    (fiid_obj_t) buf_rq, 
+				    obj_cmd_rq, 
 				    tmpl_var_cmd_rq);
     free (tmpl_var_cmd_rq);
     
@@ -1648,6 +1661,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
   }
   
   {
+    fiid_obj_t obj_cmd_rs = NULL;
+    size_t obj_cmd_rs_len = 0; 
     fiid_field_t *tmpl_var_cmd_rs = NULL;
     
     struct sockaddr_in from;
@@ -1665,7 +1680,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
        fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
        fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
     
-    tmpl_var_cmd_rs = fiid_template_make ((pkt_hdrs_size - 1024 - 1), 
+    tmpl_var_cmd_rs = fiid_template_make (((1024 - pkt_hdrs_size - 1) * 8), 
 					  "COMMAND_RS_DATA");
     pkt_len = _ipmi_lan_pkt_rs_size2 (dev, tmpl_var_cmd_rs);
     free (tmpl_var_cmd_rs);
@@ -1680,15 +1695,16 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 					0, 
 					(struct sockaddr *) &from, 
 					&fromlen);
-    ERR (bytes_received <= pkt_hdrs_size);
+    ERR (bytes_received >= pkt_hdrs_size);
     
-    *buf_rs_len = (bytes_received - pkt_hdrs_size);
-    tmpl_var_cmd_rs = fiid_template_make (buf_rs_len, "COMMAND_RS_DATA");
+    obj_cmd_rs_len = (bytes_received - pkt_hdrs_size);
+    tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), "COMMAND_RS_DATA");
+    obj_cmd_rs = (fiid_obj_t) (buf_rs + 1);
     
     if (unassemble_ipmi_lan_pkt2 (dev, 
 				  pkt, 
-				  pkt_len, 
-				  (fiid_obj_t) buf_rs, 
+				  bytes_received, 
+				  obj_cmd_rs, 
 				  tmpl_var_cmd_rs) == -1)
       {
 	free (tmpl_var_cmd_rs);
@@ -1696,7 +1712,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       }
     
     if (ipmi_lan_validate_checksum (dev, 
-				    (fiid_obj_t) buf_rs, 
+				    obj_cmd_rs, 
 				    tmpl_var_cmd_rs) != 0)
       {
 	free (tmpl_var_cmd_rs);
@@ -1704,6 +1720,29 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       }
     
     free (tmpl_var_cmd_rs);
+    
+    {
+      uint64_t val = 0;
+      
+      fiid_template_t tmpl_hdr_cmd = 
+	{
+	  {2, "lun"},
+	  {6, "net_fn"},
+	  {0, ""}
+	};
+      
+      FIID_OBJ_GET (dev->io.outofband.rs.obj_msg_hdr, 
+		    *(dev->io.outofband.rs.tmpl_msg_hdr_ptr), 
+		    "rq_lun", &val);
+      FIID_OBJ_SET ((fiid_obj_t) buf_rs, tmpl_hdr_cmd, "lun", val);
+      
+      FIID_OBJ_GET (dev->io.outofband.rs.obj_msg_hdr, 
+		    *(dev->io.outofband.rs.tmpl_msg_hdr_ptr), 
+		    "net_fn", &val);
+      FIID_OBJ_SET ((fiid_obj_t) buf_rs, tmpl_hdr_cmd, "net_fn", val);
+      
+      *buf_rs_len = obj_cmd_rs_len + 1;
+    }
   }
   
   return (0);
