@@ -1,0 +1,3 @@
+SUBDIRS = src doc
+CLEANFILES = *~
+DISTCLEANFILES = .deps/*.P

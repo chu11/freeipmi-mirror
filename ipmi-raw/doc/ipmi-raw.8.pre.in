@@ -1,0 +1,28 @@
+.TH FREEIPMI "1" "December 2005" "FreeIPMI Raw [ipmi-raw-0.2.0]" "User Commands"
+.SH NAME
+FreeIPMI \- manual page for FreeIPMI Raw [ipmi-raw-0.2.0]
+.SH SYNOPSIS
+.B ipmi-raw
+[\fIOPTION\fR...]
+.SH DESCRIPTION
+IPMI Raw \- executes IPMI commands by hex values.
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common.man>
+.SH "REPORTING BUGS"
+Report bugs to <freeipmi\-devel@gnu.org>.
+.SH COPYRIGHT
+Copyright \(co 2003-2005 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+The full documentation for
+.B FreeIPMI
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B FreeIPMI
+programs are properly installed at your site, the command
+.IP
+.B info FreeIPMI
+.PP
+should give you access to the complete manual.

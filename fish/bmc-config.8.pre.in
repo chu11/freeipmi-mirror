@@ -1,0 +1,69 @@
+.TH BMC-CONFIG 8 "@ISODATE@" "bmc-config @PACKAGE_VERSION@" "System Commands"
+.SH NAME
+bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAGE_VERSION@
+.SH DESCRIPTION
+IPMI BMC Configurator is used to get and set BMC configurations
+.SH OPTIONS
+#include <@top_srcdir@/common/doc/argp-common.man>
+.TP
+\fB\-o\fR, \fB\-\-checkout\fR
+Fetch configuration information from BMC.
+.TP
+\fB\-i\fR, \fB\-\-commit\fR
+Update configuration information to BMC
+.TP
+\fB\-d\fR, \fB\-\-diff\fR
+Show differences between BMC and config file or key pairs.
+.TP
+\fB\-f\fR FILENAME, \fB\-\-filename\fR=\fIFILENAME\fR
+Use this file for BMC get/set.
+.TP
+\fB\-k\fR "KEY=VALUE", \fB\-\-key\-pair=\fR"KEY=VALUE"
+Update configuration information to BMC.  This option can be used multiple times.
+.SH "EXAMPLES"
+.B # bmc-config --checkout 
+.PP
+Show all BMC configuration to console.
+.PP
+.B # bmc-config --checkout --filename=bmc-data1.conf
+.PP
+Store all BMC configuration to bmc-data1.conf.
+.PP
+.B # bmc-config --diff -f bmc-data2.conf
+.PP
+Show all difference between BMC and bmc-data2.conf file.
+.PP
+.B # bmc-config --diff --key-pair="lan_conf_misc:gratuitous_arp_interval=8"
+.PP
+Show difference with BMC of key 'gratuitous_arp_interval' and value '4'.
+.PP
+.B # bmc-config --commit -f bmc-data1.conf
+.PP
+Commit all configuration values from bmc-data1.conf file to BMC.
+.PP
+.B # bmc-config --commit --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.PP
+Commit key 'gratuitous_arp_interval' of value '4' to BMC.
+.PP
+.B # bmc-config --commit -f bmc-data-updt.conf --key-pair="lan_conf_misc:gratuitous_arp_interval=4"
+.PP
+Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to BMC.
+.PP
+.SH "REPORTING BUGS"
+Report bugs to <@PACKAGE_BUGREPORT@>.
+.SH COPYRIGHT
+Copyright \(co 2003,04,05 FreeIPMI Core Team.  
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+.SH "SEE ALSO"
+The full documentation for
+.B bmc-config
+is maintained as a Texinfo manual.  If the
+.B info
+and
+.B bmc-config
+programs are properly installed at your site, the command
+.IP
+.B info bmc-config
+.PP
+should give you access to the complete manual.
