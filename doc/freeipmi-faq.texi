@@ -114,7 +114,7 @@ port LLNL tools to use libfreeipmi, and support ipmipower in Powerman.
 In May 2004, the LLNL developed tools ipmipower, bmc-watchdog,
 ipmiping, and rmcpping were officially merged into the GNU FreeIPMI
 project.  In October 2004, FreeIPMI 0.1.0 was officially released.
-Around same time, FreeIPMI project as accepted by the Free Software
+Around same time, FreeIPMI project was accepted by the Free Software
 Foundation as a GNU project. 
 
 In September 2005, Supercomputing team of California Digital moved out to
@@ -151,7 +151,7 @@ commands and high level management interface.
 
 3) Command-Line Interface
 
-GNU FreeIPMI provides bunch of independent tools and extesible Scheme
+GNU FreeIPMI provides a bunch of independent tools and extensible Scheme
 interface for scripting.
 
 Ipmitool offers a single tool for all IPMI features it supports.
@@ -166,7 +166,7 @@ In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
 
 1) Support for HPC
 
-Ipmipower is capable of scalling to very large numbers of nodes.  At
+Ipmipower is capable of scaling to very large numbers of nodes.  At
 LLNL, in conjunction with Powerman, ipmipower currently power controls
 a 1024 node cluster in about 0.3 seconds. Without Powerman it can
 power control 1024 nodes in about 5 seconds. 
@@ -183,6 +183,11 @@ build/setup/manage any Linux kernel modules/drivers.
 
 Likewise, by implementing everything in userspace libraries and tools, portability
 to multiple operating systems and architectures is easier.
+
+4) Additional features
+
+By "splitting" various IPMI features into multiple tools, each tool
+is capable of providing the user with more options and features.
 
 @node SSIF Driver Configuration,  , What is special about GNU FreeIPMI, Top
 @section SSIF Driver Configuration

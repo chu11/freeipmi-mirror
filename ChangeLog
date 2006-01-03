@@ -1,6 +1,9 @@
 2005-01-03  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated with appropriate new files.
+
+	* doc/freeipmi-faq.texi: Fixed some typos, added a little more
+	info.
 	
 2006-01-02  Anand Babu  <ab@zresearch.com>
 
