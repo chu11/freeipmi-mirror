@@ -24,7 +24,7 @@ Copyright @copyright{} 2002-2005 FreeIPMI Core Team.
 @subtitle Free Intelligent Platform Management System
 @subtitle Version @value{VERSION} updated on @today{}
 @author by Albert Chu @email{chu11@@llnl.gov}
-@author by Anand Babu @email{ab@@gnu.org.in}
+@c @author by Anand Babu @email{ab@@gnu.org.in}
 
 @page
 @vskip 0pt plus 1filll
@@ -32,15 +32,6 @@ Copyright @copyright{} 2002-2005 FreeIPMI Core Team
 
 @include permissions.texi
 @end titlepage
-
-@menu
-* What is IPMI::                
-* What is GNU FreeIPMI?::       
-* How did it start?::           
-* Intended Audience::           
-* GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
-* What is special about GNU FreeIPMI::  
-@end menu
 
 @node Top, What is IPMI, (dir), (dir)
 @ifinfo
@@ -50,11 +41,6 @@ This edition of the documentation was last updated on @today{} for
 release @value{VERSION} of the GNU FreeIPMI.
 @end ifinfo
 
-@c Output the table of contents at the beginning.
-@contents
-
-@c All the menus can be updated with the EMACS command
-@c texinfo-all-menus-update, which is normally bound to C-c C-u C-a.
 @menu
 * What is IPMI::                
 * What is GNU FreeIPMI?::       
@@ -62,7 +48,11 @@ release @value{VERSION} of the GNU FreeIPMI.
 * Intended Audience::           
 * GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about GNU FreeIPMI::  
+* SSIF Driver Configuration::   
 @end menu
+
+@c Output the table of contents at the beginning.
+@contents
 
 @node What is IPMI, What is GNU FreeIPMI?, Top, Top
 @section @acronym{IPMI} - Platform Management Standard
@@ -169,7 +159,7 @@ Ipmitool offers a single tool for all IPMI features it supports.
 The GNU FreeIPMI developers have contributed patches to the other projects
 on multiple occassions.
 
-@node What is special about GNU FreeIPMI,  , GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
+@node What is special about GNU FreeIPMI, SSIF Driver Configuration, GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil, Top
 @section What is special about GNU FreeIPMI compared to other open source IPMI projects?
 
 In our eyes, there are several reasons why GNU FreeIPMI is particularly special.
@@ -194,7 +184,7 @@ build/setup/manage any Linux kernel modules/drivers.
 Likewise, by implementing everything in userspace libraries and tools, portability
 to multiple operating systems and architectures is easier.
 
-@node SSIF Driver Configuration
+@node SSIF Driver Configuration,  , What is special about GNU FreeIPMI, Top
 @section SSIF Driver Configuration
 
 GNU FreeIPMI's SSIF driver works on top of kernel'2 i2c device
@@ -206,28 +196,30 @@ before using GNU FreeIPMI.
 To identify SSIF device address: 
 
 Example:
+@example
+$> lspci  (in the output look for this entry)
+ 00:1f.3 SMBus: Intel Corp. 6300ESB SMBus Controller (rev 01)
+       Subsystem: Intel Corp.: Unknown device 342f
+       Flags: medium devsel,  IRQ 17
+       I/O ports at 0400 [size=32]
+                    ----
+$> cat /proc/bus/i2c
+i2c-0   smbus    SMBus I801 adapter at 0400         Non-I2C SMBus adapter
+                                       ----
+    Make sure the "0400" above matches with the "0400" address under
+    proc.  Also make sure "i2c-0" is not different. If it appears
+    different then grep for "i2c-0" in this code "ipmitool.c" and
+    change. "i2c-X" is the label assigned to each slave device attached on
+    the i2c bus.
 
-   $> lspci  (in the output look for this entry)
-    00:1f.3 SMBus: Intel Corp. 6300ESB SMBus Controller (rev 01)
-          Subsystem: Intel Corp.: Unknown device 342f
-          Flags: medium devsel,  IRQ 17
-          I/O ports at 0400 [size=32]
-                       ----
-   $> cat /proc/bus/i2c
-   i2c-0   smbus    SMBus I801 adapter at 0400         Non-I2C SMBus adapter
-                                          ----
-       Make sure the "0400" above matches with the "0400" address under proc.
-       Also make sure "i2c-0" is not different. If it appears different then
-       grep for "i2c-0" in this code "ipmitool.c" and change. "i2c-X" is the
-       label assigned to each slave device attached on the i2c bus.
+BMC address Locator:
+    Refer to the SM BIOS IPMI Device Information Record
+    Type 38,  record 06h and 08h. Use the value of record
+    06h as the IPMBAddress and load the SMBus controller
+    driver at the address value read from record 08h.
 
-   BMC address Locator:
-       Refer to the SM BIOS IPMI Device Information Record
-       Type 38,  record 06h and 08h. Use the value of record
-       06h as the IPMBAddress and load the SMBus controller
-       driver at the address value read from record 08h.
-       Usual values for record 06h -> 0x42
-       Usual values for record 08h -> 0x400
-
+    Usual values for record 06h -> 0x42
+    Usual values for record 08h -> 0x400
+@end example
 
 @bye
