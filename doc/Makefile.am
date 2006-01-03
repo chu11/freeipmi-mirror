@@ -3,7 +3,7 @@ SUBDIRS = examples
 EXTRA_DIST = BUGS freeipmi-hackers-intro.odp ipmi-network-layout.fig ipmi-over-ts2000.texi 
 
 #  build and install the .info pages
-info_TEXINFOS = freeipmi.texi
+info_TEXINFOS = freeipmi.texi freeipmi-faq.texi
 freeipmi_TEXINFOS = authors.texi gpl.texi fdl.texi permissions.texi
 
 docdir   = $(datadir)/doc/$(PACKAGE)

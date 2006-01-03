@@ -1,3 +1,7 @@
+2006-01-02  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi-faq.texi: FAQ by Albert Chu <chu11@llnl.gov>.
+
 2005-12-30  Anand Babu  <ab@zresearch.com>
 
 	* common: Added proper makefiles for this tree.
