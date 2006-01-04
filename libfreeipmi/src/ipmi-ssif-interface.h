@@ -27,6 +27,7 @@
 #ifndef IPMI_SSIF_INTERFACE_H
 #define IPMI_SSIF_INTERFACE_H
 
+#define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
 #define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20
 /* function error codes */
 #define IPMI_SSIF_SUCCESS         0x00
@@ -161,7 +162,7 @@ size_t ipmi_ssif_read (int i2c_fd, char *buf, size_t *len);
 *     Returns 0 for success and -1 otherwise with errno is set appropriately.
 *
 *******************************************************************************/
-size_t ipmi_ssif_exit (int i2c_fd);
+int ipmi_ssif_exit (int i2c_fd);
 
 int ipmi_ssif_cmd2 (ipmi_device_t *dev, 
 		    fiid_obj_t obj_cmd_rq, 

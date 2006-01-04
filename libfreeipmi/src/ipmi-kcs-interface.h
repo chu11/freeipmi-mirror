@@ -26,24 +26,11 @@
 extern "C" {
 #endif
 
-#define IPMI_KCS_SLEEP_USECS            0x01
-
-#define IPMI_KCS_HDR_LEN                0x01
-
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC1620    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC9416    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_SR870BN4   0x08A2 
 #define IPMI_KCS_SMS_IO_BASE_CDC6440    0x08A2
-
-/* IPMI KCS SMS Interface Registers */
-#define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
-#define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
-#define IPMI_KCS_REG_CMD(sms_io_base, reg_space)     \
-       (sms_io_base + reg_space)
-#define IPMI_KCS_REG_STATUS(sms_io_base, reg_space)  \
-       (sms_io_base + reg_space)
-
 
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
@@ -63,44 +50,14 @@ extern "C" {
 #define IPMI_KCS_STATUS_REG_OBF         0x01
 
 /* IPMI KCS Interface State Bits */ 
-/*
-#define IPMI_KCS_STATE_IDLE   0x00
-#define IPMI_KCS_STATE_READ   0x01
-#define IPMI_KCS_STATE_WRITE  0x02
-#define IPMI_KCS_STATE_ERROR  0x03
-*/
 #define IPMI_KCS_STATE_IDLE   0x00
 #define IPMI_KCS_STATE_READ   IPMI_KCS_STATUS_REG_S0
 #define IPMI_KCS_STATE_WRITE  IPMI_KCS_STATUS_REG_S1
 #define IPMI_KCS_STATE_ERROR  (IPMI_KCS_STATUS_REG_S0 & IPMI_KCS_STATUS_REG_S1)
 
-/* IPMI KCS Control Codes */
-#define IPMI_KCS_CTRL_GET_STATUS       0x60 /* Request Interface Status / 
-                                               Abort Current operation */
-#define IPMI_KCS_CTRL_GET_ABORT        IPMI_KCS_CTRL_GET_STATUS
-#define IPMI_KCS_CTRL_WRITE_START      0x61 /* Write the First byte of an Write Transfer */
-#define IPMI_KCS_CTRL_WRITE_END        0x62 /* Write the Last byte of an Write Transfer */
-/* reserved      0x63 - 0x67 */
-#define IPMI_KCS_CTRL_READ             0x68 /* Request the next data byte */
-/* reserved      0x69 - 0x6F */
-
 extern fiid_template_t tmpl_hdr_kcs;
 
-/* Never call these functions directly, unless you are a FreeIPMI hacker */
-int8_t ipmi_kcs_get_status (ipmi_device_t *dev);
-void ipmi_kcs_wait_for_ibf_clear (ipmi_device_t *dev);
-void ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev);
-int8_t ipmi_kcs_read_byte (ipmi_device_t *dev);
-void ipmi_kcs_read_next (ipmi_device_t *dev);
-void ipmi_kcs_start_write (ipmi_device_t *dev);
-void ipmi_kcs_write_byte (ipmi_device_t *dev, uint8_t byte);
-void ipmi_kcs_end_write (ipmi_device_t *dev);
-void ipmi_kcs_get_abort (ipmi_device_t *dev);
-int8_t ipmi_kcs_test_if_state (ipmi_device_t *dev, uint8_t status);
-void ipmi_kcs_clear_obf (ipmi_device_t *dev);
-
 /* High level calls */
-void ipmi_enable_old_kcs_init (ipmi_device_t *dev);
 int ipmi_kcs_io_init (uint16_t sms_io_base, 
 		      uint8_t reg_space, 
 		      unsigned long sleep_usecs);
@@ -147,13 +104,6 @@ int8_t ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
 			  size_t buf_rq_len, 
 			  uint8_t *buf_rs, 
 			  size_t *buf_rs_len);
-int8_t ipmi_kcs_cmd_raw_interruptible (uint8_t lun, 
-				       uint8_t fn, 
-				       uint8_t *buf_cmd_rq, 
-				       uint32_t buf_rq_len, 
-				       uint8_t *buf_cmd_rs, 
-				       uint32_t *buf_rs_len);
-
 int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
 			  uint8_t fn, 
 			  fiid_obj_t obj_hdr);
@@ -167,8 +117,6 @@ int8_t unassemble_ipmi_kcs_pkt (uint8_t *pkt,
 				fiid_obj_t obj_hdr, 
 				fiid_obj_t obj_cmd, 
 				fiid_template_t tmpl_cmd);
-int ipmi_kcs_get_mutex_semid (void);
-
 
 #ifdef __cplusplus
 }

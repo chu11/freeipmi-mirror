@@ -21,13 +21,28 @@
 
 #include "freeipmi.h"
 
-/* FIXME: This whole set of global variables should go. It is replaced
-          by ipmi_device_t structure. -- Anand Babu */
-/* static uint64_t     kcs_poll_count; */
-/* static uint16_t     kcs_sms_io_base = IPMI_KCS_SMS_IO_BASE_DEFAULT; */
-/* static int           kcs_reg_space   = IPMI_REG_SPACE_DEFAULT; */
-/* static unsigned long kcs_sleep_usecs = IPMI_KCS_SLEEP_USECS; */
-static int           kcs_mutex_semid = 0;
+#define IPMI_KCS_SLEEP_USECS            0x01
+
+#define IPMI_KCS_HDR_LEN                0x01
+
+/* IPMI KCS SMS Interface Registers */
+#define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
+#define IPMI_KCS_REG_DATAOUT(sms_io_base)  (sms_io_base)
+#define IPMI_KCS_REG_CMD(sms_io_base, reg_space)     \
+       (sms_io_base + reg_space)
+#define IPMI_KCS_REG_STATUS(sms_io_base, reg_space)  \
+       (sms_io_base + reg_space)
+
+/* IPMI KCS Control Codes */
+#define IPMI_KCS_CTRL_GET_STATUS       0x60 /* Request Interface Status / 
+                                               Abort Current operation */
+#define IPMI_KCS_CTRL_GET_ABORT        IPMI_KCS_CTRL_GET_STATUS
+#define IPMI_KCS_CTRL_WRITE_START      0x61 /* Write the First byte of an Write Transfer */
+#define IPMI_KCS_CTRL_WRITE_END        0x62 /* Write the Last byte of an Write Transfer */
+/* reserved      0x63 - 0x67 */
+#define IPMI_KCS_CTRL_READ             0x68 /* Request the next data byte */
+/* reserved      0x69 - 0x6F */
+
 ipmi_device_t _dev;
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
@@ -41,18 +56,10 @@ fiid_template_t tmpl_hdr_kcs =
     {0, ""}
   };
 
-int
+static int
 ipmi_kcs_get_mutex_semid (void)
 {
-  return (kcs_mutex_semid);
-}
-
-/* FIXME: This function has to go. It is replaced by ipmi_open_inband 
-            -- Anand Babu */
-void 
-ipmi_enable_old_kcs_init (ipmi_device_t *dev)
-{
-  _dev = *dev;
+  return (_dev.io.inband.mutex_semid);
 }
 
 int
@@ -61,7 +68,7 @@ ipmi_kcs_io_init (uint16_t sms_io_base,
 		  unsigned long sleep_usecs)
 {
   memset (&_dev, 0, sizeof (ipmi_device_t));
-  return (ipmi_open_inband (&_dev, 0, IPMI_DEVICE_KCS, 0, NULL, IPMI_MODE_DEFAULT));
+  return (ipmi_open_inband (&_dev, 0, IPMI_DEVICE_KCS, sms_io_base, reg_space, NULL, IPMI_MODE_DEFAULT));
 
 #if 0
   if (sms_io_base < 1)
@@ -74,7 +81,7 @@ ipmi_kcs_io_init (uint16_t sms_io_base,
   kcs_reg_space   = reg_space;
   kcs_sleep_usecs = sleep_usecs;
   
-  ERR ((kcs_mutex_semid = ipmi_mutex_init (IPMI_KCS_IPCKEY ())) != -1);
+  ERR ((inband_mutex_semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY ())) != -1);
 
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
@@ -198,7 +205,7 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
   return 0;
 }
 
-int8_t
+static int8_t
 ipmi_kcs_get_status (ipmi_device_t *dev)
 {
   return _INB (IPMI_KCS_REG_STATUS (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
@@ -208,7 +215,7 @@ ipmi_kcs_get_status (ipmi_device_t *dev)
  * Wait for IBF (In-Bound Flag) to clear, signalling BMC has
  * read the command. 
  */
-void
+static void
 ipmi_kcs_wait_for_ibf_clear (ipmi_device_t *dev)
 {
   while (ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_IBF)
@@ -220,7 +227,7 @@ ipmi_kcs_wait_for_ibf_clear (ipmi_device_t *dev)
  * or no command is pending.
  */
 
-void
+static void
 ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev)
 {
   while (!(ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_OBF))
@@ -230,7 +237,7 @@ ipmi_kcs_wait_for_obf_set (ipmi_device_t *dev)
 /*
  * Read byte from outbound data port. 
  */
-int8_t
+static int8_t
 ipmi_kcs_read_byte (ipmi_device_t *dev)
 {
   return _INB (IPMI_KCS_REG_DATAOUT (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
@@ -239,7 +246,7 @@ ipmi_kcs_read_byte (ipmi_device_t *dev)
 /*
  * Bump channel into sending next byte.
  */
-void
+static void
 ipmi_kcs_read_next (ipmi_device_t *dev) 
 {
   _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
@@ -247,7 +254,7 @@ ipmi_kcs_read_next (ipmi_device_t *dev)
 /*
  * Set up channel for writing.
  */
-void
+static void
 ipmi_kcs_start_write (ipmi_device_t *dev)
 {
   _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
@@ -256,7 +263,7 @@ ipmi_kcs_start_write (ipmi_device_t *dev)
 /*
  * Write byte to inound data port.
  */
-void
+static void
 ipmi_kcs_write_byte (ipmi_device_t *dev, uint8_t byte)
 {
   _OUTB (byte, IPMI_KCS_REG_DATAIN (dev->io.inband.locate_info.base_addr.bmc_iobase_addr));
@@ -265,22 +272,24 @@ ipmi_kcs_write_byte (ipmi_device_t *dev, uint8_t byte)
 /* 
  * Set up channel to end write.
  */
-void
+static void
 ipmi_kcs_end_write (ipmi_device_t *dev)
 {
   _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
 
+#if 0
 /* 
  * Send Abort current processing command.
  */
-void
+static void
 ipmi_kcs_get_abort (ipmi_device_t *dev)
 {
   _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, dev->io.inband.locate_info.reg_space));
 }
+#endif
 
-int8_t
+static int8_t
 ipmi_kcs_test_if_state (ipmi_device_t *dev, uint8_t status)
 {
   if ((ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_STATE) == 
@@ -293,7 +302,7 @@ ipmi_kcs_test_if_state (ipmi_device_t *dev, uint8_t status)
 /*
  * Read dummy byte to clear OBF if set.
  */
-void
+static void
 ipmi_kcs_clear_obf (ipmi_device_t *dev)
 {
   if (ipmi_kcs_get_status (dev) & IPMI_KCS_STATUS_REG_OBF) 
@@ -353,7 +362,7 @@ ipmi_kcs_read (ipmi_device_t *dev,
  finish:
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Leaving Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
 
-  IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*   IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
   return (len);
 }
 
@@ -368,14 +377,14 @@ ipmi_kcs_write (ipmi_device_t *dev,
   uint8_t *buf=bytes;
   uint32_t bytes_count = 0;
 
-  IPMI_MUTEX_LOCK (ipmi_kcs_get_mutex_semid ());
+/*   IPMI_MUTEX_LOCK (ipmi_kcs_get_mutex_semid ()); */
 
 
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Entered Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
 
   if ((bytes == NULL) || (bytes_len == 0))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EINVAL;
       bytes_count = -1;
       goto failure;
@@ -387,7 +396,7 @@ ipmi_kcs_write (ipmi_device_t *dev,
   ipmi_kcs_wait_for_ibf_clear (dev);
   if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -402,7 +411,7 @@ ipmi_kcs_write (ipmi_device_t *dev,
       ipmi_kcs_wait_for_ibf_clear (dev);
       if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
         {
-          IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*           IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
 	  errno = EBUSY;
           bytes_count = -1;
 	  goto failure;
@@ -415,7 +424,7 @@ ipmi_kcs_write (ipmi_device_t *dev,
   ipmi_kcs_wait_for_ibf_clear (dev);
   if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -437,6 +446,7 @@ ipmi_kcs_write (ipmi_device_t *dev,
 /*  Standard write loop. Returns EAGAIN when queue is full, You may
     want to try again some time later.
  */
+/* __DEPRECATED__: now locking has moved to cmd level --Anand Babu */
 ssize_t
 ipmi_kcs_write_interruptible (ipmi_device_t *dev, 
 			      uint8_t *bytes, 
@@ -444,18 +454,18 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev,
 {
   uint8_t *buf=bytes;
   uint32_t bytes_count = 0;
-  int ret;
+/*   int ret; */
   
-  ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
-  if (ret == -1 && errno == EAGAIN)
-    return (-1);
-  ERR ((!(ret == -1 && errno != EAGAIN)));
+/*   ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ()); */
+/*   if (ret == -1 && errno == EAGAIN) */
+/*     return (-1); */
+/*   ERR ((!(ret == -1 && errno != EAGAIN))); */
 
 /*   fprintf (stderr, "__DEBUG__: PID [%d] Entered Lock [%d]\n", getpid (), ipmi_kcs_get_mutex_semid ()); */
 
   if ((bytes == NULL) || (bytes_len == 0))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EINVAL;
       bytes_count = -1;
       goto failure;
@@ -467,7 +477,7 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev,
   ipmi_kcs_wait_for_ibf_clear (dev);
   if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -482,7 +492,7 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev,
       ipmi_kcs_wait_for_ibf_clear (dev);
       if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
         {
-          IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*           IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
 	  errno = EBUSY;
           bytes_count = -1;
 	  goto failure;
@@ -495,7 +505,7 @@ ipmi_kcs_write_interruptible (ipmi_device_t *dev,
   ipmi_kcs_wait_for_ibf_clear (dev);
   if (!ipmi_kcs_test_if_state (dev, IPMI_KCS_STATE_WRITE))
     {
-      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
+/*       IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ()); */
       errno = EBUSY;
       bytes_count = -1;
       goto failure;
@@ -528,6 +538,7 @@ ipmi_kcs_cmd (uint8_t lun,
       errno = EINVAL;
       return (-1);
     }
+
   { /* Request Block */
     fiid_obj_t obj_hdr_rq = NULL;
     uint8_t *bytes = NULL; 
@@ -549,7 +560,8 @@ ipmi_kcs_cmd (uint8_t lun,
     ERR (assemble_ipmi_kcs_pkt (obj_hdr_rq, obj_cmd_rq, 
 				  tmpl_cmd_rq, bytes, bytes_len) > 0);
 
-    ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
+    IPMI_MUTEX_LOCK (ipmi_kcs_get_mutex_semid ());
+    ERR_UNLOCK (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
@@ -557,19 +569,20 @@ ipmi_kcs_cmd (uint8_t lun,
     uint32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rs_len != -1);
+    ERR_UNLOCK (obj_hdr_rs_len != -1);
     obj_hdr_rs = alloca (obj_hdr_rs_len);
     memset (obj_hdr_rs, 0, obj_hdr_rs_len);
-    ERR (obj_hdr_rs);
+    ERR_UNLOCK (obj_hdr_rs);
     
     obj_cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_rs);
     
     bytes_len = obj_hdr_rs_len + obj_cmd_rs_len;
     bytes = alloca (bytes_len);
     memset (bytes, 0, bytes_len);
-    ERR (bytes);
+    ERR_UNLOCK (bytes);
     
-    ERR (ipmi_kcs_read (dev, bytes, bytes_len) != -1);
+    ERR_UNLOCK (ipmi_kcs_read (dev, bytes, bytes_len) != -1);
+    IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 
     ERR (unassemble_ipmi_kcs_pkt (bytes, bytes_len,
 				  obj_hdr_rs, obj_cmd_rs, 
@@ -674,10 +687,12 @@ ipmi_kcs_cmd_interruptible (uint8_t lun,
     ERR (assemble_ipmi_kcs_pkt (obj_hdr_rq, obj_cmd_rq, 
 				  tmpl_cmd_rq, bytes, bytes_len) > 0);
 
-    ret = ipmi_kcs_write_interruptible (dev, bytes, bytes_len);
+    ret = IPMI_MUTEX_LOCK_INTERRUPTIBLE (ipmi_kcs_get_mutex_semid ());
     if (ret == -1 && errno == EAGAIN)
       return (-1);
     ERR ((!(ret == -1 && errno != EAGAIN)));
+
+    ERR_UNLOCK (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
   }
   { /* Response Block */
     fiid_obj_t obj_hdr_rs = NULL;
@@ -685,86 +700,24 @@ ipmi_kcs_cmd_interruptible (uint8_t lun,
     uint32_t obj_hdr_rs_len, obj_cmd_rs_len, bytes_len;
     
     obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rs_len != -1);
+    ERR_UNLOCK (obj_hdr_rs_len != -1);
     obj_hdr_rs = alloca (obj_hdr_rs_len);
     memset (obj_hdr_rs, 0, obj_hdr_rs_len);
-    ERR (obj_hdr_rs);
+    ERR_UNLOCK (obj_hdr_rs);
     
     obj_cmd_rs_len = fiid_obj_len_bytes (tmpl_cmd_rs);
     
     bytes_len = obj_hdr_rs_len + obj_cmd_rs_len;
     bytes = alloca (bytes_len);
     memset (bytes, 0, bytes_len);
-    ERR (bytes);
+    ERR_UNLOCK (bytes);
     
-    ERR (ipmi_kcs_read (dev, bytes, bytes_len) != -1);
+    ERR_UNLOCK (ipmi_kcs_read (dev, bytes, bytes_len) != -1);
+    IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());
 
     ERR (unassemble_ipmi_kcs_pkt (bytes, bytes_len,
 				  obj_hdr_rs, obj_cmd_rs, 
 				  tmpl_cmd_rs) != -1);
-  }
-  return (0);
-}
-
-int8_t
-ipmi_kcs_cmd_raw (uint8_t lun, 
-		  uint8_t fn, 
-		  uint8_t *buf_rq, 
-		  size_t buf_rq_len, 
-		  uint8_t *buf_rs, 
-		  size_t *buf_rs_len)
-{
-  ipmi_device_t *dev = &_dev;
-
-  if (!(buf_rq && buf_rq_len > 0 
-        && buf_rs && buf_rs_len && *buf_rs_len > 0))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  { /* Request Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rq_len, bytes_len;
-    
-    obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rq_len > 0);
-
-    bytes_len = obj_hdr_rq_len + buf_rq_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-
-    ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
-    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
-
-    ERR (ipmi_kcs_write (dev, bytes, bytes_len) != -1);
-  }
-  { /* Response Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
-    
-    obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rs_len != -1);
-
-    bytes_len = obj_hdr_rs_len + *buf_rs_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-    
-    ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
-    if (bytes_read > obj_hdr_rs_len)
-      {
-        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
-        if (rs_len <= *buf_rs_len)
-          *buf_rs_len = rs_len;
-        
-        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
-      }
-    else
-      /* achu: the cmd and comp_code should always be returned, so
-       * hopefully we never ever reach this point */
-      *buf_rs_len = 0;
   }
   return (0);
 }
@@ -799,68 +752,5 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
   return (0);
 }
 
-int8_t
-ipmi_kcs_cmd_raw_interruptible (uint8_t lun, 
-				uint8_t fn, 
-				uint8_t *buf_rq, 
-				uint32_t buf_rq_len, 
-				uint8_t *buf_rs, 
-				uint32_t *buf_rs_len)
-{
-  int ret;
-  ipmi_device_t *dev = &_dev;
 
-  if (!(buf_rq && buf_rq_len > 0 && buf_rs && buf_rs_len && *buf_rs_len > 0))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
 
-  { /* Request Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rq_len, bytes_len;
-    
-    obj_hdr_rq_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rq_len > 0);
-
-    bytes_len = obj_hdr_rq_len + buf_rq_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-
-    ERR (fill_hdr_ipmi_kcs (lun, fn, bytes) != -1);
-    memcpy(bytes + obj_hdr_rq_len, buf_rq, buf_rq_len);
-
-    ret = ipmi_kcs_write_interruptible (dev, bytes, bytes_len);
-    if (ret == -1 && errno == EAGAIN)
-      return (-1);
-    ERR ((!(ret == -1 && errno != EAGAIN)));
-  }
-  { /* Response Block */
-    uint8_t *bytes = NULL; 
-    uint32_t obj_hdr_rs_len, bytes_read, bytes_len;
-    
-    obj_hdr_rs_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-    ERR (obj_hdr_rs_len != -1);
-
-    bytes_len = obj_hdr_rs_len + *buf_rs_len;
-    bytes = alloca (bytes_len);
-    memset (bytes, 0, bytes_len);
-    ERR (bytes);
-    
-    ERR ((bytes_read = ipmi_kcs_read (dev, bytes, bytes_len)) != -1);
-    if (bytes_read > obj_hdr_rs_len)
-      {
-        uint32_t rs_len = bytes_read - obj_hdr_rs_len;
-        if (rs_len <= *buf_rs_len)
-          *buf_rs_len = rs_len;
-        
-        memcpy(buf_rs, bytes + obj_hdr_rs_len, *buf_rs_len);
-      }
-    else
-      /* achu: the cmd and comp_code should always be returned, so
-       * hopefully we never ever reach this point */
-      *buf_rs_len = 0;
-  }
-  return (0);
-}

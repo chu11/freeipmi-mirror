@@ -96,18 +96,16 @@ fi_ipmi_open (struct arguments *args)
 	  if (ipmi_open_inband (&dev, 
 				args->common.disable_auto_probe, 
 				IPMI_DEVICE_KCS, 
-				args->common.driver_address, 
+				args->common.driver_address,
+				0,
 				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) == 0)
-	    {
-	      ipmi_enable_old_kcs_init (&dev);
-	    }
-	  else 
+				IPMI_MODE_DEFAULT) != 0)
 	    {
 	      if (ipmi_open_inband (&dev, 
 				    args->common.disable_auto_probe, 
 				    IPMI_DEVICE_SSIF, 
 				    args->common.driver_address, 
+				    0,
 				    args->common.driver_device, 
 				    IPMI_MODE_DEFAULT) != 0)
 		{
@@ -122,15 +120,12 @@ fi_ipmi_open (struct arguments *args)
 				args->common.disable_auto_probe, 
 				args->common.driver_type, 
 				args->common.driver_address, 
+				0,
 				args->common.driver_device, 
 				IPMI_MODE_DEFAULT) != 0)
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);
-	    }
-	  if (args->common.driver_type == IPMI_DEVICE_KCS)
-	    {
-	      ipmi_enable_old_kcs_init (&dev);
 	    }
 	}
     }

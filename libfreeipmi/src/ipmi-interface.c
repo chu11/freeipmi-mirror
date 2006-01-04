@@ -29,7 +29,6 @@ fiid_template_t tmpl_inband_hdr =
     {0, ""}
   };
 
-
 static void 
 ipmi_outofband_free (ipmi_device_t *dev)
 {
@@ -79,7 +78,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   switch (driver_type)
     {
     case IPMI_DEVICE_LAN:
-      break;
+     break;
     default:
       errno = EINVAL;
       return (-1);
@@ -244,12 +243,20 @@ ipmi_open_inband (ipmi_device_t *dev,
 		  int disable_auto_probe, 
 		  ipmi_driver_type_t driver_type, 
 		  uint16_t driver_address, 
+		  uint8_t reg_space,
 		  char *driver_device, 
 		  ipmi_mode_t mode)
 {
   if (dev == NULL)
     {
       errno = EINVAL;
+      return (-1);
+    }
+
+  /* device already opened */
+  if (dev->io.inband.mutex_semid != 0)
+    {
+      errno = EBUSY;
       return (-1);
     }
   
@@ -269,7 +276,7 @@ ipmi_open_inband (ipmi_device_t *dev,
 	  locate_info->bmc_i2c_dev_name = driver_device;
 	  locate_info->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
 	  locate_info->base_addr.bmc_iobase_addr = driver_address;
-	  locate_info->reg_space = 1;
+	  locate_info->reg_space = reg_space;
 	}
       else 
 	{
@@ -278,6 +285,8 @@ ipmi_open_inband (ipmi_device_t *dev,
 	    dev->io.inband.locate_info.bmc_i2c_dev_name = driver_device;
 	  if (driver_address)
 	    dev->io.inband.locate_info.base_addr.bmc_iobase_addr = driver_address;
+	  if (reg_space)
+	    dev->io.inband.locate_info.reg_space = reg_space;
 	}
       dev->type = driver_type;
       dev->mode = mode;
@@ -336,7 +345,7 @@ ipmi_open_inband (ipmi_device_t *dev,
 	  locate_info->bmc_i2c_dev_name = driver_device;
 	  locate_info->addr_space_id = 2;
 	  locate_info->base_addr.bmc_smbus_slave_addr = driver_address;
-	  locate_info->reg_space = 0;
+	  locate_info->reg_space = reg_space;
 	}
       else 
 	{
@@ -345,6 +354,8 @@ ipmi_open_inband (ipmi_device_t *dev,
 	    dev->io.inband.locate_info.bmc_i2c_dev_name = driver_device;
 	  if (driver_address)
 	    dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr = driver_address;
+	  if (reg_space)
+	    dev->io.inband.locate_info.reg_space = reg_space;
 	}
       dev->io.inband.driver_device = dev->io.inband.locate_info.bmc_i2c_dev_name;
       dev->io.inband.driver_address = dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr;
@@ -379,6 +390,8 @@ ipmi_open_inband (ipmi_device_t *dev,
       return (-1);
     }
   
+  ERR ((dev->io.inband.mutex_semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY ())) != -1);
+
   return (0);
 }
 
@@ -391,6 +404,8 @@ ipmi_cmd (ipmi_device_t *dev,
 	  fiid_obj_t obj_cmd_rs, 
 	  fiid_template_t tmpl_cmd_rs)
 {
+  int8_t status;
+
   if (dev == NULL)
     {
       errno = EINVAL;
@@ -399,35 +414,47 @@ ipmi_cmd (ipmi_device_t *dev,
   
   dev->lun = lun;
   dev->net_fn = net_fn;
-  
+
+  status = 0;
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
-      return ipmi_lan_cmd2 (dev, 
-			    obj_cmd_rq, 
-			    tmpl_cmd_rq, 
-			    obj_cmd_rs, 
-			    tmpl_cmd_rs);
+      status = ipmi_lan_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      break;
     case IPMI_DEVICE_KCS:
-      return ipmi_kcs_cmd2 (dev, 
-			    obj_cmd_rq, 
-			    tmpl_cmd_rq, 
-			    obj_cmd_rs, 
-			    tmpl_cmd_rs);
+      if (dev->mode == IPMI_MODE_NONBLOCK)
+	{
+	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
+	  if (status == -1 && errno == EAGAIN)
+	    return (-1);
+	  ERR ((!(status == -1 && errno != EAGAIN)));
+	} 
+      else
+	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
+      status = ipmi_kcs_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SSIF:
-      return ipmi_ssif_cmd2 (dev, 
-			     obj_cmd_rq, 
-			     tmpl_cmd_rq, 
-			     obj_cmd_rs, 
-			     tmpl_cmd_rs);
+      if (dev->mode == IPMI_MODE_NONBLOCK)
+	{
+	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
+	  if (status == -1 && errno == EAGAIN)
+	    return (-1);
+	  ERR ((!(status == -1 && errno != EAGAIN)));
+	} 
+      else
+	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
+      status = ipmi_ssif_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
     default:
       errno = EINVAL;
-      return (-1);
+      status = -1;
     }
   
-  return (0);
+  return (status);
 }
 
 int 
@@ -437,28 +464,49 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	      uint8_t *out, 
 	      size_t *out_len)
 {
+  int8_t status;
   if (dev == NULL || in_len < 2)
     {
       errno = EINVAL;
       return (-1);
     }
   
+  status = 0;
   switch (dev->type)
     {
     case IPMI_DEVICE_LAN:
-      return ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
+      status = ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
     case IPMI_DEVICE_KCS:
-      return ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
+      if (dev->mode == IPMI_MODE_NONBLOCK)
+	{
+	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
+	  if (status == -1 && errno == EAGAIN)
+	    return (-1);
+	  ERR ((!(status == -1 && errno != EAGAIN)));
+	} 
+      else
+	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
+      status = ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
+      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
     case IPMI_DEVICE_SSIF:
-      return ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
+      if (dev->mode == IPMI_MODE_NONBLOCK)
+	{
+	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
+	  if (status == -1 && errno == EAGAIN)
+	    return (-1);
+	  ERR ((!(status == -1 && errno != EAGAIN)));
+	} 
+      else
+	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
+      status = ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
+      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
     default:
       errno = EINVAL;
-      return (-1);
+      status = -1;
     }
-  
-  return (0);
+  return (status);
 }
 
 static int
@@ -487,6 +535,8 @@ ipmi_inband_close (ipmi_device_t *dev)
       return (-1);
     }
   
+  dev->io.inband.mutex_semid = 0;
+  
   switch (dev->type)
     {
     case IPMI_DEVICE_KCS:
@@ -501,13 +551,13 @@ ipmi_inband_close (ipmi_device_t *dev)
     case IPMI_DEVICE_BT:
       break;
     case IPMI_DEVICE_SSIF:
-      ipmi_ssif_io_exit (dev->io.inband.dev_fd);
+      ipmi_ssif_exit (dev->io.inband.dev_fd);
       break;
     default:
       errno = EINVAL;
       return (-1);
     }
-  
+  ipmi_locate_free (&(dev->io.inband.locate_info));
   ipmi_inband_free (dev);
   
   if (dev->io.inband.mutex_semid)

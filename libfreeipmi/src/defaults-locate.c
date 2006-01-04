@@ -40,8 +40,8 @@ defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
     pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
     pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
     return (pinfo);
+  case IPMI_INTERFACE_LAN:
   case IPMI_INTERFACE_BT:
-    return (NULL);
   case IPMI_INTERFACE_RESERVED:
     return (NULL);
   }

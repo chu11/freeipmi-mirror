@@ -41,6 +41,28 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
   ipmi_locate_info_t* pinfo2;
   
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+
+  switch (type)
+    {
+    case IPMI_INTERFACE_KCS:
+      pinfo->interface_type = type;
+      break;
+    case IPMI_INTERFACE_SMIC:
+      pinfo->interface_type = type;
+      break;
+    case IPMI_INTERFACE_BT:
+      pinfo->interface_type = type;
+      break;
+    case IPMI_INTERFACE_SSIF:
+      pinfo->interface_type = type;
+      pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+      break;
+    case IPMI_INTERFACE_LAN:
+      pinfo->interface_type = type;
+      break;
+    case IPMI_INTERFACE_RESERVED:
+      break;
+    }
   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
@@ -52,4 +74,10 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
   return (NULL);
+}
+
+void
+ipmi_locate_free (ipmi_locate_info_t* pinfo)
+{
+  ipmi_xfree (pinfo->bmc_i2c_dev_name);
 }

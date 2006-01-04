@@ -435,6 +435,7 @@ main (int argc, char **argv)
 				args->common.disable_auto_probe, 
 				IPMI_DEVICE_KCS, 
 				args->common.driver_address, 
+				0,
 				args->common.driver_device, 
 				IPMI_MODE_DEFAULT) != 0)
 	    {
@@ -442,6 +443,7 @@ main (int argc, char **argv)
 				    args->common.disable_auto_probe, 
 				    IPMI_DEVICE_SSIF, 
 				    args->common.driver_address, 
+				    0,
 				    args->common.driver_device, 
 				    IPMI_MODE_DEFAULT) != 0)
 		{
@@ -456,6 +458,7 @@ main (int argc, char **argv)
 				args->common.disable_auto_probe, 
 				args->common.driver_type, 
 				args->common.driver_address, 
+				0,
 				args->common.driver_device, 
 				IPMI_MODE_DEFAULT) != 0)
 	    {
