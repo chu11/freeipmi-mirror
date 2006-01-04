@@ -1,3 +1,14 @@
+2006-01-03  Anand Babu  <ab@zresearch.com>
+
+	* configure.ac: changed versioning nomenclature. Up version to
+	0.2.beta1. Automake pre-req minimum is now 1.8.
+
+	* doc/Makefile.am: build fixes for freeipmi-faq.texi.
+
+	* doc/freeipmi.texi: now includes version-doc.texi.
+
+	* doc/freeipmi-faq.texi: now includes version-faq.texi.
+	
 2006-01-03  A Balamurugan  <bala@zresearch.com>
 
 	* fish/src/ipmi-wrapper.c (get_lan_channel_number,

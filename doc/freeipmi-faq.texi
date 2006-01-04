@@ -6,7 +6,7 @@
 @finalout
 @c %**end of header
 
-@include version.texi
+@include version-faq.texi
 
 @dircategory Platform Management
 @direntry
