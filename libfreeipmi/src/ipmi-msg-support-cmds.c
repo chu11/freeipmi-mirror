@@ -1351,6 +1351,64 @@ ipmi_get_channel_number (uint8_t channel_medium_type)
 }
 
 int8_t 
+ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
+{
+  if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+    {
+      fiid_obj_t obj_data_rs;
+      uint64_t manf_id, prod_id;
+      
+      FIID_OBJ_ALLOCA (obj_data_rs, tmpl_cmd_get_dev_id_rs);
+      
+      ERR (ipmi_cmd_get_dev_id (dev, obj_data_rs) == 0);
+      
+      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
+      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, "prod_id", &prod_id);
+      
+      switch (manf_id)
+	{
+	case IPMI_MANF_ID_INTEL:
+	case 0xB000157: // Intel 
+	  switch (prod_id)
+	    {
+	    case IPMI_PROD_ID_SE7501WV2:
+	      return 7;
+	    }
+	}
+    }
+  
+  {
+    fiid_obj_t data_rs;
+    uint64_t val;
+    int i;
+    
+    FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_info_rs);
+    
+    /* Channel numbers range from 0 - 7 */
+    for (i = 0; i < 8; i++)
+      {
+	if (ipmi_cmd_get_channel_info2 (dev, i, data_rs) != 0)
+	  continue;
+	
+	FIID_OBJ_GET (data_rs, 
+		      tmpl_get_channel_info_rs, 
+		      "channel_medium_type", 
+		      &val);
+	if ((uint8_t) val == channel_medium_type)
+	  {
+	    FIID_OBJ_GET (data_rs, 
+			  tmpl_get_channel_info_rs, 
+			  "actual_channel_number", 
+			  &val);
+	    return (int8_t) val;
+	  }
+      }
+  }
+  
+  return (-1);
+}
+
+int8_t 
 ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
 				 fiid_obj_t obj_cmd_rs)
 {

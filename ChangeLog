@@ -1,5 +1,13 @@
 2006-01-03  A Balamurugan  <bala@zresearch.com>
 
+	* fish/src/ipmi-wrapper.c (get_lan_channel_number,
+	get_serial_channel_number): uses udm enabled function.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_get_channel_number2): new function.
+
+2006-01-03  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw_send,
 	ipmi_lan_cmd_raw2): fixed bugs.
 

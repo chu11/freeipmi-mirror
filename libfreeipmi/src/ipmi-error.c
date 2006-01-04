@@ -52,7 +52,7 @@ ipmi_strerror_r (uint8_t cmd,
       
     case IPMI_ERR_COMMAND_INVALID:
       SNPRINTF_RETURN ("Invalid Command. Used to indicate an "
-		       "unrecognized or unsupported ommand.");
+		       "unrecognized or unsupported command.");
       
     case IPMI_ERR_COMMAND_INVALID_FOR_LUN:
       SNPRINTF_RETURN ("Command invalid for given LUN.");
