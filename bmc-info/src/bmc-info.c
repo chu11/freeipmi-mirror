@@ -396,6 +396,17 @@ main (int argc, char **argv)
   struct hostent *hostinfo;
   struct sockaddr_in host;
   
+  struct rlimit resource_limit;
+  
+  /* generate core dump on seg-fault */
+  if (ipmi_is_root ())
+    {
+      resource_limit.rlim_cur =
+	resource_limit.rlim_max = RLIM_INFINITY;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+	perror ("warning: setrlimit()");
+    }
+  
   bmc_info_argp_parse (argc, argv);
   args = bmc_info_get_arguments ();
   

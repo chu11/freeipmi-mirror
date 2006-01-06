@@ -343,7 +343,7 @@ ipmi_open_inband (ipmi_device_t *dev,
 	  locate_info->locate_driver = 0;
 	  locate_info->interface_type = IPMI_INTERFACE_SSIF;
 	  locate_info->bmc_i2c_dev_name = driver_device;
-	  locate_info->addr_space_id = 2;
+	  locate_info->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
 	  locate_info->base_addr.bmc_smbus_slave_addr = driver_address;
 	  locate_info->reg_space = reg_space;
 	}

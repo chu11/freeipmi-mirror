@@ -113,6 +113,17 @@ main (int argc, char **argv)
   uint8_t bytes_rs[512];
   int rcvd_len;
   
+  struct rlimit resource_limit;
+  
+  /* generate core dump on seg-fault */
+  if (ipmi_is_root ())
+    {
+      resource_limit.rlim_cur =
+	resource_limit.rlim_max = RLIM_INFINITY;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+	perror ("warning: setrlimit()");
+    }
+  
   ipmi_raw_argp_parse (argc, argv);
   args = ipmi_raw_get_arguments ();
   

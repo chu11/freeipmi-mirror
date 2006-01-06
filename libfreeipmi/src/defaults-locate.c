@@ -26,19 +26,29 @@ defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_DEFAULTS;
   switch (type){
   case IPMI_INTERFACE_KCS:
+    pinfo->ipmi_ver_major = 1;
+    pinfo->ipmi_ver_minor = 5;
     pinfo->interface_type = IPMI_INTERFACE_KCS;
     pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
     pinfo->base_addr.bmc_iobase_addr = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+    pinfo->reg_space = 1;
     return (pinfo);
   case IPMI_INTERFACE_SMIC:
+    pinfo->ipmi_ver_major = 1;
+    pinfo->ipmi_ver_minor = 5;
     pinfo->interface_type = IPMI_INTERFACE_SMIC;
     pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
     pinfo->base_addr.bmc_iobase_addr = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
+    pinfo->reg_space = 1;
     return (pinfo);
   case IPMI_INTERFACE_SSIF:
+    pinfo->ipmi_ver_major = 1;
+    pinfo->ipmi_ver_minor = 5;
     pinfo->interface_type = IPMI_INTERFACE_SSIF;
     pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
     pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
+    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+    pinfo->reg_space = 1;
     return (pinfo);
   case IPMI_INTERFACE_LAN:
   case IPMI_INTERFACE_BT:
