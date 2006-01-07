@@ -110,21 +110,6 @@ fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_repo_info (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sdr_repo_info_rq);
-  fill_kcs_get_repo_info (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sdr_repo_info_rq, 
-			 obj_data_rs, tmpl_get_sdr_repo_info_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -135,21 +120,6 @@ fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sdr_repo_alloc_info_rq);
-  fill_kcs_get_repo_alloc_info (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sdr_repo_alloc_info_rq, 
-			 obj_data_rs, tmpl_get_sdr_repo_alloc_info_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -157,21 +127,6 @@ fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 		"cmd", 
 		IPMI_CMD_RESERVE_SDR_REPOSITORY);
   return 0;
-}
-
-int8_t 
-ipmi_kcs_reserve_repo (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_reserve_sdr_repo_rq);
-  fill_kcs_reserve_repo (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_reserve_sdr_repo_rq, 
-			 obj_data_rs, tmpl_reserve_sdr_repo_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -205,48 +160,6 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 }
 
 int8_t 
-ipmi_kcs_get_sensor_record_header (uint16_t record_id, 
-				   fiid_obj_t obj_data_rs, 
-				   uint8_t *sensor_record_header,
-                                   uint32_t sensor_record_header_len)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
-  fiid_obj_t obj_var_len_data_rs;
-  int header_length = 0; 
-  
-  header_length = fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
-  tmpl_var_len_get_sdr_rs = fiid_template_make (8, "cmd", 
-						8, "comp_code", 
-						16, "next_record_id", 
-						(header_length * 8), "record_data");
-  obj_var_len_data_rs = fiid_obj_calloc (tmpl_var_len_get_sdr_rs);
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sdr_rq);
-  fill_kcs_get_sensor_record_header (obj_data_rq, record_id);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sdr_rq, 
-			 obj_var_len_data_rs, tmpl_var_len_get_sdr_rs);
-  free (obj_data_rq);
-  
-  memcpy (obj_data_rs, 
-	  obj_var_len_data_rs, 
-	  fiid_obj_len_bytes (tmpl_var_len_get_sdr_rs) - header_length);
-  fiid_obj_get_data (obj_var_len_data_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     "record_data", 
-		     sensor_record_header,
-                     sensor_record_header_len);
-  
-  free (tmpl_var_len_get_sdr_rs);
-  free (obj_var_len_data_rs);
-  
-  return status;
-}
-
-int8_t 
 fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq, 
 			uint16_t reservation_id, 
 			uint16_t record_id, 
@@ -277,124 +190,6 @@ fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq,
 		tmpl_get_sdr_rq,
 		"bytes_read",
 		bytes_read);
-  return 0;
-}
-
-int8_t 
-ipmi_kcs_get_sdr_chunk (uint16_t reservation_id, 
-			uint16_t record_id, 
-			uint8_t record_offset, 
-			uint8_t bytes_read, 
-			fiid_obj_t obj_data_rs, 
-			uint8_t *sensor_record_chunk,
-                        uint32_t sensor_record_chunk_len) 
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
-  fiid_obj_t obj_var_len_data_rs;
-  
-  tmpl_var_len_get_sdr_rs = fiid_template_make (8, "cmd", 
-						8, "comp_code", 
-						16, "next_record_id", 
-						(bytes_read * 8), "record_data");
-  obj_var_len_data_rs = fiid_obj_calloc (tmpl_var_len_get_sdr_rs);
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sdr_rq);
-  fill_kcs_get_sdr_chunk (obj_data_rq, reservation_id, 
-			  record_id, record_offset, bytes_read);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sdr_rq, 
-			 obj_var_len_data_rs, tmpl_var_len_get_sdr_rs);
-  free (obj_data_rq);
-  
-  memcpy (obj_data_rs, 
-	  obj_var_len_data_rs, 
-	  fiid_obj_len_bytes (tmpl_var_len_get_sdr_rs) - bytes_read);
-  fiid_obj_get_data (obj_var_len_data_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     "record_data", 
-		     sensor_record_chunk,
-                     sensor_record_chunk_len);
-  
-  free (tmpl_var_len_get_sdr_rs);
-  free (obj_var_len_data_rs);
-  
-  return status;
-}
-
-int8_t 
-ipmi_kcs_get_sdr (uint16_t record_id, 
-		  uint8_t record_length, 
-		  uint8_t *sensor_record, 
-		  uint8_t *comp_code)
-{
-  uint8_t record_offset; 
-  uint8_t bytes_read;
-  
-  uint64_t val;
-  uint16_t reservation_id;
-  uint8_t data_rs[21];
-  uint8_t record_data[16];
-  fiid_obj_t obj_data_rs = (fiid_obj_t) data_rs;
-  
-  reservation_id = 0x0;
-  
-  if (record_length > 16)
-    {
-      *comp_code = 0x0;
-      if (ipmi_kcs_reserve_repo (data_rs) != 0)
-	return -1;
-      
-      fiid_obj_get (data_rs,  
-		    tmpl_reserve_sdr_repo_rs, 
-		    "comp_code", 
-		    &val);
-      *comp_code = (uint8_t) val;
-      
-      if (*comp_code != IPMI_KCS_STATUS_SUCCESS)
-	return -1;
-      
-      fiid_obj_get (data_rs,  
-		    tmpl_reserve_sdr_repo_rs, 
-		    "reservation_id", 
-		    &val);
-      reservation_id = (uint16_t) val;
-      /*       printf ("Reservation ID: %X\n", reservation_id); */
-    }
-  
-  for (record_offset = 0; record_offset < record_length; record_offset += 16)
-    {
-      bytes_read = 16; 
-      if ((record_offset + bytes_read) > record_length)
-	bytes_read = record_length - record_offset;
-      
-      /*       printf ("record_offset: %d, received bytes: %d\n", record_offset, bytes_read); */
-      
-      *comp_code = 0x0;
-      memset (record_data, 0, 16);
-      if (ipmi_kcs_get_sdr_chunk (reservation_id, 
-				  record_id, 
-				  record_offset, 
-				  bytes_read, 
-				  obj_data_rs, 
-				  record_data,
-                                  16) != 0)
-	return -1;
-      
-      /* 	  printf ("received record_offset: %d, received bytes: %d\n", record_offset, bytes_read); */
-      fiid_obj_get (data_rs, 
-		    tmpl_get_sdr_rs, 
-		    "comp_code", 
-		    &val);
-      *comp_code = (uint8_t) val;
-      if (*comp_code != IPMI_KCS_STATUS_SUCCESS)
-	return -1;
-      
-      memcpy (sensor_record + record_offset, record_data, bytes_read);
-    }
-  
   return 0;
 }
 

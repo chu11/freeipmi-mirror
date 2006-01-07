@@ -21,7 +21,7 @@
 #include "freeipmi.h"
 
 int 
-ipmi_sdr_repo_info_write (FILE *fp)
+ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
 {
   uint8_t *data_rs = NULL;
   uint64_t val;
@@ -34,7 +34,7 @@ ipmi_sdr_repo_info_write (FILE *fp)
 
   data_rs = alloca (fiid_obj_len_bytes (tmpl_get_sdr_repo_info_rs));
   
-  if (ipmi_kcs_get_repo_info (data_rs) != 0)
+  if (ipmi_cmd_get_sdr_repo_info2 (dev, data_rs) != 0)
     return (-1);
   
   fiid_obj_get (data_rs, 
@@ -53,40 +53,47 @@ ipmi_sdr_repo_info_write (FILE *fp)
 }
 
 int 
-ipmi_sdr_records_write (FILE *fp)
+ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 {
-  uint16_t record_id;
-  uint8_t data_rs[4] = {0, 0, 0, 0};
-  uint8_t record_header[5];
-  uint8_t *sensor_record = NULL;
-  uint64_t val;
-  uint8_t record_length;
-  uint8_t comp_code;
+  uint16_t record_id = 0;
+  uint8_t record_length = 0;
+  fiid_obj_t obj_cmd_rs = NULL;
+  fiid_obj_t obj_sdr_record = NULL;
+  uint64_t val = 0;
   
   if (fp == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
-
+  
+  fiid_obj_alloca (obj_cmd_rs, tmpl_get_sdr_rs);
+  
   record_id = 0;
   while (record_id != 0xFFFF)
     {
-      // printf ("writing %d\n", record_id);
-      if (ipmi_kcs_get_sensor_record_header (record_id, 
-					     data_rs, 
-                                             record_header,
-                                             5) != 0)
-	return (-1);
+      fiid_obj_memset (obj_cmd_rs, 0, tmpl_get_sdr_rs);
+      if (obj_sdr_record)
+	{
+	  free (obj_sdr_record);
+	  obj_sdr_record = NULL;
+	}
       
-      fiid_obj_get (data_rs, 
+      if (ipmi_cmd_get_sdr2 (dev, 
+			     record_id, 
+			     obj_cmd_rs, 
+			     &obj_sdr_record) != 0)
+	{
+	  return (-1);
+	}
+      
+      fiid_obj_get (obj_cmd_rs, 
 		    tmpl_get_sdr_rs, 
-		    "comp_code", 
+		    "next_record_id", 
 		    &val);
-      if (val != 0)
-	return (-1);
+      record_id = (uint16_t) val;
       
-      fiid_obj_get (record_header, 
+      fiid_obj_get (obj_sdr_record, 
 		    tmpl_sdr_sensor_record_header, 
 		    "record_length", 
 		    &val);
@@ -94,45 +101,19 @@ ipmi_sdr_records_write (FILE *fp)
       
       record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
       
-      sensor_record = alloca (record_length);
-      if (ipmi_kcs_get_sdr (record_id, 
-			    record_length, 
-			    sensor_record, 
-			    &comp_code) != 0)
-	return (-1);
-      
-      if (comp_code != IPMI_KCS_STATUS_SUCCESS)
-	return (-1);
-      
-/*       { */
-/* 	int i; */
-	
-/* 	if (record_id >= 130 && record_id <= 134) */
-/* 	  { */
-/* 	    for (i = 0; i < record_length; i++) */
-/* 	      printf ("%02X ", sensor_record[i]); */
-/* 	    printf ("\n\n"); */
-/* 	  } */
-/*       } */
-      
-      if (fwrite (sensor_record, 
+      if (fwrite (obj_sdr_record, 
 		  record_length, 
 		  1, 
 		  fp) < 0)
 	return (-1);
       
-      fiid_obj_get (data_rs, 
-		    tmpl_get_sdr_rs, 
-		    "next_record_id", 
-		    &val);
-      record_id = val;
     }
   
   return (0);
 }
 
 int 
-ipmi_sdr_cache_create (char *sdr_cache_file)
+ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
 {
   FILE *cache_fp;
   
@@ -145,13 +126,13 @@ ipmi_sdr_cache_create (char *sdr_cache_file)
   if ((cache_fp = fopen (sdr_cache_file, "w")) == NULL)
     return (-1);
   
-  if (ipmi_sdr_repo_info_write (cache_fp) != 0)
+  if (ipmi_sdr_repo_info_write (dev, cache_fp) != 0)
     {
       fclose (cache_fp);
       return (-1);
     }
   
-  if (ipmi_sdr_records_write (cache_fp) != 0)
+  if (ipmi_sdr_records_write (dev, cache_fp) != 0)
     {
       fclose (cache_fp);
       return (-1);

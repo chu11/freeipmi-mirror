@@ -104,11 +104,6 @@ extern fiid_template_t tmpl_set_sensor_type_rs;
 extern fiid_template_t tmpl_get_sensor_type_rq;
 extern fiid_template_t tmpl_get_sensor_type_rs;
 
-
-int8_t ipmi_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rs);
-int8_t ipmi_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rs);
-
 int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
 					uint8_t sensor_number, 
 					fiid_obj_t obj_cmd_rs);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.31 2006-01-04 14:27:10 ab Exp $
+ *  $Id: bmc-watchdog.c,v 1.32 2006-01-07 03:24:32 balamurugan Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -755,10 +755,10 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  num = ipmi_get_channel_number(IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  num = ipmi_get_channel_number2 (&ipmi_dev, IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
   if (num < 0)
     {
-      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number: %s",
+      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number2: %s",
 	      strerror(errno));
       goto cleanup;
     }

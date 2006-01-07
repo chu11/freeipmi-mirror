@@ -814,37 +814,6 @@ fill_kcs_set_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_channel_access (uint8_t channel_number, 
-			     uint8_t ipmi_messaging_access_mode, 
-			     uint8_t user_level_authentication, 
-			     uint8_t per_message_authentication, 
-			     uint8_t pef_alerting, 
-			     uint8_t channel_access_set_flag, 
-			     uint8_t channel_privilege_level_limit, 
-			     uint8_t channel_privilege_level_limit_set_flag, 
-			     fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_channel_access_rq);
-  ERR (fill_kcs_set_channel_access (obj_data_rq, 
-				    channel_number, 
-				    ipmi_messaging_access_mode, 
-				    user_level_authentication, 
-				    per_message_authentication, 
-				    pef_alerting, 
-				    channel_access_set_flag, 
-				    channel_privilege_level_limit, 
-				    channel_privilege_level_limit_set_flag) == 0); 
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_set_channel_access_rq, 
-			 obj_data_rs, tmpl_set_channel_access_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_set_user_name (fiid_obj_t obj_data_rq, 
 			uint8_t user_id, 
 			char *user_name,
@@ -889,25 +858,6 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_kcs_set_user_name (uint8_t user_id, 
-			char *user_name, 
-			fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_user_name_rq);
-  ERR (fill_kcs_set_user_name (obj_data_rq, user_id, 
-			       user_name, 
-			       (user_name) ? strlen(user_name) : 0) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_set_user_name_rq, 
-			 obj_data_rs, tmpl_set_user_name_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_get_user_name (fiid_obj_t obj_data_rq, uint8_t user_id) 
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -921,22 +871,6 @@ fill_kcs_get_user_name (fiid_obj_t obj_data_rq, uint8_t user_id)
 		user_id);
   
   return 0;
-}
-
-int8_t 
-ipmi_kcs_get_user_name (uint8_t user_id, 
-			fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_user_name_rq);
-  ERR (fill_kcs_get_user_name (obj_data_rq, user_id) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_get_user_name_rq, 
-			 obj_data_rs, tmpl_get_user_name_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -988,26 +922,6 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
                                  user_password_len) == 0);
 
   return 0;
-}
-
-int8_t 
-ipmi_kcs_set_user_password (uint8_t user_id, 
-			    uint8_t operation, 
-			    char *user_password,
-			    fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_user_password_rq);
-  ERR (fill_kcs_set_user_password (obj_data_rq, user_id, operation, 
-				   user_password, 
-				   (user_password) ? strlen(user_password) : 0) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_set_user_password_rq, 
-			 obj_data_rs, tmpl_set_user_password_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -1076,35 +990,6 @@ fill_kcs_set_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-ipmi_kcs_set_user_access (uint8_t channel_number,
-			  uint8_t user_id,
-			  uint8_t restrict_to_callback,
-			  uint8_t enable_link_auth,
-			  uint8_t enable_ipmi_msgs,
-			  uint8_t user_privilege_level_limit,
-			  uint8_t user_session_number_limit, 
-			  fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_user_access_rq);
-  ERR (fill_kcs_set_user_access (obj_data_rq, 
-				 channel_number,
-				 user_id,
-				 restrict_to_callback,
-				 enable_link_auth,
-				 enable_ipmi_msgs,
-				 user_privilege_level_limit,
-				 user_session_number_limit) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_set_user_access_rq, 
-			 obj_data_rs, tmpl_set_user_access_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
 fill_kcs_get_user_access (fiid_obj_t obj_data_rq, 
 			  uint8_t channel_number,
 			  uint8_t user_id)
@@ -1133,24 +1018,6 @@ fill_kcs_get_user_access (fiid_obj_t obj_data_rq,
   
   return 0;
 }
-
-int8_t
-ipmi_kcs_get_user_access (uint8_t channel_number,
-			  uint8_t user_id,
-			  fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_user_access_rq);
-  ERR (fill_kcs_get_user_access (obj_data_rq, channel_number, user_id) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_get_user_access_rq, 
-			 obj_data_rs, tmpl_get_user_access_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 
 int8_t
 fill_kcs_get_channel_access (fiid_obj_t obj_data_rq, 
@@ -1182,23 +1049,6 @@ fill_kcs_get_channel_access (fiid_obj_t obj_data_rq,
   return 0;
 }
 
-int8_t
-ipmi_kcs_get_channel_access (uint8_t channel_number,
-			     uint8_t channel_access_set_flag,
-			     fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_access_rq);
-  ERR (fill_kcs_get_channel_access (obj_data_rq, channel_number, channel_access_set_flag) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_get_channel_access_rq, 
-			 obj_data_rs, tmpl_get_channel_access_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 int8_t 
 fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
 {
@@ -1220,22 +1070,6 @@ fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
 		channel_number);
   
   return 0;
-}
-
-int8_t 
-ipmi_kcs_get_channel_info (uint8_t channel_number,
-			   fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_channel_info_rq);
-  ERR (fill_kcs_get_channel_info (obj_data_rq, channel_number) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_APP_RQ, 
-			 obj_data_rq, tmpl_get_channel_info_rq, 
-			 obj_data_rs, tmpl_get_channel_info_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t
@@ -1280,74 +1114,6 @@ ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_
   FIID_OBJ_GET(obj_cmd, tmpl_cmd, "comp_code", &comp_code_recv);
 
   return ((((int8_t)comp_code_recv) == comp_code) ? 1 : 0);
-}
-
-/* achu: return type int8_t is ok, b/c channel numbers only range from
- * 0h - Fh.
- */
-static int8_t
-_search_for_medium_channel_number (uint8_t channel_medium_type)
-{
-  fiid_obj_t data_rs;
-  uint64_t val;
-  int i;
-  
-  FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_info_rs);
-  
-  /* Channel numbers range from 0 - 7 */
-  for (i = 0; i < 8; i++)
-    {
-      if (ipmi_kcs_get_channel_info (i, data_rs) != 0)
-	continue;
-      
-      if (IPMI_COMP_CODE(data_rs) != IPMI_COMMAND_SUCCESS)
-	continue;
-      
-      FIID_OBJ_GET (data_rs, 
-		    tmpl_get_channel_info_rs, 
-		    "channel_medium_type", 
-		    &val);
-      if ((uint8_t)val == channel_medium_type)
-	{
-	  FIID_OBJ_GET (data_rs, 
-			tmpl_get_channel_info_rs, 
-			"actual_channel_number", 
-			&val);
-	  return (int8_t)val;
-	}
-   }
-  
-  return -1;
-}
-
-int8_t 
-ipmi_get_channel_number (uint8_t channel_medium_type)
-{
-  if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
-    {
-      fiid_obj_t obj_data_rs;
-      uint64_t manf_id, prod_id;
-  
-      FIID_OBJ_ALLOCA (obj_data_rs, tmpl_cmd_get_dev_id_rs);
-  
-      if (ipmi_kcs_get_dev_id (obj_data_rs) != 0)
-	return (-1);
-  
-      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, "manf_id.id", &manf_id);
-      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, "prod_id", &prod_id);
-      
-      switch (manf_id)
-	{
-	case IPMI_MANF_ID_INTEL:
-	case 0xB000157: // Intel 
-	  switch (prod_id)
-	    {
-	    case IPMI_PROD_ID_SE7501WV2:
-	      return 7;
-	    }
-	}
-    }
-  return _search_for_medium_channel_number (channel_medium_type);
 }
 
 int8_t 

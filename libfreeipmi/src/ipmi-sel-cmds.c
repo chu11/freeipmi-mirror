@@ -151,21 +151,6 @@ fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_sel_info (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_info_rq);
-  fill_kcs_get_sel_info (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sel_info_rq, 
-			 obj_data_rs, tmpl_get_sel_info_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -176,21 +161,6 @@ fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-ipmi_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_alloc_info_rq);
-  fill_kcs_get_sel_alloc_info (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sel_alloc_info_rq, 
-			 obj_data_rs, tmpl_get_sel_alloc_info_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
@@ -198,21 +168,6 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 		"cmd", 
 		IPMI_CMD_RESERVE_SEL);
   return 0;
-}
-
-int8_t 
-ipmi_kcs_reserve_sel (fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_reserve_sel_rq);
-  fill_kcs_reserve_sel (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_reserve_sel_rq, 
-			 obj_data_rs, tmpl_reserve_sel_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -237,21 +192,6 @@ fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
 }
 
 int8_t 
-ipmi_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_sel_entry_rq);
-  fill_kcs_get_sel_entry (obj_data_rq, record_id);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_get_sel_entry_rq, 
-			 obj_data_rs, tmpl_get_sel_entry_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq, 
 			   uint16_t reservation_id, 
 			   uint16_t record_id)
@@ -272,23 +212,6 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 		record_id);
   
   return 0;
-}
-
-int8_t 
-ipmi_kcs_delete_sel_entry (uint16_t reservation_id, 
-			   uint16_t record_id, 
-			   fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_delete_sel_entry_rq);
-  fill_kcs_delete_sel_entry (obj_data_rq, reservation_id, record_id);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_delete_sel_entry_rq, 
-			 obj_data_rs, tmpl_delete_sel_entry_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -325,23 +248,6 @@ fill_kcs_clear_sel (fiid_obj_t obj_data_rq, uint16_t reservation_id, uint8_t opc
 		opcode);
   
   return 0;
-}
-
-int8_t 
-ipmi_kcs_clear_sel (uint16_t reservation_id, 
-		    uint8_t opcode, 
-		    fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_clear_sel_rq);
-  fill_kcs_clear_sel (obj_data_rq, reservation_id, opcode);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_STORAGE_RQ, 
-			 obj_data_rq, tmpl_clear_sel_rq, 
-			 obj_data_rs, tmpl_clear_sel_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 

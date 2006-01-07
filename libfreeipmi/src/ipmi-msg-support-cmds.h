@@ -234,53 +234,10 @@ extern fiid_template_t tmpl_get_user_access_rs;
 extern fiid_template_t tmpl_get_channel_info_rq;
 extern fiid_template_t tmpl_get_channel_info_rs;
 
-int8_t ipmi_kcs_set_channel_access (uint8_t channel_number, 
-				    uint8_t ipmi_messaging_access_mode, 
-				    uint8_t user_level_authentication, 
-				    uint8_t per_message_authentication, 
-				    uint8_t pef_alerting, 
-				    uint8_t channel_access, 
-				    uint8_t channel_privilege_level, 
-				    uint8_t channel_privilege_level_limit, 
-				    fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_set_user_name (uint8_t user_id, 
-			       char *user_name, 
-			       fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_get_user_name (uint8_t user_id, 
-			       fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_set_user_password (uint8_t user_id, 
-				   uint8_t operation, 
-				   char *user_password, 
-				   fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_set_user_access (uint8_t channel_number,
-				 uint8_t user_id,
-				 uint8_t restrict_to_callback,
-				 uint8_t enable_link_auth,
-				 uint8_t enable_ipmi_msgs,
-				 uint8_t user_privilege_level_limit,
-				 uint8_t user_session_number_limit, 
-				 fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_get_user_access (uint8_t channel_number,
-				 uint8_t user_id,
-				 fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_get_channel_access (uint8_t channel_number,
-				    uint8_t channel_access,
-				    fiid_obj_t obj_data_rs);
-
-int8_t ipmi_kcs_get_channel_info (uint8_t channel_number,
-				  fiid_obj_t obj_data_rs);
-
 int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd);
 
 int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code);
 
-int8_t ipmi_get_channel_number (uint8_t channel_medium_type);
 int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
 				 uint8_t channel_medium_type);
 

@@ -1,6 +1,27 @@
+2006-01-06  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c: removed kcs command
+	functions.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sel-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cache.c (ipmi_sdr_repo_info_write,
+	ipmi_sdr_records_write, ipmi_sdr_cache_create): uses udm
+	functions.
+
+	* bmc-watchdog/src/bmc-watchdog.c: updated.
+
 2006-01-05  A Balamurugan  <bala@zresearch.com>
 
-	* bmc-info/src/bmc-info.c: generates code when seg-faults.
+	* bmc-info/src/bmc-info.c: generates core when seg-faults.
 
 	* fish/src/fish.c: like wise.
 
