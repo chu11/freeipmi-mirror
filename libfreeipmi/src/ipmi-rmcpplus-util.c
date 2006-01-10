@@ -114,7 +114,9 @@ ipmi_crypt_hash(int hash_algorithm,
       return (-1);
     }
 
-  /* XXX need to check length? */
+  /* achu: Technically any key length can be supplied.  We'll assume
+   * callers have checked if the key is of a length they care about.
+   */
   if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
     {
       if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
@@ -266,7 +268,6 @@ _cipher_crypt(int cipher_algorithm,
   
   if (key && key_len)
     {
-      /* XXX need to check length? */
       if ((e = gcry_cipher_setkey(h,
                                   (void *)key,
                                   key_len)) != GPG_ERR_NO_ERROR)
@@ -451,7 +452,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
-      /* XXX: achu: Ummm, I don't think there is a SIK?? I'm confused */
+      /* SPEC: Not sure what to do */
       memset(sik, '\0', sik_len);
       return (0);
     }
@@ -557,7 +558,7 @@ _calculate_k_rakp_none(uint8_t *k,
                        uint8_t *constant,
                        uint32_t constant_len)
 {
-  /* XXX: achu: The spec doesn't give information on what to do if
+  /* SPEC: achu: The spec doesn't give information on what to do if
    * rakp is none.  So we're just going to say a NULL key.
    */
 
@@ -618,7 +619,7 @@ _calculate_k_rakp_hmac(int hash_algorithm,
       return (-1);
     }
 
-  /* XXX: achu: I believe the length of the constant you pass in
+  /* SPEC: achu: I believe the length of the constant you pass in
    * is the digest_len, atleast according to IPMI 2.0 Spec Section
    * 13.32, "constants are constructed using a hexadecimal octet
    * value repeated up to the HMAC block size in length starting
@@ -809,9 +810,9 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
                                                        uint32_t key_exchange_authentication_code_len)
 {
   uint8_t priv_byte = 0;
-  uint8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   uint32_t buf_index = 0;
-  uint8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t digest[IPMI_MAX_PAYLOAD_LEN];
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len, expected_digest_len;
   
@@ -885,7 +886,6 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
       buf_index++;
     }
 
-  /* XXX need new len */
   if ((digest_len = ipmi_crypt_hash(hash_algorithm,
                                     hash_flags,
                                     authentication_key,
@@ -1037,9 +1037,9 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
                                                                fiid_obj_t obj_msg)
 {
   uint8_t priv_byte = 0;
-  uint8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   uint32_t buf_index = 0;
-  uint8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t digest[IPMI_MAX_PAYLOAD_LEN];
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len;
   int32_t obj_field_start;
@@ -1129,7 +1129,6 @@ check_rmcpplus_rakp_message_2_key_exchange_authentication_code(int8_t authentica
       buf_index += username_length;
     }
 
-  /* XXX need new len */
   if ((digest_len = ipmi_crypt_hash(hash_algorithm,
                                     hash_flags,
                                     authentication_key,
@@ -1157,9 +1156,9 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
                                                     uint32_t managed_system_guid_len,
                                                     fiid_obj_t obj_msg)
 {
-  uint8_t buf[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t buf[IPMI_MAX_PAYLOAD_LEN];
   uint32_t buf_index = 0;
-  uint8_t digest[IPMI_MAX_PAYLOAD_LEN]; /* XXX need a different len */
+  uint8_t digest[IPMI_MAX_PAYLOAD_LEN];
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len;
   int32_t compare_len;
@@ -1234,7 +1233,6 @@ check_rmcpplus_rakp_message_4_integrity_check_value(int8_t authentication_algori
   memcpy(buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LEN);
   buf_index += IPMI_MANAGED_SYSTEM_GUID_LEN;
 
-  /* XXX need new len */
   if ((digest_len = ipmi_crypt_hash(hash_algorithm,
                                     hash_flags,
                                     sik_key,

@@ -6,8 +6,6 @@
 @finalout
 @c %**end of header
 
-@include version.texi
-
 @dircategory Platform Management
 @direntry
 * GNU FreeIPMI: (freeipmi).  GNU FreeIPMI User's Guide 

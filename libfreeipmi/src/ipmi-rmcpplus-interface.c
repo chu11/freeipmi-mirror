@@ -111,7 +111,31 @@ _construct_payload_special(uint8_t payload_type,
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     {
-      /* XXX need template checks? */
+      if ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+           && (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
+               || !fiid_obj_field_lookup (tmpl_cmd, "requested_maximum_privilege_level")
+               || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_session_id")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.authentication_algorithm")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.integrity_algorithm")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.confidentiality_algorithm")))
+          || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+              && (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "managed_system_session_id")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_random_number")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "requested_maximum_privilege_level")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "name_only_lookup")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "username_length")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "username"))))
+        {
+          errno = EINVAL;
+          return (-1);
+        }
 
       if ((obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd)) < 0)
         return (-1);
@@ -685,7 +709,7 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
 
           if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
             {
-              /* XXX: achu: Do we zero pad?  I don't know. */
+              /* SPEC: achu: Zero Pad? */
               FIID_OBJ_GET (obj_rmcpplus_trlr_session,
                             tmpl_trlr_session,
                             "auth_calc_data_len",
@@ -706,7 +730,7 @@ _construct_trlr_session_auth_code(uint8_t integrity_algorithm,
           
           if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 && auth_calc_len)
             {
-              /* XXX: achu: Do we zero pad?  I don't know. */
+              /* SPEC: achu: Zero Pad? */
               memcpy(hash_data + hash_data_len, 
                      (void *)(obj_rmcpplus_trlr_session + auth_calc_field_start), 
                      auth_calc_len);
@@ -1473,12 +1497,19 @@ _deconstruct_payload_special(uint8_t payload_type,
 
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
     {
-      /* XXX need more template checks */
       if (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
           || !fiid_obj_field_lookup (tmpl_cmd, "rmcpplus_status_code")
           || !fiid_obj_field_lookup (tmpl_cmd, "maximum_privilege_level")
           || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_session_id")
-          || !fiid_obj_field_lookup (tmpl_cmd, "managed_system_session_id"))
+          || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_type")
+          || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_length")
+          || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.authentication_algorithm")
+          || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_type")
+          || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_length")
+          || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.integrity_algorithm")
+          || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_type")
+          || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_length")
+          || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.confidentiality_algorithm"))
         {
           errno = EINVAL;
           return (-1);
@@ -1763,7 +1794,6 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
 
   payload_data_len = ipmi_payload_len - IPMI_AES_CBC_128_BLOCK_LEN;
 
-  /* XXX: Is it ok to check this? */
   if (payload_data_len <= 0)
     {
       errno = EINVAL;
@@ -2005,7 +2035,6 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 "payload_type",
                 &payload_type);
   
-  /* XXX: Is this right to check and return -1 here? */
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type))
     {
       errno = EINVAL;
@@ -2071,7 +2100,6 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 "ipmi_payload_len",
                 &ipmi_payload_len);
 
-  /* XXX: Is this right to check and return -1 here? */
   if (((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
         || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
@@ -2225,7 +2253,6 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 	  return (-1);
 	}
       
-      /* XXX: need to remove this check? */
       if (pad_length != (pkt_len - pkt_index - authcode_len - pad_length_field_len - next_header_field_len))
         {
           errno = EINVAL;

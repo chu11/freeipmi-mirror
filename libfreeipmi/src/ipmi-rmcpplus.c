@@ -42,7 +42,7 @@ fiid_template_t tmpl_rmcpplus_trlr_session =
     {8,   "pad_length"},
     {8,   "next_header"},
     {256, "auth_code"},         /* up to 256 bits */
-    {32,  "auth_code_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,  "auth_code_len"}, /* WORKAROUND */
     {0,   ""}
   };
 
@@ -53,7 +53,7 @@ fiid_template_t tmpl_rmcpplus_trlr_session_calc =
     {8,   "pad_length"},
     {8,   "next_header"},
     {256, "auth_calc_data"},    /* up to 256 bits */
-    {32,  "auth_calc_data_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,  "auth_calc_data_len"}, /* WORKAROUND */
     {0,   ""}
   };
 /* note: the ipmi spec wording is terrible.  Apparently, the integrity
@@ -64,11 +64,11 @@ fiid_template_t tmpl_rmcpplus_trlr_session_calc =
 fiid_template_t tmpl_rmcpplus_payload = 
   {
     {512,    "confidentiality_header"},  /* up to 512 bits */
-    {32,     "confidentiality_header_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,     "confidentiality_header_len"}, /* WORKAROUND */
     {524288, "payload_data"}, /* 65536 = 2^16 bytes, b/c ipmi_payload_len is 2 bytes */
-    {32,     "payload_data_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,     "payload_data_len"}, /* WORKAROUND */
     {512,    "confidentiality_trailer"}, /* up to 512 bits */
-    {32,     "confidentiality_trailer_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,     "confidentiality_trailer_len"}, /* WORKAROUND */
     {0,   ""}
   };
 
@@ -154,7 +154,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_2 =
     {128, "managed_system_random_number"},
     {128, "managed_system_guid"},
     {512, "key_exchange_authentication_code"}, /* up to 64 bytes */
-    {32,  "key_exchange_authentication_code_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,  "key_exchange_authentication_code_len"}, /* WORKAROUND */
     {0,   ""}
   };
 
@@ -165,7 +165,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_3 =
     {16,  "reserved1"},
     {32,  "managed_system_session_id"},
     {512, "key_exchange_authentication_code"}, /* up to 64 bytes */
-    {32,  "key_exchange_authentication_code_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,  "key_exchange_authentication_code_len"}, /* WORKAROUND */
     {0,   ""}
   };
 
@@ -181,7 +181,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
     {16,  "reserved1"},
     {32,  "remote_console_session_id"},
     {512, "integrity_check_value"}, /* up to 64 bytes */
-    {32,  "integrity_check_value_len"}, /* XXX not in IPMI 2.0 spec */
+    {32,  "integrity_check_value_len"}, /* WORKAROUND */
     {0,   ""}
   };
 

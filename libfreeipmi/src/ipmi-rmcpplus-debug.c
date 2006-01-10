@@ -334,12 +334,51 @@ _dump_rmcpplus_payload_special(int fd,
       return (-1);
     }
 
-  /* XXX Need template checks? */
+  /* These can all be treated the same branch b/c there are no variable length fields */
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     {
-      /* These can all be treated the same b/c there are no variable length fields */
+      if ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+           && (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
+               || !fiid_obj_field_lookup (tmpl_cmd, "requested_maximum_privilege_level")
+               || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_session_id")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.authentication_algorithm")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.integrity_algorithm")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_type")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_length")
+               || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.confidentiality_algorithm")))
+          || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+              && (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "rmcpplus_status_code")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "maximum_privilege_level")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_session_id")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_type")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.payload_length")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "authentication_payload.authentication_algorithm")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_type")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.payload_length")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "integrity_payload.integrity_algorithm")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_type")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.payload_length")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "confidentiality_payload.confidentiality_algorithm")))
+          || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+              && (!fiid_obj_field_lookup (tmpl_cmd, "message_tag")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "managed_system_session_id")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "remote_console_random_number")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "requested_maximum_privilege_level")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "name_only_lookup")
+                  || !fiid_obj_field_lookup (tmpl_cmd, "username_length") 
+                  || !fiid_obj_field_lookup (tmpl_cmd, "username"))))
+        {
+          errno = EINVAL;
+          return (-1);
+        }
+
       FIID_OBJ_ALLOCA(obj_payload, tmpl_rmcpplus_payload);
 
       FIID_OBJ_MEMSET(obj_payload, '\0', tmpl_rmcpplus_payload);
@@ -649,7 +688,6 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
   return (0);
 }
 
-/* XXX: crypted and uncrypted payload? */
 static int32_t
 _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    char *prefix,
