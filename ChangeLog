@@ -102,7 +102,16 @@
 	libfreeipmi/src/ipmi-rmcpplus-debug.c
 	(_dump_rmcpplus_payload_special): Add template checks.
 
-		
+	* libfreeipmi/src/ipmi-rmcpplus-util.h (ipmi_init_crypt): Removed
+	prototype.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c (ipmi_init_crypt): Renamed
+	to _ipmi_init_crypt and made static.  Add pthread support.
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.c (ipmi_crypt_hash,
+	ipmi_crypt_hash_digest_len, _cipher_crypt,
+	_ipmi_crypt_cipher_info): Adjust for change in function name
+	_ipmi_init_crypt.
 	
 2006-01-03  Albert Chu <chu11@llnl.gov>
 

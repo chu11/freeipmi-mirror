@@ -53,8 +53,6 @@ extern "C" {
         (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LEN \
           || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LEN) ? 1 : 0)
 
-int8_t ipmi_init_crypt(void);
-
 int32_t ipmi_crypt_hash(int hash_algorithm, int hash_flags, uint8_t *key, uint32_t key_len, uint8_t *hash_data, uint32_t hash_data_len, uint8_t *digest, uint32_t digest_len);
 
 int32_t ipmi_crypt_hash_digest_len(int hash_algorithm);

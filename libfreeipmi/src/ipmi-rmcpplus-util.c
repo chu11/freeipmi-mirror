@@ -21,21 +21,23 @@
 #include "freeipmi.h"
 
 #include <gcrypt.h>
+GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
-static int _gcrypt_initialized = 0;
-
-/* 
- * XXX: Check for thread issues in general later on, gcrypt maybe needs
- * some stuff done.
- *
- */
-int8_t
-ipmi_init_crypt(void)
+static int8_t
+_ipmi_init_crypt(void)
 {
   gcry_error_t e;
-  
-  if (_gcrypt_initialized)
-    return (0);
+
+  /* XXX: achu: This is my lazy approach to thread safety.  All crypt
+   * functions must continually re-init.  Maybe I will come up with a
+   * more creative/better method later.
+   */
+
+  if ((e = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
+    {
+      ipmi_debug("gcry_control: %s", gcry_strerror(e));
+      return (-1);
+    }
 
   if (!gcry_check_version(GCRYPT_VERSION))
     {
@@ -56,7 +58,6 @@ ipmi_init_crypt(void)
       return (-1);
     }
 
-  _gcrypt_initialized++;
   return (0);
 }
 
@@ -85,7 +86,7 @@ ipmi_crypt_hash(int hash_algorithm,
       return (-1);
     }
     
-  if (ipmi_init_crypt() < 0)
+  if (_ipmi_init_crypt() < 0)
     return (-1);
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
@@ -153,7 +154,7 @@ ipmi_crypt_hash_digest_len(int hash_algorithm)
       return (-1);
     }
 
-  if (ipmi_init_crypt() < 0)
+  if (_ipmi_init_crypt() < 0)
     return (-1);
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
@@ -254,7 +255,7 @@ _cipher_crypt(int cipher_algorithm,
         key_len = expected_cipher_key_len;
     }
 
-  if (ipmi_init_crypt() < 0)
+  if (_ipmi_init_crypt() < 0)
     return (-1);
 
   if ((e = gcry_cipher_open(&h,
@@ -392,7 +393,7 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
   else
     gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
 
-  if (ipmi_init_crypt() < 0)
+  if (_ipmi_init_crypt() < 0)
     return (-1);
 
   if ((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
