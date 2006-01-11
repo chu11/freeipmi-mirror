@@ -45,7 +45,6 @@ _ipmi_init_crypt(void)
       return (-1);
     }
 
-  /* XXX: We copy digests to insecure memory, so not an issue for now */
   if ((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
     {
       ipmi_debug("gcry_control: %s", gcry_strerror(e));
