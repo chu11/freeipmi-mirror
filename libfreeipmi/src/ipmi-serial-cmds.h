@@ -31,51 +31,6 @@ extern fiid_template_t tmpl_get_serial_conf_param_pageblackout_rs;
 extern fiid_template_t tmpl_get_serial_conf_param_retry_rs;
 extern fiid_template_t tmpl_get_serial_conf_param_commbits_rs;
 
-int8_t ipmi_set_serial_connmode (uint8_t channel_number, 
-				 uint8_t basic_mode_enable,
-				 uint8_t ppp_mode_enable,
-				 uint8_t terminal_mode_enable,
-				 uint8_t direct,
-				 fiid_obj_t obj_data_rs);
-
-int8_t ipmi_set_serial_page_blackout_interval (uint8_t channel_number, 
-                                               uint8_t page_blackout_interval, 
-                                               fiid_obj_t obj_data_rs);
-
-int8_t ipmi_set_serial_retry_time (uint8_t channel_number, 
-                                   uint8_t retry_time, 
-                                   fiid_obj_t obj_data_rs);
-
-int8_t ipmi_set_serial_comm_bits (uint8_t channel_number, 
-                                  uint8_t dtr_hangup,
-                                  uint8_t flow_control,
-                                  uint8_t bit_rate,
-                                  fiid_obj_t obj_data_rs);
-
-int8_t ipmi_get_serial_connmode (uint8_t channel_number,
-                                 uint8_t parameter_type,
-                                 uint8_t set_selector,
-                                 uint8_t block_selector,
-                                 fiid_obj_t obj_data_rs);
-
-int8_t ipmi_get_serial_page_blackout (uint8_t channel_number,
-                                      uint8_t parameter_type,
-                                      uint8_t set_selector,
-                                      uint8_t block_selector,
-                                      fiid_obj_t obj_data_rs);
-
-int8_t ipmi_get_serial_retry_time (uint8_t channel_number,
-                                   uint8_t parameter_type,
-                                   uint8_t set_selector,
-                                   uint8_t block_selector,
-                                   fiid_obj_t obj_data_rs);
-
-int8_t ipmi_get_serial_comm_bits (uint8_t channel_number,
-                                  uint8_t parameter_type,
-                                  uint8_t set_selector,
-                                  uint8_t block_selector,
-                                  fiid_obj_t obj_data_rs);
-
 int8_t ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev, 
 				      uint8_t channel_number, 
 				      uint8_t basic_mode_enable,

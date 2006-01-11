@@ -226,31 +226,6 @@ fill_set_serial_connmode (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_connmode (uint8_t channel_number, 
-			  uint8_t basic_mode_enable,
-			  uint8_t ppp_mode_enable,
-			  uint8_t terminal_mode_enable,
-			  uint8_t direct,
-			  fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_connmode_rq);
-  ERR (fill_set_serial_connmode (obj_data_rq, 
-				 channel_number, 
-				 basic_mode_enable, 
-				 ppp_mode_enable, 
-				 terminal_mode_enable, 
-				 direct) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_set_serial_conf_param_connmode_rq, 
-			 obj_data_rs, tmpl_set_serial_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq, 
 					uint8_t channel_number, 
 					uint8_t page_blackout_interval)
@@ -283,25 +258,6 @@ fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq,
 		page_blackout_interval);
   
   return 0;
-}
-
-int8_t 
-ipmi_set_serial_page_blackout_interval (uint8_t channel_number, 
-					uint8_t page_blackout_interval, 
-					fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_pageblackout_rq);
-  ERR (fill_set_serial_page_blackout_interval (obj_data_rq, 
-					       channel_number, 
-					       page_blackout_interval) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_set_serial_conf_param_pageblackout_rq, 
-			 obj_data_rs, tmpl_set_serial_conf_param_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 
@@ -338,25 +294,6 @@ fill_set_serial_retry_time (fiid_obj_t obj_data_rq,
   
   return 0;
 }	    
-
-int8_t 
-ipmi_set_serial_retry_time (uint8_t channel_number, 
-			    uint8_t retry_time, 
-			    fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_retry_rq);
-  ERR (fill_set_serial_retry_time (obj_data_rq, 
-				   channel_number, 
-				   retry_time) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_set_serial_conf_param_retry_rq, 
-			 obj_data_rs, tmpl_set_serial_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
 
 int8_t 
 fill_set_serial_comm_bits (fiid_obj_t obj_data_rq, 
@@ -406,29 +343,6 @@ fill_set_serial_comm_bits (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-ipmi_set_serial_comm_bits (uint8_t channel_number, 
-                           uint8_t dtr_hangup,
-                           uint8_t flow_control,
-                           uint8_t bit_rate,
-			   fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_set_serial_conf_param_commbits_rq);
-  ERR (fill_set_serial_comm_bits (obj_data_rq, 
-				  channel_number, 
-				  dtr_hangup,
-				  flow_control,
-				  bit_rate) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_set_serial_conf_param_commbits_rq, 
-			 obj_data_rs, tmpl_set_serial_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
 fill_get_serial_conf_param (fiid_obj_t obj_data_rq, 
 			    uint8_t parameter_selector, 
 			    uint8_t channel_number,
@@ -474,102 +388,6 @@ fill_get_serial_conf_param (fiid_obj_t obj_data_rq,
 		block_selector);
   
   return 0;
-}
-
-int8_t 
-ipmi_get_serial_connmode (uint8_t channel_number,
-                          uint8_t parameter_type,
-                          uint8_t set_selector,
-                          uint8_t block_selector,
-                          fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (obj_data_rq, 
-				   IPMI_SERIAL_PARAM_CONNECTION_MODE, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
-			 obj_data_rs, tmpl_get_serial_conf_param_connmode_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
-ipmi_get_serial_page_blackout (uint8_t channel_number,
-			       uint8_t parameter_type,
-			       uint8_t set_selector,
-			       uint8_t block_selector,
-			       fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (obj_data_rq, 
-				   IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
-			 obj_data_rs, tmpl_get_serial_conf_param_pageblackout_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
-ipmi_get_serial_retry_time (uint8_t channel_number,
-			    uint8_t parameter_type,
-			    uint8_t set_selector,
-			    uint8_t block_selector,
-			    fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (obj_data_rq, 
-				   IPMI_SERIAL_PARAM_RETRY_TIME, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
-			 obj_data_rs, tmpl_get_serial_conf_param_retry_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t 
-ipmi_get_serial_comm_bits (uint8_t channel_number,
-			   uint8_t parameter_type,
-			   uint8_t set_selector,
-			   uint8_t block_selector,
-			   fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (obj_data_rq, 
-				   IPMI_SERIAL_PARAM_COMM_BITS, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) == 0);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_serial_conf_param_rq, 
-			 obj_data_rs, tmpl_get_serial_conf_param_commbits_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 

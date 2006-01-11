@@ -1,3 +1,14 @@
+2006-01-11  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-chassis-cmds.[c,h]: removed kcs command
+	functions.
+
+	* libfreeipmi/src/ipmi-lan-cmds.[c,h]: like wise.
+
+	* libfreeipmi/src/ipmi-serial-cmds.[c,h]: like wise.
+
+	* libfreeipmi/src/ipmi-sol-cmds.[c,h]: like wise.
+
 2006-01-06  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-dev-global-cmds.c: removed kcs command
