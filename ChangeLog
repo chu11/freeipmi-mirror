@@ -1,3 +1,10 @@
+2006-01-09  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/ipmi-kcs-interface.[c,h]: ipmi_kcs_get_mutex_semid,
+	ipmi_kcs_io_init, ipmi_kcs_open, ipmi_kcs_write_interruptible,
+	ipmi_kcs_cmd, ipmi_kcs_cmd_interruptible - obsolete API
+	removed. Use UDM API instead.
+
 2006-01-11  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-chassis-cmds.[c,h]: removed kcs command

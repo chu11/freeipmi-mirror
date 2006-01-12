@@ -58,47 +58,15 @@ extern "C" {
 extern fiid_template_t tmpl_hdr_kcs;
 
 /* High level calls */
-int ipmi_kcs_io_init (uint16_t sms_io_base, 
-		      uint8_t reg_space, 
-		      unsigned long sleep_usecs);
-int ipmi_kcs_open (uint16_t sms_io_base, 
-		   uint8_t reg_space, 
-		   unsigned long sleep_usecs);
-
-ssize_t ipmi_kcs_read (ipmi_device_t *dev, 
-		       uint8_t *bytes, 
-		       uint32_t bytes_len);
-ssize_t ipmi_kcs_write (ipmi_device_t *dev, 
-			uint8_t *bytes, 
-			uint32_t bytes_len);
-
 /* BMC treats "write followed by a read" as one transaction. It is
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
-int8_t ipmi_kcs_cmd (uint8_t lun, 
-		     uint8_t fn, 
-		     fiid_obj_t obj_cmd_rq, 
-		     fiid_template_t tmpl_cmd_rq, 
-		     fiid_obj_t obj_cmd_rs, 
-		     fiid_template_t tmpl_cmd_rs);
 int8_t ipmi_kcs_cmd2 (ipmi_device_t *dev, 
 		      fiid_obj_t obj_cmd_rq, 
 		      fiid_template_t tmpl_cmd_rq, 
 		      fiid_obj_t obj_cmd_rs, 
 		      fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_interruptible (uint8_t lun, 
-				   uint8_t fn, 
-				   fiid_obj_t obj_cmd_rq, 
-				   fiid_template_t tmpl_cmd_rq, 
-				   fiid_obj_t obj_cmd_rs, 
-				   fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_kcs_cmd_raw (uint8_t lun, 
-			 uint8_t fn, 
-			 uint8_t *buf_cmd_rq, 
-			 size_t buf_rq_len, 
-			 uint8_t *buf_cmd_rs, 
-			 size_t *buf_rs_len);
 int8_t ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, 
 			  uint8_t *buf_rq, 
 			  size_t buf_rq_len, 
