@@ -96,18 +96,16 @@ fi_ipmi_open (struct arguments *args)
 	  if (ipmi_open_inband (&dev, 
 				args->common.disable_auto_probe, 
 				IPMI_DEVICE_KCS, 
-				args->common.driver_address, 
+				args->common.driver_address,
+				0,
 				args->common.driver_device, 
-				IPMI_MODE_DEFAULT) == 0)
-	    {
-	      ipmi_enable_old_kcs_init (&dev);
-	    }
-	  else 
+				IPMI_MODE_DEFAULT) != 0)
 	    {
 	      if (ipmi_open_inband (&dev, 
 				    args->common.disable_auto_probe, 
 				    IPMI_DEVICE_SSIF, 
 				    args->common.driver_address, 
+				    0,
 				    args->common.driver_device, 
 				    IPMI_MODE_DEFAULT) != 0)
 		{
@@ -122,15 +120,12 @@ fi_ipmi_open (struct arguments *args)
 				args->common.disable_auto_probe, 
 				args->common.driver_type, 
 				args->common.driver_address, 
+				0,
 				args->common.driver_device, 
 				IPMI_MODE_DEFAULT) != 0)
 	    {
 	      perror ("ipmi_open_inband()");
 	      return (-1);
-	    }
-	  if (args->common.driver_type == IPMI_DEVICE_KCS)
-	    {
-	      ipmi_enable_old_kcs_init (&dev);
 	    }
 	}
     }
@@ -272,8 +267,9 @@ get_lan_channel_number ()
 {
   if (lan_channel_number_initialized)
     return lan_channel_number;
-
-  lan_channel_number = ipmi_get_channel_number (IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  
+  lan_channel_number = ipmi_get_channel_number2 (fi_get_ipmi_device (), 
+						 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
   if (!(lan_channel_number < 0))
     lan_channel_number_initialized = true;
   return lan_channel_number;
@@ -284,8 +280,9 @@ get_serial_channel_number ()
 {
   if (serial_channel_number_initialized)
     return serial_channel_number;
-
-  serial_channel_number = ipmi_get_channel_number (IPMI_CHANNEL_MEDIUM_TYPE_RS232);
+  
+  serial_channel_number = ipmi_get_channel_number2 (fi_get_ipmi_device (), 
+						    IPMI_CHANNEL_MEDIUM_TYPE_RS232);
   if (!(serial_channel_number < 0))
     serial_channel_number_initialized = true;
   return serial_channel_number;

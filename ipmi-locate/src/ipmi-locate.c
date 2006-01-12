@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.2.2.2 2005-12-27 21:38:11 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.2.2.3 2006-01-12 22:02:43 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -81,13 +81,13 @@ display_ipmi_locate_info (ipmi_locate_info_t *info)
   
   switch (info->addr_space_id)
     {
-    case 0x0:
+    case IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
       printf ("BMC memory base address: %lX\n", info->base_addr.bmc_membase_addr);
       break;
-    case 0x1:
+    case IPMI_ADDRESS_SPACE_ID_SYSTEM_IO:
       printf ("BMC I/O base address: %lX\n", info->base_addr.bmc_iobase_addr);
       break;
-    case 0x2:
+    case IPMI_ADDRESS_SPACE_ID_SMBUS:
       printf ("BMC SMBUS slave address: %lX\n", info->base_addr.bmc_smbus_slave_addr);
       break;
     default:
@@ -118,6 +118,7 @@ smbios_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SMIC device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -130,6 +131,7 @@ smbios_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing BT device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -142,6 +144,7 @@ smbios_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SSIF device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -154,6 +157,7 @@ smbios_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   return;
 }
@@ -177,6 +181,7 @@ acpi_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SMIC device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -189,6 +194,7 @@ acpi_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing BT device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -201,6 +207,7 @@ acpi_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SSIF device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -213,6 +220,7 @@ acpi_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   return;
 }
@@ -236,6 +244,7 @@ pci_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SMIC device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -248,6 +257,7 @@ pci_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing BT device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -260,6 +270,7 @@ pci_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
   
   printf ("Probing SSIF device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
@@ -272,6 +283,50 @@ pci_probe_display ()
     {
       printf ("FAILED\n");
     }
+  printf ("\n");
+  
+  return;
+}
+
+void 
+defaults_display ()
+{
+  extern int errno;
+  ipmi_locate_info_t *pinfo;
+  
+  pinfo = (ipmi_locate_info_t *) alloca (sizeof (ipmi_locate_info_t));
+  
+  printf ("KCS device default values:\n");
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  if (defaults_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
+    {
+      display_ipmi_locate_info (pinfo);
+    }
+  printf ("\n");
+  
+  printf ("SMIC device default values:\n");
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  if (defaults_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
+    {
+      display_ipmi_locate_info (pinfo);
+    }
+  printf ("\n");
+  
+  printf ("BT device default values:\n");
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  if (defaults_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
+    {
+      display_ipmi_locate_info (pinfo);
+    }
+  printf ("\n");
+  
+  printf ("SSIF device default values:\n");
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  if (defaults_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
+    {
+      display_ipmi_locate_info (pinfo);
+    }
+  printf ("\n");
   
   return;
 }
@@ -282,12 +337,12 @@ main (int argc, char **argv)
   struct rlimit resource_limit;
   
   /* generate core dump on seg-fault */
-  resource_limit.rlim_cur =
-    resource_limit.rlim_max = RLIM_INFINITY;
-  if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+  if (ipmi_is_root ())
     {
-      perror ("setrlimit()");
-      exit (EXIT_FAILURE);
+      resource_limit.rlim_cur =
+	resource_limit.rlim_max = RLIM_INFINITY;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+	perror ("warning: setrlimit()");
     }
   
   ipmi_locate_argp_parse (argc, argv);
@@ -295,6 +350,7 @@ main (int argc, char **argv)
   smbios_probe_display ();
   acpi_probe_display ();
   pci_probe_display ();
+  defaults_display ();
   
   return (0);
 }

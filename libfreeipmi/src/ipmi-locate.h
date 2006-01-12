@@ -86,8 +86,8 @@ struct ipmi_locate_info
 };
 typedef struct ipmi_locate_info ipmi_locate_info_t;
 
-ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
+ipmi_locate_info_t* ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
+void ipmi_locate_free (ipmi_locate_info_t* pinfo);
 
 #ifdef __cplusplus
 }

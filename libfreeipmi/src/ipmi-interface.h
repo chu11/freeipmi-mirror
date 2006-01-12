@@ -180,6 +180,7 @@ int ipmi_open_inband (ipmi_device_t *dev,
 		      int disable_auto_probe, 
 		      ipmi_driver_type_t driver_type, 
 		      uint16_t driver_address, 
+		      uint8_t reg_space,
 		      char *driver_device, 
 		      ipmi_mode_t mode);
 int ipmi_open_outofband (ipmi_device_t *dev, 

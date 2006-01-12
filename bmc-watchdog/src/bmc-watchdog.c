@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.29.2.1 2005-12-20 19:04:59 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.29.2.2 2006-01-12 22:02:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,9 +33,11 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif
+#if 0  /* commented by AB */
 #ifndef __FreeBSD__
 #include <sys/io.h>
 #endif
+#endif /* commented by AB */
 #include <syslog.h>
 #include <assert.h>
 #include <stdarg.h>
@@ -144,6 +146,8 @@ struct cmdline_info
 
 /* program name */
 char *err_progname = NULL;
+
+ipmi_device_t ipmi_dev;
 
 int cmdline_parsed = 0;
 struct cmdline_info cinfo;
@@ -254,6 +258,7 @@ _err_exit(char *fmt, ...)
   exit(1);
 }
 
+#if 0 /* commented by AB */
 static int
 _get_port_and_reg_space(uint32_t *port, uint8_t *reg_space)
 {
@@ -286,22 +291,32 @@ _get_port_and_reg_space(uint32_t *port, uint8_t *reg_space)
   *reg_space = IPMI_REG_SPACE_DEFAULT;
   return (0);
 }
+#endif  /* commented by AB */
 
 /* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi(void)
 {
   int ret;
-  uint32_t port;
-  uint8_t  reg_space;
+#if 0 /* commented by AB */
+  uint32_t port=0;
+  uint8_t  reg_space=0;
+#endif /* commented by AB */
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
+#if 0 /* commented by AB */
   _get_port_and_reg_space (&port, &reg_space);
+#endif /* commented by AB */
 
-  if ((ret = ipmi_kcs_io_init(port, reg_space, IPMI_KCS_SLEEP_USECS)) < 0)
-    _bmclog("ipmi_kcs_io_init: %s", strerror(errno));
-
+/*   if ((ret = ipmi_kcs_io_init(port, reg_space, IPMI_KCS_SLEEP_USECS)) < 0) */
+/*     _bmclog("ipmi_kcs_io_init: %s", strerror(errno)); */
+  memset(&ipmi_dev, 0, sizeof (ipmi_dev));
+  if ((ret = ipmi_open_inband(&ipmi_dev, 0, IPMI_DEVICE_KCS, 
+			      cinfo.io_port, cinfo.reg_space_val, 
+			      0, IPMI_MODE_NONBLOCK)) < 0)
+    _bmclog("ipmi_open_inband: %s", strerror(errno));
+  
   return ret;
 }
 
@@ -324,7 +339,7 @@ _init_bmc_watchdog(int facility, int err_to_stderr)
                       cinfo.logfile, strerror(errno));
           else
             _syslog(LOG_ERR, "Error opening logfile '%s': %s",
-                    cinfo.logfile, strerror(errno));
+                     cinfo.logfile, strerror(errno));
           exit(1);
         }
     }
@@ -403,9 +418,13 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 
   while (1)
     {
+#if 0 /* commented by AB */
       if (ipmi_kcs_cmd_interruptible(IPMI_BMC_IPMB_LUN_BMC,
                                      netfn, cmd_rq, 
                                      tmpl_rq, cmd_rs, tmpl_rs) < 0)
+#endif /* commented by AB */
+      if (ipmi_cmd (&ipmi_dev, IPMI_BMC_IPMB_LUN_BMC, netfn, 
+		   cmd_rq, tmpl_rq, cmd_rs, tmpl_rs) < 0)
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
@@ -736,10 +755,10 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  num = ipmi_get_channel_number(IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  num = ipmi_get_channel_number2 (&ipmi_dev, IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
   if (num < 0)
     {
-      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number: %s",
+      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number2: %s",
 	      strerror(errno));
       goto cleanup;
     }
@@ -1845,12 +1864,15 @@ _daemon_cmd(void)
 int 
 main(int argc, char **argv)
 {
+#if 0 /* commented by AB */
 #if	defined(__FreeBSD__) && !defined(USE_IOPERM)
   int dev_io_fd;
 #endif
+#endif /* commented by AB */
 
   _err_init(argv[0]);
 
+#if 0  /* commented by AB */
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
   if (i386_set_ioperm(0, 0x10000, 1) == -1)
@@ -1868,6 +1890,7 @@ main(int argc, char **argv)
       else
         _err_exit("iopl: %s", strerror(errno));
     }
+#endif /* commented by AB */
 
   _cmdline_default();
   _cmdline_parse(argc, argv);
@@ -1896,10 +1919,14 @@ main(int argc, char **argv)
   else
     _err_exit("internal error, command not set");
 
+
+#if 0  /* commented by AB */
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
   close(dev_io_fd);
 #endif
-            
+#endif /* commented by AB */
+
+  ipmi_close(&ipmi_dev);
   close(logfile_fd);
   closelog();
   exit(0);

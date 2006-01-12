@@ -245,6 +245,25 @@ do {                                                                    \
 #endif /* FREEIPMI_LIBRARY */
 
 #if defined (FREEIPMI_LIBRARY)
+#   if defined (ERR_UNLOCK)
+#      undef ERR_UNLOCK
+#   endif
+#   define ERR_UNLOCK(expr)                                             \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      extern int errno;                                                 \
+      int save_errno = errno;                                           \
+      IPMI_MUTEX_UNLOCK (ipmi_kcs_get_mutex_semid ());                  \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      errno = save_errno;                                               \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+#endif /* FREEIPMI_LIBRARY */
+
+#if defined (FREEIPMI_LIBRARY)
 #   if defined (ERR_EXIT)
 #      undef ERR_EXIT
 #   endif

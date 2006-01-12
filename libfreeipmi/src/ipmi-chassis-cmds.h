@@ -58,16 +58,6 @@ extern fiid_template_t tmpl_cmd_chassis_ctrl_rs;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 
-int8_t fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
-                                          uint8_t power_restore_policy);
-int8_t ipmi_set_power_restore_policy (uint8_t power_restore_policy, 
-				      fiid_obj_t obj_data_rs);
-
-int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
-int8_t ipmi_get_chassis_status (fiid_obj_t obj_data_rs);
-
-int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
-
 int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
 					   uint8_t power_restore_policy, 
 					   fiid_obj_t obj_cmd_rs);

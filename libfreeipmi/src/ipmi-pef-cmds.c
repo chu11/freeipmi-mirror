@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.13.2.2 2006-01-03 19:06:17 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.13.2.3 2006-01-12 22:02:43 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -664,24 +664,6 @@ fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, uint8_t enable_pef,
   return 0;
 }
 
-int8_t
-ipmi_kcs_set_pef_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t enable_pef,
-                          uint8_t enable_pef_event_msgs, uint8_t enable_startup_delay,
-                          uint8_t enable_alert_startup_delay)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_pef_control_rq);
-  fill_kcs_set_pef_control (obj_data_rq, enable_pef, enable_pef_event_msgs,
-                            enable_startup_delay, enable_alert_startup_delay);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_pef_control_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 static int8_t
 fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, uint8_t enable_alert,
                                     uint8_t enable_powerdown, uint8_t enable_reset,
@@ -723,25 +705,6 @@ fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, uint8_t enable_alert
   return 0;
 }
 
-int8_t
-ipmi_kcs_set_global_action_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t enable_alert,
-                                    uint8_t enable_powerdown, uint8_t enable_reset,
-                                    uint8_t enable_powercycle, uint8_t enable_oem,
-                                    uint8_t enable_diag_interrupt)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_global_action_control_rq);
-  fill_kcs_set_global_action_control (obj_data_rq, enable_alert, enable_powerdown,
-                                      enable_reset, enable_powercycle, enable_oem, enable_diag_interrupt);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_global_action_control_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 static int8_t
 fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, uint8_t startup_delay)
 {
@@ -758,21 +721,6 @@ fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, uint8_t startup_delay)
                 "startup_delay",
                 startup_delay);
   return 0;
-}
-
-int8_t
-ipmi_kcs_set_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t startup_delay)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_startup_delay_rq);
-  fill_kcs_set_startup_delay (obj_data_rq, startup_delay);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_startup_delay_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 static int8_t
@@ -793,21 +741,6 @@ fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, uint8_t alert_startup_
   return 0;
 }
 
-int8_t
-ipmi_kcs_set_alert_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t alert_startup_delay)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_alert_startup_delay_rq);
-  fill_kcs_set_alert_startup_delay (obj_data_rq, alert_startup_delay);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_alert_startup_delay_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 static int8_t
 fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, uint8_t num_event_filters)
 {
@@ -824,21 +757,6 @@ fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, uint8_t num_event_filter
                 "num_event_filters",
                 num_event_filters);
   return 0;
-}
-
-int8_t
-ipmi_kcs_set_num_event_filters (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t num_event_filters)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_num_event_filters_rq);
-  fill_kcs_set_num_event_filters (obj_data_rq, num_event_filters);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_num_event_filters_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 static int8_t 
@@ -968,22 +886,6 @@ fill_kcs_set_filter_table_entry (fiid_obj_t obj_data_rq,
   return 0;
 }
 
-int8_t
-ipmi_kcs_set_filter_table_entry (uint16_t sms_io_base, fiid_obj_t obj_data_rs, 
-                                 const event_filter_table_entry_t *eft_entry)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_event_filter_table_rq);
-  fill_kcs_set_filter_table_entry (obj_data_rq, eft_entry);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_event_filter_table_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 static int8_t
 fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, uint8_t filter_number,
                                  filter_type_t filter_type, uint8_t enabled)
@@ -1011,22 +913,6 @@ fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, uint8_t filter_number,
   return 0;
 }
 
-int8_t
-ipmi_kcs_set_filter_table_data1 (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t filter_number,
-                                 filter_type_t filter_type, uint8_t enabled)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_event_filter_data1_rq);
-  fill_kcs_set_filter_table_data1 (obj_data_rq, filter_number, filter_type, enabled);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_event_filter_data1_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
-}
-
 static int8_t
 fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, uint8_t num_alert_policies)
 {
@@ -1043,21 +929,6 @@ fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, uint8_t num_alert_polic
                 "num_alert_policies",
                 num_alert_policies);
   return 0;
-}
-
-int8_t
-ipmi_kcs_set_num_alert_policies (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t num_alert_policies)
-{
-  int8_t status;
-  fiid_obj_t obj_data_rq;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_pef_conf_param_num_alert_policies_rq);
-  fill_kcs_set_num_alert_policies (obj_data_rq, num_alert_policies);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_set_pef_conf_param_num_alert_policies_rq,
-                         obj_data_rs, tmpl_set_pef_conf_param_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 /* This function is not used yet.  When you find it useful, uncomment them */
@@ -1087,232 +958,6 @@ ipmi_kcs_set_num_alert_policies (uint16_t sms_io_base, fiid_obj_t obj_data_rs, u
 /*                 string_set_number); */
 /*   return 0; */
 /* } */
-
-int8_t
-ipmi_kcs_alert_immediate (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                          uint8_t channel_number, uint8_t destination_selector,
-                          uint8_t string_selector, uint8_t string_enable)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_alert_immediate_rq);
-  fill_kcs_alert_immediate (obj_data_rq, channel_number, destination_selector,
-                            string_selector, string_enable);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_alert_immediate_rq,
-                         obj_data_rs, tmpl_alert_immediate_rs);
-  free (obj_data_rq);
-  return status;                            
-}
-
-int8_t
-ipmi_kcs_get_pef_alert_string (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                               uint8_t parameter_type, uint8_t set_selector,
-                               uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq,
-                               IPMI_PEF_PARAM_ALERT_STRINGS,
-                               parameter_type,
-                               set_selector,
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_get_pef_conf_param_rq,
-                         obj_data_rs, tmpl_get_pef_conf_param_alert_strings_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_alert_string_keys (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                    uint8_t parameter_type, uint8_t set_selector,
-                                    uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq,
-                               IPMI_PEF_PARAM_ALERT_STRING_KEYS,
-                               parameter_type,
-                               set_selector,
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_get_pef_conf_param_rq,
-                         obj_data_rs, tmpl_get_pef_conf_param_alert_string_keys_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_num_alert_policies (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                     uint8_t parameter_type, uint8_t set_selector,
-                                     uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq,
-                               IPMI_PEF_PARAM_NUM_ALERT_POLICY_ENTRIES,
-                               parameter_type,
-                               set_selector,
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_get_pef_conf_param_rq,
-                         obj_data_rs, tmpl_get_pef_conf_param_num_alert_policies_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_filter_data1 (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                           uint8_t parameter_type, uint8_t set_selector, uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq,
-                               IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
-                               parameter_type,
-                               set_selector,
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ,
-                         obj_data_rq, tmpl_get_pef_conf_param_rq,
-                         obj_data_rs, tmpl_get_pef_conf_param_event_filter_data1_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                          uint8_t parameter_type, uint8_t set_selector, uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_PEF_CONTROL,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_pef_control_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_global_action_control (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                        uint8_t parameter_type, uint8_t set_selector,
-                                        uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_ACTION_GLOBAL_CONTROL,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_global_action_control_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                uint8_t parameter_type, uint8_t set_selector,
-                                uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_STARTUP_DELAY,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_startup_delay_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_alert_startup_delay (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                      uint8_t parameter_type, uint8_t set_selector,
-                                      uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_ALERT_STARTUP_DELAY,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_alert_startup_delay_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_num_event_filters (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                    uint8_t parameter_type, uint8_t set_selector,
-                                    uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_NUM_EVENT_FILTERS,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_num_event_filters_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_pef_filter_table_entry (uint16_t sms_io_base, fiid_obj_t obj_data_rs,
-                                 uint8_t parameter_type, uint8_t set_selector,
-                                 uint8_t block_selector)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_conf_param_rq);
-  fill_kcs_get_pef_conf_param (obj_data_rq, 
-                               IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
-                               parameter_type, 
-                               set_selector, 
-                               block_selector);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_TRANSPORT_RQ, 
-			 obj_data_rq, tmpl_get_pef_conf_param_rq, 
-			 obj_data_rs, tmpl_get_pef_conf_param_event_filter_table_rs);
-  free (obj_data_rq);
-  return status;
-}
 
 static int8_t 
 fill_kcs_get_pef_caps (fiid_obj_t obj_data_rq)
@@ -1400,84 +1045,6 @@ fill_kcs_pet_ack (fiid_obj_t obj_data_rq, uint16_t sequence_number, uint32_t tim
                 "pet_ack_event_data",
                 event_data);
   return 0;  
-}
-
-int8_t 
-ipmi_kcs_get_pef_caps (uint16_t sms_io_base, fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq; 
-  int8_t status;
-  
-  obj_data_rq = fiid_obj_calloc (tmpl_get_pef_caps_rq);
-  fill_kcs_get_pef_caps (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
-			 obj_data_rq, tmpl_get_pef_caps_rq, 
-			 obj_data_rs, tmpl_get_pef_caps_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_arm_pef_postpone_timer (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint8_t countdown)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_arm_pef_postpone_timer_rq);
-  fill_kcs_arm_pef_postpone_timer (obj_data_rq, countdown);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
-			 obj_data_rq, tmpl_arm_pef_postpone_timer_rq, 
-			 obj_data_rs, tmpl_arm_pef_postpone_timer_rs);
-  free (obj_data_rq);
-  return status;
-}  
-
-int8_t
-ipmi_kcs_set_last_processed_event (uint16_t sms_io_base, fiid_obj_t obj_data_rs, which_event_t which, uint16_t id)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_set_last_processed_event_rq);
-  fill_kcs_set_last_processed_event (obj_data_rq, which, id);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
-			 obj_data_rq, tmpl_set_last_processed_event_rq, 
-			 obj_data_rs, tmpl_set_last_processed_event_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_get_last_processed_event (uint16_t sms_io_base, fiid_obj_t obj_data_rs)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_get_last_processed_event_rq);
-  fill_kcs_get_last_proessed_event (obj_data_rq);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
-			 obj_data_rq, tmpl_get_last_processed_event_rq, 
-			 obj_data_rs, tmpl_get_last_processed_event_rs);
-  free (obj_data_rq);
-  return status;
-}
-
-int8_t
-ipmi_kcs_pet_ack (uint16_t sms_io_base, fiid_obj_t obj_data_rs, uint16_t sequence_number,
-                  uint32_t timestamp, uint8_t source_type, uint8_t sensor_device,
-                  uint8_t sensor_number, uint32_t event_data)
-{
-  fiid_obj_t obj_data_rq;
-  int8_t status;
-
-  obj_data_rq = fiid_obj_calloc (tmpl_pet_ack_rq);
-  fill_kcs_pet_ack (obj_data_rq, sequence_number, timestamp, source_type,
-                    sensor_device, sensor_number, event_data);
-  status = ipmi_kcs_cmd (IPMI_BMC_IPMB_LUN_BMC, IPMI_NET_FN_SENSOR_EVENT_RQ,
-			 obj_data_rq, tmpl_pet_ack_rq,
-			 obj_data_rs, tmpl_pet_ack_rs);
-  free (obj_data_rq);
-  return status;
 }
 
 int8_t 

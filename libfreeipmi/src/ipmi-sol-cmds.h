@@ -40,21 +40,6 @@ extern fiid_template_t tmpl_set_sol_conf_param_sol_disable_rs;
 extern fiid_template_t tmpl_get_sol_conf_param_rq;
 extern fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs;
 
-int8_t ipmi_sol_conf_sol_enable (uint16_t sms_io_base, 
-				 uint8_t channel_number, 
-				 fiid_obj_t obj_data_rs);
-
-int8_t ipmi_sol_conf_sol_disable (uint16_t sms_io_base, 
-				  uint8_t channel_number, 
-				  fiid_obj_t obj_data_rs);
-
-int8_t ipmi_sol_conf_get_sol_enable (uint16_t sms_io_base, 
-				     uint8_t channel_number, 
-				     uint8_t parameter_type, 
-				     uint8_t set_selector, 
-				     uint8_t block_selector, 
-				     fiid_obj_t obj_data_rs);
-
 int8_t ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
 					      uint8_t channel_number, 
 					      uint8_t sol_payload, 

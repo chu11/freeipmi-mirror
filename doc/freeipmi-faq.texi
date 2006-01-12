@@ -6,6 +6,8 @@
 @finalout
 @c %**end of header
 
+@include version-faq.texi
+
 @dircategory Platform Management
 @direntry
 * GNU FreeIPMI FAQ: (freeipmi-faq).  GNU FreeIPMI - Frequently Asked Questions

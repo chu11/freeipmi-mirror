@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.17 2005-10-06 10:41:09 balamurugan Exp $ 
+   $Id: fish.c,v 1.17.2.1 2006-01-12 22:02:43 chu11 Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for
    managing large number of IPMI compatible systems.
@@ -138,12 +138,12 @@ main (int argc, char **argv)
   textdomain (PACKAGE);
   
   /* generate core dump on seg-fault */
-  resource_limit.rlim_cur =
-    resource_limit.rlim_max = RLIM_INFINITY;
-  if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+  if (ipmi_is_root ())
     {
-      perror ("setrlimit");
-      exit (EXIT_FAILURE);
+      resource_limit.rlim_cur =
+	resource_limit.rlim_max = RLIM_INFINITY;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+	perror ("warning: setrlimit()");
     }
   
   fi_argp_parse (argc, argv);

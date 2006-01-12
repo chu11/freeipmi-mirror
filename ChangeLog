@@ -90,6 +90,10 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2006-01-12  Albert Chu <chu11@llnl.gov>
+
+	* Merge in latest from HEAD.
+
 2006-01-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus.c,
@@ -588,7 +592,121 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
-2005-01-03  Albert Chu <chu11@llnl.gov>
+2006-01-09  Anand Babu  <ab@zresearch.com>
+
+	* libfreeipmi/src/ipmi-kcs-interface.[c,h]: ipmi_kcs_get_mutex_semid,
+	ipmi_kcs_io_init, ipmi_kcs_open, ipmi_kcs_write_interruptible,
+	ipmi_kcs_cmd, ipmi_kcs_cmd_interruptible - obsolete API
+	removed. Use UDM API instead.
+
+2006-01-11  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-chassis-cmds.[c,h]: removed kcs command
+	functions.
+
+	* libfreeipmi/src/ipmi-lan-cmds.[c,h]: like wise.
+
+	* libfreeipmi/src/ipmi-serial-cmds.[c,h]: like wise.
+
+	* libfreeipmi/src/ipmi-sol-cmds.[c,h]: like wise.
+
+2006-01-06  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c: removed kcs command
+	functions.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sel-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sensor-cmds.c: like wise.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cache.c (ipmi_sdr_repo_info_write,
+	ipmi_sdr_records_write, ipmi_sdr_cache_create): uses udm
+	functions.
+
+	* bmc-watchdog/src/bmc-watchdog.c: updated.
+
+2006-01-05  A Balamurugan  <bala@zresearch.com>
+
+	* bmc-info/src/bmc-info.c: generates core when seg-faults.
+
+	* fish/src/fish.c: like wise.
+
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+
+	* ipmi-locate/src/ipmi-locate.c: shows default values for ipmi
+	devices.
+
+	* libfreeipmi/src/defaults-locate.c (defaults_get_dev_info):
+	improved.
+
+2006-01-04  Anand Babu  <ab@zresearch.com>
+
+	* bmc-watchdog/src/bmc-watchdog.c: Now uses UDM interface. 
+	
+	* libfreeipmi/src/ipmi-error.h: ERR_UNLOCK new macro. Similar to
+	ERR, but additionally unlocks the semaphore.
+
+	* libfreeipmi/src/ipmi-interface.c: ipmi_open_inband function
+	returns EBUSY if already opened. Also now accepts reg_space
+	argument. Introduced a generic locking layer for all
+	drivers. Added interruptible support through IPMI_MODE_NONBLOCK
+	argument to open function.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c,.h: big cleanup. Locking
+	now handled by generic UDM layer. How ever locking for old APIs
+	retained. Still lot more can be cleaned up if Albert gives OK.
+
+	* libfreeipmi/src/ipmi-locate.c: ipmi_locate initializes
+	interface_type and device name before probing.
+
+	* libfreeipmi/src/ipmi-semaphores.c,.h: One locking interface for
+	all inband drivers. Previously it was per-driver.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c: ipmi_ssif_io_exit
+	fixed as ipmi_ssif_exit.
+
+	* libfreeipmi/src/defaults-locate.c: handle case for enum
+	IPMI_INTERFACE_LAN too.
+
+	* bmc-info/src/bmc-info.c: reg_space argument added.
+
+	* fish/src/ipmi-wrapper.c: like wise.
+
+	* ipmi-raw/src/ipmi-raw.c: like wise. Removed calls all references
+	to obsolete ipmi_enable_old_kcs_init function.
+
+
+2006-01-03  Anand Babu  <ab@zresearch.com>
+
+	* configure.ac: changed versioning nomenclature. Up version to
+	0.2.beta1. Automake pre-req minimum is now 1.8.
+
+	* doc/Makefile.am: build fixes for freeipmi-faq.texi.
+
+	* doc/freeipmi.texi: now includes version-doc.texi.
+
+	* doc/freeipmi-faq.texi: now includes version-faq.texi.
+	
+2006-01-03  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/ipmi-wrapper.c (get_lan_channel_number,
+	get_serial_channel_number): uses udm enabled function.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_get_channel_number2): new function.
+
+2006-01-03  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw_send,
+	ipmi_lan_cmd_raw2): fixed bugs.
+
+2006-01-03  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated with appropriate new files.
 

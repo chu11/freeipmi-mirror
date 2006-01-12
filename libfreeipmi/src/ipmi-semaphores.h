@@ -34,15 +34,11 @@ extern "C" {
 
 #define IPMI_IPCKEY  "/var/lib/" PACKAGE_NAME "/ipckey"
 
-#define IPMI_LAN_PROJ_ID    0x01
-#define IPMI_KCS_PROJ_ID    0x02
-#define IPMI_SMIC_PROJ_ID   0x03
-#define IPMI_BT_PROJ_ID     0x04
+#define IPMI_OUTOFBAND_PROJ_ID    0x01
+#define IPMI_INBAND_PROJ_ID       0x02
 
-#define IPMI_LAN_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_LAN_PROJ_ID)
-#define IPMI_KCS_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_KCS_PROJ_ID)
-#define IPMI_SMIC_IPCKEY() ftok (IPMI_IPCKEY, IPMI_SMIC_PROJ_ID)
-#define IPMI_BT_IPCKEY()   ftok (IPMI_IPCKEY, IPMI_BT_PROJ_ID)
+#define IPMI_OUTOFBAND_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_OUTOFBAND_PROJ_ID)
+#define IPMI_INBAND_IPCKEY()  ftok (IPMI_IPCKEY, IPMI_INBAND_PROJ_ID)
 
 #define IPMI_MUTEX_LOCK(semid)                                      \
 do {								    \
