@@ -1,3 +1,22 @@
+------------------------------------------------------------
+2006-XX-XX  Albert Chu <chu11@llnl.gov>
+
+        Collective fixes from branch al_fiid_rearchitect_branch.  See
+	ChangeLog in branch for detailed day by day changes.
+
+	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
+
+	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
+	
+------------------------------------------------------------
+
+2006-01-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
+
+	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
+	
+------------------------------------------------------------
 2006-01-09  Anand Babu  <ab@zresearch.com>
 
 	* libfreeipmi/src/ipmi-kcs-interface.[c,h]: ipmi_kcs_get_mutex_semid,
