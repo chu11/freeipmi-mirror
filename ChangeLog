@@ -4,17 +4,27 @@
         Collective fixes from branch al_fiid_rearchitect_branch.  See
 	ChangeLog in branch for detailed day by day changes.
 
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented
+	with new, more abstract interface.
+
 	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
 
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
 	
 ------------------------------------------------------------
 
-2006-01-17  Albert Chu <chu11@llnl.gov>
+2006-01-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented
+	with new, more abstract interface.
 
 	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
 
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
+
+	* Makefile.am, libfreeipmi/src/Makefile.am,
+	libfreeipmi/src/freeipmi.h: Temporarily comment out all other code
+	to begin testing.
 	
 ------------------------------------------------------------
 2006-01-09  Anand Babu  <ab@zresearch.com>

@@ -187,8 +187,11 @@ extern "C" {
 #if defined (FREEIPMI_BUILD)
 #include "bit-ops.h"
 #include "fiid.h"
+#if 0 /* TEST */
 #include "ipmi-utils.h"
+#endif /* TEST */
 #include "ipmi-error.h"
+#if 0 /* TEST */
 #include "ipmi-locate.h"
 #include "smbios-locate.h"
 #include "acpi-spmi-locate.h"
@@ -234,7 +237,7 @@ extern "C" {
 #include "ipmi-sensor-event-messages.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sel-api.h"
-
+#endif /* TEST */
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
 	const char *__format, ...)
@@ -294,8 +297,11 @@ extern char *__progname;
 #else
 #include <freeipmi/bit-ops.h>
 #include <freeipmi/fiid.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-utils.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-error.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/smbios-locate.h>
 #include <freeipmi/acpi-spmi-locate.h>
@@ -341,6 +347,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #include <freeipmi/ipmi-sensor-api.h>
 #include <freeipmi/ipmi-sel-api.h>
+#endif /* TEST */
 #endif
 
 #ifdef __cplusplus
