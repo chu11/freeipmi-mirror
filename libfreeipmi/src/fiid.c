@@ -171,39 +171,6 @@ _fiid_obj_field_len_bytes (fiid_obj_t obj, uint8_t *field)
   return (BITS_ROUND_BYTES (len));
 }
 
-static int32_t
-_fiid_obj_block_len (fiid_obj_t obj,
-                     uint8_t *field_start,
-                     uint8_t *field_end)
-{
-  int end;
-  int start;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
-
-  start = _fiid_obj_field_start (obj, field_start);
-  ERR (start != -1);
-  end = _fiid_obj_field_end (obj, field_end);
-  ERR (end != -1);
-  ERR (!(start > end));
-
-  return (end - start);
-}
-
-static int32_t
-_fiid_obj_block_len_bytes (fiid_obj_t obj,
-                           uint8_t *field_start,
-                           uint8_t *field_end)
-{
-  int len;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
-
-  len = _fiid_obj_block_len (obj, field_start, field_end);
-  ERR (len != -1);
-  return (BITS_ROUND_BYTES (len));
-}
-
 int8_t
 fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
 {
@@ -310,23 +277,54 @@ fiid_obj_destroy (fiid_obj_t obj)
   return (0);
 }
 
-int8_t
-fiid_obj_clear (fiid_obj_t obj)
+fiid_obj_t 
+fiid_obj_dup (fiid_obj_t src_obj)
 {
-  int i;
+  fiid_obj_t dest_obj = NULL;
   
-  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+  if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
     {
       errno = EINVAL;
-      return (-1);
+      goto cleanup;
     }
+ 
+  if (!(dest_obj = ipmi_xmalloc(sizeof(struct fiid_obj))))
+    {
+      errno = ENOMEM;
+      goto cleanup;
+    }
+  dest_obj->magic = src_obj->magic;
+  dest_obj->data_len = src_obj->data_len;
+  dest_obj->field_data_len = src_obj->field_data_len;
 
-  memset(obj->data, '\0', obj->data_len);
-  
-  for (i =0; i < obj->field_data_len; i++)
-    obj->field_data[i].field_len = 0;
+  if (!(dest_obj->data = ipmi_xmalloc(src_obj->data_len)))
+    {
+      errno = ENOMEM;
+      goto cleanup;
+    }
+  memcpy(dest_obj->data, src_obj->data, src_obj->data_len);
 
-  return (0);
+  if (!(dest_obj->field_data = ipmi_xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
+    {
+      errno = ENOMEM;
+      goto cleanup;
+    }
+  memcpy(dest_obj->field_data, 
+         src_obj->field_data, 
+         src_obj->field_data_len * sizeof(struct fiid_field_data));
+
+  return dest_obj;
+
+ cleanup:
+  if (dest_obj)
+    {
+      if (dest_obj->data)
+        ipmi_xfree(dest_obj->data);
+      if (dest_obj->field_data)
+        ipmi_xfree(dest_obj->field_data);
+      ipmi_xfree(dest_obj);
+    }
+  return NULL;
 }
 
 static int32_t 
@@ -346,13 +344,33 @@ _fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
   return (-1);
 }
 
+int8_t
+fiid_obj_clear (fiid_obj_t obj)
+{
+  int i;
+  
+  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  memset(obj->data, '\0', obj->data_len);
+  
+  for (i =0; i < obj->field_data_len; i++)
+    obj->field_data[i].field_len = 0;
+
+  return (0);
+}
+
 int8_t 
 fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
 {
-  int32_t field_offset, len; 
+  int32_t bits_len, bytes_len, field_start;
+  int field_offset; 
   int key_index = -1;
   
-  if (!obj || obj->magic != FIID_OBJ_MAGIC || !field)
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
     {
       errno = EINVAL;
       return (-1);
@@ -361,12 +379,34 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
-  if ((field_offset = _fiid_obj_field_start_bytes (obj, field)) < 0)
-  ERR (field_offset != -1);
-  len = _fiid_obj_field_len_bytes (obj, field);
-  ERR (len != -1);
+  /* achu: We assume the field must start on a byte boundary and end
+   * on a byte boundary.
+   */
 
-  memset ((obj->data + field_offset), '\0', len);
+  field_start = _fiid_obj_field_start (obj, field);
+  ERR (field_start != -1);
+
+  if (field_start % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  bits_len = _fiid_obj_field_len (obj, field);
+  ERR (bits_len != -1);
+
+  if (bits_len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  bytes_len = BITS_ROUND_BYTES (bytes_len);
+
+  field_offset = _fiid_obj_field_start_bytes (obj, field);
+  ERR (field_offset != -1);
+
+  memset ((obj->data + field_offset), '\0', bytes_len);
   obj->field_data[key_index].field_len = 0;
   return (0);
 }
@@ -632,8 +672,8 @@ fiid_obj_set_data (fiid_obj_t obj,
 		   uint8_t *data, 
 		   uint32_t data_len)
 {
-  int32_t len; 
-  int field_index; 
+  int32_t bits_len, bytes_len, field_start;
+  int field_offset; 
   int key_index = -1;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC && field && data))
@@ -645,29 +685,40 @@ fiid_obj_set_data (fiid_obj_t obj,
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
-  field_index = _fiid_obj_field_start_bytes (obj, field);
-  ERR (field_index != -1);
-  len = _fiid_obj_field_len_bytes (obj, field);
-  ERR (len != -1);
-  
-  if (data_len > len)
-    data_len = len;
-  
-  if (len == 1)
-    {
-      uint64_t val = data[0];
+  /* achu: We assume the field must start on a byte boundary and end
+   * on a byte boundary.
+   */
 
-      /* obj->field_data[key_index].field_len set by fiid_obj_set */
-      if (fiid_obj_set(obj, field, val) < 0)
-        return (-1);
-    }
-  else
+  field_start = _fiid_obj_field_start (obj, field);
+  ERR (field_start != -1);
+
+  if (field_start % 8 != 0)
     {
-      memcpy ((obj + field_index), data, data_len);
-      obj->field_data[key_index].field_len = data_len;
+      errno = EINVAL;
+      return (-1);
     }
+
+  bits_len = _fiid_obj_field_len (obj, field);
+  ERR (bits_len != -1);
+
+  if (bits_len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  bytes_len = BITS_ROUND_BYTES (bytes_len);
+
+  field_offset = _fiid_obj_field_start_bytes (obj, field);
+  ERR (field_offset != -1);
+
+  if (data_len > bytes_len)
+    data_len = bytes_len;
   
-  return 0;
+  memcpy ((obj + field_offset), data, data_len);
+  obj->field_data[key_index].field_len = data_len;
+  
+  return (data_len);
 }
 
 int8_t 
@@ -676,8 +727,8 @@ fiid_obj_get_data (fiid_obj_t obj,
 		   uint8_t *data,
                    uint32_t data_len)
 {
-  int32_t len;
-  int field_index;
+  int32_t bits_len, bytes_len, field_start;
+  int field_offset;
   int key_index = -1;
 
   if (!(obj && obj->magic == FIID_OBJ_MAGIC && field && data))
@@ -689,85 +740,206 @@ fiid_obj_get_data (fiid_obj_t obj,
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
-  field_index = _fiid_obj_field_start_bytes (obj, field);
-  ERR (field_index != -1);
-  len = _fiid_obj_field_len_bytes (obj, field);
-  ERR (len != -1);
+  /* achu: We assume the field must start on a byte boundary and end
+   * on a byte boundary.
+   */
 
-  if (len > data_len)
+  field_start = _fiid_obj_field_start (obj, field);
+  ERR (field_start != -1);
+
+  if (field_start % 8 != 0)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (len == 1)
-    {
-      uint64_t val = 0;
+  bits_len = _fiid_obj_field_len (obj, field);
+  ERR (bits_len != -1);
 
-      if (fiid_obj_get(obj, field, &val) < 0)
-        return (-1);
-
-      memset (data, '\0', data_len);
-      data[0] = val;
-    }
-  else
+  if (bits_len % 8 != 0)
     {
-      memset (data, '\0', data_len);
-      memcpy (data, (obj->data + field_index), len);
+      errno = EINVAL;
+      return (-1);
     }
 
+  bytes_len = BITS_ROUND_BYTES (bytes_len);
+
+  if (bytes_len > data_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  field_offset = _fiid_obj_field_start_bytes (obj, field);
+  ERR (field_offset != -1);
+
+  memset (data, '\0', data_len);
+  memcpy (data, (obj->data + field_offset), bytes_len);
+
+  return (bytes_len);
+}
+
+static int32_t
+_fiid_obj_block_len (fiid_obj_t obj,
+                     uint8_t *field_start,
+                     uint8_t *field_end)
+{
+  int end;
+  int start;
+
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
+
+  start = _fiid_obj_field_start (obj, field_start);
+  ERR (start != -1);
+  end = _fiid_obj_field_end (obj, field_end);
+  ERR (end != -1);
+  ERR (!(start > end));
+
+  return (end - start);
+}
+
+static int32_t
+_fiid_obj_block_len_bytes (fiid_obj_t obj,
+                           uint8_t *field_start,
+                           uint8_t *field_end)
+{
+  int len;
+
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
+
+  len = _fiid_obj_block_len (obj, field_start, field_end);
+  ERR (len != -1);
   return (BITS_ROUND_BYTES (len));
 }
 
-fiid_obj_t 
-fiid_obj_dup (fiid_obj_t src_obj)
+int8_t 
+fiid_obj_set_block (fiid_obj_t obj, 
+                    uint8_t *field_start, 
+                    uint8_t *field_end,
+                    uint8_t *data, 
+                    uint32_t data_len)
 {
-  fiid_obj_t dest_obj = NULL;
+  int32_t block_bits_start, block_bits_len, block_bytes_len; 
+  int key_index_start = -1, key_index_end = -1;
+  int i, field_offset; 
   
-  if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end && data))
     {
       errno = EINVAL;
-      goto cleanup;
+      return (-1);
     }
+  
+  if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+    return (-1);
+
+  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+    return (-1);
+
+  /* achu: We assume the field must start on a byte boundary and end
+   * on a byte boundary.
+   */
+
+  block_bits_start = _fiid_obj_field_start (obj, field_start);
+  ERR (block_bits_start != -1);
  
-  if (!(dest_obj = ipmi_xmalloc(sizeof(struct fiid_obj))))
+  if (block_bits_start % 8 != 0)
     {
-      errno = ENOMEM;
-      goto cleanup;
+      errno = EINVAL;
+      return (-1);
     }
-  dest_obj->magic = src_obj->magic;
-  dest_obj->data_len = src_obj->data_len;
-  dest_obj->field_data_len = src_obj->field_data_len;
 
-  if (!(dest_obj->data = ipmi_xmalloc(src_obj->data_len)))
+  block_bits_len = _fiid_obj_block_len (obj, field_start, field_end);
+  ERR (block_bits_len != -1);
+    
+  if (block_bits_len % 8 != 0)
     {
-      errno = ENOMEM;
-      goto cleanup;
+      errno = EINVAL;
+      return (-1);
     }
-  memcpy(dest_obj->data, src_obj->data, src_obj->data_len);
 
-  if (!(dest_obj->field_data = ipmi_xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
+  block_bytes_len = BITS_ROUND_BYTES (block_bits_len);
+
+  if (data_len < block_bytes_len)
     {
-      errno = ENOMEM;
-      goto cleanup;
+      errno = EINVAL;
+      return (-1);
     }
-  memcpy(dest_obj->field_data, 
-         src_obj->field_data, 
-         src_obj->field_data_len * sizeof(struct fiid_field_data));
 
-  return dest_obj;
+  if (data_len > block_bytes_len)
+    data_len = block_bytes_len;
 
- cleanup:
-  if (dest_obj)
-    {
-      if (dest_obj->data)
-        ipmi_xfree(dest_obj->data);
-      if (dest_obj->field_data)
-        ipmi_xfree(dest_obj->field_data);
-      ipmi_xfree(dest_obj);
-    }
-  return NULL;
+  field_offset = _fiid_obj_field_start_bytes (obj, field_start);
+  ERR (field_offset != -1);
+ 
+ 
+  memcpy ((obj + field_offset), data, data_len);
+  for (i = key_index_start; i <= key_index_end; i++)
+    obj->field_data[i].field_len = obj->field_data[i].max_field_len;
+  
+  return (data_len);
 }
+
+int8_t 
+fiid_obj_get_block (fiid_obj_t obj, 
+                    uint8_t *field_start, 
+                    uint8_t *field_end,
+                    uint8_t *data, 
+                    uint32_t data_len)
+{
+  int32_t block_bits_start, block_bits_len, block_bytes_len; 
+  int key_index_start = -1, key_index_end = -1;
+  int field_offset; 
+  
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end && data))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+    return (-1);
+
+  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+    return (-1);
+
+  /* achu: We assume the field must start on a byte boundary and ends
+   * on a byte boundary.
+   */
+
+  block_bits_start = _fiid_obj_field_start (obj, field_start);
+  ERR (block_bits_start != -1);
+ 
+  if (block_bits_start % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  block_bits_len = _fiid_obj_block_len (obj, field_start, field_end);
+  ERR (block_bits_len != -1);
+    
+  if (block_bits_len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  block_bytes_len = BITS_ROUND_BYTES (block_bits_len);
+
+  if (data_len < block_bytes_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  field_offset = _fiid_obj_field_start_bytes (obj, field_start);
+  ERR (field_offset != -1);
+ 
+  memcpy (data, (obj + field_offset), block_bytes_len);
+  
+  return (block_bytes_len);
+}
+
 
 fiid_field_t * 
 __fiid_template_make (uint8_t dummy, ...)
