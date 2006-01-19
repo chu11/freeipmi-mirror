@@ -240,6 +240,17 @@ fiid_obj_create (fiid_template_t tmpl)
 
   for (i = 0; i < obj->field_data_len; i++)
     {
+#ifndef NDEBUG
+      int j = 0;
+      for (j = 0; j < i; j++)
+	{
+	  if (!strncmp(obj->field_data[j].key, tmpl[i].key, FIID_FIELD_MAX))
+	    {
+	      errno = EINVAL;
+	      goto cleanup;
+	    }
+	}
+#endif /* NDEBUG */
       obj->field_data[i].max_field_len = tmpl[i].max_field_len;
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX);
       obj->field_data[i].key[FIID_FIELD_MAX - 1] = '\0';
@@ -707,7 +718,7 @@ fiid_obj_set_data (fiid_obj_t obj,
       return (-1);
     }
 
-  bytes_len = BITS_ROUND_BYTES (bytes_len);
+  bytes_len = BITS_ROUND_BYTES (bits_len);
 
   field_offset = _fiid_obj_field_start_bytes (obj, field);
   ERR (field_offset != -1);
@@ -715,7 +726,7 @@ fiid_obj_set_data (fiid_obj_t obj,
   if (data_len > bytes_len)
     data_len = bytes_len;
   
-  memcpy ((obj + field_offset), data, data_len);
+  memcpy ((obj->data + field_offset), data, data_len);
   obj->field_data[key_index].field_len = data_len;
   
   return (data_len);
@@ -762,7 +773,7 @@ fiid_obj_get_data (fiid_obj_t obj,
       return (-1);
     }
 
-  bytes_len = BITS_ROUND_BYTES (bytes_len);
+  bytes_len = BITS_ROUND_BYTES (bits_len);
 
   if (bytes_len > data_len)
     {
@@ -832,8 +843,14 @@ fiid_obj_set_block (fiid_obj_t obj,
   if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
     return (-1);
 
-  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
+
+  if (key_index_start >= key_index_end)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   /* achu: We assume the field must start on a byte boundary and end
    * on a byte boundary.
@@ -871,8 +888,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   field_offset = _fiid_obj_field_start_bytes (obj, field_start);
   ERR (field_offset != -1);
  
- 
-  memcpy ((obj + field_offset), data, data_len);
+  memcpy ((obj->data + field_offset), data, data_len);
   for (i = key_index_start; i <= key_index_end; i++)
     obj->field_data[i].field_len = obj->field_data[i].max_field_len;
   
@@ -899,8 +915,14 @@ fiid_obj_get_block (fiid_obj_t obj,
   if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
     return (-1);
 
-  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
+  if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
+
+  if (key_index_start >= key_index_end)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   /* achu: We assume the field must start on a byte boundary and ends
    * on a byte boundary.
@@ -935,11 +957,9 @@ fiid_obj_get_block (fiid_obj_t obj,
   field_offset = _fiid_obj_field_start_bytes (obj, field_start);
   ERR (field_offset != -1);
  
-  memcpy (data, (obj + field_offset), block_bytes_len);
-  
+  memcpy (data, (obj->data + field_offset), block_bytes_len);
   return (block_bytes_len);
 }
-
 
 fiid_field_t * 
 __fiid_template_make (uint8_t dummy, ...)

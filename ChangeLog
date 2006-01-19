@@ -13,6 +13,12 @@
 	
 ------------------------------------------------------------
 
+2006-01-19  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.c (fiid_obj_create, fiid_obj_set_data,
+	fiid_obj_get_data, fiid_obj_set_block, fiid_obj_get_block):
+	Various bug fixes.
+	
 2006-01-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented
