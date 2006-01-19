@@ -45,14 +45,14 @@ string2bytes (char *line, unsigned char **buf, int *len)
   if (line == NULL || buf == NULL || len == NULL)
     return (-1);
   
-  for (i = 0, count = 0; buf[i]; i++)
+  for (i = 0, count = 0; line[i]; i++)
     {
-      if (strchr (delim, (int) buf[i]))
+      if (strchr (delim, (int) line[i]))
 	count++;
     }
   count++;
   
-  *buf = calloc (count, 1);
+  *buf = calloc ((strlen (line) - count), 1);
   str = (char *) strdupa (line);
   count = 0;
   while (1)
