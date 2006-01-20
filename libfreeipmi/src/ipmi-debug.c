@@ -20,16 +20,21 @@
 
 #include "freeipmi.h"
 
-#if 0 /* TEST */
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32
-#define IPMI_DEBUG_MAX_BUF_LEN         1024
-#define IPMI_DEBUG_MAX_PKT_LEN         1024
+#define IPMI_DEBUG_MAX_BUF_LEN        65536
+#define IPMI_DEBUG_MAX_PKT_LEN        65536
 #define IPMI_DEBUG_CHAR_PER_LINE          8
 
 #define _DPRINTF(args) \
         do { \
           if((_dprintf args) < 0) \
             return -1; \
+        } while(0) 
+
+#define _DPRINTF_CLEANUP(args) \
+        do { \
+          if((_dprintf args) < 0) \
+            goto cleanup; \
         } while(0) 
 
 static int
@@ -159,52 +164,77 @@ fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t 
 }
 
 int8_t
-fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl)
+fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj)
 {
-  int i;
-  uint64_t val=0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
+  fiid_iterator_t iter = NULL;
 
-  if (!(tmpl && obj))
+  if (!fiid_obj_verify(obj))
     {
       errno = EINVAL;
-      return (-1);
+      goto cleanup;
     }
   
   if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
-    return (-1);
+    goto cleanup;
 
-  for (i=0; tmpl[i].len != 0; i++)
+  if (!(iter = fiid_iterator_create(obj)))
+    goto cleanup;
+
+  while (!fiid_iterator_end(iter))
     {
-      if (tmpl[i].len <= 64)
-	{
-	  FIID_OBJ_GET (obj, tmpl, (char *) tmpl[i].key, &val);	
-          if (prefix)
-            _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix, (uint64_t) val, tmpl[i].key, tmpl[i].len));
-          else
-            _DPRINTF ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, tmpl[i].key, tmpl[i].len));
-        } 
+      int32_t max_field_len;
+      uint8_t *key;
+
+      if (!(key = fiid_iterator_key(iter)))
+        goto cleanup;
+
+      if ((max_field_len = fiid_iterator_max_field_len(iter)) < 0)
+        goto cleanup;
+
+      if (prefix)
+        _DPRINTF_CLEANUP ((fd, "%s", prefix));
+
+      if (max_field_len <= 64)
+        {
+          uint64_t val;
+
+	  if (fiid_iterator_get (iter, &val) < 0)
+            goto cleanup;
+
+          _DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, max_field_len));
+        }
       else
         {
-          if (prefix)
-            _DPRINTF ((fd, "%s[  BYTE ARRAY ... ] = %s[%2dB]\n", prefix, tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
-          else
-            _DPRINTF ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
-            
-          _output_byte_array(fd, prefix, 
-                             obj + fiid_obj_field_start_bytes(tmpl, (char *) tmpl[i].key),
-                             BITS_ROUND_BYTES(tmpl[i].len));
+          char buf[IPMI_DEBUG_MAX_BUF_LEN];
+          int len;
+
+          _DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(max_field_len)));
+     
+          if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
+            goto cleanup;
+       
+          if (_output_byte_array(fd, prefix, buf, len) < 0)
+            goto cleanup;
         }
+
+      fiid_iterator_next(iter);
     }
 
   if (_output_str(fd, prefix, trlr) < 0)
-    return (-1);
+    goto cleanup;
 
+  fiid_iterator_destroy(iter);
   return (0);
+
+ cleanup:
+  if (iter)
+    fiid_iterator_destroy(iter);
+  return (-1);
 }
 
 int8_t
-fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
+fiid_obj_dump (int fd, fiid_obj_t obj)
 {
   char *hdr = 
     "================================================================\n"
@@ -213,8 +243,10 @@ fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
   char *trlr = 
     "================================================================";
 
-  return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj, tmpl);
+  return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj);
 }
+
+#if 0 /* TEST */
 
 int8_t
 fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)

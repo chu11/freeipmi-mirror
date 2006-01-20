@@ -194,18 +194,6 @@ fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
   return (0);
 }
 
-int8_t
-fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
-{
-  int start = 0;
-  int end = 0; //excluded always
-  
-  if (_fiid_obj_field_start_end (obj, field, &start, &end) != -1)
-    return (1);
-  else
-    return (0);
-}
-
 fiid_obj_t 
 fiid_obj_create (fiid_template_t tmpl)
 {
@@ -284,7 +272,7 @@ fiid_obj_create (fiid_template_t tmpl)
 int8_t
 fiid_obj_destroy (fiid_obj_t obj)
 {
-  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     {
       errno = EINVAL;
       return (-1);
@@ -347,6 +335,14 @@ fiid_obj_dup (fiid_obj_t src_obj)
   return NULL;
 }
 
+int8_t 
+fiid_obj_verify(fiid_obj_t obj)
+{
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (0);
+  return (1);
+}
+
 static int32_t 
 _fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
 {
@@ -369,7 +365,7 @@ fiid_obj_clear (fiid_obj_t obj)
 {
   int i;
   
-  if (!obj || obj->magic != FIID_OBJ_MAGIC)
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     {
       errno = EINVAL;
       return (-1);
@@ -429,6 +425,18 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
   memset ((obj->data + field_offset), '\0', bytes_len);
   obj->field_data[key_index].set_field_len = 0;
   return (0);
+}
+
+int8_t
+fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
+{
+  int start = 0;
+  int end = 0; //excluded always
+  
+  if (_fiid_obj_field_start_end (obj, field, &start, &end) != -1)
+    return (1);
+  else
+    return (0);
 }
 
 int8_t

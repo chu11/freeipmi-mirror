@@ -15,6 +15,10 @@
 	symbols in freeipmi that should be exported.
 
 	* libfreeipmi/src/libfreeipmi.map: New file.
+
+	* libfreeipmi/src/: Support new fiid interface globally.
+
+	* libfreeipmi/src/: Globally remove "ipmi_" prefix for xmalloc functions.
 	
 ------------------------------------------------------------
 
@@ -26,6 +30,12 @@
 
 	* libfreeipmi/src/: Globally remove "ipmi_" prefix for xmalloc
 	functions.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_verify): New function.
+
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(fiid_obj_dump, fiid_obj_dump_perror): Support new fiid interface.
 	
 2006-01-19  Albert Chu <chu11@llnl.gov>
 

@@ -12,7 +12,7 @@ EXTRA_DIST = libfreeipmi.map
 
 #libfreeipmi_la_SOURCES= bit-ops.c libfreeipmi.c xmalloc.c fiid.c ipmi-locate.c smbios-locate.c acpi-spmi-locate.c pci-locate.c defaults-locate.c rmcp.c ipmi-utils.c ipmi-netfn-spec.c ipmi-error.c ipmi-sessions.c ipmi-semaphores.c ipmi-interface.c ipmi-lan-interface.c ipmi-kcs-interface.c ipmi-smic-interface.c ipmi-ssif-interface.c ipmi-msg-support-cmds.c ipmi-chassis-cmds.c ipmi-dev-global-cmds.c ipmi-sdr-record-types.c ipmi-sdr-repo-cmds.c ipmi-sensor-types.c ipmi-sensor-cmds.c ipmi-sel-record-types.c ipmi-sel-cmds.c ipmi-lan-cmds.c ipmi-sol-cmds.c ipmi-md2.c ipmi-md5.c ipmi-sha1.c ipmi-hmac.c ipmi-serial-cmds.c ipmi-sdr-repo-cache.c ipmi-sensor-utils.c ipmi-debug.c ipmi-watchdog.c ipmi-msg-interface-desc.c ipmi-ping.c ipmi-pef-cmds.c ipmi-sensor-event-messages.c ipmi-sensor-api.c ipmi-sel-api.c
 
-libfreeipmi_la_SOURCES= bit-ops.c xmalloc.c fiid.c ipmi-debug.c
+libfreeipmi_la_SOURCES= bit-ops.c fiid.c ipmi-debug.c xmalloc.c 
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm $(VERSION_FLAGS)
 
@@ -24,5 +24,5 @@ modincludedir = $(includedir)/freeipmi
 
 noinst_HEADERS = bit-ops.h xmalloc.h
 
-modinclude_HEADERS = freeipmi.h fiid.h bit-ops.h ipmi-error.h ipmi-debug.h 
+modinclude_HEADERS = freeipmi.h fiid.h ipmi-debug.h ipmi-error.h
 
