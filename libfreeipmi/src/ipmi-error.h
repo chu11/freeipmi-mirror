@@ -152,6 +152,9 @@ has a contiguous range of possible values. */
 /* IPMI_CMD_CLOSE_SESSION */
 #define IPMI_ERR_INVALID_SESSION_ID_IN_RQ          0x87
 
+/* IPMI_CMD_DELETE_SEL_ENTRY */
+#define IPMI_ERR_SEL_OPERATION_NOT_SUPPORTED       0x80
+#define IPMI_ERR_SEL_ERASE_IN_PROGRESS             0x81
 
 /* IPMI KCS Interface Status Codes
    -------------------------------- */

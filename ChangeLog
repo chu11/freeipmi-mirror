@@ -1,3 +1,10 @@
+2006-01-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-error.c, libfreeipmi/src/ipmi-error.h,
+	libfreeipmi/src/ipmi-sel-cmds.h: Fix consistency issue with
+	declaration of error codes.  Fix error message to be consistent
+	with IPMI specification.
+	
 2006-01-19  A Balamurugan  <bala@zresearch.com>
 
 	* doc/freeipmi.texi: updated.
