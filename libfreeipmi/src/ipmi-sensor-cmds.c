@@ -727,12 +727,12 @@ fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_threshold_reading_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SENSOR_READING); 
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_threshold_reading_rq, 
-		"sensor_number", 
+		(uint8_t *)"sensor_number", 
 		sensor_number);
   
   return 0;
@@ -743,12 +743,12 @@ fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_discrete_reading_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SENSOR_READING); 
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_discrete_reading_rq, 
-		"sensor_number", 
+		(uint8_t *)"sensor_number", 
 		sensor_number);
   
   return 0;
@@ -759,12 +759,12 @@ fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_thresholds_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SENSOR_THRESHOLDS); 
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_thresholds_rq, 
-		"sensor_number", 
+		(uint8_t *)"sensor_number", 
 		sensor_number);
   
   return 0;

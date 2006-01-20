@@ -145,7 +145,7 @@ fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_info_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SEL_DEV_CMDS_GET_SEL_INFO);
   return 0;
 }
@@ -155,7 +155,7 @@ fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_alloc_info_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ALLOCATION_INFO);
   return 0;
 }
@@ -165,7 +165,7 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_reserve_sel_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_RESERVE_SEL);
   return 0;
 }
@@ -175,17 +175,17 @@ fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_entry_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ENTRY);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_entry_rq, 
-		"record_id", 
+		(uint8_t *)"record_id", 
 		record_id);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_entry_rq, 
-		"bytes_read", 
+		(uint8_t *)"bytes_read", 
 		0xff);
   
   return 0;
@@ -198,17 +198,17 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_delete_sel_entry_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_DELETE_SEL_ENTRY);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_delete_sel_entry_rq, 
-		"reservation_id", 
+		(uint8_t *)"reservation_id", 
 		reservation_id);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_delete_sel_entry_rq, 
-		"record_id", 
+		(uint8_t *)"record_id", 
 		record_id);
   
   return 0;
@@ -219,32 +219,32 @@ fill_kcs_clear_sel (fiid_obj_t obj_data_rq, uint16_t reservation_id, uint8_t opc
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_CLEAR_SEL);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"reservation_id", 
+		(uint8_t *)"reservation_id", 
 		reservation_id);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"C", 
+		(uint8_t *)"C", 
 		'C');
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"L", 
+		(uint8_t *)"L", 
 		'L');
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"R", 
+		(uint8_t *)"R", 
 		'R');
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
-		"opcode", 
+		(uint8_t *)"opcode", 
 		opcode);
   
   return 0;

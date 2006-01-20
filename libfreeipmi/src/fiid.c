@@ -68,7 +68,7 @@ fiid_obj_field_start_end (fiid_template_t tmpl,
   
   for (i = 0; tmpl[i].len != 0; i++)
     {
-      if (strcmp (tmpl[i].key, field) == 0)
+      if (strcmp (tmpl[i].key, (char *)field) == 0)
 	{
 	  _end = _start + tmpl[i].len;
 	  key_index = i;
@@ -93,8 +93,8 @@ int8_t
 fiid_obj_field_lookup (fiid_template_t tmpl, 
 		       uint8_t *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   if (fiid_obj_field_start_end (tmpl, field, &start, &end) != -1)
     return (1);
@@ -106,8 +106,8 @@ int32_t
 fiid_obj_field_start (fiid_template_t tmpl, 
 		      uint8_t *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   ERR (fiid_obj_field_start_end (tmpl, field, &start, &end) != -1);
   return (start);
@@ -128,8 +128,8 @@ int32_t
 fiid_obj_field_end (fiid_template_t tmpl, 
 		    uint8_t *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   ERR (fiid_obj_field_start_end (tmpl, field, &start, &end) != -1);
   return (end);
@@ -160,7 +160,7 @@ fiid_obj_field_len (fiid_template_t tmpl,
   
   for (i=0; tmpl[i].len != 0; i++)
     {
-      if (strcmp (tmpl[i].key, field) == 0)
+      if (strcmp (tmpl[i].key, (char *)field) == 0)
 	return (tmpl[i].len);
     }
   
@@ -282,8 +282,8 @@ fiid_obj_set (fiid_obj_t obj,
 	      uint8_t *field, 
 	      uint64_t val)
 {
-  int start_bit_pos = 0;
-  int end_bit_pos = 0; //excluded always
+  uint32_t start_bit_pos = 0;
+  uint32_t end_bit_pos = 0; //excluded always
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;
@@ -366,8 +366,8 @@ fiid_obj_get (fiid_obj_t obj,
 	      uint8_t *field, 
 	      uint64_t *val)
 {
-  int start_bit_pos = 0;
-  int end_bit_pos = 0; //excluded always
+  uint32_t start_bit_pos = 0;
+  uint32_t end_bit_pos = 0; //excluded always
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;

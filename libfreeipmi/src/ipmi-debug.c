@@ -177,7 +177,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
     {
       if (tmpl[i].len <= 64)
 	{
-	  FIID_OBJ_GET (obj, tmpl, (char *) tmpl[i].key, &val);	
+	  FIID_OBJ_GET (obj, tmpl,(uint8_t *)tmpl[i].key, &val);	
           if (prefix)
             _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix, (uint64_t) val, tmpl[i].key, tmpl[i].len));
           else
@@ -191,7 +191,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
             _DPRINTF ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
             
           _output_byte_array(fd, prefix, 
-                             obj + fiid_obj_field_start_bytes(tmpl, (char *) tmpl[i].key),
+                             obj + fiid_obj_field_start_bytes(tmpl, (uint8_t *) tmpl[i].key),
                              BITS_ROUND_BYTES(tmpl[i].len));
         }
     }
@@ -269,7 +269,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  if ((pkt_len - indx) < fiid_obj_field_end_bytes (tmpl_session, "auth_type"))
+  if ((pkt_len - indx) < fiid_obj_field_end_bytes (tmpl_session, (uint8_t *)"auth_type"))
     {
       ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
@@ -281,12 +281,12 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       uint8_t auth_type;
       uint32_t auth_type_offset;
 
-      auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_session, "auth_type");
+      auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_session, (uint8_t *)"auth_type");
       auth_type = pkt[auth_type_offset];
 
       if (auth_type == IPMI_SESSION_AUTH_TYPE_NONE)
         tmpl_session = tmpl_hdr_session;
-      else if (fiid_obj_field_lookup(tmpl_session, "auth_calc_data"))
+      else if (fiid_obj_field_lookup(tmpl_session, (uint8_t *)"auth_calc_data"))
         tmpl_session = tmpl_hdr_session_auth;
 
       if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_session))

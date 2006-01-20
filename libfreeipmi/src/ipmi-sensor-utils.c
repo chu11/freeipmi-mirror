@@ -112,7 +112,7 @@ ipmi_sensor_get_decode_params_old (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"r_exponent", 
+		(uint8_t *)"r_exponent", 
 		&val);
   *r_exponent = (char) val;
   if (*r_exponent & 0x08)
@@ -123,23 +123,23 @@ ipmi_sensor_get_decode_params_old (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_exponent", 
+		(uint8_t *)"b_exponent", 
 		&val);
   *b_exponent = (char) val;
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"linearization_enum", 
+		(uint8_t *)"linearization_enum", 
 		&val);
   *linear = val;
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"m_ls", 
+		(uint8_t *)"m_ls", 
 		&m_ls); 
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"m_ms", 
+		(uint8_t *)"m_ms", 
 		&m_ms); 
   val = bits_merge (m_ls, 8, 10, m_ms);
   
@@ -147,11 +147,11 @@ ipmi_sensor_get_decode_params_old (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_ls", 
+		(uint8_t *)"b_ls", 
 		&b_ls); 
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_ms", 
+		(uint8_t *)"b_ms", 
 		&b_ms); 
   val = bits_merge (b_ls, 8, 10, b_ms);
   
@@ -177,7 +177,7 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"r_exponent", 
+		(uint8_t *)"r_exponent", 
 		&val);
   *r_exponent = (char) val;
   if (*r_exponent & 0x08)
@@ -185,7 +185,7 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_exponent", 
+		(uint8_t *)"b_exponent", 
 		&val);
   *b_exponent = (char) val;
   if (*b_exponent & 0x08)
@@ -193,11 +193,11 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"m_ls", 
+		(uint8_t *)"m_ls", 
 		&m_ls); 
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"m_ms", 
+		(uint8_t *)"m_ms", 
 		&m_ms); 
   val = bits_merge (m_ls, 8, 10, m_ms);
   *m = (short) val;
@@ -206,11 +206,11 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_ls", 
+		(uint8_t *)"b_ls", 
 		&b_ls); 
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
-		"b_ms", 
+		(uint8_t *)"b_ms", 
 		&b_ms); 
   val = bits_merge (b_ls, 8, 10, b_ms);
   *b = (short) val;
@@ -219,7 +219,7 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   fiid_obj_get (sensor_record,
                 tmpl_sdr_full_sensor_record,
-                "sensor_unit_analog_data_format",
+                (uint8_t *)"sensor_unit_analog_data_format",
                 &val);
   *analog_data_format = (uint8_t) val;
 

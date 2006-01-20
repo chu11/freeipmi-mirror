@@ -47,7 +47,7 @@ string2bytes (char *line, unsigned char **buf, int *len)
   
   for (i = 0, count = 0; line[i]; i++)
     {
-      if (strchr (delim, (int) line[i]))
+      if (strchr ((const char*)delim, (int) line[i]))
 	count++;
     }
   count++;
@@ -111,7 +111,7 @@ main (int argc, char **argv)
   int send_len;
   
   uint8_t bytes_rs[512];
-  int rcvd_len;
+  size_t rcvd_len;
   
   struct rlimit resource_limit;
   

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.4 2005-12-16 08:48:40 ab Exp $
+ *  $Id: rmcpping.c,v 1.5 2006-01-20 21:59:19 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -104,7 +104,7 @@ createpacket(char *buffer,
 
   if ((len = assemble_rmcp_pkt(obj_rmcp_hdr, obj_rmcp_cmd, 
                                tmpl_cmd_asf_presence_ping,
-                               buffer, buflen)) < 0)
+                               (uint8_t *)buffer, buflen)) < 0)
     ipmi_ping_err_exit("assemble_rmcp_pkt: %s", strerror(errno));
   
 #ifndef NDEBUG
@@ -157,7 +157,7 @@ parsepacket(char *buffer,
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
   Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-               "msg_type", (uint64_t *)&msg_type);
+               (uint8_t *)"msg_type", (uint64_t *)&msg_type);
 
   if (msg_type != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
     {
@@ -166,7 +166,7 @@ parsepacket(char *buffer,
     }
 
   Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-               "msg_tag", (uint64_t *)&msg_tag);
+               (uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
   if (msg_tag != (seq_num % (RMCP_MSG_TAG_MAX + 1)))
     {
       retval = 0;
@@ -177,7 +177,7 @@ parsepacket(char *buffer,
   if (verbose)
     {
       Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-                   "supported_entities.ipmi_supported", 
+                   (uint8_t *)"supported_entities.ipmi_supported", 
                    (uint64_t *)&ipmi_supported);
       printf(", ipmi %s", _supported(ipmi_supported));
     }

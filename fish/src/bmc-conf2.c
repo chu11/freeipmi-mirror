@@ -92,7 +92,7 @@ set_bmc_username (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_set_user_name_rs);
   if (ipmi_cmd_set_user_name2 (dev, 
 			       userid, 
-			       username, 
+			       (char *)username, 
 			       obj_cmd_rs) != 0)
     {
       return (-1);
@@ -115,7 +115,7 @@ set_bmc_enable_user (ipmi_device_t *dev,
 				   userid, 
 				   (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
 				    IPMI_PASSWORD_OPERATION_DISABLE_USER), 
-				   password, 
+				   (char *)password, 
 				   obj_cmd_rs) != 0)
     {
       return (-1);
@@ -135,7 +135,7 @@ set_bmc_user_password (ipmi_device_t *dev,
   if (ipmi_cmd_set_user_password2 (dev, 
 				   userid, 
 				   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
-				   password, 
+				   (char *)password, 
 				   obj_cmd_rs) != 0)
     {
       return (-1);
@@ -835,25 +835,25 @@ get_bmc_user_access (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
-		"user_privilege_level_limit", 
+		(uint8_t *)"user_privilege_level_limit", 
 		&val);
   *privilege_limit = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
-		"user_flags.enable_ipmi_msgs", 
+		(uint8_t *)"user_flags.enable_ipmi_msgs", 
 		&val);
   *enable_ipmi_msgs = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
-		"user_flags.enable_link_auth", 
+		(uint8_t *)"user_flags.enable_link_auth", 
 		&val);
   *enable_link_auth = (uint8_t) val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_user_access_rs, 
-		"user_flags.restrict_to_callback", 
+		(uint8_t *)"user_flags.restrict_to_callback", 
 		&val);
   *enable_restrict_to_callback = (uint8_t) val;
   
@@ -887,31 +887,31 @@ get_bmc_channel_access (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_channel_access_rs, 
-		"ipmi_messaging_access_mode", 
+		(uint8_t *)"ipmi_messaging_access_mode", 
 		&val);
   *access_mode = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_channel_access_rs, 
-		"user_level_authentication", 
+		(uint8_t *)"user_level_authentication", 
 		&val);
   *user_level_auth = (val ? 0 : 1);
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_channel_access_rs, 
-		"per_message_authentication", 
+		(uint8_t *)"per_message_authentication", 
 		&val);
   *per_message_auth = (val ? 0 : 1);
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_channel_access_rs, 
-		"pef_alerting", 
+		(uint8_t *)"pef_alerting", 
 		&val);
   *pef_alerting = (val ? 0 : 1);
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_channel_access_rs, 
-		"channel_privilege_level_limit", 
+		(uint8_t *)"channel_privilege_level_limit", 
 		&val);
   *privilege_limit = val;
   
@@ -928,7 +928,7 @@ get_bmc_username (ipmi_device_t *dev,
   
   if (userid == 1)
     {
-      strcpy (username, "NULL");
+      strcpy ((char *)username, "NULL");
       return (0);
     }
   
@@ -942,7 +942,7 @@ get_bmc_username (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_user_name_rs, 
-		     "user_name", 
+		     (uint8_t *)"user_name", 
 		     username,
                      username_len);
   
@@ -1043,7 +1043,7 @@ get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_ip_addr_source_rs, 
-		"ip_addr_source", 
+		(uint8_t *)"ip_addr_source", 
 		&val);
   *ip_addr_source = val;
   
@@ -1070,7 +1070,7 @@ get_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_ip_addr_rs, 
-		     "ip_addr", 
+		     (uint8_t *)"ip_addr", 
 		     ip_addr_bytes,
                      4);
   sprintf (ip_addr, 
@@ -1103,7 +1103,7 @@ get_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
-		     "mac_addr", 
+		     (uint8_t *)"mac_addr", 
 		     mac_addr_bytes,
                      6);
   sprintf (mac_addr, 
@@ -1138,7 +1138,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_subnet_mask_rs, 
-		     "subnet_mask", 
+		     (uint8_t *)"subnet_mask", 
 		     subnet_mask_bytes,
                      4);
   sprintf (subnet_mask, 
@@ -1171,7 +1171,7 @@ get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
-		     "ip_addr", 
+		     (uint8_t *)"ip_addr", 
 		     ip_addr_bytes,
                      4);
   sprintf (default_gw_ip_addr, 
@@ -1204,7 +1204,7 @@ get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
-		     "mac_addr", 
+		     (uint8_t *)"mac_addr", 
 		     mac_addr_bytes,
                      6);
   sprintf (default_gw_mac_addr, 
@@ -1239,7 +1239,7 @@ get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_gw_ip_addr_rs, 
-		     "ip_addr", 
+		     (uint8_t *)"ip_addr", 
 		     ip_addr_bytes,
                      4);
   sprintf (backup_gw_ip_addr, 
@@ -1272,7 +1272,7 @@ get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_lan_conf_param_mac_addr_rs, 
-		     "mac_addr", 
+		     (uint8_t *)"mac_addr", 
 		     mac_addr_bytes,
                      6);
   sprintf (backup_gw_mac_addr, 
@@ -1309,12 +1309,12 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_vlan_id_rs,
-		"vlan_id_ls", 
+		(uint8_t *)"vlan_id_ls", 
 		&ls_val);
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_vlan_id_rs,
-		"vlan_id_ms", 
+		(uint8_t *)"vlan_id_ms", 
 		&ms_val);
   
   ptr = (uint8_t *)vlan_id;
@@ -1328,7 +1328,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_vlan_id_rs,
-		"vlan_id_flag", 
+		(uint8_t *)"vlan_id_flag", 
 		&val);
   *vlan_id_flag = val;
   
@@ -1355,7 +1355,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_vlan_priority_rs,
-		"vlan_priority", 
+		(uint8_t *)"vlan_priority", 
 		&val);
   *vlan_priority = val;
   
@@ -1382,151 +1382,151 @@ get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_callback_level.none", 
+		(uint8_t *)"max_privilege_auth_type_callback_level.none", 
 		&val);
   bmc_auth_level->callback.type_none = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_callback_level.md2", 
+		(uint8_t *)"max_privilege_auth_type_callback_level.md2", 
 		&val);
   bmc_auth_level->callback.type_md2 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_callback_level.md5", 
+		(uint8_t *)"max_privilege_auth_type_callback_level.md5", 
 		&val);
   bmc_auth_level->callback.type_md5 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_callback_level.straight_password", 
+		(uint8_t *)"max_privilege_auth_type_callback_level.straight_password", 
 		&val);
   bmc_auth_level->callback.type_straight_password = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_callback_level.oem_proprietary", 
+		(uint8_t *)"max_privilege_auth_type_callback_level.oem_proprietary", 
 		&val);
   bmc_auth_level->callback.type_oem_proprietary = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_user_level.none", 
+		(uint8_t *)"max_privilege_auth_type_user_level.none", 
 		&val);
   bmc_auth_level->user.type_none = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_user_level.md2", 
+		(uint8_t *)"max_privilege_auth_type_user_level.md2", 
 		&val);
   bmc_auth_level->user.type_md2 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_user_level.md5", 
+		(uint8_t *)"max_privilege_auth_type_user_level.md5", 
 		&val);
   bmc_auth_level->user.type_md5 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_user_level.straight_password", 
+		(uint8_t *)"max_privilege_auth_type_user_level.straight_password", 
 		&val);
   bmc_auth_level->user.type_straight_password = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_user_level.oem_proprietary", 
+		(uint8_t *)"max_privilege_auth_type_user_level.oem_proprietary", 
 		&val);
   bmc_auth_level->user.type_oem_proprietary = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_operator_level.none", 
+		(uint8_t *)"max_privilege_auth_type_operator_level.none", 
 		&val);
   bmc_auth_level->operator.type_none = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_operator_level.md2", 
+		(uint8_t *)"max_privilege_auth_type_operator_level.md2", 
 		&val);
   bmc_auth_level->operator.type_md2 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_operator_level.md5", 
+		(uint8_t *)"max_privilege_auth_type_operator_level.md5", 
 		&val);
   bmc_auth_level->operator.type_md5 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_operator_level.straight_password", 
+		(uint8_t *)"max_privilege_auth_type_operator_level.straight_password", 
 		&val);
   bmc_auth_level->operator.type_straight_password = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_operator_level.oem_proprietary", 
+		(uint8_t *)"max_privilege_auth_type_operator_level.oem_proprietary", 
 		&val);
   bmc_auth_level->operator.type_oem_proprietary = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_admin_level.none", 
+		(uint8_t *)"max_privilege_auth_type_admin_level.none", 
 		&val);
   bmc_auth_level->admin.type_none = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_admin_level.md2", 
+		(uint8_t *)"max_privilege_auth_type_admin_level.md2", 
 		&val);
   bmc_auth_level->admin.type_md2 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_admin_level.md5", 
+		(uint8_t *)"max_privilege_auth_type_admin_level.md5", 
 		&val);
   bmc_auth_level->admin.type_md5 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_admin_level.straight_password", 
+		(uint8_t *)"max_privilege_auth_type_admin_level.straight_password", 
 		&val);
   bmc_auth_level->admin.type_straight_password = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_admin_level.oem_proprietary", 
+		(uint8_t *)"max_privilege_auth_type_admin_level.oem_proprietary", 
 		&val);
   bmc_auth_level->admin.type_oem_proprietary = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_oem_level.none", 
+		(uint8_t *)"max_privilege_auth_type_oem_level.none", 
 		&val);
   bmc_auth_level->oem.type_none = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_oem_level.md2", 
+		(uint8_t *)"max_privilege_auth_type_oem_level.md2", 
 		&val);
   bmc_auth_level->oem.type_md2 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_oem_level.md5", 
+		(uint8_t *)"max_privilege_auth_type_oem_level.md5", 
 		&val);
   bmc_auth_level->oem.type_md5 = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_oem_level.straight_password", 
+		(uint8_t *)"max_privilege_auth_type_oem_level.straight_password", 
 		&val);
   bmc_auth_level->oem.type_straight_password = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_auth_type_enables_rs, 
-		"max_privilege_auth_type_oem_level.oem_proprietary", 
+		(uint8_t *)"max_privilege_auth_type_oem_level.oem_proprietary", 
 		&val);
   bmc_auth_level->oem.type_oem_proprietary = val;
   
@@ -1554,13 +1554,13 @@ get_bmc_lan_conf_arp_control (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_bmc_generated_arp_control_rs, 
-		"bmc_generated_gratuitous_arps_flag", 
+		(uint8_t *)"bmc_generated_gratuitous_arps_flag", 
 		&val);
   *enable_gratuitous_arps = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_bmc_generated_arp_control_rs, 
-		"bmc_generated_arp_responses_flag", 
+		(uint8_t *)"bmc_generated_arp_responses_flag", 
 		&val);
   *enable_arp_response = val;
   
@@ -1587,7 +1587,7 @@ get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_lan_conf_param_gratuitous_arp_interval_rs, 
-		"gratuitous_arp_interval", 
+		(uint8_t *)"gratuitous_arp_interval", 
 		&val);
   *gratuitous_arp_interval = val;
   
@@ -1653,25 +1653,25 @@ get_bmc_serial_conf_conn_mode (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_connmode_rs, 
-		"basic_mode_enable", 
+		(uint8_t *)"basic_mode_enable", 
 		&val);
   *enable_basic_mode = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_connmode_rs, 
-		"ppp_mode_enable", 
+		(uint8_t *)"ppp_mode_enable", 
 		&val);
   *enable_ppp_mode = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_connmode_rs, 
-		"terminal_mode_enable", 
+		(uint8_t *)"terminal_mode_enable", 
 		&val);
   *enable_terminal_mode = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_connmode_rs, 
-		"direct", 
+		(uint8_t *)"direct", 
 		&val);
   *connect_mode = val;
   
@@ -1698,7 +1698,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_pageblackout_rs, 
-		"page_blackout_interval", 
+		(uint8_t *)"page_blackout_interval", 
 		&val);
   *page_blackout_interval = val;
   
@@ -1725,7 +1725,7 @@ get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_retry_rs, 
-		"retry_time", 
+		(uint8_t *)"retry_time", 
 		&val);
   *call_retry_time = val;
   
@@ -1754,19 +1754,19 @@ get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_commbits_rs, 
-		"dtr_hangup", 
+		(uint8_t *)"dtr_hangup", 
 		&val);
   *dtr_hangup = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_commbits_rs, 
-		"flow_control", 
+		(uint8_t *)"flow_control", 
 		&val);
   *flow_control = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_serial_conf_param_commbits_rs, 
-		"bit_rate", 
+		(uint8_t *)"bit_rate", 
 		&val);
   *bit_rate = val;
   
@@ -1788,7 +1788,7 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_cmd_get_chassis_status_rs, 
-		"power_state.power_restore_policy", 
+		(uint8_t *)"power_state.power_restore_policy", 
 		&val);
   *power_restore_policy = val;
   
@@ -1817,25 +1817,25 @@ get_pef_control (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_pef_control_rs, 
-		"enable_pef", 
+		(uint8_t *)"enable_pef", 
 		&val);
   *pef_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_pef_control_rs, 
-		"enable_pef_event_msgs", 
+		(uint8_t *)"enable_pef_event_msgs", 
 		&val);
   *pef_event_msgs_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_pef_control_rs, 
-		"enable_startup_delay", 
+		(uint8_t *)"enable_startup_delay", 
 		&val);
   *pef_startup_delay_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_pef_control_rs, 
-		"enable_alert_startup_delay", 
+		(uint8_t *)"enable_alert_startup_delay", 
 		&val);
   *pef_alert_startup_delay_enable = val;
   
@@ -1866,37 +1866,37 @@ get_pef_global_action_control (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_alert_action", 
+		(uint8_t *)"enable_alert_action", 
 		&val);
   *alert_action_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_powerdown_action", 
+		(uint8_t *)"enable_powerdown_action", 
 		&val);
   *powerdown_action_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_reset_action", 
+		(uint8_t *)"enable_reset_action", 
 		&val);
   *reset_action_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_powercycle_action", 
+		(uint8_t *)"enable_powercycle_action", 
 		&val);
   *powercycle_action_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_oem_action", 
+		(uint8_t *)"enable_oem_action", 
 		&val);
   *oem_action_enable = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_global_action_control_rs, 
-		"enable_diag_interrupt", 
+		(uint8_t *)"enable_diag_interrupt", 
 		&val);
   *diag_interrupt_enable = val;
   
@@ -1922,7 +1922,7 @@ get_pef_startup_delay (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_startup_delay_rs, 
-		"pef_startup_delay", 
+		(uint8_t *)"pef_startup_delay", 
 		&val);
   *pef_startup_delay = val;
   
@@ -1948,7 +1948,7 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_pef_conf_param_alert_startup_delay_rs, 
-		"pef_alert_startup_delay", 
+		(uint8_t *)"pef_alert_startup_delay", 
 		&val);
   *pef_alert_startup_delay = val;
   
@@ -1967,7 +1967,7 @@ check_bmc_user_password (ipmi_device_t *dev,
   if (ipmi_cmd_set_user_password2 (dev, 
 				   userid, 
 				   IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
-				   password, 
+				   (char *)password, 
 				   obj_cmd_rs) != 0)
     {
       if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_PASSWORD_OPERATION_TEST_FAILED)

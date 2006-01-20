@@ -184,6 +184,12 @@ extern "C" {
 # include "xmalloc.h"
 #endif
 
+#if  __WORDSIZE == 64
+#define FI_64 "%l"
+#else
+#define FI_64 "%ll"
+#endif
+
 #if defined (FREEIPMI_BUILD)
 #include "bit-ops.h"
 #include "fiid.h"

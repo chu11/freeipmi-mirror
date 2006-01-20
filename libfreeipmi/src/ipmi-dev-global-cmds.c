@@ -88,7 +88,7 @@ fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs =
 int8_t 
 fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
 { 
-  FIID_OBJ_SET (obj_data_rq, tmpl_cmd_get_dev_id_rq, "cmd", IPMI_CMD_GET_DEV_ID);
+  FIID_OBJ_SET (obj_data_rq, tmpl_cmd_get_dev_id_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEV_ID);
   return (0);
 }
 

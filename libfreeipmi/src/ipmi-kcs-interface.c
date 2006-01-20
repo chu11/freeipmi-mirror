@@ -70,8 +70,8 @@ fill_hdr_ipmi_kcs (uint8_t lun,
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, "lun", lun);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, "net_fn", fn);
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"lun", lun);
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"net_fn", fn);
   return 0;
 }
 

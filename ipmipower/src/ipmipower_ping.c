@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.4 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower_ping.c,v 1.5 2006-01-20 21:59:19 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -132,7 +132,7 @@ ipmipower_ping_process_pings(int *timeout)
             
           if ((len = assemble_rmcp_pkt(rmcp_hdr, rmcp_ping, 
                                        tmpl_cmd_asf_presence_ping,
-                                       buffer, RMCP_PACKET_BUFLEN)) < 0)
+                                       (uint8_t *)buffer, RMCP_PACKET_BUFLEN)) < 0)
             err_exit("assemble_rmcp_pkt: %s", strerror(errno));
           
 #ifndef NDEBUG
@@ -202,11 +202,11 @@ ipmipower_ping_process_pings(int *timeout)
            */
 
           if (fiid_obj_get(rmcp_pong, tmpl_cmd_asf_presence_pong, 
-                           "msg_type", &msg_type) < 0)
+                           (uint8_t *)"msg_type", &msg_type) < 0)
             err_exit("fiid_obj_get: %s", strerror(errno));
           
           if (fiid_obj_get(rmcp_pong, tmpl_cmd_asf_presence_pong, 
-                           "supported_entities.ipmi_supported", &ipmi_supported) < 0)
+                           (uint8_t *)"supported_entities.ipmi_supported", &ipmi_supported) < 0)
             err_exit("fiid_obj_get: %s", strerror(errno));
           
             

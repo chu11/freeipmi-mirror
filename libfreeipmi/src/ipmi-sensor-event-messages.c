@@ -1062,9 +1062,9 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	char *str1 = NULL;
 	char *str2 = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, "log_type", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_type", &val);
 	log_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "log_entry_action", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_entry_action", &val);
 	log_entry_action = val;
 	
 	switch (log_type)
@@ -1133,17 +1133,17 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	char *str = NULL;
 	char *tmp_str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, "alert", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"alert", &val);
 	alert = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "power_off", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_off", &val);
 	power_off = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "reset", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"reset", &val);
 	reset = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "power_cycle", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_cycle", &val);
 	power_cycle = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "oem_action", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"oem_action", &val);
 	oem_action = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "diagonstic_interrupt", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"diagonstic_interrupt", &val);
 	diagnostic_interrupt = val;
 	
 	if (alert)
@@ -1240,9 +1240,9 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	uint8_t first_second;
 	char *str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, "timestamp_clock_type", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timestamp_clock_type", &val);
 	timestamp_clock_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, "first_second", &val);
+	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"first_second", &val);
 	first_second = val;
 	
 	asprintf (&str, "%s; %s", 
@@ -1309,7 +1309,7 @@ get_21_event_data2_message (int offset, uint8_t event_data)
 	};
       uint64_t val;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, "slot_connector_type", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"slot_connector_type", &val);
       
       switch (val)
 	{
@@ -1355,9 +1355,9 @@ get_23_event_data2_message (int offset, uint8_t event_data)
       char *str1 = NULL;
       char *str2 = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, "timer_at_expiration", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
       timer_at_expiration = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, "interrupt_type", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"interrupt_type", &val);
       interrupt_type = val;
       switch (timer_at_expiration)
 	{
@@ -1426,7 +1426,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
       uint64_t val;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, "timer_at_expiration", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
       if (val == 0x0)
 	return strdup ("User ID for user that activated session = Unspecified");
       asprintf (&str, "User ID for user that activated session = %d", (int) val);
@@ -1513,9 +1513,9 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
       uint8_t cause_of_state_change;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, "previous_state_offset", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"previous_state_offset", &val);
       previous_state_offset = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, "cause_os_state_change", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"cause_os_state_change", &val);
       cause_of_state_change = val;
       switch (cause_of_state_change)
 	{
@@ -1577,7 +1577,7 @@ get_08_event_data3_message (int offset, uint8_t event_data)
 	};
       uint64_t val;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, "event_type", &val);
+      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_type", &val);
       switch (val)
 	{
 	case 0x0:
@@ -1626,11 +1626,11 @@ get_10_event_data3_message (int offset, uint8_t event_data)
 	uint8_t logging_disabled_all_events;
 	char *str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data3, "event_offset", &val);
+	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_offset", &val);
 	event_offset = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, "assertion_deassertion_event", &val);
+	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"assertion_deassertion_event", &val);
 	assertion_deassertion_event = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, "logging_disabled_all_events", &val);
+	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"logging_disabled_all_events", &val);
 	logging_disabled_all_events = val;
 	
 	asprintf (&str, "Event Offset %d; %s%s", event_offset, 
@@ -1722,9 +1722,9 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
       uint8_t deactivation_cause;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, "channel_number", &val);
+      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"channel_number", &val);
       channel_number = val;
-      fiid_obj_get (&event_data, tmpl_event_data3, "deactivation_cause", &val);
+      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"deactivation_cause", &val);
       deactivation_cause = val;
       
       switch (deactivation_cause)
