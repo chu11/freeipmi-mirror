@@ -258,7 +258,7 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 		    {
 		      if (is_ipmi_dev_info (type, dev_info_p))
 			{
-			  result = ipmi_xmalloc (size);
+			  result = xmalloc (size);
 			  if (result != NULL)
 			    {
 			      status = 0;

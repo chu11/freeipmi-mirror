@@ -47,7 +47,7 @@ ipmi_inband_free (ipmi_device_t *dev)
 {
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
-  ipmi_xfree (dev->io.inband.driver_device);
+  xfree (dev->io.inband.driver_device);
 }
 
 int 

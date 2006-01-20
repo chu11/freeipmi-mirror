@@ -40,11 +40,11 @@ void free ();
 
 /* Prototypes for functions defined here.  */
 #if defined (__STDC__) && __STDC__
-__VOID *ipmi_xmalloc (size_t n);
-__VOID *ipmi_xcalloc (size_t n, size_t s);
-__VOID *ipmi_xrealloc (__VOID *p, size_t n);
-char *ipmi_xstrdup (char *p);
-#define ipmi_xfree(p)     \
+__VOID *xmalloc (size_t n);
+__VOID *xcalloc (size_t n, size_t s);
+__VOID *xrealloc (__VOID *p, size_t n);
+char *xstrdup (char *p);
+#define xfree(p)     \
   if (p)		  \
   {			  \
     free (p);		  \

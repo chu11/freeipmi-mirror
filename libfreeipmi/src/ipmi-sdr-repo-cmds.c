@@ -292,20 +292,20 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rq, tmpl_get_sdr_rq);
   if (obj_cmd_rq == NULL)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   fiid_obj_alloca (local_obj_cmd_rs, tmpl_var_len_get_sdr_rs);
   if (local_obj_cmd_rs == NULL)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   
   if (fill_kcs_get_sensor_record_header (obj_cmd_rq, 
 					 record_id) != 0)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   if (ipmi_cmd (dev, 
@@ -316,7 +316,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 		local_obj_cmd_rs, 
 		tmpl_var_len_get_sdr_rs) != 0)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   fiid_obj_get_data (local_obj_cmd_rs, 
@@ -330,7 +330,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 		     sensor_record_header,
                      fiid_obj_len_bytes(tmpl_sdr_sensor_record_header));
   
-  ipmi_xfree (tmpl_var_len_get_sdr_rs);
+  xfree (tmpl_var_len_get_sdr_rs);
   
   ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
@@ -367,13 +367,13 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rq, tmpl_get_sdr_rq);
   if (obj_cmd_rq == NULL)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   fiid_obj_alloca (local_obj_cmd_rs, tmpl_var_len_get_sdr_rs);
   if (local_obj_cmd_rs == NULL)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   
@@ -381,7 +381,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 			      record_id, record_offset, 
 			      bytes_read) != 0)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   if (ipmi_cmd (dev, 
@@ -392,7 +392,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 		local_obj_cmd_rs, 
 		tmpl_var_len_get_sdr_rs) != 0)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
+      xfree (tmpl_var_len_get_sdr_rs);
       return (-1);
     }
   
@@ -407,7 +407,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 		     sensor_record_chunk,
                      sensor_record_chunk_len);
   
-  ipmi_xfree (tmpl_var_len_get_sdr_rs);
+  xfree (tmpl_var_len_get_sdr_rs);
   
   ERR (ipmi_comp_test (obj_cmd_rs) == 1);
   
@@ -485,7 +485,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       memcpy (record_data + record_offset, chunk_data, bytes_read);
     }
   
-  *sensor_record = ipmi_xmalloc (record_length);
+  *sensor_record = xmalloc (record_length);
   ERR (*sensor_record != NULL);
   memcpy (*sensor_record, record_data, record_length);
   

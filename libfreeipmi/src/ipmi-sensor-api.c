@@ -729,7 +729,7 @@ get_sdr_record (ipmi_device_t *dev,
       }
     }
   
-  ipmi_xfree (obj_sdr_record);
+  xfree (obj_sdr_record);
   
   return 0;
 }

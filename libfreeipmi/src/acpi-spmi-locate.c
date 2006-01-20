@@ -798,7 +798,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
 
   if ((obj_acpi_spmi_table_descriptor = fiid_obj_calloc (tmpl_acpi_spmi_table_descriptor)) == NULL)
     {
-      ipmi_xfree (obj_acpi_table_hdr);
+      xfree (obj_acpi_table_hdr);
       return (NULL);
     }
 
@@ -806,8 +806,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
 				obj_acpi_table_hdr,
 				obj_acpi_spmi_table_descriptor) != 0)
     {
-      ipmi_xfree (obj_acpi_table_hdr);
-      ipmi_xfree (obj_acpi_spmi_table_descriptor);
+      xfree (obj_acpi_table_hdr);
+      xfree (obj_acpi_spmi_table_descriptor);
 /*       errno = ENODEV; */
       return (NULL);
     }
@@ -852,8 +852,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
       case IPMI_INTERFACE_RESERVED:
       default:
 	{
-	  ipmi_xfree (obj_acpi_table_hdr);
-	  ipmi_xfree (obj_acpi_spmi_table_descriptor);
+	  xfree (obj_acpi_table_hdr);
+	  xfree (obj_acpi_spmi_table_descriptor);
 	  errno = ENODEV;
 	  return (NULL);
 	}
@@ -891,8 +891,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
 	}
       default:
 	{
-	  ipmi_xfree (obj_acpi_table_hdr);
-	  ipmi_xfree (obj_acpi_spmi_table_descriptor);
+	  xfree (obj_acpi_table_hdr);
+	  xfree (obj_acpi_spmi_table_descriptor);
 	  errno = ENODEV;
 	  return (NULL);
 	}
@@ -906,8 +906,8 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
     pinfo->reg_space = (reg_bit_width / 8);
   }
 
-  ipmi_xfree (obj_acpi_table_hdr);
-  ipmi_xfree (obj_acpi_spmi_table_descriptor);
+  xfree (obj_acpi_table_hdr);
+  xfree (obj_acpi_spmi_table_descriptor);
   return (pinfo);
 }
 

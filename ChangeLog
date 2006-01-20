@@ -18,6 +18,15 @@
 	
 ------------------------------------------------------------
 
+2006-01-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/xmalloc.c, libfreeipmi/src/xmalloc.h: Remove
+	"ipmi_" prefix for functions.  Symbol collision no longer an issue
+	since symbols localized by linker.
+
+	* libfreeipmi/src/: Globally remove "ipmi_" prefix for xmalloc
+	functions.
+	
 2006-01-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.c (fiid_obj_create, fiid_obj_set_data,

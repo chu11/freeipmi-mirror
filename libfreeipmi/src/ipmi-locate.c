@@ -79,5 +79,5 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 void
 ipmi_locate_free (ipmi_locate_info_t* pinfo)
 {
-  ipmi_xfree (pinfo->bmc_i2c_dev_name);
+  xfree (pinfo->bmc_i2c_dev_name);
 }
