@@ -2,6 +2,10 @@
 
 	* doc/freeipmi.texi: updated.
 
+2006-01-19  A Balamurugan  <bala@zresearch.com>
+
+	* doc/freeipmi.texi: updated.
+
 	* ipmi-raw/src/ipmi-raw.c (string2bytes): fixed logical/invalid
 	pointer operation bug.
 

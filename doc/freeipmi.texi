@@ -50,10 +50,12 @@ release @value{VERSION} of the GNU FreeIPMI.
 * Introduction::                Introduction to the GNU FreeIPMI system.
 * Installation::                Installing the software.
 * libfreeipmi::                 High-level C library for @acronym{IPMI}
+* ipmi-locate::                 @acronym{IPMI} device probing tool.
 * fish::                        FreeIPMI SHell.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
 * bmc-autoconfig::              Wizard-like frontend for bmc-config.
+* ipmi-raw::                    executes @acronym{IPMI} commands by hex values.
 * ipmi-sensors::                @acronym{IPMI} sensors utility.
 * ipmi-sel::                    @acronym{IPMI} System Event Log.
 * bmc-watchdog::                Watchdog daemon.
@@ -269,7 +271,7 @@ ipmitest:~#
 If you don't get the expected response from @command{bmc-info} command,
 please refer to @ref{Trouble-shooting}@.
 
-@node libfreeipmi, fish, Installation, Top
+@node libfreeipmi, ipmi-locate, Installation, Top
 @chapter @acronym{IPMI} C library (libfreeipmi)
 @pindex libfreeipmi
 
@@ -292,7 +294,98 @@ there are no other prerequisites.
 @c software using C language interface, then you should refer to
 @c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@. 
 
-@node fish, bmc-config, libfreeipmi, Top
+@node ipmi-locate, fish, libfreeipmi, Top
+@chapter @acronym{ipmi-locate} IPMI device probing tool
+@pindex ipmi-locate
+@command{ipmi-locate} tool tries to probe and display
+@acronym{KCS}/@acronym{SMIC}/@acronym{BT}/@acronym{SSIF}
+@acronym{IPMI} device interface informations by using various probing
+techniques.  The tool also displays default values of @acronym{IPMI}
+device interfaces of most commonly used in @acronym{BMC}
+manufacturers.  This tool may not probe on some machines, but FreeIPMI
+tools work on them with default values.  This behavior has been seen
+in Tyan motherboard with SMDC card.
+
+@section Command-line options
+
+@itemize @bullet
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
+@end itemize
+
+@section Example
+@example
+www:~# ipmi-locate 
+Probing KCS device using SMBIOS... done
+IPMI Version: 1.5
+IPMI locate driver: SMBIOS
+IPMI locate driver: 0
+IPMI interface: KCS
+BMC I2C device: (null)
+BMC I/O base address: CA2
+Register space: 1
+
+Probing SMIC device using SMBIOS... FAILED
+
+Probing BT device using SMBIOS... FAILED
+
+Probing SSIF device using SMBIOS... FAILED
+
+Probing KCS device using ACPI... FAILED
+
+Probing SMIC device using ACPI... FAILED
+
+Probing BT device using ACPI... FAILED
+
+Probing SSIF device using ACPI... FAILED
+
+Probing KCS device using PCI... FAILED
+
+Probing SMIC device using PCI... FAILED
+
+Probing BT device using PCI... FAILED
+
+Probing SSIF device using PCI... FAILED
+
+KCS device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: KCS
+BMC I2C device: (null)
+BMC I/O base address: CA2
+Register space: 1
+
+SMIC device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: SMIC
+BMC I2C device: (null)
+BMC I/O base address: CA9
+Register space: 1
+
+BT device default values:
+
+SSIF device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: SSIF
+BMC I2C device: /dev/i2c-0
+BMC SMBUS slave address: 20
+Register space: 1
+
+www:~# 
+@end example
+
+@node fish, bmc-config, ipmi-locate, Top
 @chapter @acronym{FISH} FreeIPMI SHell
 @cindex fish
 @cindex FreeIPMI SHell
@@ -330,7 +423,8 @@ implemented through Fish extensions.
       Do not probe IPMI devices.
 
 @item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed values are KCS, SMIC, SSIF and LAN.
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
 @item ---driver-address=@var{DRIVERADDR} @*
       Use this @var{DRIVERADDR} address instead of probed one.
@@ -342,16 +436,20 @@ implemented through Fish extensions.
       Connect to @var{IPMIHOST}.
 
 @item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is 16.
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
 
 @item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is 16.
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE, MD2, MD5, PLAIN and OEM.
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -s, ---script-file=@var{SCRIPT-FILE} @*
       Load and execute given SCRIPT-FILE.
@@ -540,7 +638,8 @@ replicate the configuration.
       Do not probe IPMI devices.
 
 @item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed values are KCS, SMIC, SSIF and LAN.
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
 @item ---driver-address=@var{DRIVERADDR} @*
       Use this @var{DRIVERADDR} address instead of probed one.
@@ -552,16 +651,20 @@ replicate the configuration.
       Connect to @var{IPMIHOST}.
 
 @item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is 16.
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
 
 @item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is 16.
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE, MD2, MD5, PLAIN and OEM.
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -o, ---checkout @*
       Get BMC configuration.
@@ -999,7 +1102,8 @@ completed successfully.
       Do not probe IPMI devices.
 
 @item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed values are KCS, SMIC, SSIF and LAN.
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
 @item ---driver-address=@var{DRIVERADDR} @*
       Use this @var{DRIVERADDR} address instead of probed one.
@@ -1011,16 +1115,20 @@ completed successfully.
       Connect to @var{IPMIHOST}.
 
 @item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is 16.
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
 
 @item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is 16.
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE, MD2, MD5, PLAIN and OEM.
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -?, ---help @*
       Give this help list.
@@ -1073,7 +1181,7 @@ Channel Information:
 ipmitest:~# 
 @end example
 
-@node bmc-autoconfig, ipmi-sensors, bmc-info, Top
+@node bmc-autoconfig, ipmi-raw, bmc-info, Top
 @chapter bmc-autoconfig
 @pindex bmc-autoconfig
 @command{bmc-autoconfig} utility is a wizard-like frontend to the
@@ -1093,7 +1201,68 @@ questionaire asking for IP/Netmask/Gateway to be committed.
       Show version information.
 @end itemize
 
-@node ipmi-sensors, ipmi-sel, bmc-autoconfig, Top
+@node ipmi-raw, ipmi-sensors, bmc-autoconfig, Top
+@chapter ipmi-raw
+@pindex ipmi-raw
+@command{ipmi-raw} tool reads hex values of @acronym{IPMI} command
+request data from standard input, executes it and displays hex values
+of @acronym{IPMI} command response data.  This tool works on in-band
+and out-of-band.
+
+@section Command-line options
+
+@itemize @bullet
+@item ---no-probing @*
+      Do not probe IPMI devices.
+
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
+
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
+@end itemize
+
+@section Example
+@example
+www:~# ipmi-raw
+18 01
+rcvd: 1C 01 00 20 81 01 20 51 9F 57 01 00 1B 00 00 15 01 10 
+www:~# 
+@end example
+
+@node ipmi-sensors, ipmi-sel, ipmi-raw, Top
 @chapter ipmi-sensors
 @pindex ipmi-sensors
 @command{ipmi-sensors} utility reports the monitored system health
@@ -1113,7 +1282,8 @@ nominal, threshold max/min readings and status descriptions.
       Do not probe IPMI devices.
 
 @item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed values are KCS, SMIC, SSIF and LAN.
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
 @item ---driver-address=@var{DRIVERADDR} @*
       Use this @var{DRIVERADDR} address instead of probed one.
@@ -1125,16 +1295,20 @@ nominal, threshold max/min readings and status descriptions.
       Connect to @var{IPMIHOST}.
 
 @item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is 16.
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
 
 @item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is 16.
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE, MD2, MD5, PLAIN and OEM.
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -v, ---verbose @*
       Increase verbosity in output.  More -v more verbosity.
@@ -2670,7 +2844,8 @@ you view and manage system event log.
       Do not probe IPMI devices.
 
 @item -D, ---driver-type=@var{IPMIDRIVER} @*
-      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed values are KCS, SMIC, SSIF and LAN.
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
 @item ---driver-address=@var{DRIVERADDR} @*
       Use this @var{DRIVERADDR} address instead of probed one.
@@ -2682,16 +2857,20 @@ you view and manage system event log.
       Connect to @var{IPMIHOST}.
 
 @item -u, ---username=@var{USERNAME} @*
-      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is 16.
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
 
 @item -p, ---password=@var{PASSWORD} @*
-      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is 16.
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
 
 @item -a, ---auth-type=@var{AUTHTYPE} @*
-      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE, MD2, MD5, PLAIN and OEM.
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
 
 @item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
-      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -i, ---info @*
       Show general information about SEL.
@@ -2702,7 +2881,7 @@ you view and manage system event log.
 @item -c, ---delete-all @*
       Delete all SEL entries.
 
-@item -x, ---hex-dump@var{[=FILE]} @*
+@item -x, ---hex-dump@var{=FILE} @*
       Hex-dump SEL entries optionally to @var{FILE}.
 
 @item -?, ---help @*
