@@ -10,6 +10,11 @@
 	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
 
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
+
+	* libfreeipmi/src/Makefile.am, configure.ac: Export only those
+	symbols in freeipmi that should be exported.
+
+	* libfreeipmi/src/libfreeipmi.map: New file.
 	
 ------------------------------------------------------------
 
@@ -26,6 +31,11 @@
 	fiid_iterator_set_field_len, fiid_iterator_get,
 	fiid_iterator_get_data): New functions.
 	
+	* libfreeipmi/src/Makefile.am, configure.ac: Export only those
+	symbols in freeipmi that should be exported.
+
+	* libfreeipmi/src/libfreeipmi.map: New file.
+
 2006-01-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented

@@ -20,6 +20,7 @@
 
 #include "freeipmi.h"
 
+#if 0 /* TEST */
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32
 #define IPMI_DEBUG_MAX_BUF_LEN         1024
 #define IPMI_DEBUG_MAX_PKT_LEN         1024
@@ -520,3 +521,5 @@ ipmi_debug(const char *fmt, ...)
   fflush (stderr);
 #endif /* !IPMI_TRACE */ 
 }
+
+#endif /* TEST */

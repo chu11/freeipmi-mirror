@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.38 2006-01-05 08:33:23 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.38.2.1 2006-01-20 01:34:52 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -58,6 +58,7 @@ AC_PROG_INSTALL
 AC_PROG_CC
 AC_PROG_LIBTOOL
 AC_PROG_MAKE_SET
+AM_CONDITIONAL(WITH_GNU_LD, test "$with_gnu_ld" = "yes")
 
 dnl Enable error tracing. Lower level calls will spit error messages
 dnl on to the console
