@@ -138,6 +138,8 @@ typedef fiid_field_t fiid_template_t[];
 
 typedef struct fiid_obj *fiid_obj_t;
 
+typedef struct fiid_iterator *fiid_iterator_t;
+
 int8_t fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field);
 int8_t fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field);
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
@@ -151,6 +153,16 @@ int8_t fiid_obj_set_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_
 int8_t fiid_obj_get_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
 int8_t fiid_obj_set_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
 int8_t fiid_obj_get_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
+
+fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
+int8_t fiid_iterator_destroy(fiid_iterator_t iter);
+int8_t fiid_iterator_reset(fiid_iterator_t iter);
+int8_t fiid_iterator_next(fiid_iterator_t iter);
+int8_t fiid_iterator_end(fiid_iterator_t iter);
+int32_t fiid_iterator_max_field_len(fiid_iterator_t iter);
+uint8_t *fiid_iterator_key(fiid_iterator_t iter);
+int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
+int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
 
 fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);

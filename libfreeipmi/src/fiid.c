@@ -22,12 +22,13 @@
 #include "freeipmi.h"
 
 #define FIID_OBJ_MAGIC 0xf00fd00d
+#define FIID_ITERATOR_MAGIC 0xd00df00f
 
 struct fiid_field_data
 {
-  uint32_t max_field_len;
+  uint16_t max_field_len;
   char key[FIID_FIELD_MAX];
-  unsigned int field_len;
+  uint16_t set_field_len;
 };
 
 struct fiid_obj
@@ -37,6 +38,14 @@ struct fiid_obj
   unsigned int data_len;
   struct fiid_field_data *field_data;
   unsigned int field_data_len;
+};
+
+struct fiid_iterator
+{
+  uint32_t magic;
+  int current_index;
+  int last_index;
+  struct fiid_obj *obj;
 };
 
 static int32_t
@@ -254,7 +263,7 @@ fiid_obj_create (fiid_template_t tmpl)
       obj->field_data[i].max_field_len = tmpl[i].max_field_len;
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX);
       obj->field_data[i].key[FIID_FIELD_MAX - 1] = '\0';
-      obj->field_data[i].field_len = 0;
+      obj->field_data[i].set_field_len = 0;
     }
 
   return (obj);
@@ -369,7 +378,7 @@ fiid_obj_clear (fiid_obj_t obj)
   memset(obj->data, '\0', obj->data_len);
   
   for (i =0; i < obj->field_data_len; i++)
-    obj->field_data[i].field_len = 0;
+    obj->field_data[i].set_field_len = 0;
 
   return (0);
 }
@@ -418,7 +427,7 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
   ERR (field_offset != -1);
 
   memset ((obj->data + field_offset), '\0', bytes_len);
-  obj->field_data[key_index].field_len = 0;
+  obj->field_data[key_index].set_field_len = 0;
   return (0);
 }
 
@@ -535,7 +544,7 @@ fiid_obj_set (fiid_obj_t obj,
 	}
 
       memcpy(obj->data, temp_data, obj->data_len);
-      obj->field_data[key_index].field_len = field_len;
+      obj->field_data[key_index].set_field_len = field_len;
     }
   else
     {
@@ -546,7 +555,7 @@ fiid_obj_set (fiid_obj_t obj,
                       &merged_val) < 0)
         goto cleanup;
       obj->data[byte_pos] = merged_val;
-      obj->field_data[key_index].field_len = field_len;
+      obj->field_data[key_index].set_field_len = field_len;
     }
 
   ipmi_xfree(temp_data);
@@ -727,7 +736,7 @@ fiid_obj_set_data (fiid_obj_t obj,
     data_len = bytes_len;
   
   memcpy ((obj->data + field_offset), data, data_len);
-  obj->field_data[key_index].field_len = data_len;
+  obj->field_data[key_index].set_field_len = data_len;
   
   return (data_len);
 }
@@ -890,7 +899,7 @@ fiid_obj_set_block (fiid_obj_t obj,
  
   memcpy ((obj->data + field_offset), data, data_len);
   for (i = key_index_start; i <= key_index_end; i++)
-    obj->field_data[i].field_len = obj->field_data[i].max_field_len;
+    obj->field_data[i].set_field_len = obj->field_data[i].max_field_len;
   
   return (data_len);
 }
@@ -961,6 +970,154 @@ fiid_obj_get_block (fiid_obj_t obj,
   return (block_bytes_len);
 }
 
+fiid_iterator_t
+fiid_iterator_create(fiid_obj_t obj)
+{
+  fiid_iterator_t iter = NULL;
+  
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+ 
+  if (!(iter = (fiid_iterator_t)ipmi_xmalloc(sizeof(struct fiid_iterator))))
+    {
+      errno = ENOMEM;
+      goto cleanup;
+    }
+  iter->magic = FIID_ITERATOR_MAGIC;
+  iter->current_index = 0;
+  /* The -1 below is because field_data_len is length of the array.  The iterator
+   * is concerned about array indexes.
+   */
+  iter->last_index = obj->field_data_len - 1;
+
+
+  if (!(iter->obj = fiid_obj_dup(obj)))
+    goto cleanup;
+
+  return (iter);
+
+ cleanup:
+  if (iter)
+    {
+      if (iter->obj)
+        fiid_obj_destroy(iter->obj);
+      ipmi_xfree(iter);
+    }
+  
+  return (NULL);
+}
+
+int8_t
+fiid_iterator_destroy(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  fiid_obj_destroy(iter->obj);
+  ipmi_xfree(iter);
+  
+  return (0);
+}
+
+int8_t
+fiid_iterator_reset(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  iter->current_index = 0;
+  return (0);
+}
+
+int8_t
+fiid_iterator_next(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (iter->current_index != iter->last_index)
+    iter->current_index++;
+  return (0);
+}
+
+int8_t 
+fiid_iterator_end(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return ((iter->current_index == iter->last_index) ? 1 : 0);
+}
+
+int32_t
+fiid_iterator_max_field_len(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (iter->obj->field_data[iter->current_index].max_field_len);
+}
+
+uint8_t *
+fiid_iterator_key(fiid_iterator_t iter)
+{
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (NULL);
+    }
+
+  return (iter->obj->field_data[iter->current_index].key);
+}
+
+int32_t
+fiid_iterator_get(fiid_iterator_t iter, uint64_t *val)
+{
+  uint8_t *key;
+
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  key = iter->obj->field_data[iter->current_index].key;
+  return (fiid_obj_get(iter->obj, key, val));
+}
+
+int32_t
+fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len)
+{
+  uint8_t *key;
+
+  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  key = iter->obj->field_data[iter->current_index].key;
+  return (fiid_obj_get_data(iter->obj, key, data, data_len));
+}
+
 fiid_field_t * 
 __fiid_template_make (uint8_t dummy, ...)
 {
@@ -1025,3 +1182,4 @@ fiid_template_free (fiid_field_t *tmpl_dynamic)
   if (tmpl_dynamic != NULL)
     free (tmpl_dynamic);
 }
+

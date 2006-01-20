@@ -18,6 +18,13 @@
 	* libfreeipmi/src/fiid.c (fiid_obj_create, fiid_obj_set_data,
 	fiid_obj_get_data, fiid_obj_set_block, fiid_obj_get_block):
 	Various bug fixes.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_iterator_create, fiid_iterator_destroy, fiid_iterator_reset,
+	fiid_iterator_next, fiid_iterator_end,
+	fiid_iterator_max_field_len, fiid_iterator_key,
+	fiid_iterator_set_field_len, fiid_iterator_get,
+	fiid_iterator_get_data): New functions.
 	
 2006-01-18  Albert Chu <chu11@llnl.gov>
 
