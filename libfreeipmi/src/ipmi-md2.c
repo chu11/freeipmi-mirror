@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.4.2.1 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.4.2.2 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -206,7 +206,7 @@ _ipmi_md2_append_padding_and_checksum(ipmi_md2_t *ctx)
   padlen = IPMI_MD2_PADDING_LEN - Mlen;
   padindex = padlen - 1;
 
-  ipmi_md2_update_data(ctx, padding[padindex], padlen);
+  ipmi_md2_update_data(ctx, (uint8_t *)padding[padindex], (int)padlen);
   
   ipmi_md2_update_data(ctx, C, IPMI_MD2_CHKSUM_LEN);
 }

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.2.2.3 2006-01-12 22:02:43 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.2.2.4 2006-01-21 09:05:48 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -82,13 +82,13 @@ display_ipmi_locate_info (ipmi_locate_info_t *info)
   switch (info->addr_space_id)
     {
     case IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
-      printf ("BMC memory base address: %lX\n", info->base_addr.bmc_membase_addr);
+      printf ("BMC memory base address: " FI_64 "X\n", info->base_addr.bmc_membase_addr);
       break;
     case IPMI_ADDRESS_SPACE_ID_SYSTEM_IO:
-      printf ("BMC I/O base address: %lX\n", info->base_addr.bmc_iobase_addr);
+      printf ("BMC I/O base address: " FI_64 "X\n", info->base_addr.bmc_iobase_addr);
       break;
     case IPMI_ADDRESS_SPACE_ID_SMBUS:
-      printf ("BMC SMBUS slave address: %lX\n", info->base_addr.bmc_smbus_slave_addr);
+      printf ("BMC SMBUS slave address: %lX\n", (unsigned long)info->base_addr.bmc_smbus_slave_addr);
       break;
     default:
       printf ("FATAL: error parsing base address\n");

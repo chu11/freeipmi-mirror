@@ -71,13 +71,13 @@ fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr)
   
   hdr_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
 
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, "ver", 
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"ver", 
 		RMCP_VER_1_0);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, "seq_num", 
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"seq_num", 
 		RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, "msg_class.class", 
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"msg_class.class", 
 		message_class);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, "msg_class.ack",
+  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"msg_class.ack",
 		RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
@@ -102,12 +102,12 @@ fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
       errno = EINVAL;
       return -1;
     }
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, "iana_enterprise_num",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"iana_enterprise_num",
 		htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, "msg_type",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"msg_type",
 		RMCP_ASF_MSG_TYPE_PRESENCE_PING);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, "msg_tag", msg_tag);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, "data_len", 0x00);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"msg_tag", msg_tag);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"data_len", 0x00);
   return 0;
 }
 
@@ -255,7 +255,7 @@ ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
   if (!pong)
     return -1;
 
-  fiid_obj_get (pong, tmpl_cmd_asf_presence_pong, "msg_tag", &val);
+  fiid_obj_get (pong, tmpl_cmd_asf_presence_pong, (uint8_t *)"msg_tag", &val);
   if (msg_tag == val)
     return 1;
   else

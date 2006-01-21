@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.3.2.6 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.3.2.7 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,7 +75,7 @@ _clean_fd(int fd)
 
       if (ufds.revents & POLLIN) 
         {
-          rv = Recvfrom(fd, buffer, IPMI_PACKET_BUFLEN, 0, NULL, NULL); 
+          rv = Recvfrom(fd, (uint8_t *)buffer, IPMI_PACKET_BUFLEN, 0, NULL, NULL); 
           if (rv == 0)
             break;
         }

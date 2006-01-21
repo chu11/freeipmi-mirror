@@ -129,7 +129,7 @@ fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd)
       return (-1);
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_reset_watchdog_timer_rq, "cmd", 
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_reset_watchdog_timer_rq, (uint8_t *)"cmd", 
 		IPMI_CMD_RESET_WATCHDOG_TIMER);
   return (0);
 }
@@ -148,21 +148,21 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use, uint8_t stop_timer, uint8_t log,
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "cmd", 
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"cmd", 
 		IPMI_CMD_SET_WATCHDOG_TIMER);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "log", log);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "stop_timer", stop_timer);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use", timer_use);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "pre_timeout_interrupt", pre_timeout_interrupt);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timeout_action", timeout_action);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "pre_timeout_interval", pre_timeout_interval);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use_expiration_flag_oem", timer_use_expiration_flag_oem);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use_expiration_flag_sms_os", timer_use_expiration_flag_sms_os);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use_expiration_flag_os_load", timer_use_expiration_flag_os_load);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use_expiration_flag_bios_post", timer_use_expiration_flag_bios_post);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "timer_use_expiration_flag_bios_frb2", timer_use_expiration_flag_bios_frb2);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, "initial_countdown_value_ms_byte", initial_countdown_value_ms_byte);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"log", log);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"stop_timer", stop_timer);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use", timer_use);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"pre_timeout_interrupt", pre_timeout_interrupt);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timeout_action", timeout_action);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"pre_timeout_interval", pre_timeout_interval);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use_expiration_flag_oem", timer_use_expiration_flag_oem);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use_expiration_flag_sms_os", timer_use_expiration_flag_sms_os);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use_expiration_flag_os_load", timer_use_expiration_flag_os_load);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use_expiration_flag_bios_post", timer_use_expiration_flag_bios_post);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"timer_use_expiration_flag_bios_frb2", timer_use_expiration_flag_bios_frb2);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_watchdog_timer_rq, (uint8_t *)"initial_countdown_value_ms_byte", initial_countdown_value_ms_byte);
 
   return (0);
 }
@@ -176,7 +176,7 @@ fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd)
       return (-1);
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_watchdog_timer_rq, "cmd", 
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_watchdog_timer_rq, (uint8_t *)"cmd", 
 		IPMI_CMD_GET_WATCHDOG_TIMER);
   return (0);
 }
@@ -195,13 +195,13 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
       return (-1);
     }
  
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, "cmd",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, (uint8_t *)"cmd",
                 IPMI_CMD_SUSPEND_BMC_ARPS);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, "channel_number",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, (uint8_t *)"channel_number",
                 channel_number);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, "gratuitous_arp_suspend",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, (uint8_t *)"gratuitous_arp_suspend",
                 gratuitous_arp_suspend);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, "arp_response_suspend",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_suspend_bmc_arps_rq, (uint8_t *)"arp_response_suspend",
                 arp_response_suspend);
  
   return (0);

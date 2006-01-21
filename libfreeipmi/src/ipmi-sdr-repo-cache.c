@@ -39,7 +39,7 @@ ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
   
   fiid_obj_get (data_rs, 
 		tmpl_get_sdr_repo_info_rs, 
-		"comp_code", 
+		(uint8_t *)"comp_code", 
 		&val);
   if (val != 0)
     return (-1);
@@ -89,13 +89,13 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       
       fiid_obj_get (obj_cmd_rs, 
 		    tmpl_get_sdr_rs, 
-		    "next_record_id", 
+		    (uint8_t *)"next_record_id", 
 		    &val);
       record_id = (uint16_t) val;
       
       fiid_obj_get (obj_sdr_record, 
 		    tmpl_sdr_sensor_record_header, 
-		    "record_length", 
+		    (uint8_t *)"record_length", 
 		    &val);
       record_length = (uint8_t) val;
       
@@ -176,7 +176,7 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
   
   fiid_obj_get (sdr_repo_cache->cache_start, 
 		tmpl_get_sdr_repo_info_rs, 
-		"record_count", 
+		(uint8_t *)"record_count", 
 		&val);
   sdr_repo_cache->total_records = (uint32_t) val;
   
@@ -298,7 +298,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
   
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_sensor_record_header, 
-		"record_type", 
+		(uint8_t *)"record_type", 
 		&val);
   
   switch (val)
@@ -306,7 +306,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
     case IPMI_SDR_FORMAT_FULL_RECORD:
       fiid_obj_get (sdr_repo_cache->cache_curr, 
 		    tmpl_sdr_full_sensor_record, 
-		    "slave_system_software_id", 
+		    (uint8_t *)"slave_system_software_id", 
 		    &val);
       if (ipmi_get_system_software_type (val) == IPMI_SYS_SOFT_ID_RESERVED)
 	return (0);
@@ -315,7 +315,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       fiid_obj_get (sdr_repo_cache->cache_curr, 
 		    tmpl_sdr_compact_sensor_record, 
-		    "slave_system_software_id", 
+		    (uint8_t *)"slave_system_software_id", 
 		    &val);
       if (ipmi_get_system_software_type (val) == IPMI_SYS_SOFT_ID_RESERVED)
 	return (0);
@@ -350,18 +350,18 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 
   fiid_obj_get(sdr_repo_cache->cache_curr, 
                tmpl_sdr_sensor_record_header,
-               "record_type", 
+               (uint8_t *)"record_type", 
                &record_type);
 
   if (record_type == IPMI_SDR_FORMAT_FULL_RECORD)
     fiid_obj_get (sdr_repo_cache->cache_curr, 
                   tmpl_sdr_full_sensor_record, 
-                  "event_reading_type", 
+                  (uint8_t *)"event_reading_type", 
                   &val);
   else if (record_type == IPMI_SDR_FORMAT_COMPACT_RECORD)
     fiid_obj_get (sdr_repo_cache->cache_curr, 
                   tmpl_sdr_compact_sensor_record, 
-                  "event_reading_type", 
+                  (uint8_t *)"event_reading_type", 
                   &val);
   else
     return IPMI_SENSOR_CLASS_NOT_AVAILABLE;
@@ -383,14 +383,14 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 
   fiid_obj_get (sdr_repo_cache->cache_curr, 
 		tmpl_sdr_sensor_record_header, 
-		"record_type", 
+		(uint8_t *)"record_type", 
 		&val);
   
   if (val == IPMI_SDR_FORMAT_FULL_RECORD)
     {
       fiid_obj_get (sdr_repo_cache->cache_curr, 
 		    tmpl_sdr_full_sensor_record, 
-		    "sensor_type", 
+		    (uint8_t *)"sensor_type", 
 		    &val);
       sensor_type = val;
       return ipmi_get_sensor_group (sensor_type);
@@ -400,7 +400,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
     {
       fiid_obj_get (sdr_repo_cache->cache_curr, 
 		    tmpl_sdr_compact_sensor_record, 
-		    "sensor_type", 
+		    (uint8_t *)"sensor_type", 
 		    &val);
       sensor_type = val;
       return ipmi_get_sensor_group (sensor_type);
@@ -427,7 +427,7 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
 
   ERR (!(fiid_obj_get(sdr_repo_cache->cache_curr, 
                       tmpl_sdr_sensor_record_header, 
-                      "record_type", 
+                      (uint8_t *)"record_type", 
                       &val) < 0));
   record_type = val;
 
@@ -435,7 +435,7 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
     {
       ERR (fiid_obj_get(sdr_repo_cache->cache_curr,
                         tmpl_sdr_full_sensor_record,
-                        "record_length",
+                        (uint8_t *)"record_length",
                         &val) >= 0);
       record_length = val;
       record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
@@ -462,7 +462,7 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
     {
       ERR (fiid_obj_get(sdr_repo_cache->cache_curr,
                         tmpl_sdr_compact_sensor_record,
-                        "record_length",
+                        (uint8_t *)"record_length",
                         &val) >= 0);
       record_length = val;
       record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.6.2.2 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.6.2.3 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -664,7 +664,7 @@ ipmipower_prompt_process_cmdline(void)
   unsigned char *buf;
   int quit = 0;
 
-  buf = Malloc(IPMIPOWER_MAX_TTY_BUF);
+  buf = (unsigned char *)Malloc(IPMIPOWER_MAX_TTY_BUF);
   do 
     {
       if (ipmipower_powercmd_pending())
@@ -675,10 +675,10 @@ ipmipower_prompt_process_cmdline(void)
           need_prompt = 0;
         }
       buf[0] = '\0';
-      _readcmd(buf, IPMIPOWER_MAX_TTY_BUF);
-      if (strlen(buf) > 0) 
+      _readcmd((char *)buf, IPMIPOWER_MAX_TTY_BUF);
+      if (strlen((char *)buf) > 0) 
         {
-          char **argv = argv_create(buf, "");
+          char **argv = argv_create((char *)buf, "");
           int i;
 
           if (argv[0] != NULL) {
@@ -792,7 +792,7 @@ ipmipower_prompt_process_cmdline(void)
 
           argv_destroy(argv);
         }
-    } while (!quit && strlen(buf) > 0);
+    } while (!quit && strlen((char *)buf) > 0);
   Free(buf);
 
   return !quit;

@@ -25,7 +25,8 @@ libfreeipmi:
   * only make those symbols exportable that should be exportable
   * gcrypt: secure mem-buffers
   * gcrypt: thread issues
-  
+  * ipmi 2.0 commands
+
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.9 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.10 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -328,7 +328,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_dump(ip, pkt, buffer, len);
       
-  if ((ret = ipmi_lan_check_chksum(buffer, len)) < 0)
+  if ((ret = ipmi_lan_check_chksum((uint8_t *)buffer, len)) < 0)
     err_exit("_recv_packet(%s:%d): ipmi_lan_check_chksum: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
@@ -364,10 +364,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     password = NULL;
 
-  if ((ret = check_hdr_session_authcode(buffer, len,
+  if ((ret = check_hdr_session_authcode((uint8_t *)buffer, len,
                                         tmpl_hdr_session_auth_calc,
                                         at,
-                                        password,
+                                        (uint8_t *)password,
                                         strlen(conf->password))) < 0)
     err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -399,10 +399,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       else
         password = NULL;
 
-      if ((ret = check_hdr_session_authcode(buffer, len,
+      if ((ret = check_hdr_session_authcode((uint8_t *)buffer, len,
                                             tmpl_hdr_session_auth_calc,
                                             at,
-                                            password,
+                                            (uint8_t *)password,
                                             strlen(conf->password))) < 0)
         err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -648,22 +648,22 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        */
 
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_type.none", &auth_type_none);
+                   (uint8_t *)"auth_type.none", &auth_type_none);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_type.md2", &auth_type_md2);
+                   (uint8_t *)"auth_type.md2", &auth_type_md2);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_type.md5", &auth_type_md5);
+                   (uint8_t *)"auth_type.md5", &auth_type_md5);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_type.straight_passwd_key", &auth_type_straight_passwd_key);
+                   (uint8_t *)"auth_type.straight_passwd_key", &auth_type_straight_passwd_key);
 
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_status.anonymous_login", &auth_status_anonymous_login);
+                   (uint8_t *)"auth_status.anonymous_login", &auth_status_anonymous_login);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_status.null_username", &auth_status_null_username);
+                   (uint8_t *)"auth_status.null_username", &auth_status_null_username);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_status.non_null_username", &auth_status_non_null_username);
+                   (uint8_t *)"auth_status.non_null_username", &auth_status_non_null_username);
       Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   "auth_status.per_message_auth", &auth_status_per_message_auth);
+                   (uint8_t *)"auth_status.per_message_auth", &auth_status_per_message_auth);
 
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
@@ -863,7 +863,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       Fiid_obj_get(ip->chas_res, 
                    tmpl_cmd_get_chassis_status_rs,
-                   "power_state.power_on",
+                   (uint8_t *)"power_state.power_on",
                    &power_state);
 
       if (ip->cmd == POWER_CMD_POWER_STATUS) 

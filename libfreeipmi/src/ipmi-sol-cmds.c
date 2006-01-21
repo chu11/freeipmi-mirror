@@ -76,22 +76,22 @@ fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq,
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_sol_conf_param_sol_enable_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SOL_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_sol_conf_param_sol_enable_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_sol_conf_param_sol_enable_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_sol_conf_param_sol_enable_rq, 
-		"sol_payload", 
+		(uint8_t *)"sol_payload", 
 		sol_payload);
   
   return 0;
@@ -107,32 +107,32 @@ fill_get_sol_conf_param (fiid_obj_t obj_data_rq,
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SOL_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"parameter_type", 
+		(uint8_t *)"parameter_type", 
 		parameter_type);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		parameter_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"set_selector", 
+		(uint8_t *)"set_selector", 
 		set_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sol_conf_param_rq, 
-		"block_selector", 
+		(uint8_t *)"block_selector", 
 		block_selector);
   
   return 0;

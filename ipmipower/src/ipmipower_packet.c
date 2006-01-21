@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.8.2.4 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8.2.5 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,6 +42,9 @@
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
+
+int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
+int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
 /* fiid_template_t */
 const fiid_field_t *
@@ -242,7 +245,7 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_memset(ip->trlr_res, '\0', tmpl_lan_msg_trlr);
   Fiid_obj_memset(obj, '\0', ipmipower_packet_cmd_template(ip, pkt));
 
-  if (unassemble_ipmi_lan_pkt(buffer, len, tmpl_hdr_session_auth_calc, ipmipower_packet_cmd_template(ip, pkt), ip->rmcp_res, ip->session_res, ip->msg_res, ipmipower_packet_cmd_obj(ip, pkt), ip->trlr_res) < 0)
+  if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, len, tmpl_hdr_session_auth_calc, ipmipower_packet_cmd_template(ip, pkt), ip->rmcp_res, ip->session_res, ip->msg_res, ipmipower_packet_cmd_obj(ip, pkt), ip->trlr_res) < 0)
     err_exit("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
 }
 
@@ -293,7 +296,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->auth_req, tmpl_cmd_get_channel_auth_caps_rq, 
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -321,7 +324,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         username = NULL;
 
       if (fill_cmd_get_session_challenge(ip->authtype, 
-                                         username, 
+                                         (char *)username, 
                                          strlen(conf->username),
                                          ip->sess_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
@@ -331,7 +334,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->sess_req, tmpl_cmd_get_session_challenge_rq, 
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -347,7 +350,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->sess_res, tmpl_cmd_get_session_challenge_rs,
-                   "tmp_session_id", &tmp_session_id);
+                   (uint8_t *)"tmp_session_id", &tmp_session_id);
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, ip->authtype, 
                            0,
@@ -365,8 +368,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_cmd_activate_session(ip->authtype, ip->privilege, 
-                                    ip->sess_res + fiid_obj_field_start_bytes(tmpl_cmd_get_session_challenge_rs, "challenge_str"), 
-                                    fiid_obj_field_len_bytes(tmpl_cmd_get_session_challenge_rs, "challenge_str"),
+                                    ip->sess_res + fiid_obj_field_start_bytes(tmpl_cmd_get_session_challenge_rs, (uint8_t *)"challenge_str"), 
+                                    fiid_obj_field_len_bytes(tmpl_cmd_get_session_challenge_rs, (uint8_t *)"challenge_str"),
                                     ip->initial_outbound_seq_num,
                                     ip->actv_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
@@ -376,7 +379,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->actv_req, tmpl_cmd_activate_session_rq,
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -418,9 +421,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         priv = IPMI_PRIV_LEVEL_OPERATOR;
 
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "initial_inbound_seq_num", &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_seq_num", &initial_inbound_seq_num);
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "session_id", &session_id);
+                   (uint8_t *)"session_id", &session_id);
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
@@ -446,7 +449,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->priv_req, tmpl_cmd_set_session_priv_level_rq,
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -473,9 +476,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "initial_inbound_seq_num", &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_seq_num", &initial_inbound_seq_num);
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "session_id", &session_id);
+                   (uint8_t *)"session_id", &session_id);
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
@@ -501,7 +504,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->clos_req, tmpl_cmd_close_session_rq,
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -528,9 +531,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "initial_inbound_seq_num", &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_seq_num", &initial_inbound_seq_num);
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "session_id", &session_id);
+                   (uint8_t *)"session_id", &session_id);
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
@@ -556,7 +559,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->chas_req, tmpl_cmd_get_chassis_status_rq,
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -604,9 +607,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         command = IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN;
 
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "initial_inbound_seq_num", &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_seq_num", &initial_inbound_seq_num);
       Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs, 
-                   "session_id", &session_id);
+                   (uint8_t *)"session_id", &session_id);
       
       if (fill_hdr_session(tmpl_hdr_session_auth_calc, at, 
                            initial_inbound_seq_num + ip->session_inbound_count, 
@@ -632,7 +635,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req, ip->session_req, 
                                        tmpl_hdr_session_auth_calc, ip->msg_req, 
                                        ip->ctrl_req, tmpl_cmd_chassis_ctrl_rq,
-                                       buffer, buflen)) < 0)
+                                       (uint8_t *)buffer, buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -659,15 +662,15 @@ ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
   obj = ipmipower_packet_cmd_obj(ip, pkt);
         
   Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc, 
-               "session_seq_num", &sseq);
+               (uint8_t *)"session_seq_num", &sseq);
   Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc, 
-               "session_id", &sid);
+               (uint8_t *)"session_id", &sid);
   Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, 
-               "net_fn", &netfn);
+               (uint8_t *)"net_fn", &netfn);
   Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs,
-               "rq_seq", &rseq);
-  Fiid_obj_get(obj, ipmipower_packet_cmd_template(ip, pkt), "cmd", &cmd);
-  Fiid_obj_get(obj, ipmipower_packet_cmd_template(ip, pkt), "comp_code", &cc);
+               (uint8_t *)"rq_seq", &rseq);
+  Fiid_obj_get(obj, ipmipower_packet_cmd_template(ip, pkt), (uint8_t *)"cmd", &cmd);
+  Fiid_obj_get(obj, ipmipower_packet_cmd_template(ip, pkt), (uint8_t *)"comp_code", &cc);
   
   if (session_seq_num) 
     *session_seq_num = sseq;

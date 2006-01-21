@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.3.2.1 2005-12-20 19:05:00 chu11 Exp $
+ *  $Id: wrappers.c,v 1.3.2.2 2006-01-21 09:05:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -222,7 +222,7 @@ Select(int maxfd, fd_set * rset, fd_set * wset, fd_set * eset,
        struct timeval *tv)
 {
     int n;
-    struct timeval tv_orig;
+    struct timeval tv_orig = { 0, };
     struct timeval start, end, delta;
 
     /* prep for EINTR handling */
@@ -638,7 +638,7 @@ int
 Poll(struct pollfd *ufds, unsigned int nfds, int timeout)
 {
     int n;
-    struct timeval tv, tv_orig;
+    struct timeval tv, tv_orig = { 0, };
     struct timeval start, end, delta;
 
     /* prep for EINTR handling */
