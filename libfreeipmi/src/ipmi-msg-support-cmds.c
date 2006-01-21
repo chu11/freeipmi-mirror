@@ -633,7 +633,7 @@ ipmi_lan_open_session (int sockfd,
       errno = EINVAL;
       goto error;
     }
-  xfree (obj_cmd_rs);
+  ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_session_challenge_rs);
@@ -650,7 +650,7 @@ ipmi_lan_open_session (int sockfd,
 		"tmp_session_id", &temp_session_id);
   *session_id = temp_session_id;
   fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, "challenge_str", challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN);
-  xfree (obj_cmd_rs);
+  ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_activate_session_rs);
@@ -671,7 +671,7 @@ ipmi_lan_open_session (int sockfd,
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		"initial_inbound_seq_num", &temp_session_seq_num);
   *session_seq_num = temp_session_seq_num;
-  xfree (obj_cmd_rs);
+  ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_set_session_priv_level_rs);
@@ -686,13 +686,13 @@ ipmi_lan_open_session (int sockfd,
       goto error;
     }
 
-  xfree (obj_cmd_rs);
+  ipmi_xfree (obj_cmd_rs);
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   return (0);
 
  error:
-  xfree (obj_cmd_rs);
+  ipmi_xfree (obj_cmd_rs);
   return (-1);
 }
 

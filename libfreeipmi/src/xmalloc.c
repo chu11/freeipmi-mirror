@@ -44,7 +44,7 @@ fixup_null_alloc (n)
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 __VOID *
-xmalloc (n)
+ipmi_xmalloc (n)
      size_t n;
 {
   __VOID *p;
@@ -60,7 +60,7 @@ xmalloc (n)
 
 /* Allocate memory for N elements of S bytes, with error checking.  */
 __VOID *
-xcalloc (n, s)
+ipmi_xcalloc (n, s)
      size_t n, s;
 {
   __VOID *p;
@@ -75,12 +75,12 @@ xcalloc (n, s)
    with error checking.
    If P is NULL, run xmalloc.  */
 __VOID *
-xrealloc (p, n)
+ipmi_xrealloc (p, n)
      __VOID *p;
      size_t n;
 {
   if (p == 0)
-    return xmalloc (n);
+    return ipmi_xmalloc (n);
   p = realloc (p, n);
   if (p == 0)
     p = fixup_null_alloc (n);
@@ -89,12 +89,12 @@ xrealloc (p, n)
 
 /* Make a copy of a string in a newly allocated block of memory. */
 char *
-xstrdup (str)
+ipmi_xstrdup (str)
      char *str;
 {
   __VOID *p;
 
-  p = xmalloc (strlen (str) + 1);
+  p = ipmi_xmalloc (strlen (str) + 1);
   strcpy (p, str);
   return p;
 }

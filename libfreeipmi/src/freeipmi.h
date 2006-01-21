@@ -197,14 +197,18 @@ extern "C" {
 #include "acpi-spmi-locate.h"
 #include "pci-locate.h"
 #include "defaults-locate.h"
+#endif /* TEST */
 #include "rmcp.h"
+#if 0 /* TEST */
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
 #include "ipmi-semaphores.h"
 #include "ipmi-interface.h"
 #include "ipmi-sessions.h"
 #include "ipmi-ipmb-interface.h"
+#endif /* TEST */
 #include "ipmi-lan-interface.h"
+#if 0 /* TEST */
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
 #include "ipmi-ssif-interface.h"
@@ -233,7 +237,9 @@ extern "C" {
 #include "ipmi-sensor-utils.h"
 #include "ipmi-watchdog.h"
 #include "ipmi-msg-interface-desc.h"
+#endif /* TEST */
 #include "ipmi-ping.h"
+#if 0 /* TEST */
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #include "ipmi-sensor-event-messages.h"
@@ -309,14 +315,18 @@ extern char *__progname;
 #include <freeipmi/acpi-spmi-locate.h>
 #include <freeipmi/pci-locate.h>
 #include <freeipmi/defaults-locate.h>
+#endif /* TEST */
 #include <freeipmi/rmcp.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-semaphores.h>
 #include <freeipmi/ipmi-interface.h>
 #include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-lan-interface.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-ssif-interface.h>
@@ -345,7 +355,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-watchdog.h>
 #include <freeipmi/ipmi-msg-interface-desc.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-ping.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>

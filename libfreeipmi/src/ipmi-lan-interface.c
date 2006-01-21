@@ -21,6 +21,8 @@
 
 #include "freeipmi.h"
 
+#if 0 /* TEST */
+
 /* IPMI LAN Message Request Header */
 fiid_template_t tmpl_lan_msg_hdr_rq =
   {
@@ -1128,6 +1130,8 @@ ipmi_lan_validate_checksum (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */
+
 ssize_t 
 ipmi_lan_sendto (int sockfd, 
 		 const void *pkt, 
@@ -1229,6 +1233,8 @@ ipmi_lan_recvfrom (int sockfd,
   /* if (recv_buf) free (recv_buf); */
   return (recv_buf_len);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_cmd (uint32_t sockfd, 
@@ -1830,3 +1836,5 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 
   return (0);
 }
+
+#endif /* TEST */

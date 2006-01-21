@@ -206,7 +206,7 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
  
-  if (!(obj = (fiid_obj_t)xmalloc(sizeof(struct fiid_obj))))
+  if (!(obj = (fiid_obj_t)ipmi_xmalloc(sizeof(struct fiid_obj))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -222,13 +222,13 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
 
-  if (!(obj->data = xmalloc(obj->data_len)))
+  if (!(obj->data = ipmi_xmalloc(obj->data_len)))
     {
       errno = ENOMEM;
       goto cleanup;
     }
   
-  if (!(obj->field_data = xmalloc(obj->field_data_len * sizeof(struct fiid_field_data))))
+  if (!(obj->field_data = ipmi_xmalloc(obj->field_data_len * sizeof(struct fiid_field_data))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -260,10 +260,10 @@ fiid_obj_create (fiid_template_t tmpl)
   if (obj)
     {
       if (obj->data)
-        xfree(obj->data);
+        ipmi_xfree(obj->data);
       if (obj->field_data)
-        xfree(obj->field_data);
-      xfree(obj);
+        ipmi_xfree(obj->field_data);
+      ipmi_xfree(obj);
     }
 
   return (NULL);
@@ -278,9 +278,9 @@ fiid_obj_destroy (fiid_obj_t obj)
       return (-1);
     }
 
-  xfree(obj->data);
-  xfree(obj->field_data);
-  xfree(obj);
+  ipmi_xfree(obj->data);
+  ipmi_xfree(obj->field_data);
+  ipmi_xfree(obj);
   
   return (0);
 }
@@ -296,7 +296,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
       goto cleanup;
     }
  
-  if (!(dest_obj = xmalloc(sizeof(struct fiid_obj))))
+  if (!(dest_obj = ipmi_xmalloc(sizeof(struct fiid_obj))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -305,14 +305,14 @@ fiid_obj_dup (fiid_obj_t src_obj)
   dest_obj->data_len = src_obj->data_len;
   dest_obj->field_data_len = src_obj->field_data_len;
 
-  if (!(dest_obj->data = xmalloc(src_obj->data_len)))
+  if (!(dest_obj->data = ipmi_xmalloc(src_obj->data_len)))
     {
       errno = ENOMEM;
       goto cleanup;
     }
   memcpy(dest_obj->data, src_obj->data, src_obj->data_len);
 
-  if (!(dest_obj->field_data = xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
+  if (!(dest_obj->field_data = ipmi_xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -327,10 +327,10 @@ fiid_obj_dup (fiid_obj_t src_obj)
   if (dest_obj)
     {
       if (dest_obj->data)
-        xfree(dest_obj->data);
+        ipmi_xfree(dest_obj->data);
       if (dest_obj->field_data)
-        xfree(dest_obj->field_data);
-      xfree(dest_obj);
+        ipmi_xfree(dest_obj->field_data);
+      ipmi_xfree(dest_obj);
     }
   return NULL;
 }
@@ -506,7 +506,7 @@ fiid_obj_set (fiid_obj_t obj,
       int field_len_left = field_len;
       int i;
       
-      if (!(temp_data = xmalloc(obj->data_len)))
+      if (!(temp_data = ipmi_xmalloc(obj->data_len)))
         {
           errno = ENOMEM;
           goto cleanup;
@@ -566,12 +566,12 @@ fiid_obj_set (fiid_obj_t obj,
       obj->field_data[key_index].set_field_len = field_len;
     }
 
-  xfree(temp_data);
+  ipmi_xfree(temp_data);
   return (0);
 
  cleanup:
   if (temp_data)
-    xfree(temp_data);
+    ipmi_xfree(temp_data);
   return (-1);
 }
 
@@ -989,7 +989,7 @@ fiid_iterator_create(fiid_obj_t obj)
       goto cleanup;
     }
  
-  if (!(iter = (fiid_iterator_t)xmalloc(sizeof(struct fiid_iterator))))
+  if (!(iter = (fiid_iterator_t)ipmi_xmalloc(sizeof(struct fiid_iterator))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -1012,7 +1012,7 @@ fiid_iterator_create(fiid_obj_t obj)
     {
       if (iter->obj)
         fiid_obj_destroy(iter->obj);
-      xfree(iter);
+      ipmi_xfree(iter);
     }
   
   return (NULL);
@@ -1028,7 +1028,7 @@ fiid_iterator_destroy(fiid_iterator_t iter)
     }
   
   fiid_obj_destroy(iter->obj);
-  xfree(iter);
+  ipmi_xfree(iter);
   
   return (0);
 }
