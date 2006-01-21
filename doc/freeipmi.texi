@@ -50,10 +50,12 @@ release @value{VERSION} of the GNU FreeIPMI.
 * Introduction::                Introduction to the GNU FreeIPMI system.
 * Installation::                Installing the software.
 * libfreeipmi::                 High-level C library for @acronym{IPMI}
+* ipmi-locate::                 @acronym{IPMI} device probing tool.
 * fish::                        FreeIPMI SHell.
 * bmc-config::                  Baseboard Management Controller configurator.
 * bmc-info::                    Baseboard Management Controller information.
 * bmc-autoconfig::              Wizard-like frontend for bmc-config.
+* ipmi-raw::                    executes @acronym{IPMI} commands by hex values.
 * ipmi-sensors::                @acronym{IPMI} sensors utility.
 * ipmi-sel::                    @acronym{IPMI} System Event Log.
 * bmc-watchdog::                Watchdog daemon.
@@ -227,11 +229,11 @@ command.
 
 Test if @acronym{IPMI} works:
 @example
-debian-ia64:~# bmc-info 
+ipmitest:~# bmc-info
 Device ID:         20
 Device Revision:   1
                    [SDR Support]
-Firmware Revision: 0.27
+Firmware Revision: 1.32
                    [Device Available (normal operation)]
 IPMI Version:      1.5
 Additional Device Support:
@@ -241,16 +243,35 @@ Additional Device Support:
                    [FRU Inventory Device]
                    [IPMB Event Receiver]
                    [Chassis Device]
-Manufacturer ID:   157h
-Product ID:        100h
-Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
-debian-ia64:~# 
+Manufacturer ID:   B000157h
+Product ID:        1Bh
+Aux Firmware Revision Info: 10011500h
+Channel Information:
+       Channel No: 0
+      Medium Type: IPMB (I2C)
+    Protocol Type: IPMB-1.0
+       Channel No: 1
+      Medium Type: Asynch. Serial/Modem (RS-232)
+    Protocol Type: IPMB-1.0
+       Channel No: 3
+      Medium Type: PCI SMBus
+    Protocol Type: IPMI-SMBus
+       Channel No: 4
+      Medium Type: System Interface (KCS, SMIC, or BT)
+    Protocol Type: KCS
+       Channel No: 6
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+       Channel No: 7
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+ipmitest:~# 
 @end example
 
 If you don't get the expected response from @command{bmc-info} command,
 please refer to @ref{Trouble-shooting}@.
 
-@node libfreeipmi, fish, Installation, Top
+@node libfreeipmi, ipmi-locate, Installation, Top
 @chapter @acronym{IPMI} C library (libfreeipmi)
 @pindex libfreeipmi
 
@@ -273,7 +294,98 @@ there are no other prerequisites.
 @c software using C language interface, then you should refer to
 @c @ref{Top, GNU FreeIPMI Hackers Guide, freeipmi-hg}@. 
 
-@node fish, bmc-config, libfreeipmi, Top
+@node ipmi-locate, fish, libfreeipmi, Top
+@chapter @acronym{ipmi-locate} IPMI device probing tool
+@pindex ipmi-locate
+@command{ipmi-locate} tool tries to probe and display
+@acronym{KCS}/@acronym{SMIC}/@acronym{BT}/@acronym{SSIF}
+@acronym{IPMI} device interface informations by using various probing
+techniques.  The tool also displays default values of @acronym{IPMI}
+device interfaces of most commonly used in @acronym{BMC}
+manufacturers.  This tool may not probe on some machines, but FreeIPMI
+tools work on them with default values.  This behavior has been seen
+in Tyan motherboard with SMDC card.
+
+@section Command-line options
+
+@itemize @bullet
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
+@end itemize
+
+@section Example
+@example
+www:~# ipmi-locate 
+Probing KCS device using SMBIOS... done
+IPMI Version: 1.5
+IPMI locate driver: SMBIOS
+IPMI locate driver: 0
+IPMI interface: KCS
+BMC I2C device: (null)
+BMC I/O base address: CA2
+Register space: 1
+
+Probing SMIC device using SMBIOS... FAILED
+
+Probing BT device using SMBIOS... FAILED
+
+Probing SSIF device using SMBIOS... FAILED
+
+Probing KCS device using ACPI... FAILED
+
+Probing SMIC device using ACPI... FAILED
+
+Probing BT device using ACPI... FAILED
+
+Probing SSIF device using ACPI... FAILED
+
+Probing KCS device using PCI... FAILED
+
+Probing SMIC device using PCI... FAILED
+
+Probing BT device using PCI... FAILED
+
+Probing SSIF device using PCI... FAILED
+
+KCS device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: KCS
+BMC I2C device: (null)
+BMC I/O base address: CA2
+Register space: 1
+
+SMIC device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: SMIC
+BMC I2C device: (null)
+BMC I/O base address: CA9
+Register space: 1
+
+BT device default values:
+
+SSIF device default values:
+IPMI Version: 1.5
+IPMI locate driver: DEFAULT
+IPMI locate driver: 0
+IPMI interface: SSIF
+BMC I2C device: /dev/i2c-0
+BMC SMBUS slave address: 20
+Register space: 1
+
+www:~# 
+@end example
+
+@node fish, bmc-config, ipmi-locate, Top
 @chapter @acronym{FISH} FreeIPMI SHell
 @cindex fish
 @cindex FreeIPMI SHell
@@ -307,23 +419,40 @@ implemented through Fish extensions.
 @cindex fish options
 
 @itemize @bullet
-@item ---brief @*
-      Shorten output.
+@item ---no-probing @*
+      Do not probe IPMI devices.
 
-@item -q, ---quiet, ---silent @*
-      Inhibit usual output.
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
-@item ---driver-poll-interval=@var{usec} @*
-      User @var{usec} driver poll interval.
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
 
-@item -s, ---script-file=@var{script-file} @*
-      Load and execute given @var{script-file}@.
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
 
-@item ---sms-io-base=@var{sms-io-base} @*
-      System Interface Driver SMS IO base address.
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
 
-@item -v, ---verbose @*
-      Print more information.
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+
+@item -s, ---script-file=@var{SCRIPT-FILE} @*
+      Load and execute given SCRIPT-FILE.
 
 @item -?, ---help @*
       Give this help list.
@@ -376,19 +505,23 @@ help on list of available commands and @option{quit} to exit the
 shell.
 
 @example
-fish# debian-ia64:~# fish
-FreeIPMI Shell [fish-0.1.0]
-Copyright (C) 2003-2004 FreeIPMI Core Team
-This program is free software; you may redistribute it under the terms
-of the GNU General Public License.  This program has absolutely no
-warranty.
-fish# help sensors
-sensors --version --usage --help --verbose --sdr-info --flush-cache
---list-groups --group=GROUP-NAME --sensors "SENSORS-LIST"
-        Display IPMI Sensors.
+www:~# fish 
+FreeIPMI Shell [fish-0.2.beta1]
+Copyright (C) 2003-2005 FreeIPMI Core Team
+This program is free software; you may redistribute it under the terms of
+the GNU General Public License.  This program has absolutely no warranty.
+fish# help sensors 
+sensors [--no-probing] [--driver-type=IPMIDRIVER]
+        [--driver-address=DRIVERADDR] [--driver-device=DEVICE]
+        [--hostname=IPMIHOST] [--username=USERNAME]
+        [--password=PASSWORD] [--auth-type=AUTHTYPE]
+        [--priv-level=PRIVILEGE-LEVEL] [--verbose] [--sdr-info]
+        [--flush-cache] [--list-groups] [--all] [--group=GROUP]
+        [--sensors=SENSORS-LIST] [--help] [--usage] [--version]
 
-fish# quit
-debian-ia64:~#
+        Displays current readings of sensor chips through BMC.
+fish# quit 
+www:~# 
 @end example
 
 @subsection Fish as script interpreter
@@ -415,7 +548,7 @@ debian-ia64:~# fish --script-file=/root/work/fish-examples/bmc-info.scm
 Device ID:         20
 Device Revision:   1
                    [SDR Support]
-Firmware Revision: 0.27
+Firmware Revision: 1.32
                    [Device Available (normal operation)]
 IPMI Version:      1.5
 Additional Device Support:
@@ -425,9 +558,28 @@ Additional Device Support:
                    [FRU Inventory Device]
                    [IPMB Event Receiver]
                    [Chassis Device]
-Manufacturer ID:   157h
-Product ID:        100h
-Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
+Manufacturer ID:   B000157h
+Product ID:        1Bh
+Aux Firmware Revision Info: 10011500h
+Channel Information:
+       Channel No: 0
+      Medium Type: IPMB (I2C)
+    Protocol Type: IPMB-1.0
+       Channel No: 1
+      Medium Type: Asynch. Serial/Modem (RS-232)
+    Protocol Type: IPMB-1.0
+       Channel No: 3
+      Medium Type: PCI SMBus
+    Protocol Type: IPMI-SMBus
+       Channel No: 4
+      Medium Type: System Interface (KCS, SMIC, or BT)
+    Protocol Type: KCS
+       Channel No: 6
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+       Channel No: 7
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
 bmc-info exited with 0 status
 debian-ia64:~#
 @end example
@@ -482,29 +634,61 @@ replicate the configuration.
 @section Command-line arguments to bmc-config
 
 @itemize @bullet
-@item -u, ---usage @*
-      Usage message
+@item ---no-probing @*
+      Do not probe IPMI devices.
 
-@item -h, ---help @*
-      Show help
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
-@item -V, ---version @*
-      Show version
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -o, ---checkout @*
-      Fetch configuration information from BMC.
+      Get BMC configuration.
 
 @item -i, ---commit @*
-      Update configuration information to BMC
+      Update BMC configuration.
 
 @item -d, ---diff @*
-      Show differences between BMC and config file or key pairs.
+      Show configuration differences with BMC.
 
-@item -f @var{filename}, ---filename=@var{filename} @*
-      Use this file for BMC get/set.
+@item -f, ---filename=@var{FILENAME} @*
+      Use FILENAME in checkout, commit or diff.
 
-@item -k @var{key=value}, ---key-pair=@var{key=value} @*
-      Update configuration information to BMC.  This option can be used multiple times.
+@item -k, ---key-pair=@var{KEY-PAIR} @*
+      Use KEY-PAIR in commit or diff.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
 @end itemize
 
 @node Sample Configuration File, BMC checkout, Options, bmc-config
@@ -912,24 +1096,57 @@ for checking if @acronym{IPMI} is supported or if BMC/FRU/SDR firmware upgrade
 completed successfully.
 
 @section Command-line options
-@itemize @bullet
-@item -u, ---usage @*
-      Usage message.
 
-@item -h, ---help @*
-      Show help.
+@itemize @bullet
+@item ---no-probing @*
+      Do not probe IPMI devices.
+
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
+
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
 
 @item -V, ---version @*
-      Show version information.
-@end itemize 
+      Print program version.
+@end itemize
 
 @section Example
 @example
-debian-ia64:~# bmc-info 
+ipmitest:~# bmc-info
 Device ID:         20
 Device Revision:   1
                    [SDR Support]
-Firmware Revision: 0.27
+Firmware Revision: 1.32
                    [Device Available (normal operation)]
 IPMI Version:      1.5
 Additional Device Support:
@@ -939,13 +1156,32 @@ Additional Device Support:
                    [FRU Inventory Device]
                    [IPMB Event Receiver]
                    [Chassis Device]
-Manufacturer ID:   157h
-Product ID:        100h
-Aux Firmware Revision Info: Boot Code v00.13, PIA v01.27
-debian-ia64:~# 
+Manufacturer ID:   B000157h
+Product ID:        1Bh
+Aux Firmware Revision Info: 10011500h
+Channel Information:
+       Channel No: 0
+      Medium Type: IPMB (I2C)
+    Protocol Type: IPMB-1.0
+       Channel No: 1
+      Medium Type: Asynch. Serial/Modem (RS-232)
+    Protocol Type: IPMB-1.0
+       Channel No: 3
+      Medium Type: PCI SMBus
+    Protocol Type: IPMI-SMBus
+       Channel No: 4
+      Medium Type: System Interface (KCS, SMIC, or BT)
+    Protocol Type: KCS
+       Channel No: 6
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+       Channel No: 7
+      Medium Type: 802.3 LAN
+    Protocol Type: IPMB-1.0
+ipmitest:~# 
 @end example
 
-@node bmc-autoconfig, ipmi-sensors, bmc-info, Top
+@node bmc-autoconfig, ipmi-raw, bmc-info, Top
 @chapter bmc-autoconfig
 @pindex bmc-autoconfig
 @command{bmc-autoconfig} utility is a wizard-like frontend to the
@@ -953,6 +1189,7 @@ debian-ia64:~#
 questionaire asking for IP/Netmask/Gateway to be committed.
 
 @section Command-line options
+
 @itemize @bullet
 @item -u, --usage @*
       Show short usage message.
@@ -964,7 +1201,68 @@ questionaire asking for IP/Netmask/Gateway to be committed.
       Show version information.
 @end itemize
 
-@node ipmi-sensors, ipmi-sel, bmc-autoconfig, Top
+@node ipmi-raw, ipmi-sensors, bmc-autoconfig, Top
+@chapter ipmi-raw
+@pindex ipmi-raw
+@command{ipmi-raw} tool reads hex values of @acronym{IPMI} command
+request data from standard input, executes it and displays hex values
+of @acronym{IPMI} command response data.  This tool works on in-band
+and out-of-band.
+
+@section Command-line options
+
+@itemize @bullet
+@item ---no-probing @*
+      Do not probe IPMI devices.
+
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
+
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
+@end itemize
+
+@section Example
+@example
+www:~# ipmi-raw
+18 01
+rcvd: 1C 01 00 20 81 01 20 51 9F 57 01 00 1B 00 00 15 01 10 
+www:~# 
+@end example
+
+@node ipmi-sensors, ipmi-sel, ipmi-raw, Top
 @chapter ipmi-sensors
 @pindex ipmi-sensors
 @command{ipmi-sensors} utility reports the monitored system health
@@ -979,39 +1277,68 @@ nominal, threshold max/min readings and status descriptions.
 
 @node ipmi-sensors options, ipmi-sensors configuration file, ipmi-sensors, ipmi-sensors
 @section command-line arguments
-@itemize
-@item -u, ---usage @*
-      Usage message.
+@itemize @bullet
+@item ---no-probing @*
+      Do not probe IPMI devices.
 
-@item -h, ---help @*
-      Show help.
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
 
-@item -V, ---version @*
-      Show version information.
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -v, ---verbose @*
-      Verbose sensor output.
-
-@item -vv @*
-      Very verbose sensor output.
-
-@item -a, ---all @*
-      Display all sensors, override ignore list.
+      Increase verbosity in output.  More -v more verbosity.
 
 @item -i, ---sdr-info @*
-      Show SDR Info.
+      Show SDR Information.
 
 @item -f, ---flush-cache @*
       Flush sensor cache.
 
-@item -l, ---list-groups
-      List the sensor groups.
+@item -L, ---list-groups @*
+      List sensor groups.
 
-@item -g @var{group-name}, ---group=@var{group-name}
-      List sensors from group.
+@item ---all @*
+      Display all sensors (Ignore sensors ignore-list).
 
-@item -s @var{sensors-list}, ---sensors=@var{sensors-list}
-      List the given sensors.
+@item -g, ---group=@var{GROUP} @*
+      Show sensors belongs to this GROUP.
+
+@item -s, ---sensors=@var{SENSORS-LIST} @* 
+      Show listed sensors.
+
+@item -?, ---help @*
+      Give this help list.
+
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
 @end itemize
 
 @node ipmi-sensors configuration file, ipmi-sensors examples, ipmi-sensors options, ipmi-sensors
@@ -1053,1921 +1380,1446 @@ sensors in total.
 
 @subsection Sample ipmi-sensors output
 @example
-debian-ia64:~# ipmi-sensors
-1: I/O Bd +1.3V (Voltage): 1.33 V (low=1.23/nom=1.30/high=1.36) [OK]
-2: I/O Bd +1.5V (Voltage): 1.53 V (low=1.42/nom=1.50/high=1.57) [OK]
-3: I/O Bd +1.8V (Voltage): 1.82 V (low=1.70/nom=1.80/high=1.88) [OK]
-4: I/O Bd +3.3V SB (Voltage): 3.26 V (low=3.13/nom=3.30/high=3.45) [OK]
-5: I/O Bd +3.3V_A (Voltage): 3.38 V (low=3.06/nom=3.30/high=3.52) [OK]
-6: I/O Bd +3.3V_B (Voltage): 3.38 V (low=3.12/nom=3.30/high=3.46) [OK]
-7: IORISER CMOS Bat (Voltage): 3.22 V (low=2.40/nom=2.99/high=3.60) [OK]
-8: I/O Bd +5V_A (Voltage): 4.99 V (low=4.73/nom=4.99/high=5.23) [OK]
-9: I/O Bd +5V_B (Voltage): 5.03 V (low=4.74/nom=5.00/high=5.23) [OK]
-10: I/O Bd +12V (Voltage): 11.97 V (low=11.28/nom=11.90/high=12.46) [OK]
-11: I/O Bd -12V (Voltage): -11.99 V (low=-12.64/nom=-12.06/high=-11.49) [OK]
-12: Proc Bd +1.2V (Voltage): 1.21 V (low=1.18/nom=1.20/high=1.21) [OK]
-13: MEM Bd 1 +1.25V (Voltage): 1.28 V (low=1.18/nom=1.25/high=1.31) [OK]
-14: MEM Bd 2 +1.25V (Voltage): 1.28 V (low=1.18/nom=1.25/high=1.31) [OK]
-15: Proc Bd +1.3V (Voltage): 1.32 V (low=1.22/nom=1.30/high=1.36) [OK]
-16: Proc Bd +1.5V (Voltage): 1.52 V (low=1.45/nom=1.50/high=1.54) [OK]
-17: Proc Bd +1.8V (Voltage): 1.82 V (low=1.73/nom=1.80/high=1.87) [OK]
-18: Proc Bd +3.3V SB (Voltage): 3.27 V (low=3.13/nom=3.29/high=3.46) [OK]
-19: Proc Bd +3.3V (Voltage): 3.30 V (low=3.13/nom=3.29/high=3.46) [OK]
-20: IORISER +12V SB (Voltage): 12.33 V (low=11.21/nom=11.80/high=12.39) [OK]
-21: IORISER +2.5V (Voltage): 2.50 V (low=2.35/nom=2.47/high=2.60) [OK]
-22: IORISER +1.5V SB (Voltage): 1.52 V (low=1.42/nom=1.50/high=1.57) [OK]
-23: IORISER +1.5V (Voltage): 1.52 V (low=1.42/nom=1.50/high=1.57) [OK]
-24: IORISER +5V SB (Voltage): 4.96 V (low=4.67/nom=4.93/high=5.16) [OK]
-25: I/O Bd SCSI +5V (Voltage): 5.04 V (low=4.63/nom=4.99/high=5.33) [OK]
-26: Mem Bd 1 Temp (Temperature): 29.00 C (low=10.00/nom=33.00/high=45.00) [OK]
-27: Mem Bd 2 Temp (Temperature): 30.00 C (low=10.00/nom=33.00/high=45.00) [OK]
-28: I/O Bd Temp 1 (Temperature): 28.00 C (low=10.00/nom=46.00/high=54.00) [OK]
-29: I/O Bd SIOH Temp (Temperature): 39.00 C (low=10.00/nom=55.00/high=95.00) [OK]
-30: I/O Bd Temp 3 (Temperature): 27.00 C (low=10.00/nom=49.00/high=57.00) [OK]
-31: Proc Bd Amb Temp (Temperature): 21.00 C (low=10.00/nom=25.00/high=38.00) [OK]
-32: Proc Bd SNC Temp (Temperature): 41.00 C (low=10.00/nom=55.00/high=95.00) [OK]
-33: F38 Tach Fan 1 (Fan): 2600.00 RPM (low=2260.00/nom=2600.00/high=2880.00) [OK]
-34: F38 Tach Fan 2 (Fan): 2620.00 RPM (low=2260.00/nom=2600.00/high=2880.00) [OK]
-35: F25 Tach Fan 3 (Fan): 2480.00 RPM (low=2160.00/nom=2500.00/high=2780.00) [OK]
-36: F25 Tach Fan 4 (Fan): 2480.00 RPM (low=2260.00/nom=2620.00/high=2900.00) [OK]
-37: Mem Bd 1 FanBst (OEM Reserved): 29.00 C (low=10.00/nom=33.00/high=45.00) [OK]
-38: Mem Bd 2 FanBst (OEM Reserved): 30.00 C (low=10.00/nom=33.00/high=45.00) [OK]
-39: I/O Bd FanBst 1 (OEM Reserved): 28.00 C (low=10.00/nom=46.00/high=54.00) [OK]
-40: IOBd SIOH FanBst (OEM Reserved): 39.00 C (low=10.00/nom=55.00/high=95.00) [OK]
-41: I/O Bd FanBst 3 (OEM Reserved): 27.00 C (low=10.00/nom=49.00/high=57.00) [OK]
-42: Proc Bd Amb FanB (OEM Reserved): 21.00 C (low=10.00/nom=25.00/high=29.00) [OK]
-43: Proc Bd SNC FanB (OEM Reserved): 41.00 C (low=10.00/nom=55.00/high=95.00) [OK]
-44: Proc 1 Temp (Temperature): 38.00 C (low=15.00/nom=70.00/high=98.00) [OK]
-45: Proc 2 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
-46: Proc 3 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
-47: Proc 4 Temp (Temperature): N/A (low=15.00/nom=70.00/high=98.00) [Unknown]
-48: Proc 1 FanBst (OEM Reserved): 38.00 C (low=10.00/nom=70.00/high=100.00) [OK]
-49: Proc 2 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
-50: Proc 3 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
-51: Proc 4 FanBst (OEM Reserved): N/A (low=10.00/nom=70.00/high=100.00) [Unknown]
-53: Pwr Unit Status (Power Unit): [OK]
-54: Pwr Unit Redund (Power Unit): [OK]
-55: Watchdog  (Watchdog 2): [OK]
-56: Scrty Violation (Platform Security Violation): [OK]
-57: Physical Scrty (Platform Chassis Intrusion): [OK]
-58: POST Error (System Firmware): [OK]
-59: Crit Int Status (Critical Interrupt): [OK]
-60: EVT Log Disabled (Event Logging Disabled): [OK]
-61: System Event (System Event): [OK]
-62: Int SCSI TERMV0 (Voltage): [Performance Met]
-63: Int SCSI TERMV1 (Voltage): [Performance Met]
-64: Int SCSI TERMV2 (Voltage): [Performance Met]
-65: Ext SCSI TERMV0 (Voltage): [Performance Met]
-66: Ext SCSI TERMV1 (Voltage): [Performance Met]
-67: Ext SCSI TERMV2 (Voltage): [Performance Met]
-68: Pwr Supply 1 (Power Supply): [OK]
-69: Pwr Supply 2 (Power Supply): [OK]
-70: IO Bd 3.3V D2D 3 (Power Supply): [OK]
-71: IO Bd 3.3V D2D 4 (Power Supply): [OK]
-72: IO Bd 5V D2D 1 (Power Supply): [OK]
-73: IO Bd 5V D2D 2 (Power Supply): [OK]
-74: ProcBd 3.3V D2D1 (Power Supply): [OK]
-75: ProcBd 2.5V D2D1 (Power Supply): [OK]
-76: ProcBd 2.5V D2D2 (Power Supply): [OK]
-77: MemBd1 1.25V D2D (Power Supply): [OK]
-78: MemBd2 1.25V D2D (Power Supply): [OK]
-79: Proc 12V SB PwGd (Voltage): [Performance Met]
-80: Node PwrGd (Voltage): [Performance Met]
-81: Mem Bd1 Pres (Board): [Device Inserted/Device Present]
-82: Mem Bd2 Pres (Board): [Device Inserted/Device Present]
-83: Fan 1 Present (Fan): [Device Inserted/Device Present]
-84: Fan 2 Present (Fan): [Device Inserted/Device Present]
-85: Fan 3 Present (Fan): [Device Inserted/Device Present]
-86: Fan 4 Present (Fan): [Device Inserted/Device Present]
-87: IO Bd Interlock (Board): [Device Inserted/Device Present]
-88: IORISER Interlck (Board): [Device Inserted/Device Present]
-89: Proc Bd Interlck (Board): [Device Inserted/Device Present]
-90: SCSI Interlock (Board): [Device Inserted/Device Present]
-91: INIT State (OEM Reserved): [State Deasserted]
-92: Proc 1 Status (Processor): [OK]
-93: Proc 2 Status (Processor): [Unknown]
-94: Proc 3 Status (Processor): [Unknown]
-95: Proc 4 Status (Processor): [Unknown]
-96: Proc 1 PwrGd (Voltage): [Performance Met]
-97: Proc 2 PwrGd (Voltage): [Unknown]
-98: Proc 3 PwrGd (Voltage): [Unknown]
-99: Proc 4 PwrGd (Voltage): [Unknown]
-100: PCI HP Slot 1 (Slot Connector): [OK]
-101: PCI HP Slot 2 (Slot Connector): [OK]
-102: PCI HP Slot 3 (Slot Connector): [OK]
-103: PCI HP Slot 4 (Slot Connector): [OK]
-104: PCI HP Slot 5 (Slot Connector): [OK]
-105: PCI HP Slot 6 (Slot Connector): [OK]
-106: PCI HP Slot 7 (Slot Connector): [OK]
-107: PCI HP Slot 8 (Slot Connector): [OK]
-debian-ia64:~#
+www:~# ipmi-sensors 
+1: Power Unit (Power Unit): [OK]
+2: BMC Watchdog (Watchdog 2): [OK]
+3: Scrty Violation (Platform Security Violation): [OK]
+4: Physical Scrty (Platform Chassis Intrusion): [LAN Leash Lost (system is unplugged from LAN)]
+5: POST Error (System Firmware): [OK]
+6: Critical Int (Critical Interrupt): [OK]
+7: Memory (Memory): [OK]
+8: Logging Disabled (Event Logging Disabled): [OK]
+9: Baseboard 1.2V (Voltage): 1.2054 V (1.0682/1.3328): [OK]
+10: Baseboard 1.25V (Voltage): 1.2642 V (1.0192/1.4896): [OK]
+11: Baseboard 1.8V (Voltage): 1.7901 V (1.6029/1.9773): [OK]
+12: Baseboard 1.8VSB (Voltage): 1.8135 V (1.6029/1.9773): [OK]
+13: Baseboard 2.5V (Voltage): 2.5155 V (2.1645/2.8314): [OK]
+14: Baseboard 3.3V (Voltage): 3.36 V (2.9925/3.64): [OK]
+15: Baseboard 3.3AUX (Voltage): 3.3089 V (2.9232/3.6946): [OK]
+16: Baseboard 5.0V (Voltage): 4.966 V (4.524/5.486): [OK]
+17: Baseboard 5VSB (Voltage): 5.076 V (4.4415/5.6165): [OK]
+18: Baseboard 12V (Voltage): 12.028 V (10.788/13.082): [OK]
+19: Baseboard 12VRM (Voltage): 12.028 V (10.602/13.392): [OK]
+20: Baseboard -12V (Voltage): -12.04 V (-13.84/-10.456): [OK]
+21: Baseboard VBAT (Voltage): 3.069 V (2.6815/3.627): [OK]
+22: Baseboard Temp (Temperature): 39.0 C (5.0/65.0): [OK]
+23: FntPnl Amb Temp (Temperature): 22.0 C (5.0/45.0): [OK]
+24: Basebrd FanBoost (OEM Reserved): 39.0 C (NA/NA): [OK]
+25: FP Amb FanBoost (OEM Reserved): 22.0 C (NA/NA): [OK]
+26: Baseboard Fan 1 (Fan): 5661.0 RPM (2703.0/NA): [OK]
+27: Baseboard Fan 2 (Fan): 5661.0 RPM (2703.0/NA): [OK]
+28: Baseboard Fan 3 (Fan): 5763.0 RPM (2703.0/NA): [OK]
+29: Baseboard Fan 4 (Fan): 5559.0 RPM (2703.0/NA): [OK]
+30: SCSI A Term Pwr (Voltage): 4.06 V (3.2/NA): [OK]
+31: SCSI B Term Pwr (Voltage): 4.04 V (3.2/NA): [OK]
+32: Power Supply 1 (Power Supply): [Presence detected]
+33: Power Cage Fan (Fan): 6720.0 RPM (4500.0/NA): [OK]
+34: Power Cage Temp (Temperature): 34.0 C (-10.0/65.0): [OK]
+35: PwrCage FanBoost (OEM Reserved): 34.0 C (NA/NA): [OK]
+36: Proc Missing (Board): [OK]
+37: ACPI State (ACPI Power State): [S0/G0 "working"]
+38: System Event (System Event): [OK]
+39: Button (Button): [OK]
+40: SMI Timeout (OEM Reserved): [OK]
+41: Sensor Failure (OEM Reserved): [OEM State = 0000h]
+42: NMI State (OEM Reserved): [OK]
+43: SMI State (OEM Reserved): [OK]
+44: FSB Mismatch (OEM Reserved): [OK]
+45: Processor 1 Stat (Processor): [Processor Presence detected]
+46: Processor 2 Stat (Processor): [Processor Presence detected]
+47: Processor1 Temp (Temperature): 37.0 C (-10.0/80.0): [OK]
+48: Processor2 Temp (Temperature): 39.0 C (-10.0/80.0): [OK]
+49: Proc1 FanBoost (OEM Reserved): 37.0 C (NA/NA): [OK]
+50: Proc2 FanBoost (OEM Reserved): 39.0 C (NA/NA): [OK]
+51: Processor Vccp (Voltage): 1.4976 V (1.0296/1.9422): [OK]
+52: CPU Therm Ctrl (Temperature): [State Deasserted]
+53: DIMM 1B (Slot Connector): [Slot/Connector Device installed/attached]
+54: DIMM 1A (Slot Connector): [Slot/Connector Device installed/attached]
+55: DIMM 2B (Slot Connector): [OK]
+56: DIMM 2A (Slot Connector): [OK]
+57: DIMM 3B (Slot Connector): [OK]
+58: DIMM 3A (Slot Connector): [OK]
+59: Hot Swap Temp (Temperature): NA (NA/NA): [Unknown]
+60: HSC Drv Status (Drive Slot): [Unknown]
+61: HSC Drv Presence (Drive Slot): [Unknown]
+www:~# 
 @end example
 
 @subsection Sample very-verbose output
 @example
-debian-ia64:~# ipmi-sensors -vv
+www:~# ipmi-sensors -vv
 Record ID: 1
-Sensor type: I/O Bd +1.3V (Voltage)
-Sensor number: #16
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.20 Volts
-Upper Critical threshold: 1.39 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 2.55 Volts
-Normal min: 1.23 Volts
-Nominal reading: 1.30 Volts
-Normal max: 1.36 Volts
-Sensor reading: 1.33 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Power Unit
+Group Name: Power Unit
+Sensor Number: 1
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 2
-Sensor type: I/O Bd +1.5V (Voltage)
-Sensor number: #17
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.38 Volts
-Upper Critical threshold: 1.61 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 2.55 Volts
-Normal min: 1.42 Volts
-Nominal reading: 1.50 Volts
-Normal max: 1.57 Volts
-Sensor reading: 1.53 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: BMC Watchdog
+Group Name: Watchdog 2
+Sensor Number: 3
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 3
-Sensor type: I/O Bd +1.8V (Voltage)
-Sensor number: #18
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.66 Volts
-Upper Critical threshold: 1.93 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.70 Volts
-Nominal reading: 1.80 Volts
-Normal max: 1.88 Volts
-Sensor reading: 1.82 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Scrty Violation
+Group Name: Platform Security Violation
+Sensor Number: 4
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 4
-Sensor type: I/O Bd +3.3V SB (Voltage)
-Sensor number: #21
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 3.04 Volts
-Upper Critical threshold: 3.54 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 4.33 Volts
-Normal min: 3.13 Volts
-Nominal reading: 3.30 Volts
-Normal max: 3.45 Volts
-Sensor reading: 3.26 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Physical Scrty
+Group Name: Platform Chassis Intrusion
+Sensor Number: 5
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [LAN Leash Lost (system is unplugged from LAN)]
 
 Record ID: 5
-Sensor type: I/O Bd +3.3V_A (Voltage)
-Sensor number: #22
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 2.94 Volts
-Upper Critical threshold: 3.60 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 5.10 Volts
-Normal min: 3.06 Volts
-Nominal reading: 3.30 Volts
-Normal max: 3.52 Volts
-Sensor reading: 3.38 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: POST Error
+Group Name: System Firmware
+Sensor Number: 6
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 6
-Sensor type: I/O Bd +3.3V_B (Voltage)
-Sensor number: #23
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 3.04 Volts
-Upper Critical threshold: 3.54 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 4.08 Volts
-Normal min: 3.12 Volts
-Nominal reading: 3.30 Volts
-Normal max: 3.46 Volts
-Sensor reading: 3.38 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Critical Int
+Group Name: Critical Interrupt
+Sensor Number: 7
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 7
-Sensor type: IORISER CMOS Bat (Voltage)
-Sensor number: #24
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 2.30 Volts
-Upper Critical threshold: 3.68 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 4.08 Volts
-Normal min: 2.40 Volts
-Nominal reading: 2.99 Volts
-Normal max: 3.60 Volts
-Sensor reading: 3.22 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Memory
+Group Name: Memory
+Sensor Number: 8
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 8
-Sensor type: I/O Bd +5V_A (Voltage)
-Sensor number: #25
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 4.60 Volts
-Upper Critical threshold: 5.36 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 6.63 Volts
-Normal min: 4.73 Volts
-Nominal reading: 4.99 Volts
-Normal max: 5.23 Volts
-Sensor reading: 4.99 Volts
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Logging Disabled
+Group Name: Event Logging Disabled
+Sensor Number: 9
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 9
-Sensor type: I/O Bd +5V_B (Voltage)
-Sensor number: #26
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.01 Volts
-Upper non-recoverable threshold: 0.01 Volts
-Lower Critical threshold: 4.61 Volts
-Upper Critical threshold: 5.36 Volts
-Lower non-critical threshold: 0.01 Volts
-Upper non-critical threshold: 0.01 Volts
-Sensor min. reading: 0.01 Volts
-Sensor max. reading: 6.64 Volts
-Normal min: 4.74 Volts
-Nominal reading: 5.00 Volts
-Normal max: 5.23 Volts
-Sensor reading: 5.03 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 1.2V
+Group Name: Voltage
+Sensor Number: 16
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 98
+R Exponent: -4
+B Exponent: 2
+Linear: 64
+Analog Data Format: 0
+Lower Critical Threshold: 1.0682 Volts
+Upper Critical Threshold: 1.3328 Volts
+Lower Non-Critical Threshold: 1.0976 Volts
+Upper Non-Critical Threshold: 1.2936 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.499 Volts
+Normal Min.: 1.1368 Volts
+Normal Max.: 1.2544 Volts
+Nominal reading: 1.1956 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 1.2054 Volts
+Sensor Status: [OK]
 
 Record ID: 10
-Sensor type: I/O Bd +12V (Voltage)
-Sensor number: #27
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 10.97 Volts
-Upper Critical threshold: 12.77 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 15.81 Volts
-Normal min: 11.28 Volts
-Nominal reading: 11.90 Volts
-Normal max: 12.46 Volts
-Sensor reading: 11.97 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 1.25V
+Group Name: Voltage
+Sensor Number: 17
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 98
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 1.0192 Volts
+Upper Critical Threshold: 1.4896 Volts
+Lower Non-Critical Threshold: 1.0486 Volts
+Upper Non-Critical Threshold: 1.4504 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.499 Volts
+Normal Min.: 1.078 Volts
+Normal Max.: 1.4112 Volts
+Nominal reading: 1.2446 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 1.2642 Volts
+Sensor Status: [OK]
 
 Record ID: 11
-Sensor type: I/O Bd -12V (Voltage)
-Sensor number: #28
-Event/Reading type code: 01h
-Lower non-recoverable threshold: -16.60 Volts
-Upper non-recoverable threshold: -16.60 Volts
-Lower Critical threshold: -13.00 Volts
-Upper Critical threshold: -11.20 Volts
-Lower non-critical threshold: -16.60 Volts
-Upper non-critical threshold: -16.60 Volts
-Sensor min. reading: -16.60 Volts
-Sensor max. reading: 1.76 Volts
-Normal min: -12.64 Volts
-Nominal reading: -12.06 Volts
-Normal max: -11.49 Volts
-Sensor reading: -11.99 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 1.8V
+Group Name: Voltage
+Sensor Number: 18
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 117
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 1.6029 Volts
+Upper Critical Threshold: 1.9773 Volts
+Lower Non-Critical Threshold: 1.6497 Volts
+Upper Non-Critical Threshold: 1.9188 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.9835 Volts
+Normal Min.: 1.6965 Volts
+Normal Max.: 1.872 Volts
+Nominal reading: 1.7901 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 1.7901 Volts
+Sensor Status: [OK]
 
 Record ID: 12
-Sensor type: Proc Bd +1.2V (Voltage)
-Sensor number: #29
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.08 Volts
-Upper Critical threshold: 1.31 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.18 Volts
-Nominal reading: 1.20 Volts
-Normal max: 1.21 Volts
-Sensor reading: 1.21 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 1.8VSB
+Group Name: Voltage
+Sensor Number: 19
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 117
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 1.6029 Volts
+Upper Critical Threshold: 1.9773 Volts
+Lower Non-Critical Threshold: 1.6497 Volts
+Upper Non-Critical Threshold: 1.9188 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.9835 Volts
+Normal Min.: 1.6965 Volts
+Normal Max.: 1.872 Volts
+Nominal reading: 1.7901 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 1.8135 Volts
+Sensor Status: [OK]
 
 Record ID: 13
-Sensor type: MEM Bd 1 +1.25V (Voltage)
-Sensor number: #30
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.15 Volts
-Upper Critical threshold: 1.33 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.18 Volts
-Nominal reading: 1.25 Volts
-Normal max: 1.31 Volts
-Sensor reading: 1.28 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 2.5V
+Group Name: Voltage
+Sensor Number: 20
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 117
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2.1645 Volts
+Upper Critical Threshold: 2.8314 Volts
+Lower Non-Critical Threshold: 2.223 Volts
+Upper Non-Critical Threshold: 2.7378 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.9835 Volts
+Normal Min.: 2.2815 Volts
+Normal Max.: 2.6793 Volts
+Nominal reading: 2.4804 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 2.5155 Volts
+Sensor Status: [OK]
 
 Record ID: 14
-Sensor type: MEM Bd 2 +1.25V (Voltage)
-Sensor number: #31
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.15 Volts
-Upper Critical threshold: 1.33 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.18 Volts
-Nominal reading: 1.25 Volts
-Normal max: 1.31 Volts
-Sensor reading: 1.28 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 3.3V
+Group Name: Voltage
+Sensor Number: 21
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 175
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2.9925 Volts
+Upper Critical Threshold: 3.64 Volts
+Lower Non-Critical Threshold: 3.08 Volts
+Upper Non-Critical Threshold: 3.535 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 4.4625 Volts
+Normal Min.: 3.15 Volts
+Normal Max.: 3.4475 Volts
+Nominal reading: 3.29 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 3.36 Volts
+Sensor Status: [OK]
 
 Record ID: 15
-Sensor type: Proc Bd +1.3V (Voltage)
-Sensor number: #32
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.16 Volts
-Upper Critical threshold: 1.43 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.22 Volts
-Nominal reading: 1.30 Volts
-Normal max: 1.36 Volts
-Sensor reading: 1.32 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 3.3AUX
+Group Name: Voltage
+Sensor Number: 22
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 203
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2.9232 Volts
+Upper Critical Threshold: 3.6946 Volts
+Lower Non-Critical Threshold: 3.0044 Volts
+Upper Non-Critical Threshold: 3.5931 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 5.1765 Volts
+Normal Min.: 3.1465 Volts
+Normal Max.: 3.451 Volts
+Nominal reading: 3.2886 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 3.3089 Volts
+Sensor Status: [OK]
 
 Record ID: 16
-Sensor type: Proc Bd +1.5V (Voltage)
-Sensor number: #33
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.34 Volts
-Upper Critical threshold: 1.64 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.45 Volts
-Nominal reading: 1.50 Volts
-Normal max: 1.54 Volts
-Sensor reading: 1.52 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 5.0V
+Group Name: Voltage
+Sensor Number: 23
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 26
+R Exponent: -3
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 4.524 Volts
+Upper Critical Threshold: 5.486 Volts
+Lower Non-Critical Threshold: 4.68 Volts
+Upper Non-Critical Threshold: 5.33 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 6.63 Volts
+Normal Min.: 4.784 Volts
+Normal Max.: 5.226 Volts
+Nominal reading: 4.966 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 4.966 Volts
+Sensor Status: [OK]
 
 Record ID: 17
-Sensor type: Proc Bd +1.8V (Voltage)
-Sensor number: #34
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.62 Volts
-Upper Critical threshold: 1.98 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.06 Volts
-Normal min: 1.73 Volts
-Nominal reading: 1.80 Volts
-Normal max: 1.87 Volts
-Sensor reading: 1.82 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 5VSB
+Group Name: Voltage
+Sensor Number: 24
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 235
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 4.4415 Volts
+Upper Critical Threshold: 5.6165 Volts
+Lower Non-Critical Threshold: 4.5825 Volts
+Upper Non-Critical Threshold: 5.452 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 5.9925 Volts
+Normal Min.: 4.794 Volts
+Normal Max.: 5.2405 Volts
+Nominal reading: 4.982 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 5.076 Volts
+Sensor Status: [OK]
 
 Record ID: 18
-Sensor type: Proc Bd +3.3V SB (Voltage)
-Sensor number: #35
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 2.99 Volts
-Upper Critical threshold: 3.59 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 4.39 Volts
-Normal min: 3.13 Volts
-Nominal reading: 3.29 Volts
-Normal max: 3.46 Volts
-Sensor reading: 3.27 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 12V
+Group Name: Voltage
+Sensor Number: 25
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 62
+R Exponent: -3
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 10.788 Volts
+Upper Critical Threshold: 13.082 Volts
+Lower Non-Critical Threshold: 11.16 Volts
+Upper Non-Critical Threshold: 12.71 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 15.81 Volts
+Normal Min.: 11.408 Volts
+Normal Max.: 12.462 Volts
+Nominal reading: 11.842 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 12.028 Volts
+Sensor Status: [OK]
 
 Record ID: 19
-Sensor type: Proc Bd +3.3V (Voltage)
-Sensor number: #36
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 2.99 Volts
-Upper Critical threshold: 3.59 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 4.39 Volts
-Normal min: 3.13 Volts
-Nominal reading: 3.29 Volts
-Normal max: 3.46 Volts
-Sensor reading: 3.30 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard 12VRM
+Group Name: Voltage
+Sensor Number: 26
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 62
+R Exponent: -3
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 10.602 Volts
+Upper Critical Threshold: 13.392 Volts
+Lower Non-Critical Threshold: 10.912 Volts
+Upper Non-Critical Threshold: 12.958 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 15.81 Volts
+Normal Min.: 11.408 Volts
+Normal Max.: 12.462 Volts
+Nominal reading: 11.904 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 12.028 Volts
+Sensor Status: [OK]
 
 Record ID: 20
-Sensor type: IORISER +12V SB (Voltage)
-Sensor number: #37
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 10.80 Volts
-Upper Critical threshold: 12.80 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 15.04 Volts
-Normal min: 11.21 Volts
-Nominal reading: 11.80 Volts
-Normal max: 12.39 Volts
-Sensor reading: 12.33 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard -12V
+Group Name: Voltage
+Sensor Number: 27
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: -160
+M: 72
+R Exponent: -3
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: -13.84 Volts
+Upper Critical Threshold: -10.456 Volts
+Lower Non-Critical Threshold: -13.408 Volts
+Upper Non-Critical Threshold: -10.744 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -16.0 Volts
+Sensor Max. Reading: 2.36 Volts
+Normal Min.: -12.616 Volts
+Normal Max.: -10.96 Volts
+Nominal reading: -12.04 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: -12.04 Volts
+Sensor Status: [OK]
 
 Record ID: 21
-Sensor type: IORISER +2.5V (Voltage)
-Sensor number: #38
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 2.26 Volts
-Upper Critical threshold: 2.69 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 3.75 Volts
-Normal min: 2.35 Volts
-Nominal reading: 2.47 Volts
-Normal max: 2.60 Volts
-Sensor reading: 2.50 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard VBAT
+Group Name: Voltage
+Sensor Number: 28
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 155
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2.6815 Volts
+Upper Critical Threshold: 3.627 Volts
+Lower Non-Critical Threshold: 2.759 Volts
+Upper Non-Critical Threshold: 3.5185 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 3.9525 Volts
+Normal Min.: 2.8365 Volts
+Normal Max.: 3.441 Volts
+Nominal reading: 2.976 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 3.069 Volts
+Sensor Status: [OK]
 
 Record ID: 22
-Sensor type: IORISER +1.5V SB (Voltage)
-Sensor number: #39
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.37 Volts
-Upper Critical threshold: 1.63 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 2.50 Volts
-Normal min: 1.42 Volts
-Nominal reading: 1.50 Volts
-Normal max: 1.57 Volts
-Sensor reading: 1.52 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard Temp
+Group Name: Temperature
+Sensor Number: 48
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: 5.0 Degrees C
+Upper Critical Threshold: 65.0 Degrees C
+Lower Non-Critical Threshold: 10.0 Degrees C
+Upper Non-Critical Threshold: 60.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 10.0 Degrees C
+Normal Max.: 55.0 Degrees C
+Nominal reading: 38.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 39.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 23
-Sensor type: IORISER +1.5V (Voltage)
-Sensor number: #40
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 1.37 Volts
-Upper Critical threshold: 1.63 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 2.50 Volts
-Normal min: 1.42 Volts
-Nominal reading: 1.50 Volts
-Normal max: 1.57 Volts
-Sensor reading: 1.51 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: FntPnl Amb Temp
+Group Name: Temperature
+Sensor Number: 50
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: 5.0 Degrees C
+Upper Critical Threshold: 45.0 Degrees C
+Lower Non-Critical Threshold: 10.0 Degrees C
+Upper Non-Critical Threshold: 40.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 10.0 Degrees C
+Normal Max.: 30.0 Degrees C
+Nominal reading: 25.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 22.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 24
-Sensor type: IORISER +5V SB (Voltage)
-Sensor number: #41
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 4.50 Volts
-Upper Critical threshold: 5.34 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 7.40 Volts
-Normal min: 4.67 Volts
-Nominal reading: 4.93 Volts
-Normal max: 5.16 Volts
-Sensor reading: 4.93 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Basebrd FanBoost
+Group Name: OEM Reserved
+Sensor Number: 51
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: 60.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 55.0 Degrees C
+Nominal reading: 38.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 39.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 25
-Sensor type: I/O Bd SCSI +5V (Voltage)
-Sensor number: #42
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Volts
-Upper non-recoverable threshold: 0.00 Volts
-Lower Critical threshold: 4.51 Volts
-Upper Critical threshold: 5.47 Volts
-Lower non-critical threshold: 0.00 Volts
-Upper non-critical threshold: 0.00 Volts
-Sensor min. reading: 0.00 Volts
-Sensor max. reading: 6.12 Volts
-Normal min: 4.63 Volts
-Nominal reading: 4.99 Volts
-Normal max: 5.33 Volts
-Sensor reading: 5.04 Volts
-Sensor status: OK
+Record Type: 01h
+Sensor Name: FP Amb FanBoost
+Group Name: OEM Reserved
+Sensor Number: 54
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: 40.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 30.0 Degrees C
+Nominal reading: 25.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 22.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 26
-Sensor type: Mem Bd 1 Temp (Temperature)
-Sensor number: #48
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 53.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 50.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 33.00 Degrees C
-Normal max: 45.00 Degrees C
-Sensor reading: 29.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard Fan 1
+Group Name: Fan
+Sensor Number: 64
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 51
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2703.0 RPM
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: 2856.0 RPM
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 RPM
+Sensor Max. Reading: 13005.0 RPM
+Normal Min.: 4488.0 RPM
+Normal Max.: 5610.0 RPM
+Nominal reading: 4998.0 RPM
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 5661.0 RPM
+Sensor Status: [OK]
 
 Record ID: 27
-Sensor type: Mem Bd 2 Temp (Temperature)
-Sensor number: #49
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 53.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 50.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 33.00 Degrees C
-Normal max: 45.00 Degrees C
-Sensor reading: 30.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard Fan 2
+Group Name: Fan
+Sensor Number: 65
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 51
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2703.0 RPM
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: 2856.0 RPM
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 RPM
+Sensor Max. Reading: 13005.0 RPM
+Normal Min.: 4488.0 RPM
+Normal Max.: 5610.0 RPM
+Nominal reading: 4998.0 RPM
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 5355.0 RPM
+Sensor Status: [OK]
 
 Record ID: 28
-Sensor type: I/O Bd Temp 1 (Temperature)
-Sensor number: #50
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 61.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 58.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 46.00 Degrees C
-Normal max: 54.00 Degrees C
-Sensor reading: 28.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard Fan 3
+Group Name: Fan
+Sensor Number: 66
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 51
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2703.0 RPM
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: 2856.0 RPM
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 RPM
+Sensor Max. Reading: 13005.0 RPM
+Normal Min.: 4488.0 RPM
+Normal Max.: 5610.0 RPM
+Nominal reading: 4998.0 RPM
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 5661.0 RPM
+Sensor Status: [OK]
 
 Record ID: 29
-Sensor type: I/O Bd SIOH Temp (Temperature)
-Sensor number: #51
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 105.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 100.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 55.00 Degrees C
-Normal max: 95.00 Degrees C
-Sensor reading: 39.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Baseboard Fan 4
+Group Name: Fan
+Sensor Number: 67
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 51
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 2703.0 RPM
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: 2856.0 RPM
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 RPM
+Sensor Max. Reading: 13005.0 RPM
+Normal Min.: 4488.0 RPM
+Normal Max.: 5610.0 RPM
+Nominal reading: 4998.0 RPM
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 5559.0 RPM
+Sensor Status: [OK]
 
 Record ID: 30
-Sensor type: I/O Bd Temp 3 (Temperature)
-Sensor number: #52
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 64.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 61.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 49.00 Degrees C
-Normal max: 57.00 Degrees C
-Sensor reading: 27.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: SCSI A Term Pwr
+Group Name: Voltage
+Sensor Number: 96
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 20
+R Exponent: -3
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 3.2 Volts
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 5.1 Volts
+Normal Min.: 3.84 Volts
+Normal Max.: 4.32 Volts
+Nominal reading: 4.08 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 4.06 Volts
+Sensor Status: [OK]
 
 Record ID: 31
-Sensor type: Proc Bd Amb Temp (Temperature)
-Sensor number: #53
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 44.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 40.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 25.00 Degrees C
-Normal max: 38.00 Degrees C
-Sensor reading: 21.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: SCSI B Term Pwr
+Group Name: Voltage
+Sensor Number: 97
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 20
+R Exponent: -3
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 3.2 Volts
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 5.1 Volts
+Normal Min.: 3.84 Volts
+Normal Max.: 4.32 Volts
+Nominal reading: 4.08 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 4.04 Volts
+Sensor Status: [OK]
 
 Record ID: 32
-Sensor type: Proc Bd SNC Temp (Temperature)
-Sensor number: #54
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 105.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 100.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 55.00 Degrees C
-Normal max: 95.00 Degrees C
-Sensor reading: 40.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Power Supply 1
+Group Name: Power Supply
+Sensor Number: 112
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Presence detected]
 
 Record ID: 33
-Sensor type: F38 Tach Fan 1 (Fan)
-Sensor number: #64
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 RPM
-Upper non-recoverable threshold: 0.00 RPM
-Lower Critical threshold: 2100.00 RPM
-Upper Critical threshold: 0.00 RPM
-Lower non-critical threshold: 0.00 RPM
-Upper non-critical threshold: 0.00 RPM
-Sensor min. reading: 0.00 RPM
-Sensor max. reading: 5100.00 RPM
-Normal min: 2260.00 RPM
-Nominal reading: 2600.00 RPM
-Normal max: 2880.00 RPM
-Sensor reading: 2620.00 RPM
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Power Cage Fan
+Group Name: Fan
+Sensor Number: 115
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 60
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 4500.0 RPM
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: 4980.0 RPM
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 RPM
+Sensor Max. Reading: 15300.0 RPM
+Normal Min.: 6000.0 RPM
+Normal Max.: 9540.0 RPM
+Nominal reading: 8220.0 RPM
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 6720.0 RPM
+Sensor Status: [OK]
 
 Record ID: 34
-Sensor type: F38 Tach Fan 2 (Fan)
-Sensor number: #65
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 RPM
-Upper non-recoverable threshold: 0.00 RPM
-Lower Critical threshold: 2100.00 RPM
-Upper Critical threshold: 0.00 RPM
-Lower non-critical threshold: 0.00 RPM
-Upper non-critical threshold: 0.00 RPM
-Sensor min. reading: 0.00 RPM
-Sensor max. reading: 5100.00 RPM
-Normal min: 2260.00 RPM
-Nominal reading: 2600.00 RPM
-Normal max: 2880.00 RPM
-Sensor reading: 2600.00 RPM
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Power Cage Temp
+Group Name: Temperature
+Sensor Number: 118
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: -10.0 Degrees C
+Upper Critical Threshold: 65.0 Degrees C
+Lower Non-Critical Threshold: -1.0 Degrees C
+Upper Non-Critical Threshold: 60.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 55.0 Degrees C
+Nominal reading: 40.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 34.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 35
-Sensor type: F25 Tach Fan 3 (Fan)
-Sensor number: #66
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 RPM
-Upper non-recoverable threshold: 0.00 RPM
-Lower Critical threshold: 2000.00 RPM
-Upper Critical threshold: 0.00 RPM
-Lower non-critical threshold: 0.00 RPM
-Upper non-critical threshold: 0.00 RPM
-Sensor min. reading: 0.00 RPM
-Sensor max. reading: 5100.00 RPM
-Normal min: 2160.00 RPM
-Nominal reading: 2500.00 RPM
-Normal max: 2780.00 RPM
-Sensor reading: 2480.00 RPM
-Sensor status: OK
+Record Type: 01h
+Sensor Name: PwrCage FanBoost
+Group Name: OEM Reserved
+Sensor Number: 119
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: 60.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 55.0 Degrees C
+Nominal reading: 40.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 34.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 36
-Sensor type: F25 Tach Fan 4 (Fan)
-Sensor number: #67
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 RPM
-Upper non-recoverable threshold: 0.00 RPM
-Lower Critical threshold: 2100.00 RPM
-Upper Critical threshold: 0.00 RPM
-Lower non-critical threshold: 0.00 RPM
-Upper non-critical threshold: 0.00 RPM
-Sensor min. reading: 0.00 RPM
-Sensor max. reading: 5100.00 RPM
-Normal min: 2260.00 RPM
-Nominal reading: 2620.00 RPM
-Normal max: 2900.00 RPM
-Sensor reading: 2500.00 RPM
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Proc Missing
+Group Name: Board
+Sensor Number: 128
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 37
-Sensor type: Mem Bd 1 FanBst (OEM Reserved)
-Sensor number: #80
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 47.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 33.00 Degrees C
-Normal max: 45.00 Degrees C
-Sensor reading: 29.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: ACPI State
+Group Name: ACPI Power State
+Sensor Number: 130
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [S0/G0 "working"]
 
 Record ID: 38
-Sensor type: Mem Bd 2 FanBst (OEM Reserved)
-Sensor number: #81
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 47.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 33.00 Degrees C
-Normal max: 45.00 Degrees C
-Sensor reading: 30.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: System Event
+Group Name: System Event
+Sensor Number: 131
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 39
-Sensor type: I/O Bd FanBst 1 (OEM Reserved)
-Sensor number: #82
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 56.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 46.00 Degrees C
-Normal max: 54.00 Degrees C
-Sensor reading: 28.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Button
+Group Name: Button
+Sensor Number: 132
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 40
-Sensor type: IOBd SIOH FanBst (OEM Reserved)
-Sensor number: #83
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 97.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 55.00 Degrees C
-Normal max: 95.00 Degrees C
-Sensor reading: 39.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: SMI Timeout
+Group Name: OEM Reserved
+Sensor Number: 133
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 41
-Sensor type: I/O Bd FanBst 3 (OEM Reserved)
-Sensor number: #84
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 59.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 49.00 Degrees C
-Normal max: 57.00 Degrees C
-Sensor reading: 27.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: Sensor Failure
+Group Name: OEM Reserved
+Sensor Number: 134
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 73h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OEM State = 0000h]
 
 Record ID: 42
-Sensor type: Proc Bd Amb FanB (OEM Reserved)
-Sensor number: #85
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 30.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 25.00 Degrees C
-Normal max: 29.00 Degrees C
-Sensor reading: 21.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: NMI State
+Group Name: OEM Reserved
+Sensor Number: 135
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 43
-Sensor type: Proc Bd SNC FanB (OEM Reserved)
-Sensor number: #86
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 97.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 55.00 Degrees C
-Normal max: 95.00 Degrees C
-Sensor reading: 40.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: SMI State
+Group Name: OEM Reserved
+Sensor Number: 136
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 44
-Sensor type: Proc 1 Temp (Temperature)
-Sensor number: #152
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 2.00 Degrees C
-Upper Critical threshold: 112.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 105.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 15.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 98.00 Degrees C
-Sensor reading: 39.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: FSB Mismatch
+Group Name: OEM Reserved
+Sensor Number: 137
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 45
-Sensor type: Proc 2 Temp (Temperature)
-Sensor number: #153
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 2.00 Degrees C
-Upper Critical threshold: 112.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 105.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 15.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 98.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 02h
+Sensor Name: Processor 1 Stat
+Group Name: Processor
+Sensor Number: 144
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Processor Presence detected]
 
 Record ID: 46
-Sensor type: Proc 3 Temp (Temperature)
-Sensor number: #154
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 2.00 Degrees C
-Upper Critical threshold: 112.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 105.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 15.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 98.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 02h
+Sensor Name: Processor 2 Stat
+Group Name: Processor
+Sensor Number: 145
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Processor Presence detected]
 
 Record ID: 47
-Sensor type: Proc 4 Temp (Temperature)
-Sensor number: #155
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 2.00 Degrees C
-Upper Critical threshold: 112.00 Degrees C
-Lower non-critical threshold: 9.00 Degrees C
-Upper non-critical threshold: 105.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 15.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 98.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 01h
+Sensor Name: Processor1 Temp
+Group Name: Temperature
+Sensor Number: 152
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: -10.0 Degrees C
+Upper Critical Threshold: 80.0 Degrees C
+Lower Non-Critical Threshold: 0.0 Degrees C
+Upper Non-Critical Threshold: 75.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 59.0 Degrees C
+Nominal reading: 47.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 37.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 48
-Sensor type: Proc 1 FanBst (OEM Reserved)
-Sensor number: #160
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 103.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 100.00 Degrees C
-Sensor reading: 39.00 Degrees C
-Sensor status: OK
+Record Type: 01h
+Sensor Name: Processor2 Temp
+Group Name: Temperature
+Sensor Number: 153
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: -10.0 Degrees C
+Upper Critical Threshold: 80.0 Degrees C
+Lower Non-Critical Threshold: 0.0 Degrees C
+Upper Non-Critical Threshold: 75.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 59.0 Degrees C
+Nominal reading: 47.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 39.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 49
-Sensor type: Proc 2 FanBst (OEM Reserved)
-Sensor number: #161
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 103.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 100.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 01h
+Sensor Name: Proc1 FanBoost
+Group Name: OEM Reserved
+Sensor Number: 160
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: 75.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 59.0 Degrees C
+Nominal reading: 47.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 37.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 50
-Sensor type: Proc 3 FanBst (OEM Reserved)
-Sensor number: #162
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 103.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 100.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 01h
+Sensor Name: Proc2 FanBoost
+Group Name: OEM Reserved
+Sensor Number: 161
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 2
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: 75.0 Degrees C
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 5.0 Degrees C
+Normal Max.: 59.0 Degrees C
+Nominal reading: 47.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 39.0 Degrees C
+Sensor Status: [OK]
 
 Record ID: 51
-Sensor type: Proc 4 FanBst (OEM Reserved)
-Sensor number: #163
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 0.00 Degrees C
-Upper Critical threshold: 0.00 Degrees C
-Lower non-critical threshold: 0.00 Degrees C
-Upper non-critical threshold: 103.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 10.00 Degrees C
-Nominal reading: 70.00 Degrees C
-Normal max: 100.00 Degrees C
-Sensor reading: N/A
-Sensor status: Unknown
+Record Type: 01h
+Sensor Name: Processor Vccp
+Group Name: Voltage
+Sensor Number: 184
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 10h
+B: 0
+M: 117
+R Exponent: -4
+B Exponent: 2
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: 1.0296 Volts
+Upper Critical Threshold: 1.9422 Volts
+Lower Non-Critical Threshold: 1.0881 Volts
+Upper Non-Critical Threshold: 1.8837 Volts
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: 0.0 Volts
+Sensor Max. Reading: 2.9835 Volts
+Normal Min.: 1.0881 Volts
+Normal Max.: 1.8369 Volts
+Nominal reading: 1.4859 Volts
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: 1.4976 Volts
+Sensor Status: [OK]
 
 Record ID: 52
-Sensor type: HSC SCSI BP Temp (Temperature)
-Sensor number: #1
-Event/Reading type code: 01h
-Lower non-recoverable threshold: 0.00 Degrees C
-Upper non-recoverable threshold: 0.00 Degrees C
-Lower Critical threshold: 5.00 Degrees C
-Upper Critical threshold: 43.00 Degrees C
-Lower non-critical threshold: 10.00 Degrees C
-Upper non-critical threshold: 39.00 Degrees C
-Sensor min. reading: -128.00 Degrees C
-Sensor max. reading: 127.00 Degrees C
-Normal min: 12.00 Degrees C
-Nominal reading: 28.00 Degrees C
-Normal max: 38.00 Degrees C
-Sensor reading: 0.00 Degrees C
-Sensor status: OK
+Record Type: 02h
+Sensor Name: CPU Therm Ctrl
+Group Name: Temperature
+Sensor Number: 192
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 03h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [State Deasserted]
 
 Record ID: 53
-Sensor type: Pwr Unit Status (Power Unit)
-Sensor number: #1
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Power Off/Power Down: [OK]
-Power Cycle: [OK]
-240VA Power Down: [OK]
-Interlock Power Down: [OK]
-AC lost: [OK]
-Soft Power Control Failure: [OK]
-Power Unit Failure detected: [OK]
-Predictive Failure: [OK]
+Record Type: 02h
+Sensor Name: DIMM 1B
+Group Name: Slot Connector
+Sensor Number: 224
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Slot/Connector Device installed/attached]
 
 Record ID: 54
-Sensor type: Pwr Unit Redund (Power Unit)
-Sensor number: #2
-Event/Reading type code: 0Bh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [OK]
+Record Type: 02h
+Sensor Name: DIMM 1A
+Group Name: Slot Connector
+Sensor Number: 225
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Slot/Connector Device installed/attached]
 
 Record ID: 55
-Sensor type: Watchdog  (Watchdog 2)
-Sensor number: #3
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Timer expired, status only (no action, no interrupt): [OK]
-Hard Reset: [OK]
-Power Down: [OK]
-Power Cycle: [OK]
-Timer interrupt: [OK]
+Record Type: 02h
+Sensor Name: DIMM 2B
+Group Name: Slot Connector
+Sensor Number: 226
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 56
-Sensor type: Scrty Violation (Platform Security Violation)
-Sensor number: #4
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Secure Mode (Front Panel Lockout) Violation attempt: [OK]
-Pre-boot Password Violation - user password: [OK]
-Pre-boot Password Violation attempt - setup password: [OK]
-Pre-boot Password Violation - network boot password: [OK]
-Other pre-boot Password Violation: [OK]
-Out-of-band Access Password Violation: [OK]
+Record Type: 02h
+Sensor Name: DIMM 2A
+Group Name: Slot Connector
+Sensor Number: 227
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 57
-Sensor type: Physical Scrty (Platform Chassis Intrusion)
-Sensor number: #5
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-General Chassis Intrusion: [OK]
-Drive Bay intrusion: [OK]
-I/O Card area intrusion: [OK]
-Processor area intrusion: [OK]
-LAN Leash Lost (system is unplugged from LAN): [OK]
-Unauthorized dock/undock: [OK]
-FAN area intrusion: [OK]
+Record Type: 02h
+Sensor Name: DIMM 3B
+Group Name: Slot Connector
+Sensor Number: 228
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 58
-Sensor type: POST Error (System Firmware)
-Sensor number: #6
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-System Firmware Error (POST Error): [OK]
-System Firmware Hang: [OK]
-System Firmware Progress: [OK]
+Record Type: 02h
+Sensor Name: DIMM 3A
+Group Name: Slot Connector
+Sensor Number: 229
+Slave Address/System Software ID: 10h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [OK]
 
 Record ID: 59
-Sensor type: Crit Int Status (Critical Interrupt)
-Sensor number: #7
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Front Panel NMI/Diagnostic Interrupt: [OK]
-Bus Timeout: [OK]
-I/O channel check NMI: [OK]
-Software NMI: [OK]
-PCI PERR: [OK]
-PCI SERR: [OK]
-EISA Fail Safe Timeout: [OK]
-Bus Correctable Error: [OK]
-Bus Uncorrectable Error: [OK]
-Fatal NMI (port 61h, bit 7): [OK]
+Record Type: 01h
+Sensor Name: Hot Swap Temp
+Group Name: Temperature
+Sensor Number: 1
+Event/Reading Type Code: 01h
+Slave Address/System Software ID: 60h
+B: -128
+M: 1
+R Exponent: 0
+B Exponent: 0
+Linear: 0
+Analog Data Format: 0
+Lower Critical Threshold: NA
+Upper Critical Threshold: NA
+Lower Non-Critical Threshold: NA
+Upper Non-Critical Threshold: NA
+Lower Non-Recoverable Threshold: NA
+Upper Non-Recoverable Threshold: NA
+Sensor Min. Reading: -128.0 Degrees C
+Sensor Max. Reading: 127.0 Degrees C
+Normal Min.: 15.0 Degrees C
+Normal Max.: 40.0 Degrees C
+Nominal reading: 30.0 Degrees C
+Negative Hysteresis: 2
+Positive Hysteresis: 2
+Sensor Reading: NA
+Sensor Status: [Unknown]
 
 Record ID: 60
-Sensor type: EVT Log Disabled (Event Logging Disabled)
-Sensor number: #9
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Correctable Memory Error Logging Disabled: [OK]
-Event `Type' Logging Disabled: [OK]
-Log Area Reset/Cleared: [OK]
-All Event Logging Disabled: [OK]
-SEL Full: [OK]
-SEL Almost Full: [OK]
+Record Type: 02h
+Sensor Name: HSC Drv Status
+Group Name: Drive Slot
+Sensor Number: 2
+Slave Address/System Software ID: 60h
+Event/Reading Type Code: 6Fh
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Unknown]
 
 Record ID: 61
-Sensor type: System Event (System Event)
-Sensor number: #10
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-System Reconfigured: [OK]
-OEM System Boot Event: [OK]
-Undetermined system hardware failure: [OK]
-Entry added to Auxiliary Log: [OK]
-PEF Action: [OK]
+Record Type: 02h
+Sensor Name: HSC Drv Presence
+Group Name: Drive Slot
+Sensor Number: 9
+Slave Address/System Software ID: 60h
+Event/Reading Type Code: 08h
+Negative Hysteresis: 0
+Positive Hysteresis: 0
+Sensor Status: [Unknown]
 
 Record ID: 62
-Sensor type: Int SCSI TERMV0 (Voltage)
-Sensor number: #96
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 08h
+Sensor Name: NONE
+Container Entity ID: 15h
+Container Entity Instance: 01h
 
 Record ID: 63
-Sensor type: Int SCSI TERMV1 (Voltage)
-Sensor number: #97
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 11h
+Device Name: AC Pwr Cage FRU
+Device Type: 10h
+Device Type Modifier: 00h
+FRU Entity ID: 15h
+FRU Entity Instance: 01h
 
 Record ID: 64
-Sensor type: Int SCSI TERMV2 (Voltage)
-Sensor number: #98
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 11h
+Device Name: Pwr Supply 1 FRU
+Device Type: 10h
+Device Type Modifier: 00h
+FRU Entity ID: 0Ah
+FRU Entity Instance: 01h
 
 Record ID: 65
-Sensor type: Ext SCSI TERMV0 (Voltage)
-Sensor number: #99
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 11h
+Device Name: DIMM 1B SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 01h
 
 Record ID: 66
-Sensor type: Ext SCSI TERMV1 (Voltage)
-Sensor number: #100
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 11h
+Device Name: DIMM 1A SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 02h
 
 Record ID: 67
-Sensor type: Ext SCSI TERMV2 (Voltage)
-Sensor number: #101
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: 11h
+Device Name: DIMM 2B SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 03h
 
 Record ID: 68
-Sensor type: Pwr Supply 1 (Power Supply)
-Sensor number: #112
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 11h
+Device Name: DIMM 2A SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 04h
 
 Record ID: 69
-Sensor type: Pwr Supply 2 (Power Supply)
-Sensor number: #113
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 11h
+Device Name: DIMM 3B SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 05h
 
 Record ID: 70
-Sensor type: IO Bd 3.3V D2D 3 (Power Supply)
-Sensor number: #116
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 11h
+Device Name: DIMM 3A SPD
+Device Type: 10h
+Device Type Modifier: 01h
+FRU Entity ID: 20h
+FRU Entity Instance: 06h
 
 Record ID: 71
-Sensor type: IO Bd 3.3V D2D 4 (Power Supply)
-Sensor number: #117
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 12h
+Device Name: Basbrd Mgmt Ctlr
+Entity ID: 07h
+Entity Instance: 01h
 
 Record ID: 72
-Sensor type: IO Bd 5V D2D 1 (Power Supply)
-Sensor number: #118
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 12h
+Device Name: Hot Swap Ctlr
+Entity ID: 0Fh
+Entity Instance: 03h
 
 Record ID: 73
-Sensor type: IO Bd 5V D2D 2 (Power Supply)
-Sensor number: #119
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: 12h
+Device Name: Chs Bridge Ctlr
+Entity ID: 07h
+Entity Instance: 01h
 
 Record ID: 74
-Sensor type: ProcBd 3.3V D2D1 (Power Supply)
-Sensor number: #120
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 02 02 00 00 70
 
 Record ID: 75
-Sensor type: ProcBd 2.5V D2D1 (Power Supply)
-Sensor number: #121
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 03 FC FC FC
 
 Record ID: 76
-Sensor type: ProcBd 2.5V D2D2 (Power Supply)
-Sensor number: #122
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 07 00 FC FC FC 01 01 00 98 01 01 0A 3E 00 99 01 01 0A 3E 00 32 00 00 10 00 12 15 13 16 15 17 18 18 1D 19 20 1A 24 1B 2A 1C 2E 1D 34 1E 39 1F 41 20 48 21 50 22 59 23 64
 
 Record ID: 77
-Sensor type: MemBd1 1.25V D2D (Power Supply)
-Sensor number: #123
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 06 01
 
 Record ID: 78
-Sensor type: MemBd2 1.25V D2D (Power Supply)
-Sensor number: #124
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Presence detected: [OK]
-Power Supply Failure detected: [OK]
-Predictive Failure: [OK]
-Power Supply AC input lost: [OK]
-Power Supply input AC lost or out-of-range: [OK]
-Power Supply input AC out-of-range, but present: [OK]
-Configuration error: [OK]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 53 44 52 20 50 61 63 6B 61 67 65 20 35 2E 36 2E 42
 
 Record ID: 79
-Sensor type: Proc 12V SB PwGd (Voltage)
-Sensor number: #126
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
+Record Type: C0h
+Sensor Name: NONE
+Manufacturer ID: 157h
+OEM Data: 53 44 52 20 46 69 6C 65 20 30 2E 43
 
-Record ID: 80
-Sensor type: Node PwrGd (Voltage)
-Sensor number: #127
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
-
-Record ID: 81
-Sensor type: Mem Bd1 Pres (Board)
-Sensor number: #128
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 82
-Sensor type: Mem Bd2 Pres (Board)
-Sensor number: #129
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 83
-Sensor type: Fan 1 Present (Fan)
-Sensor number: #130
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 84
-Sensor type: Fan 2 Present (Fan)
-Sensor number: #131
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 85
-Sensor type: Fan 3 Present (Fan)
-Sensor number: #132
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 86
-Sensor type: Fan 4 Present (Fan)
-Sensor number: #133
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 87
-Sensor type: IO Bd Interlock (Board)
-Sensor number: #134
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 88
-Sensor type: IORISER Interlck (Board)
-Sensor number: #135
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 89
-Sensor type: Proc Bd Interlck (Board)
-Sensor number: #136
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 90
-Sensor type: SCSI Interlock (Board)
-Sensor number: #137
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Device Inserted/Device Present]
-
-Record ID: 91
-Sensor type: INIT State (OEM Reserved)
-Sensor number: #138
-Event/Reading type code: 03h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [State Deasserted]
-
-Record ID: 92
-Sensor type: Proc 1 Status (Processor)
-Sensor number: #144
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-IERR: [OK]
-Thermal Trip: [OK]
-FRB1/BIST failure: [OK]
-FRB2/Hang in POST failure: [OK]
-FRB3/Processor Startup/Initialization failure: [OK]
-Configuration Error: [OK]
-SM BIOS `Uncorrectable CPU-complex Error': [OK]
-Processor Presence detected: [OK]
-Processor disabled: [OK]
-Terminator Presence Detected: [Unknown]
-Processor Automatically Throttled: [OK]
-
-Record ID: 93
-Sensor type: Proc 2 Status (Processor)
-Sensor number: #145
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-IERR: [OK]
-Thermal Trip: [OK]
-FRB1/BIST failure: [OK]
-FRB2/Hang in POST failure: [OK]
-FRB3/Processor Startup/Initialization failure: [OK]
-Configuration Error: [OK]
-SM BIOS `Uncorrectable CPU-complex Error': [OK]
-Processor Presence detected: [Unknown]
-Processor disabled: [OK]
-Terminator Presence Detected: [Unknown]
-Processor Automatically Throttled: [OK]
-
-Record ID: 94
-Sensor type: Proc 3 Status (Processor)
-Sensor number: #146
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-IERR: [OK]
-Thermal Trip: [OK]
-FRB1/BIST failure: [OK]
-FRB2/Hang in POST failure: [OK]
-FRB3/Processor Startup/Initialization failure: [OK]
-Configuration Error: [OK]
-SM BIOS `Uncorrectable CPU-complex Error': [OK]
-Processor Presence detected: [Unknown]
-Processor disabled: [OK]
-Terminator Presence Detected: [Unknown]
-Processor Automatically Throttled: [OK]
-
-Record ID: 95
-Sensor type: Proc 4 Status (Processor)
-Sensor number: #147
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-IERR: [OK]
-Thermal Trip: [OK]
-FRB1/BIST failure: [OK]
-FRB2/Hang in POST failure: [OK]
-FRB3/Processor Startup/Initialization failure: [OK]
-Configuration Error: [OK]
-SM BIOS `Uncorrectable CPU-complex Error': [OK]
-Processor Presence detected: [Unknown]
-Processor disabled: [OK]
-Terminator Presence Detected: [Unknown]
-Processor Automatically Throttled: [OK]
-
-Record ID: 96
-Sensor type: Proc 1 PwrGd (Voltage)
-Sensor number: #164
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Performance Met]
-
-Record ID: 97
-Sensor type: Proc 2 PwrGd (Voltage)
-Sensor number: #165
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Unknown]
-
-Record ID: 98
-Sensor type: Proc 3 PwrGd (Voltage)
-Sensor number: #166
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Unknown]
-
-Record ID: 99
-Sensor type: Proc 4 PwrGd (Voltage)
-Sensor number: #167
-Event/Reading type code: 06h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Unknown]
-
-Record ID: 100
-Sensor type: PCI HP Slot 1 (Slot Connector)
-Sensor number: #224
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 101
-Sensor type: PCI HP Slot 2 (Slot Connector)
-Sensor number: #225
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 102
-Sensor type: PCI HP Slot 3 (Slot Connector)
-Sensor number: #226
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 103
-Sensor type: PCI HP Slot 4 (Slot Connector)
-Sensor number: #227
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 104
-Sensor type: PCI HP Slot 5 (Slot Connector)
-Sensor number: #228
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 105
-Sensor type: PCI HP Slot 6 (Slot Connector)
-Sensor number: #229
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 106
-Sensor type: PCI HP Slot 7 (Slot Connector)
-Sensor number: #230
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 107
-Sensor type: PCI HP Slot 8 (Slot Connector)
-Sensor number: #231
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Fault Status asserted: [OK]
-Identify Status asserted: [OK]
-Slot/Connector Device installed/attached: [Unknown]
-Slot/Connector Ready for Device Installation: [OK]
-Slot/Connector Ready for Device Removal: [OK]
-Slot Power is Off: [Unknown]
-Slot/Connector Device Removal Request: [OK]
-Interlock asserted: [OK]
-Slot is Disabled: [OK]
-Slot holds spare device: [OK]
-
-Record ID: 108
-Sensor type: HSC Drv 1 Status (Drive Slot)
-Sensor number: #2
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-
-Record ID: 109
-Sensor type: HSC Drv 2 Status (Drive Slot)
-Sensor number: #3
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-
-Record ID: 110
-Sensor type: HSC Drv 3 Status (Drive Slot)
-Sensor number: #4
-Event/Reading type code: 6Fh
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-
-Record ID: 111
-Sensor type: HSC Drv 1 Pres (Drive Slot)
-Sensor number: #9
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [OK]
-
-Record ID: 112
-Sensor type: HSC Drv 2 Pres (Drive Slot)
-Sensor number: #10
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [OK]
-
-Record ID: 113
-Sensor type: HSC Drv 3 Pres (Drive Slot)
-Sensor number: #11
-Event/Reading type code: 08h
-Hysteresis +ve: 0
-Hysteresis -ve: 0
-Sensor status: [Unknown]
-
-Record ID: 114
-Sensor Number: NONE
-Container entity ID: 13h
-Container entity instance: 01h
-
-Record ID: 115
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 03h
-FRU entity ID: 03h
-FRU entity instance: 01h
-Device name: Proc 1 INFO FRU
-
-Record ID: 116
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 03h
-FRU entity ID: 03h
-FRU entity instance: 02h
-Device name: Proc 2 INFO FRU
-
-Record ID: 117
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 03h
-FRU entity ID: 03h
-FRU entity instance: 03h
-Device name: Proc 3 INFO FRU
-
-Record ID: 118
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 03h
-FRU entity ID: 03h
-FRU entity instance: 04h
-Device name: Proc 4 INFO FRU
-
-Record ID: 119
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 03h
-FRU entity instance: 05h
-Device name: Proc 1 OEM FRU
-
-Record ID: 120
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 03h
-FRU entity instance: 06h
-Device name: Proc 2 OEM FRU
-
-Record ID: 121
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 03h
-FRU entity instance: 07h
-Device name: Proc 3 OEM FRU
-
-Record ID: 122
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 03h
-FRU entity instance: 08h
-Device name: Proc 4 OEM FRU
-
-Record ID: 123
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 0Ah
-FRU entity instance: 01h
-Device name: Pwr Supply 1 FRU
-
-Record ID: 124
-Sensor Number: NONE
-Device type: 09h
-Device type modifier: 02h
-FRU entity ID: 0Ah
-FRU entity instance: 02h
-Device name: Pwr Supply 2 FRU
-
-Record ID: 125
-Sensor Number: NONE
-Device type: 02h
-Device type modifier: 00h
-FRU entity ID: 12h
-FRU entity instance: 01h
-Device name: Proc Bd FRU
-
-Record ID: 126
-Sensor Number: NONE
-Device type: 02h
-Device type modifier: 00h
-FRU entity ID: 08h
-FRU entity instance: 01h
-Device name: Mem Bd1 FRU
-
-Record ID: 127
-Sensor Number: NONE
-Device type: 02h
-Device type modifier: 00h
-FRU entity ID: 08h
-FRU entity instance: 02h
-Device name: Mem Bd2 FRU
-
-Record ID: 128
-Sensor Number: NONE
-Device type: 05h
-Device type modifier: 05h
-FRU entity ID: 10h
-FRU entity instance: 01h
-Device name: I/O Bd FRU
-
-Record ID: 129
-Sensor Number: NONE
-Entity ID: 07h
-Entity instance: 01h
-Device name: Basebrd Mgt Ctlr
-
-Record ID: 130
-Sensor Number: NONE
-Entity ID: 0Fh
-Entity instance: 01h
-Device name: Hot Swap Ctlr
-
-Record ID: 131
-Sensor Number: NONE
-Entity ID: 07h
-Entity instance: 02h
-Device name: Chs Bridge Ctlr
-
-Record ID: 132
-Sensor Number: NONE
-Manufacturer ID: 000157h
-OEM Data: 02 02 00 01 70 71 
-
-Record ID: 133
-Sensor Number: NONE
-Manufacturer ID: 000157h
-OEM Data: 03 90 40 FC 
-
-Record ID: 134
-Sensor Number: NONE
-Manufacturer ID: 000157h
-OEM Data: 54 00 00 50 00 50 00 50 01 07 D0 07 D0 07 D0 02 00 00 00 00 00 00 
-
-Record ID: 135
-Sensor Number: NONE
-Manufacturer ID: 000157h
-OEM Data: 53 44 52 20 56 65 72 73 69 6F 6E 20 30 2E 31 38 
-
-Record ID: 136
-Sensor Number: NONE
-Manufacturer ID: 000157h
-OEM Data: 53 44 52 20 50 6B 67 2E 20 56 65 72 20 32 2E 30 2E 31 38 
-
-debian-ia64:~# 
+www:~#
 @end example
 
 @node ipmi-sel, bmc-watchdog, ipmi-sensors, Top
@@ -2988,151 +2840,177 @@ you view and manage system event log.
 @section command-line arguments
 
 @itemize @bullet
-@item -u, ---usage @*
-      Usage message.
- 
-@item -h, ---help @*
-      Show help information.
+@item ---no-probing @*
+      Do not probe IPMI devices.
 
-@item -V, ---version @*
-      Show version information.
+@item -D, ---driver-type=@var{IPMIDRIVER} @*
+      Use this @var{IPMIDRIVER} instead of auto selection.  Allowed
+      values are KCS, SMIC, SSIF and LAN.
+
+@item ---driver-address=@var{DRIVERADDR} @*
+      Use this @var{DRIVERADDR} address instead of probed one.
+
+@item ---driver-device=@var{DEVICE} @*
+      Use this @var{DEVICE} for IPMI driver.
+
+@item -h, ---hostname=@var{IPMIHOST} @*
+      Connect to @var{IPMIHOST}.
+
+@item -u, ---username=@var{USERNAME} @*
+      Use @var{USERNAME} instead of NULL.  Maximum USERNAME length is
+      16.
+
+@item -p, ---password=@var{PASSWORD} @*
+      Use @var{PASSWORD} instead of NULL.  Maximum PASSWORD length is
+      16.
+
+@item -a, ---auth-type=@var{AUTHTYPE} @*
+      Use @var{AUTHTYPE} instead of NONE.  Allowed values are NONE,
+      MD2, MD5, PLAIN and OEM.
+
+@item -l, ---priv-level=@var{PRIVILEGE-LEVEL} @*
+      Use this @var{PRIVILEGE-LEVEL} instead of USER.  Allowed values
+      are CALLBACK, USER, OPERATOR, ADMIN and OEM.
 
 @item -i, ---info @*
-      Show SEL header information.
+      Show general information about SEL.
 
-@item -x @var{file}, ---hex-dump=@var{file} @*
-      Output raw SEL data in ASCII hex format beginning with the SEL header info.
+@item -d, ---delete=@var{REC-LIST} @*
+      Delete given SEL records entry.
 
 @item -c, ---delete-all @*
-      Delete all records in the SEL.
+      Delete all SEL entries.
 
-@item -d REC-LIST, ---delete=@var{rec-list} @*
-      Delete this specific list of @var{rec-list} records in the SEL.
+@item -x, ---hex-dump@var{=FILE} @*
+      Hex-dump SEL entries optionally to @var{FILE}.
 
-@item -r START-END, ---delete-range=START-END @*
-      Delete all records in the range of START to END in the SEL.
+@item -?, ---help @*
+      Give this help list.
 
-@item ---delete-event-id=ID @*
-      Delete all records which have the event as @var{ID}.
+@item ---usage @*
+      Give a short usage message.
+
+@item -V, ---version @*
+      Print program version.
 @end itemize
 
 @node ipmi-sel sample output,  , ipmi-sel options, ipmi-sel
 @section ipmi-sel sample output
 
 @example
-debian-ia64:~# ipmi-sel 
-4:30-Dec-2003 00:20:24:Event Logging Disabled #9:Log Area Reset/Cleared:SMI Handler
-24:30-Dec-2003 00:23:21:Power Unit #1:Power Unit Failure detected:SMI Handler
-124:14-Jan-2004 23:13:11:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-144:14-Jan-2004 23:13:13:System Event #8:OEM System Boot Event:BIOS
-164:16-Jan-2004 18:41:40:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
-244:16-Jan-2004 22:18:50:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-264:16-Jan-2004 22:18:52:System Event #8:OEM System Boot Event:BIOS
-284:17-Jan-2004 00:26:49:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-304:17-Jan-2004 00:26:50:System Event #8:OEM System Boot Event:BIOS
-324:16-Jan-2004 09:53:17:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-344:16-Jan-2004 09:53:19:System Event #8:OEM System Boot Event:BIOS
-364:23-Jan-2004 05:43:43:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
-384:23-Jan-2004 05:44:06:Power Supply #113:Power Supply AC input lost:SMI Handler
-1944:26-May-2004 06:03:53:System Event #8:OEM System Boot Event:BIOS
-1964:26-May-2004 06:09:40:Power Unit #1:Power Unit Failure detected:SMI Handler
-1984:26-May-2004 06:09:59:Power Unit #1:Soft Power Control Failure:SMI Handler
-2124:26-May-2004 06:19:26:Voltage #23:Lower Critical - going low:SMI Handler
-2144:26-May-2004 06:20:36:System Event #8:OEM System Boot Event:BIOS
-2164:26-May-2004 06:21:15:Power Unit #1:Power Unit Failure detected:SMI Handler
-2184:26-May-2004 06:21:30:Power Unit #1:Power Unit Failure detected:SMI Handler
-2344:26-May-2004 07:39:37:System Event #8:OEM System Boot Event:BIOS
-2424:26-May-2004 08:43:19:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2444:26-May-2004 08:43:23:System Event #8:OEM System Boot Event:BIOS
-2464:26-May-2004 08:49:43:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2484:26-May-2004 08:49:46:System Event #8:OEM System Boot Event:BIOS
-2664:26-May-2004 08:59:35:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2684:26-May-2004 08:59:38:System Event #8:OEM System Boot Event:BIOS
-2704:26-May-2004 09:08:42:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2724:26-May-2004 09:08:46:System Event #8:OEM System Boot Event:BIOS
-2744:26-May-2004 09:13:33:Board #136:Device Removed/Device Absent:SMI Handler
-2824:26-May-2004 09:18:29:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2844:26-May-2004 09:18:33:System Event #8:OEM System Boot Event:BIOS
-2884:26-May-2004 09:30:38:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2904:26-May-2004 09:30:42:System Event #8:OEM System Boot Event:BIOS
-2924:26-May-2004 09:36:17:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-2944:26-May-2004 09:36:20:System Event #8:OEM System Boot Event:BIOS
-2964:26-May-2004 09:49:59:Power Supply #112:Power Supply AC input lost:SMI Handler
-3004:26-May-2004 10:05:37:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-3024:26-May-2004 10:05:40:System Event #8:OEM System Boot Event:BIOS
-3064:26-May-2004 10:19:50:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-3084:26-May-2004 10:19:54:System Event #8:OEM System Boot Event:BIOS
-3124:26-May-2004 10:27:36:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-3144:26-May-2004 10:27:39:System Event #8:OEM System Boot Event:BIOS
-3164:27-May-2004 02:58:23:Power Supply #113:Power Supply AC input lost:SMI Handler
-3224:30-Jun-2004 07:13:20:System Event #8:OEM System Boot Event:BIOS
-3244:30-Jun-2004 07:13:49:Fan #65:Lower Critical - going low:SMI Handler
-3264:30-Jun-2004 07:13:50:Fan #131:Device Removed/Device Absent:SMI Handler
-3284:30-Jun-2004 07:13:53:Fan #131:Device Inserted/Device Present:SMI Handler
-3304:30-Jun-2004 07:14:01:Fan #65:Lower Critical - going low:SMI Handler
-3324:30-Jun-2004 07:14:01:Fan #67:Lower Critical - going low:SMI Handler
-3344:30-Jun-2004 07:14:05:Fan #132:Device Removed/Device Absent:SMI Handler
-3364:30-Jun-2004 07:14:08:Fan #132:Device Inserted/Device Present:SMI Handler
-3384:30-Jun-2004 07:14:13:Fan #67:Lower Critical - going low:SMI Handler
-3404:30-Jun-2004 07:14:23:Fan #130:Device Removed/Device Absent:SMI Handler
-3424:30-Jun-2004 07:14:25:Fan #64:Lower Critical - going low:SMI Handler
-3444:30-Jun-2004 07:14:25:Fan #65:Lower Critical - going low:SMI Handler
-3464:30-Jun-2004 07:14:26:Fan #131:Device Removed/Device Absent:SMI Handler
-3484:30-Jun-2004 07:14:32:Fan #130:Device Inserted/Device Present:SMI Handler
-3504:30-Jun-2004 07:14:37:Fan #64:Lower Critical - going low:SMI Handler
-3524:30-Jun-2004 07:15:02:Fan #131:Device Inserted/Device Present:SMI Handler
-3544:30-Jun-2004 07:15:11:Fan #132:Device Removed/Device Absent:SMI Handler
-3564:30-Jun-2004 07:15:13:Fan #65:Lower Critical - going low:SMI Handler
-3584:30-Jun-2004 07:15:14:Fan #132:Device Inserted/Device Present:SMI Handler
-3604:30-Jun-2004 07:15:20:Fan #132:Device Removed/Device Absent:SMI Handler
-3624:30-Jun-2004 07:15:23:Fan #132:Device Inserted/Device Present:SMI Handler
-3644:30-Jun-2004 07:15:25:Fan #67:Lower Critical - going low:SMI Handler
-3664:30-Jun-2004 07:15:26:Fan #133:Device Removed/Device Absent:SMI Handler
-3684:30-Jun-2004 07:15:29:Fan #132:Device Removed/Device Absent:SMI Handler
-3704:30-Jun-2004 07:15:31:Fan #66:Lower Critical - going low:SMI Handler
-3724:30-Jun-2004 07:15:41:Fan #132:Device Inserted/Device Present:SMI Handler
-3744:30-Jun-2004 07:15:47:Fan #133:Device Inserted/Device Present:SMI Handler
-3764:30-Jun-2004 07:15:49:Fan #66:Lower Critical - going low:SMI Handler
-3784:30-Jun-2004 07:15:55:Fan #67:Lower Critical - going low:SMI Handler
-3804:30-Jun-2004 07:17:00:Power Supply #113:Power Supply AC input lost:SMI Handler
-3844:30-Jun-2004 07:21:46:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-3864:30-Jun-2004 07:21:48:System Event #8:OEM System Boot Event:BIOS
-3884:30-Jun-2004 07:21:57:Power Supply #113:Power Supply AC input lost:SMI Handler
-3904:30-Jun-2004 08:29:18:System Event #8:OEM System Boot Event:BIOS
-3924:06-Jul-2004 08:54:35:System Event #8:OEM System Boot Event:BIOS
-3944:06-Jul-2004 09:02:38:Power Unit #1:Power Unit Failure detected:SMI Handler
-3964:31-Dec-1969 16:00:05:Power Unit #1:AC lost:SMI Handler
-3984:06-Jul-2004 09:04:03:System Event #8:OEM System Boot Event:BIOS
-4004:06-Jul-2004 09:09:07:Power Unit #1:Power Unit Failure detected:SMI Handler
-4044:06-Jul-2004 09:10:35:System Event #8:OEM System Boot Event:BIOS
-4064:21-Jul-2004 01:15:59:Board #137:Device Removed/Device Absent:SMI Handler
-4084:21-Jul-2004 01:16:18:Board #137:Device Inserted/Device Present:SMI Handler
-4104:23-Jul-2004 02:51:10:Power Supply #112:Power Supply Failure detected:SMI Handler
-4144:23-Jul-2004 02:54:40:System Event #8:OEM System Boot Event:BIOS
-4424:25-Aug-2004 10:49:41:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
-4444:25-Aug-2004 10:50:19:Power Unit #1:Power Unit Failure detected:SMI Handler
-4484:25-Aug-2004 10:53:57:System Event #8:OEM System Boot Event:BIOS
-4504:25-Aug-2004 14:14:09:System Event #8:OEM System Boot Event:BIOS
-4524:25-Aug-2004 14:26:28:Power Supply #112:Power Supply AC input lost:SMI Handler
-4584:26-Aug-2004 13:58:50:System Event #8:OEM System Boot Event:BIOS
-4604:27-Aug-2004 15:12:55:Power Supply #113:Power Supply AC input lost:SMI Handler
-4644:27-Aug-2004 15:17:45:System Event #8:OEM System Boot Event:BIOS
-4684:27-Aug-2004 16:33:03:System Event #8:OEM System Boot Event:BIOS
-4704:27-Aug-2004 19:11:41:Power Supply #113:Power Supply AC input lost:SMI Handler
-4724:27-Aug-2004 19:11:41:Power Unit #1:Power Unit Failure detected:SMI Handler
-4784:27-Aug-2004 19:14:42:System Event #8:OEM System Boot Event:BIOS
-4804:30-Aug-2004 12:54:01:System Event #8:OEM System Boot Event:BIOS
-4824:07-Sep-2004 13:09:39:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
-4844:07-Sep-2004 13:10:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):SMI Handler
-4864:13-Sep-2004 10:00:49:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-4884:13-Sep-2004 10:00:51:System Event #8:OEM System Boot Event:BIOS
-4904:13-Sep-2004 11:59:02:Power Unit #1:Power Unit Failure detected:SMI Handler
-4944:13-Sep-2004 13:22:20:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-4964:13-Sep-2004 13:22:22:System Event #8:OEM System Boot Event:BIOS
-4984:13-Sep-2004 13:24:56:Power Unit #1:Power Unit Failure detected:SMI Handler
-5024:13-Sep-2004 13:29:43:System Firmware #6:System Firmware Error (POST Error):SMI Handler
-5044:13-Sep-2004 13:29:45:System Event #8:OEM System Boot Event:BIOS
-debian-ia64:~# 
+www:~# ipmi-sel 
+4:11-Dec-2005 07:03:43:Event Logging Disabled #9:Log Area Reset/Cleared
+24:11-Dec-2005 07:49:05:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+44:11-Dec-2005 07:50:02:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+64:11-Dec-2005 07:52:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+84:11-Dec-2005 07:57:04:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+104:11-Dec-2005 07:57:07:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+124:11-Dec-2005 07:57:07:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+144:31-Dec-1969 16:00:02:Power Unit #1:AC lost
+164:31-Dec-1969 16:00:13:Power Supply #112:Presence detected
+184:31-Dec-1969 16:00:15:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+204:31-Dec-1969 16:00:15:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+224:31-Dec-1969 16:00:44:System Event #131:Timestamp Clock Synch
+244:11-Dec-2005 07:59:03:System Event #131:Timestamp Clock Synch
+264:11-Dec-2005 07:59:59:System Event #131:OEM System Boot Event
+284:11-Dec-2005 08:09:46:Platform Chassis Intrusion #5:General Chassis Intrusion
+304:11-Dec-2005 08:27:06:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+324:11-Dec-2005 08:27:06:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+344:11-Dec-2005 08:27:39:System Event #131:Timestamp Clock Synch
+364:11-Dec-2005 08:27:41:System Event #131:Timestamp Clock Synch
+384:11-Dec-2005 08:28:02:Platform Chassis Intrusion #5:General Chassis Intrusion
+404:11-Dec-2005 08:31:36:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+424:11-Dec-2005 08:31:36:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+444:11-Dec-2005 08:32:10:System Event #131:Timestamp Clock Synch
+464:11-Dec-2005 08:32:10:System Event #131:Timestamp Clock Synch
+484:11-Dec-2005 08:32:45:System Event #131:OEM System Boot Event
+504:11-Dec-2005 08:36:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+524:11-Dec-2005 08:36:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+544:11-Dec-2005 08:36:32:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+564:11-Dec-2005 08:36:32:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+584:11-Dec-2005 08:36:54:System Event #131:System Reconfigured:OEM code = 01h
+604:11-Dec-2005 08:37:09:System Event #131:Timestamp Clock Synch
+624:12-Dec-2005 08:37:13:System Event #131:Timestamp Clock Synch
+644:12-Dec-2005 08:40:28:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+664:12-Dec-2005 08:40:28:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+684:12-Dec-2005 08:41:05:System Event #131:Timestamp Clock Synch
+704:12-Dec-2005 08:41:06:System Event #131:Timestamp Clock Synch
+724:12-Dec-2005 08:42:20:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+744:12-Dec-2005 08:42:20:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+764:12-Dec-2005 08:42:56:System Event #131:Timestamp Clock Synch
+784:12-Dec-2005 08:42:56:System Event #131:Timestamp Clock Synch
+804:12-Dec-2005 08:43:33:System Event #131:OEM System Boot Event
+824:12-Dec-2005 08:50:58:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+844:12-Dec-2005 08:50:58:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+864:12-Dec-2005 08:51:18:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+884:12-Dec-2005 08:51:35:System Event #131:Timestamp Clock Synch
+904:12-Dec-2005 08:51:41:System Event #131:Timestamp Clock Synch
+924:12-Dec-2005 08:51:43:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+944:12-Dec-2005 08:51:46:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+964:12-Dec-2005 08:51:46:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+984:12-Dec-2005 08:52:18:System Event #131:Timestamp Clock Synch
+1004:12-Dec-2005 08:52:18:System Event #131:Timestamp Clock Synch
+1024:12-Dec-2005 08:52:29:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1044:12-Dec-2005 08:54:00:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1064:12-Dec-2005 08:54:03:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+1084:12-Dec-2005 08:54:03:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+1104:12-Dec-2005 08:54:39:System Event #131:Timestamp Clock Synch
+1124:12-Dec-2005 08:54:39:System Event #131:Timestamp Clock Synch
+1144:12-Dec-2005 08:55:17:System Event #131:OEM System Boot Event
+1164:12-Dec-2005 09:13:59:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+1184:12-Dec-2005 09:13:59:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+1204:12-Dec-2005 09:14:35:System Event #131:Timestamp Clock Synch
+1224:12-Dec-2005 09:14:36:System Event #131:Timestamp Clock Synch
+1244:12-Dec-2005 09:15:14:System Event #131:OEM System Boot Event
+1264:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
+1284:31-Dec-1969 16:00:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 26h
+1304:31-Dec-1969 16:00:10:Fan #68:Fan:Trigger reading = 00h:Trigger reading = 1Dh
+1324:31-Dec-1969 16:01:32:Platform Chassis Intrusion #5:General Chassis Intrusion
+1344:31-Dec-1969 16:00:08:Platform Chassis Intrusion #5:General Chassis Intrusion
+1364:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
+1384:31-Dec-1969 16:00:07:Platform Chassis Intrusion #5:General Chassis Intrusion
+1404:31-Dec-1969 16:00:08:Power Supply #112:Presence detected
+1424:31-Dec-1969 16:00:02:Power Unit #1:AC lost
+1444:31-Dec-1969 16:00:13:Power Supply #112:Presence detected
+1464:31-Dec-1969 16:00:51:System Event #131:Timestamp Clock Synch
+1484:12-Dec-2005 09:26:13:System Event #131:Timestamp Clock Synch
+1504:12-Dec-2005 09:27:12:System Event #131:OEM System Boot Event
+1524:12-Dec-2005 10:06:36:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1544:12-Dec-2005 10:06:58:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1564:12-Dec-2005 10:10:00:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1584:12-Dec-2005 10:10:07:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1604:13-Dec-2005 06:50:05:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1624:14-Dec-2005 11:16:23:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1644:15-Dec-2005 07:35:40:System Event #131:Timestamp Clock Synch
+1664:15-Dec-2005 07:35:37:System Event #131:Timestamp Clock Synch
+1684:15-Dec-2005 07:36:11:System Event #131:OEM System Boot Event
+1704:18-Dec-2005 12:41:53:System Event #131:Timestamp Clock Synch
+1724:18-Dec-2005 12:41:50:System Event #131:Timestamp Clock Synch
+1744:18-Dec-2005 12:42:23:System Event #131:OEM System Boot Event
+1764:19-Dec-2005 04:50:50:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1784:19-Dec-2005 04:50:51:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1804:25-Dec-2005 13:33:22:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1824:25-Dec-2005 13:33:23:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1844:26-Dec-2005 14:36:16:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1864:26-Dec-2005 14:36:55:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1884:26-Dec-2005 14:42:33:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1904:26-Dec-2005 14:42:36:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1924:27-Dec-2005 02:20:51:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1944:27-Dec-2005 02:20:59:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1964:27-Dec-2005 04:16:11:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+1984:27-Dec-2005 04:16:21:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2004:27-Dec-2005 05:06:46:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2024:27-Dec-2005 05:06:55:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2044:28-Dec-2005 08:30:42:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2064:28-Dec-2005 08:31:03:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2084:28-Dec-2005 08:32:39:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2104:28-Dec-2005 08:33:20:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2124:28-Dec-2005 08:42:29:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2144:28-Dec-2005 08:43:28:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2164:03-Jan-2006 16:40:37:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2184:03-Jan-2006 16:40:45:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+2204:03-Jan-2006 16:40:58:Platform Chassis Intrusion #5:LAN Leash Lost (system is unplugged from LAN):Network controller #15
+www:~# 
 @end example
 
 @node bmc-watchdog, ipmipower, ipmi-sel, Top

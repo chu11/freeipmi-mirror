@@ -112,7 +112,7 @@ ipmi_ssif_write (int i2c_fd, char *buf, size_t len)
 { 
   int bytes_written;
 
-  bytes_written = ipmi_i2c_smbus_write_block_data (i2c_fd, IPMI_SSIF_SMB_IPMI_REQUEST, len, buf);
+  bytes_written = ipmi_i2c_smbus_write_block_data (i2c_fd, IPMI_SSIF_SMB_IPMI_REQUEST, len, (uint8_t *)buf);
   if (bytes_written == 0)
     return (-1);
   else
@@ -124,7 +124,7 @@ ipmi_ssif_read (int i2c_fd, char *buf, size_t *len)
 { 
   int bytes_read;
   
-  bytes_read = ipmi_i2c_smbus_read_block_data (i2c_fd, IPMI_SSIF_SMB_IPMI_RESPONSE, buf);
+  bytes_read = ipmi_i2c_smbus_read_block_data (i2c_fd, IPMI_SSIF_SMB_IPMI_RESPONSE, (uint8_t *)buf);
   if (bytes_read == 0)
     return (-1);
   else
@@ -169,13 +169,13 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 				pkt, 
 				pkt_len) > 0);
     
-    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, pkt, pkt_len) != -1);
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (char *)pkt, pkt_len) != -1);
   }
   
   { 
     uint8_t *pkt;
     uint32_t pkt_len;
-    uint32_t bytes_read = 0;
+    size_t bytes_read = 0;
     
     pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
       fiid_obj_len_bytes (tmpl_cmd_rs);
@@ -183,7 +183,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     memset (pkt, 0, pkt_len);
     ERR (pkt);
     
-    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, pkt, &bytes_read) != -1);
+    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read) != -1);
     if (bytes_read != pkt_len)
       {
 	int i;
@@ -192,7 +192,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 	fprintf (stderr, 
 		 "received packet size: %d\n" 
 		 "expected packet size: %d\n", 
-		 bytes_read, 
+		 (int)bytes_read, 
 		 pkt_len);
 	fprintf (stderr, "packet data:\n");
 	for (i = 0; i < bytes_read; i++)
@@ -227,7 +227,7 @@ ipmi_ssif_cmd_raw2 (ipmi_device_t *dev,
   
   { 
     /* Request Block */
-    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, buf_rq, buf_rq_len) != -1);
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (char *)buf_rq, buf_rq_len) != -1);
   }
   
   { 
@@ -235,7 +235,7 @@ ipmi_ssif_cmd_raw2 (ipmi_device_t *dev,
     uint32_t bytes_read = 0;
     
     ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.dev_fd, 
-				       buf_rs, *buf_rs_len)) != -1);
+				       (char *)buf_rs, buf_rs_len)) != -1);
     *buf_rs_len = bytes_read;
   }
   

@@ -106,8 +106,8 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
 static int32_t
 _fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
 
@@ -130,8 +130,8 @@ _fiid_obj_field_start_bytes (fiid_obj_t obj, uint8_t *field)
 static int32_t
 _fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
 
@@ -444,8 +444,8 @@ fiid_obj_set (fiid_obj_t obj,
 	      uint8_t *field, 
 	      uint64_t val)
 {
-  int start_bit_pos = 0;
-  int end_bit_pos = 0; //excluded always
+  uint32_t start_bit_pos = 0;
+  uint32_t end_bit_pos = 0; //excluded always
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;
@@ -580,8 +580,8 @@ fiid_obj_get (fiid_obj_t obj,
 	      uint8_t *field, 
 	      uint64_t *val)
 {
-  int start_bit_pos = 0;
-  int end_bit_pos = 0; //excluded always
+  uint32_t start_bit_pos = 0;
+  uint32_t end_bit_pos = 0; //excluded always
   int byte_pos = 0;
   int start_bit_in_byte_pos = 0;
   int end_bit_in_byte_pos = 0;

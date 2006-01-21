@@ -238,11 +238,11 @@ ipmi_strerror_r (uint8_t cmd,
 	case IPMI_CMD_DELETE_SEL_ENTRY:
 	  switch (comp_code)
 	    {
-	    case IPMI_SEL_OPERATION_NOT_SUPPORTED:
-	      SNPRINTF_RETURN ("Delete operation not supported.");
+	    case IPMI_ERR_SEL_OPERATION_NOT_SUPPORTED:
+	      SNPRINTF_RETURN ("Operation not supported for this Record Type");
 	      
-	    case IPMI_SEL_ERASE_IN_PROGRESS:
-	      SNPRINTF_RETURN ("Erase in progress.");
+	    case IPMI_ERR_SEL_ERASE_IN_PROGRESS:
+	      SNPRINTF_RETURN ("Cannot execute command, SEL erase in progress");
 	    }
 	  break;
 	}

@@ -45,14 +45,14 @@ string2bytes (char *line, unsigned char **buf, int *len)
   if (line == NULL || buf == NULL || len == NULL)
     return (-1);
   
-  for (i = 0, count = 0; buf[i]; i++)
+  for (i = 0, count = 0; line[i]; i++)
     {
-      if (strchr (delim, (int) buf[i]))
+      if (strchr ((const char*)delim, (int) line[i]))
 	count++;
     }
   count++;
   
-  *buf = calloc (count, 1);
+  *buf = calloc ((strlen (line) - count), 1);
   str = (char *) strdupa (line);
   count = 0;
   while (1)
@@ -111,7 +111,7 @@ main (int argc, char **argv)
   int send_len;
   
   uint8_t bytes_rs[512];
-  int rcvd_len;
+  size_t rcvd_len;
   
   struct rlimit resource_limit;
   

@@ -189,37 +189,37 @@ fill_set_serial_connmode (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		IPMI_SERIAL_PARAM_CONNECTION_MODE);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"basic_mode_enable", 
+		(uint8_t *)"basic_mode_enable", 
 		basic_mode_enable);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"ppp_mode_enable", 
+		(uint8_t *)"ppp_mode_enable", 
 		ppp_mode_enable);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"terminal_mode_enable", 
+		(uint8_t *)"terminal_mode_enable", 
 		terminal_mode_enable);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_connmode_rq, 
-		"direct", 
+		(uint8_t *)"direct", 
 		direct);
   
   return 0;
@@ -239,22 +239,22 @@ fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_pageblackout_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_pageblackout_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_pageblackout_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_pageblackout_rq, 
-		"page_blackout_interval", 
+		(uint8_t *)"page_blackout_interval", 
 		page_blackout_interval);
   
   return 0;
@@ -274,22 +274,22 @@ fill_set_serial_retry_time (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_retry_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_retry_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_retry_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		IPMI_SERIAL_PARAM_RETRY_TIME);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_retry_rq, 
-		"retry_time", 
+		(uint8_t *)"retry_time", 
 		retry_time);
   
   return 0;
@@ -311,32 +311,32 @@ fill_set_serial_comm_bits (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		IPMI_SERIAL_PARAM_COMM_BITS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"dtr_hangup", 
+		(uint8_t *)"dtr_hangup", 
 		dtr_hangup);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"flow_control", 
+		(uint8_t *)"flow_control", 
 		flow_control);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_serial_conf_param_commbits_rq, 
-		"bit_rate", 
+		(uint8_t *)"bit_rate", 
 		bit_rate);
   
   return 0;
@@ -359,32 +359,32 @@ fill_get_serial_conf_param (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SERIAL_MODEM_CONF_PARAM);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		channel_number);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"parameter_type", 
+		(uint8_t *)"parameter_type", 
 		parameter_type);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"parameter_selector", 
+		(uint8_t *)"parameter_selector", 
 		parameter_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"set_selector", 
+		(uint8_t *)"set_selector", 
 		set_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_serial_conf_param_rq, 
-		"block_selector", 
+		(uint8_t *)"block_selector", 
 		block_selector);
   
   return 0;

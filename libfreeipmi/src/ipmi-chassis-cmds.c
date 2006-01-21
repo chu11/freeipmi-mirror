@@ -130,12 +130,12 @@ fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq,
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_power_restore_policy_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY);
   
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_power_restore_policy_rq, 
-		"power_restore_policy", 
+		(uint8_t *)"power_restore_policy", 
 		power_restore_policy);
   
   return 0;
@@ -150,7 +150,7 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
       return -1;
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_chassis_status_rq, "cmd", 
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_chassis_status_rq, (uint8_t *)"cmd", 
 		IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
@@ -165,9 +165,9 @@ fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, "cmd",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"cmd",
 		IPMI_CMD_CHASSIS_CTRL);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, "chassis_ctrl",
+  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"chassis_ctrl",
 		chassis_ctrl);
   return 0;
 }  
@@ -240,14 +240,14 @@ fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, "cmd",
+  FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, (uint8_t *)"cmd",
 		IPMI_CMD_CHASSIS_IDENTIFY);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, "identify_interval"))
+  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"identify_interval"))
     FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, 
-                  "identify_interval", identify_interval);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, "force_identify"))
+                  (uint8_t *)"identify_interval", identify_interval);
+  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"force_identify"))
     FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd,
-                  "force_identify", force_identify_flag);
+                  (uint8_t *)"force_identify", force_identify_flag);
 
   return 0;
 }  

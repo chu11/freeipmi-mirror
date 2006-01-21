@@ -262,7 +262,7 @@ ex_sel_get_first_entry_hex ()
 				fi_get_seld (), 
 				record_data, SEL_RECORD_SIZE) == 0)
     {
-      snprintf (hex_data, SEL_HEX_RECORD_SIZE,
+      snprintf ((char *)hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
                 "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n",
@@ -270,7 +270,7 @@ ex_sel_get_first_entry_hex ()
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
                 record_data[12], record_data[13], record_data[14], record_data[15]);
-      return gh_str02scm (hex_data);
+      return gh_str02scm ((char *)hex_data);
     }
   else return SCM_BOOL_F;
 }
@@ -285,7 +285,7 @@ ex_sel_get_next_entry_hex ()
 			       fi_get_seld (), 
 			       record_data, SEL_RECORD_SIZE) == 0)
     {
-      snprintf (hex_data, SEL_HEX_RECORD_SIZE,
+      snprintf ((char *)hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] "
                 "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n",
@@ -293,7 +293,7 @@ ex_sel_get_next_entry_hex ()
                 record_data[4], record_data[5], record_data[6], record_data[7], 
                 record_data[8], record_data[9], record_data[10], record_data[11], 
                 record_data[12], record_data[13], record_data[14], record_data[15]);
-      return gh_str02scm (hex_data);
+      return gh_str02scm ((char *)hex_data);
     }
   else return SCM_BOOL_F;
 }
@@ -426,7 +426,7 @@ ex_sel_delete_entry (SCM scm_record_id)
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_reserve_sel_rs, 
-		"reservation_id", 
+		(uint8_t *)"reservation_id", 
 		&val);
   reservation_id = val;
   
@@ -460,7 +460,7 @@ ex_sel_clear ()
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_reserve_sel_rs, 
-		"reservation_id", 
+		(uint8_t *)"reservation_id", 
 		&val);
   reservation_id = val;
   
@@ -494,7 +494,7 @@ ex_sel_get_clear_status ()
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_reserve_sel_rs, 
-		"reservation_id", 
+		(uint8_t *)"reservation_id", 
 		&val);
   reservation_id = val;
   
@@ -510,7 +510,7 @@ ex_sel_get_clear_status ()
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_clear_sel_rs, 
-		"erasure_progress", 
+		(uint8_t *)"erasure_progress", 
 		&val);
   return (gh_long2scm (val));
 }
@@ -526,7 +526,7 @@ ex_set_bmc_username (SCM scm_userid, SCM scm_username)
   int retval;
   
   userid = gh_scm2long (scm_userid);
-  username = gh_scm2newstr (scm_username, NULL);
+  username = (uint8_t *)gh_scm2newstr (scm_username, NULL);
   
   retval = set_bmc_username (fi_get_ipmi_device (), userid, username);
   
@@ -558,7 +558,7 @@ ex_set_bmc_user_password (SCM scm_userid, SCM scm_password)
   int retval;
   
   userid = gh_scm2long (scm_userid);
-  password = gh_scm2newstr (scm_password, NULL);
+  password = (uint8_t *)gh_scm2newstr (scm_password, NULL);
   
   retval = set_bmc_user_password (fi_get_ipmi_device (), userid, password);
   
@@ -1468,7 +1468,7 @@ ex_get_bmc_username (SCM scm_userid)
   userid = gh_scm2long (scm_userid);
   memset (username, 0, IPMI_SESSION_MAX_USERNAME_LEN+1);
 
-  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username, IPMI_SESSION_MAX_USERNAME_LEN+1)) == 0)
+  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, (uint8_t *)username, IPMI_SESSION_MAX_USERNAME_LEN+1)) == 0)
     return_list = scm_listify (scm_makfrom0str (username), SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
@@ -2124,7 +2124,7 @@ ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
   int retval;
   
   userid = gh_scm2long (scm_userid);
-  password = gh_scm2newstr (scm_password, NULL);
+  password = (uint8_t *)gh_scm2newstr (scm_password, NULL);
   
   retval = check_bmc_user_password (fi_get_ipmi_device (), userid, password);
   
@@ -2955,7 +2955,7 @@ ex_get_sdr_repo_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_sdr_repo_info_rs, 
-		"comp_code", 
+		(uint8_t *)"comp_code", 
 		&val);
   if (val != 0)
     return SCM_EOL;
@@ -2963,12 +2963,12 @@ ex_get_sdr_repo_info ()
   /* appending sdr version */
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"sdr_version_major",
+		(uint8_t *)"sdr_version_major",
 		&val);
   sdr_major_version = val;
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"sdr_version_minor",
+		(uint8_t *)"sdr_version_minor",
 		&val);
   sdr_minor_version = val;
   snprintf (version_string, 17, 
@@ -2980,7 +2980,7 @@ ex_get_sdr_repo_info ()
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"record_count",
+		(uint8_t *)"record_count",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("record_count"), 
@@ -2988,7 +2988,7 @@ ex_get_sdr_repo_info ()
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"free_space",
+		(uint8_t *)"free_space",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("free_space"), 
@@ -2996,7 +2996,7 @@ ex_get_sdr_repo_info ()
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"recent_addition_timestamp",
+		(uint8_t *)"recent_addition_timestamp",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("recent_addition_timestamp"), 
@@ -3004,7 +3004,7 @@ ex_get_sdr_repo_info ()
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_sdr_repo_info_rs,
-		"recent_erase_timestamp",
+		(uint8_t *)"recent_erase_timestamp",
 		&val);
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("recent_erase_timestamp"), 
@@ -3029,7 +3029,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"dev_id", 
+		(uint8_t *)"dev_id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_id"), 
@@ -3037,7 +3037,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"dev_rev.rev", 
+		(uint8_t *)"dev_rev.rev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_revision"), 
@@ -3045,7 +3045,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"dev_rev.sdr_support", 
+		(uint8_t *)"dev_rev.sdr_support", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_support"), 
@@ -3057,11 +3057,11 @@ ex_get_bmc_info ()
     
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
-		  "firmware_rev1.major_rev", 
+		  (uint8_t *)"firmware_rev1.major_rev", 
 		  &major);
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
-		  "firmware_rev2.minor_rev", 
+		  (uint8_t *)"firmware_rev2.minor_rev", 
 		  &minor);
     snprintf (version_string, 17, 
 	      "%d.%d", 
@@ -3073,7 +3073,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"firmware_rev1.dev_available", 
+		(uint8_t *)"firmware_rev1.dev_available", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_availability"), 
@@ -3084,11 +3084,11 @@ ex_get_bmc_info ()
     
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
-		  "ipmi_ver.ms_bits", 
+		  (uint8_t *)"ipmi_ver.ms_bits", 
 		  &major);
     fiid_obj_get (cmd_rs, 
 		  tmpl_cmd_get_dev_id_rs, 
-		  "ipmi_ver.ls_bits", 
+		  (uint8_t *)"ipmi_ver.ls_bits", 
 		  &minor);
     snprintf (version_string, 17, 
 	      "%d.%d", 
@@ -3100,7 +3100,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.sensor_dev", 
+		(uint8_t *)"additional_dev_support.sensor_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sensor_dev_support"), 
@@ -3108,7 +3108,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.sdr_repo_dev", 
+		(uint8_t *)"additional_dev_support.sdr_repo_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_repo_dev_support"), 
@@ -3116,7 +3116,7 @@ ex_get_bmc_info ()
 
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.sel_dev", 
+		(uint8_t *)"additional_dev_support.sel_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sel_dev_support"), 
@@ -3124,7 +3124,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.fru_inventory_dev", 
+		(uint8_t *)"additional_dev_support.fru_inventory_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("fru_inventory_dev_support"), 
@@ -3132,7 +3132,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.ipmb_evnt_receiver", 
+		(uint8_t *)"additional_dev_support.ipmb_evnt_receiver", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_receiver_support"), 
@@ -3140,7 +3140,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.ipmb_evnt_generator", 
+		(uint8_t *)"additional_dev_support.ipmb_evnt_generator", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_generator_support"), 
@@ -3148,7 +3148,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.bridge", 
+		(uint8_t *)"additional_dev_support.bridge", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("bridge_support"), 
@@ -3156,7 +3156,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"additional_dev_support.chassis_dev", 
+		(uint8_t *)"additional_dev_support.chassis_dev", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("chassis_dev_support"), 
@@ -3164,7 +3164,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"manf_id.id", 
+		(uint8_t *)"manf_id.id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("manufacturer_id"), 
@@ -3172,7 +3172,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"prod_id", 
+		(uint8_t *)"prod_id", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("product_id"), 
@@ -3180,7 +3180,7 @@ ex_get_bmc_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_cmd_get_dev_id_rs, 
-		"aux_firmware_rev_info", 
+		(uint8_t *)"aux_firmware_rev_info", 
 		&val);
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("aux_firmware_rev_info"), 
@@ -3302,12 +3302,12 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs,
 		tmpl_get_pef_caps_rs,
-		"pef_version_major",
+		(uint8_t *)"pef_version_major",
 		&val);
   pef_major_version = val;
   fiid_obj_get (cmd_rs,
 		tmpl_get_pef_caps_rs,
-		"pef_version_minor",
+		(uint8_t *)"pef_version_minor",
 		&val);
   pef_minor_version = val;
   snprintf (version_string, 17, 
@@ -3319,7 +3319,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.alert", 
+		(uint8_t *)"action_support.alert", 
 		&val);
   alert_support = val;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
@@ -3328,7 +3328,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.powerdown", 
+		(uint8_t *)"action_support.powerdown", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powerdown_support"), 
@@ -3336,7 +3336,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.reset", 
+		(uint8_t *)"action_support.reset", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("reset_support"), 
@@ -3344,7 +3344,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.powercycle", 
+		(uint8_t *)"action_support.powercycle", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powercycle_support"), 
@@ -3352,7 +3352,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.oem", 
+		(uint8_t *)"action_support.oem", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("oem_support"), 
@@ -3360,7 +3360,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"action_support.diag_interrupt", 
+		(uint8_t *)"action_support.diag_interrupt", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("diag_interrupt_support"), 
@@ -3368,7 +3368,7 @@ ex_get_pef_info ()
   
   fiid_obj_get (cmd_rs, 
 		tmpl_get_pef_caps_rs, 
-		"number_of_eft_entries", 
+		(uint8_t *)"number_of_eft_entries", 
 		&val);
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("eft_entries_count"), 
@@ -3388,7 +3388,7 @@ ex_get_pef_info ()
 	}
       fiid_obj_get (cmd_rs, 
 		    tmpl_get_pef_conf_param_num_event_filters_rs, 
-		    "num_event_filters", 
+		    (uint8_t *)"num_event_filters", 
 		    &val);
     }
   else 
@@ -3413,7 +3413,7 @@ ex_get_pef_info ()
 	}
       fiid_obj_get (cmd_rs, 
 		    tmpl_get_pef_conf_param_num_alert_policies_rs, 
-		    "num_alert_policies", 
+		    (uint8_t *)"num_alert_policies", 
 		    &val);
     }
   else 
@@ -3438,7 +3438,7 @@ ex_get_pef_info ()
 	}
       fiid_obj_get (cmd_rs, 
 		    tmpl_get_pef_conf_param_num_alert_strings_rs, 
-		    "num_alert_strings", 
+		    (uint8_t *)"num_alert_strings", 
 		    &val);
     }
   else 

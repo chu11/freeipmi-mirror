@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.5 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmi-md5.c,v 1.5.2.1 2006-01-21 09:17:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -331,7 +331,7 @@ _ipmi_md5_append_padding_and_length(ipmi_md5_t *ctx)
   length[7] = (ctx->bit_count[0] & 0xff000000) >> 24;
 
   ipmi_md5_update_data(ctx, padding, padlen);
-  ipmi_md5_update_data(ctx, length, 8);
+  ipmi_md5_update_data(ctx, (uint8_t *)length, 8);
 }
 
 int 

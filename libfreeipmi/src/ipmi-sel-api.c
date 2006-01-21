@@ -42,13 +42,13 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
   seld->first_record_id = IPMI_SEL_FIRST_ENTRY;
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_entry_rs, 
-		"next_record_id", 
+		(uint8_t *)"next_record_id", 
 		&val);
   seld->next_record_id = val;
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_sel_entry_rs, 
-		     "record_data", 
+		     (uint8_t *)"record_data", 
 		     record_data,
                      record_data_len);
   
@@ -78,13 +78,13 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_entry_rs, 
-		"next_record_id", 
+		(uint8_t *)"next_record_id", 
 		&val);
   seld->next_record_id = val;
   
   fiid_obj_get_data (obj_cmd_rs, 
 		     tmpl_get_sel_entry_rs, 
-		     "record_data", 
+		     (uint8_t *)"record_data", 
 		     record_data,
                      record_data_len);
   
@@ -106,68 +106,68 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"sel_version_major", 
+		(uint8_t *)"sel_version_major", 
 		&val);
   pinfo->version_major = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"sel_version_minor", 
+		(uint8_t *)"sel_version_minor", 
 		&val);
   pinfo->version_minor = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"log_entry_count", 
+		(uint8_t *)"log_entry_count", 
 		&val);
   pinfo->entry_count = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"free_space", 
+		(uint8_t *)"free_space", 
 		&val);
   pinfo->free_space = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"recent_addition_timestamp", 
+		(uint8_t *)"recent_addition_timestamp", 
 		&val);
   pinfo->last_add_time = val;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"recent_erase_timestamp", 
+		(uint8_t *)"recent_erase_timestamp", 
 		&val);
   pinfo->last_erase_time = val;
   
   pinfo->flags = 0;
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"get_sel_alloc_info_cmd_support", 
+		(uint8_t *)"get_sel_alloc_info_cmd_support", 
 		&val);
   if (val) pinfo->flags |= get_sel_alloc_info_cmd_support;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"reserve_sel_cmd_support", 
+		(uint8_t *)"reserve_sel_cmd_support", 
 		&val);
   if (val) pinfo->flags |= reserve_sel_cmd_support;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"partial_add_sel_entry_cmd_support", 
+		(uint8_t *)"partial_add_sel_entry_cmd_support", 
 		&val);
   if (val) pinfo->flags |= partial_add_sel_entry_cmd_support;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"delete_sel_cmd_support", 
+		(uint8_t *)"delete_sel_cmd_support", 
 		&val);
   if (val) pinfo->flags |= delete_sel_cmd_support;
   
   fiid_obj_get (obj_cmd_rs, 
 		tmpl_get_sel_info_rs, 
-		"overflow_flag", 
+		(uint8_t *)"overflow_flag", 
 		&val);
   if (val) pinfo->flags |= overflow_flag;
   

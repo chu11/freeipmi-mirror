@@ -50,6 +50,76 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-01-20  Anand Babu  <ab@zresearch.com>
+
+        * Applied Anand Avati's <avati@zresearch.com> patch for compiler
+	warining fixes (gcc-4.0 is aggressive about issuing warinings for
+	bad code) and 64/32-bit porting fixes.  Avati also identified a
+	bug in ipmi-raw.c. Following files are affected: 
+	bmc-info/src/bmc-info.c
+	bmc-watchdog/src/bmc-watchdog.c
+	fish/src/bmc-conf2.c
+	fish/src/ipmi-wrapper.c
+	fish/src/scm-procedures.c
+	ipmi-locate/src/ipmi-locate.c
+	ipmiping/src/ipmiping.c
+	ipmipower/src/ipmipower_check.c
+	ipmipower/src/ipmipower_connection.c
+	ipmipower/src/ipmipower_packet.c
+	ipmipower/src/ipmipower_ping.c
+	ipmipower/src/ipmipower_powercmd.c
+	ipmipower/src/ipmipower_prompt.c
+	ipmipower/src/wrappers.c
+	libfreeipmi/src/acpi-spmi-locate.c
+	libfreeipmi/src/fiid.c
+	libfreeipmi/src/freeipmi.h
+	libfreeipmi/src/ipmi-chassis-cmds.c
+	libfreeipmi/src/ipmi-debug.c
+	libfreeipmi/src/ipmi-dev-global-cmds.c
+	libfreeipmi/src/ipmi-kcs-interface.c
+	libfreeipmi/src/ipmi-lan-cmds.c
+	libfreeipmi/src/ipmi-lan-interface.c
+	libfreeipmi/src/ipmi-lan-interface.h
+	libfreeipmi/src/ipmi-md2.c
+	libfreeipmi/src/ipmi-md5.c
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	libfreeipmi/src/ipmi-pef-cmds.c
+	libfreeipmi/src/ipmi-sdr-repo-cache.c
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	libfreeipmi/src/ipmi-sel-api.c
+	libfreeipmi/src/ipmi-sel-cmds.c
+	libfreeipmi/src/ipmi-sel-record-types.c
+	libfreeipmi/src/ipmi-sensor-api.c
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	libfreeipmi/src/ipmi-sensor-event-messages.c
+	libfreeipmi/src/ipmi-sensor-types.c
+	libfreeipmi/src/ipmi-sensor-utils.c
+	libfreeipmi/src/ipmi-serial-cmds.c
+	libfreeipmi/src/ipmi-sessions.c
+	libfreeipmi/src/ipmi-sol-cmds.c
+	libfreeipmi/src/ipmi-ssif-interface.c
+	libfreeipmi/src/ipmi-watchdog.c
+	libfreeipmi/src/rmcp.c
+	rmcpping/src/rmcpping.c
+
+2006-01-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-error.c, libfreeipmi/src/ipmi-error.h,
+	libfreeipmi/src/ipmi-sel-cmds.h: Fix consistency issue with
+	declaration of error codes.  Fix error message to be consistent
+	with IPMI specification.
+	
+2006-01-19  A Balamurugan  <bala@zresearch.com>
+
+	* doc/freeipmi.texi: updated.
+
+2006-01-19  A Balamurugan  <bala@zresearch.com>
+
+	* doc/freeipmi.texi: updated.
+
+	* ipmi-raw/src/ipmi-raw.c (string2bytes): fixed logical/invalid
+	pointer operation bug.
+
 2006-01-09  Anand Babu  <ab@zresearch.com>
 
 	* libfreeipmi/src/ipmi-kcs-interface.[c,h]: ipmi_kcs_get_mutex_semid,

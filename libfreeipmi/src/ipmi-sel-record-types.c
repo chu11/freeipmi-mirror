@@ -120,85 +120,85 @@ get_sel_system_event_record (uint8_t *record_data, sel_record_t *sel_record)
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"record_id", 
+		(uint8_t *)"record_id", 
 		&val);
   record_id = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"timestamp", 
+		(uint8_t *)"timestamp", 
 		&val);
   timestamp = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id_flag", 
+		(uint8_t *)"ipmb_slave_addr_sys_soft_id_flag", 
 		&val);
   ipmb_slave_addr_sys_soft_id_flag = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"ipmb_slave_addr_sys_soft_id", 
+		(uint8_t *)"ipmb_slave_addr_sys_soft_id", 
 		&val);
   ipmb_slave_addr_sys_soft_id = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"channel_number", 
+		(uint8_t *)"channel_number", 
 		&val);
   channel_number = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"sensor_type", 
+		(uint8_t *)"sensor_type", 
 		&val);
   sensor_type = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"sensor_number", 
+		(uint8_t *)"sensor_number", 
 		&val);
   sensor_number = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_type_code", 
+		(uint8_t *)"event_type_code", 
 		&val);
   event_type_code = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"assertion_deassertion_event", 
+		(uint8_t *)"assertion_deassertion_event", 
 		&val);
   assertion_deassertion_event = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_reading_code_offset", 
+		(uint8_t *)"event_reading_code_offset", 
 		&val);
   event_reading_code_offset = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_data2_flag", 
+		(uint8_t *)"event_data2_flag", 
 		&val);
   event_data2_flag = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_data3_flag", 
+		(uint8_t *)"event_data3_flag", 
 		&val);
   event_data3_flag = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_data2", 
+		(uint8_t *)"event_data2", 
 		&val);
   event_data2 = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
-		"event_data3", 
+		(uint8_t *)"event_data3", 
 		&val);
   event_data3 = val;
   
@@ -333,25 +333,25 @@ get_sel_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_record)
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
-		"record_id", 
+		(uint8_t *)"record_id", 
 		&val);
   record_id = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
-		"timestamp", 
+		(uint8_t *)"timestamp", 
 		&val);
   timestamp = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
-		"manufacturer_id", 
+		(uint8_t *)"manufacturer_id", 
 		&val);
   manufacturer_id = val;
   
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
-		"oem_defined", 
+		(uint8_t *)"oem_defined", 
 		&val);
   oem_defined = val;
   
@@ -369,7 +369,7 @@ get_sel_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_record)
 	    "Manufacturer ID %02Xh", 
 	    manufacturer_id);
   asprintf (&(sel_record->event_message), 
-	    "OEM Defined = %lXh", 
+	    "OEM Defined = " FI_64 "Xh",
 	    oem_defined);
   
   sel_record->event_data2_message = NULL;
@@ -391,12 +391,12 @@ get_sel_non_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_reco
   
   fiid_obj_get (record_data, 
 		tmpl_sel_non_timestamped_oem_record, 
-		"record_id", 
+		(uint8_t *)"record_id", 
 		&val);
   record_id = val;
   
   oem_defined_index = fiid_obj_field_start_bytes (tmpl_sel_non_timestamped_oem_record, 
-						  "oem_defined");
+						  (uint8_t *)"oem_defined");
   if (oem_defined_index == -1)
     return 1;
   oem_defined = record_data + oem_defined_index;
@@ -442,7 +442,7 @@ get_sel_record (uint8_t *record_data, sel_record_t *sel_record)
   
   fiid_obj_get (record_data,
 		tmpl_sel_record_header,
-		"record_type",
+		(uint8_t *)"record_type",
 		&val);
   record_type = val;
 

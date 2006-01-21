@@ -104,7 +104,7 @@ fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sdr_repo_info_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SDR_REPOSITORY_INFO);
   return 0;
 }
@@ -114,7 +114,7 @@ fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sdr_repo_alloc_info_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SDR_REPOSITORY_ALLOC_INFO);
   return 0;
 }
@@ -124,7 +124,7 @@ fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_reserve_sdr_repo_rq, 
-		"cmd", 
+		(uint8_t *)"cmd", 
 		IPMI_CMD_RESERVE_SDR_REPOSITORY);
   return 0;
 }
@@ -134,27 +134,27 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"cmd",
+		(uint8_t *)"cmd",
 		IPMI_CMD_GET_SDR);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"reservation_id",
+		(uint8_t *)"reservation_id",
 		0x0);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"record_id",
+		(uint8_t *)"record_id",
 		record_id);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"record_offset",
+		(uint8_t *)"record_offset",
 		0x0);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"bytes_read",
+		(uint8_t *)"bytes_read",
 		fiid_obj_len_bytes (tmpl_sdr_sensor_record_header));
   return 0;
 }
@@ -168,27 +168,27 @@ fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq,
 {
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"cmd",
+		(uint8_t *)"cmd",
 		IPMI_CMD_GET_SDR);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"reservation_id",
+		(uint8_t *)"reservation_id",
 		reservation_id);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"record_id",
+		(uint8_t *)"record_id",
 		record_id);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"record_offset",
+		(uint8_t *)"record_offset",
 		record_offset);
   
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
-		"bytes_read",
+		(uint8_t *)"bytes_read",
 		bytes_read);
   return 0;
 }
@@ -321,12 +321,12 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
     }
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
-		     "sdr_rs", 
+		     (uint8_t *)"sdr_rs", 
 		     obj_cmd_rs,
                      fiid_obj_len_bytes(tmpl_get_sdr_rs));
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
-		     "header_data", 
+		     (uint8_t *)"header_data", 
 		     sensor_record_header,
                      fiid_obj_len_bytes(tmpl_sdr_sensor_record_header));
   
@@ -398,12 +398,12 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
-		     "sdr_rs", 
+		     (uint8_t *)"sdr_rs", 
 		     obj_cmd_rs,
                      fiid_obj_len_bytes(tmpl_get_sdr_rs));
   fiid_obj_get_data (local_obj_cmd_rs, 
 		     tmpl_var_len_get_sdr_rs, 
-		     "chunk_data", 
+		     (uint8_t *)"chunk_data", 
 		     sensor_record_chunk,
                      sensor_record_chunk_len);
   
@@ -445,7 +445,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 					     sensor_record_header) == 0);
     FIID_OBJ_GET (sensor_record_header, 
 		  tmpl_sdr_sensor_record_header, 
-		  "record_length", 
+		  (uint8_t *)"record_length", 
 		  &val);
     record_length = val;
     record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
@@ -459,7 +459,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       ERR (ipmi_cmd_reserve_sdr_repo2 (dev, local_obj_cmd_rs) == 0);
       FIID_OBJ_GET (local_obj_cmd_rs,  
 		    tmpl_reserve_sdr_repo_rs, 
-		    "reservation_id", 
+		    (uint8_t *)"reservation_id", 
 		    &val);
       reservation_id = (uint16_t) val;
     }
