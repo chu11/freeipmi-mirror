@@ -26,6 +26,7 @@ libfreeipmi:
   * gcrypt: secure mem-buffers
   * gcrypt: thread issues
   * ipmi 2.0 commands
+  * gcc 4.0 warnings test/fix
 
 fish:
 -----
