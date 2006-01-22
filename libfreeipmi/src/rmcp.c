@@ -62,22 +62,16 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr) 
 {
-  uint32_t hdr_len;
-  if (obj_hdr == NULL)
+  if (!fiid_obj_verify(obj_hdr))
     {
       errno = EINVAL;
       return -1;
     }
   
-  hdr_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
-
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"ver", 
-		RMCP_VER_1_0);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"seq_num", 
-		RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"msg_class.class", 
-		message_class);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_rmcp, (uint8_t *)"msg_class.ack",
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"ver", RMCP_VER_1_0);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"seq_num", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.class", message_class);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.ack",
 		RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
@@ -97,74 +91,95 @@ fill_hdr_rmcp_asf (fiid_obj_t obj_hdr)
 int8_t
 fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
 {
-  if (obj_cmd == NULL)
+  if (!fiid_obj_verify(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"iana_enterprise_num",
+
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"iana_enterprise_num",
 		htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"msg_type",
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_type",
 		RMCP_ASF_MSG_TYPE_PRESENCE_PING);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"msg_tag", msg_tag);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_asf_presence_ping, (uint8_t *)"data_len", 0x00);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_tag", msg_tag);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_len", 0x00);
   return 0;
 }
 
 int8_t
-assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, fiid_template_t tmpl_cmd, uint8_t *pkt, uint32_t pkt_len)
+assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
 {
+  uint32_t obj_max_cmd_len, obj_max_hdr_len;
   uint32_t obj_cmd_len, obj_hdr_len;
-  
-  if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
+
+  if (!(fiid_obj_verify(obj_hdr) 
+        && fiid_obj_verify(obj_cmd)
+        && pkt))
     {
       errno = EINVAL;
       return -1;
     }
 
-  obj_hdr_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
+  obj_max_hdr_len = fiid_obj_max_len_bytes (obj_hdr);
+  ERR(obj_max_hdr_len != -1);
+  obj_max_cmd_len = fiid_obj_max_len_bytes (obj_cmd);
+  ERR(obj_max_cmd_len != -1);
 
-  if (pkt_len < (obj_hdr_len + obj_cmd_len))
+  if (pkt_len < (obj_max_hdr_len + obj_max_cmd_len))
     {
       errno = EMSGSIZE;
       return -1;
     }
 
-  memset (pkt, '\0', obj_hdr_len + obj_cmd_len);
-  memcpy (pkt, obj_hdr, obj_hdr_len);
-  memcpy (pkt + obj_hdr_len, obj_cmd, obj_cmd_len);
+  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
+  ERR(obj_hdr_len != -1);
+  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
+  ERR(obj_cmd_len != -1);
+
+  /* achu: For this packet, this is a requirement */
+  if ((obj_hdr_len != obj_max_hdr_len) || (obj_cmd_len != obj_max_cmd_len))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  memset (pkt, '\0', pkt_len);
+  ERR((obj_hdr_len = fiid_obj_get_all(obj_hdr, pkt, pkt_len)) != -1);
+  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_hdr_len, pkt_len - obj_hdr_len)) != -1);
   return (obj_hdr_len + obj_cmd_len);
 }  
 
 int8_t
-unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
+unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
 {
-  uint32_t obj_len, indx = 0;
+  uint32_t obj_max_len, indx = 0;
 
-  if (!(pkt && tmpl_cmd))
+  if (!(pkt
+        && (!obj_hdr || fiid_obj_verify(obj_hdr)) 
+        && (!obj_cmd || fiid_obj_verify(obj_cmd))))
     {
       errno = EINVAL;
       return -1;
     }
 
   indx = 0;
-  obj_len = fiid_obj_len_bytes (tmpl_hdr_rmcp);
+  obj_max_len = fiid_obj_max_len_bytes (obj_hdr);
   if (obj_hdr)
-    memcpy (obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_len));
-  indx += obj_len;
+    ERR(fiid_obj_set_all(obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_max_len)));
+  indx += obj_max_len;
 
   if (pkt_len <= indx)
     return 0;
 
-  obj_len = fiid_obj_len_bytes (tmpl_cmd);
+  obj_max_len = fiid_obj_max_len_bytes (obj_cmd);
   if (obj_cmd)
-    memcpy (obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_len));
-  indx += obj_len;
+    ERR(fiid_obj_set_all(obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_max_len)));
+  indx += obj_max_len;
  
   return 0;
 }
 
+#if 0 /* TEST */
 int8_t
 ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong)
 {
@@ -261,3 +276,5 @@ ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
   else
     return 0;
 }
+
+#endif /* TEST */

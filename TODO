@@ -23,6 +23,10 @@ libfreeipmi:
   * fiid_obj_t must hold additional info
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
+  * gcc 4.0 test/warning
+  * fiid tags for object types
+  * fiid error codes/retrieval/strerror
+  * int wraparound corner cases - fiid
   
 fish:
 -----

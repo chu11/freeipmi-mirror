@@ -193,9 +193,7 @@ extern "C" {
 #if defined (FREEIPMI_BUILD)
 #include "bit-ops.h"
 #include "fiid.h"
-#if 0 /* TEST */
 #include "ipmi-utils.h"
-#endif /* TEST */
 #include "ipmi-error.h"
 #if 0 /* TEST */
 #include "ipmi-locate.h"
@@ -311,9 +309,7 @@ extern char *__progname;
 #else
 #include <freeipmi/bit-ops.h>
 #include <freeipmi/fiid.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-utils.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-error.h>
 #if 0 /* TEST */
 #include <freeipmi/ipmi-locate.h>

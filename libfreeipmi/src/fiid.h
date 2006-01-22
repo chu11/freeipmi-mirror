@@ -146,14 +146,20 @@ fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
 int8_t fiid_obj_verify(fiid_obj_t obj);
-
+int32_t fiid_obj_max_len(fiid_obj_t obj);
+int32_t fiid_obj_max_len_bytes(fiid_obj_t obj);
+int32_t fiid_obj_len(fiid_obj_t obj);
+int32_t fiid_obj_len_bytes(fiid_obj_t obj);
 int8_t fiid_obj_clear (fiid_obj_t obj);
 int8_t fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field);
 int8_t fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field);
 int8_t fiid_obj_set (fiid_obj_t obj, uint8_t *field, uint64_t val);
 int8_t fiid_obj_get (fiid_obj_t obj, uint8_t *field, uint64_t *val);
-int8_t fiid_obj_set_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
-int8_t fiid_obj_get_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_set_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
 int8_t fiid_obj_set_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
 int8_t fiid_obj_get_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
 
