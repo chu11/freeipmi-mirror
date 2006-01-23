@@ -609,7 +609,13 @@ get_sdr_record (ipmi_device_t *dev,
 			 obj_cmd_rs, 
 			 &obj_sdr_record) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_get_sdr2()");
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, "cmd", &val);
+      dev->cmd = val;
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
       return (-1);
     }
   
@@ -650,7 +656,13 @@ get_sdr_record (ipmi_device_t *dev,
 					   sdr_record->record.sdr_full_record.sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_sensor_thresholds2()");
+	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, "cmd", &val);
+	  dev->cmd = val;
+	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, "comp_code", &val);
+	  dev->comp_code = val;
+	  ipmi_strerror_cmd_r (obj_cmd_rs, 
+			       dev->errmsg, 
+			       IPMI_ERR_STR_MAX_LEN);
 	  /* This is ok */
 	  break;
 	}
@@ -831,7 +843,15 @@ get_sensor_reading (ipmi_device_t *dev,
 					   sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_threshold_reading2()");
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_threshold_reading_rs, 
+			"cmd", &val);
+	  dev->cmd = val;
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_threshold_reading_rs, 
+			"comp_code", &val);
+	  dev->comp_code = val;
+	  ipmi_strerror_cmd_r (obj_cmd_rs, 
+			       dev->errmsg, 
+			       IPMI_ERR_STR_MAX_LEN);
 	  return (-1);
 	}
       
@@ -883,7 +903,15 @@ get_sensor_reading (ipmi_device_t *dev,
 					  sensor_number, 
 					  obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_discrete_reading2()");
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"cmd", &val);
+	  dev->cmd = val;
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"comp_code", &val);
+	  dev->comp_code = val;
+	  ipmi_strerror_cmd_r (obj_cmd_rs, 
+			       dev->errmsg, 
+			       IPMI_ERR_STR_MAX_LEN);
 	  return (-1);
 	}
       
@@ -935,7 +963,15 @@ get_sensor_reading (ipmi_device_t *dev,
 					  sensor_number, 
 					  obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_discrete_reading2()");
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"cmd", &val);
+	  dev->cmd = val;
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"comp_code", &val);
+	  dev->comp_code = val;
+	  ipmi_strerror_cmd_r (obj_cmd_rs, 
+			       dev->errmsg, 
+			       IPMI_ERR_STR_MAX_LEN);
 	  return (-1);
 	}
       
@@ -987,7 +1023,11 @@ get_sensor_reading (ipmi_device_t *dev,
 					  sensor_number, 
 					  obj_cmd_rs) != 0)
 	{
-	  ipmi_error (obj_cmd_rs, "ipmi_cmd_get_discrete_reading2()");
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"cmd", &val);
+	  dev->cmd = val;
+	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
+			"comp_code", &val);
 	  return (-1);
 	}
       
