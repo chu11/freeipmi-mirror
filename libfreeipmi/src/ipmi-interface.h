@@ -83,6 +83,9 @@ struct ipmi_device
   ipmi_mode_t        mode;
   uint8_t            lun;
   uint8_t            net_fn;
+  uint8_t            cmd;
+  uint8_t            comp_code;
+  char               errmsg[IPMI_ERR_STR_MAX_LEN];
   union 
   {
     struct 

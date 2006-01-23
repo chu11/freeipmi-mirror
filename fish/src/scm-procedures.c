@@ -231,6 +231,12 @@ ex_sel_get_first_entry_raw ()
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
     }
+  else 
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+    }
   return scm_sel_record;
 }
 
@@ -248,6 +254,12 @@ ex_sel_get_next_entry_raw ()
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record);
+    }
+  else 
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
     }
   return scm_sel_record;
 }
@@ -272,7 +284,13 @@ ex_sel_get_first_entry_hex ()
                 record_data[12], record_data[13], record_data[14], record_data[15]);
       return gh_str02scm ((char *)hex_data);
     }
-  else return SCM_BOOL_F;
+  else 
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+    }
+  return SCM_BOOL_F;
 }
 
 SCM
@@ -295,7 +313,13 @@ ex_sel_get_next_entry_hex ()
                 record_data[12], record_data[13], record_data[14], record_data[15]);
       return gh_str02scm ((char *)hex_data);
     }
-  else return SCM_BOOL_F;
+  else 
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+    }
+  return SCM_BOOL_F;
 }
 
 SCM 
@@ -321,7 +345,13 @@ ex_sel_get_info_binary ()
                                                           gh_cons (gh_ulong2scm (info.free_space),
                                                                    tail))))));
     }
-  else return SCM_BOOL_F;
+  else 
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+    }
+  return SCM_BOOL_F;
 }
 
 SCM 
@@ -334,7 +364,12 @@ ex_sel_get_first_entry ()
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
 				record_data, SEL_RECORD_SIZE) != 0)
-    return SCM_EOL;
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+      return SCM_EOL;
+    }
   
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
@@ -375,7 +410,12 @@ ex_sel_get_next_entry ()
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
 			       record_data, SEL_RECORD_SIZE) != 0)
-    return SCM_EOL;
+    {
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       (fi_get_ipmi_device ())->errmsg);
+      return SCM_EOL;
+    }
   
   if (get_sel_record (record_data, &sel_rec) != 0)
     return SCM_EOL;
@@ -420,7 +460,12 @@ ex_sel_delete_entry (SCM scm_record_id)
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
@@ -436,7 +481,12 @@ ex_sel_delete_entry (SCM scm_record_id)
 				  record_id, 
 				  obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_delete_sel_entry2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
@@ -454,7 +504,12 @@ ex_sel_clear ()
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
@@ -470,7 +525,12 @@ ex_sel_clear ()
 			   IPMI_SEL_INITIATE_ERASE, 
 			   obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
@@ -488,7 +548,12 @@ ex_sel_get_clear_status ()
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
@@ -504,7 +569,12 @@ ex_sel_get_clear_status ()
 			   IPMI_SEL_GET_ERASURE_STATUS, 
 			   obj_cmd_rs) != 0)
     {
-      ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()");
+      char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+      
+      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      fprintf (stderr, "%s: %s\n", 
+	       program_invocation_short_name, 
+	       errmsg);
       return SCM_BOOL_F;
     }
   
