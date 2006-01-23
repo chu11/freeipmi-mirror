@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.4.2.1 2006-01-21 09:17:22 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.4.2.2 2006-01-23 21:51:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -92,8 +92,8 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
+  obj_rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = Fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
 
   if (fill_hdr_rmcp_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -140,8 +140,8 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
+  obj_rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = Fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
 
 #ifndef NDEBUG
   if (debug)
@@ -185,8 +185,8 @@ parsepacket(char *buffer,
   
   retval = 1;
  cleanup:
-  fiid_obj_free(obj_rmcp_hdr);
-  fiid_obj_free(obj_rmcp_cmd);
+  Fiid_obj_free(obj_rmcp_hdr);
+  Fiid_obj_free(obj_rmcp_cmd);
   return retval;
 }
 
