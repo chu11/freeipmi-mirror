@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.12 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower.h,v 1.13 2006-01-23 23:58:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -349,6 +349,8 @@ struct ipmipower_config
   ipmipower_bool_t  on_if_off;
   output_type_t     outputtype;
   ipmipower_bool_t  force_permsg_auth;
+  ipmipower_bool_t  accept_session_id_zero;
+  
 #ifndef NDEBUG
   ipmipower_bool_t  debug;
   ipmipower_bool_t  ipmidump;
@@ -374,6 +376,7 @@ struct ipmipower_config
   ipmipower_bool_t  privilege_set;
   ipmipower_bool_t  on_if_off_set;
   ipmipower_bool_t  force_permsg_auth_set;
+  ipmipower_bool_t  accept_session_id_zero_set;
   ipmipower_bool_t  outputtype_set;
   ipmipower_bool_t  timeout_len_set;
   ipmipower_bool_t  retry_timeout_len_set;

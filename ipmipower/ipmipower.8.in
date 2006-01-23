@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.13 2005-11-10 22:17:02 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.14 2006-01-23 23:58:11 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -172,8 +172,15 @@ Forces
 .B ipmipower
 to use IPMI per message authentication regardless of what is
 advertised by the remote machine.  This option has been specifically
-implemented to get around a compliance issue discovered on an IBM
-eServer 325.  For more information, see WORKAROUNDS below.
+implemented to get around a compliance issue.  For more information,
+see WORKAROUNDS below.
+.TP
+.I "-S, --accept-session-id-zero"
+Forces 
+.B ipmipower
+to accept packets with a session id of zero.  This option has been
+specifically implemented to get around a compliance issue.  For more
+information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -512,9 +519,9 @@ was lost.  Resolved by sending retransmitted Get Session Challenge
 requests from a different source port.
 
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
-packet responses return empty session IDs to the client.  Resolved by
-accepting empty session IDs.  This problem is apparently fixed in 
-later firmware releases.
+packet responses return empty session IDs to the client.  In order to
+work around this issue, the -S (--accept-session-id-zero) option must
+be set.  This problem is apparently fixed in later firmware releases.
 
 Dell PowerEdge 2850: When Per-Message Authentication is disabled,
 packet responses contain non-null authentication data.  Resolved by

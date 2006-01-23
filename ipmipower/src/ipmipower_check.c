@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.9 2006-01-20 21:59:19 ab Exp $
+ *  $Id: ipmipower_check.c,v 1.10 2006-01-23 23:58:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,6 +38,8 @@
 #include "ipmipower_check.h"
 #include "ipmipower_packet.h"
 #include "ipmipower_wrappers.h"      
+
+extern struct ipmipower_config *conf;
 
 static int 
 _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -195,8 +197,11 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
         ip->ic->hostname, ip->protocol_state, session_id, 
         actv_res_session_id);
   
-  return (((session_id == actv_res_session_id)
-           || (session_id == 0)) ? 1 : 0);
+  /* Special workaround, see manpage for details */
+  if (conf->accept_session_id_zero == IPMIPOWER_TRUE && !session_id)
+    return (1);
+
+  return (session_id == actv_res_session_id);
 }
 
 static int 
