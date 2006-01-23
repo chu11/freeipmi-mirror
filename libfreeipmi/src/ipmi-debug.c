@@ -183,33 +183,39 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 
   while (!fiid_iterator_end(iter))
     {
-      int32_t max_field_len;
+      int32_t field_len;
       uint8_t *key;
 
       if (!(key = fiid_iterator_key(iter)))
         goto cleanup;
 
-      if ((max_field_len = fiid_iterator_max_field_len(iter)) < 0)
+      if ((field_len = fiid_iterator_field_len(iter)) < 0)
         goto cleanup;
 
       if (prefix)
         _DPRINTF_CLEANUP ((fd, "%s", prefix));
-
-      if (max_field_len <= 64)
+      
+      if (!field_len)
         {
-          uint64_t val;
+          fiid_iterator_next(iter);
+          continue;
+        }
+
+      if (field_len <= 64)
+        {
+          uint64_t val = 0;
 
 	  if (fiid_iterator_get (iter, &val) < 0)
             goto cleanup;
 
-          _DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, max_field_len));
+          _DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
       else
         {
           char buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
-          _DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(max_field_len)));
+          _DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
      
           if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
             goto cleanup;

@@ -15,6 +15,13 @@
 	
 ------------------------------------------------------------
 
+2006-01-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Various new API
+	additions and bug fixes.
+	
+	* Makefile.am, rmcpping/: Begin support of rmcpping.
+	
 2006-01-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Various new API
@@ -22,7 +29,7 @@
 
 	* libfreeipmi/src/rmcp.h, libfreeipmi/src/rmcp.c: Begin support of
 	new fiid interface.
-	
+
 2006-01-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c

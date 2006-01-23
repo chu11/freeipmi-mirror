@@ -3,7 +3,7 @@ if FISH
 endif
 
 # SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-locate bmc-info ipmiping rmcpping garpd $(MAYBE_FISH)
-SUBDIRS = doc libfreeipmi 
+SUBDIRS = doc libfreeipmi rmcpping
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@

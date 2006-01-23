@@ -146,10 +146,17 @@ fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
 int8_t fiid_obj_verify(fiid_obj_t obj);
+
 int32_t fiid_obj_max_len(fiid_obj_t obj);
 int32_t fiid_obj_max_len_bytes(fiid_obj_t obj);
 int32_t fiid_obj_len(fiid_obj_t obj);
 int32_t fiid_obj_len_bytes(fiid_obj_t obj);
+
+int32_t fiid_obj_max_field_len(fiid_obj_t obj, uint8_t *field);
+int32_t fiid_obj_max_field_len_bytes(fiid_obj_t obj, uint8_t *field);
+int32_t fiid_obj_field_len(fiid_obj_t obj, uint8_t *field);
+int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, uint8_t *field);
+
 int8_t fiid_obj_clear (fiid_obj_t obj);
 int8_t fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field);
 int8_t fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field);
@@ -169,6 +176,7 @@ int8_t fiid_iterator_reset(fiid_iterator_t iter);
 int8_t fiid_iterator_next(fiid_iterator_t iter);
 int8_t fiid_iterator_end(fiid_iterator_t iter);
 int32_t fiid_iterator_max_field_len(fiid_iterator_t iter);
+int32_t fiid_iterator_field_len(fiid_iterator_t iter);
 uint8_t *fiid_iterator_key(fiid_iterator_t iter);
 int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
 int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
