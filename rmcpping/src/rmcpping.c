@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.6 2006-01-23 21:49:06 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.7 2006-01-23 22:02:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -113,7 +113,7 @@ createpacket(char *buffer,
       if (fiid_obj_dump_rmcp(STDERR_FILENO, "Ping", NULL, 
                              (uint8_t *)buffer, len, 
                              tmpl_cmd_asf_presence_ping) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+        ipmi_ping_err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
     }
 #endif
 
@@ -148,7 +148,7 @@ parsepacket(char *buffer,
     {
       if (fiid_obj_dump_rmcp(STDERR_FILENO, "Pong", NULL, buffer, buflen, 
                              tmpl_cmd_asf_presence_pong) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+        ipmi_ping_err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
     }
 #endif
 
