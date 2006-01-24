@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.16 2006-01-24 00:39:06 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.17 2006-01-24 00:40:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -553,7 +553,7 @@ IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
 In order to work around this issue, the -P (--force-permsg-auth)
 option must be set.  The option will force Per Message Authentication
-on no matter what is advertised by the remote BMC.
+to be used no matter what is advertised by the remote BMC.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
