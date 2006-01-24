@@ -26,9 +26,9 @@
 
 struct fiid_field_data
 {
-  uint16_t max_field_len;
+  uint32_t max_field_len;
   char key[FIID_FIELD_MAX];
-  uint16_t set_field_len;
+  uint32_t set_field_len;
 };
 
 struct fiid_obj
@@ -207,6 +207,7 @@ fiid_obj_t
 fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj = NULL;
+  uint32_t max_pkt_len;
   int i;
   
   if (!tmpl)
@@ -261,6 +262,13 @@ fiid_obj_create (fiid_template_t tmpl)
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX);
       obj->field_data[i].key[FIID_FIELD_MAX - 1] = '\0';
       obj->field_data[i].set_field_len = 0;
+      max_pkt_len += tmpl[i].max_field_len;
+    }
+
+  if (max_pkt_len % 8)
+    {
+      errno = EINVAL;
+      goto cleanup;
     }
 
   return (obj);
@@ -416,7 +424,7 @@ fiid_obj_len_bytes(fiid_obj_t obj)
       return (-1);
     }
 
-  if ((len = fiid_obj_max_len (obj)) < 0)
+  if ((len = fiid_obj_len (obj)) < 0)
     return (-1);
 
   return (BITS_ROUND_BYTES (len));

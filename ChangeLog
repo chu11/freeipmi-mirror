@@ -15,6 +15,11 @@
 	
 ------------------------------------------------------------
 
+2006-01-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.c (fiid_obj_create, fiid_obj_len_bytes):
+	Fix bugs/typos.
+	
 2006-01-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Various new API

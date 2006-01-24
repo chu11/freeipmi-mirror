@@ -27,6 +27,8 @@ libfreeipmi:
   * fiid tags for object types
   * fiid error codes/retrieval/strerror
   * int wraparound corner cases - fiid
+    - uint32_t for max_field_len, but some funcs return int32_t
+    - counters, fiid_obj_create
   
 fish:
 -----
