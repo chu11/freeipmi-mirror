@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.15 2006-01-24 00:34:32 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.16 2006-01-24 00:39:06 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -514,10 +514,11 @@ compliance issues discovered and the workarounds currently used in
 .B ipmipower. 
 
 When possible, the workarounds have been implemented so they will be
-transparent to the user.  However, some may require command line
-options be set.  The workarounds listed below are listed in the order
-of their implementation.  Therefore, workarounds implemented earlier
-may have solved problems for other vendors.
+transparent to the user.  However, some will require command line
+options be set due to issues with code logic or security.  The
+workarounds listed below are listed in the order of their
+implementation.  Therefore, workarounds implemented earlier may have
+solved problems for other vendors.
 
 Note that the following only indicates the hardware that a problem was
 discovered on.  Newer versions of a vendors firmware may fix the
@@ -532,12 +533,15 @@ requests from a different source port.
 Tyan S2882 with m3289 BMC: After the IPMI session is brought up,
 packet responses return empty session IDs to the client.  In order to
 work around this issue, the -S (--accept-session-id-zero) option must
-be set.  This problem is apparently fixed in later firmware releases.
+be set.  The option will allow empty session IDs to be accepted by the
+client.  This problem is apparently fixed in later firmware releases.
 
 Dell PowerEdge 2850: When Per-Message Authentication is disabled,
 packet responses contain non-null authentication data (when it should
 in fact be null).  In order to work around this issue, the -U
-(--check-unexpected-authcode) option must be set.
+(--check-unexpected-authcode) option must be set.  The option will
+allow unexpected non-null authcodes to be checked as though they were
+expected.
 
 Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
 activate session response and close session response packets have
@@ -548,7 +552,8 @@ later revisions of
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
 In order to work around this issue, the -P (--force-permsg-auth)
-option must be set.
+option must be set.  The option will force Per Message Authentication
+on no matter what is advertised by the remote BMC.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
