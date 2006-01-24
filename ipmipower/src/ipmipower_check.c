@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.10 2006-01-23 23:58:11 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.11 2006-01-24 00:07:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -183,6 +183,11 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    (uint8_t *)"session_id", &actv_res_session_id);
     }
   
+  if (session_id != actv_res_session_id && session_id != 0)
+    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
+        ip->ic->hostname, ip->protocol_state, session_id, 
+        actv_res_session_id);
+  
   /* IPMI Workaround (achu)
    *
    * Discovered on Tyan S2882 w/ m3289 BMC
@@ -192,12 +197,6 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if (session_id != actv_res_session_id && session_id != 0)
-    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
-        ip->ic->hostname, ip->protocol_state, session_id, 
-        actv_res_session_id);
-  
-  /* Special workaround, see manpage for details */
   if (conf->accept_session_id_zero == IPMIPOWER_TRUE && !session_id)
     return (1);
 
