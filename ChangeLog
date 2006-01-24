@@ -8,7 +8,14 @@
 	ipmipower_config_conffile_parse), ipmipower/src/ipmipower_prompt.c
 	(_cmd_advanced, _cmd_config, ipmipower_prompt_process_cmdline):
 	Support new --accept-session-id-zero option.
-	
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
+	(_recv_packet), ipmipower/src/ipmipower_config.c
+	(ipmipower_config_setup, ipmipower_config_cmdline_parse,
+	ipmipower_config_conffile_parse), ipmipower/src/ipmipower_prompt.c
+	(_cmd_advanced, _cmd_config, ipmipower_prompt_process_cmdline):
+	Support new --check-unexpected-authcode option.
+
 	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
 	Document new options.
 	

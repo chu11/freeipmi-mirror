@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.7 2006-01-23 23:58:11 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.8 2006-01-24 00:34:32 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -112,6 +112,9 @@ Specify if the permsg-auth flag is forced by default.
 .TP
 .I accept_session_id_zero enable|disable
 Specify if null session id's should be accepted by default.
+.TP
+.I accept_unexpected_authcode enable|disable
+Specify if unexpected nonnull authcodes should be accepted by default.
 .TP
 .I timeout ms
 Specify the timeout in ms.

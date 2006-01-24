@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.10 2006-01-23 23:58:11 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.11 2006-01-24 00:34:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,6 +83,7 @@ ipmipower_config_setup(void)
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_auth = IPMIPOWER_FALSE;
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
+  conf->check_unexpected_authcode = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -110,6 +111,7 @@ ipmipower_config_setup(void)
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->force_permsg_auth_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
+  conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -220,49 +222,50 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSUDIRLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSUt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
   struct option long_options[] = 
     {
-      {"hostnames",              1, NULL, 'h'},
-      {"username",               1, NULL, 'u'},
-      {"password",               1, NULL, 'p'},
-      {"on",                     0, NULL, 'n'},
-      {"off",                    0, NULL, 'f'},
-      {"cycle",                  0, NULL, 'c'},
-      {"reset",                  0, NULL, 'r'},
-      {"stat",                   0, NULL, 's'},
-      {"pulse",                  0, NULL, 'j'},
-      {"soft",                   0, NULL, 'k'},
-      {"help",                   0, NULL, 'H'},
-      {"version",                0, NULL, 'V'},
-      {"config",                 1, NULL, 'C'}, 
+      {"hostnames",                 1, NULL, 'h'},
+      {"username",                  1, NULL, 'u'},
+      {"password",                  1, NULL, 'p'},
+      {"on",                        0, NULL, 'n'},
+      {"off",                       0, NULL, 'f'},
+      {"cycle",                     0, NULL, 'c'},
+      {"reset",                     0, NULL, 'r'},
+      {"stat",                      0, NULL, 's'},
+      {"pulse",                     0, NULL, 'j'},
+      {"soft",                      0, NULL, 'k'},
+      {"help",                      0, NULL, 'H'},
+      {"version",                   0, NULL, 'V'},
+      {"config",                    1, NULL, 'C'}, 
 
-      {"authtype",               1, NULL, 'a'},  
-      {"privilege",              1, NULL, 'l'},
-      {"on-if-off",              0, NULL, 'g'},
-      {"outputtype",             1, NULL, 'o'},
-      {"force-permsg-auth",      0, NULL, 'P'},
-      {"accept-session-id-zero", 0, NULL, 'S'},
+      {"authtype",                  1, NULL, 'a'},  
+      {"privilege",                 1, NULL, 'l'},
+      {"on-if-off",                 0, NULL, 'g'},
+      {"outputtype",                1, NULL, 'o'},
+      {"force-permsg-auth",         0, NULL, 'P'},
+      {"accept-session-id-zero",    0, NULL, 'S'},
+      {"check-unexpected-authcode", 0, NULL, 'U'},
 #ifndef NDEBUG
-      {"debug",                  0, NULL, 'D'},
-      {"ipmidump",               0, NULL, 'I'},
-      {"rmcpdump",               0, NULL, 'R'},
-      {"log",                    0, NULL, 'L'},
-      {"logfile",                1, NULL, 'F'},
+      {"debug",                     0, NULL, 'D'},
+      {"ipmidump",                  0, NULL, 'I'},
+      {"rmcpdump",                  0, NULL, 'R'},
+      {"log",                       0, NULL, 'L'},
+      {"logfile",                   1, NULL, 'F'},
 #endif
       {"timeout" ,               1, NULL, 't'},
-      {"retry-timeout",          1, NULL, 'y'},
-      {"retry-backoff-count",    1, NULL, 'b'},
-      {"ping-interval",          1, NULL, 'i'},
-      {"ping-timeout",           1, NULL, 'z'},
-      {"ping-packet-count",      1, NULL, 'v'},
-      {"ping-percent",           1, NULL, 'w'},
-      {"ping-consec-count",      1, NULL, 'x'},
+      {"retry-timeout",             1, NULL, 'y'},
+      {"retry-backoff-count",       1, NULL, 'b'},
+      {"ping-interval",             1, NULL, 'i'},
+      {"ping-timeout",              1, NULL, 'z'},
+      {"ping-packet-count",         1, NULL, 'v'},
+      {"ping-percent",              1, NULL, 'w'},
+      {"ping-consec-count",         1, NULL, 'x'},
       {0, 0, 0, 0},
     };
 #endif
@@ -353,6 +356,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->accept_session_id_zero = IPMIPOWER_TRUE;
           conf->accept_session_id_zero_set = IPMIPOWER_TRUE;
           break;
+        case 'U':       /* --check-unexpected-authcode */
+          conf->check_unexpected_authcode = IPMIPOWER_TRUE;
+          conf->check_unexpected_authcode_set = IPMIPOWER_TRUE;
 #ifndef NDEBUG
         case 'D':       /* --debug */
           conf->debug = !conf->debug;
@@ -571,9 +577,10 @@ ipmipower_config_conffile_parse(char *configfile)
 {
   int hostnames_flag, username_flag, password_flag, authtype_flag, 
     privilege_flag, on_if_off_flag, outputtype_flag, force_permsg_auth_flag, 
-    accept_session_id_zero_flag, timeout_flag, retry_timeout_flag, 
-    retry_backoff_count_flag, ping_interval_flag, ping_timeout_flag, 
-    ping_packet_count_flag, ping_percent_flag, ping_consec_count_flag;
+    accept_session_id_zero_flag, check_unexpected_authcode_flag, timeout_flag, 
+    retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
+    ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
+    ping_consec_count_flag;
 
   struct conffile_option options[] = 
     {
@@ -597,6 +604,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"accept_session_id_zero", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &accept_session_id_zero_flag, &(conf->accept_session_id_zero), 
        conf->accept_session_id_zero_set},
+      {"check_unexpected_authcode", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &check_unexpected_authcode_flag, &(conf->check_unexpected_authcode), 
+       conf->check_unexpected_authcode_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

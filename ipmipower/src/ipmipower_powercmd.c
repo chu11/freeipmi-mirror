@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.17 2006-01-20 21:59:19 ab Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.18 2006-01-24 00:34:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -383,7 +383,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * here is our second session-authcode check attempt under these
    * circumstances.
    */
-  if (!ret && check_authcode_retry_flag)
+  if (conf->check_unexpected_authcode == IPMIPOWER_TRUE && !ret && check_authcode_retry_flag)
     {
       dbg("_recv_packet(%s:%d): retry authcode check");
 
