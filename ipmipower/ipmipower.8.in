@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.17 2006-01-24 00:40:39 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.18 2006-01-24 00:41:31 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -644,8 +644,8 @@ Core dumps are enabled.
 Error messages are not ambiguously returned to the user.  For example,
 in a debug compiled binary, username and password errors are returned
 with specific username or password error messages.  In a non-debug
-compiled binary, a generic "Permission Denied" is output under both
-circumstances.
+compiled binary, a generic "Permission Denied" message is output under
+both circumstances.
 .IP o
 In interactive mode, "config" and "password" commands will output
 the current password to stdout.
