@@ -11,7 +11,7 @@
 
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
 
-	* libfreeipmi/src/: Support new fiid interface globally.
+	* Support new fiid interface globally.
 	
 ------------------------------------------------------------
 
