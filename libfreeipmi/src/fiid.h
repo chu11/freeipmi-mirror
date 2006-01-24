@@ -145,7 +145,7 @@ int8_t fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field);
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
-int8_t fiid_obj_verify(fiid_obj_t obj);
+int8_t fiid_obj_valid(fiid_obj_t obj);
 
 int32_t fiid_obj_max_len(fiid_obj_t obj);
 int32_t fiid_obj_max_len_bytes(fiid_obj_t obj);

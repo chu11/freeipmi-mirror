@@ -17,15 +17,14 @@
 
 2006-01-24  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/fiid.c (fiid_obj_create, fiid_obj_len_bytes):
-	Fix bugs/typos.
+	* libfreeipmi/src/fiid.c: Various minor bug fixes and typo fixes.
+
+	* Makefile.am, rmcpping/: Begin support of rmcpping.
 	
 2006-01-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Various new API
 	additions and bug fixes.
-	
-	* Makefile.am, rmcpping/: Begin support of rmcpping.
 	
 2006-01-22  Albert Chu <chu11@llnl.gov>
 

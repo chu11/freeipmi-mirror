@@ -207,7 +207,7 @@ fiid_obj_t
 fiid_obj_create (fiid_template_t tmpl)
 {
   fiid_obj_t obj = NULL;
-  uint32_t max_pkt_len;
+  uint32_t max_pkt_len = 0;
   int i;
   
   if (!tmpl)
@@ -353,7 +353,7 @@ fiid_obj_dup (fiid_obj_t src_obj)
 }
 
 int8_t 
-fiid_obj_verify(fiid_obj_t obj)
+fiid_obj_valid(fiid_obj_t obj)
 {
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     return (0);
@@ -373,7 +373,7 @@ fiid_obj_max_len(fiid_obj_t obj)
     }
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
-      counter += obj->field_data[i].max_field_len;
+    counter += obj->field_data[i].max_field_len;
 
   return (counter);
 }
@@ -587,9 +587,7 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
 	  return (-1);
 	}
 
-      field_offset = _fiid_obj_field_start_bytes (obj, field);
-      ERR (field_offset != -1);
-
+      field_offset = BITS_ROUND_BYTES(field_start);
       memset ((obj->data + field_offset), '\0', bytes_len);
     }
 
@@ -913,13 +911,10 @@ fiid_obj_set_data (fiid_obj_t obj,
     }
 
   bytes_len = BITS_ROUND_BYTES (bits_len);
-
-  field_offset = _fiid_obj_field_start_bytes (obj, field);
-  ERR (field_offset != -1);
-
   if (data_len > bytes_len)
     data_len = bytes_len;
   
+  field_offset = BITS_ROUND_BYTES(field_start);
   memcpy ((obj->data + field_offset), data, data_len);
   obj->field_data[key_index].set_field_len = (data_len * 8);
   
@@ -981,8 +976,7 @@ fiid_obj_get_data (fiid_obj_t obj,
       return (-1);
     }
 
-  field_offset = _fiid_obj_field_start_bytes (obj, field);
-  ERR (field_offset != -1);
+  field_offset = BITS_ROUND_BYTES(field_start);
 
   memset (data, '\0', data_len);
   memcpy (data, (obj->data + field_offset), bytes_len);
@@ -1349,9 +1343,7 @@ fiid_obj_set_block (fiid_obj_t obj,
       key_index_end = i;
     }
 
-  field_offset = _fiid_obj_field_start_bytes (obj, field_start);
-  ERR (field_offset != -1);
- 
+  field_offset = BITS_ROUND_BYTES(block_bits_start);
   memcpy ((obj->data + field_offset), data, data_len);
   
   bits_counter = 0;
@@ -1440,8 +1432,7 @@ fiid_obj_get_block (fiid_obj_t obj,
       return (-1);
     }
 
-  field_offset = _fiid_obj_field_start_bytes (obj, field_start);
-  ERR (field_offset != -1);
+  field_offset = BITS_ROUND_BYTES(block_bits_start);
  
   memset(data, '\0', data_len);
 

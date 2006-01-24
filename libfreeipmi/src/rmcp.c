@@ -62,17 +62,19 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr) 
 {
-  if (!fiid_obj_verify(obj_hdr))
+  if (!fiid_obj_valid(obj_hdr))
     {
       errno = EINVAL;
       return -1;
     }
   
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"ver", RMCP_VER_1_0);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"seq_num", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.class", message_class);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.reserved1", 0);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.ack",
-		RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
+                RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
@@ -91,17 +93,18 @@ fill_hdr_rmcp_asf (fiid_obj_t obj_hdr)
 int8_t
 fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
 {
-  if (!fiid_obj_verify(obj_cmd))
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"iana_enterprise_num",
-		htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
+                htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_type",
-		RMCP_ASF_MSG_TYPE_PRESENCE_PING);
+                RMCP_ASF_MSG_TYPE_PRESENCE_PING);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_tag", msg_tag);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_len", 0x00);
   return 0;
 }
@@ -112,13 +115,15 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
   uint32_t obj_max_cmd_len, obj_max_hdr_len;
   uint32_t obj_cmd_len, obj_hdr_len;
 
-  if (!(fiid_obj_verify(obj_hdr) 
-        && fiid_obj_verify(obj_cmd)
+  if (!(fiid_obj_valid(obj_hdr) 
+        && fiid_obj_valid(obj_cmd)
         && pkt))
     {
       errno = EINVAL;
       return -1;
     }
+
+  /* XXX TEMPLATE CHECKS */
 
   obj_max_hdr_len = fiid_obj_max_len_bytes (obj_hdr);
   ERR(obj_max_hdr_len != -1);
@@ -152,30 +157,30 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
 int8_t
 unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
 {
-  uint32_t obj_max_len, indx = 0;
+  uint32_t indx = 0;
+  int32_t len;
 
   if (!(pkt
-        && (!obj_hdr || fiid_obj_verify(obj_hdr)) 
-        && (!obj_cmd || fiid_obj_verify(obj_cmd))))
+        && (!obj_hdr || fiid_obj_valid(obj_hdr))
+        && (!obj_cmd || fiid_obj_valid(obj_cmd))))
     {
       errno = EINVAL;
       return -1;
     }
 
-  indx = 0;
-  obj_max_len = fiid_obj_max_len_bytes (obj_hdr);
+  /* XXX TEMPLATE CHECKS */
+
   if (obj_hdr)
-    ERR(fiid_obj_set_all(obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_max_len)));
-  indx += obj_max_len;
+    ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  obj_max_len = fiid_obj_max_len_bytes (obj_cmd);
   if (obj_cmd)
-    ERR(fiid_obj_set_all(obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, obj_max_len)));
-  indx += obj_max_len;
- 
+    ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
+
   return 0;
 }
 

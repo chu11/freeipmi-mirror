@@ -37,6 +37,15 @@
             goto cleanup; \
         } while(0) 
 
+#define IPMI_DEBUG_MAX_UNEXPECTED_BYTES 65536
+#define IPMI_DEBUG_MAX_UNEXPECTED_BITS  (IPMI_DEBUG_MAX_UNEXPECTED_BYTES*8)
+
+fiid_template_t tmpl_unexpected =
+{
+  {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data"},
+  {0, ""}
+};
+
 static int
 _write(int fd, void *buf, size_t n)
 {
@@ -169,7 +178,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_iterator_t iter = NULL;
 
-  if (!fiid_obj_verify(obj))
+  if (!fiid_obj_valid(obj))
     {
       errno = EINVAL;
       goto cleanup;
@@ -259,7 +268,6 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_msg_trlr_len;
-  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *rmcp_hdr = 
     "RMCP Header:\n"
@@ -276,7 +284,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   char *trlr_hdr =
     "IPMI Trailer:\n"
     "--------------";
-  char *extra_hdr =
+  char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
 
@@ -400,7 +408,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 
   /* Dump extra stuff if packet is extra long */
 
-  if (_output_str(fd, prefix_buf, extra_hdr) < 0)
+  if (_output_str(fd, prefix_buf, unexpected_hdr) < 0)
     return (-1);
   
   if (_output_byte_array(fd, prefix_buf, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
@@ -409,21 +417,27 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   return 0;
 }
 
+#endif /* TEST */
+
 int8_t 
 fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
-  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  char *rmcp_hdr = 
+  char *rmcp_hdr =
     "RMCP Header:\n"
     "------------";
   char *rmcp_cmd =
     "RMCP Command Data:\n"
     "------------------";
-  char *extra_hdr =
+  char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
+  fiid_obj_t obj_hdr = NULL;
+  fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_unexpected = NULL;
+  int32_t len;
+  int8_t rv = -1;
 
   if (!(pkt && tmpl_cmd))
     {
@@ -435,48 +449,65 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
     return (-1);
 
   /* Dump rmcp header */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_hdr_rmcp))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
-
+  
+  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_hdr) < 0)
+    goto cleanup;
+  
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
   
   /* Dump command data */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_cmd))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, buf, tmpl_cmd) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, pkt + indx, tmpl_cmd) != -1);
-  indx += fiid_obj_len_bytes (tmpl_cmd);
-
-  if (pkt_len <= indx)
-    return 0;
-
-  /* Dump extra stuff if packet is extra long */
-
-  if (_output_str(fd, prefix_buf, extra_hdr) < 0)
-    return (-1);
   
-  if (_output_byte_array(fd, prefix_buf, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
-    return (-1);
-
-  return 0;
+  if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_cmd, NULL, obj_cmd) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  /* Dump unexpected stuff */
+  
+  if (!(obj_unexpected = fiid_obj_create(tmpl_unexpected)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_unexpected, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_hdr)
+    fiid_obj_destroy(obj_hdr);
+  if (obj_cmd)
+    fiid_obj_destroy(obj_cmd);
+  if (obj_unexpected)
+    fiid_obj_destroy(obj_unexpected);
+  return (rv);
 }
 
+#if 0 /* TEST */
 
 uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
