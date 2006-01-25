@@ -2,6 +2,11 @@
 
 	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session): Cleanup code
 	logic.
+
+	* libfreeipmi/src/ipmi-netfn-spec.h: Add IPMI_NET_FN_VALID macro.
+	
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_lan_msg_hdr,
+	ipmi_lan_check_net_fn): Use new macro.
 	
 2006-01-23  A Balamurugan  <bala@zresearch.com>
 
