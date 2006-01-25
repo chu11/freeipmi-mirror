@@ -140,6 +140,8 @@ typedef struct fiid_obj *fiid_obj_t;
 
 typedef struct fiid_iterator *fiid_iterator_t;
 
+int32_t fiid_template_len (fiid_template_t tmpl);
+int32_t fiid_template_len_bytes (fiid_template_t tmpl);
 int8_t fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field);
 
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);

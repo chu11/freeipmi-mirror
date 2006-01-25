@@ -238,6 +238,8 @@ int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd)
 
 int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code);
 
+#if 0 /* TEST */
+
 int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
 				 uint8_t channel_medium_type);
 
@@ -297,7 +299,7 @@ int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 				   uint8_t channel_number,
 				   fiid_obj_t obj_cmd_rs);
 
-
+#endif /* TEST */
 
 #ifdef __cplusplus
 }

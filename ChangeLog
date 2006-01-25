@@ -21,7 +21,7 @@
 
 	* Makefile.am, rmcpping/: Begin support of rmcpping.
 
-	* libfreeipmi/, ipmiping/: Begin fiid reimplementation to support
+	* libfreeipmi/, ipmiping/: Begin reimplementation to support
 	ipmiping.
 	
 2006-01-23  Albert Chu <chu11@llnl.gov>

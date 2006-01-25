@@ -67,9 +67,6 @@ extern "C" {
     ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
    fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len"))
 
-#define IPMI_LAN_PKT_RQ_CHKSUM1_BLOCK_LEN                       \
-  fiid_obj_field_start_bytes (tmpl_lan_msg_hdr_rq, (uint8_t *)"chksum1") 
-
 #define IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_INDX(auth_type)                       \
   (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
    fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \

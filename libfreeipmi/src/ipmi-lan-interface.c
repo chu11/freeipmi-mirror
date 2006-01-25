@@ -258,6 +258,10 @@ fill_lan_msg_hdr (uint8_t net_fn,
 		  uint8_t rq_seq, 
 		  fiid_obj_t obj_msg)
 {
+  uint8_t chksum_buf[1024];
+  int32_t chksum_len;
+  ipmi_chksum_t chksum;
+
   if (!IPMI_NET_FN_VALID(net_fn)
       || (rs_lun > IPMI_BMC_IPMB_LUN_OEM_LUN2)
       || (rq_seq > IPMI_LAN_SEQ_NUM_MAX)
@@ -270,8 +274,16 @@ fill_lan_msg_hdr (uint8_t net_fn,
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"net_fn", net_fn);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"chksum1", 
-		ipmi_chksum (obj_msg, IPMI_LAN_PKT_RQ_CHKSUM1_BLOCK_LEN));
+  
+  if ((chksum_len = fiid_obj_get_block(obj_msg, 
+                                       "rs_addr", 
+                                       "rs_lun", 
+                                       chksum_buf, 
+                                       1024)) < 0)
+    return (-1);
+
+  chksum = ipmi_chksum(chksum_buf, chksum_len);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"chksum1", chksum);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_seq", rq_seq);

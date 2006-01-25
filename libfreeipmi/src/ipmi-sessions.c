@@ -58,19 +58,19 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
   char *auth_field;
 
   if (!(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
-      || !(tmpl_cmd && obj_hdr))
+        || !(tmpl_cmd && obj_hdr)))
     {
       errno = EINVAL;
       return (-1);
-    
-}
-  FIID_OBJ_SET (obj_hdr, tmpl_session, (uint8_t *)"auth_type", auth_type);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, (uint8_t *)"session_seq_num", inbound_seq_num);
-  FIID_OBJ_SET (obj_hdr, tmpl_session, (uint8_t *)"session_id", session_id);
+    }
 
-  if (fiid_obj_field_lookup (obj, (uint8_t *)"auth_code") == 1) 
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_seq_num", inbound_seq_num);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);
+
+  if (fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_code") == 1) 
     auth_field = "auth_code";
-  else if (fiid_obj_field_lookup (obj, (uint8_t *)"auth_calc_data") == 1)
+  else if (fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_calc_data") == 1)
     auth_field = "auth_calc_data";
   else
     {
@@ -85,7 +85,7 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR_EXIT (fiid_obj_clear_field (obj_hdr, '\0', (uint8_t *)auth_field) == 0);
+  ERR_EXIT (fiid_obj_clear_field (obj_hdr, (uint8_t *)auth_field) == 0);
   
   if (auth_code_data && auth_code_data_len > 0
       && (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
@@ -116,7 +116,7 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
               return (-1);
             }
           
-          if (auth_code_data_len > fiid_obj_field_len_bytes (tmpl_session, (uint8_t *)"auth_calc_data"))
+          if (auth_code_data_len > fiid_obj_field_len_bytes (obj_hdr, (uint8_t *)auth_field))
             {
               errno = EINVAL;
               return (-1);
@@ -129,15 +129,17 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
                                    auth_code_data_len) == 0);
     }
 
-  ERR(!((len_hdr = fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq)) < 0));
-  ERR(!((len_cmd = fiid_obj_len_bytes (tmpl_cmd)) < 0));
-  ERR(!((len_trlr = fiid_obj_len_bytes (tmpl_lan_msg_trlr)) < 0));
+  ERR(!((len_hdr = fiid_template_len_bytes (tmpl_lan_msg_hdr_rq)) < 0));
+  ERR(!((len_cmd = fiid_template_len_bytes (tmpl_cmd)) < 0));
+  ERR(!((len_trlr = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
 
   FIID_OBJ_SET (obj_hdr, 
                 (uint8_t *)"ipmi_msg_len", 
                 len_hdr + len_cmd + len_trlr);
   return (0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, uint32_t session_seq_num)
@@ -329,3 +331,5 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
   else
     return 0;
 }
+
+#endif /* TEST */

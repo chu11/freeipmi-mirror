@@ -124,6 +124,7 @@ _fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
   return (start);
 }
 
+#if 0
 static int32_t
 _fiid_obj_field_start_bytes (fiid_obj_t obj, uint8_t *field)
 {
@@ -135,6 +136,7 @@ _fiid_obj_field_start_bytes (fiid_obj_t obj, uint8_t *field)
   ERR (start != -1);
   return (BITS_ROUND_BYTES (start));
 }
+#endif
 
 static int32_t
 _fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
@@ -148,6 +150,7 @@ _fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
   return (end);
 }
 
+#if 0
 static int32_t
 _fiid_obj_field_end_bytes (fiid_obj_t obj, uint8_t *field)
 {
@@ -159,6 +162,7 @@ _fiid_obj_field_end_bytes (fiid_obj_t obj, uint8_t *field)
   ERR (end != -1);
   return (BITS_ROUND_BYTES (end));
 }
+#endif
 
 static int32_t
 _fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
@@ -177,6 +181,7 @@ _fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
   return (-1);
 }
 
+#if 0
 static int32_t
 _fiid_obj_field_len_bytes (fiid_obj_t obj, uint8_t *field)
 {
@@ -188,6 +193,7 @@ _fiid_obj_field_len_bytes (fiid_obj_t obj, uint8_t *field)
   ERR (len != -1);
   return (BITS_ROUND_BYTES (len));
 }
+#endif 
 
 int8_t
 fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
@@ -201,6 +207,41 @@ fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
     }
 
   return (0);
+}
+
+int32_t
+fiid_template_len (fiid_template_t tmpl)
+{
+  unsigned int temp;
+  int32_t len = 0;
+
+  if (!tmpl)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = _fiid_template_len(tmpl, &temp)) < 0)
+    return (-1);
+
+  return (len);
+}
+
+int32_t
+fiid_template_len_bytes (fiid_template_t tmpl)
+{
+  int32_t len;
+
+  if (!tmpl)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if ((len = fiid_template_len (tmpl)) < 0)
+    return (-1);
+
+  return (BITS_ROUND_BYTES (len));
 }
 
 fiid_obj_t 
@@ -1199,6 +1240,7 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
   return (end - start);
 }
 
+#if 0
 static int32_t
 _fiid_obj_max_block_len_bytes (fiid_obj_t obj,
                                uint8_t *field_start,
@@ -1212,6 +1254,7 @@ _fiid_obj_max_block_len_bytes (fiid_obj_t obj,
   ERR (len != -1);
   return (BITS_ROUND_BYTES (len));
 }
+#endif
 
 static int32_t
 _fiid_obj_block_len (fiid_obj_t obj,
@@ -1248,6 +1291,7 @@ _fiid_obj_block_len (fiid_obj_t obj,
   return (counter);
 }
 
+#if 0
 static int32_t
 _fiid_obj_block_len_bytes (fiid_obj_t obj,
                            uint8_t *field_start,
@@ -1261,6 +1305,7 @@ _fiid_obj_block_len_bytes (fiid_obj_t obj,
   ERR (len != -1);
   return (BITS_ROUND_BYTES (len));
 }
+#endif
 
 int8_t 
 fiid_obj_set_block (fiid_obj_t obj, 

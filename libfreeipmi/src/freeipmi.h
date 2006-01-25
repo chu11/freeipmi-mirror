@@ -203,16 +203,14 @@ extern "C" {
 #include "defaults-locate.h"
 #endif /* TEST */
 #include "rmcp.h"
-#if 0 /* TEST */
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
-#include "ipmi-semaphores.h"
-#include "ipmi-interface.h"
-#endif /* TEST */
-#include "ipmi-sessions.h"
 #if 0 /* TEST */
-#include "ipmi-ipmb-interface.h"
+#include "ipmi-semaphores.h"
 #endif /* TEST */
+#include "ipmi-interface.h"
+#include "ipmi-sessions.h"
+#include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
 #if 0 /* TEST */
 #include "ipmi-kcs-interface.h"
@@ -323,16 +321,14 @@ extern char *__progname;
 #include <freeipmi/defaults-locate.h>
 #endif /* TEST */
 #include <freeipmi/rmcp.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
+#if 0
 #include <freeipmi/ipmi-semaphores.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-interface.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-sessions.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-ipmb-interface.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-lan-interface.h>
 #if 0 /* TEST */
 #include <freeipmi/ipmi-kcs-interface.h>
