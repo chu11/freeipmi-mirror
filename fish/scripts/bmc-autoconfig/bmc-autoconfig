@@ -219,6 +219,23 @@ main ()
 		${BMC_CONFIG} --commit -k "Lan_Conf:Subnet_Mask=${nm}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:Default_Gateway_IP_Address=${gw}";
 	    }
+	    cat <<EOF
+
+
+BMC configuration is done.
+
+Note:-
+Passwords are not set or cleared.  If you want to set password for BMC
+user, run
+
+bmc-config --commit -f 'User<N>.Password=<PASSWORD>'
+
+here,
+
+<N>        -- BMC user id.  Normally this is 1 to 4.
+<PASSWORD> -- Your new password for the user.
+
+EOF
 	    ;;
 	*)
 	    cat <<EOF
