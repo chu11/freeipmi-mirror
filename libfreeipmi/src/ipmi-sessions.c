@@ -84,7 +84,7 @@ fill_hdr_session  (fiid_template_t tmpl_session, uint8_t auth_type, uint32_t inb
    * completely cleared before setting anything.
    */
   ERR_EXIT (fiid_obj_memset_field (obj_hdr, '\0', 
-                                   tmpl_session, (uint8_t *)"auth_calc_data") == 0);
+                                   tmpl_session, (uint8_t *)auth_field) == 0);
   
   if (auth_code_data && auth_code_data_len > 0
       && (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
