@@ -1,5 +1,9 @@
 2006-01-24  A Balamurugan  <bala@zresearch.com>
 
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: improved.
+
+2006-01-24  A Balamurugan  <bala@zresearch.com>
+
 	* fish/scripts/bmc-autoconfig/bmc-config-template: new file.
 	
 	* fish/scripts/bmc-autoconfig/Makefile.am: updated.

@@ -214,6 +214,7 @@ main ()
 	    ip=$(accept_input get_ip_address validate_ip_address) &&
 	    nm=$(accept_input get_netmask validate_ip_address) &&
 	    gw=$(accept_input get_gateway_ip_address validate_ip_address) && {
+		echo "Configuring BMC now.  This may take awhile..."
 		${BMC_CONFIG} --commit -f "${TEMPLATE}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:IP_Address=${ip}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:Subnet_Mask=${nm}";
