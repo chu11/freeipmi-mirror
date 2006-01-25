@@ -261,10 +261,8 @@ fiid_obj_dump (int fd, fiid_obj_t obj)
   return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj);
 }
 
-#if 0 /* TEST */
-
 int8_t
-fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_msg_trlr_len;
@@ -287,137 +285,216 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
+  fiid_obj_t obj_rmcp_hdr = NULL;
+  fiid_obj_t obj_session_hdr = NULL;
+  fiid_obj_t obj_msg_hdr = NULL;
+  fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_msg_trlr = NULL;
+  fiid_obj_t obj_unexpected = NULL;
+  int32_t len;
+  int8_t rv = -1;
+  uint64_t auth_type;
 
-  if (!(pkt && tmpl_session && tmpl_cmd))
+  if (!(pkt && tmpl_msg_hdr && tmpl_cmd))
     {
       errno = EINVAL;
-      return (-1);
+      goto cleanup;
     }
 
   if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
-    return (-1);
+    goto cleanup;
 
   /* Dump rmcp header */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_hdr_rmcp))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
-
-  if (pkt_len <= indx)
-    return 0;
   
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  if ((pkt_len - indx) < fiid_obj_field_end_bytes (tmpl_session, (uint8_t *)"auth_type"))
+  if (!(obj_session_hdr = fiid_obj_create(tmpl_hdr_session_auth)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_block(obj_session_hdr, "auth_type", "session_id", pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (pkt_len <= indx)
     {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
+      if (fiid_obj_dump_perror(fd, 
+			       prefix_buf, 
+			       session_hdr, 
+			       NULL, 
+			       obj_session_hdr) < 0)
+	goto cleanup;
+
+      rv = 0;
+      goto cleanup;
     }
-  else 
+
+  if (fiid_obj_get(obj_session_hdr, "auth_type", &auth_type) < 0)
+    goto cleanup;
+
+  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
-      uint8_t auth_type;
-      uint32_t auth_type_offset;
-
-      auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_session, (uint8_t *)"auth_type");
-      auth_type = pkt[auth_type_offset];
-
-      if (auth_type == IPMI_SESSION_AUTH_TYPE_NONE)
-        tmpl_session = tmpl_hdr_session;
-      else if (fiid_obj_field_lookup(tmpl_session, (uint8_t *)"auth_calc_data"))
-        tmpl_session = tmpl_hdr_session_auth;
-
-      if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_session))
-        {
-          ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
-          memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-          memcpy(buf, pkt + indx, (pkt_len - indx)); 
-          ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
-        }
-      else 
-        ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, pkt + indx, tmpl_session) != -1);
+      if ((len = fiid_obj_set_data(obj_session_hdr,
+				   "auth_code",
+				   pkt + indx,
+				   pkt_len - indx)) < 0)
+	goto cleanup;
+      indx += len;
+      
     }
-  indx += fiid_obj_len_bytes (tmpl_session);
+  
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      if (fiid_obj_dump_perror(fd, 
+			       prefix_buf, 
+			       session_hdr, 
+			       NULL, 
+			       obj_session_hdr) < 0)
+	goto cleanup;
+
+      rv = 0;
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_set_data(obj_session_hdr,
+			       "ipmi_msg_len",
+			       pkt + indx,
+			       pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+
+  if (fiid_obj_dump_perror(fd, 
+			   prefix_buf, 
+			   session_hdr, 
+			   NULL, 
+			   obj_session_hdr) < 0)
+    goto cleanup;
+
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* Dump message header */
 
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_msg_hdr))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_msg_hdr) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, buf, tmpl_msg_hdr) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, pkt + indx, tmpl_msg_hdr) != -1);
-  indx += fiid_obj_len_bytes (tmpl_msg_hdr);
-
+  if (!(obj_msg_hdr = fiid_obj_create(tmpl_msg_hdr)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_msg_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, msg_hdr, NULL, obj_msg_hdr) < 0)
+    goto cleanup;
+  
   if (pkt_len <= indx)
-    return 0;
-
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
-  obj_msg_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* Dump command data */
+
+  if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+    goto cleanup;
+
+  if (!(obj_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+    goto cleanup;
+  
+  obj_cmd_len = fiid_obj_max_len_bytes (obj_cmd);
+  obj_msg_trlr_len = fiid_obj_max_len_bytes (obj_msg_trlr);
 
   if ((pkt_len - indx) <= obj_cmd_len)
     {
       if ((pkt_len - indx) > obj_msg_trlr_len)
-        obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
+	obj_cmd_len = pkt_len - indx - obj_msg_trlr_len;
       else
-        obj_cmd_len = (pkt_len - indx);
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, obj_cmd_len); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, buf, tmpl_cmd) != -1);
+	obj_cmd_len = 0;
     }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, pkt + indx, tmpl_cmd) != -1);
-  indx += obj_cmd_len;
 
-  if (pkt_len <= indx)
-    return 0;
+  if (obj_cmd_len)
+    {
+      if ((len = fiid_obj_set_all(obj_cmd,
+				  pkt + indx, 
+				  pkt_len - indx)) < 0)
+	goto cleanup;
+      indx += len;
+      
+      if (fiid_obj_dump_perror(fd, 
+			       prefix_buf, 
+			       cmd_hdr, 
+			       NULL, 
+			       obj_cmd) < 0)
+	goto cleanup;
+
+      if (pkt_len <= indx)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
+    }
 
   /* Dump trailer */
 
-  if ((pkt_len - indx) < obj_msg_trlr_len)
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_lan_msg_trlr) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, buf, tmpl_lan_msg_trlr) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, pkt + indx, tmpl_lan_msg_trlr) != -1);
-  indx += obj_msg_trlr_len;
-
-  if (pkt_len <= indx)
-    return 0;
-
-  /* Dump extra stuff if packet is extra long */
-
-  if (_output_str(fd, prefix_buf, unexpected_hdr) < 0)
-    return (-1);
+  if ((len = fiid_obj_set_all(obj_msg_trlr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
   
-  if (_output_byte_array(fd, prefix_buf, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
-    return (-1);
+  if (fiid_obj_dump_perror(fd, prefix_buf, trlr_hdr, NULL, obj_msg_trlr) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
-  return 0;
+  /* Dump unexpected stuff */
+  
+  if (!(obj_unexpected = fiid_obj_create(tmpl_unexpected)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_unexpected, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (fiid_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_rmcp_hdr)
+    fiid_obj_destroy(obj_rmcp_hdr);
+  if (obj_session_hdr)
+    fiid_obj_destroy(obj_session_hdr);
+  if (obj_msg_hdr)
+    fiid_obj_destroy(obj_msg_hdr);
+  if (obj_cmd)
+    fiid_obj_destroy(obj_cmd);
+  if (obj_msg_trlr)
+    fiid_obj_destroy(obj_msg_trlr);
+  if (obj_unexpected)
+    fiid_obj_destroy(obj_unexpected);
+  return (rv);
 }
-
-#endif /* TEST */
 
 int8_t 
 fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
@@ -433,7 +510,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
   char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
-  fiid_obj_t obj_hdr = NULL;
+  fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_unexpected = NULL;
   int32_t len;
@@ -450,14 +527,14 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
 
   /* Dump rmcp header */
   
-  if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
     goto cleanup;
   
-  if ((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0)
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_hdr) < 0)
+  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -498,8 +575,8 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
   
   rv = 0;
  cleanup:
-  if (obj_hdr)
-    fiid_obj_destroy(obj_hdr);
+  if (obj_rmcp_hdr)
+    fiid_obj_destroy(obj_rmcp_hdr);
   if (obj_cmd)
     fiid_obj_destroy(obj_cmd);
   if (obj_unexpected)

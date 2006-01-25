@@ -21,8 +21,12 @@
 
 	* Makefile.am, rmcpping/: Begin support of rmcpping.
 
-	* libfreeipmi/, ipmiping/: Begin reimplementation to support
-	ipmiping.
+	* libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_lan),
+	libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
+	libfreeipmi/src/ipmi-lan-interface.c (fill_lan_msg_hdr),
+	libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_get_channel_auth_caps): Begin reimplementation to
+	support ipmiping.
 	
 2006-01-23  Albert Chu <chu11@llnl.gov>
 
