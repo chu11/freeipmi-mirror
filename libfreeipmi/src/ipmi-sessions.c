@@ -68,7 +68,7 @@ fill_hdr_session  (fiid_template_t tmpl_session, uint8_t auth_type, uint32_t inb
 
   if (fiid_obj_field_lookup (tmpl_session, (uint8_t *)"auth_code") == 1) 
     auth_field = "auth_code";
-  else if (fiid_obj_field_lookup (tmpl_session, (uint8_t *)"auth_calc_data"))
+  else if (fiid_obj_field_lookup (tmpl_session, (uint8_t *)"auth_calc_data") == 1)
     auth_field = "auth_calc_data";
   else
     {
