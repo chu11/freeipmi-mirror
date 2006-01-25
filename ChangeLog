@@ -18,8 +18,8 @@
 2006-01-25  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/ipmi-lan-interface.h,
-	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
-	Continue reimplementation.
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
+	unassemble_ipmi_lan_pkt): Continue reimplementation.
 
 	* libfreeipmi/src/fiid.c (fiid_obj_get_data, fiid_obj_get_all,
 	fiid_obj_get_block): Use errno EMSGSIZE when appropriate.

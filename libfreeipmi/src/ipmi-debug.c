@@ -328,7 +328,11 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   if (!(obj_session_hdr = fiid_obj_create(tmpl_hdr_session_auth)))
     goto cleanup;
   
-  if ((len = fiid_obj_set_block(obj_session_hdr, "auth_type", "session_id", pkt + indx, pkt_len - indx)) < 0)
+  if ((len = fiid_obj_set_block(obj_session_hdr, 
+                                (uint8_t *)"auth_type", 
+                                (uint8_t *)"session_id", 
+                                pkt + indx, 
+                                pkt_len - indx)) < 0)
     goto cleanup;
   indx += len;
   
@@ -351,7 +355,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
       if ((len = fiid_obj_set_data(obj_session_hdr,
-				   "auth_code",
+				   (uint8_t *)"auth_code",
 				   pkt + indx,
 				   pkt_len - indx)) < 0)
 	goto cleanup;

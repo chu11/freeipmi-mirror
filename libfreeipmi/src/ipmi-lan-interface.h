@@ -107,8 +107,6 @@ int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 
 int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt, 
 				uint32_t pkt_len, 
-				fiid_template_t tmpl_hdr_session, 
-				fiid_template_t tmpl_cmd, 
 				fiid_obj_t obj_hdr_rmcp, 
 				fiid_obj_t obj_hdr_session, 
 				fiid_obj_t obj_msg_hdr, 

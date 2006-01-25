@@ -29,6 +29,8 @@ libfreeipmi:
   * int wraparound corner cases - fiid
     - uint32_t for max_field_len, but some funcs return int32_t
     - counters, fiid_obj_create
+  * test unsuccesfful commands
+  * test bad seq nums
   
 fish:
 -----

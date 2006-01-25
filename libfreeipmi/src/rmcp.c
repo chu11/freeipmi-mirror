@@ -161,24 +161,22 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t
   int32_t len;
 
   if (!(pkt
-        && (!obj_hdr || fiid_obj_valid(obj_hdr))
-        && (!obj_cmd || fiid_obj_valid(obj_cmd))))
+        && fiid_obj_valid(obj_hdr)
+        && fiid_obj_valid(obj_cmd)))
     {
       errno = EINVAL;
       return -1;
     }
 
   /* XXX TEMPLATE CHECKS */
-
-  if (obj_hdr)
-    ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  
+  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  if (obj_cmd)
-    ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+  ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   return 0;
