@@ -21,8 +21,9 @@
 
 	* Makefile.am, rmcpping/: Begin support of rmcpping.
 
-	* Merge al_fiid_rearchitect_head_merge_3
-
+	* libfreeipmi/, ipmiping/: Begin fiid reimplementation to support
+	ipmiping.
+	
 2006-01-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Various new API

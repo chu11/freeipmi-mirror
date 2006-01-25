@@ -267,14 +267,15 @@ fill_lan_msg_hdr (uint8_t net_fn,
       return -1;
     }
 
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"net_fn", net_fn);
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rs_lun", rs_lun);
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"chksum1", 
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"net_fn", net_fn);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"chksum1", 
 		ipmi_chksum (obj_msg, IPMI_LAN_PKT_RQ_CHKSUM1_BLOCK_LEN));
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
-  FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rq_seq", rq_seq);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_seq", rq_seq);
+
   return (0);
 }
 
