@@ -1013,7 +1013,7 @@ fiid_obj_get_data (fiid_obj_t obj,
 
   if (bytes_len > data_len)
     {
-      errno = EINVAL;
+      errno = EMSGSIZE;
       return (-1);
     }
 
@@ -1111,7 +1111,7 @@ fiid_obj_get_all (fiid_obj_t obj,
 
   if (data_len < bytes_len)
     {
-      errno = EINVAL;
+      errno = EMSGSIZE;
       return -1;
     }
 
@@ -1473,7 +1473,7 @@ fiid_obj_get_block (fiid_obj_t obj,
 
   if (data_len < block_bytes_set_len)
     {
-      errno = EINVAL;
+      errno = EMSGSIZE;
       return (-1);
     }
 

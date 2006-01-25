@@ -234,11 +234,11 @@ extern "C" {
 #include "ipmi-sol-cmds.h"
 #endif /* TEST */
 #include "ipmi-debug.h"
-#if 0 /* TEST */
 #include "ipmi-md2.h"
 #include "ipmi-md5.h"
 #include "ipmi-sha1.h"
 #include "ipmi-hmac.h"
+#if 0 /* TEST */
 #include "ipmi-sdr-repo-cache.h"
 #include "ipmi-sensor-utils.h"
 #include "ipmi-watchdog.h"

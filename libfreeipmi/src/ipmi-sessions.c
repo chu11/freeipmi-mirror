@@ -57,8 +57,9 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
 
   char *auth_field;
 
-  if (!(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
-        || !(tmpl_cmd && obj_hdr)))
+  if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+      || !tmpl_cmd 
+      || !fiid_obj_valid(obj_hdr))
     {
       errno = EINVAL;
       return (-1);

@@ -352,7 +352,7 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
                                 uint8_t max_priv_level, 
 				fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd 
+  if (!fiid_obj_valid(obj_cmd)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_num)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
     {
