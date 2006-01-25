@@ -34,10 +34,14 @@ _init ()
 	echo "bmc-config not found, fatal!";
 	return 1;
     }
-
-
+    
+    if [ ! -f ${TEMPLATE} ]; then
+	echo "${ME}: ${TEMPLATE} file not found"
+	return 1;
+    fi
+    
     exec 3>&1
-
+    
     ip="0.0.0.0";
     nm="0.0.0.0";
     gw="0.0.0.0";
@@ -210,11 +214,29 @@ main ()
 	    ip=$(accept_input get_ip_address validate_ip_address) &&
 	    nm=$(accept_input get_netmask validate_ip_address) &&
 	    gw=$(accept_input get_gateway_ip_address validate_ip_address) && {
+		echo "Configuring BMC now.  This may take awhile..."
 		${BMC_CONFIG} --commit -f "${TEMPLATE}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:IP_Address=${ip}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:Subnet_Mask=${nm}";
 		${BMC_CONFIG} --commit -k "Lan_Conf:Default_Gateway_IP_Address=${gw}";
 	    }
+	    cat <<EOF
+
+
+BMC configuration is done.
+
+Note:-
+Passwords are not set or cleared.  If you want to set password for BMC
+user, run
+
+bmc-config --commit -f 'User<N>.Password=<PASSWORD>'
+
+here,
+
+<N>        -- BMC user id.  Normally this is 1 to 4.
+<PASSWORD> -- Your new password for the user.
+
+EOF
 	    ;;
 	*)
 	    cat <<EOF

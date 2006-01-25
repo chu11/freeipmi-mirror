@@ -86,6 +86,23 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-01-24  A Balamurugan  <bala@zresearch.com>
+
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: improved.
+
+2006-01-24  A Balamurugan  <bala@zresearch.com>
+
+	* fish/scripts/bmc-autoconfig/bmc-config-template: new file.
+	
+	* fish/scripts/bmc-autoconfig/Makefile.am: updated.
+
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: improved.
+
+2006-01-24  A Balamurugan  <bala@zresearch.com>
+
+	* fish/scripts/bmc-autoconfig/bmc-autoconfig: checks of template
+	file existence.
+
 2006-01-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session): Cleanup code

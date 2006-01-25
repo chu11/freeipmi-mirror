@@ -641,7 +641,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
     goto cleanup;
   indx += len;
 
-  /* auth_code generated last.  Save pointers for later calculate */
+  /* auth_code generated last.  Save pointers for later calculation */
   if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
       || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
       || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
@@ -706,7 +706,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   indx += len;
   msg_data_count += len;
 
-  /* Auth type must be done last, some authentication like md2 and md5
+  /* Auth code must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated
    * beforehand
    */
