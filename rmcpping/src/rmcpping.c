@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.4.2.3 2006-01-24 18:42:40 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.4.2.4 2006-01-25 02:19:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -52,7 +52,7 @@ Fiid_obj_create(fiid_template_t tmpl)
  
   assert(tmpl != NULL);
  
-  if (!(obj = fiid_obj_create(tmpl)))
+  if ((obj = fiid_obj_create(tmpl)) == NULL)
     ipmi_ping_err_exit("fiid_obj_create: %s", strerror(errno));
  
   return obj;

@@ -360,16 +360,15 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
       return (-1);
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_rq, (uint8_t *)"cmd", 
-		IPMI_CMD_GET_CHANNEL_AUTH_CAPS);
-
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_rq,
-		(uint8_t *)"channel_num", channel_num); 
-
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_channel_auth_caps_rq, (uint8_t *)"max_priv_level", 
-		max_priv_level);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_AUTH_CAPS);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_num", channel_num); 
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"max_priv_level", max_priv_level);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
   return (0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_get_channel_auth_caps (int sockfd, 
@@ -1652,3 +1651,4 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */

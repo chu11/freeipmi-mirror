@@ -69,9 +69,40 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-01-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session): Cleanup code
+	logic.
+	
+2006-01-23  A Balamurugan  <bala@zresearch.com>
+
+	* fish/src/scm-procedures.c (ex_sel_get_first_entry_raw,
+	ex_sel_get_next_entry_raw, ex_sel_get_first_entry_hex,
+	ex_sel_get_next_entry_hex, ex_sel_get_info_binary,
+	ex_sel_get_first_entry, ex_sel_get_next_entry,
+	ex_sel_delete_entry, ex_sel_clear, ex_sel_get_clear_status):
+	display appropriate error/warning messages.
+
 2006-01-23  Albert Chu <chu11@llnl.gov>
 
 	* rmcpping/src/rmcpping.c (createpacket, parsepacket): Fix typos.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_check.c
+	(_check_session_id), ipmipower/src/ipmipower_config.c
+	(ipmipower_config_setup, ipmipower_config_cmdline_parse,
+	ipmipower_config_conffile_parse), ipmipower/src/ipmipower_prompt.c
+	(_cmd_advanced, _cmd_config, ipmipower_prompt_process_cmdline):
+	Support new --accept-session-id-zero option.
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c
+	(_recv_packet), ipmipower/src/ipmipower_config.c
+	(ipmipower_config_setup, ipmipower_config_cmdline_parse,
+	ipmipower_config_conffile_parse), ipmipower/src/ipmipower_prompt.c
+	(_cmd_advanced, _cmd_config, ipmipower_prompt_process_cmdline):
+	Support new --check-unexpected-authcode option.
+
+	* ipmipower/ipmipower.8.in, ipmipower/ipmipower.conf.5.in:
+	Document new options.
 	
 2006-01-22  A Balamurugan  <bala@zresearch.com>
 

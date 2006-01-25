@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.1 2006-01-21 09:17:22 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.2 2006-01-25 02:19:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,32 +42,31 @@
 /* IPMI has a 6 bit sequence number */
 #define IPMI_RQ_SEQ_MAX  0x3F
 
-void *
-Fiid_obj_calloc(fiid_template_t tmpl)
+fiid_obj_t
+Fiid_obj_create(fiid_template_t tmpl)
 {
-  void *ptr;
+  fiid_obj_t obj;
 
   assert(tmpl != NULL);
 
-  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
-    ipmi_ping_err_exit("fiid_obj_calloc: %s", strerror(errno));
+  if ((obj = fiid_obj_create(tmpl)) == NULL)
+    ipmi_ping_err_exit("fiid_obj_create: %s", strerror(errno));
 
   return ptr;
 }
 
 void 
-Fiid_obj_free(fiid_obj_t obj)
+Fiid_obj_destroy(fiid_obj_t obj)
 {
   fiid_obj_free(obj);
 }
 
 void 
-Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, 
-             uint8_t *field, uint64_t *val)
+Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 {
-  assert(obj != NULL && tmpl != NULL && field != NULL && val != NULL);
+  assert(obj != NULL && field != NULL && val != NULL);
 
-  if (fiid_obj_get(obj, tmpl, field, val) < 0)
+  if (fiid_obj_get(obj, field, val) < 0)
     ipmi_ping_err_exit("fiid_obj_get: %s", strerror(errno));
 }
 
@@ -91,10 +90,10 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rq);
-  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rq);
+  obj_hdr_rmcp = Fiid_obj_create(tmpl_hdr_rmcp);
+  obj_hdr_session = Fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = Fiid_obj_create(tmpl_lan_msg_hdr_rq);
+  obj_cmd = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq);
     
   if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
@@ -130,10 +129,10 @@ createpacket(char *buffer,
     }
 #endif
 
-  Fiid_obj_free(obj_hdr_rmcp);
-  Fiid_obj_free(obj_hdr_session);
-  Fiid_obj_free(obj_msg_hdr);
-  Fiid_obj_free(obj_cmd);
+  Fiid_obj_destroy(obj_hdr_rmcp);
+  Fiid_obj_destroy(obj_hdr_session);
+  Fiid_obj_destroy(obj_msg_hdr);
+  Fiid_obj_destroy(obj_cmd);
 
   return len;
 }
@@ -164,11 +163,11 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rs);
-  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rs);
-  obj_msg_trlr = Fiid_obj_calloc(tmpl_lan_msg_trlr);
+  obj_hdr_rmcp = Fiid_obj_create(tmpl_hdr_rmcp);
+  obj_hdr_session = Fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = Fiid_obj_create(tmpl_lan_msg_hdr_rs);
+  obj_cmd = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs);
+  obj_msg_trlr = Fiid_obj_create(tmpl_lan_msg_trlr);
 
 #ifndef NDEBUG
   if (debug)
@@ -286,11 +285,11 @@ parsepacket(char *buffer,
     
   retval = 1;
  cleanup:
-  Fiid_obj_free(obj_hdr_rmcp);
-  Fiid_obj_free(obj_hdr_session);
-  Fiid_obj_free(obj_msg_hdr);
-  Fiid_obj_free(obj_cmd);
-  Fiid_obj_free(obj_msg_trlr);
+  Fiid_obj_destroy(obj_hdr_rmcp);
+  Fiid_obj_destroy(obj_hdr_session);
+  Fiid_obj_destroy(obj_msg_hdr);
+  Fiid_obj_destroy(obj_cmd);
+  Fiid_obj_destroy(obj_msg_trlr);
   return retval;
 }
 

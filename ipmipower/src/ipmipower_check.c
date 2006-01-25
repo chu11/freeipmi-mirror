@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.8.2.1 2006-01-21 09:17:22 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.8.2.2 2006-01-25 02:19:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,6 +38,8 @@
 #include "ipmipower_check.h"
 #include "ipmipower_packet.h"
 #include "ipmipower_wrappers.h"      
+
+extern struct ipmipower_config *conf;
 
 static int 
 _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
@@ -181,6 +183,11 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
                    (uint8_t *)"session_id", &actv_res_session_id);
     }
   
+  if (session_id != actv_res_session_id && session_id != 0)
+    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
+        ip->ic->hostname, ip->protocol_state, session_id, 
+        actv_res_session_id);
+  
   /* IPMI Workaround (achu)
    *
    * Discovered on Tyan S2882 w/ m3289 BMC
@@ -190,13 +197,10 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
    * session id is correct if it is equal to zero.
    */
 
-  if (session_id != actv_res_session_id && session_id != 0)
-    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
-        ip->ic->hostname, ip->protocol_state, session_id, 
-        actv_res_session_id);
-  
-  return (((session_id == actv_res_session_id)
-           || (session_id == 0)) ? 1 : 0);
+  if (conf->accept_session_id_zero == IPMIPOWER_TRUE && !session_id)
+    return (1);
+
+  return (session_id == actv_res_session_id);
 }
 
 static int 

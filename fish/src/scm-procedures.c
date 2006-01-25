@@ -233,8 +233,7 @@ ex_sel_get_first_entry_raw ()
     }
   else 
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
     }
   return scm_sel_record;
@@ -257,8 +256,7 @@ ex_sel_get_next_entry_raw ()
     }
   else 
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
     }
   return scm_sel_record;
@@ -286,8 +284,7 @@ ex_sel_get_first_entry_hex ()
     }
   else 
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
     }
   return SCM_BOOL_F;
@@ -315,8 +312,7 @@ ex_sel_get_next_entry_hex ()
     }
   else 
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
     }
   return SCM_BOOL_F;
@@ -347,8 +343,7 @@ ex_sel_get_info_binary ()
     }
   else 
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
     }
   return SCM_BOOL_F;
@@ -365,8 +360,7 @@ ex_sel_get_first_entry ()
 				fi_get_seld (), 
 				record_data, SEL_RECORD_SIZE) != 0)
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
       return SCM_EOL;
     }
@@ -411,8 +405,7 @@ ex_sel_get_next_entry ()
 			       fi_get_seld (), 
 			       record_data, SEL_RECORD_SIZE) != 0)
     {
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
       return SCM_EOL;
     }
@@ -463,8 +456,7 @@ ex_sel_delete_entry (SCM scm_record_id)
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
@@ -484,8 +476,7 @@ ex_sel_delete_entry (SCM scm_record_id)
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
@@ -507,8 +498,7 @@ ex_sel_clear ()
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
@@ -528,8 +518,7 @@ ex_sel_clear ()
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
@@ -551,8 +540,7 @@ ex_sel_get_clear_status ()
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
@@ -572,8 +560,7 @@ ex_sel_get_clear_status ()
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
-      fprintf (stderr, "%s: %s\n", 
-	       program_invocation_short_name, 
+      fprintf (stderr, "%s\n", 
 	       errmsg);
       return SCM_BOOL_F;
     }
