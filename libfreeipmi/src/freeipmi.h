@@ -208,7 +208,9 @@ extern "C" {
 #include "ipmi-netfn-spec.h"
 #include "ipmi-semaphores.h"
 #include "ipmi-interface.h"
+#endif /* TEST */
 #include "ipmi-sessions.h"
+#if 0 /* TEST */
 #include "ipmi-ipmb-interface.h"
 #endif /* TEST */
 #include "ipmi-lan-interface.h"
@@ -216,7 +218,9 @@ extern "C" {
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
 #include "ipmi-ssif-interface.h"
+#endif /* TEST */
 #include "ipmi-msg-support-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-chassis-cmds.h"
 #include "ipmi-dev-global-cmds.h"
 #include "ipmi-sdr-repo-cmds.h"
@@ -324,7 +328,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-semaphores.h>
 #include <freeipmi/ipmi-interface.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-sessions.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-ipmb-interface.h>
 #endif /* TEST */
 #include <freeipmi/ipmi-lan-interface.h>
@@ -332,7 +338,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-ssif-interface.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-msg-support-cmds.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-dev-global-cmds.h>
 #include <freeipmi/ipmi-sdr-record-types.h>

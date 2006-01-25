@@ -21,8 +21,6 @@
 
 #include "freeipmi.h"
 
-#if 0 /* TEST */
-
 /* IPMI LAN Message Request Header */
 fiid_template_t tmpl_lan_msg_hdr_rq =
   {
@@ -55,6 +53,8 @@ fiid_template_t tmpl_lan_msg_trlr =
     {8, "chksum2"},
     {0, ""}
   };
+
+#if 0 /* TEST */
 
 int 
 get_rq_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
@@ -250,13 +250,15 @@ get_rs_checksum2 (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_lan_msg_hdr (uint8_t net_fn, 
 		  uint8_t rs_lun, 
 		  uint8_t rq_seq, 
 		  fiid_obj_t obj_msg)
 {
-  if ((net_fn > IPMI_NET_FN_TRANSPORT_RS)
+  if (!IPMI_NET_FN_VALID(net_fn)
       || (rs_lun > IPMI_BMC_IPMB_LUN_OEM_LUN2)
       || (rq_seq > IPMI_LAN_SEQ_NUM_MAX)
       || (obj_msg == NULL))
@@ -275,6 +277,8 @@ fill_lan_msg_hdr (uint8_t net_fn,
   FIID_OBJ_SET (obj_msg, tmpl_lan_msg_hdr_rq, (uint8_t *)"rq_seq", rq_seq);
   return (0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 fill_lan_msg_hdr2 (ipmi_device_t *dev)
@@ -1761,7 +1765,9 @@ ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr,
 {
   uint64_t net_fn_recv;
 
-  if (!(obj_msg_hdr && tmpl_msg_hdr))
+  if (!(obj_msg_hdr 
+        && tmpl_msg_hdr 
+        && IPMI_NET_FN_VALID(net_fn)))
     {
       errno = EINVAL;
       return (-1);

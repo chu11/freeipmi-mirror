@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.2 2006-01-25 02:19:57 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.3 2006-01-25 02:45:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@ createpacket(char *buffer,
   if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
 
-  if (fill_hdr_session(tmpl_hdr_session_auth_calc, IPMI_SESSION_AUTH_TYPE_NONE,
+  if (fill_hdr_session(IPMI_SESSION_AUTH_TYPE_NONE,
                        0, 0, NULL, 0, tmpl_cmd_get_channel_auth_caps_rq, 
                        obj_hdr_session) < 0)
     ipmi_ping_err_exit("fill_hdr_session: %s", strerror(errno));
