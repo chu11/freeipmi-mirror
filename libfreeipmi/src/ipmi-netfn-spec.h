@@ -53,9 +53,10 @@ extern "C" {
    0x30 to 0x3F IPMI_NET_FN_CNTRLR_OEM_GRP
 */
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_NET_FN_VALID(__net_fn) \
-        (((__net_fn) >= IPMI_NET_FN_CHASSIS_RQ \
-          && (__net_fn) <= IPMI_NET_FN_TRANSPORT_RS) ? 1 : 0)
+        (((__net_fn+1) >= IPMI_NET_FN_CHASSIS_RS \
+          && (__net_fn-1) <= IPMI_NET_FN_TRANSPORT_RQ) ? 1 : 0)
 
 typedef struct net_fn
 {
