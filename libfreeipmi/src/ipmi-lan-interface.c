@@ -661,7 +661,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   indx += obj_len;
   msg_data_count += obj_len;
 
-  /* Auth type must be done last, some authentication like md2 and md5
+  /* Auth code must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated
    * beforehand
    */
