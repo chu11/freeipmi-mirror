@@ -627,7 +627,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
           obj_len);
   indx += obj_len;
 
-  /* auth_code generated last.  Save pointers for later calculate */
+  /* auth_code generated last.  Save pointers for later calculation */
   if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
       || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
       || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
