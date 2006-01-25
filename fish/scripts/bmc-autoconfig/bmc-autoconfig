@@ -34,10 +34,14 @@ _init ()
 	echo "bmc-config not found, fatal!";
 	return 1;
     }
-
-
+    
+    if [ ! -f ${TEMPLATE} ]; then
+	echo "${ME}: ${TEMPLATE} file not found"
+	return 1;
+    fi
+    
     exec 3>&1
-
+    
     ip="0.0.0.0";
     nm="0.0.0.0";
     gw="0.0.0.0";
