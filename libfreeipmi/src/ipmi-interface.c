@@ -476,6 +476,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     {
     case IPMI_DEVICE_LAN:
       status = ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
+      break;
     case IPMI_DEVICE_KCS:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -488,6 +489,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SSIF:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -500,6 +502,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
     default:
