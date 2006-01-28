@@ -53,6 +53,12 @@ extern "C" {
    */
 #define IPMI_BMC_IPMB_LUN_OEM_LUN2     0x03
 
+#define IPMI_BMC_LUN_VALID(__lun) \
+        (((__lun) == IPMI_BMC_IPMB_LUN_BMC \
+	  || (__lun) == IPMI_BMC_IPMB_LUN_OEM_LUN1 \
+	  || (__lun) == IPMI_BMC_IPMB_LUN_SMS_MSG_LUN \
+	  || (__lun) == IPMI_BMC_IPMB_LUN_OEM_LUN2) ? 1 : 0)
+
 #ifdef __cplusplus
 }
 #endif

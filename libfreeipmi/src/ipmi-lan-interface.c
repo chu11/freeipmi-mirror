@@ -255,7 +255,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 		  fiid_obj_t obj_msg)
 {
   if (!IPMI_NET_FN_VALID(net_fn)
-      || (rs_lun > IPMI_BMC_IPMB_LUN_OEM_LUN2)
+      || !IPMI_BMC_LUN_VALID(rs_lun)
       || (rq_seq > IPMI_LAN_SEQ_NUM_MAX)
       || (obj_msg == NULL))
     {
