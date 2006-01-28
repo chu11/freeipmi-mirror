@@ -564,6 +564,8 @@ _ipmi_lan_pkt_rs_size2 (ipmi_device_t *dev,
 	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
 }
 
+#endif /* TEST */
+
 /*
   Complete IPMI LAN Request Packet
   +----------------------+
@@ -575,8 +577,6 @@ _ipmi_lan_pkt_rs_size2 (ipmi_device_t *dev,
   |  Checksum            |
   +----------------------+
 */
-
-#endif /* TEST */
 
 int32_t 
 assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
@@ -1901,12 +1901,8 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
   return ((((uint8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
 
-#if 0 /* TEST */
-
 int8_t 
-ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
-		       fiid_obj_t obj_msg_hdr, 
-		       uint8_t rq_seq)
+ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
 
@@ -1916,18 +1912,16 @@ ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr,
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (tmpl_msg_hdr, (uint8_t *)"rq_seq"))
+  if (!fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"rq_seq"))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg_hdr, tmpl_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
+  FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
 
   return ((((int8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
-
-#endif /* TEST */
 
 int8_t 
 ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
