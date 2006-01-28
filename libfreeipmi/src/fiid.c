@@ -29,6 +29,7 @@ struct fiid_field_data
   uint32_t max_field_len;
   char key[FIID_FIELD_MAX];
   uint32_t set_field_len;
+  uint32_t flags;
 };
 
 struct fiid_obj
@@ -476,11 +477,19 @@ fiid_obj_create (fiid_template_t tmpl)
 	      goto cleanup;
 	    }
 	}
+
+      if (!FIID_FIELD_REQUIRED_FLAG_VALID(tmpl[i].flags)
+	  || !FIID_FIELD_LENGTH_FLAG_VALID(tmpl[i].flags))
+	{
+	  errno = EINVAL;
+	  goto cleanup;
+	}
 #endif /* !NDEBUG */
       obj->field_data[i].max_field_len = tmpl[i].max_field_len;
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX);
       obj->field_data[i].key[FIID_FIELD_MAX - 1] = '\0';
       obj->field_data[i].set_field_len = 0;
+      obj->field_data[i].flags = tmpl[i].flags;
       max_pkt_len += tmpl[i].max_field_len;
     }
 
@@ -576,6 +585,111 @@ fiid_obj_valid(fiid_obj_t obj)
 {
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     return (0);
+  return (1);
+}
+
+int8_t
+fiid_obj_packet_valid(fiid_obj_t obj)
+{
+  int i,bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0, 
+    optional_bits_counter = 0, data_index = 0, obj_data_index = 0;;
+  
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  for (i = 0; i < obj->field_data[i].max_field_len != 0; i++)
+    {
+      uint32_t required_flag = FIID_FIELD_REQUIRED_FLAG(obj->field_data[i].flags);
+      uint32_t length_flag = FIID_FIELD_LENGTH_FLAG(obj->field_data[i].flags);
+      uint32_t max_field_len = obj->field_data[i].max_field_len;
+      uint32_t set_field_len = obj->field_data[i].set_field_len;
+      
+      if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
+	return (0);
+      
+      if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
+	return (0);
+
+      max_bits_counter += max_field_len;
+
+      if (set_field_len)
+	{
+	  if (optional_bits_counter)
+	    return (0);
+	      
+	  if (set_field_len != max_field_len)
+	    {
+	      /* If there is an optional or variable length
+	       * field, it cannot have only partial data.
+	       */
+	      if ((set_bits_counter + set_field_len) % 8 != 0)
+		return (0);
+	    }
+
+	  set_bits_counter += set_field_len;
+	  if (!(set_bits_counter % 8))
+	    {
+	      set_bits_counter = 0;
+	      max_bits_counter = 0;
+	    }
+          else
+            {
+              /* All information must be collected in byte sized
+               * chunks
+               */
+              if (set_bits_counter)
+		return (0);
+
+              /* Likewise, optional data should be aligned across
+               * bytes
+               */
+              optional_bits_counter += max_field_len;
+              if (optional_bits_counter && !(optional_bits_counter % 8))
+                {
+		  /* an "assert" */
+		  if (optional_bits_counter != max_bits_counter)
+		    return (0);
+
+                  optional_bits_counter = 0;
+		  max_bits_counter = 0;
+                }
+            }
+        }
+    }    
+     
+  /* There shouldn't be anything left over */
+  if (set_bits_counter)
+    return (0);
+ 
+  return (1);
+}
+
+int8_t 
+fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
+{
+  int i;
+
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC && tmpl))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  for (i = 0; i < obj->field_data[i].max_field_len != 0; i++)
+    {
+      if (!tmpl[i].max_field_len)
+	return (0);
+      
+      if (strcmp(obj->field_data[i].key, tmpl[i].key))
+	return (0);
+    }
+
+  if (tmpl[i].max_field_len != 0)
+    return (0);
+
   return (1);
 }
 
@@ -1304,12 +1418,12 @@ fiid_obj_get_all (fiid_obj_t obj,
 
       for (i = 0; i < obj->field_data_len; i++)
         {
-          int32_t field_bits_max = obj->field_data[i].max_field_len;
-          int32_t field_bits_set = obj->field_data[i].set_field_len;
+          int32_t max_field_len = obj->field_data[i].max_field_len;
+          int32_t set_field_len = obj->field_data[i].set_field_len;
 
-	  max_bits_counter += field_bits_max;
+	  max_bits_counter += max_field_len;
 
-          if (field_bits_set)
+          if (set_field_len)
             {
               if (optional_bits_counter)
                 {
@@ -1317,19 +1431,19 @@ fiid_obj_get_all (fiid_obj_t obj,
                   goto cleanup;
                 }
 	      
-	      if (field_bits_set != field_bits_max)
+	      if (set_field_len != max_field_len)
 		{
 		  /* If there is an optional or variable length
 		   * field, it cannot have only partial data.
 		   */
-		  if ((set_bits_counter + field_bits_set) % 8 != 0)
+		  if ((set_bits_counter + set_field_len) % 8 != 0)
 		    {
 		      errno = EINVAL;
 		      goto cleanup;
 		    }
 		}
 
-              set_bits_counter += field_bits_set;
+              set_bits_counter += set_field_len;
               if (!(set_bits_counter % 8))
                 {
                   int32_t max_bytes_count = BITS_ROUND_BYTES(max_bits_counter);
@@ -1360,7 +1474,7 @@ fiid_obj_get_all (fiid_obj_t obj,
               /* Likewise, optional data should be aligned across
                * bytes
                */
-              optional_bits_counter += field_bits_max;
+              optional_bits_counter += max_field_len;
               if (optional_bits_counter && !(optional_bits_counter % 8))
                 {
 		  /* an "assert" */
@@ -1636,12 +1750,12 @@ fiid_obj_get_block (fiid_obj_t obj,
 
       for (i = key_index_start; i <= key_index_end; i++)
         {
-          int32_t field_bits_max = obj->field_data[i].max_field_len;
-          int32_t field_bits_set = obj->field_data[i].set_field_len;
+          int32_t max_field_len = obj->field_data[i].max_field_len;
+          int32_t set_field_len = obj->field_data[i].set_field_len;
 
-	  max_bits_counter += field_bits_max;
+	  max_bits_counter += max_field_len;
 
-          if (field_bits_set)
+          if (set_field_len)
             {
               if (optional_bits_counter)
                 {
@@ -1649,19 +1763,19 @@ fiid_obj_get_block (fiid_obj_t obj,
                   goto cleanup;
                 }
 	      
-	      if (field_bits_set != field_bits_max)
+	      if (set_field_len != max_field_len)
 		{
 		  /* If there is an optional or variable length
 		   * field, it cannot have only partial data.
 		   */
-		  if ((set_bits_counter + field_bits_set) % 8 != 0)
+		  if ((set_bits_counter + set_field_len) % 8 != 0)
 		    {
 		      errno = EINVAL;
 		      goto cleanup;
 		    }
 		}
 
-              set_bits_counter += field_bits_set;
+              set_bits_counter += set_field_len;
               if (!(set_bits_counter % 8))
                 {
                   int32_t max_bytes_count = BITS_ROUND_BYTES(max_bits_counter);
@@ -1692,7 +1806,7 @@ fiid_obj_get_block (fiid_obj_t obj,
               /* Likewise, optional data should be aligned across
                * bytes
                */
-              optional_bits_counter += field_bits_max;
+              optional_bits_counter += max_field_len;
               if (optional_bits_counter && !(optional_bits_counter % 8))
                 {
 		  /* an "assert" */

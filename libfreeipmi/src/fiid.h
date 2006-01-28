@@ -128,10 +128,33 @@ do {                                                           \
 
 #define FIID_FIELD_MAX 256
 
+#define FIID_FIELD_REQUIRED         0x00000001
+#define FIID_FIELD_OPTIONAL         0x00000002
+#define FIID_FIELD_REQUIRED_MASK    0x0000000F
+
+#define FIID_FIELD_REQUIRED_FLAG(__flags) \
+        ((__flags) & FIID_FIELD_REQUIRED_MASK)
+
+#define FIID_FIELD_REQUIRED_FLAG_VALID(__flags) \
+        ((FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_REQUIRED \
+	  || FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_OPTIONAL) ? 1 : 0)
+  
+#define FIID_FIELD_LENGTH_FIXED     0x00000010
+#define FIID_FIELD_LENGTH_VARIABLE  0x00000020
+#define FIID_FIELD_LENGTH_MASK      0x000000F0
+
+#define FIID_FIELD_LENGTH_FLAG(__flags) \
+        ((__flags) & FIID_FIELD_LENGTH_MASK)
+
+#define FIID_FIELD_LENGTH_FLAG_VALID(__flags) \
+        ((FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_FIXED \
+	  || FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
+
 typedef struct fiid_field
 {
   uint32_t max_field_len;
   char key[FIID_FIELD_MAX];
+  uint32_t flags;
 } fiid_field_t;
 
 typedef fiid_field_t fiid_template_t[];
@@ -161,7 +184,8 @@ fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
 int8_t fiid_obj_valid(fiid_obj_t obj);
-
+int8_t fiid_obj_packet_valid(fiid_obj_t obj);
+int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
 int32_t fiid_obj_max_len(fiid_obj_t obj);
 int32_t fiid_obj_max_len_bytes(fiid_obj_t obj);
 int32_t fiid_obj_len(fiid_obj_t obj);

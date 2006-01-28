@@ -20,6 +20,11 @@
 	
 	* libfreeipmi/src, ipmiping/src: Support new fiid interface.
 
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Support new
+	template flags.
+
+	* libfreeipmi/src/rmcp.c: Support template flags.
+
 2006-01-25  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/ipmi-lan-interface.h,
