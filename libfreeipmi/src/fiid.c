@@ -468,22 +468,26 @@ fiid_obj_create (fiid_template_t tmpl)
   for (i = 0; i < obj->field_data_len; i++)
     {
 #ifndef NDEBUG
-      int j = 0;
-      for (j = 0; j < i; j++)
-	{
-	  if (!strncmp(obj->field_data[j].key, tmpl[i].key, FIID_FIELD_MAX))
-	    {
-	      errno = EINVAL;
-	      goto cleanup;
-	    }
-	}
+      if (tmpl[i].max_field_len)
+        {
+          int j;
 
-      if (!FIID_FIELD_REQUIRED_FLAG_VALID(tmpl[i].flags)
-	  || !FIID_FIELD_LENGTH_FLAG_VALID(tmpl[i].flags))
-	{
-	  errno = EINVAL;
-	  goto cleanup;
-	}
+          for (j = 0; j < i; j++)
+            {
+              if (!strncmp(obj->field_data[j].key, tmpl[i].key, FIID_FIELD_MAX))
+                {
+                  errno = EINVAL;
+                  goto cleanup;
+                }
+            }
+          
+          if (!FIID_FIELD_REQUIRED_FLAG_VALID(tmpl[i].flags)
+              || !FIID_FIELD_LENGTH_FLAG_VALID(tmpl[i].flags))
+            {
+              errno = EINVAL;
+              goto cleanup;
+            }
+        }
 #endif /* !NDEBUG */
       obj->field_data[i].max_field_len = tmpl[i].max_field_len;
       strncpy(obj->field_data[i].key, tmpl[i].key, FIID_FIELD_MAX);
@@ -591,8 +595,7 @@ fiid_obj_valid(fiid_obj_t obj)
 int8_t
 fiid_obj_packet_valid(fiid_obj_t obj)
 {
-  int i,bytes_written = 0, max_bits_counter = 0, set_bits_counter = 0, 
-    optional_bits_counter = 0, data_index = 0, obj_data_index = 0;;
+  int i, max_bits_counter = 0, set_bits_counter = 0, optional_bits_counter = 0;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     {
@@ -678,7 +681,7 @@ fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
       return (-1);
     }
 
-  for (i = 0; i < obj->field_data[i].max_field_len != 0; i++)
+  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     {
       if (!tmpl[i].max_field_len)
 	return (0);

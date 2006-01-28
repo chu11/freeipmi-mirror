@@ -27,7 +27,7 @@ fiid_template_t tmpl_cmd_get_channel_auth_caps_rq =
     {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "max_priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_channel_auth_caps_rs = 
@@ -51,7 +51,7 @@ fiid_template_t tmpl_cmd_get_channel_auth_caps_rs =
     {8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "oem_aux", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_session_challenge_rq =

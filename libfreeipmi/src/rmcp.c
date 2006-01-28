@@ -29,7 +29,7 @@ fiid_template_t tmpl_hdr_rmcp =
     {5, "msg_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "msg_class.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "msg_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_asf_presence_ping = 
@@ -39,7 +39,7 @@ fiid_template_t tmpl_cmd_asf_presence_ping =
     {8,  "msg_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "data_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0,  ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_asf_presence_pong =
@@ -56,7 +56,7 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
     {1,  "supported_entities.ipmi_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "supported_interactions", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {48, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0,  ""}
+    {0,  "", 0}
   };
 
 int8_t

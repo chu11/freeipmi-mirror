@@ -31,7 +31,7 @@ fiid_template_t tmpl_lan_msg_hdr_rq =
     {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 /* IPMI LAN Message Response Header */
@@ -44,14 +44,14 @@ fiid_template_t tmpl_lan_msg_hdr_rs =
     {8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 /* IPMI LAN Message Trailer */
 fiid_template_t tmpl_lan_msg_trlr = 
   {
     {8, "chksum2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 #if 0 /* TEST */
