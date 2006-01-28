@@ -1801,7 +1801,7 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
 
   FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
 
-  return ((((int8_t)net_fn_recv) == net_fn) ? 1 : 0);
+  return ((((uint8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
 
 #if 0 /* TEST */

@@ -38,6 +38,10 @@ fish:
   * Create makefile wrappers to allow fish to work locally in
     build directory rather that requiring installation.
 
+ipmipower
+---------
+  * compile options to make workarounds automatic for ipmipower
+
 General:
 --------
   * sel aggregator

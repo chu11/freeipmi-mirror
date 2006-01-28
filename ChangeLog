@@ -96,6 +96,34 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-01-28  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
+	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_check_cmd,
+	ipmi_check_comp_code): Fix typecast typos.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_outofband_free,
+	ipmi_inband_free, ipmi_open_outofband): Fix corner cases.
+
+	* ipmiping/src/ipmiping.c (parsepacket): Remove unnecessary code.
+
+	Fix ipmipower issues discovered by Keith Owens @ SGI.
+
+	* ipmipower/ipmipower.8.in: Document additional machine compliance
+	bug found with.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Fix segfault
+	corner case.
+
+	* ipmipower/src/: Fix gcc 4.0 warnings.
+
+	* rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Code cleanup.
+	
+2006-01-26  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper
+	behavior bug.
+
 2006-01-24  A Balamurugan  <bala@zresearch.com>
 
 	* fish/scripts/bmc-autoconfig/bmc-autoconfig: improved.

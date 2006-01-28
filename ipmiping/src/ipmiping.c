@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.4 2006-01-28 15:31:56 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.5 2006-01-28 17:05:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,8 +42,8 @@
 /* IPMI has a 6 bit sequence number */
 #define IPMI_RQ_SEQ_MAX  0x3F
 
-fiid_obj_t
-Fiid_obj_create(fiid_template_t tmpl)
+static fiid_obj_t
+_fiid_obj_create(fiid_template_t tmpl)
 {
   fiid_obj_t obj;
 
@@ -55,14 +55,14 @@ Fiid_obj_create(fiid_template_t tmpl)
   return obj;
 }
 
-void 
-Fiid_obj_destroy(fiid_obj_t obj)
+static void 
+_fiid_obj_destroy(fiid_obj_t obj)
 {
   fiid_obj_destroy(obj);
 }
 
-void 
-Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
+static void 
+_fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 {
   assert(obj != NULL && field != NULL && val != NULL);
 
@@ -90,10 +90,10 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_create(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_create(tmpl_lan_msg_hdr_rq);
-  obj_cmd = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq);
+  obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
+  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rq);
+  obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq);
     
   if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
@@ -134,10 +134,10 @@ createpacket(char *buffer,
     }
 #endif
 
-  Fiid_obj_destroy(obj_hdr_rmcp);
-  Fiid_obj_destroy(obj_hdr_session);
-  Fiid_obj_destroy(obj_msg_hdr);
-  Fiid_obj_destroy(obj_cmd);
+  _fiid_obj_destroy(obj_hdr_rmcp);
+  _fiid_obj_destroy(obj_hdr_session);
+  _fiid_obj_destroy(obj_msg_hdr);
+  _fiid_obj_destroy(obj_cmd);
 
   return len;
 }
@@ -168,11 +168,11 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = Fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_create(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_create(tmpl_lan_msg_hdr_rs);
-  obj_cmd = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs);
-  obj_msg_trlr = Fiid_obj_create(tmpl_lan_msg_trlr);
+  obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
+  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rs);
+  obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs);
+  obj_msg_trlr = _fiid_obj_create(tmpl_lan_msg_trlr);
 
 #ifndef NDEBUG
   if (debug)
@@ -215,15 +215,6 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_lan_check_net_fn(obj_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
-
-  if (!ret)
-    {
-      retval = 0;
-      goto cleanup;
-    }
-
   if ((ret = ipmi_check_cmd(obj_cmd, IPMI_CMD_GET_CHANNEL_AUTH_CAPS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
@@ -242,7 +233,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  Fiid_obj_get(obj_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
+  _fiid_obj_get(obj_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
 
   if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
@@ -253,36 +244,36 @@ parsepacket(char *buffer,
   printf("response received from %s: rq_seq=%u", from, (uint32_t)req_seq);
   if (verbose)
     {
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_type.none", 
-		   (uint64_t *)&none);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_type.md2", 
-		   (uint64_t *)&md2);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_type.md5", 
-		   (uint64_t *)&md5);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_type.straight_passwd_key", 
-                   (uint64_t *)&straight_passwd_key);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_type.oem_prop", 
-		   (uint64_t *)&oem);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_status.anonymous_login", 
-                   (uint64_t *)&anonymous_login);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_status.null_username", 
-                   (uint64_t *)&null_username);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_status.non_null_username", 
-                   (uint64_t *)&non_null_username);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_status.user_level_auth", 
-                   (uint64_t *)&user_level_auth);
-      Fiid_obj_get(obj_cmd, 
-                   (uint8_t *)"auth_status.per_message_auth", 
-                   (uint64_t *)&per_message_auth);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_type.none", 
+		    (uint64_t *)&none);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_type.md2", 
+		    (uint64_t *)&md2);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_type.md5", 
+		    (uint64_t *)&md5);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_type.straight_passwd_key", 
+		    (uint64_t *)&straight_passwd_key);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_type.oem_prop", 
+		    (uint64_t *)&oem);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_status.anonymous_login", 
+		    (uint64_t *)&anonymous_login);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_status.null_username", 
+		    (uint64_t *)&null_username);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_status.non_null_username", 
+		    (uint64_t *)&non_null_username);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_status.user_level_auth", 
+		    (uint64_t *)&user_level_auth);
+      _fiid_obj_get(obj_cmd, 
+		    (uint8_t *)"auth_status.per_message_auth", 
+		    (uint64_t *)&per_message_auth);
       printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
              _setstr(straight_passwd_key),_setstr(oem), 
@@ -291,14 +282,14 @@ parsepacket(char *buffer,
              _setstr(per_message_auth));
     }
   printf("\n");
-    
+  
   retval = 1;
  cleanup:
-  Fiid_obj_destroy(obj_hdr_rmcp);
-  Fiid_obj_destroy(obj_hdr_session);
-  Fiid_obj_destroy(obj_msg_hdr);
-  Fiid_obj_destroy(obj_cmd);
-  Fiid_obj_destroy(obj_msg_trlr);
+  _fiid_obj_destroy(obj_hdr_rmcp);
+  _fiid_obj_destroy(obj_hdr_session);
+  _fiid_obj_destroy(obj_msg_hdr);
+  _fiid_obj_destroy(obj_cmd);
+  _fiid_obj_destroy(obj_msg_trlr);
   return retval;
 }
 

@@ -32,6 +32,12 @@ fiid_template_t tmpl_inband_hdr =
 static void 
 ipmi_outofband_free (ipmi_device_t *dev)
 {
+  if (!dev)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
   fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
   fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
@@ -45,6 +51,12 @@ ipmi_outofband_free (ipmi_device_t *dev)
 static void 
 ipmi_inband_free (ipmi_device_t *dev)
 {
+  if (!dev)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
   ipmi_xfree (dev->io.inband.driver_device);
@@ -115,12 +127,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->io.outofband.remote_host = *remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
   dev->io.outofband.auth_type = auth_type;
+  memset(dev->io.outofband.username, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
   if (username != NULL)
     {
       memcpy (dev->io.outofband.username, 
 	      username, 
 	      strlen (username));
     }
+  memset(dev->io.outofband.password, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
   if (password != NULL)
     {
       memcpy (dev->io.outofband.password, 
@@ -476,6 +490,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     {
     case IPMI_DEVICE_LAN:
       status = ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
+      break;
     case IPMI_DEVICE_KCS:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -488,6 +503,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SSIF:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -500,6 +516,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
+      break;
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
     default:

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.8.2.2 2006-01-25 02:19:57 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.8.2.3 2006-01-28 17:05:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -159,7 +159,7 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
  out:
   if (!retval)
     dbg("_check_outbound_seq_num(%s:%d): pktoseq: %u, high: %u",
-        ip->ic->hostname, ip->protocol_state, pktoseq, ip->highest_received_seq_num);
+        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_seq_num);
   
   return retval;
 }
@@ -185,8 +185,8 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   
   if (session_id != actv_res_session_id && session_id != 0)
     dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
-        ip->ic->hostname, ip->protocol_state, session_id, 
-        actv_res_session_id);
+        ip->ic->hostname, ip->protocol_state, (unsigned int)session_id, 
+        (unsigned int)actv_res_session_id);
   
   /* IPMI Workaround (achu)
    *
@@ -221,7 +221,7 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   
   if (netfn != expected_netfn)
     dbg("_check_network_function(%s:%d): netfn bad: %x", 
-        ip->ic->hostname, ip->protocol_state, netfn);
+        ip->ic->hostname, ip->protocol_state, (unsigned int)netfn);
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
@@ -240,8 +240,8 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, (uint8_t *)"rq_seq", &pktrseq);
 
   if (pktrseq != myrseq)
-    dbg("_check_requester_seq_num(%s:%d): rseq: %d, expected: %d",
-        ip->ic->hostname, ip->protocol_state, pktrseq, myrseq);
+    dbg("_check_requester_seq_num(%s:%d): rseq: %x, expected: %x",
+        ip->ic->hostname, ip->protocol_state, (unsigned int)pktrseq, (unsigned int)myrseq);
   
   return ((pktrseq == myrseq) ? 1 : 0);
 }
@@ -276,7 +276,7 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   
   if (cmd != expected_cmd)
     dbg("_check_command(%s:%d): cmd bad: %x", 
-        ip->ic->hostname, ip->protocol_state, cmd);
+        ip->ic->hostname, ip->protocol_state, (unsigned int)cmd);
   
   return ((cmd == expected_cmd) ? 1 : 0);
 }
@@ -295,7 +295,7 @@ _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   
   if (cc != IPMI_COMMAND_SUCCESS)
     dbg("_check_completion_code(%s:%d): cc bad: %x", 
-        ip->ic->hostname, ip->protocol_state, cc);
+        ip->ic->hostname, ip->protocol_state, (unsigned int)cc);
   
   return ((cc == IPMI_COMMAND_SUCCESS) ? 1 : 0);
 }
