@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.8 2006-01-28 20:36:04 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.9 2006-01-28 20:47:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,7 +143,7 @@ ipmipower_ping_process_pings(int *timeout)
               Fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
 				 (uint8_t *)buffer, len, tmpl_cmd_asf_presence_ping);
             }
-#endif /* ifndef NDEBUG */
+#endif /* NDEBUG */
 
             Cbuf_write(ics[i].ping_out, buffer, len);
             
@@ -179,7 +179,7 @@ ipmipower_ping_process_pings(int *timeout)
               Fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
 				 (uint8_t *)buffer, len, tmpl_cmd_asf_presence_pong);
             }
-#endif
+#endif /* NDEBUG */
 
           if (unassemble_rmcp_pkt(buffer, len, tmpl_cmd_asf_presence_pong, 
                                   rmcp_hdr, rmcp_pong) < 0)
