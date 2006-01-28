@@ -29,6 +29,9 @@
 
 	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
 
+	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
+	Fix errmsg typos.
+
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper

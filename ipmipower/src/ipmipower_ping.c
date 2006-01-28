@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.6 2006-01-28 15:03:39 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.7 2006-01-28 20:26:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -144,7 +144,7 @@ ipmipower_ping_process_pings(int *timeout)
                 "============================================";
               if (fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
                                      (uint8_t *)buffer, len, tmpl_cmd_asf_presence_ping) < 0)
-                err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+                err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
             }
 #endif /* ifndef NDEBUG */
 
@@ -184,7 +184,7 @@ ipmipower_ping_process_pings(int *timeout)
                 "============================================";
               if (fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
                                      (uint8_t *)buffer, len, tmpl_cmd_asf_presence_pong) < 0)
-                err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+                err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
             }
 #endif
 
