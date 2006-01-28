@@ -64,6 +64,10 @@ int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
 				     fiid_obj_t obj_cmd_rs);
 
+int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
+
+int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
+
 int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
                                   uint8_t identify_interval,
                                   uint8_t force_identify_flag,

@@ -34,6 +34,13 @@
 	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
 	Use fiid wrapper macros.
 
+	* libfreeipmi/src/ipmi-chassis-cmds.h
+	(fill_cmd_get_chassis_status, fill_cmd_chassis_ctrl): Add function
+	prototypes.
+
+	* ipmipower/src/ipmipower_packet.c: Remove unnecessary function
+	prototypes.
+
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper
