@@ -1113,7 +1113,7 @@ ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_
 
   FIID_OBJ_GET(obj_cmd, tmpl_cmd, (uint8_t *)"comp_code", &comp_code_recv);
 
-  return ((((int8_t)comp_code_recv) == comp_code) ? 1 : 0);
+  return ((((uint8_t)comp_code_recv) == comp_code) ? 1 : 0);
 }
 
 int8_t 
