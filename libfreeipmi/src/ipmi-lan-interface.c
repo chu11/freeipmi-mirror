@@ -1906,7 +1906,7 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
 
-  if (!(obj_msg_hdr && tmpl_msg_hdr))
+  if (!fiid_obj_valid(obj_msg_hdr))
     {
       errno = EINVAL;
       return (-1);
