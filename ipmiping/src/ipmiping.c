@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.8 2006-01-20 21:59:19 ab Exp $
+ *  $Id: ipmiping.c,v 1.9 2006-01-28 14:33:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -196,16 +196,6 @@ parsepacket(char *buffer,
                               obj_hdr_rmcp, obj_hdr_session, 
                               obj_msg_hdr, obj_cmd, obj_msg_trlr) < 0)
     ipmi_ping_err_exit("unassemble_ipmi_lan_pkt: %s", strerror(errno));
-
-  if ((ret = ipmi_lan_check_net_fn(tmpl_lan_msg_hdr_rs, obj_msg_hdr, 
-                                   IPMI_NET_FN_APP_RS)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
-
-  if (!ret)
-    {
-      retval = 0;
-      goto cleanup;
-    }
 
   if ((ret = ipmi_lan_check_net_fn(tmpl_lan_msg_hdr_rs, obj_msg_hdr, 
                                    IPMI_NET_FN_APP_RS)) < 0)
