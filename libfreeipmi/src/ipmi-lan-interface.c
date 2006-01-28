@@ -263,7 +263,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
   ipmi_chksum_t chksum;
 
   if (!IPMI_NET_FN_VALID(net_fn)
-      || (rs_lun > IPMI_BMC_IPMB_LUN_OEM_LUN2)
+      || !IPMI_BMC_LUN_VALID(rs_lun)
       || (rq_seq > IPMI_LAN_SEQ_NUM_MAX)
       || !fiid_obj_valid(obj_msg))
     {
@@ -1920,7 +1920,7 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
 
   FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
 
-  return ((((int8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
+  return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
 int8_t 

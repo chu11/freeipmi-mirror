@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.4 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.4.2.1 2006-01-28 20:45:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -206,5 +206,14 @@ Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_le
 
   if (fiid_obj_dump_lan(fd, prefix, hdr, pkt, pkt_len, tmpl_session,
                         tmpl_msg_hdr, tmpl_cmd) < 0)
-    err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+    err_exit("Fiid_obj_dump_lan: %s", strerror(errno));
+}
+
+void 
+Fiid_obj_dump_rmcp(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd) 
+{
+  assert(pkt != NULL && tmpl_cmd != NULL);
+
+  if (fiid_obj_dump_rmcp(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
+    err_exit("Fiid_obj_dump_lan: %s", strerror(errno));
 }

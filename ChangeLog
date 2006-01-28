@@ -106,7 +106,7 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
 	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_check_cmd,
-	ipmi_check_comp_code): Fix typecast typos.
+	ipmi_check_comp_code, ipmi_lan_check_rq_seq): Fix typecast typos.
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_outofband_free,
 	ipmi_inband_free, ipmi_open_outofband): Fix corner cases.
@@ -124,7 +124,20 @@
 	* ipmipower/src/: Fix gcc 4.0 warnings.
 
 	* rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Code cleanup.
+
+	* libfreeipmi/src/ipmi-ipmb-interface.h (IPMI_BMC_LUN_VALID): New
+	macro.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_check_net_fn): Use
+	new IPMI_BMC_LUN_VALID macro.
+
+	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
+
+	* ipmipower/src/ipmipower_wrappers.h, ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New function.
 	
+	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
+	Use fiid wrapper macros.
+
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper
