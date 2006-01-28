@@ -276,8 +276,8 @@ fill_lan_msg_hdr (uint8_t net_fn,
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
   
   if ((chksum_len = fiid_obj_get_block(obj_msg, 
-                                       "rs_addr", 
-                                       "rs_lun", 
+                                       (uint8_t *)"rs_addr", 
+                                       (uint8_t *)"net_fn", 
                                        chksum_buf, 
                                        1024)) < 0)
     return (-1);
@@ -998,7 +998,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   int8_t rv;
 
   if (!pkt
-      || fiid_obj_valid(obj_hdr_rmcp)
+      || !fiid_obj_valid(obj_hdr_rmcp)
       || !fiid_obj_valid(obj_hdr_session) 
       || !fiid_obj_valid(obj_msg_hdr) 
       || !fiid_obj_valid(obj_cmd)
@@ -1123,8 +1123,8 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (pkt_len <= indx)
     return 0;
 
-  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
-  obj_msg_trlr_len = fiid_obj_len_bytes (obj_msg_trlr);
+  obj_cmd_len = fiid_obj_max_len_bytes (obj_cmd);
+  obj_msg_trlr_len = fiid_obj_max_len_bytes (obj_msg_trlr);
 
   if ((pkt_len - indx) <= obj_cmd_len)
     {
@@ -1971,7 +1971,7 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 
   chksum1_block_index = rmcp_hdr_len + msg_hdr_len1 + auth_code_len + msg_hdr_len2;
 
-  if ((chksum1_block_len = fiid_template_block_len_bytes(tmpl_hdr_session_auth,
+  if ((chksum1_block_len = fiid_template_block_len_bytes(tmpl_lan_msg_hdr_rs,
 							 (uint8_t *)"rq_addr",
 							 (uint8_t *)"net_fn")) < 0)
     return (-1);

@@ -200,15 +200,15 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 
       if ((field_len = fiid_iterator_field_len(iter)) < 0)
         goto cleanup;
-
-      if (prefix)
-        _DPRINTF_CLEANUP ((fd, "%s", prefix));
-      
+    
       if (!field_len)
         {
           fiid_iterator_next(iter);
           continue;
         }
+
+      if (prefix)
+        _DPRINTF_CLEANUP ((fd, "%s", prefix));
 
       if (field_len <= 64)
         {
@@ -360,9 +360,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 				   pkt_len - indx)) < 0)
 	goto cleanup;
       indx += len;
-      
     }
-  
 
   if (pkt_len <= indx)
     {

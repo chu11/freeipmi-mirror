@@ -28,6 +28,9 @@
 	* libfreeipmi/src/ipmi-msg-support-cmds.c,
 	libfreeipmi/src/ipmi-lan-interface: Support template flags.
 
+	* libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_perror): Fix output
+	bug.
+
 2006-01-25  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/ipmi-lan-interface.h,

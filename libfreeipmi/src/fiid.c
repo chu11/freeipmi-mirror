@@ -1552,7 +1552,7 @@ _fiid_obj_block_len (fiid_obj_t obj,
   if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
 
-  if (key_index_end > key_index_start)
+  if (key_index_start > key_index_end)
     {
       errno = EINVAL;
       return (-1);
@@ -1594,7 +1594,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
 
-  if (key_index_end > key_index_start)
+  if (key_index_start > key_index_end)
     {
       errno = EINVAL;
       return (-1);
