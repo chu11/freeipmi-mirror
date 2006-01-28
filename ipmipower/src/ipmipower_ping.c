@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.7 2006-01-28 20:26:49 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.8 2006-01-28 20:36:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,10 +117,8 @@ ipmipower_ping_process_pings(int *timeout)
            */
           ics[i].ping_seq_num_counter++; 
 
-          if ((rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp)) == NULL)
-            err_exit("fiid_obj_calloc: %s", strerror(errno));
-          if ((rmcp_ping = fiid_obj_calloc(tmpl_cmd_asf_presence_ping)) == NULL)
-            err_exit("fiid_obj_calloc: %s", strerror(errno));
+	  rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
+	  rmcp_ping = Fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
           
           if (fill_hdr_rmcp_asf(rmcp_hdr) < 0)
             err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -142,9 +140,8 @@ ipmipower_ping_process_pings(int *timeout)
                 "============================================\n"
                 "= RMCP Ping                                =\n"
                 "============================================";
-              if (fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
-                                     (uint8_t *)buffer, len, tmpl_cmd_asf_presence_ping) < 0)
-                err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
+              Fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
+				 (uint8_t *)buffer, len, tmpl_cmd_asf_presence_ping);
             }
 #endif /* ifndef NDEBUG */
 
@@ -156,8 +153,8 @@ ipmipower_ping_process_pings(int *timeout)
             if (conf->ping_packet_count && conf->ping_percent)
               ics[i].ping_packet_count_send++;
             
-            fiid_obj_free(rmcp_hdr);
-            fiid_obj_free(rmcp_ping);
+            Fiid_obj_free(rmcp_hdr);
+            Fiid_obj_free(rmcp_ping);
         }
       
       /* Did we receive something? */
@@ -169,11 +166,8 @@ ipmipower_ping_process_pings(int *timeout)
           fiid_obj_t rmcp_pong = NULL;
           uint64_t msg_type, ipmi_supported;
           
-          if ((rmcp_hdr = fiid_obj_calloc(tmpl_hdr_rmcp)) == NULL)
-            err_exit("fiid_obj_calloc: %s", strerror(errno));
-          
-          if ((rmcp_pong = fiid_obj_calloc(tmpl_cmd_asf_presence_pong)) == NULL)
-            err_exit("fiid_obj_calloc: %s", strerror(errno));
+          rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
+          rmcp_pong = Fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
             
 #ifndef NDEBUG
           if (conf->rmcpdump) 
@@ -182,9 +176,8 @@ ipmipower_ping_process_pings(int *timeout)
                 "============================================\n"
                 "= RMCP Pong                                =\n"
                 "============================================";
-              if (fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
-                                     (uint8_t *)buffer, len, tmpl_cmd_asf_presence_pong) < 0)
-                err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
+              Fiid_obj_dump_rmcp(STDERR_FILENO, ics[i].hostname, hdr, 
+				 (uint8_t *)buffer, len, tmpl_cmd_asf_presence_pong);
             }
 #endif
 
@@ -247,8 +240,8 @@ ipmipower_ping_process_pings(int *timeout)
               ics[i].last_ping_recv.tv_sec = cur_time.tv_sec;
               ics[i].last_ping_recv.tv_usec = cur_time.tv_usec;
               
-              fiid_obj_free(rmcp_hdr);
-              fiid_obj_free(rmcp_pong);
+              Fiid_obj_free(rmcp_hdr);
+              Fiid_obj_free(rmcp_pong);
             }
         }
       

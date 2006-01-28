@@ -29,8 +29,10 @@
 
 	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
 
+	* ipmipower/src/ipmipower_wrappers.h, ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New function.
+	
 	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
-	Fix errmsg typos.
+	Use fiid wrapper macros.
 
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
