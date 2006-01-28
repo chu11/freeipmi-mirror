@@ -2,7 +2,7 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
 	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_check_cmd,
-	ipmi_check_comp_code): Fix typecast typos.
+	ipmi_check_comp_code, ipmi_lan_check_rq_seq): Fix typecast typos.
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_outofband_free,
 	ipmi_inband_free, ipmi_open_outofband): Fix corner cases.
@@ -28,7 +28,7 @@
 	new IPMI_BMC_LUN_VALID macro.
 
 	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
-	
+
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper

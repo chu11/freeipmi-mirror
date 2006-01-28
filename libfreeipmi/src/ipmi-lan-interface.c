@@ -1795,7 +1795,7 @@ ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr,
 
   FIID_OBJ_GET(obj_msg_hdr, tmpl_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
 
-  return ((((int8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
+  return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
 int8_t 
