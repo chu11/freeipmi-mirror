@@ -48,6 +48,14 @@ extern "C" {
 #define IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR    0x04
 #define IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN 0x05
 
+#define IPMI_CHASSIS_CTRL_VALID(__chassis_ctrl) \
+        (((__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_DOWN \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_UP \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_CYCLE \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_HARD_RESET \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN) ? 1 : 0)
+
 #define IPMI_CHASSIS_FORCE_IDENTIFY_OFF      0x0
 #define IPMI_CHASSIS_FORCE_IDENTIFY_ON       0x1
 

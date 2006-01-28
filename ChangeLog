@@ -29,7 +29,9 @@
 
 	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
 
-	* ipmipower/src/ipmipower_wrappers.h, ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New function.
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New
+	function.
 	
 	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
 	Use fiid wrapper macros.
@@ -40,6 +42,12 @@
 
 	* ipmipower/src/ipmipower_packet.c: Remove unnecessary function
 	prototypes.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h (IPMI_CHASSIS_CTRL_VALID):
+	New macro.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_ctrl): Use
+	IPMI_CHASSIS_CTRL_VALID.
 
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 

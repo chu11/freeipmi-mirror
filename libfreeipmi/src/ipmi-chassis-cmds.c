@@ -158,7 +158,7 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 int8_t
 fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
-  if (chassis_ctrl > IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN
+  if (!IPMI_CHASSIS_CTRL_VALID(chassis_ctrl)
       || obj_cmd == NULL)
     {
       errno = EINVAL;
