@@ -26,6 +26,8 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_check_net_fn): Use
 	new IPMI_BMC_LUN_VALID macro.
+
+	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
 	
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
