@@ -14,6 +14,11 @@
 	* Support new fiid interface globally.
 	
 ------------------------------------------------------------
+2006-01-28  Albert Chu <chu11@llnl.gov>	
+
+	* libfreeipmi/src/fiid.c: Various new additions and fixes.
+	
+	* libfreeipmi/src, ipmiping/src: Support new fiid interface.
 
 2006-01-25  Albert Chu <chu11@llnl.gov>	
 
@@ -23,7 +28,7 @@
 
 	* libfreeipmi/src/fiid.c (fiid_obj_get_data, fiid_obj_get_all,
 	fiid_obj_get_block): Use errno EMSGSIZE when appropriate.
-	
+
 2006-01-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.c: Various minor bug fixes and typo fixes.

@@ -1071,49 +1071,53 @@ fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
   return 0;
 }
 
+#endif /* TEST */
+
 int8_t
-ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd)
+ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
 
-  if (!(obj_cmd && tmpl_cmd))
+  if (!obj_cmd)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (tmpl_cmd, (uint8_t *)"cmd"))
+  if (!fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd"))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_cmd, tmpl_cmd, (uint8_t *)"cmd", &cmd_recv);
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
 
   return ((((int8_t)cmd_recv) == cmd) ? 1 : 0);
 }
 
 int8_t
-ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code)
+ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
 {
   uint64_t comp_code_recv;
 
-  if (!(obj_cmd && tmpl_cmd))
+  if (!obj_cmd)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (tmpl_cmd, (uint8_t *)"comp_code"))
+  if (!fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code"))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_cmd, tmpl_cmd, (uint8_t *)"comp_code", &comp_code_recv);
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code_recv);
 
   return ((((int8_t)comp_code_recv) == comp_code) ? 1 : 0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)

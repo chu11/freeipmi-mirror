@@ -158,9 +158,7 @@ int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 
 #endif /* TEST */
 
-int8_t ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
-			      fiid_obj_t obj_msg_hdr, 
-			      uint8_t net_fn);
+int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn);
 
 int8_t ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
 			      fiid_obj_t obj_msg_hdr, 

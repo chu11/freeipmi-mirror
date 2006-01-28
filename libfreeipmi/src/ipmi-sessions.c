@@ -160,7 +160,7 @@ check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t 
     }
 
   FIID_OBJ_GET(obj_hdr_session, tmpl_hdr_session, (uint8_t *)"session_seq_num", &session_seq_num_recv);
-  
+
   return ((((int32_t)session_seq_num_recv) == session_seq_num) ? 1 : 0);
 }
 
@@ -206,7 +206,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
       errno = EINVAL;
       return (-1);
     }
-  
+
   auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_type");
   if (pkt_len < auth_type_offset)
     return 0;
@@ -230,19 +230,20 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
 
   if (fiid_obj_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_code"))
     {
-      ERR_EXIT(fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"auth_code") == IPMI_SESSION_MAX_AUTH_CODE_LEN);
+      ERR_EXIT(fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"auth_code") ==
+	       IPMI_SESSION_MAX_AUTH_CODE_LEN);
 
-      if (auth_code_data) 
-	memcpy(auth_code_buf, auth_code_data, auth_code_data_len);
+      if (auth_code_data)
+        memcpy(auth_code_buf, auth_code_data, auth_code_data_len);
     }
   else if (fiid_obj_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_calc_data"))
     {
       if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-	  || auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
-	{
-	  uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-	  uint32_t session_id_offset, session_seq_num_offset, data_offset;
-          
+          || auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
+        {
+          uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+          uint32_t session_id_offset, session_seq_num_offset, data_offset;
+
           session_id_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_id");
           session_seq_num_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num");
           data_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_len_bytes (tmpl_hdr_session_auth);
@@ -252,72 +253,72 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
               || pkt_len < data_offset)
             return 0;
 
-	  /* Must zero extend password.  No null termination is required. 
-	   * Also, must memcpy instead of strcpy, password need not be
-	   * 1 word
-	   */   
-	  memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	  memcpy(pwbuf, auth_code_data, auth_code_data_len);
-	  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2)
-	    {
-	      ipmi_md2_t ctx;
+          /* Must zero extend password.  No null termination is required.
+           * Also, must memcpy instead of strcpy, password need not be
+           * 1 word
+           */
+          memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
+          memcpy(pwbuf, auth_code_data, auth_code_data_len);
+          if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2)
+            {
+              ipmi_md2_t ctx;
 
-	      ERR_EXIT(IPMI_SESSION_MAX_AUTH_CODE_LEN == IPMI_MD2_DIGEST_LEN);
+              ERR_EXIT(IPMI_SESSION_MAX_AUTH_CODE_LEN == IPMI_MD2_DIGEST_LEN);
 
-	      ipmi_md2_init(&ctx);
-	      ipmi_md2_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	      ipmi_md2_update_data(&ctx, 
-				   pkt + session_id_offset,
-				   fiid_obj_field_len_bytes (tmpl_hdr_session,
-							     (uint8_t *)"session_id"));
-	      ipmi_md2_update_data(&ctx, 
-                                   pkt + data_offset, 
+              ipmi_md2_init(&ctx);
+              ipmi_md2_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              ipmi_md2_update_data(&ctx,
+                                   pkt + session_id_offset,
+                                   fiid_obj_field_len_bytes (tmpl_hdr_session,
+                                                             (uint8_t *)"session_id"));
+              ipmi_md2_update_data(&ctx,
+                                   pkt + data_offset,
                                    pkt_len - data_offset);
-	      ipmi_md2_update_data(&ctx, 
-				   pkt + session_seq_num_offset,
-				   fiid_obj_field_len_bytes (tmpl_hdr_session,
-							     (uint8_t *)"session_seq_num"));
-	      ipmi_md2_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	      ipmi_md2_finish(&ctx, auth_code_buf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	    }
-	  else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
-	    {
-	      ipmi_md5_t ctx;
-	      
- 	      ERR_EXIT(IPMI_SESSION_MAX_AUTH_CODE_LEN == IPMI_MD5_DIGEST_LEN);
+              ipmi_md2_update_data(&ctx,
+                                   pkt + session_seq_num_offset,
+                                   fiid_obj_field_len_bytes (tmpl_hdr_session,
+                                                             (uint8_t *)"session_seq_num"));
+              ipmi_md2_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              ipmi_md2_finish(&ctx, auth_code_buf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+            }
+          else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD5)
+            {
+              ipmi_md5_t ctx;
 
-	      ipmi_md5_init(&ctx);
-	      ipmi_md5_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	      ipmi_md5_update_data(&ctx, 
-				   pkt + session_id_offset,
-				   fiid_obj_field_len_bytes (tmpl_hdr_session,
-							     (uint8_t *)"session_id"));
-	      ipmi_md5_update_data(&ctx, 
-                                   pkt + data_offset, 
+              ERR_EXIT(IPMI_SESSION_MAX_AUTH_CODE_LEN == IPMI_MD5_DIGEST_LEN);
+
+              ipmi_md5_init(&ctx);
+              ipmi_md5_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              ipmi_md5_update_data(&ctx,
+                                   pkt + session_id_offset,
+                                   fiid_obj_field_len_bytes (tmpl_hdr_session,
+                                                             (uint8_t *)"session_id"));
+              ipmi_md5_update_data(&ctx,
+                                   pkt + data_offset,
                                    pkt_len - data_offset);
-	      ipmi_md5_update_data(&ctx, 
-				   pkt + session_seq_num_offset,
-				   fiid_obj_field_len_bytes (tmpl_hdr_session,
-							     (uint8_t *)"session_seq_num"));
-	      ipmi_md5_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
-	      ipmi_md5_finish(&ctx, auth_code_buf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              ipmi_md5_update_data(&ctx,
+                                   pkt + session_seq_num_offset,
+                                   fiid_obj_field_len_bytes (tmpl_hdr_session,
+                                                             (uint8_t *)"session_seq_num"));
+              ipmi_md5_update_data(&ctx, pwbuf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
+              ipmi_md5_finish(&ctx, auth_code_buf, IPMI_SESSION_MAX_AUTH_CODE_LEN);
 
-	    }
-	}
+            }
+        }
       else if (auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY)
-	{
-	  if (auth_code_data) 
-	    memcpy(auth_code_buf, auth_code_data, auth_code_data_len);
-	}
+        {
+          if (auth_code_data)
+            memcpy(auth_code_buf, auth_code_data, auth_code_data_len);
+        }
       else
-	{
-	  /* Unsupported auth type for calculations */
-	  /* XXX is this the right errno type to return?? */
-	  errno = EINVAL;
-	  return (-1);
-	}
+        {
+          /* Unsupported auth type for calculations */
+          /* XXX is this the right errno type to return?? */
+          errno = EINVAL;
+          return (-1);
+        }
     }
-  else 
+  else
     {
       /* User passed in auth_type != none, but template does not support
        * authentication
@@ -325,7 +326,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
       errno = EINVAL;
       return (-1);
     }
-  
+
   /* Must memcmp instead of strcmp, password need not be 1 word */
   if (memcmp(auth_code_buf, pkt + auth_code_offset, IPMI_SESSION_MAX_AUTH_CODE_LEN) == 0)
     return 1;

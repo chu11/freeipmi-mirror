@@ -31,7 +31,8 @@ libfreeipmi:
     - counters, fiid_obj_create
   * test unsuccesfful commands
   * test bad seq nums
-  
+  * chksum_test - confusing, not use?
+    
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in

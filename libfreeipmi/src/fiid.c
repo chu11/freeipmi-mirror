@@ -81,119 +81,14 @@ _fiid_template_len_bytes (fiid_template_t tmpl, unsigned int *tmpl_len)
   if ((len = _fiid_template_len (tmpl, tmpl_len)) < 0)
     return (-1);
 
+  if (len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   return (BITS_ROUND_BYTES (len));
 }
-
-static int32_t
-_fiid_obj_field_start_end (fiid_obj_t obj, 
-                           uint8_t *field, 
-                           uint32_t *start, 
-                           uint32_t *end)
-{
-  int i = 0;
-  int _start = 0;
-  int _end = 0; 
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field && start && end);
-
-  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
-    {
-      if (!strcmp (obj->field_data[i].key, field))
-	{
-	  _end = _start + obj->field_data[i].max_field_len;
-          *start = _start;
-          *end = _end;
-          return (obj->field_data[i].max_field_len);
-	}
-      _start += obj->field_data[i].max_field_len;
-    }
-  
-  errno = ESPIPE; 		/* Invalid seek */
-  return (-1);
-}
-
-static int32_t
-_fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
-{
-  uint32_t start = 0;
-  uint32_t end = 0; //excluded always
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
-  return (start);
-}
-
-#if 0
-static int32_t
-_fiid_obj_field_start_bytes (fiid_obj_t obj, uint8_t *field)
-{
-  int start = 0;
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  start = _fiid_obj_field_start (obj, field);
-  ERR (start != -1);
-  return (BITS_ROUND_BYTES (start));
-}
-#endif
-
-static int32_t
-_fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
-{
-  uint32_t start = 0;
-  uint32_t end = 0; //excluded always
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
-  return (end);
-}
-
-#if 0
-static int32_t
-_fiid_obj_field_end_bytes (fiid_obj_t obj, uint8_t *field)
-{
-  int end = 0;
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  end = _fiid_obj_field_end (obj, field);
-  ERR (end != -1);
-  return (BITS_ROUND_BYTES (end));
-}
-#endif
-
-static int32_t
-_fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
-{
-  int i;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-  
-  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
-    {
-      if (!strcmp (obj->field_data[i].key, field))
-	return (obj->field_data[i].max_field_len);
-    }
-  
-  errno = ESPIPE; 		/* Invalid seek */
-  return (-1);
-}
-
-#if 0
-static int32_t
-_fiid_obj_field_len_bytes (fiid_obj_t obj, uint8_t *field)
-{
-  int32_t len;
-  
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  len = _fiid_obj_field_len (obj, field);
-  ERR (len != -1);
-  return (BITS_ROUND_BYTES (len));
-}
-#endif 
 
 int8_t
 fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
@@ -241,7 +136,290 @@ fiid_template_len_bytes (fiid_template_t tmpl)
   if ((len = fiid_template_len (tmpl)) < 0)
     return (-1);
 
+  if (len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   return (BITS_ROUND_BYTES (len));
+}
+
+static int32_t
+_fiid_template_field_start_end (fiid_template_t tmpl, 
+				uint8_t *field, 
+				uint32_t *start, 
+				uint32_t *end)
+{
+  int i = 0;
+  int _start = 0;
+  int _end = 0;
+  
+  assert(tmpl && field && start && end);
+  
+  for (i = 0; tmpl[i].max_field_len != 0; i++)
+    {
+      if (strcmp (tmpl[i].key, (char *)field) == 0)
+	{
+	  _end = _start + tmpl[i].max_field_len;
+	  *start = _start;
+	  *end = _end;
+	  return (tmpl[i].max_field_len);
+	}
+      _start += tmpl[i].max_field_len;
+    }
+  
+  errno = ESPIPE; 		/* Invalid seek */
+  return (-1);
+}
+
+int32_t
+fiid_template_field_start (fiid_template_t tmpl, uint8_t *field)
+{
+  uint32_t start = 0;
+  uint32_t end = 0;
+  
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (_fiid_template_field_start_end (tmpl, field, &start, &end) < 0)
+    return (-1);
+
+  return (start);
+}
+
+int32_t
+fiid_template_field_start_bytes (fiid_template_t tmpl, uint8_t *field)
+{
+  int32_t start = 0;
+  
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((start = fiid_template_field_start (tmpl, field)) < 0)
+    return (-1);
+
+  if (start % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (BITS_ROUND_BYTES (start));
+}
+
+int32_t
+fiid_template_field_end (fiid_template_t tmpl, uint8_t *field)
+{
+  uint32_t start = 0;
+  uint32_t end = 0;
+  
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (_fiid_template_field_start_end (tmpl, field, &start, &end) < 0)
+    return (-1);
+
+  return (end);
+}
+
+int32_t
+fiid_template_field_end_bytes (fiid_template_t tmpl, uint8_t *field)
+{
+  int32_t end = 0;
+  
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((end = fiid_template_field_end (tmpl, field)) < 0)
+    return (-1);
+
+  if (end % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (BITS_ROUND_BYTES (end));
+}
+
+int32_t
+fiid_template_field_len (fiid_template_t tmpl, uint8_t *field)
+{
+  int i;
+
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  for (i=0; tmpl[i].max_field_len != 0; i++)
+    {
+      if (!strcmp (tmpl[i].key, (char *)field))
+	return (tmpl[i].max_field_len);
+    }
+  
+  errno = ESPIPE; 		/* Invalid seek */
+  return (-1);
+}
+
+int32_t
+fiid_template_field_len_bytes (fiid_template_t tmpl, uint8_t *field)
+{
+  int32_t len;
+  
+  if (!(tmpl && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_template_field_len (tmpl, field)) < 0)
+    return (-1);
+
+  if (len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (BITS_ROUND_BYTES (len));
+}
+
+int32_t
+fiid_template_block_len (fiid_template_t tmpl, 
+			 uint8_t *field_start, 
+			 uint8_t *field_end)
+{
+  int32_t start;
+  int32_t end;
+  
+  if (!(tmpl && field_start && field_end))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((end = fiid_template_field_end (tmpl, field_end)) < 0)
+    return (-1);
+
+  if ((start = fiid_template_field_start (tmpl, field_start)) < 0)
+    return (-1);
+
+  if (start > end)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (end - start);
+}
+
+int32_t
+fiid_template_block_len_bytes (fiid_template_t tmpl, 
+			       uint8_t *field_start, 
+			       uint8_t *field_end)
+{
+  int32_t len;
+  
+  if (!(tmpl && field_start && field_end))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_template_block_len (tmpl, field_start, field_end)) < 0)
+    return (-1);
+
+  if (len % 8 != 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  return (BITS_ROUND_BYTES (len));
+}
+
+static int32_t
+_fiid_obj_field_start_end (fiid_obj_t obj, 
+                           uint8_t *field, 
+                           uint32_t *start, 
+                           uint32_t *end)
+{
+  int i = 0;
+  int _start = 0;
+  int _end = 0; 
+  
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field && start && end);
+
+  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
+    {
+      if (!strcmp (obj->field_data[i].key, field))
+	{
+	  _end = _start + obj->field_data[i].max_field_len;
+          *start = _start;
+          *end = _end;
+          return (obj->field_data[i].max_field_len);
+	}
+      _start += obj->field_data[i].max_field_len;
+    }
+  
+  errno = ESPIPE; 		/* Invalid seek */
+  return (-1);
+}
+
+static int32_t
+_fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
+{
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
+  
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
+
+  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
+  return (start);
+}
+
+static int32_t
+_fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
+{
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
+  
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
+
+  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
+  return (end);
+}
+
+static int32_t
+_fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
+{
+  int i;
+
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
+  
+  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
+    {
+      if (!strcmp (obj->field_data[i].key, field))
+	return (obj->field_data[i].max_field_len);
+    }
+  
+  errno = ESPIPE; 		/* Invalid seek */
+  return (-1);
 }
 
 fiid_obj_t 
@@ -1240,22 +1418,6 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
   return (end - start);
 }
 
-#if 0
-static int32_t
-_fiid_obj_max_block_len_bytes (fiid_obj_t obj,
-                               uint8_t *field_start,
-                               uint8_t *field_end)
-{
-  int32_t len;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
-
-  len = _fiid_obj_max_block_len (obj, field_start, field_end);
-  ERR (len != -1);
-  return (BITS_ROUND_BYTES (len));
-}
-#endif
-
 static int32_t
 _fiid_obj_block_len (fiid_obj_t obj,
                      uint8_t *field_start,
@@ -1273,7 +1435,7 @@ _fiid_obj_block_len (fiid_obj_t obj,
   if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
 
-  if (key_index_start > key_index_end)
+  if (key_index_end > key_index_start)
     {
       errno = EINVAL;
       return (-1);
@@ -1290,22 +1452,6 @@ _fiid_obj_block_len (fiid_obj_t obj,
   
   return (counter);
 }
-
-#if 0
-static int32_t
-_fiid_obj_block_len_bytes (fiid_obj_t obj,
-                           uint8_t *field_start,
-                           uint8_t *field_end)
-{
-  int32_t len;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
-
-  len = _fiid_obj_block_len (obj, field_start, field_end);
-  ERR (len != -1);
-  return (BITS_ROUND_BYTES (len));
-}
-#endif
 
 int8_t 
 fiid_obj_set_block (fiid_obj_t obj, 
@@ -1331,7 +1477,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   if ((key_index_end = _fiid_obj_lookup_field_index(obj, field_end)) < 0)
     return (-1);
 
-  if (key_index_start > key_index_end)
+  if (key_index_end > key_index_start)
     {
       errno = EINVAL;
       return (-1);

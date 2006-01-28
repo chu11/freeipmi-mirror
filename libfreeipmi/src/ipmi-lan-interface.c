@@ -1780,31 +1780,31 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
-ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
-		       fiid_obj_t obj_msg_hdr, 
-		       uint8_t net_fn)
+ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
 {
   uint64_t net_fn_recv;
 
-  if (!(obj_msg_hdr 
-        && tmpl_msg_hdr 
-        && IPMI_NET_FN_VALID(net_fn)))
+  if (!(obj_msg_hdr && IPMI_NET_FN_VALID(net_fn)))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (tmpl_msg_hdr, (uint8_t *)"net_fn"))
+  if (!fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"net_fn"))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg_hdr, tmpl_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
+  FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
 
   return ((((int8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
@@ -1830,39 +1830,77 @@ ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr,
   return ((((int8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
+#endif /* TEST */
+
 int8_t 
 ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 {
   uint8_t auth_type;
-  uint32_t auth_type_offset, required_len;
+  uint32_t auth_type_offset;
+  int32_t rmcp_hdr_len, msg_hdr_len1, msg_hdr_len2, auth_code_len;
+  int32_t auth_type_start_bytes;
+  int32_t chksum1_block_index, chksum1_block_len, 
+    chksum2_block_index, chksum2_block_len;
+  ipmi_chksum_t chksum1_recv, chksum1_calc, chksum2_recv, chksum2_calc;
 
   if (pkt == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
+  
+  if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0)
+    return (-1);
 
-  if (pkt_len < (fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_end_bytes (tmpl_hdr_session, (uint8_t *)"auth_type")))
-    return (0);
-
-  auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_type");
+  if ((auth_type_start_bytes = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_type")) < 0)
+    return (-1);
+  
+  auth_type_offset = rmcp_hdr_len + auth_type_start_bytes;
   auth_type = pkt[auth_type_offset];
 
-  if (ipmi_chksum_test (pkt + IPMI_LAN_PKT_CHKSUM1_BLOCK_INDX (auth_type), 
-			IPMI_LAN_PKT_RS_CHKSUM1_BLOCK_LEN + 1))
-    {
-      required_len = IPMI_LAN_PKT_CHKSUM1_BLOCK_INDX (auth_type) + IPMI_LAN_PKT_RS_CHKSUM1_BLOCK_LEN + 1;
-      if (pkt_len <= required_len)
-	return (0);
+  if ((msg_hdr_len1 = fiid_template_block_len_bytes(tmpl_hdr_session_auth,
+						    (uint8_t *)"auth_type",
+						    (uint8_t *)"session_id")) < 0)
+    return (-1);
 
-      if (ipmi_chksum_test (pkt + IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_INDX (auth_type),
-			    pkt_len - required_len))
-	{
-	  return (1);
-	}
-    }
+  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
+    auth_code_len = IPMI_SESSION_MAX_AUTH_CODE_LEN;
+  else
+    auth_code_len = 0;
 
-  return (0);
+  if ((msg_hdr_len2 = fiid_template_field_len_bytes(tmpl_hdr_session_auth,
+						    (uint8_t *)"ipmi_msg_len")) < 0)
+    return (-1);
+
+  chksum1_block_index = rmcp_hdr_len + msg_hdr_len1 + auth_code_len + msg_hdr_len2;
+
+  if ((chksum1_block_len = fiid_template_block_len_bytes(tmpl_hdr_session_auth,
+							 (uint8_t *)"rq_addr",
+							 (uint8_t *)"net_fn")) < 0)
+    return (-1);
+
+  if (pkt_len < (chksum1_block_index + chksum1_block_len + 1))
+    return (0);
+
+  chksum1_calc = ipmi_chksum(pkt + chksum1_block_index, chksum1_block_len);
+  chksum1_recv = pkt[chksum1_block_index + chksum1_block_len];
+
+  if (chksum1_calc != chksum1_recv)
+    return (0);
+
+  chksum2_block_index = chksum1_block_index + chksum1_block_len + 1;
+
+  if (pkt_len <= (chksum2_block_index + 1))
+    return (0);
+
+  chksum2_block_len = pkt_len - chksum2_block_index - 1;
+  
+  chksum2_calc = ipmi_chksum(pkt + chksum2_block_index, chksum2_block_len);
+  chksum2_recv = pkt[chksum2_block_index + chksum2_block_len];
+
+  if (chksum2_calc != chksum2_recv)
+    return (0);
+
+  return (1);
 }
 
-#endif /* TEST */

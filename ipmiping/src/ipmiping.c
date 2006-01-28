@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.3 2006-01-25 02:45:07 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.4 2006-01-28 15:31:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -52,13 +52,13 @@ Fiid_obj_create(fiid_template_t tmpl)
   if ((obj = fiid_obj_create(tmpl)) == NULL)
     ipmi_ping_err_exit("fiid_obj_create: %s", strerror(errno));
 
-  return ptr;
+  return obj;
 }
 
 void 
 Fiid_obj_destroy(fiid_obj_t obj)
 {
-  fiid_obj_free(obj);
+  fiid_obj_destroy(obj);
 }
 
 void 
@@ -112,18 +112,23 @@ createpacket(char *buffer,
                                      obj_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_get_channel_auth_caps: %s", strerror(errno));
 
-  if ((len = assemble_ipmi_lan_pkt(obj_hdr_rmcp, obj_hdr_session, 
-                                   tmpl_hdr_session_auth_calc, obj_msg_hdr, 
-                                   obj_cmd, tmpl_cmd_get_channel_auth_caps_rq,
-                                   (uint8_t *)buffer, buflen)) < 0)
+  if ((len = assemble_ipmi_lan_pkt(obj_hdr_rmcp, 
+				   obj_hdr_session, 
+                                   obj_msg_hdr, 
+                                   obj_cmd, 
+                                   (uint8_t *)buffer, 
+				   buflen)) < 0)
     ipmi_ping_err_exit("assemble_ipmi_lan_pkt: %s", strerror(errno));
 
 #ifndef NDEBUG
   if (debug)
     {
-      if (fiid_obj_dump_lan(STDERR_FILENO, "Request", NULL, 
-                            (uint8_t *)buffer, len, 
-                            tmpl_hdr_session_auth_calc, tmpl_lan_msg_hdr_rq, 
+      if (fiid_obj_dump_lan(STDERR_FILENO, 
+			    "Request", 
+			    NULL, 
+                            (uint8_t *)buffer, 
+			    len, 
+			    tmpl_lan_msg_hdr_rq, 
                             tmpl_cmd_get_channel_auth_caps_rq) < 0)
         ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
     }
@@ -172,9 +177,12 @@ parsepacket(char *buffer,
 #ifndef NDEBUG
   if (debug)
     {
-      if (fiid_obj_dump_lan(STDERR_FILENO, "Response", NULL, 
-                            (uint8_t *)buffer, buflen, 
-                            tmpl_hdr_session_auth_calc, tmpl_lan_msg_hdr_rs, 
+      if (fiid_obj_dump_lan(STDERR_FILENO, 
+			    "Response", 
+			    NULL, 
+                            (uint8_t *)buffer, 
+			    buflen, 
+                            tmpl_lan_msg_hdr_rs, 
                             tmpl_cmd_get_channel_auth_caps_rs) < 0)
         ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
     }
@@ -189,15 +197,16 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, buflen, 
-                              tmpl_hdr_session_auth_calc, 
-                              tmpl_cmd_get_channel_auth_caps_rs, 
-                              obj_hdr_rmcp, obj_hdr_session, 
-                              obj_msg_hdr, obj_cmd, obj_msg_trlr) < 0)
+  if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
+			      buflen, 
+                              obj_hdr_rmcp, 
+			      obj_hdr_session, 
+                              obj_msg_hdr,
+			      obj_cmd, 
+			      obj_msg_trlr) < 0)
     ipmi_ping_err_exit("unassemble_ipmi_lan_pkt: %s", strerror(errno));
 
-  if ((ret = ipmi_lan_check_net_fn(tmpl_lan_msg_hdr_rs, obj_msg_hdr, 
-                                   IPMI_NET_FN_APP_RS)) < 0)
+  if ((ret = ipmi_lan_check_net_fn(obj_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
   if (!ret)
@@ -206,8 +215,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_lan_check_net_fn(tmpl_lan_msg_hdr_rs, obj_msg_hdr, 
-                                   IPMI_NET_FN_APP_RS)) < 0)
+  if ((ret = ipmi_lan_check_net_fn(obj_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
   if (!ret)
@@ -216,8 +224,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_check_cmd(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
-                            IPMI_CMD_GET_CHANNEL_AUTH_CAPS)) < 0)
+  if ((ret = ipmi_check_cmd(obj_cmd, IPMI_CMD_GET_CHANNEL_AUTH_CAPS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
   if (!ret)
@@ -226,8 +233,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_check_comp_code(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
-                                  IPMI_COMMAND_SUCCESS)) < 0)
+  if ((ret = ipmi_check_comp_code(obj_cmd, IPMI_COMMAND_SUCCESS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
   if (!ret)
@@ -236,8 +242,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  Fiid_obj_get(obj_msg_hdr, tmpl_lan_msg_hdr_rs, 
-               (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
+  Fiid_obj_get(obj_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
 
   if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
@@ -248,30 +253,34 @@ parsepacket(char *buffer,
   printf("response received from %s: rq_seq=%u", from, (uint32_t)req_seq);
   if (verbose)
     {
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.none", (uint64_t *)&none);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md2", (uint64_t *)&md2);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md5", (uint64_t *)&md5);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
+                   (uint8_t *)"auth_type.none", 
+		   (uint64_t *)&none);
+      Fiid_obj_get(obj_cmd, 
+                   (uint8_t *)"auth_type.md2", 
+		   (uint64_t *)&md2);
+      Fiid_obj_get(obj_cmd, 
+                   (uint8_t *)"auth_type.md5", 
+		   (uint64_t *)&md5);
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_type.straight_passwd_key", 
                    (uint64_t *)&straight_passwd_key);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.oem_prop", (uint64_t *)&oem);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
+                   (uint8_t *)"auth_type.oem_prop", 
+		   (uint64_t *)&oem);
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_status.anonymous_login", 
                    (uint64_t *)&anonymous_login);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_status.null_username", 
                    (uint64_t *)&null_username);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_status.non_null_username", 
                    (uint64_t *)&non_null_username);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_status.user_level_auth", 
                    (uint64_t *)&user_level_auth);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+      Fiid_obj_get(obj_cmd, 
                    (uint8_t *)"auth_status.per_message_auth", 
                    (uint64_t *)&per_message_auth);
       printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
