@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.3.2.2 2006-01-21 09:05:48 chu11 Exp $
+ *  $Id: wrappers.c,v 1.3.2.3 2006-01-28 16:57:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -317,7 +317,7 @@ char *wrap_realloc(char *file, int line, char *item , int newsize)
     assert(newsize > 0 && newsize <= INT_MAX);
     assert(p[0] == MALLOC_MAGIC);
     oldsize = p[1];
-    assert(_checkfill(item + oldsize, MALLOC_PAD_FILL, MALLOC_PAD_SIZE));
+    assert(_checkfill((unsigned char *)(item + oldsize), MALLOC_PAD_FILL, MALLOC_PAD_SIZE));
     p = (int *)realloc(p, 2*sizeof(int) + newsize + MALLOC_PAD_SIZE);
     if (p == NULL)
         return lsd_nomem_error(file, line, "realloc");
@@ -341,7 +341,7 @@ void Free(void *ptr)
 
         assert(p[0] == MALLOC_MAGIC);   /* magic cookie still there? */
         size = p[1];
-        assert(_checkfill(ptr + size, MALLOC_PAD_FILL, MALLOC_PAD_SIZE));
+        assert(_checkfill((unsigned char *)(ptr + size), MALLOC_PAD_FILL, MALLOC_PAD_SIZE));
         memset(p, 0, 2*sizeof(int) + size + MALLOC_PAD_SIZE);
 #ifndef NDEBUG
         memory_alloc -= size;

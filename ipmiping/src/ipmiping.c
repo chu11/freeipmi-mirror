@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.8 2006-01-21 09:05:48 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.9 2006-01-28 16:57:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,8 +42,8 @@
 /* IPMI has a 6 bit sequence number */
 #define IPMI_RQ_SEQ_MAX  0x3F
 
-void *
-Fiid_obj_calloc(fiid_template_t tmpl)
+static void *
+_fiid_obj_calloc(fiid_template_t tmpl)
 {
   void *ptr;
 
@@ -55,15 +55,15 @@ Fiid_obj_calloc(fiid_template_t tmpl)
   return ptr;
 }
 
-void 
-Fiid_obj_free(fiid_obj_t obj)
+static void 
+_fiid_obj_free(fiid_obj_t obj)
 {
   fiid_obj_free(obj);
 }
 
 void 
-Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, 
-             uint8_t *field, uint64_t *val)
+_fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, 
+	      uint8_t *field, uint64_t *val)
 {
   assert(obj != NULL && tmpl != NULL && field != NULL && val != NULL);
 
@@ -99,10 +99,10 @@ createpacket(char *buffer,
   else
     tmpl_cmd_get_channel_auth_caps_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_auth_caps_v20_rq[0];
 
-  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rq);
-  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_ptr);
+  obj_hdr_rmcp = _fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_hdr_session = _fiid_obj_calloc(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = _fiid_obj_calloc(tmpl_lan_msg_hdr_rq);
+  obj_cmd = _fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_ptr);
     
   if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
@@ -149,10 +149,10 @@ createpacket(char *buffer,
     }
 #endif
 
-  Fiid_obj_free(obj_hdr_rmcp);
-  Fiid_obj_free(obj_hdr_session);
-  Fiid_obj_free(obj_msg_hdr);
-  Fiid_obj_free(obj_cmd);
+  _fiid_obj_free(obj_hdr_rmcp);
+  _fiid_obj_free(obj_hdr_session);
+  _fiid_obj_free(obj_msg_hdr);
+  _fiid_obj_free(obj_cmd);
 
   return len;
 }
@@ -192,11 +192,11 @@ parsepacket(char *buffer,
   else
     tmpl_cmd_get_channel_auth_caps_ptr = (fiid_field_t *)&tmpl_cmd_get_channel_auth_caps_v20_rs[0];
 
-  obj_hdr_rmcp = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_hdr_session = Fiid_obj_calloc(tmpl_hdr_session_auth_calc);
-  obj_msg_hdr = Fiid_obj_calloc(tmpl_lan_msg_hdr_rs);
-  obj_cmd = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_ptr);
-  obj_msg_trlr = Fiid_obj_calloc(tmpl_lan_msg_trlr);
+  obj_hdr_rmcp = _fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_hdr_session = _fiid_obj_calloc(tmpl_hdr_session_auth_calc);
+  obj_msg_hdr = _fiid_obj_calloc(tmpl_lan_msg_hdr_rs);
+  obj_cmd = _fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_ptr);
+  obj_msg_trlr = _fiid_obj_calloc(tmpl_lan_msg_trlr);
 
 #ifndef NDEBUG
   if (debug)
@@ -235,16 +235,6 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_lan_check_net_fn(tmpl_lan_msg_hdr_rs, obj_msg_hdr, 
-                                   IPMI_NET_FN_APP_RS)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
-
-  if (!ret)
-    {
-      retval = 0;
-      goto cleanup;
-    }
-
   if ((ret = ipmi_check_cmd(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
                             IPMI_CMD_GET_CHANNEL_AUTH_CAPS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
@@ -265,8 +255,8 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  Fiid_obj_get(obj_msg_hdr, tmpl_lan_msg_hdr_rs, 
-               (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
+  _fiid_obj_get(obj_msg_hdr, tmpl_lan_msg_hdr_rs, 
+		(uint8_t *)"rq_seq", (uint64_t *)&req_seq);
 
   if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
@@ -277,32 +267,32 @@ parsepacket(char *buffer,
   printf("response received from %s: rq_seq=%u", from, (uint32_t)req_seq);
   if (verbose)
     {
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.none", (uint64_t *)&none);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md2", (uint64_t *)&md2);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md5", (uint64_t *)&md5);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.straight_passwd_key", 
-                   (uint64_t *)&straight_passwd_key);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.oem_prop", (uint64_t *)&oem);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.anonymous_login", 
-                   (uint64_t *)&anonymous_login);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.null_username", 
-                   (uint64_t *)&null_username);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.non_null_username", 
-                   (uint64_t *)&non_null_username);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.user_level_auth", 
-                   (uint64_t *)&user_level_auth);
-      Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.per_message_auth", 
-                   (uint64_t *)&per_message_auth);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_type.none", (uint64_t *)&none);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_type.md2", (uint64_t *)&md2);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_type.md5", (uint64_t *)&md5);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_type.straight_passwd_key", 
+		    (uint64_t *)&straight_passwd_key);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_type.oem_prop", (uint64_t *)&oem);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_status.anonymous_login", 
+		    (uint64_t *)&anonymous_login);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_status.null_username", 
+		    (uint64_t *)&null_username);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_status.non_null_username", 
+		    (uint64_t *)&non_null_username);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_status.user_level_auth", 
+		    (uint64_t *)&user_level_auth);
+      _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_rs, 
+		    (uint8_t *)"auth_status.per_message_auth", 
+		    (uint64_t *)&per_message_auth);
       printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
              _setstr(straight_passwd_key),_setstr(oem), 
@@ -312,22 +302,22 @@ parsepacket(char *buffer,
       
       if (version == IPMI_PING_VERSION_2_0)
         {
-          Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
-                       "auth_type.ipmi_v2.0_extended_capabilities_available", 
-                       (u_int64_t *)&ipmi_v20_extended_capabilities_available);
+          _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
+			"auth_type.ipmi_v2.0_extended_capabilities_available", 
+			(u_int64_t *)&ipmi_v20_extended_capabilities_available);
 
           printf("ipmi_v20_extended capabilities_available: %s ",
                  _setstr(ipmi_v20_extended_capabilities_available));
 
           if (ipmi_v20_extended_capabilities_available)
             {
-              Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
-                           "channel_supports_ipmi_v1.5_connections", 
-                           (u_int64_t *)&ipmi_v15);
-              Fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
-                           "channel_supports_ipmi_v2.0_connections", 
-                           (u_int64_t *)&ipmi_v20);
-
+              _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
+			    "channel_supports_ipmi_v1.5_connections", 
+			    (u_int64_t *)&ipmi_v15);
+              _fiid_obj_get(obj_cmd, tmpl_cmd_get_channel_auth_caps_v20_rs, 
+			    "channel_supports_ipmi_v2.0_connections", 
+			    (u_int64_t *)&ipmi_v20);
+	      
               printf("ipmi_v1.5: %s ipmi_v2.0: %s ", _setstr(ipmi_v15), _setstr(ipmi_v20));
             }
         }
@@ -336,11 +326,11 @@ parsepacket(char *buffer,
     
   retval = 1;
  cleanup:
-  Fiid_obj_free(obj_hdr_rmcp);
-  Fiid_obj_free(obj_hdr_session);
-  Fiid_obj_free(obj_msg_hdr);
-  Fiid_obj_free(obj_cmd);
-  Fiid_obj_free(obj_msg_trlr);
+  _fiid_obj_free(obj_hdr_rmcp);
+  _fiid_obj_free(obj_hdr_session);
+  _fiid_obj_free(obj_msg_hdr);
+  _fiid_obj_free(obj_cmd);
+  _fiid_obj_free(obj_msg_trlr);
   return retval;
 }
 

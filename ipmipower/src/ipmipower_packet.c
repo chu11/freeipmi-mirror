@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.8.2.5 2006-01-21 09:05:48 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8.2.6 2006-01-28 16:57:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -213,12 +213,12 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           "============================================";
       
       if (pkt & PACKET_TYPE_REQ_MASK)
-        Fiid_obj_dump_lan(STDERR_FILENO, ip->ic->hostname, hdr, buffer, len,
+        Fiid_obj_dump_lan(STDERR_FILENO, ip->ic->hostname, hdr, (uint8_t *)buffer, len,
                           tmpl_hdr_session_auth_calc, 
                           tmpl_lan_msg_hdr_rq,
                           ipmipower_packet_cmd_template(ip, pkt));
       else
-        Fiid_obj_dump_lan(STDERR_FILENO, ip->ic->hostname, hdr, buffer, len,
+        Fiid_obj_dump_lan(STDERR_FILENO, ip->ic->hostname, hdr, (uint8_t *)buffer, len,
                           tmpl_hdr_session_auth_calc, 
                           tmpl_lan_msg_hdr_rs,
                           ipmipower_packet_cmd_template(ip, pkt));

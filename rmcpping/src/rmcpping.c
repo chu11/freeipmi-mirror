@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.1.4.7 2006-01-23 21:50:00 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.1.4.8 2006-01-28 16:57:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -45,8 +45,8 @@
  */
 #define RMCP_MSG_TAG_MAX  0xFE
 
-void *
-Fiid_obj_calloc(fiid_template_t tmpl)
+static void *
+_fiid_obj_calloc(fiid_template_t tmpl)
 {
   void *ptr;
  
@@ -58,15 +58,15 @@ Fiid_obj_calloc(fiid_template_t tmpl)
   return ptr;
 }
  
-void
-Fiid_obj_free(fiid_obj_t obj)
+static void
+_fiid_obj_free(fiid_obj_t obj)
 {
   fiid_obj_free(obj);
 }
 
-void
-Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
-             uint8_t *field, uint64_t *val)
+static void
+_fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
+	      uint8_t *field, uint64_t *val)
 {
   assert(obj != NULL && tmpl != NULL && field != NULL && val != NULL);
 
@@ -93,8 +93,8 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = Fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
+  obj_rmcp_hdr = _fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = _fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
 
   if (fill_hdr_rmcp_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -114,12 +114,12 @@ createpacket(char *buffer,
       if (fiid_obj_dump_rmcp(STDERR_FILENO, "Ping", NULL, 
                              (uint8_t *)buffer, len, 
                              tmpl_cmd_asf_presence_ping) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+        ipmi_ping_err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
     }
 #endif
 
-  Fiid_obj_free(obj_rmcp_hdr);
-  Fiid_obj_free(obj_rmcp_cmd);
+  _fiid_obj_free(obj_rmcp_hdr);
+  _fiid_obj_free(obj_rmcp_cmd);
   return len;
 }
 
@@ -142,15 +142,15 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = Fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = Fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
+  obj_rmcp_hdr = _fiid_obj_calloc(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = _fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
 
 #ifndef NDEBUG
   if (debug)
     {
       if (fiid_obj_dump_rmcp(STDERR_FILENO, "Pong", NULL, buffer, buflen, 
                              tmpl_cmd_asf_presence_pong) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+        ipmi_ping_err_exit("fiid_obj_dump_rmcp: %s", strerror(errno));
     }
 #endif
 
@@ -158,8 +158,8 @@ parsepacket(char *buffer,
                           obj_rmcp_hdr, obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
-  Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-               (uint8_t *)"msg_type", (uint64_t *)&msg_type);
+  _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
+		(uint8_t *)"msg_type", (uint64_t *)&msg_type);
 
   if (msg_type != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
     {
@@ -167,8 +167,8 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-               (uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
+  _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
+		(uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
   if (msg_tag != (seq_num % (RMCP_MSG_TAG_MAX + 1)))
     {
       retval = 0;
@@ -178,17 +178,17 @@ parsepacket(char *buffer,
   printf("pong received from %s: msg_tag=%u", from, (uint32_t)msg_tag);
   if (verbose)
     {
-      Fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-                   (uint8_t *)"supported_entities.ipmi_supported", 
-                   (uint64_t *)&ipmi_supported);
+      _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
+		    (uint8_t *)"supported_entities.ipmi_supported", 
+		    (uint64_t *)&ipmi_supported);
       printf(", ipmi %s", _supported(ipmi_supported));
     }
   printf("\n");
   
   retval = 1;
  cleanup:
-  Fiid_obj_free(obj_rmcp_hdr);
-  Fiid_obj_free(obj_rmcp_cmd);
+  _fiid_obj_free(obj_rmcp_hdr);
+  _fiid_obj_free(obj_rmcp_cmd);
   return retval;
 }
 

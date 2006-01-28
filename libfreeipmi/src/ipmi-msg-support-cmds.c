@@ -1159,7 +1159,7 @@ ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd)
 
   FIID_OBJ_GET(obj_cmd, tmpl_cmd, (uint8_t *)"cmd", &cmd_recv);
 
-  return ((((int8_t)cmd_recv) == cmd) ? 1 : 0);
+  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
 }
 
 int8_t

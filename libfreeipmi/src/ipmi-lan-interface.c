@@ -254,7 +254,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 		  uint8_t rq_seq, 
 		  fiid_obj_t obj_msg)
 {
-  if ((net_fn > IPMI_NET_FN_TRANSPORT_RS)
+  if (!IPMI_NET_FN_VALID(net_fn)
       || (rs_lun > IPMI_BMC_IPMB_LUN_OEM_LUN2)
       || (rq_seq > IPMI_LAN_SEQ_NUM_MAX)
       || (obj_msg == NULL))
@@ -627,7 +627,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
           obj_len);
   indx += obj_len;
 
-  /* auth_code generated last.  Save pointers for later calculate */
+  /* auth_code generated last.  Save pointers for later calculation */
   if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
       || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
       || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
@@ -661,7 +661,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   indx += obj_len;
   msg_data_count += obj_len;
 
-  /* Auth type must be done last, some authentication like md2 and md5
+  /* Auth code must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated
    * beforehand
    */
@@ -1755,7 +1755,9 @@ ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr,
 {
   uint64_t net_fn_recv;
 
-  if (!(obj_msg_hdr && tmpl_msg_hdr))
+  if (!(obj_msg_hdr 
+        && tmpl_msg_hdr 
+        && IPMI_NET_FN_VALID(net_fn)))
     {
       errno = EINVAL;
       return (-1);
@@ -1769,7 +1771,7 @@ ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr,
 
   FIID_OBJ_GET(obj_msg_hdr, tmpl_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
 
-  return ((((int8_t)net_fn_recv) == net_fn) ? 1 : 0);
+  return ((((uint8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
 
 int8_t 
