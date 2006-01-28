@@ -22,30 +22,30 @@
 
 fiid_template_t tmpl_hdr_session = 
   {
-    {8,  "auth_type"},
-    {32, "session_seq_num"},
-    {32, "session_id"},
-    {8,  "ipmi_msg_len"},
+    {8,  "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "ipmi_msg_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
 fiid_template_t tmpl_hdr_session_auth =
   {
-    {8,   "auth_type"},
-    {32,  "session_seq_num"},
-    {32,  "session_id"},
-    {128, "auth_code"},
-    {8,   "ipmi_msg_len"},
+    {8,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32,  "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32,  "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {128, "auth_code", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {8,   "ipmi_msg_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0,   ""}
   };
 
 fiid_template_t tmpl_hdr_session_auth_calc =
   {
-    {8,   "auth_type"},
-    {32,  "session_seq_num"},
-    {32,  "session_id"},
-    {256, "auth_calc_data"},
-    {8,   "ipmi_msg_len"},
+    {8,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32,  "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32,  "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {256, "auth_calc_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {8,   "ipmi_msg_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0,   ""}
   };
 

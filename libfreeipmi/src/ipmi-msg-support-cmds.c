@@ -22,35 +22,35 @@
 
 fiid_template_t tmpl_cmd_get_channel_auth_caps_rq =
   {
-    {8, "cmd"},
-    {4, "channel_num"},
-    {4, "reserved1"},
-    {4, "max_priv_level"},
-    {4, "reserved2"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "max_priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
 fiid_template_t tmpl_cmd_get_channel_auth_caps_rs = 
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {8, "channel_num"},
-    {1, "auth_type.none"},
-    {1, "auth_type.md2"},
-    {1, "auth_type.md5"},
-    {1, "auth_type.reserved1"},
-    {1, "auth_type.straight_passwd_key"},
-    {1, "auth_type.oem_prop"},
-    {2, "auth_type.reserved2"},
-    {1, "auth_status.anonymous_login"},
-    {1, "auth_status.null_username"},
-    {1, "auth_status.non_null_username"},
-    {1, "auth_status.user_level_auth"},
-    {1, "auth_status.per_message_auth"},
-    {3, "auth_status.reserved"},
-    {8, "reserved1"},
-    {24, "oem_id"},
-    {8, "oem_aux"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "channel_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.straight_passwd_key", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_type.oem_prop", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "auth_type.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_status.anonymous_login", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_status.null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_status.non_null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_status.user_level_auth", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "auth_status.per_message_auth", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "auth_status.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "oem_aux", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 

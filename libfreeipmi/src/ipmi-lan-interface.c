@@ -24,33 +24,33 @@
 /* IPMI LAN Message Request Header */
 fiid_template_t tmpl_lan_msg_hdr_rq =
   {
-    {8, "rs_addr"},
-    {2, "rs_lun"},
-    {6, "net_fn"},
-    {8, "chksum1"},
-    {8, "rq_addr"},
-    {2, "rq_lun"},
-    {6, "rq_seq"},
+    {8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "chksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
 /* IPMI LAN Message Response Header */
 fiid_template_t tmpl_lan_msg_hdr_rs =
   {
-    {8, "rq_addr"},
-    {2, "rq_lun"},
-    {6, "net_fn"},
-    {8, "chksum1"},
-    {8, "rs_addr"},
-    {2, "rs_lun"},
-    {6, "rq_seq"},
+    {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "chksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
 /* IPMI LAN Message Trailer */
 fiid_template_t tmpl_lan_msg_trlr = 
   {
-    {8, "chksum2"},
+    {8, "chksum2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
@@ -596,6 +596,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   int32_t len;
   fiid_obj_t obj_msg_trlr = NULL;
   ipmi_chksum_t chksum;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_hdr_rmcp)
       || !fiid_obj_valid(obj_hdr_session) 
@@ -607,8 +608,57 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return -1;
     }
   
-  /* XXX TEMPLATE CHECKS */
+  if ((rv = fiid_obj_template_compare(obj_hdr_rmcp, tmpl_hdr_rmcp)) < 0)
+    return (-1);
 
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth_calc)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_msg_hdr, tmpl_lan_msg_hdr_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_hdr_rmcp)) < 0)
+    return (-1);
+
+  if ((rv = fiid_obj_packet_valid(obj_hdr_session)) < 0)
+    return (-1);
+
+  if ((rv = fiid_obj_packet_valid(obj_msg_hdr)) < 0)
+    return (-1);
+
+  if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
+    return (-1);
+  
   if (fiid_obj_get(obj_hdr_session, (uint8_t *)"auth_type", &auth_type) < 0)
     return -1;
 
@@ -945,6 +995,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   uint32_t indx;
   uint32_t obj_cmd_len, obj_msg_trlr_len;
   int32_t len;
+  int8_t rv;
 
   if (!pkt
       || fiid_obj_valid(obj_hdr_rmcp)
@@ -957,7 +1008,53 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return -1;
     }
 
-  /* XXX template checks */
+  if ((rv = fiid_obj_template_compare(obj_hdr_rmcp, tmpl_hdr_rmcp)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth_calc)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_msg_hdr, tmpl_lan_msg_hdr_rs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_msg_trlr, tmpl_lan_msg_trlr)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   indx = 0;
   ERR(!(fiid_obj_clear(obj_hdr_rmcp) < 0));
