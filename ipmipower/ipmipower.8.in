@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.18 2006-01-24 00:41:31 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.19 2006-01-28 15:03:39 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -541,7 +541,7 @@ packet responses contain non-null authentication data (when it should
 in fact be null).  In order to work around this issue, the -U
 (--check-unexpected-authcode) option must be set.  The option will
 allow unexpected non-null authcodes to be checked as though they were
-expected.
+expected. (Bug also discovered on Dell PowerEdge SC1425)
 
 Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
 activate session response and close session response packets have

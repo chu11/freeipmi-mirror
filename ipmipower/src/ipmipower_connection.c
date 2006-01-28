@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.6 2006-01-20 21:59:19 ab Exp $
+ *  $Id: ipmipower_connection.c,v 1.7 2006-01-28 15:03:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -267,6 +267,6 @@ ipmipower_connection_hostname_index(struct ipmipower_connection *ics,
         return i;
     }
 
-  dbg("ipmipower_connection_hostname_index: %s not found"); 
+  dbg("ipmipower_connection_hostname_index: %s not found", hostname); 
   return -1;
 }

@@ -8,6 +8,16 @@
 	ipmi_inband_free, ipmi_open_outofband): Fix corner cases.
 
 	* ipmiping/src/ipmiping.c (parsepacket): Remove unnecessary code.
+
+	Fix ipmipower issues discovered by Keith Owens @ SGI.
+
+	* ipmipower/ipmipower.8.in: Document additional machine compliance
+	bug found with.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Fix segfault
+	corner case.
+
+	* ipmipower/src/: Fix gcc 4.0 warnings.
 	
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
