@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.8 2006-01-29 22:57:04 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.9 2006-01-29 23:09:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -91,7 +91,7 @@ createpacket(char *buffer,
     return 0;
 
   obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth);
   obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rq);
   obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq);
     
@@ -174,7 +174,7 @@ parsepacket(char *buffer,
     return 0;
 
   obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth_calc);
+  obj_hdr_session = _fiid_obj_create(tmpl_hdr_session_auth);
   obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rs);
   obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs);
   obj_msg_trlr = _fiid_obj_create(tmpl_lan_msg_trlr);

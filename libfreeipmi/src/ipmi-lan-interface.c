@@ -511,13 +511,17 @@ fill_hdr_session2 (ipmi_device_t *dev,
 
 #endif /* TEST */
 
-int32_t 
+static int32_t 
 _ipmi_lan_pkt_size (uint8_t auth_type, 
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
+
+  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+         && tmpl_lan_msg
+         && fiid_obj_valid(obj_cmd));
 
   ERR(!((len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
   msg_len += len;
@@ -540,14 +544,11 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
       || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
       || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
     msg_len += IPMI_SESSION_MAX_AUTH_CODE_LEN;
-  else 
-    /* fatal error, library should not call this function with a bad auth_type */
-    ERR_EXIT(0);
   
   return msg_len;
 }
 
-int32_t 
+static int32_t 
 _ipmi_lan_pkt_rq_size (uint8_t auth_type, fiid_obj_t obj_cmd)
 {
   return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rq, obj_cmd);
@@ -1132,9 +1133,6 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 
   if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
-      uint32_t authcode_len;
-      int8_t rv;
-
       ERR(!((len = fiid_obj_set_data(obj_hdr_session,
                                      (uint8_t *)"auth_code",
                                      pkt + indx,

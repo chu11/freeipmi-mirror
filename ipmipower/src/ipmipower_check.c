@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.8.2.5 2006-01-29 18:12:21 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.8.2.6 2006-01-29 23:09:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -231,8 +231,8 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
 
   if (netfn != expected_netfn)
-    dbg("_check_network_function(%s:%d): netfn bad: %x", 
-        ip->ic->hostname, ip->protocol_state, (unsigned int)netfn);
+    dbg("_check_network_function(%s:%d): netfn bad: %x, expected: %x", 
+        ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
