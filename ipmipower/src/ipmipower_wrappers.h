@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.4.2.1 2006-01-28 20:45:19 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.4.2.2 2006-01-29 16:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,30 +76,30 @@ int Cbuf_peek_and_drop(cbuf_t buf, void *buffer, int len);
  */
 int Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len);
 
-/* Fiid_obj_calloc
+/* Fiid_obj_create
  * - Allocate a fiid object
  */
-void * Fiid_obj_calloc(fiid_template_t tmpl);
+fiid_obj_t Fiid_obj_create(fiid_template_t tmpl);
 
-/* Fiid_obj_memset
- * - Memset a fiid object 
+/* Fiid_obj_clear
+ * - Clear a fiid object 
  */
-void * Fiid_obj_memset(fiid_obj_t obj, int c, fiid_template_t tmpl);
+int8_t Fiid_obj_clear(fiid_obj_t obj);
 
-/* Fiid_obj_free
- * - Free a fiid object
+/* Fiid_obj_destroy
+ * - Destroy a fiid object
  */
-void Fiid_obj_free(fiid_obj_t obj);
+void Fiid_obj_destroy(fiid_obj_t obj);
 
 /* Fiid_obj_get
  * - Get fiid field data
  */
-void Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, uint8_t *field, uint64_t *val);
+void Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val);
 
 /* Fiid_obj_dump_lan
  * - Dump lan contents
  */
-void Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
+void Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
 
 /* Fiid_obj_dump_rmcp
  * - Dump rmcp contents

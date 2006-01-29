@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.8.2.3 2006-01-28 17:05:04 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.8.2.4 2006-01-29 16:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -67,8 +67,9 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTH_RES || pkt == SESS_RES)
     return 1;
 
-  Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc, 
-               (uint8_t *)"session_seq_num", &pktoseq);
+  Fiid_obj_get(ip->session_res,
+               (uint8_t *)"session_seq_num", 
+	       &pktoseq);
   
   if (pkt == ACTV_RES)
     {
@@ -177,10 +178,12 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
     return 1;
   else
     {
-      Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                   (uint8_t *)"session_id", &session_id);
-      Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
-                   (uint8_t *)"session_id", &actv_res_session_id);
+      Fiid_obj_get(ip->session_res, 
+                   (uint8_t *)"session_id", 
+		   &session_id);
+      Fiid_obj_get(ip->actv_res, 
+                   (uint8_t *)"session_id", 
+		   &actv_res_session_id);
     }
   
   if (session_id != actv_res_session_id && session_id != 0)
@@ -212,7 +215,7 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, (uint8_t *)"net_fn", &netfn);
+  Fiid_obj_get(ip->msg_res, (uint8_t *)"net_fn", &netfn);
 
   if (pkt == CHAS_RES || pkt == CTRL_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
@@ -237,7 +240,7 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     
   myrseq = ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1);
 
-  Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, (uint8_t *)"rq_seq", &pktrseq);
+  Fiid_obj_get(ip->msg_res, (uint8_t *)"rq_seq", &pktrseq);
 
   if (pktrseq != myrseq)
     dbg("_check_requester_seq_num(%s:%d): rseq: %x, expected: %x",
@@ -256,8 +259,8 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   
   Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               ipmipower_packet_cmd_template(ip, pkt),
-               (uint8_t *)"cmd", &cmd);
+               (uint8_t *)"cmd", 
+	       &cmd);
 
   if (pkt == AUTH_RES) 
     expected_cmd = IPMI_CMD_GET_CHANNEL_AUTH_CAPS;
@@ -290,8 +293,8 @@ _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
     
   Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               ipmipower_packet_cmd_template(ip, pkt),
-               (uint8_t *)"comp_code", &cc);
+               (uint8_t *)"comp_code", 
+	       &cc);
   
   if (cc != IPMI_COMMAND_SUCCESS)
     dbg("_check_completion_code(%s:%d): cc bad: %x", 

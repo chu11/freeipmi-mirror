@@ -14,6 +14,11 @@
 	* Support new fiid interface globally.
 	
 ------------------------------------------------------------
+2006-01-29  Albert Chu <chu11@llnl.gov>	
+
+	* libfreeipmi/src/,ipmipower/src: Support new fiid interface for
+	ipmipower.
+	
 2006-01-28  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/fiid.c: Various new additions and fixes.

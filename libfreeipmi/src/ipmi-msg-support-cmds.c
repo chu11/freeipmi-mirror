@@ -56,76 +56,76 @@ fiid_template_t tmpl_cmd_get_channel_auth_caps_rs =
 
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
-    {8, "cmd"},
-    {4, "auth_type"},
-    {4, "reserved1"},
-    {128, "username"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {128, "username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_session_challenge_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {32, "tmp_session_id"}, /* LS byte first */
-    {128, "challenge_str"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "tmp_session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* LS byte first */
+    {128, "challenge_str", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_activate_session_rq =
   {
-    {8, "cmd"},
-    {4, "auth_type"},
-    {4, "reserved1"},
-    {4, "max_priv_level"},
-    {4, "reserved2"},
-    {128, "challenge_str"},
-    {32, "initial_outbound_seq_num"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "max_priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {128, "challenge_str", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "initial_outbound_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_activate_session_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {4, "auth_type"},
-    {4, "reserved1"},
-    {32, "session_id"},
-    {32, "initial_inbound_seq_num"},
-    {4, "max_priv_level"},
-    {4, "reserved2"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "initial_inbound_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "max_priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_set_session_priv_level_rq =
   {
-    {8, "cmd"},
-    {4, "priv_level"},
-    {4, "reserved1"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_set_session_priv_level_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {4, "new_priv_level"},
-    {4, "reserved1"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "new_priv_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_close_session_rq =
   {
-    {8, "cmd"},
-    {32, "session_id"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_close_session_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_channel_access_rq =
@@ -402,6 +402,8 @@ ipmi_lan_get_channel_auth_caps (int sockfd,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_cmd_get_session_challenge (uint8_t auth_type, 
 				char *username, 
@@ -411,7 +413,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
    */
-  if (!obj_cmd 
+  if (!fiid_obj_valid(obj_cmd)
       || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
     {
@@ -419,28 +421,25 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, (uint8_t *)"cmd", 
-		IPMI_CMD_GET_SESSION_CHALLENGE);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_session_challenge_rq, (uint8_t *)"auth_type",
-		auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
 
   /* achu: The BMC may ignore any '\0' characters that indicate the
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR_EXIT (fiid_obj_memset_field(obj_cmd, '\0',
-                                  tmpl_cmd_get_session_challenge_rq,
-                                  (uint8_t *)"username") == 0);
+  ERR (!(fiid_obj_clear_field(obj_cmd, (uint8_t *)"username") < 0));
 
   if (username)
     ERR_EXIT (fiid_obj_set_data (obj_cmd, 
-                                 tmpl_cmd_get_session_challenge_rq, 
                                  (uint8_t *)"username", 
                                  (uint8_t *)username, 
                                  username_len) == 0);
 
   return (0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_get_session_challenge (int sockfd, 
@@ -473,6 +472,8 @@ ipmi_lan_get_session_challenge (int sockfd,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_cmd_activate_session (uint8_t auth_type, 
 			   uint8_t max_priv_level, 
@@ -484,29 +485,28 @@ fill_cmd_activate_session (uint8_t auth_type,
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
       || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
-      || !obj_cmd)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, (uint8_t *)"cmd", 
-		IPMI_CMD_ACTIVATE_SESSION);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, (uint8_t *)"auth_type", 
-		auth_type);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, (uint8_t *)"max_priv_level", 
-		max_priv_level);
-  ERR_EXIT (fiid_obj_memset_field (obj_cmd, '\0', 
-                                   tmpl_cmd_activate_session_rq,
-                                   (uint8_t *)"challenge_str") == 0);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_SESSION);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"max_priv_level", max_priv_level);
+  ERR (!(fiid_obj_clear_field (obj_cmd, (uint8_t *)"challenge_str") < 0));
   if (challenge_str)
-    fiid_obj_set_data (obj_cmd, tmpl_cmd_activate_session_rq, 
-                       (uint8_t *)"challenge_str", challenge_str, 
-                       challenge_str_len);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_activate_session_rq, (uint8_t *)"initial_outbound_seq_num", 
+    ERR (!(fiid_obj_set_data (obj_cmd,
+			      (uint8_t *)"challenge_str",
+			      challenge_str, 
+			      challenge_str_len) < 0));
+  FIID_OBJ_SET (obj_cmd, 
+		(uint8_t *)"initial_outbound_seq_num", 
 		initial_outbound_seq_num);
   return (0);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_activate_session (int sockfd, 
@@ -546,23 +546,25 @@ ipmi_lan_activate_session (int sockfd,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_cmd_set_session_priv_level (uint8_t priv_level, 
 				 fiid_obj_t obj_cmd)
 {
   if (!IPMI_PRIV_LEVEL_VALID(priv_level)
-      || obj_cmd == NULL)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_session_priv_level_rq, (uint8_t *)"cmd",
-		IPMI_CMD_SET_SESSION_PRIV_LEVEL);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_set_session_priv_level_rq, (uint8_t *)"priv_level",
-		priv_level);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_SESSION_PRIV_LEVEL);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"priv_level", priv_level);
   return (0);
 }  
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_lan_set_session_priv_level (int sockfd, 
@@ -695,23 +697,24 @@ ipmi_lan_open_session (int sockfd,
   return (-1);
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd)
 {
-  if (obj_cmd == NULL)
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_close_session_rq, (uint8_t *)"cmd",
-		IPMI_CMD_CLOSE_SESSION);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_close_session_rq, (uint8_t *)"session_id",
-		close_session_id);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CLOSE_SESSION);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"session_id", close_session_id);
   return (0);
 }  
 
+#if 0 /* TEST */
 int8_t 
 ipmi_lan_close_session (int sockfd, 
 			struct sockaddr *hostaddr, 

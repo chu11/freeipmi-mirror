@@ -595,7 +595,8 @@ fiid_obj_valid(fiid_obj_t obj)
 int8_t
 fiid_obj_packet_valid(fiid_obj_t obj)
 {
-  int i, max_bits_counter = 0, set_bits_counter = 0, optional_bits_counter = 0;
+  int i, total_set_bits_counter = 0, max_bits_counter = 0, 
+    set_bits_counter = 0, optional_bits_counter = 0;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     {
@@ -617,6 +618,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
 	return (0);
 
       max_bits_counter += max_field_len;
+      total_set_bits_counter += set_field_len;
 
       if (set_field_len)
 	{
@@ -665,6 +667,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
      
   /* There shouldn't be anything left over */
   if (set_bits_counter)
+    return (0);
+
+  /* And the bits set should align across a byte */
+  if (total_set_bits_counter % 8 != 0)
     return (0);
  
   return (1);

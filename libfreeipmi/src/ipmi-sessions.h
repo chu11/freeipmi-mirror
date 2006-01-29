@@ -30,8 +30,8 @@ extern fiid_template_t tmpl_hdr_session_auth;
 extern fiid_template_t tmpl_hdr_session_auth_calc;
 
 int8_t fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr);
-int8_t check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, uint32_t session_seq_num);
-int8_t check_hdr_session_session_id (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_hdr_session, uint32_t session_id);
+int8_t check_hdr_session_session_seq_num (fiid_obj_t obj_hdr_session, uint32_t session_seq_num);
+int8_t check_hdr_session_session_id (fiid_obj_t obj_hdr_session, uint32_t session_id);
 int8_t check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl_hdr_session, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len);
 
 #ifdef __cplusplus

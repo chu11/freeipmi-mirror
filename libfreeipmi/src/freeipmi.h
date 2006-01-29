@@ -218,8 +218,8 @@ extern "C" {
 #include "ipmi-ssif-interface.h"
 #endif /* TEST */
 #include "ipmi-msg-support-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-chassis-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-dev-global-cmds.h"
 #include "ipmi-sdr-repo-cmds.h"
 #include "ipmi-sdr-record-types.h"
@@ -336,8 +336,8 @@ extern char *__progname;
 #include <freeipmi/ipmi-ssif-interface.h>
 #endif /* TEST */
 #include <freeipmi/ipmi-msg-support-cmds.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-chassis-cmds.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-dev-global-cmds.h>
 #include <freeipmi/ipmi-sdr-record-types.h>
 #include <freeipmi/ipmi-sdr-repo-cmds.h>

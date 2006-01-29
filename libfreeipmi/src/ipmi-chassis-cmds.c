@@ -45,41 +45,41 @@ fiid_template_t tmpl_set_power_restore_policy_rs =
 
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
   {
-    {8, "cmd"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_chassis_status_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {1, "power_state.power_on"},
-    {1, "power_state.power_overload"},
-    {1, "power_state.interlock"},
-    {1, "power_state.power_fault"},
-    {1, "power_state.power_control_fault"},
-    {2, "power_state.power_restore_policy"},
-    {1, "power_state.reserved"},
-    {1, "last_power_event.ac_failed"},
-    {1, "last_power_event.power_down_overload"},
-    {1, "last_power_event.power_down_interlock"},
-    {1, "last_power_event.power_down_fault"},
-    {1, "last_power_event.power_on_via_ipmi"},
-    {3, "last_power_event.reserved"},
-    {1, "misc_chassis.chassis_intrusion_active"},
-    {1, "misc_chassis.front_panel_lockout_active"},
-    {1, "misc_chassis.drive_fault"},
-    {1, "misc_chassis.cooling_fan_fault"},
-    {4, "misc_chassis.reserved"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_overload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_control_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "power_state.power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.ac_failed", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_overload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_on_via_ipmi", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "last_power_event.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.chassis_intrusion_active", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.front_panel_lockout_active", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.drive_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.cooling_fan_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "misc_chassis.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_ctrl_rq =
   {
-    {8, "cmd"},
-    {4, "chassis_ctrl"},
-    {4, "reserved1"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "chassis_ctrl", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 /* NOTE: 
@@ -88,9 +88,9 @@ fiid_template_t tmpl_cmd_chassis_ctrl_rq =
 */
 fiid_template_t tmpl_cmd_chassis_ctrl_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_identify_rq = 
@@ -124,6 +124,8 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
     {0, ""}
   };
 
+#if 0 /* TEST */
+
 int8_t 
 fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
                                    uint8_t power_restore_policy)
@@ -141,17 +143,18 @@ fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq,
   return 0;
 }
 
+#endif /* TEST */
+
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 { 
-  if (obj_cmd == NULL)
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_chassis_status_rq, (uint8_t *)"cmd", 
-		IPMI_CMD_GET_CHASSIS_STATUS);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
 
@@ -159,18 +162,18 @@ int8_t
 fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
   if (!IPMI_CHASSIS_CTRL_VALID(chassis_ctrl)
-      || obj_cmd == NULL)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"cmd",
-		IPMI_CMD_CHASSIS_CTRL);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"chassis_ctrl",
-		chassis_ctrl);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CTRL);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_ctrl", chassis_ctrl);
   return 0;
 }  
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
@@ -251,3 +254,5 @@ fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
 
   return 0;
 }  
+
+#endif /* TEST */

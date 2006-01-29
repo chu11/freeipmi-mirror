@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.h,v 1.3 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower_packet.h,v 1.3.2.1 2006-01-29 16:08:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,7 +33,7 @@
  * - retrieve template of the appropriate packet type
  */
 /* fiid_template_t */
-const fiid_field_t *
+fiid_field_t *
 ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt);
 
 /* ipmipower_packet_cmd_obj
