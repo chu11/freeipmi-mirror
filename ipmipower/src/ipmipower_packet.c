@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.12.2.5 2006-01-29 18:12:21 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.12.2.6 2006-01-29 20:49:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -306,7 +306,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 			   0, 
 			   NULL, 
 			   0, 
-                           tmpl_cmd_get_channel_auth_caps_rq, 
 			   ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -344,7 +343,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 			   0, 
 			   NULL,
 			   0, 
-                           tmpl_cmd_get_session_challenge_rq, 
 			   ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -398,7 +396,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                            (uint32_t)tmp_session_id, 
                            password,
                            strlen(conf->password), 
-                           tmpl_cmd_activate_session_rq, 
 			   ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -489,7 +486,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                            (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
-                           tmpl_cmd_set_session_priv_level_rq, 
                            ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -549,7 +545,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                            (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
-                           tmpl_cmd_close_session_rq, 
                            ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -609,7 +604,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                            (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
-                           tmpl_cmd_get_chassis_status_rq, 
                            ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -690,7 +684,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                            (uint32_t)session_id, 
                            password,
                            strlen(conf->password), 
-                           tmpl_cmd_chassis_ctrl_rq, 
                            ip->session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));

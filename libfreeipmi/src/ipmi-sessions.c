@@ -51,14 +51,12 @@ fiid_template_t tmpl_hdr_session_auth_calc =
 
 
 int8_t
-fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
+fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_obj_t obj_hdr)
 {
-  int32_t len_hdr, len_cmd, len_trlr;
   char *auth_field;
   int8_t rv;
 
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
-      || !tmpl_cmd 
       || !fiid_obj_valid(obj_hdr))
     {
       errno = EINVAL;
@@ -170,13 +168,6 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
         }     
     }
 
-  ERR(!((len_hdr = fiid_template_len_bytes (tmpl_lan_msg_hdr_rq)) < 0));
-  ERR(!((len_cmd = fiid_template_len_bytes (tmpl_cmd)) < 0));
-  ERR(!((len_trlr = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
-
-  FIID_OBJ_SET (obj_hdr, 
-                (uint8_t *)"ipmi_msg_len", 
-                len_hdr + len_cmd + len_trlr);
   return (0);
 }
 

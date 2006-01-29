@@ -18,6 +18,10 @@
 
 	* libfreeipmi/src/,ipmipower/src: Support new fiid interface for
 	ipmipower.
+
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
+	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt): Move
+	ipmi_msg_len calculation into assemble_ipmi_lan_pkt.
 	
 2006-01-28  Albert Chu <chu11@llnl.gov>	
 

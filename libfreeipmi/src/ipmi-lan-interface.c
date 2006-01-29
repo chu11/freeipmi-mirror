@@ -601,9 +601,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   uint8_t *auth_code_field_ptr = NULL;
   uint8_t *chksum_data_ptr = NULL;
   uint8_t *msg_data_ptr = NULL;
+  uint8_t *ipmi_msg_len_ptr = NULL;
   uint32_t msg_data_count = 0;
   uint32_t chksum_data_count = 0;
-  int32_t len;
+  int32_t len, max_len;
+  uint8_t ipmi_msg_len;
   fiid_obj_t obj_msg_trlr = NULL;
   ipmi_chksum_t chksum;
   int8_t rv;
@@ -666,14 +668,47 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_packet_valid(obj_hdr_session)) < 0)
+  /* 
+   * ipmi_msg_len is calculted in this function, so we can't use
+   * fiid_obj_packet_valid() b/c ipmi_msg_len is probably not set yet.
+   */
+
+  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"auth_type")) < 0)
     return (-1);
 
-  if (!rv)
+  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"auth_type")) < 0)
+    return (-1);
+  
+  if (len != max_len)
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+    return (-1);
+
+  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+    return (-1);
+  
+  if (len != max_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_id")) < 0)
+    return (-1);
+
+  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"session_id")) < 0)
+    return (-1);
+  
+  if (len != max_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
 
   if ((rv = fiid_obj_packet_valid(obj_msg_hdr)) < 0)
     return (-1);
@@ -734,12 +769,16 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       auth_code_field_ptr = (pkt + indx); 
       indx += IPMI_SESSION_MAX_AUTH_CODE_LEN;
     }
-    
-  if ((len = fiid_obj_get_data(obj_hdr_session,
-			       (uint8_t *)"ipmi_msg_len",
-			       pkt + indx,
-			       pkt_len - indx)) < 0)
+  
+  ipmi_msg_len_ptr = (pkt + indx);
+  if ((len = fiid_obj_max_field_len_bytes(obj_hdr_session,
+					  (uint8_t *)"ipmi_msg_len")) < 0)
     goto cleanup;
+  if (len != 1)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
   indx += len;
 
   msg_data_ptr = (pkt + indx);
@@ -790,6 +829,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   indx += len;
   msg_data_count += len;
 
+  /* ipmi_msg_len done after message length is computed */
+  ipmi_msg_len = msg_data_count;
+  memcpy (ipmi_msg_len_ptr,
+	  &ipmi_msg_len,
+	  sizeof(ipmi_msg_len));
+  
   /* Auth code must be done last, some authentication like md2 and md5
    * require all fields, including checksums, to be calculated
    * beforehand
