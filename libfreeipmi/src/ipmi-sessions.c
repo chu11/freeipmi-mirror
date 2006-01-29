@@ -314,7 +314,6 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
       else
 	{
 	  /* Unsupported auth type for calculations */
-	  /* XXX is this the right errno type to return?? */
 	  errno = EINVAL;
 	  return (-1);
 	}
