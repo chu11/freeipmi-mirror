@@ -63,37 +63,6 @@ fiid_template_t tmpl_cmd_get_session_challenge_rq =
     {0, ""}
   };
 
-fiid_template_t tmpl_get_channel_access_rq =
-  {
-    {8, "cmd"},
-
-    {4, "channel_number"},
-    {4, "reserved"},
-
-    {6, "reserved2"},
-    {2, "channel_access_set_flag"},
-
-    {0, ""}
-  };
-
-fiid_template_t tmpl_get_channel_access_rs =
-  {
-    {8, "cmd"},
-
-    {8, "comp_code"},
-
-    {3, "ipmi_messaging_access_mode"}, 
-    {1, "user_level_authentication"}, 
-    {1, "per_message_authentication"}, 
-    {1, "pef_alerting"}, 
-    {2, "reserved"}, 
-
-    {4, "channel_privilege_level_limit"},
-    {4, "reserved2"},
-
-    {0, ""}
-  };
-
 fiid_template_t tmpl_cmd_get_session_challenge_rs =
   {
     {8, "cmd"},
@@ -156,6 +125,37 @@ fiid_template_t tmpl_cmd_close_session_rs =
   {
     {8, "cmd"},
     {8, "comp_code"},
+    {0, ""}
+  };
+
+fiid_template_t tmpl_get_channel_access_rq =
+  {
+    {8, "cmd"},
+
+    {4, "channel_number"},
+    {4, "reserved"},
+
+    {6, "reserved2"},
+    {2, "channel_access_set_flag"},
+
+    {0, ""}
+  };
+
+fiid_template_t tmpl_get_channel_access_rs =
+  {
+    {8, "cmd"},
+
+    {8, "comp_code"},
+
+    {3, "ipmi_messaging_access_mode"}, 
+    {1, "user_level_authentication"}, 
+    {1, "per_message_authentication"}, 
+    {1, "pef_alerting"}, 
+    {2, "reserved"}, 
+
+    {4, "channel_privilege_level_limit"},
+    {4, "reserved2"},
+
     {0, ""}
   };
 

@@ -102,6 +102,14 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-01-29  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,
+	check_hdr_session_session_id): Fix typecast typos.
+
+	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_authcode):
+	Fix parameter check.  Fix corner case bugs.
+
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
@@ -133,10 +141,25 @@
 
 	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
 
-	* ipmipower/src/ipmipower_wrappers.h, ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New function.
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New
+	function.
 	
 	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
 	Use fiid wrapper macros.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h
+	(fill_cmd_get_chassis_status, fill_cmd_chassis_ctrl): Add function
+	prototypes.
+
+	* ipmipower/src/ipmipower_packet.c: Remove unnecessary function
+	prototypes.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h (IPMI_CHASSIS_CTRL_VALID):
+	New macro.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_ctrl): Use
+	IPMI_CHASSIS_CTRL_VALID.
 
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
