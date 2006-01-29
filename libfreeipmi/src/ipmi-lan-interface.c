@@ -487,6 +487,10 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
 {
   uint32_t msg_len;
   
+  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+         && tmpl_lan_msg
+         && tmpl_cmd);
+
   msg_len = fiid_obj_len_bytes (tmpl_hdr_rmcp) +
     fiid_obj_len_bytes (tmpl_lan_msg) +
     fiid_obj_len_bytes (tmpl_cmd) +
