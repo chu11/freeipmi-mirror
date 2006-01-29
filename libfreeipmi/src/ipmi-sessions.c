@@ -249,8 +249,8 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
           session_seq_num_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num");
           data_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_len_bytes (tmpl_hdr_session_auth);
 
-          if (pkt_len < session_id_offset
-              || pkt_len < session_seq_num_offset
+          if (pkt_len < (session_id_offset + fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_id"))
+              || pkt_len < (session_seq_num_offset + fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num"))
               || pkt_len < data_offset)
             return 0;
 

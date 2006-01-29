@@ -4,7 +4,7 @@
 	check_hdr_session_session_id): Fix typecast typos.
 
 	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_authcode):
-	Fix parameter check.
+	Fix parameter check.  Fix corner case bugs.
 
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
