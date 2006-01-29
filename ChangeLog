@@ -1,3 +1,8 @@
+2006-01-29  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,
+	check_hdr_session_session_id): Fix typecast typos.
+
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
