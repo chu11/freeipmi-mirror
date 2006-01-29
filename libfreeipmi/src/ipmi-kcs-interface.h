@@ -62,6 +62,8 @@ extern fiid_template_t tmpl_hdr_kcs;
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure
    you check the return status of write before calling read.
 */
+
+#if 0 /* TEST */
 int8_t ipmi_kcs_cmd2 (ipmi_device_t *dev, 
 		      fiid_obj_t obj_cmd_rq, 
 		      fiid_template_t tmpl_cmd_rq, 
@@ -72,19 +74,19 @@ int8_t ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
 			  size_t buf_rq_len, 
 			  uint8_t *buf_rs, 
 			  size_t *buf_rs_len);
+#endif /* TEST */
+
 int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
 			  uint8_t fn, 
 			  fiid_obj_t obj_hdr);
 int8_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
 			      fiid_obj_t obj_cmd, 
-			      fiid_template_t tmpl_cmd, 
 			      uint8_t *pkt, 
 			      uint32_t pkt_len);
 int8_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
 				uint32_t pkt_len, 
 				fiid_obj_t obj_hdr, 
-				fiid_obj_t obj_cmd, 
-				fiid_template_t tmpl_cmd);
+				fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

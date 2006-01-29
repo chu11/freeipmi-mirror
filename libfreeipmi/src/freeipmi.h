@@ -212,9 +212,9 @@ extern "C" {
 #include "ipmi-sessions.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
-#if 0 /* TEST */
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
+#if 0 /* TEST */
 #include "ipmi-ssif-interface.h"
 #endif /* TEST */
 #include "ipmi-msg-support-cmds.h"
@@ -330,9 +330,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
 #include <freeipmi/ipmi-lan-interface.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-ssif-interface.h>
 #endif /* TEST */
 #include <freeipmi/ipmi-msg-support-cmds.h>

@@ -20,7 +20,7 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_hdr_session_auth =
+fiid_template_t tmpl_hdr_session =
   {
     {8,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32,  "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -43,7 +43,7 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session_auth)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session)) < 0)
     return (-1);
 
   if (!rv)
@@ -166,7 +166,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, u
     }
 
   ERR(!((rmcp_hdr_len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
-  ERR(!((auth_type_index = fiid_template_field_start_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type")) < 0));
+  ERR(!((auth_type_index = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_type")) < 0));
   auth_type_offset = rmcp_hdr_len + auth_type_index;
 
   if (pkt_len < auth_type_offset)
@@ -182,7 +182,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, u
   if (auth_type_recv == IPMI_SESSION_AUTH_TYPE_NONE)
     return 1;
 
-  ERR(!((auth_code_index = fiid_template_field_start_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code")) < 0));
+  ERR(!((auth_code_index = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_code")) < 0));
   auth_code_offset = rmcp_hdr_len + auth_code_index;
 
   if (pkt_len < (auth_code_offset + IPMI_SESSION_MAX_AUTH_CODE_LEN))
@@ -198,11 +198,11 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, u
       uint32_t session_id_offset, session_seq_num_offset, data_offset;
       int32_t session_id_len, session_seq_num_len;
       
-      ERR(!((session_id_index = fiid_template_field_start_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id")) < 0));
-      ERR(!((session_seq_num_index = fiid_template_field_start_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num")) < 0));
-      ERR(!((session_id_len = fiid_template_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id")) < 0));
-      ERR(!((session_seq_num_len = fiid_template_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num")) < 0));
-      ERR(!((data_index = fiid_template_len_bytes (tmpl_hdr_session_auth)) < 0));
+      ERR(!((session_id_index = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_id")) < 0));
+      ERR(!((session_seq_num_index = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num")) < 0));
+      ERR(!((session_id_len = fiid_template_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_id")) < 0));
+      ERR(!((session_seq_num_len = fiid_template_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num")) < 0));
+      ERR(!((data_index = fiid_template_len_bytes (tmpl_hdr_session)) < 0));
       
       session_id_offset = rmcp_hdr_len + session_id_index;
       session_seq_num_offset = rmcp_hdr_len + session_seq_num_index;

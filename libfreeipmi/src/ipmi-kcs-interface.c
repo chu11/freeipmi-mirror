@@ -43,7 +43,9 @@
 #define IPMI_KCS_CTRL_READ             0x68 /* Request the next data byte */
 /* reserved      0x69 - 0x6F */
 
+#if 0 /* TEST */
 ipmi_device_t _dev;
+#endif /* TEST */
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_ksc_dev_io_fd = -1;
@@ -51,8 +53,8 @@ static int ipmi_ksc_dev_io_fd = -1;
 
 fiid_template_t tmpl_hdr_kcs =
   {
-    {2, "lun"},
-    {6, "net_fn"},
+    {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
@@ -62,43 +64,88 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 		   uint8_t fn, 
 		   fiid_obj_t obj_hdr)
 {
+  int8_t rv;
+
   if ((lun > IPMI_BMC_IPMB_LUN_OEM_LUN2) ||
       (fn > IPMI_NET_FN_TRANSPORT_RS)    ||
-      (obj_hdr == NULL))
+      !fiid_obj_valid(obj_hdr))
     {
       errno = EINVAL;
       return (-1);
     }
+  
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
 
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"lun", lun);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"net_fn", fn);
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"lun", lun);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"net_fn", fn);
   return 0;
 }
 
 int8_t 
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
 		       fiid_obj_t obj_cmd, 
-		       fiid_template_t tmpl_cmd, 
 		       uint8_t *pkt, 
 		       uint32_t pkt_len)
 {
-  uint32_t obj_cmd_len, obj_hdr_len;
-  if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
+  int32_t obj_cmd_len, obj_hdr_len;
+  int8_t rv;
+
+  if (!(fiid_obj_valid(obj_hdr)
+	&& fiid_obj_valid(obj_cmd)
+	&& pkt))
     {
       errno = EINVAL;
       return (-1);
     }
-  obj_hdr_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
+  
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
+  ERR(obj_hdr_len != -1);
+  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
+  ERR(obj_cmd_len != -1);
+
   if (pkt_len < (obj_hdr_len + obj_cmd_len))
     {
       errno = EMSGSIZE;
       return (-1);
     }
   
-  memset (pkt, 0, obj_hdr_len + obj_cmd_len);
-  memcpy (pkt, obj_hdr, obj_hdr_len);
-  memcpy (pkt + obj_hdr_len, obj_cmd, obj_cmd_len);
+  memset (pkt, 0, pkt_len);
+  ERR((obj_hdr_len = fiid_obj_get_all(obj_hdr, pkt, pkt_len)) != -1);
+  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_hdr_len, pkt_len - obj_hdr_len)) != -1);
   return (obj_hdr_len + obj_cmd_len);
 }
 
@@ -106,42 +153,42 @@ int8_t
 unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
 			 uint32_t pkt_len, 
 			 fiid_obj_t obj_hdr, 
-			 fiid_obj_t obj_cmd, 
-			 fiid_template_t tmpl_cmd)
+			 fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;
+  int32_t len;
+  int8_t rv;
 
-  if (pkt == NULL)
+  if (!(pkt
+        && fiid_obj_valid(obj_hdr)
+        && fiid_obj_valid(obj_cmd)))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  indx = 0;
-  if (obj_hdr)
-    memcpy (obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_hdr_kcs)));
-  indx += fiid_obj_len_bytes (tmpl_hdr_kcs);
+  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  if (obj_cmd)
-    {
-      if (tmpl_cmd)
-        {
-          memcpy (obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_cmd)));
-          indx += fiid_obj_len_bytes (tmpl_cmd);
-        }
-      else
-	{
-	  errno = EINVAL;
-	  return (-1);
- 	}
-    }
+  ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
 
   return 0;
 }
 
+#if 0 /* TEST */
 static int8_t
 ipmi_kcs_get_status (ipmi_device_t *dev)
 {
@@ -371,7 +418,6 @@ ipmi_kcs_write (ipmi_device_t *dev,
   return (bytes_count);
 }
 
-
 int8_t 
 ipmi_kcs_cmd2 (ipmi_device_t *dev, 
 	       fiid_obj_t obj_cmd_rq, 
@@ -460,5 +506,6 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */
 
 

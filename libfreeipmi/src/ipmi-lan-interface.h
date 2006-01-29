@@ -55,39 +55,6 @@ extern "C" {
 
 #define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQ_NUM_MAX + 1)))
 
-#define IPMI_LAN_PKT_CHKSUM1_BLOCK_INDX(auth_type)                          \
-  (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num") +    \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id") +         \
-   ((auth_type == IPMI_SESSION_AUTH_TYPE_MD2                                \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_MD5                             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)                       \
-    ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len"))
-
-#define IPMI_LAN_PKT_RS_CHKSUM1_BLOCK_LEN                      \
-  fiid_obj_field_start_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1")
-
-#define IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_INDX(auth_type)                       \
-  (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num") +    \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id") +         \
-   ((auth_type == IPMI_SESSION_AUTH_TYPE_MD2                                \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_MD5                             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)                       \
-    ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len") +       \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1"))
-
-#define IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_LEN(tmpl_cmd)             \
-  (fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs) -                   \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1") +  \
-   fiid_obj_len_bytes (tmpl_cmd))
-   
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;

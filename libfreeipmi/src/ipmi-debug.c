@@ -325,7 +325,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  if (!(obj_session_hdr = fiid_obj_create(tmpl_hdr_session_auth)))
+  if (!(obj_session_hdr = fiid_obj_create(tmpl_hdr_session)))
     goto cleanup;
   
   if ((len = fiid_obj_set_block(obj_session_hdr, 
@@ -586,8 +586,6 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
   return (rv);
 }
 
-#if 0 /* TEST */
-
 uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
@@ -669,5 +667,3 @@ ipmi_debug(const char *fmt, ...)
   fflush (stderr);
 #endif /* !IPMI_TRACE */ 
 }
-
-#endif /* TEST */
