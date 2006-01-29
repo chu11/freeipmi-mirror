@@ -148,12 +148,23 @@ fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq,
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 { 
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
   
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_chassis_status_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
@@ -161,8 +172,19 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 int8_t
 fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!IPMI_CHASSIS_CTRL_VALID(chassis_ctrl)
       || !fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_ctrl_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return -1;

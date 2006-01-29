@@ -54,8 +54,8 @@ int8_t
 fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_template_t tmpl_cmd, fiid_obj_t obj_hdr)
 {
   int32_t len_hdr, len_cmd, len_trlr;
-
   char *auth_field;
+  int8_t rv;
 
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !tmpl_cmd 
@@ -65,13 +65,43 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session_auth)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session_auth_calc)) < 0)
+	return (-1);
+    }
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"auth_type", auth_type);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_seq_num", inbound_seq_num);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);
 
-  if (fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_code") == 1) 
+  if ((rv = fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_code")) < 0)
+    return -1;
+  
+  if (rv)
     auth_field = "auth_code";
-  else if (fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_calc_data") == 1)
+  else 
+    {
+      if ((rv = fiid_obj_field_lookup (obj_hdr, (uint8_t *)"auth_calc_data")) < 0)
+	return -1;
+    }
+
+  if (rv)
     auth_field = "auth_calc_data";
   else
     {
@@ -79,9 +109,9 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
        * passing in a template that supports authentication
        */ 
       errno = EINVAL;
-      return (-1);
+      return -1;
     }
-
+  
   /* achu: The BMC may ignore any '\0' characters that indicate the
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
@@ -154,6 +184,8 @@ int8_t
 check_hdr_session_session_seq_num (fiid_obj_t obj_hdr_session, uint32_t session_seq_num)
 {
   uint64_t session_seq_num_recv;
+  int32_t len;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_hdr_session))
     {
@@ -161,7 +193,19 @@ check_hdr_session_session_seq_num (fiid_obj_t obj_hdr_session, uint32_t session_
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"session_seq_num"))
+  if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+    return (-1);
+  
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+    return (-1);
+
+  if (!len)
     {
       errno = EINVAL;
       return (-1);
@@ -176,6 +220,8 @@ int8_t
 check_hdr_session_session_id (fiid_obj_t obj_hdr_session, uint32_t session_id)
 {
   uint64_t session_id_recv;
+  int32_t len;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_hdr_session))
     {
@@ -183,7 +229,19 @@ check_hdr_session_session_id (fiid_obj_t obj_hdr_session, uint32_t session_id)
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"session_id"))
+  if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"session_id")) < 0)
+    return (-1);
+  
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_hdr_session, (uint8_t *)"session_id")) < 0)
+    return (-1);
+
+  if (!len)
     {
       errno = EINVAL;
       return (-1);
@@ -202,6 +260,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
   uint32_t auth_type_offset, auth_code_offset;
   uint8_t auth_code_buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
   char *auth_field;
+  int8_t rv;
 
   if (!pkt 
       || (auth_code_data && auth_code_data_len > IPMI_SESSION_MAX_AUTH_CODE_LEN))
@@ -236,9 +295,18 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
 
   memset(auth_code_buf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
 
-  if (fiid_template_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_code") == 1)
+  if ((rv = fiid_template_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_code")) < 0)
+    return -1;
+  
+  if (rv)
     auth_field = "auth_code";
-  else if (fiid_template_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_calc_data") == 1)
+  else 
+    {
+      if ((rv = fiid_template_field_lookup (tmpl_hdr_session, (uint8_t *)"auth_calc_data")) < 0)
+	return -1;
+    }
+  
+  if (rv)
     auth_field = "auth_calc_data";
   else
     {
@@ -246,7 +314,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
        * support authentication
        */
       errno = EINVAL;
-      return (-1);
+      return -1;
     }
 
   if (!strcmp(auth_field, "auth_code"))

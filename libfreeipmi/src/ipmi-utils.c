@@ -69,8 +69,39 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
   uint64_t cmd;
 #endif /* IPMI_SYSLOG */
   uint64_t comp_code;
+  int32_t len;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+#if defined (IPMI_SYSLOG)
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+#endif /* IPMI_SYSLOG */
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!len)
     {
       errno = EINVAL;
       return (-1);

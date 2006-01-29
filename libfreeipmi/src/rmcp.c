@@ -62,7 +62,18 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr) 
 {
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_hdr))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_rmcp)) < 0)
+    return (-1);
+  
+  if (!rv)
     {
       errno = EINVAL;
       return -1;
@@ -93,7 +104,18 @@ fill_hdr_rmcp_asf (fiid_obj_t obj_hdr)
 int8_t
 fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_asf_presence_ping)) < 0)
+    return (-1);
+  
+  if (!rv)
     {
       errno = EINVAL;
       return -1;

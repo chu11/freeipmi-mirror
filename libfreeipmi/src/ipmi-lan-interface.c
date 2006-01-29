@@ -261,6 +261,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
   uint8_t chksum_buf[1024];
   int32_t chksum_len;
   ipmi_chksum_t chksum;
+  int8_t rv;
 
   if (!IPMI_NET_FN_VALID(net_fn)
       || !IPMI_BMC_LUN_VALID(rs_lun)
@@ -269,6 +270,15 @@ fill_lan_msg_hdr (uint8_t net_fn,
     {
       errno = EINVAL;
       return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_msg, tmpl_lan_msg_hdr_rq)) < 0)
+    return (-1);
+  
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
     }
 
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
@@ -792,10 +802,20 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
       int32_t auth_len;
       char *auth_field;
+      int8_t rv;
 
-      if (fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_code") == 1)
+      if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_code")) < 0)
+	goto cleanup;
+      
+      if (rv)
 	auth_field = "auth_code";
-      else if (fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_calc_data") == 1)
+      else 
+	{
+	  if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_calc_data")) < 0)
+	    goto cleanup;
+	}
+
+      if (rv)
 	auth_field = "auth_calc_data";
       else
 	{
@@ -1109,17 +1129,27 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
     {
       char *auth_field;
       uint32_t authcode_len;
+      int8_t rv;
 
-      if (fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_code") == 1)
-        auth_field = "auth_code";
-      else if (fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_calc_data") == 1)
-        auth_field = "auth_calc_data";
+      if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_code")) < 0)
+	return -1;
+      
+      if (rv)
+	auth_field = "auth_code";
+      else 
+	{
+	  if ((rv = fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_calc_data")) < 0)
+	    return -1;
+	}
+
+      if (rv)
+	auth_field = "auth_calc_data";
       else
-        {
-          /* Invalid session object */
-          errno = EINVAL;
-          return -1;
-        }
+	{
+	  /* Invalid session object */
+	  errno = EINVAL;
+	  return -1;
+	}
 
       authcode_len = FREEIPMI_MIN(IPMI_SESSION_MAX_AUTH_CODE_LEN, pkt_len - indx);
       ERR(!((len = fiid_obj_set_data(obj_hdr_session,
@@ -1909,6 +1939,8 @@ int8_t
 ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
 {
   uint64_t net_fn_recv;
+  int32_t len;
+  int8_t rv;
 
   if (!(obj_msg_hdr && IPMI_NET_FN_VALID(net_fn)))
     {
@@ -1916,7 +1948,19 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"net_fn"))
+  if ((rv = fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"net_fn")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_msg_hdr, (uint8_t *)"net_fn")) < 0)
+    return (-1);
+
+  if (!len)
     {
       errno = EINVAL;
       return (-1);
@@ -1931,6 +1975,8 @@ int8_t
 ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
+  int32_t len;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_msg_hdr))
     {
@@ -1938,7 +1984,19 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"rq_seq"))
+  if ((rv = fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"rq_seq")) < 0)
+    return (-1);
+  
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_msg_hdr, (uint8_t *)"rq_seq")) < 0)
+    return (-1);
+
+  if (!len)
     {
       errno = EINVAL;
       return (-1);

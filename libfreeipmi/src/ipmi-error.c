@@ -264,13 +264,51 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 		     size_t len)
 {
   uint64_t cmd, comp_code;
-  
+  int32_t _len;
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
   
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);
   
@@ -322,13 +360,35 @@ ipmi_error (fiid_obj_t obj_cmd, const char *s)
 {
   char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
   uint64_t cmd;
+  int32_t len;
+  int8_t rv;
 
   if (!fiid_obj_valid(obj_cmd))
     return;
   
-  ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN);
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return;
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return;
+    }
+
+  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return;
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return;
+    }
+
+  if (ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
+    return;
   
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
+    return;
 
   fprintf (stderr, 
 	   "%s%s" "ipmi command %02Xh: %s\n", 

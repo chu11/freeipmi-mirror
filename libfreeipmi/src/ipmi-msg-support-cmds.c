@@ -352,6 +352,8 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
                                 uint8_t max_priv_level, 
 				fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_cmd)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_num)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
@@ -360,6 +362,15 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
       return (-1);
     }
   
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_channel_auth_caps_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_AUTH_CAPS);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_num", channel_num); 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
@@ -410,12 +421,23 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
 				uint32_t username_len, 
 				fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
    */
   if (!fiid_obj_valid(obj_cmd)
       || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_session_challenge_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -490,10 +512,21 @@ fill_cmd_activate_session (uint8_t auth_type,
 			   uint32_t initial_outbound_seq_num, 
 			   fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
       || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
       || !fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_activate_session_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -570,8 +603,19 @@ int8_t
 fill_cmd_set_session_priv_level (uint8_t priv_level, 
 				 fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!IPMI_PRIV_LEVEL_VALID(priv_level)
       || !fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_set_session_priv_level_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -722,7 +766,18 @@ int8_t
 fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_close_session_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -1099,6 +1154,7 @@ int8_t
 ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
+  int8_t rv;
 
   if (!obj_cmd)
     {
@@ -1106,7 +1162,10 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd"))
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+  
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -1121,6 +1180,7 @@ int8_t
 ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
 {
   uint64_t comp_code_recv;
+  int8_t rv;
 
   if (!obj_cmd)
     {
@@ -1128,7 +1188,10 @@ ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
       return (-1);
     }
 
-  if (!fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code"))
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+  
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);

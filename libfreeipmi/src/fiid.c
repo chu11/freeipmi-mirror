@@ -943,6 +943,12 @@ fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
   int start = 0;
   int end = 0; //excluded always
   
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (_fiid_obj_field_start_end (obj, field, &start, &end) != -1)
     return (1);
   else
