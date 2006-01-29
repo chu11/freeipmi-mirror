@@ -503,9 +503,6 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
            || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
            || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
     msg_len += fiid_obj_len_bytes(tmpl_hdr_session_auth);
-  else 
-    /* fatal error, library should not call this function with a bad auth_type */
-    ERR_EXIT(0);
   
   return msg_len;
 }
