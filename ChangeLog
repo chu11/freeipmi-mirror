@@ -26,13 +26,8 @@
 	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_authcode):
 	Remove calculated check.
 
-	* libfreeipmi/src/ipmi-sessions.c
-	(check_hdr_session_authcode_calc): New function.
-
-	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Use
-	check_hdr_session_authcode_calc.
-
-	* libfreeipmi/src/: Remove global need for tmpl_hdr_session template.
+	* Remove global need for tmpl_hdr_session and
+	tmpl_hdr_session_auth_calc template.
 	
 2006-01-28  Albert Chu <chu11@llnl.gov>	
 

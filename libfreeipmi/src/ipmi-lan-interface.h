@@ -102,6 +102,8 @@ int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 			       fiid_obj_t obj_hdr_session, 
 			       fiid_obj_t obj_msg_hdr, 
 			       fiid_obj_t obj_cmd, 
+			       uint8_t *auth_code_data,
+			       uint32_t auth_code_data_len,
 			       uint8_t *pkt, 
 			       uint32_t pkt_len);
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.7 2006-01-29 20:49:45 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.8 2006-01-29 22:57:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -119,6 +119,8 @@ createpacket(char *buffer,
 				   obj_hdr_session, 
                                    obj_msg_hdr, 
                                    obj_cmd, 
+				   NULL, 
+				   0,
                                    (uint8_t *)buffer, 
 				   buflen)) < 0)
     ipmi_ping_err_exit("assemble_ipmi_lan_pkt: %s", strerror(errno));
