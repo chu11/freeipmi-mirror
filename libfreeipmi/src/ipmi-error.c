@@ -263,16 +263,16 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 		     char *errstr, 
 		     size_t len)
 {
-  uint8_t cmd, comp_code;
+  uint64_t cmd, comp_code;
   
-  if (obj_cmd == NULL || errstr == NULL)
+  if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  cmd = obj_cmd[0];
-  comp_code = obj_cmd[1];
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);
   
   return ipmi_strerror_r (cmd, comp_code, errstr, len); 
 }
@@ -321,17 +321,20 @@ void
 ipmi_error (fiid_obj_t obj_cmd, const char *s)
 {
   char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
-  
-  if (obj_cmd == NULL)
+  uint64_t cmd;
+
+  if (!fiid_obj_valid(obj_cmd))
     return;
   
   ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN);
   
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
+
   fprintf (stderr, 
 	   "%s%s" "ipmi command %02Xh: %s\n", 
 	   (s ? s : ""), 
 	   (s ? ": " : ""), 
-	   obj_cmd[0], 
+           (uint8_t)cmd,
 	   errmsg);
 }
 

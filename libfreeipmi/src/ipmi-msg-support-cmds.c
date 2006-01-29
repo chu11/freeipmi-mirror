@@ -423,6 +423,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
 
   /* achu: The BMC may ignore any '\0' characters that indicate the
    * end of the string.  So we need to guarantee the buffer is
@@ -431,11 +432,18 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
   ERR (!(fiid_obj_clear_field(obj_cmd, (uint8_t *)"username") < 0));
 
   if (username)
-    ERR_EXIT (fiid_obj_set_data (obj_cmd, 
-                                 (uint8_t *)"username", 
-                                 (uint8_t *)username, 
-                                 username_len) == 0);
-
+    {
+      /* achu: username must be zero extended */
+      char buf[IPMI_SESSION_MAX_USERNAME_LEN];
+      memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
+      strncpy(buf, username, IPMI_SESSION_MAX_USERNAME_LEN);
+      
+      ERR_EXIT (!(fiid_obj_set_data (obj_cmd, 
+                                     (uint8_t *)"username", 
+                                     (uint8_t *)buf,
+                                     IPMI_SESSION_MAX_USERNAME_LEN) < 0));
+    }
+  
   return (0);
 }
 
@@ -493,13 +501,23 @@ fill_cmd_activate_session (uint8_t auth_type,
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_SESSION);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"max_priv_level", max_priv_level);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
   ERR (!(fiid_obj_clear_field (obj_cmd, (uint8_t *)"challenge_str") < 0));
+
   if (challenge_str)
-    ERR (!(fiid_obj_set_data (obj_cmd,
-			      (uint8_t *)"challenge_str",
-			      challenge_str, 
-			      challenge_str_len) < 0));
+    {
+      /* achu: challenge string must be zero extended */
+      char buf[IPMI_SESSION_CHALLENGE_STR_LEN];
+      memset(buf, '\0', IPMI_SESSION_CHALLENGE_STR_LEN);
+      memcpy(buf, challenge_str, challenge_str_len);
+      
+      ERR (!(fiid_obj_set_data (obj_cmd,
+                                (uint8_t *)"challenge_str",
+                                (uint8_t *)buf,
+                                IPMI_SESSION_CHALLENGE_STR_LEN) < 0));
+    }
   FIID_OBJ_SET (obj_cmd, 
 		(uint8_t *)"initial_outbound_seq_num", 
 		initial_outbound_seq_num);
@@ -561,6 +579,7 @@ fill_cmd_set_session_priv_level (uint8_t priv_level,
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_SESSION_PRIV_LEVEL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"priv_level", priv_level);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   return (0);
 }  
 

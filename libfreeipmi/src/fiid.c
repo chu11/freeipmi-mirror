@@ -595,7 +595,7 @@ fiid_obj_valid(fiid_obj_t obj)
 int8_t
 fiid_obj_packet_valid(fiid_obj_t obj)
 {
-  int i, total_set_bits_counter = 0, max_bits_counter = 0, 
+  int i, total_set_bits_counter = 0, max_bits_counter = 0,
     set_bits_counter = 0, optional_bits_counter = 0;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
@@ -604,7 +604,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
       return (-1);
     }
   
-  for (i = 0; i < obj->field_data[i].max_field_len != 0; i++)
+  for (i = 0; i < obj->field_data_len; i++)
     {
       uint32_t required_flag = FIID_FIELD_REQUIRED_FLAG(obj->field_data[i].flags);
       uint32_t length_flag = FIID_FIELD_LENGTH_FLAG(obj->field_data[i].flags);
@@ -612,10 +612,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
       uint32_t set_field_len = obj->field_data[i].set_field_len;
       
       if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
-	return (0);
+        return (0);
       
       if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
-	return (0);
+        return (0);
 
       max_bits_counter += max_field_len;
       total_set_bits_counter += set_field_len;
@@ -623,7 +623,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
       if (set_field_len)
 	{
 	  if (optional_bits_counter)
-	    return (0);
+            return (0);
 	      
 	  if (set_field_len != max_field_len)
 	    {
@@ -631,7 +631,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
 	       * field, it cannot have only partial data.
 	       */
 	      if ((set_bits_counter + set_field_len) % 8 != 0)
-		return (0);
+                return (0);
 	    }
 
 	  set_bits_counter += set_field_len;
@@ -640,27 +640,27 @@ fiid_obj_packet_valid(fiid_obj_t obj)
 	      set_bits_counter = 0;
 	      max_bits_counter = 0;
 	    }
-          else
+        }
+      else
+        {
+          /* All information must be collected in byte sized
+           * chunks
+           */
+          if (set_bits_counter)
+            return (0);
+          
+          /* Likewise, optional data should be aligned across
+           * bytes
+           */
+          optional_bits_counter += max_field_len;
+          if (optional_bits_counter && !(optional_bits_counter % 8))
             {
-              /* All information must be collected in byte sized
-               * chunks
-               */
-              if (set_bits_counter)
-		return (0);
-
-              /* Likewise, optional data should be aligned across
-               * bytes
-               */
-              optional_bits_counter += max_field_len;
-              if (optional_bits_counter && !(optional_bits_counter % 8))
-                {
-		  /* an "assert" */
-		  if (optional_bits_counter != max_bits_counter)
-		    return (0);
-
-                  optional_bits_counter = 0;
-		  max_bits_counter = 0;
-                }
+              /* an "assert" */
+              if (optional_bits_counter != max_bits_counter)
+                return (0);
+              
+              optional_bits_counter = 0;
+              max_bits_counter = 0;
             }
         }
     }    
@@ -672,7 +672,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
   /* And the bits set should align across a byte */
   if (total_set_bits_counter % 8 != 0)
     return (0);
- 
+
   return (1);
 }
 

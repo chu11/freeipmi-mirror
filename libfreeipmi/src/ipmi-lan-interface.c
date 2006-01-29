@@ -650,15 +650,39 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   if ((rv = fiid_obj_packet_valid(obj_hdr_rmcp)) < 0)
     return (-1);
 
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if ((rv = fiid_obj_packet_valid(obj_hdr_session)) < 0)
     return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   if ((rv = fiid_obj_packet_valid(obj_msg_hdr)) < 0)
     return (-1);
 
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
     return (-1);
   
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (fiid_obj_get(obj_hdr_session, (uint8_t *)"auth_type", &auth_type) < 0)
     return -1;
 
@@ -1084,6 +1108,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
       char *auth_field;
+      uint32_t authcode_len;
 
       if (fiid_obj_field_lookup (obj_hdr_session, (uint8_t *)"auth_code") == 1)
         auth_field = "auth_code";
@@ -1096,10 +1121,11 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
           return -1;
         }
 
+      authcode_len = FREEIPMI_MIN(IPMI_SESSION_MAX_AUTH_CODE_LEN, pkt_len - indx);
       ERR(!((len = fiid_obj_set_data(obj_hdr_session,
                                      (uint8_t *)auth_field,
                                      pkt + indx,
-                                     pkt_len - indx)) < 0));
+                                     authcode_len)) < 0));
       indx += len;
 
       if (pkt_len <= indx)

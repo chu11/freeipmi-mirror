@@ -96,6 +96,8 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
     {
       if (!strcmp(auth_field, "auth_code"))
         {
+          char buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+
           /* achu: auth_code_data_len can be equal to
            * IPMI_SESSION_MAX_AUTH_CODE_LEN, null termination is not
            * required.
@@ -105,6 +107,14 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
               errno = EINVAL;
               return (-1);
             }
+
+          memset(buf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
+          memcpy(buf, auth_code_data, auth_code_data_len);
+
+          ERR_EXIT (!(fiid_obj_set_data (obj_hdr, 
+                                         (uint8_t *)auth_field, 
+                                         (uint8_t *)buf,
+                                         IPMI_SESSION_MAX_AUTH_CODE_LEN) < 0));
         }
       else
         {
@@ -117,17 +127,17 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
               return (-1);
             }
           
-          if (auth_code_data_len > fiid_obj_field_len_bytes (obj_hdr, (uint8_t *)auth_field))
+          if (auth_code_data_len > fiid_obj_max_field_len_bytes (obj_hdr, (uint8_t *)auth_field))
             {
               errno = EINVAL;
               return (-1);
             }
-        }
-      
-      ERR_EXIT (fiid_obj_set_data (obj_hdr, 
-                                   (uint8_t *)auth_field, 
-                                   auth_code_data, 
-                                   auth_code_data_len) == 0);
+
+          ERR_EXIT (!(fiid_obj_set_data (obj_hdr, 
+                                         (uint8_t *)auth_field, 
+                                         auth_code_data, 
+                                         auth_code_data_len) < 0));
+        }     
     }
 
   ERR(!((len_hdr = fiid_template_len_bytes (tmpl_lan_msg_hdr_rq)) < 0));

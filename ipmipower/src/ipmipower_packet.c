@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.12.2.4 2006-01-29 16:08:00 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.12.2.5 2006-01-29 18:12:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -256,7 +256,26 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
 			      ipmipower_packet_cmd_obj(ip, pkt), 
 			      ip->trlr_res) < 0)
     err_exit("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
+#if 0
+  fiid_obj_dump_perror(STDERR_FILENO,
+                       "rmcp",
+                       NULL,
+                       NULL,
+                       ip->rmcp_res);
+
+  fiid_obj_dump_perror(STDERR_FILENO,
+                       "session_res",
+                       NULL,
+                       NULL,
+                       ip->session_res);
+  fiid_obj_dump_perror(STDERR_FILENO,
+                       "msg_res",
+                       NULL,
+                       NULL,
+                       ip->msg_res);
+#endif
 }
+
 
 int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,

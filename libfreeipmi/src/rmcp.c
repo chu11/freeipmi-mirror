@@ -144,8 +144,20 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
   if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
     return (-1);
 
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
     return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
   ERR(obj_hdr_len != -1);
