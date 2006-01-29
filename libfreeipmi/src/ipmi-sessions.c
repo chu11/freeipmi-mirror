@@ -20,15 +20,6 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_hdr_session = 
-  {
-    {8,  "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "ipmi_msg_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0,  "", 0}
-  };
-
 fiid_template_t tmpl_hdr_session_auth =
   {
     {8,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -63,14 +54,8 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session_auth)) < 0)
     return (-1);
-
-  if (!rv)
-    {
-      if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_session_auth)) < 0)
-	return (-1);
-    }
 
   if (!rv)
     {

@@ -516,20 +516,30 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_obj_t obj_cmd)
 {
-  uint32_t msg_len;
-  
-  msg_len = fiid_template_len_bytes (tmpl_hdr_rmcp) +
-    fiid_template_len_bytes (tmpl_lan_msg) +
-    fiid_obj_len_bytes (obj_cmd) +
-    fiid_template_len_bytes (tmpl_lan_msg_trlr);
+  uint32_t msg_len = 0;
+  int32_t len;
 
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_NONE) 
-    msg_len += fiid_template_len_bytes(tmpl_hdr_session);
-  else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-           || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-           || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-           || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
-    msg_len += fiid_template_len_bytes(tmpl_hdr_session_auth);
+  ERR(!((len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg)) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_template_block_len_bytes (tmpl_hdr_session_auth,
+					      (uint8_t *)"auth_type",
+					      (uint8_t *)"session_id")) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_template_field_len_bytes (tmpl_hdr_session_auth,
+					      (uint8_t *)"ipmi_msg_len")) < 0));
+  msg_len += len;
+  
+  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
+      || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
+      || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
+      || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
+    msg_len += IPMI_SESSION_MAX_AUTH_CODE_LEN;
   else 
     /* fatal error, library should not call this function with a bad auth_type */
     ERR_EXIT(0);
@@ -629,14 +639,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
     return (-1);
-
-  if (!rv)
-    {
-      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
-	return (-1);
-    }
 
   if (!rv)
     {
@@ -1106,14 +1110,8 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
     return (-1);
-
-  if (!rv)
-    {
-      if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_hdr_session_auth)) < 0)
-	return (-1);
-    }
 
   if (!rv)
     {
@@ -2072,7 +2070,7 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
   if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0)
     return (-1);
 
-  if ((auth_type_start_bytes = fiid_template_field_start_bytes (tmpl_hdr_session, (uint8_t *)"auth_type")) < 0)
+  if ((auth_type_start_bytes = fiid_template_field_start_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type")) < 0)
     return (-1);
   
   auth_type_offset = rmcp_hdr_len + auth_type_start_bytes;

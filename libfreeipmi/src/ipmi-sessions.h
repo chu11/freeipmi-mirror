@@ -25,7 +25,6 @@
 extern "C" {
 #endif
 
-extern fiid_template_t tmpl_hdr_session;
 extern fiid_template_t tmpl_hdr_session_auth;
 extern fiid_template_t tmpl_hdr_session_auth_calc;
 

@@ -31,6 +31,8 @@
 
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Use
 	check_hdr_session_authcode_calc.
+
+	* libfreeipmi/src/: Remove global need for tmpl_hdr_session template.
 	
 2006-01-28  Albert Chu <chu11@llnl.gov>	
 
