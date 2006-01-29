@@ -194,7 +194,7 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
   uint8_t auth_code_buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
 
   if (!tmpl_hdr_session 
-      || pkt 
+      || !pkt 
       || (auth_code_data && auth_code_data_len > IPMI_SESSION_MAX_AUTH_CODE_LEN))
     {
       errno = EINVAL;
