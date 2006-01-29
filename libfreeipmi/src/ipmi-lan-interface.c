@@ -480,7 +480,7 @@ fill_hdr_session2 (ipmi_device_t *dev,
   return (0);
 }
 
-int32_t 
+static int32_t 
 _ipmi_lan_pkt_size (uint8_t auth_type, 
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_template_t tmpl_cmd)
@@ -506,7 +506,7 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
   return msg_len;
 }
 
-int32_t 
+static int32_t 
 _ipmi_lan_pkt_rq_size (uint8_t auth_type, 
 		       fiid_template_t tmpl_cmd)
 {

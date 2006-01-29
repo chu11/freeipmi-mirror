@@ -9,6 +9,9 @@
 	* ipmipower/src/ipmipower_checkc.c (_check_network_function): Fix
 	debug output message.
 
+	* libfreeipmi/src/ipmi-lan-interface.c (_ipmi_lan_pkt_size,
+	_ipmi_lan_pkt_rq_size): Make functions static.
+
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
