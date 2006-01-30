@@ -6,6 +6,9 @@
 	* bmc-watchdog/src/bmc-watchdog.c (_FIID_OBJ_GET): Cleaned up code.
 
 	* bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
+
+	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd): Add parameter
+	checks.
 	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
