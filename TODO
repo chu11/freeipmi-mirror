@@ -35,6 +35,8 @@ libfreeipmi:
   * cmds to test
     - set power restore policy
     - chassis ctrl
+  * test for "{0, ""}"
+  * need to test acpi
     
 fish:
 -----

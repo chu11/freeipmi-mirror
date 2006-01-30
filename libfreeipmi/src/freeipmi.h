@@ -195,32 +195,26 @@ extern "C" {
 #include "fiid.h"
 #include "ipmi-utils.h"
 #include "ipmi-error.h"
-#if 0 /* TEST */
 #include "ipmi-locate.h"
 #include "smbios-locate.h"
 #include "acpi-spmi-locate.h"
 #include "pci-locate.h"
 #include "defaults-locate.h"
-#endif /* TEST */
 #include "rmcp.h"
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
-#if 0 /* TEST */
 #include "ipmi-semaphores.h"
-#endif /* TEST */
 #include "ipmi-interface.h"
 #include "ipmi-sessions.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
-#if 0 /* TEST */
 #include "ipmi-ssif-interface.h"
-#endif /* TEST */
 #include "ipmi-msg-support-cmds.h"
 #include "ipmi-chassis-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-dev-global-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-sdr-repo-cmds.h"
 #include "ipmi-sdr-record-types.h"
 #include "ipmi-sensor-types.h"
@@ -312,32 +306,26 @@ extern char *__progname;
 #include <freeipmi/fiid.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-error.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/smbios-locate.h>
 #include <freeipmi/acpi-spmi-locate.h>
 #include <freeipmi/pci-locate.h>
 #include <freeipmi/defaults-locate.h>
-#endif /* TEST */
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
-#if 0
 #include <freeipmi/ipmi-semaphores.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-interface.h>
 #include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-ssif-interface.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-msg-support-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-dev-global-cmds.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-sdr-record-types.h>
 #include <freeipmi/ipmi-sdr-repo-cmds.h>
 #include <freeipmi/ipmi-sensor-cmds.h>

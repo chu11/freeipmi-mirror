@@ -24,11 +24,12 @@
 
 fiid_template_t tmpl_inband_hdr =
   {
-    {2, "lun"},
-    {6, "net_fn"},
-    {0, ""}
+    {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
+#if 0 /* TEST */
 static void 
 ipmi_outofband_free (ipmi_device_t *dev)
 {
@@ -47,6 +48,7 @@ ipmi_outofband_free (ipmi_device_t *dev)
   fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
   fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
 }
+#endif /* TEST */
 
 static void 
 ipmi_inband_free (ipmi_device_t *dev)
@@ -57,11 +59,12 @@ ipmi_inband_free (ipmi_device_t *dev)
       return;
     }
 
-  fiid_obj_free (dev->io.inband.rq.obj_hdr);
-  fiid_obj_free (dev->io.inband.rs.obj_hdr);
+  fiid_obj_destroy (dev->io.inband.rq.obj_hdr);
+  fiid_obj_destroy (dev->io.inband.rs.obj_hdr);
   ipmi_xfree (dev->io.inband.driver_device);
 }
 
+#if 0 /* TEST */
 int 
 ipmi_open_outofband (ipmi_device_t *dev, 
 		     ipmi_driver_type_t driver_type, 
@@ -251,6 +254,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   
   return (0);
 }
+#endif /* TEST */
 
 int 
 ipmi_open_inband (ipmi_device_t *dev, 
@@ -390,14 +394,14 @@ ipmi_open_inband (ipmi_device_t *dev,
   dev->io.inband.rs.tmpl_hdr_ptr = &tmpl_inband_hdr;
   
   dev->io.inband.rq.obj_hdr = 
-    fiid_obj_calloc (*(dev->io.inband.rq.tmpl_hdr_ptr));
+    fiid_obj_create (*(dev->io.inband.rq.tmpl_hdr_ptr));
   if (dev->io.inband.rq.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
       return (-1);
     }
   dev->io.inband.rs.obj_hdr = 
-    fiid_obj_calloc (*(dev->io.inband.rs.tmpl_hdr_ptr));
+    fiid_obj_create (*(dev->io.inband.rs.tmpl_hdr_ptr));
   if (dev->io.inband.rs.obj_hdr == NULL)
     {
       ipmi_inband_free (dev);
@@ -414,27 +418,38 @@ ipmi_cmd (ipmi_device_t *dev,
 	  uint8_t lun, 
 	  uint8_t net_fn, 
 	  fiid_obj_t obj_cmd_rq, 
-	  fiid_template_t tmpl_cmd_rq, 
-	  fiid_obj_t obj_cmd_rs, 
-	  fiid_template_t tmpl_cmd_rs)
+	  fiid_obj_t obj_cmd_rs)
 {
-  int8_t status;
+  int8_t status, rv;
 
-  if (dev == NULL)
+  if (!dev
+      || !fiid_obj_valid(obj_cmd_rq)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
+  if ((rv = fiid_obj_packet_valid(obj_cmd_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   dev->lun = lun;
   dev->net_fn = net_fn;
 
   status = 0;
   switch (dev->type)
     {
+#if 0 /* TEST */
     case IPMI_DEVICE_LAN:
       status = ipmi_lan_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
       break;
+#endif /* TEST */
     case IPMI_DEVICE_KCS:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -445,7 +460,7 @@ ipmi_cmd (ipmi_device_t *dev,
 	} 
       else
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
-      status = ipmi_kcs_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      status = ipmi_kcs_cmd2 (dev, obj_cmd_rq, obj_cmd_rs);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SSIF:
@@ -458,7 +473,7 @@ ipmi_cmd (ipmi_device_t *dev,
 	} 
       else
 	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
-      status = ipmi_ssif_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      status = ipmi_ssif_cmd2 (dev, obj_cmd_rq, obj_cmd_rs);
       IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SMIC:
@@ -471,6 +486,7 @@ ipmi_cmd (ipmi_device_t *dev,
   return (status);
 }
 
+#if 0 /* TEST */
 int 
 ipmi_cmd_raw (ipmi_device_t *dev, 
 	      uint8_t *in, 
@@ -542,6 +558,7 @@ ipmi_outofband_close (ipmi_device_t *dev)
   
   return (retval);
 }
+#endif /* TEST */
 
 static int 
 ipmi_inband_close (ipmi_device_t *dev)
@@ -594,9 +611,11 @@ ipmi_close (ipmi_device_t *dev)
   
   switch (dev->type)
     {
+#if 0 /* TEST */
     case IPMI_DEVICE_LAN:
       ipmi_outofband_close (dev);
       break;
+#endif /* TEST */
     case IPMI_DEVICE_KCS:
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:

@@ -77,8 +77,6 @@ enum ipmi_driver_type
   };
 typedef enum ipmi_driver_type ipmi_driver_type_t;
 
-#if 0 /* TEST */
-
 struct ipmi_device 
 {
   ipmi_driver_type_t type;
@@ -179,14 +177,11 @@ int ipmi_cmd (ipmi_device_t *dev,
 	      uint8_t lun, 
 	      uint8_t net_fn, 
 	      fiid_obj_t obj_cmd_rq, 
-	      fiid_template_t tmpl_cmd_rq, 
-	      fiid_obj_t obj_cmd_rs, 
-	      fiid_template_t tmpl_cmd_rs);
+	      fiid_obj_t obj_cmd_rs);
 int ipmi_cmd_raw (ipmi_device_t *dev, 
 		  uint8_t *in, 
 		  size_t in_len, 
 		  uint8_t *out, 
 		  size_t *out_len);
-#endif /* TEST */
 
 #endif /* _IPMI_INTERFACE_H */

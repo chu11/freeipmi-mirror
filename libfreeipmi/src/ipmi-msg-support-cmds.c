@@ -314,36 +314,36 @@ fiid_template_t tmpl_get_user_access_rs =
     
 fiid_template_t tmpl_get_channel_info_rq =
   {
-    {8, "cmd"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {4, "channel_number"},
-    {4, "reserved"},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_channel_info_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {4, "actual_channel_number"},
-    {4, "actual_channel_number.reserved"},
+    {4, "actual_channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "actual_channel_number.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {7, "channel_medium_type"}, 
-    {1, "channel_medium_type.reserved"},
+    {7, "channel_medium_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_medium_type.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {5, "channel_protocol_type"}, 
-    {3, "channel_protocol_type.reserved"},
+    {5, "channel_protocol_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_protocol_type.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {6, "active_session_count"}, 
-    {2, "session_support"},
+    {6, "active_session_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "session_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {24, "vendor_id"}, 
+    {24, "vendor_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {16, "auxiliary_channel_info"}, 
+    {16, "auxiliary_channel_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0, ""}
+    {0, "", 0}
   };
 
 
@@ -1125,30 +1125,43 @@ fill_kcs_get_channel_access (fiid_obj_t obj_data_rq,
   return 0;
 }
 
+#endif /* TEST */
+
 int8_t 
 fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_channel_info_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_channel_info_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_CHANNEL_INFO_CMD);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_channel_info_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"reserved",
+		0);
   
   return 0;
 }
-
-#endif /* TEST */
 
 int8_t
 ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
@@ -1202,22 +1215,38 @@ ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
   return ((((uint8_t)comp_code_recv) == comp_code) ? 1 : 0);
 }
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 {
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
-      fiid_obj_t obj_data_rs;
+      fiid_obj_t obj_data_rs = NULL;
       uint64_t manf_id, prod_id;
+      int8_t rv = -1, err_flag = 0;
+
+      if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+	{
+	  err_flag++;
+	  goto cleanup1;
+	}
       
-      FIID_OBJ_ALLOCA (obj_data_rs, tmpl_cmd_get_dev_id_rs);
+      if (ipmi_cmd_get_dev_id (dev, obj_data_rs) < 0)
+	{
+	  err_flag++;
+	  goto cleanup1;
+	}
       
-      ERR (ipmi_cmd_get_dev_id (dev, obj_data_rs) == 0);
-      
-      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, (uint8_t *)"manf_id.id", &manf_id);
-      FIID_OBJ_GET (obj_data_rs, tmpl_cmd_get_dev_id_rs, (uint8_t *)"prod_id", &prod_id);
+      if (fiid_obj_get (obj_data_rs, (uint8_t *)"manf_id.id", &manf_id) < 0)
+	{
+	  err_flag++;
+	  goto cleanup1;
+	}
+
+      if (fiid_obj_get (obj_data_rs, (uint8_t *)"prod_id", &prod_id) < 0)
+	{
+	  err_flag++;
+	  goto cleanup1;
+	}
       
       switch (manf_id)
 	{
@@ -1226,17 +1255,28 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 	  switch (prod_id)
 	    {
 	    case IPMI_PROD_ID_SE7501WV2:
-	      return 7;
+	      rv = 7;
 	    }
 	}
+
+    cleanup1:
+      if (obj_data_rs)
+	fiid_obj_destroy(obj_data_rs);
+      if (err_flag || rv != -1)
+	return rv;
     }
   
   {
-    fiid_obj_t data_rs;
+    fiid_obj_t data_rs = NULL;
     uint64_t val;
+    int8_t rv = -1, err_flag = 0;
     int i;
     
-    FIID_OBJ_ALLOCA (data_rs, tmpl_get_channel_info_rs);
+    if (!(data_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
+      {
+	err_flag++;
+	goto cleanup2;
+      }
     
     /* Channel numbers range from 0 - 7 */
     for (i = 0; i < 8; i++)
@@ -1244,23 +1284,40 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 	if (ipmi_cmd_get_channel_info2 (dev, i, data_rs) != 0)
 	  continue;
 	
-	FIID_OBJ_GET (data_rs, 
-		      tmpl_get_channel_info_rs, 
-		      (uint8_t *)"channel_medium_type", 
-		      &val);
+	if (fiid_obj_get (data_rs, 
+			  (uint8_t *)"channel_medium_type", 
+			  &val) < 0)
+	  {
+	    err_flag++;
+	    goto cleanup2;
+	  }
+	  
 	if ((uint8_t) val == channel_medium_type)
 	  {
-	    FIID_OBJ_GET (data_rs, 
-			  tmpl_get_channel_info_rs, 
-			  (uint8_t *)"actual_channel_number", 
-			  &val);
-	    return (int8_t) val;
+	    if (fiid_obj_get (data_rs, 
+			      (uint8_t *)"actual_channel_number", 
+			      &val) < 0)
+	      {
+		err_flag++;
+		goto cleanup2;
+	      }
+	      
+	    rv = (int8_t) val;
+	    break;
 	  }
       }
+
+  cleanup2:
+    if (data_rs)
+      fiid_obj_destroy(data_rs);
+    if (err_flag || rv != -1)
+      return rv;
   }
   
   return (-1);
 }
+
+#if 0 /* TEST */
 
 int8_t 
 ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
@@ -1716,28 +1773,51 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
   return (0);
 }
 
+#endif /* TEST */
+
 int8_t 
 ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
 			    uint8_t channel_number,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
+
+  if (!dev || !fiid_obj_valid(obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_channel_info_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_channel_info_rq);
-  ERR (fill_kcs_get_channel_info (obj_cmd_rq, channel_number) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_APP_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_channel_info_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_channel_info_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_channel_info_rq)))
+    goto cleanup;
+
+  if (fill_kcs_get_channel_info (obj_cmd_rq, channel_number) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev,
+                IPMI_BMC_IPMB_LUN_BMC,
+                IPMI_NET_FN_APP_RQ,
+                obj_cmd_rq,
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+ 
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
-#endif /* TEST */

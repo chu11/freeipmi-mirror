@@ -238,11 +238,11 @@ int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);
 
 int8_t ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code);
 
-#if 0 /* TEST */
-
 int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
 				 uint8_t channel_medium_type);
 
+
+#if 0 /* TEST */
 
 int8_t ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
 					fiid_obj_t obj_cmd_rs);
@@ -295,11 +295,11 @@ int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
 				     uint8_t channel_number,
 				     uint8_t channel_access_set_flag,
 				     fiid_obj_t obj_cmd_rs);
+#endif /* TEST */
 int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
 				   uint8_t channel_number,
 				   fiid_obj_t obj_cmd_rs);
 
-#endif /* TEST */
 
 #ifdef __cplusplus
 }
