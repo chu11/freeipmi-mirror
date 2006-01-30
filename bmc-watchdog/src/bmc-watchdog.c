@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.32.2.1 2006-01-21 09:17:22 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.32.2.2 2006-01-30 14:05:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,11 +33,6 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif
-#if 0  /* commented by AB */
-#ifndef __FreeBSD__
-#include <sys/io.h>
-#endif
-#endif /* commented by AB */
 #include <syslog.h>
 #include <assert.h>
 #include <stdarg.h>
@@ -84,15 +79,15 @@
 
 #define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
 
-#define _FIID_OBJ_GET(a, b, c, d, e) \
+#define _FIID_OBJ_GET(__obj, __tmpl, __field, __val, __func) \
   do { \
      uint64_t val; \
-     if (fiid_obj_get((a), (b), (c), &val) < 0) \
+     if (fiid_obj_get((__obj), (__tmpl), (__field), &val) < 0) \
        { \
-         _bmclog("%s: fiid_obj_get: %s", (e), strerror(errno)); \
+         _bmclog("%s: fiid_obj_get: %s", (__func), strerror(errno)); \
          goto cleanup; \
        } \
-     *d = val; \
+     *(__val) = val; \
   } while (0) 
 
 struct cmdline_info
@@ -258,64 +253,25 @@ _err_exit(char *fmt, ...)
   exit(1);
 }
 
-#if 0 /* commented by AB */
-static int
-_get_port_and_reg_space(uint32_t *port, uint8_t *reg_space)
-{
-  ipmi_locate_info_t locate_info;
-
-  if ((port == NULL) || (reg_space == NULL))
-    return (-1);
-
-  assert(cmdline_parsed != 0);
-  
-  if (cinfo.io_port)
-    *port      = cinfo.io_port_val;
-
-  if (cinfo.reg_space)
-    *reg_space = cinfo.reg_space_val;
-
-  if (cinfo.io_port && cinfo.reg_space)
-    return (0);
-  
-  if (ipmi_locate (IPMI_INTERFACE_KCS, &locate_info) != NULL && (locate_info.addr_space_id == IPMI_ADDRESS_SPACE_ID_SYSTEM_IO))
-    {
-      if (!cinfo.io_port)
-        *port      = locate_info.base_addr.bmc_iobase_addr;
-      if (!cinfo.reg_space)
-        *reg_space = locate_info.reg_space;
-      return (0);
-    }
-
-  *port      = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-  *reg_space = IPMI_REG_SPACE_DEFAULT;
-  return (0);
-}
-#endif  /* commented by AB */
-
 /* Must be called after cmdline parsed b/c user may pass in io port */
 static int
 _init_ipmi(void)
 {
   int ret;
-#if 0 /* commented by AB */
-  uint32_t port=0;
-  uint8_t  reg_space=0;
-#endif /* commented by AB */
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-#if 0 /* commented by AB */
-  _get_port_and_reg_space (&port, &reg_space);
-#endif /* commented by AB */
-
-/*   if ((ret = ipmi_kcs_io_init(port, reg_space, IPMI_KCS_SLEEP_USECS)) < 0) */
-/*     _bmclog("ipmi_kcs_io_init: %s", strerror(errno)); */
   memset(&ipmi_dev, 0, sizeof (ipmi_dev));
   if ((ret = ipmi_open_inband(&ipmi_dev, 0, IPMI_DEVICE_KCS, 
 			      cinfo.io_port, cinfo.reg_space_val, 
 			      0, IPMI_MODE_NONBLOCK)) < 0)
-    _bmclog("ipmi_open_inband: %s", strerror(errno));
+    {
+      /* glibc bug on older ia64 systems returns EACCES instead of EPERM */
+      if (errno == EPERM || errno == EACCES)
+        _err_exit("Permission denied, must be root.");
+      else
+        _bmclog("ipmi_open_inband: %s", strerror(errno));
+    }
   
   return ret;
 }
@@ -418,11 +374,6 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 
   while (1)
     {
-#if 0 /* commented by AB */
-      if (ipmi_kcs_cmd_interruptible(IPMI_BMC_IPMB_LUN_BMC,
-                                     netfn, cmd_rq, 
-                                     tmpl_rq, cmd_rs, tmpl_rs) < 0)
-#endif /* commented by AB */
       if (ipmi_cmd (&ipmi_dev, IPMI_BMC_IPMB_LUN_BMC, netfn, 
 		   cmd_rq, tmpl_rq, cmd_rs, tmpl_rs) < 0)
         {
@@ -1864,33 +1815,7 @@ _daemon_cmd(void)
 int 
 main(int argc, char **argv)
 {
-#if 0 /* commented by AB */
-#if	defined(__FreeBSD__) && !defined(USE_IOPERM)
-  int dev_io_fd;
-#endif
-#endif /* commented by AB */
-
   _err_init(argv[0]);
-
-#if 0  /* commented by AB */
-#ifdef __FreeBSD__
-#ifdef USE_IOPERM
-  if (i386_set_ioperm(0, 0x10000, 1) == -1)
-#else
-  dev_io_fd = open("/dev/io", O_RDONLY);
-  if (dev_io_fd == -1)
-#endif /* !USE_IOPERM */
-#else
-  if(iopl(3) != 0)
-#endif /* !__FreeBSD__ */
-    {
-      /* glibc bug on older ia64 systems returns EACCES instead of EPERM */  
-      if (errno == EPERM || errno == EACCES)
-        _err_exit("Permission denied, must be root.");
-      else
-        _err_exit("iopl: %s", strerror(errno));
-    }
-#endif /* commented by AB */
 
   _cmdline_default();
   _cmdline_parse(argc, argv);
@@ -1918,13 +1843,6 @@ main(int argc, char **argv)
     _daemon_cmd();
   else
     _err_exit("internal error, command not set");
-
-
-#if 0  /* commented by AB */
-#if defined(__FreeBSD__) && !defined(USE_IOPERM)
-  close(dev_io_fd);
-#endif
-#endif /* commented by AB */
 
   ipmi_close(&ipmi_dev);
   close(logfile_fd);
