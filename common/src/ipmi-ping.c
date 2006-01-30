@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.1 2006-01-30 01:17:41 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.1.2.1 2006-01-30 01:37:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,8 +75,11 @@
 #define MAXHOSTNAMELEN 64
 #endif
 
-#define IPMI_PING_MAX_PKT_LEN    1024
-#define IPMI_PING_MAX_ERR_LEN    1024
+#define IPMI_PING_MAX_PKT_LEN      1024
+#define IPMI_PING_MAX_ERR_LEN      1024
+
+#define IPMI_PING_VERSION_1_5_STR  "1.5"
+#define IPMI_PING_VERSION_2_0_STR  "2.0"
 
 #define DEVURANDOM                "/dev/urandom"
 #define DEVRANDOM                 "/dev/random"
@@ -94,6 +97,7 @@ static int _interval = 1;
 static int _timeout = 5;
 static int _verbose = 0;
 static int _debug = 0;
+static int _version = IPMI_PING_VERSION_1_5;
 static int _initial_seq_num = -1;
 
 /* globals */
@@ -169,6 +173,8 @@ _output_usage(char *options)
     fprintf(stderr, "  -t   timeout in seconds\n");
   if (strchr(options, 'v'))
     fprintf(stderr, "  -v   verbose output\n");
+  if (strchr(options, 'r'))
+    fprintf(stderr, "  -r   protocol version\n");
   if (strchr(options, 's'))
     fprintf(stderr, "  -s   starting sequence number\n");
 #ifndef NDEBUG
@@ -206,6 +212,14 @@ _cmdline_parse(int argc,
         _output_usage(options);
       case 'V':
         _output_version();
+      case 'r':
+        if (!strcmp(optarg, IPMI_PING_VERSION_1_5_STR))
+          _version = IPMI_PING_VERSION_1_5;
+        else if (!strcmp(optarg, IPMI_PING_VERSION_2_0_STR))
+          _version = IPMI_PING_VERSION_2_0;
+        else
+          ipmi_ping_err_exit("invalid version");
+        break;
       case 'c':
         _count = strtol(optarg, &ptr, 10);
         if (ptr != (optarg + strlen(optarg)))
@@ -353,35 +367,6 @@ _setup(void)
   srand(time(NULL));
 }
 
-static unsigned int
-_get_rand(void)
-{
-#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
-  uint32_t randval;
-  int fd, ret = -1; 
-#if HAVE_DEVURANDOM
-  char *device = DEVURANDOM;
-#else 
-  char *device = DEVRANDOM;
-#endif
-  
-  if ((fd = open(device, O_RDONLY)) < 0)
-    goto cleanup;
-  
-  if ((ret = read(fd, (char *)&randval, sizeof(uint32_t))) < 0)
-    goto cleanup;
-  
- cleanup:
-  close(fd);
-  if (ret != sizeof(uint32_t))
-    return rand();
-  
-  return (unsigned int)randval;
-#else
-  return (unsigned int)rand();
-#endif
-}
-
 static void 
 _main_loop(Ipmi_Ping_CreatePacket _create, 
            Ipmi_Ping_ParsePacket _parse, 
@@ -398,9 +383,17 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
          && _end_result != NULL);
 
   if (_initial_seq_num < 0)
-    seq_num = _get_rand();
-  else
-    seq_num = _initial_seq_num;
+    {
+      int len;
+
+      if ((len = ipmi_get_random((char *)&_initial_seq_num,
+                                 sizeof(_initial_seq_num))) < 0)
+        ipmi_ping_err_exit("ipmi_get_random: %s", strerror(errno));
+      if (len != sizeof(_initial_seq_num))
+        ipmi_ping_err_exit("ipmi_get_random: invalid len returned");
+    }
+
+  seq_num = _initial_seq_num;
 
   printf("%s %s (%s)\n", _progname, _dest, _dest_ip);
 
@@ -419,7 +412,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
         }
       
       if ((len = _create((char *)buffer, IPMI_PING_MAX_PKT_LEN, 
-                         seq_num, _debug)) < 0)
+                         seq_num, _version, _debug)) < 0)
         ipmi_ping_err_exit("_create failed: %s", strerror(errno));
         
       rv = ipmi_lan_sendto(_sockfd, buffer, len, 0, 
@@ -460,7 +453,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
                 ipmi_ping_err_exit("ipmi_recvfrom: %s", strerror(errno));
               
               if ((rv = _parse((char *)buffer, len, inet_ntoa(from.sin_addr), 
-                               seq_num, _verbose, _debug)) < 0)
+                               seq_num, _verbose, _version, _debug)) < 0)
                 ipmi_ping_err_exit("_parse failed: %s", strerror(errno));
 
               /* If rv == 0, the sequence numbers don't match, so
@@ -495,9 +488,9 @@ ipmi_ping_setup(int argc,
                 char *options)
 {
 #ifndef NDEBUG
-  char *valid_options = "hVciItvsd:";
+  char *valid_options = "hVciItvrsd:";
 #else
-  char *valid_options = "hVciItvs:";
+  char *valid_options = "hVciItvrs:";
 #endif
   char *ptr;
   char c;

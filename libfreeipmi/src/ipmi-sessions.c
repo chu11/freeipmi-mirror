@@ -161,7 +161,7 @@ check_hdr_session_session_seq_num (fiid_template_t tmpl_hdr_session, fiid_obj_t 
 
   FIID_OBJ_GET(obj_hdr_session, tmpl_hdr_session, (uint8_t *)"session_seq_num", &session_seq_num_recv);
   
-  return ((((int32_t)session_seq_num_recv) == session_seq_num) ? 1 : 0);
+  return ((((uint32_t)session_seq_num_recv) == session_seq_num) ? 1 : 0);
 }
 
 int8_t 
@@ -183,7 +183,7 @@ check_hdr_session_session_id (fiid_template_t tmpl_hdr_session, fiid_obj_t obj_h
 
   FIID_OBJ_GET(obj_hdr_session, tmpl_hdr_session, (uint8_t *)"session_id", &session_id_recv);
 
-  return ((((int32_t)session_id_recv) == session_id) ? 1 : 0);
+  return ((((uint32_t)session_id_recv) == session_id) ? 1 : 0);
 }
 
 int8_t 
@@ -193,7 +193,9 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
   uint32_t auth_type_offset, auth_code_offset;
   uint8_t auth_code_buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
 
-  if (!(tmpl_hdr_session && pkt && auth_code_data_len <= IPMI_SESSION_MAX_AUTH_CODE_LEN))
+  if (!tmpl_hdr_session 
+      || !pkt 
+      || (auth_code_data && auth_code_data_len > IPMI_SESSION_MAX_AUTH_CODE_LEN))
     {
       errno = EINVAL;
       return (-1);
@@ -247,8 +249,8 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
           session_seq_num_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num");
           data_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_len_bytes (tmpl_hdr_session_auth);
 
-          if (pkt_len < session_id_offset
-              || pkt_len < session_seq_num_offset
+          if (pkt_len < (session_id_offset + fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_id"))
+              || pkt_len < (session_seq_num_offset + fiid_obj_field_len_bytes (tmpl_hdr_session, (uint8_t *)"session_seq_num"))
               || pkt_len < data_offset)
             return 0;
 
@@ -312,7 +314,6 @@ check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, fiid_template_t tmpl
       else
 	{
 	  /* Unsupported auth type for calculations */
-	  /* XXX is this the right errno type to return?? */
 	  errno = EINVAL;
 	  return (-1);
 	}

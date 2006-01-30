@@ -48,6 +48,14 @@ extern "C" {
 #define IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR    0x04
 #define IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN 0x05
 
+#define IPMI_CHASSIS_CTRL_VALID(__chassis_ctrl) \
+        (((__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_DOWN \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_UP \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_POWER_CYCLE \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_HARD_RESET \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR \
+          || (__chassis_ctrl) == IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN) ? 1 : 0)
+
 #define IPMI_CHASSIS_FORCE_IDENTIFY_OFF      0x0
 #define IPMI_CHASSIS_FORCE_IDENTIFY_ON       0x1
 
@@ -63,6 +71,12 @@ int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 					   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
 				     fiid_obj_t obj_cmd_rs);
+
+int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd);
+
+int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
+
+int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
                                   uint8_t identify_interval,

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.8.2.6 2006-01-28 16:57:10 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8.2.7 2006-01-30 01:37:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,9 +42,6 @@
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
-
-int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
-int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
 /* fiid_template_t */
 const fiid_field_t *

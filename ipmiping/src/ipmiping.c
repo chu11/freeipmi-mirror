@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.9 2006-01-28 16:57:10 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.10 2006-01-30 01:37:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <assert.h>
 #include "freeipmi.h"
+#include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
 
@@ -214,6 +215,9 @@ parsepacket(char *buffer,
 
   if (!ret)
     {
+#ifndef NDEBUG
+      fprintf(stderr, "%s(%d): chksum failed\n", __FUNCTION__, __LINE__);
+#endif /* NDEBUG */
       retval = 0;
       goto cleanup;
     }
@@ -231,26 +235,35 @@ parsepacket(char *buffer,
 
   if (!ret)
     {
+#ifndef NDEBUG
+      fprintf(stderr, "%s(%d): net_fn failed\n", __FUNCTION__, __LINE__);
+#endif /* NDEBUG */
       retval = 0;
       goto cleanup;
     }
 
   if ((ret = ipmi_check_cmd(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
                             IPMI_CMD_GET_CHANNEL_AUTH_CAPS)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
+    ipmi_ping_err_exit("ipmi_check_cmd: %s", strerror(errno));
 
   if (!ret)
     {
+#ifndef NDEBUG
+      fprintf(stderr, "%s(%d): cmd failed\n", __FUNCTION__, __LINE__);
+#endif /* NDEBUG */
       retval = 0;
       goto cleanup;
     }
 
   if ((ret = ipmi_check_comp_code(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
                                   IPMI_COMMAND_SUCCESS)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
+    ipmi_ping_err_exit("ipmi_check_comp_code: %s", strerror(errno));
 
   if (!ret)
     {
+#ifndef NDEBUG
+      fprintf(stderr, "%s(%d): comp_code failed\n", __FUNCTION__, __LINE__);
+#endif /* NDEBUG */
       retval = 0;
       goto cleanup;
     }
@@ -260,6 +273,9 @@ parsepacket(char *buffer,
 
   if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
+#ifndef NDEBUG
+      fprintf(stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
+#endif /* NDEBUG */
       retval = 0;
       goto cleanup;
     }

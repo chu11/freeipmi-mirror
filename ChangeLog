@@ -592,16 +592,84 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2006-01-29  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,
+	check_hdr_session_session_id): Fix typecast typos.
+
+	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_authcode):
+	Fix parameter check.  Fix corner case bugs.
+
+	* ipmipower/src/ipmipower_checkc.c (_check_network_function): Fix
+	debug output message.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (_ipmi_lan_pkt_size,
+	_ipmi_lan_pkt_rq_size): Make functions static.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (_ipmi_lan_pkt_size): Add
+	parameter check.
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface (assemble_ipmi_kcs_pkt,
+	unassemble_ipmi_kcs_pkt), libfreeipmi/src/rmcp.h,
+	libfreeipmi/src/rmcp.c (assemble_rmcp_pkt, unassemble_rmcp_pkt:
+	Change return type to int32_t for consistency.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c
+	(fill_cmd_set_power_restore_policy): Fix prototype for
+	consistency.  Add parameter check.  Add prototype to .h file.
+
+	* libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c:
+	Removed files.
+
+	* libfreeipmi/src/Makefile.am: Remove ipmi-ping.h and ipmi-ping.c.
+	
+	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: New files.
+
+	* common/src/Makefile.am, rmcpping/src/Makefile.am,
+	ipmiping/src/Makefile.am: Support new ping common lib.
+
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
 	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi_check_cmd,
-	ipmi_check_comp_code): Fix typecast typos.
+	ipmi_check_comp_code, ipmi_lan_check_rq_seq): Fix typecast typos.
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_outofband_free,
 	ipmi_inband_free, ipmi_open_outofband): Fix corner cases.
 
 	* ipmiping/src/ipmiping.c (parsepacket): Remove unnecessary code.
+
+	* rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Code cleanup.
+
+	* libfreeipmi/src/ipmi-ipmb-interface.h (IPMI_BMC_LUN_VALID): New
+	macro.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_check_net_fn): Use
+	new IPMI_BMC_LUN_VALID macro.
+
+	* ipmiping/src/ipmiping.c (parsepacket): Add additional debugging.
+
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c (Fiid_obj_dump_rmcp): New
+	function.
+	
+	* ipmipower/src/ipmipower_ping.c (ipmipower_ping_process_pings):
+	Use fiid wrapper macros.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h
+	(fill_cmd_get_chassis_status, fill_cmd_chassis_ctrl): Add function
+	prototypes.
+
+	* ipmipower/src/ipmipower_packet.c: Remove unnecessary function
+	prototypes.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h (IPMI_CHASSIS_CTRL_VALID):
+	New macro.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_ctrl): Use
+	IPMI_CHASSIS_CTRL_VALID.
 
 	Fix ipmipower issues discovered by Keith Owens @ SGI.
 
@@ -613,8 +681,6 @@
 
 	* ipmipower/src/: Fix gcc 4.0 warnings.
 
-	* rmcpping/src/rmcpping.c, ipmiping/src/ipmiping.c: Code cleanup.
-	
 2006-01-26  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd_raw): fixed improper

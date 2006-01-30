@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1 2006-01-30 01:17:41 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.2.1 2006-01-30 01:37:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -31,6 +31,9 @@
 extern "C" {
 #endif
 
+#define IPMI_PING_VERSION_1_5    0
+#define IPMI_PING_VERSION_2_0    1
+
 /* Ipmi_Ping_CreatePacket
  * - Create a ping request packet and store it in the buffer
  * - Return length of packet created, or -1 on error.
@@ -38,6 +41,7 @@ extern "C" {
 typedef int (*Ipmi_Ping_CreatePacket)(char *buffer, 
                                       int buflen, 
                                       unsigned int seq_num, 
+                                      int version,
                                       int debug);
 
 /* Ipmi_Ping_ParsePacket
@@ -51,6 +55,7 @@ typedef int (*Ipmi_Ping_ParsePacket)(char *buffer,
                                      const char *from, 
                                      unsigned int seq_num, 
                                      int verbose, 
+                                     int version,
                                      int debug);
 
 /* Ipmi_Ping_LatePacket
