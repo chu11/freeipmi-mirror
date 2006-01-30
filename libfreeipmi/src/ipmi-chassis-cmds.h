@@ -74,6 +74,8 @@ int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
 				     fiid_obj_t obj_cmd_rs);
 #endif /* TEST */
 
+int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd);
+
 int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);

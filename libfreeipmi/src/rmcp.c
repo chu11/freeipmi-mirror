@@ -131,7 +131,7 @@ fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
   return 0;
 }
 
-int8_t
+int32_t
 assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
 {
   uint32_t obj_cmd_len, obj_hdr_len;
@@ -198,7 +198,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
   return (obj_hdr_len + obj_cmd_len);
 }  
 
-int8_t
+int32_t
 unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;

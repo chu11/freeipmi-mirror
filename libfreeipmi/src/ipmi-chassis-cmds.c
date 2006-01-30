@@ -127,15 +127,21 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
 #if 0 /* TEST */
 
 int8_t 
-fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
-                                   uint8_t power_restore_policy)
+fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd)
 {
-  FIID_OBJ_SET (obj_data_rq, 
+  if (!obj_cmd
+      || !IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd, 
 		tmpl_set_power_restore_policy_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY);
   
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_SET (obj_cmd, 
 		tmpl_set_power_restore_policy_rq, 
 		(uint8_t *)"power_restore_policy", 
 		power_restore_policy);
@@ -213,8 +219,7 @@ ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_power_restore_policy_rq);
-  ERR (fill_cmd_set_power_restore_policy (obj_cmd_rq, 
-					  power_restore_policy) == 0);
+  ERR (fill_cmd_set_power_restore_policy (power_restore_policy, obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_CHASSIS_RQ, 
