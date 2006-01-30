@@ -79,7 +79,6 @@ int8_t ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
 int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
 			  uint8_t fn, 
 			  fiid_obj_t obj_hdr);
-
 int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
                                fiid_obj_t obj_cmd, 
                                uint8_t *pkt, 

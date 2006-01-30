@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.h,v 1.1 2006-01-30 01:17:41 chu11 Exp $
+ *  $Id: ipmi-ping.h,v 1.1.4.1 2006-01-30 01:52:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

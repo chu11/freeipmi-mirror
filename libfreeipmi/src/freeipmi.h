@@ -243,9 +243,6 @@ extern "C" {
 #include "ipmi-sensor-utils.h"
 #include "ipmi-watchdog.h"
 #include "ipmi-msg-interface-desc.h"
-#endif /* TEST */
-#include "ipmi-ping.h"
-#if 0 /* TEST */
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #include "ipmi-sensor-event-messages.h"
@@ -361,9 +358,6 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-watchdog.h>
 #include <freeipmi/ipmi-msg-interface-desc.h>
-#endif /* TEST */
-#include <freeipmi/ipmi-ping.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.10 2006-01-29 23:57:26 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.11 2006-01-30 01:52:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -36,6 +36,7 @@
 #include <errno.h>
 #include <assert.h>
 #include "freeipmi.h"
+#include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
 
