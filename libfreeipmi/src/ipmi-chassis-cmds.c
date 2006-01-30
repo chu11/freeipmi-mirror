@@ -128,6 +128,13 @@ int8_t
 fill_cmd_set_power_restore_policy (fiid_obj_t obj_data_rq, 
                                    uint8_t power_restore_policy)
 {
+  if (!obj_data_rq
+      || !IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_power_restore_policy_rq, 
 		(uint8_t *)"cmd", 
