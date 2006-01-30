@@ -1119,6 +1119,12 @@ ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_
 int8_t 
 ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 {
+  if (!dev)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
       fiid_obj_t obj_data_rs;
