@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.37 2006-01-30 22:30:40 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.38 2006-01-30 22:51:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1637,6 +1637,7 @@ _daemon_setup(void)
               _deamon_cmd_error_exit("Suspend BMC ARPs", ret);
               continue;
             }
+          break;
         }
     }
 

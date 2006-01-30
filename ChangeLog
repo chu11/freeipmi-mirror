@@ -23,7 +23,10 @@
 	messages.
 
 	* bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd): Fix corner case.
-	
+
+	* bmc-watchdog/src/bmc-watchdog.c (_daemon_setup): Fix infinite
+	loop bug.
+
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,
