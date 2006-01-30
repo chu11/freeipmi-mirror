@@ -21,6 +21,8 @@
 
 	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix debug output
 	messages.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd): Fix corner case.
 	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
