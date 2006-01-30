@@ -241,7 +241,9 @@ extern "C" {
 #if 0 /* TEST */
 #include "ipmi-sdr-repo-cache.h"
 #include "ipmi-sensor-utils.h"
+#endif /* TEST */
 #include "ipmi-watchdog.h"
+#if 0 /* TEST */
 #include "ipmi-msg-interface-desc.h"
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"

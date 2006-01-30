@@ -28,6 +28,8 @@
 
 	* Remove global need for tmpl_hdr_session and
 	tmpl_hdr_session_auth_calc template.
+
+	* libfreeipmi/src/ipmi-watchdog.c: Support new fiid.
 	
 2006-01-28  Albert Chu <chu11@llnl.gov>	
 
