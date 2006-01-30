@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.32.2.3 2006-01-30 19:42:00 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.32.2.4 2006-01-30 22:58:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1471,29 +1471,38 @@ _daemon_init()
   int i;
   pid_t pid;
 
-  if ((pid = fork()) < 0) 
-    _err_exit("fork: %s", strerror(errno));
-  if (pid != 0)
-    exit(0);                    /* parent terminates */
 
-  setsid();
-
-  if (signal(SIGHUP, SIG_IGN) == SIG_ERR)
-    _err_exit("signal: %s", strerror(errno));
+#ifndef NDEBUG
+  /* Run in foreground if debugging */
+  if (!cinfo.debug)
+    {
+#endif
+      if ((pid = fork()) < 0) 
+	_err_exit("fork: %s", strerror(errno));
+      if (pid != 0)
+	exit(0);                    /* parent terminates */
+      
+      setsid();
+      
+      if (signal(SIGHUP, SIG_IGN) == SIG_ERR)
+	_err_exit("signal: %s", strerror(errno));
+      
+      if ((pid = fork()) < 0) 
+	_err_exit("fork: %s", strerror(errno));
+      if (pid != 0)
+	exit(0);                    /* 1st child terminates */
+      
+      if (chdir("/") < 0)
+	_err_exit("chdir: %s", strerror(errno));
+      
+      umask(0);
+      
+      for (i = 0; i < 64; i++)
+	close(i);
+#ifndef NDEBUG
+    }
+#endif
   
-  if ((pid = fork()) < 0) 
-    _err_exit("fork: %s", strerror(errno));
-  if (pid != 0)
-    exit(0);                    /* 1st child terminates */
-
-  if (chdir("/") < 0)
-    _err_exit("chdir: %s", strerror(errno));
-
-  umask(0);
-  
-  for (i = 0; i < 64; i++)
-    close(i);
-
   _init_bmc_watchdog(LOG_DAEMON, 0);
 }
 
@@ -1629,6 +1638,7 @@ _daemon_setup(void)
               _deamon_cmd_error_exit("Suspend BMC ARPs", ret);
               continue;
             }
+          break;
         }
     }
 
@@ -1674,13 +1684,7 @@ _daemon_cmd(void)
   int retry_wait_time, retry_attempt;
   int ret;
 
-#ifndef NDEBUG
-  /* Run in foreground if debugging */
-  if (!cinfo.debug)
-    _daemon_init();
-#else
   _daemon_init();
-#endif
 
   _daemon_setup();
 

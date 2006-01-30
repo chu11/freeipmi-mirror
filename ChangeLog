@@ -126,10 +126,32 @@
 ------------------------------------------------------------
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
-	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
-	output message.
+        * bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
+        output message.
 
-	* bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
+        * bmc-watchdog/src/bmc-watchdog.c (_FIID_OBJ_GET): Cleaned up code.
+
+        * bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
+
+        * libfreeipmi/src/ipmi-interface.c (ipmi_cmd): Add parameter
+        checks.
+
+        * libfreeipmi/src/ipmi-msg-support-cmds.c
+        (ipmi_get_channel_number2): Add parameter check.
+
+        * libfreeipmi/src/ipmi-dev-global-cmds.c (fill_cmd_get_dev_id):
+        Add parameter check.
+
+        * libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
+        Add parameter checks.
+
+        * bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix debug output
+        messages.
+
+        * bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd): Fix corner case.
+
+        * bmc-watchdog/src/bmc-watchdog.c (_daemon_setup): Fix infinite
+        loop bug.
 	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
