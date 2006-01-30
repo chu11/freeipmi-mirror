@@ -1,3 +1,10 @@
+2006-01-30  Albert Chu  <chu11@llnl.gov>
+
+	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
+	output message.
+
+	* bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
+	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,
