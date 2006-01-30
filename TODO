@@ -32,6 +32,9 @@ libfreeipmi:
   * test unsuccesfful commands
   * test bad seq nums
   * chksum_test - confusing, not use?
+  * cmds to test
+    - set power restore policy
+    - chassis ctrl
     
 fish:
 -----

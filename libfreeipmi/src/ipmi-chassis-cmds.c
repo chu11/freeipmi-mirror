@@ -22,23 +22,23 @@
 
 fiid_template_t tmpl_set_power_restore_policy_rq =
   {
-    {8, "cmd"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {3, "power_restore_policy"}, 
-    {5, "power_restore_policy.reserved"}, 
+    {3, "power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {5, "power_restore_policy.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     {0, ""}
   };
 
 fiid_template_t tmpl_set_power_restore_policy_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "powered_off_after_ac_mains_returns_flag"}, 
-    {1, "restoring_power_to_state_when_ac_mains_was_lost_flag"}, 
-    {1, "always_powering_up_after_ac_mains_returns_flag"}, 
-    {5, "power_restore_policy_support.reserved"}, 
+    {1, "powered_off_after_ac_mains_returns_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "restoring_power_to_state_when_ac_mains_was_lost_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "always_powering_up_after_ac_mains_returns_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {5, "power_restore_policy_support.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     {0,  ""}
   };
@@ -124,32 +124,41 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
     {0, ""}
   };
 
-#if 0 /* TEST */
-
 int8_t 
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd)
       || !IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, 
-		tmpl_set_power_restore_policy_rq, 
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_set_power_restore_policy_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY);
   
   FIID_OBJ_SET (obj_cmd, 
-		tmpl_set_power_restore_policy_rq, 
 		(uint8_t *)"power_restore_policy", 
 		power_restore_policy);
+
+  FIID_OBJ_SET (obj_cmd,
+		(uint8_t *)"power_restore_policy.reserved",
+		0);
   
   return 0;
 }
-
-#endif /* TEST */
 
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
