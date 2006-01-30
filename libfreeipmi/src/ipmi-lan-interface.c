@@ -570,10 +570,9 @@ _ipmi_lan_pkt_rq_size2 (ipmi_device_t *dev,
 #endif /* TEST */
 
 int32_t 
-_ipmi_lan_pkt_rs_size (uint8_t auth_type, 
-		       fiid_template_t tmpl_cmd)
+_ipmi_lan_pkt_rs_size (uint8_t auth_type, fiid_obj_t obj_cmd)
 {
-  return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rs, tmpl_cmd);
+  return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rs, obj_cmd);
 }
 
 #if 0 /* TEST */

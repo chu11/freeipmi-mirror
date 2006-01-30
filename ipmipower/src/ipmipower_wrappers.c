@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.4.2.2 2006-01-29 16:08:00 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.4.2.3 2006-01-30 01:59:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -206,7 +206,7 @@ Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
   if (!rv)
     err_exit("Fiid_obj_get: No data set");
   
-  return rv;
+  return;
 }
 
 void 
