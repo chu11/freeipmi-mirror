@@ -26,6 +26,16 @@
 	(fill_cmd_set_power_restore_policy): Fix prototype for
 	consistency.  Add parameter check.  Add prototype to .h file.
 
+	* libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c:
+	Removed files.
+
+	* libfreeipmi/src/Makefile.am: Remove ipmi-ping.h and ipmi-ping.c.
+	
+	* common/src/ipmi-ping.h, common/src/ipmi-ping.c: New files.
+
+	* common/src/Makefile.am, rmcpping/src/Makefile.am,
+	ipmiping/src/Makefile.am: Support new ping common lib.
+
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_net_fn),
