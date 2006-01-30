@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.34 2006-01-30 13:54:26 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.35 2006-01-30 14:01:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,15 +79,15 @@
 
 #define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
 
-#define _FIID_OBJ_GET(a, b, c, d, e) \
+#define _FIID_OBJ_GET(__obj, __tmpl, __field, __val, __func) \
   do { \
      uint64_t val; \
-     if (fiid_obj_get((a), (b), (c), &val) < 0) \
+     if (fiid_obj_get((__obj), (__tmpl), (__field), &val) < 0) \
        { \
-         _bmclog("%s: fiid_obj_get: %s", (e), strerror(errno)); \
+         _bmclog("%s: fiid_obj_get: %s", (__func), strerror(errno)); \
          goto cleanup; \
        } \
-     *d = val; \
+     *(__val) = val; \
   } while (0) 
 
 struct cmdline_info
