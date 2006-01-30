@@ -21,8 +21,10 @@
 	libfreeipmi/src/rmcp.c (assemble_rmcp_pkt, unassemble_rmcp_pkt:
 	Change return type to int32_t for consistency.
 
-	* libfreeipmi/src/ipmi-chassis-cmds.c
-	(fill_cmd_set_power_restore_policy): Add parameter check.
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c
+	(fill_cmd_set_power_restore_policy): Fix prototype for
+	consistency.  Add parameter check.  Add prototype to .h file.
 
 2006-01-28  Albert Chu  <chu11@llnl.gov>
 
