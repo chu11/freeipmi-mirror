@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.35 2006-01-30 14:01:51 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.36 2006-01-30 21:18:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -379,15 +379,14 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
-              _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
-                      str, strerror(errno));
+              _bmclog("%s: ipmi_cmd: %s", str, strerror(errno));
               return -1;
             }
           else
             {
               if (retry_count >= retry_attempt)
                 {
-                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
+                  _bmclog("%s: ipmi_cmd: BMC too busy: "
                           "retry_wait_time=%d, retry_attempt=%d", 
                           str, retry_wait_time, retry_attempt);
                   return -1;
@@ -395,8 +394,8 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
               if (cinfo.debug)
                 {
-                  fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
-                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
+                  fprintf(stderr, "%s: ipmi_cmd: BMC busy\n", str);
+                  _bmclog("%s: ipmi_cmd: BMC busy", str);
                 }
 #endif
               _sleep(retry_wait_time);

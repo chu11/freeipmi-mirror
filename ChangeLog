@@ -18,6 +18,9 @@
 
 	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
 	Add parameter checks.
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix debug output
+	messages.
 	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
