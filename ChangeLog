@@ -12,6 +12,9 @@
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(ipmi_get_channel_number2): Add parameter check.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.c (fill_cmd_get_dev_id):
+	Add parameter check.
 	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
