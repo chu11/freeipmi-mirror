@@ -116,7 +116,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_addr", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -124,7 +124,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_addr", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -133,7 +133,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_lun", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -141,7 +141,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_lun", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -150,7 +150,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_seq", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -158,7 +158,7 @@ get_rq_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_seq", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -168,14 +168,14 @@ get_rq_checksum2 (ipmi_device_t *dev,
 			 obj_cmd, 
 			 cmd_length) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
   *checksum = ipmi_chksum (var_checksum2_data, 
 			   var_checksum2_data_length);
   
-  free (tmpl_var_checksum2_data);
+  fiid_template_free (tmpl_var_checksum2_data);
   return (0);
 }
 
@@ -215,7 +215,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rs_addr", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -223,7 +223,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rs_addr", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -232,7 +232,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rs_lun", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -240,7 +240,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rs_lun", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -249,7 +249,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_seq", 
 		    &val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   if (fiid_obj_set (var_checksum2_data, 
@@ -257,7 +257,7 @@ get_rs_checksum2 (ipmi_device_t *dev,
 		    (uint8_t *)"rq_seq", 
 		    val) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
@@ -267,14 +267,14 @@ get_rs_checksum2 (ipmi_device_t *dev,
 			 obj_cmd, 
 			 cmd_length) == -1)
     {
-      free (tmpl_var_checksum2_data);
+      fiid_template_free (tmpl_var_checksum2_data);
       return (-1);
     }
   
   *checksum = ipmi_chksum (var_checksum2_data, 
 			   var_checksum2_data_length);
   
-  free (tmpl_var_checksum2_data);
+  fiid_template_free (tmpl_var_checksum2_data);
   return (0);
 }
 

@@ -19,6 +19,9 @@
 	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): Fix
 	consistency issue with fill function parameters.
 
+	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum2,
+	get_rs_checksum2): Use fiid_template_free().
+
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
