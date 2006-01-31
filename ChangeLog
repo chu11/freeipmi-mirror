@@ -16,7 +16,7 @@
 ------------------------------------------------------------
 2006-01-31  Albert Chu <chu11@llnl.gov>	
 
-	* Support garpd.
+	* Support garpd and ipmi-locate.
 	
 2006-01-30  Albert Chu <chu11@llnl.gov>	
 
