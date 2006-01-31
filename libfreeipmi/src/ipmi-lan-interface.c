@@ -413,11 +413,6 @@ fill_hdr_session2 (ipmi_device_t *dev,
     case IPMI_SESSION_AUTH_TYPE_NONE:
       break;
     case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      /* XXX: Bala, you assume that the template always passed in
-       * is contains a field called "auth_code" which is incorrect.
-       *
-       * Please see fill_hdr_session().
-       */
       ERR (fiid_obj_set_data (dev->io.outofband.rq.obj_hdr_session, 
 			      *(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
 			      (uint8_t *)"auth_code", 
@@ -428,14 +423,20 @@ fill_hdr_session2 (ipmi_device_t *dev,
       {
 	ipmi_md2_t ctx;
 	uint8_t digest[IPMI_MD2_DIGEST_LEN];
-	
+	uint8_t session_id_buf[4];
+	uint8_t session_seq_num_buf[4];
+
 	ipmi_md2_init (&ctx);
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
+        session_id_buf[0] = (dev->io.outofband.session_id & 0x000000ff);
+        session_id_buf[1] = (dev->io.outofband.session_id & 0x0000ff00) >> 8;
+        session_id_buf[2] = (dev->io.outofband.session_id & 0x00ff0000) >> 16;
+        session_id_buf[3] = (dev->io.outofband.session_id & 0xff000000) >> 24;
 	ipmi_md2_update_data (&ctx, 
-			      (uint8_t *)&(dev->io.outofband.session_id), 
-			      sizeof (dev->io.outofband.session_id));
+                              session_id_buf,
+                              4);
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_hdr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
@@ -445,9 +446,13 @@ fill_hdr_session2 (ipmi_device_t *dev,
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_trlr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
+        session_seq_num_buf[0] = (dev->io.outofband.session_seq_num & 0x000000ff);
+        session_seq_num_buf[1] = (dev->io.outofband.session_seq_num & 0x0000ff00) >> 8;
+        session_seq_num_buf[2] = (dev->io.outofband.session_seq_num & 0x00ff0000) >> 16;
+        session_seq_num_buf[3] = (dev->io.outofband.session_seq_num & 0xff000000) >> 24;
 	ipmi_md2_update_data (&ctx, 
-			      (uint8_t *)&(dev->io.outofband.session_seq_num), 
-			      sizeof (dev->io.outofband.session_seq_num));
+                              session_seq_num_buf,
+                              4);
 	ipmi_md2_update_data (&ctx, 
 			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
@@ -468,14 +473,20 @@ fill_hdr_session2 (ipmi_device_t *dev,
       {
 	ipmi_md5_t ctx;
 	uint8_t digest[IPMI_MD5_DIGEST_LEN];
+	uint8_t session_id_buf[4];
+	uint8_t session_seq_num_buf[4];
 	
 	ipmi_md5_init (&ctx);
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.password,	      
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);
+        session_id_buf[0] = (dev->io.outofband.session_id & 0x000000ff);
+        session_id_buf[1] = (dev->io.outofband.session_id & 0x0000ff00) >> 8;
+        session_id_buf[2] = (dev->io.outofband.session_id & 0x00ff0000) >> 16;
+        session_id_buf[3] = (dev->io.outofband.session_id & 0xff000000) >> 24;
 	ipmi_md5_update_data (&ctx, 
-			      (uint8_t *)&(dev->io.outofband.session_id), 
-			      sizeof (dev->io.outofband.session_id));
+                              session_id_buf,
+                              4);
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_hdr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
@@ -485,9 +496,13 @@ fill_hdr_session2 (ipmi_device_t *dev,
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.rq.obj_msg_trlr, 
 			      fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
+        session_seq_num_buf[0] = (dev->io.outofband.session_seq_num & 0x000000ff);
+        session_seq_num_buf[1] = (dev->io.outofband.session_seq_num & 0x0000ff00) >> 8;
+        session_seq_num_buf[2] = (dev->io.outofband.session_seq_num & 0x00ff0000) >> 16;
+        session_seq_num_buf[3] = (dev->io.outofband.session_seq_num & 0xff000000) >> 24;
 	ipmi_md5_update_data (&ctx, 
-			      (uint8_t *)&(dev->io.outofband.session_seq_num), 
-			      sizeof (dev->io.outofband.session_seq_num));
+                              session_seq_num_buf,
+                              4);
 	ipmi_md5_update_data (&ctx, 
 			      dev->io.outofband.password,
 			      IPMI_SESSION_MAX_AUTH_CODE_LEN);

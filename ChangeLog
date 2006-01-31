@@ -22,6 +22,9 @@
 	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum2,
 	get_rs_checksum2): Use fiid_template_free().
 
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	endian bugs.
+
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
