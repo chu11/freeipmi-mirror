@@ -87,7 +87,7 @@ do {                                                     \
     _val_ptr = val;                                      \
     if (fiid_obj_get (bytes, field, &_val) == -1)        \
     {                                                    \
-      err (1, "fiid_obj_get (%p, %p, \"%s\", %p) error", \
+      err (1, "fiid_obj_get (%p, \"%s\", %p) error",     \
 	   bytes, field, val);                           \
     }                                                    \
     *_val_ptr = _val;                                    \

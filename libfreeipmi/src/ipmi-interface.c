@@ -29,7 +29,6 @@ fiid_template_t tmpl_inband_hdr =
     {0, "", 0}
   };
 
-#if 0 /* TEST */
 static void 
 ipmi_outofband_free (ipmi_device_t *dev)
 {
@@ -39,16 +38,15 @@ ipmi_outofband_free (ipmi_device_t *dev)
       return;
     }
 
-  fiid_obj_free (dev->io.outofband.rq.obj_hdr_rmcp);
-  fiid_obj_free (dev->io.outofband.rs.obj_hdr_rmcp);
-  fiid_obj_free (dev->io.outofband.rq.obj_hdr_session);
-  fiid_obj_free (dev->io.outofband.rs.obj_hdr_session);
-  fiid_obj_free (dev->io.outofband.rq.obj_msg_hdr);
-  fiid_obj_free (dev->io.outofband.rs.obj_msg_hdr);
-  fiid_obj_free (dev->io.outofband.rq.obj_msg_trlr);
-  fiid_obj_free (dev->io.outofband.rs.obj_msg_trlr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_hdr_rmcp);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_hdr_rmcp);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_hdr_session);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_hdr_session);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_msg_hdr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_msg_hdr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_msg_trlr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_msg_trlr);
 }
-#endif /* TEST */
 
 static void 
 ipmi_inband_free (ipmi_device_t *dev)
@@ -64,7 +62,6 @@ ipmi_inband_free (ipmi_device_t *dev)
   ipmi_xfree (dev->io.inband.driver_device);
 }
 
-#if 0 /* TEST */
 int 
 ipmi_open_outofband (ipmi_device_t *dev, 
 		     ipmi_driver_type_t driver_type, 
@@ -151,18 +148,13 @@ ipmi_open_outofband (ipmi_device_t *dev,
   switch (dev->io.outofband.auth_type)
     {
     case IPMI_SESSION_AUTH_TYPE_NONE:
-      dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
-      break;
     case IPMI_SESSION_AUTH_TYPE_MD2:
     case IPMI_SESSION_AUTH_TYPE_MD5:
     case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
       dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth;
+	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
       break;
     case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
-      dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session_auth_calc;
       fprintf (stderr, "%s:%d:%s(): auth_type OEM is not supported\n", 
 	       __FILE__, __LINE__, __PRETTY_FUNCTION__);
     default:
@@ -176,14 +168,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
   dev->io.outofband.rq.obj_hdr_rmcp = 
-    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_rmcp = 
-    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
   if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
     {
       ipmi_outofband_free (dev);
@@ -191,14 +183,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_hdr_session = 
-    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rq.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_session = 
-    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
   if (dev->io.outofband.rs.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
@@ -206,14 +198,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_hdr = 
-    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_hdr = 
-    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
   if (dev->io.outofband.rs.obj_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -221,14 +213,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_msg_trlr = 
-    fiid_obj_calloc (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rq.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
   dev->io.outofband.rs.obj_msg_trlr = 
-    fiid_obj_calloc (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
   if (dev->io.outofband.rs.obj_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
@@ -254,7 +246,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
   
   return (0);
 }
-#endif /* TEST */
 
 int 
 ipmi_open_inband (ipmi_device_t *dev, 
@@ -548,7 +539,9 @@ ipmi_outofband_close (ipmi_device_t *dev)
   int retval = 0;
   fiid_obj_t obj_cmd_rs = NULL;
   
-  FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_close_session_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_close_session_rs)))
+    return (-1);
+
   retval = ipmi_lan_close_session2 (dev, obj_cmd_rs);
   
   if (dev->io.outofband.local_sockfd)
@@ -558,7 +551,6 @@ ipmi_outofband_close (ipmi_device_t *dev)
   
   return (retval);
 }
-#endif /* TEST */
 
 static int 
 ipmi_inband_close (ipmi_device_t *dev)
