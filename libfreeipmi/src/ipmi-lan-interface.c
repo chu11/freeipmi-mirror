@@ -575,6 +575,12 @@ int32_t
 _ipmi_lan_pkt_rq_size2 (ipmi_device_t *dev, 
 			fiid_template_t tmpl_cmd)
 {
+  if (!dev || !tmpl_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   return (fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)) + 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr)) + 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)) + 
@@ -593,6 +599,12 @@ int32_t
 _ipmi_lan_pkt_rs_size2 (ipmi_device_t *dev, 
 			fiid_template_t tmpl_cmd)
 {
+  if (!dev || !tmpl_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   return (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) + 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) + 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
