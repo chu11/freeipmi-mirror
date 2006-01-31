@@ -1,5 +1,8 @@
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove
+	debugging statements.
+
 	* libfreeipmi/src/ipmi-lan-interface.c (fill_lan_msg_hdr2,
 	fill_lan_msg_trlr2, fill_hdr_session2): Fix parameter checks.
 
@@ -13,12 +16,7 @@
 	ipmi_cmd_set_user_access2, ipmi_cmd_get_user_access2,
 	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): Fix
 	consistency issue with fill function parameters.
-	
-2006-01-31  Albert Chu  <chu11@llnl.gov>
 
-	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd): Remove
-	debugging statements.
-	
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
