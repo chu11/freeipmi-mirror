@@ -279,7 +279,8 @@ fill_lan_msg_hdr2 (ipmi_device_t *dev)
 {
   uint8_t checksum = 0;
   
-  if (dev->io.outofband.rq.obj_msg_hdr == NULL)
+  if (!dev 
+      || dev->io.outofband.rq.obj_msg_hdr == NULL)
     {
       errno = EINVAL;
       return -1;
@@ -325,6 +326,15 @@ fill_lan_msg_trlr2 (ipmi_device_t *dev,
 {
   uint8_t checksum = 0;
   
+  if (dev == NULL
+      || dev->io.outofband.rq.obj_msg_trlr == NULL
+      || obj_cmd == NULL
+      || tmpl_cmd == NULL)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   ERR (get_rq_checksum2 (dev, 
 			 obj_cmd, 
 			 tmpl_cmd, 
@@ -346,13 +356,15 @@ fill_hdr_session2 (ipmi_device_t *dev,
   uint8_t *auth_code = NULL;
   uint8_t auth_code_length = 0;
   
-  if (dev == NULL || tmpl_cmd == NULL)
+  if (dev == NULL 
+      || dev->io.outofband.rq.obj_hdr_session == NULL
+      || obj_cmd == NULL
+      || tmpl_cmd == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
-  
- 
+   
   FIID_OBJ_SET (dev->io.outofband.rq.obj_hdr_session, 
 		*(dev->io.outofband.rq.tmpl_hdr_session_ptr), 
 		(uint8_t *)"auth_type", 
