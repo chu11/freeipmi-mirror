@@ -1945,7 +1945,7 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_channel_info_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_channel_info (obj_cmd_rq, channel_number) < 0)
+  if (fill_kcs_get_channel_info (channel_number, obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev,

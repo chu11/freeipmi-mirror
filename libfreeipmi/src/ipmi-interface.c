@@ -436,11 +436,9 @@ ipmi_cmd (ipmi_device_t *dev,
   status = 0;
   switch (dev->type)
     {
-#if 0 /* TEST */
     case IPMI_DEVICE_LAN:
-      status = ipmi_lan_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
+      status = ipmi_lan_cmd2 (dev, obj_cmd_rq, obj_cmd_rs);
       break;
-#endif /* TEST */
     case IPMI_DEVICE_KCS:
       if (dev->mode == IPMI_MODE_NONBLOCK)
 	{
@@ -532,6 +530,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     }
   return (status);
 }
+#endif /* TEST */
 
 static int
 ipmi_outofband_close (ipmi_device_t *dev)
@@ -603,11 +602,9 @@ ipmi_close (ipmi_device_t *dev)
   
   switch (dev->type)
     {
-#if 0 /* TEST */
     case IPMI_DEVICE_LAN:
       ipmi_outofband_close (dev);
       break;
-#endif /* TEST */
     case IPMI_DEVICE_KCS:
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:

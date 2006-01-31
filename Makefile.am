@@ -4,7 +4,7 @@ endif
 
 # TEST
 # SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-locate bmc-info ipmiping rmcpping garpd $(MAYBE_FISH)
-SUBDIRS = doc common libfreeipmi ipmiping rmcpping ipmipower bmc-watchdog garpd ipmi-locate bmc-info
+SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-locate bmc-info ipmiping rmcpping garpd
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@
