@@ -824,15 +824,15 @@ ipmi_lan_close_session (int sockfd,
 }
 
 int8_t 
-fill_kcs_set_channel_access (fiid_obj_t obj_data_rq, 
-			     uint8_t channel_number, 
+fill_kcs_set_channel_access (uint8_t channel_number, 
 			     uint8_t ipmi_messaging_access_mode, 
 			     uint8_t user_level_authentication, 
 			     uint8_t per_message_authentication, 
 			     uint8_t pef_alerting, 
 			     uint8_t channel_access_set_flag, 
 			     uint8_t channel_privilege_level_limit, 
-			     uint8_t channel_privilege_level_limit_set_flag)
+			     uint8_t channel_privilege_level_limit_set_flag,
+                             fiid_obj_t obj_data_rq)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -890,10 +890,10 @@ fill_kcs_set_channel_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_kcs_set_user_name (fiid_obj_t obj_data_rq, 
-			uint8_t user_id, 
+fill_kcs_set_user_name (uint8_t user_id, 
 			char *user_name,
-                        unsigned int user_name_len)
+                        unsigned int user_name_len,
+                        fiid_obj_t obj_data_rq)
 {
   /* achu: username can be IPMI_USER_NAME_MAX_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -934,7 +934,7 @@ fill_kcs_set_user_name (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_kcs_get_user_name (fiid_obj_t obj_data_rq, uint8_t user_id) 
+fill_kcs_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
 {
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_user_name_rq, 
@@ -950,11 +950,11 @@ fill_kcs_get_user_name (fiid_obj_t obj_data_rq, uint8_t user_id)
 }
 
 int8_t 
-fill_kcs_set_user_password (fiid_obj_t obj_data_rq, 
-			    uint8_t user_id, 
+fill_kcs_set_user_password (uint8_t user_id, 
 			    uint8_t operation, 
 			    char *user_password,
-                            unsigned int user_password_len)
+                            unsigned int user_password_len,
+                            fiid_obj_t obj_data_rq)
 {
   /* achu: password can be IPMI_USER_PASSWORD_MAX_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -1001,14 +1001,14 @@ fill_kcs_set_user_password (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_kcs_set_user_access (fiid_obj_t obj_data_rq, 
-			  uint8_t channel_number,
+fill_kcs_set_user_access (uint8_t channel_number,
 			  uint8_t user_id,
 			  uint8_t restrict_to_callback,
 			  uint8_t enable_link_auth,
 			  uint8_t enable_ipmi_msgs,
 			  uint8_t user_privilege_level_limit,
-			  uint8_t user_session_number_limit)
+			  uint8_t user_session_number_limit,
+                          fiid_obj_t obj_data_rq)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1066,9 +1066,9 @@ fill_kcs_set_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-fill_kcs_get_user_access (fiid_obj_t obj_data_rq, 
-			  uint8_t channel_number,
-			  uint8_t user_id)
+fill_kcs_get_user_access (uint8_t channel_number,
+			  uint8_t user_id,
+                          fiid_obj_t obj_data_rq)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1096,9 +1096,9 @@ fill_kcs_get_user_access (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-fill_kcs_get_channel_access (fiid_obj_t obj_data_rq, 
-			     uint8_t channel_number,
-			     uint8_t channel_access_set_flag)
+fill_kcs_get_channel_access (uint8_t channel_number,
+			     uint8_t channel_access_set_flag,
+                             fiid_obj_t obj_data_rq)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -1128,7 +1128,7 @@ fill_kcs_get_channel_access (fiid_obj_t obj_data_rq,
 #endif /* TEST */
 
 int8_t 
-fill_kcs_get_channel_info (fiid_obj_t obj_data_rq, uint8_t channel_number)
+fill_kcs_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1344,16 +1344,6 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   
   local_dev = *dev;
   local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-  local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
-    local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
-  local_dev.io.outofband.rq.obj_hdr_session = NULL;
-  local_dev.io.outofband.rs.obj_hdr_session = NULL;
-
-  if (!(local_dev.io.outofband.rq.obj_hdr_session = fiid_obj_create(*(local_dev.io.outofband.rq.tmpl_hdr_session_ptr))))
-    goto cleanup;
-  
-  if (!(local_dev.io.outofband.rs.obj_hdr_session = fiid_obj_create(*(local_dev.io.outofband.rs.tmpl_hdr_session_ptr))))
-    goto cleanup;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_auth_caps_rq)))
     goto cleanup;
@@ -1377,10 +1367,6 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
   
   rv = 0;
  cleanup:
-  if (local_dev.io.outofband.rq.obj_hdr_session)
-    fiid_obj_destroy(local_dev.io.outofband.rq.obj_hdr_session);
-  if (local_dev.io.outofband.rs.obj_hdr_session)
-    fiid_obj_destroy(local_dev.io.outofband.rs.obj_hdr_session);
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
   return (rv);
@@ -1413,16 +1399,6 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   
   local_dev = *dev;
   local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-  local_dev.io.outofband.rq.tmpl_hdr_session_ptr = 
-    local_dev.io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
-  local_dev.io.outofband.rq.obj_hdr_session = NULL;
-  local_dev.io.outofband.rs.obj_hdr_session = NULL;
-
-  if (!(local_dev.io.outofband.rq.obj_hdr_session = fiid_obj_create(*(local_dev.io.outofband.rq.tmpl_hdr_session_ptr))))
-    goto cleanup;
-  
-  if (!(local_dev.io.outofband.rs.obj_hdr_session = fiid_obj_create(*(local_dev.io.outofband.rs.tmpl_hdr_session_ptr))))
-    goto cleanup;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
     goto cleanup;
@@ -1447,10 +1423,6 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
   
   rv = 0;
  cleanup:
-  if (local_dev.io.outofband.rq.obj_hdr_session)
-    fiid_obj_destroy(local_dev.io.outofband.rq.obj_hdr_session);
-  if (local_dev.io.outofband.rs.obj_hdr_session)
-    fiid_obj_destroy(local_dev.io.outofband.rs.obj_hdr_session);
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
   return (rv);
@@ -1753,15 +1725,15 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_channel_access_rq);
-  ERR (fill_kcs_set_channel_access (obj_cmd_rq, 
-				    channel_number, 
+  ERR (fill_kcs_set_channel_access (channel_number, 
 				    ipmi_messaging_access_mode, 
 				    user_level_authentication, 
 				    per_message_authentication, 
 				    pef_alerting, 
 				    channel_access_set_flag, 
 				    channel_privilege_level_limit, 
-				    channel_privilege_level_limit_set_flag) == 0); 
+				    channel_privilege_level_limit_set_flag,
+                                    obj_cmd_rq) == 0); 
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1786,10 +1758,10 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_name_rq);
-  ERR (fill_kcs_set_user_name (obj_cmd_rq, 
-			       user_id, 
+  ERR (fill_kcs_set_user_name (user_id, 
 			       user_name, 
-			       ((user_name) ? strlen (user_name) : 0)) == 0);
+			       ((user_name) ? strlen (user_name) : 0),
+                               obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1813,7 +1785,7 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_name_rq);
-  ERR (fill_kcs_get_user_name (obj_cmd_rq, user_id) == 0);
+  ERR (fill_kcs_get_user_name (user_id, obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1839,11 +1811,11 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_password_rq);
-  ERR (fill_kcs_set_user_password (obj_cmd_rq, 
-				   user_id, 
+  ERR (fill_kcs_set_user_password (user_id, 
 				   operation, 
 				   user_password, 
-				   ((user_password) ? strlen(user_password) : 0)) == 0);
+				   ((user_password) ? strlen(user_password) : 0),
+                                   obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1873,14 +1845,14 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_access_rq);
-  ERR (fill_kcs_set_user_access (obj_cmd_rq, 
-				 channel_number,
+  ERR (fill_kcs_set_user_access (channel_number,
 				 user_id,
 				 restrict_to_callback,
 				 enable_link_auth,
 				 enable_ipmi_msgs,
 				 user_privilege_level_limit,
-				 user_session_number_limit) == 0);
+				 user_session_number_limit,
+                                 obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1905,7 +1877,7 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_access_rq);
-  ERR (fill_kcs_get_user_access (obj_cmd_rq, channel_number, user_id) == 0);
+  ERR (fill_kcs_get_user_access (channel_number, user_id, obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
@@ -1930,9 +1902,9 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
   ERR (obj_cmd_rs != NULL);
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_channel_access_rq);
-  ERR (fill_kcs_get_channel_access (obj_cmd_rq, 
-				    channel_number, 
-				    channel_access_set_flag) == 0);
+  ERR (fill_kcs_get_channel_access (channel_number, 
+				    channel_access_set_flag,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_APP_RQ, 
