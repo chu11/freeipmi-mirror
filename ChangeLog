@@ -21,6 +21,9 @@
 	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): Fix
 	consistency issue with fill function parameters.
 
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_open_session2): Fix parameter checks.
+
 	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum2,
 	get_rs_checksum2): Use fiid_template_free().
 
