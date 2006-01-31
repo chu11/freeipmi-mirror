@@ -420,7 +420,11 @@ ipmi_cmd (ipmi_device_t *dev,
 {
   int8_t status;
 
-  if (dev == NULL)
+  if (dev == NULL
+      || obj_cmd_rq == NULL
+      || tmpl_cmd_rq == NULL
+      || obj_cmd_rs == NULL
+      || tmpl_cmd_rs == NULL)
     {
       errno = EINVAL;
       return (-1);

@@ -736,6 +736,13 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   uint32_t copy_length;
   int instance;
   
+  if (!obj_acpi_table_hdr
+      || !obj_acpi_spmi_table_descriptor)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   obj_acpi_table_hdr = alloca (fiid_obj_len_bytes (tmpl_acpi_table_hdr));
   memset (obj_acpi_table_hdr, 0, fiid_obj_len_bytes (tmpl_acpi_table_hdr));
   
