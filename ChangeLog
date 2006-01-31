@@ -135,7 +135,9 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum1,
 	get_rq_checksum1, get_rq_checksum2, get_rs_checksum2,
-	fill_lan_msg_hdr2, fill_lan_msg_trlr2, fill_hdr_session2): Fix
+	fill_lan_msg_hdr2, fill_lan_msg_trlr2, fill_hdr_session2,
+	_ipmi_lan_pkt_rq_size2, _ipmi_lan_pkt_rs_size2,
+	unassemble_ipmi_lan_pkt2, ipmi_lan_validate_checksum): Fix
 	parameter checks.
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
@@ -148,6 +150,18 @@
 	ipmi_cmd_set_user_access2, ipmi_cmd_get_user_access2,
 	ipmi_cmd_get_channel_access2, ipmi_cmd_get_channel_info2): Fix
 	consistency issue with fill function parameters.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_open_session2): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum2,
+	get_rs_checksum2): Use fiid_template_free().
+
+	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
+	endian bugs.
+
+	* libfreeipmi/src/ipmi-semaphores.h (IPMI_MUTEX_LOCK,
+	IPMI_MUTEX_UNLOCK): Revert fixes from 2005-08-30.
 
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 

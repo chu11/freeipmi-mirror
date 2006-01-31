@@ -1551,7 +1551,11 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
   uint64_t temp_session_seq_num = 0;
   
-  /* err checks */
+  if (!dev)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   dev->io.outofband.rq_seq = 0;
   
