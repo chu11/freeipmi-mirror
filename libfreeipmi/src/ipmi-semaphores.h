@@ -43,7 +43,6 @@ extern "C" {
 #define IPMI_MUTEX_LOCK(semid)                                      \
 do {								    \
   int status;							    \
-  if (semid == 0) break;                                            \
   status = semop (semid, &mutex_lock_buf, 1);			    \
   if (status == -1)						    \
     {								    \
@@ -65,7 +64,6 @@ do {								    \
 
 #define IPMI_MUTEX_UNLOCK(semid)                                    \
 do {								    \
-  if (semid == 0) break;                                            \
   ERR (semop (semid, &mutex_unlock_buf, 1) != -1);                  \
   /* If you are in a loop to go grab LOCK again, Other tasks will   \
      never get a chance until you break. Give fair chance to other  \

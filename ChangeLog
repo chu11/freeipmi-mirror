@@ -27,6 +27,9 @@
 	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
 	endian bugs.
 
+	* libfreeipmi/src/ipmi-semaphores.h (IPMI_MUTEX_LOCK,
+	IPMI_MUTEX_UNLOCK): Revert fixes from 2005-08-30.
+
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
