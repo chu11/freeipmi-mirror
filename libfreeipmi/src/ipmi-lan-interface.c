@@ -57,6 +57,12 @@ fiid_template_t tmpl_lan_msg_trlr =
 int 
 get_rq_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
 {
+  if (!dev || !checksum)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   *checksum = ipmi_chksum (dev->io.outofband.rq.obj_msg_hdr, 2);
   return (0);
 }
@@ -64,6 +70,12 @@ get_rq_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
 int 
 get_rs_checksum1 (ipmi_device_t *dev, uint8_t *checksum)
 {
+  if (!dev || !checksum)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   *checksum = ipmi_chksum (dev->io.outofband.rs.obj_msg_hdr, 2);
   return (0);
 }
@@ -80,6 +92,15 @@ get_rq_checksum2 (ipmi_device_t *dev,
   int cmd_length = 0;
   uint64_t val = 0;
   
+  if (!dev 
+      || !obj_cmd
+      || !tmpl_cmd
+      || !checksum)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   ERR ((cmd_length = fiid_obj_len_bytes (tmpl_cmd)) != -1);
   
   tmpl_var_checksum2_data = fiid_template_make (8, "rq_addr", 
@@ -170,6 +191,15 @@ get_rs_checksum2 (ipmi_device_t *dev,
   int cmd_length = 0;
   uint64_t val = 0;
   
+  if (!dev 
+      || !obj_cmd
+      || !tmpl_cmd
+      || !checksum)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   ERR ((cmd_length = fiid_obj_len_bytes (tmpl_cmd)) != -1);
   
   tmpl_var_checksum2_data = fiid_template_make (8, "rs_addr", 

@@ -3,8 +3,10 @@
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove
 	debugging statements.
 
-	* libfreeipmi/src/ipmi-lan-interface.c (fill_lan_msg_hdr2,
-	fill_lan_msg_trlr2, fill_hdr_session2): Fix parameter checks.
+	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum1,
+	get_rq_checksum1, get_rq_checksum2, get_rs_checksum2,
+	fill_lan_msg_hdr2, fill_lan_msg_trlr2, fill_hdr_session2): Fix
+	parameter checks.
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(fill_kcs_set_channel_access, fill_kcs_set_user_name,
