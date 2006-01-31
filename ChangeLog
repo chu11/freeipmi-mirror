@@ -16,9 +16,7 @@
 ------------------------------------------------------------
 2006-01-31  Albert Chu <chu11@llnl.gov>	
 
-	* Support garpd and ipmi-locate.
-
-	* Begin support of bmc-info.
+	* Support garpd, ipmi-locate, bmc-info.
 	
 2006-01-30  Albert Chu <chu11@llnl.gov>	
 
