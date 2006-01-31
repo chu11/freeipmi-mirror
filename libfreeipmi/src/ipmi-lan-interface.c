@@ -1110,6 +1110,15 @@ unassemble_ipmi_lan_pkt2 (ipmi_device_t *dev,
   fiid_field_t *tmpl_lan_packet = NULL;
   int lan_packet_length = 0;
   
+  if (!dev
+      || !pkt
+      || !obj_cmd
+      || !tmpl_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   int rmcp_length = 0;
   int session_length = 0;
   int hdr_length = 0;
@@ -1179,6 +1188,14 @@ ipmi_lan_validate_checksum (ipmi_device_t *dev,
   uint8_t checksum = 0;
   uint64_t val = 0;
   
+  if (!dev
+      || !obj_cmd
+      || !tmpl_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   checksum = 0;
   ERR (get_rs_checksum1 (dev, &checksum) == 0);
   FIID_OBJ_GET (dev->io.outofband.rs.obj_msg_hdr, 
