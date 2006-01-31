@@ -1455,6 +1455,8 @@ printf("DEBUGGING:\n");
     
     if (bytes_received > pkt_len)
       {
+#if 0
+	/* DEBUGGING */
 	int i;
 	
 	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
@@ -1467,7 +1469,7 @@ printf("DEBUGGING:\n");
 	for (i = 0; i < bytes_received; i++)
 	  fprintf (stderr, "%02X ", pkt[i]);
 	fprintf (stderr, "\n");
-	
+#endif	
 	return (-1);
       }
     
