@@ -159,7 +159,7 @@ fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq =
     {8, "vlan_id_ls"},
     {4, "vlan_id_ms"},
     {3, "reserved"},
-    {1, "vlan_id_flag"},
+    {1, "vlan_id_enable"},
 
     {0, ""}
   };
@@ -389,7 +389,7 @@ fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs =
     {8, "vlan_id_ls"},
     {4, "vlan_id_ms"},
     {3, "reserved"},
-    {1, "vlan_id_flag"},
+    {1, "vlan_id_enable"},
     
     {0,  ""}
   };
@@ -670,7 +670,8 @@ fill_lan_set_ip_addr_source (fiid_obj_t obj_data_rq,
 			     uint8_t ip_addr_source)
 {
   if (obj_data_rq == NULL
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_IP_ADDR_SOURCE_VALID(ip_addr_source))
     {
       errno = EINVAL;
       return (-1);
@@ -738,7 +739,7 @@ fill_lan_set_ip_addr (fiid_obj_t obj_data_rq,
 int8_t 
 fill_lan_set_vlan_id (fiid_obj_t obj_data_rq, 
                       uint8_t channel_number, 
-                      uint8_t vlan_id_flag,
+                      uint8_t vlan_id_enable,
                       uint32_t vlan_id)
 {
   uint8_t *ptr, ls, ms;
@@ -767,8 +768,8 @@ fill_lan_set_vlan_id (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_lan_conf_param_vlan_id_rq, 
-		(uint8_t *)"vlan_id_flag", 
-		vlan_id_flag);
+		(uint8_t *)"vlan_id_enable", 
+		vlan_id_enable);
 
   ptr = (uint8_t *)&vlan_id;
 #if WORDS_BIGENDIAN
@@ -953,7 +954,9 @@ fill_suspend_bmc_arps (fiid_obj_t obj_data_rq,
 		       uint8_t arp_response_suspend)
 {
   if (obj_data_rq == NULL
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend))
     {
       errno = EINVAL;
       return (-1);
@@ -990,10 +993,17 @@ ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
+
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(bmc_generated_gratuitous_arps_flag)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(bmc_generated_arp_responses_flag)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
   ERR (fill_lan_set_arp (obj_cmd_rq, 
 			 channel_number, 
@@ -1019,8 +1029,13 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
   ERR (fill_lan_set_gratuitous_arp_interval (obj_cmd_rq, 
@@ -1070,8 +1085,13 @@ ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_auth_type_enables_rq);
   ERR (fill_lan_set_auth_type_enables (obj_cmd_rq, 
@@ -1121,8 +1141,13 @@ ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_source_rq);
   ERR (fill_lan_set_ip_addr_source (obj_cmd_rq, 
@@ -1148,8 +1173,13 @@ ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1176,8 +1206,13 @@ ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1204,8 +1239,13 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1227,19 +1267,24 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
 			   uint8_t channel_number, 
-			   uint8_t vlan_id_flag, 
+			   uint8_t vlan_id_enable, 
 			   uint32_t vlan_id, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_vlan_id_rq);
   ERR (fill_lan_set_vlan_id (obj_cmd_rq, 
 			     channel_number,
-                             vlan_id_flag,
+                             vlan_id_enable,
 			     vlan_id) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
@@ -1261,8 +1306,13 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_vlan_priority_rq);
   ERR (fill_lan_set_vlan_priority (obj_cmd_rq, 
@@ -1288,8 +1338,13 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_subnet_mask_rq);
   ERR (fill_lan_set_subnet_mask (obj_cmd_rq, 
@@ -1315,8 +1370,13 @@ ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1343,8 +1403,13 @@ ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1371,8 +1436,13 @@ ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1401,8 +1471,13 @@ ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1433,8 +1508,13 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1465,8 +1545,13 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1497,8 +1582,13 @@ ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1529,8 +1619,13 @@ ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1561,8 +1656,13 @@ ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1593,8 +1693,13 @@ ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1625,8 +1730,13 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1657,8 +1767,13 @@ ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1689,8 +1804,13 @@ ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1721,8 +1841,13 @@ ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1753,8 +1878,13 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1785,8 +1915,13 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1816,8 +1951,13 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_suspend_bmc_arps_rq);
   ERR (fill_suspend_bmc_arps (obj_cmd_rq, 
