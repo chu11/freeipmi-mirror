@@ -379,8 +379,6 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
   return (0);
 }
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_lan_get_channel_auth_caps (int sockfd, 
 				struct sockaddr *hostaddr, 
@@ -388,32 +386,46 @@ ipmi_lan_get_channel_auth_caps (int sockfd,
 				uint8_t rq_seq, 
 				fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq;
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
 
-  if (!(hostaddr && sockfd && hostaddr_len && obj_cmd_rs))
+  if (!(hostaddr 
+	&& sockfd 
+	&& hostaddr_len 
+	&& fiid_obj_valid(obj_cmd_rs)))
     {
       errno = EINVAL;
       return (-1);
     }
-  
-  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_get_channel_auth_caps_rq));
-  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_channel_auth_caps_rq));
-  ERR (obj_cmd_rq);
 
-  ERR (fill_cmd_get_channel_auth_caps (IPMI_CHANNEL_CURRENT_CHANNEL, 
-                                       IPMI_PRIV_LEVEL_USER, 
-                                       obj_cmd_rq) != -1);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs)) < 0)
+    goto cleanup;
 
-  ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
-		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
-		     obj_cmd_rq, tmpl_cmd_get_channel_auth_caps_rq,
-		     obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs) != -1);
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    } 
   
-  /* INFO: you can also do auth type check here */
-  return (0);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq)))
+    goto cleanup;
+
+  if (fill_cmd_get_channel_auth_caps (IPMI_CHANNEL_CURRENT_CHANNEL, 
+				      IPMI_PRIV_LEVEL_USER, 
+				      obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
+		    0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
+		    rq_seq, obj_cmd_rq, obj_cmd_rs) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
-
-#endif /* TEST */
 
 int8_t 
 fill_cmd_get_session_challenge (uint8_t auth_type, 
@@ -469,8 +481,6 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
   return (0);
 }
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_lan_get_session_challenge (int sockfd, 
 				struct sockaddr *hostaddr, 
@@ -480,29 +490,46 @@ ipmi_lan_get_session_challenge (int sockfd,
 				uint8_t rq_seq, 
 				fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq;
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
 
-  if (!(hostaddr && sockfd && hostaddr_len && obj_cmd_rs))
+  if (!(hostaddr 
+	&& sockfd 
+	&& hostaddr_len 
+	&& fiid_obj_valid(obj_cmd_rs)))
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_session_challenge_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    } 
   
-  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_get_session_challenge_rq));
-  ERR (obj_cmd_rq);
-  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_get_session_challenge_rq));
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_session_challenge_rq)))
+    goto cleanup;
 
-  ERR (fill_cmd_get_session_challenge (auth_type, username, 
-                                       (username) ? strlen(username) : 0, obj_cmd_rq) != -1);
+  if (fill_cmd_get_session_challenge (auth_type, username,
+				      (username) ? strlen(username) : 0, 
+				      obj_cmd_rq) < 0)
+    goto cleanup;
 
-  ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
-		     0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
-		     obj_cmd_rq, tmpl_cmd_get_session_challenge_rq,
-		     obj_cmd_rs, tmpl_cmd_get_session_challenge_rs) != -1);
-  return (0);
+  if (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, IPMI_SESSION_AUTH_TYPE_NONE,
+		    0, 0, NULL, 0, IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
+		    rq_seq, obj_cmd_rq, obj_cmd_rs) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
-
-#endif /* TEST */
 
 int8_t 
 fill_cmd_activate_session (uint8_t auth_type, 
@@ -557,8 +584,6 @@ fill_cmd_activate_session (uint8_t auth_type,
   return (0);
 }
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_lan_activate_session (int sockfd, 
 			   struct sockaddr *hostaddr, 
@@ -574,30 +599,47 @@ ipmi_lan_activate_session (int sockfd,
 			   uint8_t rq_seq, 
 			   fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq;
-  
-  if (!(hostaddr && sockfd && hostaddr_len && tmp_session_id &&
-	challenge_str && obj_cmd_rs))
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
+
+  if (!(hostaddr 
+	&& sockfd 
+	&& hostaddr_len 
+	&& fiid_obj_valid(obj_cmd_rs)))
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_activate_session_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    } 
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_activate_session_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_activate_session_rq)))
+    goto cleanup;
+  
+  if (fill_cmd_activate_session (auth_type, max_priv_level, challenge_str,
+				 challenge_str_len, initial_outbound_seq_num,
+				 obj_cmd_rq) < 0)
+    goto cleanup;
+  
+  if (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, auth_type, 
+		    0, tmp_session_id, auth_code_data, auth_code_data_len,
+		    IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq, 
+		    obj_cmd_rq, obj_cmd_rs) < 0)
+    goto cleanup;
 
-  ERR (fill_cmd_activate_session (auth_type, max_priv_level, challenge_str, 
-				  challenge_str_len, initial_outbound_seq_num,
-				  obj_cmd_rq) != -1);
-
-  ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, auth_type, 
-		     0, tmp_session_id, auth_code_data, auth_code_data_len,
-		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq, 
-		     obj_cmd_rq, tmpl_cmd_activate_session_rq,
-		     obj_cmd_rs, tmpl_cmd_activate_session_rs) != -1);
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
-
-#endif /* TEST */
 
 int8_t 
 fill_cmd_set_session_priv_level (uint8_t priv_level, 
@@ -627,8 +669,6 @@ fill_cmd_set_session_priv_level (uint8_t priv_level,
   return (0);
 }  
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_lan_set_session_priv_level (int sockfd, 
 				 struct sockaddr *hostaddr, 
@@ -642,26 +682,44 @@ ipmi_lan_set_session_priv_level (int sockfd,
 				 uint8_t rq_seq, 
 				 fiid_obj_t obj_cmd_rs)
 {
-  fiid_obj_t obj_cmd_rq;
-  
-  if (!(hostaddr && sockfd && hostaddr_len && session_id && obj_cmd_rs))
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
+
+  if (!(hostaddr 
+	&& sockfd 
+	&& hostaddr_len 
+	&& fiid_obj_valid(obj_cmd_rs)))
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    } 
   
-  obj_cmd_rq = alloca (fiid_obj_len_bytes (tmpl_cmd_set_session_priv_level_rq));
-  memset (obj_cmd_rq, 0, fiid_obj_len_bytes (tmpl_cmd_set_session_priv_level_rq));
-  ERR (obj_cmd_rq);
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_set_session_priv_level_rq)))
+    goto cleanup;
+  
+  if (fill_cmd_set_session_priv_level (priv_level, obj_cmd_rq) < 0)
+    goto cleanup;
+  
+  if (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, auth_type, session_seq_num, 
+		    session_id, auth_code_data, auth_code_data_len,
+		    IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
+		    obj_cmd_rq, obj_cmd_rs) < 0)
+    goto cleanup;
 
-  ERR (fill_cmd_set_session_priv_level (priv_level, obj_cmd_rq) != -1);
-
-  ERR (ipmi_lan_cmd (sockfd, hostaddr, hostaddr_len, auth_type, session_seq_num, 
-		     session_id, auth_code_data, auth_code_data_len,
-		     IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, rq_seq,
-		     obj_cmd_rq, tmpl_cmd_set_session_priv_level_rq,
-		     obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs) != -1);
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -678,89 +736,129 @@ ipmi_lan_open_session (int sockfd,
 		       uint32_t *session_id, 
 		       uint8_t *rq_seq)
 {
-  fiid_obj_t obj_cmd_rs;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t temp_session_id, temp_session_seq_num;
   uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+  int8_t rv;
 
-  if (rq_seq == NULL)
+  if (!session_seq_num
+      || !session_id
+      || !rq_seq)
     {
       errno = EINVAL;
       return (-1);
     }
 
   *rq_seq = 0;
-  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_channel_auth_caps_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_channel_auth_caps_rs)))
+    goto error;
+
   if (ipmi_lan_get_channel_auth_caps (sockfd, hostaddr, hostaddr_len, *rq_seq, obj_cmd_rs) == -1)
     goto error;
-  if (!ipmi_comp_test (obj_cmd_rs))
+
+  if ((rv = ipmi_comp_test (obj_cmd_rs)) < 0)
+    goto error;
+
+  if (!rv)
     {
-      errno = EINVAL;
+      errno = EBADMSG;
       goto error;
     }
-  ipmi_xfree (obj_cmd_rs);
+
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_get_session_challenge_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_session_challenge_rs)))
+    goto error;
   if (ipmi_lan_get_session_challenge (sockfd, hostaddr, hostaddr_len, 
 				      auth_type, username, *rq_seq, obj_cmd_rs) == -1)
     goto error;
-  if (!ipmi_comp_test (obj_cmd_rs))
+  if ((rv = ipmi_comp_test (obj_cmd_rs)) < 0)
+    goto error;
+
+  if (!rv)
     {
-      errno = EINVAL;
+      errno = EBADMSG;
       goto error;
     }
 
-  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, 
-		(uint8_t *)"tmp_session_id", &temp_session_id);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"tmp_session_id", 
+		    &temp_session_id) < 0)
+    goto error;
+
   *session_id = temp_session_id;
-  fiid_obj_get_data (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs, (uint8_t *)"challenge_str", challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN);
-  ipmi_xfree (obj_cmd_rs);
+  
+  if (fiid_obj_get_data (obj_cmd_rs, 
+			 (uint8_t *)"challenge_str", 
+			 challenge_str, 
+			 IPMI_SESSION_CHALLENGE_STR_LEN) < 0)
+    goto error;
+
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_activate_session_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_activate_session_rs)))
+    goto error;
+
   if (ipmi_lan_activate_session (sockfd, hostaddr, hostaddr_len, 
 				 auth_type, *session_id, auth_code_data, auth_code_data_len,
 				 priv_level, challenge_str, IPMI_SESSION_CHALLENGE_STR_LEN,
 				 initial_outbound_seq_num, *rq_seq, obj_cmd_rs) == -1)
     goto error;
-  if (!ipmi_comp_test (obj_cmd_rs))
+  if ((rv = ipmi_comp_test (obj_cmd_rs)) < 0)
+    goto error;
+
+  if (!rv)
     {
-      errno = EINVAL;
+      errno = EBADMSG;
       goto error;
     }
 
-  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
-		(uint8_t *)"session_id", &temp_session_id);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"session_id", 
+		    &temp_session_id) < 0)
+    goto error;
+
   *session_id = temp_session_id;
-  FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
-		(uint8_t *)"initial_inbound_seq_num", &temp_session_seq_num);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"initial_inbound_seq_num", 
+		    &temp_session_seq_num) < 0)
+    goto error;
   *session_seq_num = temp_session_seq_num;
-  ipmi_xfree (obj_cmd_rs);
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
-  obj_cmd_rs = fiid_obj_calloc (tmpl_cmd_set_session_priv_level_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_session_priv_level_rs)))
+    goto error;
   if (ipmi_lan_set_session_priv_level (sockfd, hostaddr, hostaddr_len, 
 				       auth_type, *session_seq_num, *session_id, 
 				       auth_code_data, auth_code_data_len, priv_level,
 				       *rq_seq,  obj_cmd_rs) == -1)
     goto error;
-  if (!ipmi_comp_test (obj_cmd_rs))
+  if ((rv = ipmi_comp_test (obj_cmd_rs)) < 0)
+    goto error;
+
+  if (!rv)
     {
-      errno = EINVAL;
+      errno = EBADMSG;
       goto error;
     }
 
-  ipmi_xfree (obj_cmd_rs);
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
   IPMI_LAN_RQ_SEQ_INC (*rq_seq);
 
   return (0);
 
  error:
-  ipmi_xfree (obj_cmd_rs);
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (-1);
 }
-
-#endif /* TEST */
 
 int8_t 
 fill_cmd_close_session (uint32_t close_session_id, 

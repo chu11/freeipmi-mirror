@@ -27,7 +27,7 @@ fiid_template_t tmpl_set_power_restore_policy_rq =
     {3, "power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {5, "power_restore_policy.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_power_restore_policy_rs =
@@ -40,7 +40,7 @@ fiid_template_t tmpl_set_power_restore_policy_rs =
     {1, "always_powering_up_after_ac_mains_returns_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {5, "power_restore_policy_support.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
@@ -99,14 +99,14 @@ fiid_template_t tmpl_cmd_chassis_identify_rq =
     {8, "identify_interval", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {1, "force_identify", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {7, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_identify_rs = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 int8_t 
