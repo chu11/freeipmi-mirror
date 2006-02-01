@@ -471,12 +471,98 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   return (0);
 }
 
+static int8_t
+_fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
+                                 fiid_template_t l_tmpl_set_auth_auth_type_enables,
+                                 uint8_t channel_number,
+                                 uint8_t max_privilege_auth_type_callback_level,
+                                 uint8_t max_privilege_auth_type_user_level,
+                                 uint8_t max_privilege_auth_type_operator_level,
+                                 uint8_t max_privilege_auth_type_admin_level,
+                                 uint8_t max_privilege_auth_type_oem_level)
+{
+  if (obj_data_rq == NULL
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"cmd",
+                    IPMI_CMD_SET_LAN_CONF_PARAMS) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"channel_number",
+                    channel_number) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"parameter_selector",
+                    IPMI_LAN_PARAM_AUTH_TYPE_ENABLES) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"max_privilege_auth_type_callback_level",
+                    max_privilege_auth_type_callback_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"max_privilege_auth_type_user_level",
+                    max_privilege_auth_type_user_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"max_privilege_auth_type_operator_level",
+                    max_privilege_auth_type_operator_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"max_privilege_auth_type_admin_level",
+                    max_privilege_auth_type_admin_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    l_tmpl_set_auth_auth_type_enables,
+                    (uint8_t *)"max_privilege_auth_type_oem_level",
+                    max_privilege_auth_type_oem_level) < 0)
+    return (-1);
+
+  return 0;
+}
+
 int8_t 
 set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev, 
 				    struct bmc_auth_level *bmc_auth_level)
 {
+  fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  
+  fiid_template_t l_tmpl_set_lan_conf_param_auth_type_enables_rq =
+    {
+      {8, "cmd"},
+      {4, "channel_number"},
+      {4, "reserved1"},
+      {8, "parameter_selector"},
+      {6, "max_privilege_auth_type_callback_level"},
+      {2, "max_privilege_auth_type_callback_level.reserved2"},
+      {6, "max_privilege_auth_type_user_level"},
+      {2, "max_privilege_auth_type_user_level.reserved2"},
+      {6, "max_privilege_auth_type_operator_level"},
+      {2, "max_privilege_auth_type_operator_level.reserved2"},
+      {6, "max_privilege_auth_type_admin_level"},
+      {2, "max_privilege_auth_type_admin_level.reserved2"},
+      {6, "max_privilege_auth_type_oem_level"},
+      {2, "max_privilege_auth_type_oem_level.reserved2"},
+      {0, ""}
+    };
   uint8_t auth_type_callback_level = 0;
   uint8_t auth_type_user_level = 0;
   uint8_t auth_type_operator_level = 0;
@@ -538,18 +624,27 @@ set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
   if (bmc_auth_level->oem.type_oem_proprietary)
     auth_type_oem_level = BIT_SET (auth_type_oem_level, 5);
   
+  fiid_obj_alloca (obj_cmd_rq, l_tmpl_set_lan_conf_param_auth_type_enables_rq);
   fiid_obj_alloca (obj_cmd_rs, tmpl_set_lan_conf_param_rs);
-  if (ipmi_cmd_lan_set_auth_type_enables2 (dev, 
-					   get_lan_channel_number (), 
-					   auth_type_callback_level, 
-					   auth_type_user_level, 
-					   auth_type_operator_level, 
-					   auth_type_admin_level, 
-					   auth_type_oem_level, 
-					   obj_cmd_rs) != 0)
-    {
-      return (-1);
-    }
+  if (_fill_lan_set_auth_type_enables (obj_cmd_rq,
+                                       l_tmpl_set_lan_conf_param_auth_type_enables_rq,
+                                       get_lan_channel_number (), 
+                                       auth_type_callback_level,
+                                       auth_type_user_level,
+                                       auth_type_operator_level,
+                                       auth_type_admin_level,
+                                       auth_type_oem_level) < 0)
+    return (-1);
+  if (ipmi_cmd (dev,
+                IPMI_BMC_IPMB_LUN_BMC,
+                IPMI_NET_FN_TRANSPORT_RQ,
+                obj_cmd_rq,
+                l_tmpl_set_lan_conf_param_auth_type_enables_rq,
+                obj_cmd_rs,
+                tmpl_set_lan_conf_param_rs) < 0)
+    return (-1);
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    return (-1);
   
   return (0);
 }
