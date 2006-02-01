@@ -343,11 +343,22 @@ fill_hdr_session2 (ipmi_device_t *dev, fiid_obj_t obj_cmd)
 		(uint8_t *)"session_id", 
 		dev->io.outofband.session_id);
   
-  if (!(hdr_len = fiid_obj_len_bytes(dev->io.outofband.rq.obj_msg_hdr)))
+  if ((hdr_len = fiid_obj_len_bytes(dev->io.outofband.rq.obj_msg_hdr)) < 0)
     return (-1);
-  if (!(cmd_len = fiid_obj_len_bytes(obj_cmd)))
+
+  if (!hdr_len)
     return (-1);
-  if (!(trlr_len = fiid_obj_len_bytes(dev->io.outofband.rq.obj_msg_trlr)))
+
+  if ((cmd_len = fiid_obj_len_bytes(obj_cmd)) < 0)
+    return (-1);
+
+  if (!cmd_len)
+    return (-1);
+
+  if ((trlr_len = fiid_obj_len_bytes(dev->io.outofband.rq.obj_msg_trlr)) < 0)
+    return (-1);
+
+  if (!trlr_len)
     return (-1);
 
   switch (dev->io.outofband.auth_type)
@@ -1813,8 +1824,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     fiid_obj_t obj_hdr;
     fiid_template_t tmpl_hdr_cmd = 
       {
-	{2, "lun"},
-	{6, "net_fn"},
+	{2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+	{6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	{0, ""}
       };
     
@@ -1854,7 +1865,9 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 
     obj_cmd_rq_len = buf_rq_len - 1;
 
-    if (!(tmpl_var_cmd_rq = fiid_template_make ((obj_cmd_rq_len * 8), (uint8_t *)"COMMAND_RQ_DATA")))
+    if (!(tmpl_var_cmd_rq = fiid_template_make ((obj_cmd_rq_len * 8), 
+                                                (uint8_t *)"COMMAND_RQ_DATA",
+                                                FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)))
       return (-1);
 
     if (!(obj_cmd_rq = fiid_obj_create(tmpl_var_cmd_rq)))
@@ -1863,6 +1876,15 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
         return (-1);
       }
     
+    if (fiid_obj_set_all(obj_cmd_rq,
+                         buf_rq + 1,
+                         buf_rq_len - 1) < 0)
+      {
+        fiid_obj_destroy(obj_cmd_rq);
+        fiid_template_free (tmpl_var_cmd_rq);
+        return (-1);
+      }
+
     if ((retval = ipmi_lan_cmd_raw_send (dev, obj_cmd_rq)) < 0)
       {
         fiid_obj_destroy(obj_cmd_rq);
@@ -1938,7 +1960,9 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
         return (-1);
       }
 
-    if (!(tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), "COMMAND_RS_DATA")))
+    if (!(tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), 
+                                                (uint8_t *)"COMMAND_RS_DATA",
+                                                FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)))
       return (-1);
 
     if (!(obj_cmd_rs = fiid_obj_create(tmpl_var_cmd_rs)))
@@ -1983,8 +2007,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       fiid_obj_t obj_hdr;
       fiid_template_t tmpl_hdr_cmd = 
 	{
-	  {2, "lun"},
-	  {6, "net_fn"},
+	  {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+	  {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	  {0, ""}
 	};
       
