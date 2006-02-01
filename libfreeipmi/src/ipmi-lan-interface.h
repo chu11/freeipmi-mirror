@@ -108,9 +108,7 @@ int8_t ipmi_lan_cmd (uint32_t sockfd,
 		     uint8_t lun, 
 		     uint8_t rq_seq, 
 		     fiid_obj_t obj_cmd_rq, 
-		     fiid_template_t tmpl_cmd_rq, 
-		     fiid_obj_t obj_cmd_rs, 
-		     fiid_template_t tmpl_cmd_rs);
+		     fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
 		      fiid_obj_t obj_cmd_rq, 

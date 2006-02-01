@@ -1420,7 +1420,22 @@ ipmi_lan_cmd (uint32_t sockfd,
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs)
 {
-  if (!(hostaddr && sockfd && hostaddr_len && obj_cmd_rq && obj_cmd_rs))
+  int8_t rv;
+
+  if (!(hostaddr 
+	&& sockfd 
+	&& hostaddr_len 
+	&& fiid_obj_valid(obj_cmd_rq)
+	&& fiid_obj_valid(obj_cmd_rs)))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_cmd_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
@@ -1434,67 +1449,129 @@ ipmi_lan_cmd (uint32_t sockfd,
     uint32_t pkt_len;
     int status = 0;
     
-    if (!(obj_hdr_rmcp = fiid_obj_create (obj_hdr_rmcp, tmpl_hdr_rmcp)))
+    rv = -1;
 
-    FIID_OBJ_ALLOCA (obj_hdr_rmcp, tmpl_hdr_rmcp);
-    FIID_OBJ_ALLOCA (obj_hdr_session, *tmpl_hdr_session_ptr);
-    FIID_OBJ_ALLOCA (obj_msg_hdr, tmpl_lan_msg_hdr_rq);
+    if (!(obj_hdr_rmcp = fiid_obj_create (tmpl_hdr_rmcp)))
+      goto cleanup1;
+    if (!(obj_hdr_session = fiid_obj_create(tmpl_hdr_session)))
+      goto cleanup1;
+    if (!(obj_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rq)))
+      goto cleanup1;
 
     pkt_len = _ipmi_lan_pkt_rq_size(auth_type, obj_cmd_rq); 
     pkt = alloca (pkt_len);
     ERR (pkt);
     memset (pkt, 0, pkt_len);
    
-    ERR (fill_hdr_rmcp_ipmi (obj_hdr_rmcp) != -1);
-    ERR (fill_hdr_session (*tmpl_hdr_session_ptr, auth_type, session_seq_num, 
-			   session_id, auth_code_data, auth_code_data_len,
-                           tmpl_cmd_rq, obj_hdr_session) != -1);
-    ERR (fill_lan_msg_hdr (net_fn, lun, rq_seq, obj_msg_hdr) != -1);
-    ERR (assemble_ipmi_lan_pkt (obj_hdr_rmcp, obj_hdr_session, *tmpl_hdr_session_ptr,
-				obj_msg_hdr, obj_cmd_rq, tmpl_cmd_rq,
-				pkt, pkt_len) != -1);
-    /* __DEBUG >> */
-/*     fiid_obj_dump (2, obj_hdr_rmcp, tmpl_hdr_rmcp); */
-/*     fiid_obj_dump (2, obj_hdr_session, *tmpl_hdr_session_ptr); */
-/*     fiid_obj_dump (2, obj_msg_hdr, tmpl_lan_msg_hdr_rq); */
-/*     fiid_obj_dump (2, obj_cmd_rq, tmpl_cmd_rq); */
-    /* __DEBUG >> */
+    if (fill_hdr_rmcp_ipmi (obj_hdr_rmcp) < 0)
+      goto cleanup1;
+    
+    if (fill_hdr_session (auth_type, 
+			  session_seq_num, 
+			  session_id, 
+			  NULL, 
+			  0,
+			  obj_hdr_session) < 0)
+      goto cleanup1;
 
-    status = ipmi_lan_sendto (sockfd, pkt, pkt_len, 0, hostaddr, hostaddr_len);
-    ERR (status != -1);
+    if (fill_lan_msg_hdr (net_fn, 
+			  lun, 
+			  rq_seq, 
+			  obj_msg_hdr) < 0)
+      goto cleanup1;
+
+    if (assemble_ipmi_lan_pkt (obj_hdr_rmcp, 
+			       obj_hdr_session, 
+			       obj_msg_hdr, 
+			       obj_cmd_rq, 
+			       auth_code_data,
+			       auth_code_data_len,
+			       pkt, 
+			       pkt_len) < 0)
+      goto cleanup1;
+
+    if ((status = ipmi_lan_sendto (sockfd, 
+				   pkt,
+				   pkt_len, 
+				   0, 
+				   hostaddr, 
+				   hostaddr_len)) < 0)
+      goto cleanup1;
+    
+    rv = 0;
+  cleanup1:
+    if (obj_hdr_rmcp)
+      fiid_obj_destroy(obj_hdr_rmcp);
+    if (obj_hdr_session)
+      fiid_obj_destroy(obj_hdr_session);
+    if (obj_msg_hdr)
+      fiid_obj_destroy(obj_msg_hdr);
+    if (rv < 0)
+      return (rv);
   }
 
   {
+    fiid_obj_t obj_hdr_rmcp = NULL;
+    fiid_obj_t obj_hdr_session = NULL;
+    fiid_obj_t obj_msg_hdr = NULL;
+    fiid_obj_t obj_msg_trlr = NULL;
     struct sockaddr_in from;
     socklen_t fromlen;
-    fiid_obj_t obj_hdr_session;
     uint8_t *pkt;
     uint32_t _pkt_len = 1024;
     int32_t pkt_len;
 
-    FIID_OBJ_ALLOCA (obj_hdr_session, *tmpl_hdr_session_ptr);
+    rv = -1;
 
-    pkt_len = _ipmi_lan_pkt_rs_size (auth_type, tmpl_cmd_rs);
+    if (!(obj_hdr_rmcp = fiid_obj_create (tmpl_hdr_rmcp)))
+      goto cleanup2;
+    if (!(obj_hdr_session = fiid_obj_create(tmpl_hdr_session)))
+      goto cleanup2;
+    if (!(obj_msg_hdr = fiid_obj_create(tmpl_lan_msg_hdr_rs)))
+      goto cleanup2;
+    if (!(obj_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+      goto cleanup2;
+
+    pkt_len = _ipmi_max_lan_pkt_rs_size (auth_type, obj_cmd_rs);
     pkt     = alloca (_pkt_len);
     memset (pkt, 0, _pkt_len);
     ERR (pkt);
     
     fromlen = sizeof(struct sockaddr_in);
-    pkt_len = ipmi_lan_recvfrom (sockfd, pkt, _pkt_len, 0, (struct sockaddr *)&from, 
-				&fromlen);
-    ERR (pkt_len != -1);
-    ERR (ipmi_lan_check_chksum (pkt, pkt_len) == 1);
-    ERR (unassemble_ipmi_lan_pkt (pkt, pkt_len, *tmpl_hdr_session_ptr, tmpl_cmd_rs,
-				  0, obj_hdr_session, 0, obj_cmd_rs, 0) != -1);
+    if ((pkt_len = ipmi_lan_recvfrom (sockfd, 
+				      pkt, 
+				      _pkt_len, 
+				      0, 
+				      (struct sockaddr *)&from, 
+				      &fromlen)) < 0)
+      goto cleanup2;
 
-    /* __DEBUG__ >> */
-/*     fiid_obj_dump (2, obj_cmd_rs, tmpl_cmd_rs); */
-    /* __DEBUG__ << */
+    if (ipmi_lan_check_chksum (pkt, pkt_len) != 1)
+      goto cleanup2;
 
-    /* Caller is reponsible for checking return code */
-    /* ERR (ipmi_comp_test (obj_cmd_rs)); */
+    if (unassemble_ipmi_lan_pkt (pkt, 
+				 pkt_len, 
+				 obj_hdr_rmcp,
+				 obj_hdr_session, 
+				 obj_msg_hdr,
+				 obj_cmd_rs, 
+				 obj_msg_trlr) < 0)
+      goto cleanup2;
 
+    rv = 0;
+  cleanup2:
+    if (obj_hdr_rmcp)
+      fiid_obj_destroy(obj_hdr_rmcp);
+    if (obj_hdr_session)
+      fiid_obj_destroy(obj_hdr_session);
+    if (obj_msg_hdr)
+      fiid_obj_destroy(obj_msg_hdr);
+    if (obj_msg_trlr)
+      fiid_obj_destroy(obj_msg_trlr);
+    if (rv < 0)
+      return (rv);
   }
+
   return (0);
 }
 
@@ -1566,11 +1643,11 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 printf("DEBUGGING:\n");
 
 	fiid_obj_dump_lan(STDERR_FILENO,
-			NULL,
-			NULL,
-			pkt,
-			pkt_len,
-			*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
+			  NULL,
+			  NULL,
+			  pkt,
+			  pkt_len,
+			  *(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
 #endif
 
     dev->io.outofband.session_seq_num++;
