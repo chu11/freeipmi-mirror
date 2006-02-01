@@ -221,8 +221,10 @@ extern "C" {
 #include "ipmi-sensor-cmds.h"
 #include "ipmi-sel-record-types.h"
 #include "ipmi-sel-cmds.h"
+#endif /* TEST */
 #include "ipmi-lan-param-spec.h"
 #include "ipmi-lan-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-serial-modem-param-spec.h"
 #include "ipmi-serial-cmds.h"
 #include "ipmi-sol-cmds.h"
@@ -332,8 +334,10 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-types.h>
 #include <freeipmi/ipmi-sel-record-types.h>
 #include <freeipmi/ipmi-sel-cmds.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-lan-param-spec.h>
 #include <freeipmi/ipmi-lan-cmds.h>
+#if 0
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-serial-cmds.h>
 #include <freeipmi/ipmi-sol-cmds.h>

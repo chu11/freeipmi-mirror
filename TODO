@@ -53,7 +53,9 @@ libfreeipmi:
       - fill_kcs_set_user_access
       - fill_kcs_get_user_access
       - fill_kcs_get_channel_access
-      
+    lan-cmds
+      - generic set/get lan conf
+      - everythign else
   * test for "{0, ""}"
   * need to test acpi
   * consistency in templates and functions

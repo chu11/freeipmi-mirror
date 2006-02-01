@@ -16,7 +16,12 @@
 ------------------------------------------------------------
 2006-02-01  Albert Chu <chu11@llnl.gov>	
 
-	* Continue fiid reimplementation in libfreeipmi.
+	* libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds.c: Continue fiid reimplementation in
+	libfreeipmi.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c (ipmi_cmd_lan_get_conf_param,
+	fill_lan_set_conf_param): New functions.
 	
 2006-01-31  Albert Chu <chu11@llnl.gov>	
 
@@ -159,6 +164,35 @@
 
 	* fish/src/bmc-conf2.c (set_bmc_lan_conf_auth_type_enables): Use
 	convenience template.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c (fill_lan_set_ip_addr_source,
+	fill_lan_set_ip_addr, fill_lan_set_vlan_id, fill_suspend_bmc_arps,
+	ipmi_cmd_lan_set_arp2, ipmi_lan_set_gratuitous_arp_interval2,
+	ipmi_cmd_lan_set_auth_type_enables2,
+	ipmi_cmd_lan_set_ip_addr_source2, ipmi_cmd_lan_set_ip_addr2,
+	ipmi_cmd_lan_set_default_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2,
+	ipmi_cmd_lan_set_vlan_priority2, ipmi_cmd_lan_set_subnet_mask2,
+	ipmi_cmd_lan_set_mac_addr2, ipmi_cmd_lan_set_default_gw_mac_addr2,
+	ipmi_cmd_lan_set_backup_gw_mac_addr2, ipmi_cmd_lan_get_arp2,
+	ipmi_cmd_lan_get_gratuitous_arp_interval2,
+	ipmi_cmd_lan_get_auth_type_enables2,
+	ipmi_cmd_lan_get_ip_addr_source2, ipmi_cmd_lan_get_ip_addr2,
+	ipmi_cmd_lan_get_default_gw_ip_addr2,
+	ipmi_cmd_lan_get_backup_gw_ip_addr2,
+	ipmi_cmd_lan_get_subnet_mask2, ipmi_cmd_lan_get_mac_addr2,
+	ipmi_cmd_lan_get_default_gw_mac_addr2,
+	ipmi_cmd_lan_get_backup_gw_mac_addr2, ipmi_cmd_lan_get_vlan_id2,
+	ipmi_cmd_lan_get_vlan_priority2, ipmi_cmd_suspend_bmc_arps2) ):
+	Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-lan-cmds.h
+	(IPMI_ENABLE_BMC_GENERATED_GRATUITOUS_ARPS_VALID,
+	IPMI_ENABLE_BMC_GENERATED_ARP_RESPONSES_VALID,
+	IPMI_IP_ADDR_SOURCE_VALID,
+	IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID,
+	IPMI_BMC_GENERATED_ARP_RESPONSE_VALID): New macros.
 
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
