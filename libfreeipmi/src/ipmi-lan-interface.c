@@ -1405,8 +1405,6 @@ ipmi_lan_recvfrom (int sockfd,
   return (recv_buf_len);
 }
 
-#if 0 /* TEST */
-
 int8_t 
 ipmi_lan_cmd (uint32_t sockfd, 
 	      struct sockaddr *hostaddr, 
@@ -1420,46 +1418,29 @@ ipmi_lan_cmd (uint32_t sockfd,
 	      uint8_t lun, 
 	      uint8_t rq_seq, 
 	      fiid_obj_t obj_cmd_rq, 
-	      fiid_template_t tmpl_cmd_rq, 
-	      fiid_obj_t obj_cmd_rs, 
-	      fiid_template_t tmpl_cmd_rs)
+	      fiid_obj_t obj_cmd_rs)
 {
-  fiid_template_t *tmpl_hdr_session_ptr;
-
-  if (!(hostaddr && sockfd && hostaddr_len && tmpl_cmd_rq && obj_cmd_rq 
-	&& tmpl_cmd_rs && obj_cmd_rs))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_NONE)
-    tmpl_hdr_session_ptr = &tmpl_hdr_session;
-  else if (auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)
-    tmpl_hdr_session_ptr = &tmpl_hdr_session_auth;
-  else if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-	   || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-	   || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY)
-    tmpl_hdr_session_ptr = &tmpl_hdr_session_auth_calc;
-  else
+  if (!(hostaddr && sockfd && hostaddr_len && obj_cmd_rq && obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
 
   {
-    fiid_obj_t obj_hdr_rmcp;
-    fiid_obj_t obj_hdr_session;
-    fiid_obj_t obj_msg_hdr;
+    fiid_obj_t obj_hdr_rmcp = NULL;
+    fiid_obj_t obj_hdr_session = NULL;
+    fiid_obj_t obj_msg_hdr = NULL;
     uint8_t *pkt;
     uint32_t pkt_len;
     int status = 0;
+    
+    if (!(obj_hdr_rmcp = fiid_obj_create (obj_hdr_rmcp, tmpl_hdr_rmcp)))
 
     FIID_OBJ_ALLOCA (obj_hdr_rmcp, tmpl_hdr_rmcp);
     FIID_OBJ_ALLOCA (obj_hdr_session, *tmpl_hdr_session_ptr);
     FIID_OBJ_ALLOCA (obj_msg_hdr, tmpl_lan_msg_hdr_rq);
 
-    pkt_len = _ipmi_lan_pkt_rq_size(auth_type, tmpl_cmd_rq); 
+    pkt_len = _ipmi_lan_pkt_rq_size(auth_type, obj_cmd_rq); 
     pkt = alloca (pkt_len);
     ERR (pkt);
     memset (pkt, 0, pkt_len);
@@ -1516,8 +1497,6 @@ ipmi_lan_cmd (uint32_t sockfd,
   }
   return (0);
 }
-
-#endif /* TEST */
 
 int8_t 
 ipmi_lan_cmd2 (ipmi_device_t *dev, 

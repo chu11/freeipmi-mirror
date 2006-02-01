@@ -35,6 +35,7 @@ libfreeipmi:
   * cmds to test
     - set power restore policy
     - chassis ctrl
+    - ipmi_lan_cmd
   * test for "{0, ""}"
   * need to test acpi
     
