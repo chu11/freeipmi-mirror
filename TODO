@@ -36,12 +36,30 @@ libfreeipmi:
     - set power restore policy
     - chassis ctrl
     - ipmi_lan_cmd
+      - ipmi_lan_get_channel_auth_caps
+      - ipmi_lan_get_session_challenge
+      - ipmi_lan_activate_session
+      - ipmi_lan_set_session_priv_level
+      - ipmi_lan_close_session
     - chassis identify
     - ipmi_cmd_get_chassis_status2
     - ipmi_cmd_set_power_restore_policy2
     - ipmi_rmcp_ping
+    msg support
+      - fill_kcs_set_channel_access
+      - fill_kcs_set_user_name
+      - fill_kcs_get_user_name
+      - fill_kcs_set_user_password
+      - fill_kcs_set_user_access
+      - fill_kcs_get_user_access
+      - fill_kcs_get_channel_access
   * test for "{0, ""}"
   * need to test acpi
+  * consistency in templates and functions
+    - user_id.reserved vs. reserved vs. reserved1 etc.
+    - user_name vs. username
+  * stronger parameter checking
+  * fill_kcs functions -> fill
     
 fish:
 -----

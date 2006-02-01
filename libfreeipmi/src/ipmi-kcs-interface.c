@@ -420,6 +420,8 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
 	       fiid_obj_t obj_cmd_rq, 
 	       fiid_obj_t obj_cmd_rs)
 {
+  int8_t rv;
+
   if (!(dev 
 	&& fiid_obj_valid(obj_cmd_rq)
 	&& fiid_obj_valid(obj_cmd_rs)))
@@ -428,6 +430,15 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
       return (-1);
     }
   
+  if ((rv = fiid_obj_packet_valid(obj_cmd_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   { 
     uint8_t *pkt;
     uint32_t pkt_len;
