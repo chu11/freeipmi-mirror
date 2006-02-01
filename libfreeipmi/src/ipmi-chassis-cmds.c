@@ -95,32 +95,17 @@ fiid_template_t tmpl_cmd_chassis_ctrl_rs =
 
 fiid_template_t tmpl_cmd_chassis_identify_rq = 
   {
-    {8, "cmd"},
-    {7, "reserved"},
-    {0, ""}
-  };
-
-fiid_template_t tmpl_cmd_chassis_identify_interval_rq = 
-  {
-    {8, "cmd"},
-    {8, "identify_interval"},
-    {7, "reserved"},
-    {0, ""}
-  };
-
-fiid_template_t tmpl_cmd_chassis_identify_interval_force_rq = 
-  {
-    {8, "cmd"},
-    {8, "identify_interval"},
-    {1, "force_identify"},
-    {7, "reserved"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "identify_interval", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "force_identify", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {7, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
 fiid_template_t tmpl_cmd_chassis_identify_rs = 
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, ""}
   };
 
@@ -207,10 +192,9 @@ fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CTRL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_ctrl", chassis_ctrl);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   return 0;
 }  
-
-#if 0 /* TEST */
 
 int8_t 
 ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
@@ -218,27 +202,47 @@ ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  if (IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy) == 0)
+  int8_t ret, rv = -1;
+
+  if (!dev
+      || !IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_power_restore_policy_rq);
-  ERR (fill_cmd_set_power_restore_policy (power_restore_policy, obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_CHASSIS_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_power_restore_policy_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_power_restore_policy_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_power_restore_policy_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_power_restore_policy_rq)))
+    goto cleanup;
+
+  if (fill_cmd_set_power_restore_policy (power_restore_policy, 
+					 obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_CHASSIS_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -246,49 +250,81 @@ ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
-  ERR (fill_cmd_get_chassis_status (obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_CHASSIS_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_cmd_get_chassis_status_rq, 
-		 obj_cmd_rs, 
-		 tmpl_cmd_get_chassis_status_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
-}
+  int8_t ret, rv = -1;
 
-int8_t
-fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                           uint8_t identify_interval, 
-                           uint8_t force_identify_flag,
-                           fiid_obj_t obj_cmd)
-{
-  if (!tmpl_identify_cmd
-      || (force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_OFF
-          && force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_ON)
-      || !obj_cmd)
+  if (!dev
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, (uint8_t *)"cmd",
-		IPMI_CMD_CHASSIS_IDENTIFY);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"identify_interval"))
-    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, 
-                  (uint8_t *)"identify_interval", identify_interval);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"force_identify"))
-    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd,
-                  (uint8_t *)"force_identify", force_identify_flag);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_chassis_status_rq)))
+    goto cleanup;
+
+  if (fill_cmd_get_chassis_status (obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_CHASSIS_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t
+fill_cmd_chassis_identify (uint8_t *identify_interval, 
+			   uint8_t *force_identify_flag,
+                           fiid_obj_t obj_cmd)
+{
+  int8_t rv;
+
+  if ((force_identify_flag 
+       && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify_flag))
+      || !fiid_obj_valid(obj_cmd))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_identify_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
+  if (identify_interval)
+    {
+      FIID_OBJ_SET (obj_cmd, (uint8_t *)"identify_interval", *identify_interval);
+      if (force_identify_flag)
+	{
+	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"force_identify", *force_identify_flag);
+	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
+	}
+    }
 
   return 0;
 }  
-
-#endif /* TEST */

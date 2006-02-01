@@ -36,6 +36,10 @@ libfreeipmi:
     - set power restore policy
     - chassis ctrl
     - ipmi_lan_cmd
+    - chassis identify
+    - ipmi_cmd_get_chassis_status2
+    - ipmi_cmd_set_power_restore_policy2
+    - ipmi_rmcp_ping
   * test for "{0, ""}"
   * need to test acpi
     

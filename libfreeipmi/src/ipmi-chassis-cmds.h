@@ -59,6 +59,10 @@ extern "C" {
 #define IPMI_CHASSIS_FORCE_IDENTIFY_OFF      0x0
 #define IPMI_CHASSIS_FORCE_IDENTIFY_ON       0x1
 
+#define IPMI_CHASSIS_FORCE_IDENTIFY_VALID(__force_identify) \
+        (((__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_OFF \
+          || (__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_ON) ? 1 : 0)
+
 extern fiid_template_t tmpl_set_power_restore_policy_rq;
 extern fiid_template_t tmpl_set_power_restore_policy_rs;
 extern fiid_template_t tmpl_cmd_chassis_ctrl_rq;
@@ -66,13 +70,11 @@ extern fiid_template_t tmpl_cmd_chassis_ctrl_rs;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rq;
 extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 
-#if 0 /* TEST */
 int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
 					   uint8_t power_restore_policy, 
 					   fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
 				     fiid_obj_t obj_cmd_rs);
-#endif /* TEST */
 
 int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd);
 
@@ -82,9 +84,8 @@ int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
-int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                                  uint8_t identify_interval,
-                                  uint8_t force_identify_flag,
+int8_t fill_cmd_chassis_identify (uint8_t *identify_interval,
+                                  uint8_t *force_identify_flag,
                                   fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
