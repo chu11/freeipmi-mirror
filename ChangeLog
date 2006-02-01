@@ -10,6 +10,9 @@
 	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
 	Fix parameter checks.
 	
+	* libfreeipmi/src/fiid.c (__fiid_template_make): Fix string copy
+	corner case.
+
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove
