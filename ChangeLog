@@ -53,6 +53,10 @@
 	IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID,
 	IPMI_BMC_GENERATED_ARP_RESPONSE_VALID): New macros.
 
+	* libfreeipmi/src/ipmi-lan-cmds.c
+	(tmpl_set_lan_conf_param_vlan_id_rq,
+	tmpl_set_lan_conf_param_vlan_priority_rq): Fix field naming bugs.
+
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove

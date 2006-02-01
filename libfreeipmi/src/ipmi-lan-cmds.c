@@ -153,12 +153,12 @@ fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq =
   {
     {8, "cmd"},
     {4, "channel_number"},
-    {4, "reserved"},
+    {4, "reserved1"},
     {8, "parameter_selector"},
 
     {8, "vlan_id_ls"},
     {4, "vlan_id_ms"},
-    {3, "reserved"},
+    {3, "reserved2"},
     {1, "vlan_id_enable"},
 
     {0, ""}
@@ -168,12 +168,12 @@ fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq =
   {
     {8, "cmd"},
     {4, "channel_number"},
-    {4, "reserved"},
+    {4, "reserved1"},
     {8, "parameter_selector"},
 
     {3, "vlan_priority"},
     {2, "unspecified"},
-    {3, "reserved"},
+    {3, "reserved2"},
 
     {0, ""}
   };
