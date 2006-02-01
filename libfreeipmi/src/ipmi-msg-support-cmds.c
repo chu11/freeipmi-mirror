@@ -862,6 +862,12 @@ fill_kcs_set_user_name (uint8_t user_id,
 int8_t 
 fill_kcs_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_user_name_rq, 
 		(uint8_t *)"cmd", 

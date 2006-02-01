@@ -1,8 +1,8 @@
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
-	(fill_cmd_activate_session, ipmi_lan_open_session): Fix parameter
-	checks.
+	(fill_cmd_activate_session, ipmi_lan_open_session,
+	fill_kcs_get_user_name): Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-chassis-cmds.h
 	(IPMI_CHASSIS_FORCE_IDENTIFY_VALID): New macro.
