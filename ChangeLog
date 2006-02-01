@@ -134,6 +134,32 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-01  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_activate_session, ipmi_lan_open_session,
+	fill_kcs_get_user_name): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h
+	(IPMI_CHASSIS_FORCE_IDENTIFY_VALID): New macro.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	Fix parameter checks.
+	
+	* libfreeipmi/src/fiid.c (__fiid_template_make): Fix string copy
+	corner case.
+
+	* libfreeipmi/src/ipmi-lan-cmds.h, libfreeipmi/src/ipmi-lan-cmds.c
+	(ipmi_cmd_lan_set_auth_type_enables2,
+	fill_lan_set_auth_type_enables): Make functions pristine to IPMI
+	spec.
+
+	* fish/src/bmc-conf2.c (_fill_lan_set_auth_type_enables): New
+	function.
+
+	* fish/src/bmc-conf2.c (set_bmc_lan_conf_auth_type_enables): Use
+	convenience template.
+
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove
