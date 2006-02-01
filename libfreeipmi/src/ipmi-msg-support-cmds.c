@@ -484,7 +484,7 @@ fill_cmd_activate_session (uint8_t auth_type,
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
-      || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
+      || (challenge_str && challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN)
       || !obj_cmd)
     {
       errno = EINVAL;

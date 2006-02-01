@@ -59,6 +59,10 @@ extern "C" {
 #define IPMI_CHASSIS_FORCE_IDENTIFY_OFF      0x0
 #define IPMI_CHASSIS_FORCE_IDENTIFY_ON       0x1
 
+#define IPMI_CHASSIS_FORCE_IDENTIFY_VALID(__force_identify) \
+        (((__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_OFF \
+          || (__force_identify) == IPMI_CHASSIS_FORCE_IDENTIFY_ON) ? 1 : 0)
+
 extern fiid_template_t tmpl_set_power_restore_policy_rq;
 extern fiid_template_t tmpl_set_power_restore_policy_rs;
 extern fiid_template_t tmpl_cmd_chassis_ctrl_rq;

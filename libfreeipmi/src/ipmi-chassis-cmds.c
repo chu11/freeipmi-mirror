@@ -237,8 +237,7 @@ fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
                            fiid_obj_t obj_cmd)
 {
   if (!tmpl_identify_cmd
-      || (force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_OFF
-          && force_identify_flag != IPMI_CHASSIS_FORCE_IDENTIFY_ON)
+      || !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(force_identify_flag)
       || !obj_cmd)
     {
       errno = EINVAL;
