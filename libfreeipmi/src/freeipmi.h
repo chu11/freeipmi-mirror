@@ -237,8 +237,8 @@ extern "C" {
 #include "ipmi-sensor-utils.h"
 #endif /* TEST */
 #include "ipmi-watchdog.h"
-#if 0 /* TEST */
 #include "ipmi-msg-interface-desc.h"
+#if 0 /* TEST */
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #include "ipmi-sensor-event-messages.h"
@@ -347,7 +347,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-sdr-repo-cache.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-watchdog.h>
+#endif /* TEST */
 #include <freeipmi/ipmi-msg-interface-desc.h>
+#if 0
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>
