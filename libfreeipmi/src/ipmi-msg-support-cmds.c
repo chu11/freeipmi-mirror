@@ -618,7 +618,9 @@ ipmi_lan_open_session (int sockfd,
   uint64_t temp_session_id, temp_session_seq_num;
   uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
 
-  if (rq_seq == NULL)
+  if (!session_seq_num
+      || !session_id
+      || !rq_seq)
     {
       errno = EINVAL;
       return (-1);
