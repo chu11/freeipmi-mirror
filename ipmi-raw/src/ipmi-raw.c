@@ -221,7 +221,11 @@ main (int argc, char **argv)
       if (string2bytes (line, &bytes_rq, &send_len) != 0)
 	break;
       
-      ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len);
+      if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) < 0)
+        {
+          perror("ipmi_cmd_raw");
+          continue;
+        }
       
       printf ("rcvd: ");
       for (i = 0; i < rcvd_len; i++)
