@@ -476,8 +476,6 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
   return (0);
 }
 
-#if 0 /* TEST */
-
 int8_t
 ipmi_kcs_cmd_raw2 (ipmi_device_t *dev, 
 		   uint8_t *buf_rq, 
@@ -507,6 +505,4 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
   
   return (0);
 }
-
-#endif /* TEST */
 

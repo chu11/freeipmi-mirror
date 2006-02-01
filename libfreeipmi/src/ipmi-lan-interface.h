@@ -116,14 +116,11 @@ int8_t ipmi_lan_cmd2 (ipmi_device_t *dev,
 		      fiid_obj_t obj_cmd_rq, 
 		      fiid_obj_t obj_cmd_rs);
 
-#if 0 /* TEST */
 int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
 			  uint8_t *buf_rq, 
 			  size_t buf_rq_len, 
 			  uint8_t *buf_rs, 
 			  size_t *buf_rs_len);
-
-#endif /* TEST */
 
 int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn);
 

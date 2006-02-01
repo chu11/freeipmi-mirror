@@ -475,7 +475,6 @@ ipmi_cmd (ipmi_device_t *dev,
   return (status);
 }
 
-#if 0 /* TEST */
 int 
 ipmi_cmd_raw (ipmi_device_t *dev, 
 	      uint8_t *in, 
@@ -530,7 +529,6 @@ ipmi_cmd_raw (ipmi_device_t *dev,
     }
   return (status);
 }
-#endif /* TEST */
 
 static int
 ipmi_outofband_close (ipmi_device_t *dev)
