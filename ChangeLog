@@ -146,6 +146,13 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-02  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sol-cmds.c
+	(ipmi_cmd_sol_conf_get_sol_enable2,
+	ipmi_cmd_sol_conf_sol_enable_disable2, fill_get_sol_conf_param,
+	fill_sol_conf_sol_enable_disable): Fix parameter checks.
+	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repo-cache.c
@@ -158,6 +165,10 @@
 	ipmi_cmd_get_sdr_repo_alloc_info2, ipmi_cmd_reserve_sdr_repo2,
 	ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2,
 	ipmi_cmd_get_sdr2): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	(ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2): Use
+	fiid_template_free.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
