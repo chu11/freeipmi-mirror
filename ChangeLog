@@ -3,7 +3,45 @@
 	* libfreeipmi/src/ipmi-sol-cmds.c
 	(ipmi_cmd_sol_conf_get_sol_enable2,
 	ipmi_cmd_sol_conf_sol_enable_disable2, fill_get_sol_conf_param,
-	fill_sol_conf_sol_enable_disable): Fix parameter checks.
+	fill_sol_conf_sol_enable_disable), libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_filter_table_entry, fill_kcs_set_num_event_filters,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_get_pef_caps, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event,
+	fill_kcs_get_last_proessed_event, ipmi_cmd_set_pef_control2,
+	ipmi_cmd_set_global_action_control2, ipmi_cmd_set_startup_delay2,
+	ipmi_cmd_set_num_event_filters2,
+	ipmi_cmd_set_alert_startup_delay2,
+	ipmi_cmd_set_filter_table_entry2,
+	ipmi_cmd_set_filter_table_data1_2,
+	ipmi_cmd_set_num_alert_policies2, ipmi_cmd_alert_immediate2,
+	ipmi_cmd_get_pef_alert_string2,
+	ipmi_cmd_get_pef_alert_string_keys2,
+	ipmi_cmd_get_pef_num_alert_policies2,
+	ipmi_cmd_get_pef_num_alert_strings2,
+	ipmi_cmd_get_pef_filter_data1_2, ipmi_cmd_get_pef_control2,
+	ipmi_cmd_get_pef_global_action_control2,
+	ipmi_cmd_get_pef_startup_delay2,
+	ipmi_cmd_get_pef_alert_startup_delay2,
+	ipmi_cmd_get_pef_num_event_filters2,
+	ipmi_cmd_get_pef_filter_table_entry2, ipmi_cmd_get_pef_caps2,
+	ipmi_cmd_arm_pef_postpone_timer2,
+	ipmi_cmd_set_last_processed_event2,
+	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2): Fix
+	parameter checks.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_filter_table_entry, fill_kcs_set_num_event_filters,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_get_pef_caps, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event,
+	fill_kcs_get_last_proessed_event): Make non-static.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
