@@ -30,8 +30,10 @@
 	ipmi_cmd_get_pef_filter_table_entry2, ipmi_cmd_get_pef_caps2,
 	ipmi_cmd_arm_pef_postpone_timer2,
 	ipmi_cmd_set_last_processed_event2,
-	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2): Fix
-	parameter checks.
+	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2),
+	libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_sensor_threshold_health_check,
+	ipmi_sensor_discrete_health_check): Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
@@ -45,7 +47,7 @@
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: Fix templates with duplicate
 	field names.
-	
+
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repo-cache.c

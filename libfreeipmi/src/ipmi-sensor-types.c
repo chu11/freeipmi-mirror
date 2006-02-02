@@ -820,6 +820,12 @@ ipmi_sensor_threshold_health_check (double sensor_reading,
 {
   uint64_t val;
   
+  if (!data_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_get (data_rs, 
 		tmpl_get_sensor_threshold_reading_rs, 
 		(uint8_t *)"status_comparison_lower_non_critical_threshold", 
@@ -888,6 +894,12 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
   char key[65];
   int i;
   struct ipmi_discrete_desc *discrete_sensor_desc;
+
+  if (!data_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   discrete_sensor_desc = (struct ipmi_discrete_desc *) 
     ipmi_sensor_type_desc_ptr[sensor_type];
