@@ -75,7 +75,7 @@ fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq,
 				  uint8_t sol_payload)
 {
   if (!obj_data_rq
-      || !!IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return -1;
@@ -113,7 +113,7 @@ fill_get_sol_conf_param (fiid_obj_t obj_data_rq,
 			 uint8_t block_selector)
 {
   if (!obj_data_rq
-      || !!IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return -1;
@@ -161,7 +161,7 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rq = NULL;
   
   if (!dev
-      || !!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !obj_cmd_rs)
     {
       errno = EINVAL;
@@ -217,7 +217,7 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rq = NULL;
   
   if (!dev
-      || !!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !obj_cmd_rs)
     {
       errno = EINVAL;
