@@ -725,6 +725,12 @@ fiid_template_t tmpl_get_sensor_type_rs =
 int8_t 
 fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_threshold_reading_rq, 
 		(uint8_t *)"cmd", 
@@ -741,6 +747,12 @@ fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 int8_t 
 fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_discrete_reading_rq, 
 		(uint8_t *)"cmd", 
@@ -757,6 +769,12 @@ fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 int8_t 
 fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sensor_thresholds_rq, 
 		(uint8_t *)"cmd", 
@@ -777,8 +795,11 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_threshold_reading_rq);
   ERR (fill_kcs_get_threshold_reading (obj_cmd_rq, 
@@ -802,8 +823,11 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_discrete_reading_rq);
   ERR (fill_kcs_get_discrete_reading (obj_cmd_rq, 
@@ -827,8 +851,11 @@ ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
   ERR (fill_kcs_get_sensor_thresholds (obj_cmd_rq, 

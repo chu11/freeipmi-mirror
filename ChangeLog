@@ -33,7 +33,11 @@
 	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2),
 	libfreeipmi/src/ipmi-sensor-types.c
 	(ipmi_sensor_threshold_health_check,
-	ipmi_sensor_discrete_health_check): Fix parameter checks.
+	ipmi_sensor_discrete_health_check),
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
+	ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
+	ipmi_cmd_get_sensor_thresholds2): Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
