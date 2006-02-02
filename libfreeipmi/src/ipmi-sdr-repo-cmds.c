@@ -390,6 +390,7 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
   return (rv);
 }
 
+/* XXX behavior change, find out who calls this */
 static int8_t 
 ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev, 
 				    uint16_t record_id, 
@@ -440,6 +441,9 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 		obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   if ((len = fiid_obj_field_len_bytes (obj_cmd_rs, (uint8_t *)"record_data")) < 0)
     goto cleanup;
   
@@ -456,21 +460,18 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 		       buf,
 		       len) < 0)
     goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
-  
+   
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
-  if (local_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
   if (buf)
     free(buf);
   return (rv);
 }
 
+/* XXX behavior change, find out who calls this */
+/* duplicate functionality, should consolidate with above */
 static int8_t 
 ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev, 
 			 uint16_t reservation_id, 
@@ -481,12 +482,8 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 			 uint8_t *sensor_record_chunk,
                          uint32_t sensor_record_chunk_len)
 {
-  fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
-  
-  int sdr_rs_length = 0;
-  
   fiid_obj_t obj_cmd_rq = NULL;
-  fiid_obj_t local_obj_cmd_rs = NULL;
+  int8_t ret, rv = -1;
   
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
@@ -496,60 +493,48 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
       return -1;
     }
   
-  sdr_rs_length = fiid_obj_len_bytes (tmpl_get_sdr_rs);
-  ERR (sdr_rs_length != -1);
-  
-  tmpl_var_len_get_sdr_rs = fiid_template_make ((sdr_rs_length * 8), "sdr_rs", 
-						(bytes_read * 8), "chunk_data");
-  
-  fiid_obj_alloca (obj_cmd_rq, tmpl_get_sdr_rq);
-  if (obj_cmd_rq == NULL)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
+      errno = EINVAL;
+      goto cleanup;
     }
-  fiid_obj_alloca (local_obj_cmd_rs, tmpl_var_len_get_sdr_rs);
-  if (local_obj_cmd_rs == NULL)
-    {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  
-  if (fill_kcs_get_sdr_chunk (obj_cmd_rq, reservation_id, 
-			      record_id, record_offset, 
-			      bytes_read) != 0)
-    {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
+    goto cleanup;
+
+  if (fill_kcs_get_sdr_chunk (obj_cmd_rq, 
+			      reservation_id, 
+			      record_id, 
+			      record_offset, 
+			      bytes_read) < 0)
+    goto cleanup;
+
   if (ipmi_cmd (dev, 
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
-		tmpl_get_sdr_rq, 
-		local_obj_cmd_rs, 
-		tmpl_var_len_get_sdr_rs) != 0)
-    {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
+		obj_cmd_rs) < 0)
+    goto cleanup;
   
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"sdr_rs", 
-		     obj_cmd_rs,
-                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"chunk_data", 
-		     sensor_record_chunk,
-                     sensor_record_chunk_len);
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  if (fiid_obj_get_data(local_cmd_rs,
+			(uint8_t *)"record_data",
+			sensor_record_chunk,
+			sensor_record_chunk_len) < 0)
+    goto cleanup;
   
-  ipmi_xfree (tmpl_var_len_get_sdr_rs);
-  
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  if (buf)
+    free(buf);
+  return (rv);
 }
 
 int8_t 
