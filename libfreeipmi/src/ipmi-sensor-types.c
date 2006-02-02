@@ -819,44 +819,54 @@ ipmi_sensor_threshold_health_check (double sensor_reading,
 				    fiid_obj_t data_rs)
 {
   uint64_t val;
-  
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  int8_t rv;
+
+  if (!fiid_obj_valid(data_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(data_rs, tmpl_get_sensor_threshold_reading_rs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_lower_non_critical_threshold", 
 		&val);
   if (val == 1)
     return 0;
       
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_lower_critical_threshold", 
 		&val);
   if (val == 1)
     return 0;
       
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_lower_non_recoverable_threshold", 
 		&val);
   if (val == 1)
     return 0;
       
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_upper_non_critical_threshold", 
 		&val);
   if (val == 1)
     return 0;
       
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_upper_critical_threshold", 
 		&val);
   if (val == 1)
     return 0;
   
-  fiid_obj_get (data_rs, 
-		tmpl_get_sensor_threshold_reading_rs, 
+  FIID_OBJ_GET (data_rs, 
 		(uint8_t *)"status_comparison_upper_non_recoverable_threshold", 
 		&val);
   if (val == 1)
@@ -888,7 +898,23 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
   char key[65];
   int i;
   struct ipmi_discrete_desc *discrete_sensor_desc;
+  int8_t rv;
+
+  if (!fiid_obj_valid(data_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
+  if ((rv = fiid_obj_template_compare(data_rs, tmpl_get_sensor_discrete_reading_rs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   discrete_sensor_desc = (struct ipmi_discrete_desc *) 
     ipmi_sensor_type_desc_ptr[sensor_type];
   
@@ -906,29 +932,29 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
 	    
 	    if (i == 7)
 	      {
-		fiid_obj_get (data_rs, 
-			      tmpl_get_sensor_discrete_reading_rs, 
-			      (uint8_t *)"state_7_asserted", 
-			      &val);
+		if (fiid_obj_get (data_rs, 
+                                  (uint8_t *)"state_7_asserted", 
+                                  &val) < 0)
+                  return -1;
 		processor_present_flag = val;
 		continue;
 	      }
 	    
 	    if (i == 9)
 	      {
-		fiid_obj_get (data_rs, 
-			      tmpl_get_sensor_discrete_reading_rs, 
-			      (uint8_t *)"state_9_asserted", 
-			      &val);
+		if (fiid_obj_get (data_rs, 
+                                  (uint8_t *)"state_9_asserted", 
+                                  &val) < 0)
+                  return -1;
 		terminator_present_flag = val;
 		continue;
 	      }
 	    
 	    snprintf (key, 64, "state_%d_asserted", i);
-	    fiid_obj_get (data_rs, 
-			  tmpl_get_sensor_discrete_reading_rs, 
-			  (uint8_t *)key, 
-			  &val);
+	    if (fiid_obj_get (data_rs, 
+                              (uint8_t *)key, 
+                              &val) < 0)
+              return -1;
 	    
 	    if (discrete_sensor_desc[i].normal_code != val)
 	      return 0;
@@ -950,29 +976,29 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
 	    
 	    if (i == 2)
 	      {
-		fiid_obj_get (data_rs, 
-			      tmpl_get_sensor_discrete_reading_rs, 
-			      (uint8_t *)"state_2_asserted", 
-			      &val);
+		if (fiid_obj_get (data_rs, 
+                                  (uint8_t *)"state_2_asserted", 
+                                  &val) < 0)
+                  return -1;
 		device_installed_flag = val;
 		continue;
 	      }
 	    
 	    if (i == 5)
 	      {
-		fiid_obj_get (data_rs, 
-			      tmpl_get_sensor_discrete_reading_rs, 
-			      (uint8_t *)"state_5_asserted", 
-			      &val);
+		if (fiid_obj_get (data_rs, 
+                                  (uint8_t *)"state_5_asserted", 
+                                  &val) < 0)
+                  return -1;
 		power_off_flag = val;
 		continue;
 	      }
 	    
 	    snprintf (key, 64, "state_%d_asserted", i);
-	    fiid_obj_get (data_rs, 
-			  tmpl_get_sensor_discrete_reading_rs, 
-			  (uint8_t *)key, 
-			  &val);
+	    if (fiid_obj_get (data_rs, 
+                              (uint8_t *)key, 
+                              &val) < 0)
+              return -1;
 	    
 	    if (discrete_sensor_desc[i].normal_code != val)
 	      return 0;
@@ -990,10 +1016,10 @@ ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs)
 	    continue;
 	  
 	  snprintf (key, 64, "state_%d_asserted", i);
-	  fiid_obj_get (data_rs, 
-			tmpl_get_sensor_discrete_reading_rs, 
-			(uint8_t *)key, 
-			&val);
+	  if (fiid_obj_get (data_rs, 
+                            (uint8_t *)key, 
+                            &val) < 0)
+            return -1;
 	  
 	  if (discrete_sensor_desc[i].normal_code != val)
 	    return 0;

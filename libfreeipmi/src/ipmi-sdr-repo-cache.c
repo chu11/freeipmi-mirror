@@ -509,14 +509,10 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 			(uint8_t *)"event_reading_type", 
 			&val) < 0)
 	goto cleanup;
-#if 0 /* TEST */
       rv = ipmi_sensor_classify (val);
-#endif /* TEST */
     }
-#if 0 /* TEST */
   else
     rv = IPMI_SENSOR_CLASS_NOT_AVAILABLE;
-#endif /* TEST */
     
  cleanup:
   if (obj_data_rs)
@@ -589,9 +585,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 	goto cleanup;
 
       sensor_type = val;
-#if 0 /* TEST */
       rv = ipmi_get_sensor_group (sensor_type);
-#endif /* TEST */
     }
  
  cleanup:

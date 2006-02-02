@@ -216,9 +216,9 @@ extern "C" {
 #include "ipmi-dev-global-cmds.h"
 #include "ipmi-sdr-repo-cmds.h"
 #include "ipmi-sdr-record-types.h"
-#if 0 /* TEST */
 #include "ipmi-sensor-types.h"
 #include "ipmi-sensor-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-sel-record-types.h"
 #include "ipmi-sel-cmds.h"
 #endif /* TEST */
@@ -329,9 +329,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-dev-global-cmds.h>
 #include <freeipmi/ipmi-sdr-record-types.h>
 #include <freeipmi/ipmi-sdr-repo-cmds.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-sensor-types.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-sel-record-types.h>
 #include <freeipmi/ipmi-sel-cmds.h>
 #endif /* TEST */
