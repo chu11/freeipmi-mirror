@@ -227,8 +227,8 @@ extern "C" {
 #if 0 /* TEST */
 #include "ipmi-serial-modem-param-spec.h"
 #include "ipmi-serial-cmds.h"
-#include "ipmi-sol-cmds.h"
 #endif /* TEST */
+#include "ipmi-sol-cmds.h"
 #include "ipmi-debug.h"
 #include "ipmi-md2.h"
 #include "ipmi-md5.h"
@@ -340,8 +340,8 @@ extern char *__progname;
 #if 0
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-serial-cmds.h>
-#include <freeipmi/ipmi-sol-cmds.h>
 #endif /* TEST */
+#include <freeipmi/ipmi-sol-cmds.h>
 #include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-md2.h>
 #include <freeipmi/ipmi-md5.h>

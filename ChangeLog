@@ -17,9 +17,10 @@
 2006-02-02  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/ipmi-sdr-record-types.c,
-        libfreeipmi/src/ipmi-sdr-repo-cache.c,
-        libfreeipmi/src/ipmi-sdr-repo-cmds.c: Continue fiid
-        reimplementation in libfreeipmi.	
+	libfreeipmi/src/ipmi-sdr-repo-cache.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: Continue fiid reimplementation in
+	libfreeipmi.
 	
 2006-02-01  Albert Chu <chu11@llnl.gov>	
 

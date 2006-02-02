@@ -419,13 +419,8 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
   if (!ret)
     {
-<<<<<<< ipmi-sdr-repo-cmds.c
       errno = EINVAL;
       goto cleanup;
-=======
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
->>>>>>> 1.15
     }
 
   if ((ret = fiid_obj_template_compare(sensor_record_header, tmpl_sdr_sensor_record_header)) < 0)
@@ -433,20 +428,8 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
   if (!ret)
     {
-<<<<<<< ipmi-sdr-repo-cmds.c
       errno = EINVAL;
       goto cleanup;
-=======
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  
-  if (fill_kcs_get_sensor_record_header (obj_cmd_rq, 
-					 record_id) != 0)
-    {
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
->>>>>>> 1.15
     }
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
@@ -459,7 +442,6 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
-<<<<<<< ipmi-sdr-repo-cmds.c
 		obj_cmd_rs) < 0)
     goto cleanup;
 
@@ -468,27 +450,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
   if ((len = fiid_obj_field_len_bytes (obj_cmd_rs, (uint8_t *)"record_data")) < 0)
     goto cleanup;
-=======
-		tmpl_get_sdr_rq, 
-		local_obj_cmd_rs, 
-		tmpl_var_len_get_sdr_rs) != 0)
-    {
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"sdr_rs", 
-		     obj_cmd_rs,
-                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"header_data", 
-		     sensor_record_header,
-                     fiid_obj_len_bytes(tmpl_sdr_sensor_record_header));
->>>>>>> 1.15
   
-<<<<<<< ipmi-sdr-repo-cmds.c
   if (!(buf = (uint8_t *)malloc(len)))
     goto cleanup;
 
@@ -510,13 +472,6 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   if (buf)
     free(buf);
   return (rv);
-=======
-  fiid_template_free (tmpl_var_len_get_sdr_rs);
-  
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
->>>>>>> 1.15
 }
 
 /* XXX duplicate functionality, should consolidate with above */
@@ -546,27 +501,8 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 
   if (!ret)
     {
-<<<<<<< ipmi-sdr-repo-cmds.c
       errno = EINVAL;
       goto cleanup;
-=======
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  fiid_obj_alloca (local_obj_cmd_rs, tmpl_var_len_get_sdr_rs);
-  if (local_obj_cmd_rs == NULL)
-    {
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  
-  if (fill_kcs_get_sdr_chunk (obj_cmd_rq, reservation_id, 
-			      record_id, record_offset, 
-			      bytes_read) != 0)
-    {
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
->>>>>>> 1.15
     }
 
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
@@ -583,31 +519,9 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
-<<<<<<< ipmi-sdr-repo-cmds.c
 		obj_cmd_rs) < 0)
     goto cleanup;
-=======
-		tmpl_get_sdr_rq, 
-		local_obj_cmd_rs, 
-		tmpl_var_len_get_sdr_rs) != 0)
-    {
-      fiid_template_free (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
   
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"sdr_rs", 
-		     obj_cmd_rs,
-                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"chunk_data", 
-		     sensor_record_chunk,
-                     sensor_record_chunk_len);
->>>>>>> 1.15
-  
-<<<<<<< ipmi-sdr-repo-cmds.c
   if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
@@ -622,13 +536,6 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
   return (rv);
-=======
-  fiid_template_free (tmpl_var_len_get_sdr_rs);
-  
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
->>>>>>> 1.15
 }
 
 int8_t 
