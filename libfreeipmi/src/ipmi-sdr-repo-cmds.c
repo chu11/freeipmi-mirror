@@ -102,6 +102,12 @@ fiid_template_t tmpl_get_sdr_rs =
 int8_t 
 fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sdr_repo_info_rq, 
 		(uint8_t *)"cmd", 
