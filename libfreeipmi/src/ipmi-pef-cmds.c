@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.19 2006-02-02 21:59:04 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.20 2006-02-02 22:18:13 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -171,13 +171,13 @@ fiid_template_t tmpl_set_pef_conf_param_pef_control_rq =
     {8, "cmd"},
 
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {1, "enable_pef"},
     {1, "enable_pef_event_msgs"},
     {1, "enable_startup_delay"},
     {1, "enable_alert_startup_delay"},
-    {4, "reserved"},
+    {4, "reserved2"},
 
     {0, ""}
   };
@@ -202,7 +202,7 @@ fiid_template_t tmpl_set_pef_conf_param_global_action_control_rq =
     {8, "cmd"},
 
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {1, "enable_alert_action"},
     {1, "enable_powerdown_action"},
@@ -210,7 +210,7 @@ fiid_template_t tmpl_set_pef_conf_param_global_action_control_rq =
     {1, "enable_powercycle_action"},
     {1, "enable_oem_action"},
     {1, "enable_diag_interrupt"},
-    {2, "reserved"},
+    {2, "reserved2"},
 
     {0, ""}
   };
@@ -283,10 +283,10 @@ fiid_template_t tmpl_set_pef_conf_param_num_event_filters_rq =
     {8, "cmd"},
 
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {7, "num_event_filters"},
-    {1, "reserved"},
+    {1, "reserved2"},
 
     {0, ""}
   };
@@ -431,12 +431,12 @@ fiid_template_t tmpl_set_pef_conf_param_event_filter_data1_rq =
     {8, "cmd"},
     
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {7, "filter_number"},
-    {1, "reserved"},
+    {1, "reserved2"},
 
-    {5, "reserved"},
+    {5, "reserved3"},
     {2, "filter_type"},
     {1, "filter_enable"},
 
@@ -450,9 +450,9 @@ fiid_template_t tmpl_get_pef_conf_param_event_filter_data1_rs =
     {8, "comp_code"},
 
     {7, "filter_number"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
-    {5, "reserved"},
+    {5, "reserved2"},
     {2, "filter_type"},
     {1, "filter_enable"},
 
@@ -464,10 +464,10 @@ fiid_template_t tmpl_set_pef_conf_param_num_alert_policies_rq =
     {8, "cmd"},
 
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {7, "num_alert_policies"},
-    {1, "reserved"},
+    {1, "reserved2"},
 
     {0, ""}
   };
@@ -501,16 +501,16 @@ fiid_template_t tmpl_set_pef_conf_param_alert_string_keys_rq =
     {8, "cmd"},
 
     {7, "parameter_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {7, "string_selector"},
-    {1, "reserved"},
+    {1, "reserved2"},
 
     {7, "filter_number"},
-    {1, "reserved"},
+    {1, "reserved3"},
 
     {7, "string_set_number"},
-    {1, "reserved"},
+    {1, "reserved4"},
 
     {0, ""}
   };
@@ -522,13 +522,13 @@ fiid_template_t tmpl_get_pef_conf_param_alert_string_keys_rs =
     {8, "comp_code"},
 
     {7, "string_selector"},
-    {1, "reserved"},
+    {1, "reserved1"},
 
     {7, "filter_number"},
-    {1, "reserved"},
+    {1, "reserved2"},
 
     {7, "string_set_number"},
-    {1, "reserved"},
+    {1, "reserved3"},
 
     {0, ""}
   };
@@ -554,10 +554,10 @@ fiid_template_t tmpl_alert_immediate_rq =
     {8, "cmd"},
 
     {4, "alert_immediate_channel_number"},
-    {4, "reserved"},
+    {4, "reserved1"},
 
     {4, "alert_immediate_destination_selector"},
-    {4, "reserved"},
+    {4, "reserved2"},
 
     {7, "alert_immediate_string_selector"},
     {1, "alert_immediate_string_enable"},

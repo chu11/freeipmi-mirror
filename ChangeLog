@@ -42,6 +42,9 @@
 	fill_kcs_get_pef_caps, fill_kcs_arm_pef_postpone_timer,
 	fill_kcs_set_last_processed_event,
 	fill_kcs_get_last_proessed_event): Make non-static.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: Fix templates with duplicate
+	field names.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
