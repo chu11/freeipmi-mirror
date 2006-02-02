@@ -240,9 +240,9 @@ extern "C" {
 #endif /* TEST */
 #include "ipmi-watchdog.h"
 #include "ipmi-msg-interface-desc.h"
-#if 0 /* TEST */
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
+#if 0 /* TEST */
 #include "ipmi-sensor-event-messages.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sel-api.h"
@@ -353,9 +353,9 @@ extern char *__progname;
 #endif /* TEST */
 #include <freeipmi/ipmi-watchdog.h>
 #include <freeipmi/ipmi-msg-interface-desc.h>
-#if 0
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
+#if 0
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #include <freeipmi/ipmi-sensor-api.h>
 #include <freeipmi/ipmi-sel-api.h>
