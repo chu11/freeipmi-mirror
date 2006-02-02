@@ -1,3 +1,10 @@
+2006-02-02  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sol-cmds.c
+	(ipmi_cmd_sol_conf_get_sol_enable2,
+	ipmi_cmd_sol_conf_sol_enable_disable2, fill_get_sol_conf_param,
+	fill_sol_conf_sol_enable_disable): Fix parameter checks.
+	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repo-cache.c
