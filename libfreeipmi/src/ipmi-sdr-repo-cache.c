@@ -74,13 +74,11 @@ int
 ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 {
   uint16_t record_id = 0;
-  uint8_t record_length = 0;
   fiid_obj_t obj_cmd_rs = NULL;
-  fiid_obj_t obj_sdr_record = NULL;
   uint64_t val = 0;
+  uint8_t sensor_record_buf[1024];
+  uint32_t sensor_record_len;
   int rv = -1;
-  int32_t len, get_len;
-  uint8_t *buf = NULL;
 
   if (!dev || !fp)
     {
@@ -97,16 +95,21 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       if (fiid_obj_clear (obj_cmd_rs) < 0)
 	goto cleanup;
 
+      if (fiid_obj_clear (obj_sdr_record) < 0)
+	goto cleanup;
+
       if (obj_sdr_record)
 	{
 	  fiid_obj_destroy (obj_sdr_record);
 	  obj_sdr_record = NULL;
 	}
-      
+
+      sensor_record_len = 1024;
       if (ipmi_cmd_get_sdr2 (dev, 
 			     record_id, 
 			     obj_cmd_rs, 
-			     &obj_sdr_record) != 0)
+			     sensor_record_buf,
+			     &sensor_record_len) < 0)
 	goto cleanup;
       
       if (fiid_obj_get (obj_cmd_rs, 
@@ -116,28 +119,8 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 
       record_id = (uint16_t) val;
       
-      if (fiid_obj_get (obj_sdr_record, 
-			(uint8_t *)"record_length", 
-			&val) < 0)
-	goto cleanup;
-
-      record_length = (uint8_t) val;
-      
-      if ((len = fiid_template_len_bytes(tmpl_sdr_sensor_record_header)) < 0)
-	goto cleanup;
-
-      record_length += len;
-      
-      if (!(buf = (uint8_t *)malloc(record_length)))
-	goto cleanup;
-
-      if ((get_len = fiid_obj_get_all(obj_sdr_record,
-				      buf,
-				      record_length)) < 0)
-	goto cleanup;
-
-      if (fwrite (buf,
-		  record_length, 
+      if (fwrite (sensor_record_buf,
+		  sensor_record_len,
 		  1, 
 		  fp) < 0)
 	goto cleanup;
@@ -145,15 +128,11 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       free(buf);
       buf = NULL;
     }
- 
+  
   rv = 0;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
-  if (buf)
-    free(buf);
   return (rv);
 }
 

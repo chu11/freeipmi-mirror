@@ -58,7 +58,8 @@ int8_t ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
 			  uint16_t record_id, 
 			  fiid_obj_t obj_cmd_rs, 
-			  fiid_obj_t *sensor_record);
+			  uint8_t *sensor_record,
+			  uint32_t *sensor_record_len);
 
 
 #ifdef __cplusplus

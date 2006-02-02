@@ -537,11 +537,13 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   return (rv);
 }
 
+/* XXX logic changed, see who calls this */
 int8_t 
 ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
 		   uint16_t record_id, 
 		   fiid_obj_t obj_cmd_rs, 
-		   fiid_obj_t *sensor_record)
+		   uint8_t *sensor_record,
+		   uint32_t *sensor_record_len)
 {
   uint64_t val = 0;
   
@@ -553,44 +555,89 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   uint8_t chunk_data[16];
   
   fiid_obj_t record_data = NULL;
-  
+
+  int8_t ret, rv = -1;
+
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
-      || !sensor_record)
+      || !sensor_record
+      || !sensor_record_len)
     {
       errno = EINVAL;
       return -1;
     }
 
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
   {
     fiid_obj_t sensor_record_header = NULL;
+    int32_t hdr_len;
+
+    if (!(sensor_record_header = fiid_obj_create(tmpl_sdr_sensor_record_header)))
+      goto cleanup1;
     
-    FIID_OBJ_ALLOCA (sensor_record_header, tmpl_sdr_sensor_record_header);
-    ERR (ipmi_cmd_get_sensor_record_header2 (dev, 
-					     record_id, 
-					     obj_cmd_rs, 
-					     sensor_record_header) == 0);
-    FIID_OBJ_GET (sensor_record_header, 
-		  tmpl_sdr_sensor_record_header, 
-		  (uint8_t *)"record_length", 
-		  &val);
+    if ((hdr_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
+      goto cleanup1;
+
+    if (ipmi_cmd_get_sensor_record_header2 (dev, 
+					    record_id, 
+					    obj_cmd_rs, 
+					    sensor_record_header) < 0)
+      goto cleanup1;
+
+    if (fiid_obj_get (sensor_record_header,
+		      (uint8_t *)"record_length", 
+		      &val))
+      goto cleanup1;
+		      
     record_length = val;
-    record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
+    record_length += hdr_len;
+
+    rv = 0;
+  cleanup1:
+    if (sensor_record_header)
+      fiid_obj_destroy(sensor_record_header);
+    if (rv < 0)
+      return (rv);
   }
   
+
+  /* achu: where does the 16 come from? */
   if (record_length > 16)
     {
       fiid_obj_t local_obj_cmd_rs = NULL;
       
-      FIID_OBJ_ALLOCA (local_obj_cmd_rs, tmpl_reserve_sdr_repo_rs);
-      ERR (ipmi_cmd_reserve_sdr_repo2 (dev, local_obj_cmd_rs) == 0);
-      FIID_OBJ_GET (local_obj_cmd_rs,  
-		    tmpl_reserve_sdr_repo_rs, 
-		    (uint8_t *)"reservation_id", 
-		    &val);
+      rv = -1;
+
+      if (!(local_obj_cmd_rs = fiid_obj_create(tmpl_reserve_sdr_repo_rs)))
+	goto cleanup2;
+      
+      if (ipmi_cmd_reserve_sdr_repo2 (dev, local_obj_cmd_rs) < 0)
+	goto cleanup2;
+      
+      if (fiid_obj_get (local_obj_cmd_rs,  
+			tmpl_reserve_sdr_repo_rs, 
+			(uint8_t *)"reservation_id", 
+			&val) < 0)
+	goto cleanup2;
+
       reservation_id = (uint16_t) val;
+      rv = 0;
+    cleanup2:
+      if (local_obj_cmd_rs)
+	fiid_obj_destroy(local_obj_cmd_rs);
+      if (rv < 0)
+	return (rv);
     }
   
+  rv = -1;
   record_data = alloca (record_length);
   memset (record_data, 0, record_length);
   
@@ -600,22 +647,27 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       if ((record_offset + bytes_read) > record_length)
 	bytes_read = record_length - record_offset;
       
-      ERR (ipmi_cmd_get_sdr_chunk2 (dev, 
-				    reservation_id, 
-				    record_id, 
-				    record_offset, 
-				    bytes_read, 
-				    obj_cmd_rs, 
-				    chunk_data,
-                                    16) == 0);
+      if (ipmi_cmd_get_sdr_chunk2 (dev, 
+				   reservation_id, 
+				   record_id, 
+				   record_offset, 
+				   bytes_read, 
+				   obj_cmd_rs, 
+				   chunk_data,
+				   16) < 0)
+	goto cleanup;
       
       memcpy (record_data + record_offset, chunk_data, bytes_read);
     }
   
-  *sensor_record = ipmi_xmalloc (record_length);
-  ERR (*sensor_record != NULL);
-  memcpy (*sensor_record, record_data, record_length);
+  if (*sensor_record_len < record_length)
+    goto cleanup;
+
+  memcpy(sensor_record, record_data, record_length);
+  *sensor_record_len = record_length;
   
-  return 0;
+  rv = 0;
+ cleanup:
+  return (rv);
 }
 
