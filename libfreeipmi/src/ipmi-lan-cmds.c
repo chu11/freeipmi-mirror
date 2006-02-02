@@ -1219,7 +1219,7 @@ ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1273,7 +1273,7 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1348,7 +1348,7 @@ ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev,
                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1423,7 +1423,7 @@ ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev,
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1474,7 +1474,7 @@ ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1526,7 +1526,7 @@ ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1578,7 +1578,7 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1631,7 +1631,7 @@ ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1683,7 +1683,7 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1734,7 +1734,7 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1785,7 +1785,7 @@ ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1837,7 +1837,7 @@ ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1889,7 +1889,7 @@ ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1944,7 +1944,7 @@ ipmi_cmd_lan_get_conf_param (ipmi_device_t *dev,
                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2000,7 +2000,7 @@ ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2056,7 +2056,7 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 					   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2112,7 +2112,7 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2168,7 +2168,7 @@ ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev,
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2224,7 +2224,7 @@ ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;  
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2280,7 +2280,7 @@ ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2336,7 +2336,7 @@ ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev,
 				     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2392,7 +2392,7 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2448,7 +2448,7 @@ ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2504,7 +2504,7 @@ ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2560,7 +2560,7 @@ ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev,
 				      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2616,7 +2616,7 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2672,7 +2672,7 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -2727,7 +2727,7 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)

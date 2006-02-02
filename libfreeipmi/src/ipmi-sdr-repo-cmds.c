@@ -95,7 +95,7 @@ fiid_template_t tmpl_get_sdr_rs =
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    // record data field will be added on the fly
+    {4096, "record_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     {0,  "", 0}
   };
 
@@ -311,7 +311,7 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
 
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -353,7 +353,7 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int8_t ret, rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -396,14 +396,11 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 				    fiid_obj_t obj_cmd_rs, 
 				    fiid_obj_t sensor_record_header)
 {
-  fiid_field_t *tmpl_var_len_get_sdr_rs = NULL;
-  
-  int sdr_rs_length = 0;
-  int header_length = 0; 
-  
   fiid_obj_t obj_cmd_rq = NULL;
-  fiid_obj_t local_obj_cmd_rs = NULL;
-  
+  int8_t ret, rv = -1;
+  int32_t len;
+  uint8_t *buf = NULL;
+
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
       || !sensor_record_header)
@@ -412,61 +409,66 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
       return -1;
     }
 
-  sdr_rs_length = fiid_obj_len_bytes (tmpl_get_sdr_rs);
-  ERR (sdr_rs_length != -1);
-  
-  header_length = fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
-  ERR (header_length != -1);
-  
-  tmpl_var_len_get_sdr_rs = fiid_template_make ((sdr_rs_length * 8), "sdr_rs", 
-						(header_length * 8), "header_data");
-  
-  fiid_obj_alloca (obj_cmd_rq, tmpl_get_sdr_rq);
-  if (obj_cmd_rq == NULL)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
+      errno = EINVAL;
+      goto cleanup;
     }
-  fiid_obj_alloca (local_obj_cmd_rs, tmpl_var_len_get_sdr_rs);
-  if (local_obj_cmd_rs == NULL)
+
+  if ((ret = fiid_obj_template_compare(sensor_record_header, tmpl_sdr_sensor_record_header)) < 0)
+    goto cleanup;
+
+  if (!ret)
     {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
+      errno = EINVAL;
+      goto cleanup;
     }
-  
-  if (fill_kcs_get_sensor_record_header (obj_cmd_rq, 
-					 record_id) != 0)
-    {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
+    goto cleanup;
+
+  if (fill_kcs_get_sensor_record_header (obj_cmd_rq, record_id) < 0)
+    goto cleanup;
+
   if (ipmi_cmd (dev, 
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
-		tmpl_get_sdr_rq, 
-		local_obj_cmd_rs, 
-		tmpl_var_len_get_sdr_rs) != 0)
-    {
-      ipmi_xfree (tmpl_var_len_get_sdr_rs);
-      return (-1);
-    }
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"sdr_rs", 
-		     obj_cmd_rs,
-                     fiid_obj_len_bytes(tmpl_get_sdr_rs));
-  fiid_obj_get_data (local_obj_cmd_rs, 
-		     tmpl_var_len_get_sdr_rs, 
-		     (uint8_t *)"header_data", 
-		     sensor_record_header,
-                     fiid_obj_len_bytes(tmpl_sdr_sensor_record_header));
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if ((len = fiid_obj_field_len_bytes (obj_cmd_rs, (uint8_t *)"record_data")) < 0)
+    goto cleanup;
   
-  ipmi_xfree (tmpl_var_len_get_sdr_rs);
+  if (!(buf = (uint8_t *)malloc(len)))
+    goto cleanup;
+
+  if (fiid_obj_get_data(local_cmd_rs,
+			(uint8_t *)"record_data",
+			buf,
+			len) < 0)
+    goto cleanup;
+
+  if (fiid_obj_set_all(sensor_record_header,
+		       buf,
+		       len) < 0)
+    goto cleanup;
   
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
   
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  if (local_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  if (buf)
+    free(buf);
+  return (rv);
 }
 
 static int8_t 
