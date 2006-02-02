@@ -10,6 +10,10 @@
 	ipmi_cmd_get_sdr_repo_alloc_info2, ipmi_cmd_reserve_sdr_repo2,
 	ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2,
 	ipmi_cmd_get_sdr2): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	(ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2): Use
+	fiid_template_free.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
