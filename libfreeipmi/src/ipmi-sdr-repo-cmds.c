@@ -112,6 +112,12 @@ fill_kcs_get_repo_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sdr_repo_alloc_info_rq, 
 		(uint8_t *)"cmd", 
@@ -122,6 +128,12 @@ fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_reserve_sdr_repo_rq, 
 		(uint8_t *)"cmd", 
@@ -132,6 +144,12 @@ fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
 		(uint8_t *)"cmd",
@@ -166,6 +184,12 @@ fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq,
 			uint8_t record_offset, 
 			uint8_t bytes_read)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq,
 		tmpl_get_sdr_rq,
 		(uint8_t *)"cmd",
@@ -199,9 +223,12 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sdr_repo_info_rq);
   ERR (fill_kcs_get_repo_info (obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
@@ -222,8 +249,11 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return -1;
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sdr_repo_alloc_info_rq);
   ERR (fill_kcs_get_repo_alloc_info (obj_cmd_rq) == 0);
@@ -245,8 +275,11 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return -1;
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_reserve_sdr_repo_rq);
   ERR (fill_kcs_reserve_repo (obj_cmd_rq) == 0);
@@ -276,10 +309,14 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t local_obj_cmd_rs = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  ERR (sensor_record_header != NULL);
-  
+  if (!dev 
+      || !obj_cmd_rs
+      || !sensor_record_header)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   sdr_rs_length = fiid_obj_len_bytes (tmpl_get_sdr_rs);
   ERR (sdr_rs_length != -1);
   
@@ -354,9 +391,13 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t local_obj_cmd_rs = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  ERR (sensor_record_chunk != NULL);
+  if (!dev 
+      || !obj_cmd_rs
+      || !sensor_record_chunk)
+    {
+      errno = EINVAL;
+      return -1;
+    }
   
   sdr_rs_length = fiid_obj_len_bytes (tmpl_get_sdr_rs);
   ERR (sdr_rs_length != -1);
@@ -431,10 +472,14 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   
   fiid_obj_t record_data = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  ERR (sensor_record != NULL);
-  
+  if (!dev 
+      || !obj_cmd_rs
+      || !sensor_record)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   {
     fiid_obj_t sensor_record_header = NULL;
     

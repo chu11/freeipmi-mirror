@@ -1,5 +1,18 @@
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-sdr-repo-cache.c
+	(ipmi_sdr_repo_info_write, ipmi_sdr_records_write,
+	ipmi_sdr_cache_create): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c (fill_kcs_get_repo_info,
+	fill_kcs_reserve_repo, fill_kcs_get_repo_alloc_info,
+	fill_kcs_get_sdr_chunk, ipmi_cmd_get_sdr_repo_info2,
+	ipmi_cmd_get_sdr_repo_alloc_info2, ipmi_cmd_reserve_sdr_repo2,
+	ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2,
+	ipmi_cmd_get_sdr2): Fix parameter checks.
+	
+2006-02-01  Albert Chu  <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(fill_cmd_activate_session, ipmi_lan_open_session,
 	fill_kcs_get_user_name): Fix parameter checks.
