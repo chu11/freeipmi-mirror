@@ -149,7 +149,7 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     // ID String type/Length code
     {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String bytes
-    {128, "sensor_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABL}, 
+    {128, "sensor_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}
   };
 

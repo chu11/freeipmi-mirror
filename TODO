@@ -57,6 +57,7 @@ libfreeipmi:
       - generic set/get lan conf
       - everythign else
     sdr-repo-cache
+    sdr-repo-cmds
     tmpl_sdr_non_intelligent_fru_device_locator_sensor_record
   * test for "{0, ""}"
   * need to test acpi

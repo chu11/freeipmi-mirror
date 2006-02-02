@@ -181,6 +181,7 @@ int8_t
 fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
   int8_t rv;
+  int32_t len;
 
   if (!fiid_obj_valid(obj_data_rq))
     {
@@ -196,6 +197,9 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
       errno = EINVAL;
       return -1;
     }
+
+  if ((len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
+    return (-1);
 
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"cmd",
@@ -215,7 +219,7 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
   
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"bytes_read",
-		fiid_obj_len_bytes (tmpl_sdr_sensor_record_header));
+                len);
   return 0;
 }
 
@@ -270,7 +274,8 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
 			     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
+  int8_t ret, rv = -1;
+
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -390,7 +395,6 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
   return (rv);
 }
 
-/* XXX behavior change, find out who calls this */
 static int8_t 
 ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev, 
 				    uint16_t record_id, 
@@ -450,7 +454,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   if (!(buf = (uint8_t *)malloc(len)))
     goto cleanup;
 
-  if (fiid_obj_get_data(local_cmd_rs,
+  if (fiid_obj_get_data(obj_cmd_rs,
 			(uint8_t *)"record_data",
 			buf,
 			len) < 0)
@@ -470,8 +474,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   return (rv);
 }
 
-/* XXX behavior change, find out who calls this */
-/* duplicate functionality, should consolidate with above */
+/* XXX duplicate functionality, should consolidate with above */
 static int8_t 
 ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev, 
 			 uint16_t reservation_id, 
@@ -522,7 +525,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
-  if (fiid_obj_get_data(local_cmd_rs,
+  if (fiid_obj_get_data(obj_cmd_rs,
 			(uint8_t *)"record_data",
 			sensor_record_chunk,
 			sensor_record_chunk_len) < 0)
@@ -532,12 +535,9 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rq)
     fiid_obj_destroy(obj_cmd_rq);
-  if (buf)
-    free(buf);
   return (rv);
 }
 
-/* XXX logic changed, see who calls this */
 int8_t 
 ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
 		   uint16_t record_id, 
@@ -554,7 +554,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   
   uint8_t chunk_data[16];
   
-  fiid_obj_t record_data = NULL;
+  uint8_t *record_data = NULL;
 
   int8_t ret, rv = -1;
 
@@ -623,7 +623,6 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 	goto cleanup2;
       
       if (fiid_obj_get (local_obj_cmd_rs,  
-			tmpl_reserve_sdr_repo_rs, 
 			(uint8_t *)"reservation_id", 
 			&val) < 0)
 	goto cleanup2;

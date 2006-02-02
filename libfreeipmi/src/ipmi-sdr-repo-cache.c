@@ -25,7 +25,6 @@ ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint8_t *buf = NULL;
-  uint64_t val;
   int32_t len;
   int rv = -1;
 
@@ -95,15 +94,6 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       if (fiid_obj_clear (obj_cmd_rs) < 0)
 	goto cleanup;
 
-      if (fiid_obj_clear (obj_sdr_record) < 0)
-	goto cleanup;
-
-      if (obj_sdr_record)
-	{
-	  fiid_obj_destroy (obj_sdr_record);
-	  obj_sdr_record = NULL;
-	}
-
       sensor_record_len = 1024;
       if (ipmi_cmd_get_sdr2 (dev, 
 			     record_id, 
@@ -124,9 +114,6 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 		  1, 
 		  fp) < 0)
 	goto cleanup;
-
-      free(buf);
-      buf = NULL;
     }
   
   rv = 0;
@@ -201,7 +188,7 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
   if (sdr_repo_cache->cache_start <= 0)
     goto cleanup;
   
-  if (!(obj_data_rs = fiid_obj_create(obj_data_rs)))
+  if (!(obj_data_rs = fiid_obj_create(tmpl_get_sdr_repo_info_rs)))
     goto cleanup;
 
   if ((len = fiid_template_len_bytes (tmpl_get_sdr_repo_info_rs)) < 0)
@@ -430,7 +417,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
 			   len) < 0)
 	goto cleanup;
       
-      if (fiid_obj_get (obj_data_rs
+      if (fiid_obj_get (obj_data_rs,
 			(uint8_t *)"slave_system_software_id", 
 			&val) < 0)
 	goto cleanup;
@@ -518,15 +505,18 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 			   len) < 0)
 	goto cleanup;
       
-      if (fiid_obj_get (obj_data_rs
+      if (fiid_obj_get (obj_data_rs,
 			(uint8_t *)"event_reading_type", 
 			&val) < 0)
 	goto cleanup;
-
+#if 0 /* TEST */
       rv = ipmi_sensor_classify (val);
+#endif /* TEST */
     }
+#if 0 /* TEST */
   else
     rv = IPMI_SENSOR_CLASS_NOT_AVAILABLE;
+#endif /* TEST */
     
  cleanup:
   if (obj_data_rs)
@@ -541,11 +531,12 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
   uint64_t record_type, val;
   int32_t len;
   char *rv = NULL;
+  int8_t sensor_type;
 
   if (sdr_repo_cache == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return NULL;
     }
   
   if (!(obj_data_rs = fiid_obj_create(tmpl_sdr_sensor_record_header)))
@@ -592,13 +583,15 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 			   len) < 0)
 	goto cleanup;
       
-      if (fiid_obj_get (obj_data_rs
+      if (fiid_obj_get (obj_data_rs,
 			(uint8_t *)"sensor_type", 
 			&val) < 0)
 	goto cleanup;
 
       sensor_type = val;
+#if 0 /* TEST */
       rv = ipmi_get_sensor_group (sensor_type);
+#endif /* TEST */
     }
  
  cleanup:
@@ -613,8 +606,8 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
                                      size_t len)
 {
   fiid_obj_t obj_data_rs = NULL;
-  uint64_t record_type, val;
-  int32_t hdr_len, string_len;
+  uint64_t record_type;
+  int32_t str_len;
   int rv = -1;
 
   if (sdr_repo_cache == NULL

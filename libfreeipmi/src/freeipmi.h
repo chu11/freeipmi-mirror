@@ -214,9 +214,9 @@ extern "C" {
 #include "ipmi-msg-support-cmds.h"
 #include "ipmi-chassis-cmds.h"
 #include "ipmi-dev-global-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-sdr-repo-cmds.h"
 #include "ipmi-sdr-record-types.h"
+#if 0 /* TEST */
 #include "ipmi-sensor-types.h"
 #include "ipmi-sensor-cmds.h"
 #include "ipmi-sel-record-types.h"
@@ -234,8 +234,8 @@ extern "C" {
 #include "ipmi-md5.h"
 #include "ipmi-sha1.h"
 #include "ipmi-hmac.h"
-#if 0 /* TEST */
 #include "ipmi-sdr-repo-cache.h"
+#if 0 /* TEST */
 #include "ipmi-sensor-utils.h"
 #endif /* TEST */
 #include "ipmi-watchdog.h"
@@ -327,9 +327,9 @@ extern char *__progname;
 #include <freeipmi/ipmi-msg-support-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
 #include <freeipmi/ipmi-dev-global-cmds.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-sdr-record-types.h>
 #include <freeipmi/ipmi-sdr-repo-cmds.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-sensor-types.h>
 #include <freeipmi/ipmi-sel-record-types.h>
@@ -343,15 +343,15 @@ extern char *__progname;
 #include <freeipmi/ipmi-sol-cmds.h>
 #endif /* TEST */
 #include <freeipmi/ipmi-debug.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-md2.h>
 #include <freeipmi/ipmi-md5.h>
 #include <freeipmi/ipmi-sha1.h>
 #include <freeipmi/ipmi-hmac.h>
 #include <freeipmi/ipmi-sdr-repo-cache.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-sensor-utils.h>
-#include <freeipmi/ipmi-watchdog.h>
 #endif /* TEST */
+#include <freeipmi/ipmi-watchdog.h>
 #include <freeipmi/ipmi-msg-interface-desc.h>
 #if 0
 #include <freeipmi/ipmi-pef-cmds.h>
