@@ -1061,12 +1061,37 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	char *str = NULL;
 	char *str1 = NULL;
 	char *str2 = NULL;
-	
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_type", &val);
+	fiid_obj_t obj = NULL;
+
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get(obj,
+                         (uint8_t *)"log_type",
+                         &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	log_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_entry_action", &val);
+
+        if (fiid_obj_get(obj,
+                         (uint8_t *)"log_entry_action",
+                         &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	log_entry_action = val;
-	
+          
+	fiid_obj_destroy(obj);
+
 	switch (log_type)
 	  {
 	  case 0x00:
@@ -1133,19 +1158,73 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	char *str = NULL;
 	char *tmp_str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"alert", &val);
-	alert = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_off", &val);
-	power_off = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"reset", &val);
-	reset = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_cycle", &val);
-	power_cycle = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"oem_action", &val);
-	oem_action = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"diagonstic_interrupt", &val);
-	diagnostic_interrupt = val;
-	
+        fiid_obj_t obj = NULL;
+     
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"alert", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        alert = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"power_off", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        power_off = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"reset", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        reset = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"power_cycle", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        power_cycle = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"oem_action", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        oem_action = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"diagnostic_interrupt", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        diagnostic_interrupt = val;
+
+	fiid_obj_destroy(obj);
+
 	if (alert)
 	  {
 	    tmp_str = str;
@@ -1240,10 +1319,36 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	uint8_t first_second;
 	char *str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timestamp_clock_type", &val);
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"timestamp_clock_type", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	timestamp_clock_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"first_second", &val);
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"first_second", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	first_second = val;
+
+        fiid_obj_destroy(obj);
 	
 	asprintf (&str, "%s; %s", 
 		  (timestamp_clock_type ? "SDR Timestamp Clock updated" : 
@@ -1309,7 +1414,26 @@ get_21_event_data2_message (int offset, uint8_t event_data)
 	};
       uint64_t val;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"slot_connector_type", &val);
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
+      
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"slot_connector_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
+      fiid_obj_destroy(obj);
       
       switch (val)
 	{
@@ -1355,10 +1479,39 @@ get_23_event_data2_message (int offset, uint8_t event_data)
       char *str1 = NULL;
       char *str2 = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
+      
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"timer_at_expiration", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+        
       timer_at_expiration = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"interrupt_type", &val);
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"interrupt_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
       interrupt_type = val;
+
+      fiid_obj_destroy(obj);
+
       switch (timer_at_expiration)
 	{
 	case 0x01:
@@ -1425,8 +1578,27 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
 	};
       uint64_t val;
       char *str = NULL;
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"user_id", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+        
+      fiid_obj_destroy(obj);
+      
       if (val == 0x0)
 	return strdup ("User ID for user that activated session = Unspecified");
       asprintf (&str, "User ID for user that activated session = %d", (int) val);
@@ -1512,11 +1684,38 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
       uint8_t previous_state_offset;
       uint8_t cause_of_state_change;
       char *str = NULL;
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"previous_state_offset", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"previous_state_offset", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+        
       previous_state_offset = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"cause_os_state_change", &val);
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"cause_os_state_change", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
       cause_of_state_change = val;
+      fiid_obj_destroy(obj);
+
       switch (cause_of_state_change)
 	{
 	case 0x00: 
@@ -1575,9 +1774,27 @@ get_08_event_data3_message (int offset, uint8_t event_data)
 	  {4, "reserved"}, 
 	  {0, ""}
 	};
-      uint64_t val;
+      uint64_t val;      
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_type", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"event_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      fiid_obj_destroy(obj);
       switch (val)
 	{
 	case 0x0:
@@ -1625,13 +1842,45 @@ get_10_event_data3_message (int offset, uint8_t event_data)
 	uint8_t assertion_deassertion_event;
 	uint8_t logging_disabled_all_events;
 	char *str = NULL;
-	
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_offset", &val);
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+      
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"event_offset", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	event_offset = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"assertion_deassertion_event", &val);
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"assertion_deassertion_e", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	assertion_deassertion_event = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"logging_disabled_all_events", &val);
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"logging_disabled_all_ev", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	logging_disabled_all_events = val;
+        
+        fiid_obj_destroy(obj);
 	
 	asprintf (&str, "Event Offset %d; %s%s", event_offset, 
 		  (assertion_deassertion_event ? "assertion event" : "deassertion event"), 
@@ -1722,11 +1971,37 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
       uint8_t deactivation_cause;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"channel_number", &val);
-      channel_number = val;
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"deactivation_cause", &val);
-      deactivation_cause = val;
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
       
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"channel_number", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        channel_number = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"deactivation_cause", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        deactivation_cause = val;
+        
+        fiid_obj_destroy(obj);
+
       switch (deactivation_cause)
 	{
 	case 0x00:
