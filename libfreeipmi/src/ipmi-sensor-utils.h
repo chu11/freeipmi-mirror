@@ -37,9 +37,11 @@ double ipmi_sensor_decode_value (char r_exponent,
 				 uint8_t is_signed, 
 				 uint8_t raw_data);
 void ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
+					uint32_t sensor_record_len,
 				    int *is_signed, char *r_exponent, char *b_exponent, 
 				    uint64_t *linear, int *b, int *m);
 void ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
+				    uint32_t sensor_record_len,
 				    uint8_t *is_signed, 
 				    char *r_exponent, 
 				    char *b_exponent, 

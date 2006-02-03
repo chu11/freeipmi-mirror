@@ -61,6 +61,8 @@ libfreeipmi:
     sdr-repo-cmds
     sensor-cmds
     sensor-types
+    sel-cmds
+    serial-cmds
     tmpl_sdr_non_intelligent_fru_device_locator_sensor_record
   * test for "{0, ""}"
   * need to test acpi
