@@ -57,9 +57,10 @@
 	ipmi_cmd_set_serial_page_blackout_interval
 	ipmi_cmd_set_serial_retry_time2 ipmi_cmd_set_serial_comm_bits2
 	ipmi_cmd_get_serial_connmode2 ipmi_cmd_get_serial_page_blackout2
-	ipmi_cmd_get_serial_retry_time2 ipmi_cmd_get_serial_comm_bits2):
-	Fix parameter checks.
-
+	ipmi_cmd_get_serial_retry_time2 ipmi_cmd_get_serial_comm_bits2),
+	libfreeipmi/src/ipmi-sel-api.c (ipmi_sel_get_first_entry,
+	ipmi_sel_get_next_entry, get_sel_info): Fix parameter checks.
+x
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
 	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,

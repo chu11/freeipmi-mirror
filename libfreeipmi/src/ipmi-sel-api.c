@@ -30,6 +30,12 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
   
+  if (!dev || !seld || !record_data)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_entry_rs);
   if (ipmi_cmd_get_sel_entry2 (dev, 
 			       IPMI_SEL_FIRST_ENTRY, 
@@ -70,6 +76,12 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
   
+  if (!dev || !seld || !record_data)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (seld->next_record_id == IPMI_SEL_LAST_ENTRY)
     return (-1);
   
@@ -109,6 +121,12 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   fiid_obj_t obj_cmd_rs;
   uint64_t val;
   
+  if (!dev || !pinfo)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_info_rs);
   if (ipmi_cmd_get_sel_info2 (dev, obj_cmd_rs) != 0)
     {
