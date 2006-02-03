@@ -2,9 +2,7 @@ if FISH
   MAYBE_FISH = fish
 endif
 
-# TEST
-# SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-locate bmc-info ipmiping rmcpping garpd $(MAYBE_FISH)
-SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-locate bmc-info ipmiping rmcpping garpd
+SUBDIRS = doc libfreeipmi common bmc-watchdog ipmipower ipmi-raw ipmi-locate bmc-info ipmiping rmcpping garpd $(MAYBE_FISH)
 
 PACKAGE = @PACKAGE@
 VERSION = @VERSION@

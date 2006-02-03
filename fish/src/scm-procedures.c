@@ -222,10 +222,13 @@ ex_sel_get_first_entry_raw ()
 {
   uint8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
-  
+  uint32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data, SEL_RECORD_SIZE) == 0)
+				record_data,
+                                &record_data_len) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -244,11 +247,13 @@ ex_sel_get_next_entry_raw ()
 {
   uint8_t record_data[SEL_RECORD_SIZE];
   SCM scm_sel_record = SCM_EOL;
-  
+  uint32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;  
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data, SEL_RECORD_SIZE) == 0)
-
+				record_data,
+                                &record_data_len) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -267,10 +272,13 @@ ex_sel_get_first_entry_hex ()
 {
   uint8_t record_data [SEL_RECORD_SIZE];
   uint8_t hex_data [SEL_HEX_RECORD_SIZE];
-  
+  uint32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data, SEL_RECORD_SIZE) == 0)
+				record_data, 
+                                &record_data_len) == 0)
     {
       snprintf ((char *)hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -295,10 +303,13 @@ ex_sel_get_next_entry_hex ()
 {
   uint8_t record_data [SEL_RECORD_SIZE];
   uint8_t hex_data [SEL_HEX_RECORD_SIZE];
-  
+  uint32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data, SEL_RECORD_SIZE) == 0)
+                               record_data, 
+                               &record_data_len) == 0)
     {
       snprintf ((char *)hex_data, SEL_HEX_RECORD_SIZE,
                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] "
@@ -355,17 +366,20 @@ ex_sel_get_first_entry ()
   uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
-  
+  int32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
 				fi_get_seld (), 
-				record_data, SEL_RECORD_SIZE) != 0)
+				record_data, 
+                                &record_data_len) != 0)
     {
       fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
       return SCM_EOL;
     }
   
-  if (get_sel_record (record_data, &sel_rec) != 0)
+  if (get_sel_record (record_data, record_data_len, &sel_rec) != 0)
     return SCM_EOL;
   
   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
@@ -400,17 +414,20 @@ ex_sel_get_next_entry ()
   uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
-  
+  int32_t record_data_len;
+
+  record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-			       record_data, SEL_RECORD_SIZE) != 0)
+			       record_data, 
+                               &record_data_len) != 0)
     {
       fprintf (stderr, "%s\n", 
 	       (fi_get_ipmi_device ())->errmsg);
       return SCM_EOL;
     }
   
-  if (get_sel_record (record_data, &sel_rec) != 0)
+  if (get_sel_record (record_data, record_data_len, &sel_rec) != 0)
     return SCM_EOL;
   
   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED);
@@ -449,7 +466,9 @@ ex_sel_delete_entry (SCM scm_record_id)
   
   record_id = gh_scm2long (scm_record_id);
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
@@ -458,16 +477,21 @@ ex_sel_delete_entry (SCM scm_record_id)
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_reserve_sel_rs, 
-		(uint8_t *)"reservation_id", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+                    (uint8_t *)"reservation_id", 
+                    &val) < 0)
+    goto cleanup;
   reservation_id = val;
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_delete_sel_entry_rs);
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_delete_sel_entry_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_delete_sel_entry2 (fi_get_ipmi_device (), 
 				  reservation_id, 
 				  record_id, 
@@ -478,10 +502,16 @@ ex_sel_delete_entry (SCM scm_record_id)
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
+  fiid_obj_destroy(obj_cmd_rs);
   return SCM_BOOL_T;
+
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return SCM_BOOL_F;
 }
 
 SCM 
@@ -491,7 +521,9 @@ ex_sel_clear ()
   uint16_t reservation_id;
   uint64_t val;
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
@@ -500,16 +532,21 @@ ex_sel_clear ()
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_reserve_sel_rs, 
-		(uint8_t *)"reservation_id", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+                    (uint8_t *)"reservation_id", 
+                    &val) < 0)
+    goto cleanup;
   reservation_id = val;
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs);
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
 			   reservation_id, 
 			   IPMI_SEL_INITIATE_ERASE, 
@@ -520,10 +557,14 @@ ex_sel_clear ()
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
   return SCM_BOOL_T;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return SCM_BOOL_F;
 }
 
 SCM 
@@ -533,7 +574,9 @@ ex_sel_get_clear_status ()
   uint16_t reservation_id;
   uint64_t val;
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
 			     obj_cmd_rs) != 0)
     {
@@ -542,16 +585,21 @@ ex_sel_get_clear_status ()
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_reserve_sel_rs, 
-		(uint8_t *)"reservation_id", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+                    (uint8_t *)"reservation_id", 
+                    &val) < 0)
+    goto cleanup;
   reservation_id = val;
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs);
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
 			   reservation_id, 
 			   IPMI_SEL_GET_ERASURE_STATUS, 
@@ -562,14 +610,21 @@ ex_sel_get_clear_status ()
       ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_clear_sel_rs, 
-		(uint8_t *)"erasure_progress", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+                    (uint8_t *)"erasure_progress", 
+                    &val) < 0)
+    goto cleanup;
+  
+  fiid_obj_destroy(obj_cmd_rs);
   return (gh_long2scm (val));
+
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return SCM_BOOL_F;
 }
 
 /***
@@ -2994,7 +3049,7 @@ ex_get_sdr_repo_info ()
 {
   SCM scm_repo_info_list = SCM_EOL;
   
-  uint8_t *cmd_rs = NULL;
+  fiid_obj_t cmd_rs = NULL;
   
   char version_string[17];
   uint8_t sdr_major_version;
@@ -3003,30 +3058,32 @@ ex_get_sdr_repo_info ()
   uint64_t val;
   
   /* get_repo_info */
-  fiid_obj_alloca (cmd_rs, tmpl_get_sdr_repo_info_rs);
+  if (!(cmd_rs = fiid_obj_create(tmpl_get_sdr_repo_info_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_get_sdr_repo_info2 (fi_get_ipmi_device (), cmd_rs) != 0)
     {
       ipmi_error (cmd_rs, "ipmi_cmd_get_sdr_repo_info2()");
-      return SCM_EOL;
+      goto cleanup;
     }
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_sdr_repo_info_rs, 
-		(uint8_t *)"comp_code", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"comp_code", 
+                    &val) < 0)
+    goto cleanup;
   if (val != 0)
     return SCM_EOL;
   
   /* appending sdr version */
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"sdr_version_major",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"sdr_version_major",
+                    &val) < 0)
+    goto cleanup;
   sdr_major_version = val;
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"sdr_version_minor",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"sdr_version_minor",
+                    &val) < 0)
+    goto cleanup;
   sdr_minor_version = val;
   snprintf (version_string, 17, 
 	    "%d.%d", 
@@ -3035,39 +3092,45 @@ ex_get_sdr_repo_info ()
 					gh_str02scm ("sdr_version"), 
 					gh_str02scm (version_string));
   
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"record_count",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"record_count",
+                    &val) < 0)
+    goto cleanup;
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("record_count"), 
 					gh_long2scm (val));
   
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"free_space",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"free_space",
+                    &val) < 0)
+    goto cleanup;
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("free_space"), 
 					gh_long2scm (val));
   
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"recent_addition_timestamp",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"recent_addition_timestamp",
+                    &val) < 0)
+    goto cleanup;
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("recent_addition_timestamp"), 
 					gh_ulong2scm (val));
   
-  fiid_obj_get (cmd_rs,
-		tmpl_get_sdr_repo_info_rs,
-		(uint8_t *)"recent_erase_timestamp",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"recent_erase_timestamp",
+                    &val) < 0)
+    goto cleanup;
   scm_repo_info_list = scm_assoc_set_x (scm_repo_info_list, 
 					gh_str02scm ("recent_erase_timestamp"), 
 					gh_ulong2scm (val));
   
+  fiid_obj_destroy(cmd_rs);
   return (scm_repo_info_list);
+
+ cleanup:
+  if (cmd_rs)
+    fiid_obj_destroy(cmd_rs);
+  return (SCM_EOL);
 }
 
 SCM 
@@ -3078,32 +3141,36 @@ ex_get_bmc_info ()
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
   
-  fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
       ipmi_error (cmd_rs, "ipmi_cmd_get_dev_id()");
+      goto cleanup;
     }
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_id", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"dev_id", 
+                    &val) < 0)
+    goto cleanup;
+
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_rev.rev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"dev_rev.rev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_revision"), 
 				       gh_long2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_rev.sdr_support", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"dev_rev.sdr_support", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_support"), 
 				       gh_bool2scm ((unsigned int) val));
@@ -3112,14 +3179,16 @@ ex_get_bmc_info ()
     char version_string[17];
     uint64_t major, minor;
     
-    fiid_obj_get (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"firmware_rev1.major_rev", 
-		  &major);
-    fiid_obj_get (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"firmware_rev2.minor_rev", 
-		  &minor);
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"firmware_rev1.major_rev", 
+                      &major) < 0)
+      goto cleanup;
+
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"firmware_rev2.minor_rev", 
+                      &minor) < 0)
+      goto cleanup;
+
     snprintf (version_string, 17, 
 	      "%d.%d", 
 	      (int) major, (int) minor);
@@ -3128,10 +3197,11 @@ ex_get_bmc_info ()
 					 gh_str02scm (version_string));
   }
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"firmware_rev1.dev_available", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"firmware_rev1.dev_available", 
+                    &val) < 0)
+    goto cleanup;
+
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_availability"), 
 				       gh_bool2scm ((unsigned int) val));
@@ -3139,14 +3209,16 @@ ex_get_bmc_info ()
     char version_string[17];
     uint64_t major, minor;
     
-    fiid_obj_get (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"ipmi_ver.ms_bits", 
-		  &major);
-    fiid_obj_get (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"ipmi_ver.ls_bits", 
-		  &minor);
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"ipmi_ver.ms_bits", 
+                      &major) < 0)
+      goto cleanup;
+
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"ipmi_ver.ls_bits", 
+                      &minor) < 0)
+      goto cleanup;
+
     snprintf (version_string, 17, 
 	      "%d.%d", 
 	      (int) major, (int) minor);
@@ -3155,95 +3227,101 @@ ex_get_bmc_info ()
 					 gh_str02scm (version_string));
   }
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sensor_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.sensor_dev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sensor_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sdr_repo_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.sdr_repo_dev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_repo_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
 
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sel_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.sel_dev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sel_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.fru_inventory_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.fru_inventory_dev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("fru_inventory_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.ipmb_evnt_receiver", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.ipmb_evnt_receiver", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_receiver_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.ipmb_evnt_generator", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.ipmb_evnt_generator", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_generator_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.bridge", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.bridge", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("bridge_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.chassis_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_dev_support.chassis_dev", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("chassis_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"manf_id.id", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"manf_id.id", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("manufacturer_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"prod_id", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"prod_id", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("product_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"aux_firmware_rev_info", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"aux_firmware_rev_info", 
+                    &val) < 0)
+    goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("aux_firmware_rev_info"), 
 				       gh_long2scm ((unsigned int) val));
   
+  fiid_obj_destroy(cmd_rs);
   return scm_bmc_info_list;
+
+ cleanup:
+  if (cmd_rs)
+    fiid_obj_destroy(cmd_rs);
+  return (SCM_EOL);
 }
 
 SCM 
@@ -3341,8 +3419,7 @@ ex_get_pef_info ()
 {
   SCM scm_pef_info_list = SCM_EOL;
   
-  uint8_t *cmd_rs = NULL;
-  
+  fiid_obj_t cmd_rs = NULL;
   char version_string[17];
   uint8_t pef_major_version;
   uint8_t pef_minor_version;
@@ -3350,22 +3427,24 @@ ex_get_pef_info ()
   uint64_t val;
   uint8_t alert_support = 0;
   
-  fiid_obj_alloca (cmd_rs, tmpl_get_pef_caps_rs);
+  if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_caps_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_get_pef_caps2 (fi_get_ipmi_device (), cmd_rs) != 0)
     {
       ipmi_error (cmd_rs, "ipmi_cmd_get_pef_caps2()");
-      return SCM_BOOL_F;
+      goto cleanup;
     }
   
-  fiid_obj_get (cmd_rs,
-		tmpl_get_pef_caps_rs,
-		(uint8_t *)"pef_version_major",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"pef_version_major",
+                    &val) < 0)
+    goto cleanup;
   pef_major_version = val;
-  fiid_obj_get (cmd_rs,
-		tmpl_get_pef_caps_rs,
-		(uint8_t *)"pef_version_minor",
-		&val);
+  if (fiid_obj_get (cmd_rs,
+                    (uint8_t *)"pef_version_minor",
+                    &val) < 0)
+    goto cleanup;
   pef_minor_version = val;
   snprintf (version_string, 17, 
 	    "%d.%d", 
@@ -3374,66 +3453,71 @@ ex_get_pef_info ()
 				       gh_str02scm ("pef_version"), 
 				       gh_str02scm (version_string));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.alert", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.alert", 
+                    &val) < 0)
+    goto cleanup;
   alert_support = val;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("alert_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.powerdown", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.powerdown", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powerdown_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.reset", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.reset", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("reset_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.powercycle", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.powercycle", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powercycle_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.oem", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.oem", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("oem_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"action_support.diag_interrupt", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"action_support.diag_interrupt", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("diag_interrupt_support"), 
 				       gh_bool2scm (val));
   
-  fiid_obj_get (cmd_rs, 
-		tmpl_get_pef_caps_rs, 
-		(uint8_t *)"number_of_eft_entries", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"number_of_eft_entries", 
+                    &val) < 0)
+    goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("eft_entries_count"), 
 				       gh_ulong2scm (val));
   
+  fiid_obj_destroy(cmd_rs);
+  cmd_rs = NULL;
+
   if (alert_support)
     {
-      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_event_filters_rs);
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_event_filters_rs)))
+        goto cleanup;
+
       if (ipmi_cmd_get_pef_num_event_filters2 (fi_get_ipmi_device (), 
 					       IPMI_GET_PARAMETER, 
 					       SET_SELECTOR, 
@@ -3441,12 +3525,16 @@ ex_get_pef_info ()
 					       cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_event_filters2()");
-	  return SCM_BOOL_F;
+          goto cleanup;
 	}
-      fiid_obj_get (cmd_rs, 
-		    tmpl_get_pef_conf_param_num_event_filters_rs, 
-		    (uint8_t *)"num_event_filters", 
-		    &val);
+
+      if (fiid_obj_get (cmd_rs, 
+                        (uint8_t *)"num_event_filters", 
+                        &val) < 0)
+        goto cleanup;
+
+      fiid_obj_destroy(cmd_rs);
+      cmd_rs = NULL;
     }
   else 
     {
@@ -3458,7 +3546,9 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_policies_rs);
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_alert_policies_rs)))
+        goto cleanup;
+
       if (ipmi_cmd_get_pef_num_alert_policies2 (fi_get_ipmi_device (), 
 						IPMI_GET_PARAMETER, 
 						SET_SELECTOR, 
@@ -3466,12 +3556,16 @@ ex_get_pef_info ()
 						cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_policies2()");
-	  return SCM_BOOL_F;
+          goto cleanup;
 	}
-      fiid_obj_get (cmd_rs, 
-		    tmpl_get_pef_conf_param_num_alert_policies_rs, 
-		    (uint8_t *)"num_alert_policies", 
-		    &val);
+      
+      if (fiid_obj_get (cmd_rs, 
+                        (uint8_t *)"num_alert_policies", 
+                        &val) < 0)
+        goto cleanup;
+
+      fiid_obj_destroy(cmd_rs);
+      cmd_rs = NULL;
     }
   else 
     {
@@ -3483,7 +3577,9 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_strings_rs);
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_alert_strings_rs)))
+        goto cleanup;
+
       if (ipmi_cmd_get_pef_num_alert_strings2 (fi_get_ipmi_device (), 
 					       IPMI_GET_PARAMETER, 
 					       SET_SELECTOR, 
@@ -3491,12 +3587,16 @@ ex_get_pef_info ()
 					       cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_strings2()");
-	  return SCM_BOOL_F;
+          goto cleanup;
 	}
-      fiid_obj_get (cmd_rs, 
-		    tmpl_get_pef_conf_param_num_alert_strings_rs, 
-		    (uint8_t *)"num_alert_strings", 
-		    &val);
+
+      if (fiid_obj_get (cmd_rs, 
+                        (uint8_t *)"num_alert_strings", 
+                        &val) < 0)
+        goto cleanup;
+
+      fiid_obj_destroy(cmd_rs);
+      cmd_rs = NULL;
     }
   else 
     {
@@ -3506,6 +3606,12 @@ ex_get_pef_info ()
 				       gh_str02scm ("num_alert_strings"), 
 				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
   
+  fiid_obj_destroy(cmd_rs);
   return (scm_pef_info_list);
+
+ cleanup:
+  if (cmd_rs)
+    fiid_obj_destroy(cmd_rs);
+  return (SCM_BOOL_F);
 }
 

@@ -25,13 +25,14 @@ int
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			  sel_descriptor_t *seld, 
 			  uint8_t *record_data,
-                          uint32_t record_data_len)
+                          uint32_t *record_data_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
+  int32_t len;
 
-  if (!dev || !seld || !record_data)
+  if (!dev || !seld || !record_data || !record_data_len)
     {
       errno = EINVAL;
       return (-1);
@@ -68,11 +69,12 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
     goto cleanup;
   seld->next_record_id = val;
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"record_data", 
-			 record_data,
-			 record_data_len) < 0)
+  if ((len = fiid_obj_get_data (obj_cmd_rs, 
+                                (uint8_t *)"record_data", 
+                                record_data,
+                                *record_data_len)) < 0)
     goto cleanup;
+  *record_data_len = len;
   
   rv = 0;
  cleanup:
@@ -85,13 +87,14 @@ int
 ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			 sel_descriptor_t *seld, 
 			 uint8_t *record_data,
-                         uint32_t record_data_len)
+                         uint32_t *record_data_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int rv = -1;
-  
-  if (!dev || !seld || !record_data)
+  int32_t len;
+
+  if (!dev || !seld || !record_data || *record_data_len)
     {
       errno = EINVAL;
       return (-1);
@@ -131,11 +134,12 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
     goto cleanup;
   seld->next_record_id = val;
   
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"record_data", 
-			 record_data,
-			 record_data_len) < 0)
+  if ((len = fiid_obj_get_data (obj_cmd_rs, 
+                                (uint8_t *)"record_data", 
+                                record_data,
+                                *record_data_len)) < 0)
     goto cleanup;
+  *record_data_len = len;
   
   rv = 0;
  cleanup:

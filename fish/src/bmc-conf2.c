@@ -275,10 +275,14 @@ set_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
   int8_t rv = -1;
 
   sscanf (ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  ip_address = bits_merge (ip_address, 0,  8,  b1);
-  ip_address = bits_merge (ip_address, 8,  16, b2);
-  ip_address = bits_merge (ip_address, 16, 24, b3);
-  ip_address = bits_merge (ip_address, 24, 32, b4);
+  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -307,12 +311,18 @@ set_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
   int8_t rv = -1;
   
   sscanf (mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6);
-  mac_address = bits_merge (mac_address, 0,  8,  b1);
-  mac_address = bits_merge (mac_address, 8,  16, b2);
-  mac_address = bits_merge (mac_address, 16, 24, b3);
-  mac_address = bits_merge (mac_address, 24, 32, b4);
-  mac_address = bits_merge (mac_address, 32, 40, b5);
-  mac_address = bits_merge (mac_address, 40, 48, b6);
+  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -341,10 +351,14 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   int8_t rv = -1;
   
   sscanf (subnet_mask, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  subnetmask = bits_merge (subnetmask, 0,  8,  b1);
-  subnetmask = bits_merge (subnetmask, 8,  16, b2);
-  subnetmask = bits_merge (subnetmask, 16, 24, b3);
-  subnetmask = bits_merge (subnetmask, 24, 32, b4);
+  if (bits_merge (subnetmask, 0,  8,  b1, &subnetmask) < 0)
+    goto cleanup;
+  if (bits_merge (subnetmask, 8,  16, b2, &subnetmask) < 0)
+    goto cleanup;
+  if (bits_merge (subnetmask, 16, 24, b3, &subnetmask) < 0)
+    goto cleanup;
+  if (bits_merge (subnetmask, 24, 32, b4, &subnetmask) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -373,10 +387,14 @@ set_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
   int8_t rv = -1;
   
   sscanf (default_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  ip_address = bits_merge (ip_address, 0,  8,  b1);
-  ip_address = bits_merge (ip_address, 8,  16, b2);
-  ip_address = bits_merge (ip_address, 16, 24, b3);
-  ip_address = bits_merge (ip_address, 24, 32, b4);
+  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -406,12 +424,18 @@ set_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
   
   sscanf (default_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
-  mac_address = bits_merge (mac_address, 0,  8,  b1);
-  mac_address = bits_merge (mac_address, 8,  16, b2);
-  mac_address = bits_merge (mac_address, 16, 24, b3);
-  mac_address = bits_merge (mac_address, 24, 32, b4);
-  mac_address = bits_merge (mac_address, 32, 40, b5);
-  mac_address = bits_merge (mac_address, 40, 48, b6);
+  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -440,10 +464,14 @@ set_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
   int8_t rv = -1;
   
   sscanf (backup_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  ip_address = bits_merge (ip_address, 0,  8,  b1);
-  ip_address = bits_merge (ip_address, 8,  16, b2);
-  ip_address = bits_merge (ip_address, 16, 24, b3);
-  ip_address = bits_merge (ip_address, 24, 32, b4);
+  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+    goto cleanup;
+  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -473,12 +501,18 @@ set_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
   
   sscanf (backup_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
-  mac_address = bits_merge (mac_address, 0,  8,  b1);
-  mac_address = bits_merge (mac_address, 8,  16, b2);
-  mac_address = bits_merge (mac_address, 16, 24, b3);
-  mac_address = bits_merge (mac_address, 24, 32, b4);
-  mac_address = bits_merge (mac_address, 32, 40, b5);
-  mac_address = bits_merge (mac_address, 40, 48, b6);
+  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+    goto cleanup;
+  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+    goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
@@ -562,49 +596,41 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
     }
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"cmd",
                     IPMI_CMD_SET_LAN_CONF_PARAMS) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"channel_number",
                     channel_number) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"parameter_selector",
                     IPMI_LAN_PARAM_AUTH_TYPE_ENABLES) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"max_privilege_auth_type_callback_level",
                     max_privilege_auth_type_callback_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"max_privilege_auth_type_user_level",
                     max_privilege_auth_type_user_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"max_privilege_auth_type_operator_level",
                     max_privilege_auth_type_operator_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"max_privilege_auth_type_admin_level",
                     max_privilege_auth_type_admin_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    l_tmpl_set_auth_auth_type_enables,
                     (uint8_t *)"max_privilege_auth_type_oem_level",
                     max_privilege_auth_type_oem_level) < 0)
     return (-1);
@@ -2329,7 +2355,14 @@ check_bmc_user_password (ipmi_device_t *dev,
 				   (char *)password, 
 				   obj_cmd_rs) != 0)
     {
-      if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_PASSWORD_OPERATION_TEST_FAILED)
+      uint64_t comp_code;
+
+      if (fiid_obj_get(obj_cmd_rs,
+                       (uint8_t *)"comp_code",
+                       &comp_code) < 0)
+        goto cleanup;
+
+      if (comp_code == IPMI_PASSWORD_OPERATION_TEST_FAILED)
 	rv = 0; /* false */
       else
 	goto cleanup;; /* error */

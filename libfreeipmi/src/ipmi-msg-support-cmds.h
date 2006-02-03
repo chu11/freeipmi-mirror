@@ -252,7 +252,6 @@ int8_t ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
 int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
 int8_t ipmi_lan_close_session2 (ipmi_device_t *dev, 
 				fiid_obj_t obj_cmd_rs);
-#if 0 /* TEST */
 int8_t ipmi_cmd_set_channel_access2 (ipmi_device_t *dev, 
 				     uint8_t channel_number, 
 				     uint8_t ipmi_messaging_access_mode, 
@@ -292,7 +291,6 @@ int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
 				     uint8_t channel_number,
 				     uint8_t channel_access_set_flag,
 				     fiid_obj_t obj_cmd_rs);
-#endif /* TEST */
 int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
 				   uint8_t channel_number,
 				   fiid_obj_t obj_cmd_rs);

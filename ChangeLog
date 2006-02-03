@@ -158,6 +158,17 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-03  Albert Chu  <chu11@llnl.gov>
+
+	* fish/src/ipmi-wrapper.c (ipmi_ping): Remove incorrect warning message.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_info2, ipmi_cmd_get_channel_access2,
+	ipmi_cmd_get_user_access2, ipmi_cmd_set_user_access2,
+	ipmi_cmd_set_user_password2, ipmi_cmd_get_user_name2,
+	ipmi_cmd_set_user_name2, ipmi_cmd_set_channel_access2): Fix
+	parameter checks.
+	
 2006-02-02  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-utils.c
@@ -248,6 +259,9 @@
 	* libfreeipmi/src/ipmi-sensor-api.h,
 	libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record,
 	get_sensor_reading): Make return type int8_t.
+
+	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_event_only_record):
+	Fix incorrect template usage typo.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
