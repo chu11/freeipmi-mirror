@@ -218,8 +218,8 @@ extern "C" {
 #include "ipmi-sdr-record-types.h"
 #include "ipmi-sensor-types.h"
 #include "ipmi-sensor-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-sel-record-types.h"
+#if 0 /* TEST */
 #include "ipmi-sel-cmds.h"
 #endif /* TEST */
 #include "ipmi-lan-param-spec.h"
@@ -240,8 +240,8 @@ extern "C" {
 #include "ipmi-msg-interface-desc.h"
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-sensor-event-messages.h"
+#if 0 /* TEST */
 #include "ipmi-sensor-api.h"
 #include "ipmi-sel-api.h"
 #endif /* TEST */
@@ -329,8 +329,8 @@ extern char *__progname;
 #include <freeipmi/ipmi-sdr-repo-cmds.h>
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-sensor-types.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-sel-record-types.h>
+#if 0 /* TEST */
 #include <freeipmi/ipmi-sel-cmds.h>
 #endif /* TEST */
 #include <freeipmi/ipmi-lan-param-spec.h>
@@ -351,8 +351,8 @@ extern char *__progname;
 #include <freeipmi/ipmi-msg-interface-desc.h>
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
-#if 0
 #include <freeipmi/ipmi-sensor-event-messages.h>
+#if 0
 #include <freeipmi/ipmi-sensor-api.h>
 #include <freeipmi/ipmi-sel-api.h>
 #endif /* TEST */

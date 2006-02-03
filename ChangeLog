@@ -22,7 +22,7 @@
 	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
 	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-pef-cmds.c,
 	libfreeipmi/src/ipmi-sensor-types.c,
-	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c, ipmi-sel-record-types.c,
 	libfreeipmi/src/ipmi-sensor-cmds.c: Continue fiid reimplementation
 	in libfreeipmi.
 	
@@ -191,6 +191,8 @@
 	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
 	ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
 	ipmi_cmd_get_sensor_thresholds2),
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(get_sel_system_event_record, get_sel_record),
 	libfreeipmi/src/ipmi-serial-cmds.c (ipmi_cmd_set_serial_connmode2
 	ipmi_cmd_set_serial_page_blackout_interval
 	ipmi_cmd_set_serial_retry_time2 ipmi_cmd_set_serial_comm_bits2
@@ -210,6 +212,9 @@
 
 	* libfreeipmi/src/ipmi-pef-cmds.c: Fix templates with duplicate
 	field names.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_2A_event_data2_message): Fix typo.
 
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
