@@ -487,7 +487,8 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
-  
+  int32_t len;
+
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
       || !sensor_record_chunk)
@@ -529,7 +530,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 			(uint8_t *)"record_data",
 			sensor_record_chunk,
 			sensor_record_chunk_len) < 0)
-    goto cleanup;
+      goto cleanup;
   
   rv = 0;
  cleanup:
@@ -594,7 +595,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 
     if (fiid_obj_get (sensor_record_header,
 		      (uint8_t *)"record_length", 
-		      &val))
+		      &val) < 0)
       goto cleanup1;
 		      
     record_length = val;
@@ -608,7 +609,6 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       return (rv);
   }
   
-
   /* achu: where does the 16 come from? */
   if (record_length > 16)
     {
@@ -646,6 +646,9 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       if ((record_offset + bytes_read) > record_length)
 	bytes_read = record_length - record_offset;
       
+      if (fiid_obj_clear(obj_cmd_rs) < 0)
+	goto cleanup;
+
       if (ipmi_cmd_get_sdr_chunk2 (dev, 
 				   reservation_id, 
 				   record_id, 

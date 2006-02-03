@@ -12,7 +12,7 @@
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
 
 	* Support new fiid interface globally.
-	
+
 ------------------------------------------------------------
 2006-02-03  Albert Chu <chu11@llnl.gov>	
 
@@ -168,6 +168,9 @@
 	ipmi_cmd_set_user_password2, ipmi_cmd_get_user_name2,
 	ipmi_cmd_set_user_name2, ipmi_cmd_set_channel_access2): Fix
 	parameter checks.
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd2): Fix kcs
+	read bug.
 	
 2006-02-02  Albert Chu  <chu11@llnl.gov>
 

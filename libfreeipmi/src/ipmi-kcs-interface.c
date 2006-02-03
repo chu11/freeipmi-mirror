@@ -465,6 +465,7 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     uint8_t *pkt;
     uint32_t pkt_len;
     int32_t hdr_len, cmd_len;
+    int32_t read_len;
     
     ERR(!((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rs.tmpl_hdr_ptr))) < 0));
     ERR(!((cmd_len = fiid_obj_max_len_bytes(obj_cmd_rs)) < 0));
@@ -477,9 +478,9 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     ERR (fill_hdr_ipmi_kcs (dev->lun, 
 			    dev->net_fn, 
 			    dev->io.inband.rs.obj_hdr) == 0);
-    ERR (ipmi_kcs_read (dev, pkt, pkt_len) != -1);
+    ERR ((read_len = ipmi_kcs_read (dev, pkt, pkt_len)) != -1);
     ERR (unassemble_ipmi_kcs_pkt (pkt, 
-				  pkt_len, 
+                                  read_len,
 				  dev->io.inband.rs.obj_hdr, 
 				  obj_cmd_rs) != -1);
   }
