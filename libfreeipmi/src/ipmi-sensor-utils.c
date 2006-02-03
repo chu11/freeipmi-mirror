@@ -103,6 +103,15 @@ ipmi_sensor_get_decode_params_old (uint8_t *sensor_record,
   uint64_t b_ls;
   uint64_t b_ms;
   
+  if (!sensor_record 
+      || !is_signed 
+      || !r_exponent 
+      || !b_exponent)
+    {
+      errno = EINVAL;
+      return;
+    }
+
 /*   ipmi_sensor_get_decode_params_own (sensor_record); */
   
   if ((sensor_record[20] & 0xC0) == 0)
@@ -175,6 +184,18 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   uint64_t b_ls;
   uint64_t b_ms;
   
+  if (!sensor_record 
+      || !analog_data_format
+      || !r_exponent
+      || !b_exponent
+      || !linear
+      || !b
+      || !m)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sensor_record, 
 		tmpl_sdr_full_sensor_record, 
 		(uint8_t *)"r_exponent", 
