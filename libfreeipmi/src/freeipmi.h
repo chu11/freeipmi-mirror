@@ -237,9 +237,7 @@ extern "C" {
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-cmds.h"
 #include "ipmi-sensor-event-messages.h"
-#if 0 /* TEST */
 #include "ipmi-sensor-api.h"
-#endif /* TEST */
 #include "ipmi-sel-api.h"
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
@@ -344,9 +342,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-pef-cmds.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>
-#if 0
 #include <freeipmi/ipmi-sensor-api.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-sel-api.h>
 #endif
 

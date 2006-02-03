@@ -641,7 +641,7 @@ fiid_template_t tmpl_get_sensor_threshold_reading_rs =
     {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     /* optional byte */
-    {8, "ignore", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
     
     {0,  "", 0}
   };
