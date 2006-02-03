@@ -1,6 +1,13 @@
 2006-02-03  Albert Chu  <chu11@llnl.gov>
 
 	* fish/src/ipmi-wrapper.c (ipmi_ping): Remove incorrect warning message.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_info2, ipmi_cmd_get_channel_access2,
+	ipmi_cmd_get_user_access2, ipmi_cmd_set_user_access2,
+	ipmi_cmd_set_user_password2, ipmi_cmd_get_user_name2,
+	ipmi_cmd_set_user_name2, ipmi_cmd_set_channel_access2): Fix
+	parameter checks.
 	
 2006-02-02  Albert Chu  <chu11@llnl.gov>
 
