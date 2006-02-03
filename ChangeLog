@@ -21,6 +21,7 @@
 	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
 	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-pef-cmds.c,
 	libfreeipmi/src/ipmi-sensor-types.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
 	libfreeipmi/src/ipmi-sensor-cmds.c: Continue fiid reimplementation
 	in libfreeipmi.
 	
@@ -188,7 +189,13 @@
 	libfreeipmi/src/ipmi-sensor-cmds.c
 	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
 	ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
-	ipmi_cmd_get_sensor_thresholds2): Fix parameter checks.
+	ipmi_cmd_get_sensor_thresholds2),
+	libfreeipmi/src/ipmi-serial-cmds.c (ipmi_cmd_set_serial_connmode2
+	ipmi_cmd_set_serial_page_blackout_interval
+	ipmi_cmd_set_serial_retry_time2 ipmi_cmd_set_serial_comm_bits2
+	ipmi_cmd_get_serial_connmode2 ipmi_cmd_get_serial_page_blackout2
+	ipmi_cmd_get_serial_retry_time2 ipmi_cmd_get_serial_comm_bits2):
+	Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,

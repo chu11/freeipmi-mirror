@@ -224,10 +224,8 @@ extern "C" {
 #endif /* TEST */
 #include "ipmi-lan-param-spec.h"
 #include "ipmi-lan-cmds.h"
-#if 0 /* TEST */
 #include "ipmi-serial-modem-param-spec.h"
 #include "ipmi-serial-cmds.h"
-#endif /* TEST */
 #include "ipmi-sol-cmds.h"
 #include "ipmi-debug.h"
 #include "ipmi-md2.h"
@@ -337,10 +335,8 @@ extern char *__progname;
 #endif /* TEST */
 #include <freeipmi/ipmi-lan-param-spec.h>
 #include <freeipmi/ipmi-lan-cmds.h>
-#if 0
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-serial-cmds.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-sol-cmds.h>
 #include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-md2.h>
