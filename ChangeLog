@@ -39,8 +39,19 @@
 	ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
 	ipmi_cmd_get_sensor_thresholds2),
 	libfreeipmi/src/ipmi-sel-record-types.c
-	(get_sel_system_event_record, get_sel_record),
-	libfreeipmi/src/ipmi-serial-cmds.c (ipmi_cmd_set_serial_connmode2
+	(get_sel_system_event_record, get_sel_record,
+	get_sel_non_timestamped_oem_record,
+	get_sel_timestamped_oem_record),
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(get_sel_timestamped_oem_record,
+	get_sel_non_timestamped_oem_record),
+	libfreeipmi/src/ipmi-sel-cmds.c (fill_kcs_reserve_sel,
+	fill_kcs_get_sel_entry, fill_kcs_delete_sel_entry,
+	fill_kcs_clear_sel, ipmi_cmd_get_sel_info2,
+	ipmi_cmd_get_sel_alloc_info2, ipmi_cmd_reserve_sel2,
+	ipmi_cmd_get_sel_entry2, ipmi_cmd_delete_sel_entry2,
+	ipmi_cmd_clear_sel2), libfreeipmi/src/ipmi-serial-cmds.c
+	(ipmi_cmd_set_serial_connmode2
 	ipmi_cmd_set_serial_page_blackout_interval
 	ipmi_cmd_set_serial_retry_time2 ipmi_cmd_set_serial_comm_bits2
 	ipmi_cmd_get_serial_connmode2 ipmi_cmd_get_serial_page_blackout2

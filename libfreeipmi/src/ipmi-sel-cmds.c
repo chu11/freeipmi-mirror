@@ -143,6 +143,12 @@ fiid_template_t tmpl_clear_sel_rs =
 int8_t 
 fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_info_rq, 
 		(uint8_t *)"cmd", 
@@ -153,6 +159,12 @@ fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_alloc_info_rq, 
 		(uint8_t *)"cmd", 
@@ -163,6 +175,12 @@ fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_reserve_sel_rq, 
 		(uint8_t *)"cmd", 
@@ -173,6 +191,12 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 int8_t 
 fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_sel_entry_rq, 
 		(uint8_t *)"cmd", 
@@ -196,6 +220,12 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 			   uint16_t reservation_id, 
 			   uint16_t record_id)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_delete_sel_entry_rq, 
 		(uint8_t *)"cmd", 
@@ -217,6 +247,12 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 int8_t 
 fill_kcs_clear_sel (fiid_obj_t obj_data_rq, uint16_t reservation_id, uint8_t opcode)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_clear_sel_rq, 
 		(uint8_t *)"cmd", 
@@ -256,9 +292,12 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_info_rq);
   ERR (fill_kcs_get_sel_info (obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
@@ -279,8 +318,11 @@ ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_alloc_info_rq);
   ERR (fill_kcs_get_sel_alloc_info (obj_cmd_rq) == 0);
@@ -302,8 +344,11 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_reserve_sel_rq);
   ERR (fill_kcs_reserve_sel (obj_cmd_rq) == 0);
@@ -326,8 +371,11 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_entry_rq);
   ERR (fill_kcs_get_sel_entry (obj_cmd_rq, record_id) == 0);
@@ -351,8 +399,11 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_delete_sel_entry_rq);
   ERR (fill_kcs_delete_sel_entry (obj_cmd_rq, 
@@ -378,8 +429,11 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_clear_sel_rq);
   ERR (fill_kcs_clear_sel (obj_cmd_rq, 
