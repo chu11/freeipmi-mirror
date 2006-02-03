@@ -900,39 +900,39 @@ get_sensor_reading (ipmi_device_t *dev,
 {
   fiid_template_t l_tmpl_get_sensor_threshold_reading_rs =
     {
-      {8, "cmd"}, 
-      {8, "comp_code"}, 
+      {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {8, "sensor_reading"}, 
+      {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {5, "reserved1"}, 
-      {1, "status_reading_availability"}, 
-      {1, "status_sensor_scanning"}, 
-      {1, "status_all_event_messages"}, 
+      {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_reading_availability", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {6, "sensor_state"}, 
-      {2, "reserved2"}, 
+      {6, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       /* optional byte */
-      {8, "ignore"}, 
+      {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
       
       {0,  ""}
     };
   
   fiid_template_t l_tmpl_get_sensor_discrete_reading_rs =
     {
-      {8, "cmd"}, 
-      {8, "comp_code"}, 
+      {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {8, "sensor_reading"}, 
+      {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {5, "reserved1"}, 
-      {1, "status_reading_availability"}, 
-      {1, "status_sensor_scanning"}, 
-      {1, "status_all_event_messages"}, 
+      {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_reading_availability", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "status_all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {15, "sensor_state"}, 
-      {1, "reserved2"}, 
+      {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       {0,  ""}
     };
@@ -997,7 +997,6 @@ get_sensor_reading (ipmi_device_t *dev,
     case IPMI_SENSOR_CLASS_THRESHOLD:
       if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_threshold_reading_rs)))
 	goto cleanup;
-
       if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_threshold_reading_rs)))
 	goto cleanup;
 
