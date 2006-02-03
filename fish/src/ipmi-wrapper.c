@@ -648,9 +648,6 @@ ipmi_ping (char *host, unsigned int sock_timeout)
 			     sizeof (struct sockaddr_in), 
 			     _get_rmcp_msg_tag (), 
 			     pong);
-    
-    if (errno == EBADMSG)
-      warn ("Increase your socket timeout value");
   }
   
   close (sockfd);

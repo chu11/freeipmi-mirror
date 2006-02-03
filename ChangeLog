@@ -1,3 +1,7 @@
+2006-02-03  Albert Chu  <chu11@llnl.gov>
+
+	* fish/src/ipmi-wrapper.c (ipmi_ping): Remove incorrect warning message.
+	
 2006-02-02  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-utils.c
