@@ -50,7 +50,7 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 			&val) < 0)
 	goto cleanup;
       dev->cmd = val;
-
+      
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"comp_code", 
 			&val) < 0)
@@ -94,7 +94,7 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   int rv = -1;
   int32_t len;
 
-  if (!dev || !seld || !record_data || *record_data_len)
+  if (!dev || !seld || !record_data || !record_data_len)
     {
       errno = EINVAL;
       return (-1);

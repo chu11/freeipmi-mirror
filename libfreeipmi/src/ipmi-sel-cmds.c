@@ -241,11 +241,19 @@ fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ENTRY);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"reservation_id",
+		0);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"record_id", 
 		record_id);
   
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"record_offset",
+		0);
+
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"bytes_read", 
 		0xff);
@@ -493,10 +501,10 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_STORAGE_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;

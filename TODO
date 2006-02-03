@@ -69,8 +69,13 @@ libfreeipmi:
   * consistency in templates and functions
     - user_id.reserved vs. reserved vs. reserved1 etc.
     - user_name vs. username
+  * fill_kcs_get_sel_entry
+    - why not the other arguments?
   * stronger parameter checking
   * fill_kcs functions -> fill
+  * fill_kcs_get_sel_entry
+    - why not the other arguments?
+
     
 fish:
 -----
