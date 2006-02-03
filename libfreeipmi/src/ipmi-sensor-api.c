@@ -37,6 +37,13 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   uint8_t analog_data_format;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_full_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_full_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -258,6 +265,13 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_compact_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_compact_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -326,6 +340,13 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_event_only_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_event_only_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -373,6 +394,12 @@ get_sdr_entity_association_record (uint8_t *sdr_record_data,
 {
   uint64_t val;
   
+  if (!sdr_record_data || !sdr_entity_association_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_entity_association_sensor_record, 
 		(uint8_t *)"container_entity_id", 
@@ -397,6 +424,13 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_generic_device_locator_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_generic_device_locator_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -483,6 +517,13 @@ get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_logical_fru_device_locator_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_logical_fru_device_locator_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -533,6 +574,13 @@ get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_management_controller_device_locator_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_management_controller_device_locator_sensor_record, 
 		(uint8_t *)"record_length", 
@@ -570,6 +618,13 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
   int c;
   
   uint8_t record_length;
+
+  if (!sdr_record_data || !sdr_oem_record)
+    {
+      errno = EINVAL;
+      return;
+    }
+
   fiid_obj_get (sdr_record_data, 
 		tmpl_sdr_oem_record, 
 		(uint8_t *)"record_length", 
@@ -593,7 +648,7 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
   return;
 }
 
-uint8_t 
+int8_t 
 get_sdr_record (ipmi_device_t *dev, 
 		uint16_t record_id, 
 		uint16_t *next_record_id, 
@@ -603,6 +658,14 @@ get_sdr_record (ipmi_device_t *dev,
   fiid_obj_t obj_sdr_record = NULL;
   uint64_t val = 0;
   
+  if (!dev
+      || !next_record_id
+      || !sdr_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sdr_rs);
   if (ipmi_cmd_get_sdr2 (dev, 
 			 record_id, 
@@ -746,7 +809,7 @@ get_sdr_record (ipmi_device_t *dev,
   return 0;
 }
 
-uint8_t 
+int8_t 
 get_sensor_reading (ipmi_device_t *dev, 
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
@@ -804,6 +867,14 @@ get_sensor_reading (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs; 
   uint64_t val;
   
+  if (!dev
+      || !sdr_record
+      || !sensor_reading)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   switch (sdr_record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:

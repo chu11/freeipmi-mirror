@@ -179,11 +179,11 @@ void get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_da
 void get_sdr_oem_record (uint8_t *sdr_record_data, 
 			 sdr_oem_record_t *sdr_oem_record);
 
-uint8_t get_sdr_record (ipmi_device_t *dev, 
+int8_t get_sdr_record (ipmi_device_t *dev, 
 			 uint16_t record_id, 
 			 uint16_t *next_record_id, 
 			 sdr_record_t *sdr_record);
-uint8_t get_sensor_reading (ipmi_device_t *dev, 
+int8_t get_sensor_reading (ipmi_device_t *dev, 
 			     sdr_record_t *sdr_record, 
 			     sensor_reading_t *sensor_reading);
 #endif

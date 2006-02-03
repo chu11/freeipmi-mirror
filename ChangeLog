@@ -59,8 +59,16 @@
 	ipmi_cmd_get_serial_connmode2 ipmi_cmd_get_serial_page_blackout2
 	ipmi_cmd_get_serial_retry_time2 ipmi_cmd_get_serial_comm_bits2),
 	libfreeipmi/src/ipmi-sel-api.c (ipmi_sel_get_first_entry,
-	ipmi_sel_get_next_entry, get_sel_info): Fix parameter checks.
-x
+	ipmi_sel_get_next_entry, get_sel_info),
+	libfreeipmi/src/ipmi-sensor-api.c (get_sensor_reading,
+	get_sdr_record, get_sdr_oem_record,
+	get_sdr_management_controller_device_locator_record,
+	get_sdr_logical_fru_device_locator_record,
+	get_sdr_generic_device_locator_record,
+	get_sdr_entity_association_record, get_sdr_event_only_record,
+	get_sdr_compact_record, get_sdr_full_record): Fix parameter
+	checks.
+
 	* libfreeipmi/src/ipmi-pef-cmds.c
 	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
 	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
@@ -77,6 +85,10 @@ x
 	* libfreeipmi/src/ipmi-sensor-event-messages.c
 	(get_2A_event_data2_message): Fix typo.
 
+	* libfreeipmi/src/ipmi-sensor-api.h,
+	libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record,
+	get_sensor_reading): Make return type int8_t.
+	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repo-cache.c
