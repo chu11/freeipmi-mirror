@@ -355,7 +355,7 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
   record_length += fiid_obj_len_bytes (tmpl_sdr_sensor_record_header);
   
   fiid_obj_get (sdr_record_data, 
-		tmpl_sdr_compact_sensor_record, 
+		tmpl_sdr_event_only_sensor_record, 
 		(uint8_t *)"slave_system_software_id", 
 		&val);
   sdr_event_only_record->slave_system_software_id = val;

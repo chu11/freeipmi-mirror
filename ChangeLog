@@ -88,6 +88,9 @@
 	* libfreeipmi/src/ipmi-sensor-api.h,
 	libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record,
 	get_sensor_reading): Make return type int8_t.
+
+	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_event_only_record):
+	Fix incorrect template usage typo.
 	
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
