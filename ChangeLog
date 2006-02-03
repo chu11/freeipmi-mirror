@@ -58,6 +58,9 @@
 	* libfreeipmi/src/ipmi-pef-cmds.c: Fix templates with duplicate
 	field names.
 
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_2A_event_data2_message): Fix typo.
+
 2006-02-01  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repo-cache.c
