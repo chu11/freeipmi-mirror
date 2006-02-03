@@ -231,9 +231,7 @@ extern "C" {
 #include "ipmi-sha1.h"
 #include "ipmi-hmac.h"
 #include "ipmi-sdr-repo-cache.h"
-#if 0 /* TEST */
 #include "ipmi-sensor-utils.h"
-#endif /* TEST */
 #include "ipmi-watchdog.h"
 #include "ipmi-msg-interface-desc.h"
 #include "ipmi-pef-param-spec.h"
@@ -241,8 +239,8 @@ extern "C" {
 #include "ipmi-sensor-event-messages.h"
 #if 0 /* TEST */
 #include "ipmi-sensor-api.h"
-#include "ipmi-sel-api.h"
 #endif /* TEST */
+#include "ipmi-sel-api.h"
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
 	const char *__format, ...)
@@ -340,9 +338,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-sha1.h>
 #include <freeipmi/ipmi-hmac.h>
 #include <freeipmi/ipmi-sdr-repo-cache.h>
-#if 0 /* TEST */
 #include <freeipmi/ipmi-sensor-utils.h>
-#endif /* TEST */
 #include <freeipmi/ipmi-watchdog.h>
 #include <freeipmi/ipmi-msg-interface-desc.h>
 #include <freeipmi/ipmi-pef-cmds.h>
@@ -350,8 +346,8 @@ extern char *__progname;
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #if 0
 #include <freeipmi/ipmi-sensor-api.h>
-#include <freeipmi/ipmi-sel-api.h>
 #endif /* TEST */
+#include <freeipmi/ipmi-sel-api.h>
 #endif
 
 #ifdef __cplusplus

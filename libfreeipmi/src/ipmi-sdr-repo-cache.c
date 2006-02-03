@@ -585,7 +585,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 	goto cleanup;
 
       sensor_type = val;
-      rv = ipmi_get_sensor_group (sensor_type);
+      rv = (char *)ipmi_get_sensor_group (sensor_type);
     }
  
  cleanup:
