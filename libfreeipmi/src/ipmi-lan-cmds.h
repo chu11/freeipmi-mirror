@@ -24,14 +24,29 @@
 #define IPMI_ENABLE_BMC_GENERATED_GRATUITOUS_ARPS     0x1
 #define IPMI_DISABLE_BMC_GENERATED_GRATUITOUS_ARPS    0x0
 
+#define IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(__val) \
+        (((__val) == IPMI_ENABLE_BMC_GENERATED_GRATUITOUS_ARPS \
+          || (__val) == IPMI_DISABLE_BMC_GENERATED_GRATUITOUS_ARPS) ? 1 : 0)
+
 #define IPMI_ENABLE_BMC_GENERATED_ARP_RESPONSES       0x1
 #define IPMI_DISABLE_BMC_GENERATED_ARP_RESPONSES      0x0
+
+#define IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(__val) \
+        (((__val) == IPMI_ENABLE_BMC_GENERATED_ARP_RESPONSES \
+          || (__val) == IPMI_DISABLE_BMC_GENERATED_ARP_RESPONSES) ? 1 : 0)
 
 #define IPMI_IP_ADDR_SOURCE_UNSPECIFIED                0x0
 #define IPMI_IP_ADDR_SOURCE_STATIC                     0x1
 #define IPMI_IP_ADDR_SOURCE_DHCP                       0x2
 #define IPMI_IP_ADDR_SOURCE_BIOS                       0x3
 #define IPMI_IP_ADDR_SOURCE_OTHER                      0x4
+
+#define IPMI_IP_ADDR_SOURCE_VALID(__val) \
+        (((__val) == IPMI_IP_ADDR_SOURCE_UNSPECIFIED \
+          || (__val) == IPMI_IP_ADDR_SOURCE_STATIC \
+          || (__val) == IPMI_IP_ADDR_SOURCE_DHCP \
+          || (__val) == IPMI_IP_ADDR_SOURCE_BIOS \
+          || (__val) == IPMI_IP_ADDR_SOURCE_OTHER) ? 1 : 0)
 
 /* #define IPMI_ENABLE_AUTH_TYPE_NONE                  0x1 */
 /* #define IPMI_DISABLE_AUTH_TYPE_NONE                 0x0 */
@@ -52,8 +67,18 @@
 
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_NO_SUSPEND    0x0
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND       0x1
+
+#define IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(__val) \
+        (((__val) ==  IPMI_BMC_GENERATED_GRATUITOUS_ARP_NO_SUSPEND \
+          || (__val) == IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND) ? 1 : 0)
+
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_NO_SUSPEND      0x0
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND         0x1
+
+#define IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(__val) \
+        (((__val) ==  IPMI_BMC_GENERATED_ARP_RESPONSE_NO_SUSPEND \
+          || (__val) == IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND) ? 1 : 0)
+
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPENDED     0x0
 #define IPMI_BMC_GENERATED_GRATUITOUS_ARP_OCCURRING     0x1
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPENDED       0x0
@@ -98,11 +123,31 @@ int8_t ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 					      fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
 					    uint8_t channel_number, 
-					    uint8_t max_privilege_auth_type_callback_level, 
-					    uint8_t max_privilege_auth_type_user_level, 
-					    uint8_t max_privilege_auth_type_operator_level, 
-					    uint8_t max_privilege_auth_type_admin_level, 
-					    uint8_t max_privilege_auth_type_oem_level, 
+                                            int8_t auth_type_callback_none,
+                                            int8_t auth_type_callback_md2,
+                                            int8_t auth_type_callback_md5,
+                                            int8_t auth_type_callback_straight_password,
+                                            int8_t auth_type_callback_oem_proprietary,
+                                            int8_t auth_type_user_none,
+                                            int8_t auth_type_user_md2,
+                                            int8_t auth_type_user_md5,
+                                            int8_t auth_type_user_straight_password,
+                                            int8_t auth_type_user_oem_proprietary,
+                                            int8_t auth_type_operator_none,
+                                            int8_t auth_type_operator_md2,
+                                            int8_t auth_type_operator_md5,
+                                            int8_t auth_type_operator_straight_password,
+                                            int8_t auth_type_operator_oem_proprietary,
+                                            int8_t auth_type_admin_none,
+                                            int8_t auth_type_admin_md2,
+                                            int8_t auth_type_admin_md5,
+                                            int8_t auth_type_admin_straight_password,
+                                            int8_t auth_type_admin_oem_proprietary,
+                                            int8_t auth_type_oem_none,
+                                            int8_t auth_type_oem_md2,
+                                            int8_t auth_type_oem_md5,
+                                            int8_t auth_type_oem_straight_password,
+                                            int8_t auth_type_oem_oem_proprietary,
 					    fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev, 
 					 uint8_t channel_number, 

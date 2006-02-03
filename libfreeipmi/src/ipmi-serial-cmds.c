@@ -401,8 +401,11 @@ ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_connmode_rq);
   ERR (fill_set_serial_connmode (obj_cmd_rq, 
@@ -431,8 +434,11 @@ ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_pageblackout_rq);
   ERR (fill_set_serial_page_blackout_interval (obj_cmd_rq, 
@@ -458,8 +464,11 @@ ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_retry_rq);
   ERR (fill_set_serial_retry_time (obj_cmd_rq, 
@@ -487,8 +496,11 @@ ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_commbits_rq);
   ERR (fill_set_serial_comm_bits (obj_cmd_rq, 
@@ -518,8 +530,11 @@ ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_cmd_rq, 
@@ -550,8 +565,11 @@ ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_cmd_rq, 
@@ -582,8 +600,11 @@ ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_cmd_rq, 
@@ -614,8 +635,11 @@ ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
   ERR (fill_get_serial_conf_param (obj_cmd_rq, 

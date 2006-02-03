@@ -116,8 +116,13 @@ get_sel_system_event_record (uint8_t *record_data, sel_record_t *sel_record)
   uint8_t event_data3;
   
   uint64_t val;
-  
-  
+   
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+ 
   fiid_obj_get (record_data, 
 		tmpl_sel_system_event_record, 
 		(uint8_t *)"record_id", 
@@ -331,6 +336,12 @@ get_sel_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_record)
   uint64_t oem_defined;
   uint64_t val;
   
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_get (record_data, 
 		tmpl_sel_timestamped_oem_record, 
 		(uint8_t *)"record_id", 
@@ -389,6 +400,12 @@ get_sel_non_timestamped_oem_record (uint8_t *record_data, sel_record_t *sel_reco
   char *str = NULL;
   char *tmp_str = NULL;
   
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_get (record_data, 
 		tmpl_sel_non_timestamped_oem_record, 
 		(uint8_t *)"record_id", 
@@ -440,6 +457,12 @@ get_sel_record (uint8_t *record_data, sel_record_t *sel_record)
   uint8_t record_type;
   uint64_t val;
   
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   fiid_obj_get (record_data,
 		tmpl_sel_record_header,
 		(uint8_t *)"record_type",

@@ -1426,7 +1426,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
       uint64_t val;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"user_id", &val);
       if (val == 0x0)
 	return strdup ("User ID for user that activated session = Unspecified");
       asprintf (&str, "User ID for user that activated session = %d", (int) val);

@@ -592,6 +592,187 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2006-02-03  Albert Chu  <chu11@llnl.gov>
+
+	* fish/src/ipmi-wrapper.c (ipmi_ping): Remove incorrect warning message.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_cmd_get_channel_info2, ipmi_cmd_get_channel_access2,
+	ipmi_cmd_get_user_access2, ipmi_cmd_set_user_access2,
+	ipmi_cmd_set_user_password2, ipmi_cmd_get_user_name2,
+	ipmi_cmd_set_user_name2, ipmi_cmd_set_channel_access2): Fix
+	parameter checks.
+	
+2006-02-02  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-utils.c
+	(ipmi_sensor_get_decode_params_old,
+	ipmi_sensor_get_decode_params), libfreeipmi/src/ipmi-sol-cmds.c
+	(ipmi_cmd_sol_conf_get_sol_enable2,
+	ipmi_cmd_sol_conf_sol_enable_disable2, fill_get_sol_conf_param,
+	fill_sol_conf_sol_enable_disable), libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_filter_table_entry, fill_kcs_set_num_event_filters,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_get_pef_caps, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event,
+	fill_kcs_get_last_proessed_event, ipmi_cmd_set_pef_control2,
+	ipmi_cmd_set_global_action_control2, ipmi_cmd_set_startup_delay2,
+	ipmi_cmd_set_num_event_filters2,
+	ipmi_cmd_set_alert_startup_delay2,
+	ipmi_cmd_set_filter_table_entry2,
+	ipmi_cmd_set_filter_table_data1_2,
+	ipmi_cmd_set_num_alert_policies2, ipmi_cmd_alert_immediate2,
+	ipmi_cmd_get_pef_alert_string2,
+	ipmi_cmd_get_pef_alert_string_keys2,
+	ipmi_cmd_get_pef_num_alert_policies2,
+	ipmi_cmd_get_pef_num_alert_strings2,
+	ipmi_cmd_get_pef_filter_data1_2, ipmi_cmd_get_pef_control2,
+	ipmi_cmd_get_pef_global_action_control2,
+	ipmi_cmd_get_pef_startup_delay2,
+	ipmi_cmd_get_pef_alert_startup_delay2,
+	ipmi_cmd_get_pef_num_event_filters2,
+	ipmi_cmd_get_pef_filter_table_entry2, ipmi_cmd_get_pef_caps2,
+	ipmi_cmd_arm_pef_postpone_timer2,
+	ipmi_cmd_set_last_processed_event2,
+	ipmi_cmd_get_last_processed_event2, ipmi_cmd_pet_ack2),
+	libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_sensor_threshold_health_check,
+	ipmi_sensor_discrete_health_check),
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
+	ipmi_cmd_get_threshold_reading2, ipmi_cmd_get_discrete_reading2,
+	ipmi_cmd_get_sensor_thresholds2),
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(get_sel_system_event_record, get_sel_record,
+	get_sel_non_timestamped_oem_record,
+	get_sel_timestamped_oem_record),
+	libfreeipmi/src/ipmi-sel-record-types.c
+	(get_sel_timestamped_oem_record,
+	get_sel_non_timestamped_oem_record),
+	libfreeipmi/src/ipmi-sel-cmds.c (fill_kcs_reserve_sel,
+	fill_kcs_get_sel_entry, fill_kcs_delete_sel_entry,
+	fill_kcs_clear_sel, ipmi_cmd_get_sel_info2,
+	ipmi_cmd_get_sel_alloc_info2, ipmi_cmd_reserve_sel2,
+	ipmi_cmd_get_sel_entry2, ipmi_cmd_delete_sel_entry2,
+	ipmi_cmd_clear_sel2), libfreeipmi/src/ipmi-serial-cmds.c
+	(ipmi_cmd_set_serial_connmode2
+	ipmi_cmd_set_serial_page_blackout_interval
+	ipmi_cmd_set_serial_retry_time2 ipmi_cmd_set_serial_comm_bits2
+	ipmi_cmd_get_serial_connmode2 ipmi_cmd_get_serial_page_blackout2
+	ipmi_cmd_get_serial_retry_time2 ipmi_cmd_get_serial_comm_bits2),
+	libfreeipmi/src/ipmi-sel-api.c (ipmi_sel_get_first_entry,
+	ipmi_sel_get_next_entry, get_sel_info),
+	libfreeipmi/src/ipmi-sensor-api.c (get_sensor_reading,
+	get_sdr_record, get_sdr_oem_record,
+	get_sdr_management_controller_device_locator_record,
+	get_sdr_logical_fru_device_locator_record,
+	get_sdr_generic_device_locator_record,
+	get_sdr_entity_association_record, get_sdr_event_only_record,
+	get_sdr_compact_record, get_sdr_full_record): Fix parameter
+	checks.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_filter_table_entry, fill_kcs_set_num_event_filters,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_get_pef_caps, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event,
+	fill_kcs_get_last_proessed_event): Make non-static.
+
+	* libfreeipmi/src/ipmi-pef-cmds.c: Fix templates with duplicate
+	field names.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_2A_event_data2_message): Fix typo.
+
+	* libfreeipmi/src/ipmi-sensor-api.h,
+	libfreeipmi/src/ipmi-sensor-api.c (get_sdr_record,
+	get_sensor_reading): Make return type int8_t.
+
+	* libfreeipmi/src/ipmi-sensor-api.c (get_sdr_event_only_record):
+	Fix incorrect template usage typo.
+	
+2006-02-01  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-repo-cache.c
+	(ipmi_sdr_repo_info_write, ipmi_sdr_records_write,
+	ipmi_sdr_cache_create): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c (fill_kcs_get_repo_info,
+	fill_kcs_reserve_repo, fill_kcs_get_repo_alloc_info,
+	fill_kcs_get_sdr_chunk, ipmi_cmd_get_sdr_repo_info2,
+	ipmi_cmd_get_sdr_repo_alloc_info2, ipmi_cmd_reserve_sdr_repo2,
+	ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2,
+	ipmi_cmd_get_sdr2): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.c
+	(ipmi_cmd_get_sensor_record_header2, ipmi_cmd_get_sdr_chunk2): Use
+	fiid_template_free.
+	
+2006-02-01  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(fill_cmd_activate_session, ipmi_lan_open_session,
+	fill_kcs_get_user_name): Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h
+	(IPMI_CHASSIS_FORCE_IDENTIFY_VALID): New macro.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c (fill_cmd_chassis_identify):
+	Fix parameter checks.
+	
+	* libfreeipmi/src/fiid.c (__fiid_template_make): Fix string copy
+	corner case.
+
+	* libfreeipmi/src/ipmi-lan-cmds.h, libfreeipmi/src/ipmi-lan-cmds.c
+	(ipmi_cmd_lan_set_auth_type_enables2,
+	fill_lan_set_auth_type_enables): Make functions pristine to IPMI
+	spec.
+
+	* fish/src/bmc-conf2.c (_fill_lan_set_auth_type_enables): New
+	function.
+
+	* fish/src/bmc-conf2.c (set_bmc_lan_conf_auth_type_enables): Use
+	convenience template.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c (fill_lan_set_ip_addr_source,
+	fill_lan_set_ip_addr, fill_lan_set_vlan_id, fill_suspend_bmc_arps,
+	ipmi_cmd_lan_set_arp2, ipmi_lan_set_gratuitous_arp_interval2,
+	ipmi_cmd_lan_set_auth_type_enables2,
+	ipmi_cmd_lan_set_ip_addr_source2, ipmi_cmd_lan_set_ip_addr2,
+	ipmi_cmd_lan_set_default_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2,
+	ipmi_cmd_lan_set_backup_gw_ip_addr2,
+	ipmi_cmd_lan_set_vlan_priority2, ipmi_cmd_lan_set_subnet_mask2,
+	ipmi_cmd_lan_set_mac_addr2, ipmi_cmd_lan_set_default_gw_mac_addr2,
+	ipmi_cmd_lan_set_backup_gw_mac_addr2, ipmi_cmd_lan_get_arp2,
+	ipmi_cmd_lan_get_gratuitous_arp_interval2,
+	ipmi_cmd_lan_get_auth_type_enables2,
+	ipmi_cmd_lan_get_ip_addr_source2, ipmi_cmd_lan_get_ip_addr2,
+	ipmi_cmd_lan_get_default_gw_ip_addr2,
+	ipmi_cmd_lan_get_backup_gw_ip_addr2,
+	ipmi_cmd_lan_get_subnet_mask2, ipmi_cmd_lan_get_mac_addr2,
+	ipmi_cmd_lan_get_default_gw_mac_addr2,
+	ipmi_cmd_lan_get_backup_gw_mac_addr2, ipmi_cmd_lan_get_vlan_id2,
+	ipmi_cmd_lan_get_vlan_priority2, ipmi_cmd_suspend_bmc_arps2) ):
+	Fix parameter checks.
+
+	* libfreeipmi/src/ipmi-lan-cmds.h
+	(IPMI_ENABLE_BMC_GENERATED_GRATUITOUS_ARPS_VALID,
+	IPMI_ENABLE_BMC_GENERATED_ARP_RESPONSES_VALID,
+	IPMI_IP_ADDR_SOURCE_VALID,
+	IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID,
+	IPMI_BMC_GENERATED_ARP_RESPONSE_VALID): New macros.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c
+	(tmpl_set_lan_conf_param_vlan_id_rq,
+	tmpl_set_lan_conf_param_vlan_priority_rq): Fix field naming bugs.
+
 2006-01-31  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): Remove
@@ -601,8 +782,8 @@
 	get_rq_checksum1, get_rq_checksum2, get_rs_checksum2,
 	fill_lan_msg_hdr2, fill_lan_msg_trlr2, fill_hdr_session2,
 	_ipmi_lan_pkt_rq_size2, _ipmi_lan_pkt_rs_size2,
-	unassemble_ipmi_lan_pkt2, ipmi_lan_validate_checksum): Fix
-	parameter checks.
+	unassemble_ipmi_lan_pkt2, ipmi_lan_validate_checksum,
+	ipmi_lan_cmd_raw_send): Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(fill_kcs_set_channel_access, fill_kcs_set_user_name,
@@ -619,13 +800,21 @@
 	(ipmi_lan_open_session2): Fix parameter checks.
 
 	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum2,
-	get_rs_checksum2): Use fiid_template_free().
+	get_rs_checksum2, ipmi_lan_cmd_raw2): Use fiid_template_free().
 
 	* libfreeipmi/src/ipmi-lan-interface.c (fill_hdr_session2): Fix
 	endian bugs.
 
 	* libfreeipmi/src/ipmi-semaphores.h (IPMI_MUTEX_LOCK,
 	IPMI_MUTEX_UNLOCK): Revert fixes from 2005-08-30.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): Code
+	cleanup.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_raw2): Fix
+	buffer overflow bug.
+
+	* ipmi-raw/src/ipmi-raw.c (main): Fix output bug.
 
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 

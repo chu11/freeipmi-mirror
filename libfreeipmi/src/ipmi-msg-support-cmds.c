@@ -552,7 +552,7 @@ fill_cmd_activate_session (uint8_t auth_type,
 {
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_1_5_PRIV_LEVEL_VALID(max_priv_level)
-      || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
+      || (challenge_str && challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN)
       || !obj_cmd)
     {
       errno = EINVAL;
@@ -686,7 +686,9 @@ ipmi_lan_open_session (int sockfd,
   uint64_t temp_session_id, temp_session_seq_num;
   uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
 
-  if (rq_seq == NULL)
+  if (!session_seq_num
+      || !session_id
+      || !rq_seq)
     {
       errno = EINVAL;
       return (-1);
@@ -928,6 +930,12 @@ fill_kcs_set_user_name (uint8_t user_id,
 int8_t 
 fill_kcs_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
 {
+  if (!obj_data_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_get_user_name_rq, 
 		(uint8_t *)"cmd", 
@@ -1512,8 +1520,13 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_channel_access_rq);
   ERR (fill_kcs_set_channel_access (channel_number, 
@@ -1545,8 +1558,12 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_name_rq);
   ERR (fill_kcs_set_user_name (user_id, 
@@ -1572,8 +1589,12 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_name_rq);
   ERR (fill_kcs_get_user_name (user_id, obj_cmd_rq) == 0);
@@ -1598,8 +1619,12 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_password_rq);
   ERR (fill_kcs_set_user_password (user_id, 
@@ -1632,8 +1657,13 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_user_access_rq);
   ERR (fill_kcs_set_user_access (channel_number,
@@ -1664,8 +1694,13 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_user_access_rq);
   ERR (fill_kcs_get_user_access (channel_number, user_id, obj_cmd_rq) == 0);
@@ -1689,8 +1724,13 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_channel_access_rq);
   ERR (fill_kcs_get_channel_access (channel_number, 
@@ -1715,8 +1755,13 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_channel_info_rq);
   ERR (fill_kcs_get_channel_info (channel_number, obj_cmd_rq) == 0);

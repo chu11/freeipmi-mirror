@@ -1632,6 +1632,12 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rq, 
 		       fiid_template_t tmpl_cmd_rq)
 {
+  if (!dev || !obj_cmd_rq || !tmpl_cmd_rq)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   memset (dev->io.outofband.rq.obj_hdr_rmcp, 
 	  0, 
 	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
@@ -1701,6 +1707,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 		   uint8_t *buf_rs, 
 		   size_t *buf_rs_len)
 {
+  size_t buf_rs_len_in;
+
   if (!(dev && 
 	dev->io.outofband.local_sockfd && 
 	buf_rq && 
@@ -1713,6 +1721,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       return (-1);
     }
   
+  buf_rs_len_in = *buf_rs_len;
   *buf_rs_len = 0;
   
   {
@@ -1744,7 +1753,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     retval = ipmi_lan_cmd_raw_send (dev, 
 				    obj_cmd_rq, 
 				    tmpl_var_cmd_rq);
-    free (tmpl_var_cmd_rq);
+    fiid_template_free (tmpl_var_cmd_rq);
     
     ERR (retval == 0);
   }
@@ -1769,10 +1778,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
        fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) + 
        fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
     
-    tmpl_var_cmd_rs = fiid_template_make (((1024 - pkt_hdrs_size - 1) * 8), 
-					  "COMMAND_RS_DATA");
-    pkt_len = _ipmi_lan_pkt_rs_size2 (dev, tmpl_var_cmd_rs);
-    free (tmpl_var_cmd_rs);
+    pkt_len = 1024 - pkt_hdrs_size - 1;
     ERR (pkt_len <= pkt_max_size);
     
     pkt = alloca (pkt_max_size);
@@ -1787,6 +1793,13 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     ERR (bytes_received >= pkt_hdrs_size);
     
     obj_cmd_rs_len = (bytes_received - pkt_hdrs_size);
+
+    if ((buf_rs_len_in - 1) < obj_cmd_rs_len)
+      {
+        errno = EINVAL;
+        return (-1);
+      }
+
     tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), "COMMAND_RS_DATA");
     obj_cmd_rs = (fiid_obj_t) (buf_rs + 1);
     
@@ -1796,7 +1809,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 				  obj_cmd_rs, 
 				  tmpl_var_cmd_rs) == -1)
       {
-	free (tmpl_var_cmd_rs);
+	fiid_template_free (tmpl_var_cmd_rs);
 	return (-1);
       }
     
@@ -1804,11 +1817,11 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 				    obj_cmd_rs, 
 				    tmpl_var_cmd_rs) != 0)
       {
-	free (tmpl_var_cmd_rs);
+	fiid_template_free (tmpl_var_cmd_rs);
 	return (-1);
       }
     
-    free (tmpl_var_cmd_rs);
+    fiid_template_free (tmpl_var_cmd_rs);
     
     {
       uint64_t val = 0;

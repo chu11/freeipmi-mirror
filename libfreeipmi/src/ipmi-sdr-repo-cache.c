@@ -26,7 +26,7 @@ ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
   uint8_t *data_rs = NULL;
   uint64_t val;
   
-  if (fp == NULL)
+  if (!dev || !fp)
     {
       errno = EINVAL;
       return -1;
@@ -61,7 +61,7 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
   fiid_obj_t obj_sdr_record = NULL;
   uint64_t val = 0;
   
-  if (fp == NULL)
+  if (!dev || !fp)
     {
       errno = EINVAL;
       return (-1);
@@ -117,7 +117,7 @@ ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
 {
   FILE *cache_fp;
   
-  if (sdr_cache_file == NULL)
+  if (!dev || !sdr_cache_file)
     {
       errno = EINVAL;
       return -1;

@@ -500,7 +500,8 @@ __fiid_template_make (uint8_t dummy, ...)
 	}
       
       tmpl_dynamic[i].len = len;
-      strcpy (tmpl_dynamic[i].key, key);
+      strncpy (tmpl_dynamic[i].key, key, FIID_FIELD_MAX);
+      tmpl_dynamic[i].key[FIID_FIELD_MAX - 1] = '\0';
     }
   
   va_end (ap);

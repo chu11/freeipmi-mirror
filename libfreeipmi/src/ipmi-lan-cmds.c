@@ -58,49 +58,44 @@ fiid_template_t tmpl_set_lan_conf_param_auth_type_enables_rq =
     {8, "parameter_selector"}, 
     /* for Authentication type enables */
     /* byte 1 */
-/*     {1, "max_privilege_auth_type_callback_level.none"},  */
-/*     {1, "max_privilege_auth_type_callback_level.md2"},  */
-/*     {1, "max_privilege_auth_type_callback_level.md5"},  */
-/*     {1, "max_privilege_auth_type_callback_level.reserved1"},  */
-/*     {1, "max_privilege_auth_type_callback_level.straight_password"},  */
-/*     {1, "max_privilege_auth_type_callback_level.oem_proprietary"},  */
-    {6, "max_privilege_auth_type_callback_level"}, 
+    {1, "max_privilege_auth_type_callback_level.none"},
+    {1, "max_privilege_auth_type_callback_level.md2"},
+    {1, "max_privilege_auth_type_callback_level.md5"},
+    {1, "max_privilege_auth_type_callback_level.reserved1"},
+    {1, "max_privilege_auth_type_callback_level.straight_password"},
+    {1, "max_privilege_auth_type_callback_level.oem_proprietary"},
     {2, "max_privilege_auth_type_callback_level.reserved2"}, 
     /* byte 2 */
-/*     {1, "max_privilege_auth_type_user_level.none"},  */
-/*     {1, "max_privilege_auth_type_user_level.md2"},  */
-/*     {1, "max_privilege_auth_type_user_level.md5"},  */
-/*     {1, "max_privilege_auth_type_user_level.reserved1"},  */
-/*     {1, "max_privilege_auth_type_user_level.straight_password"},  */
-/*     {1, "max_privilege_auth_type_user_level.oem_proprietary"},  */
-    {6, "max_privilege_auth_type_user_level"}, 
+    {1, "max_privilege_auth_type_user_level.none"},
+    {1, "max_privilege_auth_type_user_level.md2"},
+    {1, "max_privilege_auth_type_user_level.md5"},
+    {1, "max_privilege_auth_type_user_level.reserved1"},
+    {1, "max_privilege_auth_type_user_level.straight_password"},
+    {1, "max_privilege_auth_type_user_level.oem_proprietary"},
     {2, "max_privilege_auth_type_user_level.reserved2"}, 
     /* byte 3 */
-/*     {1, "max_privilege_auth_type_operator_level.none"},  */
-/*     {1, "max_privilege_auth_type_operator_level.md2"},  */
-/*     {1, "max_privilege_auth_type_operator_level.md5"},  */
-/*     {1, "max_privilege_auth_type_operator_level.reserved1"},  */
-/*     {1, "max_privilege_auth_type_operator_level.straight_password"},  */
-/*     {1, "max_privilege_auth_type_operator_level.oem_proprietary"},  */
-    {6, "max_privilege_auth_type_operator_level"}, 
+    {1, "max_privilege_auth_type_operator_level.none"},
+    {1, "max_privilege_auth_type_operator_level.md2"},
+    {1, "max_privilege_auth_type_operator_level.md5"},
+    {1, "max_privilege_auth_type_operator_level.reserved1"},
+    {1, "max_privilege_auth_type_operator_level.straight_password"},
+    {1, "max_privilege_auth_type_operator_level.oem_proprietary"},
     {2, "max_privilege_auth_type_operator_level.reserved2"}, 
     /* byte 4 */
-/*     {1, "max_privilege_auth_type_admin_level.none"},  */
-/*     {1, "max_privilege_auth_type_admin_level.md2"},  */
-/*     {1, "max_privilege_auth_type_admin_level.md5"},  */
-/*     {1, "max_privilege_auth_type_admin_level.reserved1"},  */
-/*     {1, "max_privilege_auth_type_admin_level.straight_password"},  */
-/*     {1, "max_privilege_auth_type_admin_level.oem_proprietary"},  */
-    {6, "max_privilege_auth_type_admin_level"}, 
+    {1, "max_privilege_auth_type_admin_level.none"},
+    {1, "max_privilege_auth_type_admin_level.md2"},
+    {1, "max_privilege_auth_type_admin_level.md5"},
+    {1, "max_privilege_auth_type_admin_level.reserved1"},
+    {1, "max_privilege_auth_type_admin_level.straight_password"},
+    {1, "max_privilege_auth_type_admin_level.oem_proprietary"},
     {2, "max_privilege_auth_type_admin_level.reserved2"}, 
     /* byte 5 */
-/*     {1, "max_privilege_auth_type_oem_level.none"},  */
-/*     {1, "max_privilege_auth_type_oem_level.md2"},  */
-/*     {1, "max_privilege_auth_type_oem_level.md5"},  */
-/*     {1, "max_privilege_auth_type_oem_level.reserved1"},  */
-/*     {1, "max_privilege_auth_type_oem_level.straight_password"},  */
-/*     {1, "max_privilege_auth_type_oem_level.oem_proprietary"},  */
-    {6, "max_privilege_auth_type_oem_level"}, 
+    {1, "max_privilege_auth_type_oem_level.none"},
+    {1, "max_privilege_auth_type_oem_level.md2"},
+    {1, "max_privilege_auth_type_oem_level.md5"},
+    {1, "max_privilege_auth_type_oem_level.reserved1"},
+    {1, "max_privilege_auth_type_oem_level.straight_password"},
+    {1, "max_privilege_auth_type_oem_level.oem_proprietary"},
     {2, "max_privilege_auth_type_oem_level.reserved2"}, 
     {0, ""}
   };
@@ -158,13 +153,13 @@ fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq =
   {
     {8, "cmd"},
     {4, "channel_number"},
-    {4, "reserved"},
+    {4, "reserved1"},
     {8, "parameter_selector"},
 
     {8, "vlan_id_ls"},
     {4, "vlan_id_ms"},
-    {3, "reserved"},
-    {1, "vlan_id_flag"},
+    {3, "reserved2"},
+    {1, "vlan_id_enable"},
 
     {0, ""}
   };
@@ -173,12 +168,12 @@ fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq =
   {
     {8, "cmd"},
     {4, "channel_number"},
-    {4, "reserved"},
+    {4, "reserved1"},
     {8, "parameter_selector"},
 
     {3, "vlan_priority"},
     {2, "unspecified"},
-    {3, "reserved"},
+    {3, "reserved2"},
 
     {0, ""}
   };
@@ -239,7 +234,6 @@ fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
     {1, "max_privilege_auth_type_callback_level.reserved1"},
     {1, "max_privilege_auth_type_callback_level.straight_password"},
     {1, "max_privilege_auth_type_callback_level.oem_proprietary"},
-/*     {6, "max_privilege_auth_type_callback_level"},  */
     {2, "max_privilege_auth_type_callback_level.reserved2"}, 
     /* byte 2 */
     {1, "max_privilege_auth_type_user_level.none"},
@@ -248,7 +242,6 @@ fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
     {1, "max_privilege_auth_type_user_level.reserved1"},
     {1, "max_privilege_auth_type_user_level.straight_password"},
     {1, "max_privilege_auth_type_user_level.oem_proprietary"},
-/*     {6, "max_privilege_auth_type_user_level"},  */
     {2, "max_privilege_auth_type_user_level.reserved2"}, 
     /* byte 3 */
     {1, "max_privilege_auth_type_operator_level.none"},
@@ -257,7 +250,6 @@ fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
     {1, "max_privilege_auth_type_operator_level.reserved1"},
     {1, "max_privilege_auth_type_operator_level.straight_password"},
     {1, "max_privilege_auth_type_operator_level.oem_proprietary"},
-/*     {6, "max_privilege_auth_type_operator_level"},  */
     {2, "max_privilege_auth_type_operator_level.reserved2"}, 
     /* byte 4 */
     {1, "max_privilege_auth_type_admin_level.none"},
@@ -266,7 +258,6 @@ fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
     {1, "max_privilege_auth_type_admin_level.reserved1"},
     {1, "max_privilege_auth_type_admin_level.straight_password"},
     {1, "max_privilege_auth_type_admin_level.oem_proprietary"},
-/*     {6, "max_privilege_auth_type_admin_level"},  */
     {2, "max_privilege_auth_type_admin_level.reserved2"}, 
     /* byte 5 */
     {1, "max_privilege_auth_type_oem_level.none"},
@@ -275,7 +266,6 @@ fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
     {1, "max_privilege_auth_type_oem_level.reserved1"},
     {1, "max_privilege_auth_type_oem_level.straight_password"},
     {1, "max_privilege_auth_type_oem_level.oem_proprietary"},
-/*     {6, "max_privilege_auth_type_oem_level"},  */
     {2, "max_privilege_auth_type_oem_level.reserved2"}, 
     {0, ""}
   };
@@ -399,7 +389,7 @@ fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs =
     {8, "vlan_id_ls"},
     {4, "vlan_id_ms"},
     {3, "reserved"},
-    {1, "vlan_id_flag"},
+    {1, "vlan_id_enable"},
     
     {0,  ""}
   };
@@ -498,11 +488,31 @@ fill_lan_set_gratuitous_arp_interval (fiid_obj_t obj_data_rq,
 int8_t 
 fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq, 
 				uint8_t channel_number, 
-				uint8_t max_privilege_auth_type_callback_level, 
-				uint8_t max_privilege_auth_type_user_level, 
-				uint8_t max_privilege_auth_type_operator_level, 
-				uint8_t max_privilege_auth_type_admin_level, 
-				uint8_t max_privilege_auth_type_oem_level)
+                                int8_t auth_type_callback_none,
+                                int8_t auth_type_callback_md2,
+                                int8_t auth_type_callback_md5,
+                                int8_t auth_type_callback_straight_password,
+                                int8_t auth_type_callback_oem_proprietary,
+                                int8_t auth_type_user_none,
+                                int8_t auth_type_user_md2,
+                                int8_t auth_type_user_md5,
+                                int8_t auth_type_user_straight_password,
+                                int8_t auth_type_user_oem_proprietary,
+                                int8_t auth_type_operator_none,
+                                int8_t auth_type_operator_md2,
+                                int8_t auth_type_operator_md5,
+                                int8_t auth_type_operator_straight_password,
+                                int8_t auth_type_operator_oem_proprietary,
+                                int8_t auth_type_admin_none,
+                                int8_t auth_type_admin_md2,
+                                int8_t auth_type_admin_md5,
+                                int8_t auth_type_admin_straight_password,
+                                int8_t auth_type_admin_oem_proprietary,
+                                int8_t auth_type_oem_none,
+                                int8_t auth_type_oem_md2,
+                                int8_t auth_type_oem_md5,
+                                int8_t auth_type_oem_straight_password,
+                                int8_t auth_type_oem_oem_proprietary)
 {
   if (obj_data_rq == NULL
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -526,30 +536,130 @@ fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_AUTH_TYPE_ENABLES);
   
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_SET (obj_data_rq,
 		tmpl_set_lan_conf_param_auth_type_enables_rq, 
-		(uint8_t *)"max_privilege_auth_type_callback_level", 
-		max_privilege_auth_type_callback_level);
-  
-  FIID_OBJ_SET (obj_data_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.none",
+                auth_type_callback_none);
+
+  FIID_OBJ_SET (obj_data_rq,
 		tmpl_set_lan_conf_param_auth_type_enables_rq, 
-		(uint8_t *)"max_privilege_auth_type_user_level", 
-		max_privilege_auth_type_user_level);
-  
-  FIID_OBJ_SET (obj_data_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.md2",
+                auth_type_callback_md2);
+
+  FIID_OBJ_SET (obj_data_rq,
 		tmpl_set_lan_conf_param_auth_type_enables_rq, 
-		(uint8_t *)"max_privilege_auth_type_operator_level", 
-		max_privilege_auth_type_operator_level);
-  
-  FIID_OBJ_SET (obj_data_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.md5",
+                auth_type_callback_md5);
+
+  FIID_OBJ_SET (obj_data_rq,
 		tmpl_set_lan_conf_param_auth_type_enables_rq, 
-		(uint8_t *)"max_privilege_auth_type_admin_level", 
-		max_privilege_auth_type_admin_level);
-  
-  FIID_OBJ_SET (obj_data_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.straight_password",
+                auth_type_callback_straight_password);
+
+  FIID_OBJ_SET (obj_data_rq,
 		tmpl_set_lan_conf_param_auth_type_enables_rq, 
-		(uint8_t *)"max_privilege_auth_type_oem_level", 
-		max_privilege_auth_type_oem_level);
+                (uint8_t *)"max_privilege_auth_type_callback_level.oem_proprietary",
+                auth_type_callback_oem_proprietary);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.none",
+                auth_type_user_none);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.md2",
+                auth_type_user_md2);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.md5",
+                auth_type_user_md5);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.straight_password",
+                auth_type_user_straight_password);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.oem_proprietary",
+                auth_type_user_oem_proprietary);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.none",
+                auth_type_operator_none);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.md2",
+                auth_type_operator_md2);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.md5",
+                auth_type_operator_md5);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.straight_password",
+                auth_type_operator_straight_password);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.oem_proprietary",
+                auth_type_operator_oem_proprietary);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.none",
+                auth_type_admin_none);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.md2",
+                auth_type_admin_md2);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.md5",
+                auth_type_admin_md5);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.straight_password",
+                auth_type_admin_straight_password);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.oem_proprietary",
+                auth_type_admin_oem_proprietary);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.none",
+                auth_type_oem_none);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.md2",
+                auth_type_oem_md2);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.md5",
+                auth_type_oem_md5);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.straight_password",
+                auth_type_oem_straight_password);
+
+  FIID_OBJ_SET (obj_data_rq,
+		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.oem_proprietary",
+                auth_type_oem_oem_proprietary);
   
   return 0;
 }
@@ -560,7 +670,8 @@ fill_lan_set_ip_addr_source (fiid_obj_t obj_data_rq,
 			     uint8_t ip_addr_source)
 {
   if (obj_data_rq == NULL
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_IP_ADDR_SOURCE_VALID(ip_addr_source))
     {
       errno = EINVAL;
       return (-1);
@@ -628,7 +739,7 @@ fill_lan_set_ip_addr (fiid_obj_t obj_data_rq,
 int8_t 
 fill_lan_set_vlan_id (fiid_obj_t obj_data_rq, 
                       uint8_t channel_number, 
-                      uint8_t vlan_id_flag,
+                      uint8_t vlan_id_enable,
                       uint32_t vlan_id)
 {
   uint8_t *ptr, ls, ms;
@@ -657,8 +768,8 @@ fill_lan_set_vlan_id (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_SET (obj_data_rq, 
 		tmpl_set_lan_conf_param_vlan_id_rq, 
-		(uint8_t *)"vlan_id_flag", 
-		vlan_id_flag);
+		(uint8_t *)"vlan_id_enable", 
+		vlan_id_enable);
 
   ptr = (uint8_t *)&vlan_id;
 #if WORDS_BIGENDIAN
@@ -843,7 +954,9 @@ fill_suspend_bmc_arps (fiid_obj_t obj_data_rq,
 		       uint8_t arp_response_suspend)
 {
   if (obj_data_rq == NULL
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend))
     {
       errno = EINVAL;
       return (-1);
@@ -880,10 +993,17 @@ ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
+
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(bmc_generated_gratuitous_arps_flag)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(bmc_generated_arp_responses_flag)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_bmc_generated_arp_control_rq);
   ERR (fill_lan_set_arp (obj_cmd_rq, 
 			 channel_number, 
@@ -909,8 +1029,13 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_gratuitous_arp_interval_rq);
   ERR (fill_lan_set_gratuitous_arp_interval (obj_cmd_rq, 
@@ -931,26 +1056,71 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
 				     uint8_t channel_number, 
-				     uint8_t max_privilege_auth_type_callback_level, 
-				     uint8_t max_privilege_auth_type_user_level, 
-				     uint8_t max_privilege_auth_type_operator_level, 
-				     uint8_t max_privilege_auth_type_admin_level, 
-				     uint8_t max_privilege_auth_type_oem_level, 
-				     fiid_obj_t obj_cmd_rs)
+                                     int8_t auth_type_callback_none,
+                                     int8_t auth_type_callback_md2,
+                                     int8_t auth_type_callback_md5,
+                                     int8_t auth_type_callback_straight_password,
+                                     int8_t auth_type_callback_oem_proprietary,
+                                     int8_t auth_type_user_none,
+                                     int8_t auth_type_user_md2,
+                                     int8_t auth_type_user_md5,
+                                     int8_t auth_type_user_straight_password,
+                                     int8_t auth_type_user_oem_proprietary,
+                                     int8_t auth_type_operator_none,
+                                     int8_t auth_type_operator_md2,
+                                     int8_t auth_type_operator_md5,
+                                     int8_t auth_type_operator_straight_password,
+                                     int8_t auth_type_operator_oem_proprietary,
+                                     int8_t auth_type_admin_none,
+                                     int8_t auth_type_admin_md2,
+                                     int8_t auth_type_admin_md5,
+                                     int8_t auth_type_admin_straight_password,
+                                     int8_t auth_type_admin_oem_proprietary,
+                                     int8_t auth_type_oem_none,
+                                     int8_t auth_type_oem_md2,
+                                     int8_t auth_type_oem_md5,
+                                     int8_t auth_type_oem_straight_password,
+                                     int8_t auth_type_oem_oem_proprietary,
+                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_auth_type_enables_rq);
   ERR (fill_lan_set_auth_type_enables (obj_cmd_rq, 
 				       channel_number, 
-				       max_privilege_auth_type_callback_level, 
-				       max_privilege_auth_type_user_level, 
-				       max_privilege_auth_type_operator_level, 
-				       max_privilege_auth_type_admin_level, 
-				       max_privilege_auth_type_oem_level) == 0);
+                                       auth_type_callback_none,
+                                       auth_type_callback_md2,
+                                       auth_type_callback_md5,
+                                       auth_type_callback_straight_password,
+                                       auth_type_callback_oem_proprietary,
+                                       auth_type_user_none,
+                                       auth_type_user_md2,
+                                       auth_type_user_md5,
+                                       auth_type_user_straight_password,
+                                       auth_type_user_oem_proprietary,
+                                       auth_type_operator_none,
+                                       auth_type_operator_md2,
+                                       auth_type_operator_md5,
+                                       auth_type_operator_straight_password,
+                                       auth_type_operator_oem_proprietary,
+                                       auth_type_admin_none,
+                                       auth_type_admin_md2,
+                                       auth_type_admin_md5,
+                                       auth_type_admin_straight_password,
+                                       auth_type_admin_oem_proprietary,
+                                       auth_type_oem_none,
+                                       auth_type_oem_md2,
+                                       auth_type_oem_md5,
+                                       auth_type_oem_straight_password,
+                                       auth_type_oem_oem_proprietary) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -971,8 +1141,13 @@ ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_source_rq);
   ERR (fill_lan_set_ip_addr_source (obj_cmd_rq, 
@@ -998,8 +1173,13 @@ ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1026,8 +1206,13 @@ ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1054,8 +1239,13 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_ip_addr_rq);
   ERR (fill_lan_set_ip_addr (obj_cmd_rq, 
@@ -1077,19 +1267,24 @@ ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
 			   uint8_t channel_number, 
-			   uint8_t vlan_id_flag, 
+			   uint8_t vlan_id_enable, 
 			   uint32_t vlan_id, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_vlan_id_rq);
   ERR (fill_lan_set_vlan_id (obj_cmd_rq, 
 			     channel_number,
-                             vlan_id_flag,
+                             vlan_id_enable,
 			     vlan_id) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
@@ -1111,8 +1306,13 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_vlan_priority_rq);
   ERR (fill_lan_set_vlan_priority (obj_cmd_rq, 
@@ -1138,8 +1338,13 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_subnet_mask_rq);
   ERR (fill_lan_set_subnet_mask (obj_cmd_rq, 
@@ -1165,8 +1370,13 @@ ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1193,8 +1403,13 @@ ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1221,8 +1436,13 @@ ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_lan_conf_param_mac_addr_rq);
   ERR (fill_lan_set_mac_addr (obj_cmd_rq, 
@@ -1251,8 +1471,13 @@ ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1283,8 +1508,13 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1315,8 +1545,13 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1347,8 +1582,13 @@ ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1379,8 +1619,13 @@ ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1411,8 +1656,13 @@ ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1443,8 +1693,13 @@ ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1475,8 +1730,13 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1507,8 +1767,13 @@ ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1539,8 +1804,13 @@ ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1571,8 +1841,13 @@ ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1603,8 +1878,13 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1635,8 +1915,13 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
   ERR (fill_get_lan_conf_param (obj_cmd_rq, 
@@ -1666,8 +1951,13 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
+  if (!dev
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !obj_cmd_rs)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_suspend_bmc_arps_rq);
   ERR (fill_suspend_bmc_arps (obj_cmd_rq, 
