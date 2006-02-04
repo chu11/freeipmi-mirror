@@ -427,6 +427,10 @@ fill_get_serial_conf_param (fiid_obj_t obj_data_rq,
 		(uint8_t *)"channel_number", 
 		channel_number);
     
+  FIID_OBJ_SET (obj_data_rq,
+		(uint8_t *)"reserved",
+		0);
+
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_type", 
 		parameter_type);

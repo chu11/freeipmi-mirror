@@ -253,7 +253,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			 sdr_full_record->sensor_name,
 			 17) < 0)
     goto cleanup;
-  
+
  cleanup:
   if (obj)
     fiid_obj_destroy(obj);
@@ -661,18 +661,18 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
 		       sdr_record_data_len) < 0)
     goto cleanup;
 
-
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"manufacturer_id", 
 		    &val) < 0)
     goto cleanup;
   sdr_oem_record->manufacturer_id = val;
 
-  memset(sdr_oem_record->oem_data, '\0', 17);
+
+  memset(sdr_oem_record->oem_data, '\0', 55);
   if (fiid_obj_get_data (obj,
 			 (uint8_t *)"oem_data",
 			 sdr_oem_record->oem_data,
-			 17) < 0)
+			 55) < 0)
     goto cleanup;
  
 cleanup:

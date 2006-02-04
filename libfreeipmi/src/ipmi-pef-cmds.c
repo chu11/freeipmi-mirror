@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.17.2.2 2006-02-02 23:02:46 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.17.2.3 2006-02-04 01:25:41 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -1344,6 +1344,9 @@ ipmi_cmd_set_pef_control2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1397,6 +1400,9 @@ ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1437,6 +1443,9 @@ ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1482,6 +1491,9 @@ ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1525,6 +1537,9 @@ ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1566,6 +1581,9 @@ ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1615,6 +1633,9 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1656,6 +1677,9 @@ ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1707,6 +1731,9 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1753,6 +1780,9 @@ ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1803,6 +1833,9 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1849,6 +1882,9 @@ ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1899,6 +1935,9 @@ ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -1945,6 +1984,9 @@ ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -1995,6 +2037,9 @@ ipmi_cmd_get_pef_control2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -2041,6 +2086,9 @@ ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -2091,6 +2139,9 @@ ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -2137,6 +2188,9 @@ ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev,
                 IPMI_NET_FN_TRANSPORT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -2187,6 +2241,9 @@ ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -2235,6 +2292,9 @@ ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -2273,6 +2333,9 @@ ipmi_cmd_get_pef_caps2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -2316,6 +2379,9 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -2363,6 +2429,9 @@ ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rq)
@@ -2401,6 +2470,9 @@ ipmi_cmd_get_last_processed_event2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;
@@ -2454,6 +2526,9 @@ ipmi_cmd_pet_ack2 (ipmi_device_t *dev,
                 IPMI_NET_FN_SENSOR_EVENT_RQ, 
                 obj_cmd_rq, 
                 obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
 
   rv = 0;

@@ -135,6 +135,8 @@ set_bmc_enable_user (ipmi_device_t *dev,
 				   obj_cmd_rs) != 0)
     goto cleanup;
   
+  
+
   rv = 0;
  cleanup:
   if (obj_cmd_rs)
@@ -635,6 +637,8 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
                     max_privilege_auth_type_oem_level) < 0)
     return (-1);
 
+  printf("%s:%d\n", __FUNCTION__, __LINE__);
+
   return 0;
 }
 
@@ -1098,25 +1102,29 @@ get_bmc_user_access (ipmi_device_t *dev,
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_privilege_level_limit", 
 		    &val) < 0)
-    *privilege_limit = (uint8_t) val;
+    goto cleanup;
+  *privilege_limit = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_flags.enable_ipmi_msgs", 
 		    &val) < 0)
-    *enable_ipmi_msgs = (uint8_t) val;
+    goto cleanup;
+  *enable_ipmi_msgs = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_flags.enable_link_auth", 
 		    &val) < 0)
-    *enable_link_auth = (uint8_t) val;
+    goto cleanup;
+  *enable_link_auth = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_flags.restrict_to_callback", 
 		    &val) < 0)
-    *enable_restrict_to_callback = (uint8_t) val;
+    goto cleanup;
+  *enable_restrict_to_callback = (uint8_t) val;
   
   *session_limit = 0;
-  
+ 
   rv = 0;
  cleanup:
   if (obj_cmd_rs)
@@ -2267,7 +2275,7 @@ get_pef_global_action_control (ipmi_device_t *dev,
 		    &val) < 0)
     goto cleanup;
   *diag_interrupt_enable = val;
-  
+
   rv = 0;
  cleanup:
   if (obj_cmd_rs)
