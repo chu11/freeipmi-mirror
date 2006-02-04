@@ -646,6 +646,7 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
 {
   uint64_t val;
   fiid_obj_t obj = NULL;
+  int32_t len;
 
   if (!sdr_record_data || !sdr_oem_record)
     {
@@ -667,14 +668,14 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
     goto cleanup;
   sdr_oem_record->manufacturer_id = val;
 
-
   memset(sdr_oem_record->oem_data, '\0', 55);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"oem_data",
-			 sdr_oem_record->oem_data,
-			 55) < 0)
+  if ((len = fiid_obj_get_data (obj,
+				(uint8_t *)"oem_data",
+				sdr_oem_record->oem_data,
+				55)) < 0)
     goto cleanup;
- 
+  sdr_oem_record->oem_data_length = len;
+
 cleanup:
   if (obj)
     fiid_obj_destroy(obj);
