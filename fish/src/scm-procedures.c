@@ -639,9 +639,9 @@ ex_set_bmc_username (SCM scm_userid, SCM scm_username)
   
   userid = gh_scm2long (scm_userid);
   username = (uint8_t *)gh_scm2newstr (scm_username, NULL);
-  
+
   retval = set_bmc_username (fi_get_ipmi_device (), userid, username);
-  
+
   free (username);
   
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);

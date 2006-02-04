@@ -472,10 +472,10 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
       memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
       strncpy(buf, username, IPMI_SESSION_MAX_USERNAME_LEN);
       
-      ERR_EXIT (!(fiid_obj_set_data (obj_cmd, 
-                                     (uint8_t *)"username", 
-                                     (uint8_t *)buf,
-                                     IPMI_SESSION_MAX_USERNAME_LEN) < 0));
+      ERR (!(fiid_obj_set_data (obj_cmd, 
+				(uint8_t *)"username", 
+				(uint8_t *)buf,
+				IPMI_SESSION_MAX_USERNAME_LEN) < 0));
     }
   
   return (0);
@@ -1064,8 +1064,8 @@ fill_kcs_set_user_name (uint8_t user_id,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR_EXIT (!(fiid_obj_clear_field(obj_data_rq, 
-                                   (uint8_t *)"user_name") < 0));
+  ERR (!(fiid_obj_clear_field(obj_data_rq, 
+			      (uint8_t *)"user_name") < 0));
 
   if (user_name)
     {
@@ -1074,10 +1074,10 @@ fill_kcs_set_user_name (uint8_t user_id,
       memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
       strncpy(buf, user_name, IPMI_SESSION_MAX_USERNAME_LEN);
       
-      ERR_EXIT (!(fiid_obj_set_data (obj_data_rq, 
-                                     (uint8_t *)"username", 
-                                     (uint8_t *)buf,
-                                     IPMI_SESSION_MAX_USERNAME_LEN) < 0));
+      ERR (!(fiid_obj_set_data (obj_data_rq, 
+				(uint8_t *)"user_name", 
+				(uint8_t *)buf,
+				IPMI_SESSION_MAX_USERNAME_LEN) < 0));
     }
   
   return 0;
@@ -1170,8 +1170,8 @@ fill_kcs_set_user_password (uint8_t user_id,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR_EXIT (!(fiid_obj_clear_field(obj_data_rq, 
-                                   (uint8_t *)"password") < 0));
+  ERR (!(fiid_obj_clear_field(obj_data_rq, 
+			      (uint8_t *)"password") < 0));
 
   if (user_password)
     {
@@ -1180,10 +1180,10 @@ fill_kcs_set_user_password (uint8_t user_id,
       memset(buf, '\0', IPMI_USER_PASSWORD_MAX_LENGTH);
       strncpy(buf, user_password, IPMI_USER_PASSWORD_MAX_LENGTH);
       
-      ERR_EXIT (!(fiid_obj_set_data (obj_data_rq, 
-                                     (uint8_t *)"password", 
-                                     (uint8_t *)buf,
-                                     IPMI_USER_PASSWORD_MAX_LENGTH) < 0));
+      ERR (!(fiid_obj_set_data (obj_data_rq, 
+				(uint8_t *)"password", 
+				(uint8_t *)buf,
+				IPMI_USER_PASSWORD_MAX_LENGTH) < 0));
     }
 
   return 0;

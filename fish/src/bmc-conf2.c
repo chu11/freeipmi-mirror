@@ -608,6 +608,11 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"reserved1",
+                    0) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
                     (uint8_t *)"parameter_selector",
                     IPMI_LAN_PARAM_AUTH_TYPE_ENABLES) < 0)
     return (-1);
@@ -618,8 +623,18 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"max_privilege_auth_type_callback_level.reserved2",
+                    0) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
                     (uint8_t *)"max_privilege_auth_type_user_level",
                     max_privilege_auth_type_user_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"max_privilege_auth_type_user_level.reserved2",
+                    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
@@ -628,8 +643,18 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"max_privilege_auth_type_operator_level.reserved2",
+                    0) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
                     (uint8_t *)"max_privilege_auth_type_admin_level",
                     max_privilege_auth_type_admin_level) < 0)
+    return (-1);
+
+  if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"max_privilege_auth_type_admin_level.reserved2",
+                    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
@@ -637,7 +662,10 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
                     max_privilege_auth_type_oem_level) < 0)
     return (-1);
 
-  printf("%s:%d\n", __FUNCTION__, __LINE__);
+  if (fiid_obj_set (obj_data_rq,
+                    (uint8_t *)"max_privilege_auth_type_oem_level.reserved2",
+                    0) < 0)
+    return (-1);
 
   return 0;
 }
@@ -650,20 +678,20 @@ set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   fiid_template_t l_tmpl_set_lan_conf_param_auth_type_enables_rq =
     {
-      {8, "cmd"},
-      {4, "channel_number"},
-      {4, "reserved1"},
-      {8, "parameter_selector"},
-      {6, "max_privilege_auth_type_callback_level"},
-      {2, "max_privilege_auth_type_callback_level.reserved2"},
-      {6, "max_privilege_auth_type_user_level"},
-      {2, "max_privilege_auth_type_user_level.reserved2"},
-      {6, "max_privilege_auth_type_operator_level"},
-      {2, "max_privilege_auth_type_operator_level.reserved2"},
-      {6, "max_privilege_auth_type_admin_level"},
-      {2, "max_privilege_auth_type_admin_level.reserved2"},
-      {6, "max_privilege_auth_type_oem_level"},
-      {2, "max_privilege_auth_type_oem_level.reserved2"},
+      {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "max_privilege_auth_type_callback_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "max_privilege_auth_type_callback_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "max_privilege_auth_type_user_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "max_privilege_auth_type_user_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "max_privilege_auth_type_operator_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "max_privilege_auth_type_operator_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "max_privilege_auth_type_admin_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "max_privilege_auth_type_admin_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "max_privilege_auth_type_oem_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "max_privilege_auth_type_oem_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       {0, ""}
     };
   uint8_t auth_type_callback_level = 0;
