@@ -62,10 +62,11 @@ fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session
    */
   ERR_EXIT (fiid_obj_clear_field (obj_hdr, (uint8_t *)"auth_code") == 0);
   
-  if (auth_code_data)
+  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE 
+      && auth_code_data)
     {
       char buf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-      
+	  
       memset(buf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
       memcpy(buf, auth_code_data, auth_code_data_len);
       

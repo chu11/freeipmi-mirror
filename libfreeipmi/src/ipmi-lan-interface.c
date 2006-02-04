@@ -826,10 +826,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   indx += len;
 
   /* auth_code generated last.  Save pointers for later calculation */
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-      || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-      || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
+  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
       auth_code_field_ptr = (pkt + indx); 
       indx += IPMI_SESSION_MAX_AUTH_CODE_LEN;
@@ -904,14 +901,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
    * require all fields, including checksums, to be calculated
    * beforehand
    */
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-      || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-      || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
+  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {     
       uint8_t pwbuf[IPMI_SESSION_MAX_AUTH_CODE_LEN];
       int32_t auth_len;
-
+      
       memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	  
       if ((auth_len = fiid_obj_field_len_bytes(obj_hdr_session,
@@ -932,9 +926,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 	}
       else
 	{
-	  memcpy(pwbuf,
-		 auth_code_data,
-		 auth_code_data_len);
+	  if (auth_code_data)
+	    memcpy(pwbuf,
+		   auth_code_data,
+		   auth_code_data_len);
 	  
 	  if (auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY)
 	    {	 

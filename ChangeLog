@@ -14,6 +14,14 @@
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
+2006-02-04  Albert Chu <chu11@llnl.gov>	
+
+	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session): Fix corner
+	case.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt):
+	Fix corner cases.
+	
 2006-02-03  Albert Chu <chu11@llnl.gov>	
 
 	* Support new fiid in fish.
