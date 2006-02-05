@@ -194,6 +194,7 @@ extern "C" {
 #include "bit-ops.h"
 #include "fiid.h"
 #include "ipmi-utils.h"
+#include "ipmi-comp-code-spec.h"
 #include "ipmi-error.h"
 #include "ipmi-locate.h"
 #include "smbios-locate.h"
@@ -299,6 +300,7 @@ extern char *__progname;
 #else
 #include <freeipmi/bit-ops.h>
 #include <freeipmi/fiid.h>
+#include <freeipmi/ipmi-comp-code-spec.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-locate.h>

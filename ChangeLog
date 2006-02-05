@@ -1,6 +1,11 @@
 2006-02-05  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-interface-desc.h: Remove duplicate code.
+
+	Comp Code cleanup.
+
+	* libfreeipmi/src/ipmi-comp-code-spec.h: New file.
+
 	
 2006-02-04  Albert Chu  <chu11@llnl.gov>
 

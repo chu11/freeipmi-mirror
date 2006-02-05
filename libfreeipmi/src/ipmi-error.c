@@ -40,210 +40,148 @@ ipmi_strerror_r (uint8_t cmd,
       return (-1);
     }
   
-  switch (comp_code) 
+  switch (comp_code)
     {
-    case IPMI_COMMAND_SUCCESS:
-      SNPRINTF_RETURN ("Command Completed Normally.");
-      
-    case IPMI_ERR_NODE_BUSY:
-      SNPRINTF_RETURN ("Node Busy. Command could not be processed "
-		       "because command processing resources are "
-		       "temporarily unavailable.");
-      
-    case IPMI_ERR_COMMAND_INVALID:
-      SNPRINTF_RETURN ("Invalid Command. Used to indicate an "
-		       "unrecognized or unsupported command.");
-      
-    case IPMI_ERR_COMMAND_INVALID_FOR_LUN:
-      SNPRINTF_RETURN ("Command invalid for given LUN.");
-      
-    case IPMI_ERR_COMMAND_TIMEOUT:
-      SNPRINTF_RETURN ("Timeout while processing command. "
-		       "Response unavailable.");
-      
-    case IPMI_ERR_OUT_OF_SPACE:
-      SNPRINTF_RETURN ("Out of space. Command could not be "
-		       "completed because of a lack of storage "
-		       "space required to execute the given "
-		       "command operation.");
-      
-    case IPMI_ERR_RESERVATION_CANCELLED:
-      SNPRINTF_RETURN ("Reservation Canceled or Invalid "
-		       "Reservation ID.");
-      
-    case IPMI_ERR_REQUEST_DATA_TRUNCATED:
-      SNPRINTF_RETURN ("Request data truncated.");
-      
-    case IPMI_ERR_REQUEST_DATA_LENGTH_INVALID:
-      SNPRINTF_RETURN ("Request data length invalid.");
-      
-    case IPMI_ERR_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED: 
-      SNPRINTF_RETURN ("Request data field length limit exceeded.");
-      
-    case IPMI_ERR_PARAMETER_OUT_OF_RANGE:
-      SNPRINTF_RETURN ("Parameter out of range. One or more "
-		       "parameters in the data field of the "
-		       "Request are out of range. This is "
-		       "different from  Invalid data field "
-		       "(CCh) code in that it indicates that "
-		       "the erroneous field(s) has a contiguous "
-		       "range of possible values.");
-      
-    case IPMI_ERR_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES:
-      SNPRINTF_RETURN ("Cannot return number of requested data bytes.");
-      
-    case IPMI_ERR_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT:
-      SNPRINTF_RETURN ("Requested Sensor, data, or record not present.");
-      
-    case IPMI_ERR_REQUEST_INVALID_DATA_FIELD:
-      SNPRINTF_RETURN ("Invalid data field in Request.");
-      
-    case IPMI_ERR_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE:
-      SNPRINTF_RETURN ("Command illegal for specified sensor or record type.");
-      
-    case IPMI_ERR_COMMAND_CANNOT_RESPOND:    
-      SNPRINTF_RETURN ("Command response could not be provided.");
-      
-    case IPMI_ERR_COMMAND_DUPLICATE_REQUEST:
-      SNPRINTF_RETURN ("Cannot execute duplicated request. "
-		       "This completion code is for devices "
-		       "which cannot return the response that "
-		       "was returned for the original instance "
-		       "of the request. Such devices should provide "
-		       "separate commands that allow the completion "
-		       "status of the original request to be determined. "
-		       "An Event Receiver does not use this completion "
-		       "code, but returns the 00h completion code in the "
-		       "response to (valid) duplicated requests.");
-      
-    case IPMI_ERR_SDR_UPDATE_MODE:
-      SNPRINTF_RETURN ("Command response could not be provided. "
-		       "SDR Repository in update mode.");
-      
-    case IPMI_ERR_FIRMWARE_UPDATE_MODE:
-      SNPRINTF_RETURN ("Command response could not be provided. "
-		       "Device in firmware update mode.");
-      
-    case IPMI_ERR_BMC_INIT_MODE:
-      SNPRINTF_RETURN ("Command response could not be provided. "
-		       "BMC initialization or initialization "
-		       "agent in progress.");
-      
-    case IPMI_ERR_DESTINATION_UNAVAILABLE:
-      SNPRINTF_RETURN ("Destination unavailable. Cannot deliver "
-		       "request to selected destination. E.g. "
-		       "this code can be returned if a request "
-		       "message is targeted to SMS, but receive "
-		       "message queue reception is disabled for "
-		       "the particular channel.");
-      
-    case IPMI_ERR_INSUFFICIENT_PRIVILEGE_LEVEL:
-      SNPRINTF_RETURN ("Cannot execute command. "
-		       "Insufficient privilege level.");
-      
-    case IPMI_ERR_REQUEST_PARAMETER_NOT_SUPPORTED:
-      SNPRINTF_RETURN ("Cannot execute command. Command, "
-		       "or request parameter(s), not supported "
-		       "in present state.");
-      
-    case IPMI_ERR_UNSPECIFIED_ERROR:
-      SNPRINTF_RETURN ("Unspecified error.");
+    case IPMI_COMP_CODE_COMMAND_SUCCESS:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_SUCCESS_STR);
+
+    case IPMI_COMP_CODE_NODE_BUSY:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_NODE_BUSY_STR);
+
+    case IPMI_COMP_CODE_COMMAND_INVALID:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_INVALID_STR);
+
+    case IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_INVALID_FOR_LUN_STR);
+
+    case IPMI_COMP_CODE_COMMAND_TIMEOUT:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_TIMEOUT_STR);
+
+    case IPMI_COMP_CODE_OUT_OF_SPACE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_OUT_OF_SPACE_STR);
+
+    case IPMI_COMP_CODE_RESERVATION_CANCELLED:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_RESERVATION_CANCELLED_STR);
+
+    case IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_DATA_TRUNCATED_STR);
+
+    case IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_DATA_LENGTH_INVALID_STR);
+
+    case IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_DATA_LENGTH_LIMIT_EXCEEDED_STR);
+
+    case IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_PARAMETER_OUT_OF_RANGE_STR);
+
+    case IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_RETURN_REQUESTED_NUMBER_OF_BYTES_STR);
+
+    case IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_SENSOR_DATA_OR_RECORD_NOT_PRESENT_STR);
+
+    case IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD_STR);
+
+    case IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_ILLEGAL_FOR_SENSOR_OR_RECORD_TYPE_STR);
+
+    case IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_CANNOT_RESPOND_STR);
+
+    case IPMI_COMP_CODE_COMMAND_DUPLICATE_REQUEST:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_DUPLICATE_REQUEST_STR);
+
+    case IPMI_COMP_CODE_SDR_UPDATE_MODE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_SDR_UPDATE_MODE_STR);
+
+    case IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_FIRMWARE_UPDATE_MODE_STR);
+
+    case IPMI_COMP_CODE_BMC_INIT_MODE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_BMC_INIT_MODE_STR);
+
+    case IPMI_COMP_CODE_DESTINATION_UNAVAILABLE:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_DESTINATION_UNAVAILABLE_STR);
+
+    case IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL_STR);
+
+    case IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED_STR);
+
+    case IPMI_COMP_CODE_UNSPECIFIED_ERROR:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_UNSPECIFIED_ERROR_STR);
     }
 
   /* OEM completion codes */
   if ((comp_code >= 0x01) && (comp_code <= 0x7E))
-    {
-      SNPRINTF_RETURN ("Device specific (OEM) completion code %02Xh.", 
-		       comp_code);
-    }
-  
+    SNPRINTF_RETURN ("Device specific (OEM) completion code %02Xh.", comp_code);
+
   /* Command specific completion codes */
   if ((comp_code >= 0x80) && (comp_code <= 0xBE)) 
     {
       switch (cmd) 
 	{
 	case IPMI_CMD_GET_SESSION_CHALLENGE:
-	  switch (comp_code) 
-	    {
-	    case IPMI_ERR_INVALID_USERNAME:
-	      SNPRINTF_RETURN ("Invalid user name");
+	  switch (comp_code)
+            {
+            case IPMI_COMP_CODE_INVALID_USERNAME:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_USERNAME_STR);
 	      
-	    case IPMI_ERR_NULL_USERNAME_NOT_ENABLED:
-	      SNPRINTF_RETURN ("Null user name (User 1) not enabled");
-	    }
+            case IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED_STR);
+            }
 	  break;
 	case IPMI_CMD_ACTIVATE_SESSION:
-	  switch (comp_code) 
-	    {
-	    case IPMI_ERR_NO_SESSION_SLOT_AVAILABLE:
-	      SNPRINTF_RETURN ("No session slot available "
-			       "(BMC cannot accept any more sessions)");
+	  switch (comp_code)
+            {
+            case IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE_STR);
 	      
-	    case IPMI_ERR_NO_SLOT_AVAILABLE_FOR_GIVEN_USER:
-	      SNPRINTF_RETURN ("No slot available for given user. "
-			       "(Limit of user sessions allowed under "
-			       "that name has been reached)");
+            case IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER_STR);
 	      
-	    case IPMI_ERR_NO_SLOT_AVAILABLE_TO_SUPPORT_USER:
-	      SNPRINTF_RETURN ("No slot available to support user due to "
-			       "maximum privilege capability. (An "
-			       "implementation may only be able to support "
-			       "a certain number of sessions based on what "
-			       "authentication resources are required. For "
-			       "example, if User Level Authentication is "
-			       "disabled, an implementation may be able "
-			       "to allow a larger number of users that are "
-			       "limited to User Level privilege, than users "
-			       "that require higher privilege.");
+            case IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_NO_SLOT_AVAILALBE_TO_SUPPORT_USER_STR);
 	      
-	    case IPMI_ERR_SESSION_SEQ_NUM_OUT_OF_RANGE:
-	      SNPRINTF_RETURN ("Session sequence number out-of-range");
+            case IPMI_COMP_CODE_SESSION_SEQ_NUM_OUT_OF_RANGE:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_SESSION_SEQ_NUM_OUT_OF_RANGE_STR);
 	      
-	    case IPMI_ERR_INVALID_SESSION_ID:
-	      SNPRINTF_RETURN ("Invalid session ID in request");
+            case IPMI_COMP_CODE_INVALID_SESSION_ID:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_STR);
 	      
-	    case IPMI_ERR_EXCEEDS_PRIV_LEVEL:
-	      SNPRINTF_RETURN ("requested maximum privilege level exceeds user and/or "
-			       "channel privilege limit");
-	    }
+            case IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL_STR);
+            }
 	  break;
 	case IPMI_CMD_SET_SESSION_PRIV_LEVEL: 
-	  switch (comp_code) 
-	    {
-	    case IPMI_ERR_RQ_LEVEL_NOT_AVAILABLE_FOR_USER:
-	      SNPRINTF_RETURN ("Requested level not available for this user");
-	      
-	    case IPMI_ERR_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT:
-	      SNPRINTF_RETURN ("Requested level exceeds Channel and/or User "
-			       "Privilege Limit");
-	      
-	    case IPMI_ERR_CANNOT_DISABLE_USER_LEVEL_AUTH:
-	      SNPRINTF_RETURN ("Cannot disable User Level authentication");
-	    }
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER_STR);
+            case IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT_STR);
+            case IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH_STR);
+            }
 	  break;
 	case IPMI_CMD_CLOSE_SESSION:
-	  switch (comp_code) 
-	    {
-	    case IPMI_ERR_INVALID_SESSION_ID_IN_RQ:
-	      SNPRINTF_RETURN ("Invalid session ID in request");
-	      
-	    default:
-	      SNPRINTF_RETURN ("No error message found for command "
-			       "%02Xh and completion code %02Xh.  "
-			       "Please report to <freeipmi-devel@gnu.org>", 
-			       cmd, 
-			       comp_code);
-	    }
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR);
+            }
 	  break;
 	case IPMI_CMD_DELETE_SEL_ENTRY:
-	  switch (comp_code)
-	    {
-	    case IPMI_ERR_SEL_OPERATION_NOT_SUPPORTED:
-	      SNPRINTF_RETURN ("Operation not supported for this Record Type");
-	      
-	    case IPMI_ERR_SEL_ERASE_IN_PROGRESS:
-	      SNPRINTF_RETURN ("Cannot execute command, SEL erase in progress");
-	    }
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED_STR);
+            case IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS_STR);
+            }
 	  break;
 	}
       SNPRINTF_RETURN ("No error message found for command "
