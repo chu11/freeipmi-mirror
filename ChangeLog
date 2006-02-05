@@ -1,3 +1,7 @@
+2006-02-05  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-interface-desc.h: Remove duplicate code.
+	
 2006-02-04  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
