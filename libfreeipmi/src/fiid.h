@@ -128,8 +128,8 @@ do {                                                           \
 
 #define FIID_FIELD_MAX 256
 
-#define FIID_FIELD_REQUIRED         0x00000000
-#define FIID_FIELD_OPTIONAL         0x00000001
+#define FIID_FIELD_REQUIRED         0x00000001
+#define FIID_FIELD_OPTIONAL         0x00000002
 #define FIID_FIELD_REQUIRED_MASK    0x0000000F
 
 #define FIID_FIELD_REQUIRED_FLAG(__flags) \
@@ -139,8 +139,8 @@ do {                                                           \
         ((FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_REQUIRED \
 	  || FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_OPTIONAL) ? 1 : 0)
   
-#define FIID_FIELD_LENGTH_FIXED     0x00000000
-#define FIID_FIELD_LENGTH_VARIABLE  0x00000010
+#define FIID_FIELD_LENGTH_FIXED     0x00000010
+#define FIID_FIELD_LENGTH_VARIABLE  0x00000020
 #define FIID_FIELD_LENGTH_MASK      0x000000F0
 
 #define FIID_FIELD_LENGTH_FLAG(__flags) \

@@ -487,7 +487,6 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
-  int32_t len;
 
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
