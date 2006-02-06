@@ -2,6 +2,10 @@
 
 	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd2): Fix ssif
 	read bug.
+
+	* libfreeipmi/src/ipmi-netfn-spec.c: Removed file.
+
+	* libfreeipmi/src/ipmi-netfn-spec.h: Removed pre 0.1.0 remnant code.
 	
 2006-02-05  Albert Chu  <chu11@llnl.gov>
 

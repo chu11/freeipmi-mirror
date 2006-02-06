@@ -25,9 +25,6 @@
 extern "C" {
 #endif
 
-#define IPMI_NET_FN_LUN(net_fn)  (net_fn & 0x03)
-#define IPMI_NET_FN_FN(net_fn)   (net_fn >> 2)
-
 /* Notes:
    Refer to IPMIv1_5_rev1_1.pdf Table 5-1, Network Function Codes
    for complete description
@@ -57,14 +54,6 @@ extern "C" {
 #define IPMI_NET_FN_VALID(__net_fn) \
         (((__net_fn+1) >= IPMI_NET_FN_CHASSIS_RS \
           && (__net_fn-1) <= IPMI_NET_FN_TRANSPORT_RQ) ? 1 : 0)
-
-typedef struct net_fn
-{
-  uint8_t lun:2;
-  uint8_t fn:6;
-} net_fn_t;
-
-uint8_t ipmi_netfn2byte (net_fn_t net_fn);
 
 #ifdef __cplusplus
 }
