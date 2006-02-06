@@ -189,21 +189,32 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     uint8_t *pkt;
     uint32_t pkt_len;
     size_t bytes_read = 0;
+    size_t read_len;
     int32_t hdr_len, cmd_len;
+    fiid_field_t *tmpl = NULL;
 
-    ERR(!((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rs.tmpl_hdr_ptr))) < 0));
-    ERR(!((cmd_len = fiid_obj_max_len_bytes(obj_cmd_rs)) < 0));
+    rv = -1;
+    
+    if ((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rs.tmpl_hdr_ptr))) < 0)
+      goto cleanup;
+    if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
+      goto cleanup;
+    if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
+      goto cleanup;
     pkt_len = hdr_len + cmd_len;
     
     pkt = alloca (pkt_len);
+    if (!pkt)
+      goto cleanup;
     memset (pkt, 0, pkt_len);
-    ERR (pkt);
     
-    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read) != -1);
-    if (bytes_read != pkt_len)
+    if ((read_len = ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read)) < 0)
+      goto cleanup;
+
+    if (read_len != pkt_len)
       {
 	int i;
-	
+#if 0	
 	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
 	fprintf (stderr, 
 		 "received packet size: %d\n" 
@@ -214,13 +225,21 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 	for (i = 0; i < bytes_read; i++)
 	  fprintf (stderr, "%02X ", pkt[i]);
 	fprintf (stderr, "\n");
-	
-	return (-1);
+#endif
+        goto cleanup;
       }
-    ERR (unassemble_ipmi_kcs_pkt (pkt, 
-				  pkt_len, 
-				  dev->io.inband.rs.obj_hdr, 
-				  obj_cmd_rs) != -1);
+    if (unassemble_ipmi_kcs_pkt (pkt, 
+                                 read_len,
+                                 dev->io.inband.rs.obj_hdr, 
+                                 obj_cmd_rs) < 0)
+      goto cleanup;
+
+    rv = 0;
+  cleanup:
+    if (tmpl)
+      fiid_template_free(tmpl);
+    if (rv < 0)
+      return (rv);
   }
   
   return (0);

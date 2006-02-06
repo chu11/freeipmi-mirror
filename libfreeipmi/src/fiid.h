@@ -150,6 +150,8 @@ do {                                                           \
         ((FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_FIXED \
 	  || FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
 
+#define FIID_FIELD_FLAGS_DEFAULT    (FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)
+
 typedef struct fiid_field
 {
   uint32_t max_field_len;
@@ -179,20 +181,19 @@ int32_t fiid_template_block_len (fiid_template_t tmpl,
 int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
 				       uint8_t *field_start, 
 				       uint8_t *field_end);
+fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
+void fiid_template_free (fiid_field_t *tmpl_dynamic);
 
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
 int8_t fiid_obj_valid(fiid_obj_t obj);
 int8_t fiid_obj_packet_valid(fiid_obj_t obj);
+fiid_field_t *fiid_obj_template(fiid_obj_t obj);
 int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
-int32_t fiid_obj_max_len(fiid_obj_t obj);
-int32_t fiid_obj_max_len_bytes(fiid_obj_t obj);
+
 int32_t fiid_obj_len(fiid_obj_t obj);
 int32_t fiid_obj_len_bytes(fiid_obj_t obj);
-
-int32_t fiid_obj_max_field_len(fiid_obj_t obj, uint8_t *field);
-int32_t fiid_obj_max_field_len_bytes(fiid_obj_t obj, uint8_t *field);
 int32_t fiid_obj_field_len(fiid_obj_t obj, uint8_t *field);
 int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, uint8_t *field);
 
@@ -214,14 +215,10 @@ int8_t fiid_iterator_destroy(fiid_iterator_t iter);
 int8_t fiid_iterator_reset(fiid_iterator_t iter);
 int8_t fiid_iterator_next(fiid_iterator_t iter);
 int8_t fiid_iterator_end(fiid_iterator_t iter);
-int32_t fiid_iterator_max_field_len(fiid_iterator_t iter);
 int32_t fiid_iterator_field_len(fiid_iterator_t iter);
 uint8_t *fiid_iterator_key(fiid_iterator_t iter);
 int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
 int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
-
-fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
-void fiid_template_free (fiid_field_t *tmpl_dynamic);
 
 #ifdef __cplusplus
 }

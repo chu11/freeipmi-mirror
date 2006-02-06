@@ -103,10 +103,10 @@ fill_lan_msg_hdr (uint8_t net_fn,
   return (0);
 }
 
-static int32_t 
-_ipmi_lan_pkt_size (uint8_t auth_type, 
-		    fiid_template_t tmpl_lan_msg, 
-		    fiid_obj_t obj_cmd)
+static int32_t
+_ipmi_lan_pkt_min_size(uint8_t auth_type,
+                       fiid_template_t tmpl_lan_msg, 
+                       fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
@@ -118,8 +118,6 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
   ERR(!((len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg)) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
   msg_len += len;
@@ -137,6 +135,26 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
       || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
     msg_len += IPMI_SESSION_MAX_AUTH_CODE_LEN;
   
+  return msg_len;
+}
+                       
+static int32_t 
+_ipmi_lan_pkt_size (uint8_t auth_type, 
+		    fiid_template_t tmpl_lan_msg, 
+		    fiid_obj_t obj_cmd)
+{
+  uint32_t msg_len = 0;
+  int32_t len;
+  
+  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+         && tmpl_lan_msg
+         && fiid_obj_valid(obj_cmd));
+
+  ERR(!((len = _ipmi_lan_pkt_min_size(auth_type, tmpl_lan_msg, obj_cmd)) < 0));
+  msg_len += len;
+  ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
+  msg_len += len;
+
   return msg_len;
 }
 
@@ -153,34 +171,28 @@ _ipmi_max_lan_pkt_size (uint8_t auth_type,
 {
   uint32_t msg_len = 0;
   int32_t len;
+  fiid_field_t *tmpl = NULL;
+  int32_t rv = -1;
 
   assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  ERR(!((len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg)) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_obj_max_len_bytes (obj_cmd)) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_template_block_len_bytes (tmpl_hdr_session,
-					      (uint8_t *)"auth_type",
-					      (uint8_t *)"session_id")) < 0));
-  msg_len += len;
-  ERR(!((len = fiid_template_field_len_bytes (tmpl_hdr_session,
-					      (uint8_t *)"ipmi_msg_len")) < 0));
+  if ((len = _ipmi_lan_pkt_min_size(auth_type, tmpl_lan_msg, obj_cmd)) < 0)
+    goto cleanup;
   msg_len += len;
   
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-      || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-      || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
-    msg_len += IPMI_SESSION_MAX_AUTH_CODE_LEN;
+  if (!(tmpl = fiid_obj_template(obj_cmd)))
+    goto cleanup;
+  if ((len = fiid_template_len_bytes(tmpl)) < 0)
+    goto cleanup;
+  msg_len += len;
   
-  return msg_len;
+  rv = msg_len;
+ cleanup:
+  if (tmpl)
+    fiid_template_free(tmpl);
+  return (rv);
 }
 
 int32_t 
@@ -219,7 +231,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   uint8_t *ipmi_msg_len_ptr = NULL;
   uint32_t msg_data_count = 0;
   uint32_t chksum_data_count = 0;
-  int32_t len, max_len;
+  int32_t len, req_len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_msg_trlr = NULL;
   ipmi_chksum_t chksum;
@@ -280,10 +292,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"auth_type")) < 0)
     return (-1);
 
-  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"auth_type")) < 0)
+  if ((req_len = fiid_template_field_len(tmpl_hdr_session, (uint8_t *)"auth_type")) < 0)
     return (-1);
   
-  if (len != max_len)
+  if (len != req_len)
     {
       errno = EINVAL;
       return (-1);
@@ -292,10 +304,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
     return (-1);
 
-  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+  if ((req_len = fiid_template_field_len(tmpl_hdr_session, (uint8_t *)"session_seq_num")) < 0)
     return (-1);
   
-  if (len != max_len)
+  if (len != req_len)
     {
       errno = EINVAL;
       return (-1);
@@ -304,10 +316,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_id")) < 0)
     return (-1);
 
-  if ((max_len = fiid_obj_max_field_len(obj_hdr_session, (uint8_t *)"session_id")) < 0)
+  if ((req_len = fiid_template_field_len(tmpl_hdr_session, (uint8_t *)"session_id")) < 0)
     return (-1);
   
-  if (len != max_len)
+  if (len != req_len)
     {
       errno = EINVAL;
       return (-1);
@@ -371,8 +383,8 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
     }
   
   ipmi_msg_len_ptr = (pkt + indx);
-  if ((len = fiid_obj_max_field_len_bytes(obj_hdr_session,
-					  (uint8_t *)"ipmi_msg_len")) < 0)
+  if ((len = fiid_template_field_len_bytes(tmpl_hdr_session,
+                                           (uint8_t *)"ipmi_msg_len")) < 0)
     goto cleanup;
   if (len != 1)
     {
@@ -691,25 +703,19 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (pkt_len <= indx)
     return 0;
 
-  obj_cmd_len = fiid_obj_max_len_bytes (obj_cmd);
-  obj_msg_trlr_len = fiid_obj_max_len_bytes (obj_msg_trlr);
+  ERR(!((obj_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
 
-  if ((pkt_len - indx) <= obj_cmd_len)
-    {
-      if ((pkt_len - indx) > obj_msg_trlr_len)
-        obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
-      else
-        obj_cmd_len = 0;
-    }
+  if ((pkt_len - indx) >= obj_msg_trlr_len)
+    obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
+  else if ((pkt_len - indx) < obj_msg_trlr_len)
+    obj_cmd_len = 0;
 
   if (obj_cmd_len)
     {
-      if ((len = fiid_obj_set_all(obj_cmd,
-                                  pkt + indx,
-                                  pkt_len - indx)) < 0)
-        return -1;
+      ERR(!(fiid_obj_clear(obj_cmd) < 0));
+      ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
       indx += len;
-
+      
       if (pkt_len <= indx)
         return 0;
     }

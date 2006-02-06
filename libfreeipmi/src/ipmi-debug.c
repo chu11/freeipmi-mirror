@@ -421,16 +421,12 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   if (!(obj_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
     goto cleanup;
   
-  obj_cmd_len = fiid_obj_max_len_bytes (obj_cmd);
-  obj_msg_trlr_len = fiid_obj_max_len_bytes (obj_msg_trlr);
+  ERR(!((obj_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
 
-  if ((pkt_len - indx) <= obj_cmd_len)
-    {
-      if ((pkt_len - indx) > obj_msg_trlr_len)
-	obj_cmd_len = pkt_len - indx - obj_msg_trlr_len;
-      else
-	obj_cmd_len = 0;
-    }
+  if ((pkt_len - indx) >= obj_msg_trlr_len)
+    obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
+  else if ((pkt_len - indx) < obj_msg_trlr_len)
+    obj_cmd_len = 0;
 
   if (obj_cmd_len)
     {

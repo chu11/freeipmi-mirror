@@ -29,6 +29,23 @@
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(fill_cmd_get_session_challenge, fill_cmd_activate_session,
 	fill_kcs_set_user_name, fill_kcs_set_user_password): Fix bugs.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c (fiid_obj_template): New function.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c
+	(fiid_obj_max_len, fiid_obj_max_len_bytes, fiid_obj_max_field_len,
+	fiid_obj_max_field_len_bytes, fiid_iterator_max_field_len):
+	Removed functions.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (_ipmi_lan_pkt_min_size): New function.
+
+	* libfreeipmi/src/ipmi-debug.c (fiid_obj_dump_lan),
+	libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_cmd2),
+	libfreeipmi/src/ipmi-lan-interface.c (_ipmi_lan_pkt_size,
+	_ipmi_max_lan_pkt_size, assemble_ipmi_lan_pkt,
+	unassemble_ipmi_lan_pkt), libfreeipmi/src/ipmi-ssif-interface.c
+	(ipmi_ssif_cmd2), libfreeipmi/src/rmcp.c (ipmi_rmcp_ping): Use new
+	functions appropriately.
 	
 2006-02-04  Albert Chu <chu11@llnl.gov>	
 

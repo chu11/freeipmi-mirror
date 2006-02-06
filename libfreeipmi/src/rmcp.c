@@ -279,10 +279,10 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
     if (!(obj_cmd = fiid_obj_create(tmpl_cmd_asf_presence_ping)))
       goto cleanup1;
 
-    if ((hdr_len = fiid_obj_max_len_bytes(obj_hdr)) < 0)
+    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
       goto cleanup1;
 
-    if ((cmd_len = fiid_obj_max_len_bytes(obj_cmd)) < 0)
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_ping)) < 0)
       goto cleanup1;
 	
     pkt_len = hdr_len + cmd_len;
@@ -335,10 +335,10 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
     if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
       goto cleanup2;
 
-    if ((hdr_len = fiid_obj_max_len_bytes(obj_hdr)) < 0)
+    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
       goto cleanup2;
 
-    if ((cmd_len = fiid_obj_max_len_bytes(pong)) < 0)
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_pong)) < 0)
       goto cleanup2;
 
     pkt_len = hdr_len + cmd_len;

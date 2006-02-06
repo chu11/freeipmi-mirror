@@ -354,6 +354,120 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
+fiid_field_t * 
+__fiid_template_make (uint8_t dummy, ...)
+{
+  va_list ap;
+  
+  int max_field_len = 0;
+  char *key = NULL;
+  int flags = 0;
+
+  fiid_field_t *tmpl_dynamic = NULL;
+  int element_count = 0;
+  
+  int32_t max_pkt_len = 0;
+
+  int i;
+  
+  {
+    va_list ap;
+    
+    va_start (ap, dummy);
+    
+    while (1)
+      {
+	if ((max_field_len = va_arg (ap, int)) == 0)
+	  break;
+	
+	if ((key = va_arg (ap, char *)) == NULL)
+	  break;
+	
+        if ((flags = va_arg (ap, int)) == 0)
+          break;
+
+	element_count++;
+      }
+    
+    //printf ("total field count: %d\n", element_count);
+    va_end (ap);
+  }
+  
+  va_start (ap, dummy);
+  
+  if (!(tmpl_dynamic = (fiid_field_t *)ipmi_xcalloc ((element_count + 1), 
+                                                     sizeof (fiid_field_t))))
+    return NULL;
+  
+  for (i = 0; i < element_count; i++)
+    {
+      if ((max_field_len = va_arg (ap, int)) == 0)
+	break;
+      
+      if ((key = va_arg (ap, char *)) == NULL)
+	{
+	  free (tmpl_dynamic);
+	  return NULL;
+	}
+      
+      if ((flags = va_arg (ap, int)) == 0)
+	{
+	  free (tmpl_dynamic);
+	  return NULL;
+	}
+
+#ifndef NDEBUG
+      if (max_field_len)
+        {
+          int j;
+
+          for (j = 0; j < i; j++)
+            {
+              if (!strcmp(tmpl_dynamic[i].key, key))
+                {
+                  free (tmpl_dynamic);
+                  errno = EINVAL;
+                  return NULL;
+                }
+            }
+
+          if (!FIID_FIELD_REQUIRED_FLAG_VALID(flags)
+              || !FIID_FIELD_LENGTH_FLAG_VALID(flags))
+            {
+              free (tmpl_dynamic);
+              errno = EINVAL;
+              return NULL;
+            }
+        }
+#endif /* !NDEBUG */
+      
+      tmpl_dynamic[i].max_field_len = max_field_len;
+      strncpy (tmpl_dynamic[i].key, key, FIID_FIELD_MAX);
+      tmpl_dynamic[i].key[FIID_FIELD_MAX - 1] = '\0';
+      tmpl_dynamic[i].flags = flags;
+
+      max_pkt_len += tmpl_dynamic[i].max_field_len;
+    }
+  
+  if (max_pkt_len % 8)
+    {
+      free (tmpl_dynamic);
+      errno = EINVAL;
+      return NULL;
+    }
+
+  va_end (ap);
+  
+  return tmpl_dynamic;
+}
+
+void 
+fiid_template_free (fiid_field_t *tmpl_dynamic)
+{
+  if (tmpl_dynamic != NULL)
+    ipmi_xfree (tmpl_dynamic);
+}
+
 static int32_t
 _fiid_obj_field_start_end (fiid_obj_t obj, 
                            uint8_t *field, 
@@ -676,6 +790,35 @@ fiid_obj_packet_valid(fiid_obj_t obj)
   return (1);
 }
 
+fiid_field_t *
+fiid_obj_template(fiid_obj_t obj)
+{
+  fiid_field_t *tmpl;
+  int i;
+
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    {
+      errno = EINVAL;
+      return (NULL);
+    }
+
+  if (!(tmpl = (fiid_field_t *)ipmi_xmalloc(sizeof(fiid_field_t) * obj->field_data_len)))
+    {
+      errno = ENOMEM;
+      return (NULL);
+    }
+
+  memset(tmpl, '\0', sizeof(fiid_field_t) * obj->field_data_len);
+  for (i = 0; i < obj->field_data_len; i++)
+    {
+      tmpl[i].max_field_len = obj->field_data[i].max_field_len;
+      memcpy(tmpl[i].key, obj->field_data[i].key, FIID_FIELD_MAX);
+      tmpl[i].flags = obj->field_data[i].flags;
+    }
+  
+  return (tmpl);
+}
+
 int8_t 
 fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
 {
@@ -702,39 +845,21 @@ fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
   return (1);
 }
 
-int32_t
-fiid_obj_max_len(fiid_obj_t obj)
+static int32_t 
+_fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
 {
-  int32_t counter = 0;
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
-    counter += obj->field_data[i].max_field_len;
-
-  return (counter);
-}
-
-int32_t
-fiid_obj_max_len_bytes(fiid_obj_t obj)
-{
-  int32_t len;
-
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     {
-      errno = EINVAL;
-      return (-1);
+      if (!strcmp (obj->field_data[i].key, field))
+        return (i);
     }
 
-  if ((len = fiid_obj_max_len (obj)) < 0)
-    return (-1);
-
-  return (BITS_ROUND_BYTES (len));
+  errno = ESPIPE; 		/* Invalid seek */
+  return (-1);
 }
 
 int32_t
@@ -767,57 +892,6 @@ fiid_obj_len_bytes(fiid_obj_t obj)
     }
 
   if ((len = fiid_obj_len (obj)) < 0)
-    return (-1);
-
-  return (BITS_ROUND_BYTES (len));
-}
-
-static int32_t 
-_fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
-{
-  int i;
-
-  assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
-
-  for (i = 0; obj->field_data[i].max_field_len != 0; i++)
-    {
-      if (!strcmp (obj->field_data[i].key, field))
-        return (i);
-    }
-
-  errno = ESPIPE; 		/* Invalid seek */
-  return (-1);
-}
-
-int32_t
-fiid_obj_max_field_len(fiid_obj_t obj, uint8_t *field)
-{
-  int key_index = -1;
-
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
-    return (-1);
-  
-  return (obj->field_data[key_index].max_field_len);
-}
-
-int32_t
-fiid_obj_max_field_len_bytes(fiid_obj_t obj, uint8_t *field)
-{
-  int32_t len;
-
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((len = fiid_obj_max_field_len (obj, field)) < 0)
     return (-1);
 
   return (BITS_ROUND_BYTES (len));
@@ -1956,18 +2030,6 @@ fiid_iterator_end(fiid_iterator_t iter)
 }
 
 int32_t
-fiid_iterator_max_field_len(fiid_iterator_t iter)
-{
-  if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  return (iter->obj->field_data[iter->current_index].max_field_len);
-}
-
-int32_t
 fiid_iterator_field_len(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2021,117 +2083,4 @@ fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len)
   return (fiid_obj_get_data(iter->obj, key, data, data_len));
 }
 
-fiid_field_t * 
-__fiid_template_make (uint8_t dummy, ...)
-{
-  va_list ap;
-  
-  int max_field_len = 0;
-  char *key = NULL;
-  int flags = 0;
-
-  fiid_field_t *tmpl_dynamic = NULL;
-  int element_count = 0;
-  
-  int32_t max_pkt_len = 0;
-
-  int i;
-  
-  {
-    va_list ap;
-    
-    va_start (ap, dummy);
-    
-    while (1)
-      {
-	if ((max_field_len = va_arg (ap, int)) == 0)
-	  break;
-	
-	if ((key = va_arg (ap, char *)) == NULL)
-	  break;
-	
-        if ((flags = va_arg (ap, int)) == 0)
-          break;
-
-	element_count++;
-      }
-    
-    //printf ("total field count: %d\n", element_count);
-    va_end (ap);
-  }
-  
-  va_start (ap, dummy);
-  
-  if (!(tmpl_dynamic = (fiid_field_t *) calloc ((element_count + 1), 
-                                                sizeof (fiid_field_t))))
-    return NULL;
-  
-  for (i = 0; i < element_count; i++)
-    {
-      if ((max_field_len = va_arg (ap, int)) == 0)
-	break;
-      
-      if ((key = va_arg (ap, char *)) == NULL)
-	{
-	  free (tmpl_dynamic);
-	  return NULL;
-	}
-      
-      if ((flags = va_arg (ap, int)) == 0)
-	{
-	  free (tmpl_dynamic);
-	  return NULL;
-	}
-
-#ifndef NDEBUG
-      if (max_field_len)
-        {
-          int j;
-
-          for (j = 0; j < i; j++)
-            {
-              if (!strcmp(tmpl_dynamic[i].key, key))
-                {
-                  free (tmpl_dynamic);
-                  errno = EINVAL;
-                  return NULL;
-                }
-            }
-
-          if (!FIID_FIELD_REQUIRED_FLAG_VALID(flags)
-              || !FIID_FIELD_LENGTH_FLAG_VALID(flags))
-            {
-              free (tmpl_dynamic);
-              errno = EINVAL;
-              return NULL;
-            }
-        }
-#endif /* !NDEBUG */
-      
-      tmpl_dynamic[i].max_field_len = max_field_len;
-      strncpy (tmpl_dynamic[i].key, key, FIID_FIELD_MAX);
-      tmpl_dynamic[i].key[FIID_FIELD_MAX - 1] = '\0';
-      tmpl_dynamic[i].flags = flags;
-
-      max_pkt_len += tmpl_dynamic[i].max_field_len;
-    }
-  
-  if (max_pkt_len % 8)
-    {
-      free (tmpl_dynamic);
-      errno = EINVAL;
-      return NULL;
-    }
-
-  va_end (ap);
-  
-  return tmpl_dynamic;
-}
-
-void 
-fiid_template_free (fiid_field_t *tmpl_dynamic)
-{
-  if (tmpl_dynamic != NULL)
-    free (tmpl_dynamic);
-}
 
