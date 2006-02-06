@@ -434,6 +434,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
 				fiid_obj_t obj_cmd)
 {
   int8_t rv;
+  char buf[IPMI_SESSION_MAX_USERNAME_LEN];
 
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
@@ -465,18 +466,15 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
    */
   ERR (!(fiid_obj_clear_field(obj_cmd, (uint8_t *)"username") < 0));
 
+  /* achu: username must be zero extended */
+  memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
   if (username)
-    {
-      /* achu: username must be zero extended */
-      char buf[IPMI_SESSION_MAX_USERNAME_LEN];
-      memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
-      strncpy(buf, username, IPMI_SESSION_MAX_USERNAME_LEN);
-      
-      ERR (!(fiid_obj_set_data (obj_cmd, 
-				(uint8_t *)"username", 
-				(uint8_t *)buf,
-				IPMI_SESSION_MAX_USERNAME_LEN) < 0));
-    }
+    strncpy(buf, username, IPMI_SESSION_MAX_USERNAME_LEN);
+  
+  ERR (!(fiid_obj_set_data (obj_cmd, 
+                            (uint8_t *)"username", 
+                            (uint8_t *)buf,
+                            IPMI_SESSION_MAX_USERNAME_LEN) < 0));
   
   return (0);
 }
@@ -492,7 +490,7 @@ ipmi_lan_get_session_challenge (int sockfd,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
-
+  
   if (!(hostaddr 
 	&& sockfd 
 	&& hostaddr_len 
@@ -540,10 +538,12 @@ fill_cmd_activate_session (uint8_t auth_type,
 			   fiid_obj_t obj_cmd)
 {
   int8_t rv;
+  char buf[IPMI_SESSION_CHALLENGE_STR_LEN];
 
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
       || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
-      || (challenge_str && challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN)
+      || !challenge_str
+      || challenge_str_len > IPMI_SESSION_CHALLENGE_STR_LEN
       || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
@@ -565,22 +565,20 @@ fill_cmd_activate_session (uint8_t auth_type,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"max_priv_level", max_priv_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
   ERR (!(fiid_obj_clear_field (obj_cmd, (uint8_t *)"challenge_str") < 0));
+  
+  /* achu: challenge string must be zero extended */
+  memset(buf, '\0', IPMI_SESSION_CHALLENGE_STR_LEN);
+  memcpy(buf, challenge_str, challenge_str_len);
+  
+  ERR (!(fiid_obj_set_data (obj_cmd,
+                            (uint8_t *)"challenge_str",
+                            (uint8_t *)buf,
+                            IPMI_SESSION_CHALLENGE_STR_LEN) < 0));
 
-  if (challenge_str)
-    {
-      /* achu: challenge string must be zero extended */
-      char buf[IPMI_SESSION_CHALLENGE_STR_LEN];
-      memset(buf, '\0', IPMI_SESSION_CHALLENGE_STR_LEN);
-      memcpy(buf, challenge_str, challenge_str_len);
-      
-      ERR (!(fiid_obj_set_data (obj_cmd,
-                                (uint8_t *)"challenge_str",
-                                (uint8_t *)buf,
-                                IPMI_SESSION_CHALLENGE_STR_LEN) < 0));
-    }
   FIID_OBJ_SET (obj_cmd, 
-		(uint8_t *)"initial_outbound_seq_num", 
-		initial_outbound_seq_num);
+                (uint8_t *)"initial_outbound_seq_num", 
+                initial_outbound_seq_num);
+
   return (0);
 }
 
@@ -1028,6 +1026,7 @@ fill_kcs_set_user_name (uint8_t user_id,
                         fiid_obj_t obj_data_rq)
 {
   int8_t rv;
+  char buf[IPMI_SESSION_MAX_USERNAME_LEN];
 
   /* achu: username can be IPMI_USER_NAME_MAX_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -1067,18 +1066,15 @@ fill_kcs_set_user_name (uint8_t user_id,
   ERR (!(fiid_obj_clear_field(obj_data_rq, 
 			      (uint8_t *)"user_name") < 0));
 
+  /* achu: username must be zero extended */
+  memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
   if (user_name)
-    {
-      /* achu: username must be zero extended */
-      char buf[IPMI_SESSION_MAX_USERNAME_LEN];
-      memset(buf, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
-      strncpy(buf, user_name, IPMI_SESSION_MAX_USERNAME_LEN);
+    strncpy(buf, user_name, IPMI_SESSION_MAX_USERNAME_LEN);
       
-      ERR (!(fiid_obj_set_data (obj_data_rq, 
-				(uint8_t *)"user_name", 
-				(uint8_t *)buf,
-				IPMI_SESSION_MAX_USERNAME_LEN) < 0));
-    }
+  ERR (!(fiid_obj_set_data (obj_data_rq, 
+                            (uint8_t *)"user_name", 
+                            (uint8_t *)buf,
+                            IPMI_SESSION_MAX_USERNAME_LEN) < 0));
   
   return 0;
 }
@@ -1126,6 +1122,7 @@ fill_kcs_set_user_password (uint8_t user_id,
                             fiid_obj_t obj_data_rq)
 {
   int8_t rv;
+  char buf[IPMI_USER_PASSWORD_MAX_LENGTH];
 
   /* achu: password can be IPMI_USER_PASSWORD_MAX_LENGTH length.  Null
    * termination in IPMI packet not required
@@ -1173,18 +1170,15 @@ fill_kcs_set_user_password (uint8_t user_id,
   ERR (!(fiid_obj_clear_field(obj_data_rq, 
 			      (uint8_t *)"password") < 0));
 
+  /* achu: password must be zero extended */
+  memset(buf, '\0', IPMI_USER_PASSWORD_MAX_LENGTH);
   if (user_password)
-    {
-      /* achu: password must be zero extended */
-      char buf[IPMI_USER_PASSWORD_MAX_LENGTH];
-      memset(buf, '\0', IPMI_USER_PASSWORD_MAX_LENGTH);
-      strncpy(buf, user_password, IPMI_USER_PASSWORD_MAX_LENGTH);
+    strncpy(buf, user_password, IPMI_USER_PASSWORD_MAX_LENGTH);
       
-      ERR (!(fiid_obj_set_data (obj_data_rq, 
-				(uint8_t *)"password", 
-				(uint8_t *)buf,
-				IPMI_USER_PASSWORD_MAX_LENGTH) < 0));
-    }
+  ERR (!(fiid_obj_set_data (obj_data_rq, 
+                            (uint8_t *)"password", 
+                            (uint8_t *)buf,
+                            IPMI_USER_PASSWORD_MAX_LENGTH) < 0));
 
   return 0;
 }
