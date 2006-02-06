@@ -46,6 +46,9 @@
 	unassemble_ipmi_lan_pkt), libfreeipmi/src/ipmi-ssif-interface.c
 	(ipmi_ssif_cmd2), libfreeipmi/src/rmcp.c (ipmi_rmcp_ping): Use new
 	functions appropriately.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Support fiid
+	error codes.
 	
 2006-02-04  Albert Chu <chu11@llnl.gov>	
 

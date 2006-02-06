@@ -35,6 +35,7 @@ struct fiid_field_data
 struct fiid_obj
 {
   uint32_t magic;
+  int32_t errnum;
   uint8_t *data;
   unsigned int data_len;
   struct fiid_field_data *field_data;
@@ -44,10 +45,36 @@ struct fiid_obj
 struct fiid_iterator
 {
   uint32_t magic;
+  int32_t errnum;
   int current_index;
   int last_index;
   struct fiid_obj *obj;
 };
+
+static char * fiid_errmsg[] =
+  {
+    "success",
+    "fiid object is null",
+    "fiid object is invalid",
+    "fiid iterator is null",
+    "fiid iterator is invalid",
+    "invalid parameter",
+    "field not found",
+    "template key invalid",
+    "template flags invalid",
+    "template not byte aligned",
+    "buffer too small to hold result",
+    "template max field length mismatch",
+    "template key mismatch",
+    "template flags mismatch",
+    "template length mismatch",
+    "data not byte aligned",
+    "required field missing",
+    "fixed length field invalid",
+    "out of memory",
+    "internal error",
+    "error number out of range",
+  };
 
 static int32_t
 _fiid_template_len (fiid_template_t tmpl, unsigned int *tmpl_len)
@@ -492,7 +519,7 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
       _start += obj->field_data[i].max_field_len;
     }
   
-  errno = ESPIPE; 		/* Invalid seek */
+  obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
   return (-1);
 }
 
@@ -504,7 +531,8 @@ _fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
   
   assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
 
-  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
+  if (_fiid_obj_field_start_end (obj, field, &start, &end) < 0)
+    return (-1);
   return (start);
 }
 
@@ -516,7 +544,8 @@ _fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
   
   assert(obj && obj->magic == FIID_OBJ_MAGIC && field);
 
-  ERR (_fiid_obj_field_start_end (obj, field, &start, &end) != -1);
+  if (_fiid_obj_field_start_end (obj, field, &start, &end) < 0)
+    return (-1);
   return (end);
 }
 
@@ -533,8 +562,17 @@ _fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
 	return (obj->field_data[i].max_field_len);
     }
   
-  errno = ESPIPE; 		/* Invalid seek */
+  obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
   return (-1);
+}
+
+char *
+fiid_strerror(int32_t errnum)
+{ 
+  if (errnum >= FIID_ERR_SUCCESS && errnum <= FIID_ERR_ERRNUMRANGE)
+    return fiid_errmsg[errnum];
+  else
+    return fiid_errmsg[FIID_ERR_ERRNUMRANGE];
 }
 
 fiid_obj_t 
@@ -617,6 +655,7 @@ fiid_obj_create (fiid_template_t tmpl)
       goto cleanup;
     }
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (obj);
   
  cleanup:
@@ -636,11 +675,10 @@ int8_t
 fiid_obj_destroy (fiid_obj_t obj)
 {
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
+  obj->magic = ~FIID_OBJ_MAGIC;
+  obj->errnum = FIID_ERR_SUCCESS;
   ipmi_xfree(obj->data);
   ipmi_xfree(obj->field_data);
   ipmi_xfree(obj);
@@ -648,20 +686,18 @@ fiid_obj_destroy (fiid_obj_t obj)
   return (0);
 }
 
+
 fiid_obj_t 
 fiid_obj_dup (fiid_obj_t src_obj)
 {
   fiid_obj_t dest_obj = NULL;
   
   if (!(src_obj && src_obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+    goto cleanup;
  
   if (!(dest_obj = ipmi_xmalloc(sizeof(struct fiid_obj))))
     {
-      errno = ENOMEM;
+      src_obj->errnum = FIID_ERR_OUTMEM;
       goto cleanup;
     }
   dest_obj->magic = src_obj->magic;
@@ -670,20 +706,22 @@ fiid_obj_dup (fiid_obj_t src_obj)
 
   if (!(dest_obj->data = ipmi_xmalloc(src_obj->data_len)))
     {
-      errno = ENOMEM;
+      src_obj->errnum = FIID_ERR_OUTMEM;
       goto cleanup;
     }
   memcpy(dest_obj->data, src_obj->data, src_obj->data_len);
 
   if (!(dest_obj->field_data = ipmi_xmalloc(dest_obj->field_data_len * sizeof(struct fiid_field_data))))
     {
-      errno = ENOMEM;
+      src_obj->errnum = FIID_ERR_OUTMEM;
       goto cleanup;
     }
   memcpy(dest_obj->field_data, 
          src_obj->field_data, 
          src_obj->field_data_len * sizeof(struct fiid_field_data));
 
+  src_obj->errnum = FIID_ERR_SUCCESS;
+  dest_obj->errnum = FIID_ERR_SUCCESS;
   return dest_obj;
 
  cleanup:
@@ -713,10 +751,7 @@ fiid_obj_packet_valid(fiid_obj_t obj)
     set_bits_counter = 0, optional_bits_counter = 0;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
   
   for (i = 0; i < obj->field_data_len; i++)
     {
@@ -726,10 +761,16 @@ fiid_obj_packet_valid(fiid_obj_t obj)
       uint32_t set_field_len = obj->field_data[i].set_field_len;
       
       if (required_flag == FIID_FIELD_REQUIRED && !set_field_len)
-        return (0);
+        {
+          obj->errnum = FIID_ERR_REQUIRED_FIELD_MISSING;
+          return (0);
+        }
       
       if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
-        return (0);
+        {
+          obj->errnum = FIID_ERR_FIXED_LENGTH_FIELD_INVALID;
+          return (0);
+        }
 
       max_bits_counter += max_field_len;
       total_set_bits_counter += set_field_len;
@@ -737,7 +778,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
       if (set_field_len)
 	{
 	  if (optional_bits_counter)
-            return (0);
+            {
+              obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+              return (0);
+            }
 	      
 	  if (set_field_len != max_field_len)
 	    {
@@ -745,7 +789,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
 	       * field, it cannot have only partial data.
 	       */
 	      if ((set_bits_counter + set_field_len) % 8 != 0)
-                return (0);
+                {
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+                  return (0);
+                }
 	    }
 
 	  set_bits_counter += set_field_len;
@@ -761,7 +808,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
            * chunks
            */
           if (set_bits_counter)
-            return (0);
+            {
+              obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+              return (0);
+            }
           
           /* Likewise, optional data should be aligned across
            * bytes
@@ -771,7 +821,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
             {
               /* an "assert" */
               if (optional_bits_counter != max_bits_counter)
-                return (0);
+                {
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED; 
+                  return (0);
+                }
               
               optional_bits_counter = 0;
               max_bits_counter = 0;
@@ -781,12 +834,19 @@ fiid_obj_packet_valid(fiid_obj_t obj)
      
   /* There shouldn't be anything left over */
   if (set_bits_counter)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+      return (0);
+    }
 
   /* And the bits set should align across a byte */
   if (total_set_bits_counter % 8 != 0)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+      return (0);
+    }
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (1);
 }
 
@@ -797,14 +857,11 @@ fiid_obj_template(fiid_obj_t obj)
   int i;
 
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (NULL);
-    }
+    return (NULL);
 
   if (!(tmpl = (fiid_field_t *)ipmi_xmalloc(sizeof(fiid_field_t) * obj->field_data_len)))
     {
-      errno = ENOMEM;
+      obj->errnum = FIID_ERR_OUTMEM;
       return (NULL);
     }
 
@@ -816,6 +873,7 @@ fiid_obj_template(fiid_obj_t obj)
       tmpl[i].flags = obj->field_data[i].flags;
     }
   
+  obj->errnum = FIID_ERR_SUCCESS;
   return (tmpl);
 }
 
@@ -824,25 +882,55 @@ fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl)
 {
   int i;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && tmpl))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!tmpl)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     {
-      if (!tmpl[i].max_field_len)
-	return (0);
+      if (obj->field_data[i].max_field_len != tmpl[i].max_field_len)
+        {
+          obj->errnum = FIID_ERR_MAX_FIELD_LEN_MISMATCH;
+          return (0);
+        }
       
       if (strcmp(obj->field_data[i].key, tmpl[i].key))
-	return (0);
+        {
+          obj->errnum = FIID_ERR_KEY_FIELD_MISMATCH;
+          return (0);
+        }
+
+      if (obj->field_data[i].flags != tmpl[i].flags)
+        {
+          obj->errnum = FIID_ERR_FLAGS_FIELD_MISMATCH;
+          return (0);
+        }
     }
 
   if (tmpl[i].max_field_len != 0)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_TEMPLATE_LENGTH_MISMATCH;
+      return (0);
+    }
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (1);
+}
+
+int32_t
+fiid_obj_errnum(fiid_obj_t obj)
+{
+  if (!obj)
+    return (FIID_ERR_OBJ_NULL);
+  else if (obj->magic == FIID_OBJ_MAGIC)
+    return (FIID_ERR_OBJ_INVALID);
+  else
+    return (obj->errnum);
 }
 
 static int32_t 
@@ -858,7 +946,7 @@ _fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
         return (i);
     }
 
-  errno = ESPIPE; 		/* Invalid seek */
+  obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
   return (-1);
 }
 
@@ -869,14 +957,12 @@ fiid_obj_len(fiid_obj_t obj)
   int i;
 
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   for (i = 0; obj->field_data[i].max_field_len != 0; i++)
     counter += obj->field_data[i].set_field_len;
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (counter);
 }
 
@@ -886,14 +972,18 @@ fiid_obj_len_bytes(fiid_obj_t obj)
   int32_t len;
 
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   if ((len = fiid_obj_len (obj)) < 0)
     return (-1);
 
+  if (len % 8 != 0)
+    {
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+      return (-1);
+    }
+
+  obj->errnum = FIID_ERR_SUCCESS;
   return (BITS_ROUND_BYTES (len));
 }
 
@@ -902,15 +992,19 @@ fiid_obj_field_len(fiid_obj_t obj, uint8_t *field)
 {
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!field)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
   
+  obj->errnum = FIID_ERR_SUCCESS;
   return (obj->field_data[key_index].set_field_len);
 }
 
@@ -919,15 +1013,25 @@ fiid_obj_field_len_bytes(fiid_obj_t obj, uint8_t *field)
 {
   int32_t len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!field)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
   if ((len = fiid_obj_field_len (obj, field)) < 0)
     return (-1);
 
+  if (len % 8 != 0)
+    {
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
+      return (-1);
+    }
+
+  obj->errnum = FIID_ERR_SUCCESS;
   return (BITS_ROUND_BYTES (len));
 }
 
@@ -937,16 +1041,14 @@ fiid_obj_clear (fiid_obj_t obj)
   int i;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   memset(obj->data, '\0', obj->data_len);
-  
+ 
   for (i =0; i < obj->field_data_len; i++)
     obj->field_data[i].set_field_len = 0;
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (0);
 }
 
@@ -956,20 +1058,23 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
   int32_t bits_len, bytes_len;
   int key_index = -1;
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+  
+  if (!field)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
   if (!obj->field_data[key_index].set_field_len)
     return (0);
 
-  bits_len = _fiid_obj_field_len (obj, field);
-  ERR (bits_len != -1);
+  if ((bits_len = _fiid_obj_field_len (obj, field)) < 0)
+    return (-1);
 
   if (bits_len <= 64)
     {
@@ -988,18 +1093,18 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
 
       if (bits_len % 8 != 0)
 	{
-	  errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 	  return (-1);
 	}
 
       bytes_len = BITS_ROUND_BYTES (bytes_len);
 
-      field_start = _fiid_obj_field_start (obj, field);
-      ERR (field_start != -1);
+      if ((field_start = _fiid_obj_field_start (obj, field)) < 0)
+        return (-1);
 
       if (field_start % 8 != 0)
 	{
-	  errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 	  return (-1);
 	}
 
@@ -1008,6 +1113,7 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
     }
 
   obj->field_data[key_index].set_field_len = 0;
+  obj->errnum = FIID_ERR_SUCCESS;
   return (0);
 }
 
@@ -1017,16 +1123,25 @@ fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
   int start = 0;
   int end = 0; //excluded always
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!field)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
   if (_fiid_obj_field_start_end (obj, field, &start, &end) != -1)
-    return (1);
+    {
+      obj->errnum = FIID_ERR_SUCCESS;
+      return (1);
+    }
   else
-    return (0);
+    {
+      obj->errnum = FIID_ERR_FIELD_NOT_FOUND;
+      return (0);
+    }
 }
 
 int8_t
@@ -1045,17 +1160,20 @@ fiid_obj_set (fiid_obj_t obj,
   uint64_t merged_val = 0;
   uint8_t *temp_data = NULL;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    goto cleanup;
+
+  if (!field)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       goto cleanup;
     }
 
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
-  field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos);
-  ERR(field_len != -1);
+  if ((field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos)) < 0)
+    return (-1);
 
   if (field_len > 64)
     field_len = 64;
@@ -1098,7 +1216,7 @@ fiid_obj_set (fiid_obj_t obj,
       
       if (!(temp_data = ipmi_xmalloc(obj->data_len)))
         {
-          errno = ENOMEM;
+          obj->errnum = FIID_ERR_OUTMEM;
           goto cleanup;
         }
       memcpy(temp_data, obj->data, obj->data_len);
@@ -1127,14 +1245,20 @@ fiid_obj_set (fiid_obj_t obj,
                             start_val_pos, 
                             end_val_pos, 
                             &extracted_val) < 0)
-            goto cleanup;
+            {
+              obj->errnum = FIID_ERR_INTERNAL;
+              goto cleanup;
+            }
 
           if (bits_merge (temp_data[byte_pos + i], 
                           start_bit_in_byte_pos, 
                           end_bit_in_byte_pos, 
                           extracted_val,
                           &merged_val) < 0)
-            goto cleanup;
+            {
+              obj->errnum = FIID_ERR_INTERNAL;
+              goto cleanup;
+            }
 
           temp_data[byte_pos + i] = merged_val;
 	  start_bit_in_byte_pos = 0;
@@ -1151,12 +1275,16 @@ fiid_obj_set (fiid_obj_t obj,
                       end_bit_in_byte_pos, 
                       val,
                       &merged_val) < 0)
-        goto cleanup;
+        {
+          obj->errnum = FIID_ERR_INTERNAL;
+          goto cleanup;
+        }
       obj->data[byte_pos] = merged_val;
       obj->field_data[key_index].set_field_len = field_len;
     }
 
   ipmi_xfree(temp_data);
+  obj->errnum = FIID_ERR_SUCCESS;
   return (0);
 
  cleanup:
@@ -1180,9 +1308,12 @@ fiid_obj_get (fiid_obj_t obj,
   int key_index = -1;
   uint64_t merged_val = 0;
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field && val))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!field || !val)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
@@ -1190,10 +1321,13 @@ fiid_obj_get (fiid_obj_t obj,
     return (-1);
 
   if (!obj->field_data[key_index].set_field_len)
-    return (0);
+    {
+      obj->errnum = FIID_ERR_SUCCESS;
+      return (0);
+    }
 
-  field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos);
-  ERR(field_len != -1);
+  if ((field_len = _fiid_obj_field_start_end (obj, field, &start_bit_pos, &end_bit_pos)) < 0)
+    return (-1);
   
   if (field_len > 64)
     field_len = 64;
@@ -1259,14 +1393,20 @@ fiid_obj_get (fiid_obj_t obj,
                             start_bit_in_byte_pos,
                             end_bit_in_byte_pos,
                             &extracted_val) < 0)
-            return (-1);
+            {
+              obj->errnum = FIID_ERR_INTERNAL;
+              return (-1);
+            }
 	  
 	  if (bits_merge (final_val, 
                           start_val_pos, 
                           end_val_pos, 
                           extracted_val, 
                           &merged_val) < 0)
-            return (-1);
+            {
+              obj->errnum = FIID_ERR_INTERNAL;
+              return (-1);
+            }
 	  
           final_val = merged_val;
 	  start_bit_in_byte_pos = 0;
@@ -1282,12 +1422,16 @@ fiid_obj_get (fiid_obj_t obj,
                         start_bit_in_byte_pos, 
                         end_bit_in_byte_pos,
                         &merged_val) < 0)
-        return (-1);
+        {
+          obj->errnum = FIID_ERR_INTERNAL;
+          return (-1);
+        }
 
       *val = 0;
       *val = merged_val;
     }
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (1);
 }
 
@@ -1301,12 +1445,15 @@ fiid_obj_set_data (fiid_obj_t obj,
   int field_offset; 
   int key_index = -1;
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+  
+  if (!field || !data)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   if ((key_index = _fiid_obj_lookup_field_index(obj, field)) < 0)
     return (-1);
 
@@ -1314,21 +1461,21 @@ fiid_obj_set_data (fiid_obj_t obj,
    * on a byte boundary.
    */
 
-  field_start = _fiid_obj_field_start (obj, field);
-  ERR (field_start != -1);
+  if ((field_start = _fiid_obj_field_start (obj, field)) < 0)
+    return (-1);
 
   if (field_start % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
-  bits_len = _fiid_obj_field_len (obj, field);
-  ERR (bits_len != -1);
+  if ((bits_len = _fiid_obj_field_len (obj, field)) < 0)
+    return (-1);
 
   if (bits_len % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
@@ -1340,6 +1487,7 @@ fiid_obj_set_data (fiid_obj_t obj,
   memcpy ((obj->data + field_offset), data, data_len);
   obj->field_data[key_index].set_field_len = (data_len * 8);
   
+  obj->errnum = FIID_ERR_SUCCESS;
   return (data_len);
 }
 
@@ -1353,9 +1501,12 @@ fiid_obj_get_data (fiid_obj_t obj,
   int field_offset;
   int key_index = -1;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+
+  if (!field || !data)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
@@ -1369,24 +1520,24 @@ fiid_obj_get_data (fiid_obj_t obj,
    * on a byte boundary.
    */
 
-  field_start = _fiid_obj_field_start (obj, field);
-  ERR (field_start != -1);
+  if ((field_start = _fiid_obj_field_start (obj, field)) < 0)
+    return (-1);
 
   if (field_start % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
-  bits_len = _fiid_obj_field_len (obj, field);
-  ERR (bits_len != -1);
+  if ((bits_len = _fiid_obj_field_len (obj, field)) < 0)
+    return (-1);
 
   if (obj->field_data[key_index].set_field_len < bits_len)
     bits_len = obj->field_data[key_index].set_field_len;
 
   if (bits_len % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
@@ -1394,7 +1545,7 @@ fiid_obj_get_data (fiid_obj_t obj,
 
   if (bytes_len > data_len)
     {
-      errno = EMSGSIZE;
+      obj->errnum = FIID_ERR_OVERFLOW;
       return (-1);
     }
 
@@ -1403,6 +1554,7 @@ fiid_obj_get_data (fiid_obj_t obj,
   memset (data, '\0', data_len);
   memcpy (data, (obj->data + field_offset), bytes_len);
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (bytes_len);
 }
 
@@ -1415,12 +1567,15 @@ fiid_obj_set_all (fiid_obj_t obj,
   int bits_counter, data_bits_len;
   int i;
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+  
+  if (!data)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   if (data_len > obj->data_len)
     data_len = obj->data_len;
 
@@ -1437,7 +1592,7 @@ fiid_obj_set_all (fiid_obj_t obj,
               /* achu: We assume the data must end on a byte boundary. */
               if (bits_counter % 8 != 0)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   return (-1);
                 }
               else
@@ -1466,6 +1621,7 @@ fiid_obj_set_all (fiid_obj_t obj,
   else
     obj->field_data[i].set_field_len = obj->field_data[i].max_field_len;
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (data_len);
 }
 
@@ -1476,10 +1632,13 @@ fiid_obj_get_all (fiid_obj_t obj,
 {
   int32_t bits_len, bytes_len;
 
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return -1;
+
+  if (!data)
     {
-      errno = EINVAL;
-      return -1;
+      obj->errnum = FIID_ERR_PARAMETERS;
+      return (-1);
     }
 
   if ((bits_len = fiid_obj_len(obj)) < 0)
@@ -1492,7 +1651,7 @@ fiid_obj_get_all (fiid_obj_t obj,
 
   if (data_len < bytes_len)
     {
-      errno = EMSGSIZE;
+      obj->errnum = FIID_ERR_OVERFLOW;
       return -1;
     }
 
@@ -1516,7 +1675,7 @@ fiid_obj_get_all (fiid_obj_t obj,
             {
               if (optional_bits_counter)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   goto cleanup;
                 }
 	      
@@ -1527,7 +1686,7 @@ fiid_obj_get_all (fiid_obj_t obj,
 		   */
 		  if ((set_bits_counter + set_field_len) % 8 != 0)
 		    {
-		      errno = EINVAL;
+                      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 		      goto cleanup;
 		    }
 		}
@@ -1556,7 +1715,7 @@ fiid_obj_get_all (fiid_obj_t obj,
                */
               if (set_bits_counter)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   goto cleanup;
                 }
 
@@ -1569,7 +1728,7 @@ fiid_obj_get_all (fiid_obj_t obj,
 		  /* an "assert" */
 		  if (optional_bits_counter != max_bits_counter)
 		    {
-		      errno = EINVAL;
+                      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 		      goto cleanup;
 		    }
 
@@ -1583,17 +1742,18 @@ fiid_obj_get_all (fiid_obj_t obj,
       /* There shouldn't be anything left over */
       if (set_bits_counter)
 	{
-	  errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 	  goto cleanup;
 	}
 
       if (bytes_written != bytes_len)
         {
-          errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
           goto cleanup;
         }
     }
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (bytes_len);
 
  cleanup:
@@ -1612,11 +1772,17 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
 
   assert(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end);
 
-  start = _fiid_obj_field_start (obj, field_start);
-  ERR (start != -1);
-  end = _fiid_obj_field_end (obj, field_end);
-  ERR (end != -1);
-  ERR (!(start > end));
+  if ((start = _fiid_obj_field_start (obj, field_start)) < 0)
+    return (-1);
+
+  if ((end = _fiid_obj_field_end (obj, field_end)) < 0)
+    return (-1);
+
+  if (start > end)
+    {
+      obj->errnum = FIID_ERR_PARAMETERS;
+      return (-1);
+    }
 
   return (end - start);
 }
@@ -1640,13 +1806,7 @@ _fiid_obj_block_len (fiid_obj_t obj,
 
   if (key_index_start > key_index_end)
     {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
@@ -1668,12 +1828,15 @@ fiid_obj_set_block (fiid_obj_t obj,
   int bits_counter, data_bits_len;
   int i, field_offset; 
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+  
+  if (!field_start || !field_end || !data)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
     return (-1);
 
@@ -1682,7 +1845,7 @@ fiid_obj_set_block (fiid_obj_t obj,
 
   if (key_index_start > key_index_end)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
@@ -1690,21 +1853,21 @@ fiid_obj_set_block (fiid_obj_t obj,
    * on a byte boundary.
    */
 
-  block_bits_start = _fiid_obj_field_start (obj, field_start);
-  ERR (block_bits_start != -1);
+  if ((block_bits_start = _fiid_obj_field_start (obj, field_start)) < 0)
+    return (-1);
  
   if (block_bits_start % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
-  block_bits_len = _fiid_obj_max_block_len (obj, field_start, field_end);
-  ERR (block_bits_len != -1);
+  if ((block_bits_len = _fiid_obj_max_block_len (obj, field_start, field_end)) < 0)
+    return (-1);
     
   if (block_bits_len % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
@@ -1726,7 +1889,7 @@ fiid_obj_set_block (fiid_obj_t obj,
               /* achu: We assume the data must end on a byte boundary. */
               if (bits_counter % 8 != 0)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   return (-1);
                 }
               else
@@ -1754,6 +1917,7 @@ fiid_obj_set_block (fiid_obj_t obj,
   else
     obj->field_data[i].set_field_len = obj->field_data[i].max_field_len;
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (data_len);
 }
 
@@ -1768,12 +1932,15 @@ fiid_obj_get_block (fiid_obj_t obj,
   int key_index_start = -1, key_index_end = -1;
   int field_offset; 
   
-  if (!(obj && obj->magic == FIID_OBJ_MAGIC && field_start && field_end && data))
+  if (!(obj && obj->magic == FIID_OBJ_MAGIC))
+    return (-1);
+  
+  if (!field_start || !field_end || !data)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
-  
+
   if ((key_index_start = _fiid_obj_lookup_field_index(obj, field_start)) < 0)
     return (-1);
 
@@ -1782,7 +1949,7 @@ fiid_obj_get_block (fiid_obj_t obj,
 
   if (key_index_start > key_index_end)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_PARAMETERS;
       return (-1);
     }
 
@@ -1790,30 +1957,30 @@ fiid_obj_get_block (fiid_obj_t obj,
    * on a byte boundary.
    */
 
-  block_bits_start = _fiid_obj_field_start (obj, field_start);
-  ERR (block_bits_start != -1);
+  if ((block_bits_start = _fiid_obj_field_start (obj, field_start)) < 0)
+    return (-1);
  
   if (block_bits_start % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
-  block_bits_max_len = _fiid_obj_max_block_len (obj, field_start, field_end);
-  ERR (block_bits_max_len != -1);
+  if ((block_bits_max_len = _fiid_obj_max_block_len (obj, field_start, field_end)) < 0)
+    return (-1);
 
   if (block_bits_max_len % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
-  block_bits_set_len = _fiid_obj_block_len (obj, field_start, field_end);
-  ERR (block_bits_set_len != -1);
+  if ((block_bits_set_len = _fiid_obj_block_len (obj, field_start, field_end)) < 0)
+    return (-1);
     
   if (block_bits_set_len % 8 != 0)
     {
-      errno = EINVAL;
+      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
       return (-1);
     }
 
@@ -1822,7 +1989,7 @@ fiid_obj_get_block (fiid_obj_t obj,
 
   if (data_len < block_bytes_set_len)
     {
-      errno = EMSGSIZE;
+      obj->errnum = FIID_ERR_OVERFLOW;
       return (-1);
     }
 
@@ -1848,7 +2015,7 @@ fiid_obj_get_block (fiid_obj_t obj,
             {
               if (optional_bits_counter)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   goto cleanup;
                 }
 	      
@@ -1859,7 +2026,7 @@ fiid_obj_get_block (fiid_obj_t obj,
 		   */
 		  if ((set_bits_counter + set_field_len) % 8 != 0)
 		    {
-		      errno = EINVAL;
+                      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 		      goto cleanup;
 		    }
 		}
@@ -1888,7 +2055,7 @@ fiid_obj_get_block (fiid_obj_t obj,
                */
               if (set_bits_counter)
                 {
-                  errno = EINVAL;
+                  obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
                   goto cleanup;
                 }
 
@@ -1901,7 +2068,7 @@ fiid_obj_get_block (fiid_obj_t obj,
 		  /* an "assert" */
 		  if (optional_bits_counter != max_bits_counter)
 		    {
-		      errno = EINVAL;
+                      obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 		      goto cleanup;
 		    }
 
@@ -1916,17 +2083,18 @@ fiid_obj_get_block (fiid_obj_t obj,
       /* There shouldn't be anything left over */
       if (set_bits_counter)
 	{
-	  errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
 	  goto cleanup;
 	}
 
       if (bytes_written != block_bytes_set_len)
         {
-          errno = EINVAL;
+          obj->errnum = FIID_ERR_DATA_NOT_BYTE_ALIGNED;
           goto cleanup;
         }
     }
   
+  obj->errnum = FIID_ERR_SUCCESS;
   return (block_bytes_set_len);
 
  cleanup:
@@ -1941,14 +2109,11 @@ fiid_iterator_create(fiid_obj_t obj)
   fiid_iterator_t iter = NULL;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+    goto cleanup;
  
   if (!(iter = (fiid_iterator_t)ipmi_xmalloc(sizeof(struct fiid_iterator))))
     {
-      errno = ENOMEM;
+      obj->errnum = FIID_ERR_OUTMEM;
       goto cleanup;
     }
   iter->magic = FIID_ITERATOR_MAGIC;
@@ -1958,10 +2123,10 @@ fiid_iterator_create(fiid_obj_t obj)
    */
   iter->last_index = obj->field_data_len - 1;
 
-
   if (!(iter->obj = fiid_obj_dup(obj)))
     goto cleanup;
 
+  obj->errnum = FIID_ERR_SUCCESS;
   return (iter);
 
  cleanup:
@@ -1979,27 +2144,35 @@ int8_t
 fiid_iterator_destroy(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
   
+  iter->magic = ~FIID_ITERATOR_MAGIC;
+  iter->errnum = FIID_ERR_SUCCESS;
   fiid_obj_destroy(iter->obj);
   ipmi_xfree(iter);
   
   return (0);
 }
 
+int32_t
+fiid_iterator_errnum(fiid_iterator_t iter)
+{
+  if (!iter)
+    return (FIID_ERR_ITERATOR_NULL);
+  else if (iter->magic == FIID_ITERATOR_MAGIC)
+    return (FIID_ERR_ITERATOR_INVALID);
+  else
+    return (iter->errnum);
+}
+
 int8_t
 fiid_iterator_reset(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   iter->current_index = 0;
+  iter->errnum = FIID_ERR_SUCCESS;
   return (0);
 }
 
@@ -2007,13 +2180,12 @@ int8_t
 fiid_iterator_next(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   if (iter->current_index != iter->last_index)
     iter->current_index++;
+
+  iter->errnum = FIID_ERR_SUCCESS;
   return (0);
 }
 
@@ -2021,11 +2193,9 @@ int8_t
 fiid_iterator_end(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
+  iter->errnum = FIID_ERR_SUCCESS;
   return ((iter->current_index == iter->last_index) ? 1 : 0);
 }
 
@@ -2033,11 +2203,9 @@ int32_t
 fiid_iterator_field_len(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
+  iter->errnum = FIID_ERR_SUCCESS;
   return (iter->obj->field_data[iter->current_index].set_field_len);
 }
 
@@ -2045,11 +2213,9 @@ uint8_t *
 fiid_iterator_key(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (NULL);
-    }
+    return (NULL);
 
+  iter->errnum = FIID_ERR_SUCCESS;
   return (iter->obj->field_data[iter->current_index].key);
 }
 
@@ -2057,30 +2223,30 @@ int32_t
 fiid_iterator_get(fiid_iterator_t iter, uint64_t *val)
 {
   uint8_t *key;
+  int32_t rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
   
   key = iter->obj->field_data[iter->current_index].key;
-  return (fiid_obj_get(iter->obj, key, val));
+  rv = fiid_obj_get(iter->obj, key, val);
+  iter->errnum = (iter->obj->errnum);
+  return (rv);
 }
 
 int32_t
 fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len)
 {
   uint8_t *key;
+  int32_t rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (-1);
 
   key = iter->obj->field_data[iter->current_index].key;
-  return (fiid_obj_get_data(iter->obj, key, data, data_len));
+  rv = fiid_obj_get_data(iter->obj, key, data, data_len);
+  iter->errnum = (iter->obj->errnum);
+  return (rv);
 }
 
 

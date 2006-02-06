@@ -28,13 +28,13 @@ extern "C" {
 
 #define __LFI_FIID_OBJ_SET(bytes, field, val)           \
 do {                                                    \
-    if (fiid_obj_set (bytes, field, val) == -1)         \
+    if (fiid_obj_set (bytes, field, val) < 0)           \
       return (-1);                                      \
 } while (0)
 
 #define __FI_FIID_OBJ_SET(bytes, field, val)            \
 do {                                                    \
-    if (fiid_obj_set (bytes, field, val) == -1)         \
+    if (fiid_obj_set (bytes, field, val) < 0)           \
     {                                                   \
       err (1, "fiid_obj_set (%p, \"%s\", %X) error",    \
 	   bytes, field, val);                          \
@@ -51,13 +51,13 @@ do {                                                    \
 
 #define __LFI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)   \
 do {                                                          \
-    if (fiid_obj_set_data (bytes, field, val, val_len) == -1) \
+    if (fiid_obj_set_data (bytes, field, val, val_len) < 0)   \
       return (-1);                                            \
 } while (0)
 
 #define __FI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
 do {                                                          \
-    if (fiid_obj_set (bytes, field, val, val_len) == -1)      \
+    if (fiid_obj_set (bytes, field, val, val_len) < 0)        \
     {                                                         \
       err (1, "fiid_obj_set_data (%p, \"%s\", %p, %u) error", \
 	   bytes, field, val, val_len);                       \
@@ -76,7 +76,7 @@ do {                                                          \
 do {                                                     \
     uint64_t _val = 0, *_val_ptr;                        \
     _val_ptr = val;                                      \
-    if (fiid_obj_get (bytes, field, &_val) == -1)        \
+    if (fiid_obj_get (bytes, field, &_val) < 0)          \
       return (-1);                                       \
     *_val_ptr = _val;                                    \
 } while (0)
@@ -85,7 +85,7 @@ do {                                                     \
 do {                                                     \
     uint64_t _val = 0, *_val_ptr;                        \
     _val_ptr = val;                                      \
-    if (fiid_obj_get (bytes, field, &_val) == -1)        \
+    if (fiid_obj_get (bytes, field, &_val) < 0)          \
     {                                                    \
       err (1, "fiid_obj_get (%p, \"%s\", %p) error",     \
 	   bytes, field, val);                           \
@@ -103,13 +103,13 @@ do {                                                     \
 
 #define __LFI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)    \
 do {                                                           \
-    if (fiid_obj_get_data (bytes, field, val, val_len) == -1)  \
+    if (fiid_obj_get_data (bytes, field, val, val_len) < 0)    \
       return (-1);                                             \
 } while (0)
 
 #define __FI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)     \
 do {                                                           \
-    if (fiid_obj_get_data (bytes, field, &val, val_len) == -1) \
+    if (fiid_obj_get_data (bytes, field, &val, val_len) < 0)   \
     {                                                          \
       err (1, "fiid_obj_get_data (%p, \"%s\", %p) error",      \
 	   bytes, field, val);                                 \
@@ -123,6 +123,28 @@ do {                                                           \
 #define FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)  \
   __FI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
 #endif
+
+#define FIID_ERR_SUCCESS                         0
+#define FIID_ERR_OBJ_NULL                        1 
+#define FIID_ERR_OBJ_INVALID                     2                   
+#define FIID_ERR_ITERATOR_NULL                   3
+#define FIID_ERR_ITERATOR_INVALID                4
+#define FIID_ERR_PARAMETERS                      5
+#define FIID_ERR_FIELD_NOT_FOUND                 6
+#define FIID_ERR_KEY_INVALID                     7
+#define FIID_ERR_FLAGS_INVALID                   8
+#define FIID_ERR_TEMPLATE_NOT_BYTE_ALIGNED       9
+#define FIID_ERR_OVERFLOW                       10
+#define FIID_ERR_MAX_FIELD_LEN_MISMATCH         11
+#define FIID_ERR_KEY_FIELD_MISMATCH             12
+#define FIID_ERR_FLAGS_FIELD_MISMATCH           13
+#define FIID_ERR_TEMPLATE_LENGTH_MISMATCH       14
+#define FIID_ERR_DATA_NOT_BYTE_ALIGNED          15
+#define FIID_ERR_REQUIRED_FIELD_MISSING         16
+#define FIID_ERR_FIXED_LENGTH_FIELD_INVALID     17
+#define FIID_ERR_OUTMEM                         18
+#define FIID_ERR_INTERNAL                       19
+#define FIID_ERR_ERRNUMRANGE                    20
 
 #define fiid_template_make(arg...) __fiid_template_make (1, arg, 0)
 
@@ -184,6 +206,8 @@ int32_t fiid_template_block_len_bytes (fiid_template_t tmpl,
 fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
 
+char *fiid_strerror(int32_t errnum);
+
 fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
 int8_t fiid_obj_destroy (fiid_obj_t obj);
 fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
@@ -191,6 +215,7 @@ int8_t fiid_obj_valid(fiid_obj_t obj);
 int8_t fiid_obj_packet_valid(fiid_obj_t obj);
 fiid_field_t *fiid_obj_template(fiid_obj_t obj);
 int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
+int32_t fiid_obj_errnum(fiid_obj_t obj);
 
 int32_t fiid_obj_len(fiid_obj_t obj);
 int32_t fiid_obj_len_bytes(fiid_obj_t obj);
@@ -212,6 +237,7 @@ int8_t fiid_obj_get_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_
 
 fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
 int8_t fiid_iterator_destroy(fiid_iterator_t iter);
+int32_t fiid_iterator_errnum(fiid_iterator_t iter);
 int8_t fiid_iterator_reset(fiid_iterator_t iter);
 int8_t fiid_iterator_next(fiid_iterator_t iter);
 int8_t fiid_iterator_end(fiid_iterator_t iter);
