@@ -175,6 +175,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
   { 
     uint8_t *pkt;
     uint32_t pkt_len;
+    size_t read_len;
     size_t bytes_read = 0;
     
     pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
@@ -183,7 +184,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     memset (pkt, 0, pkt_len);
     ERR (pkt);
     
-    ERR (ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read) != -1);
+    ERR ((read_len = ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read)) != -1);
     if (bytes_read != pkt_len)
       {
 	int i;
@@ -202,7 +203,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 	return (-1);
       }
     ERR (unassemble_ipmi_kcs_pkt (pkt, 
-				  pkt_len, 
+				  read_len, 
 				  dev->io.inband.rs.obj_hdr, 
 				  obj_cmd_rs, 
 				  tmpl_cmd_rs) != -1);
