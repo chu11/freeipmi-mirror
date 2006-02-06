@@ -5,7 +5,7 @@
 
 	* libfreeipmi/src/ipmi-netfn-spec.c: Removed file.
 
-	* libfreeipmi/src/ipmi-netfn-spec.h: Removed pre 0.1.0 remnant code.\
+	* libfreeipmi/src/ipmi-netfn-spec.h: Removed pre 0.1.0 remnant code.
 
 	* doc/examples/Makefile.am: Fix distcheck.
 
