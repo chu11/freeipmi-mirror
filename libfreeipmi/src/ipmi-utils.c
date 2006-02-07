@@ -106,15 +106,6 @@ ipmi_input_timeout (int fd, unsigned int seconds)
 				     &timeout));
 }
 
-int 
-ipmi_is_root ()
-{
-  uid_t uid = getuid ();
-  if (uid == 0)
-    return 1;
-  return 0;
-}
-
 unsigned int
 ipmi_get_random_seed (void)
 {

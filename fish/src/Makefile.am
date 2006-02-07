@@ -3,7 +3,9 @@ fish_SOURCES=fish.c xmalloc.c fi-utils.c interpreter.c \
 	extension.c scm-procedures.c guile-wrapper.c ipmi-wrapper.c \
 	fi-commands.c bmc-conf2.c fish-argp.c ../../common/src/argp-common.c
 
-fish_LDADD = ../../libfreeipmi/src/libfreeipmi.la $(GUILE_LDFLAGS) $(READLINE_LIBS)
+fish_LDADD = ../../common/src/libipmicommon.la \
+	     ../../libfreeipmi/src/libfreeipmi.la \
+	     $(GUILE_LDFLAGS) $(READLINE_LIBS)
 
 noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 	extension.h scm-procedures.h guile-wrapper.h ipmi-wrapper.h \
@@ -15,6 +17,9 @@ AM_CFLAGS = -Wall  -I$(srcdir)/../../common/src \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
+../../common/src/libipmicommon.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
 
 force-dependency-check:

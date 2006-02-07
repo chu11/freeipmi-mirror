@@ -255,21 +255,3 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
   SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
 };
 
-void 
-ipmi_error (fiid_obj_t obj_cmd, const char *s)
-{
-  char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
-  
-  if (obj_cmd == NULL)
-    return;
-  
-  ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN);
-  
-  fprintf (stderr, 
-	   "%s%s" "ipmi command %02Xh: %s\n", 
-	   (s ? s : ""), 
-	   (s ? ": " : ""), 
-	   obj_cmd[0], 
-	   errmsg);
-}
-

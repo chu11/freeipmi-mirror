@@ -1,3 +1,19 @@
+2006-02-07  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_is_root): Removed function.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(ipmi_error): Removed function.
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c: New files.
+
+	* common/src/Makefile.am, bmc-info/src/Makefile.am,
+	ipmi-raw/src/Makefile.am, ipmi-locate/src/Makefile.am,
+	bmc-info/src/bmc-info.c, ipmi-raw/src/ipmi-raw.c,
+	ipmi-locate/src/ipmi-locate.c, fish/src/Makefile.am,
+	fish/src/common.h: Support and make use of new common lib.
+	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
 	* configure.ac: Closes bug #15550 "configure guile warning

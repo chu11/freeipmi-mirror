@@ -139,8 +139,6 @@ int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 int8_t ipmi_kcs_strstatus_r (uint8_t status_code, 
 			     char *errstr, 
 			     size_t len);
-void ipmi_error (fiid_obj_t obj_cmd, 
-		 const char *s);
 
 #ifdef __cplusplus
 }
