@@ -1,3 +1,10 @@
+2006-02-06  Anand Babu  <ab@zresearch.com>
+
+	* configure.ac: Closes bug #15550 "configure guile warning
+	misleading". guile.m4 installed by guile development library was
+	used to check guile installation recursively. Thanks to Keith 
+	Owens from SGI for reporting this bug.
+
 2006-02-06  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd2): Fix ssif
