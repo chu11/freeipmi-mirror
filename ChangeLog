@@ -36,6 +36,10 @@
 
 	* libfreeipmi/src/ipmi-error.c (ipmi_kcs_strstatus_r): Use new
 	definition strings.
+
+	* libfreeipmi/src/ipmi-sensor-types.h: Remove commented out code.
+
+	* libfreeipmi/src/ipmi-sensor-types.c: Fix typos.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
