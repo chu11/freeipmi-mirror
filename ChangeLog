@@ -43,6 +43,12 @@
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
 	(ipmi_input_timeout, ipmi_get_random_seed): Removed functions.
+
+	* libfreeipmi/src/ipmi-sensor-utils.h,
+	libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value_old,
+	ipmi_sensor_get_decode_params_old): Removed functions.
+
+	* libfreeipmi/src/ipmi-sensor-utils.h: Fix "is_signed" typoed parameter.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
