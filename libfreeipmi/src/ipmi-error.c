@@ -228,26 +228,24 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
   
   switch (status_code)
     {
-    case IPMI_KCS_STATUS_NO_ERR:
-      SNPRINTF_RETURN ("No error");
+    case IPMI_KCS_STATUS_NO_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
       
     case IPMI_KCS_STATUS_ABORTED_BY_CMD:
-      SNPRINTF_RETURN ("Aborted by command (Transfer "
-		       "in progress was aborted by SMS "
-		       "issuing the Abort/Status control code)");
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
       
     case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
-      SNPRINTF_RETURN ("Illegal control code");
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
       
-    case IPMI_KCS_STATUS_LEN_ERR:
-      SNPRINTF_RETURN ("Length error (e.g.overrun)"); 
+    case IPMI_KCS_STATUS_LEN_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
       
-    case IPMI_KCS_STATUS_UNSPECIFIED_ERR:
-      SNPRINTF_RETURN ("Unspecified error"); 
+    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
     }
   
-  if ((status_code >= IPMI_KCS_STATUS_OEM_ERR_BEGIN) &&
-      (status_code <= IPMI_KCS_STATUS_OEM_ERR_END))
+  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
+      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
     {
       SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
     }

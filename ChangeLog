@@ -29,6 +29,13 @@
 
 	* fish/src/bmc-conf2.c, fish/src/scm-procedures.c: Adjust code
 	appropriately.
+
+	* libfreeipmi/src/ipmi-error.h,
+	libfreeipmi/src/ipmi-kcs-interface.h: Move kcs error codes from
+	ipmi-error.h to ipmi-kcs-interface.h.
+
+	* libfreeipmi/src/ipmi-error.c (ipmi_kcs_strstatus_r): Use new
+	definition strings.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
