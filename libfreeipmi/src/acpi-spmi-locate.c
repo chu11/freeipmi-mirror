@@ -1010,12 +1010,6 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
       return -1;
     }
 
-  if ((acpi_table_hdr_len = fiid_template_len_bytes(tmpl_acpi_table_hdr)) < 0)
-    goto cleanup;
-
-  if (!(obj_acpi_table_hdr2 = fiid_obj_create(tmpl_acpi_table_hdr)))
-    goto cleanup;
-
   for (instance = 0; instance <= IPMI_INTERFACE_MAX; instance++)
     {
       if (ipmi_acpi_get_firmware_table (IPMI_ACPI_SPMI_SIG, instance, 

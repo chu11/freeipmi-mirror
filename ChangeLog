@@ -207,6 +207,39 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-06  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd2): Fix ssif
+	read bug.
+
+	* libfreeipmi/src/ipmi-netfn-spec.c: Removed file.
+
+	* libfreeipmi/src/ipmi-netfn-spec.h: Removed pre 0.1.0 remnant code.
+
+	* doc/examples/Makefile.am: Fix distcheck.
+
+	* common/src/Makefile.am: Make libargpcommon.la library.
+	
+	* bmc-info/src/Makefile.am, ipmi-raw/src/Makefile.am: Use new util library.
+
+	* common/src/arg-common.c: Use config.h for #includes.
+
+	* common/src/Makefile.am, ipmiping/src/Makefile.am,
+	rmcpping/src/Makefile.am: Linking cleanup.
+
+2006-02-05  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-msg-interface-desc.h: Remove duplicate code.
+
+	Comp Code cleanup.
+
+	* libfreeipmi/src/ipmi-comp-code-spec.h: New file.
+	
+2006-02-04  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
+	Fix parameter overwriting bug.
+	
 2006-02-03  Albert Chu  <chu11@llnl.gov>
 
 	* fish/src/ipmi-wrapper.c (ipmi_ping): Remove incorrect warning message.

@@ -115,7 +115,7 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
   if (fiid_obj_get(obj_cmd, (uint8_t *)"comp_code", &comp_code) < 0)
     return (-1);
 
-  if (comp_code != IPMI_COMMAND_SUCCESS)
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {
 #if defined (IPMI_SYSLOG)
       char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN];

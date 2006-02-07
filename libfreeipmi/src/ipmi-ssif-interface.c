@@ -188,8 +188,8 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
   { 
     uint8_t *pkt;
     uint32_t pkt_len;
-    size_t bytes_read = 0;
     size_t read_len;
+    size_t bytes_read = 0;
     int32_t hdr_len, cmd_len;
     fiid_field_t *tmpl = NULL;
 
@@ -213,8 +213,8 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 
     if (read_len != pkt_len)
       {
-	int i;
 #if 0	
+	int i;
 	fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
 	fprintf (stderr, 
 		 "received packet size: %d\n" 

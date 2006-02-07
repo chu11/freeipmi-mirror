@@ -42,4 +42,4 @@
 #define IPMI_LAN_PARAM_VLAN_ID                      20
 #define IPMI_LAN_PARAM_VLAN_PRIORITY                21
 
-#endif
+#endif /* _IPMI_LAN_PARAM_SPEC_H */

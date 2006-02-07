@@ -17,11 +17,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
-#include <unistd.h>
 #include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <error.h>
-#include <strings.h>
 #include <argp.h>
 
 #include "freeipmi.h"

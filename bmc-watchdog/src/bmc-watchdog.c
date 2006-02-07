@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.32.2.4 2006-01-30 22:58:14 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.32.2.5 2006-02-07 01:27:55 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -425,7 +425,7 @@ _cmd(char *str,
 
   _FIID_OBJ_GET(cmd_rs, (uint8_t *)"comp_code", &comp_code, str);
 
-  if (comp_code != IPMI_COMMAND_SUCCESS)
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog("%s: cmd error: %Xh", str, comp_code);
 
   return (int)comp_code;
