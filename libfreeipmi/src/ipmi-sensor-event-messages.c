@@ -1051,9 +1051,9 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {4, "log_type"}, 
-	    {4, "log_entry_action"}, 
-	    {0, ""}
+	    {4, "log_type", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {4, "log_entry_action", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t log_type;
@@ -1139,14 +1139,14 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {1, "alert"}, 
-	    {1, "power_off"}, 
-	    {1, "reset"}, 
-	    {1, "power_cycle"}, 
-	    {1, "oem_action"}, 
-	    {1, "diagonstic_interrupt"}, 
-	    {2, "reserved"}, 
-	    {0, ""}
+	    {1, "alert", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "power_off", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "reset", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "power_cycle", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "oem_action", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "diagonstic_interrupt", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {2, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t alert;
@@ -1309,10 +1309,10 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {4, "timestamp_clock_type"}, 
-	    {3, "reserved"}, 
-	    {1, "first_second"}, 
-	    {0, ""}
+	    {4, "timestamp_clock_type", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {3, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "first_second", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t timestamp_clock_type;
@@ -1408,9 +1408,9 @@ get_21_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {6, "slot_connector_type"}, 
-	  {1, "reserved"}, 
-	  {0, ""}
+	  {6, "slot_connector_type", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {1, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       
@@ -1468,9 +1468,9 @@ get_23_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {4, "timer_at_expiration"}, 
-	  {4, "interrupt_type"}, 
-	  {0, ""}
+	  {4, "timer_at_expiration", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "interrupt_type", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t timer_at_expiration;
@@ -1572,9 +1572,9 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {6, "user_id"}, 
-	  {2, "reserved"}, 
-	  {0, ""}
+	  {6, "user_id", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       char *str = NULL;
@@ -1676,9 +1676,9 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {4, "previous_state_offset"}, 
-	  {4, "cause_of_state_change"}, 
-	  {0, ""}
+	  {4, "previous_state_offset", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "cause_of_state_change", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t previous_state_offset;
@@ -1770,9 +1770,9 @@ get_08_event_data3_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data3 = 
 	{
-	  {4, "event_type"}, 
-	  {4, "reserved"}, 
-	  {0, ""}
+	  {4, "event_type", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;      
       fiid_obj_t obj = NULL;
@@ -1831,11 +1831,11 @@ get_10_event_data3_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data3 = 
 	  {
-	    {4, "event_offset"}, 
-	    {1, "assertion_deassertion_event"}, 
-	    {1, "logging_disabled_all_events"}, 
-	    {2, "reserved"}, 
-	    {0, ""}
+	    {4, "event_offset", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "assertion_deassertion_event", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "logging_disabled_all_events", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {2, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t event_offset;
@@ -1961,10 +1961,10 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data3 = 
 	{
-	  {4, "channel_number"}, 
-	  {2, "deactivation_cause"}, 
-	  {2, "reserved"}, 
-	  {0, ""}
+	  {4, "channel_number", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "deactivation_cause", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},  
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t channel_number;

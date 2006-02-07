@@ -49,6 +49,11 @@
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Support fiid
 	error codes.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c
+	(tmpl_cmd_get_chassis_status_rs): Support optional fields.
+
+	* Various code cleanup.
 	
 2006-02-04  Albert Chu <chu11@llnl.gov>	
 

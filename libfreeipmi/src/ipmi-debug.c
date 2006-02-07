@@ -42,8 +42,8 @@
 
 fiid_template_t tmpl_unexpected =
 {
-  {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data"},
-  {0, ""}
+  {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {0, "", 0}
 };
 
 static int

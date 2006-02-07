@@ -917,7 +917,7 @@ get_sensor_reading (ipmi_device_t *dev,
       /* optional byte */
       {8, "ignore", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
       
-      {0,  ""}
+      {0,  "", 0}
     };
   
   fiid_template_t l_tmpl_get_sensor_discrete_reading_rs =
@@ -935,7 +935,7 @@ get_sensor_reading (ipmi_device_t *dev,
       {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
-      {0,  ""}
+      {0,  "", 0}
     };
   
   uint8_t slave_sys_soft_id;

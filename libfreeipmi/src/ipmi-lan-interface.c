@@ -1235,7 +1235,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       {
 	{2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	{6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	{0, ""}
+	{0, "", 0}
       };
     
     if (!(obj_hdr = fiid_obj_create(tmpl_hdr_cmd)))
@@ -1424,7 +1424,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 	{
 	  {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	  {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-	  {0, ""}
+	  {0, "", 0}
 	};
       
       if (!(obj_hdr = fiid_obj_create(tmpl_hdr_cmd)))

@@ -183,7 +183,7 @@ fiid_template_t tmpl_set_channel_access_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_set_user_name_rq =
@@ -222,7 +222,7 @@ fiid_template_t tmpl_get_user_name_rs =
     
     {128, "user_name", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_set_user_password_rq =

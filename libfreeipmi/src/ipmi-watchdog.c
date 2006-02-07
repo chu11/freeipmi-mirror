@@ -62,7 +62,7 @@ fiid_template_t tmpl_cmd_set_watchdog_timer_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_watchdog_timer_rq =

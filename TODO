@@ -17,62 +17,21 @@ Al's TODO list
 ==============
 libfreeipmi:
 ------------
-  * IPMI 1.5 Errata - Get Chassis Status 
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * Templates must be encapsulated further
   * fiid_obj_t must hold additional info
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
   * gcc 4.0 test/warning
-  * fiid tags for object types
-  * fiid error codes/retrieval/strerror
   * int wraparound corner cases - fiid
     - uint32_t for max_field_len, but some funcs return int32_t
     - counters, fiid_obj_create
-  * test unsuccesfful commands
   * test bad seq nums
   * chksum_test - confusing, not use?
-  * cmds to test
-    - set power restore policy
-    - chassis ctrl
-    - ipmi_lan_cmd
-      - ipmi_lan_get_channel_auth_caps
-      - ipmi_lan_get_session_challenge
-      - ipmi_lan_activate_session
-      - ipmi_lan_set_session_priv_level
-      - ipmi_lan_close_session
-    - chassis identify
-    - ipmi_cmd_get_chassis_status2
-    - ipmi_cmd_set_power_restore_policy2
-    - ipmi_rmcp_ping
-    msg support
-      - fill_kcs_set_channel_access
-      - fill_kcs_set_user_name
-      - fill_kcs_get_user_name
-      - fill_kcs_set_user_password
-      - fill_kcs_set_user_access
-      - fill_kcs_get_user_access
-      - fill_kcs_get_channel_access
-    lan-cmds
-      - generic set/get lan conf
-      - everythign else
-    pef-cmds
-    sdr-repo-cache
-    sdr-repo-cmds
-    sensor-cmds
-    sensor-types
-    sel-cmds
-    serial-cmds
-    tmpl_sdr_non_intelligent_fru_device_locator_sensor_record
-  * test for "{0, ""}"
   * need to test acpi
   * consistency in templates and functions
     - user_id.reserved vs. reserved vs. reserved1 etc.
     - user_name vs. username
-  * fill_kcs_get_sel_entry
-    - why not the other arguments?
-  * stronger parameter checking
-  * fill_kcs functions -> fill
   * fill_kcs_get_sel_entry
     - why not the other arguments?
 
