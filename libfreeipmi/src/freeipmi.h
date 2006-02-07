@@ -229,8 +229,6 @@ extern "C" {
 #include "ipmi-debug.h"
 #include "ipmi-md2.h"
 #include "ipmi-md5.h"
-#include "ipmi-sha1.h"
-#include "ipmi-hmac.h"
 #include "ipmi-sdr-repo-cache.h"
 #include "ipmi-sensor-utils.h"
 #include "ipmi-watchdog.h"
@@ -336,8 +334,6 @@ extern char *__progname;
 #include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-md2.h>
 #include <freeipmi/ipmi-md5.h>
-#include <freeipmi/ipmi-sha1.h>
-#include <freeipmi/ipmi-hmac.h>
 #include <freeipmi/ipmi-sdr-repo-cache.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-watchdog.h>

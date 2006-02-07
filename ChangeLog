@@ -13,6 +13,13 @@
 	bmc-info/src/bmc-info.c, ipmi-raw/src/ipmi-raw.c,
 	ipmi-locate/src/ipmi-locate.c, fish/src/Makefile.am,
 	fish/src/common.h: Support and make use of new common lib.
+
+	* libfreeipmi/src/ipmi-sha1.h, libfreeipmi/src/ipmi-sha1.c,
+	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-hmac.c: Removed
+	files.
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi.h: Remove
+	appropriate files.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
