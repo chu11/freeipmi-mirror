@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.8.2.7 2006-01-30 01:37:56 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.8.2.8 2006-02-07 01:24:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -693,12 +693,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_response_data(ip, pkt, 0, 0, 0, 0, 0, &cc);
     
-  if (cc == IPMI_COMMAND_SUCCESS)
+  if (cc == IPMI_COMP_CODE_COMMAND_SUCCESS)
     err_exit("ipmipower_packet_errmsg(%s:%d:%d): called with cc == SUCCESS",
              ip->ic->hostname, ip->protocol_state, pkt);
   else if (pkt == SESS_RES 
-           && (cc == IPMI_ERR_INVALID_USERNAME 
-               || cc == IPMI_ERR_NULL_USERNAME_NOT_ENABLED))
+           && (cc == IPMI_COMP_CODE_INVALID_USERNAME 
+               || cc == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
     {
 #ifndef NDEBUG
       return MSG_TYPE_USERNAME;
@@ -707,7 +707,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == ACTV_RES 
-           && cc == IPMI_ERR_EXCEEDS_PRIV_LEVEL)
+           && cc == IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL)
     {
 #ifndef NDEBUG
       return MSG_TYPE_PRIVILEGE;
@@ -716,9 +716,9 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == PRIV_RES 
-           && (cc == IPMI_ERR_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
-               || cc == IPMI_ERR_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT 
-               || cc == IPMI_ERR_CANNOT_DISABLE_USER_LEVEL_AUTH))
+           && (cc == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
+               || cc == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT 
+               || cc == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH))
     {
 #ifndef NDEBUG
       return MSG_TYPE_PRIVILEGE;
@@ -727,12 +727,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == ACTV_RES 
-           && (cc == IPMI_ERR_NO_SESSION_SLOT_AVAILABLE 
-               || cc == IPMI_ERR_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
-               || cc == IPMI_ERR_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
+           && (cc == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
+               || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
+               || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
     return MSG_TYPE_BMCBUSY;
   else if (pkt == CTRL_RES 
-           && cc == IPMI_ERR_REQUEST_PARAMETER_NOT_SUPPORTED)
+           && cc == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
     return MSG_TYPE_OPERATION;
   
   return MSG_TYPE_BMCERROR;

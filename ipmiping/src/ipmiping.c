@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.10 2006-01-30 01:37:56 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.11 2006-02-07 01:24:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -256,7 +256,7 @@ parsepacket(char *buffer,
     }
 
   if ((ret = ipmi_check_comp_code(tmpl_cmd_get_channel_auth_caps_rs, obj_cmd, 
-                                  IPMI_COMMAND_SUCCESS)) < 0)
+                                  IPMI_COMP_CODE_COMMAND_SUCCESS)) < 0)
     ipmi_ping_err_exit("ipmi_check_comp_code: %s", strerror(errno));
 
   if (!ret)

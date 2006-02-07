@@ -1,4 +1,4 @@
-OBJS = udm-test
+OBJS = udm-test ipmi-lan-test
 CC = gcc
 CFLAGS = -Wall -g -D_GNU_SOURCE
 LDFLAGS = -lfreeipmi

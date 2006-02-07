@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.6.2.8 2006-01-30 01:37:56 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.6.2.9 2006-02-07 01:24:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -293,11 +293,11 @@ _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
                ipmipower_packet_cmd_template(ip, pkt),
                (uint8_t *)"comp_code", &cc);
   
-  if (cc != IPMI_COMMAND_SUCCESS)
+  if (cc != IPMI_COMP_CODE_COMMAND_SUCCESS)
     dbg("_check_completion_code(%s:%d): cc bad: %x", 
         ip->ic->hostname, ip->protocol_state, (unsigned int)cc);
   
-  return ((cc == IPMI_COMMAND_SUCCESS) ? 1 : 0);
+  return ((cc == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
 }
 
 int 
