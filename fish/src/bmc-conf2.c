@@ -1128,7 +1128,7 @@ get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_ip_addr_source_rs);
   if (ipmi_cmd_lan_get_ip_addr_source2 (dev, 
 					get_lan_channel_number (), 
-					IPMI_GET_PARAMETER, 
+					IPMI_GET_LAN_PARAMETER, 
 					SET_SELECTOR, 
 					BLOCK_SELECTOR, 
 					obj_cmd_rs) != 0)
@@ -1155,7 +1155,7 @@ get_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_ip_addr_rs);
   if (ipmi_cmd_lan_get_ip_addr2 (dev, 
 				 get_lan_channel_number (), 
-				 IPMI_GET_PARAMETER, 
+				 IPMI_GET_LAN_PARAMETER, 
 				 SET_SELECTOR, 
 				 BLOCK_SELECTOR, 
 				 obj_cmd_rs) != 0)
@@ -1188,7 +1188,7 @@ get_bmc_lan_conf_mac_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_mac_addr2 (dev, 
 				  get_lan_channel_number (), 
-				  IPMI_GET_PARAMETER, 
+				  IPMI_GET_LAN_PARAMETER, 
 				  SET_SELECTOR, 
 				  BLOCK_SELECTOR, 
 				  obj_cmd_rs) != 0)
@@ -1223,7 +1223,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_subnet_mask_rs);
   if (ipmi_cmd_lan_get_subnet_mask2 (dev, 
 				     get_lan_channel_number (), 
-				     IPMI_GET_PARAMETER, 
+				     IPMI_GET_LAN_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_cmd_rs) != 0)
@@ -1256,7 +1256,7 @@ get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   if (ipmi_cmd_lan_get_default_gw_ip_addr2 (dev, 
 					    get_lan_channel_number (), 
-					    IPMI_GET_PARAMETER, 
+					    IPMI_GET_LAN_PARAMETER, 
 					    SET_SELECTOR, 
 					    BLOCK_SELECTOR, 
 					    obj_cmd_rs) != 0)
@@ -1289,7 +1289,7 @@ get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_default_gw_mac_addr2 (dev, 
 					     get_lan_channel_number (), 
-					     IPMI_GET_PARAMETER, 
+					     IPMI_GET_LAN_PARAMETER, 
 					     SET_SELECTOR, 
 					     BLOCK_SELECTOR, 
 					     obj_cmd_rs) != 0)
@@ -1324,7 +1324,7 @@ get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gw_ip_addr_rs);
   if (ipmi_cmd_lan_get_backup_gw_ip_addr2 (dev, 
 					   get_lan_channel_number (), 
-					   IPMI_GET_PARAMETER, 
+					   IPMI_GET_LAN_PARAMETER, 
 					   SET_SELECTOR, 
 					   BLOCK_SELECTOR, 
 					   obj_cmd_rs) != 0)
@@ -1357,7 +1357,7 @@ get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_mac_addr_rs);
   if (ipmi_cmd_lan_get_backup_gw_mac_addr2 (dev, 
 					    get_lan_channel_number (), 
-					    IPMI_GET_PARAMETER, 
+					    IPMI_GET_LAN_PARAMETER, 
 					    SET_SELECTOR, 
 					    BLOCK_SELECTOR, 
 					    obj_cmd_rs) != 0)
@@ -1394,7 +1394,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_vlan_id_rs);
   if (ipmi_cmd_lan_get_vlan_id2 (dev, 
 				 get_lan_channel_number (), 
-                                 IPMI_GET_PARAMETER, 
+                                 IPMI_GET_LAN_PARAMETER, 
                                  SET_SELECTOR, 
                                  BLOCK_SELECTOR, 
                                  obj_cmd_rs) != 0)
@@ -1440,7 +1440,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_vlan_priority_rs);
   if (ipmi_cmd_lan_get_vlan_priority2 (dev, 
 				       get_lan_channel_number (), 
-                                       IPMI_GET_PARAMETER, 
+                                       IPMI_GET_LAN_PARAMETER, 
                                        SET_SELECTOR, 
                                        BLOCK_SELECTOR, 
                                        obj_cmd_rs) != 0)
@@ -1467,7 +1467,7 @@ get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_auth_type_enables_rs);
   if (ipmi_cmd_lan_get_auth_type_enables2 (dev, 
 					   get_lan_channel_number (), 
-					   IPMI_GET_PARAMETER, 
+					   IPMI_GET_LAN_PARAMETER, 
 					   SET_SELECTOR, 
 					   BLOCK_SELECTOR, 
 					   obj_cmd_rs) != 0)
@@ -1639,7 +1639,7 @@ get_bmc_lan_conf_arp_control (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_bmc_generated_arp_control_rs);
   if (ipmi_cmd_lan_get_arp2 (dev, 
 			     get_lan_channel_number (), 
-			     IPMI_GET_PARAMETER, 
+			     IPMI_GET_LAN_PARAMETER, 
 			     SET_SELECTOR, 
 			     BLOCK_SELECTOR, 
 			     obj_cmd_rs) != 0)
@@ -1672,7 +1672,7 @@ get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_lan_conf_param_gratuitous_arp_interval_rs);
   if (ipmi_cmd_lan_get_gratuitous_arp_interval2 (dev, 
 						 get_lan_channel_number (), 
-						 IPMI_GET_PARAMETER, 
+						 IPMI_GET_LAN_PARAMETER, 
 						 SET_SELECTOR, 
 						 BLOCK_SELECTOR, 
 						 obj_cmd_rs) != 0)
@@ -1738,7 +1738,7 @@ get_bmc_serial_conf_conn_mode (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_connmode_rs);
   if (ipmi_cmd_get_serial_connmode2 (dev, 
 				     get_serial_channel_number (), 
-				     IPMI_GET_PARAMETER, 
+				     IPMI_GET_SERIAL_PARAMETER, 
 				     SET_SELECTOR, 
 				     BLOCK_SELECTOR, 
 				     obj_cmd_rs) != 0)
@@ -1783,7 +1783,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_pageblackout_rs);
   if (ipmi_cmd_get_serial_page_blackout2 (dev, 
 					  get_serial_channel_number (), 
-					  IPMI_GET_PARAMETER, 
+					  IPMI_GET_SERIAL_PARAMETER, 
 					  SET_SELECTOR, 
 					  BLOCK_SELECTOR, 
 					  obj_cmd_rs) != 0)
@@ -1810,7 +1810,7 @@ get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_retry_rs);
   if (ipmi_cmd_get_serial_retry_time2 (dev, 
 				       get_serial_channel_number (), 
-				       IPMI_GET_PARAMETER, 
+				       IPMI_GET_SERIAL_PARAMETER, 
 				       SET_SELECTOR, 
 				       BLOCK_SELECTOR, 
 				       obj_cmd_rs) != 0)
@@ -1839,7 +1839,7 @@ get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev,
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_serial_conf_param_commbits_rs);
   if (ipmi_cmd_get_serial_comm_bits2 (dev, 
 				      get_serial_channel_number (), 
-				      IPMI_GET_PARAMETER, 
+				      IPMI_GET_SERIAL_PARAMETER, 
 				      SET_SELECTOR, 
 				      BLOCK_SELECTOR, 
 				      obj_cmd_rs) != 0)
@@ -1902,7 +1902,7 @@ get_pef_control (ipmi_device_t *dev,
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_pef_control_rs);
   if (ipmi_cmd_get_pef_control2 (dev, 
-				 IPMI_GET_PARAMETER, 
+				 IPMI_GET_PEF_PARAMETER, 
 				 SET_SELECTOR, 
 				 BLOCK_SELECTOR, 
 				 obj_cmd_rs) != 0)
@@ -1951,7 +1951,7 @@ get_pef_global_action_control (ipmi_device_t *dev,
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_global_action_control_rs);
   if (ipmi_cmd_get_pef_global_action_control2 (dev, 
-					       IPMI_GET_PARAMETER, 
+					       IPMI_GET_PEF_PARAMETER, 
 					       SET_SELECTOR, 
 					       BLOCK_SELECTOR, 
 					       obj_cmd_rs) != 0)
@@ -2007,7 +2007,7 @@ get_pef_startup_delay (ipmi_device_t *dev,
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_startup_delay_rs);
   if (ipmi_cmd_get_pef_startup_delay2 (dev, 
-				       IPMI_GET_PARAMETER, 
+				       IPMI_GET_PEF_PARAMETER, 
 				       SET_SELECTOR, 
 				       BLOCK_SELECTOR, 
 				       obj_cmd_rs) != 0)
@@ -2033,7 +2033,7 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
   
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_pef_conf_param_alert_startup_delay_rs);
   if (ipmi_cmd_get_pef_alert_startup_delay2 (dev, 
-					     IPMI_GET_PARAMETER, 
+					     IPMI_GET_PEF_PARAMETER, 
 					     SET_SELECTOR, 
 					     BLOCK_SELECTOR, 
 					     obj_cmd_rs) != 0)

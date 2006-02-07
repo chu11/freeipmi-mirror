@@ -84,6 +84,9 @@
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPENDED       0x0
 #define IPMI_BMC_GENERATED_ARP_RESPONSE_OCCURRING       0x1
 
+#define IPMI_GET_LAN_PARAMETER                          0x0
+#define IPMI_GET_LAN_PARAMETER_REVISION_ONLY            0x1
+
 #ifdef __cplusplus
 extern "C" {
 #endif

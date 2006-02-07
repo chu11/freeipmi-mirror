@@ -20,6 +20,15 @@
 
 	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi.h: Remove
 	appropriate files.
+
+	* libfreeipmi/src/ipmi-cmd-spec.h,
+	libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.h: Move non-cmd-spec #defines out of
+	ipmi-cmd-spec.h.
+
+	* fish/src/bmc-conf2.c, fish/src/scm-procedures.c: Adjust code
+	appropriately.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 

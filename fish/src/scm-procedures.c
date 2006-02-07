@@ -3435,7 +3435,7 @@ ex_get_pef_info ()
     {
       fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_event_filters_rs);
       if (ipmi_cmd_get_pef_num_event_filters2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PARAMETER, 
+					       IPMI_GET_PEF_PARAMETER, 
 					       SET_SELECTOR, 
 					       BLOCK_SELECTOR, 
 					       cmd_rs) != 0)
@@ -3460,7 +3460,7 @@ ex_get_pef_info ()
     {
       fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_policies_rs);
       if (ipmi_cmd_get_pef_num_alert_policies2 (fi_get_ipmi_device (), 
-						IPMI_GET_PARAMETER, 
+						IPMI_GET_PEF_PARAMETER, 
 						SET_SELECTOR, 
 						BLOCK_SELECTOR, 
 						cmd_rs) != 0)
@@ -3485,7 +3485,7 @@ ex_get_pef_info ()
     {
       fiid_obj_alloca (cmd_rs, tmpl_get_pef_conf_param_num_alert_strings_rs);
       if (ipmi_cmd_get_pef_num_alert_strings2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PARAMETER, 
+					       IPMI_GET_PEF_PARAMETER, 
 					       SET_SELECTOR, 
 					       BLOCK_SELECTOR, 
 					       cmd_rs) != 0)
