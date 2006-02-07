@@ -9,6 +9,10 @@
 
 	* doc/examples/Makefile.am: Fix distcheck.
 
+	* common/src/Makefile.am: Make libargpcommon.la library.
+	
+	* bmc-info/src/Makefile.am, ipmi-raw/src/Makefile.am: Use new util library.
+
 2006-02-05  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-msg-interface-desc.h: Remove duplicate code.

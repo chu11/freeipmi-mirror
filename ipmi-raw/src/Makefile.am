@@ -1,9 +1,9 @@
 sbin_PROGRAMS=ipmi-raw
-ipmi_raw_SOURCES=ipmi-raw-argp.c ipmi-raw.c ../../common/src/argp-common.c
+ipmi_raw_SOURCES=ipmi-raw-argp.c ipmi-raw.c 
  
-ipmi_raw_LDADD = ../../libfreeipmi/src/libfreeipmi.la
+ipmi_raw_LDADD = ../../common/src/libargpcommon.la ../../libfreeipmi/src/libfreeipmi.la
  
-noinst_HEADERS=ipmi-raw-argp.h ../../common/src/argp-common.h
+noinst_HEADERS=ipmi-raw-argp.h 
  
 AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
@@ -13,4 +13,7 @@ AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
+../../common/src/libargpcommon.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
+
 force-dependency-check:
