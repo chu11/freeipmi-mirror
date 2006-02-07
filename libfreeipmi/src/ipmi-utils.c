@@ -87,45 +87,6 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
 }
 
 int
-ipmi_input_timeout (int fd, unsigned int seconds)
-{
-  fd_set set;
-  struct timeval timeout;
-  
-  /* Initialize the file descriptor set. */
-  FD_ZERO (&set);
-  FD_SET (fd, &set);
-
-  /* Initialize the timeout data structure. */
-  timeout.tv_sec = seconds;
-  timeout.tv_usec = 0;
-
-  /* `select' returns 0 if timeout, 1 if input available, -1 if error. */
-  return TEMP_FAILURE_RETRY (select (FD_SETSIZE,
-				     &set, NULL, NULL,
-				     &timeout));
-}
-
-unsigned int
-ipmi_get_random_seed (void)
-{
-  unsigned int seed;
-  int fd;
-  
-  if ((fd = open ("/dev/urandom", O_RDONLY)) == -1)
-    goto fail_over_seed;
-  
-  if (read (fd, &seed, sizeof (seed)) < sizeof (seed))
-    goto fail_over_seed;
-
-  close (fd);
-  return (seed);
-
- fail_over_seed:
-  return ((unsigned int) time (0));
-}
-
-int
 ipmi_open_free_udp_port (void)
 {
   int sockfd;

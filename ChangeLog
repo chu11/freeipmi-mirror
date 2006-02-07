@@ -40,6 +40,9 @@
 	* libfreeipmi/src/ipmi-sensor-types.h: Remove commented out code.
 
 	* libfreeipmi/src/ipmi-sensor-types.c: Fix typos.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_input_timeout, ipmi_get_random_seed): Removed functions.
 	
 2006-02-06  Anand Babu  <ab@zresearch.com>
 
