@@ -34,7 +34,7 @@ double ipmi_sensor_decode_value (char r_exponent,
 				 short m, 
 				 short b, 
 				 char linear, 
-				 uint8_t is_signed, 
+				 uint8_t analog_data_format, 
 				 uint8_t raw_data);
 void ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
 				    int *is_signed, char *r_exponent, char *b_exponent, 
