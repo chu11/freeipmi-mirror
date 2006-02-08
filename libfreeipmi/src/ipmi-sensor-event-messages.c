@@ -20,39 +20,468 @@
 
 #include "freeipmi.h"
 
+const char *const ipmi_generic_event_reading_type_code_01_desc[] =
+  {
+    "Lower Non-critical - going low",
+    "Lower Non-critical - going high",
+    "Lower Critical - going low",
+    "Lower Critical - going high",
+    "Lower Non-recoverable - going low",
+    "Lower Non-recoverable - going high",
+    "Upper Non-critical - going low",
+    "Upper Non-critical - going high",
+    "Upper Critical - going low",
+    "Upper Critical - going high",
+    "Upper Non-recoverable - going low",
+    "Upper Non-recoverable - going high",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_02_desc[] =
+  {
+    "Transition to Idle",
+    "Transition to Active",
+    "Transition to Busy",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_03_desc[] =
+  {
+    "State Deasserted",
+    "State Asserted",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_04_desc[] =
+  {
+    "Predictive Failure deasserted",
+    "Predictive Failure asserted",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_05_desc[] =
+  {
+    "Limit Not Exceeded",
+    "Limit Exceeded",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_06_desc[] =
+  {
+    "Performance Met",
+    "Performance Lags",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_07_desc[] =
+  {
+    "transition to OK",
+    "transition to Non-Critical from OK",
+    "transition to Critical from less severe",
+    "transition to Non-recoverable from less severe",
+    "transition to Non-Critical from more severe",
+    "transition to Critical from Non-recoverable",
+    "transition to Non-recoverable",
+    "Monitor",
+    "Informational",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_08_desc[] =
+  {
+    "Device Removed/Device Absent",
+    "Device Inserted/Device Present",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_09_desc[] =
+  {
+    "Device Disabled",
+    "Device Enabled",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_0A_desc[] =
+  {
+    "transition to Running",
+    "transition to In Test",
+    "transition to Power Off",
+    "transition to On Line",
+    "transition to Off Line",
+    "transition to Off Duty",
+    "transition to Degraded",
+    "transition to Power Save",
+    "Install Error",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_0B_desc[] =
+  {
+    "Fully Redundant (formerly \"Redundancy Regained\")",
+    "Redundancy Lost",
+    "Redundancy Degraded",
+    "Entered from Redundancy Degraded or Fully Redundant",
+    "Entered from Non-redundant:Insufficient Resources",
+    "Non-redundant:Insufficient Resources",
+    "Redundancy Degraded from Fully Redundant",
+    "Redundancy Degraded from Non-redundant",
+    NULL
+  };
+
+const char *const ipmi_generic_event_reading_type_code_0C_desc[] =
+  {
+    "D0 Power State",
+    "D1 Power State",
+    "D2 Power State",
+    "D3 Power State",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_01_desc[] =
+  {
+    "Temperature",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_02_desc[] =
+  {
+    "Voltage",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_03_desc[] =
+  {
+    "Current",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_04_desc[] =
+  {
+    "Fan",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_05_desc[] =
+  {
+    "General Chassis Intrusion",
+    "Drive Bay intrusion",
+    "I/O Card area intrusion",
+    "Processor area intrusion",
+    "LAN Leash Lost (system is unplugged from LAN)",
+    "Unauthorized dock/undock",
+    " FAN area intrusion (supports detection of hot plug fan tampering)",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_06_desc[] =
+  {
+    "Secure Mode (Front Panel Lockout) Violation attempt",
+    "Pre-boot Password Violation - user password",
+    "Pre-boot Password Violation attempt - setup password",
+    "Pre-boot Password Violation - network boot password",
+    "Other pre-boot Password Violation",
+    "Out-of-band Access Password Violation",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_07_desc[] =
+  {
+    "IERR",
+    "Thermal Trip",
+    "FRB1/BIST failure",
+    "FRB2/Hang in POST failure (used hang is believed to be due or related to a processor failure. Use System Firmware Progress sensor for other BIOS hangs.)",
+    "FRB3/Processor Startup/Initialization failure (CPU didn't start)",
+    "Configuration Error",
+    "SM BIOS `Uncorrectable CPU-complex Error'",
+    "Processor Presence detected",
+    "Processor disabled",
+    "Terminator Presence Detected",
+    "Processor Automatically Throttled (processor throttling triggered by a hardware-based mechanism operating independent from system software, such as automatic thermal throttling or throttling to limit power consumption.)",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_08_desc[] =
+  {
+    "Presence detected",
+    "Power Supply Failure detected",
+    "Predictive Failure",
+    "Power Supply input lost (AC/DC)",
+    "Power Supply input lost or out-of-range",
+    "Power Supply input out-of-range, but present",
+    "Configuration error",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_09_desc[] =
+  {
+    "Power Off/Power Down",
+    "Power Cycle",
+    "240VA Power Down",
+    "Interlock Power Down",
+    "AC lost",
+    "Soft Power Control Failure (unit did not respond to request to turn on)",
+    "Power Unit Failure detected",
+    "Predictive Failure",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_0C_desc[] =
+  {
+    "Correctable ECC/other correctable memory error",
+    "Uncorrectable ECC/other uncorrectable memory error",
+    "Parity",
+    "Memory Scrub Failed (stuck bit)",
+    "Memory Device Disabled",
+    "Correctable ECC/other correctable memory error logging limit reached",
+    "Presence detected",
+    "Configuration error",
+    "Spare",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_0F_desc[] =
+  {
+    "System Firmware Error (POST Error)",
+    "System Firmware Hang",
+    "System Firmware Progress",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_10_desc[] =
+  {
+    "Correctable Memory Error Logging Disabled",
+    "Event `Type' Logging Disabled",
+    "Log Area Reset/Cleared",
+    "All Event Logging Disabled",
+    "SEL Full",
+    "SEL Almost Full",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_11_desc[] =
+  {
+    "BIOS Watchdog Reset",
+    "OS Watchdog Reset",
+    "OS Watchdog Shut Down",
+    "OS Watchdog Power Down",
+    "OS Watchdog Power Cycle",
+    "OS Watchdog NMI/Diagnostic Interrupt",
+    "OS Watchdog Expired, status only",
+    "OS Watchdog pre-timeout Interrupt, non-NMI",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_12_desc[] =
+  {
+    "System Reconfigured",
+    "OEM System Boot Event",
+    "Undetermined system hardware failure",
+    "Entry added to Auxiliary Log",
+    "PEF Action",
+    "Timestamp Clock Synch",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_13_desc[] =
+  {
+    "Front Panel NMI/Diagnostic Interrupt",
+    "Bus Timeout",
+    "I/O channel check NMI",
+    "Software NMI",
+    "PCI PERR",
+    "PCI SERR",
+    "EISA Fail Safe Timeout",
+    "Bus Correctable Error",
+    "Bus Uncorrectable Error",
+    "Fatal NMI (port 61h, bit 7)",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_14_desc[] =
+  {
+    "Power Button pressed",
+    "Sleep Button pressed",
+    "Reset Button pressed",
+    "FRU latch open (Switch indicating FRU latch is in `unlatched' position and FRU is mechanically removable)",
+    "FRU service request button (pressed, service, e.g. removal/replacement, requested)",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_19_desc[] =
+  {
+    "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)", 
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_1D_desc[] =
+  {
+    "Initiated by power up",
+    "Initiated by hard reset",
+    "Initiated by warm reset",
+    "User requested PXE boot",
+    "Automatic boot to diagnostic",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_1E_desc[] =
+  {
+    "No bootable media",
+    "Non-bootable diskette left in drive",
+    "PXE Server not found",
+    "Invalid boot sector",
+    "Timeout waiting for user selection of boot source",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_1F_desc[] =
+  {
+    "A: boot completed",
+    "C: boot completed",
+    "PXE boot completed",
+    "Diagnostic boot completed",
+    "CD-ROM boot completed",
+    "ROM boot completed",
+    "boot completed - boot device not specified",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_20_desc[] =
+  {
+    "Stop during OS load/initialization",
+    "Run-time Stop",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_21_desc[] =
+  {
+    "Fault Status asserted",
+    "Identify Status asserted",
+    "Slot/Connector Device installed/attached",
+    "Slot/Connector Ready for Device Installation",
+    "Slot/Connector Ready for Device Removal",
+    "Slot Power is Off",
+    "Slot/Connector Device Removal Request",
+    "Interlock asserted",
+    "Slot is Disabled",
+    "Slot holds spare device",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_22_desc[] =
+  {
+    "S0/G0 \"working\"",
+    "S1 \"sleeping with system h/w & processor context maintained\"",
+    "S2 \"sleeping, processor context lost\"",
+    "S3 \"sleeping, processor & h/w context lost, memory retained.\"",
+    "S4 \"non-volatile sleep/suspend-to disk\"",
+    "S5/G2 \"soft-off\"",
+    "S4/S5 soft-off, particular S4/S5 state cannot be determined",
+    "G3/Mechanical Off",
+    "Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)",
+    "G1 sleeping (S1-S4 state cannot be determined)",
+    "S5 entered by override",
+    "Legacy ON state",
+    "Legacy OFF state",
+    "Unknown",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_23_desc[] =
+  {
+    "Timer expired, status only (no action, no interrupt)",
+    "Hard Reset",
+    "Power Down",
+    "Power Cycle",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Timer interrupt",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_24_desc[] =
+  {
+    "platform generated page",
+    "platform generated LAN alert",
+    "Platform Event Trap generated, formatted per IPMI PET specification",
+    "platform generated SNMP trap, OEM format",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_25_desc[] =
+  {
+    "Entity Present",
+    "Entity Absent",
+    "Entity Disabled",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_27_desc[] =
+  {
+    "LAN Heartbeat Lost",
+    "LAN Heartbeat",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_28_desc[] =
+  {
+    "sensor access degraded or unavailable",
+    "controller access degraded or unavailable",
+    "management controller off-line",
+    "management controller unavailable",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_29_desc[] =
+  {
+    "battery low (predictive failure)",
+    "battery failed",
+    "battery presence detected",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2A_desc[] =
+  {
+    "Session Activated",
+    "Session Deactivated",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2B_desc[] =
+  {
+    "Hardware change detected with associated Entity",
+    "Firmware or software change detected with associated Entity",
+    "Hardware incompatibility detected with associated Entity",
+    "Firmware or software incompatibility detected with associated Entity",
+    "Entity is of an invalid or unsupported hardware version",
+    "Entity contains an invalid or unsupported firmware or software version",
+    "Hardware Change detected with associated Entity was successful",
+    "Software or F/W Change detected with associated Entity was successful",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2C_desc[] =
+  {
+    "FRU Not Installed",
+    "FRU Inactive (in standby or `hot spare' state)",
+    "FRU Activation Requested",
+    "FRU Activation In Progress",
+    "FRU Active",
+    "FRU Deactivation Requested",
+    "FRU Deactivation In Progress",
+    "FRU Communication Lost",
+    NULL
+  };
+
 /**********************************************************/
 /***********      event message functions   ***************/
 /**********************************************************/
 static char *
 get_01_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Lower Non-critical - going low");
-    case 0x01:
-      return strdup ("Lower Non-critical - going high");
-    case 0x02:
-      return strdup ("Lower Critical - going low");
-    case 0x03:
-      return strdup ("Lower Critical - going high");
-    case 0x04:
-      return strdup ("Lower Non-recoverable - going low");
-    case 0x05:
-      return strdup ("Lower Non-recoverable - going high");
-    case 0x06:
-      return strdup ("Upper Non-critical - going low");
-    case 0x07:
-      return strdup ("Upper Non-critical - going high");
-    case 0x08:
-      return strdup ("Upper Critical - going low");
-    case 0x09:
-      return strdup ("Upper Critical - going high");
-    case 0x0A:
-      return strdup ("Upper Non-recoverable - going low");
-    case 0x0B:
-      return strdup ("Upper Non-recoverable - going high");
-    }
+  if (offset <= 0x0B)
+    return strdup(ipmi_generic_event_reading_type_code_01_desc[offset]);
   
   return NULL;
 }
@@ -60,15 +489,8 @@ get_01_generic_event_message (uint16_t offset)
 static char *
 get_02_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Transition to Idle");
-    case 0x01:
-      return strdup ("Transition to Active");
-    case 0x02:
-      return strdup ("Transition to Busy");
-    }
+  if (offset <= 0x02)
+    return strdup(ipmi_generic_event_reading_type_code_02_desc[offset]);
   
   return NULL;
 }
@@ -76,184 +498,80 @@ get_02_generic_event_message (uint16_t offset)
 static char *
 get_03_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("State Deasserted");
-    case 0x01:
-      return strdup ("State Asserted");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_03_desc[offset]);
   return NULL;
 }
 
 static char *
 get_04_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Predictive Failure deasserted");
-    case 0x01:
-      return strdup ("Predictive Failure asserted");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_04_desc[offset]);
   return NULL;
 }
 
 static char *
 get_05_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Limit Not Exceeded");
-    case 0x01:
-      return strdup ("Limit Exceeded");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_05_desc[offset]);
   return NULL;
 }
 
 static char *
 get_06_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Performance Met");
-    case 0x01:
-      return strdup ("Performance Lags");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_06_desc[offset]);
   return NULL;
 }
 
 static char *
 get_07_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("transition to OK");
-    case 0x01:
-      return strdup ("transition to Non-Critical from OK");
-    case 0x02:
-      return strdup ("transition to Critical from less severe");
-    case 0x03:
-      return strdup ("transition to Non-recoverable from less severe");
-    case 0x04:
-      return strdup ("transition to Non-Critical from more severe");
-    case 0x05:
-      return strdup ("transition to Critical from Non-recoverable");
-    case 0x06:
-      return strdup ("transition to Non-recoverable");
-    case 0x07:
-	return strdup ("Monitor");
-    case 0x08:
-      return strdup ("Informational");
-    }
-  
+  if (offset <= 0x08)
+    return strdup(ipmi_generic_event_reading_type_code_07_desc[offset]);
   return NULL;
 }
 
 static char *
 get_08_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Device Removed/Device Absent");
-    case 0x01:
-	return strdup ("Device Inserted/Device Present");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_08_desc[offset]);
   return NULL;
 }
 
 static char *
 get_09_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Device Disabled");
-    case 0x01:
-      return strdup ("Device Enabled");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_generic_event_reading_type_code_09_desc[offset]);
   return NULL;
 }
 
 static char *
 get_0A_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("transition to Running");
-    case 0x01:
-      return strdup ("transition to In Test");
-    case 0x02:
-      return strdup ("transition to Power Off");
-    case 0x03:
-      return strdup ("transition to On Line");
-    case 0x04:
-      return strdup ("transition to Off Line");
-    case 0x05:
-      return strdup ("transition to Off Duty");
-    case 0x06:
-      return strdup ("transition to Degraded");
-    case 0x07:
-      return strdup ("transition to Power Save");
-    case 0x08:
-      return strdup ("Install Error");
-    }
-  
+  if (offset <= 0x0A)
+    return strdup(ipmi_generic_event_reading_type_code_0A_desc[offset]);
   return NULL;
 }
 
 static char *
 get_0B_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Fully Redundant (formerly \"Redundancy Regained\")");
-    case 0x01:
-      return strdup ("Redundancy Lost");
-    case 0x02:
-      return strdup ("Redundancy Degraded");
-    case 0x03:
-      return strdup ("Entered from Redundancy Degraded or Fully Redundant");
-    case 0x04:
-      return strdup ("Entered from Non-redundant:Insufficient Resources");
-    case 0x05:
-      return strdup ("Non-redundant:Insufficient Resources");
-    case 0x06:
-      return strdup ("Redundancy Degraded from Fully Redundant");
-    case 0x07:
-      return strdup ("Redundancy Degraded from Non-redundant");
-    }
-  
+  if (offset <= 0x07)
+    return strdup(ipmi_generic_event_reading_type_code_0B_desc[offset]);
   return NULL;
 }
 
 static char *
 get_0C_generic_event_message (uint16_t offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("D0 Power State");
-    case 0x01:
-      return strdup ("D1 Power State");
-    case 0x02:
-      return strdup ("D2 Power State");
-    case 0x03:
-      return strdup ("D3 Power State");
-    }
-  
+  if (offset <= 0x03)
+    return strdup(ipmi_generic_event_reading_type_code_0C_desc[offset]);
   return NULL;
 }
 
@@ -263,328 +581,136 @@ get_0C_generic_event_message (uint16_t offset)
 static char *
 get_01_event_message (int offset)
 {
-  return strdup ("Temperature");
+  if (offset <= 0x00)
+    return strdup(ipmi_sensor_type_code_01_desc[offset]);
+  return NULL;
 }
 
 static char *
 get_02_event_message (int offset)
 {
-  return strdup ("Voltage");
+  if (offset <= 0x00)
+    return strdup(ipmi_sensor_type_code_02_desc[offset]);
+  return NULL;
 }
 
 static char *
 get_03_event_message (int offset)
 {
-  return strdup ("Current");
+  if (offset <= 0x00)
+    return strdup(ipmi_sensor_type_code_03_desc[offset]);
+  return NULL;
 }
 
 static char *
 get_04_event_message (int offset)
 {
-  return strdup ("Fan");
+  if (offset <= 0x00)
+    return strdup(ipmi_sensor_type_code_04_desc[offset]);
+  return NULL;
 }
 
 static char *
 get_05_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("General Chassis Intrusion");
-    case 0x01:
-      return strdup ("Drive Bay intrusion");
-    case 0x02:
-      return strdup ("I/O Card area intrusion");
-    case 0x03:
-      return strdup ("Processor area intrusion");
-    case 0x04:
-      return strdup ("LAN Leash Lost (system is unplugged from LAN)");
-    case 0x05:
-      return strdup ("Unauthorized dock/undock");
-    case 0x06:
-      return strdup (" FAN area intrusion (supports detection of hot plug fan tampering)");
-    }
-  
+  if (offset <= 0x06)
+    return strdup(ipmi_sensor_type_code_05_desc[offset]);
   return NULL;
 }
 
 static char *
 get_06_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Secure Mode (Front Panel Lockout) Violation attempt");
-    case 0x01:
-      return strdup ("Pre-boot Password Violation - user password");
-    case 0x02:
-      return strdup ("Pre-boot Password Violation attempt - setup password");
-    case 0x03:
-      return strdup ("Pre-boot Password Violation - network boot password");
-    case 0x04:
-      return strdup ("Other pre-boot Password Violation");
-    case 0x05:
-      return strdup ("Out-of-band Access Password Violation");
-    }
-  
+  if (offset <= 0x05)
+    return strdup(ipmi_sensor_type_code_06_desc[offset]);
   return NULL;
 }
 
 static char *
 get_07_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("IERR");
-    case 0x01:
-      return strdup ("Thermal Trip");
-    case 0x02:
-      return strdup ("FRB1/BIST failure");
-    case 0x03:
-      return strdup ("FRB2/Hang in POST failure (used hang is believed to be due or related to a processor failure. Use System Firmware Progress sensor for other BIOS hangs.)");
-    case 0x04:
-      return strdup ("FRB3/Processor Startup/Initialization failure (CPU didn't start)");
-    case 0x05:
-      return strdup ("Configuration Error");
-    case 0x06:
-      return strdup ("SM BIOS `Uncorrectable CPU-complex Error'");
-    case 0x07:
-      return strdup ("Processor Presence detected");
-    case 0x08:
-      return strdup ("Processor disabled");
-    case 0x09:
-      return strdup ("Terminator Presence Detected");
-    case 0x0A:
-      return strdup ("Processor Automatically Throttled (processor throttling triggered by a hardware-based mechanism operating independent from system software, such as automatic thermal throttling or throttling to limit power consumption.)");
-    }
-  
+  if (offset <= 0x0A)
+    return strdup(ipmi_sensor_type_code_07_desc[offset]);
   return NULL;
 }
 
 static char *
 get_08_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Presence detected");
-    case 0x01:
-      return strdup ("Power Supply Failure detected");
-    case 0x02:
-      return strdup ("Predictive Failure");
-    case 0x03:
-      return strdup ("Power Supply input lost (AC/DC)");
-    case 0x04:
-      return strdup ("Power Supply input lost or out-of-range");
-    case 0x05:
-      return strdup ("Power Supply input out-of-range, but present");
-    case 0x06:
-      return strdup ("Configuration error");
-    }
-  
+  if (offset <= 0x06)
+    return strdup(ipmi_sensor_type_code_08_desc[offset]);
   return NULL;
 }
 
 static char *
 get_09_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00: 
-      return strdup ("Power Off/Power Down");
-    case 0x01: 
-      return strdup ("Power Cycle");
-    case 0x02: 
-      return strdup ("240VA Power Down");
-    case 0x03: 
-      return strdup ("Interlock Power Down");
-    case 0x04: 
-      return strdup ("AC lost");
-    case 0x05: 
-      return strdup ("Soft Power Control Failure (unit did not respond to request to turn on)");
-    case 0x06: 
-      return strdup ("Power Unit Failure detected");
-    case 0x07: 
-      return strdup ("Predictive Failure");
-    }
-  
+  if (offset <= 0x07)
+    return strdup(ipmi_sensor_type_code_09_desc[offset]);
   return NULL;
 }
 
 static char *
 get_0C_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Correctable ECC/other correctable memory error");
-    case 0x01:
-      return strdup ("Uncorrectable ECC/other uncorrectable memory error");
-    case 0x02:
-      return strdup ("Parity");
-    case 0x03:
-      return strdup ("Memory Scrub Failed (stuck bit)");
-    case 0x04:
-      return strdup ("Memory Device Disabled");
-    case 0x05:
-      return strdup ("Correctable ECC/other correctable memory error logging limit reached");
-    case 0x06:
-      return strdup ("Presence detected");
-    case 0x07:
-      return strdup ("Configuration error");
-    case 0x08:
-      return strdup ("Spare");
-    }
-  
+  if (offset <= 0x08)
+    return strdup(ipmi_sensor_type_code_0C_desc[offset]);
   return NULL;
 }
 
 static char *
 get_0F_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("System Firmware Error (POST Error)");
-    case 0x01:
-      return strdup ("System Firmware Hang");
-    case 0x02:
-      return strdup ("System Firmware Progress");
-    }
-  
+  if (offset <= 0x02)
+    return strdup(ipmi_sensor_type_code_0F_desc[offset]);
   return NULL;
 }
 
 static char *
 get_10_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Correctable Memory Error Logging Disabled");
-    case 0x01:
-      return strdup ("Event `Type' Logging Disabled");
-    case 0x02:
-      return strdup ("Log Area Reset/Cleared");
-    case 0x03:
-      return strdup ("All Event Logging Disabled");
-    case 0x04:
-      return strdup ("SEL Full");
-    case 0x05:
-      return strdup ("SEL Almost Full");
-    }
-  
+  if (offset <= 0x05)
+    return strdup(ipmi_sensor_type_code_10_desc[offset]);
   return NULL;
 }
 
 static char *
 get_11_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("BIOS Watchdog Reset");
-    case 0x01:
-      return strdup ("OS Watchdog Reset");
-    case 0x02:
-      return strdup ("OS Watchdog Shut Down");
-    case 0x03:
-      return strdup ("OS Watchdog Power Down");
-    case 0x04:
-      return strdup ("OS Watchdog Power Cycle");
-    case 0x05:
-      return strdup ("OS Watchdog NMI/Diagnostic Interrupt");
-    case 0x06:
-      return strdup ("OS Watchdog Expired, status only");
-    case 0x07:
-      return strdup ("OS Watchdog pre-timeout Interrupt, non-NMI");
-    }
-  
+  if (offset <= 0x07)
+    return strdup(ipmi_sensor_type_code_11_desc[offset]);
   return NULL;
 }
 
 static char *
 get_12_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("System Reconfigured");
-    case 0x01:
-      return strdup ("OEM System Boot Event");
-    case 0x02:
-      return strdup ("Undetermined system hardware failure");
-    case 0x03:
-      return strdup ("Entry added to Auxiliary Log");
-    case 0x04:
-      return strdup ("PEF Action");
-    case 0x05:
-      return strdup ("Timestamp Clock Synch");
-    }
-  
+  if (offset <= 0x05)
+    return strdup(ipmi_sensor_type_code_12_desc[offset]);
   return NULL;
 }
 
 static char *
 get_13_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Front Panel NMI/Diagnostic Interrupt");
-    case 0x01:
-      return strdup ("Bus Timeout");
-    case 0x02:
-      return strdup ("I/O channel check NMI");
-    case 0x03:
-      return strdup ("Software NMI");
-    case 0x04:
-      return strdup ("PCI PERR");
-    case 0x05:
-      return strdup ("PCI SERR");
-    case 0x06:
-      return strdup ("EISA Fail Safe Timeout");
-    case 0x07:
-      return strdup ("Bus Correctable Error");
-    case 0x08:
-      return strdup ("Bus Uncorrectable Error");
-    case 0x09:
-      return strdup ("Fatal NMI (port 61h, bit 7)");
-    }
-  
+  if (offset <= 0x09)
+    return strdup(ipmi_sensor_type_code_13_desc[offset]);
   return NULL;
 }
 
 static char *
 get_14_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Power Button pressed");
-    case 0x01:
-      return strdup ("Sleep Button pressed");
-    case 0x02:
-      return strdup ("Reset Button pressed");
-    case 0x03:
-      return strdup ("FRU latch open (Switch indicating FRU latch is in `unlatched' position and FRU is mechanically removable)");
-    case 0x04:
-      return strdup ("FRU service request button (pressed, service, e.g. removal/replacement, requested)");
-    }
-  
+  if (offset <= 0x04)
+    return strdup(ipmi_sensor_type_code_14_desc[offset]);
   return NULL;
 }
 
 static char *
 get_19_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00: 
-      return strdup ("Soft Power Control Failure (chipset did not respond to BMC request to change system power state)"); 
-    }
-  
+  if (offset <= 0x00)
+    return strdup(ipmi_sensor_type_code_19_desc[offset]);
   return NULL;
 }
 
@@ -592,314 +718,120 @@ get_19_event_message (int offset)
 static char *
 get_1D_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Initiated by power up");
-    case 0x01:
-      return strdup ("Initiated by hard reset");
-    case 0x02:
-      return strdup ("Initiated by warm reset");
-    case 0x03:
-      return strdup ("User requested PXE boot");
-    case 0x04:
-      return strdup ("Automatic boot to diagnostic");
-    }
-  
+  if (offset <= 0x04)
+    return strdup(ipmi_sensor_type_code_1D_desc[offset]);
   return NULL;
 }
 
 static char *
 get_1E_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("No bootable media");
-    case 0x01:
-      return strdup ("Non-bootable diskette left in drive");
-    case 0x02:
-      return strdup ("PXE Server not found");
-    case 0x03:
-      return strdup ("Invalid boot sector");
-    case 0x04:
-      return strdup ("Timeout waiting for user selection of boot source");
-    }
-  
+  if (offset <= 0x04)
+    return strdup(ipmi_sensor_type_code_1E_desc[offset]);
   return NULL;
 }
 
 static char *
 get_1F_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("A: boot completed");
-    case 0x01:
-      return strdup ("C: boot completed");
-    case 0x02:
-      return strdup ("PXE boot completed");
-    case 0x03:
-      return strdup ("Diagnostic boot completed");
-    case 0x04:
-      return strdup ("CD-ROM boot completed");
-    case 0x05:
-      return strdup ("ROM boot completed");
-    case 0x06:
-      return strdup ("boot completed - boot device not specified");
-    }
-  
+  if (offset <= 0x06)
+    return strdup(ipmi_sensor_type_code_1F_desc[offset]);
   return NULL;
 }
 
 static char *
 get_20_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Stop during OS load/initialization");
-    case 0x01:
-      return strdup ("Run-time Stop");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_sensor_type_code_20_desc[offset]);
   return NULL;
 }
 
 static char *
 get_21_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Fault Status asserted");
-    case 0x01:
-      return strdup ("Identify Status asserted");
-    case 0x02:
-      return strdup ("Slot/Connector Device installed/attached");
-    case 0x03:
-      return strdup ("Slot/Connector Ready for Device Installation");
-    case 0x04:
-      return strdup ("Slot/Connector Ready for Device Removal");
-    case 0x05:
-      return strdup ("Slot Power is Off");
-    case 0x06:
-      return strdup ("Slot/Connector Device Removal Request");
-    case 0x07:
-      return strdup ("Interlock asserted");
-    case 0x08:
-      return strdup ("Slot is Disabled");
-    case 0x09:
-      return strdup ("Slot holds spare device");
-    }
-  
+  if (offset <= 0x09)
+    return strdup(ipmi_sensor_type_code_21_desc[offset]);
   return NULL;
 }
 
 static char *
 get_22_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("S0/G0 \"working\"");
-    case 0x01:
-      return strdup ("S1 \"sleeping with system h/w & processor context maintained\"");
-    case 0x02:
-      return strdup ("S2 \"sleeping, processor context lost\"");
-    case 0x03:
-      return strdup ("S3 \"sleeping, processor & h/w context lost, memory retained.\"");
-    case 0x04:
-      return strdup ("S4 \"non-volatile sleep/suspend-to disk\"");
-    case 0x05:
-      return strdup ("S5/G2 \"soft-off\"");
-    case 0x06:
-      return strdup ("S4/S5 soft-off, particular S4/S5 state cannot be determined");
-    case 0x07:
-      return strdup ("G3/Mechanical Off");
-    case 0x08:
-      return strdup ("Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)");
-    case 0x09:
-      return strdup ("G1 sleeping (S1-S4 state cannot be determined)");
-    case 0x0A:
-      return strdup ("S5 entered by override");
-    case 0x0B:
-      return strdup ("Legacy ON state");
-    case 0x0C:
-      return strdup ("Legacy OFF state");
-    case 0x0E:
-      return strdup ("Unknown");
-    }
-  
+  if (offset <= 0x0E)
+    return strdup(ipmi_sensor_type_code_22_desc[offset]);
   return NULL;
 }
 
 static char *
 get_23_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Timer expired, status only (no action, no interrupt)");
-    case 0x01:
-      return strdup ("Hard Reset");
-    case 0x02:
-      return strdup ("Power Down");
-    case 0x03:
-      return strdup ("Power Cycle");
-    case 0x08:
-      return strdup ("Timer interrupt");
-    }
-  
+  if (offset <= 0x08)
+    return strdup(ipmi_sensor_type_code_23_desc[offset]);
   return NULL;
 }
 
 static char *
 get_24_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("platform generated page");
-    case 0x01:
-      return strdup ("platform generated LAN alert");
-    case 0x02:
-      return strdup ("Platform Event Trap generated, formatted per IPMI PET specification");
-    case 0x03:
-      return strdup ("platform generated SNMP trap, OEM format");
-    }
-  
+  if (offset <= 0x03)
+    return strdup(ipmi_sensor_type_code_24_desc[offset]);
   return NULL;
 }
 
 static char *
 get_25_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Entity Present");
-    case 0x01:
-      return strdup ("Entity Absent");
-    case 0x02:
-      return strdup ("Entity Disabled");
-    }
-  
+  if (offset <= 0x02)
+    return strdup(ipmi_sensor_type_code_25_desc[offset]);
   return NULL;
 }
 
 static char *
 get_27_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("LAN Heartbeat Lost");
-    case 0x01:
-      return strdup ("LAN Heartbeat");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_sensor_type_code_27_desc[offset]);
   return NULL;
 }
 
 static char *
 get_28_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("sensor access degraded or unavailable");
-    case 0x01:
-      return strdup ("controller access degraded or unavailable");
-    case 0x02:
-      return strdup ("management controller off-line");
-    case 0x03:
-      return strdup ("management controller unavailable");
-    }
-  
+  if (offset <= 0x03)
+    return strdup(ipmi_sensor_type_code_28_desc[offset]);
   return NULL;
 }
 
 static char *
 get_29_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("battery low (predictive failure)");
-    case 0x01:
-      return strdup ("battery failed");
-    case 0x02:
-      return strdup ("battery presence detected");
-    }
-  
+  if (offset <= 0x02)
+    return strdup(ipmi_sensor_type_code_29_desc[offset]);
   return NULL;
 }
 
 static char *
 get_2A_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Session Activated");
-    case 0x01:
-      return strdup ("Session Deactivated");
-    }
-  
+  if (offset <= 0x01)
+    return strdup(ipmi_sensor_type_code_2A_desc[offset]);
   return NULL;
 }
 
 static char *
 get_2B_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("Hardware change detected with associated Entity");
-    case 0x01:
-      return strdup ("Firmware or software change detected with associated Entity");
-    case 0x02:
-      return strdup ("Hardware incompatibility detected with associated Entity");
-    case 0x03:
-      return strdup ("Firmware or software incompatibility detected with associated Entity");
-    case 0x04:
-      return strdup ("Entity is of an invalid or unsupported hardware version");
-    case 0x05:
-      return strdup ("Entity contains an invalid or unsupported firmware or software version");
-    case 0x06:
-      return strdup ("Hardware Change detected with associated Entity was successful");
-    case 0x07:
-      return strdup ("Software or F/W Change detected with associated Entity was successful");
-    }
-  
+  if (offset <= 0x07)
+    return strdup(ipmi_sensor_type_code_2B_desc[offset]);
   return NULL;
 }
 
 static char *
 get_2C_event_message (int offset)
 {
-  switch (offset)
-    {
-    case 0x00:
-      return strdup ("FRU Not Installed");
-    case 0x01:
-      return strdup ("FRU Inactive (in standby or `hot spare' state)");
-    case 0x02:
-      return strdup ("FRU Activation Requested");
-    case 0x03:
-      return strdup ("FRU Activation In Progress");
-    case 0x04:
-      return strdup ("FRU Active");
-    case 0x05:
-      return strdup ("FRU Deactivation Requested");
-    case 0x06:
-      return strdup ("FRU Deactivation In Progress");
-    case 0x07:
-      return strdup ("FRU Communication Lost");
-    }
-  
+  if (offset <= 0x07)
+    return strdup(ipmi_sensor_type_code_2C_desc[offset]);
   return NULL;
 }
 

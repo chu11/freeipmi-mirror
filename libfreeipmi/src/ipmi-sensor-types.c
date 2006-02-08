@@ -729,6 +729,7 @@ const char *const ipmi_event_reading_type_code_10_desc[] =
     "transition to Off Duty", 
     "transition to Degraded", 
     "transition to Power Save", 
+    "Install Error",
     NULL
   };
 

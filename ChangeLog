@@ -1,3 +1,10 @@
+2006-02-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c: Move strings into
+	arrays as much as possible.
+
+	* libfreeipmi/src/ipmi-sensor-types.c: Add forgotten string.
+	
 2006-02-07  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
