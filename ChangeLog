@@ -1,3 +1,13 @@
+2006-02-09  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.h,
+	libfreeipmi/src/ipmi-sel-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.h: Add mising fill functions.
+
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 
 	* ipmi-raw/doc/ipmi-raw.8.pre.in: updated.

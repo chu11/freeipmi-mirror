@@ -49,6 +49,15 @@ extern fiid_template_t tmpl_delete_sel_entry_rs;
 extern fiid_template_t tmpl_clear_sel_rq;
 extern fiid_template_t tmpl_clear_sel_rs;
 
+int8_t fill_kcs_get_sel_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_reserve_sel (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq);
+int8_t fill_kcs_delete_sel_entry (uint16_t reservation_id,
+                                  uint16_t record_id,
+                                  fiid_obj_t obj_data_rq);
+int8_t fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq);
+
 int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
 			       fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev, 

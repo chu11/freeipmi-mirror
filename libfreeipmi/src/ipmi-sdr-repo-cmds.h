@@ -49,6 +49,16 @@ extern fiid_template_t tmpl_reserve_sdr_repo_rs;
 extern fiid_template_t tmpl_get_sdr_rq;
 extern fiid_template_t tmpl_get_sdr_rs;
 
+int8_t fill_kcs_get_repo_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_reserve_repo (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sensor_record_header (uint16_t record_id, fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sdr_chunk (uint16_t reservation_id,
+                               uint16_t record_id,
+                               uint8_t record_offset,
+                               uint8_t bytes_read,
+                               fiid_obj_t obj_data_rq);
+
 int8_t ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
 				    fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
