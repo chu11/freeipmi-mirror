@@ -18,10 +18,13 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.13 2006-01-07 03:24:32 balamurugan Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.13.2.1 2006-02-09 18:19:30 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
+
+#define IPMI_GET_PEF_PARAMETER                          0x0
+#define IPMI_GET_PEF_PARAMETER_REVISION_ONLY            0x1
 
 #ifdef __cplusplus
 extern "C" {

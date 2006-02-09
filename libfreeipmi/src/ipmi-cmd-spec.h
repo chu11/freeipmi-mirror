@@ -218,10 +218,6 @@ extern "C" {
 // Other Bridge Commands
 #define IPMI_CMD_ERR_REPORT                      0xFF
 
-/* Common definitions for all commands */
-#define IPMI_GET_PARAMETER                  0x0
-#define IPMI_GET_PARAMETER_REVISION_ONLY    0x1
-
 #ifdef __cplusplus
 }
 #endif

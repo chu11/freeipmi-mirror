@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.beta1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.38.2.2 2006-01-21 01:09:50 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.38.2.3 2006-02-09 18:19:29 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -107,6 +107,7 @@ if test "x${enable_fish}" = "x" ; then
 fi
 
 if test "x${enable_fish}" = "xyes" ; then
+   AC_CHECK_LIB([guile], [gh_enter], , AC_MSG_ERROR([GNU Guile development library is not installed on your system. Fish based utilities are dependent on it.]))
    GUILE_PROGS
    GUILE_FLAGS
 

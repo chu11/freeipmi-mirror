@@ -3519,7 +3519,7 @@ ex_get_pef_info ()
         goto cleanup;
 
       if (ipmi_cmd_get_pef_num_event_filters2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PARAMETER, 
+					       IPMI_GET_PEF_PARAMETER, 
 					       SET_SELECTOR, 
 					       BLOCK_SELECTOR, 
 					       cmd_rs) != 0)
@@ -3550,7 +3550,7 @@ ex_get_pef_info ()
         goto cleanup;
 
       if (ipmi_cmd_get_pef_num_alert_policies2 (fi_get_ipmi_device (), 
-						IPMI_GET_PARAMETER, 
+						IPMI_GET_PEF_PARAMETER, 
 						SET_SELECTOR, 
 						BLOCK_SELECTOR, 
 						cmd_rs) != 0)
@@ -3581,7 +3581,7 @@ ex_get_pef_info ()
         goto cleanup;
 
       if (ipmi_cmd_get_pef_num_alert_strings2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PARAMETER, 
+					       IPMI_GET_PEF_PARAMETER, 
 					       SET_SELECTOR, 
 					       BLOCK_SELECTOR, 
 					       cmd_rs) != 0)

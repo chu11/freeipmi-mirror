@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.3 2005-12-26 08:06:57 balamurugan Exp $ 
+   $Id: common.h,v 1.3.2.1 2006-02-09 18:19:29 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -33,6 +33,7 @@
 #include <readline/history.h>
 
 #include "argp-common.h"
+#include "ipmi-common.h"
 
 #include "xmalloc.h"
 #include "fish-argp.h"

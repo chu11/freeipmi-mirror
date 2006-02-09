@@ -11,6 +11,14 @@
 
 	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
 
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Support optional fields
+	with get chassis status response and chassis identify request.
+
+	* libfreeipmi/src/ipmi-sessions.h,
+	libfreeipmi/src/ipmi-sessions.c,
+	libfreeipmi/src/ipmi-lan-interface.c: Support optional auth_code
+	in LAN sessio header through one template.
+	
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
@@ -207,6 +215,92 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c: Move strings into
+	arrays as much as possible.
+
+	* libfreeipmi/src/ipmi-sensor-types.c: Add forgotten string.
+
+	* libfreeipmi/src/libfreeipmi/src/ipmi-sensor-event-messages.c:
+	Add new/modified event message strings from errata.
+	
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_0D_event_message, get_1B_event_message,
+	get_1D_event_data2_message, get_1D_event_data3_message,
+	get_28_event_data3_message, get_28_event_data2_message): New
+	functions.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_0C_event_message, get_1D_event_message,
+	get_20_event_message, get_28_event_message): Adjust offsets.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(ipmi_get_event_data3_message, ipmi_get_event_data2_message,
+	ipmi_get_event_message): Add new functions.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Support new options in
+	tmpl_cmd_get_chassis_status_rs from ipmi 2.0 errata.
+
+2006-02-07  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_is_root): Removed function.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(ipmi_error): Removed function.
+
+	* common/src/ipmi-common.h, common/src/ipmi-common.c: New files.
+
+	* common/src/Makefile.am, bmc-info/src/Makefile.am,
+	ipmi-raw/src/Makefile.am, ipmi-locate/src/Makefile.am,
+	bmc-info/src/bmc-info.c, ipmi-raw/src/ipmi-raw.c,
+	ipmi-locate/src/ipmi-locate.c, fish/src/Makefile.am,
+	fish/src/common.h: Support and make use of new common lib.
+
+	* libfreeipmi/src/ipmi-sha1.h, libfreeipmi/src/ipmi-sha1.c,
+	libfreeipmi/src/ipmi-hmac.h, libfreeipmi/src/ipmi-hmac.c: Removed
+	files.
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi.h: Remove
+	appropriate files.
+
+	* libfreeipmi/src/ipmi-cmd-spec.h,
+	libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.h: Move non-cmd-spec #defines out of
+	ipmi-cmd-spec.h.
+
+	* fish/src/bmc-conf2.c, fish/src/scm-procedures.c: Adjust code
+	appropriately.
+
+	* libfreeipmi/src/ipmi-error.h,
+	libfreeipmi/src/ipmi-kcs-interface.h: Move kcs error codes from
+	ipmi-error.h to ipmi-kcs-interface.h.
+
+	* libfreeipmi/src/ipmi-error.c (ipmi_kcs_strstatus_r): Use new
+	definition strings.
+
+	* libfreeipmi/src/ipmi-sensor-types.h: Remove commented out code.
+
+	* libfreeipmi/src/ipmi-sensor-types.c: Fix typos.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_input_timeout, ipmi_get_random_seed): Removed functions.
+
+	* libfreeipmi/src/ipmi-sensor-utils.h,
+	libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value_old,
+	ipmi_sensor_get_decode_params_old): Removed functions.
+
+	* libfreeipmi/src/ipmi-sensor-utils.h: Fix "is_signed" typoed parameter.
+	
+2006-02-06  Anand Babu  <ab@zresearch.com>
+
+	* configure.ac: Closes bug #15550 "configure guile warning
+	misleading". guile.m4 installed by guile development library was
+	used to check guile installation recursively. Thanks to Keith 
+	Owens from SGI for reporting this bug.
+
 2006-02-06  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd2): Fix ssif

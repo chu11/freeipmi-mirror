@@ -266,26 +266,24 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
   
   switch (status_code)
     {
-    case IPMI_KCS_STATUS_NO_ERR:
-      SNPRINTF_RETURN ("No error");
+    case IPMI_KCS_STATUS_NO_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
       
     case IPMI_KCS_STATUS_ABORTED_BY_CMD:
-      SNPRINTF_RETURN ("Aborted by command (Transfer "
-		       "in progress was aborted by SMS "
-		       "issuing the Abort/Status control code)");
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
       
     case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
-      SNPRINTF_RETURN ("Illegal control code");
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
       
-    case IPMI_KCS_STATUS_LEN_ERR:
-      SNPRINTF_RETURN ("Length error (e.g.overrun)"); 
+    case IPMI_KCS_STATUS_LEN_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
       
-    case IPMI_KCS_STATUS_UNSPECIFIED_ERR:
-      SNPRINTF_RETURN ("Unspecified error"); 
+    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
     }
   
-  if ((status_code >= IPMI_KCS_STATUS_OEM_ERR_BEGIN) &&
-      (status_code <= IPMI_KCS_STATUS_OEM_ERR_END))
+  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
+      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
     {
       SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
     }
@@ -293,46 +291,4 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
   SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
 };
 
-void 
-ipmi_error (fiid_obj_t obj_cmd, const char *s)
-{
-  char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
-  uint64_t cmd;
-  int32_t len;
-  int8_t rv;
-
-  if (!fiid_obj_valid(obj_cmd))
-    return;
-  
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return;
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return;
-
-  if (!len)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-  if (ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
-    return;
-  
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
-    return;
-
-  fprintf (stderr, 
-	   "%s%s" "ipmi command %02Xh: %s\n", 
-	   (s ? s : ""), 
-	   (s ? ": " : ""), 
-           (uint8_t)cmd,
-	   errmsg);
-}
 

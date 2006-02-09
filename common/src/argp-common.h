@@ -1,5 +1,5 @@
 /*
-argp-common.h: common work for argp for all freeipmi tools.
+argp-common.h: common work for argp for freeipmi tools.
 Copyright (C) 2005 FreeIPMI Core Team
 
 This program is free software; you can redistribute it and/or modify

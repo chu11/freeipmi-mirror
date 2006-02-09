@@ -31,8 +31,8 @@ static unsigned long smic_sleep_usecs = IPMI_SMIC_SLEEP_USECS;
 
 fiid_template_t tmpl_hdr_smic =
   {
-    {2, "lun", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
-    {6, "net_fn", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 

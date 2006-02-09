@@ -34,8 +34,8 @@ libfreeipmi:
     - user_name vs. username
   * fill_kcs_get_sel_entry
     - why not the other arguments?
-
-    
+  * sensor-event-messages: get_28_event_data3_messages
+  
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in

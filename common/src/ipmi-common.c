@@ -44,20 +44,45 @@ ipmi_is_root ()
   return 0;
 }
 
-void
+void 
 ipmi_error (fiid_obj_t obj_cmd, const char *s)
 {
   char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
+  uint64_t cmd;
+  int32_t len;
+  int8_t rv;
 
-  if (obj_cmd == NULL)
+  if (!fiid_obj_valid(obj_cmd))
+    return;
+  
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
     return;
 
-  ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN);
+  if (!rv)
+    {
+      errno = EINVAL;
+      return;
+    }
 
-  fprintf (stderr,
-           "%s%s" "ipmi command %02Xh: %s\n",
-           (s ? s : ""),
-           (s ? ": " : ""),
-           obj_cmd[0],
-           errmsg);
+  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return;
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return;
+    }
+
+  if (ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
+    return;
+  
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
+    return;
+
+  fprintf (stderr, 
+	   "%s%s" "ipmi command %02Xh: %s\n", 
+	   (s ? s : ""), 
+	   (s ? ": " : ""), 
+           (uint8_t)cmd,
+	   errmsg);
 }

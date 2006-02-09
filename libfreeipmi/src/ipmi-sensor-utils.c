@@ -21,30 +21,6 @@
 #include "freeipmi.h"
 
 double 
-ipmi_sensor_decode_value_old (char r_exponent, 
-			      char b_exponent, 
-			      int m, 
-			      int b, 
-			      int linear, 
-			      int is_signed, 
-			      uint64_t raw_data)
-{
-  double fval = 0.0;
-  
-  if (is_signed)
-    fval = (double) ((char) raw_data);
-  else 
-    fval = (double) raw_data;
-  fval *= (double) m;
-  fval += (b * pow (10, b_exponent));
-  fval *= pow (10, r_exponent);
-  if (raw_data != 0) 
-    if (linear == 7) 
-      fval = 1.0 / fval;
-  return fval;
-}
-
-double 
 ipmi_sensor_decode_value (char r_exponent, 
 			  char b_exponent, 
 			  short m, 
@@ -88,101 +64,6 @@ ipmi_sensor_decode_value (char r_exponent,
   dval *= pow (10, r_exponent);
   
   return (dval);
-}
-
-void 
-ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
-				   uint32_t sensor_record_len,
-				   int *is_signed, char *r_exponent, char *b_exponent, 
-				   uint64_t *linear, int *b, int *m)
-{
-  uint64_t val;
-  
-  uint64_t m_ls;
-  uint64_t m_ms;
-  
-  uint64_t b_ls;
-  uint64_t b_ms;
-  
-  fiid_obj_t obj = NULL;
-
-  if (!sensor_record 
-      || !is_signed 
-      || !r_exponent 
-      || !b_exponent)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-/*   ipmi_sensor_get_decode_params_own (sensor_record); */
-  
-  if ((sensor_record[20] & 0xC0) == 0)
-    *is_signed = 0;
-  else 
-    *is_signed = 1;
-
-  if (!(obj = fiid_obj_create(tmpl_sdr_full_sensor_record)))
-    goto cleanup;
-  
-  if (fiid_obj_set_all(obj,
-		       sensor_record,
-		       sensor_record_len) < 0)
-    goto cleanup;
-
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"r_exponent", 
-		    &val) < 0)
-    goto cleanup;
-  *r_exponent = (char) val;
-  if (*r_exponent & 0x08)
-    {
-      *r_exponent = (char) val;
-      *r_exponent += 0xF0;
-    }
-  
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_exponent", 
-		    &val) < 0)
-    goto cleanup;
-  *b_exponent = (char) val;
-  
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"linearization_enum", 
-		    &val) < 0)
-    goto cleanup;
-  *linear = val;
-  
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"m_ls", 
-		    &m_ls) < 0)
-    goto cleanup;
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"m_ms", 
-		    &m_ms) < 0)
-    goto cleanup;
-  if (bits_merge (m_ls, 8, 10, m_ms, &val) < 0)
-    goto cleanup;
-  
-  *m = (int) val;
-  
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_ls", 
-		    &b_ls) < 0)
-    goto cleanup;
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_ms", 
-		    &b_ms) < 0)
-    goto cleanup;
-  if (bits_merge (b_ls, 8, 10, b_ms, &val) < 0)
-    goto cleanup;
-  
-  *b = (int) val;
-
- cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
-  return;
 }
 
 void 
