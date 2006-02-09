@@ -140,6 +140,7 @@ do {                                                           \
 #define FIID_ERR_FLAGS_FIELD_MISMATCH           13
 #define FIID_ERR_TEMPLATE_LENGTH_MISMATCH       14
 #define FIID_ERR_DATA_NOT_BYTE_ALIGNED          15
+
 #define FIID_ERR_REQUIRED_FIELD_MISSING         16
 #define FIID_ERR_FIXED_LENGTH_FIELD_INVALID     17
 #define FIID_ERR_OUTMEM                         18
@@ -187,22 +188,22 @@ typedef struct fiid_obj *fiid_obj_t;
 
 typedef struct fiid_iterator *fiid_iterator_t;
 
-int8_t fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field);
+int8_t fiid_template_field_lookup (fiid_template_t tmpl, char *field);
 int32_t fiid_template_len (fiid_template_t tmpl);
 int32_t fiid_template_len_bytes (fiid_template_t tmpl);
-int32_t fiid_template_field_start (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_template_field_end (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_template_field_len (fiid_template_t tmpl, uint8_t *field);
+int32_t fiid_template_field_start (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_end (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_len (fiid_template_t tmpl, char *field);
 int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, 
-				       uint8_t *field);
+				       char *field);
 int32_t fiid_template_block_len (fiid_template_t tmpl, 
-				 uint8_t *field_start, 
-				 uint8_t *field_end);
+				 char *field_start, 
+				 char *field_end);
 int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
-				       uint8_t *field_start, 
-				       uint8_t *field_end);
+				       char *field_start, 
+				       char *field_end);
 fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
 
@@ -219,21 +220,21 @@ int32_t fiid_obj_errnum(fiid_obj_t obj);
 
 int32_t fiid_obj_len(fiid_obj_t obj);
 int32_t fiid_obj_len_bytes(fiid_obj_t obj);
-int32_t fiid_obj_field_len(fiid_obj_t obj, uint8_t *field);
-int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, uint8_t *field);
+int32_t fiid_obj_field_len(fiid_obj_t obj, char *field);
+int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, char *field);
 
 int8_t fiid_obj_clear (fiid_obj_t obj);
-int8_t fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field);
-int8_t fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field);
-int8_t fiid_obj_set (fiid_obj_t obj, uint8_t *field, uint64_t val);
-int8_t fiid_obj_get (fiid_obj_t obj, uint8_t *field, uint64_t *val);
-int32_t fiid_obj_set_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
-int32_t fiid_obj_get_data (fiid_obj_t obj, uint8_t *field, uint8_t *data, uint32_t data_len);
+int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
+int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
+int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
+int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+int32_t fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
 int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
 
-int8_t fiid_obj_set_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
-int8_t fiid_obj_get_block (fiid_obj_t obj, uint8_t *field_start, uint8_t *field_end, uint8_t *data, uint32_t data_len);
+int8_t fiid_obj_set_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
+int8_t fiid_obj_get_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
 
 fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
 int8_t fiid_iterator_destroy(fiid_iterator_t iter);

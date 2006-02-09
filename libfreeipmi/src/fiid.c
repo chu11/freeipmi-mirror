@@ -119,7 +119,7 @@ _fiid_template_len_bytes (fiid_template_t tmpl, unsigned int *tmpl_len)
 }
 
 int8_t
-fiid_template_field_lookup (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_lookup (fiid_template_t tmpl, char *field)
 {
   int i;
   
@@ -175,7 +175,7 @@ fiid_template_len_bytes (fiid_template_t tmpl)
 
 static int32_t
 _fiid_template_field_start_end (fiid_template_t tmpl, 
-				uint8_t *field, 
+				char *field, 
 				uint32_t *start, 
 				uint32_t *end)
 {
@@ -202,7 +202,7 @@ _fiid_template_field_start_end (fiid_template_t tmpl,
 }
 
 int32_t
-fiid_template_field_start (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_start (fiid_template_t tmpl, char *field)
 {
   uint32_t start = 0;
   uint32_t end = 0;
@@ -220,7 +220,7 @@ fiid_template_field_start (fiid_template_t tmpl, uint8_t *field)
 }
 
 int32_t
-fiid_template_field_start_bytes (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_start_bytes (fiid_template_t tmpl, char *field)
 {
   int32_t start = 0;
   
@@ -243,7 +243,7 @@ fiid_template_field_start_bytes (fiid_template_t tmpl, uint8_t *field)
 }
 
 int32_t
-fiid_template_field_end (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_end (fiid_template_t tmpl, char *field)
 {
   uint32_t start = 0;
   uint32_t end = 0;
@@ -261,7 +261,7 @@ fiid_template_field_end (fiid_template_t tmpl, uint8_t *field)
 }
 
 int32_t
-fiid_template_field_end_bytes (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_end_bytes (fiid_template_t tmpl, char *field)
 {
   int32_t end = 0;
   
@@ -284,7 +284,7 @@ fiid_template_field_end_bytes (fiid_template_t tmpl, uint8_t *field)
 }
 
 int32_t
-fiid_template_field_len (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_len (fiid_template_t tmpl, char *field)
 {
   int i;
 
@@ -305,7 +305,7 @@ fiid_template_field_len (fiid_template_t tmpl, uint8_t *field)
 }
 
 int32_t
-fiid_template_field_len_bytes (fiid_template_t tmpl, uint8_t *field)
+fiid_template_field_len_bytes (fiid_template_t tmpl, char *field)
 {
   int32_t len;
   
@@ -329,8 +329,8 @@ fiid_template_field_len_bytes (fiid_template_t tmpl, uint8_t *field)
 
 int32_t
 fiid_template_block_len (fiid_template_t tmpl, 
-			 uint8_t *field_start, 
-			 uint8_t *field_end)
+			 char *field_start, 
+			 char *field_end)
 {
   int32_t start;
   int32_t end;
@@ -358,8 +358,8 @@ fiid_template_block_len (fiid_template_t tmpl,
 
 int32_t
 fiid_template_block_len_bytes (fiid_template_t tmpl, 
-			       uint8_t *field_start, 
-			       uint8_t *field_end)
+			       char *field_start, 
+			       char *field_end)
 {
   int32_t len;
   
@@ -497,7 +497,7 @@ fiid_template_free (fiid_field_t *tmpl_dynamic)
 
 static int32_t
 _fiid_obj_field_start_end (fiid_obj_t obj, 
-                           uint8_t *field, 
+                           char *field, 
                            uint32_t *start, 
                            uint32_t *end)
 {
@@ -524,7 +524,7 @@ _fiid_obj_field_start_end (fiid_obj_t obj,
 }
 
 static int32_t
-_fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
+_fiid_obj_field_start (fiid_obj_t obj, char *field)
 {
   uint32_t start = 0;
   uint32_t end = 0; //excluded always
@@ -537,7 +537,7 @@ _fiid_obj_field_start (fiid_obj_t obj, uint8_t *field)
 }
 
 static int32_t
-_fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
+_fiid_obj_field_end (fiid_obj_t obj, char *field)
 {
   uint32_t start = 0;
   uint32_t end = 0; //excluded always
@@ -550,7 +550,7 @@ _fiid_obj_field_end (fiid_obj_t obj, uint8_t *field)
 }
 
 static int32_t
-_fiid_obj_field_len (fiid_obj_t obj, uint8_t *field)
+_fiid_obj_field_len (fiid_obj_t obj, char *field)
 {
   int i;
 
@@ -934,7 +934,7 @@ fiid_obj_errnum(fiid_obj_t obj)
 }
 
 static int32_t 
-_fiid_obj_lookup_field_index(fiid_obj_t obj, uint8_t *field)
+_fiid_obj_lookup_field_index(fiid_obj_t obj, char *field)
 {
   int i;
 
@@ -988,7 +988,7 @@ fiid_obj_len_bytes(fiid_obj_t obj)
 }
 
 int32_t
-fiid_obj_field_len(fiid_obj_t obj, uint8_t *field)
+fiid_obj_field_len(fiid_obj_t obj, char *field)
 {
   int key_index = -1;
 
@@ -1009,7 +1009,7 @@ fiid_obj_field_len(fiid_obj_t obj, uint8_t *field)
 }
 
 int32_t
-fiid_obj_field_len_bytes(fiid_obj_t obj, uint8_t *field)
+fiid_obj_field_len_bytes(fiid_obj_t obj, char *field)
 {
   int32_t len;
 
@@ -1053,7 +1053,7 @@ fiid_obj_clear (fiid_obj_t obj)
 }
 
 int8_t 
-fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
+fiid_obj_clear_field (fiid_obj_t obj, char *field)
 {
   int32_t bits_len, bytes_len;
   int key_index = -1;
@@ -1118,7 +1118,7 @@ fiid_obj_clear_field (fiid_obj_t obj, uint8_t *field)
 }
 
 int8_t
-fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
+fiid_obj_field_lookup (fiid_obj_t obj, char *field)
 {
   int start = 0;
   int end = 0; //excluded always
@@ -1146,7 +1146,7 @@ fiid_obj_field_lookup (fiid_obj_t obj, uint8_t *field)
 
 int8_t
 fiid_obj_set (fiid_obj_t obj, 
-	      uint8_t *field, 
+	      char *field, 
 	      uint64_t val)
 {
   uint32_t start_bit_pos = 0;
@@ -1295,7 +1295,7 @@ fiid_obj_set (fiid_obj_t obj,
 
 int8_t
 fiid_obj_get (fiid_obj_t obj, 
-	      uint8_t *field, 
+	      char *field, 
 	      uint64_t *val)
 {
   uint32_t start_bit_pos = 0;
@@ -1437,7 +1437,7 @@ fiid_obj_get (fiid_obj_t obj,
 
 int32_t 
 fiid_obj_set_data (fiid_obj_t obj, 
-		   uint8_t *field, 
+		   char *field, 
 		   uint8_t *data, 
 		   uint32_t data_len)
 {
@@ -1493,7 +1493,7 @@ fiid_obj_set_data (fiid_obj_t obj,
 
 int32_t 
 fiid_obj_get_data (fiid_obj_t obj, 
-		   uint8_t *field, 
+		   char *field, 
 		   uint8_t *data,
                    uint32_t data_len)
 {
@@ -1764,8 +1764,8 @@ fiid_obj_get_all (fiid_obj_t obj,
 
 static int32_t
 _fiid_obj_max_block_len (fiid_obj_t obj,
-                         uint8_t *field_start,
-                         uint8_t *field_end)
+                         char *field_start,
+                         char *field_end)
 {
   int end;
   int start;
@@ -1789,8 +1789,8 @@ _fiid_obj_max_block_len (fiid_obj_t obj,
 
 static int32_t
 _fiid_obj_block_len (fiid_obj_t obj,
-                     uint8_t *field_start,
-                     uint8_t *field_end)
+                     char *field_start,
+                     char *field_end)
 {
   int key_index_start = -1, key_index_end = -1;
   int32_t counter = 0;
@@ -1818,8 +1818,8 @@ _fiid_obj_block_len (fiid_obj_t obj,
 
 int8_t 
 fiid_obj_set_block (fiid_obj_t obj, 
-                    uint8_t *field_start, 
-                    uint8_t *field_end,
+                    char *field_start, 
+                    char *field_end,
                     uint8_t *data, 
                     uint32_t data_len)
 {
@@ -1923,8 +1923,8 @@ fiid_obj_set_block (fiid_obj_t obj,
 
 int8_t 
 fiid_obj_get_block (fiid_obj_t obj, 
-                    uint8_t *field_start, 
-                    uint8_t *field_end,
+                    char *field_start, 
+                    char *field_end,
                     uint8_t *data, 
                     uint32_t data_len)
 {

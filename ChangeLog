@@ -22,6 +22,11 @@
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
+2006-02-09  Albert Chu <chu11@llnl.gov>	
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: All field
+	parameters changed from uint8_t * to char *.
+	
 2006-02-06  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/ipmi-lan-interface.c (get_rq_checksum1,
