@@ -33,7 +33,7 @@
 	(get_sel_non_timestamped_oem_record), fish/src/ipmi-wrapper.c
 	(ipmi_ping): Fix warnings/bugs.
 
-	* Changed tmpl_hdr_session to tmpl_lan_session_header globally.
+	* Changed tmpl_hdr_session to tmpl_lan_session_hdr globally.
 	
 2006-02-06  Albert Chu <chu11@llnl.gov>	
 

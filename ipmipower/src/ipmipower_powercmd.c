@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.16.2.9 2006-02-09 23:33:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.16.2.10 2006-02-09 23:37:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -142,8 +142,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
     
   ip->rmcp_req = Fiid_obj_create(tmpl_hdr_rmcp); 
   ip->rmcp_res = Fiid_obj_create(tmpl_hdr_rmcp); 
-  ip->session_req = Fiid_obj_create(tmpl_lan_session_header); 
-  ip->session_res = Fiid_obj_create(tmpl_lan_session_header); 
+  ip->session_req = Fiid_obj_create(tmpl_lan_session_hdr); 
+  ip->session_res = Fiid_obj_create(tmpl_lan_session_hdr); 
   ip->msg_req = Fiid_obj_create(tmpl_lan_msg_hdr_rq); 
   ip->msg_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
   ip->trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
