@@ -465,12 +465,15 @@ const char *const ipmi_sensor_type_code_27_desc[] =
     NULL
   };
 
+/* achu: new additions as stated in errata */
 const char *const ipmi_sensor_type_code_28_desc[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
     "management controller off-line",
     "management controller unavailable",
+    "sensor failure",
+    "FRU failure",
     NULL
   };
 
@@ -1148,7 +1151,7 @@ get_27_event_message (int offset)
 static char *
 get_28_event_message (int offset)
 {
-  if (offset <= 0x03)
+  if (offset <= 0x05)
     return strdup(ipmi_sensor_type_code_28_desc[offset]);
   return NULL;
 }
@@ -1534,6 +1537,44 @@ get_23_event_data2_message (int offset, uint8_t event_data)
 }
 
 static char *
+get_28_event_data2_message (int offset, uint8_t event_data)
+{
+  if (offset == 0x00 || offset == 0x04)
+    {
+      char *str = NULL;
+      asprintf (&str, "Sensor Number #%d", event_data);
+      return str;
+    }
+  else if (offset == 0x05)
+    {
+      fiid_template_t tmpl_event_data2 = 
+	{
+          {3, "private_bus_id"},
+          {2, "lun"},
+          {2, "reserved"},
+          {1, "logical_fru_device"},
+	  {0, ""}
+	};
+      uint64_t val;
+      char *str = NULL;
+      uint8_t private_bus_id, lun, logical_fru_device;
+
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"private_bus_id", &val);
+      private_bus_id = val;
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"lun", &val);
+      lun = val;
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"logical_fru_device", &val);
+      logical_fru_device = val;
+
+      asprintf (&str, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", (logical_fru_device) ? "device is logical FRU Device (accessed via FRU commands to mgmt. controller" : "device is not a logical FRU Device", lun, private_bus_id);
+      return str;
+      
+    }
+
+  return NULL;
+}
+
+static char *
 get_2A_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x01)
@@ -1703,7 +1744,7 @@ get_1D_event_data3_message (int offset, uint8_t event_data)
   if (offset == 0x07)
     {
       char *str = NULL;
-      asprintf (&str, "Channel Number used to deliver command that generated restart: %d", event_data);
+      asprintf (&str, "Channel Number used to deliver command that generated restart #%d", event_data);
       return str;
     }
   
@@ -1718,6 +1759,19 @@ get_21_event_data3_message (int offset, uint8_t event_data)
       char *str = NULL;
       asprintf (&str, "Slot/Connector# %d", event_data);
       return str;
+    }
+  
+  return NULL;
+}
+
+static char *
+get_28_event_data3_message (int offset, uint8_t event_data)
+{
+  if (offset == 0x05)
+    {
+      /* XXX: achu: this code logic cannot support this function, 
+       * since it requires info from the event data 2
+       */ 
     }
   
   return NULL;
@@ -1835,6 +1889,7 @@ ipmi_get_event_data2_message (int sensor_type_code, int offset, uint8_t event_da
     case 0x1D: return get_1D_event_data2_message (offset, event_data);
     case 0x21: return get_21_event_data2_message (offset, event_data);
     case 0x23: return get_23_event_data2_message (offset, event_data);
+    case 0x28: return get_28_event_data2_message (offset, event_data);
     case 0x2A: return get_2A_event_data2_message (offset, event_data);
     case 0x2B: return get_2B_event_data2_message (offset, event_data);
     case 0x2C: return get_2C_event_data2_message (offset, event_data);
@@ -1854,6 +1909,7 @@ ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_da
     case 0x19: return get_19_event_data3_message (offset, event_data);
     case 0x1D: return get_1D_event_data3_message (offset, event_data);
     case 0x21: return get_21_event_data3_message (offset, event_data);
+    case 0x28: return get_28_event_data3_message (offset, event_data);
     case 0x2A: return get_2A_event_data3_message (offset, event_data);
     }
   

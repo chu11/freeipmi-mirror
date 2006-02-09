@@ -23,6 +23,7 @@ libfreeipmi:
   * fiid_obj_t must hold additional info
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
+  * sensor-event-messages: get_28_event_data3_messages
   
 fish:
 -----
