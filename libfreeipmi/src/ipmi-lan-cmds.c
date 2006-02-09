@@ -1628,12 +1628,12 @@ ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_lan_conf_param_rq);
-  ERR (fill_get_lan_conf_param (obj_cmd_rq, 
-				IPMI_LAN_PARAM_IP_ADDR, 
+  ERR (fill_get_lan_conf_param (IPMI_LAN_PARAM_IP_ADDR, 
 				channel_number, 
 				parameter_type, 
 				set_selector, 
-				block_selector) == 0);
+				block_selector, 
+				obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 

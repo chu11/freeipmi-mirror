@@ -41,9 +41,9 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 			       IPMI_SEL_FIRST_ENTRY, 
 			       obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, "cmd", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, "comp_code", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
@@ -90,9 +90,9 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
 			       seld->next_record_id, 
 			       obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, "cmd", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, "comp_code", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
@@ -130,9 +130,9 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_info_rs);
   if (ipmi_cmd_get_sel_info2 (dev, obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, "cmd", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, "comp_code", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 

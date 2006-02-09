@@ -1,3 +1,9 @@
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-sel-api.c,
+	libfreeipmi/src/ipmi-sensor-api.c: fixed compiler warnings.
+
 2006-02-09  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-cmds.h,

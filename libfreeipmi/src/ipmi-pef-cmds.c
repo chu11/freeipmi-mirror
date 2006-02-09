@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.21 2006-02-09 18:56:57 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.22 2006-02-09 21:26:19 balamurugan Exp $  */
 
 #include "freeipmi.h"
 
@@ -1017,23 +1017,23 @@ fill_kcs_set_alert_string_keys (uint8_t string_selector,
 
   FIID_OBJ_SET (obj_data_rq, 
                 tmpl_set_pef_conf_param_alert_string_keys_rq, 
-                "cmd", 
+                (uint8_t *)"cmd", 
                 IPMI_CMD_SET_PEF_CONF_PARAMS); 
   FIID_OBJ_SET (obj_data_rq, 
                 tmpl_set_pef_conf_param_alert_string_keys_rq, 
-                "parameter_selector", 
+                (uint8_t *)"parameter_selector", 
                 IPMI_PEF_PARAM_ALERT_STRING_KEYS); 
   FIID_OBJ_SET (obj_data_rq, 
                 tmpl_set_pef_conf_param_alert_string_keys_rq, 
-                "string_selector", 
+                (uint8_t *)"string_selector", 
                 string_selector); 
   FIID_OBJ_SET (obj_data_rq, 
                 tmpl_set_pef_conf_param_alert_string_keys_rq, 
-                "filter_number", 
+                (uint8_t *)"filter_number", 
                 filter_number); 
   FIID_OBJ_SET (obj_data_rq, 
                 tmpl_set_pef_conf_param_alert_string_keys_rq, 
-                "string_set_number", 
+                (uint8_t *)"string_set_number", 
                 string_set_number); 
   return 0; 
 } 
