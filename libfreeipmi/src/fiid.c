@@ -1055,7 +1055,7 @@ fiid_obj_clear (fiid_obj_t obj)
 int8_t 
 fiid_obj_clear_field (fiid_obj_t obj, char *field)
 {
-  int32_t bits_len, bytes_len;
+  int32_t bits_len;
   int key_index = -1;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
@@ -1086,6 +1086,7 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
   else
     {
       int32_t field_start, field_offset;
+      int32_t bytes_len;
 
       /* achu: We assume the field must start on a byte boundary and end
        * on a byte boundary.
@@ -1097,8 +1098,8 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
 	  return (-1);
 	}
 
-      bytes_len = BITS_ROUND_BYTES (bytes_len);
-
+      bytes_len = BITS_ROUND_BYTES (bits_len);
+      
       if ((field_start = _fiid_obj_field_start (obj, field)) < 0)
         return (-1);
 

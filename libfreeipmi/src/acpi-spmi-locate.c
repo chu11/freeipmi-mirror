@@ -979,7 +979,6 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   int instance;
 
   fiid_obj_t obj_acpi_table_hdr2 = NULL;
-  int32_t acpi_table_hdr_len;
   int32_t acpi_spmi_table_descriptor_len;
 
   int rv = -1;

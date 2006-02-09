@@ -425,7 +425,6 @@ static int
 get_sel_non_timestamped_oem_record (uint8_t *record_data, uint32_t record_data_len, sel_record_t *sel_record)
 {
   uint16_t record_id;
-  uint8_t *oem_defined;
   uint64_t val;
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
@@ -477,7 +476,7 @@ get_sel_non_timestamped_oem_record (uint8_t *record_data, uint32_t record_data_l
 	  free (tmp_str);
 	}
       else
-	asprintf (&str, "%02X", oem_defined[i]);
+	asprintf (&str, "%02X", buf[i]);
     }
   
   if (str)

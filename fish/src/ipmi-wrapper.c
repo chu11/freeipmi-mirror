@@ -620,7 +620,7 @@ int
 ipmi_ping (char *host, unsigned int sock_timeout)
 {
   int sockfd;
-  int status;
+  int status = -1;
   struct sockaddr_in to_addr;
   struct hostent *hostinfo;
   
