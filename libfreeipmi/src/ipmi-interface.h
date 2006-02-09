@@ -132,7 +132,7 @@ struct ipmi_device
       {
 	fiid_template_t *tmpl_hdr_rmcp_ptr;
 	fiid_obj_t      obj_hdr_rmcp;
-	fiid_template_t *tmpl_hdr_session_ptr;
+	fiid_template_t *tmpl_lan_session_header_ptr;
 	fiid_obj_t      obj_hdr_session;
 	fiid_template_t *tmpl_msg_hdr_ptr;
 	fiid_obj_t      obj_msg_hdr;
@@ -144,7 +144,7 @@ struct ipmi_device
       {
 	fiid_template_t *tmpl_hdr_rmcp_ptr;
 	fiid_obj_t      obj_hdr_rmcp;
-	fiid_template_t *tmpl_hdr_session_ptr;
+	fiid_template_t *tmpl_lan_session_header_ptr;
 	fiid_obj_t      obj_hdr_session;
 	fiid_template_t *tmpl_msg_hdr_ptr;
 	fiid_obj_t      obj_msg_hdr;

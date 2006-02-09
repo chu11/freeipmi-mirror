@@ -151,8 +151,8 @@ ipmi_open_outofband (ipmi_device_t *dev,
     case IPMI_SESSION_AUTH_TYPE_MD2:
     case IPMI_SESSION_AUTH_TYPE_MD5:
     case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      dev->io.outofband.rq.tmpl_hdr_session_ptr = 
-	dev->io.outofband.rs.tmpl_hdr_session_ptr = &tmpl_hdr_session;
+      dev->io.outofband.rq.tmpl_lan_session_header_ptr = 
+	dev->io.outofband.rs.tmpl_lan_session_header_ptr = &tmpl_lan_session_header;
       break;
     case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
       fprintf (stderr, "%s:%d:%s(): auth_type OEM is not supported\n", 
@@ -183,14 +183,14 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   dev->io.outofband.rq.obj_hdr_session = 
-    fiid_obj_create (*(dev->io.outofband.rq.tmpl_hdr_session_ptr));
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_lan_session_header_ptr));
   if (dev->io.outofband.rq.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
   dev->io.outofband.rs.obj_hdr_session = 
-    fiid_obj_create (*(dev->io.outofband.rs.tmpl_hdr_session_ptr));
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_lan_session_header_ptr));
   if (dev->io.outofband.rs.obj_hdr_session == NULL)
     {
       ipmi_outofband_free (dev);

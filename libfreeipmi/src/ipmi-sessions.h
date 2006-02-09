@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-extern fiid_template_t tmpl_hdr_session;
+extern fiid_template_t tmpl_lan_session_header;
 
 int8_t fill_hdr_session  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_obj_t obj_hdr);
 int8_t check_hdr_session_session_seq_num (fiid_obj_t obj_hdr_session, uint32_t session_seq_num);

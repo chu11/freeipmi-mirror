@@ -325,7 +325,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  if (!(obj_session_hdr = fiid_obj_create(tmpl_hdr_session)))
+  if (!(obj_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
     goto cleanup;
   
   if ((len = fiid_obj_set_block(obj_session_hdr, 
