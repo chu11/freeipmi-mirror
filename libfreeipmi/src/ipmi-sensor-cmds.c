@@ -723,7 +723,7 @@ fiid_template_t tmpl_get_sensor_type_rs =
   };
 
 int8_t 
-fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -745,7 +745,7 @@ fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 }
 
 int8_t 
-fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -767,7 +767,7 @@ fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 }
 
 int8_t 
-fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -802,8 +802,8 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_threshold_reading_rq);
-  ERR (fill_kcs_get_threshold_reading (obj_cmd_rq, 
-				       sensor_number) == 0);
+  ERR (fill_kcs_get_threshold_reading (sensor_number,
+                                       obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
@@ -830,8 +830,8 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_discrete_reading_rq);
-  ERR (fill_kcs_get_discrete_reading (obj_cmd_rq, 
-				      sensor_number) == 0);
+  ERR (fill_kcs_get_discrete_reading (sensor_number,
+                                      obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
@@ -858,8 +858,8 @@ ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
-  ERR (fill_kcs_get_sensor_thresholds (obj_cmd_rq, 
-				       sensor_number) == 0);
+  ERR (fill_kcs_get_sensor_thresholds (sensor_number,
+                                       obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 

@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.20 2006-02-02 22:18:13 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.21 2006-02-09 18:56:57 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -575,9 +575,11 @@ fiid_template_t tmpl_alert_immediate_rs =
   };
 
 int8_t
-fill_kcs_alert_immediate (fiid_obj_t obj_data_rq, uint8_t channel_number,
-                          uint8_t destination_selector, uint8_t string_selector,
-                          uint8_t string_enable)
+fill_kcs_alert_immediate (uint8_t channel_number,
+                          uint8_t destination_selector, 
+                          uint8_t string_selector,
+                          uint8_t string_enable,
+                          fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -610,10 +612,11 @@ fill_kcs_alert_immediate (fiid_obj_t obj_data_rq, uint8_t channel_number,
 }
 
 int8_t
-fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, uint8_t parameter_selector,
+fill_kcs_get_pef_conf_param (uint8_t parameter_selector,
                              uint8_t parameter_type,
                              uint8_t set_selector,
-                             uint8_t block_selector)
+                             uint8_t block_selector,
+                             fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -650,9 +653,11 @@ fill_kcs_get_pef_conf_param (fiid_obj_t obj_data_rq, uint8_t parameter_selector,
 }
 
 int8_t
-fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, uint8_t enable_pef,
-                          uint8_t enable_pef_event_msgs, uint8_t enable_startup_delay,
-                          uint8_t enable_alert_startup_delay)
+fill_kcs_set_pef_control (uint8_t enable_pef,
+                          uint8_t enable_pef_event_msgs, 
+                          uint8_t enable_startup_delay,
+                          uint8_t enable_alert_startup_delay,
+                          fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -684,10 +689,13 @@ fill_kcs_set_pef_control (fiid_obj_t obj_data_rq, uint8_t enable_pef,
 }
 
 int8_t
-fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, uint8_t enable_alert,
-                                    uint8_t enable_powerdown, uint8_t enable_reset,
-                                    uint8_t enable_powercycle, uint8_t enable_oem,
-                                    uint8_t enable_diag_interrupt)
+fill_kcs_set_global_action_control (uint8_t enable_alert,
+                                    uint8_t enable_powerdown, 
+                                    uint8_t enable_reset,
+                                    uint8_t enable_powercycle, 
+                                    uint8_t enable_oem,
+                                    uint8_t enable_diag_interrupt,
+                                    fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -731,7 +739,7 @@ fill_kcs_set_global_action_control (fiid_obj_t obj_data_rq, uint8_t enable_alert
 }
 
 int8_t
-fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, uint8_t startup_delay)
+fill_kcs_set_startup_delay (uint8_t startup_delay, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -755,7 +763,7 @@ fill_kcs_set_startup_delay (fiid_obj_t obj_data_rq, uint8_t startup_delay)
 }
 
 int8_t
-fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, uint8_t alert_startup_delay)
+fill_kcs_set_alert_startup_delay (uint8_t alert_startup_delay, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -779,7 +787,7 @@ fill_kcs_set_alert_startup_delay (fiid_obj_t obj_data_rq, uint8_t alert_startup_
 }
 
 int8_t
-fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, uint8_t num_event_filters)
+fill_kcs_set_num_event_filters (uint8_t num_event_filters, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -803,8 +811,8 @@ fill_kcs_set_num_event_filters (fiid_obj_t obj_data_rq, uint8_t num_event_filter
 }
 
 int8_t 
-fill_kcs_set_filter_table_entry (fiid_obj_t obj_data_rq, 
-                                 const event_filter_table_entry_t *eft_entry)
+fill_kcs_set_filter_table_entry (const event_filter_table_entry_t *eft_entry,
+                                 fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -936,8 +944,10 @@ fill_kcs_set_filter_table_entry (fiid_obj_t obj_data_rq,
 }
 
 int8_t
-fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, uint8_t filter_number,
-                                 filter_type_t filter_type, uint8_t enabled)
+fill_kcs_set_filter_table_data1 (uint8_t filter_number,
+                                 filter_type_t filter_type, 
+                                 uint8_t enabled,
+                                 fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -969,7 +979,8 @@ fill_kcs_set_filter_table_data1 (fiid_obj_t obj_data_rq, uint8_t filter_number,
 }
 
 int8_t
-fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, uint8_t num_alert_policies)
+fill_kcs_set_num_alert_policies (uint8_t num_alert_policies,
+                                 fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -993,8 +1004,10 @@ fill_kcs_set_num_alert_policies (fiid_obj_t obj_data_rq, uint8_t num_alert_polic
 }
 
 int8_t 
-fill_kcs_set_alert_string_keys (fiid_obj_t obj_data_rq, uint8_t string_selector, 
-                                uint8_t filter_number, uint8_t string_set_number)
+fill_kcs_set_alert_string_keys (uint8_t string_selector, 
+                                uint8_t filter_number, 
+                                uint8_t string_set_number,
+                                fiid_obj_t obj_data_rq)
 { 
   if (!obj_data_rq)
     {
@@ -1042,7 +1055,7 @@ fill_kcs_get_pef_caps (fiid_obj_t obj_data_rq)
 }
 
 int8_t
-fill_kcs_arm_pef_postpone_timer (fiid_obj_t obj_data_rq, uint8_t countdown)
+fill_kcs_arm_pef_postpone_timer (uint8_t countdown, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -1062,7 +1075,7 @@ fill_kcs_arm_pef_postpone_timer (fiid_obj_t obj_data_rq, uint8_t countdown)
 }
 
 int8_t
-fill_kcs_set_last_processed_event (fiid_obj_t obj_data_rq, which_event_t which, uint16_t id)
+fill_kcs_set_last_processed_event (which_event_t which, uint16_t id, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -1102,9 +1115,13 @@ fill_kcs_get_last_proessed_event (fiid_obj_t obj_data_rq)
 }
 
 int8_t
-fill_kcs_pet_ack (fiid_obj_t obj_data_rq, uint16_t sequence_number, uint32_t timestamp,
-                  uint8_t source_type, uint8_t sensor_device, uint8_t sensor_number,
-                  uint32_t event_data)
+fill_kcs_pet_ack (uint16_t sequence_number, 
+                  uint32_t timestamp,
+                  uint8_t source_type, 
+                  uint8_t sensor_device, 
+                  uint8_t sensor_number,
+                  uint32_t event_data, 
+                  fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -1160,11 +1177,11 @@ ipmi_cmd_set_pef_control2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_pef_control_rq);
-  ERR (fill_kcs_set_pef_control (obj_cmd_rq, 
-				 enable_pef, 
+  ERR (fill_kcs_set_pef_control (enable_pef, 
 				 enable_pef_event_msgs,
 				 enable_startup_delay, 
-				 enable_alert_startup_delay) == 0);
+				 enable_alert_startup_delay,
+                                 obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1196,13 +1213,13 @@ ipmi_cmd_set_global_action_control2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_global_action_control_rq);
-  ERR (fill_kcs_set_global_action_control (obj_cmd_rq, 
-					   enable_alert, 
+  ERR (fill_kcs_set_global_action_control (enable_alert, 
 					   enable_powerdown,
 					   enable_reset, 
 					   enable_powercycle, 
 					   enable_oem, 
-					   enable_diag_interrupt) == 0);
+					   enable_diag_interrupt,
+                                           obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1229,7 +1246,7 @@ ipmi_cmd_set_startup_delay2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_startup_delay_rq);
-  ERR (fill_kcs_set_startup_delay (obj_cmd_rq, startup_delay) == 0);
+  ERR (fill_kcs_set_startup_delay (startup_delay, obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1256,8 +1273,8 @@ ipmi_cmd_set_alert_startup_delay2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_alert_startup_delay_rq);
-  ERR (fill_kcs_set_alert_startup_delay (obj_cmd_rq, 
-					 alert_startup_delay) == 0);
+  ERR (fill_kcs_set_alert_startup_delay (alert_startup_delay,
+                                         obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1284,8 +1301,8 @@ ipmi_cmd_set_num_event_filters2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_event_filters_rq);
-  ERR (fill_kcs_set_num_event_filters (obj_cmd_rq, 
-				       num_event_filters) == 0);
+  ERR (fill_kcs_set_num_event_filters (num_event_filters,
+                                       obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1312,8 +1329,8 @@ ipmi_cmd_set_filter_table_entry2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_event_filter_table_rq);
-  ERR (fill_kcs_set_filter_table_entry (obj_cmd_rq, 
-					eft_entry) == 0);
+  ERR (fill_kcs_set_filter_table_entry (eft_entry,
+                                        obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1342,10 +1359,10 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_event_filter_data1_rq);
-  ERR (fill_kcs_set_filter_table_data1 (obj_cmd_rq, 
-					filter_number, 
+  ERR (fill_kcs_set_filter_table_data1 (filter_number, 
 					filter_type, 
-					enabled) == 0);
+					enabled,
+                                        obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1372,8 +1389,8 @@ ipmi_cmd_set_num_alert_policies2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_pef_conf_param_num_alert_policies_rq);
-  ERR (fill_kcs_set_num_alert_policies (obj_cmd_rq, 
-					num_alert_policies) == 0);
+  ERR (fill_kcs_set_num_alert_policies (num_alert_policies,
+                                        obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1403,11 +1420,11 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_alert_immediate_rq);
-  ERR (fill_kcs_alert_immediate (obj_cmd_rq, 
-				 channel_number, 
+  ERR (fill_kcs_alert_immediate (channel_number, 
 				 destination_selector,
 				 string_selector, 
-				 string_enable) == 0);
+				 string_enable,
+                                 obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1436,11 +1453,11 @@ ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
-				    IPMI_PEF_PARAM_ALERT_STRINGS,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_ALERT_STRINGS,
 				    parameter_type,
 				    set_selector,
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1469,11 +1486,11 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
     }
 
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
-				    IPMI_PEF_PARAM_ALERT_STRING_KEYS,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_ALERT_STRING_KEYS,
 				    parameter_type,
 				    set_selector,
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1502,11 +1519,11 @@ ipmi_cmd_get_pef_num_alert_policies2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
-				    IPMI_PEF_PARAM_NUM_ALERT_POLICY_ENTRIES,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_NUM_ALERT_POLICY_ENTRIES,
 				    parameter_type,
 				    set_selector,
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1535,11 +1552,11 @@ ipmi_cmd_get_pef_num_alert_strings2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_NUM_ALERT_STRINGS, 
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_NUM_ALERT_STRINGS, 
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1568,11 +1585,11 @@ ipmi_cmd_get_pef_filter_data1_2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq,
-				    IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
 				    parameter_type,
 				    set_selector,
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1601,11 +1618,11 @@ ipmi_cmd_get_pef_control2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_PEF_CONTROL,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_PEF_CONTROL,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1634,11 +1651,11 @@ ipmi_cmd_get_pef_global_action_control2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_ACTION_GLOBAL_CONTROL,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_ACTION_GLOBAL_CONTROL,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1667,11 +1684,11 @@ ipmi_cmd_get_pef_startup_delay2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_STARTUP_DELAY,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_STARTUP_DELAY,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1700,11 +1717,11 @@ ipmi_cmd_get_pef_alert_startup_delay2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_ALERT_STARTUP_DELAY,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_ALERT_STARTUP_DELAY,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1733,11 +1750,11 @@ ipmi_cmd_get_pef_num_event_filters2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_NUM_EVENT_FILTERS,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_NUM_EVENT_FILTERS,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1766,11 +1783,11 @@ ipmi_cmd_get_pef_filter_table_entry2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_pef_conf_param_rq);
-  ERR (fill_kcs_get_pef_conf_param (obj_cmd_rq, 
-				    IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
+  ERR (fill_kcs_get_pef_conf_param (IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
 				    parameter_type, 
 				    set_selector, 
-				    block_selector) == 0);
+				    block_selector,
+                                    obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -1822,8 +1839,8 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_arm_pef_postpone_timer_rq);
-  ERR (fill_kcs_arm_pef_postpone_timer (obj_cmd_rq, 
-					countdown) == 0);
+  ERR (fill_kcs_arm_pef_postpone_timer (countdown,
+                                        obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
@@ -1851,9 +1868,9 @@ ipmi_cmd_set_last_processed_event2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_last_processed_event_rq);
-  ERR (fill_kcs_set_last_processed_event (obj_cmd_rq, 
-					  which, 
-					  id) == 0);
+  ERR (fill_kcs_set_last_processed_event (which, 
+					  id,
+                                          obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 
@@ -1910,13 +1927,13 @@ ipmi_cmd_pet_ack2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_pet_ack_rq);
-  ERR (fill_kcs_pet_ack (obj_cmd_rq, 
-			 sequence_number, 
+  ERR (fill_kcs_pet_ack (sequence_number, 
 			 timestamp, 
 			 source_type,
 			 sensor_device, 
 			 sensor_number, 
-			 event_data) == 0);
+			 event_data,
+                         obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_SENSOR_EVENT_RQ, 

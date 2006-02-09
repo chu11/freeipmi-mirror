@@ -70,9 +70,9 @@ fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs =
   };
 
 int8_t 
-fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq, 
-				  uint8_t channel_number, 
-				  uint8_t sol_payload)
+fill_sol_conf_sol_enable_disable (uint8_t channel_number, 
+				  uint8_t sol_payload,
+                                  fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -105,12 +105,12 @@ fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_get_sol_conf_param (fiid_obj_t obj_data_rq, 
-			 uint8_t parameter_selector, 
+fill_get_sol_conf_param (uint8_t parameter_selector, 
 			 uint8_t channel_number,
 			 uint8_t parameter_type,
 			 uint8_t set_selector,
-			 uint8_t block_selector)
+			 uint8_t block_selector,
+                         fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -169,9 +169,9 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
     }
 
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_sol_conf_param_sol_enable_rq);
-  ERR (fill_sol_conf_sol_enable_disable (obj_cmd_rq, 
-					 channel_number, 
-					 sol_payload) == 0);
+  ERR (fill_sol_conf_sol_enable_disable (channel_number, 
+					 sol_payload,
+                                         obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 
@@ -225,12 +225,12 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
     }
 
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sol_conf_param_rq);
-  ERR (fill_get_sol_conf_param (obj_cmd_rq, 
-				IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
+  ERR (fill_get_sol_conf_param (IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
 				channel_number, 
 				parameter_type, 
 				set_selector, 
-				block_selector) == 0);
+				block_selector,
+                                obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_TRANSPORT_RQ, 

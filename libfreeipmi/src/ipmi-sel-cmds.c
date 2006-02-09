@@ -189,7 +189,7 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
+fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -216,9 +216,9 @@ fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
 }
 
 int8_t 
-fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq, 
-			   uint16_t reservation_id, 
-			   uint16_t record_id)
+fill_kcs_delete_sel_entry (uint16_t reservation_id, 
+			   uint16_t record_id,
+                           fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -245,7 +245,7 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_kcs_clear_sel (fiid_obj_t obj_data_rq, uint16_t reservation_id, uint8_t opcode)
+fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -378,7 +378,7 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sel_entry_rq);
-  ERR (fill_kcs_get_sel_entry (obj_cmd_rq, record_id) == 0);
+  ERR (fill_kcs_get_sel_entry (record_id, obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_STORAGE_RQ, 
@@ -406,9 +406,9 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_delete_sel_entry_rq);
-  ERR (fill_kcs_delete_sel_entry (obj_cmd_rq, 
-				  reservation_id, 
-				  record_id) == 0);
+  ERR (fill_kcs_delete_sel_entry (reservation_id, 
+				  record_id,
+                                  obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_STORAGE_RQ, 
@@ -436,9 +436,9 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_clear_sel_rq);
-  ERR (fill_kcs_clear_sel (obj_cmd_rq, 
-			   reservation_id, 
-			   opcode) == 0);
+  ERR (fill_kcs_clear_sel (reservation_id, 
+			   opcode,
+                           obj_cmd_rq) == 0);
   ERR (ipmi_cmd (dev, 
 		 IPMI_BMC_IPMB_LUN_BMC, 
 		 IPMI_NET_FN_STORAGE_RQ, 

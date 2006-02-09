@@ -1,3 +1,38 @@
+2006-02-09  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-cmds.c (fill_lan_set_arp,
+	fill_lan_set_gratuitous_arp_interval,
+	fill_lan_set_auth_type_enables, fill_lan_set_ip_addr_source,
+	fill_lan_set_ip_addr, fill_lan_set_vlan_id,
+	fill_lan_set_vlan_priority, fill_lan_set_subnet_mask,
+	fill_lan_set_mac_addr, fill_get_lan_conf_param,
+	fill_suspend_bmc_arps), libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_num_event_filters, fill_kcs_set_filter_table_entry,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_set_alert_string_keys, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event, fill_kcs_pet_ack),
+	libfreeipmi/src/ipmi-sel-cmds.c (fill_kcs_get_sel_entry,
+	fill_kcs_delete_sel_entry, fill_kcs_clear_sel),
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
+	fill_kcs_get_sensor_thresholds),
+	libfreeipmi/src/ipmi-serial-cmds.c (fill_set_serial_connmode,
+	fill_set_serial_page_blackout_interval,
+	fill_set_serial_retry_time, fill_set_serial_comm_bits,
+	fill_get_serial_conf_param), libfreeipmi/src/ipmi-sol-cmds.c
+	(fill_sol_conf_sol_enable_disable, fill_get_sol_conf_param): Fix
+	function prototype consistency issue.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: Adjust function calls for new
+	prototypes appropriately.
+	
 2006-02-08  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-event-messages.c: Move strings into
