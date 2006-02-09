@@ -4,6 +4,22 @@
 	arrays as much as possible.
 
 	* libfreeipmi/src/ipmi-sensor-types.c: Add forgotten string.
+
+	* libfreeipmi/src/libfreeipmi/src/ipmi-sensor-event-messages.c:
+	Add new/modified event message strings from errata.
+	
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_0D_event_message, get_1B_event_message,
+	get_1D_event_data2_message, get_1D_event_data3_message): New
+	functions.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(get_0C_event_message, get_1D_event_message,
+	get_20_event_message): Adjust offsets.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c
+	(ipmi_get_event_data3_message, ipmi_get_event_data2_message,
+	ipmi_get_event_message):
 	
 2006-02-07  Albert Chu  <chu11@llnl.gov>
 

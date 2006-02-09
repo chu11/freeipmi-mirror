@@ -140,6 +140,20 @@ const char *const ipmi_generic_event_reading_type_code_0C_desc[] =
     NULL
   };
 
+const char *const ipmi_generic_event_reading_type_code_0D_desc[] =
+  {
+    "Drive Presence",
+    "Drive Fault",
+    "Predictive Failure",
+    "Hot Spare",
+    "Consistency Check / Parity Check in progress",
+    "In Critical Array",
+    "In Failed Array",
+    "Rebuild/Remap in progress",
+    "Rebuild/Remap Aborted (was not completed normally)",
+    NULL
+  };
+
 /* 
  * Sensor Type Strings
  */
@@ -168,6 +182,7 @@ const char *const ipmi_sensor_type_code_04_desc[] =
     NULL
   };
 
+/* achu: 'undock' removed as noted in errata */
 const char *const ipmi_sensor_type_code_05_desc[] =
   {
     "General Chassis Intrusion",
@@ -175,8 +190,8 @@ const char *const ipmi_sensor_type_code_05_desc[] =
     "I/O Card area intrusion",
     "Processor area intrusion",
     "LAN Leash Lost (system is unplugged from LAN)",
-    "Unauthorized dock/undock",
-    " FAN area intrusion (supports detection of hot plug fan tampering)",
+    "Unauthorized dock",
+    "FAN area intrusion (supports detection of hot plug fan tampering)",
     NULL
   };
 
@@ -232,6 +247,7 @@ const char *const ipmi_sensor_type_code_09_desc[] =
     NULL
   };
 
+/* achu: new additions as stated in errata */
 const char *const ipmi_sensor_type_code_0C_desc[] =
   {
     "Correctable ECC/other correctable memory error",
@@ -243,6 +259,7 @@ const char *const ipmi_sensor_type_code_0C_desc[] =
     "Presence detected",
     "Configuration error",
     "Spare",
+    "Memory Automatically Throttled",
     NULL
   };
 
@@ -320,6 +337,14 @@ const char *const ipmi_sensor_type_code_19_desc[] =
     NULL
   };
 
+const char *const ipmi_sensor_type_code_1B_desc[] =
+  {
+    "Cable/Interconnect is connected",
+    "Configuration Error - Incorrect cable connected / Incorrect inerconnection",
+    NULL
+  };
+
+/* achu: new additions as stated in errata */
 const char *const ipmi_sensor_type_code_1D_desc[] =
   {
     "Initiated by power up",
@@ -327,6 +352,9 @@ const char *const ipmi_sensor_type_code_1D_desc[] =
     "Initiated by warm reset",
     "User requested PXE boot",
     "Automatic boot to diagnostic",
+    "OS / run-time software initiated hard reset",
+    "OS / run-time software initiated warm reset",
+    "System Restart",
     NULL
   };
 
@@ -352,10 +380,15 @@ const char *const ipmi_sensor_type_code_1F_desc[] =
     NULL
   };
 
+/* achu: modified per errata */
 const char *const ipmi_sensor_type_code_20_desc[] =
   {
-    "Stop during OS load/initialization",
-    "Run-time Stop",
+    "Critical stop during OS load / initialization.  Unexpected error during system startup.  Stopped waiting for input or power cycle/reset.",
+    "Run-time Critical Stop (a.k.a. 'core dump', 'blue screen')",
+    "OS Graceful Stop (system powered up, but normal OS operation has shut down and system is awaiting reset pushbutton, powercycle or other external input)",
+    "OS Graceful Shutdown (system graceful power down by OS)",
+    "Soft Shutdown initiated by PEF",
+    "Agent Not Responding.  Graceful shutdown request to agent via BMC did not occur due to missing or malfunctioning local agent.",
     NULL
   };
 
@@ -611,6 +644,23 @@ const char *const ipmi_sensor_type_code_19_event_data_2_offset_00_desc[] =
     "Requested power state = Legacy ON state",
     "Requested power state = Legacy OFF state",
     NULL,
+  };
+
+const char *const ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_desc[] =
+  {
+    "unknown",
+    "Chassis Control command",
+    "reset via pushbutton",
+    "power-up via power pushbutton",
+    "Watchdog expiration",
+    "OEM",
+    "automatic power-up on AC being applied due to 'always restore' power restore policy",
+    "automatic power-up on AC being applied due to 'restore previous power state' power restore policy",
+    "reset via PEF",
+    "power-cycle via PEF",
+    "soft reset (e.g. CTRL-ALT-DEL)",
+    "power-up via RTC (system real time clock) wakeup",
+    NULL
   };
 
 const char *const ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[] =
@@ -938,8 +988,16 @@ get_09_event_message (int offset)
 static char *
 get_0C_event_message (int offset)
 {
-  if (offset <= 0x08)
+  if (offset <= 0x09)
     return strdup(ipmi_sensor_type_code_0C_desc[offset]);
+  return NULL;
+}
+
+static char *
+get_0D_event_message (int offset)
+{
+  if (offset <= 0x08)
+    return strdup(ipmi_generic_event_reading_type_code_0D_desc[offset]);
   return NULL;
 }
 
@@ -999,11 +1057,18 @@ get_19_event_message (int offset)
   return NULL;
 }
 
+static char *
+get_1B_event_message (int offset)
+{
+  if (offset <= 0x01)
+    return strdup(ipmi_sensor_type_code_1B_desc[offset]);
+  return NULL;
+}
 
 static char *
 get_1D_event_message (int offset)
 {
-  if (offset <= 0x04)
+  if (offset <= 0x07)
     return strdup(ipmi_sensor_type_code_1D_desc[offset]);
   return NULL;
 }
@@ -1027,7 +1092,7 @@ get_1F_event_message (int offset)
 static char *
 get_20_event_message (int offset)
 {
-  if (offset <= 0x01)
+  if (offset <= 0x05)
     return strdup(ipmi_sensor_type_code_20_desc[offset]);
   return NULL;
 }
@@ -1383,6 +1448,28 @@ get_19_event_data2_message (int offset, uint8_t event_data)
 }
 
 static char *
+get_1D_event_data2_message (int offset, uint8_t event_data)
+{
+  if (offset == 0x07)
+    {
+      fiid_template_t tmpl_event_data2 = 
+	{
+          {4, "restart_cause"},
+          {4, "reserved"},
+	  {0, ""}
+	};
+      uint64_t val;
+      
+      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"restart_cause", &val);
+      
+      if (val <= 0x08)
+        return strdup(ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_desc[val]);
+    }
+  
+  return NULL;
+}
+
+static char *
 get_21_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x09)
@@ -1611,6 +1698,19 @@ get_19_event_data3_message (int offset, uint8_t event_data)
 }
 
 static char *
+get_1D_event_data3_message (int offset, uint8_t event_data)
+{
+  if (offset == 0x07)
+    {
+      char *str = NULL;
+      asprintf (&str, "Channel Number used to deliver command that generated restart: %d", event_data);
+      return str;
+    }
+  
+  return NULL;
+}
+
+static char *
 get_21_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x09)
@@ -1693,6 +1793,7 @@ ipmi_get_event_message (int sensor_type_code, int offset)
     case 0x08: return get_08_event_message (offset);
     case 0x09: return get_09_event_message (offset);
     case 0x0C: return get_0C_event_message (offset);
+    case 0x0D: return get_0D_event_message (offset);
     case 0x0F: return get_0F_event_message (offset);
     case 0x10: return get_10_event_message (offset);
     case 0x11: return get_11_event_message (offset);
@@ -1700,6 +1801,7 @@ ipmi_get_event_message (int sensor_type_code, int offset)
     case 0x13: return get_13_event_message (offset);
     case 0x14: return get_14_event_message (offset);
     case 0x19: return get_19_event_message (offset);
+    case 0x1B: return get_1B_event_message (offset);
     case 0x1D: return get_1D_event_message (offset);
     case 0x1E: return get_1E_event_message (offset);
     case 0x1F: return get_1F_event_message (offset);
@@ -1730,6 +1832,7 @@ ipmi_get_event_data2_message (int sensor_type_code, int offset, uint8_t event_da
     case 0x10: return get_10_event_data2_message (offset, event_data);
     case 0x12: return get_12_event_data2_message (offset, event_data);
     case 0x19: return get_19_event_data2_message (offset, event_data);
+    case 0x1D: return get_1D_event_data2_message (offset, event_data);
     case 0x21: return get_21_event_data2_message (offset, event_data);
     case 0x23: return get_23_event_data2_message (offset, event_data);
     case 0x2A: return get_2A_event_data2_message (offset, event_data);
@@ -1749,6 +1852,7 @@ ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_da
     case 0x0C: return get_0C_event_data3_message (offset, event_data);
     case 0x10: return get_10_event_data3_message (offset, event_data);
     case 0x19: return get_19_event_data3_message (offset, event_data);
+    case 0x1D: return get_1D_event_data3_message (offset, event_data);
     case 0x21: return get_21_event_data3_message (offset, event_data);
     case 0x2A: return get_2A_event_data3_message (offset, event_data);
     }
