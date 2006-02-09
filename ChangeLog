@@ -1,3 +1,12 @@
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: updated.
+
+	* ipmi-raw/src/ipmi-raw-argp.[ch]: added --file argument and
+	command hex bytes as argument. fixed bug #15599 and bug #15600.
+
+	* ipmi-raw/src/ipmi-raw.c: updated.
+
 2006-02-09  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-cmds.c (fill_lan_set_arp,

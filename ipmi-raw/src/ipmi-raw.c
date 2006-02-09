@@ -100,6 +100,8 @@ main (int argc, char **argv)
   struct arguments *args = NULL;
   ipmi_device_t dev;
   
+  FILE *infile = NULL;
+  
   int i;
   
   struct hostent *hostinfo;
@@ -111,7 +113,7 @@ main (int argc, char **argv)
   uint8_t *bytes_rq = NULL;
   int send_len;
   
-  uint8_t bytes_rs[512];
+  uint8_t bytes_rs[ARG_MAX];
   size_t rcvd_len;
   
   struct rlimit resource_limit;
@@ -197,7 +199,45 @@ main (int argc, char **argv)
 	}
     }
   
-  while (1)
+  if (args->cmd_length)
+    {
+      bytes_rq = args->cmd;
+      send_len = args->cmd_length;
+      if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) == 0)
+	{
+	  printf ("rcvd: ");
+	  for (i = 0; i < rcvd_len; i++)
+	    printf ("%02X ", bytes_rs[i]);
+	  printf ("\n");
+	}
+      else 
+        {
+          perror (program_invocation_short_name);
+        }
+      bytes_rq = NULL;
+      send_len = 0;
+    }
+  
+  if (args->cmd_file)
+    {
+      infile = fopen (args->cmd_file, "r");
+      if (infile == NULL)
+	{
+          perror (program_invocation_short_name);
+	  if (ipmi_close (&dev) != 0)
+	    {
+	      perror ("ipmi_close()");
+	    }
+	  exit (EXIT_FAILURE);
+	}
+    }
+  else 
+    {
+      if (args->cmd_length == 0)
+	infile = stdin;
+    }
+  
+  while (infile)
     {
       if (line != NULL)
 	{
@@ -211,9 +251,9 @@ main (int argc, char **argv)
 	  bytes_rq = NULL;
 	}
       send_len = 0;
-      rcvd_len = 512;
+      rcvd_len = ARG_MAX;
       
-      if (getline (&line, &n, stdin) == -1)
+      if (getline (&line, &n, infile) == -1)
 	{
 	  /* perror ("getline()"); */
 	  break;
@@ -224,7 +264,7 @@ main (int argc, char **argv)
       
       if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) < 0)
         {
-          perror("ipmi_cmd_raw");
+          perror (program_invocation_short_name);
           continue;
         }
       
@@ -232,6 +272,11 @@ main (int argc, char **argv)
       for (i = 0; i < rcvd_len; i++)
 	printf ("%02X ", bytes_rs[i]);
       printf ("\n");
+    }
+  
+  if ((infile != NULL) && (infile != stdin))
+    {
+      fclose (infile);
     }
   
   if (ipmi_close (&dev) != 0)
