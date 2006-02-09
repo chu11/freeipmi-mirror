@@ -27,6 +27,8 @@ libfreeipmi:
   * gcrypt: thread issues
   * ipmi 2.0 commands
   * gcc 4.0 warnings test/fix
+  * password 16 vs 20 bytes fix
+    - also see errata
 
 fish:
 -----
