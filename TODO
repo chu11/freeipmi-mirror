@@ -35,6 +35,7 @@ libfreeipmi:
   * fill_kcs_get_sel_entry
     - why not the other arguments?
   * sensor-event-messages: get_28_event_data3_messages
+  * remove ipmi_chksum_test
   
 fish:
 -----
