@@ -30,7 +30,8 @@
 	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table),
 	libfreeipmi/src/fiid.c (fiid_obj_clear_field),
 	libfreeipmi/src/ipmi-sel-record-types.c
-	(get_sel_non_timestamped_oem_record): Fix warnings/bugs.
+	(get_sel_non_timestamped_oem_record), fish/src/ipmi-wrapper.c
+	(ipmi_ping): Fix warnings/bugs.
 	
 2006-02-06  Albert Chu <chu11@llnl.gov>	
 
