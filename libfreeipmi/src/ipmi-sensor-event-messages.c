@@ -20,6 +20,9 @@
 
 #include "freeipmi.h"
 
+/* 
+ * Generic Event Reading Strings
+ */
 const char *const ipmi_generic_event_reading_type_code_01_desc[] =
   {
     "Lower Non-critical - going low",
@@ -136,6 +139,10 @@ const char *const ipmi_generic_event_reading_type_code_0C_desc[] =
     "D3 Power State",
     NULL
   };
+
+/* 
+ * Sensor Type Strings
+ */
 
 const char *const ipmi_sensor_type_code_01_desc[] =
   {
@@ -382,6 +389,7 @@ const char *const ipmi_sensor_type_code_22_desc[] =
     "S5 entered by override",
     "Legacy ON state",
     "Legacy OFF state",
+    "Unspecified",
     "Unknown",
     NULL
   };
@@ -471,6 +479,283 @@ const char *const ipmi_sensor_type_code_2C_desc[] =
     "FRU Deactivation Requested",
     "FRU Deactivation In Progress",
     "FRU Communication Lost",
+    NULL
+  };
+
+/* 
+ * Sensor Type Strings for Event Data 2
+ */
+
+const char *const ipmi_sensor_type_code_0F_event_data_2_offset_00_desc[] =
+  {
+    "Unspecified",
+    "No system memory is physically installed in the system",
+    "No usable system memory, all installed memory has experienced an unrecoverable failure",
+    "Unrecoverable hard-disk/ATAPI/IDE device failure",
+    "Unrecoverable system-board failure",
+    "Unrecoverable diskette subsystem failure",
+    "Unrecoverable hard-disk controller failure",
+    "Unrecoverable PS/2 or USB keyboard failure",
+    "Removable boot media not found",
+    "Unrecoverable video controller failure",
+    "No video device detected",
+    "Firmware (BIOS) ROM corruption detected",
+    "CPU voltage mismatch (processors that share same supply have mismatched voltage requirements)",
+    "CPU speed matching failure",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_0F_event_data_2_offset_01_desc[] =
+  {
+    "Unspecified",
+    "Memory initialization",
+    "Hard-disk initialization",
+    "Secondary processor(s) initialization",
+    "User authentication",
+    "User-initiated system setup",
+    "USB resource configuration",
+    "PCI resource configuration",
+    "Option ROM initialization",
+    "Video initialization",
+    "Cache initialization",
+    "SM Bus initialization",
+    "Keyboard controller initialization",
+    "Embedded controller/management controller initialization",
+    "Docking station attachment",
+    "Enabling docking station",
+    "Docking station ejection",
+    "Disabling docking station",
+    "Calling operating system wake-up vector",
+    "Starting operating system boot process, e.g. calling Int 19h",
+    "Baseboard or motherboard initialization",
+    "Floppy initialization",
+    "Keyboard test",
+    "Pointing device test",
+    "Primary processor initialization",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_0F_event_data_2_offset_02_desc[] =
+  {
+    "Unspecified",
+    "Memory initialization",
+    "Hard-disk initialization",
+    "Secondary processor(s) initialization",
+    "User authentication",
+    "User-initiated system setup",
+    "USB resource configuration",
+    "PCI resource configuration",
+    "Option ROM initialization",
+    "Video initialization",
+    "Cache initialization",
+    "SM Bus initialization",
+    "Keyboard controller initialization",
+    "Embedded controller/management controller initialization",
+    "Docking station attachment",
+    "Enabling docking station",
+    "Docking station ejection",
+    "Disabling docking station",
+    "Calling operating system wake-up vector",
+    "Starting operating system boot process, e.g. calling Int 19h",
+    "Baseboard or motherboard initialization",
+    "Floppy initialization",
+    "Keyboard test",
+    "Pointing device test",
+    "Primary processor initialization",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[] =
+  {
+   "Log entry action = entry added",
+   "Log entry action = entry added because event did not be map to standard IPMI event",
+   "Log entry action = entry added along with one or more corresponding SEL entries",
+   "Log entry action = log cleared",
+   "Log entry action = log disabled",
+   "Log entry action = log enabled",
+   NULL
+  };
+
+const char *const ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[] =
+  {
+    "Log Type = MCA log",
+    "Log Type = OEM1",
+    "Log Type = OEM2",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[] =
+  {
+    "Alert",
+    "power off",
+    "reset",
+    "power cycle",
+    "OEM action",
+    "Diagnostic Interrupt (NMI)",
+    NULL,
+  };
+
+const char *const ipmi_sensor_type_code_19_event_data_2_offset_00_desc[] =
+  {
+    "Requested power state = S0/G0 \"working\"",
+    "Requested power state = S1 \"sleeping with system h/w & processor context maintained\"",
+    "Requested power state = S2 \"sleeping, processor context lost\"",
+    "Requested power state = S3 \"sleeping, processor & h/w context lost, memory retained.\"",
+    "Requested power state = S4 \"non-volatile sleep/suspend-to disk\"",
+    "Requested power state = S5/G2 \"soft-off\"",
+    "Requested power state = S4/S5 soft-off, particular S4/S5 state cannot be determined",
+    "Requested power state = G3/Mechanical Off",
+    "Requested power state = Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)",
+    "Requested power state = G1 sleeping (S1-S4 state cannot be determined)",
+    "Requested power state = S5 entered by override",
+    "Requested power state = Legacy ON state",
+    "Requested power state = Legacy OFF state",
+    NULL,
+  };
+
+const char *const ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[] =
+  {
+    "Slot/Connector Type = PCI",
+    "Slot/Connector Type = Drive Array",
+    "Slot/Connector Type = External Peripheral Connector",
+    "Slot/Connector Type = Docking",
+    "Slot/Connector Type = other standard internal expansion slot",
+    "Slot/Connector Type = slot associated with entity specified by Entity ID for sensor",
+    "Slot/Connector Type = AdvancedTCA",
+    "Slot/Connector Type = DIMM/memory device",
+    "Slot/Connector Type = FAN",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type_desc[] =
+  {
+    "Interrupt type = none",
+    "Interrupt type = SMI",
+    "Interrupt type = NMI",
+    "Interrupt type = Messaging Interrupt",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Interrupt type = unspecified",
+    NULL,
+  };
+
+const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_expiration_desc[] =
+  {
+    "reserved",
+    "Timer use at expiration = BIOS FRB2",
+    "Timer use at expiration = BIOS/POST",
+    "Timer use at expiration = OS Load",
+    "Timer use at expiration = SMS/OS",
+    "Timer use at expiration = OEM",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Timer use at expiration = unspecified",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2B_event_data_2_offset_07_version_change_type_desc[] =
+  {
+    "Version change type = unspecified",
+    "Version change type = management controller device ID (change in one or more fields from `Get Device ID')",
+    "Version change type = management controller firmware revision",
+    "Version change type = management controller device revision",
+    "Version change type = management controller manufacturer ID",
+    "Version change type = management controller IPMI version",
+    "Version change type = management controller auxiliary firmware ID",
+    "Version change type = management controller firmware boot block",
+    "Version change type = other management controller firmware",
+    "Version change type = system firmware (EFI/BIOS) change",
+    "Version change type = SMBIOS change",
+    "Version change type = operating system change",
+    "Version change type = operating system loader change",
+    "Version change type = service or diagnostic partition change",
+    "Version change type = management software agent change",
+    "Version change type = management software application change",
+    "Version change type = management software middleware change",
+    "Version change type = programmable hardware change (e.g. FPGA)",
+    "Version change type = board/FRU module change (change of a module plugged into associated entity)",
+    "Version change type = board/FRU component change (addition or removal of a replaceable component on the board/FRU that is not tracked as a FRU)",
+    "Version change type = board/FRU replaced with equivalent version",
+    "Version change type = board/FRU replaced with newer version",
+    "Version change type = board/FRU replaced with older version",
+    "Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2C_event_data_2_offset_07_cause_of_state_change_desc[] =
+  {
+    "Cause of state change = Normal State Change",
+    "Cause of state change = Change Commanded by software external to FRU",
+    "Cause of state change = State Change due to operator changing a Handle latch",
+    "Cause of state change = State Change due to operator pressing the hotswap push button",
+    "Cause of state change = State Change due to FRU programmatic action",
+    "Cause of state change = Communication Lost",
+    "Cause of state change = Communication Lost due to local failure",
+    "Cause of state change = State Change due to unexpected extraction",
+    "Cause of state change = State Change due to operator intervention/update",
+    "Cause of state change = Unable to compute IPMB address",
+    "Cause of state change = Unexpected Deactivation",
+    "reserved",
+    "reserved",
+    "reserved",
+    "reserved",
+    "Cause of state change = State Change, Cause Unknown",
+    NULL
+  };
+
+/* 
+ * Sensor Type Strings for Event Data 3
+ */
+
+const char *const ipmi_sensor_type_code_08_event_data_3_offset_06_error_type_desc[] = 
+  {
+    "Vendor mismatch",
+    "Revision mismatch",
+    "Processor missing or unexpected/unsupported condition",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_19_event_data_3_offset_00_desc[] =
+  {
+    "Power state at time of request = S0/G0 \"working\"",
+    "Power state at time of request = S1 \"sleeping with system h/w & processor context maintained\"",
+    "Power state at time of request = S2 \"sleeping, processor context lost\"",
+    "Power state at time of request = S3 \"sleeping, processor & h/w context lost, memory retained.\"",
+    "Power state at time of request = S4 \"non-volatile sleep/suspend-to disk\"",
+    "Power state at time of request = S5/G2 \"soft-off\"",
+    "Power state at time of request = S4/S5 soft-off, particular S4/S5 state cannot be determined",
+    "Power state at time of request = G3/Mechanical Off",
+    "Power state at time of request = Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)",
+    "Power state at time of request = G1 sleeping (S1-S4 state cannot be determined)",
+    "Power state at time of request = S5 entered by override",
+    "Power state at time of request = Legacy ON state",
+    "Power state at time of request = Legacy OFF state",
+    "Power state at time of request = unknown",
+    NULL
+  };
+
+const char *const ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[] =
+  {
+    "Session deactivatation cause unspecified. This value is also used for Session Activated events",
+    "Session deactivated by Close Session command",
+    "Session deactivated by timeout",
+    "Session deactivated by configuration change",
     NULL
   };
 
@@ -857,96 +1142,14 @@ get_0F_event_data2_message (int offset, uint8_t event_data)
   switch (offset)
     {
     case 0x00:
-      switch (event_data)
-	{
-	case 0x00:
-	  return strdup ("Unspecified");
-	case 0x01:
-	  return strdup ("No system memory is physically installed in the system");
-	case 0x02:
-	  return strdup ("No usable system memory, all installed memory has experienced an unrecoverable failure");
-	case 0x03:
-	  return strdup ("Unrecoverable hard-disk/ATAPI/IDE device failure");
-	case 0x04:
-	  return strdup ("Unrecoverable system-board failure");
-	case 0x05:
-	  return strdup ("Unrecoverable diskette subsystem failure");
-	case 0x06: 
-	  return strdup ("Unrecoverable hard-disk controller failure");
-	case 0x07: 
-	  return strdup ("Unrecoverable PS/2 or USB keyboard failure");
-	case 0x08: 
-	  return strdup ("Removable boot media not found");
-	case 0x09: 
-	  return strdup ("Unrecoverable video controller failure");
-	case 0x0A: 
-	  return strdup ("No video device detected");
-	case 0x0B: 
-	  return strdup ("Firmware (BIOS) ROM corruption detected");
-	case 0x0C: 
-	  return strdup ("CPU voltage mismatch (processors that share same supply have mismatched voltage requirements)");
-	case 0x0D: 
-	  return strdup ("CPU speed matching failure");
-	default:
-	  return NULL;
-	}
+      if (event_data <= 0x0D)
+        return strdup(ipmi_sensor_type_code_0F_event_data_2_offset_00_desc[event_data]);
+      return NULL;
     case 0x01:
     case 0x02:
-      switch (event_data)
-	{
-	case 0x00:
-	  return strdup ("Unspecified");
-	case 0x01:
-	  return strdup ("Memory initialization");
-	case 0x02:
-	  return strdup ("Hard-disk initialization");
-	case 0x03:
-	  return strdup ("Secondary processor(s) initialization");
-	case 0x04:
-	  return strdup ("User authentication");
-	case 0x05:
-	  return strdup ("User-initiated system setup");
-	case 0x06:
-	  return strdup ("USB resource configuration");
-	case 0x07:
-	  return strdup ("PCI resource configuration");
-	case 0x08:
-	  return strdup ("Option ROM initialization");
-	case 0x09:
-	  return strdup ("Video initialization");
-	case 0x0A:
-	  return strdup ("Cache initialization");
-	case 0x0B:
-	  return strdup ("SM Bus initialization");
-	case 0x0C:
-	  return strdup ("Keyboard controller initialization");
-	case 0x0D:
-	  return strdup ("Embedded controller/management controller initialization");
-	case 0x0E:
-	  return strdup ("Docking station attachment");
-	case 0x0F:
-	  return strdup ("Enabling docking station");
-	case 0x10:
-	  return strdup ("Docking station ejection");
-	case 0x11:
-	  return strdup ("Disabling docking station");
-	case 0x12:
-	  return strdup ("Calling operating system wake-up vector");
-	case 0x13:
-	  return strdup ("Starting operating system boot process, e.g. calling Int 19h");
-	case 0x14:
-	  return strdup ("Baseboard or motherboard initialization");
-	case 0x16:
-	  return strdup ("Floppy initialization");
-	case 0x17:
-	  return strdup ("Keyboard test");
-	case 0x18:
-	  return strdup ("Pointing device test");
-	case 0x19:
-	  return strdup ("Primary processor initialization");
-	default:
-	  return NULL;
-	}
+      if (event_data <= 0x19)
+        return strdup(ipmi_sensor_type_code_0F_event_data_2_offset_01_desc[event_data]);
+      return NULL;
     }
   
   return NULL;
@@ -999,40 +1202,11 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_entry_action", &val);
 	log_entry_action = val;
 	
-	switch (log_type)
-	  {
-	  case 0x00:
-	    str1 = strdupa ("Log Type = MCA log");
-	    break;
-	  case 0x01:
-	    str1 = strdupa ("Log Type = OEM1");
-	    break;
-	  case 0x02:
-	    str1 = strdupa ("Log Type = OEM2");
-	    break;
-	  }
-	
-	switch (log_entry_action)
-	  {
-	  case 0x00:
-	    str2 = strdupa ("Log entry action = entry added");
-	    break;
-	  case 0x01:
-	    str2 = strdupa ("Log entry action = entry added because event did not be map to standard IPMI event");
-	    break;
-	  case 0x02:
-	    str2 = strdupa ("Log entry action = entry added along with one or more corresponding SEL entries");
-	    break;
-	  case 0x03:
-	    str2 = strdupa ("Log entry action = log cleared");
-	    break;
-	  case 0x04:
-	    str2 = strdupa ("Log entry action = log disabled");
-	    break;
-	  case 0x05:
-	    str2 = strdupa ("Log entry action = log enabled");
-	    break;
-	  }
+        if (log_type <= 0x02)
+          str1 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[log_type]);
+
+        if (log_entry_action <= 0x05)
+          str2 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[log_entry_action]);
 	
 	if (str1 || str2)
 	  {
@@ -1064,7 +1238,8 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	uint8_t diagnostic_interrupt;
 	char *str = NULL;
 	char *tmp_str = NULL;
-	
+	const char *msg = NULL;
+
 	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"alert", &val);
 	alert = val;
 	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_off", &val);
@@ -1081,79 +1256,85 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	if (alert)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[0];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; Alert", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "Alert");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	if (power_off)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[1];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; Power off", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "Power off");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	if (reset)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[2];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; Reset", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "Reset");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	if (power_cycle)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[3];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; Power cycle", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "Power cycle");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	if (oem_action)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[4];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; OEM action", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "OEM action");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	if (diagnostic_interrupt)
 	  {
 	    tmp_str = str;
+            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[5];
 	    if (str)
 	      {
 		str = NULL;
-		asprintf (&str, "%s; Diagnostic interrupt(NMI)", tmp_str);
+		asprintf (&str, "%s; %s", tmp_str, msg);
 		free (tmp_str);
 	      }
 	    else
-	      asprintf (&str, "Diagnostic interrupt");
+	      asprintf (&str, "%s", msg);
 	  }
 	
 	return str;
@@ -1194,35 +1375,8 @@ get_19_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x00)
     {
-      switch (event_data)
-	{
-	case 0x00:
-	  return strdup ("Requested power state = S0/G0 \"working\"");
-	case 0x01:
-	  return strdup ("Requested power state = S1 \"sleeping with system h/w & processor context maintained\"");
-	case 0x02:
-	  return strdup ("Requested power state = S2 \"sleeping, processor context lost\"");
-	case 0x03:
-	  return strdup ("Requested power state = S3 \"sleeping, processor & h/w context lost, memory retained.\"");
-	case 0x04:
-	  return strdup ("Requested power state = S4 \"non-volatile sleep/suspend-to disk\"");
-	case 0x05:
-	  return strdup ("Requested power state = S5/G2 \"soft-off\"");
-	case 0x06:
-	  return strdup ("Requested power state = S4/S5 soft-off, particular S4/S5 state cannot be determined");
-	case 0x07:
-	  return strdup ("Requested power state = G3/Mechanical Off");
-	case 0x08:
-	  return strdup ("Requested power state = Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)");
-	case 0x09:
-	  return strdup ("Requested power state = G1 sleeping (S1-S4 state cannot be determined)");
-	case 0x0A:
-	  return strdup ("Requested power state = S5 entered by override");
-	case 0x0B:
-	  return strdup ("Requested power state = Legacy ON state");
-	case 0x0C:
-	  return strdup ("Requested power state = Legacy OFF state");
-	}
+      if (event_data <= 0x0C)
+        return strdup (ipmi_sensor_type_code_19_event_data_2_offset_00_desc[event_data]);
     }
   
   return NULL;
@@ -1235,7 +1389,7 @@ get_21_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {6, "slot_connector_type"}, 
+	  {7, "slot_connector_type"}, 
 	  {1, "reserved"}, 
 	  {0, ""}
 	};
@@ -1243,27 +1397,8 @@ get_21_event_data2_message (int offset, uint8_t event_data)
       
       fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"slot_connector_type", &val);
       
-      switch (val)
-	{
-	case 0x00:
-	  return strdup ("Slot/Connector Type = PCI");
-	case 0x01:
-	  return strdup ("Slot/Connector Type = Drive Array");
-	case 0x02:
-	  return strdup ("Slot/Connector Type = External Peripheral Connector");
-	case 0x03:
-	  return strdup ("Slot/Connector Type = Docking");
-	case 0x04:
-	  return strdup ("Slot/Connector Type = other standard internal expansion slot");
-	case 0x05:
-	  return strdup ("Slot/Connector Type = slot associated with entity specified by Entity ID for sensor");
-	case 0x06:
-	  return strdup ("Slot/Connector Type = AdvancedTCA");
-	case 0x07:
-	  return strdup ("Slot/Connector Type = DIMM/memory device");
-	case 0x08:
-	  return strdup ("Slot/Connector Type = FAN");
-	}
+      if (val <= 0x08)
+        return strdup(ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[val]);
     }
   
   return NULL;
@@ -1291,45 +1426,12 @@ get_23_event_data2_message (int offset, uint8_t event_data)
       timer_at_expiration = val;
       fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"interrupt_type", &val);
       interrupt_type = val;
-      switch (timer_at_expiration)
-	{
-	case 0x01:
-	  str1 = strdupa ("Timer use at expiration = BIOS FRB2");
-	  break;
-	case 0x02:
-	  str1 = strdupa ("Timer use at expiration = BIOS/POST");
-	  break;
-	case 0x03:
-	  str1 = strdupa ("Timer use at expiration = OS Load");
-	  break;
-	case 0x04:
-	  str1 = strdupa ("Timer use at expiration = SMS/OS");
-	  break;
-	case 0x05:
-	  str1 = strdupa ("Timer use at expiration = OEM");
-	  break;
-	case 0x0F:
-	  str1 = strdupa ("Timer use at expiration = unspecified");
-	  break;
-	}
-      switch (interrupt_type)
-	{
-	case 0x00:
-	  str2 = strdupa ("Interrupt type = none");
-	  break;
-	case 0x01:
-	  str2 = strdupa ("Interrupt type = SMI");
-	  break;
-	case 0x02:
-	  str2 = strdupa ("Interrupt type = NMI");
-	  break;
-	case 0x03:
-	  str2 = strdupa ("Interrupt type = Messaging Interrupt");
-	  break;
-	case 0x0F:
-	  str2 = strdupa ("Interrupt type = unspecified");
-	  break;
-	}
+      
+      if (timer_at_expiration <= 0x0F)
+        str1 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_expiration_desc[timer_at_expiration]);
+
+      if (interrupt_type <= 0x0F)
+        str2 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type_desc[interrupt_type]);
       
       if (str1 || str2)
 	{
@@ -1373,57 +1475,8 @@ get_2B_event_data2_message (int offset, uint8_t event_data)
 {
   if (offset == 0x07)
     {
-      switch (event_data)
-	{
-	case 0x00:
-	  return strdup ("Version change type = unspecified");
-	case 0x01:
-	  return strdup ("Version change type = management controller device ID (change in one or more fields from `Get Device ID')");
-	case 0x02:
-	  return strdup ("Version change type = management controller firmware revision");
-	case 0x03:
-	  return strdup ("Version change type = management controller device revision");
-	case 0x04:
-	  return strdup ("Version change type = management controller manufacturer ID");
-	case 0x05:
-	  return strdup ("Version change type = management controller IPMI version");
-	case 0x06:
-	  return strdup ("Version change type = management controller auxiliary firmware ID");
-	case 0x07:
-	  return strdup ("Version change type = management controller firmware boot block");
-	case 0x08:
-	  return strdup ("Version change type = other management controller firmware");
-	case 0x09:
-	  return strdup ("Version change type = system firmware (EFI/BIOS) change");
-	case 0x0A:
-	  return strdup ("Version change type = SMBIOS change");
-	case 0x0B:
-	  return strdup ("Version change type = operating system change");
-	case 0x0C:
-	  return strdup ("Version change type = operating system loader change");
-	case 0x0D:
-	  return strdup ("Version change type = service or diagnostic partition change");
-	case 0x0E:
-	  return strdup ("Version change type = management software agent change");
-	case 0x0F:
-	  return strdup ("Version change type = management software application change");
-	case 0x10:
-	  return strdup ("Version change type = management software middleware change");
-	case 0x11:
-	  return strdup ("Version change type = programmable hardware change (e.g. FPGA)");
-	case 0x12:
-	  return strdup ("Version change type = board/FRU module change (change of a module plugged into associated entity)");
-	case 0x13:
-	  return strdup ("Version change type = board/FRU component change (addition or removal of a replaceable component on the board/FRU that is not tracked as a FRU)");
-	case 0x14:
-	  return strdup ("Version change type = board/FRU replaced with equivalent version");
-	case 0x15:
-	  return strdup ("Version change type = board/FRU replaced with newer version");
-	case 0x16:
-	  return strdup ("Version change type = board/FRU replaced with older version");
-	case 0x17:
-	  return strdup ("Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)");
-	}
+      if (event_data <= 0x17)
+        return strdup(ipmi_sensor_type_code_2B_event_data_2_offset_07_version_change_type_desc[event_data]);
     }
   
   return NULL;
@@ -1449,45 +1502,14 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
       previous_state_offset = val;
       fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"cause_os_state_change", &val);
       cause_of_state_change = val;
-      switch (cause_of_state_change)
-	{
-	case 0x00: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Normal State Change", previous_state_offset);
-	  return str;
-	case 0x01: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Change Commanded by software external to FRU", previous_state_offset);
-	  return str;
-	case 0x02: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change due to operator changing a Handle latch", previous_state_offset);
-	  return str;
-	case 0x03: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change due to operator pressing the hotswap push button", previous_state_offset);
-	  return str;
-	case 0x04: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change due to FRU programmatic action", previous_state_offset);
-	  return str;
-	case 0x05: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Communication Lost", previous_state_offset);
-	  return str;
-	case 0x06: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Communication Lost due to local failure", previous_state_offset);
-	  return str;
-	case 0x07: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change due to unexpected extraction", previous_state_offset);
-	  return str;
-	case 0x08: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change due to operator intervention/update", previous_state_offset);
-	  return str;
-	case 0x09: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Unable to compute IPMB address", previous_state_offset);
-	  return str;
-	case 0x0A: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = Unexpected Deactivation", previous_state_offset);
-	  return str;
-	case 0x0F: 
-	  asprintf (&str, "Previous state offset value = %d; Cause of state change = State Change, Cause Unknown", previous_state_offset);
-	  return str;
-	}
+
+      if (cause_of_state_change <= 0x0F)
+        {
+          asprintf (&str, "Previous state offset value = %d; %s", 
+                    previous_state_offset, 
+                    ipmi_sensor_type_code_2C_event_data_2_offset_07_cause_of_state_change_desc[cause_of_state_change]);
+          return str;
+        }
     }
   
   return NULL;
@@ -1510,15 +1532,8 @@ get_08_event_data3_message (int offset, uint8_t event_data)
       uint64_t val;
       
       fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_type", &val);
-      switch (val)
-	{
-	case 0x0:
-	  return strdup ("Vendor mismatch");
-	case 0x1:
-	  return strdup ("Revision mismatch");
-	case 0x2:
-	  return strdup ("Processor missing or unexpected/unsupported condition");
-	}
+      if (val <= 0x2)
+        return strdup(ipmi_sensor_type_code_08_event_data_3_offset_06_error_type_desc[val]);
     }
   
   return NULL;
@@ -1588,37 +1603,8 @@ get_19_event_data3_message (int offset, uint8_t event_data)
 {
   if (offset == 0x00)
     {
-      switch (event_data)
-	{
-	case 0x00:
-	  return strdup ("Power state at time of request = S0/G0 \"working\"");
-	case 0x01:
-	  return strdup ("Power state at time of request = S1 \"sleeping with system h/w & processor context maintained\"");
-	case 0x02:
-	  return strdup ("Power state at time of request = S2 \"sleeping, processor context lost\"");
-	case 0x03:
-	  return strdup ("Power state at time of request = S3 \"sleeping, processor & h/w context lost, memory retained.\"");
-	case 0x04:
-	  return strdup ("Power state at time of request = S4 \"non-volatile sleep/suspend-to disk\"");
-	case 0x05:
-	  return strdup ("Power state at time of request = S5/G2 \"soft-off\"");
-	case 0x06:
-	  return strdup ("Power state at time of request = S4/S5 soft-off, particular S4/S5 state cannot be determined");
-	case 0x07:
-	  return strdup ("Power state at time of request = G3/Mechanical Off");
-	case 0x08:
-	  return strdup ("Power state at time of request = Sleeping in an S1, S2, or S3 states (used when particular S1, S2, S3 state cannot be determined)");
-	case 0x09:
-	  return strdup ("Power state at time of request = G1 sleeping (S1-S4 state cannot be determined)");
-	case 0x0A:
-	  return strdup ("Power state at time of request = S5 entered by override");
-	case 0x0B:
-	  return strdup ("Power state at time of request = Legacy ON state");
-	case 0x0C:
-	  return strdup ("Power state at time of request = Legacy OFF state");
-	case 0x0D:
-	  return strdup ("Power state at time of request = unknown");
-	}
+      if (event_data <= 0x0D)
+        return strdup(ipmi_sensor_type_code_19_event_data_3_offset_00_desc[event_data]);
     }
   
   return NULL;
@@ -1659,21 +1645,11 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
       fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"deactivation_cause", &val);
       deactivation_cause = val;
       
-      switch (deactivation_cause)
-	{
-	case 0x00:
-	  asprintf (&str, "Channel number that session was activated/deactivated = %d; Session deactivatation cause unspecified. This value is also used for Session Activated events", channel_number);
-	  return str;
-	case 0x01:
-	  asprintf (&str, "Channel number that session was activated/deactivated = %d; Session deactivated by Close Session command", channel_number);
-	  return str;
-	case 0x02:
-	  asprintf (&str, "Channel number that session was activated/deactivated = %d; Session deactivated by timeout", channel_number);
-	  return str;
-	case 0x03:
-	  asprintf (&str, "Channel number that session was activated/deactivated = %d; Session deactivated by configuration change", channel_number);
-	  return str;
-	}
+      if (deactivation_cause <= 0x03)
+        {
+          asprintf (&str, "Channel number that session was activated/deactivated = %d; %s", channel_number, ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[deactivation_cause]);
+          return str;
+        }
     }
   
   return NULL;
