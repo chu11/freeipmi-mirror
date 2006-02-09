@@ -70,7 +70,9 @@ fiid_template_t tmpl_cmd_get_chassis_status_rs =
     {1, "misc_chassis.front_panel_lockout_active"},
     {1, "misc_chassis.drive_fault"},
     {1, "misc_chassis.cooling_fan_fault"},
-    {4, "misc_chassis.reserved"},
+    {2, "misc_chassis.chassis_identify_state"},
+    {1, "misc_chassis.chassis_identify_command_and_state_info_supported"},
+    {1, "misc_chassis.reserved"},
     {0, ""}
   };
 

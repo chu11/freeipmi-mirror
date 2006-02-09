@@ -19,8 +19,11 @@
 
 	* libfreeipmi/src/ipmi-sensor-event-messages.c
 	(ipmi_get_event_data3_message, ipmi_get_event_data2_message,
-	ipmi_get_event_message):
-	
+	ipmi_get_event_message): Add new functions.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Support new options in
+	tmpl_cmd_get_chassis_status_rs from ipmi 2.0 errata.
+
 2006-02-07  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
