@@ -40,7 +40,9 @@
 	libfreeipmi/src/ipmi-serial-cmds-udm.c,
 	libfreeipmi/src/ipmi-serial-cmds-udm.h,
 	libfreeipmi/src/ipmi-sol-cmds-udm.c,
-	libfreeipmi/src/ipmi-sol-cmds-udm.h: New files.
+	libfreeipmi/src/ipmi-sol-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-interface-udm.c,
+	libfreeipmi/src/ipmi-lan-interface-udm.h: New files.
 	
 	* libfreeipmi/src/ipmi-chassis-cmds.c,
 	libfreeipmi/src/ipmi-chassis-cmds.h,
@@ -58,8 +60,13 @@
 	libfreeipmi/src/ipmi-serial-cmds.c,
 	libfreeipmi/src/ipmi-serial-cmds.h,
 	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h:
-	Split off UDM code into specific UDM files.
+	libfreeipmi/src/ipmi-lan-interface.c,
+	libfreeipmi/src/ipmi-lan-interface.h Split off UDM code into
+	specific UDM files.
 
+	* libfreeipmi/src/ipmi-udm.h, libfreeipmi/src/ipmi-udm.c: Rename
+	ipmi-interface.h and ipmi-interface.c appropriately.
+	
 	* libfreeipmi/src/ipmi-serial-cmds.h,
 	libfreeipmi/src/ipmi-lan-cmds.h: Add forgotten templates.
 
@@ -67,7 +74,9 @@
 	prototypes.
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.h,
-	libfreeipmi/src/ipmi-msg-support-cmds.c: Remove old functions.
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-lan-interface.c: Remove old functions.
 
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 

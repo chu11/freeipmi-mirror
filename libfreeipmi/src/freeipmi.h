@@ -205,10 +205,11 @@ extern "C" {
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"
 #include "ipmi-semaphores.h"
-#include "ipmi-interface.h"
+#include "ipmi-udm.h"
 #include "ipmi-sessions.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
+#include "ipmi-lan-interface-udm.h"
 #include "ipmi-kcs-interface.h"
 #include "ipmi-smic-interface.h"
 #include "ipmi-ssif-interface.h"
@@ -320,10 +321,10 @@ extern char *__progname;
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-semaphores.h>
-#include <freeipmi/ipmi-interface.h>
+#include <freeipmi/ipmi-udm.h>
 #include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
-#include <freeipmi/ipmi-lan-interface.h>
+#include <freeipmi/ipmi-lan-interface-udm.h>
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-ssif-interface.h>

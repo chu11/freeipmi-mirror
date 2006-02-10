@@ -1,5 +1,5 @@
 /* 
-   ipmi-interface.c: IPMI Unified Driver Model (API interface for all
+   ipmi-udm.c: IPMI Unified Driver Model (API interface for all
    IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team

@@ -1,5 +1,5 @@
 /* 
-   ipmi-interface.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
+   ipmi-udm.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_INTERFACE_H
-#define _IPMI_INTERFACE_H
+#ifndef _IPMI_UDM_H
+#define _IPMI_UDM_H
 
 /* XXX: need to remove */
 #define IPMI_INTERFACE_MAX_USERNAME_LEN     16
@@ -158,4 +158,4 @@ int ipmi_cmd_raw (ipmi_device_t *dev,
 		  uint8_t *out, 
 		  size_t *out_len);
 
-#endif /* _IPMI_INTERFACE_H */
+#endif /* _IPMI_UDM_H */
