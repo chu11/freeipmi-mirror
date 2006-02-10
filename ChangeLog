@@ -1,3 +1,11 @@
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* doc/examples/ipmi-lan-test.c: removed.
+
+	* doc/examples/Makefile.example: updated.
+
+	* doc/examples/udm-test.c: updated.
+
 2006-02-09  Albert Chu  <chu11@llnl.gov>
 
 	* configure.ac: Increment libfreeipmi version with release coming
