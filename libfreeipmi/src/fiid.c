@@ -2160,7 +2160,7 @@ fiid_iterator_errnum(fiid_iterator_t iter)
 {
   if (!iter)
     return (FIID_ERR_ITERATOR_NULL);
-  else if (iter->magic == FIID_ITERATOR_MAGIC)
+  else if (iter->magic != FIID_ITERATOR_MAGIC)
     return (FIID_ERR_ITERATOR_INVALID);
   else
     return (iter->errnum);

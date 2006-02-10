@@ -22,6 +22,11 @@
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
+2006-02-10  Albert Chu <chu11@llnl.gov>	
+
+	* libfreeipmi/src/fiid.c (fiid_obj_errnum, fiid_iterator_errnum):
+	Fix bug.
+	
 2006-02-09  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: All field
