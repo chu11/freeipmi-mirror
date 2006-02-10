@@ -83,6 +83,14 @@
 	ipmi_get_physical_mem_data): Move from ipmi-utils.h and
 	ipmi-utils.c into acpi-spmi-locate.c.
 
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(fiid_obj_dump_setup, fiid_obj_dump_perror, fiid_obj_dump,
+	fiid_obj_dump_lan, fiid_obj_dump_rmcp): Rename functions to
+	ipmi_dump_setup, ipmi_obj_dump_perror, ipmi_obj_dump,
+	ipmi_dump_lan_packet, and ipmi_dump_rmcp_packet respectively.
+
+	* Support function re-naming throughout code.
+
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 
 	* doc/examples/Makefile.am: fix for bug #15689, to build non-inst

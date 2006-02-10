@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.39 2006-02-05 20:36:30 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.39.2.1 2006-02-10 18:24:32 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -367,8 +367,8 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
@@ -409,8 +409,8 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 

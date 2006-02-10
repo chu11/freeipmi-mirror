@@ -146,7 +146,7 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 }
 
 int8_t
-fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
+ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
 {
   if (_set_prefix_str(prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     return (-1);
@@ -158,7 +158,7 @@ fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t 
 }
 
 int8_t
-fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl)
+ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl)
 {
   int i;
   uint64_t val=0;
@@ -170,7 +170,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
       return (-1);
     }
   
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);
 
   for (i=0; tmpl[i].len != 0; i++)
@@ -203,7 +203,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 }
 
 int8_t
-fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
+ipmi_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
 {
   char *hdr = 
     "================================================================\n"
@@ -212,11 +212,11 @@ fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
   char *trlr = 
     "================================================================";
 
-  return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj, tmpl);
+  return ipmi_obj_dump_perror(fd, NULL, hdr, trlr, obj, tmpl);
 }
 
 int8_t
-fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_msg_trlr_len;
@@ -247,7 +247,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       return (-1);
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);
 
   /* Dump rmcp header */
@@ -257,10 +257,10 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
   indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
 
   if (pkt_len <= indx)
@@ -274,7 +274,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
     }
   else 
     {
@@ -294,10 +294,10 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
           ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
           memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
           memcpy(buf, pkt + indx, (pkt_len - indx)); 
-          ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
+          ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
         }
       else 
-        ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, pkt + indx, tmpl_session) != -1);
+        ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, pkt + indx, tmpl_session) != -1);
     }
   indx += fiid_obj_len_bytes (tmpl_session);
 
@@ -311,10 +311,10 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       ERR_EXIT(fiid_obj_len_bytes(tmpl_msg_hdr) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, buf, tmpl_msg_hdr) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, buf, tmpl_msg_hdr) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, pkt + indx, tmpl_msg_hdr) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, pkt + indx, tmpl_msg_hdr) != -1);
   indx += fiid_obj_len_bytes (tmpl_msg_hdr);
 
   if (pkt_len <= indx)
@@ -334,10 +334,10 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, obj_cmd_len); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, buf, tmpl_cmd) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, buf, tmpl_cmd) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, pkt + indx, tmpl_cmd) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, pkt + indx, tmpl_cmd) != -1);
   indx += obj_cmd_len;
 
   if (pkt_len <= indx)
@@ -350,10 +350,10 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       ERR_EXIT(fiid_obj_len_bytes(tmpl_lan_msg_trlr) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, buf, tmpl_lan_msg_trlr) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, buf, tmpl_lan_msg_trlr) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, pkt + indx, tmpl_lan_msg_trlr) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, pkt + indx, tmpl_lan_msg_trlr) != -1);
   indx += obj_msg_trlr_len;
 
   if (pkt_len <= indx)
@@ -371,7 +371,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 }
 
 int8_t 
-fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
+ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
@@ -392,7 +392,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
       return (-1);
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);
 
   /* Dump rmcp header */
@@ -402,10 +402,10 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
       ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
   indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
 
   if (pkt_len <= indx)
@@ -418,10 +418,10 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
       ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
       memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
       memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, buf, tmpl_cmd) != -1);
+      ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, buf, tmpl_cmd) != -1);
     }
   else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, pkt + indx, tmpl_cmd) != -1);
+    ERR_OUT(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, pkt + indx, tmpl_cmd) != -1);
   indx += fiid_obj_len_bytes (tmpl_cmd);
 
   if (pkt_len <= indx)
