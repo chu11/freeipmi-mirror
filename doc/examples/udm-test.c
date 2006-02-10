@@ -17,15 +17,12 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <error.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <freeipmi/freeipmi.h>
+#if HAVE_CONFIG_H
+# include "config.h"
+# include "freeipmi.h"
+#else 
+# include <freeipmi/freeipmi.h>
+#endif
 
 int 
 main (int argc, char **argv)

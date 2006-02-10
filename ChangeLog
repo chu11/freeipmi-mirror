@@ -1,5 +1,12 @@
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 
+	* doc/examples/Makefile.am: fix for bug #15689, to build non-inst
+	examples.
+
+	* doc/examples/udm-test.c: updated.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
 	* freeipmi.spec.in: updated.
 
 	* doc/examples/Makefile.am: updated.
