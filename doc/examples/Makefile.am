@@ -1,5 +1,5 @@
 # libfreeipmi Examples
-LIBFREEIPMI_EXAMPLES = udm-test.c ipmi-lan-test.c
+LIBFREEIPMI_EXAMPLES = udm-test.c
 
 docdir   = $(datadir)/doc/$(PACKAGE)
 Examplesdir     = $(docdir)/examples
