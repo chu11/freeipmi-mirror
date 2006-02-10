@@ -50,6 +50,56 @@ fiid_template_t tmpl_set_lan_conf_param_gratuitous_arp_interval_rq =
     {0, ""}
   };
 
+fiid_template_t tmpl_set_lan_conf_param_auth_type_enables_rq =
+  {
+    {8, "cmd"}, 
+    {4, "channel_number"}, 
+    {4, "reserved1"}, 
+    {8, "parameter_selector"}, 
+    /* for Authentication type enables */
+    /* byte 1 */
+    {1, "max_privilege_auth_type_callback_level.none"},
+    {1, "max_privilege_auth_type_callback_level.md2"},
+    {1, "max_privilege_auth_type_callback_level.md5"},
+    {1, "max_privilege_auth_type_callback_level.reserved1"},
+    {1, "max_privilege_auth_type_callback_level.straight_password"},
+    {1, "max_privilege_auth_type_callback_level.oem_proprietary"},
+    {2, "max_privilege_auth_type_callback_level.reserved2"}, 
+    /* byte 2 */
+    {1, "max_privilege_auth_type_user_level.none"},
+    {1, "max_privilege_auth_type_user_level.md2"},
+    {1, "max_privilege_auth_type_user_level.md5"},
+    {1, "max_privilege_auth_type_user_level.reserved1"},
+    {1, "max_privilege_auth_type_user_level.straight_password"},
+    {1, "max_privilege_auth_type_user_level.oem_proprietary"},
+    {2, "max_privilege_auth_type_user_level.reserved2"}, 
+    /* byte 3 */
+    {1, "max_privilege_auth_type_operator_level.none"},
+    {1, "max_privilege_auth_type_operator_level.md2"},
+    {1, "max_privilege_auth_type_operator_level.md5"},
+    {1, "max_privilege_auth_type_operator_level.reserved1"},
+    {1, "max_privilege_auth_type_operator_level.straight_password"},
+    {1, "max_privilege_auth_type_operator_level.oem_proprietary"},
+    {2, "max_privilege_auth_type_operator_level.reserved2"}, 
+    /* byte 4 */
+    {1, "max_privilege_auth_type_admin_level.none"},
+    {1, "max_privilege_auth_type_admin_level.md2"},
+    {1, "max_privilege_auth_type_admin_level.md5"},
+    {1, "max_privilege_auth_type_admin_level.reserved1"},
+    {1, "max_privilege_auth_type_admin_level.straight_password"},
+    {1, "max_privilege_auth_type_admin_level.oem_proprietary"},
+    {2, "max_privilege_auth_type_admin_level.reserved2"}, 
+    /* byte 5 */
+    {1, "max_privilege_auth_type_oem_level.none"},
+    {1, "max_privilege_auth_type_oem_level.md2"},
+    {1, "max_privilege_auth_type_oem_level.md5"},
+    {1, "max_privilege_auth_type_oem_level.reserved1"},
+    {1, "max_privilege_auth_type_oem_level.straight_password"},
+    {1, "max_privilege_auth_type_oem_level.oem_proprietary"},
+    {2, "max_privilege_auth_type_oem_level.reserved2"}, 
+    {0, ""}
+  };
+
 fiid_template_t tmpl_set_lan_conf_param_ip_addr_source_rq =
   {
     {8, "cmd"},
