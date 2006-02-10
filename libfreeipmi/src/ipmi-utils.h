@@ -55,11 +55,6 @@ int8_t ipmi_chksum (uint8_t *buf, uint64_t len);
 int8_t ipmi_chksum_test (uint8_t *buf, uint64_t len);
 int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
 int ipmi_open_free_udp_port (void);
-int ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len, void **virtual_addr, void **mapped_addr, size_t *mapped_addr_len);
-int ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len);
-int ipmi_get_physical_mem_data (uint64_t physical_address, size_t length, uint8_t *data);
-
-
 
 #ifdef __cplusplus
 }
