@@ -1,5 +1,5 @@
 /*
-   ipmi-dev-global-cmds.h - IPMI Device Global Commands
+   ipmi-sol-cmds-udm.h - IPMI UDM SOL Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,32 +18,33 @@
    Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
 */
 
-#ifndef _IPMI_DEV_GLOBAL_CMDS_H
-#define	_IPMI_DEV_GLOBAL_CMDS_H
+#ifndef _IPMI_SOL_CMDS_UDM_H
+#define _IPMI_SOL_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define IPMI_DEV_ID_UNSPECIFIED     0x00
-#define IPMI_MANF_ID_UNSPECIFIED    0x000000
-#define IPMI_MANF_ID_RESERVED       0x0FFFFF
-#define IPMI_MANF_ID_INTEL          0x157
-
-#define IPMI_PROD_ID_SR870BN4       0x100
-#define IPMI_PROD_ID_CDC6440        0x100
-
-#define IPMI_PROD_ID_SE7501WV2      0x1B
-#define IPMI_PROD_ID_CDC1620        0x1B
-
-extern fiid_template_t tmpl_cmd_get_dev_id_rq;
-extern fiid_template_t tmpl_cmd_get_dev_id_rs;
-extern fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs;
-
-int8_t fill_cmd_get_dev_id (fiid_obj_t obj_data_rq);
+int8_t ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
+					      uint8_t channel_number, 
+					      uint8_t sol_payload, 
+					      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
+				      uint8_t channel_number, 
+				      fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
+				       uint8_t channel_number, 
+				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
+					  uint8_t channel_number,
+					  uint8_t parameter_type,
+					  uint8_t set_selector,
+					  uint8_t block_selector,
+					  fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-dev-global-cmds.h */
+
+#endif

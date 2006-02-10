@@ -30,11 +30,11 @@
 
 #include "freeipmi.h"
 
-ipmi_chksum_t
+int8_t
 ipmi_chksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
-  register ipmi_chksum_t chksum = 0;
+  register int8_t chksum = 0;
  
   if (buf == NULL || len == 0)
     return (chksum);
@@ -48,8 +48,8 @@ ipmi_chksum (uint8_t *buf, uint64_t len)
 int8_t
 ipmi_chksum_test (uint8_t *buf, uint64_t len) 
 {
-  ipmi_chksum_t chksum_val;
-  ipmi_chksum_t chksum_calc;
+  int8_t chksum_val;
+  int8_t chksum_calc;
 
   if (buf == NULL || len == 0)
     {

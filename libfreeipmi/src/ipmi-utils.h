@@ -51,8 +51,7 @@ extern "C" {
 
 #define IPMI_COMP_CODE(obj_cmd)  obj_cmd[1]
 
-typedef  int8_t ipmi_chksum_t;
-ipmi_chksum_t ipmi_chksum (uint8_t *buf, uint64_t len);
+int8_t ipmi_chksum (uint8_t *buf, uint64_t len);
 int8_t ipmi_chksum_test (uint8_t *buf, uint64_t len);
 int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
 int ipmi_open_free_udp_port (void);

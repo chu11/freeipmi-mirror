@@ -24,6 +24,7 @@ libfreeipmi:
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
   * sensor-event-messages: get_28_event_data3_messages
+  * audit serial/lan/pef auditting      
   
 fish:
 -----

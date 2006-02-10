@@ -640,7 +640,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   uint8_t *msg_data_ptr = NULL;
   uint32_t msg_data_count = 0;
   uint32_t obj_len;
-  ipmi_chksum_t chksum;
+  int8_t chksum;
 
   if (!(obj_hdr_rmcp && obj_hdr_session && tmpl_hdr_session && 
         obj_msg_hdr && obj_cmd && tmpl_cmd && pkt))

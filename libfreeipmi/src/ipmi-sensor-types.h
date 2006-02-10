@@ -191,67 +191,11 @@ extern const char *const ipmi_oem_sensor_type;
 extern const char *const ipmi_sensor_units[];
 extern const char *const ipmi_sensor_units_short[];
 
-typedef struct ipmi_discrete_desc
-{
-  char *message;
-  bool normal_code;
-} ipmi_discrete_desc_t ;
-
-
-extern const char *const ipmi_sensor_type_threshold_desc[];
-
-extern const ipmi_discrete_desc_t ipmi_sensor_type_dummy_desc[]; 
-extern const ipmi_discrete_desc_t ipmi_sensor_type_physical_security_desc[]; 
-extern const ipmi_discrete_desc_t ipmi_sersor_type_platform_security_violation_attempt[]; 
-extern const ipmi_discrete_desc_t ipmi_sensor_type_processor[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_power_supply[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_power_unit[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_memory[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_system_firmware_progress[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_event_logging_disabled[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_watchdog_1[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_system_event[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_critical_interrupt[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_button_switch[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_chip_set[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_system_boot_initiated[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_boot_error[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_os_boot[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_os_critical_stop[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_slot_connector[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_system_acpi_power_state[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_watchdog_2[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_platform_alert[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_entity_presence[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_lan[]; 
-extern const ipmi_discrete_desc_t ipmi_sensor_type_management_subsystem_health[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_battery[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_session_audit[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_version_change[];
-extern const ipmi_discrete_desc_t ipmi_sensor_type_fru_state[];
-
-extern const struct ipmi_discrete_desc *const ipmi_sensor_type_desc_ptr[];
-
-extern const char *const ipmi_event_reading_type_code_dummy_desc[];
-extern const char *const ipmi_event_reading_type_code_2_desc[];
-extern const char *const ipmi_event_reading_type_code_3_desc[];
-extern const char *const ipmi_event_reading_type_code_6_desc[];
-extern const char *const ipmi_event_reading_type_code_8_desc[];
-extern const char *const ipmi_event_reading_type_code_11_desc[];
-
-extern const char *const *const ipmi_event_reading_type_code_desc_ptr[];
-
-
 int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 int ipmi_is_oem_reserved_sensor_type (int sensor_type);
 
 const char *ipmi_get_sensor_group (int sensor_type);
-int ipmi_sensor_threshold_health_check (double sensor_reading, 
-					double normal_min, 
-					double normal_max, 
-					fiid_obj_t data_rs);
-int ipmi_sensor_discrete_health_check (int sensor_type, fiid_obj_t data_rs);
 
 #ifdef __cplusplus
 }

@@ -50,24 +50,6 @@ int8_t fill_get_sol_conf_param (uint8_t parameter_selector,
                                 uint8_t block_selector,
                                 fiid_obj_t obj_data_rq);
 
-int8_t ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
-					      uint8_t channel_number, 
-					      uint8_t sol_payload, 
-					      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
-				      uint8_t channel_number, 
-				      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
-				       uint8_t channel_number, 
-				       fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
-					  uint8_t channel_number,
-					  uint8_t parameter_type,
-					  uint8_t set_selector,
-					  uint8_t block_selector,
-					  fiid_obj_t obj_cmd_rs);
-
-
 #ifdef __cplusplus
 }
 #endif

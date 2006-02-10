@@ -97,26 +97,3 @@ fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
   FIID_OBJ_SET (obj_data_rq, tmpl_cmd_get_dev_id_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEV_ID);
   return (0);
 }
-
-int8_t 
-ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_dev_id_rq);
-  ERR (fill_cmd_get_dev_id (obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_APP_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_cmd_get_dev_id_rq, 
-		 obj_cmd_rs, 
-		 tmpl_cmd_get_dev_id_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
-}
-

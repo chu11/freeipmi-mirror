@@ -22,38 +22,10 @@
 #ifndef _IPMI_INTERFACE_H
 #define _IPMI_INTERFACE_H
 
-#define IPMI_SESSION_MAX_USERNAME_LEN     16
-#define IPMI_SESSION_CHALLENGE_STR_LEN    16
-#define IPMI_SESSION_MAX_AUTH_CODE_LEN    16
-
-#define IPMI_SESSION_AUTH_TYPE_NONE                0x00
-#define IPMI_SESSION_AUTH_TYPE_MD2                 0x01
-#define IPMI_SESSION_AUTH_TYPE_MD5                 0x02
-#define IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
-#define IPMI_SESSION_AUTH_TYPE_OEM_PROP            0x05
-
-#define IPMI_SESSION_AUTH_TYPE_VALID(__auth_type) \
-        (((__auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
-
-#define IPMI_PRIV_LEVEL_RESERVED     0x00
-#define IPMI_PRIV_LEVEL_CALLBACK     0x01
-#define IPMI_PRIV_LEVEL_USER         0x02
-#define IPMI_PRIV_LEVEL_OPERATOR     0x03
-#define IPMI_PRIV_LEVEL_ADMIN        0x04
-#define IPMI_PRIV_LEVEL_OEM          0x05
-#define IPMI_PRIV_LEVEL_NO_ACCESS    0x0F
-
-#define IPMI_PRIV_LEVEL_VALID(__priv_level) \
-        (((__priv_level) == IPMI_PRIV_LEVEL_RESERVED \
-          || (__priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
-          || (__priv_level) == IPMI_PRIV_LEVEL_USER \
-          || (__priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
-          || (__priv_level) == IPMI_PRIV_LEVEL_ADMIN \
-          || (__priv_level) == IPMI_PRIV_LEVEL_OEM) ? 1 : 0)
+/* XXX: need to remove */
+#define IPMI_INTERFACE_MAX_USERNAME_LEN     16
+#define IPMI_INTERFACE_CHALLENGE_STR_LEN    16
+#define IPMI_INTERFACE_MAX_AUTH_CODE_LEN    16
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3
@@ -119,13 +91,13 @@ struct ipmi_device
       unsigned int       remote_host_len;
       
       uint8_t           auth_type;
-      uint8_t           challenge_string[IPMI_SESSION_CHALLENGE_STR_LEN];
+      uint8_t           challenge_string[IPMI_INTERFACE_CHALLENGE_STR_LEN];
       uint32_t          session_id;
       uint32_t          session_seq_num;
       uint8_t           rq_seq;
       
-      uint8_t           username[IPMI_SESSION_MAX_USERNAME_LEN];
-      uint8_t           password[IPMI_SESSION_MAX_AUTH_CODE_LEN];
+      uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];
+      uint8_t           password[IPMI_INTERFACE_MAX_AUTH_CODE_LEN];
       uint8_t           priv_level;
       
       struct 

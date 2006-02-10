@@ -1,3 +1,71 @@
+2006-02-XX  Albert Chu  <chu11@llnl.gov>
+
+	* Bring in cleanup changes from al_libfreeipmi_cleanup_branch.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c: Remove old unused arrays.
+
+	* libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_sensor_threshold_health_check,
+	ipmi_sensor_discrete_health_check): Removed functions.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c,
+	libfreeipmi/src/ipmi-lan-interface.c: Replace ipmi_chksum_t
+	definition with int8_t.
+
+	* libfreeipmi/src/rmcp.c (ipmi_rmcp_ping), fish/src/ipmi-wrapper.c
+	(ipmi_rmcp_ping): Moved function from libfreeipmi into fish
+	because it is really a convenience function.
+
+	* libfreeipmi/src/ipmi-interface.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.h: Move #defines from
+	ipmi-interface.h to ipmi-msg-support-cmds.h.
+
+	* libfreeipmi/src/ipmi-chassis-cmds-udm.c,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.h,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.c,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-cmds-udm.c,
+	libfreeipmi/src/ipmi-lan-cmds-udm.h,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.c,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.h,
+	libfreeipmi/src/ipmi-pef-cmds-udm.c,
+	libfreeipmi/src/ipmi-pef-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.h,
+	libfreeipmi/src/ipmi-sel-cmds-udm.c,
+	libfreeipmi/src/ipmi-sel-cmds-udm.h,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.c,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.h,
+	libfreeipmi/src/ipmi-serial-cmds-udm.c,
+	libfreeipmi/src/ipmi-serial-cmds-udm.h,
+	libfreeipmi/src/ipmi-sol-cmds-udm.c,
+	libfreeipmi/src/ipmi-sol-cmds-udm.h: New files.
+	
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-dev-global-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c, libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.h,
+	libfreeipmi/src/ipmi-sel-cmds.c, libfreeipmi/src/ipmi-sel-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h:
+	Split off UDM code into specific UDM files.
+
+	* libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.h: Add forgotten templates.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Add forgotten function
+	prototypes.
+
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 
 	* doc/examples/Makefile.am: fix for bug #15689, to build non-inst
