@@ -164,23 +164,11 @@ extern fiid_template_t tmpl_get_channel_access_rs;
 int8_t fill_cmd_get_channel_auth_caps (uint8_t channel_num,
                                        uint8_t max_priv_level, 
                                        fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_channel_auth_caps (int sockfd, 
-				       struct sockaddr *hostaddr, 
-				       size_t hostaddr_len, 
-				       uint8_t rq_seq, 
-				       fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_get_session_challenge (uint8_t auth_type, 
 				       char *username, 
 				       uint32_t username_len, 
 				       fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_session_challenge (int sockfd, 
-				       struct sockaddr *hostaddr, 
-				       size_t hostaddr_len, 
-				       uint8_t auth_type, 
-				       char *username, 
-				       uint8_t rq_seq, 
-				       fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_activate_session (uint8_t auth_type, 
 				  uint8_t max_priv_level, 
@@ -188,61 +176,12 @@ int8_t fill_cmd_activate_session (uint8_t auth_type,
 				  uint32_t challenge_str_len, 
 				  uint32_t initial_outbound_seq_num, 
 				  fiid_obj_t obj_cmd);
-int8_t ipmi_lan_activate_session (int sockfd, 
-				  struct sockaddr *hostaddr, 
-				  size_t hostaddr_len, 
-				  uint8_t auth_type, 
-				  uint32_t tmp_session_id, 
-				  uint8_t *auth_code_data, 
-				  uint32_t auth_code_data_len, 
-				  uint8_t max_priv_level, 
-				  uint8_t *challenge_str, 
-				  uint32_t challenge_str_len, 
-				  uint32_t initial_outbound_seq_num, 
-				  uint8_t rq_seq, 
-				  fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_set_session_priv_level (uint8_t priv_level, 
 					fiid_obj_t obj_cmd);
-int8_t ipmi_lan_set_session_priv_level (int sockfd, 
-					struct sockaddr *hostaddr, 
-					size_t hostaddr_len, 
-					uint8_t auth_type, 
-					uint32_t session_seq_num, 
-					uint32_t session_id, 
-					uint8_t *auth_code_data, 
-					uint32_t auth_code_data_len, 
-					uint8_t priv_level, 
-					uint8_t rq_seq, 
-					fiid_obj_t obj_cmd_rs);
-
-
-int8_t ipmi_lan_open_session (int sockfd, 
-			      struct sockaddr *hostaddr, 
-			      size_t hostaddr_len, 
-			      uint8_t auth_type, 
-			      char *username, 
-                              uint8_t *auth_code_data,
-                              uint32_t auth_code_data_len,
-			      uint32_t initial_outbound_seq_num, 
-			      uint8_t priv_level, 
-			      uint32_t *session_seq_num, 
-			      uint32_t *session_id, 
-			      uint8_t *rq_seq);
 
 int8_t fill_cmd_close_session (uint32_t close_session_id, 
 			       fiid_obj_t obj_cmd);
-int8_t ipmi_lan_close_session (int sockfd, 
-			       struct sockaddr *hostaddr, 
-			       size_t hostaddr_len, 
-			       uint8_t auth_type, 
-			       uint32_t session_seq_num, 
-			       uint32_t session_id, 
-			       uint8_t *auth_code_data, 
-			       uint32_t auth_code_data_len, 
-			       uint8_t rq_seq, 
-			       uint32_t close_session_id, 
-			       fiid_obj_t obj_cmd_rs);
 
 int8_t fill_kcs_set_channel_access (uint8_t channel_number, 
                                     uint8_t ipmi_messaging_access_mode, 
@@ -261,11 +200,11 @@ int8_t fill_kcs_set_user_name (uint8_t user_id,
 
 int8_t fill_kcs_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq);
        
-  int8_t fill_kcs_set_user_password (uint8_t user_id, 
-                                     uint8_t operation, 
-                                     char *user_password,
-                                     unsigned int user_password_len,
-                                     fiid_obj_t obj_data_rq);
+int8_t fill_kcs_set_user_password (uint8_t user_id, 
+                                   uint8_t operation, 
+                                   char *user_password,
+                                   unsigned int user_password_len,
+                                   fiid_obj_t obj_data_rq);
 
 int8_t fill_kcs_set_user_access (uint8_t channel_number,
                                  uint8_t user_id,
