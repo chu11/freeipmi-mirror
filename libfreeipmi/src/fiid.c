@@ -927,7 +927,7 @@ fiid_obj_errnum(fiid_obj_t obj)
 {
   if (!obj)
     return (FIID_ERR_OBJ_NULL);
-  else if (obj->magic == FIID_OBJ_MAGIC)
+  else if (obj->magic != FIID_OBJ_MAGIC)
     return (FIID_ERR_OBJ_INVALID);
   else
     return (obj->errnum);
