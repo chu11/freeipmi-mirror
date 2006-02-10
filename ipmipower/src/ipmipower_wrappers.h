@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.5.2.1 2006-02-10 18:24:32 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.5.2.2 2006-02-10 18:44:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,7 +99,7 @@ void Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, uint8_t *field, uint64_t
 /* Ipmi_dump_lan_packet
  * - Dump lan contents
  */
-void ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
+void Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
 
 /* Ipmi_dump_rmcp_packet
  * - Dump rmcp contents
