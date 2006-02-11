@@ -43,6 +43,8 @@
 	libfreeipmi/src/ipmi-sol-cmds-udm.h,
 	libfreeipmi/src/ipmi-lan-interface-udm.c,
 	libfreeipmi/src/ipmi-lan-interface-udm.h,
+	libfreeipmi/src/ipmi-ssif-interface-udm.c,
+	libfreeipmi/src/ipmi-ssif-interface-udm.h,
 	libfreeipmi/src/ipmi-kcs-interface-udm.c,
 	libfreeipmi/src/ipmi-kcs-interface-udm.h: New files.
 	
@@ -64,6 +66,8 @@
 	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h:
 	libfreeipmi/src/ipmi-lan-interface.c,
 	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.c,
+	libfreeipmi/src/ipmi-ssif-interface.h,
 	libfreeipmi/src/ipmi-kcs-interface.c,
 	libfreeipmi/src/ipmi-kcs-interface.h: Split off UDM code into
 	specific UDM files.

@@ -43,10 +43,6 @@
 #define IPMI_KCS_CTRL_READ             0x68 /* Request the next data byte */
 /* reserved      0x69 - 0x6F */
 
-#if defined(__FreeBSD__) && !defined(USE_IOPERM)
-static int ipmi_ksc_dev_io_fd = -1;
-#endif
-
 fiid_template_t tmpl_hdr_kcs =
   {
     {2, "lun"},
