@@ -1,5 +1,11 @@
 2006-02-10  A Balamurugan  <bala@zresearch.com>
 
+	* doc/freeipmi.texi: updated.
+
+	* fish/bmc-config.8.pre.in: updated.
+
+2006-02-10  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-raw/src/ipmi-raw.c: bug fix of command hex bytes execution.
 
 2006-02-09  A Balamurugan  <bala@zresearch.com>

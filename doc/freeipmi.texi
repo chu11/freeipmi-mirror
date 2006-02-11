@@ -1014,78 +1014,9 @@ debian-ia64:~#
 
 @node bmc-config known issues,  , Diff configuration, bmc-config
 @section bmc-config known issues
-
-@subsection Auth_Type_None conflict
-@option{XXXXXXX_Auth_Type_None} @emph{cannot be} @option{Yes} when
-ever any of the
-@option{XXXXXXX_Auth_Type_@{Md2|Md5|Straight_Password|Oem_Proprietary@}}
-are set to @option{Yes}.
-
-@subsubsection Bad configration
-@option{XXXXXXX_Auth_Type_None} @emph{should be} set to @option{No}. 
-
-@example 
-Section LAN_Conf_Auth
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_None                  Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md2                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md5                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Straight_Password     Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Oem_Proprietary       No
-EndSection
-@end example
-
-@subsubsection Good configration
-@example 
-Section LAN_Conf_Auth
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_None                  No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md2                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md5                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Straight_Password     Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Oem_Proprietary       No
-EndSection
-@end example
-
-@subsubsection Good configration
-@example 
-Section LAN_Conf_Auth
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_None                  Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md2                   No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md5                   No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Straight_Password     No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Oem_Proprietary       No
-EndSection
-@end example
-
-@subsubsection Good configration
-@example 
-Section LAN_Conf_Auth
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_None                  No
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md2                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Md5                   Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Straight_Password     Yes
-	## Possible values: Yes/No
-	Admin_Enable_Auth_Type_Oem_Proprietary       Yes
-EndSection
-@end example
+@command{bmc-config} checkout in out-of-band may fail to retrieve some
+BMC configuration options, because of default USER privilege level.
+For such cases, use ADMIN privilege level.
 
 @node bmc-info, bmc-autoconfig, bmc-config, Top
 @chapter bmc-info
