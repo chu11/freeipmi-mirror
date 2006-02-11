@@ -96,14 +96,14 @@ ipmi_kcs_cmd_raw2 (ipmi_device_t *dev,
   
   { 
     /* Request Block */
-    ERR (ipmi_kcs_write (dev, buf_rq, buf_rq_len) != -1);
+    ERR (ipmi_kcs_write (dev->io.inband.kcs_ctx, buf_rq, buf_rq_len) != -1);
   }
   
   { 
     /* Response Block */
     uint32_t bytes_read = 0;
     
-    ERR ((bytes_read = ipmi_kcs_read (dev, buf_rs, *buf_rs_len)) != -1);
+    ERR ((bytes_read = ipmi_kcs_read (dev->io.inband.kcs_ctx, buf_rs, *buf_rs_len)) != -1);
     *buf_rs_len = bytes_read;
   }
   
