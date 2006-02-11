@@ -70,7 +70,9 @@ struct ipmi_device
       ipmi_locate_info_t locate_info;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
       int                mutex_semid;
-      
+
+      ipmi_kcs_ctx_t     kcs_ctx;
+
       struct 
       {
 	fiid_template_t *tmpl_hdr_ptr;

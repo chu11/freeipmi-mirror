@@ -42,7 +42,9 @@
 	libfreeipmi/src/ipmi-sol-cmds-udm.c,
 	libfreeipmi/src/ipmi-sol-cmds-udm.h,
 	libfreeipmi/src/ipmi-lan-interface-udm.c,
-	libfreeipmi/src/ipmi-lan-interface-udm.h: New files.
+	libfreeipmi/src/ipmi-lan-interface-udm.h,
+	libfreeipmi/src/ipmi-kcs-interface-udm.c,
+	libfreeipmi/src/ipmi-kcs-interface-udm.h: New files.
 	
 	* libfreeipmi/src/ipmi-chassis-cmds.c,
 	libfreeipmi/src/ipmi-chassis-cmds.h,
@@ -61,7 +63,9 @@
 	libfreeipmi/src/ipmi-serial-cmds.h,
 	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h:
 	libfreeipmi/src/ipmi-lan-interface.c,
-	libfreeipmi/src/ipmi-lan-interface.h Split off UDM code into
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c,
+	libfreeipmi/src/ipmi-kcs-interface.h: Split off UDM code into
 	specific UDM files.
 
 	* libfreeipmi/src/ipmi-udm.h, libfreeipmi/src/ipmi-udm.c: Rename
@@ -90,6 +94,12 @@
 	ipmi_dump_lan_packet, and ipmi_dump_rmcp_packet respectively.
 
 	* Support function re-naming throughout code.
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c: Modify KCS interface.
+
+	* libfreeipmi/src/ipmi-kcs-interface-udm.c: Support new KCS
+	interface.
 
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 

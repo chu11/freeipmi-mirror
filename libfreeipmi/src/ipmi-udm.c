@@ -56,9 +56,10 @@ ipmi_inband_free (ipmi_device_t *dev)
       errno = EINVAL;
       return;
     }
-
+  
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
+  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
   ipmi_xfree (dev->io.inband.driver_device);
 }
 
@@ -261,6 +262,8 @@ ipmi_open_inband (ipmi_device_t *dev,
 		  char *driver_device, 
 		  ipmi_mode_t mode)
 {
+  uint8_t temp_mode;
+
   if (dev == NULL)
     {
       errno = EINVAL;
@@ -304,7 +307,6 @@ ipmi_open_inband (ipmi_device_t *dev,
 	}
       dev->type = driver_type;
       dev->mode = mode;
-      dev->io.inband.poll_interval_usecs = IPMI_POLL_INTERVAL_USECS;
       
       /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
 	 If we cant find the bass address, we better exit. -- Anand Babu */
@@ -313,31 +315,51 @@ ipmi_open_inband (ipmi_device_t *dev,
 	  errno = ENODEV;
 	  return (-1);
 	}
+
+      if (!(dev->io.inband.kcs_ctx = ipmi_kcs_ctx_create()))
+        return (-1);
       
-#ifdef __FreeBSD__
-#ifdef USE_IOPERM
-      /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
-      if (i386_set_ioperm (dev->io.inband.locate_info.base_addr.bmc_iobase_addr, 
-			   0x02, 0x01) != 0)
-	{
-	  return (-1);
-	}
-#else
-      /* Opening /dev/io raises IOPL bits for current process. */
-      /* XXX This fd will remain open until exit as there is no
-       * uninitialization routine. */
-      dev->io.inband.dev_fd = open ("/dev/io", O_RDONLY);
-      if (dev->io.inband.dev_fd < 0)
-	{
-	  return (-1);
-	}
-#endif
-#else
-      if (iopl (3) < 0)
-	{
-	  return (-1);
-	}
-#endif
+      if (ipmi_kcs_ctx_set_bmc_iobase_addr(dev->io.inband.kcs_ctx, 
+                                           dev->io.inband.locate_info.base_addr.bmc_iobase_addr) < 0)
+        {
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (ipmi_kcs_ctx_set_register_space(dev->io.inband.kcs_ctx, 
+                                          dev->io.inband.locate_info.reg_space) < 0)
+        {
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (dev->mode == IPMI_MODE_DEFAULT)
+        temp_mode = IPMI_KCS_MODE_BLOCKING;
+      else if (dev->mode == IPMI_MODE_NONBLOCK)
+        temp_mode = IPMI_KCS_MODE_NONBLOCKING;
+      else
+        temp_mode = IPMI_KCS_MODE_DEFAULT;
+      
+      if (ipmi_kcs_ctx_set_mode(dev->io.inband.kcs_ctx, 
+                                temp_mode) < 0)
+        {
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
+                                         IPMI_POLL_INTERVAL_USECS) < 0)
+        {
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (ipmi_kcs_ctx_init_io(dev->io.inband.kcs_ctx) < 0)
+        {
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
       break;
     case IPMI_DEVICE_SMIC:
       ERR (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) != NULL);
@@ -440,17 +462,7 @@ ipmi_cmd (ipmi_device_t *dev,
       status = ipmi_lan_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
       break;
     case IPMI_DEVICE_KCS:
-      if (dev->mode == IPMI_MODE_NONBLOCK)
-	{
-	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
-	  if (status == -1 && errno == EAGAIN)
-	    return (-1);
-	  ERR ((!(status == -1 && errno != EAGAIN)));
-	} 
-      else
-	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_kcs_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
-      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SSIF:
       if (dev->mode == IPMI_MODE_NONBLOCK)
@@ -496,17 +508,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
       status = ipmi_lan_cmd_raw2 (dev, in, in_len, out, out_len);
       break;
     case IPMI_DEVICE_KCS:
-      if (dev->mode == IPMI_MODE_NONBLOCK)
-	{
-	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
-	  if (status == -1 && errno == EAGAIN)
-	    return (-1);
-	  ERR ((!(status == -1 && errno != EAGAIN)));
-	} 
-      else
-	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
-      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SSIF:
       if (dev->mode == IPMI_MODE_NONBLOCK)
@@ -561,11 +563,6 @@ ipmi_inband_close (ipmi_device_t *dev)
   switch (dev->type)
     {
     case IPMI_DEVICE_KCS:
-#ifdef __FreeBSD__
-#ifndef USE_IOPERM
-      close (dev->io.inband.dev_fd);
-#endif
-#endif
       break;
     case IPMI_DEVICE_SMIC:
       break;
