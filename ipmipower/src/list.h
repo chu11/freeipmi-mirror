@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: list.h,v 1.1 2004-05-11 17:05:23 chu11 Exp $
+ *  $Id: list.h,v 1.2 2006-02-12 11:16:11 ab Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -19,7 +19,7 @@
  *
  *  You should have received a copy of the GNU General Public License along
  *  with LSD-Tools; if not, write to the Free Software Foundation, Inc.,
- *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02110-1301  USA.
  *****************************************************************************/
 
 
