@@ -8,6 +8,8 @@
 	interface bug fixes.
 
 	* libfreeipmi/src/ipmi-udm.h: Remove unecessary struct members.
+
+	* tagged al_libfreeipmi_cleanup_branch_final_merge_complete_2.
 	
 2006-02-13  Albert Chu  <chu11@llnl.gov>
 
