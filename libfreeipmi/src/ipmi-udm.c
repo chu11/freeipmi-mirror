@@ -59,7 +59,6 @@ ipmi_inband_free (ipmi_device_t *dev)
   
   fiid_obj_free (dev->io.inband.rq.obj_hdr);
   fiid_obj_free (dev->io.inband.rs.obj_hdr);
-  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
   ipmi_xfree (dev->io.inband.driver_device);
 }
 
@@ -322,6 +321,7 @@ ipmi_open_inband (ipmi_device_t *dev,
       if (ipmi_kcs_ctx_set_bmc_iobase_addr(dev->io.inband.kcs_ctx, 
                                            dev->io.inband.locate_info.base_addr.bmc_iobase_addr) < 0)
         {
+	  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
           ipmi_inband_free (dev);
           return (-1);
         }
@@ -329,6 +329,15 @@ ipmi_open_inband (ipmi_device_t *dev,
       if (ipmi_kcs_ctx_set_register_space(dev->io.inband.kcs_ctx, 
                                           dev->io.inband.locate_info.reg_space) < 0)
         {
+	  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
+                                         IPMI_POLL_INTERVAL_USECS) < 0)
+        {
+	  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
           ipmi_inband_free (dev);
           return (-1);
         }
@@ -343,19 +352,14 @@ ipmi_open_inband (ipmi_device_t *dev,
       if (ipmi_kcs_ctx_set_mode(dev->io.inband.kcs_ctx, 
                                 temp_mode) < 0)
         {
+	  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
           ipmi_inband_free (dev);
           return (-1);
         }
 
-      if (ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
-                                         IPMI_POLL_INTERVAL_USECS) < 0)
+      if (ipmi_kcs_ctx_io_init(dev->io.inband.kcs_ctx) < 0)
         {
-          ipmi_inband_free (dev);
-          return (-1);
-        }
-
-      if (ipmi_kcs_ctx_init_io(dev->io.inband.kcs_ctx) < 0)
-        {
+	  ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
           ipmi_inband_free (dev);
           return (-1);
         }
@@ -398,9 +402,48 @@ ipmi_open_inband (ipmi_device_t *dev,
       /* dev->io.inband.driver_address = 0x341A; */
       dev->type = driver_type;
       dev->mode = mode;
-      ERR (ipmi_ssif_io_init (dev->io.inband.driver_device, 
-			      dev->io.inband.driver_address, 
-			      &(dev->io.inband.dev_fd)) != 0);
+
+      if (!(dev->io.inband.ssif_ctx = ipmi_ssif_ctx_create()))
+        return (-1);
+      
+      if (ipmi_ssif_ctx_set_i2c_device(dev->io.inband.ssif_ctx, 
+				       dev->io.inband.driver_device) < 0)
+        {
+	  ipmi_ssif_ctx_destroy(dev->io.inband.ssif_ctx);
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+ 
+      if (ipmi_ssif_ctx_set_ipmb_addr(dev->io.inband.ssif_ctx, 
+				      dev->io.inband.driver_address) < 0)
+        {
+	  ipmi_ssif_ctx_destroy(dev->io.inband.ssif_ctx);
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (dev->mode == IPMI_MODE_DEFAULT)
+        temp_mode = IPMI_SSIF_MODE_BLOCKING;
+      else if (dev->mode == IPMI_MODE_NONBLOCK)
+        temp_mode = IPMI_SSIF_MODE_NONBLOCKING;
+      else
+        temp_mode = IPMI_SSIF_MODE_DEFAULT;
+      
+      if (ipmi_ssif_ctx_set_mode(dev->io.inband.ssif_ctx, 
+                                temp_mode) < 0)
+        {
+	  ipmi_ssif_ctx_destroy(dev->io.inband.ssif_ctx);
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
+      if (ipmi_ssif_ctx_io_init(dev->io.inband.ssif_ctx) < 0)
+        {
+	  ipmi_ssif_ctx_destroy(dev->io.inband.ssif_ctx);
+          ipmi_inband_free (dev);
+          return (-1);
+        }
+
       break;
     default:
       errno = EINVAL;
@@ -563,13 +606,14 @@ ipmi_inband_close (ipmi_device_t *dev)
   switch (dev->type)
     {
     case IPMI_DEVICE_KCS:
+      ipmi_kcs_ctx_destroy(dev->io.inband.kcs_ctx);
       break;
     case IPMI_DEVICE_SMIC:
       break;
     case IPMI_DEVICE_BT:
       break;
     case IPMI_DEVICE_SSIF:
-      ipmi_ssif_exit (dev->io.inband.dev_fd);
+      ipmi_ssif_ctx_destroy(dev->io.inband.ssif_ctx);
       break;
     default:
       errno = EINVAL;

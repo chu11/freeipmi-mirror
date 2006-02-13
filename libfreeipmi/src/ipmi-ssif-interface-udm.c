@@ -58,7 +58,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 				pkt, 
 				pkt_len) > 0);
     
-    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (char *)pkt, pkt_len) != -1);
+    ERR (ipmi_ssif_write (dev->io.inband.ssif_ctx, (char *)pkt, pkt_len) != -1);
   }
   
   { 
@@ -73,7 +73,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     memset (pkt, 0, pkt_len);
     ERR (pkt);
     
-    ERR ((read_len = ipmi_ssif_read (dev->io.inband.dev_fd, (char *)pkt, &bytes_read)) != -1);
+    ERR ((read_len = ipmi_ssif_read (dev->io.inband.ssif_ctx, (char *)pkt, &bytes_read)) != -1);
     if (bytes_read != pkt_len)
       {
 	int i;
@@ -117,14 +117,14 @@ ipmi_ssif_cmd_raw2 (ipmi_device_t *dev,
   
   { 
     /* Request Block */
-    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (char *)buf_rq, buf_rq_len) != -1);
+    ERR (ipmi_ssif_write (dev->io.inband.ssif_ctx, (char *)buf_rq, buf_rq_len) != -1);
   }
   
   { 
     /* Response Block */
     uint32_t bytes_read = 0;
     
-    ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.dev_fd, 
+    ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.ssif_ctx, 
 				       (char *)buf_rs, buf_rs_len)) != -1);
     *buf_rs_len = bytes_read;
   }

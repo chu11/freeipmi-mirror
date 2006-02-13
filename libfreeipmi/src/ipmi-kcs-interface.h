@@ -86,22 +86,24 @@ extern "C" {
 
 extern fiid_template_t tmpl_hdr_kcs;
 
-typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
-
 #define IPMI_KCS_CTX_ERR_SUCCESS         0
 #define IPMI_KCS_CTX_ERR_NULL            1
 #define IPMI_KCS_CTX_ERR_INVALID         2
 #define IPMI_KCS_CTX_ERR_PARAMETERS      3
 #define IPMI_KCS_CTX_ERR_PERMISSION      4
-#define IPMI_KCS_CTX_ERR_
-#define IPMI_KCS_CTX_ERR_BUSY            4 
-#define IPMI_KCS_CTX_ERR_OUTMEM          5
-#define IPMI_KCS_CTX_ERR_INTERNAL        6
-#define IPMI_KCS_CTX_ERR_ERRNUMRANGE     7
+#define IPMI_KCS_CTX_ERR_IO_PARAMETERS   5
+#define IPMI_KCS_CTX_ERR_IO_INIT         6
+#define IPMI_KCS_CTX_ERR_OVERFLOW        7
+#define IPMI_KCS_CTX_ERR_BUSY            8
+#define IPMI_KCS_CTX_ERR_OUTMEM          9
+#define IPMI_KCS_CTX_ERR_INTERNAL        10
+#define IPMI_KCS_CTX_ERR_ERRNUMRANGE     11
 
 #define IPMI_KCS_MODE_BLOCKING    0
 #define IPMI_KCS_MODE_NONBLOCKING 1
 #define IPMI_KCS_MODE_DEFAULT     IPMI_KCS_MODE_BLOCKING
+
+typedef struct ipmi_kcs_ctx *ipmi_kcs_ctx_t;
 
 ipmi_kcs_ctx_t ipmi_kcs_ctx_create(void);
 int8_t ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx);
@@ -110,15 +112,15 @@ char *ipmi_kcs_ctx_strerror(int32_t errnum);
 
 int8_t ipmi_kcs_ctx_get_bmc_iobase_addr(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_addr);
 int8_t ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space);
-int8_t ipmi_kcs_ctx_get_mode(ipmi_kcs_ctx_t ctx, uint8_t *mode);
 int8_t ipmi_kcs_ctx_get_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t *poll_interval);
+int8_t ipmi_kcs_ctx_get_mode(ipmi_kcs_ctx_t ctx, uint8_t *mode);
 
 int8_t ipmi_kcs_ctx_set_bmc_iobase_addr(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_addr);
 int8_t ipmi_kcs_ctx_set_register_space(ipmi_kcs_ctx_t ctx, uint8_t reg_space);
-int8_t ipmi_kcs_ctx_set_mode(ipmi_kcs_ctx_t ctx, uint8_t mode);
 int8_t ipmi_kcs_ctx_set_poll_interval(ipmi_kcs_ctx_t ctx, uint8_t poll_interval);
+int8_t ipmi_kcs_ctx_set_mode(ipmi_kcs_ctx_t ctx, uint8_t mode);
 
-int8_t ipmi_kcs_ctx_init_io(ipmi_kcs_ctx_t ctx);
+int8_t ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx);
 
 int32_t ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
                         uint8_t *bytes,

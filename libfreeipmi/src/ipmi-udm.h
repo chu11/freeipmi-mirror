@@ -72,6 +72,7 @@ struct ipmi_device
       int                mutex_semid;
 
       ipmi_kcs_ctx_t     kcs_ctx;
+      ipmi_ssif_ctx_t    ssif_ctx;
 
       struct 
       {

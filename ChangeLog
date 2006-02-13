@@ -102,7 +102,15 @@
 	* libfreeipmi/src/ipmi-kcs-interface.h,
 	libfreeipmi/src/ipmi-kcs-interface.c: Modify KCS interface.
 
-	* libfreeipmi/src/ipmi-kcs-interface-udm.c: Support new KCS
+	* libfreeipmi/src/ipmi-udm.c,
+	libfreeipmi/src/ipmi-kcs-interface-udm.c: Support new KCS
+	interface.
+
+	* libfreeipmi/src/ipmi-ssif-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.c: Modify SSIF interface.
+
+	* libfreeipmi/src/ipmi-udm.c,
+	libfreeipmi/src/ipmi-ssif-interface-udm.c: Support new SSIF
 	interface.
 
 2006-02-09  A Balamurugan  <bala@zresearch.com>
