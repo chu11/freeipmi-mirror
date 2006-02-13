@@ -22,6 +22,11 @@
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
+2006-02-13  Albert Chu <chu11@llnl.gov>	
+
+	* Merge in tags al_libfreeipmi_cleanup_branch_final_merge_complete
+	and al_libfreeipmi_cleanup_branch_final_merge_complete_2.
+	
 2006-02-10  Albert Chu <chu11@llnl.gov>	
 
 	* libfreeipmi/src/fiid.c (fiid_obj_errnum, fiid_iterator_errnum):
