@@ -203,6 +203,7 @@ main (int argc, char **argv)
     {
       bytes_rq = args->cmd;
       send_len = args->cmd_length;
+      rcvd_len = ARG_MAX;
       if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) == 0)
 	{
 	  printf ("rcvd: ");

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.h,v 1.3 2006-02-09 20:32:24 balamurugan Exp $ 
+   $Id: ipmi-raw-argp.h,v 1.3.2.1 2006-02-13 17:01:42 chu11 Exp $ 
    
    ipmi-raw-argp.h - ipmi-raw command line argument parser.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifndef _IPMI_RAW_ARGP_H

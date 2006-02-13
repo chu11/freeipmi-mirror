@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.h,v 1.3 2005-12-26 08:06:57 balamurugan Exp $ 
+   $Id: fish-argp.h,v 1.3.4.1 2006-02-13 17:01:42 chu11 Exp $ 
    
    fish-argp.h - fish command line argument parser.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifndef _FISH_ARGP_H

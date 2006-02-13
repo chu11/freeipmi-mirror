@@ -113,6 +113,24 @@
 	libfreeipmi/src/ipmi-ssif-interface-udm.c: Support new SSIF
 	interface.
 
+2006-02-12  Anand Babu  <ab@zresearch.com>
+
+	* Copyright notices: Updated new FSF's address.
+
+2006-02-10  Anand Babu  <ab@zresearch.com>
+
+	* Tagged Release-0_2_0.
+
+2006-02-10  A Balamurugan  <bala@zresearch.com>
+
+	* doc/freeipmi.texi: updated.
+
+	* fish/bmc-config.8.pre.in: updated.
+
+2006-02-10  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-raw/src/ipmi-raw.c: bug fix of command hex bytes execution.
+
 2006-02-09  A Balamurugan  <bala@zresearch.com>
 
 	* doc/examples/Makefile.am: fix for bug #15689, to build non-inst

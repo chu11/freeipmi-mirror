@@ -14,10 +14,10 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with GNU Emacs; see the file COPYING.  If not, write to
-the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-Boston, MA 02111-1307, USA.
+the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.22.2.1 2006-02-10 17:00:33 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.22.2.2 2006-02-13 17:01:43 chu11 Exp $  */
 
 #include "freeipmi.h"
 

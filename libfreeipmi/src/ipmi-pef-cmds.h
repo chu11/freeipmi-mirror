@@ -15,10 +15,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.15.2.1 2006-02-10 17:00:33 chu11 Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.15.2.2 2006-02-13 17:01:43 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
