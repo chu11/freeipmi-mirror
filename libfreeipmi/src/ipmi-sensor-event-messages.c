@@ -1254,9 +1254,9 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {4, "log_type"}, 
-	    {4, "log_entry_action"}, 
-	    {0, ""}
+	    {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {4, "log_entry_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t log_type;
@@ -1264,18 +1264,43 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	char *str = NULL;
 	char *str1 = NULL;
 	char *str2 = NULL;
-	
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_type", &val);
+	fiid_obj_t obj = NULL;
+
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get(obj,
+                         (uint8_t *)"log_type",
+                         &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	log_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"log_entry_action", &val);
+
+        if (fiid_obj_get(obj,
+                         (uint8_t *)"log_entry_action",
+                         &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	log_entry_action = val;
-	
+          
+	fiid_obj_destroy(obj);
+
         if (log_type <= 0x02)
           str1 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[log_type]);
 
         if (log_entry_action <= 0x05)
           str2 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[log_entry_action]);
-	
+
 	if (str1 || str2)
 	  {
 	    asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
@@ -1288,14 +1313,14 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {1, "alert"}, 
-	    {1, "power_off"}, 
-	    {1, "reset"}, 
-	    {1, "power_cycle"}, 
-	    {1, "oem_action"}, 
-	    {1, "diagonstic_interrupt"}, 
-	    {2, "reserved"}, 
-	    {0, ""}
+	    {1, "alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "power_off", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t alert;
@@ -1306,21 +1331,74 @@ get_12_event_data2_message (int offset, uint8_t event_data)
 	uint8_t diagnostic_interrupt;
 	char *str = NULL;
 	char *tmp_str = NULL;
+        fiid_obj_t obj = NULL;
 	const char *msg = NULL;
+     
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"alert", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        alert = val;
 
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"alert", &val);
-	alert = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_off", &val);
-	power_off = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"reset", &val);
-	reset = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"power_cycle", &val);
-	power_cycle = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"oem_action", &val);
-	oem_action = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"diagonstic_interrupt", &val);
-	diagnostic_interrupt = val;
-	
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"power_off", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        power_off = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"reset", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        reset = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"power_cycle", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        power_cycle = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"oem_action", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        oem_action = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"diagnostic_interrupt", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        diagnostic_interrupt = val;
+
+	fiid_obj_destroy(obj);
+
 	if (alert)
 	  {
 	    tmp_str = str;
@@ -1411,20 +1489,46 @@ get_12_event_data2_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data2 = 
 	  {
-	    {4, "timestamp_clock_type"}, 
-	    {3, "reserved"}, 
-	    {1, "first_second"}, 
-	    {0, ""}
+	    {4, "timestamp_clock_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "first_second", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t timestamp_clock_type;
 	uint8_t first_second;
 	char *str = NULL;
 	
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timestamp_clock_type", &val);
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data2)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"timestamp_clock_type", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	timestamp_clock_type = val;
-	fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"first_second", &val);
+        
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"first_second", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	first_second = val;
+
+        fiid_obj_destroy(obj);
 	
 	asprintf (&str, "%s; %s", 
 		  (timestamp_clock_type ? "SDR Timestamp Clock updated" : 
@@ -1457,14 +1561,33 @@ get_1D_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-          {4, "restart_cause"},
-          {4, "reserved"},
-	  {0, ""}
+          {4, "restart_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+	  {0, "", 0}
 	};
       uint64_t val;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"restart_cause", &val);
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"restart_cause", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
+      fiid_obj_destroy(obj);
+
       if (val <= 0x08)
         return strdup(ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_desc[val]);
     }
@@ -1479,13 +1602,32 @@ get_21_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {7, "slot_connector_type"}, 
-	  {1, "reserved"}, 
-	  {0, ""}
+	  {7, "slot_connector_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {1, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"slot_connector_type", &val);
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
+      
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"slot_connector_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
+      fiid_obj_destroy(obj);
       
       if (val <= 0x08)
         return strdup(ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[val]);
@@ -1501,9 +1643,9 @@ get_23_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {4, "timer_at_expiration"}, 
-	  {4, "interrupt_type"}, 
-	  {0, ""}
+	  {4, "timer_at_expiration", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "interrupt_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t timer_at_expiration;
@@ -1512,17 +1654,43 @@ get_23_event_data2_message (int offset, uint8_t event_data)
       char *str1 = NULL;
       char *str2 = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"timer_at_expiration", &val);
-      timer_at_expiration = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"interrupt_type", &val);
-      interrupt_type = val;
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"timer_at_expiration", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      timer_at_expiration = val;
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"interrupt_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      interrupt_type = val;
+
+      fiid_obj_destroy(obj);
+
       if (timer_at_expiration <= 0x0F)
         str1 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_expiration_desc[timer_at_expiration]);
 
       if (interrupt_type <= 0x0F)
         str2 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type_desc[interrupt_type]);
-      
+
       if (str1 || str2)
 	{
 	  asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
@@ -1549,23 +1717,56 @@ get_28_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-          {3, "private_bus_id"},
-          {2, "lun"},
-          {2, "reserved"},
-          {1, "logical_fru_device"},
-	  {0, ""}
+          {3, "private_bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          {1, "logical_fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+	  {0, "", 0}
 	};
       uint64_t val;
       char *str = NULL;
       uint8_t private_bus_id, lun, logical_fru_device;
-
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"private_bus_id", &val);
+      
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
+      
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"private_bus_id", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
       private_bus_id = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"lun", &val);
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"lun", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
       lun = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"logical_fru_device", &val);
+
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"logical_fru_device", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
       logical_fru_device = val;
 
+      fiid_obj_destroy(obj);
+      
       asprintf (&str, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", (logical_fru_device) ? "device is logical FRU Device (accessed via FRU commands to mgmt. controller" : "device is not a logical FRU Device", lun, private_bus_id);
       return str;
       
@@ -1581,14 +1782,33 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {6, "user_id"}, 
-	  {2, "reserved"}, 
-	  {0, ""}
+	  {6, "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       char *str = NULL;
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"user_id", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"user_id", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+        
+      fiid_obj_destroy(obj);
+      
       if (val == 0x0)
 	return strdup ("User ID for user that activated session = Unspecified");
       asprintf (&str, "User ID for user that activated session = %d", (int) val);
@@ -1617,20 +1837,46 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data2 = 
 	{
-	  {4, "previous_state_offset"}, 
-	  {4, "cause_of_state_change"}, 
-	  {0, ""}
+	  {4, "previous_state_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "cause_of_state_change", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t previous_state_offset;
       uint8_t cause_of_state_change;
       char *str = NULL;
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data2)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"previous_state_offset", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"previous_state_offset", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+        
       previous_state_offset = val;
-      fiid_obj_get (&event_data, tmpl_event_data2, (uint8_t *)"cause_os_state_change", &val);
-      cause_of_state_change = val;
 
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"cause_os_state_change", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+
+      cause_of_state_change = val;
+      fiid_obj_destroy(obj);
+      
       if (cause_of_state_change <= 0x0F)
         {
           asprintf (&str, "Previous state offset value = %d; %s", 
@@ -1653,13 +1899,31 @@ get_08_event_data3_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data3 = 
 	{
-	  {4, "event_type"}, 
-	  {4, "reserved"}, 
-	  {0, ""}
+	  {4, "event_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {0, "", 0}
 	};
-      uint64_t val;
+      uint64_t val;      
+      fiid_obj_t obj = NULL;
+     
+      if (!(obj = fiid_obj_create(tmpl_event_data3)))
+        return NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_type", &val);
+      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      if (fiid_obj_get (obj,
+                        (uint8_t *)"event_type", 
+                        &val) < 0)
+        {
+          fiid_obj_destroy(obj);
+          return NULL;
+        }
+      
+      fiid_obj_destroy(obj);
       if (val <= 0x2)
         return strdup(ipmi_sensor_type_code_08_event_data_3_offset_06_error_type_desc[val]);
     }
@@ -1689,24 +1953,56 @@ get_10_event_data3_message (int offset, uint8_t event_data)
       {
 	fiid_template_t tmpl_event_data3 = 
 	  {
-	    {4, "event_offset"}, 
-	    {1, "assertion_deassertion_event"}, 
-	    {1, "logging_disabled_all_events"}, 
-	    {2, "reserved"}, 
-	    {0, ""}
+	    {4, "event_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "assertion_deassertion_event", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {1, "logging_disabled_all_events", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	    {0, "", 0}
 	  };
 	uint64_t val;
 	uint8_t event_offset;
 	uint8_t assertion_deassertion_event;
 	uint8_t logging_disabled_all_events;
 	char *str = NULL;
-	
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"event_offset", &val);
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+      
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"event_offset", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	event_offset = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"assertion_deassertion_event", &val);
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"assertion_deassertion_e", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	assertion_deassertion_event = val;
-	fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"logging_disabled_all_events", &val);
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"logging_disabled_all_ev", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
 	logging_disabled_all_events = val;
+        
+        fiid_obj_destroy(obj);
 	
 	asprintf (&str, "Event Offset %d; %s%s", event_offset, 
 		  (assertion_deassertion_event ? "assertion event" : "deassertion event"), 
@@ -1784,26 +2080,52 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
     {
       fiid_template_t tmpl_event_data3 = 
 	{
-	  {4, "channel_number"}, 
-	  {2, "deactivation_cause"}, 
-	  {2, "reserved"}, 
-	  {0, ""}
+	  {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "deactivation_cause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+	  {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},  
+	  {0, "", 0}
 	};
       uint64_t val;
       uint8_t channel_number;
       uint8_t deactivation_cause;
       char *str = NULL;
       
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"channel_number", &val);
-      channel_number = val;
-      fiid_obj_get (&event_data, tmpl_event_data3, (uint8_t *)"deactivation_cause", &val);
-      deactivation_cause = val;
+        fiid_obj_t obj = NULL;
+        
+        if (!(obj = fiid_obj_create(tmpl_event_data3)))
+          return NULL;
+        
+        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
       
-      if (deactivation_cause <= 0x03)
-        {
-          asprintf (&str, "Channel number that session was activated/deactivated = %d; %s", channel_number, ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[deactivation_cause]);
-          return str;
-        }
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"channel_number", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        channel_number = val;
+
+        if (fiid_obj_get (obj,
+                          (uint8_t *)"deactivation_cause", 
+                          &val) < 0)
+          {
+            fiid_obj_destroy(obj);
+            return NULL;
+          }
+        deactivation_cause = val;
+        
+        fiid_obj_destroy(obj);
+
+        if (deactivation_cause <= 0x03)
+          {
+            asprintf (&str, "Channel number that session was activated/deactivated = %d; %s", channel_number, ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[deactivation_cause]);
+            return str;
+          }
     }
   
   return NULL;

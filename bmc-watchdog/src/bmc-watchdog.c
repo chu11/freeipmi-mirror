@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.41.2.1 2006-02-13 18:48:44 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.41.2.2 2006-02-13 22:21:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -79,10 +79,10 @@
 
 #define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
 
-#define _FIID_OBJ_GET(__obj, __tmpl, __field, __val, __func) \
+#define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
      uint64_t val; \
-     if (fiid_obj_get((__obj), (__tmpl), (__field), &val) < 0) \
+     if (fiid_obj_get((__obj), (__field), &val) < 0) \
        { \
          _bmclog("%s: fiid_obj_get: %s", (__func), strerror(errno)); \
          goto cleanup; \
@@ -352,41 +352,50 @@ _sleep(unsigned int sleep_len)
 }
 
 static int
-_cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
-     fiid_obj_t cmd_rq, fiid_template_t tmpl_rq,
-     fiid_obj_t cmd_rs, fiid_template_t tmpl_rs)
+_cmd(char *str, 
+     int retry_wait_time, 
+     int retry_attempt, 
+     uint8_t netfn,
+     fiid_obj_t cmd_rq,
+     fiid_obj_t cmd_rs)
 {
   uint64_t comp_code;
   int retry_count = 0;
 
-  assert (str != NULL && retry_wait_time >= 0 && retry_attempt >= 0
+  assert (str != NULL 
+	  && retry_wait_time >= 0 
+	  && retry_attempt >= 0
           && (netfn == IPMI_NET_FN_APP_RQ || netfn == IPMI_NET_FN_TRANSPORT_RQ)
-          && cmd_rq != NULL && tmpl_rq != NULL
-          && cmd_rs != NULL && tmpl_rs != NULL);
+          && cmd_rq != NULL
+          && cmd_rs != NULL);
 
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
   while (1)
     {
-      if (ipmi_cmd (&ipmi_dev, IPMI_BMC_IPMB_LUN_BMC, netfn, 
-		   cmd_rq, tmpl_rq, cmd_rs, tmpl_rs) < 0)
+      if (ipmi_cmd (&ipmi_dev, 
+		    IPMI_BMC_IPMB_LUN_BMC, 
+		    netfn, 
+		    cmd_rq, 
+		    cmd_rs) < 0)
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
-              _bmclog("%s: ipmi_cmd: %s", str, strerror(errno));
+              _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
+                      str, strerror(errno));
               return -1;
             }
           else
             {
               if (retry_count >= retry_attempt)
                 {
-                  _bmclog("%s: ipmi_cmd: BMC too busy: "
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
                           "retry_wait_time=%d, retry_attempt=%d", 
                           str, retry_wait_time, retry_attempt);
                   return -1;
@@ -394,8 +403,8 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
               if (cinfo.debug)
                 {
-                  fprintf(stderr, "%s: ipmi_cmd: BMC busy\n", str);
-                  _bmclog("%s: ipmi_cmd: BMC busy", str);
+                  fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
                 }
 #endif
               _sleep(retry_wait_time);
@@ -409,12 +418,12 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
         _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
-  _FIID_OBJ_GET(cmd_rs, tmpl_rs, (uint8_t *)"comp_code", &comp_code, str);
+  _FIID_OBJ_GET(cmd_rs, (uint8_t *)"comp_code", &comp_code, str);
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog("%s: cmd error: %Xh", str, comp_code);
@@ -432,16 +441,16 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -453,14 +462,16 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
     
-  retval = _cmd("Reset Cmd", retry_wait_time, retry_attempt, 
+  retval = _cmd("Reset Cmd", 
+		retry_wait_time, 
+		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
-                cmd_rq, tmpl_cmd_reset_watchdog_timer_rq,
-                cmd_rs, tmpl_cmd_reset_watchdog_timer_rs);
+                cmd_rq,
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -493,16 +504,16 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   ms_byte = ptr[1];
 #endif
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -522,14 +533,16 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
     
-  retval = _cmd("Set Cmd", retry_wait_time, retry_attempt, 
+  retval = _cmd("Set Cmd", 
+		retry_wait_time,
+		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
-                cmd_rq, tmpl_cmd_set_watchdog_timer_rq,
-                cmd_rs, tmpl_cmd_set_watchdog_timer_rs);
+                cmd_rq,
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -569,16 +582,16 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   uint8_t ls_byte, ms_byte;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -590,94 +603,80 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  if ((retval =_cmd("Get Cmd", retry_wait_time, retry_attempt, 
+  if ((retval =_cmd("Get Cmd", 
+		    retry_wait_time,
+		    retry_attempt, 
                     IPMI_NET_FN_APP_RQ,
-                    cmd_rq, tmpl_cmd_get_watchdog_timer_rq,
-                    cmd_rs, tmpl_cmd_get_watchdog_timer_rs)) != 0)
+                    cmd_rq, 
+                    cmd_rs)) != 0)
     goto cleanup;
 
   if (timer_use)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timer_use", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use", 
                   timer_use, "_get_watchdog_timer_cmd");
 
   if (timer_state)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timer_state", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_state", 
                   timer_state, "_get_watchdog_timer_cmd");
 
   if (log)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"log", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"log", 
                   log, "_get_watchdog_timer_cmd");
 
   if (timeout_action)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timeout_action", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timeout_action", 
                   timeout_action, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interrupt)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                  (uint8_t *)"pre_timeout_interrupt", pre_timeout_interrupt, 
-                  "_get_watchdog_timer_cmd");
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interrupt", 
+		  pre_timeout_interrupt, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interval)
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"pre_timeout_interval", pre_timeout_interval, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interval", 
+		    pre_timeout_interval, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_frb2)
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_bios_frb2", 
-                    timer_use_expiration_flag_bios_frb2, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_bios_frb2", 
+                    timer_use_expiration_flag_bios_frb2, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_post) 
-     _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                   (uint8_t *)"timer_use_expiration_flag_bios_post", 
-                   timer_use_expiration_flag_bios_post, 
-                   "_get_watchdog_timer_cmd");
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_bios_post", 
+                   timer_use_expiration_flag_bios_post, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_os_load) 
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_os_load", 
-                    timer_use_expiration_flag_os_load, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_os_load", 
+                    timer_use_expiration_flag_os_load, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_sms_os) 
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_sms_os", 
-                    timer_use_expiration_flag_sms_os, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_sms_os", 
+                    timer_use_expiration_flag_sms_os, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_oem) 
-     _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                   (uint8_t *)"timer_use_expiration_flag_oem", 
-                   timer_use_expiration_flag_oem, 
-                   "_get_watchdog_timer_cmd");
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_oem", 
+                   timer_use_expiration_flag_oem, "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)
      {
-       _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                     (uint8_t *)"initial_countdown_value_ls_byte", 
+       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ls_byte", 
                      &ls_byte, "_get_watchdog_timer_cmd");
        
-       _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                     (uint8_t *)"initial_countdown_value_ms_byte", 
+       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ms_byte", 
                      &ms_byte, "_get_watchdog_timer_cmd");
        *initial_countdown_seconds = _time_seconds(ls_byte, ms_byte);
      }
 
   if (present_countdown_seconds)
     {
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"present_countdown_value_ls_byte", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ls_byte", 
                     &ls_byte, "_get_watchdog_timer_cmd");
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"present_countdown_value_ms_byte", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ms_byte", 
                     &ms_byte, "_get_watchdog_timer_cmd");
       *present_countdown_seconds = _time_seconds(ls_byte, ms_byte);
     }
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -691,16 +690,16 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
   int retval = -1;
   int8_t num;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
     {
-      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
     {
-      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -723,14 +722,16 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
     
-  retval = _cmd("Suspend Cmd", retry_wait_time, retry_attempt,
+  retval = _cmd("Suspend Cmd", 
+		retry_wait_time, 
+		retry_attempt,
                 IPMI_NET_FN_TRANSPORT_RQ,
-                cmd_rq, tmpl_cmd_suspend_bmc_arps_rq,
-                cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
+                cmd_rq, 
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 

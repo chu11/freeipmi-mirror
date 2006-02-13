@@ -45,9 +45,9 @@
 
 fiid_template_t tmpl_hdr_kcs =
   {
-    {2, "lun"},
-    {6, "net_fn"},
-    {0, ""}
+    {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
@@ -179,7 +179,7 @@ ipmi_kcs_ctx_get_register_space(ipmi_kcs_ctx_t ctx, uint8_t *reg_space)
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
-
+  
   *reg_space = ctx->reg_space;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
@@ -610,43 +610,88 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 		   uint8_t fn, 
 		   fiid_obj_t obj_hdr)
 {
+  int8_t rv;
+
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_VALID(fn)
-      || !obj_hdr)
+      || !fiid_obj_valid(obj_hdr))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"lun", lun);
-  FIID_OBJ_SET (obj_hdr, tmpl_hdr_kcs, (uint8_t *)"net_fn", fn);
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"lun", lun);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"net_fn", fn);
   return 0;
 }
 
 int32_t 
 assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
 		       fiid_obj_t obj_cmd, 
-		       fiid_template_t tmpl_cmd, 
 		       uint8_t *pkt, 
 		       uint32_t pkt_len)
 {
-  uint32_t obj_cmd_len, obj_hdr_len;
-  if (!(obj_hdr && obj_cmd && tmpl_cmd && pkt))
+  int32_t obj_cmd_len, obj_hdr_len;
+  int8_t rv;
+
+  if (!(fiid_obj_valid(obj_hdr)
+        && fiid_obj_valid(obj_cmd)
+        && pkt))
     {
       errno = EINVAL;
       return (-1);
     }
-  obj_hdr_len = fiid_obj_len_bytes (tmpl_hdr_kcs);
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
+
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
+  ERR(obj_hdr_len != -1);
+  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
+  ERR(obj_cmd_len != -1);
+
   if (pkt_len < (obj_hdr_len + obj_cmd_len))
     {
       errno = EMSGSIZE;
       return (-1);
     }
-  
-  memset (pkt, 0, obj_hdr_len + obj_cmd_len);
-  memcpy (pkt, obj_hdr, obj_hdr_len);
-  memcpy (pkt + obj_hdr_len, obj_cmd, obj_cmd_len);
+
+  memset (pkt, 0, pkt_len);
+  ERR((obj_hdr_len = fiid_obj_get_all(obj_hdr, pkt, pkt_len)) != -1);
+  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_hdr_len, pkt_len - obj_hdr_len)) != -1);
   return (obj_hdr_len + obj_cmd_len);
 }
 
@@ -654,38 +699,37 @@ int32_t
 unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
 			 uint32_t pkt_len, 
 			 fiid_obj_t obj_hdr, 
-			 fiid_obj_t obj_cmd, 
-			 fiid_template_t tmpl_cmd)
+			 fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;
+  int32_t len;
+  int8_t rv;
 
-  if (pkt == NULL)
+  if (!(pkt
+        && fiid_obj_valid(obj_hdr)
+        && fiid_obj_valid(obj_cmd)))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  indx = 0;
-  if (obj_hdr)
-    memcpy (obj_hdr, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_hdr_kcs)));
-  indx += fiid_obj_len_bytes (tmpl_hdr_kcs);
+  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  if (obj_cmd)
-    {
-      if (tmpl_cmd)
-        {
-          memcpy (obj_cmd, pkt + indx, FREEIPMI_MIN (pkt_len - indx, fiid_obj_len_bytes (tmpl_cmd)));
-          indx += fiid_obj_len_bytes (tmpl_cmd);
-        }
-      else
-	{
-	  errno = EINVAL;
-	  return (-1);
- 	}
-    }
+  ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+  indx += len;
 
   return 0;
 }

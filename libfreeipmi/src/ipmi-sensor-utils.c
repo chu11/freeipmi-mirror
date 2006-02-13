@@ -68,6 +68,7 @@ ipmi_sensor_decode_value (char r_exponent,
 
 void 
 ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
+			       uint32_t sensor_record_len,
 			       uint8_t *analog_data_format, 
 			       char *r_exponent, 
 			       char *b_exponent, 
@@ -83,6 +84,8 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   uint64_t b_ls;
   uint64_t b_ms;
   
+  fiid_obj_t obj = NULL;
+
   if (!sensor_record 
       || !analog_data_format
       || !r_exponent
@@ -95,54 +98,67 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
       return;
     }
 
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"r_exponent", 
-		&val);
+  if (!(obj = fiid_obj_create(tmpl_sdr_full_sensor_record)))
+    goto cleanup;
+  
+  if (fiid_obj_set_all(obj,
+		       sensor_record,
+		       sensor_record_len) < 0)
+    goto cleanup;
+
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"r_exponent", 
+		    &val) < 0)
+    goto cleanup;
   *r_exponent = (char) val;
   if (*r_exponent & 0x08)
     *r_exponent |= 0xF0;
   
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_exponent", 
-		&val);
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"b_exponent", 
+		    &val) < 0)
+    goto cleanup;
   *b_exponent = (char) val;
   if (*b_exponent & 0x08)
     *b_exponent |= 0xF0;
   
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"m_ls", 
-		&m_ls); 
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"m_ms", 
-		&m_ms); 
-  val = bits_merge (m_ls, 8, 10, m_ms);
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"m_ls", 
+		    &m_ls) < 0)
+    goto cleanup;
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"m_ms", 
+		    &m_ms) < 0)
+    goto cleanup;
+  if (bits_merge (m_ls, 8, 10, m_ms, &val) < 0)
+    goto cleanup;
   *m = (short) val;
   if (*m & 0x200)
     *m |= 0xFE00;
   
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_ls", 
-		&b_ls); 
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_ms", 
-		&b_ms); 
-  val = bits_merge (b_ls, 8, 10, b_ms);
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"b_ls", 
+		    &b_ls) < 0)
+    goto cleanup;
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"b_ms", 
+		    &b_ms) < 0)
+    goto cleanup;
+  if (bits_merge (b_ls, 8, 10, b_ms, &val) < 0)
+    goto cleanup;
   *b = (short) val;
   if (*b & 0x200)
     *b |= 0xFE00;
   
-  fiid_obj_get (sensor_record,
-                tmpl_sdr_full_sensor_record,
-                (uint8_t *)"sensor_unit_analog_data_format",
-                &val);
+  if (fiid_obj_get (obj,
+		    (uint8_t *)"sensor_unit_analog_data_format",
+		    &val) < 0)
+    goto cleanup;
   *analog_data_format = (uint8_t) val;
 
+ cleanup:
+  if (obj)
+    fiid_obj_destroy(obj);
   return;
 }
 

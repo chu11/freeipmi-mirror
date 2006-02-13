@@ -24,21 +24,42 @@ int8_t
 ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_dev_id_rq);
-  ERR (fill_cmd_get_dev_id (obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_APP_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_cmd_get_dev_id_rq, 
-		 obj_cmd_rs, 
-		 tmpl_cmd_get_dev_id_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
-}
+  int8_t ret, rv = -1;
 
+  if (!dev || !fiid_obj_valid(obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_dev_id_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_dev_id_rq)))
+    goto cleanup;
+
+  if (fill_cmd_get_dev_id (obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_APP_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
+}

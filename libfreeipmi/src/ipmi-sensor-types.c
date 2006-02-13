@@ -300,4 +300,3 @@ ipmi_get_sensor_group (int sensor_type)
 
   return ipmi_sensor_types[0];
 }
-

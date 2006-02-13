@@ -89,12 +89,17 @@ main (int argc, char **argv)
 	}
     }
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+    {
+      perror("fiid_obj_create");
+      exit (EXIT_FAILURE);
+    }
   if (ipmi_cmd_get_dev_id (&dev, obj_cmd_rs) != 0)
     {
       perror ("ipmi_cmd()");
+      exit (EXIT_FAILURE);
     }
-  ipmi_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  ipmi_obj_dump (fileno (stdout), obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {

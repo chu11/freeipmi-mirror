@@ -251,7 +251,6 @@ extern "C" {
 #include "ipmi-sensor-event-messages.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sel-api.h"
-
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
 	const char *__format, ...)

@@ -1,3 +1,29 @@
+2006-02-13  Albert Chu <chu11@llnl.gov>
+
+        Collective fixes from branch al_fiid_rearchitect_branch at tag
+	al_fiid_rearchitect_branch_final.  See ChangeLog in branch for
+	detailed day by day changes.
+
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented
+	with new, more abstract interface.
+
+	* libfreeipmi/src/bit-ops.c (bits_extract, bits_merge): Add parameter checks.
+
+	* libfreeipmi/src/bit-ops.c (bits_merge): Fix bit shifting bug.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.c: Support optional fields
+	with get chassis status response and chassis identify request.
+
+	* libfreeipmi/src/ipmi-sessions.h,
+	libfreeipmi/src/ipmi-sessions.c,
+	libfreeipmi/src/ipmi-lan-interface.c: Support optional auth_code
+	in LAN sessio header through one template.
+
+	* libfreeipmi/src/ipmi-lan-interface-udm.c: Use interface
+	assemble/unassembly functions rather than UDM functions.
+
+	* Support new fiid interface globally.
+
 2006-02-13  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read): Fix logic bug.
@@ -584,33 +610,33 @@
 
 2006-01-30  Albert Chu  <chu11@llnl.gov>
 
-	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
-	output message.
+        * bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Re-add error
+        output message.
 
-	* bmc-watchdog/src/bmc-watchdog.c (_FIID_OBJ_GET): Cleaned up code.
+        * bmc-watchdog/src/bmc-watchdog.c (_FIID_OBJ_GET): Cleaned up code.
 
-	* bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
+        * bmc-watchdog/src/bmc-watchdog.c: Remove all #if 0'd code.
 
-	* libfreeipmi/src/ipmi-interface.c (ipmi_cmd): Add parameter
-	checks.
+        * libfreeipmi/src/ipmi-interface.c (ipmi_cmd): Add parameter
+        checks.
 
-	* libfreeipmi/src/ipmi-msg-support-cmds.c
-	(ipmi_get_channel_number2): Add parameter check.
+        * libfreeipmi/src/ipmi-msg-support-cmds.c
+        (ipmi_get_channel_number2): Add parameter check.
 
-	* libfreeipmi/src/ipmi-dev-global-cmds.c (fill_cmd_get_dev_id):
-	Add parameter check.
+        * libfreeipmi/src/ipmi-dev-global-cmds.c (fill_cmd_get_dev_id):
+        Add parameter check.
 
-	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
-	Add parameter checks.
+        * libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_spmi_table):
+        Add parameter checks.
 
-	* bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix debug output
-	messages.
+        * bmc-watchdog/src/bmc-watchdog.c (_cmd): Fix debug output
+        messages.
 
-	* bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd): Fix corner case.
+        * bmc-watchdog/src/bmc-watchdog.c (_daemon_cmd): Fix corner case.
 
-	* bmc-watchdog/src/bmc-watchdog.c (_daemon_setup): Fix infinite
-	loop bug.
-
+        * bmc-watchdog/src/bmc-watchdog.c (_daemon_setup): Fix infinite
+        loop bug.
+	
 2006-01-29  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sessions.c (check_hdr_session_seq_num,

@@ -107,6 +107,7 @@ extern fiid_template_t tmpl_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_suspend_bmc_arps_rs;
 
 extern fiid_template_t tmpl_get_lan_conf_param_rq;
+extern fiid_template_t tmpl_get_lan_conf_param_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_bmc_generated_arp_control_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_gratuitous_arp_interval_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs;

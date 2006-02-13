@@ -201,16 +201,54 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 		     char *errstr, 
 		     size_t len)
 {
-  uint8_t cmd, comp_code;
-  
-  if (obj_cmd == NULL || errstr == NULL)
+  uint64_t cmd, comp_code;
+  int32_t _len;
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  cmd = obj_cmd[0];
-  comp_code = obj_cmd[1];
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);
   
   return ipmi_strerror_r (cmd, comp_code, errstr, len); 
 }
@@ -252,4 +290,5 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
   
   SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
 };
+
 

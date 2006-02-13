@@ -26,27 +26,47 @@ ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  if (IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy) == 0)
+  int8_t ret, rv = -1;
+
+  if (!dev
+      || !IPMI_POWER_RESTORE_POLICY_VALID (power_restore_policy)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
+      errno = EINVAL;
       return (-1);
     }
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_power_restore_policy_rq);
-  ERR (fill_cmd_set_power_restore_policy (power_restore_policy, obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_CHASSIS_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_power_restore_policy_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_power_restore_policy_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_power_restore_policy_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_power_restore_policy_rq)))
+    goto cleanup;
+
+  if (fill_cmd_set_power_restore_policy (power_restore_policy, 
+					 obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_CHASSIS_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -54,21 +74,43 @@ ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  ERR (dev != NULL);
-  ERR (obj_cmd_rs != NULL);
-  
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
-  ERR (fill_cmd_get_chassis_status (obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_CHASSIS_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_cmd_get_chassis_status_rq, 
-		 obj_cmd_rs, 
-		 tmpl_cmd_get_chassis_status_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
-}
+  int8_t ret, rv = -1;
 
+  if (!dev
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_chassis_status_rq)))
+    goto cleanup;
+
+  if (fill_cmd_get_chassis_status (obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_CHASSIS_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
+}

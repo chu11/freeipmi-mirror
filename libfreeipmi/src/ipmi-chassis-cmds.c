@@ -22,66 +22,74 @@
 
 fiid_template_t tmpl_set_power_restore_policy_rq =
   {
-    {8, "cmd"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {3, "power_restore_policy"}, 
-    {5, "power_restore_policy.reserved"}, 
+    {3, "power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {5, "power_restore_policy.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_power_restore_policy_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "powered_off_after_ac_mains_returns_flag"}, 
-    {1, "restoring_power_to_state_when_ac_mains_was_lost_flag"}, 
-    {1, "always_powering_up_after_ac_mains_returns_flag"}, 
-    {5, "power_restore_policy_support.reserved"}, 
+    {1, "powered_off_after_ac_mains_returns_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "restoring_power_to_state_when_ac_mains_was_lost_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "always_powering_up_after_ac_mains_returns_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {5, "power_restore_policy_support.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
   {
-    {8, "cmd"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_get_chassis_status_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {1, "power_state.power_on"},
-    {1, "power_state.power_overload"},
-    {1, "power_state.interlock"},
-    {1, "power_state.power_fault"},
-    {1, "power_state.power_control_fault"},
-    {2, "power_state.power_restore_policy"},
-    {1, "power_state.reserved"},
-    {1, "last_power_event.ac_failed"},
-    {1, "last_power_event.power_down_overload"},
-    {1, "last_power_event.power_down_interlock"},
-    {1, "last_power_event.power_down_fault"},
-    {1, "last_power_event.power_on_via_ipmi"},
-    {3, "last_power_event.reserved"},
-    {1, "misc_chassis.chassis_intrusion_active"},
-    {1, "misc_chassis.front_panel_lockout_active"},
-    {1, "misc_chassis.drive_fault"},
-    {1, "misc_chassis.cooling_fan_fault"},
-    {2, "misc_chassis.chassis_identify_state"},
-    {1, "misc_chassis.chassis_identify_command_and_state_info_supported"},
-    {1, "misc_chassis.reserved"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_on", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_overload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.power_control_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "power_state.power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "power_state.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.ac_failed", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_overload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_interlock", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_down_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "last_power_event.power_on_via_ipmi", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "last_power_event.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.chassis_intrusion_active", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.front_panel_lockout_active", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.drive_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.cooling_fan_fault", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "misc_chassis.chassis_identify_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.chassis_identify_command_and_state_info_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "misc_chassis.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.power_off_button_disabled", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.reset_button_disabled", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.diagnostic_interrupt_button_disabled", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.standy_button_disabled", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.power_off_button_disable_allowed", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.reset_button_disable_allowed", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.diagnostic_interrupt_button_disable_allowed", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "front_panel.standby_button_disable_allowed", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_ctrl_rq =
   {
-    {8, "cmd"},
-    {4, "chassis_ctrl"},
-    {4, "reserved1"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "chassis_ctrl", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 /* NOTE: 
@@ -90,61 +98,59 @@ fiid_template_t tmpl_cmd_chassis_ctrl_rq =
 */
 fiid_template_t tmpl_cmd_chassis_ctrl_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_identify_rq = 
   {
-    {8, "cmd"},
-    {7, "reserved"},
-    {0, ""}
-  };
-
-fiid_template_t tmpl_cmd_chassis_identify_interval_rq = 
-  {
-    {8, "cmd"},
-    {8, "identify_interval"},
-    {7, "reserved"},
-    {0, ""}
-  };
-
-fiid_template_t tmpl_cmd_chassis_identify_interval_force_rq = 
-  {
-    {8, "cmd"},
-    {8, "identify_interval"},
-    {1, "force_identify"},
-    {7, "reserved"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "identify_interval", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {1, "force_identify", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {7, "reserved", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_chassis_identify_rs = 
   {
-    {8, "cmd"},
-    {8, "comp_code"},
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 int8_t 
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd)
       || !IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, 
-		tmpl_set_power_restore_policy_rq, 
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_set_power_restore_policy_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY);
   
   FIID_OBJ_SET (obj_cmd, 
-		tmpl_set_power_restore_policy_rq, 
 		(uint8_t *)"power_restore_policy", 
 		power_restore_policy);
+
+  FIID_OBJ_SET (obj_cmd,
+		(uint8_t *)"power_restore_policy.reserved",
+		0);
   
   return 0;
 }
@@ -152,56 +158,88 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 { 
-  if (obj_cmd == NULL)
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
   
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_get_chassis_status_rq, (uint8_t *)"cmd", 
-		IPMI_CMD_GET_CHASSIS_STATUS);
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_chassis_status_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
 
 int8_t
 fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd)
 {
+  int8_t rv;
+
   if (!IPMI_CHASSIS_CTRL_VALID(chassis_ctrl)
-      || obj_cmd == NULL)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"cmd",
-		IPMI_CMD_CHASSIS_CTRL);
-  FIID_OBJ_SET (obj_cmd, tmpl_cmd_chassis_ctrl_rq, (uint8_t *)"chassis_ctrl",
-		chassis_ctrl);
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_ctrl_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CTRL);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_ctrl", chassis_ctrl);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   return 0;
 }  
 
 int8_t
-fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                           uint8_t identify_interval, 
-                           uint8_t force_identify_flag,
+fill_cmd_chassis_identify (uint8_t *identify_interval, 
+			   uint8_t *force_identify_flag,
                            fiid_obj_t obj_cmd)
 {
-  if (!tmpl_identify_cmd
-      || !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(force_identify_flag)
-      || !obj_cmd)
+  int8_t rv;
+
+  if ((force_identify_flag 
+       && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify_flag))
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, (uint8_t *)"cmd",
-		IPMI_CMD_CHASSIS_IDENTIFY);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"identify_interval"))
-    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd, 
-                  (uint8_t *)"identify_interval", identify_interval);
-  if (fiid_obj_field_lookup(tmpl_identify_cmd, (uint8_t *)"force_identify"))
-    FIID_OBJ_SET (obj_cmd, tmpl_identify_cmd,
-                  (uint8_t *)"force_identify", force_identify_flag);
+  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_identify_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
+  if (identify_interval)
+    {
+      FIID_OBJ_SET (obj_cmd, (uint8_t *)"identify_interval", *identify_interval);
+      if (force_identify_flag)
+	{
+	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"force_identify", *force_identify_flag);
+	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
+	}
+    }
 
   return 0;
 }  

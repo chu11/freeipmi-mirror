@@ -27,29 +27,48 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
 				       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
+  int8_t ret, rv = -1;
+
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !obj_cmd_rs)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_sol_conf_param_sol_enable_rq);
-  ERR (fill_sol_conf_sol_enable_disable (channel_number, 
-					 sol_payload,
-                                         obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_sol_conf_param_sol_enable_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_sol_conf_param_sol_enable_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_sol_conf_param_sol_enable_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_sol_conf_param_sol_enable_rq)))
+    goto cleanup;
+
+  if (fill_sol_conf_sol_enable_disable (channel_number, 
+                                        sol_payload,
+                                        obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
   
-  return (0);
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -83,31 +102,50 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !obj_cmd_rs)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sol_conf_param_rq);
-  ERR (fill_get_sol_conf_param (IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
-				channel_number, 
-				parameter_type, 
-				set_selector, 
-				block_selector,
-                                obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_sol_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_sol_conf_param_sol_enable_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sol_conf_param_sol_enable_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sol_conf_param_rq)))
+    goto cleanup;
+
+  if (fill_get_sol_conf_param (IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
+                               channel_number, 
+                               parameter_type, 
+                               set_selector, 
+                               block_selector,
+                               obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 

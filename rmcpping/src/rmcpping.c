@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.11.2.1 2006-02-13 18:48:45 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.11.2.2 2006-02-13 22:21:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,32 +46,31 @@
  */
 #define RMCP_MSG_TAG_MAX  0xFE
 
-static void *
-_fiid_obj_calloc(fiid_template_t tmpl)
+static fiid_obj_t
+_fiid_obj_create(fiid_template_t tmpl)
 {
-  void *ptr;
+  fiid_obj_t obj;
  
   assert(tmpl != NULL);
  
-  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
-    ipmi_ping_err_exit("fiid_obj_calloc: %s", strerror(errno));
+  if ((obj = fiid_obj_create(tmpl)) == NULL)
+    ipmi_ping_err_exit("fiid_obj_create: %s", strerror(errno));
  
-  return ptr;
+  return obj;
 }
  
 static void
-_fiid_obj_free(fiid_obj_t obj)
+_fiid_obj_destroy(fiid_obj_t obj)
 {
-  fiid_obj_free(obj);
+  fiid_obj_destroy(obj);
 }
 
 static void
-_fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl,
-	      uint8_t *field, uint64_t *val)
+_fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 {
-  assert(obj != NULL && tmpl != NULL && field != NULL && val != NULL);
+  assert(obj && field && val);
 
-  if (fiid_obj_get(obj, tmpl, field, val) < 0)
+  if (fiid_obj_get(obj, field, val) < 0)
     ipmi_ping_err_exit("fiid_obj_get: %s", strerror(errno));
 }
 
@@ -93,8 +92,8 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = _fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = _fiid_obj_calloc(tmpl_cmd_asf_presence_ping);
+  obj_rmcp_hdr = _fiid_obj_create(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = _fiid_obj_create(tmpl_cmd_asf_presence_ping);
 
   if (fill_hdr_rmcp_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
@@ -104,7 +103,6 @@ createpacket(char *buffer,
     ipmi_ping_err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
 
   if ((len = assemble_rmcp_pkt(obj_rmcp_hdr, obj_rmcp_cmd, 
-                               tmpl_cmd_asf_presence_ping,
                                (uint8_t *)buffer, buflen)) < 0)
     ipmi_ping_err_exit("assemble_rmcp_pkt: %s", strerror(errno));
   
@@ -118,8 +116,8 @@ createpacket(char *buffer,
     }
 #endif
 
-  _fiid_obj_free(obj_rmcp_hdr);
-  _fiid_obj_free(obj_rmcp_cmd);
+  _fiid_obj_destroy(obj_rmcp_hdr);
+  _fiid_obj_destroy(obj_rmcp_cmd);
   return len;
 }
 
@@ -141,8 +139,8 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_rmcp_hdr = _fiid_obj_calloc(tmpl_hdr_rmcp);
-  obj_rmcp_cmd = _fiid_obj_calloc(tmpl_cmd_asf_presence_pong);
+  obj_rmcp_hdr = _fiid_obj_create(tmpl_hdr_rmcp);
+  obj_rmcp_cmd = _fiid_obj_create(tmpl_cmd_asf_presence_pong);
 
 #ifndef NDEBUG
   if (debug)
@@ -153,12 +151,10 @@ parsepacket(char *buffer,
     }
 #endif
 
-  if (unassemble_rmcp_pkt(buffer, buflen, tmpl_cmd_asf_presence_pong, 
-                          obj_rmcp_hdr, obj_rmcp_cmd) < 0)
+  if (unassemble_rmcp_pkt(buffer, buflen, obj_rmcp_hdr, obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
-  _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-		(uint8_t *)"msg_type", (uint64_t *)&msg_type);
+  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"msg_type", (uint64_t *)&msg_type);
 
   if (msg_type != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
     {
@@ -166,8 +162,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
-		(uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
+  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
   if (msg_tag != (seq_num % (RMCP_MSG_TAG_MAX + 1)))
     {
       retval = 0;
@@ -177,7 +172,7 @@ parsepacket(char *buffer,
   printf("pong received from %s: msg_tag=%u", from, (uint32_t)msg_tag);
   if (verbose)
     {
-      _fiid_obj_get(obj_rmcp_cmd, tmpl_cmd_asf_presence_pong, 
+      _fiid_obj_get(obj_rmcp_cmd, 
 		    (uint8_t *)"supported_entities.ipmi_supported", 
 		    (uint64_t *)&ipmi_supported);
       printf(", ipmi %s", _supported(ipmi_supported));
@@ -186,8 +181,8 @@ parsepacket(char *buffer,
   
   retval = 1;
  cleanup:
-  _fiid_obj_free(obj_rmcp_hdr);
-  _fiid_obj_free(obj_rmcp_cmd);
+  _fiid_obj_destroy(obj_rmcp_hdr);
+  _fiid_obj_destroy(obj_rmcp_cmd);
   return retval;
 }
 

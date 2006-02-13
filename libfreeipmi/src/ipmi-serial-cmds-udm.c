@@ -30,30 +30,48 @@ ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  
-  if (!dev || !obj_cmd_rs)
+  int8_t ret, rv = -1;
+
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_serial_conf_param_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_connmode_rq)))
+    goto cleanup;
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_connmode_rq);
-  ERR (fill_set_serial_connmode (channel_number, 
-				 basic_mode_enable, 
-				 ppp_mode_enable, 
-				 terminal_mode_enable, 
-				 direct,
-                                 obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_serial_conf_param_connmode_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if (fill_set_serial_connmode (channel_number, 
+                                basic_mode_enable, 
+                                ppp_mode_enable, 
+                                terminal_mode_enable, 
+                                direct,
+                                obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -63,27 +81,45 @@ ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev,
 					     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_pageblackout_rq);
-  ERR (fill_set_serial_page_blackout_interval (channel_number, 
-					       page_blackout_interval,
-                                               obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_serial_conf_param_pageblackout_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_serial_conf_param_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_pageblackout_rq)))
+    goto cleanup;
+
+  if (fill_set_serial_page_blackout_interval (channel_number, 
+                                              page_blackout_interval,
+                                              obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -93,27 +129,45 @@ ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_retry_rq);
-  ERR (fill_set_serial_retry_time (channel_number, 
-				   retry_time,
-                                   obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_serial_conf_param_retry_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_serial_conf_param_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_retry_rq)))
+    goto cleanup;
+
+  if (fill_set_serial_retry_time (channel_number, 
+                                  retry_time,
+                                  obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -125,29 +179,47 @@ ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev,
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_serial_conf_param_commbits_rq);
-  ERR (fill_set_serial_comm_bits (channel_number, 
-				  dtr_hangup,
-				  flow_control,
-				  bit_rate,
-                                  obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_serial_conf_param_commbits_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_serial_conf_param_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_serial_conf_param_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_commbits_rq)))
+    goto cleanup;
+
+  if (fill_set_serial_comm_bits (channel_number, 
+                                 dtr_hangup,
+                                 flow_control,
+                                 bit_rate,
+                                 obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -159,30 +231,48 @@ ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev,
 			       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_CONNECTION_MODE, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector,
-                                   obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_serial_conf_param_connmode_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_serial_conf_param_connmode_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
+    goto cleanup;
+
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_CONNECTION_MODE, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -194,30 +284,48 @@ ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev,
 				    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector,
-                                   obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_serial_conf_param_pageblackout_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_serial_conf_param_pageblackout_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
+    goto cleanup;
+
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -229,30 +337,48 @@ ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev,
 				 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_RETRY_TIME, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector,
-                                   obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_serial_conf_param_retry_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_serial_conf_param_retry_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
+    goto cleanup;
+
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_RETRY_TIME, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
 
 int8_t 
@@ -264,28 +390,47 @@ ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev,
 				fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
   
-  if (!dev || !obj_cmd_rs)
+  if (!dev 
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_serial_conf_param_rq);
-  ERR (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_COMM_BITS, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector,
-                                   obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_serial_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_serial_conf_param_commbits_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_serial_conf_param_commbits_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
+    goto cleanup;
+
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_COMM_BITS, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
 }
+

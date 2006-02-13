@@ -72,13 +72,14 @@ extern fiid_template_t tmpl_cmd_get_chassis_status_rs;
 
 int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd);
 
+int8_t fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd);
+
 int8_t fill_cmd_get_chassis_status (fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_chassis_ctrl (uint8_t chassis_ctrl, fiid_obj_t obj_cmd);
 
-int8_t fill_cmd_chassis_identify (fiid_template_t tmpl_identify_cmd,
-                                  uint8_t identify_interval,
-                                  uint8_t force_identify_flag,
+int8_t fill_cmd_chassis_identify (uint8_t *identify_interval,
+                                  uint8_t *force_identify_flag,
                                   fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus

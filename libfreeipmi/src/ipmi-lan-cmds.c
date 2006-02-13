@@ -20,394 +20,466 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_set_lan_conf_param_bmc_generated_arp_control_rq =
+fiid_template_t tmpl_set_lan_conf_param_rq = 
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
-    {8, "parameter_selector"}, 
-    /* for BMC generated ARP control */
-    {1, "bmc_generated_gratuitous_arps_flag"}, 
-    {1, "bmc_generated_arp_responses_flag"}, 
-    {6, "reserved2"}, 
-    {0, ""}
+    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,    "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,    "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,    "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
-    {0,  ""}
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0,  "", 0}
+  };
+
+fiid_template_t tmpl_set_lan_conf_param_bmc_generated_arp_control_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    /* for BMC generated ARP control */
+    {1, "bmc_generated_gratuitous_arps_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "bmc_generated_arp_responses_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_gratuitous_arp_interval_rq =
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
-    {8, "parameter_selector"}, 
-    {8, "gratuitous_arp_interval"}, 
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "gratuitous_arp_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_auth_type_enables_rq =
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
-    {8, "parameter_selector"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* for Authentication type enables */
     /* byte 1 */
-    {1, "max_privilege_auth_type_callback_level.none"},
-    {1, "max_privilege_auth_type_callback_level.md2"},
-    {1, "max_privilege_auth_type_callback_level.md5"},
-    {1, "max_privilege_auth_type_callback_level.reserved1"},
-    {1, "max_privilege_auth_type_callback_level.straight_password"},
-    {1, "max_privilege_auth_type_callback_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_callback_level.reserved2"}, 
+    {1, "max_privilege_auth_type_callback_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_callback_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 2 */
-    {1, "max_privilege_auth_type_user_level.none"},
-    {1, "max_privilege_auth_type_user_level.md2"},
-    {1, "max_privilege_auth_type_user_level.md5"},
-    {1, "max_privilege_auth_type_user_level.reserved1"},
-    {1, "max_privilege_auth_type_user_level.straight_password"},
-    {1, "max_privilege_auth_type_user_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_user_level.reserved2"}, 
+    {1, "max_privilege_auth_type_user_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_user_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 3 */
-    {1, "max_privilege_auth_type_operator_level.none"},
-    {1, "max_privilege_auth_type_operator_level.md2"},
-    {1, "max_privilege_auth_type_operator_level.md5"},
-    {1, "max_privilege_auth_type_operator_level.reserved1"},
-    {1, "max_privilege_auth_type_operator_level.straight_password"},
-    {1, "max_privilege_auth_type_operator_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_operator_level.reserved2"}, 
+    {1, "max_privilege_auth_type_operator_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_operator_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 4 */
-    {1, "max_privilege_auth_type_admin_level.none"},
-    {1, "max_privilege_auth_type_admin_level.md2"},
-    {1, "max_privilege_auth_type_admin_level.md5"},
-    {1, "max_privilege_auth_type_admin_level.reserved1"},
-    {1, "max_privilege_auth_type_admin_level.straight_password"},
-    {1, "max_privilege_auth_type_admin_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_admin_level.reserved2"}, 
+    {1, "max_privilege_auth_type_admin_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_admin_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 5 */
-    {1, "max_privilege_auth_type_oem_level.none"},
-    {1, "max_privilege_auth_type_oem_level.md2"},
-    {1, "max_privilege_auth_type_oem_level.md5"},
-    {1, "max_privilege_auth_type_oem_level.reserved1"},
-    {1, "max_privilege_auth_type_oem_level.straight_password"},
-    {1, "max_privilege_auth_type_oem_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_oem_level.reserved2"}, 
-    {0, ""}
+    {1, "max_privilege_auth_type_oem_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_oem_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_ip_addr_source_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved1"},
-    {8, "parameter_selector"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
 
-    {4, "ip_addr_source"},
-    {4, "reserved2"},
+    {4, "ip_addr_source", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_ip_addr_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved"},
-    {8, "parameter_selector"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {32, "ip_addr"},
+    {32, "ip_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
     
 fiid_template_t tmpl_set_lan_conf_param_subnet_mask_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved"},
-    {8, "parameter_selector"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {32, "subnet_mask"},
+    {32, "subnet_mask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_mac_addr_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved"},
-    {8, "parameter_selector"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {48, "mac_addr"},
+    {48, "mac_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved1"},
-    {8, "parameter_selector"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {8, "vlan_id_ls"},
-    {4, "vlan_id_ms"},
-    {3, "reserved2"},
-    {1, "vlan_id_enable"},
+    {8, "vlan_id_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "vlan_id_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq =
   {
-    {8, "cmd"},
-    {4, "channel_number"},
-    {4, "reserved1"},
-    {8, "parameter_selector"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {3, "vlan_priority"},
-    {2, "unspecified"},
-    {3, "reserved2"},
+    {3, "vlan_priority", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Bits 3:4 in the IPMI spec do not exist.  */
+    {2, "unspecified", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_suspend_bmc_arps_rq =
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "gratuitous_arp_suspend"}, 
-    {1, "arp_response_suspend"}, 
-    {6, "reserved2"}, 
+    {1, "gratuitous_arp_suspend", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "arp_response_suspend", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_suspend_bmc_arps_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "gratuitous_arp_response_status"}, 
-    {1, "arp_response_status"}, 
-    {6, "reserved2"}, 
+    {1, "gratuitous_arp_response_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "arp_response_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_rq =
   {
-    {8, "cmd"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "channel_number"}, 
-    {3, "reserved1"}, 
-    {1, "parameter_type"}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "parameter_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "parameter_selector"}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "set_selector"}, 
-    {8, "block_selector"}, 
-    {0, ""}
+    {8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_get_lan_conf_param_rs = 
+  {
+    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,    "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,    "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
 
     /* for Authentication type enables */
     /* byte 1 */
-    {1, "max_privilege_auth_type_callback_level.none"},
-    {1, "max_privilege_auth_type_callback_level.md2"},
-    {1, "max_privilege_auth_type_callback_level.md5"},
-    {1, "max_privilege_auth_type_callback_level.reserved1"},
-    {1, "max_privilege_auth_type_callback_level.straight_password"},
-    {1, "max_privilege_auth_type_callback_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_callback_level.reserved2"}, 
+    {1, "max_privilege_auth_type_callback_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_callback_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_callback_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 2 */
-    {1, "max_privilege_auth_type_user_level.none"},
-    {1, "max_privilege_auth_type_user_level.md2"},
-    {1, "max_privilege_auth_type_user_level.md5"},
-    {1, "max_privilege_auth_type_user_level.reserved1"},
-    {1, "max_privilege_auth_type_user_level.straight_password"},
-    {1, "max_privilege_auth_type_user_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_user_level.reserved2"}, 
+    {1, "max_privilege_auth_type_user_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_user_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_user_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 3 */
-    {1, "max_privilege_auth_type_operator_level.none"},
-    {1, "max_privilege_auth_type_operator_level.md2"},
-    {1, "max_privilege_auth_type_operator_level.md5"},
-    {1, "max_privilege_auth_type_operator_level.reserved1"},
-    {1, "max_privilege_auth_type_operator_level.straight_password"},
-    {1, "max_privilege_auth_type_operator_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_operator_level.reserved2"}, 
+    {1, "max_privilege_auth_type_operator_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_operator_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_operator_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 4 */
-    {1, "max_privilege_auth_type_admin_level.none"},
-    {1, "max_privilege_auth_type_admin_level.md2"},
-    {1, "max_privilege_auth_type_admin_level.md5"},
-    {1, "max_privilege_auth_type_admin_level.reserved1"},
-    {1, "max_privilege_auth_type_admin_level.straight_password"},
-    {1, "max_privilege_auth_type_admin_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_admin_level.reserved2"}, 
+    {1, "max_privilege_auth_type_admin_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_admin_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_admin_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* byte 5 */
-    {1, "max_privilege_auth_type_oem_level.none"},
-    {1, "max_privilege_auth_type_oem_level.md2"},
-    {1, "max_privilege_auth_type_oem_level.md5"},
-    {1, "max_privilege_auth_type_oem_level.reserved1"},
-    {1, "max_privilege_auth_type_oem_level.straight_password"},
-    {1, "max_privilege_auth_type_oem_level.oem_proprietary"},
-    {2, "max_privilege_auth_type_oem_level.reserved2"}, 
-    {0, ""}
+    {1, "max_privilege_auth_type_oem_level.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.straight_password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "max_privilege_auth_type_oem_level.oem_proprietary", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "max_privilege_auth_type_oem_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_bmc_generated_arp_control_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
     /* for BMC generated ARP control */
-    {1, "bmc_generated_gratuitous_arps_flag"}, 
-    {1, "bmc_generated_arp_responses_flag"}, 
-    {6, "reserved2"}, 
+    {1, "bmc_generated_gratuitous_arps_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "bmc_generated_arp_responses_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_gratuitous_arp_interval_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "gratuitous_arp_interval"}, 
+    {8, "gratuitous_arp_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_ip_addr_source_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "ip_addr_source"},
-    {4, "reserved"},
+    {4, "ip_addr_source", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_ip_addr_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {32, "ip_addr"},
+    {32, "ip_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_mac_addr_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {48, "mac_addr"},
+    {48, "mac_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_subnet_mask_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {32, "subnet_mask"},
+    {32, "subnet_mask", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_gw_ip_addr_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {32, "ip_addr"},
+    {32, "ip_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_gw_mac_addr_rs =
   {
-    {8, "cmd"},
-    {8, "comp_code"},
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {4, "present_revision"},
-    {4, "oldest_revision_parameter"},
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {48, "mac_addr"},
+    {48, "mac_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "vlan_id_ls"},
-    {4, "vlan_id_ms"},
-    {3, "reserved"},
-    {1, "vlan_id_enable"},
+    {8, "vlan_id_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "vlan_id_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {3, "vlan_priority"},
-    {2, "unspecified"},
-    {3, "reserved"},
+    {3, "vlan_priority", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* Bits 3:4 in the IPMI spec do not exist.  */
+    {2, "unspecified", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {0,  ""}
+    {0,  "", 0}
   };
+
+int8_t
+fill_lan_set_conf_param (fiid_obj_t obj_data_rq,
+                         uint8_t channel_number,
+                         uint8_t *configuration_parameter_data,
+                         uint8_t configuration_parameter_data_len)
+{
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
+      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"cmd", 
+		IPMI_CMD_SET_LAN_CONF_PARAMS);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"channel_number", 
+		channel_number);
+  
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"parameter_selector", 
+		IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL);
+  
+  FIID_OBJ_SET_DATA (obj_data_rq, 
+                     (uint8_t *)"configuration_parameter_data", 
+                     configuration_parameter_data,
+                     configuration_parameter_data_len);
+  
+  return 0;
+}
 
 int8_t 
 fill_lan_set_arp (uint8_t channel_number, 
@@ -415,38 +487,52 @@ fill_lan_set_arp (uint8_t channel_number,
 		  uint8_t bmc_generated_arp_responses_flag,
                   fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_bmc_generated_arp_control_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+  
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 		(uint8_t *)"bmc_generated_gratuitous_arps_flag", 
 		bmc_generated_gratuitous_arps_flag);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_bmc_generated_arp_control_rq, 
 		(uint8_t *)"bmc_generated_arp_responses_flag", 
 		bmc_generated_arp_responses_flag);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved2",
+                0);
+
   return 0;
 }
 
@@ -455,30 +541,41 @@ fill_lan_set_gratuitous_arp_interval (uint8_t channel_number,
 				      uint8_t gratuitous_arp_interval,
                                       fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_gratuitous_arp_interval_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_gratuitous_arp_interval_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_gratuitous_arp_interval_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
     
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_gratuitous_arp_interval_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_gratuitous_arp_interval_rq, 
 		(uint8_t *)"gratuitous_arp_interval", 
 		gratuitous_arp_interval);
   
@@ -514,153 +611,180 @@ fill_lan_set_auth_type_enables (uint8_t channel_number,
                                 int8_t auth_type_oem_oem_proprietary,
                                 fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_auth_type_enables_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_AUTH_TYPE_ENABLES);
   
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_callback_level.none",
                 auth_type_callback_none);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_callback_level.md2",
                 auth_type_callback_md2);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_callback_level.md5",
                 auth_type_callback_md5);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.reserved1",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_callback_level.straight_password",
                 auth_type_callback_straight_password);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_callback_level.oem_proprietary",
                 auth_type_callback_oem_proprietary);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_callback_level.reserved2",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_user_level.none",
                 auth_type_user_none);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_user_level.md2",
                 auth_type_user_md2);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_user_level.md5",
                 auth_type_user_md5);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.reserved1",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_user_level.straight_password",
                 auth_type_user_straight_password);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_user_level.oem_proprietary",
                 auth_type_user_oem_proprietary);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_user_level.reserved2",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_operator_level.none",
                 auth_type_operator_none);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_operator_level.md2",
                 auth_type_operator_md2);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_operator_level.md5",
                 auth_type_operator_md5);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.reserved1",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_operator_level.straight_password",
                 auth_type_operator_straight_password);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_operator_level.oem_proprietary",
                 auth_type_operator_oem_proprietary);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_operator_level.reserved2",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_admin_level.none",
                 auth_type_admin_none);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_admin_level.md2",
                 auth_type_admin_md2);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_admin_level.md5",
                 auth_type_admin_md5);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.reserved1",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_admin_level.straight_password",
                 auth_type_admin_straight_password);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_admin_level.oem_proprietary",
                 auth_type_admin_oem_proprietary);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_admin_level.reserved2",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_oem_level.none",
                 auth_type_oem_none);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_oem_level.md2",
                 auth_type_oem_md2);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_oem_level.md5",
                 auth_type_oem_md5);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
+                (uint8_t *)"max_privilege_auth_type_oem_level.reserved1",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"max_privilege_auth_type_oem_level.straight_password",
                 auth_type_oem_straight_password);
 
   FIID_OBJ_SET (obj_data_rq,
-		tmpl_set_lan_conf_param_auth_type_enables_rq, 
                 (uint8_t *)"max_privilege_auth_type_oem_level.oem_proprietary",
                 auth_type_oem_oem_proprietary);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"max_privilege_auth_type_oem_level.reserved2",
+                0);
+
   return 0;
 }
 
@@ -669,34 +793,48 @@ fill_lan_set_ip_addr_source (uint8_t channel_number,
 			     uint8_t ip_addr_source,
                              fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_IP_ADDR_SOURCE_VALID(ip_addr_source))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_ip_addr_source_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_source_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_source_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_source_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_IP_ADDR_SOURCE);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_source_rq, 
 		(uint8_t *)"ip_addr_source", 
 		ip_addr_source);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved2",
+                0);
+
   return 0;
 }
 
@@ -706,30 +844,41 @@ fill_lan_set_ip_addr (uint8_t parameter_selector,
 		      uint32_t ip_addr,
                       fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_ip_addr_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_rq, 
 		(uint8_t *)"parameter_selector", 
 		parameter_selector);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_ip_addr_rq, 
 		(uint8_t *)"ip_addr", 
 		ip_addr);
   
@@ -743,33 +892,39 @@ fill_lan_set_vlan_id (uint8_t channel_number,
                       fiid_obj_t obj_data_rq)
 {
   uint8_t *ptr, ls, ms;
+  int8_t rv;
 
-  if (obj_data_rq == NULL
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_vlan_id_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_VLAN_ID);
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
 
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq, 
-		(uint8_t *)"vlan_id_enable", 
-		vlan_id_enable);
+		(uint8_t *)"parameter_selector", 
+		IPMI_LAN_PARAM_VLAN_ID);
 
   ptr = (uint8_t *)&vlan_id;
 #if WORDS_BIGENDIAN
@@ -781,15 +936,21 @@ fill_lan_set_vlan_id (uint8_t channel_number,
 #endif
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq, 
 		(uint8_t *)"vlan_id_ls", 
 		ls);
 
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_id_rq, 
 		(uint8_t *)"vlan_id_ms", 
 		ms);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved2",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"vlan_id_enable", 
+		vlan_id_enable);
+
   return 0;
 }
 
@@ -798,33 +959,52 @@ fill_lan_set_vlan_priority (uint8_t channel_number,
                             uint8_t vlan_priority,
                             fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_vlan_priority_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_priority_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_priority_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_priority_rq, 
+		(uint8_t *)"reserved1", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_VLAN_PRIORITY);
 
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_vlan_priority_rq, 
 		(uint8_t *)"vlan_priority", 
 		vlan_priority);
   
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"unspecified", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"reserved2", 
+		0);
+
   return 0;
 }
 
@@ -833,30 +1013,41 @@ fill_lan_set_subnet_mask (uint8_t channel_number,
 			  uint32_t subnet_mask,
                           fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_subnet_mask_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_subnet_mask_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_subnet_mask_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_subnet_mask_rq, 
+		(uint8_t *)"reserved", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_LAN_PARAM_SUBNET_MASK);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_subnet_mask_rq, 
 		(uint8_t *)"subnet_mask", 
 		subnet_mask);
   
@@ -869,30 +1060,41 @@ fill_lan_set_mac_addr (uint8_t parameter_selector,
 		       uint64_t mac_addr,
                        fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_conf_param_mac_addr_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_mac_addr_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_mac_addr_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_mac_addr_rq, 
+		(uint8_t *)"reserved", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_selector", 
 		parameter_selector);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_lan_conf_param_mac_addr_rq, 
 		(uint8_t *)"mac_addr", 
 		mac_addr);
   
@@ -907,40 +1109,49 @@ fill_get_lan_conf_param (uint8_t parameter_selector,
 			 uint8_t block_selector,
                          fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_lan_conf_param_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_LAN_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
+		(uint8_t *)"reserved1", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_type", 
 		parameter_type);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
 		(uint8_t *)"parameter_selector", 
 		parameter_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
 		(uint8_t *)"set_selector", 
 		set_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_lan_conf_param_rq, 
 		(uint8_t *)"block_selector", 
 		block_selector);
   
@@ -953,7 +1164,9 @@ fill_suspend_bmc_arps (uint8_t channel_number,
 		       uint8_t arp_response_suspend,
                        fiid_obj_t obj_data_rq)
 {
-  if (obj_data_rq == NULL
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
       || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(arp_response_suspend))
@@ -962,26 +1175,40 @@ fill_suspend_bmc_arps (uint8_t channel_number,
       return (-1);
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_suspend_bmc_arps_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_suspend_bmc_arps_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SUSPEND_BMC_ARPS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_suspend_bmc_arps_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_suspend_bmc_arps_rq, 
+		(uint8_t *)"reserved1", 
+		0);
+
+  FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"gratuitous_arp_suspend", 
 		gratuitous_arp_suspend);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_suspend_bmc_arps_rq, 
 		(uint8_t *)"arp_response_suspend", 
 		arp_response_suspend);
+
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"reserved2", 
+		0);
   
   return 0;
 }
+
 

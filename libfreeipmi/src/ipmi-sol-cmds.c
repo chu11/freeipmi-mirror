@@ -22,51 +22,51 @@
 
 fiid_template_t tmpl_set_sol_conf_param_sol_enable_rq =
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
-    {8, "parameter_selector"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "sol_payload"}, 
-    {7, "reserved2"}, 
+    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0, ""}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_set_sol_conf_param_sol_enable_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
-    {0,  ""}
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0,  "", 0}
   };
 
 fiid_template_t tmpl_get_sol_conf_param_rq =
   {
-    {8, "cmd"}, 
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "channel_number"}, 
-    {3, "reserved1"}, 
-    {1, "parameter_type"}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "parameter_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "parameter_selector"}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {8, "set_selector"}, 
-    {8, "block_selector"}, 
-    {0, ""}
+    {8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {1, "sol_payload"}, 
-    {7, "reserved2"}, 
+    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     
-    {0,  ""}
+    {0,  "", 0}
   };
 
 int8_t 
@@ -74,33 +74,48 @@ fill_sol_conf_sol_enable_disable (uint8_t channel_number,
 				  uint8_t sol_payload,
                                   fiid_obj_t obj_data_rq)
 {
-  if (!obj_data_rq
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_conf_param_sol_enable_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return -1;
     }
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SOL_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
+
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
 		(uint8_t *)"parameter_selector", 
 		IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
 		(uint8_t *)"sol_payload", 
 		sol_payload);
   
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved2",
+                0);
+
   return 0;
 }
 
@@ -112,42 +127,52 @@ fill_get_sol_conf_param (uint8_t parameter_selector,
 			 uint8_t block_selector,
                          fiid_obj_t obj_data_rq)
 {
-  if (!obj_data_rq
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
       errno = EINVAL;
       return -1;
     }
 
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sol_conf_param_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SOL_CONF_PARAMS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
     
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"parameter_type", 
 		parameter_type);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"parameter_selector", 
 		parameter_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"set_selector", 
 		set_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"block_selector", 
 		block_selector);
   
   return 0;
 }
+

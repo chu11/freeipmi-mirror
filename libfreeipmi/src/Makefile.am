@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libfreeipmi.la
 # AM_CFLAGS = -Wall -D_GNU_SOURCE -DFREEIPMI_LIBRARY -fpack-struct
 AM_CFLAGS = -Wall -D_GNU_SOURCE -DFREEIPMI_BUILD -DFREEIPMI_LIBRARY -D_REENTRANT
 
-EXTRA_DIST = 
+EXTRA_DIST = libfreeipmi.map
 
 libfreeipmi_la_SOURCES= bit-ops.c libfreeipmi.c xmalloc.c fiid.c ipmi-locate.c smbios-locate.c acpi-spmi-locate.c pci-locate.c defaults-locate.c rmcp.c ipmi-utils.c ipmi-error.c ipmi-sessions.c ipmi-semaphores.c ipmi-udm.c ipmi-lan-interface.c ipmi-kcs-interface.c ipmi-smic-interface.c ipmi-ssif-interface.c ipmi-msg-support-cmds.c ipmi-chassis-cmds.c ipmi-dev-global-cmds.c ipmi-sdr-record-types.c ipmi-sdr-repo-cmds.c ipmi-sensor-types.c ipmi-sensor-cmds.c ipmi-sel-record-types.c ipmi-sel-cmds.c ipmi-lan-cmds.c ipmi-sol-cmds.c ipmi-md2.c ipmi-md5.c ipmi-serial-cmds.c ipmi-sdr-repo-cache.c ipmi-sensor-utils.c ipmi-debug.c ipmi-watchdog.c ipmi-msg-interface-desc.c ipmi-pef-cmds.c ipmi-sensor-event-messages.c ipmi-sensor-api.c ipmi-sel-api.c ipmi-sensor-cmds-udm.c ipmi-sel-cmds-udm.c ipmi-lan-cmds-udm.c ipmi-chassis-cmds-udm.c ipmi-dev-global-cmds-udm.c ipmi-pef-cmds-udm.c ipmi-sdr-repo-cmds-udm.c ipmi-serial-cmds-udm.c ipmi-sol-cmds-udm.c ipmi-msg-support-cmds-udm.c ipmi-lan-interface-udm.c ipmi-kcs-interface-udm.c ipmi-ssif-interface-udm.c
 

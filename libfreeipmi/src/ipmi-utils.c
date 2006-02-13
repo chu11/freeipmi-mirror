@@ -65,25 +65,69 @@ ipmi_chksum_test (uint8_t *buf, uint64_t len)
 int8_t 
 ipmi_comp_test (fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd)
+#if defined (IPMI_SYSLOG)
+  uint64_t cmd;
+#endif /* IPMI_SYSLOG */
+  uint64_t comp_code;
+  int32_t len;
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
-  
-  if (IPMI_COMP_CODE (obj_cmd) != IPMI_COMP_CODE_COMMAND_SUCCESS)
+
+#if defined (IPMI_SYSLOG)
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+#endif /* IPMI_SYSLOG */
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+#if defined (IPMI_SYSLOG)
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
+    return (-1);
+#endif /* IPMI_SYSLOG */
+
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"comp_code", &comp_code) < 0)
+    return (-1);
+
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {
 #if defined (IPMI_SYSLOG)
-      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN]; 
+      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN];
       ipmi_strerror_cmd_r (obj_cmd, _str, IPMI_ERR_STR_MAX_LEN);
-      sprintf (errstr, "cmd[%d].comp_code[%d]: %s", obj_cmd[0],
-	       IPMI_COMP_CODE (obj_cmd), _str);
+      sprintf (errstr, "cmd[%llX].comp_code[%llX]: %s",
+               cmd, comp_code, _str);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
 #endif /* IPMI_SYSLOG */
       errno = EIO;
       return (0);
     }
-  return (1); 
+  return (1);
 }
 
 int

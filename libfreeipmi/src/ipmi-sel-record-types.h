@@ -68,7 +68,7 @@ extern fiid_template_t tmpl_discrete_event_data;
 extern fiid_template_t tmpl_oem_event_data;
 
 int ipmi_get_sel_record_type (uint8_t record_type);
-int get_sel_record (uint8_t *record_data, sel_record_t *sel_record);
+int get_sel_record (uint8_t *record_data, uint32_t record_data_len, sel_record_t *sel_record);
 
 #ifdef __cplusplus
 }

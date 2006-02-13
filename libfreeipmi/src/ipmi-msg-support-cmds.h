@@ -246,9 +246,9 @@ extern fiid_template_t tmpl_get_user_access_rs;
 extern fiid_template_t tmpl_get_channel_info_rq;
 extern fiid_template_t tmpl_get_channel_info_rs;
 
-int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd);
+int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);
 
-int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code);
+int8_t ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code);
 
 #ifdef __cplusplus
 }
