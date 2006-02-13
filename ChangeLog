@@ -1,6 +1,7 @@
-2006-02-XX  Albert Chu  <chu11@llnl.gov>
+2006-02-13  Albert Chu  <chu11@llnl.gov>
 
-	* Bring in cleanup changes from al_libfreeipmi_cleanup_branch.
+	* Bring in cleanup changes from al_libfreeipmi_cleanup_branch at
+	tag al_libfreeipmi_cleanup_branch_final.
 
 	* libfreeipmi/src/ipmi-sensor-types.h,
 	libfreeipmi/src/ipmi-sensor-types.c: Remove old unused arrays.
