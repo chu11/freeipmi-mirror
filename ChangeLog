@@ -1,8 +1,9 @@
 ------------------------------------------------------------
-2006-XX-XX  Albert Chu <chu11@llnl.gov>
+2006-02-13  Albert Chu <chu11@llnl.gov>
 
-        Collective fixes from branch al_fiid_rearchitect_branch.  See
-	ChangeLog in branch for detailed day by day changes.
+        Collective fixes from branch al_fiid_rearchitect_branch at tag
+	al_fiid_rearchitect_branch_final.  See ChangeLog in branch for
+	detailed day by day changes.
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/fiid.c: Re-implemented
 	with new, more abstract interface.
@@ -18,7 +19,10 @@
 	libfreeipmi/src/ipmi-sessions.c,
 	libfreeipmi/src/ipmi-lan-interface.c: Support optional auth_code
 	in LAN sessio header through one template.
-	
+
+	* libfreeipmi/src/ipmi-lan-interface-udm.c: Use interface
+	assemble/unassembly functions rather than UDM functions.
+
 	* Support new fiid interface globally.
 
 ------------------------------------------------------------
