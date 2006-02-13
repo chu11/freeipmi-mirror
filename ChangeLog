@@ -113,6 +113,11 @@
 	libfreeipmi/src/ipmi-ssif-interface-udm.c: Support new SSIF
 	interface.
 
+2006-02-13  Albert Chu <chu11@llnl.gov>
+
+	* rmcpping/, ipmiping/, ipmipower/, bmc-watchdog/, common/,
+	doc/examples: Fix remaining copyright notices.
+	
 2006-02-12  Anand Babu  <ab@zresearch.com>
 
 	* Copyright notices: Updated new FSF's address.
