@@ -3,7 +3,7 @@
 	* rmcpping/, ipmiping/, ipmipower/, bmc-watchdog/, common/,
 	doc/examples: Fix remaining copyright notices.
 
-	* tagged freeipmi_0_3_0_devel
+	* tagged freeipmi_0_3_0_devel_branch and freeipmi_0_3_0_devel_branch_base.
 	
 2006-02-12  Anand Babu  <ab@zresearch.com>
 
