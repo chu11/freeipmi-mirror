@@ -3,6 +3,11 @@
 	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read): Fix logic bug.
 
 	* tagged al_libfreeipmi_cleanup_branch_final_merge_complete.
+
+	* libfreeipmi/src/ipmi-udm.c (ipmi_inband_close, ipmi_cmd): SSIF
+	interface bug fixes.
+
+	* libfreeipmi/src/ipmi-udm.h: Remove unecessary struct members.
 	
 2006-02-13  Albert Chu  <chu11@llnl.gov>
 

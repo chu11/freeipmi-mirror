@@ -69,7 +69,6 @@ struct ipmi_device
       uint8_t            retry_count:4;
       ipmi_locate_info_t locate_info;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
-      int                mutex_semid;
 
       ipmi_kcs_ctx_t     kcs_ctx;
       ipmi_ssif_ctx_t    ssif_ctx;

@@ -268,14 +268,7 @@ ipmi_open_inband (ipmi_device_t *dev,
       errno = EINVAL;
       return (-1);
     }
-
-  /* device already opened */
-  if (dev->io.inband.mutex_semid != 0)
-    {
-      errno = EBUSY;
-      return (-1);
-    }
-  
+ 
   switch (driver_type)
     {
     case IPMI_DEVICE_KCS:
@@ -469,8 +462,6 @@ ipmi_open_inband (ipmi_device_t *dev,
       return (-1);
     }
   
-  ERR ((dev->io.inband.mutex_semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY ())) != -1);
-
   return (0);
 }
 
@@ -508,17 +499,7 @@ ipmi_cmd (ipmi_device_t *dev,
       status = ipmi_kcs_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
       break;
     case IPMI_DEVICE_SSIF:
-      if (dev->mode == IPMI_MODE_NONBLOCK)
-	{
-	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
-	  if (status == -1 && errno == EAGAIN)
-	    return (-1);
-	  ERR ((!(status == -1 && errno != EAGAIN)));
-	} 
-      else
-	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_ssif_cmd2 (dev, obj_cmd_rq, tmpl_cmd_rq, obj_cmd_rs, tmpl_cmd_rs);
-      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
@@ -554,17 +535,7 @@ ipmi_cmd_raw (ipmi_device_t *dev,
       status = ipmi_kcs_cmd_raw2 (dev, in, in_len, out, out_len);
       break;
     case IPMI_DEVICE_SSIF:
-      if (dev->mode == IPMI_MODE_NONBLOCK)
-	{
-	  status = IPMI_MUTEX_LOCK_INTERRUPTIBLE (dev->io.inband.mutex_semid);
-	  if (status == -1 && errno == EAGAIN)
-	    return (-1);
-	  ERR ((!(status == -1 && errno != EAGAIN)));
-	} 
-      else
-	IPMI_MUTEX_LOCK (dev->io.inband.mutex_semid);
       status = ipmi_ssif_cmd_raw2 (dev, in, in_len, out, out_len);
-      IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
       break;
     case IPMI_DEVICE_SMIC:
     case IPMI_DEVICE_BT:
@@ -601,8 +572,6 @@ ipmi_inband_close (ipmi_device_t *dev)
       return (-1);
     }
   
-  dev->io.inband.mutex_semid = 0;
-  
   switch (dev->type)
     {
     case IPMI_DEVICE_KCS:
@@ -621,9 +590,6 @@ ipmi_inband_close (ipmi_device_t *dev)
     }
   ipmi_locate_free (&(dev->io.inband.locate_info));
   ipmi_inband_free (dev);
-  
-  if (dev->io.inband.mutex_semid)
-    IPMI_MUTEX_UNLOCK (dev->io.inband.mutex_semid);
   
   return (0);
 }
