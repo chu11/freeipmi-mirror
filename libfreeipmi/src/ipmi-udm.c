@@ -38,14 +38,14 @@ ipmi_outofband_free (ipmi_device_t *dev)
       return;
     }
 
-  fiid_obj_destroy (dev->io.outofband.rq.obj_hdr_rmcp);
-  fiid_obj_destroy (dev->io.outofband.rs.obj_hdr_rmcp);
-  fiid_obj_destroy (dev->io.outofband.rq.obj_hdr_session);
-  fiid_obj_destroy (dev->io.outofband.rs.obj_hdr_session);
-  fiid_obj_destroy (dev->io.outofband.rq.obj_msg_hdr);
-  fiid_obj_destroy (dev->io.outofband.rs.obj_msg_hdr);
-  fiid_obj_destroy (dev->io.outofband.rq.obj_msg_trlr);
-  fiid_obj_destroy (dev->io.outofband.rs.obj_msg_trlr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_rmcp_hdr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_rmcp_hdr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_lan_session_hdr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_lan_session_hdr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_lan_msg_hdr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_lan_msg_hdr);
+  fiid_obj_destroy (dev->io.outofband.rq.obj_lan_msg_trlr);
+  fiid_obj_destroy (dev->io.outofband.rs.obj_lan_msg_trlr);
 }
 
 static void 
@@ -143,70 +143,70 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   dev->io.outofband.priv_level = priv_level;
   
-  dev->io.outofband.rq.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
-  dev->io.outofband.rs.tmpl_hdr_rmcp_ptr = &tmpl_hdr_rmcp;
+  dev->io.outofband.rq.tmpl_rmcp_hdr_ptr = &tmpl_rmcp_hdr;
+  dev->io.outofband.rs.tmpl_rmcp_hdr_ptr = &tmpl_rmcp_hdr;
   dev->io.outofband.rq.tmpl_lan_session_hdr_ptr = &tmpl_lan_session_hdr;
   dev->io.outofband.rs.tmpl_lan_session_hdr_ptr = &tmpl_lan_session_hdr;
-  dev->io.outofband.rq.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rq;
-  dev->io.outofband.rs.tmpl_msg_hdr_ptr = &tmpl_lan_msg_hdr_rs;
-  dev->io.outofband.rq.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
-  dev->io.outofband.rs.tmpl_msg_trlr_ptr = &tmpl_lan_msg_trlr;
+  dev->io.outofband.rq.tmpl_lan_msg_hdr_ptr = &tmpl_lan_msg_hdr_rq;
+  dev->io.outofband.rs.tmpl_lan_msg_hdr_ptr = &tmpl_lan_msg_hdr_rs;
+  dev->io.outofband.rq.tmpl_lan_msg_trlr_ptr = &tmpl_lan_msg_trlr;
+  dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr = &tmpl_lan_msg_trlr;
   
-  dev->io.outofband.rq.obj_hdr_rmcp =
-    fiid_obj_create (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr));
-  if (dev->io.outofband.rq.obj_hdr_rmcp == NULL)
+  dev->io.outofband.rq.obj_rmcp_hdr =
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_rmcp_hdr_ptr));
+  if (dev->io.outofband.rq.obj_rmcp_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
-  dev->io.outofband.rs.obj_hdr_rmcp =
-    fiid_obj_create (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr));
-  if (dev->io.outofband.rs.obj_hdr_rmcp == NULL)
+  dev->io.outofband.rs.obj_rmcp_hdr =
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_rmcp_hdr_ptr));
+  if (dev->io.outofband.rs.obj_rmcp_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
 
-  dev->io.outofband.rq.obj_hdr_session =
+  dev->io.outofband.rq.obj_lan_session_hdr =
     fiid_obj_create (*(dev->io.outofband.rq.tmpl_lan_session_hdr_ptr));
-  if (dev->io.outofband.rq.obj_hdr_session == NULL)
+  if (dev->io.outofband.rq.obj_lan_session_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
-  dev->io.outofband.rs.obj_hdr_session =
+  dev->io.outofband.rs.obj_lan_session_hdr =
     fiid_obj_create (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr));
-  if (dev->io.outofband.rs.obj_hdr_session == NULL)
+  if (dev->io.outofband.rs.obj_lan_session_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
 
-  dev->io.outofband.rq.obj_msg_hdr =
-    fiid_obj_create (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr));
-  if (dev->io.outofband.rq.obj_msg_hdr == NULL)
+  dev->io.outofband.rq.obj_lan_msg_hdr =
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_lan_msg_hdr_ptr));
+  if (dev->io.outofband.rq.obj_lan_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
-  dev->io.outofband.rs.obj_msg_hdr =
-    fiid_obj_create (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
-  if (dev->io.outofband.rs.obj_msg_hdr == NULL)
+  dev->io.outofband.rs.obj_lan_msg_hdr =
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_lan_msg_hdr_ptr));
+  if (dev->io.outofband.rs.obj_lan_msg_hdr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
 
-  dev->io.outofband.rq.obj_msg_trlr =
-    fiid_obj_create (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr));
-  if (dev->io.outofband.rq.obj_msg_trlr == NULL)
+  dev->io.outofband.rq.obj_lan_msg_trlr =
+    fiid_obj_create (*(dev->io.outofband.rq.tmpl_lan_msg_trlr_ptr));
+  if (dev->io.outofband.rq.obj_lan_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);
     }
-  dev->io.outofband.rs.obj_msg_trlr =
-    fiid_obj_create (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
-  if (dev->io.outofband.rs.obj_msg_trlr == NULL)
+  dev->io.outofband.rs.obj_lan_msg_trlr =
+    fiid_obj_create (*(dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr));
+  if (dev->io.outofband.rs.obj_lan_msg_trlr == NULL)
     {
       ipmi_outofband_free (dev);
       return (-1);

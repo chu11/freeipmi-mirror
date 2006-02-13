@@ -115,7 +115,7 @@ _ipmi_lan_pkt_min_size(uint8_t auth_type,
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  ERR(!((len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0));
+  ERR(!((len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg)) < 0));
   msg_len += len;
@@ -177,9 +177,9 @@ _ipmi_lan_pkt_rq_size (uint8_t auth_type, fiid_obj_t obj_cmd)
 */
 
 int32_t 
-assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
-		       fiid_obj_t obj_hdr_session, 
-		       fiid_obj_t obj_msg_hdr, 
+assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
+		       fiid_obj_t obj_lan_session_hdr, 
+		       fiid_obj_t obj_lan_msg_hdr, 
 		       fiid_obj_t obj_cmd, 
 		       uint8_t *auth_code_data,
 		       uint32_t auth_code_data_len,
@@ -196,13 +196,13 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   uint32_t chksum_data_count = 0;
   int32_t len, req_len;
   uint8_t ipmi_msg_len;
-  fiid_obj_t obj_msg_trlr = NULL;
+  fiid_obj_t obj_lan_msg_trlr = NULL;
   int8_t chksum;
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_hdr_rmcp)
-      || !fiid_obj_valid(obj_hdr_session) 
-      || !fiid_obj_valid(obj_msg_hdr) 
+  if (!fiid_obj_valid(obj_rmcp_hdr)
+      || !fiid_obj_valid(obj_lan_session_hdr) 
+      || !fiid_obj_valid(obj_lan_msg_hdr) 
       || !fiid_obj_valid(obj_cmd) 
       || (auth_code_data && auth_code_data_len > IPMI_SESSION_MAX_AUTH_CODE_LEN)
       || !pkt)
@@ -211,7 +211,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return -1;
     }
   
-  if ((rv = fiid_obj_template_compare(obj_hdr_rmcp, tmpl_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -220,7 +220,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_lan_session_hdr)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_lan_session_hdr, tmpl_lan_session_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -229,7 +229,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_msg_hdr, tmpl_lan_msg_hdr_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -238,7 +238,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_packet_valid(obj_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_packet_valid(obj_rmcp_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -252,7 +252,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
    * fiid_obj_packet_valid() b/c ipmi_msg_len is probably not set yet.
    */
 
-  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"auth_type")) < 0)
+  if ((len = fiid_obj_field_len(obj_lan_session_hdr, (uint8_t *)"auth_type")) < 0)
     return (-1);
 
   if ((req_len = fiid_template_field_len(tmpl_lan_session_hdr, (uint8_t *)"auth_type")) < 0)
@@ -264,7 +264,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_seq_num")) < 0)
+  if ((len = fiid_obj_field_len(obj_lan_session_hdr, (uint8_t *)"session_seq_num")) < 0)
     return (-1);
 
   if ((req_len = fiid_template_field_len(tmpl_lan_session_hdr, (uint8_t *)"session_seq_num")) < 0)
@@ -276,7 +276,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((len = fiid_obj_field_len(obj_hdr_session, (uint8_t *)"session_id")) < 0)
+  if ((len = fiid_obj_field_len(obj_lan_session_hdr, (uint8_t *)"session_id")) < 0)
     return (-1);
 
   if ((req_len = fiid_template_field_len(tmpl_lan_session_hdr, (uint8_t *)"session_id")) < 0)
@@ -288,7 +288,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if ((rv = fiid_obj_packet_valid(obj_msg_hdr)) < 0)
+  if ((rv = fiid_obj_packet_valid(obj_lan_msg_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -306,7 +306,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       return (-1);
     }
 
-  if (fiid_obj_get(obj_hdr_session, (uint8_t *)"auth_type", &auth_type) < 0)
+  if (fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"auth_type", &auth_type) < 0)
     return -1;
 
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type))
@@ -326,11 +326,11 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 
   indx = 0;
 
-  if ((len = fiid_obj_get_all(obj_hdr_rmcp, pkt + indx, pkt_len - indx)) < 0)
+  if ((len = fiid_obj_get_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
     goto cleanup;
   indx += len;
 
-  if ((len = fiid_obj_get_block(obj_hdr_session,
+  if ((len = fiid_obj_get_block(obj_lan_session_hdr,
 				(uint8_t *)"auth_type",
 				(uint8_t *)"session_id",
 				pkt + indx,
@@ -358,7 +358,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 
   msg_data_ptr = (pkt + indx);
 
-  if ((len = fiid_obj_get_block(obj_msg_hdr,
+  if ((len = fiid_obj_get_block(obj_lan_msg_hdr,
 				(uint8_t *)"rs_addr",
 				(uint8_t *)"chksum1",
 				pkt + indx,
@@ -369,7 +369,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 
   chksum_data_ptr = (pkt + indx);
 
-  if ((len = fiid_obj_get_block(obj_msg_hdr,
+  if ((len = fiid_obj_get_block(obj_lan_msg_hdr,
 				(uint8_t *)"rq_addr",
 				(uint8_t *)"rq_seq",
 				pkt + indx,
@@ -387,17 +387,17 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   msg_data_count += len;
   chksum_data_count += len;
 
-  if (!(obj_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+  if (!(obj_lan_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
     goto cleanup;
 
   chksum = ipmi_chksum (chksum_data_ptr, chksum_data_count);
   
-  if (fiid_obj_set_all(obj_msg_trlr, 
+  if (fiid_obj_set_all(obj_lan_msg_trlr, 
 		       (uint8_t *)&chksum, 
 		       sizeof(chksum)) < 0)
     goto cleanup;
   
-  if ((len = fiid_obj_get_all(obj_msg_trlr,
+  if ((len = fiid_obj_get_all(obj_lan_msg_trlr,
 			      pkt + indx,
 			      pkt_len - indx)) < 0)
     goto cleanup;
@@ -421,13 +421,13 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
       
       memset(pwbuf, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
 	  
-      if ((auth_len = fiid_obj_field_len_bytes(obj_hdr_session,
+      if ((auth_len = fiid_obj_field_len_bytes(obj_lan_session_hdr,
 					       (uint8_t *)"auth_code")) < 0)
 	goto cleanup;
       
       if (auth_len)
 	{
-	  if (fiid_obj_get_data(obj_hdr_session, 
+	  if (fiid_obj_get_data(obj_lan_session_hdr, 
 				(uint8_t *)"auth_code",
 				pwbuf,
 				IPMI_SESSION_MAX_AUTH_CODE_LEN) < 0)
@@ -457,7 +457,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 	      uint8_t session_seq_num_buf[1024];
 	      int32_t session_id_len, session_seq_num_len;
 	      
-	      if ((session_id_len = fiid_obj_get_data(obj_hdr_session,
+	      if ((session_id_len = fiid_obj_get_data(obj_lan_session_hdr,
 						      (uint8_t *)"session_id",
 						      session_id_buf,
 						      1024)) < 0)
@@ -469,7 +469,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 		  goto cleanup;
 		}
 	      
-	      if ((session_seq_num_len = fiid_obj_get_data(obj_hdr_session,
+	      if ((session_seq_num_len = fiid_obj_get_data(obj_lan_session_hdr,
 							   (uint8_t *)"session_seq_num",
 							   session_seq_num_buf,
 							   1024)) < 0)
@@ -525,14 +525,14 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 	}
     }
 
-  fiid_obj_destroy(obj_msg_trlr);
+  fiid_obj_destroy(obj_lan_msg_trlr);
   return indx;
   
  cleanup:
   if (pkt)
     memset(pkt, '\0', pkt_len);
-  if (obj_msg_trlr)
-    fiid_obj_destroy(obj_msg_trlr);
+  if (obj_lan_msg_trlr)
+    fiid_obj_destroy(obj_lan_msg_trlr);
   return -1;
 }
 
@@ -548,36 +548,36 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
   |  Checksum            |
   +----------------------+
 Optional Arguments : (pass NULL to ignore)
-  hdr_rmcp, session, msg, cmd and chksum
+  rmcp_hdr, session, msg, cmd and chksum
 */
 
 int8_t 
 unassemble_ipmi_lan_pkt (uint8_t *pkt, 
 			 uint32_t pkt_len, 
-			 fiid_obj_t obj_hdr_rmcp, 
-			 fiid_obj_t obj_hdr_session, 
-			 fiid_obj_t obj_msg_hdr, 
+			 fiid_obj_t obj_rmcp_hdr, 
+			 fiid_obj_t obj_lan_session_hdr, 
+			 fiid_obj_t obj_lan_msg_hdr, 
 			 fiid_obj_t obj_cmd, 
-			 fiid_obj_t obj_msg_trlr)
+			 fiid_obj_t obj_lan_msg_trlr)
 {
   uint64_t auth_type;
   uint32_t indx;
-  uint32_t obj_cmd_len, obj_msg_trlr_len;
+  uint32_t obj_cmd_len, obj_lan_msg_trlr_len;
   int32_t len;
   int8_t rv;
 
   if (!pkt
-      || !fiid_obj_valid(obj_hdr_rmcp)
-      || !fiid_obj_valid(obj_hdr_session) 
-      || !fiid_obj_valid(obj_msg_hdr) 
+      || !fiid_obj_valid(obj_rmcp_hdr)
+      || !fiid_obj_valid(obj_lan_session_hdr) 
+      || !fiid_obj_valid(obj_lan_msg_hdr) 
       || !fiid_obj_valid(obj_cmd)
-      || !fiid_obj_valid(obj_msg_trlr))
+      || !fiid_obj_valid(obj_lan_msg_trlr))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr_rmcp, tmpl_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -586,7 +586,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr_session, tmpl_lan_session_hdr)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_lan_session_hdr, tmpl_lan_session_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -595,7 +595,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_msg_hdr, tmpl_lan_msg_hdr_rs)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs)) < 0)
     return (-1);
 
   if (!rv)
@@ -604,7 +604,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_msg_trlr, tmpl_lan_msg_trlr)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_lan_msg_trlr, tmpl_lan_msg_trlr)) < 0)
     return (-1);
 
   if (!rv)
@@ -614,22 +614,22 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
     }
 
   indx = 0;
-  ERR(!(fiid_obj_clear(obj_hdr_rmcp) < 0));
-  ERR(!((len = fiid_obj_set_all(obj_hdr_rmcp, pkt + indx, pkt_len - indx)) < 0));
+  ERR(!(fiid_obj_clear(obj_rmcp_hdr) < 0));
+  ERR(!((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  ERR(!(fiid_obj_clear(obj_hdr_session) < 0));
-  ERR(!((len = fiid_obj_set_block(obj_hdr_session,
+  ERR(!(fiid_obj_clear(obj_lan_session_hdr) < 0));
+  ERR(!((len = fiid_obj_set_block(obj_lan_session_hdr,
                                   (uint8_t *)"auth_type",
                                   (uint8_t *)"session_id",
                                   pkt + indx,
                                   pkt_len - indx)) < 0));
   indx += len;
 
-  ERR(!(fiid_obj_get(obj_hdr_session, (uint8_t *)"auth_type", &auth_type) < 0));
+  ERR(!(fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"auth_type", &auth_type) < 0));
 
   if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type))
     {
@@ -639,7 +639,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 
   if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
     {
-      ERR(!((len = fiid_obj_set_data(obj_hdr_session,
+      ERR(!((len = fiid_obj_set_data(obj_lan_session_hdr,
                                      (uint8_t *)"auth_code",
                                      pkt + indx,
 				     pkt_len - indx)) < 0));
@@ -649,7 +649,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
         return 0;
     }
 
-  if ((len = fiid_obj_set_data(obj_hdr_session,
+  if ((len = fiid_obj_set_data(obj_lan_session_hdr,
 			       (uint8_t *)"ipmi_msg_len",
 			       pkt + indx,
 			       pkt_len - indx)) < 0)
@@ -659,18 +659,18 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (pkt_len <= indx)
     return 0;
 
-  ERR(!(fiid_obj_clear(obj_msg_hdr) < 0));
-  ERR(!((len = fiid_obj_set_all(obj_msg_hdr, pkt + indx, pkt_len - indx)) < 0));
+  ERR(!(fiid_obj_clear(obj_lan_msg_hdr) < 0));
+  ERR(!((len = fiid_obj_set_all(obj_lan_msg_hdr, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  ERR(!((obj_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+  ERR(!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
 
-  if ((pkt_len - indx) >= obj_msg_trlr_len)
-    obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
-  else if ((pkt_len - indx) < obj_msg_trlr_len)
+  if ((pkt_len - indx) >= obj_lan_msg_trlr_len)
+    obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;
+  else if ((pkt_len - indx) < obj_lan_msg_trlr_len)
     obj_cmd_len = 0;
 
   if (obj_cmd_len)
@@ -683,8 +683,8 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
         return 0;
     }
 
-  ERR(!(fiid_obj_clear(obj_msg_trlr) < 0));
-  ERR(!((len = fiid_obj_set_all(obj_msg_trlr, pkt + indx, pkt_len - indx)) < 0));
+  ERR(!(fiid_obj_clear(obj_lan_msg_trlr) < 0));
+  ERR(!((len = fiid_obj_set_all(obj_lan_msg_trlr, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   return 0;
@@ -793,19 +793,19 @@ ipmi_lan_recvfrom (int sockfd,
 }
 
 int8_t 
-ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
+ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn)
 {
   uint64_t net_fn_recv;
   int32_t len;
   int8_t rv;
 
-  if (!(obj_msg_hdr && IPMI_NET_FN_VALID(net_fn)))
+  if (!(obj_lan_msg_hdr && IPMI_NET_FN_VALID(net_fn)))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((rv = fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"net_fn")) < 0)
+  if ((rv = fiid_obj_field_lookup (obj_lan_msg_hdr, (uint8_t *)"net_fn")) < 0)
     return (-1);
 
   if (!rv)
@@ -814,7 +814,7 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
       return (-1);
     }
 
-  if ((len = fiid_obj_field_len (obj_msg_hdr, (uint8_t *)"net_fn")) < 0)
+  if ((len = fiid_obj_field_len (obj_lan_msg_hdr, (uint8_t *)"net_fn")) < 0)
     return (-1);
 
   if (!len)
@@ -823,25 +823,25 @@ ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn)
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
+  FIID_OBJ_GET(obj_lan_msg_hdr, (uint8_t *)"net_fn", &net_fn_recv);
 
   return ((((uint8_t)net_fn_recv) == net_fn) ? 1 : 0);
 }
 
 int8_t 
-ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
+ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
 {
   uint64_t rq_seq_recv;
   int32_t len;
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_msg_hdr))
+  if (!fiid_obj_valid(obj_lan_msg_hdr))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((rv = fiid_obj_field_lookup (obj_msg_hdr, (uint8_t *)"rq_seq")) < 0)
+  if ((rv = fiid_obj_field_lookup (obj_lan_msg_hdr, (uint8_t *)"rq_seq")) < 0)
     return (-1);
   
   if (!rv)
@@ -850,7 +850,7 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  if ((len = fiid_obj_field_len (obj_msg_hdr, (uint8_t *)"rq_seq")) < 0)
+  if ((len = fiid_obj_field_len (obj_lan_msg_hdr, (uint8_t *)"rq_seq")) < 0)
     return (-1);
 
   if (!len)
@@ -859,7 +859,7 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq)
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
+  FIID_OBJ_GET(obj_lan_msg_hdr, (uint8_t *)"rq_seq", &rq_seq_recv);
 
   return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
@@ -881,7 +881,7 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
       return (-1);
     }
   
-  if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_hdr_rmcp)) < 0)
+  if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     return (-1);
 
   if ((auth_type_start_bytes = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"auth_type")) < 0)

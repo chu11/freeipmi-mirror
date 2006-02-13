@@ -56,20 +56,20 @@ extern "C" {
 /* #define RMCP_ASF_PRESENCE_PONG_MESSAGE_TAG_MAX 0xFE 
    - Should be removed before release --ab@gnu.org.in */
 
-extern fiid_template_t tmpl_hdr_rmcp;
+extern fiid_template_t tmpl_rmcp_hdr;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;
 
-int8_t fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr);
-int8_t fill_hdr_rmcp_ipmi (fiid_obj_t obj_hdr);
-int8_t fill_hdr_rmcp_asf (fiid_obj_t obj_hdr);
+int8_t fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);
+int8_t fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
+int8_t fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
 /* MSG_TAG:
    achu: Consecutive ping messages should use different message tags,
    ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
    optionally discard duplicate messages.  */
 int8_t fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd);
-int32_t assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len);
-int32_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd);
+int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len);
+int32_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
 int8_t ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong);
 
 #ifdef __cplusplus

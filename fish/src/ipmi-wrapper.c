@@ -646,13 +646,13 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
   
     rv = -1;
 
-    if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+    if (!(obj_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
       goto cleanup1;
 
     if (!(obj_cmd = fiid_obj_create(tmpl_cmd_asf_presence_ping)))
       goto cleanup1;
 
-    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
+    if ((hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
       goto cleanup1;
 
     if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_ping)) < 0)
@@ -664,7 +664,7 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
       return -1;
     memset (pkt, 0, pkt_len);
 
-    if (fill_hdr_rmcp_asf (obj_hdr) < 0)
+    if (fill_rmcp_hdr_asf (obj_hdr) < 0)
       goto cleanup1;
 
     if (fill_cmd_asf_presence_ping (msg_tag, obj_cmd) < 0)
@@ -706,10 +706,10 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
 
     rv = -1;
 
-    if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+    if (!(obj_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
       goto cleanup2;
 
-    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
+    if ((hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
       goto cleanup2;
 
     if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_pong)) < 0)

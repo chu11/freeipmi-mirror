@@ -1,15 +1,21 @@
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c,
-	libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_print_state): Move
-	from ipmi-debug.h and ipmi-debug.c to ipmi-kcs-interface.c.
-
-	* libfreeipmi/src/ipmi-debug.c,
-	libfreeipmi/src/ipmi-smic-interface.c (ipmi_smic_print_state):
-	Move from ipmi-debug.c to ipmi-smic-interface.c.
-
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
 	(ipmi_chksum_test): Removed function.
+
+	* libfreeipmi/src/rmcp.h, libfreeipmi/src/rmcp.c: Rename
+	tmpl_hdr_rmcp to tmpl_rmcp_hdr.
+
+	* Push naming consistency across code:
+	  - fill_hdr_session -> fill_lan_session_hdr
+	  - obj_msg_hdr -> obj_lan_msg_hdr
+	  - obj_msg_trlr -> obj_lan_msg_trlr
+	  - tmpl_msg_hdr -> tmpl_lan_msg_hdr
+	  - tmpl_msg_trlr -> tmpl_lan_msg_trlr
+	  - tmpl_hdr_rmcp -> tmpl_rmcp_hdr
+	  - obj_hdr_rmcp -> obj_rmcp_hdr
+	  - "hdr_rmcp" -> "rmcp_hdr"
+	  - and various others
 
 2006-02-13  Albert Chu <chu11@llnl.gov>
 

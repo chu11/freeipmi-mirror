@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.11.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.11.2.3 2006-02-13 23:24:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -117,11 +117,11 @@ ipmipower_ping_process_pings(int *timeout)
            */
           ics[i].ping_seq_num_counter++; 
 
-	  rmcp_hdr = Fiid_obj_create(tmpl_hdr_rmcp);
+	  rmcp_hdr = Fiid_obj_create(tmpl_rmcp_hdr);
 	  rmcp_ping = Fiid_obj_create(tmpl_cmd_asf_presence_ping);
           
-          if (fill_hdr_rmcp_asf(rmcp_hdr) < 0)
-            err_exit("fill_hdr_rmcp_asf: %s", strerror(errno));
+          if (fill_rmcp_hdr_asf(rmcp_hdr) < 0)
+            err_exit("fill_rmcp_hdr_asf: %s", strerror(errno));
 
           if (fill_cmd_asf_presence_ping((ics[i].ping_seq_num_counter % 
                                           (IPMIPOWER_PING_TAG_MAX + 1)), 
@@ -171,7 +171,7 @@ ipmipower_ping_process_pings(int *timeout)
           fiid_obj_t rmcp_pong = NULL;
           uint64_t msg_type, ipmi_supported;
           
-          rmcp_hdr = Fiid_obj_create(tmpl_hdr_rmcp);
+          rmcp_hdr = Fiid_obj_create(tmpl_rmcp_hdr);
           rmcp_pong = Fiid_obj_create(tmpl_cmd_asf_presence_pong);
             
 #ifndef NDEBUG

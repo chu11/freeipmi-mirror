@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.15.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.15.2.3 2006-02-13 23:24:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,9 +77,9 @@ createpacket(char *buffer,
              unsigned int seq_num,
              int debug) 
 {
-  fiid_obj_t obj_hdr_rmcp = NULL;
-  fiid_obj_t obj_hdr_session = NULL;
-  fiid_obj_t obj_msg_hdr = NULL;
+  fiid_obj_t obj_rmcp_hdr = NULL;
+  fiid_obj_t obj_lan_session_hdr = NULL;
+  fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   int len;
 
@@ -91,24 +91,24 @@ createpacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = _fiid_obj_create(tmpl_lan_session_hdr);
-  obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rq);
+  obj_rmcp_hdr = _fiid_obj_create(tmpl_rmcp_hdr);
+  obj_lan_session_hdr = _fiid_obj_create(tmpl_lan_session_hdr);
+  obj_lan_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rq);
   obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq);
     
-  if (fill_hdr_rmcp_ipmi(obj_hdr_rmcp) < 0)
-    ipmi_ping_err_exit("fill_hdr_rmcp_ipmi: %s", strerror(errno));
+  if (fill_rmcp_hdr_ipmi(obj_rmcp_hdr) < 0)
+    ipmi_ping_err_exit("fill_rmcp_hdr_ipmi: %s", strerror(errno));
 
-  if (fill_hdr_session(IPMI_SESSION_AUTH_TYPE_NONE,
-                       0, 
-		       0,
-		       NULL, 
-		       0, 
-                       obj_hdr_session) < 0)
-    ipmi_ping_err_exit("fill_hdr_session: %s", strerror(errno));
+  if (fill_lan_session_hdr(IPMI_SESSION_AUTH_TYPE_NONE,
+                           0, 
+                           0,
+                           NULL, 
+                           0, 
+                           obj_lan_session_hdr) < 0)
+    ipmi_ping_err_exit("fill_lan_session_hdr: %s", strerror(errno));
 
   if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
-                       seq_num % (IPMI_RQ_SEQ_MAX+1), obj_msg_hdr) < 0)
+                       seq_num % (IPMI_RQ_SEQ_MAX+1), obj_lan_msg_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_msg_hdr: %s", strerror(errno));
 
   if (fill_cmd_get_channel_auth_caps(IPMI_CHANNEL_CURRENT_CHANNEL,
@@ -116,9 +116,9 @@ createpacket(char *buffer,
                                      obj_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_get_channel_auth_caps: %s", strerror(errno));
 
-  if ((len = assemble_ipmi_lan_pkt(obj_hdr_rmcp, 
-				   obj_hdr_session, 
-                                   obj_msg_hdr, 
+  if ((len = assemble_ipmi_lan_pkt(obj_rmcp_hdr, 
+				   obj_lan_session_hdr, 
+                                   obj_lan_msg_hdr, 
                                    obj_cmd, 
 				   NULL, 
 				   0,
@@ -140,9 +140,9 @@ createpacket(char *buffer,
     }
 #endif
 
-  _fiid_obj_destroy(obj_hdr_rmcp);
-  _fiid_obj_destroy(obj_hdr_session);
-  _fiid_obj_destroy(obj_msg_hdr);
+  _fiid_obj_destroy(obj_rmcp_hdr);
+  _fiid_obj_destroy(obj_lan_session_hdr);
+  _fiid_obj_destroy(obj_lan_msg_hdr);
   _fiid_obj_destroy(obj_cmd);
 
   return len;
@@ -156,11 +156,11 @@ parsepacket(char *buffer,
             int verbose, 
             int debug)
 {
-  fiid_obj_t obj_hdr_rmcp = NULL;
-  fiid_obj_t obj_hdr_session = NULL;
-  fiid_obj_t obj_msg_hdr = NULL;
+  fiid_obj_t obj_rmcp_hdr = NULL;
+  fiid_obj_t obj_lan_session_hdr = NULL;
+  fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
-  fiid_obj_t obj_msg_trlr = NULL;
+  fiid_obj_t obj_lan_msg_trlr = NULL;
   uint64_t req_seq, none, md2, md5, straight_passwd_key, oem, 
     anonymous_login, null_username, non_null_username,
     user_level_auth, per_message_auth;
@@ -174,11 +174,11 @@ parsepacket(char *buffer,
   if (buflen == 0)
     return 0;
 
-  obj_hdr_rmcp = _fiid_obj_create(tmpl_hdr_rmcp);
-  obj_hdr_session = _fiid_obj_create(tmpl_lan_session_hdr);
-  obj_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rs);
+  obj_rmcp_hdr = _fiid_obj_create(tmpl_rmcp_hdr);
+  obj_lan_session_hdr = _fiid_obj_create(tmpl_lan_session_hdr);
+  obj_lan_msg_hdr = _fiid_obj_create(tmpl_lan_msg_hdr_rs);
   obj_cmd = _fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs);
-  obj_msg_trlr = _fiid_obj_create(tmpl_lan_msg_trlr);
+  obj_lan_msg_trlr = _fiid_obj_create(tmpl_lan_msg_trlr);
 
 #ifndef NDEBUG
   if (debug)
@@ -208,14 +208,14 @@ parsepacket(char *buffer,
 
   if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
 			      buflen, 
-                              obj_hdr_rmcp, 
-			      obj_hdr_session, 
-                              obj_msg_hdr,
+                              obj_rmcp_hdr, 
+			      obj_lan_session_hdr, 
+                              obj_lan_msg_hdr,
 			      obj_cmd, 
-			      obj_msg_trlr) < 0)
+			      obj_lan_msg_trlr) < 0)
     ipmi_ping_err_exit("unassemble_ipmi_lan_pkt: %s", strerror(errno));
 
-  if ((ret = ipmi_lan_check_net_fn(obj_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
+  if ((ret = ipmi_lan_check_net_fn(obj_lan_msg_hdr, IPMI_NET_FN_APP_RS)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_net_fn: %s", strerror(errno));
 
   if (!ret)
@@ -251,7 +251,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  _fiid_obj_get(obj_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
+  _fiid_obj_get(obj_lan_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
 
   if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
     {
@@ -306,11 +306,11 @@ parsepacket(char *buffer,
   
   retval = 1;
  cleanup:
-  _fiid_obj_destroy(obj_hdr_rmcp);
-  _fiid_obj_destroy(obj_hdr_session);
-  _fiid_obj_destroy(obj_msg_hdr);
+  _fiid_obj_destroy(obj_rmcp_hdr);
+  _fiid_obj_destroy(obj_lan_session_hdr);
+  _fiid_obj_destroy(obj_lan_msg_hdr);
   _fiid_obj_destroy(obj_cmd);
-  _fiid_obj_destroy(obj_msg_trlr);
+  _fiid_obj_destroy(obj_lan_msg_trlr);
   return retval;
 }
 

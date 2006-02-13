@@ -21,7 +21,7 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_hdr_rmcp =
+fiid_template_t tmpl_rmcp_hdr =
   {
     {8, "ver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -60,17 +60,17 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
   };
 
 int8_t
-fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr) 
+fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr) 
 {
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_hdr))
+  if (!fiid_obj_valid(obj_rmcp_hdr))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr)) < 0)
     return (-1);
   
   if (!rv)
@@ -79,26 +79,26 @@ fill_hdr_rmcp (uint8_t message_class, fiid_obj_t obj_hdr)
       return -1;
     }
 
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"ver", RMCP_VER_1_0);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"seq_num", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.class", message_class);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.reserved1", 0);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"msg_class.ack",
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"ver", RMCP_VER_1_0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"seq_num", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.class", message_class);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.reserved1", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.ack",
                 RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
 int8_t
-fill_hdr_rmcp_ipmi (fiid_obj_t obj_hdr) 
+fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr) 
 {
-  return fill_hdr_rmcp(RMCP_HDR_MSG_CLASS_IPMI, obj_hdr);
+  return fill_rmcp_hdr(RMCP_HDR_MSG_CLASS_IPMI, obj_rmcp_hdr);
 }
 
 int8_t
-fill_hdr_rmcp_asf (fiid_obj_t obj_hdr)
+fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_hdr_rmcp(RMCP_HDR_MSG_CLASS_ASF, obj_hdr);
+  return fill_rmcp_hdr(RMCP_HDR_MSG_CLASS_ASF, obj_rmcp_hdr);
 }
 
 int8_t
@@ -132,12 +132,12 @@ fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
 }
 
 int32_t
-assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
+assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len)
 {
-  uint32_t obj_cmd_len, obj_hdr_len;
+  uint32_t obj_cmd_len, obj_rmcp_hdr_len;
   int8_t rv;
 
-  if (!(fiid_obj_valid(obj_hdr) 
+  if (!(fiid_obj_valid(obj_rmcp_hdr) 
         && fiid_obj_valid(obj_cmd)
         && pkt))
     {
@@ -145,7 +145,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr)) < 0)
     return (-1);
   
   if (!rv)
@@ -163,7 +163,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
       return (-1);
     }
 
-  if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
+  if ((rv = fiid_obj_packet_valid(obj_rmcp_hdr)) < 0)
     return (-1);
 
   if (!rv)
@@ -181,39 +181,39 @@ assemble_rmcp_pkt (fiid_obj_t obj_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_
       return (-1);
     }
 
-  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
-  ERR(obj_hdr_len != -1);
+  obj_rmcp_hdr_len = fiid_obj_len_bytes (obj_rmcp_hdr);
+  ERR(obj_rmcp_hdr_len != -1);
   obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
   ERR(obj_cmd_len != -1);
 
-  if (pkt_len < (obj_hdr_len + obj_cmd_len))
+  if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
     {
       errno = EMSGSIZE;
       return -1;
     }
 
   memset (pkt, '\0', pkt_len);
-  ERR((obj_hdr_len = fiid_obj_get_all(obj_hdr, pkt, pkt_len)) != -1);
-  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_hdr_len, pkt_len - obj_hdr_len)) != -1);
-  return (obj_hdr_len + obj_cmd_len);
+  ERR((obj_rmcp_hdr_len = fiid_obj_get_all(obj_rmcp_hdr, pkt, pkt_len)) != -1);
+  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_rmcp_hdr_len, pkt_len - obj_rmcp_hdr_len)) != -1);
+  return (obj_rmcp_hdr_len + obj_cmd_len);
 }  
 
 int32_t
-unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t obj_cmd)
+unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd)
 {
   uint32_t indx = 0;
   int32_t len;
   int8_t rv;
 
   if (!(pkt
-        && fiid_obj_valid(obj_hdr)
+        && fiid_obj_valid(obj_rmcp_hdr)
         && fiid_obj_valid(obj_cmd)))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_rmcp)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_rmcp_hdr, tmpl_rmcp_hdr)) < 0)
     return (-1);
   
   if (!rv)
@@ -231,7 +231,7 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_hdr, fiid_obj_t
       return (-1);
     }
 
-  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  ERR(!((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0));
   indx += len;
 
   if (pkt_len <= indx)

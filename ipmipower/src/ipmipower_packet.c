@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.18.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.18.2.3 2006-02-13 23:24:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -277,19 +277,19 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->msg_req);
   Fiid_obj_clear(obj);
 
-  if (fill_hdr_rmcp_ipmi(ip->rmcp_req) < 0)
-    err_exit("ipmipower_packet_create(%s: %d): fill_hdr_rmcp_ipmi: %s", 
+  if (fill_rmcp_hdr_ipmi(ip->rmcp_req) < 0)
+    err_exit("ipmipower_packet_create(%s: %d): fill_rmcp_hdr_ipmi: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (pkt == AUTH_REQ)
     {
-      if (fill_hdr_session(IPMI_SESSION_AUTH_TYPE_NONE, 
-                           0, 
-			   0, 
-			   NULL, 
-			   0, 
-			   ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(IPMI_SESSION_AUTH_TYPE_NONE, 
+                               0, 
+                               0, 
+                               NULL, 
+                               0, 
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
@@ -322,13 +322,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       uint8_t *username;
 
-      if (fill_hdr_session(IPMI_SESSION_AUTH_TYPE_NONE, 
-                           0, 
-			   0, 
-			   NULL,
-			   0, 
-			   ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(IPMI_SESSION_AUTH_TYPE_NONE, 
+                               0, 
+                               0, 
+                               NULL,
+                               0, 
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
@@ -377,13 +377,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       Fiid_obj_get(ip->sess_res, (uint8_t *)"tmp_session_id", &tmp_session_id);
       
-      if (fill_hdr_session(ip->authtype, 
-                           0,
-                           (uint32_t)tmp_session_id, 
-			   NULL,
-			   0,
-			   ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(ip->authtype, 
+                               0,
+                               (uint32_t)tmp_session_id, 
+                               NULL,
+                               0,
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
@@ -469,13 +469,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                    (uint8_t *)"session_id", 
 		   &session_id);
       
-      if (fill_hdr_session(at, 
-                           initial_inbound_seq_num + ip->session_inbound_count, 
-                           (uint32_t)session_id, 
-			   NULL,
-			   0,
-                           ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(at, 
+                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               (uint32_t)session_id, 
+                               NULL,
+                               0,
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
@@ -530,13 +530,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                    (uint8_t *)"session_id", 
 		   &session_id);
       
-      if (fill_hdr_session(at, 
-                           initial_inbound_seq_num + ip->session_inbound_count, 
-                           (uint32_t)session_id, 
-			   NULL,
-			   0,
-                           ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(at, 
+                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               (uint32_t)session_id, 
+                               NULL,
+                               0,
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
@@ -591,13 +591,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                    (uint8_t *)"session_id", 
 		   &session_id);
       
-      if (fill_hdr_session(at,
-			   initial_inbound_seq_num + ip->session_inbound_count, 
-                           (uint32_t)session_id, 
-			   NULL,
-			   0,
-                           ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(at,
+                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               (uint32_t)session_id, 
+                               NULL,
+                               0,
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 
@@ -673,13 +673,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                    (uint8_t *)"session_id", 
 		   &session_id);
       
-      if (fill_hdr_session(at, 
-                           initial_inbound_seq_num + ip->session_inbound_count, 
-                           (uint32_t)session_id, 
-			   NULL,
-			   0,
-                           ip->session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_hdr_session: %s", 
+      if (fill_lan_session_hdr(at, 
+                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               (uint32_t)session_id, 
+                               NULL,
+                               0,
+                               ip->session_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 

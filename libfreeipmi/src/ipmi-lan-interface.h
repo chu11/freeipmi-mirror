@@ -65,9 +65,9 @@ int8_t fill_lan_msg_hdr (uint8_t net_fn,
 			 uint8_t rq_seq, 
 			 fiid_obj_t obj_msg);
 
-int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
-			       fiid_obj_t obj_hdr_session, 
-			       fiid_obj_t obj_msg_hdr, 
+int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
+			       fiid_obj_t obj_lan_session_hdr, 
+			       fiid_obj_t obj_lan_msg_hdr, 
 			       fiid_obj_t obj_cmd, 
 			       uint8_t *auth_code_data,
 			       uint32_t auth_code_data_len,
@@ -76,11 +76,11 @@ int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp,
 
 int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt, 
 				uint32_t pkt_len, 
-				fiid_obj_t obj_hdr_rmcp, 
-				fiid_obj_t obj_hdr_session, 
-				fiid_obj_t obj_msg_hdr, 
+				fiid_obj_t obj_rmcp_hdr, 
+				fiid_obj_t obj_lan_session_hdr, 
+				fiid_obj_t obj_lan_msg_hdr, 
 				fiid_obj_t obj_cmd, 
-				fiid_obj_t obj_msg_trlr);
+				fiid_obj_t obj_lan_msg_trlr);
 
 ssize_t ipmi_lan_sendto (int sockfd, 
 			 const void *pkt, 
@@ -96,9 +96,9 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn);
+int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
 
-int8_t ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq);
+int8_t ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq);
 
 int8_t ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len);
 

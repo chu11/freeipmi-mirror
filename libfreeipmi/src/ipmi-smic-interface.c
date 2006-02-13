@@ -187,26 +187,6 @@ ipmi_smic_read_end (uint16_t sms_io_base)
     ipmi_smic_wait_for_idle (sms_io_base);
 }
 
-int
-ipmi_smic_print_flags (int fd, uint8_t state)
-{
-  _dprintf (fd, "Current SMIC flags: %#x : ", state);
-  if(state & IPMI_SMIC_RX_DATA_RDY) 
-    _dprintf (fd, "RX_DATA_RDY ");
-  if(state & IPMI_SMIC_TX_DATA_RDY)
-    _dprintf (fd, "TX_DATA_RDY ");
-  if(state & IPMI_SMIC_SMI)
-    _dprintf (fd, "SMI ");
-  if(state & IPMI_SMIC_EVT_ATN) 
-    _dprintf (fd, "EVT_ATN ");
-  if(state & IPMI_SMIC_SMS_ATN)
-    _dprintf (fd, "SMS_ATN ");
-  if(state & IPMI_SMIC_BUSY)
-    _dprintf (fd, "BUSY ");
-  _dprintf (fd, "\n");
-  return (0);
-}
-
 /* API read function. */
 
 int
