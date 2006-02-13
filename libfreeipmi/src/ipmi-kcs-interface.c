@@ -588,8 +588,6 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
       /* Clean up */
       ipmi_kcs_wait_for_obf_set (ctx);
       ipmi_kcs_read_byte (ctx); /* toss it, ACK */
-      ctx->errnum = IPMI_KCS_CTX_ERR_BUSY;
-      goto cleanup_unlock;
     }
   else
     {

@@ -1,5 +1,11 @@
 2006-02-13  Albert Chu  <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read): Fix logic bug.
+
+	* tagged al_libfreeipmi_cleanup_branch_final_merge_complete.
+	
+2006-02-13  Albert Chu  <chu11@llnl.gov>
+
 	* Bring in cleanup changes from al_libfreeipmi_cleanup_branch at
 	tag al_libfreeipmi_cleanup_branch_final.
 
