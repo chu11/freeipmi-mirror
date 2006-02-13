@@ -45,23 +45,6 @@ ipmi_chksum (uint8_t *buf, uint64_t len)
   return (-chksum);
 }
 
-int8_t
-ipmi_chksum_test (uint8_t *buf, uint64_t len) 
-{
-  int8_t chksum_val;
-  int8_t chksum_calc;
-
-  if (buf == NULL || len == 0)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  chksum_val = buf[len - 1];
-  chksum_calc = ipmi_chksum(buf, len - 1);
-  return ((chksum_val == chksum_calc) ? 1 : 0);
-}
-
 int8_t 
 ipmi_comp_test (fiid_obj_t obj_cmd)
 {

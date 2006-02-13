@@ -1,5 +1,18 @@
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c,
+	libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_print_state): Move
+	from ipmi-debug.h and ipmi-debug.c to ipmi-kcs-interface.c.
+
+	* libfreeipmi/src/ipmi-debug.c,
+	libfreeipmi/src/ipmi-smic-interface.c (ipmi_smic_print_state):
+	Move from ipmi-debug.c to ipmi-smic-interface.c.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_chksum_test): Removed function.
+
+2006-02-13  Albert Chu <chu11@llnl.gov>
+
         Collective fixes from branch al_fiid_rearchitect_branch at tag
 	al_fiid_rearchitect_branch_final.  See ChangeLog in branch for
 	detailed day by day changes.
