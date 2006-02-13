@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.7.2.16 2006-02-13 18:29:02 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.7.2.17 2006-02-13 22:10:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -129,14 +129,14 @@ createpacket(char *buffer,
 #ifndef NDEBUG
   if (debug)
     {
-      if (fiid_obj_dump_lan(STDERR_FILENO, 
-			    "Request", 
-			    NULL, 
-                            (uint8_t *)buffer, 
-			    len, 
-			    tmpl_lan_msg_hdr_rq, 
-                            tmpl_cmd_get_channel_auth_caps_rq) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+      if (ipmi_dump_lan_packet(STDERR_FILENO, 
+                               "Request", 
+                               NULL, 
+                               (uint8_t *)buffer, 
+                               len, 
+                               tmpl_lan_msg_hdr_rq, 
+                               tmpl_cmd_get_channel_auth_caps_rq) < 0)
+        ipmi_ping_err_exit("ipmi_dump_lan_packet: %s", strerror(errno));
     }
 #endif
 
@@ -183,14 +183,14 @@ parsepacket(char *buffer,
 #ifndef NDEBUG
   if (debug)
     {
-      if (fiid_obj_dump_lan(STDERR_FILENO, 
-			    "Response", 
-			    NULL, 
-                            (uint8_t *)buffer, 
-			    buflen, 
-                            tmpl_lan_msg_hdr_rs, 
-                            tmpl_cmd_get_channel_auth_caps_rs) < 0)
-        ipmi_ping_err_exit("fiid_obj_dump_lan: %s", strerror(errno));
+      if (ipmi_dump_lan_packet(STDERR_FILENO, 
+                               "Response", 
+                               NULL, 
+                               (uint8_t *)buffer, 
+                               buflen, 
+                               tmpl_lan_msg_hdr_rs, 
+                               tmpl_cmd_get_channel_auth_caps_rs) < 0)
+        ipmi_ping_err_exit("ipmi_dump_lan_packet: %s", strerror(errno));
     }
 #endif
 

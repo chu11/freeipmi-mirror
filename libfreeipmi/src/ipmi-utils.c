@@ -30,11 +30,11 @@
 
 #include "freeipmi.h"
 
-ipmi_chksum_t
+int8_t
 ipmi_chksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
-  register ipmi_chksum_t chksum = 0;
+  register int8_t chksum = 0;
  
   if (buf == NULL || len == 0)
     return (chksum);
@@ -48,8 +48,8 @@ ipmi_chksum (uint8_t *buf, uint64_t len)
 int8_t
 ipmi_chksum_test (uint8_t *buf, uint64_t len) 
 {
-  ipmi_chksum_t chksum_val;
-  ipmi_chksum_t chksum_calc;
+  int8_t chksum_val;
+  int8_t chksum_calc;
 
   if (buf == NULL || len == 0)
     {
@@ -172,75 +172,4 @@ ipmi_open_free_udp_port (void)
   close (sockfd);
   errno = EBUSY;
   return (-1);
-}
-
-
-int 
-ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len, 
-	      void **virtual_addr, 
-	      void **mapped_addr, size_t *mapped_addr_len)
-{
-  uint64_t startaddr;
-  uint32_t pad;
-  int mem_fd;
-  extern int errno;
-  
-  if (!(physical_addr_len && virtual_addr && 
-	mapped_addr && mapped_addr_len))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
-  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
-    return (-1);
-  
-  pad = physical_addr % getpagesize ();
-  startaddr = physical_addr - pad;
-  *mapped_addr_len = physical_addr_len + pad;
-  *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
-
-  
-  if (*mapped_addr == MAP_FAILED)
-    {
-      close (mem_fd);
-      return (-1);
-    }
-
-  close (mem_fd);
-  *virtual_addr = (*mapped_addr) + pad;
-  return (0);
-}
-
-int 
-ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
-{
-  return (munmap (mapped_addr, mapped_addr_len));
-}
-
-int 
-ipmi_get_physical_mem_data (uint64_t physical_address, 
-			    size_t length, 
-			    uint8_t *data)
-{
-  void *virtual_addr = NULL;
-  void *mapped_addr = NULL;
-  size_t mapped_addr_len = 0;
-  
-  if (data == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
-  if (ipmi_ioremap (physical_address, length, 
-		    &virtual_addr, 
-		    &mapped_addr, &mapped_addr_len) != 0)
-    return (-1);
-  
-  memcpy (data, virtual_addr, length);
-  
-  ipmi_iounmap (mapped_addr, mapped_addr_len);
-  
-  return 0;
 }

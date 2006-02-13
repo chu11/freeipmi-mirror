@@ -616,6 +616,171 @@ _get_rmcp_msg_tag (void)
   return (rmcp_msg_tag++);
 }
 
+int8_t
+ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong)
+{
+  int8_t rv;
+
+  if (!(sockfd && hostaddr && fiid_obj_valid(pong)))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(pong, tmpl_cmd_asf_presence_pong)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  
+  {/* asf_presence_ping request */
+    fiid_obj_t obj_hdr = NULL;
+    fiid_obj_t obj_cmd = NULL;
+    int32_t hdr_len, cmd_len;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_len = 0;
+    int status = 0;
+  
+    rv = -1;
+
+    if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+      goto cleanup1;
+
+    if (!(obj_cmd = fiid_obj_create(tmpl_cmd_asf_presence_ping)))
+      goto cleanup1;
+
+    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
+      goto cleanup1;
+
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_ping)) < 0)
+      goto cleanup1;
+	
+    pkt_len = hdr_len + cmd_len;
+    pkt = alloca (pkt_len);
+    if (!pkt)
+      return -1;
+    memset (pkt, 0, pkt_len);
+
+    if (fill_hdr_rmcp_asf (obj_hdr) < 0)
+      goto cleanup1;
+
+    if (fill_cmd_asf_presence_ping (msg_tag, obj_cmd) < 0)
+      goto cleanup1;
+
+    if (assemble_rmcp_pkt (obj_hdr, 
+			   obj_cmd, 
+			   pkt, 
+			   pkt_len) < 0)
+      goto cleanup1;
+
+    if ((status = ipmi_lan_sendto (sockfd, 
+				   pkt,
+				   pkt_len,
+				   0, 
+				   hostaddr, 
+				   hostaddr_len)) < 0)
+      goto cleanup1;
+
+    rv = 0;
+  cleanup1:
+    if (obj_hdr)
+      fiid_obj_destroy(obj_hdr);
+    if (obj_cmd)
+      fiid_obj_destroy(obj_cmd);
+    if (rv < 0)
+      return (rv);
+  }
+
+  {/* asf_presence_ping response */ 
+    struct sockaddr_in from, *hostaddr_in;
+    socklen_t fromlen;
+    fiid_obj_t obj_hdr = NULL;
+    int32_t hdr_len, cmd_len;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_len = 0;
+    int32_t recv_len;
+    uint64_t val;
+
+    rv = -1;
+
+    if (!(obj_hdr = fiid_obj_create(tmpl_hdr_rmcp)))
+      goto cleanup2;
+
+    if ((hdr_len = fiid_template_len_bytes(tmpl_hdr_rmcp)) < 0)
+      goto cleanup2;
+
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_pong)) < 0)
+      goto cleanup2;
+
+    pkt_len = hdr_len + cmd_len;
+    pkt = alloca (pkt_len);
+    if (!pkt)
+      return -1;
+    memset (pkt, 0, pkt_len);
+
+    if ((recv_len = ipmi_lan_recvfrom (sockfd,
+				       pkt,
+				       pkt_len,
+				       0, 
+				       (struct sockaddr *)&from, 
+				       &fromlen)) < 0)
+      goto cleanup2;
+
+    hostaddr_in = (struct sockaddr_in *) hostaddr;
+    if ((from.sin_family == AF_INET) && 
+	(from.sin_addr.s_addr != hostaddr_in->sin_addr.s_addr))
+      {
+#if 0
+	printf ("ipmi_ping warning: Reply came from [%s] instead of [%s]." 
+		"Please tune your time-out value to something higher\n", 
+		inet_ntoa (from.sin_addr), inet_ntoa (hostaddr->sin_addr));
+#endif
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+    
+    if (unassemble_rmcp_pkt (pkt, 
+			     recv_len,
+			     obj_hdr, 
+			     pong) < 0)
+      goto cleanup2;
+
+    if (fiid_obj_get(pong,
+		     (uint8_t *)"msg_type",
+		     &val) < 0)
+      goto cleanup2;
+
+    if (val != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
+      {
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+
+    if (fiid_obj_get(pong,
+		     (uint8_t *)"msg_tag",
+		     &val) < 0)
+      goto cleanup2;
+
+    if (val != msg_tag)
+      {
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+    
+    rv = 0;
+  cleanup2:
+    if (obj_hdr)
+      fiid_obj_destroy(obj_hdr);
+    if (rv < 0)
+      return (rv);
+    }
+
+  return (0);
+}
+
 int 
 ipmi_ping (char *host, unsigned int sock_timeout)
 {

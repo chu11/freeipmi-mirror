@@ -36,7 +36,10 @@ libfreeipmi:
     - why not the other arguments?
   * sensor-event-messages: get_28_event_data3_messages
   * remove ipmi_chksum_test
-  
+  * audit serial/lan/pef/sel/sensors template auditting      
+  * reg-space default  
+  * udm parameter checks
+
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in

@@ -1,5 +1,5 @@
 /* 
-   ipmi-sensor-cmds.c - IPMI sensor commands
+   ipmi-sensor-cmds.h - IPMI sensor commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -109,17 +109,6 @@ int8_t fill_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_dat
 int8_t fill_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
 
 int8_t fill_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq);
-
-int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
-					uint8_t sensor_number, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
-				       uint8_t sensor_number, 
-				       fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
-					uint8_t sensor_number, 
-					fiid_obj_t obj_cmd_rs);
-
 
 #ifdef __cplusplus
 }

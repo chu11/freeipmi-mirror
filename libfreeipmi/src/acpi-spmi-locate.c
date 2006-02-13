@@ -531,6 +531,76 @@ ipmi_acpi_table_chksum (uint8_t *buffer, size_t len)
   return sum;
 }
 
+int
+ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
+              void **virtual_addr,
+              void **mapped_addr, size_t *mapped_addr_len)
+{
+  uint64_t startaddr;
+  uint32_t pad;
+  int mem_fd;
+  extern int errno;
+
+  if (!(physical_addr_len && virtual_addr &&
+        mapped_addr && mapped_addr_len))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
+    return (-1);
+
+  pad = physical_addr % getpagesize ();
+  startaddr = physical_addr - pad;
+  *mapped_addr_len = physical_addr_len + pad;
+  *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
+
+
+  if (*mapped_addr == MAP_FAILED)
+    {
+      close (mem_fd);
+      return (-1);
+    }
+
+  close (mem_fd);
+  *virtual_addr = (*mapped_addr) + pad;
+  return (0);
+}
+
+int
+ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
+{
+  return (munmap (mapped_addr, mapped_addr_len));
+}
+
+int
+ipmi_get_physical_mem_data (uint64_t physical_address,
+                            size_t length,
+                            uint8_t *data)
+{
+  void *virtual_addr = NULL;
+  void *mapped_addr = NULL;
+  size_t mapped_addr_len = 0;
+
+  if (data == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (ipmi_ioremap (physical_address, length,
+                    &virtual_addr,
+                    &mapped_addr, &mapped_addr_len) != 0)
+    return (-1);
+
+  memcpy (data, virtual_addr, length);
+
+  ipmi_iounmap (mapped_addr, mapped_addr_len);
+
+  return 0;
+}
+
 int 
 ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size, 
 		    fiid_obj_t obj_acpi_rsdp_descriptor)

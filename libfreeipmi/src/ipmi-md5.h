@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.h,v 1.4.2.1 2006-02-13 17:45:23 chu11 Exp $
+ *  $Id: ipmi-md5.h,v 1.4.2.2 2006-02-13 22:10:07 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

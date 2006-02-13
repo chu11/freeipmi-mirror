@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.32.2.7 2006-02-13 18:29:02 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.32.2.8 2006-02-13 22:10:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -372,8 +372,8 @@ _cmd(char *str,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
@@ -418,8 +418,8 @@ _cmd(char *str,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 

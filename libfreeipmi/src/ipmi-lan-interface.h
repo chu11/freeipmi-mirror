@@ -96,30 +96,6 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_cmd (uint32_t sockfd, 
-		     struct sockaddr *hostaddr, 
-		     size_t hostaddr_len, 
-		     uint8_t auth_type, 
-		     uint32_t session_seq_num, 
-		     uint32_t session_id, 
-		     uint8_t *auth_code_data, 
-		     uint32_t auth_code_data_len, 
-		     uint8_t net_fn, 
-		     uint8_t lun, 
-		     uint8_t rq_seq, 
-		     fiid_obj_t obj_cmd_rq, 
-		     fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
-		      fiid_obj_t obj_cmd_rq, 
-		      fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
-			  uint8_t *buf_rq, 
-			  size_t buf_rq_len, 
-			  uint8_t *buf_rs, 
-			  size_t *buf_rs_len);
-
 int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_msg_hdr, uint8_t net_fn);
 
 int8_t ipmi_lan_check_rq_seq (fiid_obj_t obj_msg_hdr, uint8_t rq_seq);

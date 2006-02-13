@@ -96,6 +96,10 @@ extern fiid_template_t tmpl_set_lan_conf_param_rs;
 extern fiid_template_t tmpl_set_lan_conf_param_bmc_generated_arp_control_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_gratuitous_arp_interval_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_auth_type_enables_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_ip_addr_source_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_ip_addr_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_mac_addr_rq;
+extern fiid_template_t tmpl_set_lan_conf_param_subnet_mask_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq;
 extern fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq;
 
@@ -103,6 +107,7 @@ extern fiid_template_t tmpl_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_suspend_bmc_arps_rs;
 
 extern fiid_template_t tmpl_get_lan_conf_param_rq;
+extern fiid_template_t tmpl_get_lan_conf_param_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_bmc_generated_arp_control_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_gratuitous_arp_interval_rs;
 extern fiid_template_t tmpl_get_lan_conf_param_auth_type_enables_rs;
@@ -180,169 +185,6 @@ int8_t fill_suspend_bmc_arps (uint8_t channel_number,
                               uint8_t gratuitous_arp_suspend,
                               uint8_t arp_response_suspend,
                               fiid_obj_t obj_data_rq);
-
-int8_t ipmi_cmd_lan_set_arp2 (ipmi_device_t *dev, 
-			      uint8_t channel_number, 
-			      uint8_t bmc_generated_gratuitous_arps_flag, 
-			      uint8_t bmc_generated_arp_responses_flag, 
-			      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-					      uint8_t channel_number, 
-					      uint8_t gratuitous_arp_interval, 
-					      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
-					    uint8_t channel_number, 
-                                            int8_t auth_type_callback_none,
-                                            int8_t auth_type_callback_md2,
-                                            int8_t auth_type_callback_md5,
-                                            int8_t auth_type_callback_straight_password,
-                                            int8_t auth_type_callback_oem_proprietary,
-                                            int8_t auth_type_user_none,
-                                            int8_t auth_type_user_md2,
-                                            int8_t auth_type_user_md5,
-                                            int8_t auth_type_user_straight_password,
-                                            int8_t auth_type_user_oem_proprietary,
-                                            int8_t auth_type_operator_none,
-                                            int8_t auth_type_operator_md2,
-                                            int8_t auth_type_operator_md5,
-                                            int8_t auth_type_operator_straight_password,
-                                            int8_t auth_type_operator_oem_proprietary,
-                                            int8_t auth_type_admin_none,
-                                            int8_t auth_type_admin_md2,
-                                            int8_t auth_type_admin_md5,
-                                            int8_t auth_type_admin_straight_password,
-                                            int8_t auth_type_admin_oem_proprietary,
-                                            int8_t auth_type_oem_none,
-                                            int8_t auth_type_oem_md2,
-                                            int8_t auth_type_oem_md5,
-                                            int8_t auth_type_oem_straight_password,
-                                            int8_t auth_type_oem_oem_proprietary,
-					    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_ip_addr_source2 (ipmi_device_t *dev, 
-					 uint8_t channel_number, 
-					 uint8_t ip_addr_source, 
-					 fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_ip_addr2 (ipmi_device_t *dev, 
-				  uint8_t channel_number, 
-				  uint32_t ip_addr, 
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_default_gw_ip_addr2 (ipmi_device_t *dev, 
-					     uint8_t channel_number, 
-					     uint32_t ip_addr, 
-					     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_backup_gw_ip_addr2 (ipmi_device_t *dev, 
-					    uint8_t channel_number, 
-					    uint32_t ip_addr, 
-					    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
-				  uint8_t channel_number, 
-				  uint8_t vlan_id_flag, 
-				  uint32_t vlan_id, 
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev, 
-					uint8_t channel_number,
-					uint32_t vlan_priority,
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev, 
-				      uint8_t channel_number, 
-				      uint32_t subnet_mask, 
-				      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_mac_addr2 (ipmi_device_t *dev, 
-				   uint8_t channel_number,
-				   uint64_t mac_addr,
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_default_gw_mac_addr2 (ipmi_device_t *dev, 
-					      uint8_t channel_number,
-					      uint64_t mac_addr,
-					      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_set_backup_gw_mac_addr2 (ipmi_device_t *dev, 
-					     uint8_t channel_number,
-					     uint64_t mac_addr,
-					     fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_lan_get_arp2 (ipmi_device_t *dev, 
-			      uint8_t channel_number, 
-			      uint8_t parameter_type, 
-			      uint8_t set_selector, 
-			      uint8_t block_selector, 
-			      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-						  uint8_t channel_number, 
-						  uint8_t parameter_type, 
-						  uint8_t set_selector, 
-						  uint8_t block_selector, 
-						  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev, 
-					    uint8_t channel_number, 
-					    uint8_t parameter_type, 
-					    uint8_t set_selector, 
-					    uint8_t block_selector, 
-					    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_ip_addr_source2 (ipmi_device_t *dev, 
-					 uint8_t channel_number, 
-					 uint8_t parameter_type, 
-					 uint8_t set_selector, 
-					 uint8_t block_selector, 
-					 fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_ip_addr2 (ipmi_device_t *dev, 
-				  uint8_t channel_number,
-				  uint8_t parameter_type,
-				  uint8_t set_selector,
-				  uint8_t block_selector,
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_default_gw_ip_addr2 (ipmi_device_t *dev, 
-					     uint8_t channel_number,
-					     uint8_t parameter_type,
-					     uint8_t set_selector,
-					     uint8_t block_selector,
-					     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_backup_gw_ip_addr2 (ipmi_device_t *dev, 
-					    uint8_t channel_number,
-					    uint8_t parameter_type,
-					    uint8_t set_selector,
-					    uint8_t block_selector,
-					    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev, 
-				      uint8_t channel_number,
-				      uint8_t parameter_type,
-				      uint8_t set_selector,
-				      uint8_t block_selector,
-				      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_mac_addr2 (ipmi_device_t *dev, 
-				   uint8_t channel_number,
-				   uint8_t parameter_type,
-				   uint8_t set_selector,
-				   uint8_t block_selector,
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_default_gw_mac_addr2 (ipmi_device_t *dev, 
-					      uint8_t channel_number,
-					      uint8_t parameter_type,
-					      uint8_t set_selector,
-					      uint8_t block_selector,
-					      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_backup_gw_mac_addr2 (ipmi_device_t *dev, 
-					     uint8_t channel_number,
-					     uint8_t parameter_type,
-					     uint8_t set_selector,
-					     uint8_t block_selector,
-					     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev, 
-				   uint8_t channel_number, 
-				   uint8_t gratuitous_arp_suspend, 
-				   uint8_t arp_response_suspend, 
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev, 
-				  uint8_t channel_number, 
-				  uint8_t parameter_type, 
-				  uint8_t set_selector, 
-				  uint8_t block_selector, 
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev, 
-					uint8_t channel_number, 
-					uint8_t parameter_type, 
-					uint8_t set_selector, 
-					uint8_t block_selector, 
-					fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

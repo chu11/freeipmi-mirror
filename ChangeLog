@@ -233,6 +233,128 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-13  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-kcs-interface.c (ipmi_kcs_read): Fix logic bug.
+
+	* tagged al_libfreeipmi_cleanup_branch_final_merge_complete.
+	
+2006-02-13  Albert Chu  <chu11@llnl.gov>
+
+	* Bring in cleanup changes from al_libfreeipmi_cleanup_branch at
+	tag al_libfreeipmi_cleanup_branch_final.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c: Remove old unused arrays.
+
+	* libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_sensor_threshold_health_check,
+	ipmi_sensor_discrete_health_check): Removed functions.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c,
+	libfreeipmi/src/ipmi-lan-interface.c: Replace ipmi_chksum_t
+	definition with int8_t.
+
+	* libfreeipmi/src/rmcp.c (ipmi_rmcp_ping), fish/src/ipmi-wrapper.c
+	(ipmi_rmcp_ping): Moved function from libfreeipmi into fish
+	because it is really a convenience function.
+
+	* libfreeipmi/src/ipmi-interface.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.h: Move #defines from
+	ipmi-interface.h to ipmi-msg-support-cmds.h.
+
+	* libfreeipmi/src/ipmi-chassis-cmds-udm.c,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.h,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.c,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-cmds-udm.c,
+	libfreeipmi/src/ipmi-lan-cmds-udm.h,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.c,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.h,
+	libfreeipmi/src/ipmi-pef-cmds-udm.c,
+	libfreeipmi/src/ipmi-pef-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.h,
+	libfreeipmi/src/ipmi-sel-cmds-udm.c,
+	libfreeipmi/src/ipmi-sel-cmds-udm.h,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.c,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.h,
+	libfreeipmi/src/ipmi-serial-cmds-udm.c,
+	libfreeipmi/src/ipmi-serial-cmds-udm.h,
+	libfreeipmi/src/ipmi-sol-cmds-udm.c,
+	libfreeipmi/src/ipmi-sol-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-interface-udm.c,
+	libfreeipmi/src/ipmi-lan-interface-udm.h,
+	libfreeipmi/src/ipmi-ssif-interface-udm.c,
+	libfreeipmi/src/ipmi-ssif-interface-udm.h,
+	libfreeipmi/src/ipmi-kcs-interface-udm.c,
+	libfreeipmi/src/ipmi-kcs-interface-udm.h: New files.
+	
+	* libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-dev-global-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c, libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.h,
+	libfreeipmi/src/ipmi-sel-cmds.c, libfreeipmi/src/ipmi-sel-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h:
+	libfreeipmi/src/ipmi-lan-interface.c,
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.c,
+	libfreeipmi/src/ipmi-ssif-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c,
+	libfreeipmi/src/ipmi-kcs-interface.h: Split off UDM code into
+	specific UDM files.
+
+	* libfreeipmi/src/ipmi-udm.h, libfreeipmi/src/ipmi-udm.c: Rename
+	ipmi-interface.h and ipmi-interface.c appropriately.
+	
+	* libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.h: Add forgotten templates.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Add forgotten function
+	prototypes.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-lan-interface.c: Remove old functions.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c,
+	libfreeipmi/src/acpi-spmi-locate.c (ipmi_ioremap, ipmi_iounmap,
+	ipmi_get_physical_mem_data): Move from ipmi-utils.h and
+	ipmi-utils.c into acpi-spmi-locate.c.
+
+	* libfreeipmi/src/ipmi-debug.h, libfreeipmi/src/ipmi-debug.c
+	(fiid_obj_dump_setup, fiid_obj_dump_perror, fiid_obj_dump,
+	fiid_obj_dump_lan, fiid_obj_dump_rmcp): Rename functions to
+	ipmi_dump_setup, ipmi_obj_dump_perror, ipmi_obj_dump,
+	ipmi_dump_lan_packet, and ipmi_dump_rmcp_packet respectively.
+
+	* Support function re-naming throughout code.
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c: Modify KCS interface.
+
+	* libfreeipmi/src/ipmi-udm.c,
+	libfreeipmi/src/ipmi-kcs-interface-udm.c: Support new KCS
+	interface.
+
+	* libfreeipmi/src/ipmi-ssif-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.c: Modify SSIF interface.
+
+	* libfreeipmi/src/ipmi-udm.c,
+	libfreeipmi/src/ipmi-ssif-interface-udm.c: Support new SSIF
+	interface.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
 	* rmcpping/, ipmiping/, ipmipower/, bmc-watchdog/, common/,

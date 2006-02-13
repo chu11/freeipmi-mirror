@@ -1,21 +1,21 @@
 /*
-   ipmi-debug.c - IPMI Debugging Functions
+  ipmi-debug.c - IPMI Debugging Functions
 
-   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+  Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "freeipmi.h"
@@ -41,10 +41,10 @@
 #define IPMI_DEBUG_MAX_UNEXPECTED_BITS  (IPMI_DEBUG_MAX_UNEXPECTED_BYTES*8)
 
 fiid_template_t tmpl_unexpected =
-{
-  {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {0, "", 0}
-};
+  {
+    {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
 
 static int
 _write(int fd, void *buf, size_t n)
@@ -161,7 +161,7 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 }
 
 int8_t
-fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
+ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
 {
   if (_set_prefix_str(prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     return (-1);
@@ -173,7 +173,7 @@ fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t 
 }
 
 int8_t
-fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj)
+ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj)
 {
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_iterator_t iter = NULL;
@@ -184,7 +184,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
       goto cleanup;
     }
   
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     goto cleanup;
 
   if (!(iter = fiid_iterator_create(obj)))
@@ -249,7 +249,7 @@ fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 }
 
 int8_t
-fiid_obj_dump (int fd, fiid_obj_t obj)
+ipmi_obj_dump (int fd, fiid_obj_t obj)
 {
   char *hdr = 
     "================================================================\n"
@@ -258,11 +258,11 @@ fiid_obj_dump (int fd, fiid_obj_t obj)
   char *trlr = 
     "================================================================";
 
-  return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj);
+  return ipmi_obj_dump_perror(fd, NULL, hdr, trlr, obj);
 }
 
 int8_t
-fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_msg_trlr_len;
@@ -301,7 +301,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
       goto cleanup;
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     goto cleanup;
 
   /* Dump rmcp header */
@@ -313,7 +313,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -338,11 +338,11 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   
   if (pkt_len <= indx)
     {
-      if (fiid_obj_dump_perror(fd, 
-			       prefix_buf, 
-			       session_hdr, 
-			       NULL, 
-			       obj_session_hdr) < 0)
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               session_hdr, 
+                               NULL, 
+                               obj_session_hdr) < 0)
 	goto cleanup;
 
       rv = 0;
@@ -364,11 +364,11 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 
   if (pkt_len <= indx)
     {
-      if (fiid_obj_dump_perror(fd, 
-			       prefix_buf, 
-			       session_hdr, 
-			       NULL, 
-			       obj_session_hdr) < 0)
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               session_hdr, 
+                               NULL, 
+                               obj_session_hdr) < 0)
 	goto cleanup;
 
       rv = 0;
@@ -382,11 +382,11 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
     goto cleanup;
   indx += len;
 
-  if (fiid_obj_dump_perror(fd, 
-			   prefix_buf, 
-			   session_hdr, 
-			   NULL, 
-			   obj_session_hdr) < 0)
+  if (ipmi_obj_dump_perror(fd, 
+                           prefix_buf, 
+                           session_hdr, 
+                           NULL, 
+                           obj_session_hdr) < 0)
     goto cleanup;
 
   if (pkt_len <= indx)
@@ -404,7 +404,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, msg_hdr, NULL, obj_msg_hdr) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, msg_hdr, NULL, obj_msg_hdr) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -436,11 +436,11 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 	goto cleanup;
       indx += len;
       
-      if (fiid_obj_dump_perror(fd, 
-			       prefix_buf, 
-			       cmd_hdr, 
-			       NULL, 
-			       obj_cmd) < 0)
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               cmd_hdr, 
+                               NULL, 
+                               obj_cmd) < 0)
 	goto cleanup;
 
       if (pkt_len <= indx)
@@ -456,7 +456,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, trlr_hdr, NULL, obj_msg_trlr) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, trlr_hdr, NULL, obj_msg_trlr) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -474,7 +474,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
     goto cleanup;
   
   rv = 0;
@@ -495,7 +495,7 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
 }
 
 int8_t 
-fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
+ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
@@ -520,7 +520,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
       return (-1);
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);
 
   /* Dump rmcp header */
@@ -532,7 +532,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -550,7 +550,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, rmcp_cmd, NULL, obj_cmd) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_cmd, NULL, obj_cmd) < 0)
     goto cleanup;
   
   if (pkt_len <= indx)
@@ -568,7 +568,7 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
     goto cleanup;
   indx += len;
   
-  if (fiid_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+  if (ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
     goto cleanup;
   
   rv = 0;
@@ -585,53 +585,53 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
 uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
-    /* we assume we have already ioperm'd the space */
-    _dprintf (fd, "Current KCS state: 0x%x : ", state);
-    if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
-            _dprintf (fd, "IDLE_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
-            _dprintf (fd, "READ_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
-            _dprintf (fd, "WRITE_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
-            _dprintf (fd, "ERROR_STATE ");
-    } else {
-      _dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
-    }
-    if (state & IPMI_KCS_STATUS_REG_IBF) {
-            _dprintf (fd, "IBF ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OBF) {
-            _dprintf (fd, "OBF ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OEM1) {
-            _dprintf (fd, "OEM1 ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OEM2) {
-            _dprintf (fd, "OEM2 ");
-    }
-    _dprintf (fd, "\n");
-    return (0);
+  /* we assume we have already ioperm'd the space */
+  _dprintf (fd, "Current KCS state: 0x%x : ", state);
+  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
+    _dprintf (fd, "IDLE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
+    _dprintf (fd, "READ_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
+    _dprintf (fd, "WRITE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
+    _dprintf (fd, "ERROR_STATE ");
+  } else {
+    _dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
+  }
+  if (state & IPMI_KCS_STATUS_REG_IBF) {
+    _dprintf (fd, "IBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OBF) {
+    _dprintf (fd, "OBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM1) {
+    _dprintf (fd, "OEM1 ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM2) {
+    _dprintf (fd, "OEM2 ");
+  }
+  _dprintf (fd, "\n");
+  return (0);
 }
 
 int
 ipmi_smic_print_flags (int fd, uint8_t state)
 {
-    _dprintf (fd, "Current SMIC flags: %#x : ", state);
-    if(state & IPMI_SMIC_RX_DATA_RDY) 
-        _dprintf (fd, "RX_DATA_RDY ");
-    if(state & IPMI_SMIC_TX_DATA_RDY)
-        _dprintf (fd, "TX_DATA_RDY ");
-    if(state & IPMI_SMIC_SMI)
-        _dprintf (fd, "SMI ");
-    if(state & IPMI_SMIC_EVT_ATN) 
-        _dprintf (fd, "EVT_ATN ");
-    if(state & IPMI_SMIC_SMS_ATN)
-        _dprintf (fd, "SMS_ATN ");
-    if(state & IPMI_SMIC_BUSY)
-        _dprintf (fd, "BUSY ");
-    _dprintf (fd, "\n");
-    return (0);
+  _dprintf (fd, "Current SMIC flags: %#x : ", state);
+  if(state & IPMI_SMIC_RX_DATA_RDY) 
+    _dprintf (fd, "RX_DATA_RDY ");
+  if(state & IPMI_SMIC_TX_DATA_RDY)
+    _dprintf (fd, "TX_DATA_RDY ");
+  if(state & IPMI_SMIC_SMI)
+    _dprintf (fd, "SMI ");
+  if(state & IPMI_SMIC_EVT_ATN) 
+    _dprintf (fd, "EVT_ATN ");
+  if(state & IPMI_SMIC_SMS_ATN)
+    _dprintf (fd, "SMS_ATN ");
+  if(state & IPMI_SMIC_BUSY)
+    _dprintf (fd, "BUSY ");
+  _dprintf (fd, "\n");
+  return (0);
 }
 
 void

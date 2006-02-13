@@ -15,7 +15,7 @@
 /* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, */
 /* Boston, MA 02110-1301, USA. */
 
-/* $Id: ipmi-pef-param-spec.h,v 1.2.4.1 2006-02-13 17:45:23 chu11 Exp $ */
+/* $Id: ipmi-pef-param-spec.h,v 1.2.4.2 2006-02-13 22:10:07 chu11 Exp $ */
 
 #ifndef IPMI_PEF_PARAM_SPEC_H_INCLUDED
 #define IPMI_PEF_PARAM_SPEC_H_INCLUDED

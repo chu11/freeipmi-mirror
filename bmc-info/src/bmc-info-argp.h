@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.h,v 1.1.4.1 2006-02-13 17:45:21 chu11 Exp $ 
+   $Id: bmc-info-argp.h,v 1.1.4.2 2006-02-13 22:10:06 chu11 Exp $ 
    
    bmc-info-argp.h - displays BMC information.
    

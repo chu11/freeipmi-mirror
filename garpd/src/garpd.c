@@ -1,5 +1,5 @@
 /* 
-   $Id: garpd.c,v 1.3.2.1 2006-02-13 17:45:22 chu11 Exp $
+   $Id: garpd.c,v 1.3.2.2 2006-02-13 22:10:06 chu11 Exp $
 
    garpd - Gratuitous ARP Daemon - Send Gratuitous ARPs for each ARP
    MAC address mapping from the config file.

@@ -59,19 +59,6 @@ int8_t fill_kcs_get_sdr_chunk (uint16_t reservation_id,
                                uint8_t bytes_read,
                                fiid_obj_t obj_data_rq);
 
-int8_t ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
-				    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
-					  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-			  uint16_t record_id, 
-			  fiid_obj_t obj_cmd_rs, 
-			  uint8_t *sensor_record,
-			  uint32_t *sensor_record_len);
-
-
 #ifdef __cplusplus
 }
 #endif

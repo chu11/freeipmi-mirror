@@ -99,7 +99,7 @@ main (int argc, char **argv)
       perror ("ipmi_cmd()");
       exit (EXIT_FAILURE);
     }
-  fiid_obj_dump (fileno (stdout), obj_cmd_rs);
+  ipmi_obj_dump (fileno (stdout), obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {
