@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
@@ -70,9 +70,9 @@ fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs =
   };
 
 int8_t 
-fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq, 
-				  uint8_t channel_number, 
-				  uint8_t sol_payload)
+fill_sol_conf_sol_enable_disable (uint8_t channel_number, 
+				  uint8_t sol_payload,
+                                  fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -120,12 +120,12 @@ fill_sol_conf_sol_enable_disable (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_get_sol_conf_param (fiid_obj_t obj_data_rq, 
-			 uint8_t parameter_selector, 
+fill_get_sol_conf_param (uint8_t parameter_selector, 
 			 uint8_t channel_number,
 			 uint8_t parameter_type,
 			 uint8_t set_selector,
-			 uint8_t block_selector)
+			 uint8_t block_selector,
+                         fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -205,9 +205,9 @@ ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_sol_conf_param_sol_enable_rq)))
     goto cleanup;
 
-  if (fill_sol_conf_sol_enable_disable (obj_cmd_rq, 
-                                        channel_number, 
-                                        sol_payload) < 0)
+  if (fill_sol_conf_sol_enable_disable (channel_number, 
+                                        sol_payload,
+                                        obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -280,12 +280,12 @@ ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sol_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_sol_conf_param (obj_cmd_rq, 
-                               IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
+  if (fill_get_sol_conf_param (IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
                                channel_number, 
                                parameter_type, 
                                set_selector, 
-                               block_selector) < 0)
+                               block_selector,
+                               obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

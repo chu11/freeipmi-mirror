@@ -17,60 +17,30 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <error.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <argp.h>
-#include <freeipmi/freeipmi.h>
-
-#include "argp-common.h"
-
-const char *argp_program_version = "udm-test 0.1.0";
-const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
-
-static char doc[] = 
-"UDM Test -- an example program about usage of libfreeipmi";
-
-/* A description of the arguments we accept. */
-static char args_doc[] = "";
-
-/* The options we understand. */
-static struct argp_option options[] = 
-  {
-    ARGP_COMMON_OPTIONS, 
-    { 0 }
-  };
-
-/* Used by `main' to communicate with `parse_opt'. */
-struct arguments
-{
-  struct common_cmd_args common;
-};
-
-/* Parse a single option. */
-static error_t 
-parse_opt (int key, char *arg, struct argp_state *state)
-{
-  /* Get the INPUT argument from `argp_parse', which we
-     know is a pointer to our arguments structure. */
-  struct arguments *cmd_args = state->input;
-  
-  return common_parse_opt (key, arg, state, 
-			   &(cmd_args->common));
-}
-
-/* Our argp parser. */
-static struct argp argp = { options, parse_opt, args_doc, doc };
+#if HAVE_CONFIG_H
+# include "config.h"
+# include "freeipmi.h"
+#else 
+# include <freeipmi/freeipmi.h>
+#endif
 
 int 
 main (int argc, char **argv)
 {
-  struct arguments cmd_args;
+  char *hostname = NULL; /* ipmi hostname for out-of-band */
+  int auth_type = IPMI_SESSION_AUTH_TYPE_NONE; 
+  /* for out-of-band, it can also be IPMI_SESSION_AUTH_TYPE_MD2, 
+     IPMI_SESSION_AUTH_TYPE_MD5, IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 
+     IPMI_SESSION_AUTH_TYPE_OEM_PROP */
+  char username[] = ""; /* ipmi username for out-of-band */
+  char password[] = ""; /* ipmi user's password for out-of-band */
+  int priv_level = IPMI_PRIV_LEVEL_USER; 
+  /* for out-of-band, can also be IPMI_PRIV_LEVEL_CALLBACK, 
+     IPMI_PRIV_LEVEL_OPERATOR, IPMI_PRIV_LEVEL_ADMIN, IPMI_PRIV_LEVEL_OEM */
+  
+  int disable_auto_probe = 0; /* to disable automatic probing, set non-zero here */
+  int driver_address = 0; /* driver address, if needed */
+  char *driver_device = NULL; /* driver device, if needed */
   
   ipmi_device_t dev;
   
@@ -79,33 +49,26 @@ main (int argc, char **argv)
   
   fiid_obj_t obj_cmd_rs;
   
-  init_common_cmd_args (&(cmd_args.common));
-  
-  /* Parse our arguments; every option seen by `parse_opt' will
-     be reflected in `arguments'. */
-  argp_parse (&argp, argc, argv, 0, 0, &cmd_args);
-  
-  if (cmd_args.common.host != NULL)
+  if (hostname != NULL)
     {
       host.sin_family = AF_INET;
       host.sin_port = htons (RMCP_AUX_BUS_SHUNT);
-      hostinfo = gethostbyname (cmd_args.common.host);
+      hostinfo = gethostbyname (hostname);
       if (hostinfo == NULL)
 	{
 	  perror ("gethostbyname()");
 	  exit (EXIT_FAILURE);
 	}
       host.sin_addr = *(struct in_addr *) hostinfo->h_addr;
-      
       if (ipmi_open_outofband (&dev, 
 			       IPMI_DEVICE_LAN, 
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       cmd_args.common.auth_type, 
-			       cmd_args.common.username, 
-			       cmd_args.common.password, 
-			       cmd_args.common.priv_level) != 0)
+			       auth_type, 
+			       username, 
+			       password, 
+			       priv_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  exit (EXIT_FAILURE);
@@ -114,7 +77,11 @@ main (int argc, char **argv)
   else 
     {
       if (ipmi_open_inband (&dev, 
-			    cmd_args.common.driver_type, 
+			    disable_auto_probe, 
+			    IPMI_DEVICE_KCS, /* can also be any inband device */
+			    driver_address, 
+			    0, /* register spacing */
+			    driver_device, 
 			    IPMI_MODE_DEFAULT) != 0)
 	{
 	  perror ("ipmi_open_inband()");
@@ -122,12 +89,17 @@ main (int argc, char **argv)
 	}
     }
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+    {
+      perror("fiid_obj_create");
+      exit (EXIT_FAILURE);
+    }
   if (ipmi_cmd_get_dev_id (&dev, obj_cmd_rs) != 0)
     {
       perror ("ipmi_cmd()");
+      exit (EXIT_FAILURE);
     }
-  fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  fiid_obj_dump (fileno (stdout), obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {

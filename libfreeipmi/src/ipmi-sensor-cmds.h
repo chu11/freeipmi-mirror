@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -103,6 +103,12 @@ extern fiid_template_t tmpl_set_sensor_type_rs;
 /* Intel - Not Implemented */
 extern fiid_template_t tmpl_get_sensor_type_rq;
 extern fiid_template_t tmpl_get_sensor_type_rs;
+
+int8_t fill_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq);
 
 int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
 					uint8_t sensor_number, 

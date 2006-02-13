@@ -1,5 +1,5 @@
 /* 
-   $Id: garpd.c,v 1.3 2005-12-16 08:48:40 ab Exp $
+   $Id: garpd.c,v 1.3.2.1 2006-02-13 17:45:22 chu11 Exp $
 
    garpd - Gratuitous ARP Daemon - Send Gratuitous ARPs for each ARP
    MAC address mapping from the config file.
@@ -18,7 +18,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #if HAVE_CONFIG_H

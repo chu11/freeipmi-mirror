@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.5 2005-12-16 08:48:40 ab Exp $
+ *  $Id: ipmipower_auth.c,v 1.5.2.1 2006-02-13 17:45:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmipower; if not, write to the Free Software Foundation, Inc.,
- *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H

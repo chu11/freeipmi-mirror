@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.c,v 1.2 2005-12-26 08:06:57 balamurugan Exp $ 
+   $Id: ipmi-raw-argp.c,v 1.2.2.1 2006-02-13 17:45:22 chu11 Exp $ 
    
    ipmi-raw-argp.c - ipmi-raw command line argument parser.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include <argp.h>
@@ -40,11 +40,13 @@ const char *argp_program_bug_address = "<freeipmi-devel@gnu.org>";
 
 static char doc[] = "IPMI Raw - executes IPMI commands by hex values.";
 
-static char args_doc[] = "";
+static char args_doc[] = "[COMMAND-HEX-BYTES]";
 
 static struct argp_option options[] = 
   {
     ARGP_COMMON_OPTIONS, 
+    {"file", CMD_FILE_KEY, "CMD-FILE", 0, 
+     "Read command requests from CMD-FILE.", 9}, 
     { 0 }
   };
 
@@ -57,10 +59,38 @@ parse_opt (int key, char *arg, struct argp_state *state)
   
   switch (key)
     {
-    case ARGP_KEY_ARG:
-      /* Too many arguments. */
-      argp_usage (state);
+    case CMD_FILE_KEY:
+      cmd_args->cmd_file = strdup (arg);
       break;
+    case ARGP_KEY_ARG:
+      {
+	int i;
+	long value;
+	
+	for (i = 0; arg[i] != (char) NULL; i++)
+	  {
+	    if (i > 2)
+	      {
+		fprintf (stderr, "%s: invalid hex byte argument\n", 
+			 program_invocation_short_name);
+		argp_usage (state);
+		return (-1);
+	      }
+	    
+	    if (isxdigit (arg[i]) == 0)
+	      {
+		fprintf (stderr, "%s: invalid hex byte argument\n", 
+			 program_invocation_short_name);
+		argp_usage (state);
+		return (-1);
+	      }
+	  }
+	
+	value = strtol (arg, (char **) NULL, 16);
+	cmd_args->cmd[cmd_args->cmd_length++] = (uint8_t) value;
+	
+	break;
+      }
     case ARGP_KEY_END:
       break;
     default:
@@ -75,6 +105,9 @@ void
 ipmi_raw_argp_parse (int argc, char **argv)
 {
   init_common_cmd_args (&(cmd_args.common));
+  cmd_args.cmd_file = NULL;
+  memset (cmd_args.cmd, 0, ARG_MAX);
+  cmd_args.cmd_length = 0;
   
   argp_parse (&argp, argc, argv, ARGP_IN_ORDER, NULL, &cmd_args);
 }

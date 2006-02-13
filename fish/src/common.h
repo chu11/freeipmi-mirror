@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.3.2.1 2006-02-09 18:19:29 chu11 Exp $ 
+   $Id: common.h,v 1.3.2.2 2006-02-13 17:45:22 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -17,7 +17,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifndef _COMMON_H

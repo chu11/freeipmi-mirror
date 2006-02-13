@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
@@ -173,12 +173,12 @@ fiid_template_t tmpl_get_serial_conf_param_commbits_rs =
   };
 
 int 
-fill_set_serial_connmode (fiid_obj_t obj_data_rq, 
-			  uint8_t channel_number, 
+fill_set_serial_connmode (uint8_t channel_number, 
 			  uint8_t basic_mode_enable,
 			  uint8_t ppp_mode_enable,
 			  uint8_t terminal_mode_enable,
-			  uint8_t direct)
+			  uint8_t direct,
+                          fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -238,9 +238,9 @@ fill_set_serial_connmode (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq, 
-					uint8_t channel_number, 
-					uint8_t page_blackout_interval)
+fill_set_serial_page_blackout_interval (uint8_t channel_number, 
+					uint8_t page_blackout_interval,
+                                        fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -284,9 +284,9 @@ fill_set_serial_page_blackout_interval (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_set_serial_retry_time (fiid_obj_t obj_data_rq, 
-			    uint8_t channel_number, 
-			    uint8_t retry_time)
+fill_set_serial_retry_time (uint8_t channel_number, 
+			    uint8_t retry_time,
+                            fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -330,11 +330,11 @@ fill_set_serial_retry_time (fiid_obj_t obj_data_rq,
 }	    
 
 int8_t 
-fill_set_serial_comm_bits (fiid_obj_t obj_data_rq, 
-			   uint8_t channel_number, 
+fill_set_serial_comm_bits (uint8_t channel_number, 
                            uint8_t dtr_hangup,
                            uint8_t flow_control,
-                           uint8_t bit_rate)
+                           uint8_t bit_rate,
+                           fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -394,12 +394,12 @@ fill_set_serial_comm_bits (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_get_serial_conf_param (fiid_obj_t obj_data_rq, 
-			    uint8_t parameter_selector, 
+fill_get_serial_conf_param (uint8_t parameter_selector, 
 			    uint8_t channel_number,
 			    uint8_t parameter_type,
 			    uint8_t set_selector,
-			    uint8_t block_selector)
+			    uint8_t block_selector,
+                            fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -482,19 +482,19 @@ ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_connmode_rq)))
     goto cleanup;
   
-  if (fill_set_serial_connmode (obj_cmd_rq, 
-				 channel_number, 
-				 basic_mode_enable, 
-				 ppp_mode_enable, 
-				 terminal_mode_enable, 
-				 direct) < 0)
+  if (fill_set_serial_connmode (channel_number, 
+                                basic_mode_enable, 
+                                ppp_mode_enable, 
+                                terminal_mode_enable, 
+                                direct,
+                                obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -533,16 +533,16 @@ ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_pageblackout_rq)))
     goto cleanup;
 
-  if (fill_set_serial_page_blackout_interval (obj_cmd_rq, 
-					       channel_number, 
-					       page_blackout_interval) < 0)
+  if (fill_set_serial_page_blackout_interval (channel_number, 
+                                              page_blackout_interval,
+                                              obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -581,16 +581,16 @@ ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_retry_rq)))
     goto cleanup;
 
-  if (fill_set_serial_retry_time (obj_cmd_rq, 
-				   channel_number, 
-				   retry_time) < 0)
+  if (fill_set_serial_retry_time (channel_number, 
+                                  retry_time,
+                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -631,18 +631,18 @@ ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_serial_conf_param_commbits_rq)))
     goto cleanup;
 
-  if (fill_set_serial_comm_bits (obj_cmd_rq, 
-				  channel_number, 
-				  dtr_hangup,
-				  flow_control,
-				  bit_rate) < 0)
+  if (fill_set_serial_comm_bits (channel_number, 
+                                 dtr_hangup,
+                                 flow_control,
+                                 bit_rate,
+                                 obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -683,19 +683,19 @@ ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_serial_conf_param (obj_cmd_rq, 
-				   IPMI_SERIAL_PARAM_CONNECTION_MODE, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) < 0)
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_CONNECTION_MODE, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -736,19 +736,19 @@ ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_serial_conf_param (obj_cmd_rq, 
-				   IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) < 0)
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -789,19 +789,19 @@ ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_serial_conf_param (obj_cmd_rq, 
-				   IPMI_SERIAL_PARAM_RETRY_TIME, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) < 0)
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_RETRY_TIME, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -842,19 +842,19 @@ ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_serial_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_serial_conf_param (obj_cmd_rq, 
-				   IPMI_SERIAL_PARAM_COMM_BITS, 
-				   channel_number, 
-				   parameter_type, 
-				   set_selector, 
-				   block_selector) < 0)
+  if (fill_get_serial_conf_param (IPMI_SERIAL_PARAM_COMM_BITS, 
+                                  channel_number, 
+                                  parameter_type, 
+                                  set_selector, 
+                                  block_selector,
+                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;

@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
@@ -723,7 +723,7 @@ fiid_template_t tmpl_get_sensor_type_rs =
   };
 
 int8_t 
-fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -754,7 +754,7 @@ fill_kcs_get_threshold_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 }
 
 int8_t 
-fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -785,7 +785,7 @@ fill_kcs_get_discrete_reading (fiid_obj_t obj_data_rq, uint8_t sensor_number)
 }
 
 int8_t 
-fill_kcs_get_sensor_thresholds (fiid_obj_t obj_data_rq, uint8_t sensor_number)
+fill_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -841,8 +841,8 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_threshold_reading_rq)))
     goto cleanup;
   
-  if (fill_kcs_get_threshold_reading (obj_cmd_rq, 
-                                      sensor_number) < 0)
+  if (fill_kcs_get_threshold_reading (sensor_number,
+                                      obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -888,8 +888,8 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_discrete_reading_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_discrete_reading (obj_cmd_rq, 
-                                     sensor_number) < 0)
+  if (fill_kcs_get_discrete_reading (sensor_number,
+                                     obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -935,8 +935,8 @@ ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_thresholds_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sensor_thresholds (obj_cmd_rq, 
-                                      sensor_number) < 0)
+  if (fill_kcs_get_sensor_thresholds (sensor_number,
+                                      obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

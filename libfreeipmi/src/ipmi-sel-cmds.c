@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
@@ -219,7 +219,7 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
+fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -262,9 +262,9 @@ fill_kcs_get_sel_entry (fiid_obj_t obj_data_rq, uint16_t record_id)
 }
 
 int8_t 
-fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq, 
-			   uint16_t reservation_id, 
-			   uint16_t record_id)
+fill_kcs_delete_sel_entry (uint16_t reservation_id, 
+			   uint16_t record_id,
+                           fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -299,7 +299,7 @@ fill_kcs_delete_sel_entry (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_kcs_clear_sel (fiid_obj_t obj_data_rq, uint16_t reservation_id, uint8_t opcode)
+fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -374,10 +374,10 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_STORAGE_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -416,10 +416,10 @@ ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_STORAGE_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -458,10 +458,10 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_STORAGE_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -497,7 +497,7 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_entry_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sel_entry (obj_cmd_rq, record_id) < 0)
+  if (fill_kcs_get_sel_entry (record_id, obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -541,16 +541,17 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_delete_sel_entry_rq)))
     goto cleanup;
 
-  if (fill_kcs_delete_sel_entry (obj_cmd_rq, 
-				  reservation_id, 
-				  record_id) < 0)
+  if (fill_kcs_delete_sel_entry (
+                                 reservation_id, 
+                                 record_id,
+                                 obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_STORAGE_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;
@@ -587,16 +588,16 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_clear_sel_rq)))
     goto cleanup;
 
-  if (fill_kcs_clear_sel (obj_cmd_rq, 
-			   reservation_id, 
-			   opcode) < 0)
+  if (fill_kcs_clear_sel (reservation_id, 
+                          opcode,
+                          obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_STORAGE_RQ, 
-		 obj_cmd_rq, 
-		 obj_cmd_rs) < 0)
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_STORAGE_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
     goto cleanup;
 
   rv = 0;

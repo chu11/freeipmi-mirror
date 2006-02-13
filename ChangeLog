@@ -233,6 +233,110 @@
 	to begin testing.
 	
 ------------------------------------------------------------
+2006-02-12  Anand Babu  <ab@zresearch.com>
+
+	* Copyright notices: Updated new FSF's address.
+
+2006-02-10  Anand Babu  <ab@zresearch.com>
+
+	* Tagged Release-0_2_0.
+
+2006-02-10  A Balamurugan  <bala@zresearch.com>
+
+	* doc/freeipmi.texi: updated.
+
+	* fish/bmc-config.8.pre.in: updated.
+
+2006-02-10  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-raw/src/ipmi-raw.c: bug fix of command hex bytes execution.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* doc/examples/Makefile.am: fix for bug #15689, to build non-inst
+	examples.
+
+	* doc/examples/udm-test.c: updated.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* freeipmi.spec.in: updated.
+
+	* doc/examples/Makefile.am: updated.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* doc/examples/ipmi-lan-test.c: removed.
+
+	* doc/examples/Makefile.example: updated.
+
+	* doc/examples/udm-test.c: updated.
+
+2006-02-09  Albert Chu  <chu11@llnl.gov>
+
+	* configure.ac: Increment libfreeipmi version with release coming
+	up.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-sel-api.c,
+	libfreeipmi/src/ipmi-sensor-api.c: fixed compiler warnings.
+
+2006-02-09  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.h,
+	libfreeipmi/src/ipmi-sel-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-serial-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.h: Add mising fill functions.
+
+2006-02-09  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-raw/doc/ipmi-raw.8.pre.in: updated.
+
+	* ipmi-raw/src/ipmi-raw-argp.[ch]: added --file argument and
+	command hex bytes as argument. fixed bug #15599 and bug #15600.
+
+	* ipmi-raw/src/ipmi-raw.c: updated.
+
+2006-02-09  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-cmds.c (fill_lan_set_arp,
+	fill_lan_set_gratuitous_arp_interval,
+	fill_lan_set_auth_type_enables, fill_lan_set_ip_addr_source,
+	fill_lan_set_ip_addr, fill_lan_set_vlan_id,
+	fill_lan_set_vlan_priority, fill_lan_set_subnet_mask,
+	fill_lan_set_mac_addr, fill_get_lan_conf_param,
+	fill_suspend_bmc_arps), libfreeipmi/src/ipmi-pef-cmds.c
+	(fill_kcs_alert_immediate, fill_kcs_get_pef_conf_param,
+	fill_kcs_set_pef_control, fill_kcs_set_global_action_control,
+	fill_kcs_set_startup_delay, fill_kcs_set_alert_startup_delay,
+	fill_kcs_set_num_event_filters, fill_kcs_set_filter_table_entry,
+	fill_kcs_set_filter_table_data1, fill_kcs_set_num_alert_policies,
+	fill_kcs_set_alert_string_keys, fill_kcs_arm_pef_postpone_timer,
+	fill_kcs_set_last_processed_event, fill_kcs_pet_ack),
+	libfreeipmi/src/ipmi-sel-cmds.c (fill_kcs_get_sel_entry,
+	fill_kcs_delete_sel_entry, fill_kcs_clear_sel),
+	libfreeipmi/src/ipmi-sensor-cmds.c
+	(fill_kcs_get_threshold_reading, fill_kcs_get_discrete_reading,
+	fill_kcs_get_sensor_thresholds),
+	libfreeipmi/src/ipmi-serial-cmds.c (fill_set_serial_connmode,
+	fill_set_serial_page_blackout_interval,
+	fill_set_serial_retry_time, fill_set_serial_comm_bits,
+	fill_get_serial_conf_param), libfreeipmi/src/ipmi-sol-cmds.c
+	(fill_sol_conf_sol_enable_disable, fill_get_sol_conf_param): Fix
+	function prototype consistency issue.
+
+	* libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c: Adjust function calls for new
+	prototypes appropriately.
+	
 2006-02-08  Albert Chu  <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-event-messages.c: Move strings into
