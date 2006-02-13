@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -54,6 +54,35 @@ extern "C" {
 #define IPMI_KCS_STATE_READ   IPMI_KCS_STATUS_REG_S0
 #define IPMI_KCS_STATE_WRITE  IPMI_KCS_STATUS_REG_S1
 #define IPMI_KCS_STATE_ERROR  (IPMI_KCS_STATUS_REG_S0 & IPMI_KCS_STATUS_REG_S1)
+
+/* IPMI KCS Interface Status Codes */
+#define IPMI_KCS_STATUS_NO_ERROR             0x00
+#define IPMI_KCS_STATUS_SUCCESS              IPMI_KCS_STATUS_NO_ERR
+#define IPMI_KCS_STATUS_OK                   IPMI_KCS_STATUS_NO_ERR
+#define IPMI_KCS_STATUS_NO_ERROR_STR \
+"No error"
+          
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD         0x01
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD_STR \
+"Aborted by command (Transfer in progress was " \
+"aborted by SMS issuing the Abort/Status control code)"
+
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE      0x02
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR \
+"Illegal control code"
+
+#define IPMI_KCS_STATUS_LEN_ERROR              0x06
+#define IPMI_KCS_STATUS_LEN_ERROR_STR \
+"Length error (e.g.overrun)"
+
+#define IPMI_KCS_STATUS_OEM_ERROR_BEGIN        0xC0
+#define IPMI_KCS_STATUS_OEM_ERROR_END          0xFE
+
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR      0xFF
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR \
+"Unspecified error"
+
+/* Reserved - all others */
 
 extern fiid_template_t tmpl_hdr_kcs;
 

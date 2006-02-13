@@ -30,6 +30,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "argp-common.h"
 #include "bmc-info-argp.h"
+#include "ipmi-common.h"
 
 typedef struct channel_info 
 {

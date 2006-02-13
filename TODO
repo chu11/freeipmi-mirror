@@ -29,6 +29,8 @@ libfreeipmi:
   * gcc 4.0 warnings test/fix
   * password 16 vs 20 bytes fix
     - also see errata
+  * sensor-event-messages: get_28_event_data3_messages
+  * autoconf pthread finding
 
 fish:
 -----

@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -28,19 +28,6 @@ extern "C" {
 #endif
 
 #define IPMI_ERR_STR_MAX_LEN                 0x0800
-
-/* IPMI KCS Interface Status Codes
-   -------------------------------- */
-#define IPMI_KCS_STATUS_NO_ERR               0x00
-#define IPMI_KCS_STATUS_SUCCESS              IPMI_KCS_STATUS_NO_ERR
-#define IPMI_KCS_STATUS_OK                   IPMI_KCS_STATUS_NO_ERR
-#define IPMI_KCS_STATUS_ABORTED_BY_CMD       0x01
-#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE    0x02
-#define IPMI_KCS_STATUS_LEN_ERR              0x06
-#define IPMI_KCS_STATUS_OEM_ERR_BEGIN        0xC0
-#define IPMI_KCS_STATUS_OEM_ERR_END          0xFE
-#define IPMI_KCS_STATUS_UNSPECIFIED_ERR      0xFF
-/* Reserved - all others */
 
 /* RMCP+ and RAKP Message Status Codes
    -------------------------------- */
@@ -167,8 +154,6 @@ int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 int8_t ipmi_kcs_strstatus_r (uint8_t status_code, 
 			     char *errstr, 
 			     size_t len);
-void ipmi_error (fiid_obj_t obj_cmd, 
-		 const char *s);
 
 int8_t rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
                                   char *errstr,

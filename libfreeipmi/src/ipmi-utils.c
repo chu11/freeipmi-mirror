@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -86,61 +86,6 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
       return (0);
     }
   return (1); 
-}
-
-int
-ipmi_input_timeout (int fd, unsigned int seconds)
-{
-  fd_set set;
-  struct timeval timeout;
-  
-  /* Initialize the file descriptor set. */
-  FD_ZERO (&set);
-  FD_SET (fd, &set);
-
-  /* Initialize the timeout data structure. */
-  timeout.tv_sec = seconds;
-  timeout.tv_usec = 0;
-
-  /* `select' returns 0 if timeout, 1 if input available, -1 if error. */
-  return TEMP_FAILURE_RETRY (select (FD_SETSIZE,
-				     &set, NULL, NULL,
-				     &timeout));
-}
-
-int 
-ipmi_is_root ()
-{
-  uid_t uid = getuid ();
-  if (uid == 0)
-    return 1;
-  return 0;
-}
-
-unsigned int
-ipmi_get_random_seed (void)
-{
-#if HAVE_DEVURANDOM || HAVE_DEVRANDOM
-  unsigned int seed;
-  int fd;
-  
-#if HAVE_DEVURANDOM
-  if ((fd = open ("/dev/urandom", O_RDONLY)) == -1)
-    goto fail_over_seed;
-#else
-  if ((fd = open ("/dev/random", O_RDONLY)) == -1)
-    goto fail_over_seed;
-#endif
-  
-  if (read (fd, &seed, sizeof (seed)) < sizeof (seed))
-    goto fail_over_seed;
-
-  close (fd);
-  return (seed);
-
- fail_over_seed:
-#endif
-  return ((unsigned int) time (0));
 }
 
 int

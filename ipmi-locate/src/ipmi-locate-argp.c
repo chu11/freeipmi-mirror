@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate-argp.c,v 1.1.2.2 2005-12-27 21:38:11 chu11 Exp $ 
+   $Id: ipmi-locate-argp.c,v 1.1.2.3 2006-02-13 23:54:47 chu11 Exp $ 
    
    ipmi-locate-argp.c - command line argument parser.
    
@@ -17,7 +17,7 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifdef HAVE_CONFIG_H

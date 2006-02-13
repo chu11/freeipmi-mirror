@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifndef _IPMI_SEL_CMDS_H
@@ -48,6 +48,15 @@ extern fiid_template_t tmpl_delete_sel_entry_rs;
 
 extern fiid_template_t tmpl_clear_sel_rq;
 extern fiid_template_t tmpl_clear_sel_rs;
+
+int8_t fill_kcs_get_sel_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_reserve_sel (fiid_obj_t obj_data_rq);
+int8_t fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq);
+int8_t fill_kcs_delete_sel_entry (uint16_t reservation_id,
+                                  uint16_t record_id,
+                                  fiid_obj_t obj_data_rq);
+int8_t fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq);
 
 int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
 			       fiid_obj_t obj_cmd_rs);

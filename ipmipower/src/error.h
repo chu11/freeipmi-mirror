@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.h,v 1.2 2004-12-18 00:42:36 chu11 Exp $
+ *  $Id: error.h,v 1.2.2.1 2006-02-13 23:54:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with PowerMan; if not, write to the Free Software Foundation, Inc.,
- *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
 \*****************************************************************************/
 
 #ifndef EXIT_ERROR_H

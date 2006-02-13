@@ -49,6 +49,8 @@ Commit key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
+.SH "KNOWN ISSUES"
+bmc-config checkout in out-of-band may fail to retrieve some BMC configuration options, because of default USER privilege level.  For such cases, use ADMIN privilege level.
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

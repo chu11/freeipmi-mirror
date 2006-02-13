@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
@@ -525,10 +525,10 @@ const struct ipmi_discrete_desc ipmi_sensor_type_watchdog_2[] =
 
 const struct ipmi_discrete_desc ipmi_sensor_type_platform_alert[] =
   {
-    {"Platform generated page", false}, 
-    {"Platform generated LAN alert", false}, 
+    {"platform generated page", false}, 
+    {"platform generated LAN alert", false}, 
     {"Platform Event Trap generated, formatted per IPMI PET", false}, 
-    {"Platform generated SNMP trap, OEM format", false}, 
+    {"platform generated SNMP trap, OEM format", false}, 
     {NULL, 0}
   };
 
@@ -549,16 +549,16 @@ const struct ipmi_discrete_desc ipmi_sensor_type_lan[] =
 
 const struct ipmi_discrete_desc ipmi_sensor_type_management_subsystem_health[] =
   {
-    {"Sensor access degraded or unavailable", false}, 
-    {"Controller access degraded or unavailable", false}, 
-    {"Management controller off-line", false}, 
-    {"Management controller unavailable", false}, 
+    {"sensor access degraded or unavailable", false}, 
+    {"controller access degraded or unavailable", false}, 
+    {"management controller off-line", false}, 
+    {"management controller unavailable", false}, 
     {NULL, 0}
   };
 
 const struct ipmi_discrete_desc ipmi_sensor_type_battery[] =
   {
-    {"Battery low", false}, 
+    {"battery low (predictive failure)", false}, 
     {"battery failed", false}, 
     {"battery presence detected", false}, 
     {NULL, 0}
@@ -729,6 +729,7 @@ const char *const ipmi_event_reading_type_code_10_desc[] =
     "transition to Off Duty", 
     "transition to Degraded", 
     "transition to Power Save", 
+    "Install Error",
     NULL
   };
 

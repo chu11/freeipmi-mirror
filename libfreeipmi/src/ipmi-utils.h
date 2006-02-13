@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -55,9 +55,6 @@ typedef  int8_t ipmi_chksum_t;
 ipmi_chksum_t ipmi_chksum (uint8_t *buf, uint64_t len);
 int8_t ipmi_chksum_test (uint8_t *buf, uint64_t len);
 int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
-int ipmi_input_timeout (int fd, unsigned int seconds);
-int ipmi_is_root ();
-unsigned int ipmi_get_random_seed (void);
 int ipmi_get_random (char *buf, unsigned int buflen);
 int ipmi_open_free_udp_port (void);
 int ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len, void **virtual_addr, void **mapped_addr, size_t *mapped_addr_len);

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-raw-argp.h,v 1.1.2.2 2005-12-27 21:38:11 chu11 Exp $ 
+   $Id: ipmi-raw-argp.h,v 1.1.2.3 2006-02-13 23:54:47 chu11 Exp $ 
    
    ipmi-raw-argp.h - ipmi-raw command line argument parser.
    
@@ -17,15 +17,20 @@
    
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #ifndef _IPMI_RAW_ARGP_H
 #define _IPMI_RAW_ARGP_H
 
+#define CMD_FILE_KEY     'f'
+
 struct arguments
 {
   struct common_cmd_args common;
+  char *cmd_file;
+  uint8_t cmd[ARG_MAX];
+  int cmd_length;
 };
 
 void ipmi_raw_argp_parse (int argc, char **argv);

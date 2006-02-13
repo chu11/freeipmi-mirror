@@ -15,32 +15,22 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 
 #ifndef _IPMI_SENSOR_UTILS_H
 #define _IPMI_SENSOR_UTILS_H
 
-double ipmi_sensor_decode_value_old (char r_exponent, 
-				     char b_exponent, 
-				     int m, 
-				     int b, 
-				     int linear, 
-				     int is_signed, 
-				     uint64_t raw_data);
 double ipmi_sensor_decode_value (char r_exponent, 
 				 char b_exponent, 
 				 short m, 
 				 short b, 
 				 char linear, 
-				 uint8_t is_signed, 
+				 uint8_t analog_data_format, 
 				 uint8_t raw_data);
-void ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
-				    int *is_signed, char *r_exponent, char *b_exponent, 
-				    uint64_t *linear, int *b, int *m);
 void ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
-				    uint8_t *is_signed, 
+				    uint8_t *analog_data_format,
 				    char *r_exponent, 
 				    char *b_exponent, 
 				    char *linear, 

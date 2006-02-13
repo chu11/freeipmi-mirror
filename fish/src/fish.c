@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.17.2.1 2006-01-12 22:02:43 chu11 Exp $ 
+   $Id: fish.c,v 1.17.2.2 2006-02-13 23:54:47 chu11 Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for
    managing large number of IPMI compatible systems.
@@ -18,7 +18,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "common.h"

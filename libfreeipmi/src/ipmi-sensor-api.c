@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -672,9 +672,9 @@ get_sdr_record (ipmi_device_t *dev,
 			 obj_cmd_rs, 
 			 &obj_sdr_record) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, "cmd", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, "comp_code", &val);
+      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sdr_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
@@ -719,9 +719,9 @@ get_sdr_record (ipmi_device_t *dev,
 					   sdr_record->record.sdr_full_record.sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
-	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, "cmd", &val);
+	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
-	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, "comp_code", &val);
+	  FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sensor_thresholds_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs, 
 			       dev->errmsg, 
@@ -915,10 +915,10 @@ get_sensor_reading (ipmi_device_t *dev,
 					   obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_threshold_reading_rs, 
-			"cmd", &val);
+			(uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_threshold_reading_rs, 
-			"comp_code", &val);
+			(uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs, 
 			       dev->errmsg, 
@@ -975,10 +975,10 @@ get_sensor_reading (ipmi_device_t *dev,
 					  obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"cmd", &val);
+			(uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"comp_code", &val);
+			(uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs, 
 			       dev->errmsg, 
@@ -1035,10 +1035,10 @@ get_sensor_reading (ipmi_device_t *dev,
 					  obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"cmd", &val);
+			(uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"comp_code", &val);
+			(uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs, 
 			       dev->errmsg, 
@@ -1095,10 +1095,10 @@ get_sensor_reading (ipmi_device_t *dev,
 					  obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"cmd", &val);
+			(uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  FIID_OBJ_GET (obj_cmd_rs, l_tmpl_get_sensor_discrete_reading_rs, 
-			"comp_code", &val);
+			(uint8_t *)"comp_code", &val);
 	  return (-1);
 	}
       

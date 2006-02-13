@@ -15,34 +15,10 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
 #include "freeipmi.h"
-
-double 
-ipmi_sensor_decode_value_old (char r_exponent, 
-			      char b_exponent, 
-			      int m, 
-			      int b, 
-			      int linear, 
-			      int is_signed, 
-			      uint64_t raw_data)
-{
-  double fval = 0.0;
-  
-  if (is_signed)
-    fval = (double) ((char) raw_data);
-  else 
-    fval = (double) raw_data;
-  fval *= (double) m;
-  fval += (b * pow (10, b_exponent));
-  fval *= pow (10, r_exponent);
-  if (raw_data != 0) 
-    if (linear == 7) 
-      fval = 1.0 / fval;
-  return fval;
-}
 
 double 
 ipmi_sensor_decode_value (char r_exponent, 
@@ -88,83 +64,6 @@ ipmi_sensor_decode_value (char r_exponent,
   dval *= pow (10, r_exponent);
   
   return (dval);
-}
-
-void 
-ipmi_sensor_get_decode_params_old (uint8_t *sensor_record, 
-				   int *is_signed, char *r_exponent, char *b_exponent, 
-				   uint64_t *linear, int *b, int *m)
-{
-  uint64_t val;
-  
-  uint64_t m_ls;
-  uint64_t m_ms;
-  
-  uint64_t b_ls;
-  uint64_t b_ms;
-  
-  if (!sensor_record 
-      || !is_signed 
-      || !r_exponent 
-      || !b_exponent)
-    {
-      errno = EINVAL;
-      return;
-    }
-
-/*   ipmi_sensor_get_decode_params_own (sensor_record); */
-  
-  if ((sensor_record[20] & 0xC0) == 0)
-    *is_signed = 0;
-  else 
-    *is_signed = 1;
-  
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"r_exponent", 
-		&val);
-  *r_exponent = (char) val;
-  if (*r_exponent & 0x08)
-    {
-      *r_exponent = (char) val;
-      *r_exponent += 0xF0;
-    }
-  
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_exponent", 
-		&val);
-  *b_exponent = (char) val;
-  
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"linearization_enum", 
-		&val);
-  *linear = val;
-  
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"m_ls", 
-		&m_ls); 
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"m_ms", 
-		&m_ms); 
-  val = bits_merge (m_ls, 8, 10, m_ms);
-  
-  *m = (int) val;
-  
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_ls", 
-		&b_ls); 
-  fiid_obj_get (sensor_record, 
-		tmpl_sdr_full_sensor_record, 
-		(uint8_t *)"b_ms", 
-		&b_ms); 
-  val = bits_merge (b_ls, 8, 10, b_ms);
-  
-  *b = (int) val;
 }
 
 void 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.4.2.2 2006-01-21 09:05:48 chu11 Exp $
+ *  $Id: ipmi-md2.c,v 1.4.2.3 2006-02-13 23:54:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *
  *  You should have received a copy of the GNU General Public License along
  *  with Ipmipower; if not, write to the Free Software Foundation, Inc.,
- *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
 #include "freeipmi.h"

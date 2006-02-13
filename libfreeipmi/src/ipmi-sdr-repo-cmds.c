@@ -15,7 +15,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
-   Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.  
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 
 */
 
@@ -148,7 +148,7 @@ fill_kcs_reserve_repo (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
+fill_kcs_get_sensor_record_header (uint16_t record_id, fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -184,11 +184,11 @@ fill_kcs_get_sensor_record_header (fiid_obj_t obj_data_rq, uint16_t record_id)
 }
 
 int8_t 
-fill_kcs_get_sdr_chunk (fiid_obj_t obj_data_rq, 
-			uint16_t reservation_id, 
+fill_kcs_get_sdr_chunk (uint16_t reservation_id, 
 			uint16_t record_id, 
 			uint8_t record_offset, 
-			uint8_t bytes_read)
+			uint8_t bytes_read,
+                        fiid_obj_t obj_data_rq)
 {
   if (!obj_data_rq)
     {
@@ -345,8 +345,8 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (fill_kcs_get_sensor_record_header (obj_cmd_rq, 
-					 record_id) != 0)
+  if (fill_kcs_get_sensor_record_header (record_id,
+                                         obj_cmd_rq) != 0)
     {
       fiid_template_free (tmpl_var_len_get_sdr_rs);
       return (-1);
@@ -424,9 +424,11 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (fill_kcs_get_sdr_chunk (obj_cmd_rq, reservation_id, 
-			      record_id, record_offset, 
-			      bytes_read) != 0)
+  if (fill_kcs_get_sdr_chunk (reservation_id, 
+			      record_id, 
+                              record_offset, 
+			      bytes_read,
+                              obj_cmd_rq) != 0)
     {
       fiid_template_free (tmpl_var_len_get_sdr_rs);
       return (-1);
