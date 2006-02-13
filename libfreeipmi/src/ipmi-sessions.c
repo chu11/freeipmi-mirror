@@ -80,7 +80,7 @@ fill_lan_session_hdr  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t ses
 }
 
 int8_t 
-check_hdr_session_session_seq_num (fiid_obj_t obj_lan_session_hdr, uint32_t session_seq_num)
+ipmi_lan_check_session_seq_num (fiid_obj_t obj_lan_session_hdr, uint32_t session_seq_num)
 {
   uint64_t session_seq_num_recv;
   int32_t len;
@@ -116,7 +116,7 @@ check_hdr_session_session_seq_num (fiid_obj_t obj_lan_session_hdr, uint32_t sess
 }
 
 int8_t 
-check_hdr_session_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
+ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
 {
   uint64_t session_id_recv;
   int32_t len;
@@ -152,7 +152,7 @@ check_hdr_session_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_i
 }
 
 int8_t 
-check_hdr_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len)
+ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len)
 {
   uint8_t auth_type_recv;
   int32_t rmcp_hdr_len, auth_type_index, auth_code_index;

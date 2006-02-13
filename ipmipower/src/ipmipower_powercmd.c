@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21.2.3 2006-02-13 23:24:02 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.21.2.4 2006-02-13 23:38:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -364,11 +364,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     password = NULL;
 
-  if ((ret = check_hdr_session_authcode((uint8_t *)buffer, 
-					len,
-					at,
-					(uint8_t *)password,
-					strlen(conf->password))) < 0)
+  if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
+					     len,
+					     at,
+					     (uint8_t *)password,
+					     strlen(conf->password))) < 0)
     err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
@@ -400,11 +400,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       else
         password = NULL;
 
-      if ((ret = check_hdr_session_authcode((uint8_t *)buffer, 
-					    len,
-					    at,
-					    (uint8_t *)password,
-					    strlen(conf->password))) < 0)
+      if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
+					         len,
+					         at,
+					         (uint8_t *)password,
+					         strlen(conf->password))) < 0)
         err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 

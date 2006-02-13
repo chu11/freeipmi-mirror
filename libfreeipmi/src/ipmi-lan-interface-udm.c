@@ -244,11 +244,11 @@ printf("DEBUGGING:\n");
                                  obj_cmd_rs,
                                  dev->io.outofband.rs.obj_lan_msg_trlr) != -1);
     
-    ERR (check_hdr_session_authcode (pkt, 
-                                     bytes_received, 
-                                     dev->io.outofband.auth_type,
-                                     dev->io.outofband.password,
-                                     IPMI_SESSION_MAX_AUTH_CODE_LEN) == 1);
+    ERR (ipmi_lan_check_session_authcode (pkt, 
+                                          bytes_received, 
+                                          dev->io.outofband.auth_type,
+                                          dev->io.outofband.password,
+                                          IPMI_SESSION_MAX_AUTH_CODE_LEN) == 1);
 
   }
   
@@ -515,11 +515,11 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 	return (-1);
       }
 
-    if (check_hdr_session_authcode (pkt, 
-                                    bytes_received, 
-                                    dev->io.outofband.auth_type,
-                                    dev->io.outofband.password,
-                                    IPMI_SESSION_MAX_AUTH_CODE_LEN) != 1)
+    if (ipmi_lan_check_session_authcode (pkt, 
+                                         bytes_received, 
+                                         dev->io.outofband.auth_type,
+                                         dev->io.outofband.password,
+                                         IPMI_SESSION_MAX_AUTH_CODE_LEN) != 1)
       {
 	fiid_template_free (tmpl_var_cmd_rs);
         fiid_obj_destroy(obj_cmd_rs);
