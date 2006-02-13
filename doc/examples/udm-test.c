@@ -94,7 +94,7 @@ main (int argc, char **argv)
     {
       perror ("ipmi_cmd()");
     }
-  fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  ipmi_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
   
   if (ipmi_close (&dev) != 0)
     {

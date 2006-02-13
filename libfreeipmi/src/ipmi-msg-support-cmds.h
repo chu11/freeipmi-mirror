@@ -27,6 +27,38 @@ extern "C" {
 
 #define IPMI_USER_NAME_MAX_LENGTH        16
 #define IPMI_USER_PASSWORD_MAX_LENGTH    16
+#define IPMI_SESSION_MAX_USERNAME_LEN     16
+#define IPMI_SESSION_CHALLENGE_STR_LEN    16
+#define IPMI_SESSION_MAX_AUTH_CODE_LEN    16
+
+#define IPMI_SESSION_AUTH_TYPE_NONE                0x00
+#define IPMI_SESSION_AUTH_TYPE_MD2                 0x01
+#define IPMI_SESSION_AUTH_TYPE_MD5                 0x02
+#define IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
+#define IPMI_SESSION_AUTH_TYPE_OEM_PROP            0x05
+
+#define IPMI_SESSION_AUTH_TYPE_VALID(__auth_type) \
+        (((__auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
+          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
+          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
+          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
+          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
+
+#define IPMI_PRIV_LEVEL_RESERVED     0x00
+#define IPMI_PRIV_LEVEL_CALLBACK     0x01
+#define IPMI_PRIV_LEVEL_USER         0x02
+#define IPMI_PRIV_LEVEL_OPERATOR     0x03
+#define IPMI_PRIV_LEVEL_ADMIN        0x04
+#define IPMI_PRIV_LEVEL_OEM          0x05
+#define IPMI_PRIV_LEVEL_NO_ACCESS    0x0F
+
+#define IPMI_PRIV_LEVEL_VALID(__priv_level) \
+        (((__priv_level) == IPMI_PRIV_LEVEL_RESERVED \
+          || (__priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
+          || (__priv_level) == IPMI_PRIV_LEVEL_USER \
+          || (__priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
+          || (__priv_level) == IPMI_PRIV_LEVEL_ADMIN \
+          || (__priv_level) == IPMI_PRIV_LEVEL_OEM) ? 1 : 0)
 
 #define IPMI_OEM_ID_LEN                0x03
 
@@ -132,23 +164,11 @@ extern fiid_template_t tmpl_get_channel_access_rs;
 int8_t fill_cmd_get_channel_auth_caps (uint8_t channel_num,
                                        uint8_t max_priv_level, 
                                        fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_channel_auth_caps (int sockfd, 
-				       struct sockaddr *hostaddr, 
-				       size_t hostaddr_len, 
-				       uint8_t rq_seq, 
-				       fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_get_session_challenge (uint8_t auth_type, 
 				       char *username, 
 				       uint32_t username_len, 
 				       fiid_obj_t obj_cmd);
-int8_t ipmi_lan_get_session_challenge (int sockfd, 
-				       struct sockaddr *hostaddr, 
-				       size_t hostaddr_len, 
-				       uint8_t auth_type, 
-				       char *username, 
-				       uint8_t rq_seq, 
-				       fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_activate_session (uint8_t auth_type, 
 				  uint8_t max_priv_level, 
@@ -156,62 +176,54 @@ int8_t fill_cmd_activate_session (uint8_t auth_type,
 				  uint32_t challenge_str_len, 
 				  uint32_t initial_outbound_seq_num, 
 				  fiid_obj_t obj_cmd);
-int8_t ipmi_lan_activate_session (int sockfd, 
-				  struct sockaddr *hostaddr, 
-				  size_t hostaddr_len, 
-				  uint8_t auth_type, 
-				  uint32_t tmp_session_id, 
-				  uint8_t *auth_code_data, 
-				  uint32_t auth_code_data_len, 
-				  uint8_t max_priv_level, 
-				  uint8_t *challenge_str, 
-				  uint32_t challenge_str_len, 
-				  uint32_t initial_outbound_seq_num, 
-				  uint8_t rq_seq, 
-				  fiid_obj_t obj_cmd_rs);
 
 int8_t fill_cmd_set_session_priv_level (uint8_t priv_level, 
 					fiid_obj_t obj_cmd);
-int8_t ipmi_lan_set_session_priv_level (int sockfd, 
-					struct sockaddr *hostaddr, 
-					size_t hostaddr_len, 
-					uint8_t auth_type, 
-					uint32_t session_seq_num, 
-					uint32_t session_id, 
-					uint8_t *auth_code_data, 
-					uint32_t auth_code_data_len, 
-					uint8_t priv_level, 
-					uint8_t rq_seq, 
-					fiid_obj_t obj_cmd_rs);
-
-
-int8_t ipmi_lan_open_session (int sockfd, 
-			      struct sockaddr *hostaddr, 
-			      size_t hostaddr_len, 
-			      uint8_t auth_type, 
-			      char *username, 
-                              uint8_t *auth_code_data,
-                              uint32_t auth_code_data_len,
-			      uint32_t initial_outbound_seq_num, 
-			      uint8_t priv_level, 
-			      uint32_t *session_seq_num, 
-			      uint32_t *session_id, 
-			      uint8_t *rq_seq);
 
 int8_t fill_cmd_close_session (uint32_t close_session_id, 
 			       fiid_obj_t obj_cmd);
-int8_t ipmi_lan_close_session (int sockfd, 
-			       struct sockaddr *hostaddr, 
-			       size_t hostaddr_len, 
-			       uint8_t auth_type, 
-			       uint32_t session_seq_num, 
-			       uint32_t session_id, 
-			       uint8_t *auth_code_data, 
-			       uint32_t auth_code_data_len, 
-			       uint8_t rq_seq, 
-			       uint32_t close_session_id, 
-			       fiid_obj_t obj_cmd_rs);
 
+int8_t fill_kcs_set_channel_access (uint8_t channel_number, 
+                                    uint8_t ipmi_messaging_access_mode, 
+                                    uint8_t user_level_authentication, 
+                                    uint8_t per_message_authentication, 
+                                    uint8_t pef_alerting, 
+                                    uint8_t channel_access_set_flag, 
+                                    uint8_t channel_privilege_level_limit, 
+                                    uint8_t channel_privilege_level_limit_set_flag,
+                                    fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_set_user_name (uint8_t user_id, 
+                               char *user_name,
+                               unsigned int user_name_len,
+                               fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq);
+       
+int8_t fill_kcs_set_user_password (uint8_t user_id, 
+                                   uint8_t operation, 
+                                   char *user_password,
+                                   unsigned int user_password_len,
+                                   fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_set_user_access (uint8_t channel_number,
+                                 uint8_t user_id,
+                                 uint8_t restrict_to_callback,
+                                 uint8_t enable_link_auth,
+                                 uint8_t enable_ipmi_msgs,
+                                 uint8_t user_privilege_level_limit,
+                                 uint8_t user_session_number_limit,
+                                 fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_get_user_access (uint8_t channel_number,
+                                 uint8_t user_id,
+                                 fiid_obj_t obj_data_rq);
+       
+int8_t fill_kcs_get_channel_access (uint8_t channel_number,
+                                    uint8_t channel_access_set_flag,
+                                    fiid_obj_t obj_data_rq);
+
+int8_t fill_kcs_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq);
 
 extern fiid_template_t tmpl_set_channel_access_rq;
 extern fiid_template_t tmpl_set_channel_access_rs;
@@ -237,67 +249,6 @@ extern fiid_template_t tmpl_get_channel_info_rs;
 int8_t ipmi_check_cmd(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t cmd);
 
 int8_t ipmi_check_comp_code(fiid_template_t tmpl_cmd, fiid_obj_t obj_cmd, uint8_t comp_code);
-
-int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
-				 uint8_t channel_medium_type);
-
-
-int8_t ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
-					 fiid_obj_t obj_cmd_rs);
-int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
-int8_t ipmi_lan_close_session2 (ipmi_device_t *dev, 
-				fiid_obj_t obj_cmd_rs);
-
-int8_t ipmi_cmd_set_channel_access2 (ipmi_device_t *dev, 
-				     uint8_t channel_number, 
-				     uint8_t ipmi_messaging_access_mode, 
-				     uint8_t user_level_authentication, 
-				     uint8_t per_message_authentication, 
-				     uint8_t pef_alerting, 
-				     uint8_t channel_access_set_flag, 
-				     uint8_t channel_privilege_level_limit, 
-				     uint8_t channel_privilege_level_limit_set_flag, 
-				     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
-				uint8_t user_id, 
-				char *user_name, 
-				fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
-				uint8_t user_id, 
-				fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
-				    uint8_t user_id, 
-				    uint8_t operation, 
-				    char *user_password,
-				    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
-				  uint8_t channel_number,
-				  uint8_t user_id,
-				  uint8_t restrict_to_callback,
-				  uint8_t enable_link_auth,
-				  uint8_t enable_ipmi_msgs,
-				  uint8_t user_privilege_level_limit,
-				  uint8_t user_session_number_limit, 
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 
-				  uint8_t channel_number,
-				  uint8_t user_id,
-				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
-				     uint8_t channel_number,
-				     uint8_t channel_access_set_flag,
-				     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
-				   uint8_t channel_number,
-				   fiid_obj_t obj_cmd_rs);
-
-
 
 #ifdef __cplusplus
 }

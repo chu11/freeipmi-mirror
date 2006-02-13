@@ -28,6 +28,7 @@
 #define IPMI_SSIF_INTERFACE_H
 
 #define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
+#define IPMI_DEFAULT_IPMB_ADDRESS  0x42
 #define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20
 /* function error codes */
 #define IPMI_SSIF_SUCCESS         0x00
@@ -107,72 +108,51 @@ struct ipmi_i2c_smbus_ioctl_data {
 	union ipmi_i2c_smbus_data *data;
 };
 
+#define IPMI_SSIF_CTX_ERR_SUCCESS         0
+#define IPMI_SSIF_CTX_ERR_NULL            1
+#define IPMI_SSIF_CTX_ERR_INVALID         2
+#define IPMI_SSIF_CTX_ERR_PARAMETERS      3
+#define IPMI_SSIF_CTX_ERR_PERMISSION      4
+#define IPMI_SSIF_CTX_ERR_IO_PARAMETERS   5
+#define IPMI_SSIF_CTX_ERR_IO_INIT         6
+#define IPMI_SSIF_CTX_ERR_OVERFLOW        7
+#define IPMI_SSIF_CTX_ERR_BUSY            8
+#define IPMI_SSIF_CTX_ERR_OUTMEM          9
+#define IPMI_SSIF_CTX_ERR_INTERNAL        10
+#define IPMI_SSIF_CTX_ERR_ERRNUMRANGE     11
 
-/*******************************************************************************
-*  Routine: ipmi_ssif_io_init
-*
-*  Arguments:
-*     IPMBAddress - slave address of the BMC on the SMBus (usually 0x42)
-*
-*  Returns:
-*     a the BMC device file pointer
-*     retuns zero otherwise
-*
-*******************************************************************************/
-int ipmi_ssif_io_init (char *i2c_device, uint8_t ipmb_addr, int *i2c_fd);
+#define IPMI_SSIF_MODE_BLOCKING    0
+#define IPMI_SSIF_MODE_NONBLOCKING 1
+#define IPMI_SSIF_MODE_DEFAULT     IPMI_SSIF_MODE_BLOCKING
 
+typedef struct ipmi_ssif_ctx *ipmi_ssif_ctx_t;
 
-/*******************************************************************************
-*  Routine: ipmi_ssif_write
-*
-*  Arguments:
-*     i2c_fd - file descriptor to the BMC device file
-*     buf - array of unsigned chars which holds the ipmi command and vals
-*     len - length of buf 
-* 
-*  Returns:
-*     the number of bytes written to the BMC
-*     -1 means failed to send data to the BMC
-*
-*
-*******************************************************************************/
-size_t ipmi_ssif_write (int i2c_fd, char *buf, size_t len);
+/* Notes:
+ *
+ * IPMBAddress - slave address of the BMC on the SMBus (usually 0x42)
+ *
+ */
+ipmi_ssif_ctx_t ipmi_ssif_ctx_create(void);
+int8_t ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx);
+int32_t ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx);
+char *ipmi_ssif_ctx_strerror(int32_t errnum);
 
-/*******************************************************************************
-*  Routine: ipmi_ssif_read
-*
-*     i2c_fd - file descriptor to the BMC device file
-*     ioIpmb - pointer to the BMC device file
-*     buf - array of unsigned chars which holds the response from the BMC
-* 
-*  Returns:
-*     the number of bytes read from the BMC
-*     -1 means failed to get respons from the BMC
-*
-*******************************************************************************/
-size_t ipmi_ssif_read (int i2c_fd, char *buf, size_t *len);
+int8_t ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device);
+int8_t ipmi_ssif_ctx_get_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_addr);
+int8_t ipmi_ssif_ctx_get_mode(ipmi_ssif_ctx_t ctx, uint8_t *mode);
 
+int8_t ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char *i2c_device);
+int8_t ipmi_ssif_ctx_set_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t ipmb_addr);
+int8_t ipmi_ssif_ctx_set_mode(ipmi_ssif_ctx_t ctx, uint8_t mode);
 
-/*******************************************************************************
-*  Routine: ipmi_ssif_exit closes SSIF device.
-*
-*     i2c_fd - file descriptor to the BMC device file.
-* 
-*  Returns:
-*     Returns 0 for success and -1 otherwise with errno is set appropriately.
-*
-*******************************************************************************/
-int ipmi_ssif_exit (int i2c_fd);
+int8_t ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx);
 
-int ipmi_ssif_cmd2 (ipmi_device_t *dev, 
-		    fiid_obj_t obj_cmd_rq, 
-		    fiid_template_t tmpl_cmd_rq, 
-		    fiid_obj_t obj_cmd_rs, 
-		    fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_ssif_cmd_raw2 (ipmi_device_t *dev, 
-			   uint8_t *buf_rq, 
-			   size_t buf_rq_len, 
-			   uint8_t *buf_rs, 
-			   size_t *buf_rs_len);
+int32_t ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
+			 uint8_t *buf,
+			 uint32_t buf_len);
+
+int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
+			uint8_t* buf,
+			uint32_t buf_len);
 
 #endif /* IPMI_SSIF_INTERFACE_H */

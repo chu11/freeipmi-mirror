@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.5 2006-02-12 11:16:11 ab Exp $ 
+   $Id: common.h,v 1.5.2.1 2006-02-13 18:48:44 chu11 Exp $ 
 
    common.h - Common header definitions.
 

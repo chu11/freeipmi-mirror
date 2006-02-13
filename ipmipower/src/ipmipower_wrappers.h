@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.7 2006-02-13 17:51:20 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.7.2.1 2006-02-13 18:48:44 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,15 +96,15 @@ void Fiid_obj_free(fiid_obj_t obj);
  */
 void Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, uint8_t *field, uint64_t *val);
 
-/* Fiid_obj_dump_lan
+/* Ipmi_dump_lan_packet
  * - Dump lan contents
  */
-void Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
+void Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
 
-/* Fiid_obj_dump_rmcp
+/* Ipmi_dump_rmcp_packet
  * - Dump rmcp contents
  */
 void
-Fiid_obj_dump_rmcp(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd);
+Ipmi_dump_rmcp_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd);
 
 #endif /* _IPMIPOWER_WRAPPERS_H */

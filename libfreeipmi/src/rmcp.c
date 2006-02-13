@@ -166,95 +166,12 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd, fiid
 }
 
 int8_t
-ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong)
-{
-  int status = 0;
-  fiid_obj_t obj_hdr = NULL;
-  fiid_obj_t obj_cmd = NULL;
-  uint8_t *pkt = NULL;;
-
-  if (!(sockfd && hostaddr && pong))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-  
-  {/* asf_presence_ping request */
-    uint32_t pkt_len = 0;
-
-    obj_hdr = alloca (fiid_obj_len_bytes (tmpl_hdr_rmcp));
-    memset (obj_hdr, 0, fiid_obj_len_bytes (tmpl_hdr_rmcp));
-    ERR (obj_hdr);
-
-    obj_cmd = alloca (fiid_obj_len_bytes (tmpl_cmd_asf_presence_ping));
-    memset (obj_cmd, 0, fiid_obj_len_bytes (tmpl_cmd_asf_presence_ping));
-    ERR (obj_cmd);
-
-    pkt_len = fiid_obj_len_bytes (tmpl_hdr_rmcp) + 
-      fiid_obj_len_bytes (tmpl_cmd_asf_presence_ping);
-    pkt = alloca (pkt_len);
-    memset (pkt, 0, pkt_len);
-    ERR (pkt);
-
-    ERR (fill_hdr_rmcp_asf (obj_hdr) != -1);
-    ERR (fill_cmd_asf_presence_ping (msg_tag, obj_cmd) != -1);
-    ERR (assemble_rmcp_pkt (obj_hdr, obj_cmd, 
-			      tmpl_cmd_asf_presence_ping, pkt, pkt_len) > 0);
-    status = ipmi_lan_sendto (sockfd, pkt, pkt_len, 0, hostaddr, hostaddr_len);
-    ERR (status != -1);
-  }
-
-  {/* asf_presence_ping response */ 
-    struct sockaddr_in from, *hostaddr_in;
-    socklen_t fromlen;
-    uint32_t  pkt_len;
-    pkt_len = fiid_obj_len_bytes (tmpl_hdr_rmcp) + 
-      fiid_obj_len_bytes (tmpl_cmd_asf_presence_pong);
-    pkt = alloca (pkt_len);
-    memset (pkt, 0, pkt_len);
-    ERR (pkt);
-
-    /*     ipmi_input_timeout (sockfd, 1); */
-    status = ipmi_lan_recvfrom (sockfd, pkt, pkt_len, 0, (struct sockaddr *)&from, &fromlen);
-    ERR (status != -1);
-
-    /* FIXME: <ab@gnu.org.in>
-       We need to verify 
-       - IANA Enterprise Number (4542 = ASF IANA)
-       - Msg Type (40h = Presence Pong)
-       - Msg TAG  (from Ping Request)
-    */
-
-    hostaddr_in = (struct sockaddr_in *) hostaddr;
-    if ((from.sin_family == AF_INET) && 
-	(from.sin_addr.s_addr != hostaddr_in->sin_addr.s_addr))
-      {
-#if 0
-	printf ("ipmi_ping warning: Reply came from [%s] instead of [%s]." 
-		"Please tune your time-out value to something higher\n", 
-		inet_ntoa (from.sin_addr), inet_ntoa (hostaddr->sin_addr));
-#endif
-	errno = EBADMSG;
-	return (-1);
-      }
-    ERR (unassemble_rmcp_pkt (pkt, pkt_len, 
-			      tmpl_cmd_asf_presence_pong, NULL, pong) != -1);
-/*     if (ipmi_rmcp_msg_tag_chk (msg_tag, pong) != 1) */
-/*       { */
-/* 	errno = EAGAIN; */
-/* 	return (-1); */
-/*       } */
-    }
-  return (0);
-}
-
-int8_t
 ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
 {
   uint64_t val;
   if (!pong)
     return -1;
-
+  
   fiid_obj_get (pong, tmpl_cmd_asf_presence_pong, (uint8_t *)"msg_tag", &val);
   if (msg_tag == val)
     return 1;
