@@ -244,8 +244,8 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-				 uint8_t ip_addr_source)
+set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+                                    uint8_t ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -253,10 +253,10 @@ set_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_ip_addr_source2 (dev, 
-					get_lan_channel_number (), 
-					ip_addr_source, 
-					obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_ip_address_source2 (dev, 
+                                           get_lan_channel_number (), 
+                                           ip_address_source, 
+                                           obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -267,32 +267,32 @@ set_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_ip_addr (ipmi_device_t *dev, 
-			  char *ip_addr)
+set_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+                             char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  uint64_t ip_address = 0;
+  uint64_t ip_address_val = 0;
   int8_t rv = -1;
 
-  sscanf (ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+  sscanf (ip_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
+  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_ip_addr2 (dev, 
-				 get_lan_channel_number (), 
-				 ip_address, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_ip_address2 (dev, 
+                                    get_lan_channel_number (), 
+                                    ip_address_val, 
+                                    obj_cmd_rs) != 0)
     goto cleanup;
     
   rv = 0;
@@ -303,36 +303,36 @@ set_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_mac_addr (ipmi_device_t *dev, 
-			   char *mac_addr)
+set_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+                              char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  uint64_t mac_address = 0;
+  uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+  sscanf (mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6);
+  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_mac_addr2 (dev, 
-				  get_lan_channel_number (), 
-				  mac_address, 
-				  obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_mac_address2 (dev, 
+                                     get_lan_channel_number (), 
+                                     mac_address_val, 
+                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -349,17 +349,17 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  uint64_t subnetmask = 0;
+  uint64_t subnet_mask_val = 0;
   int8_t rv = -1;
   
   sscanf (subnet_mask, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (subnetmask, 0,  8,  b1, &subnetmask) < 0)
+  if (bits_merge (subnet_mask_val, 0,  8,  b1, &subnet_mask_val) < 0)
     goto cleanup;
-  if (bits_merge (subnetmask, 8,  16, b2, &subnetmask) < 0)
+  if (bits_merge (subnet_mask_val, 8,  16, b2, &subnet_mask_val) < 0)
     goto cleanup;
-  if (bits_merge (subnetmask, 16, 24, b3, &subnetmask) < 0)
+  if (bits_merge (subnet_mask_val, 16, 24, b3, &subnet_mask_val) < 0)
     goto cleanup;
-  if (bits_merge (subnetmask, 24, 32, b4, &subnetmask) < 0)
+  if (bits_merge (subnet_mask_val, 24, 32, b4, &subnet_mask_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
@@ -367,7 +367,7 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 
   if (ipmi_cmd_lan_set_subnet_mask2 (dev, 
 				     get_lan_channel_number (), 
-				     subnetmask, 
+				     subnet_mask_val, 
 				     obj_cmd_rs) != 0)
     goto cleanup;
   
@@ -379,32 +379,32 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev, 
-				     char *default_gw_ip_addr)
+set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+                                          char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  uint64_t ip_address = 0;
+  uint64_t ip_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (default_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+  sscanf (default_gateway_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
+  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_default_gw_ip_addr2 (dev, 
-					    get_lan_channel_number (), 
-					    ip_address, 
-					    obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_default_gateway_address2 (dev, 
+                                                 get_lan_channel_number (), 
+                                                 ip_address_val, 
+                                                 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -415,37 +415,37 @@ set_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev, 
-				      char *default_gw_mac_addr)
+set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+                                              char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  uint64_t mac_address = 0;
+  uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (default_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
+  sscanf (default_gateway_mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_default_gw_mac_addr2 (dev, 
-					     get_lan_channel_number (), 
-					     mac_address, 
-					     obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_default_gateway_mac_address2 (dev, 
+                                                     get_lan_channel_number (), 
+                                                     mac_address_val, 
+                                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -456,32 +456,32 @@ set_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev, 
-				    char *backup_gw_ip_addr)
+set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+                                         char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4;
-  uint64_t ip_address = 0;
+  uint64_t ip_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (backup_gw_ip_addr, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address, 0,  8,  b1, &ip_address) < 0)
+  sscanf (backup_gateway_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
+  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 8,  16, b2, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 16, 24, b3, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address, 24, 32, b4, &ip_address) < 0)
+  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_backup_gw_ip_addr2 (dev, 
-					   get_lan_channel_number (), 
-					   ip_address, 
-					   obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_backup_gateway_address2 (dev, 
+                                                get_lan_channel_number (), 
+                                                ip_address_val, 
+                                                obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -492,37 +492,37 @@ set_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev, 
-				     char *backup_gw_mac_addr)
+set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+                                             char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
   unsigned int b1, b2, b3, b4, b5, b6;
-  uint64_t mac_address = 0;
+  uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (backup_gw_mac_addr, "%02X:%02X:%02X:%02X:%02X:%02X", 
+  sscanf (backup_gateway_mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", 
 	  &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address, 0,  8,  b1, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 8,  16, b2, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 16, 24, b3, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 24, 32, b4, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 32, 40, b5, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address, 40, 48, b6, &mac_address) < 0)
+  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_backup_gw_mac_addr2 (dev, 
-					    get_lan_channel_number (), 
-					    mac_address, 
-					    obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_backup_gateway_mac_address2 (dev, 
+                                                    get_lan_channel_number (), 
+                                                    mac_address_val, 
+                                                    obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -792,9 +792,9 @@ set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-			      uint8_t enable_gratuitous_arps, 
-			      uint8_t enable_arp_response)
+set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+                                            uint8_t enable_gratuitous_arps, 
+                                            uint8_t enable_arp_response)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -802,11 +802,11 @@ set_bmc_lan_conf_arp_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_set_arp2 (dev, 
-			     get_lan_channel_number (), 
-			     enable_gratuitous_arps, 
-			     enable_arp_response, 
-			     obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_set_bmc_generated_arp_control2 (dev, 
+                                                   get_lan_channel_number (), 
+                                                   enable_gratuitous_arps, 
+                                                   enable_arp_response, 
+                                                   obj_cmd_rs) != 0)
     goto cleanup;
     
   rv = 0;
@@ -818,8 +818,8 @@ set_bmc_lan_conf_arp_control (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-				 uint8_t gratuitous_arp_interval)
+set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+                                          uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1332,29 +1332,29 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-				 uint8_t *ip_addr_source)
+get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+                                    uint8_t *ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_ip_addr_source_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_ip_address_source_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_ip_addr_source2 (dev, 
-					get_lan_channel_number (), 
-					IPMI_GET_LAN_PARAMETER, 
-					SET_SELECTOR, 
-					BLOCK_SELECTOR, 
-					obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_ip_address_source2 (dev, 
+                                           get_lan_channel_number (), 
+                                           IPMI_GET_LAN_PARAMETER, 
+                                           SET_SELECTOR, 
+                                           BLOCK_SELECTOR, 
+                                           obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"ip_addr_source", 
+		    (uint8_t *)"ip_address_source", 
 		    &val) < 0)
     goto cleanup;
-  *ip_addr_source = val;
+  *ip_address_source = val;
   
   rv = 0;
  cleanup:
@@ -1364,35 +1364,35 @@ get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_ip_addr (ipmi_device_t *dev, 
-			  char *ip_addr)
+get_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+                             char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t ip_addr_bytes[4];
+  uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_ip_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_ip_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_ip_addr2 (dev, 
-				 get_lan_channel_number (), 
-				 IPMI_GET_LAN_PARAMETER, 
-				 SET_SELECTOR, 
-				 BLOCK_SELECTOR, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_ip_address2 (dev, 
+                                    get_lan_channel_number (), 
+                                    IPMI_GET_LAN_PARAMETER, 
+                                    SET_SELECTOR, 
+                                    BLOCK_SELECTOR, 
+                                    obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_addr", 
-			 ip_addr_bytes,
+			 (uint8_t *)"ip_address", 
+			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
-  sprintf (ip_addr, 
+  sprintf (ip_address, 
 	   "%u.%u.%u.%u", 
-	   ip_addr_bytes[0], 
-	   ip_addr_bytes[1], 
-	   ip_addr_bytes[2], 
-	   ip_addr_bytes[3]);
+	   ip_address_bytes[0], 
+	   ip_address_bytes[1], 
+	   ip_address_bytes[2], 
+	   ip_address_bytes[3]);
   
   rv = 0;
  cleanup:
@@ -1402,37 +1402,37 @@ get_bmc_lan_conf_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_mac_addr (ipmi_device_t *dev, 
-			   char *mac_addr)
+get_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+                              char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t mac_addr_bytes[6];
+  uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_mac_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_mac_addr2 (dev, 
-				  get_lan_channel_number (), 
-				  IPMI_GET_LAN_PARAMETER, 
-				  SET_SELECTOR, 
-				  BLOCK_SELECTOR, 
-				  obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_mac_address2 (dev, 
+                                     get_lan_channel_number (), 
+                                     IPMI_GET_LAN_PARAMETER, 
+                                     SET_SELECTOR, 
+                                     BLOCK_SELECTOR, 
+                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_addr", 
-			 mac_addr_bytes,
+			 (uint8_t *)"mac_address", 
+			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
-  sprintf (mac_addr, 
+  sprintf (mac_address, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_addr_bytes[0], 
-	   mac_addr_bytes[1], 
-	   mac_addr_bytes[2], 
-	   mac_addr_bytes[3], 
-	   mac_addr_bytes[4], 
-	   mac_addr_bytes[5]);
+	   mac_address_bytes[0], 
+	   mac_address_bytes[1], 
+	   mac_address_bytes[2], 
+	   mac_address_bytes[3], 
+	   mac_address_bytes[4], 
+	   mac_address_bytes[5]);
   
   rv = 0;
  cleanup:
@@ -1480,35 +1480,35 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev, 
-				     char *default_gw_ip_addr)
+get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+                                          char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t ip_addr_bytes[4];
+  uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_gw_ip_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_default_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_default_gw_ip_addr2 (dev, 
-					    get_lan_channel_number (), 
-					    IPMI_GET_LAN_PARAMETER, 
-					    SET_SELECTOR, 
-					    BLOCK_SELECTOR, 
-					    obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_default_gateway_address2 (dev, 
+                                                 get_lan_channel_number (), 
+                                                 IPMI_GET_LAN_PARAMETER, 
+                                                 SET_SELECTOR, 
+                                                 BLOCK_SELECTOR, 
+                                                 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_addr", 
-			 ip_addr_bytes,
+			 (uint8_t *)"ip_address", 
+			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
-  sprintf (default_gw_ip_addr, 
+  sprintf (default_gateway_address, 
 	   "%u.%u.%u.%u", 
-	   ip_addr_bytes[0], 
-	   ip_addr_bytes[1], 
-	   ip_addr_bytes[2], 
-	   ip_addr_bytes[3]);
+	   ip_address_bytes[0], 
+	   ip_address_bytes[1], 
+	   ip_address_bytes[2], 
+	   ip_address_bytes[3]);
   
   rv = 0;
  cleanup:
@@ -1518,37 +1518,37 @@ get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev, 
-				      char *default_gw_mac_addr)
+get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+                                              char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t mac_addr_bytes[6];
+  uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_mac_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_default_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_default_gw_mac_addr2 (dev, 
-					     get_lan_channel_number (), 
-					     IPMI_GET_LAN_PARAMETER, 
-					     SET_SELECTOR, 
-					     BLOCK_SELECTOR, 
-					     obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_default_gateway_mac_address2 (dev, 
+                                                     get_lan_channel_number (), 
+                                                     IPMI_GET_LAN_PARAMETER, 
+                                                     SET_SELECTOR, 
+                                                     BLOCK_SELECTOR, 
+                                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_addr", 
-			 mac_addr_bytes,
+			 (uint8_t *)"mac_address", 
+			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
-  sprintf (default_gw_mac_addr, 
+  sprintf (default_gateway_mac_address, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_addr_bytes[0], 
-	   mac_addr_bytes[1], 
-	   mac_addr_bytes[2], 
-	   mac_addr_bytes[3], 
-	   mac_addr_bytes[4], 
-	   mac_addr_bytes[5]);
+	   mac_address_bytes[0], 
+	   mac_address_bytes[1], 
+	   mac_address_bytes[2], 
+	   mac_address_bytes[3], 
+	   mac_address_bytes[4], 
+	   mac_address_bytes[5]);
   
   rv = 0;
  cleanup:
@@ -1558,35 +1558,35 @@ get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev, 
-				    char *backup_gw_ip_addr)
+get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+                                         char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t ip_addr_bytes[4];
+  uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_gw_ip_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_backup_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_backup_gw_ip_addr2 (dev, 
-					   get_lan_channel_number (), 
-					   IPMI_GET_LAN_PARAMETER, 
-					   SET_SELECTOR, 
-					   BLOCK_SELECTOR, 
-					   obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_backup_gateway_address2 (dev, 
+                                                get_lan_channel_number (), 
+                                                IPMI_GET_LAN_PARAMETER, 
+                                                SET_SELECTOR, 
+                                                BLOCK_SELECTOR, 
+                                                obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_addr", 
-			 ip_addr_bytes,
+			 (uint8_t *)"ip_address", 
+			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
-  sprintf (backup_gw_ip_addr, 
+  sprintf (backup_gateway_address, 
 	   "%u.%u.%u.%u", 
-	   ip_addr_bytes[0], 
-	   ip_addr_bytes[1], 
-	   ip_addr_bytes[2], 
-	   ip_addr_bytes[3]);
+	   ip_address_bytes[0], 
+	   ip_address_bytes[1], 
+	   ip_address_bytes[2], 
+	   ip_address_bytes[3]);
   
   rv = 0;
  cleanup:
@@ -1596,37 +1596,37 @@ get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev, 
-				     char *backup_gw_mac_addr)
+get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+                                             char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t mac_addr_bytes[6];
+  uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_mac_addr_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_backup_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_backup_gw_mac_addr2 (dev, 
-					    get_lan_channel_number (), 
-					    IPMI_GET_LAN_PARAMETER, 
-					    SET_SELECTOR, 
-					    BLOCK_SELECTOR, 
-					    obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_backup_gateway_mac_address2 (dev, 
+                                                    get_lan_channel_number (), 
+                                                    IPMI_GET_LAN_PARAMETER, 
+                                                    SET_SELECTOR, 
+                                                    BLOCK_SELECTOR, 
+                                                    obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_addr", 
-			 mac_addr_bytes,
+			 (uint8_t *)"mac_address", 
+			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
-  sprintf (backup_gw_mac_addr, 
+  sprintf (backup_gateway_mac_address, 
 	   "%02X:%02X:%02X:%02X:%02X:%02X", 
-	   mac_addr_bytes[0], 
-	   mac_addr_bytes[1], 
-	   mac_addr_bytes[2], 
-	   mac_addr_bytes[3], 
-	   mac_addr_bytes[4], 
-	   mac_addr_bytes[5]);
+	   mac_address_bytes[0], 
+	   mac_address_bytes[1], 
+	   mac_address_bytes[2], 
+	   mac_address_bytes[3], 
+	   mac_address_bytes[4], 
+	   mac_address_bytes[5]);
   
   rv = 0;
  cleanup:
@@ -1897,9 +1897,9 @@ get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-			      uint8_t *enable_gratuitous_arps, 
-			      uint8_t *enable_arp_response)
+get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+                                            uint8_t *enable_gratuitous_arps, 
+                                            uint8_t *enable_arp_response)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1908,12 +1908,12 @@ get_bmc_lan_conf_arp_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_bmc_generated_arp_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_lan_get_arp2 (dev, 
-			     get_lan_channel_number (), 
-			     IPMI_GET_LAN_PARAMETER, 
-			     SET_SELECTOR, 
-			     BLOCK_SELECTOR, 
-			     obj_cmd_rs) != 0)
+  if (ipmi_cmd_lan_get_bmc_generated_arp_control2 (dev, 
+                                                   get_lan_channel_number (), 
+                                                   IPMI_GET_LAN_PARAMETER, 
+                                                   SET_SELECTOR, 
+                                                   BLOCK_SELECTOR, 
+                                                   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1936,8 +1936,8 @@ get_bmc_lan_conf_arp_control (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-				 uint8_t *gratuitous_arp_interval)
+get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+                                          uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;

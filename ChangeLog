@@ -33,6 +33,16 @@
 
 	* libfreeipmi/src/freeipmi.h: Remove ipmi-sessions.h.
 
+	* libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-cmds-udm.c: Code cleanup.  Make code more
+	consistent with IPMI spec.
+
+	* fish/src/bmc-conf2.c, fish/src/scm-procedures.c,
+	fish/src/extensions.c, fish/extensions/bc-lan-conf-section.scm,
+	fish/extensions/bc-lan-conf-misc-section.scm: Adjust for changes.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
         Collective fixes from branch al_fiid_rearchitect_branch at tag

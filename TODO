@@ -37,8 +37,10 @@ libfreeipmi:
   * sensor-event-messages: get_28_event_data3_messages
   * remove ipmi_chksum_test
   * audit serial/lan/pef/sel/sensors template auditting      
+    - lan-cmds done, but need to fill in missing commands
   * reg-space default  
   * udm parameter checks
+  
 
 fish:
 -----

@@ -47,13 +47,13 @@
 (define (checkout-subnet-mask section-name) 
   (fi-get-bmc-lan-conf-subnet-mask)) 
 
-(define (commit-default-gateway-ip-address section-name gateway-ip-address)
-  (if (list? gateway-ip-address)
+(define (commit-default-gateway-address section-name gateway-address)
+  (if (list? gateway-address)
       #t 
-      (fi-set-bmc-lan-conf-default-gateway-ip-address gateway-ip-address)))
+      (fi-set-bmc-lan-conf-default-gateway-address gateway-address)))
 
-(define (checkout-default-gateway-ip-address section-name) 
-  (fi-get-bmc-lan-conf-default-gateway-ip-address)) 
+(define (checkout-default-gateway-address section-name) 
+  (fi-get-bmc-lan-conf-default-gateway-address)) 
 
 (define (commit-default-gateway-mac-address section-name gateway-mac-address)
   (if (list? gateway-mac-address)
@@ -63,13 +63,13 @@
 (define (checkout-default-gateway-mac-address section-name) 
   (fi-get-bmc-lan-conf-default-gateway-mac-address)) 
 
-(define (commit-backup-gateway-ip-address section-name gateway-ip-address)
-  (if (list? gateway-ip-address)
+(define (commit-backup-gateway-address section-name gateway-address)
+  (if (list? gateway-address)
       #t 
-      (fi-set-bmc-lan-conf-backup-gateway-ip-address gateway-ip-address)))
+      (fi-set-bmc-lan-conf-backup-gateway-address gateway-address)))
 
-(define (checkout-backup-gateway-ip-address section-name) 
-  (fi-get-bmc-lan-conf-backup-gateway-ip-address)) 
+(define (checkout-backup-gateway-address section-name) 
+  (fi-get-bmc-lan-conf-backup-gateway-address)) 
 
 (define (commit-backup-gateway-mac-address section-name gateway-mac-address)
   (if (list? gateway-mac-address)
@@ -151,8 +151,8 @@
     ("default_gateway_ip_address" 
      valid-ip-address? 
      get-string 
-     commit-default-gateway-ip-address 
-     checkout-default-gateway-ip-address 
+     commit-default-gateway-address 
+     checkout-default-gateway-address 
      get-string
      same-string-ci?
      "Give valid IP Address")
@@ -167,8 +167,8 @@
     ("backup_gateway_ip_address" 
      valid-ip-address? 
      get-string 
-     commit-backup-gateway-ip-address 
-     checkout-backup-gateway-ip-address 
+     commit-backup-gateway-address 
+     checkout-backup-gateway-address 
      get-string
      same-string-ci?
      "Give valid IP Address")

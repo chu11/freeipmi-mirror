@@ -242,17 +242,17 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-lan-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address-source", ex_set_bmc_lan_conf_ip_addr_source, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address-source", ex_set_bmc_lan_conf_ip_address_source, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-ip-address-source IP-ADDRESS-SOURCE)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address", ex_set_bmc_lan_conf_ip_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-ip-address", ex_set_bmc_lan_conf_ip_address, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-ip-address IP-ADDRESS)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-mac-address", ex_set_bmc_lan_conf_mac_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-mac-address", ex_set_bmc_lan_conf_mac_address, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-mac-address MAC-ADDRESS)
   */
@@ -262,22 +262,22 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-lan-conf-subnet-mask SUBNET-MASK)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-ip-address", ex_set_bmc_lan_conf_default_gw_ip_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-address", ex_set_bmc_lan_conf_default_gateway_address, 1, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-ip-address IP-ADDRESS)
+     syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-address IP-ADDRESS)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-mac-address", ex_set_bmc_lan_conf_default_gw_mac_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-default-gateway-mac-address", ex_set_bmc_lan_conf_default_gateway_mac_address, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-default-gateway-mac-address MAC-ADDRESS)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-ip-address", ex_set_bmc_lan_conf_backup_gw_ip_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-address", ex_set_bmc_lan_conf_backup_gateway_address, 1, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-ip-address IP-ADDRESS)
+     syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-address IP-ADDRESS)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-mac-address", ex_set_bmc_lan_conf_backup_gw_mac_addr, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-backup-gateway-mac-address", ex_set_bmc_lan_conf_backup_gateway_mac_address, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-backup-gateway-mac-address MAC-ADDRESS)
   */
@@ -317,14 +317,14 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-oem-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-arp-control", ex_set_bmc_lan_conf_arp_control, 2, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-bmc-generated-arp-control", ex_set_bmc_lan_conf_bmc_generated_arp_control, 2, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-lan-conf-arp-control ENABLE-GRATUITOUS-ARPS ENABLE-ARP-RESPONSE)
+     syntax in scheme: (fi-set-bmc-lan-conf-bmc-generated-arp-control ENABLE-GRATUITOUS-ARPS ENABLE-ARP-RESPONSE)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-gratuitous-arp", ex_set_bmc_lan_conf_gratuitous_arp, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-gratuitous-arp-interval", ex_set_bmc_lan_conf_gratuitous_arp_interval, 1, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-lan-conf-gratuitous-arp ARP-INTERVAL)
+     syntax in scheme: (fi-set-bmc-lan-conf-gratuitous-arp-interval ARP-INTERVAL)
   */
   
   gh_new_procedure ("fi-set-bmc-serial-channel-volatile-access", ex_set_bmc_serial_channel_volatile_access, 5, 0, 0);
@@ -396,17 +396,17 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-lan-channel-non-volatile-access)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address-source", ex_get_bmc_lan_conf_ip_addr_source, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address-source", ex_get_bmc_lan_conf_ip_address_source, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-ip-address-source)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address", ex_get_bmc_lan_conf_ip_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-ip-address", ex_get_bmc_lan_conf_ip_address, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-ip-address)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-mac-address", ex_get_bmc_lan_conf_mac_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-mac-address", ex_get_bmc_lan_conf_mac_address, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-mac-address)
   */
@@ -416,22 +416,22 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-lan-conf-subnet-mask)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-ip-address", ex_get_bmc_lan_conf_default_gw_ip_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-address", ex_get_bmc_lan_conf_default_gateway_address, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-ip-address)
+     syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-address)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-mac-address", ex_get_bmc_lan_conf_default_gw_mac_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-default-gateway-mac-address", ex_get_bmc_lan_conf_default_gateway_mac_address, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-default-gateway-mac-address)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-ip-address", ex_get_bmc_lan_conf_backup_gw_ip_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-address", ex_get_bmc_lan_conf_backup_gateway_address, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-ip-address)
+     syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-address)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-mac-address", ex_get_bmc_lan_conf_backup_gw_mac_addr, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-backup-gateway-mac-address", ex_get_bmc_lan_conf_backup_gateway_mac_address, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-backup-gateway-mac-address)
   */
@@ -471,14 +471,14 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-oem-enables)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-arp-control", ex_get_bmc_lan_conf_arp_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-bmc-generated-arp-control", ex_get_bmc_lan_conf_bmc_generated_arp_control, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-lan-conf-arp-control)
+     syntax in scheme: (fi-get-bmc-lan-conf-bmc-generated-arp-control)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-gratuitous-arp", ex_get_bmc_lan_conf_gratuitous_arp, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-gratuitous-arp-interval", ex_get_bmc_lan_conf_gratuitous_arp_interval, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-lan-conf-gratuitous-arp)
+     syntax in scheme: (fi-get-bmc-lan-conf-gratuitous-arp-interval)
   */
   
   gh_new_procedure ("fi-get-bmc-serial-channel-volatile-access", ex_get_bmc_serial_channel_volatile_access, 0, 0, 0);

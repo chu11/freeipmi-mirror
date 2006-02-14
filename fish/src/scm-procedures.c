@@ -22,9 +22,9 @@
 #define SEL_HEX_RECORD_SIZE 128
 
 /*
-SCM
-ex_set_some_thing_x (SCM scm_some_thing)
-{
+  SCM
+  ex_set_some_thing_x (SCM scm_some_thing)
+  {
   int some_thing_length;
   
   // FIXME: currently I'm not validating the result of gh_scm2newstr
@@ -38,7 +38,7 @@ ex_set_some_thing_x (SCM scm_some_thing)
   set_some_thing (gh_scm2newstr (scm_some_thing, &some_thing_length));
   
   return (SCM_UNSPECIFIED);
-}
+  }
 */
 
 /* returns current freehoo version */
@@ -167,7 +167,7 @@ ex_get_script_command_line ()
   for (i = 0; i < argc; i++)
     {
       if (gh_list_p (scm_arg_list) != 1)
-          scm_arg_list = gh_list (gh_str02scm (argv[i]), SCM_UNDEFINED);
+        scm_arg_list = gh_list (gh_str02scm (argv[i]), SCM_UNDEFINED);
       else 
         {
           scm_arg_list = gh_append2 (scm_arg_list, 
@@ -252,8 +252,8 @@ ex_sel_get_next_entry_raw ()
   record_data_len = SEL_RECORD_SIZE;  
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
 			       fi_get_seld (), 
-				record_data,
-                                &record_data_len) == 0)
+                               record_data,
+                               &record_data_len) == 0)
     {
       int i;
       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--)
@@ -695,7 +695,7 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
   uint8_t lan_session_limit;
   int retval;
   
-/*   printf ("ex_ called\n"); */
+  /*   printf ("ex_ called\n"); */
   userid = gh_scm2long (scm_userid);
   
   retval = get_bmc_user_lan_channel_access (fi_get_ipmi_device (), 
@@ -709,12 +709,12 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-/*   printf ("Before:\n"); */
-/*   printf ("ipmi_msgs %d\n", lan_enable_ipmi_msgs); */
-/*   printf ("link_auth %d\n", lan_enable_link_auth); */
-/*   printf ("restrict_to_callback %d\n", lan_enable_restrict_to_callback); */
-/*   printf ("priv_limit %d\n", lan_privilege_limit); */
-/*   printf ("session_limit %d\n", lan_session_limit); */
+  /*   printf ("Before:\n"); */
+  /*   printf ("ipmi_msgs %d\n", lan_enable_ipmi_msgs); */
+  /*   printf ("link_auth %d\n", lan_enable_link_auth); */
+  /*   printf ("restrict_to_callback %d\n", lan_enable_restrict_to_callback); */
+  /*   printf ("priv_limit %d\n", lan_privilege_limit); */
+  /*   printf ("session_limit %d\n", lan_session_limit); */
   
   if (scm_boolean_p (scm_lan_enable_ipmi_msgs) == SCM_BOOL_T)
     lan_enable_ipmi_msgs = gh_scm2bool (scm_lan_enable_ipmi_msgs);
@@ -731,12 +731,12 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
   if (scm_integer_p (scm_lan_session_limit) == SCM_BOOL_T)
     lan_session_limit = gh_scm2long (scm_lan_session_limit);
   
-/*   printf ("After:\n"); */
-/*   printf ("ipmi_msgs %d\n", lan_enable_ipmi_msgs); */
-/*   printf ("link_auth %d\n", lan_enable_link_auth); */
-/*   printf ("restrict_to_callback %d\n", lan_enable_restrict_to_callback); */
-/*   printf ("priv_limit %d\n", lan_privilege_limit); */
-/*   printf ("session_limit %d\n", lan_session_limit); */
+  /*   printf ("After:\n"); */
+  /*   printf ("ipmi_msgs %d\n", lan_enable_ipmi_msgs); */
+  /*   printf ("link_auth %d\n", lan_enable_link_auth); */
+  /*   printf ("restrict_to_callback %d\n", lan_enable_restrict_to_callback); */
+  /*   printf ("priv_limit %d\n", lan_privilege_limit); */
+  /*   printf ("session_limit %d\n", lan_session_limit); */
   
   retval = set_bmc_user_lan_channel_access (fi_get_ipmi_device (), 
 					    userid, 
@@ -891,36 +891,36 @@ ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode,
 }
 
 SCM 
-ex_set_bmc_lan_conf_ip_addr_source (SCM scm_ip_address_source)
+ex_set_bmc_lan_conf_ip_address_source (SCM scm_ip_address_source)
 {
   uint8_t ip_address_source;
   uint8_t retval;
   
   ip_address_source = gh_scm2long (scm_ip_address_source);
-  retval = set_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), ip_address_source);
+  retval = set_bmc_lan_conf_ip_address_source (fi_get_ipmi_device (), ip_address_source);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_ip_addr (SCM scm_ip_address)
+ex_set_bmc_lan_conf_ip_address (SCM scm_ip_address)
 {
   char *ip_address;
   uint8_t retval;
   
   ip_address = gh_scm2newstr (scm_ip_address, NULL);
-  retval = set_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), ip_address);
+  retval = set_bmc_lan_conf_ip_address (fi_get_ipmi_device (), ip_address);
   free (ip_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_mac_addr (SCM scm_mac_address)
+ex_set_bmc_lan_conf_mac_address (SCM scm_mac_address)
 {
   char *mac_address;
   uint8_t retval;
   
   mac_address = gh_scm2newstr (scm_mac_address, NULL);
-  retval = set_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), mac_address);
+  retval = set_bmc_lan_conf_mac_address (fi_get_ipmi_device (), mac_address);
   free (mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -938,50 +938,50 @@ ex_set_bmc_lan_conf_subnet_mask (SCM scm_subnet_mask)
 }
 
 SCM 
-ex_set_bmc_lan_conf_default_gw_ip_addr (SCM scm_gw_ip_address)
+ex_set_bmc_lan_conf_default_gateway_address (SCM scm_gateway_address)
 {
-  char *gw_ip_address;
+  char *gateway_address;
   uint8_t retval;
   
-  gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
-  retval = set_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
-  free (gw_ip_address);
+  gateway_address = gh_scm2newstr (scm_gateway_address, NULL);
+  retval = set_bmc_lan_conf_default_gateway_address (fi_get_ipmi_device (), gateway_address);
+  free (gateway_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_default_gw_mac_addr (SCM scm_gw_mac_address)
+ex_set_bmc_lan_conf_default_gateway_mac_address (SCM scm_gateway_mac_address)
 {
-  char *gw_mac_address;
+  char *gateway_mac_address;
   uint8_t retval;
   
-  gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
-  retval = set_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
-  free (gw_mac_address);
+  gateway_mac_address = gh_scm2newstr (scm_gateway_mac_address, NULL);
+  retval = set_bmc_lan_conf_default_gateway_mac_address (fi_get_ipmi_device (), gateway_mac_address);
+  free (gateway_mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_backup_gw_ip_addr (SCM scm_gw_ip_address)
+ex_set_bmc_lan_conf_backup_gateway_address (SCM scm_gateway_address)
 {
-  char *gw_ip_address;
+  char *gateway_address;
   uint8_t retval;
   
-  gw_ip_address = gh_scm2newstr (scm_gw_ip_address, NULL);
-  retval = set_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), gw_ip_address);
-  free (gw_ip_address);
+  gateway_address = gh_scm2newstr (scm_gateway_address, NULL);
+  retval = set_bmc_lan_conf_backup_gateway_address (fi_get_ipmi_device (), gateway_address);
+  free (gateway_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
+ex_set_bmc_lan_conf_backup_gateway_mac_address (SCM scm_gateway_mac_address)
 {
-  char *gw_mac_address;
+  char *gateway_mac_address;
   uint8_t retval;
   
-  gw_mac_address = gh_scm2newstr (scm_gw_mac_address, NULL);
-  retval = set_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), gw_mac_address);
-  free (gw_mac_address);
+  gateway_mac_address = gh_scm2newstr (scm_gateway_mac_address, NULL);
+  retval = set_bmc_lan_conf_backup_gateway_mac_address (fi_get_ipmi_device (), gateway_mac_address);
+  free (gateway_mac_address);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1211,16 +1211,16 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
 }
 
 SCM 
-ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps, 
-				 SCM scm_enable_arp_response)
+ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_enable_gratuitous_arps, 
+                                               SCM scm_enable_arp_response)
 {
   uint8_t enable_gratuitous_arps;
   uint8_t enable_arp_response;
   int retval;
   
-  retval = get_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
-					 &enable_gratuitous_arps, 
-					 &enable_arp_response);
+  retval = get_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
+                                                       &enable_gratuitous_arps, 
+                                                       &enable_arp_response);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
@@ -1230,21 +1230,21 @@ ex_set_bmc_lan_conf_arp_control (SCM scm_enable_gratuitous_arps,
   if (scm_boolean_p (scm_enable_arp_response) == SCM_BOOL_T)
     enable_arp_response = gh_scm2bool (scm_enable_arp_response);
   
-  retval = set_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
-					 enable_gratuitous_arps, 
-					 enable_arp_response);
+  retval = set_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
+                                                       enable_gratuitous_arps, 
+                                                       enable_arp_response);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_lan_conf_gratuitous_arp (SCM scm_gratuitous_arp_interval)
+ex_set_bmc_lan_conf_gratuitous_arp_interval (SCM scm_gratuitous_arp_interval)
 {
   uint8_t gratuitous_arp_interval;
   uint8_t retval;
   
   gratuitous_arp_interval = gh_scm2long (scm_gratuitous_arp_interval);
-  retval = set_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
-					    gratuitous_arp_interval);
+  retval = set_bmc_lan_conf_gratuitous_arp_interval (fi_get_ipmi_device (), 
+                                                     gratuitous_arp_interval);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1709,42 +1709,42 @@ ex_get_bmc_lan_channel_non_volatile_access ()
 }
 
 SCM 
-ex_get_bmc_lan_conf_ip_addr_source ()
+ex_get_bmc_lan_conf_ip_address_source ()
 {
   uint8_t ip_address_source = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_ip_addr_source (fi_get_ipmi_device (), 
-						 &ip_address_source)) == 0)
+  if ((retval = get_bmc_lan_conf_ip_address_source (fi_get_ipmi_device (), 
+                                                    &ip_address_source)) == 0)
     return_list = gh_list (gh_long2scm (ip_address_source), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_lan_conf_ip_addr ()
+ex_get_bmc_lan_conf_ip_address ()
 {
   char ip_address[16];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_ip_addr (fi_get_ipmi_device (), 
-					  ip_address)) == 0)
+  if ((retval = get_bmc_lan_conf_ip_address (fi_get_ipmi_device (), 
+                                             ip_address)) == 0)
     return_list = gh_list (gh_str02scm (ip_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_lan_conf_mac_addr ()
+ex_get_bmc_lan_conf_mac_address ()
 {
   char mac_address[18];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_mac_addr (fi_get_ipmi_device (), 
-					   mac_address)) == 0)
+  if ((retval = get_bmc_lan_conf_mac_address (fi_get_ipmi_device (), 
+                                              mac_address)) == 0)
     return_list = gh_list (gh_str02scm (mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -1765,57 +1765,57 @@ ex_get_bmc_lan_conf_subnet_mask ()
 }
 
 SCM 
-ex_get_bmc_lan_conf_default_gw_ip_addr ()
+ex_get_bmc_lan_conf_default_gateway_address ()
 {
-  char gw_ip_address[16];
+  char gateway_address[16];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_default_gw_ip_addr (fi_get_ipmi_device (), 
-						     gw_ip_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+  if ((retval = get_bmc_lan_conf_default_gateway_address (fi_get_ipmi_device (), 
+                                                          gateway_address)) == 0)
+    return_list = gh_list (gh_str02scm (gateway_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_lan_conf_default_gw_mac_addr ()
+ex_get_bmc_lan_conf_default_gateway_mac_address ()
 {
-  char gw_mac_address[18];
+  char gateway_mac_address[18];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_default_gw_mac_addr (fi_get_ipmi_device (), 
-						      gw_mac_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
+  if ((retval = get_bmc_lan_conf_default_gateway_mac_address (fi_get_ipmi_device (), 
+                                                              gateway_mac_address)) == 0)
+    return_list = gh_list (gh_str02scm (gateway_mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_lan_conf_backup_gw_ip_addr ()
+ex_get_bmc_lan_conf_backup_gateway_address ()
 {
-  char gw_ip_address[16];
+  char gateway_address[16];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_backup_gw_ip_addr (fi_get_ipmi_device (), 
-						    gw_ip_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_ip_address), SCM_UNDEFINED);
+  if ((retval = get_bmc_lan_conf_backup_gateway_address (fi_get_ipmi_device (), 
+                                                         gateway_address)) == 0)
+    return_list = gh_list (gh_str02scm (gateway_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_lan_conf_backup_gw_mac_addr (SCM scm_gw_mac_address)
+ex_get_bmc_lan_conf_backup_gateway_mac_address (SCM scm_gateway_mac_address)
 {
-  char gw_mac_address[18];
+  char gateway_mac_address[18];
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_backup_gw_mac_addr (fi_get_ipmi_device (), 
-						     gw_mac_address)) == 0)
-    return_list = gh_list (gh_str02scm (gw_mac_address), SCM_UNDEFINED);
+  if ((retval = get_bmc_lan_conf_backup_gateway_mac_address (fi_get_ipmi_device (), 
+                                                             gateway_mac_address)) == 0)
+    return_list = gh_list (gh_str02scm (gateway_mac_address), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
@@ -1957,16 +1957,16 @@ ex_get_bmc_lan_conf_auth_type_oem_enables ()
 }
 
 SCM 
-ex_get_bmc_lan_conf_arp_control ()
+ex_get_bmc_lan_conf_bmc_generated_arp_control ()
 {
   uint8_t enable_gratuitous_arps;
   uint8_t enable_arp_response;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_arp_control (fi_get_ipmi_device (), 
-					      &enable_gratuitous_arps, 
-					      &enable_arp_response)) == 0)
+  if ((retval = get_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
+                                                            &enable_gratuitous_arps, 
+                                                            &enable_arp_response)) == 0)
     {
       return_list = gh_list (gh_bool2scm (enable_gratuitous_arps), 
 			     gh_bool2scm (enable_arp_response), 
@@ -1977,14 +1977,14 @@ ex_get_bmc_lan_conf_arp_control ()
 }
 
 SCM 
-ex_get_bmc_lan_conf_gratuitous_arp ()
+ex_get_bmc_lan_conf_gratuitous_arp_interval ()
 {
   uint8_t gratuitous_arp_interval;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_gratuitous_arp (fi_get_ipmi_device (), 
-						 &gratuitous_arp_interval)) == 0)
+  if ((retval = get_bmc_lan_conf_gratuitous_arp_interval (fi_get_ipmi_device (), 
+                                                          &gratuitous_arp_interval)) == 0)
     return_list = gh_list (gh_long2scm (gratuitous_arp_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
@@ -3384,11 +3384,11 @@ ex_ipmi_open (SCM scm_arg_list)
   else 
     args.common.priv_level = gh_scm2int (scm_value);
   
-/*   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9)); */
-/*   if (scm_boolean_p (scm_value) == SCM_BOOL_T) */
-/*     args.script_file = 0; */
-/*   else  */
-/*     args.script_file = gh_scm2newstr (scm_value, NULL); */
+  /*   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9)); */
+  /*   if (scm_boolean_p (scm_value) == SCM_BOOL_T) */
+  /*     args.script_file = 0; */
+  /*   else  */
+  /*     args.script_file = gh_scm2newstr (scm_value, NULL); */
   args.script_file = NULL;
   
   fi_set_arguments (&args);

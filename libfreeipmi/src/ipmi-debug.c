@@ -582,6 +582,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   return (rv);
 }
 
+/* XXX move out of here */
 uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
@@ -614,6 +615,7 @@ ipmi_kcs_print_state (int fd, uint8_t state)
   return (0);
 }
 
+/* XXX move out of here */
 int
 ipmi_smic_print_flags (int fd, uint8_t state)
 {

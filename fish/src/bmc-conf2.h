@@ -72,22 +72,22 @@ int8_t set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 						uint8_t enable_per_message_auth, 
 						uint8_t enable_pef_alerting, 
 						uint8_t channel_privilege_limit);
-int8_t set_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-					uint8_t ip_addr_source);
-int8_t set_bmc_lan_conf_ip_addr (ipmi_device_t *dev, 
-				 char *ip_addr);
-int8_t set_bmc_lan_conf_mac_addr (ipmi_device_t *dev, 
-				  char *mac_addr);
+int8_t set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+                                           uint8_t ip_address_source);
+int8_t set_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+                                    char *ip_address);
+int8_t set_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+                                     char *mac_address);
 int8_t set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev, 
 				     char *subnet_mask);
-int8_t set_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev, 
-					    char *default_gw_ip_addr);
-int8_t set_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev, 
-					     char *default_gw_mac_addr);
-int8_t set_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev, 
-					   char *backup_gw_ip_addr);
-int8_t set_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev, 
-					    char *backup_gw_mac_addr);
+int8_t set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+                                                 char *default_gateway_address);
+int8_t set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+                                                     char *default_gateway_mac_address);
+int8_t set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+                                                char *backup_gateway_address);
+int8_t set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+                                                    char *backup_gateway_mac_address);
 int8_t set_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
 				 uint8_t vlan_id_flag,
 				 uint32_t vlan_id);
@@ -96,11 +96,11 @@ int8_t set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 
 int8_t set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev, 
 					   struct bmc_auth_level *bmc_auth_level);
-int8_t set_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-				     uint8_t enable_gratuitous_arps, 
-				     uint8_t enable_arp_response);
-int8_t set_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-					uint8_t gratuitous_arp_interval);
+int8_t set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+                                                   uint8_t enable_gratuitous_arps, 
+                                                   uint8_t enable_arp_response);
+int8_t set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+                                                 uint8_t gratuitous_arp_interval);
 int8_t set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					       uint8_t access_mode, 
 					       uint8_t enable_user_level_auth, 
@@ -175,29 +175,29 @@ int8_t get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 						uint8_t *per_message_auth, 
 						uint8_t *pef_alerting, 
 						uint8_t *privilege_limit);
-int8_t get_bmc_lan_conf_ip_addr_source (ipmi_device_t *dev, 
-					uint8_t *ip_addr_source);
-int8_t get_bmc_lan_conf_ip_addr (ipmi_device_t *dev, 
-				 char *ip_addr);
-int8_t get_bmc_lan_conf_mac_addr (ipmi_device_t *dev, 
-				  char *mac_addr);
+int8_t get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
+                                           uint8_t *ip_address_source);
+int8_t get_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
+                                    char *ip_address);
+int8_t get_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
+                                     char *mac_address);
 int8_t get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev, 
 				     char *subnet_mask);
-int8_t get_bmc_lan_conf_default_gw_ip_addr (ipmi_device_t *dev, 
-					    char *default_gw_ip_addr);
-int8_t get_bmc_lan_conf_default_gw_mac_addr (ipmi_device_t *dev, 
-					     char *default_gw_mac_addr);
-int8_t get_bmc_lan_conf_backup_gw_ip_addr (ipmi_device_t *dev, 
-					   char *backup_gw_ip_addr);
-int8_t get_bmc_lan_conf_backup_gw_mac_addr (ipmi_device_t *dev, 
-					    char *backup_gw_mac_addr);
+int8_t get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
+                                                 char *default_gateway_address);
+int8_t get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
+                                                     char *default_gateway_mac_address);
+int8_t get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
+                                                char *backup_gateway_address);
+int8_t get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
+                                                    char *backup_gateway_mac_address);
 int8_t get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev, 
 					   struct bmc_auth_level *bmc_auth_level);
-int8_t get_bmc_lan_conf_arp_control (ipmi_device_t *dev, 
-				     uint8_t *enable_gratuitous_arps, 
-				     uint8_t *enable_arp_response);
-int8_t get_bmc_lan_conf_gratuitous_arp (ipmi_device_t *dev, 
-					uint8_t *gratuitous_arp_interval);
+int8_t get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
+                                                   uint8_t *enable_gratuitous_arps, 
+                                                   uint8_t *enable_arp_response);
+int8_t get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
+                                                 uint8_t *gratuitous_arp_interval);
 
 int8_t get_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					       uint8_t *access_mode, 
