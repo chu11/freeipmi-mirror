@@ -27,6 +27,10 @@
 	ipmipower/src/ipmipower_powercmd.c (check_hdr_session_authcode):
 	Rename to ipmi_lan_check_session_authcode.
 
+	* libfreeipmi/src/ipmi-sessions.h,
+	libfreeipmi/src/ipmi-sessions.c: Removed files.  Moved all code
+	into ipmi-lan-interface.h and ipmi-lan-interface.c.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
         Collective fixes from branch al_fiid_rearchitect_branch at tag
