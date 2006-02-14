@@ -56,6 +56,8 @@
 
 	* libfreeipmi/src/bmc-watchdog.c: Adjust for code changes.
 
+	* libfreeipmi/src/rmcp.c: Code cleanup.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
         Collective fixes from branch al_fiid_rearchitect_branch at tag

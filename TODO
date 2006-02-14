@@ -61,6 +61,12 @@ libfreeipmi:
        - missing commands
        - audit templates
        - audit function names, parameters
+    - rmcp
+       - clean function names (done)
+       - order code appropriately (done)
+       - parameter checking (done)
+       - audit templates
+       - audit function names, parameters (done)
   * reg-space default  
   * udm parameter checks
 

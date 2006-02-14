@@ -64,7 +64,8 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 {
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_rmcp_hdr))
+  if (!RMCP_HDR_MSG_CLASS_VALID(message_class)
+      || !fiid_obj_valid(obj_rmcp_hdr))
     {
       errno = EINVAL;
       return -1;
@@ -137,9 +138,10 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
   uint32_t obj_cmd_len, obj_rmcp_hdr_len;
   int8_t rv;
 
-  if (!(fiid_obj_valid(obj_rmcp_hdr) 
-        && fiid_obj_valid(obj_cmd)
-        && pkt))
+  if (!fiid_obj_valid(obj_rmcp_hdr) 
+      || !fiid_obj_valid(obj_cmd)
+      || !pkt
+      || !pkt_len)
     {
       errno = EINVAL;
       return (-1);
@@ -205,9 +207,9 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
   int32_t len;
   int8_t rv;
 
-  if (!(pkt
-        && fiid_obj_valid(obj_rmcp_hdr)
-        && fiid_obj_valid(obj_cmd)))
+  if (!pkt
+      || !fiid_obj_valid(obj_rmcp_hdr)
+      || !fiid_obj_valid(obj_cmd)))
     {
       errno = EINVAL;
       return -1;
