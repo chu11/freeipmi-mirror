@@ -46,18 +46,21 @@ libfreeipmi:
        - parameter checking (done)
        - missing commands
        - audit templates (some done)
+       - audit function names, parameters
     - msg-support-cmds
        - clean function names (done)
        - order code appropriately (done)
-       - parameter checking
+       - parameter checking (done)
        - missing commands
        - audit templates
+       - audit function names, parameters
     - watchdog
        - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
        - audit templates
+       - audit function names, parameters
   * reg-space default  
   * udm parameter checks
 

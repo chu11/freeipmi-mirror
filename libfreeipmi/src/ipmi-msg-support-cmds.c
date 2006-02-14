@@ -158,7 +158,7 @@ fiid_template_t tmpl_get_channel_access_rq =
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2, "channel_access_set_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "channel_access_get_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -310,9 +310,9 @@ fill_cmd_get_channel_auth_caps (uint8_t channel_num,
 {
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_cmd)
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_num)
-      || !IPMI_PRIV_LEVEL_VALID(max_priv_level))
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_num)
+      || !IPMI_PRIV_LEVEL_VALID(max_priv_level)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
@@ -347,9 +347,9 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
   /* achu: username can be IPMI_SESSION_MAX_USERNAME_LEN length.  Null
    * termination in IPMI packet not required
    */
-  if (!fiid_obj_valid(obj_cmd)
-      || !IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
-      || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN))
+  if (!IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+      || (username && username_len > IPMI_SESSION_MAX_USERNAME_LEN)
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
@@ -508,6 +508,13 @@ fill_cmd_set_channel_access (uint8_t channel_number,
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
+      || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
+      || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
+      || !IPMI_PEF_ALERTING_VALID(pef_alerting)
+      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set_flag)
+      || !IPMI_PRIV_LEVEL_VALID(channel_privilege_level_limit)
+      || !IPMI_PRIV_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set_flag)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -572,12 +579,13 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 
 int8_t
 fill_cmd_get_channel_access (uint8_t channel_number,
-			     uint8_t channel_access_set_flag,
+			     uint8_t channel_access_get_flag,
                              fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get_flag)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -610,8 +618,8 @@ fill_cmd_get_channel_access (uint8_t channel_number,
                 0);
 
   FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"channel_access_set_flag",
-		channel_access_set_flag);
+		(uint8_t *)"channel_access_get_flag",
+		channel_access_get_flag);
 
   return 0;
 }
@@ -665,6 +673,10 @@ fill_cmd_set_user_access (uint8_t channel_number,
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(restrict_to_callback)
+      || !IPMI_USER_LINK_AUTHENTICATION_VALID(enable_link_auth)
+      || !IPMI_USER_IPMI_MESSAGING_VALID(enable_ipmi_msgs)
+      || !IPMI_PRIV_LEVEL_VALID(user_privilege_level_limit)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -885,7 +897,8 @@ fill_cmd_set_user_password (uint8_t user_id,
   /* achu: password can be IPMI_USER_PASSWORD_MAX_LENGTH length.  Null
    * termination in IPMI packet not required
    */
-  if ((user_password && user_password_len > IPMI_USER_PASSWORD_MAX_LENGTH)
+  if (!IPMI_PASSWORD_OPERATION_VALID(operation)
+      || (user_password && user_password_len > IPMI_USER_PASSWORD_MAX_LENGTH)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
