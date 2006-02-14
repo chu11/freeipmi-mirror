@@ -21,65 +21,65 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev, 
-				     uint8_t channel_number, 
-                                     uint8_t auth_type_callback_none,
-                                     uint8_t auth_type_callback_md2,
-                                     uint8_t auth_type_callback_md5,
-                                     uint8_t auth_type_callback_straight_password,
-                                     uint8_t auth_type_callback_oem_proprietary,
-                                     uint8_t auth_type_user_none,
-                                     uint8_t auth_type_user_md2,
-                                     uint8_t auth_type_user_md5,
-                                     uint8_t auth_type_user_straight_password,
-                                     uint8_t auth_type_user_oem_proprietary,
-                                     uint8_t auth_type_operator_none,
-                                     uint8_t auth_type_operator_md2,
-                                     uint8_t auth_type_operator_md5,
-                                     uint8_t auth_type_operator_straight_password,
-                                     uint8_t auth_type_operator_oem_proprietary,
-                                     uint8_t auth_type_admin_none,
-                                     uint8_t auth_type_admin_md2,
-                                     uint8_t auth_type_admin_md5,
-                                     uint8_t auth_type_admin_straight_password,
-                                     uint8_t auth_type_admin_oem_proprietary,
-                                     uint8_t auth_type_oem_none,
-                                     uint8_t auth_type_oem_md2,
-                                     uint8_t auth_type_oem_md5,
-                                     uint8_t auth_type_oem_straight_password,
-                                     uint8_t auth_type_oem_oem_proprietary,
-                                     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev, 
+                                               uint8_t channel_number, 
+                                               uint8_t callback_level_none,
+                                               uint8_t callback_level_md2,
+                                               uint8_t callback_level_md5,
+                                               uint8_t callback_level_straight_password,
+                                               uint8_t callback_level_oem_proprietary,
+                                               uint8_t user_level_none,
+                                               uint8_t user_level_md2,
+                                               uint8_t user_level_md5,
+                                               uint8_t user_level_straight_password,
+                                               uint8_t user_level_oem_proprietary,
+                                               uint8_t operator_level_none,
+                                               uint8_t operator_level_md2,
+                                               uint8_t operator_level_md5,
+                                               uint8_t operator_level_straight_password,
+                                               uint8_t operator_level_oem_proprietary,
+                                               uint8_t admin_level_none,
+                                               uint8_t admin_level_md2,
+                                               uint8_t admin_level_md5,
+                                               uint8_t admin_level_straight_password,
+                                               uint8_t admin_level_oem_proprietary,
+                                               uint8_t oem_level_none,
+                                               uint8_t oem_level_md2,
+                                               uint8_t oem_level_md5,
+                                               uint8_t oem_level_straight_password,
+                                               uint8_t oem_level_oem_proprietary,
+                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_callback_none)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_callback_md2)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_callback_md5)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_callback_straight_password)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_callback_oem_proprietary)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_user_none)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_user_md2)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_user_md5)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_user_straight_password)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_user_oem_proprietary)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_operator_none)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_operator_md2)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_operator_md5)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_operator_straight_password)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_operator_oem_proprietary)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_admin_none)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_admin_md2)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_admin_md5)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_admin_straight_password)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_admin_oem_proprietary)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_oem_none)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_oem_md2)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_oem_md5)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_oem_straight_password)
-      || !IPMI_AUTH_TYPE_ENABLE_VALID(auth_type_oem_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(callback_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(user_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(operator_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(admin_level_oem_proprietary)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_none)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md2)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_md5)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_straight_password)
+      || !IPMI_AUTHENTICATION_TYPE_ENABLE_VALID(oem_level_oem_proprietary)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -95,36 +95,36 @@ ipmi_cmd_lan_set_auth_type_enables2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_auth_type_enables_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_authentication_type_enables_rq)))
     goto cleanup;
 
-  if (fill_lan_set_auth_type_enables (channel_number, 
-                                      auth_type_callback_none,
-                                      auth_type_callback_md2,
-                                      auth_type_callback_md5,
-                                      auth_type_callback_straight_password,
-                                      auth_type_callback_oem_proprietary,
-                                      auth_type_user_none,
-                                      auth_type_user_md2,
-                                      auth_type_user_md5,
-                                      auth_type_user_straight_password,
-                                      auth_type_user_oem_proprietary,
-                                      auth_type_operator_none,
-                                      auth_type_operator_md2,
-                                      auth_type_operator_md5,
-                                      auth_type_operator_straight_password,
-                                      auth_type_operator_oem_proprietary,
-                                      auth_type_admin_none,
-                                      auth_type_admin_md2,
-                                      auth_type_admin_md5,
-                                      auth_type_admin_straight_password,
-                                      auth_type_admin_oem_proprietary,
-                                      auth_type_oem_none,
-                                      auth_type_oem_md2,
-                                      auth_type_oem_md5,
-                                      auth_type_oem_straight_password,
-                                      auth_type_oem_oem_proprietary,
-                                      obj_cmd_rq) < 0)
+  if (fill_lan_set_authentication_type_enables (channel_number, 
+                                                callback_level_none,
+                                                callback_level_md2,
+                                                callback_level_md5,
+                                                callback_level_straight_password,
+                                                callback_level_oem_proprietary,
+                                                user_level_none,
+                                                user_level_md2,
+                                                user_level_md5,
+                                                user_level_straight_password,
+                                                user_level_oem_proprietary,
+                                                operator_level_none,
+                                                operator_level_md2,
+                                                operator_level_md5,
+                                                operator_level_straight_password,
+                                                operator_level_oem_proprietary,
+                                                admin_level_none,
+                                                admin_level_md2,
+                                                admin_level_md5,
+                                                admin_level_straight_password,
+                                                admin_level_oem_proprietary,
+                                                oem_level_none,
+                                                oem_level_md2,
+                                                oem_level_md5,
+                                                oem_level_straight_password,
+                                                oem_level_oem_proprietary,
+                                                obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -351,8 +351,8 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev, 
                                              uint8_t channel_number, 
-                                             uint8_t bmc_generated_gratuitous_arps_flag, 
-                                             uint8_t bmc_generated_arp_responses_flag, 
+                                             uint8_t bmc_generated_gratuitous_arps, 
+                                             uint8_t bmc_generated_arp_responses, 
                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -360,8 +360,8 @@ ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev,
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(bmc_generated_gratuitous_arps_flag)
-      || !IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(bmc_generated_arp_responses_flag)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(bmc_generated_gratuitous_arps)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(bmc_generated_arp_responses)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -381,8 +381,8 @@ ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_lan_set_bmc_generated_arp_control (channel_number, 
-                                              bmc_generated_gratuitous_arps_flag, 
-                                              bmc_generated_arp_responses_flag,
+                                              bmc_generated_gratuitous_arps, 
+                                              bmc_generated_arp_responses,
                                               obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -763,12 +763,12 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev, 
-				     uint8_t channel_number, 
-				     uint8_t parameter_type, 
-				     uint8_t set_selector, 
-				     uint8_t block_selector, 
-				     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev, 
+                                               uint8_t channel_number, 
+                                               uint8_t parameter_type, 
+                                               uint8_t set_selector, 
+                                               uint8_t block_selector, 
+                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -781,7 +781,7 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_conf_param_auth_type_enables_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_conf_param_authentication_type_enables_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -793,7 +793,7 @@ ipmi_cmd_lan_get_auth_type_enables2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_AUTH_TYPE_ENABLES, 
+  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
                                channel_number, 
                                parameter_type, 
                                set_selector, 

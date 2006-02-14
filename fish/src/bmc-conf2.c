@@ -271,19 +271,10 @@ set_bmc_lan_conf_ip_address (ipmi_device_t *dev,
                              char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4;
-  uint64_t ip_address_val = 0;
+  uint32_t ip_address_val = 0;
   int8_t rv = -1;
-
-  sscanf (ip_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
+  
+  if (ipmi_ipv4_address_string2int(ip_address, &ip_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
@@ -308,22 +299,10 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
-  unsigned int b1, b2, b3, b4, b5, b6;
   uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
+  if (ipmi_mac_address_string2int(mac_address, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
@@ -581,14 +560,14 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 }
 
 static int8_t
-_fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
-                                 fiid_template_t l_tmpl_set_auth_auth_type_enables,
-                                 uint8_t channel_number,
-                                 uint8_t max_privilege_auth_type_callback_level,
-                                 uint8_t max_privilege_auth_type_user_level,
-                                 uint8_t max_privilege_auth_type_operator_level,
-                                 uint8_t max_privilege_auth_type_admin_level,
-                                 uint8_t max_privilege_auth_type_oem_level)
+_fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
+                                           fiid_template_t l_tmpl_set_auth_authentication_type_enables,
+                                           uint8_t channel_number,
+                                           uint8_t callback_level,
+                                           uint8_t user_level,
+                                           uint8_t operator_level,
+                                           uint8_t admin_level,
+                                           uint8_t oem_level)
 {
   if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -614,56 +593,56 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
 
   if (fiid_obj_set (obj_data_rq,
                     (uint8_t *)"parameter_selector",
-                    IPMI_LAN_PARAM_AUTH_TYPE_ENABLES) < 0)
+                    IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_callback_level",
-                    max_privilege_auth_type_callback_level) < 0)
+                    (uint8_t *)"callback_level",
+                    callback_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_callback_level.reserved2",
+                    (uint8_t *)"callback_level.reserved2",
                     0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_user_level",
-                    max_privilege_auth_type_user_level) < 0)
+                    (uint8_t *)"user_level",
+                    user_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_user_level.reserved2",
+                    (uint8_t *)"user_level.reserved2",
                     0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_operator_level",
-                    max_privilege_auth_type_operator_level) < 0)
+                    (uint8_t *)"operator_level",
+                    operator_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_operator_level.reserved2",
+                    (uint8_t *)"operator_level.reserved2",
                     0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_admin_level",
-                    max_privilege_auth_type_admin_level) < 0)
+                    (uint8_t *)"admin_level",
+                    admin_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_admin_level.reserved2",
+                    (uint8_t *)"admin_level.reserved2",
                     0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_oem_level",
-                    max_privilege_auth_type_oem_level) < 0)
+                    (uint8_t *)"oem_level",
+                    oem_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"max_privilege_auth_type_oem_level.reserved2",
+                    (uint8_t *)"oem_level.reserved2",
                     0) < 0)
     return (-1);
 
@@ -671,105 +650,105 @@ _fill_lan_set_auth_type_enables (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-set_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev, 
-				    struct bmc_auth_level *bmc_auth_level)
+set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
+                                              struct bmc_auth_level *bmc_auth_level)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
-  fiid_template_t l_tmpl_set_lan_conf_param_auth_type_enables_rq =
+  fiid_template_t l_tmpl_set_lan_conf_param_authentication_type_enables_rq =
     {
       {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {6, "max_privilege_auth_type_callback_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {2, "max_privilege_auth_type_callback_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {6, "max_privilege_auth_type_user_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {2, "max_privilege_auth_type_user_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {6, "max_privilege_auth_type_operator_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {2, "max_privilege_auth_type_operator_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {6, "max_privilege_auth_type_admin_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {2, "max_privilege_auth_type_admin_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {6, "max_privilege_auth_type_oem_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-      {2, "max_privilege_auth_type_oem_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "callback_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "callback_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "user_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "user_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "operator_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "operator_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "admin_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "admin_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {6, "oem_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+      {2, "oem_level.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
       {0, ""}
     };
-  uint8_t auth_type_callback_level = 0;
-  uint8_t auth_type_user_level = 0;
-  uint8_t auth_type_operator_level = 0;
-  uint8_t auth_type_admin_level = 0;
-  uint8_t auth_type_oem_level = 0;
+  uint8_t callback_level = 0;
+  uint8_t user_level = 0;
+  uint8_t operator_level = 0;
+  uint8_t admin_level = 0;
+  uint8_t oem_level = 0;
   int8_t rv = -1;
 
   if (bmc_auth_level->callback.type_none)
-    auth_type_callback_level = BIT_SET (auth_type_callback_level, 0);
+    callback_level = BIT_SET (callback_level, 0);
   if (bmc_auth_level->callback.type_md2)
-    auth_type_callback_level = BIT_SET (auth_type_callback_level, 1);
+    callback_level = BIT_SET (callback_level, 1);
   if (bmc_auth_level->callback.type_md5)
-    auth_type_callback_level = BIT_SET (auth_type_callback_level, 2);
+    callback_level = BIT_SET (callback_level, 2);
   if (bmc_auth_level->callback.type_straight_password)
-    auth_type_callback_level = BIT_SET (auth_type_callback_level, 4);
+    callback_level = BIT_SET (callback_level, 4);
   if (bmc_auth_level->callback.type_oem_proprietary)
-    auth_type_callback_level = BIT_SET (auth_type_callback_level, 5);
+    callback_level = BIT_SET (callback_level, 5);
   
   if (bmc_auth_level->user.type_none)
-    auth_type_user_level = BIT_SET (auth_type_user_level, 0);
+    user_level = BIT_SET (user_level, 0);
   if (bmc_auth_level->user.type_md2)
-    auth_type_user_level = BIT_SET (auth_type_user_level, 1);
+    user_level = BIT_SET (user_level, 1);
   if (bmc_auth_level->user.type_md5)
-    auth_type_user_level = BIT_SET (auth_type_user_level, 2);
+    user_level = BIT_SET (user_level, 2);
   if (bmc_auth_level->user.type_straight_password)
-    auth_type_user_level = BIT_SET (auth_type_user_level, 4);
+    user_level = BIT_SET (user_level, 4);
   if (bmc_auth_level->user.type_oem_proprietary)
-    auth_type_user_level = BIT_SET (auth_type_user_level, 5);
+    user_level = BIT_SET (user_level, 5);
   
   if (bmc_auth_level->operator.type_none)
-    auth_type_operator_level = BIT_SET (auth_type_operator_level, 0);
+    operator_level = BIT_SET (operator_level, 0);
   if (bmc_auth_level->operator.type_md2)
-    auth_type_operator_level = BIT_SET (auth_type_operator_level, 1);
+    operator_level = BIT_SET (operator_level, 1);
   if (bmc_auth_level->operator.type_md5)
-    auth_type_operator_level = BIT_SET (auth_type_operator_level, 2);
+    operator_level = BIT_SET (operator_level, 2);
   if (bmc_auth_level->operator.type_straight_password)
-    auth_type_operator_level = BIT_SET (auth_type_operator_level, 4);
+    operator_level = BIT_SET (operator_level, 4);
   if (bmc_auth_level->operator.type_oem_proprietary)
-    auth_type_operator_level = BIT_SET (auth_type_operator_level, 5);
+    operator_level = BIT_SET (operator_level, 5);
   
   if (bmc_auth_level->admin.type_none)
-    auth_type_admin_level = BIT_SET (auth_type_admin_level, 0);
+    admin_level = BIT_SET (admin_level, 0);
   if (bmc_auth_level->admin.type_md2)
-    auth_type_admin_level = BIT_SET (auth_type_admin_level, 1);
+    admin_level = BIT_SET (admin_level, 1);
   if (bmc_auth_level->admin.type_md5)
-    auth_type_admin_level = BIT_SET (auth_type_admin_level, 2);
+    admin_level = BIT_SET (admin_level, 2);
   if (bmc_auth_level->admin.type_straight_password)
-    auth_type_admin_level = BIT_SET (auth_type_admin_level, 4);
+    admin_level = BIT_SET (admin_level, 4);
   if (bmc_auth_level->admin.type_oem_proprietary)
-    auth_type_admin_level = BIT_SET (auth_type_admin_level, 5);
+    admin_level = BIT_SET (admin_level, 5);
   
   if (bmc_auth_level->oem.type_none)
-    auth_type_oem_level = BIT_SET (auth_type_oem_level, 0);
+    oem_level = BIT_SET (oem_level, 0);
   if (bmc_auth_level->oem.type_md2)
-    auth_type_oem_level = BIT_SET (auth_type_oem_level, 1);
+    oem_level = BIT_SET (oem_level, 1);
   if (bmc_auth_level->oem.type_md5)
-    auth_type_oem_level = BIT_SET (auth_type_oem_level, 2);
+    oem_level = BIT_SET (oem_level, 2);
   if (bmc_auth_level->oem.type_straight_password)
-    auth_type_oem_level = BIT_SET (auth_type_oem_level, 4);
+    oem_level = BIT_SET (oem_level, 4);
   if (bmc_auth_level->oem.type_oem_proprietary)
-    auth_type_oem_level = BIT_SET (auth_type_oem_level, 5);
+    oem_level = BIT_SET (oem_level, 5);
 
-  if (!(obj_cmd_rq = fiid_obj_create(l_tmpl_set_lan_conf_param_auth_type_enables_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(l_tmpl_set_lan_conf_param_authentication_type_enables_rq)))
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_conf_param_rs)))
     goto cleanup;
 
-  if (_fill_lan_set_auth_type_enables (obj_cmd_rq,
-                                       l_tmpl_set_lan_conf_param_auth_type_enables_rq,
-                                       get_lan_channel_number (), 
-                                       auth_type_callback_level,
-                                       auth_type_user_level,
-                                       auth_type_operator_level,
-                                       auth_type_admin_level,
-                                       auth_type_oem_level) < 0)
+  if (_fill_lan_set_authentication_type_enables (obj_cmd_rq,
+                                                 l_tmpl_set_lan_conf_param_authentication_type_enables_rq,
+                                                 get_lan_channel_number (), 
+                                                 callback_level,
+                                                 user_level,
+                                                 operator_level,
+                                                 admin_level,
+                                                 oem_level) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev,
@@ -1721,170 +1700,170 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_lan_conf_auth_type_enables (ipmi_device_t *dev, 
-				    struct bmc_auth_level *bmc_auth_level)
+get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
+                                              struct bmc_auth_level *bmc_auth_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_auth_type_enables_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_conf_param_authentication_type_enables_rs)))
     goto cleanup;
-
-  if (ipmi_cmd_lan_get_auth_type_enables2 (dev, 
-					   get_lan_channel_number (), 
-					   IPMI_GET_LAN_PARAMETER, 
-					   SET_SELECTOR, 
-					   BLOCK_SELECTOR, 
-					   obj_cmd_rs) != 0)
+  
+  if (ipmi_cmd_lan_get_authentication_type_enables2 (dev, 
+                                                     get_lan_channel_number (), 
+                                                     IPMI_GET_LAN_PARAMETER, 
+                                                     SET_SELECTOR, 
+                                                     BLOCK_SELECTOR, 
+                                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_callback_level.none", 
+		    (uint8_t *)"callback_level.none", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->callback.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_callback_level.md2", 
+		    (uint8_t *)"callback_level.md2", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->callback.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_callback_level.md5", 
+		    (uint8_t *)"callback_level.md5", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->callback.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_callback_level.straight_password", 
+		    (uint8_t *)"callback_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->callback.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_callback_level.oem_proprietary", 
+		    (uint8_t *)"callback_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->callback.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_user_level.none", 
+		    (uint8_t *)"user_level.none", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->user.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_user_level.md2", 
+		    (uint8_t *)"user_level.md2", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->user.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_user_level.md5", 
+		    (uint8_t *)"user_level.md5", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->user.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_user_level.straight_password", 
+		    (uint8_t *)"user_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->user.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_user_level.oem_proprietary", 
+		    (uint8_t *)"user_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->user.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_operator_level.none", 
+		    (uint8_t *)"operator_level.none", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->operator.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_operator_level.md2", 
+		    (uint8_t *)"operator_level.md2", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->operator.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_operator_level.md5", 
+		    (uint8_t *)"operator_level.md5", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->operator.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_operator_level.straight_password", 
+		    (uint8_t *)"operator_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->operator.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_operator_level.oem_proprietary", 
+		    (uint8_t *)"operator_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->operator.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_admin_level.none", 
+		    (uint8_t *)"admin_level.none", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->admin.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_admin_level.md2", 
+		    (uint8_t *)"admin_level.md2", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->admin.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_admin_level.md5", 
+		    (uint8_t *)"admin_level.md5", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->admin.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_admin_level.straight_password", 
+		    (uint8_t *)"admin_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->admin.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_admin_level.oem_proprietary", 
+		    (uint8_t *)"admin_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->admin.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_oem_level.none", 
+		    (uint8_t *)"oem_level.none", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->oem.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_oem_level.md2", 
+		    (uint8_t *)"oem_level.md2", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->oem.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_oem_level.md5", 
+		    (uint8_t *)"oem_level.md5", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->oem.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_oem_level.straight_password", 
+		    (uint8_t *)"oem_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->oem.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"max_privilege_auth_type_oem_level.oem_proprietary", 
+		    (uint8_t *)"oem_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
   bmc_auth_level->oem.type_oem_proprietary = val;
@@ -1917,13 +1896,13 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bmc_generated_gratuitous_arps_flag", 
+		    (uint8_t *)"bmc_generated_gratuitous_arps", 
 		    &val) < 0)
     goto cleanup;
   *enable_gratuitous_arps = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bmc_generated_arp_responses_flag", 
+		    (uint8_t *)"bmc_generated_arp_responses", 
 		    &val) < 0)
     goto cleanup;
   *enable_arp_response = val;

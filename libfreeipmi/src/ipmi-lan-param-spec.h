@@ -21,7 +21,7 @@
 #ifndef _IPMI_LAN_PARAM_SPEC_H
 #define _IPMI_LAN_PARAM_SPEC_H
 
-#define IPMI_LAN_PARAM_AUTH_TYPE_ENABLES            2 
+#define IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES  2 
 #define IPMI_LAN_PARAM_IP_ADDRESS                   3 
 #define IPMI_LAN_PARAM_IP_ADDRESS_SOURCE            4 
 #define IPMI_LAN_PARAM_MAC_ADDRESS                  5 

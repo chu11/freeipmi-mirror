@@ -24,10 +24,10 @@
 fiid_template_t tmpl_rmcp_hdr =
   {
     {8, "version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {5, "message_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2, "message_class.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "message_class.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "message_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -37,7 +37,7 @@ fiid_template_t tmpl_cmd_asf_presence_ping =
     {32, "iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "message_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "data_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -52,9 +52,9 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
     {32, "oem_iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "supported_entities.version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {3,  "supported_entities.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "supported_entities.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "supported_entities.ipmi_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {7,  "supported_interactions.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7,  "supported_interactions.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "supported_interactions.security_extensions", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {48, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0,  "", 0}
@@ -82,10 +82,10 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
     }
 
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"version", RMCP_VER_1_0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.class", message_class);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.reserved1", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.reserved", 0);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.ack",
                 RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
   return 0;
@@ -128,7 +128,7 @@ fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_type",
                 RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_tag", message_tag);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_length", 0x00);
   return 0;
 }

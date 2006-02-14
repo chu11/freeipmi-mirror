@@ -7,6 +7,18 @@
 
 	* rmcpping/, ipmipower/, fish/: Adjust code appropriately.
 
+	* libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c: Code cleanup.
+
+	* fish/, libfreeipmi/: Adjust code appropriately.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_ipv4_address_string2int, ipmi_mac_address_string2int): New
+	functions.
+
+	* fish/src/bmc-conf2.c (set_bmc_lan_conf_ip_address,
+	set_bmc_lan_conf_mac_address): Use new function.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c

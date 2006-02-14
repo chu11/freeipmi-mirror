@@ -45,8 +45,9 @@ libfreeipmi:
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
-       - audit templates (some done)
-       - audit function names, parameters
+       - audit templates (done)
+       - audit function names (done)
+       - audit parameters (done)
     - msg-support-cmds
        - clean function names (done)
        - order code appropriately (done)

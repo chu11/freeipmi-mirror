@@ -1037,32 +1037,32 @@ ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none,
 						SCM scm_auth_type_straight_password, 
 						SCM scm_auth_type_oem_proprietary)
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.callback.type_none = gh_scm2bool (scm_auth_type_none);
+    authentication_type_enables.callback.type_none = gh_scm2bool (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.callback.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    authentication_type_enables.callback.type_md2 = gh_scm2bool (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.callback.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    authentication_type_enables.callback.type_md5 = gh_scm2bool (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
-    auth_type_enables.callback.type_straight_password = 
+    authentication_type_enables.callback.type_straight_password = 
       gh_scm2bool (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
-    auth_type_enables.callback.type_oem_proprietary = 
+    authentication_type_enables.callback.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = set_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1073,32 +1073,32 @@ ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none,
 					    SCM scm_auth_type_straight_password, 
 					    SCM scm_auth_type_oem_proprietary)
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.user.type_none = gh_scm2bool (scm_auth_type_none);
+    authentication_type_enables.user.type_none = gh_scm2bool (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.user.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    authentication_type_enables.user.type_md2 = gh_scm2bool (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.user.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    authentication_type_enables.user.type_md5 = gh_scm2bool (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
-    auth_type_enables.user.type_straight_password = 
+    authentication_type_enables.user.type_straight_password = 
       gh_scm2bool (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
-    auth_type_enables.user.type_oem_proprietary = 
+    authentication_type_enables.user.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = set_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1109,32 +1109,32 @@ ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none,
 						SCM scm_auth_type_straight_password, 
 						SCM scm_auth_type_oem_proprietary)
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.operator.type_none = gh_scm2bool (scm_auth_type_none);
+    authentication_type_enables.operator.type_none = gh_scm2bool (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.operator.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    authentication_type_enables.operator.type_md2 = gh_scm2bool (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.operator.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    authentication_type_enables.operator.type_md5 = gh_scm2bool (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
-    auth_type_enables.operator.type_straight_password = 
+    authentication_type_enables.operator.type_straight_password = 
       gh_scm2bool (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
-    auth_type_enables.operator.type_oem_proprietary = 
+    authentication_type_enables.operator.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = set_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1145,32 +1145,32 @@ ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none,
 					     SCM scm_auth_type_straight_password, 
 					     SCM scm_auth_type_oem_proprietary)
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.admin.type_none = gh_scm2bool (scm_auth_type_none);
+    authentication_type_enables.admin.type_none = gh_scm2bool (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.admin.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    authentication_type_enables.admin.type_md2 = gh_scm2bool (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.admin.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    authentication_type_enables.admin.type_md5 = gh_scm2bool (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
-    auth_type_enables.admin.type_straight_password = 
+    authentication_type_enables.admin.type_straight_password = 
       gh_scm2bool (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
-    auth_type_enables.admin.type_oem_proprietary = 
+    authentication_type_enables.admin.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = set_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1181,32 +1181,32 @@ ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none,
 					   SCM scm_auth_type_straight_password, 
 					   SCM scm_auth_type_oem_proprietary)
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   
-  retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_boolean_p (scm_auth_type_none) == SCM_BOOL_T)
-    auth_type_enables.oem.type_none = gh_scm2bool (scm_auth_type_none);
+    authentication_type_enables.oem.type_none = gh_scm2bool (scm_auth_type_none);
   
   if (scm_boolean_p (scm_auth_type_md2) == SCM_BOOL_T)
-    auth_type_enables.oem.type_md2 = gh_scm2bool (scm_auth_type_md2);
+    authentication_type_enables.oem.type_md2 = gh_scm2bool (scm_auth_type_md2);
   
   if (scm_boolean_p (scm_auth_type_md5) == SCM_BOOL_T)
-    auth_type_enables.oem.type_md5 = gh_scm2bool (scm_auth_type_md5);
+    authentication_type_enables.oem.type_md5 = gh_scm2bool (scm_auth_type_md5);
   
   if (scm_boolean_p (scm_auth_type_straight_password) == SCM_BOOL_T)
-    auth_type_enables.oem.type_straight_password = 
+    authentication_type_enables.oem.type_straight_password = 
       gh_scm2bool (scm_auth_type_straight_password);
   
   if (scm_boolean_p (scm_auth_type_oem_proprietary) == SCM_BOOL_T)
-    auth_type_enables.oem.type_oem_proprietary = 
+    authentication_type_enables.oem.type_oem_proprietary = 
       gh_scm2bool (scm_auth_type_oem_proprietary);
   
-  retval = set_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), &auth_type_enables);
+  retval = set_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1854,18 +1854,18 @@ ex_get_bmc_lan_conf_vlan_priority ()
 SCM 
 ex_get_bmc_lan_conf_auth_type_callback_enables ()
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
-						    &auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), 
+                                                              &authentication_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.callback.type_none), 
-			     gh_bool2scm (auth_type_enables.callback.type_md2), 
-			     gh_bool2scm (auth_type_enables.callback.type_md5), 
-			     gh_bool2scm (auth_type_enables.callback.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.callback.type_oem_proprietary), 
+      return_list = gh_list (gh_bool2scm (authentication_type_enables.callback.type_none), 
+			     gh_bool2scm (authentication_type_enables.callback.type_md2), 
+			     gh_bool2scm (authentication_type_enables.callback.type_md5), 
+			     gh_bool2scm (authentication_type_enables.callback.type_straight_password), 
+			     gh_bool2scm (authentication_type_enables.callback.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1875,18 +1875,18 @@ ex_get_bmc_lan_conf_auth_type_callback_enables ()
 SCM 
 ex_get_bmc_lan_conf_auth_type_user_enables ()
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
-						    &auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), 
+                                                              &authentication_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.user.type_none), 
-			     gh_bool2scm (auth_type_enables.user.type_md2), 
-			     gh_bool2scm (auth_type_enables.user.type_md5), 
-			     gh_bool2scm (auth_type_enables.user.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.user.type_oem_proprietary), 
+      return_list = gh_list (gh_bool2scm (authentication_type_enables.user.type_none), 
+			     gh_bool2scm (authentication_type_enables.user.type_md2), 
+			     gh_bool2scm (authentication_type_enables.user.type_md5), 
+			     gh_bool2scm (authentication_type_enables.user.type_straight_password), 
+			     gh_bool2scm (authentication_type_enables.user.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1896,18 +1896,18 @@ ex_get_bmc_lan_conf_auth_type_user_enables ()
 SCM 
 ex_get_bmc_lan_conf_auth_type_operator_enables ()
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
-						    &auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), 
+                                                              &authentication_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.operator.type_none), 
-			     gh_bool2scm (auth_type_enables.operator.type_md2), 
-			     gh_bool2scm (auth_type_enables.operator.type_md5), 
-			     gh_bool2scm (auth_type_enables.operator.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.operator.type_oem_proprietary), 
+      return_list = gh_list (gh_bool2scm (authentication_type_enables.operator.type_none), 
+			     gh_bool2scm (authentication_type_enables.operator.type_md2), 
+			     gh_bool2scm (authentication_type_enables.operator.type_md5), 
+			     gh_bool2scm (authentication_type_enables.operator.type_straight_password), 
+			     gh_bool2scm (authentication_type_enables.operator.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1917,18 +1917,18 @@ ex_get_bmc_lan_conf_auth_type_operator_enables ()
 SCM 
 ex_get_bmc_lan_conf_auth_type_admin_enables ()
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
-						    &auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), 
+                                                              &authentication_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.admin.type_none), 
-			     gh_bool2scm (auth_type_enables.admin.type_md2), 
-			     gh_bool2scm (auth_type_enables.admin.type_md5), 
-			     gh_bool2scm (auth_type_enables.admin.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.admin.type_oem_proprietary), 
+      return_list = gh_list (gh_bool2scm (authentication_type_enables.admin.type_none), 
+			     gh_bool2scm (authentication_type_enables.admin.type_md2), 
+			     gh_bool2scm (authentication_type_enables.admin.type_md5), 
+			     gh_bool2scm (authentication_type_enables.admin.type_straight_password), 
+			     gh_bool2scm (authentication_type_enables.admin.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
@@ -1938,18 +1938,18 @@ ex_get_bmc_lan_conf_auth_type_admin_enables ()
 SCM 
 ex_get_bmc_lan_conf_auth_type_oem_enables ()
 {
-  struct bmc_auth_level auth_type_enables;
+  struct bmc_auth_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_lan_conf_auth_type_enables (fi_get_ipmi_device (), 
-						    &auth_type_enables)) == 0)
+  if ((retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), 
+                                                              &authentication_type_enables)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (auth_type_enables.oem.type_none), 
-			     gh_bool2scm (auth_type_enables.oem.type_md2), 
-			     gh_bool2scm (auth_type_enables.oem.type_md5), 
-			     gh_bool2scm (auth_type_enables.oem.type_straight_password), 
-			     gh_bool2scm (auth_type_enables.oem.type_oem_proprietary), 
+      return_list = gh_list (gh_bool2scm (authentication_type_enables.oem.type_none), 
+			     gh_bool2scm (authentication_type_enables.oem.type_md2), 
+			     gh_bool2scm (authentication_type_enables.oem.type_md5), 
+			     gh_bool2scm (authentication_type_enables.oem.type_straight_password), 
+			     gh_bool2scm (authentication_type_enables.oem.type_oem_proprietary), 
 			     SCM_UNDEFINED);
     }
   
