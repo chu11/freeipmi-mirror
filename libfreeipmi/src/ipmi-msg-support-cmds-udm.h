@@ -25,19 +25,18 @@
 extern "C" {
 #endif
 
-int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
-				 uint8_t channel_medium_type);
-
-
 int8_t ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
 					fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev, 
 					fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
 				   fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
 					 fiid_obj_t obj_cmd_rs);
-int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
+
 int8_t ipmi_lan_close_session2 (ipmi_device_t *dev, 
 				fiid_obj_t obj_cmd_rs);
 
@@ -51,18 +50,16 @@ int8_t ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 				     uint8_t channel_privilege_level_limit, 
 				     uint8_t channel_privilege_level_limit_set_flag, 
 				     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
-				uint8_t user_id, 
-				char *user_name, 
-				fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
-				uint8_t user_id, 
-				fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
-				    uint8_t user_id, 
-				    uint8_t operation, 
-				    char *user_password,
-				    fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
+				     uint8_t channel_number,
+				     uint8_t channel_access_set_flag,
+				     fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
+				   uint8_t channel_number,
+				   fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
 				  uint8_t channel_number,
 				  uint8_t user_id,
@@ -72,17 +69,31 @@ int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 				  uint8_t user_privilege_level_limit,
 				  uint8_t user_session_number_limit, 
 				  fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 
 				  uint8_t channel_number,
 				  uint8_t user_id,
 				  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
-				     uint8_t channel_number,
-				     uint8_t channel_access_set_flag,
-				     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev, 
-				   uint8_t channel_number,
-				   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
+				uint8_t user_id, 
+				char *user_name, 
+				fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_user_name2 (ipmi_device_t *dev, 
+				uint8_t user_id, 
+				fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
+				    uint8_t user_id, 
+				    uint8_t operation, 
+				    char *user_password,
+				    fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_get_channel_number2 (ipmi_device_t *dev, 
+				 uint8_t channel_medium_type);
+
+int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
 
 #ifdef __cplusplus
 }

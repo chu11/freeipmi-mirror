@@ -32,12 +32,23 @@ libfreeipmi:
   * consistency in templates and functions
     - user_id.reserved vs. reserved vs. reserved1 etc.
     - user_name vs. username
+    - channel_num vs. channel_number
+    - priv_ vs. privilege
   * fill_kcs_get_sel_entry
     - why not the other arguments?
   * sensor-event-messages: get_28_event_data3_messages
   * remove ipmi_chksum_test
   * audit serial/lan/pef/sel/sensors template auditting      
-    - lan-cmds done, but need to fill in missing commands
+    - lan-cmds 
+       - clean function names (done)
+       - order code appropriately (done)
+       - missing commands
+       - audit templates (some done)
+    - msg-support-cmds
+       - clean function names (done)
+       - order code appropriately (done)
+       - missing commands
+       - audit templates
   * reg-space default  
   * udm parameter checks
   

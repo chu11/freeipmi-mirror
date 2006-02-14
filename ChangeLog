@@ -41,7 +41,15 @@
 
 	* fish/src/bmc-conf2.c, fish/src/scm-procedures.c,
 	fish/src/extensions.c, fish/extensions/bc-lan-conf-section.scm,
-	fish/extensions/bc-lan-conf-misc-section.scm: Adjust for changes.
+	fish/extensions/bc-lan-conf-misc-section.scm: Adjust for code
+	changes.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c: Code cleanup.  Make
+	function name consistent with rest of library.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds-udm.c: Adjust for code
+	changes.
 
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
