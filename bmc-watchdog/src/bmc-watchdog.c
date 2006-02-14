@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.41.2.3 2006-02-14 05:37:32 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.41.2.4 2006-02-14 22:42:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -860,9 +860,9 @@ _usage(void)
             "             %d = Suspend ARP Responses\n"
             "             %d = Do Not Suspend ARP Responses\n",
             IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
-            IPMI_BMC_GENERATED_GRATUITOUS_ARP_NO_SUSPEND,
+            IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND,
             IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND,
-            IPMI_BMC_GENERATED_ARP_RESPONSE_NO_SUSPEND);
+            IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
   if (cinfo.daemon)
     fprintf(stderr, 
             "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n");
@@ -1391,12 +1391,12 @@ _start_cmd(void)
       if (cinfo.gratuitous_arp)
         gratuitous_arp = cinfo.gratuitous_arp_val;
       else
-        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_NO_SUSPEND;
+        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
       if (cinfo.arp_response)
         arp_response = cinfo.arp_response_val;
       else
-        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_NO_SUSPEND;
+        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
         
       if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                        BMC_WATCHDOG_RETRY_ATTEMPT,
@@ -1621,12 +1621,12 @@ _daemon_setup(void)
       if (cinfo.gratuitous_arp)
         gratuitous_arp = cinfo.gratuitous_arp_val;
       else
-        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_NO_SUSPEND;
+        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
       
       if (cinfo.arp_response)
         arp_response = cinfo.gratuitous_arp_val;
       else
-        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_NO_SUSPEND;
+        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
       while (1)
         {

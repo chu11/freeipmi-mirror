@@ -794,7 +794,8 @@ fill_lan_set_ip_address_source (uint8_t channel_number,
 {
   int8_t rv;
 
-  if (!IPMI_IP_ADDRESS_SOURCE_VALID(ip_address_source)
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_IP_ADDRESS_SOURCE_VALID(ip_address_source)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -1180,6 +1181,7 @@ fill_lan_set_vlan_id (uint8_t channel_number,
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;

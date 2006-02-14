@@ -360,8 +360,8 @@ ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev,
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_BMC_GENERATED_GRATUITOUS_ARPS_VALID(bmc_generated_gratuitous_arps)
-      || !IPMI_BMC_GENERATED_ARP_RESPONSES_VALID(bmc_generated_arp_responses)
+      || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(bmc_generated_gratuitous_arps)
+      || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(bmc_generated_arp_responses)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
