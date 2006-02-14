@@ -51,6 +51,11 @@
 	* libfreeipmi/src/ipmi-msg-support-cmds-udm.c: Adjust for code
 	changes.
 
+	* libfreeipmi/src/ipmi-watchdog.h,
+	libfreeipmi/src/ipmi-watchdog.c: Code cleanup.
+
+	* libfreeipmi/src/bmc-watchdog.c: Adjust for code changes.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
         Collective fixes from branch al_fiid_rearchitect_branch at tag

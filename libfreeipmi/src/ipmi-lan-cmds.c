@@ -422,7 +422,7 @@ fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_suspend_bmc_arps_rq =
+fiid_template_t tmpl_cmd_suspend_bmc_arps_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -433,7 +433,7 @@ fiid_template_t tmpl_suspend_bmc_arps_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_suspend_bmc_arps_rs =
+fiid_template_t tmpl_cmd_suspend_bmc_arps_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -1359,10 +1359,10 @@ fill_get_lan_conf_param (uint8_t parameter_selector,
 }
 
 int8_t 
-fill_suspend_bmc_arps (uint8_t channel_number, 
-		       uint8_t gratuitous_arp_suspend, 
-		       uint8_t arp_response_suspend,
-                       fiid_obj_t obj_data_rq)
+fill_cmd_suspend_bmc_arps (uint8_t channel_number, 
+			   uint8_t gratuitous_arp_suspend, 
+			   uint8_t arp_response_suspend,
+			   fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1375,7 +1375,7 @@ fill_suspend_bmc_arps (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_suspend_bmc_arps_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_cmd_suspend_bmc_arps_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1395,7 +1395,7 @@ fill_suspend_bmc_arps (uint8_t channel_number,
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"reserved1", 
 		0);
-
+  
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"gratuitous_arp_suspend", 
 		gratuitous_arp_suspend);
@@ -1403,7 +1403,7 @@ fill_suspend_bmc_arps (uint8_t channel_number,
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"arp_response_suspend", 
 		arp_response_suspend);
-
+  
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"reserved", 
 		0);

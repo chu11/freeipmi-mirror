@@ -29,6 +29,7 @@ libfreeipmi:
   * test bad seq nums
   * chksum_test - confusing, not use?
   * need to test acpi
+  * reset watchdog timer CC specific error message
   * consistency in templates and functions
     - user_id.reserved vs. reserved vs. reserved1 etc.
     - user_name vs. username
@@ -42,16 +43,23 @@ libfreeipmi:
     - lan-cmds 
        - clean function names (done)
        - order code appropriately (done)
+       - parameter checking (done)
        - missing commands
        - audit templates (some done)
     - msg-support-cmds
        - clean function names (done)
        - order code appropriately (done)
+       - parameter checking
+       - missing commands
+       - audit templates
+    - watchdog
+       - clean function names (done)
+       - order code appropriately (done)
+       - parameter checking (done)
        - missing commands
        - audit templates
   * reg-space default  
   * udm parameter checks
-  
 
 fish:
 -----

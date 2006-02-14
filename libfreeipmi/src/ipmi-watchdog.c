@@ -99,27 +99,6 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_suspend_bmc_arps_rq =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "gratuitous_arp_suspend", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "arp_response_suspend", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
- 
-fiid_template_t tmpl_cmd_suspend_bmc_arps_rs =
-  {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "gratuitous_arp_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "arp_response_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
 int8_t
 fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd)
 {
@@ -154,6 +133,11 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use, uint8_t stop_timer, uint8_t log,
       || !IPMI_WATCHDOG_STOP_TIMER_VALID(stop_timer)
       || !IPMI_WATCHDOG_TIMER_USE_VALID(timer_use)
       || !IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(pre_timeout_interrupt)
+      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_frb2)
+      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_post)
+      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_os_load)
+      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_sms_os)
+      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_oem)
       || !IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(timeout_action))
     {
       errno = EINVAL;
@@ -214,40 +198,5 @@ fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd)
     }
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
-  return (0);
-}
-
-int8_t
-fill_cmd_suspend_bmc_arps (uint8_t channel_number,
-                           uint8_t gratuitous_arp_suspend,
-                           uint8_t arp_response_suspend,
-                           fiid_obj_t obj_cmd)
-{
-  int8_t rv;
-
-  if (!fiid_obj_valid(obj_cmd)
-      || !IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(gratuitous_arp_suspend)
-      || !IPMI_WATCHDOG_ARP_RESPONSE_VALID(arp_response_suspend))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
- 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_suspend_bmc_arps_rq)) < 0)
-      return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SUSPEND_BMC_ARPS);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"gratuitous_arp_suspend", gratuitous_arp_suspend);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"arp_response_suspend", arp_response_suspend);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
- 
   return (0);
 }

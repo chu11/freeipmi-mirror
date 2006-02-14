@@ -1508,7 +1508,7 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_suspend_bmc_arps_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_suspend_bmc_arps_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1517,13 +1517,13 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_suspend_bmc_arps_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)))
     goto cleanup;
 
-  if (fill_suspend_bmc_arps (channel_number, 
-                             gratuitous_arp_suspend, 
-                             arp_response_suspend,
-                             obj_cmd_rq) < 0)
+  if (fill_cmd_suspend_bmc_arps (channel_number, 
+				 gratuitous_arp_suspend, 
+				 arp_response_suspend,
+				 obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
