@@ -31,6 +31,8 @@
 	libfreeipmi/src/ipmi-sessions.c: Removed files.  Moved all code
 	into ipmi-lan-interface.h and ipmi-lan-interface.c.
 
+	* libfreeipmi/src/freeipmi.h: Remove ipmi-sessions.h.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
         Collective fixes from branch al_fiid_rearchitect_branch at tag

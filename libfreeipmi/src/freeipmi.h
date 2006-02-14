@@ -208,7 +208,6 @@ extern "C" {
 #include "ipmi-kcs-interface.h"
 #include "ipmi-ssif-interface.h"
 #include "ipmi-udm.h"
-#include "ipmi-sessions.h"
 #include "ipmi-ipmb-interface.h"
 #include "ipmi-lan-interface.h"
 #include "ipmi-lan-interface-udm.h"
@@ -325,7 +324,6 @@ extern char *__progname;
 #include <freeipmi/ipmi-kcs-interface.h>
 #include <freeipmi/ipmi-ssif-interface.h>
 #include <freeipmi/ipmi-udm.h>
-#include <freeipmi/ipmi-sessions.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
 #include <freeipmi/ipmi-lan-interface-udm.h>
 #include <freeipmi/ipmi-kcs-interface-udm.h>
