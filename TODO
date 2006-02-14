@@ -40,6 +40,9 @@ libfreeipmi:
   * sensor-event-messages: get_28_event_data3_messages
   * remove ipmi_chksum_test
   * audit serial/lan/pef/sel/sensors template auditting      
+      templates
+       - consistent
+       - reserved
     - lan-cmds 
        - clean function names (done)
        - order code appropriately (done)
@@ -59,9 +62,9 @@ libfreeipmi:
        - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
-       - missing commands
-       - audit templates
-       - audit function names, parameters
+       - missing commands (done)
+       - audit templates (done)
+       - audit function names, parameters (done)
     - rmcp
        - clean function names (done)
        - order code appropriately (done)

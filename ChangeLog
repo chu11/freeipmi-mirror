@@ -10,7 +10,7 @@
 	* libfreeipmi/src/ipmi-lan-cmds.h,
 	libfreeipmi/src/ipmi-lan-cmds.c: Code cleanup.
 
-	* fish/, libfreeipmi/: Adjust code appropriately.
+	* fish/, libfreeipmi/, bmc-watchdog/: Adjust code appropriately.
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
 	(ipmi_ipv4_address_string2int, ipmi_mac_address_string2int): New
@@ -18,6 +18,9 @@
 
 	* fish/src/bmc-conf2.c (set_bmc_lan_conf_ip_address,
 	set_bmc_lan_conf_mac_address): Use new function.
+
+	* libfreeipmi/src/ipmi-watchdog.h,
+	libfreeipmi/src/ipmi-watchdog.c: Code cleanup.
 
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
