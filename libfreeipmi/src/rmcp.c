@@ -23,38 +23,39 @@
 
 fiid_template_t tmpl_rmcp_hdr =
   {
-    {8, "ver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {5, "msg_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2, "msg_class.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "msg_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {5, "message_class.class", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "message_class.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "message_class.ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_asf_presence_ping = 
   {
-    {32, "iana_enterprise_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "msg_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "msg_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "message_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "data_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "data_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_asf_presence_pong =
   {
-    {32, "iana_enterprise_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "msg_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "msg_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "message_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "data_len", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "oem_iana_enterprise_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "data_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "oem_iana_enterprise_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32, "oem_defined", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,  "supported_entities.ver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "supported_entities.version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3,  "supported_entities.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,  "supported_entities.ipmi_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "supported_interactions", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {7,  "supported_interactions.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "supported_interactions.security_extensions", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {48, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0,  "", 0}
   };
@@ -64,7 +65,7 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 {
   int8_t rv;
 
-  if (!RMCP_HDR_MSG_CLASS_VALID(message_class)
+  if (!RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
       || !fiid_obj_valid(obj_rmcp_hdr))
     {
       errno = EINVAL;
@@ -80,30 +81,30 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
       return -1;
     }
 
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"ver", RMCP_VER_1_0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"version", RMCP_VER_1_0);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"seq_num", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.class", message_class);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.reserved1", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"msg_class.ack",
-                RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.class", message_class);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.reserved1", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.ack",
+                RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
 int8_t
 fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr) 
 {
-  return fill_rmcp_hdr(RMCP_HDR_MSG_CLASS_IPMI, obj_rmcp_hdr);
+  return fill_rmcp_hdr(RMCP_HDR_MESSAGE_CLASS_IPMI, obj_rmcp_hdr);
 }
 
 int8_t
 fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 {
-  return fill_rmcp_hdr(RMCP_HDR_MSG_CLASS_ASF, obj_rmcp_hdr);
+  return fill_rmcp_hdr(RMCP_HDR_MESSAGE_CLASS_ASF, obj_rmcp_hdr);
 }
 
 int8_t
-fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
+fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
 {
   int8_t rv;
 
@@ -122,13 +123,13 @@ fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd)
       return -1;
     }
 
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"iana_enterprise_num",
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"iana_enterprise_number",
                 htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_type",
-                RMCP_ASF_MSG_TYPE_PRESENCE_PING);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"msg_tag", msg_tag);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_type",
+                RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_tag", message_tag);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_len", 0x00);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_length", 0x00);
   return 0;
 }
 
@@ -246,7 +247,7 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
 }
 
 int8_t
-ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
+ipmi_rmcp_message_tag_chk (uint8_t message_tag, fiid_obj_t pong)
 {
   uint64_t val;
   int8_t rv;
@@ -266,10 +267,10 @@ ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong)
       return -1;
     }
 
-  if (fiid_obj_get (pong, (uint8_t *)"msg_tag", &val) < 0)
+  if (fiid_obj_get (pong, (uint8_t *)"message_tag", &val) < 0)
     return (-1);
 
-  if (msg_tag == val)
+  if (message_tag == val)
     return 1;
   else
     return 0;

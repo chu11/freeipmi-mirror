@@ -41,22 +41,24 @@ extern "C" {
 
 #define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK         0xFF
 
-#define RMCP_HDR_MSG_CLASS_BIT_RMCP_NORMAL   0x0
-#define RMCP_HDR_MSG_CLASS_BIT_RMCP_ACK      0x1
+#define RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL   0x0
+#define RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_ACK      0x1
 
-#define RMCP_HDR_MSG_CLASS_ASF   0x06
-#define RMCP_HDR_MSG_CLASS_IPMI  0x07
-#define RMCP_HDR_MSG_CLASS_OEM   0x08
+#define RMCP_HDR_MESSAGE_CLASS_ASF   0x06
+#define RMCP_HDR_MESSAGE_CLASS_IPMI  0x07
+#define RMCP_HDR_MESSAGE_CLASS_OEM   0x08
 
-#define RMCP_HDR_MSG_CLASS_VALID(__message_class) \
-        (((__message_class) == RMCP_HDR_MSG_CLASS_ASF \
-          || (__message_class) == RMCP_HDR_MSG_CLASS_IPMI \
-          || (__message_class) == RMCP_HDR_MSG_CLASS_OEM) ? 1 : 0)
+#define RMCP_HDR_MESSAGE_CLASS_VALID(__message_class) \
+        (((__message_class) == RMCP_HDR_MESSAGE_CLASS_ASF \
+          || (__message_class) == RMCP_HDR_MESSAGE_CLASS_IPMI \
+          || (__message_class) == RMCP_HDR_MESSAGE_CLASS_OEM) ? 1 : 0)
 
 #define RMCP_ASF_IANA_ENTERPRISE_NUM    0x11BE /* 4542 */
 
-#define RMCP_ASF_MSG_TYPE_PRESENCE_PING 0x80
-#define RMCP_ASF_MSG_TYPE_PRESENCE_PONG 0x40
+#define RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING 0x80
+#define RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG 0x40
+
+#define RMCP_ASF_MESSAGE_TAG_MAX 0xFE
 
 extern fiid_template_t tmpl_rmcp_hdr;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
@@ -65,14 +67,14 @@ extern fiid_template_t tmpl_cmd_asf_presence_pong;
 int8_t fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);
 int8_t fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
 int8_t fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
-/* MSG_TAG:
+/* MESSAGE_TAG:
    achu: Consecutive ping messages should use different message tags,
    ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
    optionally discard duplicate messages.  */
-int8_t fill_cmd_asf_presence_ping(uint8_t msg_tag, fiid_obj_t obj_cmd);
+int8_t fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd);
 int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len);
 int32_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
-int8_t ipmi_rmcp_msg_tag_chk (uint8_t msg_tag, fiid_obj_t pong);
+int8_t ipmi_rmcp_message_tag_chk (uint8_t message_tag, fiid_obj_t pong);
 
 #ifdef __cplusplus
 }

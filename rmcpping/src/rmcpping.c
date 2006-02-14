@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.11.2.3 2006-02-13 23:24:02 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.11.2.4 2006-02-14 18:56:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,12 +39,6 @@
 #include "ipmi-ping.h"
 
 #define _supported(x)   (x) ? "supported" : "not-supported"
-
-/* Avoid use of message tag number 0xFF.  Behavior of message tag 0xFF
- * is unpredictable.  See IPMI 1.5 Specification and DMTF RMCP
- * specification for details.
- */
-#define RMCP_MSG_TAG_MAX  0xFE
 
 static fiid_obj_t
 _fiid_obj_create(fiid_template_t tmpl)
@@ -98,7 +92,12 @@ createpacket(char *buffer,
   if (fill_rmcp_hdr_asf(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_rmcp_hdr_asf: %s", strerror(errno));
 
-  if (fill_cmd_asf_presence_ping(seq_num % (RMCP_MSG_TAG_MAX + 1), 
+  /* Avoid use of message tag number 0xFF.  Behavior of message tag 0xFF
+   * is unpredictable.  See IPMI 1.5 Specification and DMTF RMCP
+   * specification for details.
+   */
+
+  if (fill_cmd_asf_presence_ping(seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1), 
                                  obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
 
@@ -131,7 +130,7 @@ parsepacket(char *buffer,
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_rmcp_cmd = NULL;
-  uint64_t msg_type, ipmi_supported, msg_tag;
+  uint64_t message_type, ipmi_supported, message_tag;
   int retval = -1;
 
   assert(buffer != NULL && from != NULL);
@@ -154,22 +153,22 @@ parsepacket(char *buffer,
   if (unassemble_rmcp_pkt(buffer, buflen, obj_rmcp_hdr, obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
-  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"msg_type", (uint64_t *)&msg_type);
+  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"message_type", (uint64_t *)&message_type);
 
-  if (msg_type != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
+  if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
       retval = 0;
       goto cleanup;
     }
 
-  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"msg_tag", (uint64_t *)&msg_tag);
-  if (msg_tag != (seq_num % (RMCP_MSG_TAG_MAX + 1)))
+  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"message_tag", (uint64_t *)&message_tag);
+  if (message_tag != (seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
       retval = 0;
       goto cleanup;
     }
 
-  printf("pong received from %s: msg_tag=%u", from, (uint32_t)msg_tag);
+  printf("pong received from %s: message_tag=%u", from, (uint32_t)message_tag);
   if (verbose)
     {
       _fiid_obj_get(obj_rmcp_cmd, 
@@ -189,7 +188,7 @@ parsepacket(char *buffer,
 void 
 latepacket(unsigned int seq_num) 
 {
-  printf("pong timed out: msg_tag=%u\n", seq_num % (RMCP_MSG_TAG_MAX + 1));
+  printf("pong timed out: message_tag=%u\n", seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1));
 }
 
 int
@@ -217,9 +216,9 @@ int
 main(int argc, char **argv) 
 {
 #ifndef NDEBUG
-  ipmi_ping_setup(argc, argv, 0, RMCP_MSG_TAG_MAX, "hVc:i:I:t:vs:d");
+  ipmi_ping_setup(argc, argv, 0, RMCP_ASF_MESSAGE_TAG_MAX, "hVc:i:I:t:vs:d");
 #else
-  ipmi_ping_setup(argc, argv, 0, RMCP_MSG_TAG_MAX, "hVc:i:I:t:vs:");
+  ipmi_ping_setup(argc, argv, 0, RMCP_ASF_MESSAGE_TAG_MAX, "hVc:i:I:t:vs:");
 #endif
   ipmi_ping_loop(createpacket, parsepacket, latepacket, endresult);
   exit(1);                    /* NOT REACHED */

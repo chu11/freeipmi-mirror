@@ -1,3 +1,12 @@
+2006-02-14  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/rmcp.c (tmpl_cmd_asf_presence_pong): Add
+	security extensions bit field.
+
+	* libfreeipmi/src/rmcp.h, libfreeipmi/src/rmcp.c: Code cleanup.
+
+	* rmcpping/, ipmipower/, fish/: Adjust code appropriately.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c

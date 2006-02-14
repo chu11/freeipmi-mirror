@@ -31,7 +31,7 @@ static int8_t lan_channel_number;
 static uint8_t serial_channel_number_initialized = false;
 static int8_t serial_channel_number;
 
-static unsigned int rmcp_msg_tag = 0;
+static unsigned int rmcp_message_tag = 0;
 
 ipmi_device_t *
 fi_get_ipmi_device ()
@@ -608,16 +608,16 @@ display_get_dev_id ()
 }
 
 static unsigned int 
-_get_rmcp_msg_tag (void)
+_get_rmcp_message_tag (void)
 {
-  if (rmcp_msg_tag == 0xFE)
-    rmcp_msg_tag = 0; /* roll over */
+  if (rmcp_message_tag == 0xFE)
+    rmcp_message_tag = 0; /* roll over */
   
-  return (rmcp_msg_tag++);
+  return (rmcp_message_tag++);
 }
 
 int8_t
-ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t msg_tag, fiid_obj_t pong)
+ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t message_tag, fiid_obj_t pong)
 {
   int8_t rv;
 
@@ -667,7 +667,7 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
     if (fill_rmcp_hdr_asf (obj_hdr) < 0)
       goto cleanup1;
 
-    if (fill_cmd_asf_presence_ping (msg_tag, obj_cmd) < 0)
+    if (fill_cmd_asf_presence_ping (message_tag, obj_cmd) < 0)
       goto cleanup1;
 
     if (assemble_rmcp_pkt (obj_hdr, 
@@ -753,18 +753,18 @@ ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_le
 		     &val) < 0)
       goto cleanup2;
 
-    if (val != RMCP_ASF_MSG_TYPE_PRESENCE_PONG)
+    if (val != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
       {
 	errno = EBADMSG;
 	goto cleanup2;
       }
 
     if (fiid_obj_get(pong,
-		     (uint8_t *)"msg_tag",
+		     (uint8_t *)"message_tag",
 		     &val) < 0)
       goto cleanup2;
 
-    if (val != msg_tag)
+    if (val != message_tag)
       {
 	errno = EBADMSG;
 	goto cleanup2;
@@ -834,7 +834,7 @@ ipmi_ping (char *host, unsigned int sock_timeout)
     if ((status = ipmi_rmcp_ping (sockfd, 
                                   (struct sockaddr *) &to_addr, 
                                   sizeof (struct sockaddr_in), 
-                                  _get_rmcp_msg_tag (), 
+                                  _get_rmcp_message_tag (), 
                                   pong)) < 0)
       goto cleanup;
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.11.2.3 2006-02-13 23:24:02 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.11.2.4 2006-02-14 18:56:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -169,7 +169,7 @@ ipmipower_ping_process_pings(int *timeout)
         {
           fiid_obj_t rmcp_hdr = NULL;
           fiid_obj_t rmcp_pong = NULL;
-          uint64_t msg_type, ipmi_supported;
+          uint64_t message_type, ipmi_supported;
           
           rmcp_hdr = Fiid_obj_create(tmpl_rmcp_hdr);
           rmcp_pong = Fiid_obj_create(tmpl_cmd_asf_presence_pong);
@@ -205,12 +205,12 @@ ipmipower_ping_process_pings(int *timeout)
            * ensure the machine is still there.
            */
 
-          Fiid_obj_get(rmcp_pong, (uint8_t *)"msg_type", &msg_type);
+          Fiid_obj_get(rmcp_pong, (uint8_t *)"message_type", &message_type);
           Fiid_obj_get(rmcp_pong, 
 		       (uint8_t *)"supported_entities.ipmi_supported", 
 		       &ipmi_supported);
                       
-          if (msg_type == RMCP_ASF_MSG_TYPE_PRESENCE_PONG && ipmi_supported) 
+          if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported) 
             {
               if (conf->ping_packet_count && conf->ping_percent)
                 ics[i].ping_packet_count_recv++;
