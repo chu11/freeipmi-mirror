@@ -58,9 +58,6 @@ extern "C" {
 #define RMCP_ASF_MSG_TYPE_PRESENCE_PING 0x80
 #define RMCP_ASF_MSG_TYPE_PRESENCE_PONG 0x40
 
-/* #define RMCP_ASF_PRESENCE_PONG_MESSAGE_TAG_MAX 0xFE 
-   - Should be removed before release --ab@gnu.org.in */
-
 extern fiid_template_t tmpl_rmcp_hdr;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;

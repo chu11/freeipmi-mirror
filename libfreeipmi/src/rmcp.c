@@ -209,7 +209,7 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
 
   if (!pkt
       || !fiid_obj_valid(obj_rmcp_hdr)
-      || !fiid_obj_valid(obj_cmd)))
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
