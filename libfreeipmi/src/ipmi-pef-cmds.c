@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.23.2.3 2006-02-15 21:01:35 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.23.2.4 2006-02-15 21:55:40 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -1175,7 +1175,7 @@ fill_kcs_get_pef_caps (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-                IPMI_CMD_GET_PEF_CAPS);
+                IPMI_CMD_GET_PEF_CAPABILITIES);
   return 0;
 }
 

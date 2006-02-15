@@ -57,7 +57,7 @@ extern "C" {
 #define IPMI_CMD_GET_MSG                                    0x33
 #define IPMI_CMD_SEND_MSG                                   0x34
 #define IPMI_CMD_READ_EVENT_MSG_BUFFER                      0x35
-#define IPMI_CMD_GET_BT_INTERFACE_CAPS                      0x36
+#define IPMI_CMD_GET_BT_INTERFACE_CAPABILITIES              0x36
 #define IPMI_CMD_GET_SYSTEM_GUID                            0x37
 #define IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES    0x38
 #define IPMI_CMD_GET_SESSION_CHALLENGE                      0x39
@@ -79,12 +79,12 @@ extern "C" {
 #define IPMI_CMD_MASTER_WRITE_READ                          0x52
 
 // Chassis Device Commands 
-#define IPMI_CMD_GET_CHASSIS_CAPS                           0x00
+#define IPMI_CMD_GET_CHASSIS_CAPABILITIES                   0x00
 #define IPMI_CMD_GET_CHASSIS_STATUS                         0x01
-#define IPMI_CMD_CHASSIS_CTRL                               0x02
+#define IPMI_CMD_CHASSIS_CONTROL                            0x02
 #define IPMI_CMD_CHASSIS_RESET                              0x03
 #define IPMI_CMD_CHASSIS_IDENTIFY                           0x04
-#define IPMI_CMD_SET_CHASSIS_CAPS                           0x05
+#define IPMI_CMD_SET_CHASSIS_CAPABILITIES                   0x05
 #define IPMI_CMD_SET_POWER_RESTORE_POLICY                   0x06
 #define IPMI_CMD_GET_SYSTEM_RESTART_CAUSE                   0x07
 #define IPMI_CMD_SET_SYSTEM_BOOT_OPTS                       0x08
@@ -99,7 +99,7 @@ extern "C" {
 // unassigned                                               0x03h to 0x0F
 
 // PEF and Alerting Commands 
-#define IPMI_CMD_GET_PEF_CAPS                               0x10
+#define IPMI_CMD_GET_PEF_CAPABILITIES                       0x10
 #define IPMI_CMD_ARM_PEF_POSTPONE_TIMER                     0x11
 #define IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS           0x12
 #define IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS           0x13
@@ -186,7 +186,7 @@ extern "C" {
 #define IPMI_CMD_SET_ICMB_ADDR                              0x03
 #define IPMI_CMD_SET_BRIDGE_PROXY_ADDR                      0x04
 #define IPMI_CMD_GET_BRIDGE_STATS                           0x05
-#define IPMI_CMD_GET_ICMB_CAPS                              0x06
+#define IPMI_CMD_GET_ICMB_CAPABILITIES                      0x06
 #define IPMI_CMD_CLEAR_BRIDGE_STATS                         0x08
 #define IPMI_CMD_GET_BRIDGE_PROXY_ADDR                      0x09
 #define IPMI_CMD_GET_ICMB_CONNECTOR_INFO                    0x0A

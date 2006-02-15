@@ -84,6 +84,13 @@ libfreeipmi:
        - audit templates (done)
        - audit function names, parameters (done)
     - chassis-cmds
+       - clean function names (done)
+       - order code appropriately (done)
+       - parameter checking (done)
+       - missing commands
+       - audit templates (done)
+       - audit function names, parameters (done)
+       - function parameter ordering (done)
     - pef-cmds
     - sdr-repo-cmds
     - sel-cmds

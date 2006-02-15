@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21.2.7 2006-02-15 19:19:48 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.21.2.8 2006-02-15 21:55:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -160,8 +160,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->clos_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
   ip->chas_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
   ip->chas_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
-  ip->ctrl_req = Fiid_obj_create(tmpl_cmd_chassis_ctrl_rq); 
-  ip->ctrl_res = Fiid_obj_create(tmpl_cmd_chassis_ctrl_rs); 
+  ip->ctrl_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
+  ip->ctrl_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;
@@ -870,7 +870,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       Fiid_obj_get(ip->chas_res, 
-                   (uint8_t *)"power_state.power_on",
+                   (uint8_t *)"current_power_state.power_is_on",
                    &power_state);
 
       if (ip->cmd == POWER_CMD_POWER_STATUS) 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.18.2.6 2006-02-15 19:19:48 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.18.2.7 2006-02-15 21:55:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,9 +75,9 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == CHAS_RES)
     return &tmpl_cmd_get_chassis_status_rs[0];
   else if (pkt == CTRL_REQ)
-    return &tmpl_cmd_chassis_ctrl_rq[0];
+    return &tmpl_cmd_chassis_control_rq[0];
   else if (pkt == CTRL_RES)
-    return &tmpl_cmd_chassis_ctrl_rs[0];
+    return &tmpl_cmd_chassis_control_rs[0];
   else
     err_exit("ipmipower_packet_cmd_template: Invalid packet type(%s:%d)",
              ip->ic->hostname, ip->protocol_state);
@@ -654,17 +654,17 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       if (ip->cmd == POWER_CMD_POWER_OFF)
-        command = IPMI_CHASSIS_CTRL_POWER_DOWN;
+        command = IPMI_CHASSIS_CONTROL_POWER_DOWN;
       else if (ip->cmd == POWER_CMD_POWER_ON)
-        command = IPMI_CHASSIS_CTRL_POWER_UP;
+        command = IPMI_CHASSIS_CONTROL_POWER_UP;
       else if (ip->cmd == POWER_CMD_POWER_CYCLE)
-        command = IPMI_CHASSIS_CTRL_POWER_CYCLE;
+        command = IPMI_CHASSIS_CONTROL_POWER_CYCLE;
       else if (ip->cmd == POWER_CMD_POWER_RESET)
-        command = IPMI_CHASSIS_CTRL_HARD_RESET;
+        command = IPMI_CHASSIS_CONTROL_HARD_RESET;
       else if (ip->cmd == POWER_CMD_PULSE_DIAG_INTR)
-        command = IPMI_CHASSIS_CTRL_PULSE_DIAG_INTR;
+        command = IPMI_CHASSIS_CONTROL_PULSE_DIAGNOSTIC_INTERRUPT;
       else if (ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS)
-        command = IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN;
+        command = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
 
       Fiid_obj_get(ip->actv_res, 
                    (uint8_t *)"initial_inbound_sequence_number", 
@@ -689,9 +689,9 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-      if (fill_cmd_chassis_ctrl(command, ip->ctrl_req) < 0)
+      if (fill_cmd_chassis_control(command, ip->ctrl_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
-                 "fill_cmd_chassis_ctrl: %s", 
+                 "fill_cmd_chassis_control: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if ((len = assemble_ipmi_lan_pkt(ip->rmcp_req,

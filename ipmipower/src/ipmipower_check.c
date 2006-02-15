@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.16.2.4 2006-02-15 19:19:48 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.16.2.5 2006-02-15 21:55:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -283,7 +283,7 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == CHAS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CTRL_RES) 
-    expected_cmd = IPMI_CMD_CHASSIS_CTRL;
+    expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
   
   if (cmd != expected_cmd)
     dbg("_check_command(%s:%d): cmd bad: %x", 

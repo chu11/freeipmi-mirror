@@ -25,16 +25,16 @@
 extern "C" {
 #endif
 
-#define IPMI_DEVICE_ID_UNSPECIFIED     0x00
-#define IPMI_MANUFACTURER_ID_UNSPECIFIED    0x000000
-#define IPMI_MANUFACTURER_ID_RESERVED       0x0FFFFF
-#define IPMI_MANUFACTURER_ID_INTEL          0x157
+#define IPMI_DEVICE_ID_UNSPECIFIED        0x00
+#define IPMI_MANUFACTURER_ID_UNSPECIFIED  0x000000
+#define IPMI_MANUFACTURER_ID_RESERVED     0x0FFFFF
+#define IPMI_MANUFACTURER_ID_INTEL        0x157
 
-#define IPMI_PRODUCT_ID_SR870BN4       0x100
-#define IPMI_PRODUCT_ID_CDC6440        0x100
+#define IPMI_PRODUCT_ID_SR870BN4          0x100
+#define IPMI_PRODUCT_ID_CDC6440           0x100
 
-#define IPMI_PRODUCT_ID_SE7501WV2      0x1B
-#define IPMI_PRODUCT_ID_CDC1620        0x1B
+#define IPMI_PRODUCT_ID_SE7501WV2         0x1B
+#define IPMI_PRODUCT_ID_CDC1620           0x1B
 
 extern fiid_template_t tmpl_cmd_get_device_id_rq;
 extern fiid_template_t tmpl_cmd_get_device_id_rs;

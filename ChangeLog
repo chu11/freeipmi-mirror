@@ -11,6 +11,15 @@
 	libfreeipmi/src/ipmi-dev-global-cmds.c: Cleanup.
 
 	* fish/, bmc-info/, libfreeipmi/: Adjust code appropriately.
+
+	* libfreeipmi/src/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c: Add new reset watchdog timer error
+	codes and error strings.
+
+	* libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.c: Code cleanup.
+
+	* ipmipower/: Adjusted code appropriately.
 	
 2006-02-14  Albert Chu <chu11@llnl.gov>
 

@@ -174,6 +174,13 @@ ipmi_strerror_r (uint8_t cmd,
               SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR);
             }
 	  break;
+	case IPMI_CMD_RESET_WATCHDOG_TIMER:
+          switch (comp_code)
+            {
+            case IPMI_COMPO_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG:
+              SNPRINTF_RETURN (IPMI_COMPO_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
+            }
+	  break;
 	case IPMI_CMD_DELETE_SEL_ENTRY:
           switch (comp_code)
             {

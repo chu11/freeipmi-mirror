@@ -21,6 +21,52 @@
 #include "freeipmi.h"
 
 int8_t 
+ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
+			      fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int8_t ret, rv = -1;
+
+  if (!dev
+      || !fiid_obj_valid(obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_chassis_status_rq)))
+    goto cleanup;
+
+  if (fill_cmd_get_chassis_status (obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+		IPMI_BMC_IPMB_LUN_BMC, 
+		IPMI_NET_FN_CHASSIS_RQ, 
+		obj_cmd_rq, 
+		obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
 ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
 				    uint8_t power_restore_policy, 
 				    fiid_obj_t obj_cmd_rs)
@@ -50,52 +96,6 @@ ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev,
 
   if (fill_cmd_set_power_restore_policy (power_restore_policy, 
 					 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_CHASSIS_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
-  return (rv);
-}
-
-int8_t 
-ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
-			      fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
-
-  if (!dev
-      || !fiid_obj_valid(obj_cmd_rs))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_chassis_status_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_chassis_status_rq)))
-    goto cleanup;
-
-  if (fill_cmd_get_chassis_status (obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
