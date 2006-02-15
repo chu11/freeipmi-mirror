@@ -35,19 +35,19 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.straight_passwd_key", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_type.oem_prop", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2,  "auth_type.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_status.anonymous_login", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_status.null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_status.non_null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_status.user_level_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,  "auth_status.per_message_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {3,  "auth_status.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.none", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.md2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.md5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.straight_passwd_key", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_type.oem_prop", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,  "authentication_type.reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.anonymous_login", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.non_null_username", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.user_level_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "authentication_status.per_message_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {3,  "authentication_status.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {24, "oem_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -57,7 +57,7 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs =
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {128, "user_name", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -75,7 +75,7 @@ fiid_template_t tmpl_cmd_get_session_challenge_rs =
 fiid_template_t tmpl_cmd_activate_session_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -88,7 +88,7 @@ fiid_template_t tmpl_cmd_activate_session_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,  "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32, "initial_inbound_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -336,7 +336,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_get_session_challenge (uint8_t auth_type, 
+fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				char *user_name, 
 				uint32_t user_name_len, 
 				fiid_obj_t obj_cmd)
@@ -347,7 +347,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
    * termination in IPMI packet not required
    */
-  if (!IPMI_AUTH_TYPE_VALID(auth_type)
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
       || !fiid_obj_valid(obj_cmd))
     {
@@ -365,7 +365,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
     }
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
 
   /* achu: The BMC may ignore any '\0' characters that indicate the
@@ -388,7 +388,7 @@ fill_cmd_get_session_challenge (uint8_t auth_type,
 }
 
 int8_t 
-fill_cmd_activate_session (uint8_t auth_type, 
+fill_cmd_activate_session (uint8_t authentication_type, 
 			   uint8_t maximum_privilege_level, 
 			   uint8_t *challenge_string, 
 			   uint32_t challenge_string_len, 
@@ -398,7 +398,7 @@ fill_cmd_activate_session (uint8_t auth_type,
   int8_t rv;
   char buf[IPMI_CHALLENGE_STRING_LENGTH];
 
-  if (!IPMI_AUTH_TYPE_VALID(auth_type)
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
       || !challenge_string
       || challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH
@@ -418,7 +418,7 @@ fill_cmd_activate_session (uint8_t auth_type,
     }
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_SESSION);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);

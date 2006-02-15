@@ -73,18 +73,18 @@ extern "C" {
           || (__channel_number) == IPMI_CHANNEL_SESSION_BASED \
           || (__channel_number) == IPMI_CHANNEL_CURRENT_CHANNEL) ? 1 : 0)       
 
-#define IPMI_AUTH_TYPE_NONE                0x00
-#define IPMI_AUTH_TYPE_MD2                 0x01
-#define IPMI_AUTH_TYPE_MD5                 0x02
-#define IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
-#define IPMI_AUTH_TYPE_OEM_PROP            0x05
+#define IPMI_AUTHENTICATION_TYPE_NONE                0x00
+#define IPMI_AUTHENTICATION_TYPE_MD2                 0x01
+#define IPMI_AUTHENTICATION_TYPE_MD5                 0x02
+#define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY 0x04
+#define IPMI_AUTHENTICATION_TYPE_OEM_PROP            0x05
 
-#define IPMI_AUTH_TYPE_VALID(__auth_type) \
-        (((__auth_type) == IPMI_AUTH_TYPE_NONE \
-          || (__auth_type) == IPMI_AUTH_TYPE_MD2 \
-          || (__auth_type) == IPMI_AUTH_TYPE_MD5 \
-          || (__auth_type) == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
-          || (__auth_type) == IPMI_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
+#define IPMI_AUTHENTICATION_TYPE_VALID(__authentication_type) \
+        (((__authentication_type) == IPMI_AUTHENTICATION_TYPE_NONE \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD2 \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD5 \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP) ? 1 : 0) 
 
 #define IPMI_PRIVILEGE_LEVEL_RESERVED     0x00
 #define IPMI_PRIVILEGE_LEVEL_CALLBACK     0x01
@@ -230,12 +230,12 @@ int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 
                                                          fiid_obj_t obj_cmd);
   
-int8_t fill_cmd_get_session_challenge (uint8_t auth_type, 
+int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				       char *user_name, 
 				       uint32_t user_name_len, 
 				       fiid_obj_t obj_cmd);
 
-int8_t fill_cmd_activate_session (uint8_t auth_type, 
+int8_t fill_cmd_activate_session (uint8_t authentication_type, 
 				  uint8_t maximum_privilege_level, 
 				  uint8_t *challenge_string, 
 				  uint32_t challenge_string_len, 

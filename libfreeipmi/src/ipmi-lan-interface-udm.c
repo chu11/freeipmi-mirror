@@ -23,14 +23,14 @@
 
 /* XXX - need to clean this up */
 static int32_t
-_ipmi_lan_pkt_min_size(uint8_t auth_type,
+_ipmi_lan_pkt_min_size(uint8_t authentication_type,
                        fiid_template_t tmpl_lan_msg, 
                        fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
@@ -41,35 +41,35 @@ _ipmi_lan_pkt_min_size(uint8_t auth_type,
   ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_block_len_bytes (tmpl_lan_session_hdr,
-					      (uint8_t *)"auth_type",
+					      (uint8_t *)"authentication_type",
 					      (uint8_t *)"session_id")) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_field_len_bytes (tmpl_lan_session_hdr,
 					      (uint8_t *)"ipmi_msg_len")) < 0));
   msg_len += len;
   
-  if (auth_type == IPMI_AUTH_TYPE_MD2
-      || auth_type == IPMI_AUTH_TYPE_MD5
-      || auth_type == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_AUTH_TYPE_OEM_PROP) 
+  if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
     msg_len += IPMI_MAX_AUTH_CODE_LENGTH;
   
   return msg_len;
 }
                        
 static int32_t 
-_ipmi_lan_pkt_size (uint8_t auth_type, 
+_ipmi_lan_pkt_size (uint8_t authentication_type, 
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
   
-  assert(IPMI_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  ERR(!((len = _ipmi_lan_pkt_min_size(auth_type, tmpl_lan_msg, obj_cmd)) < 0));
+  ERR(!((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0));
   msg_len += len;
   ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
   msg_len += len;
@@ -78,13 +78,13 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
 }
 
 static int32_t 
-_ipmi_lan_pkt_rq_size (uint8_t auth_type, fiid_obj_t obj_cmd)
+_ipmi_lan_pkt_rq_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
-  return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rq, obj_cmd);
+  return _ipmi_lan_pkt_size(authentication_type, tmpl_lan_msg_hdr_rq, obj_cmd);
 }
 
 static int32_t 
-_ipmi_max_lan_pkt_size (uint8_t auth_type, 
+_ipmi_max_lan_pkt_size (uint8_t authentication_type, 
                         fiid_template_t tmpl_lan_msg, 
                         fiid_obj_t obj_cmd)
 {
@@ -93,11 +93,11 @@ _ipmi_max_lan_pkt_size (uint8_t auth_type,
   fiid_field_t *tmpl = NULL;
   int32_t rv = -1;
 
-  assert(IPMI_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  if ((len = _ipmi_lan_pkt_min_size(auth_type, tmpl_lan_msg, obj_cmd)) < 0)
+  if ((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0)
     goto cleanup;
   msg_len += len;
   
@@ -115,9 +115,9 @@ _ipmi_max_lan_pkt_size (uint8_t auth_type,
 }
 
 static int32_t 
-_ipmi_max_lan_pkt_rs_size (uint8_t auth_type, fiid_obj_t obj_cmd)
+_ipmi_max_lan_pkt_rs_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
-  return _ipmi_max_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rs, obj_cmd);
+  return _ipmi_max_lan_pkt_size(authentication_type, tmpl_lan_msg_hdr_rs, obj_cmd);
 }
 
 int8_t 
@@ -167,7 +167,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     int32_t pkt_len;
     int status = 0;
     
-    if ((pkt_len = _ipmi_lan_pkt_rq_size (dev->io.outofband.auth_type, obj_cmd_rq)) < 0)
+    if ((pkt_len = _ipmi_lan_pkt_rq_size (dev->io.outofband.authentication_type, obj_cmd_rq)) < 0)
       return (-1);
     pkt = alloca (pkt_len);
     ERR (pkt);
@@ -178,7 +178,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
                            dev->lun,
                            dev->io.outofband.rq_seq,
                            dev->io.outofband.rq.obj_lan_msg_hdr) != -1);
-    ERR (fill_lan_session_hdr (dev->io.outofband.auth_type,
+    ERR (fill_lan_session_hdr (dev->io.outofband.authentication_type,
                                dev->io.outofband.session_seq_num,
                                dev->io.outofband.session_id,
                                NULL,
@@ -222,7 +222,7 @@ printf("DEBUGGING:\n");
     int32_t bytes_received = 0;
     int32_t max_pkt_len;
     
-    if ((max_pkt_len = _ipmi_max_lan_pkt_rs_size (dev->io.outofband.auth_type, obj_cmd_rs)) < 0)
+    if ((max_pkt_len = _ipmi_max_lan_pkt_rs_size (dev->io.outofband.authentication_type, obj_cmd_rs)) < 0)
       return (-1);
     ERR (max_pkt_len <= pkt_max_size);
     
@@ -246,7 +246,7 @@ printf("DEBUGGING:\n");
     
     ERR (ipmi_lan_check_session_authcode (pkt, 
                                           bytes_received, 
-                                          dev->io.outofband.auth_type,
+                                          dev->io.outofband.authentication_type,
                                           dev->io.outofband.password,
                                           IPMI_MAX_AUTH_CODE_LENGTH) == 1);
 
@@ -287,7 +287,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
     uint32_t pkt_len;
     int status = 0;
     
-    if ((pkt_len = _ipmi_lan_pkt_rq_size (dev->io.outofband.auth_type, obj_cmd_rq)) < 0)
+    if ((pkt_len = _ipmi_lan_pkt_rq_size (dev->io.outofband.authentication_type, obj_cmd_rq)) < 0)
       return (-1);
     pkt = alloca (pkt_len);
     ERR (pkt);
@@ -298,7 +298,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
                            dev->lun,
                            dev->io.outofband.rq_seq,
                            dev->io.outofband.rq.obj_lan_msg_hdr) != -1);
-    ERR (fill_lan_session_hdr (dev->io.outofband.auth_type,
+    ERR (fill_lan_session_hdr (dev->io.outofband.authentication_type,
                                dev->io.outofband.session_seq_num,
                                dev->io.outofband.session_id,
                                NULL,
@@ -448,11 +448,11 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       return (-1);
 
     if ((session_len = fiid_template_block_len_bytes (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
-                                                      (uint8_t *)"auth_type",
+                                                      (uint8_t *)"authentication_type",
                                                       (uint8_t *)"session_id")) < 0)
       return (-1);
 
-    if (dev->io.outofband.auth_type != IPMI_AUTH_TYPE_NONE)
+    if (dev->io.outofband.authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
       authcode_len = IPMI_MAX_AUTH_CODE_LENGTH;
     else
       authcode_len = 0;
@@ -517,7 +517,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 
     if (ipmi_lan_check_session_authcode (pkt, 
                                          bytes_received, 
-                                         dev->io.outofband.auth_type,
+                                         dev->io.outofband.authentication_type,
                                          dev->io.outofband.password,
                                          IPMI_MAX_AUTH_CODE_LENGTH) != 1)
       {

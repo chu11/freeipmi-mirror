@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.15.2.4 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.15.2.5 2006-02-15 07:04:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -99,7 +99,7 @@ createpacket(char *buffer,
   if (fill_rmcp_hdr_ipmi(obj_rmcp_hdr) < 0)
     ipmi_ping_err_exit("fill_rmcp_hdr_ipmi: %s", strerror(errno));
 
-  if (fill_lan_session_hdr(IPMI_AUTH_TYPE_NONE,
+  if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE,
                            0, 
                            0,
                            NULL, 
@@ -266,34 +266,34 @@ parsepacket(char *buffer,
   if (verbose)
     {
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_type.none", 
+		    (uint8_t *)"authentication_type.none", 
 		    (uint64_t *)&none);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_type.md2", 
+		    (uint8_t *)"authentication_type.md2", 
 		    (uint64_t *)&md2);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_type.md5", 
+		    (uint8_t *)"authentication_type.md5", 
 		    (uint64_t *)&md5);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_type.straight_passwd_key", 
+		    (uint8_t *)"authentication_type.straight_passwd_key", 
 		    (uint64_t *)&straight_passwd_key);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_type.oem_prop", 
+		    (uint8_t *)"authentication_type.oem_prop", 
 		    (uint64_t *)&oem);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_status.anonymous_login", 
+		    (uint8_t *)"authentication_status.anonymous_login", 
 		    (uint64_t *)&anonymous_login);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_status.null_username", 
+		    (uint8_t *)"authentication_status.null_username", 
 		    (uint64_t *)&null_username);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_status.non_null_username", 
+		    (uint8_t *)"authentication_status.non_null_username", 
 		    (uint64_t *)&non_null_username);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_status.user_level_authentication", 
+		    (uint8_t *)"authentication_status.user_level_authentication", 
 		    (uint64_t *)&user_level_authentication);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"auth_status.per_message_authentication", 
+		    (uint8_t *)"authentication_status.per_message_authentication", 
 		    (uint64_t *)&per_message_authentication);
       printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 

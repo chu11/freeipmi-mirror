@@ -92,7 +92,7 @@ struct ipmi_device
       struct sockaddr    remote_host;
       unsigned int       remote_host_len;
       
-      uint8_t           auth_type;
+      uint8_t           authentication_type;
       uint8_t           challenge_string[IPMI_INTERFACE_CHALLENGE_STR_LEN];
       uint32_t          session_id;
       uint32_t          session_seq_num;
@@ -142,7 +142,7 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 ipmi_mode_t mode, 
 			 struct sockaddr *remote_host, 
 			 size_t remote_host_len, 
-			 uint8_t auth_type, 
+			 uint8_t authentication_type, 
 			 char *username, 
 			 char *password, 
 			 uint8_t privilege_level);

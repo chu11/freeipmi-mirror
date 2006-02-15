@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21.2.5 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.21.2.6 2006-02-15 07:04:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -340,21 +340,21 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   
   if (pkt == AUTH_RES || pkt == SESS_RES)
-    at = IPMI_AUTH_TYPE_NONE;
+    at = IPMI_AUTHENTICATION_TYPE_NONE;
   else if (pkt == ACTV_RES)
     at = ip->authtype;
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         {
-          at = IPMI_AUTH_TYPE_NONE;
+          at = IPMI_AUTHENTICATION_TYPE_NONE;
           check_authcode_retry_flag++;
         }
       else
         at = ip->authtype;
     }
 
-  if (at != IPMI_AUTH_TYPE_NONE)
+  if (at != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       if (strlen(conf->password))
         password = (uint8_t *)conf->password;
@@ -390,7 +390,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
       at = ip->authtype;
 
-      if (at != IPMI_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -649,28 +649,28 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        */
 
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_type.none", 
+                   (uint8_t *)"authentication_type.none", 
 		   &auth_type_none);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_type.md2", 
+                   (uint8_t *)"authentication_type.md2", 
 		   &auth_type_md2);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_type.md5", 
+                   (uint8_t *)"authentication_type.md5", 
 		   &auth_type_md5);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_type.straight_passwd_key", 
+                   (uint8_t *)"authentication_type.straight_passwd_key", 
 		   &auth_type_straight_passwd_key);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_status.anonymous_login", 
+                   (uint8_t *)"authentication_status.anonymous_login", 
 		   &auth_status_anonymous_login);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_status.null_username",
+                   (uint8_t *)"authentication_status.null_username",
 		   &auth_status_null_username);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_status.non_null_username", 
+                   (uint8_t *)"authentication_status.non_null_username", 
 		   &auth_status_non_null_username);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_status.per_message_authentication",
+                   (uint8_t *)"authentication_status.per_message_authentication",
 		   &auth_status_per_message_authentication);
 
       /* Does the remote BMC's authentication configuration support

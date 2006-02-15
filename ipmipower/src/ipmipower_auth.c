@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.7.2.3 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.7.2.4 2006-02-15 07:04:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -103,16 +103,16 @@ ipmipower_ipmi_auth_type(auth_type_t at)
   switch(at) 
     {
     case AUTH_TYPE_NONE:
-      return IPMI_AUTH_TYPE_NONE;
+      return IPMI_AUTHENTICATION_TYPE_NONE;
       break;
     case AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      return IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
+      return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY;
       break;
     case AUTH_TYPE_MD2:
-      return IPMI_AUTH_TYPE_MD2;
+      return IPMI_AUTHENTICATION_TYPE_MD2;
       break;
     case AUTH_TYPE_MD5:
-      return IPMI_AUTH_TYPE_MD5;
+      return IPMI_AUTHENTICATION_TYPE_MD5;
       break;
     default:
       err_exit("ipmipower_ipmi_auth_type: Invalid Auth Type: %d\n", at);

@@ -68,7 +68,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		     ipmi_mode_t mode, 
 		     struct sockaddr *remote_host, 
 		     size_t remote_host_len, 
-		     uint8_t auth_type, 
+		     uint8_t authentication_type, 
 		     char *username, 
 		     char *password, 
 		     uint8_t privilege_level)
@@ -96,7 +96,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_AUTH_TYPE_VALID (auth_type) == 0)
+  if (IPMI_AUTHENTICATION_TYPE_VALID (authentication_type) == 0)
     {
       errno = EINVAL;
       return (-1);
@@ -126,7 +126,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->mode = mode;
   dev->io.outofband.remote_host = *remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
-  dev->io.outofband.auth_type = auth_type;
+  dev->io.outofband.authentication_type = authentication_type;
   memset(dev->io.outofband.username, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (username != NULL)
     {

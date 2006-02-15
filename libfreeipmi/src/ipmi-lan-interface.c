@@ -23,7 +23,7 @@
 
 fiid_template_t tmpl_lan_session_hdr =
   {
-    {8,   "auth_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32,  "session_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32,  "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {128, "auth_code", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
@@ -114,11 +114,11 @@ fill_lan_msg_hdr (uint8_t net_fn,
 }
 
 int8_t
-fill_lan_session_hdr  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_obj_t obj_hdr)
+fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_seq_num, uint32_t session_id, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_obj_t obj_hdr)
 {
   int8_t rv;
 
-  if (!IPMI_AUTH_TYPE_VALID(auth_type)
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || (auth_code_data && auth_code_data_len > IPMI_MAX_AUTH_CODE_LENGTH)
       || !fiid_obj_valid(obj_hdr))
     {
@@ -135,7 +135,7 @@ fill_lan_session_hdr  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t ses
       return (-1);
     }
 
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"auth_type", auth_type);
+  FIID_OBJ_SET (obj_hdr, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_seq_num", inbound_seq_num);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);
  
@@ -145,7 +145,7 @@ fill_lan_session_hdr  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t ses
    */
   ERR_EXIT (fiid_obj_clear_field (obj_hdr, (uint8_t *)"auth_code") == 0);
   
-  if (auth_type != IPMI_AUTH_TYPE_NONE 
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE 
       && auth_code_data)
     {
       char buf[IPMI_MAX_AUTH_CODE_LENGTH];
@@ -163,14 +163,14 @@ fill_lan_session_hdr  (uint8_t auth_type, uint32_t inbound_seq_num, uint32_t ses
 }
 
 static int32_t
-_ipmi_lan_pkt_min_size(uint8_t auth_type,
+_ipmi_lan_pkt_min_size(uint8_t authentication_type,
                        fiid_template_t tmpl_lan_msg, 
                        fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
@@ -181,35 +181,35 @@ _ipmi_lan_pkt_min_size(uint8_t auth_type,
   ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_block_len_bytes (tmpl_lan_session_hdr,
-					      (uint8_t *)"auth_type",
+					      (uint8_t *)"authentication_type",
 					      (uint8_t *)"session_id")) < 0));
   msg_len += len;
   ERR(!((len = fiid_template_field_len_bytes (tmpl_lan_session_hdr,
 					      (uint8_t *)"ipmi_msg_len")) < 0));
   msg_len += len;
   
-  if (auth_type == IPMI_AUTH_TYPE_MD2
-      || auth_type == IPMI_AUTH_TYPE_MD5
-      || auth_type == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_AUTH_TYPE_OEM_PROP) 
+  if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
     msg_len += IPMI_MAX_AUTH_CODE_LENGTH;
   
   return msg_len;
 }
                        
 static int32_t 
-_ipmi_lan_pkt_size (uint8_t auth_type, 
+_ipmi_lan_pkt_size (uint8_t authentication_type, 
 		    fiid_template_t tmpl_lan_msg, 
 		    fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
   
-  assert(IPMI_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  ERR(!((len = _ipmi_lan_pkt_min_size(auth_type, tmpl_lan_msg, obj_cmd)) < 0));
+  ERR(!((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0));
   msg_len += len;
   ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
   msg_len += len;
@@ -218,9 +218,9 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
 }
 
 static int32_t 
-_ipmi_lan_pkt_rq_size (uint8_t auth_type, fiid_obj_t obj_cmd)
+_ipmi_lan_pkt_rq_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
-  return _ipmi_lan_pkt_size(auth_type, tmpl_lan_msg_hdr_rq, obj_cmd);
+  return _ipmi_lan_pkt_size(authentication_type, tmpl_lan_msg_hdr_rq, obj_cmd);
 }
 
 /*
@@ -245,7 +245,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		       uint8_t *pkt, 
 		       uint32_t pkt_len)
 {
-  uint64_t auth_type;
+  uint64_t authentication_type;
   uint32_t indx, required_len;
   uint8_t *auth_code_field_ptr = NULL;
   uint8_t *chksum_data_ptr = NULL;
@@ -311,10 +311,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    * fiid_obj_packet_valid() b/c ipmi_msg_len is probably not set yet.
    */
 
-  if ((len = fiid_obj_field_len(obj_lan_session_hdr, (uint8_t *)"auth_type")) < 0)
+  if ((len = fiid_obj_field_len(obj_lan_session_hdr, (uint8_t *)"authentication_type")) < 0)
     return (-1);
 
-  if ((req_len = fiid_template_field_len(tmpl_lan_session_hdr, (uint8_t *)"auth_type")) < 0)
+  if ((req_len = fiid_template_field_len(tmpl_lan_session_hdr, (uint8_t *)"authentication_type")) < 0)
     return (-1);
   
   if (len != req_len)
@@ -365,16 +365,16 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return (-1);
     }
 
-  if (fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"auth_type", &auth_type) < 0)
+  if (fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"authentication_type", &authentication_type) < 0)
     return -1;
 
-  if (!IPMI_AUTH_TYPE_VALID(auth_type))
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type))
     {
       errno = EINVAL;
       return -1;
     }
   
-  required_len = _ipmi_lan_pkt_rq_size((uint8_t)auth_type, obj_cmd);
+  required_len = _ipmi_lan_pkt_rq_size((uint8_t)authentication_type, obj_cmd);
   if (pkt_len < required_len) 
     {
       errno = EMSGSIZE;
@@ -390,7 +390,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   indx += len;
 
   if ((len = fiid_obj_get_block(obj_lan_session_hdr,
-				(uint8_t *)"auth_type",
+				(uint8_t *)"authentication_type",
 				(uint8_t *)"session_id",
 				pkt + indx,
 				pkt_len - indx)) < 0)
@@ -398,7 +398,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   indx += len;
 
   /* auth_code generated last.  Save pointers for later calculation */
-  if (auth_type != IPMI_AUTH_TYPE_NONE)
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       auth_code_field_ptr = (pkt + indx); 
       indx += IPMI_MAX_AUTH_CODE_LENGTH;
@@ -473,7 +473,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    * require all fields, including checksums, to be calculated
    * beforehand
    */
-  if (auth_type != IPMI_AUTH_TYPE_NONE)
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {     
       uint8_t pwbuf[IPMI_MAX_AUTH_CODE_LENGTH];
       int32_t auth_len;
@@ -503,14 +503,14 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		   auth_code_data,
 		   auth_code_data_len);
 	  
-	  if (auth_type == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY)
+	  if (authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY)
 	    {	 
 	      memcpy (auth_code_field_ptr,
 		      pwbuf,
 		      IPMI_MAX_AUTH_CODE_LENGTH);
 	    }
-	  else if (auth_type == IPMI_AUTH_TYPE_MD2
-		   || auth_type == IPMI_AUTH_TYPE_MD5)
+	  else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+		   || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 	    {
 	      uint8_t session_id_buf[1024];
 	      uint8_t session_seq_num_buf[1024];
@@ -540,7 +540,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  goto cleanup;
 		}
 
-	      if (auth_type == IPMI_AUTH_TYPE_MD2)
+	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
 		  ipmi_md2_t ctx;
 		  uint8_t digest[IPMI_MD2_DIGEST_LEN];
@@ -557,7 +557,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  
 		  memcpy (auth_code_field_ptr, digest, IPMI_MAX_AUTH_CODE_LENGTH);
 		}
-	      else if (auth_type == IPMI_AUTH_TYPE_MD5)
+	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
 		  ipmi_md5_t ctx;
 		  uint8_t digest[IPMI_MD5_DIGEST_LEN];
@@ -619,7 +619,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 			 fiid_obj_t obj_cmd, 
 			 fiid_obj_t obj_lan_msg_trlr)
 {
-  uint64_t auth_type;
+  uint64_t authentication_type;
   uint32_t indx;
   uint32_t obj_cmd_len, obj_lan_msg_trlr_len;
   int32_t len;
@@ -682,21 +682,21 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 
   ERR(!(fiid_obj_clear(obj_lan_session_hdr) < 0));
   ERR(!((len = fiid_obj_set_block(obj_lan_session_hdr,
-                                  (uint8_t *)"auth_type",
+                                  (uint8_t *)"authentication_type",
                                   (uint8_t *)"session_id",
                                   pkt + indx,
                                   pkt_len - indx)) < 0));
   indx += len;
 
-  ERR(!(fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"auth_type", &auth_type) < 0));
+  ERR(!(fiid_obj_get(obj_lan_session_hdr, (uint8_t *)"authentication_type", &authentication_type) < 0));
 
-  if (!IPMI_AUTH_TYPE_VALID(auth_type))
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if (auth_type != IPMI_AUTH_TYPE_NONE)
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       ERR(!((len = fiid_obj_set_data(obj_lan_session_hdr,
                                      (uint8_t *)"auth_code",
@@ -924,11 +924,11 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
 }
 
 int8_t 
-ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len)
+ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *auth_code_data, uint32_t auth_code_data_len)
 {
-  uint8_t auth_type_recv;
-  int32_t rmcp_hdr_len, auth_type_index, auth_code_index;
-  uint32_t auth_type_offset, auth_code_offset;
+  uint8_t authentication_type_recv;
+  int32_t rmcp_hdr_len, authentication_type_index, auth_code_index;
+  uint32_t authentication_type_offset, auth_code_offset;
   uint8_t auth_code_buf[IPMI_MAX_AUTH_CODE_LENGTH];
 
   if (!pkt 
@@ -939,20 +939,20 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_ty
     }
 
   ERR(!((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0));
-  ERR(!((auth_type_index = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"auth_type")) < 0));
-  auth_type_offset = rmcp_hdr_len + auth_type_index;
+  ERR(!((authentication_type_index = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"authentication_type")) < 0));
+  authentication_type_offset = rmcp_hdr_len + authentication_type_index;
 
-  if (pkt_len < auth_type_offset)
+  if (pkt_len < authentication_type_offset)
     return 0;
 
-  auth_type_recv = pkt[auth_type_offset];
+  authentication_type_recv = pkt[authentication_type_offset];
 
   /* authcode check fails if authentication types do not match */
-  if (auth_type != auth_type_recv)
+  if (authentication_type != authentication_type_recv)
     return 0;
 
   /* Automatically return 1 if auth type is none */
-  if (auth_type_recv == IPMI_AUTH_TYPE_NONE)
+  if (authentication_type_recv == IPMI_AUTHENTICATION_TYPE_NONE)
     return 1;
 
   ERR(!((auth_code_index = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"auth_code")) < 0));
@@ -963,8 +963,8 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_ty
 
   memset(auth_code_buf, '\0', IPMI_MAX_AUTH_CODE_LENGTH);
 
-  if (auth_type == IPMI_AUTH_TYPE_MD2
-      || auth_type == IPMI_AUTH_TYPE_MD5)
+  if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
     {
       uint8_t pwbuf[IPMI_MAX_AUTH_CODE_LENGTH];
       int32_t session_id_index, session_seq_num_index, data_index;
@@ -992,7 +992,7 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_ty
        */
       memset(pwbuf, '\0', IPMI_MAX_AUTH_CODE_LENGTH);
       memcpy(pwbuf, auth_code_data, auth_code_data_len);
-      if (auth_type == IPMI_AUTH_TYPE_MD2)
+      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 	{
 	  ipmi_md2_t ctx;
 	  
@@ -1012,7 +1012,7 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_ty
 	  ipmi_md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTH_CODE_LENGTH);
 	  ipmi_md2_finish(&ctx, auth_code_buf, IPMI_MAX_AUTH_CODE_LENGTH);
 	}
-      else if (auth_type == IPMI_AUTH_TYPE_MD5)
+      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 	{
 	  ipmi_md5_t ctx;
 	  
@@ -1034,8 +1034,8 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_ty
 	  
 	}
     }
-  else /* auth_type == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-	  || auth_type == IPMI_AUTH_TYPE_OEM_PROP */
+  else /* authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+	  || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP */
     {
       if (auth_code_data)
 	memcpy(auth_code_buf, auth_code_data, auth_code_data_len);
@@ -1123,10 +1123,10 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
 int8_t 
 ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 {
-  uint8_t auth_type;
-  uint32_t auth_type_offset;
+  uint8_t authentication_type;
+  uint32_t authentication_type_offset;
   int32_t rmcp_hdr_len, msg_hdr_len1, msg_hdr_len2, auth_code_len;
-  int32_t auth_type_start_bytes;
+  int32_t authentication_type_start_bytes;
   int32_t chksum1_block_index, chksum1_block_len, 
     chksum2_block_index, chksum2_block_len;
   int8_t chksum1_recv, chksum1_calc, chksum2_recv, chksum2_calc;
@@ -1140,18 +1140,18 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
   if ((rmcp_hdr_len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0)
     return (-1);
 
-  if ((auth_type_start_bytes = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"auth_type")) < 0)
+  if ((authentication_type_start_bytes = fiid_template_field_start_bytes (tmpl_lan_session_hdr, (uint8_t *)"authentication_type")) < 0)
     return (-1);
   
-  auth_type_offset = rmcp_hdr_len + auth_type_start_bytes;
-  auth_type = pkt[auth_type_offset];
+  authentication_type_offset = rmcp_hdr_len + authentication_type_start_bytes;
+  authentication_type = pkt[authentication_type_offset];
 
   if ((msg_hdr_len1 = fiid_template_block_len_bytes(tmpl_lan_session_hdr,
-						    (uint8_t *)"auth_type",
+						    (uint8_t *)"authentication_type",
 						    (uint8_t *)"session_id")) < 0)
     return (-1);
 
-  if (auth_type != IPMI_AUTH_TYPE_NONE)
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     auth_code_len = IPMI_MAX_AUTH_CODE_LENGTH;
   else
     auth_code_len = 0;

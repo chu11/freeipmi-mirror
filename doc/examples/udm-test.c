@@ -28,10 +28,10 @@ int
 main (int argc, char **argv)
 {
   char *hostname = NULL; /* ipmi hostname for out-of-band */
-  int auth_type = IPMI_AUTH_TYPE_NONE; 
-  /* for out-of-band, it can also be IPMI_AUTH_TYPE_MD2, 
-     IPMI_AUTH_TYPE_MD5, IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 
-     IPMI_AUTH_TYPE_OEM_PROP */
+  int authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
+  /* for out-of-band, it can also be IPMI_AUTHENTICATION_TYPE_MD2, 
+     IPMI_AUTHENTICATION_TYPE_MD5, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY, 
+     IPMI_AUTHENTICATION_TYPE_OEM_PROP */
   char username[] = ""; /* ipmi username for out-of-band */
   char password[] = ""; /* ipmi user's password for out-of-band */
   int priv_level = IPMI_PRIVILEGE_LEVEL_USER; 
@@ -65,7 +65,7 @@ main (int argc, char **argv)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       auth_type, 
+			       authentication_type, 
 			       username, 
 			       password, 
 			       priv_level) != 0)

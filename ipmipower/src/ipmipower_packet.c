@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.18.2.4 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.18.2.5 2006-02-15 07:04:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -283,7 +283,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
   if (pkt == AUTH_REQ)
     {
-      if (fill_lan_session_hdr(IPMI_AUTH_TYPE_NONE, 
+      if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE, 
                                0, 
                                0, 
                                NULL, 
@@ -322,7 +322,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       uint8_t *username;
 
-      if (fill_lan_session_hdr(IPMI_AUTH_TYPE_NONE, 
+      if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE, 
                                0, 
                                0, 
                                NULL,
@@ -434,11 +434,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t priv;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_AUTH_TYPE_NONE; 
+        at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
         at = ip->authtype;
 
-      if (at != IPMI_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -509,11 +509,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t *password;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_AUTH_TYPE_NONE; 
+        at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
         at = ip->authtype;
 
-      if (at != IPMI_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -570,11 +570,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t *password;
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_AUTH_TYPE_NONE; 
+        at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
         at = ip->authtype;
 
-      if (at != IPMI_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -639,11 +639,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
              || ip->cmd == POWER_CMD_SOFT_SHUTDOWN_OS);
 
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_AUTH_TYPE_NONE; 
+        at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
         at = ip->authtype;
 
-      if (at != IPMI_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;

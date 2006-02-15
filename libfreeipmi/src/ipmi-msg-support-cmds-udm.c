@@ -46,7 +46,7 @@ ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev,
     }
   
   local_dev = *dev;
-  local_dev.io.outofband.auth_type = IPMI_AUTH_TYPE_NONE;
+  local_dev.io.outofband.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     goto cleanup;
@@ -101,12 +101,12 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
     }
   
   local_dev = *dev;
-  local_dev.io.outofband.auth_type = IPMI_AUTH_TYPE_NONE;
+  local_dev.io.outofband.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
     goto cleanup;
 
-  if (fill_cmd_get_session_challenge (dev->io.outofband.auth_type, 
+  if (fill_cmd_get_session_challenge (dev->io.outofband.authentication_type, 
 				      (char *)dev->io.outofband.username,
 				      IPMI_MAX_USER_NAME_LENGTH,
 				      obj_cmd_rq) < 0)
@@ -167,7 +167,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_activate_session_rq)))
     goto cleanup;
 
-  if (fill_cmd_activate_session (dev->io.outofband.auth_type, 
+  if (fill_cmd_activate_session (dev->io.outofband.authentication_type, 
 				 dev->io.outofband.privilege_level, 
 				 dev->io.outofband.challenge_string, 
 				 IPMI_CHALLENGE_STRING_LENGTH, 
@@ -832,7 +832,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   
-  uint64_t supported_auth_type = 0;
+  uint64_t supported_authentication_type = 0;
   uint64_t temp_session_id = 0;
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
   uint64_t temp_session_seq_num = 0;
@@ -851,36 +851,36 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   if (ipmi_cmd_get_channel_authentication_capabilities2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
-  switch (dev->io.outofband.auth_type)
+  switch (dev->io.outofband.authentication_type)
     {
-    case IPMI_AUTH_TYPE_NONE:
+    case IPMI_AUTHENTICATION_TYPE_NONE:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"auth_type.none", 
-			&supported_auth_type) < 0)
+			(uint8_t *)"authentication_type.none", 
+			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_AUTH_TYPE_MD2:
+    case IPMI_AUTHENTICATION_TYPE_MD2:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"auth_type.md2", 
-			&supported_auth_type) < 0)
+			(uint8_t *)"authentication_type.md2", 
+			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_AUTH_TYPE_MD5:
+    case IPMI_AUTHENTICATION_TYPE_MD5:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"auth_type.md5", 
-			&supported_auth_type) < 0)
+			(uint8_t *)"authentication_type.md5", 
+			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
+    case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"auth_type.straight_passwd_key", 
-			&supported_auth_type) < 0)
+			(uint8_t *)"authentication_type.straight_passwd_key", 
+			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_AUTH_TYPE_OEM_PROP:
+    case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"auth_type.oem_prop", 
-			&supported_auth_type) < 0)
+			(uint8_t *)"authentication_type.oem_prop", 
+			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
     default:
@@ -888,7 +888,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
       return (-1);
     }
 
-  if (supported_auth_type == 0)
+  if (supported_authentication_type == 0)
     {
       errno = ENOTSUP;
       goto cleanup;

@@ -292,27 +292,27 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-lan-conf-vlan-priority VLAN_PRIORITY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-callback-enables", ex_set_bmc_lan_conf_auth_type_callback_enables, 5, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-callback-enables", ex_set_bmc_lan_conf_authentication_type_callback_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-callback-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-user-enables", ex_set_bmc_lan_conf_auth_type_user_enables, 5, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-user-enables", ex_set_bmc_lan_conf_authentication_type_user_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-user-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-operator-enables", ex_set_bmc_lan_conf_auth_type_operator_enables, 5, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-operator-enables", ex_set_bmc_lan_conf_authentication_type_operator_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-operator-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-admin-enables", ex_set_bmc_lan_conf_auth_type_admin_enables, 5, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-admin-enables", ex_set_bmc_lan_conf_authentication_type_admin_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-admin-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
   
-  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-oem-enables", ex_set_bmc_lan_conf_auth_type_oem_enables, 5, 0, 0);
+  gh_new_procedure ("fi-set-bmc-lan-conf-auth-type-oem-enables", ex_set_bmc_lan_conf_authentication_type_oem_enables, 5, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-lan-conf-auth-type-oem-enables AUTH_NONE AUTH_MD2 AUTH_MD5 AUTH_STRAIGHT_PASSWORD AUTH_OEM_PROPRIETARY)
   */
@@ -446,27 +446,27 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-lan-conf-vlan-priority)
   */
 
-  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-callback-enables", ex_get_bmc_lan_conf_auth_type_callback_enables, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-callback-enables", ex_get_bmc_lan_conf_authentication_type_callback_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-callback-enables)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-user-enables", ex_get_bmc_lan_conf_auth_type_user_enables, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-user-enables", ex_get_bmc_lan_conf_authentication_type_user_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-user-enables)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-operator-enables", ex_get_bmc_lan_conf_auth_type_operator_enables, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-operator-enables", ex_get_bmc_lan_conf_authentication_type_operator_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-operator-enables)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-admin-enables", ex_get_bmc_lan_conf_auth_type_admin_enables, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-admin-enables", ex_get_bmc_lan_conf_authentication_type_admin_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-admin-enables)
   */
   
-  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-oem-enables", ex_get_bmc_lan_conf_auth_type_oem_enables, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-lan-conf-auth-type-oem-enables", ex_get_bmc_lan_conf_authentication_type_oem_enables, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-bmc-lan-conf-auth-type-oem-enables)
   */

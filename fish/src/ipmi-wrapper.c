@@ -73,10 +73,10 @@ fi_ipmi_open (struct arguments *args)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       args->common.auth_type, 
+			       args->common.authentication_type, 
 			       args->common.username, 
 			       args->common.password, 
-			       args->common.priv_level) != 0)
+			       args->common.privilege_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);

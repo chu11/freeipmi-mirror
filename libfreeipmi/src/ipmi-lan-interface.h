@@ -69,7 +69,7 @@ int8_t fill_lan_msg_hdr (uint8_t net_fn,
 			 uint8_t rq_seq, 
 			 fiid_obj_t obj_msg);
 
-int8_t fill_lan_session_hdr  (uint8_t auth_type, 
+int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
                               uint32_t inbound_seq_num, 
                               uint32_t session_id,
                               uint8_t *auth_code_data, 
@@ -111,7 +111,7 @@ int8_t ipmi_lan_check_session_seq_num (fiid_obj_t obj_lan_session_hdr, uint32_t 
 
 int8_t ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id);
 
-int8_t ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t auth_type, uint8_t *auth_code_data, uint32_t auth_code_data_len);
+int8_t ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *auth_code_data, uint32_t auth_code_data_len);
 
 int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
 

@@ -293,7 +293,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   fiid_obj_t obj_unexpected = NULL;
   int32_t len;
   int8_t rv = -1;
-  uint64_t auth_type;
+  uint64_t authentication_type;
 
   if (!(pkt && tmpl_msg_hdr && tmpl_cmd))
     {
@@ -329,7 +329,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
     goto cleanup;
   
   if ((len = fiid_obj_set_block(obj_session_hdr, 
-                                (uint8_t *)"auth_type", 
+                                (uint8_t *)"authentication_type", 
                                 (uint8_t *)"session_id", 
                                 pkt + indx, 
                                 pkt_len - indx)) < 0)
@@ -349,10 +349,10 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
       goto cleanup;
     }
 
-  if (fiid_obj_get(obj_session_hdr, "auth_type", &auth_type) < 0)
+  if (fiid_obj_get(obj_session_hdr, "authentication_type", &authentication_type) < 0)
     goto cleanup;
 
-  if (auth_type != IPMI_AUTH_TYPE_NONE)
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       if ((len = fiid_obj_set_data(obj_session_hdr,
 				   (uint8_t *)"auth_code",

@@ -19,7 +19,6 @@
 #ifndef _SCM_PROCEDURES_H
 #define _SCM_PROCEDURES_H
 
-
 SCM ex_version (void);
 SCM ex_display (SCM scm_message);
 SCM ex_bell (void);
@@ -76,10 +75,10 @@ SCM ex_set_bmc_user_serial_channel_access (SCM scm_userid,
 					   SCM scm_serial_privilege_limit, 
 					   SCM scm_serial_session_limit);
 SCM ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode, 
-					   SCM scm_enable_user_level_auth, 
-					   SCM scm_enable_per_message_auth, 
-					   SCM scm_enable_pef_alerting, 
-					   SCM scm_channel_privilege_limit);
+					    SCM scm_enable_user_level_auth, 
+					    SCM scm_enable_per_message_auth, 
+					    SCM scm_enable_pef_alerting, 
+					    SCM scm_channel_privilege_limit);
 SCM ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode, 
 						SCM scm_enable_user_level_auth, 
 						SCM scm_enable_per_message_auth, 
@@ -97,33 +96,33 @@ SCM ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
                                  SCM scm_vlan_id);
 SCM ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority);
 
-SCM ex_set_bmc_lan_conf_auth_type_callback_enables (SCM scm_auth_type_none, 
-						    SCM scm_auth_type_md2, 
-						    SCM scm_auth_type_md5, 
-						    SCM scm_auth_type_straight_password, 
-						    SCM scm_auth_type_oem_proprietary);
-SCM ex_set_bmc_lan_conf_auth_type_user_enables (SCM scm_auth_type_none, 
-						SCM scm_auth_type_md2, 
-						SCM scm_auth_type_md5, 
-						SCM scm_auth_type_straight_password, 
-						SCM scm_auth_type_oem_proprietary);
-SCM ex_set_bmc_lan_conf_auth_type_operator_enables (SCM scm_auth_type_none, 
-						    SCM scm_auth_type_md2, 
-						    SCM scm_auth_type_md5, 
-						    SCM scm_auth_type_straight_password, 
-						    SCM scm_auth_type_oem_proprietary);
-SCM ex_set_bmc_lan_conf_auth_type_admin_enables (SCM scm_auth_type_none, 
-						 SCM scm_auth_type_md2, 
-						 SCM scm_auth_type_md5, 
-						 SCM scm_auth_type_straight_password, 
-						 SCM scm_auth_type_oem_proprietary);
-SCM ex_set_bmc_lan_conf_auth_type_oem_enables (SCM scm_auth_type_none, 
-					       SCM scm_auth_type_md2, 
-					       SCM scm_auth_type_md5, 
-					       SCM scm_auth_type_straight_password, 
-					       SCM scm_auth_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_authentication_type_callback_enables (SCM scm_authentication_type_none, 
+							      SCM scm_authentication_type_md2, 
+							      SCM scm_authentication_type_md5, 
+							      SCM scm_authentication_type_straight_password, 
+							      SCM scm_authentication_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_authentication_type_user_enables (SCM scm_authentication_type_none, 
+							  SCM scm_authentication_type_md2, 
+							  SCM scm_authentication_type_md5, 
+							  SCM scm_authentication_type_straight_password, 
+							  SCM scm_authentication_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_authentication_type_operator_enables (SCM scm_authentication_type_none, 
+							      SCM scm_authentication_type_md2, 
+							      SCM scm_authentication_type_md5, 
+							      SCM scm_authentication_type_straight_password, 
+							      SCM scm_authentication_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_authentication_type_admin_enables (SCM scm_authentication_type_none, 
+							   SCM scm_authentication_type_md2, 
+							   SCM scm_authentication_type_md5, 
+							   SCM scm_authentication_type_straight_password, 
+							   SCM scm_authentication_type_oem_proprietary);
+SCM ex_set_bmc_lan_conf_authentication_type_oem_enables (SCM scm_authentication_type_none, 
+							 SCM scm_authentication_type_md2, 
+							 SCM scm_authentication_type_md5, 
+							 SCM scm_authentication_type_straight_password, 
+							 SCM scm_authentication_type_oem_proprietary);
 SCM ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_enable_gratuitous_arps, 
-				     SCM scm_enable_arp_response);
+						   SCM scm_enable_arp_response);
 SCM ex_set_bmc_lan_conf_gratuitous_arp_interval (SCM scm_gratuitous_arp_interval);
 
 SCM ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode, 
@@ -175,11 +174,11 @@ SCM ex_get_bmc_lan_conf_backup_gateway_address ();
 SCM ex_get_bmc_lan_conf_backup_gateway_mac_address ();
 SCM ex_get_bmc_lan_conf_vlan_id ();
 SCM ex_get_bmc_lan_conf_vlan_priority ();
-SCM ex_get_bmc_lan_conf_auth_type_callback_enables ();
-SCM ex_get_bmc_lan_conf_auth_type_user_enables ();
-SCM ex_get_bmc_lan_conf_auth_type_operator_enables ();
-SCM ex_get_bmc_lan_conf_auth_type_admin_enables ();
-SCM ex_get_bmc_lan_conf_auth_type_oem_enables ();
+SCM ex_get_bmc_lan_conf_authentication_type_callback_enables ();
+SCM ex_get_bmc_lan_conf_authentication_type_user_enables ();
+SCM ex_get_bmc_lan_conf_authentication_type_operator_enables ();
+SCM ex_get_bmc_lan_conf_authentication_type_admin_enables ();
+SCM ex_get_bmc_lan_conf_authentication_type_oem_enables ();
 SCM ex_get_bmc_lan_conf_bmc_generated_arp_control ();
 SCM ex_get_bmc_lan_conf_gratuitous_arp_interval ();
 SCM ex_get_bmc_serial_channel_volatile_access ();

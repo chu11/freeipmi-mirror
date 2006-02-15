@@ -19,7 +19,7 @@
 #ifndef _BMC_CONF2_H
 #define _BMC_CONF2_H
 
-struct auth_type
+struct authentication_type
 {
   uint8_t type_none;
   uint8_t type_md2;
@@ -30,11 +30,11 @@ struct auth_type
 
 struct bmc_auth_level
 {
-  struct auth_type callback;
-  struct auth_type user;
-  struct auth_type operator;
-  struct auth_type admin;
-  struct auth_type oem;
+  struct authentication_type callback;
+  struct authentication_type user;
+  struct authentication_type operator;
+  struct authentication_type admin;
+  struct authentication_type oem;
 };
 
 int8_t set_bmc_username (ipmi_device_t *dev, 
