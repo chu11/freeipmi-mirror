@@ -20,11 +20,11 @@
 
 static int8_t 
 set_bmc_user_access (ipmi_device_t *dev, 
-		     uint8_t userid, 
 		     uint8_t channel_number, 
 		     uint8_t user_ipmi_messaging, 
 		     uint8_t user_link_authentication, 
 		     uint8_t user_restricted_to_callback, 
+		     uint8_t userid, 
 		     uint8_t privilege_limit, 
 		     uint8_t session_limit)
 {
@@ -35,10 +35,10 @@ set_bmc_user_access (ipmi_device_t *dev,
     goto cleanup;
   if (ipmi_cmd_set_user_access2 (dev, 
 				 channel_number, 
-				 userid, 
-				 user_restricted_to_callback, 
-				 user_link_authentication, 
 				 user_ipmi_messaging, 
+				 user_link_authentication, 
+				 user_restricted_to_callback, 
+				 userid, 
 				 privilege_limit, 
 				 session_limit, 
 				 obj_cmd_rs) != 0)
@@ -182,11 +182,11 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 				 uint8_t lan_session_limit)
 {
   return set_bmc_user_access (dev, 
-			      userid, 
 			      get_lan_channel_number (), 
 			      lan_user_ipmi_messaging, 
 			      lan_user_link_authentication, 
 			      lan_user_restricted_to_callback, 
+			      userid, 
 			      lan_privilege_limit, 
 			      lan_session_limit);
 }
@@ -201,11 +201,11 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 				    uint8_t serial_session_limit)
 {
   return set_bmc_user_access (dev, 
-			      userid, 
 			      get_serial_channel_number (), 
 			      serial_user_ipmi_messaging, 
 			      serial_user_link_authentication, 
 			      serial_user_restricted_to_callback, 
+			      userid, 
 			      serial_privilege_limit, 
 			      serial_session_limit);
 }

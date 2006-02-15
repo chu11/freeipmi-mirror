@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.18.2.5 2006-02-15 07:04:35 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.18.2.6 2006-02-15 19:19:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -294,7 +294,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -333,7 +333,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -388,7 +388,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -408,7 +408,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 				    ip->privilege, 
 				    challenge_string,
 				    challenge_string_len,
-                                    ip->initial_outbound_seq_num,
+                                    ip->initial_outbound_sequence_number,
                                     ip->actv_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_activate_session: %s", 
@@ -428,7 +428,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == PRIV_REQ)
     {
-      uint64_t initial_inbound_seq_num;
+      uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
       uint8_t *password;
       uint8_t priv;
@@ -463,14 +463,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         priv = IPMI_PRIVILEGE_LEVEL_OPERATOR;
 
       Fiid_obj_get(ip->actv_res, 
-                   (uint8_t *)"initial_inbound_seq_num", 
-		   &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_sequence_number", 
+		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->actv_res, 
                    (uint8_t *)"session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
-                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               initial_inbound_sequence_number + ip->session_inbound_count, 
                                (uint32_t)session_id, 
                                NULL,
                                0,
@@ -480,7 +480,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -504,7 +504,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == CLOS_REQ)
     {
-      uint64_t initial_inbound_seq_num;
+      uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
       uint8_t *password;
 
@@ -524,14 +524,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->actv_res, 
-                   (uint8_t *)"initial_inbound_seq_num", 
-		   &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_sequence_number", 
+		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->actv_res, 
                    (uint8_t *)"session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
-                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               initial_inbound_sequence_number + ip->session_inbound_count, 
                                (uint32_t)session_id, 
                                NULL,
                                0,
@@ -541,7 +541,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -565,7 +565,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == CHAS_REQ)
     {
-      uint64_t initial_inbound_seq_num;
+      uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
       uint8_t *password;
 
@@ -585,14 +585,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->actv_res, 
-                   (uint8_t *)"initial_inbound_seq_num", 
-		   &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_sequence_number", 
+		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->actv_res, 
                    (uint8_t *)"session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at,
-                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               initial_inbound_sequence_number + ip->session_inbound_count, 
                                (uint32_t)session_id, 
                                NULL,
                                0,
@@ -602,7 +602,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -627,7 +627,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == CTRL_REQ) 
     {
       uint8_t command = 0;
-      uint64_t initial_inbound_seq_num;
+      uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
       uint8_t *password;
 
@@ -667,14 +667,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         command = IPMI_CHASSIS_CTRL_INIT_SOFT_SHUTDOWN;
 
       Fiid_obj_get(ip->actv_res, 
-                   (uint8_t *)"initial_inbound_seq_num", 
-		   &initial_inbound_seq_num);
+                   (uint8_t *)"initial_inbound_sequence_number", 
+		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->actv_res, 
                    (uint8_t *)"session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
-                               initial_inbound_seq_num + ip->session_inbound_count, 
+                               initial_inbound_sequence_number + ip->session_inbound_count, 
                                (uint32_t)session_id, 
                                NULL,
                                0,
@@ -684,7 +684,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
                            ip->msg_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -712,10 +712,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
 void 
 ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
-                               uint32_t *session_seq_num, 
+                               uint32_t *session_sequence_number, 
                                uint32_t *session_id,
                                uint8_t *network_function, 
-                               uint8_t *requester_seq_num,
+                               uint8_t *requester_sequence_number,
                                uint8_t *command, 
                                uint8_t *completion_code) 
 {
@@ -728,7 +728,7 @@ ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
   obj = ipmipower_packet_cmd_obj(ip, pkt);
         
   Fiid_obj_get(ip->session_res, 
-               (uint8_t *)"session_seq_num", 
+               (uint8_t *)"session_sequence_number", 
 	       &sseq);
   Fiid_obj_get(ip->session_res, 
                (uint8_t *)"session_id", 
@@ -746,14 +746,14 @@ ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
 	       (uint8_t *)"comp_code", 
 	       &cc);
   
-  if (session_seq_num) 
-    *session_seq_num = sseq;
+  if (session_sequence_number) 
+    *session_sequence_number = sseq;
   if (session_id)
     *session_id = sid;
   if (network_function) 
     *network_function = netfn;
-  if (requester_seq_num)
-    *requester_seq_num = rseq;
+  if (requester_sequence_number)
+    *requester_sequence_number = rseq;
   if (command)
     *command = cmd;
   if (completion_code)

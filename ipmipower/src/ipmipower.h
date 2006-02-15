@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.16.2.4 2006-02-15 14:46:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.16.2.5 2006-02-15 19:19:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,24 +106,24 @@
 /* RMCP ASF Presence ping message tag 
  * - Use max 0xFE, b/c 0xFF indicates a unidirectional packet
  */
-#define IPMIPOWER_PING_TAG_MAX         0xFE
+#define IPMIPOWER_PING_TAG_MAX           0xFE
 
 /* IPMI Requester Sequence Number
  * - Requester Sequence Number is 6 bits, not 8 
  */
-#define IPMIPOWER_RSEQ_MAX             0x3F
+#define IPMIPOWER_RSEQ_MAX               0x3F
 
 /* IPMI allowable sequence number range window
  */
-#define IPMIPOWER_SEQ_NUM_WINDOW       8
+#define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
 
 /* MISC */
-#define IPMI_PACKET_BUFLEN             1024
-#define RMCP_PACKET_BUFLEN             1024
+#define IPMI_PACKET_BUFLEN               1024
+#define RMCP_PACKET_BUFLEN               1024
 
-#define IPMIPOWER_HOSTLIST_BUFLEN      65536
+#define IPMIPOWER_HOSTLIST_BUFLEN        65536
 
-#define IPMIPOWER_DEFAULT_LOGFILE      "/tmp/ipmipower.%d"
+#define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
 /* ipmipower_bool_t
  * - boolean type
@@ -264,8 +264,8 @@ struct ipmipower_powercmd {
 
     struct timeval time_begin;
     unsigned int session_inbound_count;
-    uint32_t initial_outbound_seq_num;
-    uint32_t highest_received_seq_num;
+    uint32_t initial_outbound_sequence_number;
+    uint32_t highest_received_sequence_number;
     unsigned int previously_received_list;
     unsigned int retry_count;
     ipmipower_bool_t error_occurred;
@@ -314,8 +314,8 @@ struct ipmipower_connection
   cbuf_t ipmi_out;
   cbuf_t ping_in;
   cbuf_t ping_out;
-  uint32_t ipmi_requester_seq_num_counter;
-  uint32_t ping_seq_num_counter;
+  uint32_t ipmi_requester_sequence_number_counter;
+  uint32_t ping_sequence_number_counter;
   struct timeval last_ipmi_send;
   struct timeval last_ping_send;
   struct timeval last_ipmi_recv;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.11.2.4 2006-02-14 18:56:14 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.11.2.5 2006-02-15 19:19:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -71,7 +71,7 @@ _fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 int 
 createpacket(char *buffer, 
              int buflen, 
-             unsigned int seq_num, 
+             unsigned int sequence_number, 
              int debug)
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -97,7 +97,7 @@ createpacket(char *buffer,
    * specification for details.
    */
 
-  if (fill_cmd_asf_presence_ping(seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1), 
+  if (fill_cmd_asf_presence_ping(sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1), 
                                  obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
 
@@ -124,7 +124,7 @@ int
 parsepacket(char *buffer, 
             int buflen, 
             const char *from, 
-            unsigned int seq_num, 
+            unsigned int sequence_number, 
             int verbose, 
             int debug) 
 {
@@ -162,7 +162,7 @@ parsepacket(char *buffer,
     }
 
   _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"message_tag", (uint64_t *)&message_tag);
-  if (message_tag != (seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
+  if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
       retval = 0;
       goto cleanup;
@@ -186,9 +186,9 @@ parsepacket(char *buffer,
 }
 
 void 
-latepacket(unsigned int seq_num) 
+latepacket(unsigned int sequence_number) 
 {
-  printf("pong timed out: message_tag=%u\n", seq_num % (RMCP_ASF_MESSAGE_TAG_MAX + 1));
+  printf("pong timed out: message_tag=%u\n", sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1));
 }
 
 int

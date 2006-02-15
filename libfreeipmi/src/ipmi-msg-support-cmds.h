@@ -65,12 +65,10 @@ extern "C" {
 #define IPMI_CHANNEL_SESSION_BASED     0x3
 #define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(__channel_number) \
-        (((__channel_number) == IPMI_CHANNEL_SESSION_LESS \
-          || (__channel_number) == IPMI_CHANNEL_SINGLE_SESSION \
-          || (__channel_number) == IPMI_CHANNEL_MULTI_SESSION \
-          || (__channel_number) == IPMI_CHANNEL_SESSION_BASED \
-          || (__channel_number) == IPMI_CHANNEL_CURRENT_CHANNEL) ? 1 : 0)       
+        (((__channel_number+1) >= IPMI_CHANNEL_SINGLE_SESSION \
+          && (__channel_number-1) <= IPMI_CHANNEL_CURRENT_CHANNEL) ? 1 : 0)
 
 #define IPMI_AUTHENTICATION_TYPE_NONE                0x00
 #define IPMI_AUTHENTICATION_TYPE_MD2                 0x01
@@ -116,21 +114,21 @@ extern "C" {
 
 #define IPMI_USER_LEVEL_AUTHENTICATION_VALID(__flag) \
         (((__flag) == IPMI_USER_LEVEL_AUTHENTICATION_ENABLE \
-          && (__flag) == IPMI_USER_LEVEL_AUTHENTICATION_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_USER_LEVEL_AUTHENTICATION_DISABLE) ? 1 : 0)
 
 #define IPMI_PER_MESSAGE_AUTHENTICATION_ENABLE     0x0
 #define IPMI_PER_MESSAGE_AUTHENTICATION_DISABLE    0x1
 
 #define IPMI_PER_MESSAGE_AUTHENTICATION_VALID(__flag) \
         (((__flag) == IPMI_PER_MESSAGE_AUTHENTICATION_ENABLE \
-          && (__flag) == IPMI_PER_MESSAGE_AUTHENTICATION_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_PER_MESSAGE_AUTHENTICATION_DISABLE) ? 1 : 0)
 
 #define IPMI_PEF_ALERTING_ENABLE     0x0
 #define IPMI_PEF_ALERTING_DISABLE    0x1
 
 #define IPMI_PEF_ALERTING_VALID(__flag) \
         (((__flag) == IPMI_PEF_ALERTING_ENABLE \
-          && (__flag) == IPMI_PEF_ALERTING_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_PEF_ALERTING_DISABLE) ? 1 : 0)
 
 #define IPMI_CHANNEL_ACCESS_NO_CHANGE           0x0
 #define IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE    0x1
@@ -147,7 +145,7 @@ extern "C" {
 #define IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE        0x2
 #define IPMI_PRIVILEGE_LEVEL_LIMIT_RESERVED            0x3
 
-#define IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(__privilege_level_limit) \
+#define IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(__privilege_level_limit) \
         (((__privilege_level_limit) == IPMI_PRIVILEGE_LEVEL_LIMIT_NO_CHANGE \
           || (__privilege_level_limit) == IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE \
           || (__privilege_level_limit) == IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE) ? 1 : 0)
@@ -157,28 +155,36 @@ extern "C" {
 
 #define IPMI_CHANNEL_ACCESS_GET_VALID(__flag) \
         (((__flag) == IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE \
-          && (__flag) == IPMI_CHANNEL_ACCESS_GET_VOLATILE) ? 1 : 0)
-
+          || (__flag) == IPMI_CHANNEL_ACCESS_GET_VOLATILE) ? 1 : 0)
+  
 #define IPMI_USER_RESTRICTED_TO_CALLBACK_ENABLE     0x1
 #define IPMI_USER_RESTRICTED_TO_CALLBACK_DISABLE    0x0
 
 #define IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(__flag) \
         (((__flag) == IPMI_USER_RESTRICTED_TO_CALLBACK_ENABLE \
-          && (__flag) == IPMI_USER_RESTRICTED_TO_CALLBACK_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_USER_RESTRICTED_TO_CALLBACK_DISABLE) ? 1 : 0)
+
+#define IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(__privilege_level) \
+        (((__privilege_level) == IPMI_PRIVILEGE_LEVEL_CALLBACK \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_USER \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OPERATOR \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_ADMIN \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OEM \
+	  || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_NO_ACCESS) ? 1 : 0)
 
 #define IPMI_USER_LINK_AUTHENTICATION_ENABLE     0x1
 #define IPMI_USER_LINK_AUTHENTICATION_DISABLE    0x0
 
 #define IPMI_USER_LINK_AUTHENTICATION_VALID(__flag) \
         (((__flag) == IPMI_USER_LINK_AUTHENTICATION_ENABLE \
-          && (__flag) == IPMI_USER_LINK_AUTHENTICATION_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_USER_LINK_AUTHENTICATION_DISABLE) ? 1 : 0)
 
 #define IPMI_USER_IPMI_MESSAGING_ENABLE     0x1
 #define IPMI_USER_IPMI_MESSAGING_DISABLE    0x0
 
 #define IPMI_USER_IPMI_MESSAGING_VALID(__flag) \
         (((__flag) == IPMI_USER_IPMI_MESSAGING_ENABLE \
-          && (__flag) == IPMI_USER_IPMI_MESSAGING_DISABLE) ? 1 : 0)
+          || (__flag) == IPMI_USER_IPMI_MESSAGING_DISABLE) ? 1 : 0)
 
 #define IPMI_PASSWORD_OPERATION_DISABLE_USER     0x0
 #define IPMI_PASSWORD_OPERATION_ENABLE_USER      0x1
@@ -238,7 +244,7 @@ int8_t fill_cmd_activate_session (uint8_t authentication_type,
 				  uint8_t maximum_privilege_level, 
 				  uint8_t *challenge_string, 
 				  uint32_t challenge_string_len, 
-				  uint32_t initial_outbound_seq_num, 
+				  uint32_t initial_outbound_sequence_number, 
 				  fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_set_session_privilege_level (uint8_t privilege_level, 

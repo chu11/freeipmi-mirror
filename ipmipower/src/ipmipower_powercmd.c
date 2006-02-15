@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21.2.6 2006-02-15 07:04:35 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.21.2.7 2006-02-15 19:19:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,8 +168,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->initial_outbound_seq_num = get_rand();
-  ip->highest_received_seq_num = ip->initial_outbound_seq_num;
+  ip->initial_outbound_sequence_number = get_rand();
+  ip->highest_received_sequence_number = ip->initial_outbound_sequence_number;
   ip->previously_received_list = 0xFF;
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
@@ -227,7 +227,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   /* Must set before ipmipower_packet_create, so requester sequence
    * number is set properly.
    */
-  ip->ic->ipmi_requester_seq_num_counter++;
+  ip->ic->ipmi_requester_sequence_number_counter++;
   
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);

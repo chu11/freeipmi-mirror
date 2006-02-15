@@ -80,7 +80,7 @@ fiid_template_t tmpl_cmd_activate_session_rq =
     {4,   "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {128, "challenge_string", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32,  "initial_outbound_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32,  "initial_outbound_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -91,7 +91,7 @@ fiid_template_t tmpl_cmd_activate_session_rs =
     {4,  "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {32, "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32, "initial_inbound_seq_num", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "initial_inbound_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -392,7 +392,7 @@ fill_cmd_activate_session (uint8_t authentication_type,
 			   uint8_t maximum_privilege_level, 
 			   uint8_t *challenge_string, 
 			   uint32_t challenge_string_len, 
-			   uint32_t initial_outbound_seq_num, 
+			   uint32_t initial_outbound_sequence_number, 
 			   fiid_obj_t obj_cmd)
 {
   int8_t rv;
@@ -434,8 +434,8 @@ fill_cmd_activate_session (uint8_t authentication_type,
                             IPMI_CHALLENGE_STRING_LENGTH) < 0));
 
   FIID_OBJ_SET (obj_cmd, 
-                (uint8_t *)"initial_outbound_seq_num", 
-                initial_outbound_seq_num);
+                (uint8_t *)"initial_outbound_sequence_number", 
+                initial_outbound_sequence_number);
 
   return (0);
 }
@@ -514,7 +514,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
       || !IPMI_PEF_ALERTING_VALID(pef_alerting)
       || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
       || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -662,10 +662,10 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq)
 
 int8_t 
 fill_cmd_set_user_access (uint8_t channel_number,
+			  uint8_t user_ipmi_messaging,
+			  uint8_t user_link_authentication,
+			  uint8_t user_restricted_to_callback,
 			  uint8_t user_id,
-                          uint8_t user_restricted_to_callback,
-                          uint8_t user_link_authentication,
-                          uint8_t user_ipmi_messaging,
 			  uint8_t user_privilege_level_limit,
 			  uint8_t user_session_number_limit,
                           fiid_obj_t obj_data_rq)
@@ -673,10 +673,10 @@ fill_cmd_set_user_access (uint8_t channel_number,
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
-      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
       || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
-      || !IPMI_PRIVILEGE_LEVEL_VALID(user_privilege_level_limit)
+      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
+      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;

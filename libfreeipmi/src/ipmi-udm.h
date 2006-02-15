@@ -95,7 +95,7 @@ struct ipmi_device
       uint8_t           authentication_type;
       uint8_t           challenge_string[IPMI_INTERFACE_CHALLENGE_STR_LEN];
       uint32_t          session_id;
-      uint32_t          session_seq_num;
+      uint32_t          session_sequence_number;
       uint8_t           rq_seq;
       
       uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];

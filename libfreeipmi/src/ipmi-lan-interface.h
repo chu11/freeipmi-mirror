@@ -51,12 +51,12 @@ extern "C" {
 */
 
 #define IPMI_LAN_PKT_PAD_SIZE   1
-#define IPMI_LAN_SEQ_NUM_MAX    0x3F /* 111111b */
+#define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
 #define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
 #define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
 
-#define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQ_NUM_MAX + 1)))
+#define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))
 
 extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
@@ -70,7 +70,7 @@ int8_t fill_lan_msg_hdr (uint8_t net_fn,
 			 fiid_obj_t obj_msg);
 
 int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
-                              uint32_t inbound_seq_num, 
+                              uint32_t inbound_sequence_number, 
                               uint32_t session_id,
                               uint8_t *authentication_code_data, 
                               uint32_t authentication_code_data_len, 
@@ -107,8 +107,8 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_check_session_seq_num (fiid_obj_t obj_lan_session_hdr, 
-				       uint32_t session_seq_num);
+int8_t ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, 
+                                               uint32_t session_sequence_number);
 
 int8_t ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, 
 				  uint32_t session_id);

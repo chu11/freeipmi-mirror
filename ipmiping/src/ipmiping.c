@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.15.2.5 2006-02-15 07:04:35 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.15.2.6 2006-02-15 19:19:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -74,7 +74,7 @@ _fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 int 
 createpacket(char *buffer, 
              int buflen, 
-             unsigned int seq_num,
+             unsigned int sequence_number,
              int debug) 
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -108,7 +108,7 @@ createpacket(char *buffer,
     ipmi_ping_err_exit("fill_lan_session_hdr: %s", strerror(errno));
 
   if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, IPMI_BMC_IPMB_LUN_BMC, 
-                       seq_num % (IPMI_RQ_SEQ_MAX+1), obj_lan_msg_hdr) < 0)
+                       sequence_number % (IPMI_RQ_SEQ_MAX+1), obj_lan_msg_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_msg_hdr: %s", strerror(errno));
 
   if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_CURRENT_CHANNEL,
@@ -152,7 +152,7 @@ int
 parsepacket(char *buffer, 
             int buflen, 
             const char *from,
-            unsigned int seq_num, 
+            unsigned int sequence_number, 
             int verbose, 
             int debug)
 {
@@ -253,7 +253,7 @@ parsepacket(char *buffer,
 
   _fiid_obj_get(obj_lan_msg_hdr, (uint8_t *)"rq_seq", (uint64_t *)&req_seq);
 
-  if (req_seq != seq_num % (IPMI_RQ_SEQ_MAX + 1)) 
+  if (req_seq != sequence_number % (IPMI_RQ_SEQ_MAX + 1)) 
     {
 #ifndef NDEBUG
       fprintf(stderr, "%s(%d): req_seq failed\n", __FUNCTION__, __LINE__);
@@ -315,9 +315,9 @@ parsepacket(char *buffer,
 }
 
 void 
-latepacket(unsigned int seq_num) 
+latepacket(unsigned int sequence_number) 
 {
-  printf("response timed out: rq_seq=%u\n", seq_num % (IPMI_RQ_SEQ_MAX + 1));
+  printf("response timed out: rq_seq=%u\n", sequence_number % (IPMI_RQ_SEQ_MAX + 1));
 }
 
 int

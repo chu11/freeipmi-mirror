@@ -135,7 +135,7 @@ int8_t
 ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
 			    fiid_obj_t obj_cmd_rs)
 {
-  uint32_t initial_outbound_seq_num = 0;
+  uint32_t initial_outbound_sequence_number = 0;
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
 
@@ -161,7 +161,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
     unsigned int seedp;
     seedp = (unsigned int) clock () + (unsigned int) time (NULL);
     srand (seedp);
-    initial_outbound_seq_num = rand_r (&seedp);
+    initial_outbound_sequence_number = rand_r (&seedp);
   }
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_activate_session_rq)))
@@ -171,7 +171,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 				 dev->io.outofband.privilege_level, 
 				 dev->io.outofband.challenge_string, 
 				 IPMI_CHALLENGE_STRING_LENGTH, 
-				 initial_outbound_seq_num, 
+				 initial_outbound_sequence_number, 
 				 obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -314,7 +314,7 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
       || !IPMI_PEF_ALERTING_VALID(pef_alerting)
       || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
       || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -464,10 +464,10 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
 			   uint8_t channel_number,
-			   uint8_t user_id,
-                           uint8_t user_restricted_to_callback,
-                           uint8_t user_link_authentication,
                            uint8_t user_ipmi_messaging,
+                           uint8_t user_link_authentication,
+                           uint8_t user_restricted_to_callback,
+			   uint8_t user_id,
 			   uint8_t user_privilege_level_limit,
 			   uint8_t user_session_number_limit, 
 			   fiid_obj_t obj_cmd_rs)
@@ -477,10 +477,10 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
-      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
       || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
-      || !IPMI_PRIVILEGE_LEVEL_VALID(user_privilege_level_limit)
+      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
+      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -500,10 +500,10 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_set_user_access (channel_number,
-                                user_id,
-                                user_restricted_to_callback,
-                                user_link_authentication,
                                 user_ipmi_messaging,
+                                user_link_authentication,
+                                user_restricted_to_callback,
+                                user_id,
                                 user_privilege_level_limit,
                                 user_session_number_limit,
                                 obj_cmd_rq) < 0)
@@ -841,7 +841,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   uint64_t supported_authentication_type = 0;
   uint64_t temp_session_id = 0;
   uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
-  uint64_t temp_session_seq_num = 0;
+  uint64_t temp_session_sequence_number = 0;
   
   if (!dev)
     {
@@ -935,10 +935,10 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 
   dev->io.outofband.session_id = temp_session_id;
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"initial_inbound_seq_num", 
-		    &temp_session_seq_num) < 0)
+		    (uint8_t *)"initial_inbound_sequence_number", 
+		    &temp_session_sequence_number) < 0)
     goto cleanup;
-  dev->io.outofband.session_seq_num = temp_session_seq_num;
+  dev->io.outofband.session_sequence_number = temp_session_sequence_number;
   
   fiid_obj_destroy(obj_cmd_rs);
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))

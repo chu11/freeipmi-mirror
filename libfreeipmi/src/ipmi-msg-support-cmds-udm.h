@@ -62,12 +62,12 @@ int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 
 int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
 				  uint8_t channel_number,
+				  uint8_t user_ipmi_messaging,
+				  uint8_t user_link_authentication,
+				  uint8_t user_restricted_to_callback,
 				  uint8_t user_id,
-                                  uint8_t user_restricted_to_callback,
-                                  uint8_t user_link_authentication,
-                                  uint8_t user_ipmi_messaging,
 				  uint8_t user_privilege_level_limit,
-				  uint8_t user_session_number_limit, 
+				  uint8_t user_session_number_limit,
 				  fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_user_access2 (ipmi_device_t *dev, 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.16.2.3 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.16.2.4 2006-02-15 19:19:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,9 +42,9 @@
 extern struct ipmipower_config *conf;
 
 static int 
-_check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
+_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint32_t shift_num, wrap_val, max_seq_num = 0xFFFFFFFF;
+  uint32_t shift_num, wrap_val, max_sequence_number = 0xFFFFFFFF;
   uint64_t pktoseq = 0;
   int retval = 0;
 
@@ -68,7 +68,7 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     return 1;
 
   Fiid_obj_get(ip->session_res,
-               (uint8_t *)"session_seq_num", 
+               (uint8_t *)"session_sequence_number", 
 	       &pktoseq);
   
   if (pkt == ACTV_RES)
@@ -78,29 +78,29 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
        * whatever sequence number they give us even if it isn't the
        * initial outbound sequence number.
        */
-      ip->highest_received_seq_num = pktoseq;
+      ip->highest_received_sequence_number = pktoseq;
       return 1;
     }
   
   /* Drop duplicate packet */
-  if (pktoseq == ip->highest_received_seq_num)
+  if (pktoseq == ip->highest_received_sequence_number)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
    * within range 
    */
-  if (ip->highest_received_seq_num > (max_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+  if (ip->highest_received_sequence_number > (max_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
     {
-      wrap_val = IPMIPOWER_SEQ_NUM_WINDOW - (max_seq_num - ip->highest_received_seq_num) - 1;
+      wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (max_sequence_number - ip->highest_received_sequence_number) - 1;
 
-      if (pktoseq > ip->highest_received_seq_num || pktoseq <= wrap_val)
+      if (pktoseq > ip->highest_received_sequence_number || pktoseq <= wrap_val)
         {
-          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
-            shift_num = pktoseq - ip->highest_received_seq_num;
+          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
+            shift_num = pktoseq - ip->highest_received_sequence_number;
           else
-            shift_num = pktoseq + (max_seq_num - ip->highest_received_seq_num) + 1;
+            shift_num = pktoseq + (max_sequence_number - ip->highest_received_sequence_number) + 1;
           
-          ip->highest_received_seq_num = pktoseq;
+          ip->highest_received_sequence_number = pktoseq;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
           retval++;
@@ -108,11 +108,11 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      if (pktoseq > ip->highest_received_seq_num
-          && (pktoseq - ip->highest_received_seq_num) <= IPMIPOWER_SEQ_NUM_WINDOW)
+      if (pktoseq > ip->highest_received_sequence_number
+          && (pktoseq - ip->highest_received_sequence_number) <= IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
         {
-          shift_num = (pktoseq - ip->highest_received_seq_num);
-          ip->highest_received_seq_num = pktoseq;
+          shift_num = (pktoseq - ip->highest_received_sequence_number);
+          ip->highest_received_sequence_number = pktoseq;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
           retval++;
@@ -122,16 +122,16 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Check if sequence number is lower than highest received, is
    * within range, and hasn't been seen yet
    */
-  if (ip->highest_received_seq_num < IPMIPOWER_SEQ_NUM_WINDOW)
+  if (ip->highest_received_sequence_number < IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
     {
-      uint32_t wrap_val = max_seq_num - (IPMIPOWER_SEQ_NUM_WINDOW - ip->highest_received_seq_num) + 1;
+      uint32_t wrap_val = max_sequence_number - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
-      if (pktoseq < ip->highest_received_seq_num || pktoseq >= wrap_val)
+      if (pktoseq < ip->highest_received_sequence_number || pktoseq >= wrap_val)
         {
-          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
-            shift_num = ip->highest_received_seq_num + (max_seq_num - pktoseq) + 1;
+          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
+            shift_num = ip->highest_received_sequence_number + (max_sequence_number - pktoseq) + 1;
           else
-            shift_num = ip->highest_received_seq_num - pktoseq;
+            shift_num = ip->highest_received_sequence_number - pktoseq;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
@@ -143,10 +143,10 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      if (pktoseq < ip->highest_received_seq_num
-          && pktoseq >= (ip->highest_received_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+      if (pktoseq < ip->highest_received_sequence_number
+          && pktoseq >= (ip->highest_received_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
         {
-          shift_num = ip->highest_received_seq_num - pktoseq;
+          shift_num = ip->highest_received_sequence_number - pktoseq;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
@@ -159,8 +159,8 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   
  out:
   if (!retval)
-    dbg("_check_outbound_seq_num(%s:%d): pktoseq: %u, high: %u",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_seq_num);
+    dbg("_check_outbound_sequence_number(%s:%d): pktoseq: %u, high: %u",
+        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_sequence_number);
   
   return retval;
 }
@@ -238,7 +238,7 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
 }
 
 static int 
-_check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt) 
+_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t pktrseq = 0;
   uint64_t myrseq = 0;
@@ -246,12 +246,12 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  myrseq = ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1);
+  myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1);
 
   Fiid_obj_get(ip->msg_res, (uint8_t *)"rq_seq", &pktrseq);
 
   if (pktrseq != myrseq)
-    dbg("_check_requester_seq_num(%s:%d): rseq: %x, expected: %x",
+    dbg("_check_requester_sequence_number(%s:%d): rseq: %x, expected: %x",
         ip->ic->hostname, ip->protocol_state, (unsigned int)pktrseq, (unsigned int)myrseq);
   
   return ((pktrseq == myrseq) ? 1 : 0);
@@ -321,13 +321,13 @@ ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
 
-  if (oseq && !(*oseq = _check_outbound_seq_num(ip, pkt)))
+  if (oseq && !(*oseq = _check_outbound_sequence_number(ip, pkt)))
     e++;
   if (sid && !(*sid = _check_session_id(ip, pkt)))
     e++;
   if (netfn && !(*netfn = _check_network_function(ip, pkt)))
     e++;
-  if (rseq && !(*rseq = _check_requester_seq_num(ip, pkt)))
+  if (rseq && !(*rseq = _check_requester_sequence_number(ip, pkt)))
     e++;
   if (cmd && !(*cmd = _check_command(ip, pkt)))
     e++;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.9.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.9.2.3 2006-02-15 19:19:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,8 +143,8 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   ic->ping_out = Cbuf_create(IPMIPOWER_MIN_CONNECTION_BUF, 
                              IPMIPOWER_MAX_CONNECTION_BUF);
 
-  ic->ipmi_requester_seq_num_counter = get_rand();
-  ic->ping_seq_num_counter = get_rand();
+  ic->ipmi_requester_sequence_number_counter = get_rand();
+  ic->ping_sequence_number_counter = get_rand();
   memset(&ic->last_ipmi_send, '\0', sizeof(struct timeval));
   memset(&ic->last_ping_send, '\0', sizeof(struct timeval));
   memset(&ic->last_ipmi_recv, '\0', sizeof(struct timeval));

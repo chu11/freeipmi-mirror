@@ -179,7 +179,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
                            dev->io.outofband.rq_seq,
                            dev->io.outofband.rq.obj_lan_msg_hdr) != -1);
     ERR (fill_lan_session_hdr (dev->io.outofband.authentication_type,
-                               dev->io.outofband.session_seq_num,
+                               dev->io.outofband.session_sequence_number,
                                dev->io.outofband.session_id,
                                NULL,
                                0,
@@ -204,7 +204,7 @@ printf("DEBUGGING:\n");
 			  *(dev->io.outofband.rs.tmpl_msg_hdr_ptr));
 #endif
 
-    dev->io.outofband.session_seq_num++;
+    dev->io.outofband.session_sequence_number++;
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
     
     status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0, 
@@ -299,7 +299,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
                            dev->io.outofband.rq_seq,
                            dev->io.outofband.rq.obj_lan_msg_hdr) != -1);
     ERR (fill_lan_session_hdr (dev->io.outofband.authentication_type,
-                               dev->io.outofband.session_seq_num,
+                               dev->io.outofband.session_sequence_number,
                                dev->io.outofband.session_id,
                                NULL,
                                0,
@@ -313,7 +313,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
                                 pkt,
                                 pkt_len) != -1);
 
-    dev->io.outofband.session_seq_num++;
+    dev->io.outofband.session_sequence_number++;
     IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
     
     status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0, 
