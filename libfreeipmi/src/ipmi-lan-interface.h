@@ -53,6 +53,9 @@ extern "C" {
 #define IPMI_LAN_PKT_PAD_SIZE   1
 #define IPMI_LAN_SEQ_NUM_MAX    0x3F /* 111111b */
 
+#define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
+#define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
+
 #define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQ_NUM_MAX + 1)))
 
 extern fiid_template_t tmpl_lan_session_hdr;

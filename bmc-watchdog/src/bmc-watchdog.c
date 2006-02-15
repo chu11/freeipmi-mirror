@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.41.2.4 2006-02-14 22:42:14 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.41.2.5 2006-02-15 05:05:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -636,23 +636,23 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
 		    pre_timeout_interval, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_frb2)
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_bios_frb2", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_frb2", 
                     timer_use_expiration_flag_bios_frb2, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_post) 
-     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_bios_post", 
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_post", 
                    timer_use_expiration_flag_bios_post, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_os_load) 
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_os_load", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.os_load", 
                     timer_use_expiration_flag_os_load, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_sms_os) 
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_sms_os", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.sms_os", 
                     timer_use_expiration_flag_sms_os, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_oem) 
-     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag_oem", 
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.oem", 
                    timer_use_expiration_flag_oem, "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)

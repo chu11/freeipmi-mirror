@@ -22,6 +22,15 @@
 	* libfreeipmi/src/ipmi-watchdog.h,
 	libfreeipmi/src/ipmi-watchdog.c: Code cleanup.
 
+	* libfreeipmi/src/ipmi-msg-support-cmds.h,
+	libfreeipmi/src/ipmi-msg-support-cmds.c: Code cleanup.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.h: Consolidate the
+	multiple user name, password, challenge string, and auth-code
+	defines.  Cleanup auth-type defines.
+
+	* libfreeipmi/, ipmiping/, ipmipower/, fish/: Adjust code appropriately.
+
 2006-02-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c

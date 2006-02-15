@@ -25,8 +25,8 @@
 extern "C" {
 #endif
 
-int8_t ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
-					fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 
+                                                          fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev, 
 					fiid_obj_t obj_cmd_rs);
@@ -34,7 +34,7 @@ int8_t ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_activate_session2 (ipmi_device_t *dev, 
 				   fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_session_privilege_level2 (ipmi_device_t *dev, 
 					 fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_lan_close_session2 (ipmi_device_t *dev, 
@@ -63,9 +63,9 @@ int8_t ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
 				  uint8_t channel_number,
 				  uint8_t user_id,
-				  uint8_t restrict_to_callback,
-				  uint8_t enable_link_auth,
-				  uint8_t enable_ipmi_msgs,
+                                  uint8_t user_restricted_to_callback,
+                                  uint8_t user_link_authentication,
+                                  uint8_t user_ipmi_messaging,
 				  uint8_t user_privilege_level_limit,
 				  uint8_t user_session_number_limit, 
 				  fiid_obj_t obj_cmd_rs);

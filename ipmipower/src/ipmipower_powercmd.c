@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21.2.4 2006-02-13 23:38:22 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.21.2.5 2006-02-15 05:05:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -148,14 +148,14 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->msg_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
   ip->trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
 
-  ip->auth_req = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rq); 
-  ip->auth_res = Fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs); 
+  ip->auth_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
+  ip->auth_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs); 
   ip->sess_req = Fiid_obj_create(tmpl_cmd_get_session_challenge_rq); 
   ip->sess_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
   ip->actv_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
   ip->actv_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
-  ip->priv_req = Fiid_obj_create(tmpl_cmd_set_session_priv_level_rq); 
-  ip->priv_res = Fiid_obj_create(tmpl_cmd_set_session_priv_level_rs); 
+  ip->priv_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
+  ip->priv_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->clos_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
   ip->clos_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
   ip->chas_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
@@ -185,9 +185,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * specification 
        */
       if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege = IPMI_PRIV_LEVEL_USER;
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
       else
-        ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
     }
   else
     ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
@@ -340,21 +340,21 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   
   if (pkt == AUTH_RES || pkt == SESS_RES)
-    at = IPMI_SESSION_AUTH_TYPE_NONE;
+    at = IPMI_AUTH_TYPE_NONE;
   else if (pkt == ACTV_RES)
     at = ip->authtype;
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         {
-          at = IPMI_SESSION_AUTH_TYPE_NONE;
+          at = IPMI_AUTH_TYPE_NONE;
           check_authcode_retry_flag++;
         }
       else
         at = ip->authtype;
     }
 
-  if (at != IPMI_SESSION_AUTH_TYPE_NONE)
+  if (at != IPMI_AUTH_TYPE_NONE)
     {
       if (strlen(conf->password))
         password = (uint8_t *)conf->password;
@@ -390,7 +390,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
       at = ip->authtype;
 
-      if (at != IPMI_SESSION_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTH_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -630,7 +630,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       uint64_t auth_type_none, auth_type_md2, auth_type_md5, 
         auth_type_straight_passwd_key, auth_status_anonymous_login, 
         auth_status_null_username, auth_status_non_null_username, 
-        auth_status_per_message_auth;
+        auth_status_per_message_authentication;
       int authtype_try_higher_priv = 0;
 
       if ((rv = _recv_packet(ip, AUTH_RES)) != 1) 
@@ -670,8 +670,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    (uint8_t *)"auth_status.non_null_username", 
 		   &auth_status_non_null_username);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"auth_status.per_message_auth",
-		   &auth_status_per_message_auth);
+                   (uint8_t *)"auth_status.per_message_authentication",
+		   &auth_status_per_message_authentication);
 
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
@@ -718,7 +718,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                * could be enabled (shame on you evil vendor!!) or
                * authentication at this privilege level isn't allowed.
                */
-              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
                 {
                   /* Time to give up */
 #ifndef NDEBUG	      
@@ -757,7 +757,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
           else
             {
-              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
                 {
                   /* Time to give up */
                   ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
@@ -775,10 +775,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (authtype_try_higher_priv)
         {
           /* Try a higher privilege level */
-          if (ip->privilege == IPMI_PRIV_LEVEL_USER)
-            ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
-          else if (ip->privilege == IPMI_PRIV_LEVEL_OPERATOR)
-            ip->privilege = IPMI_PRIV_LEVEL_ADMIN;
+          if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+          else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
           else
             err_exit("_process_ipmi_packets: invalid privilege state: %d", 
                      ip->privilege);
@@ -790,7 +790,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       if (!conf->force_permsg_auth)
         {
-          if (!auth_status_per_message_auth)
+          if (!auth_status_per_message_authentication)
             ip->permsgauth_enabled = IPMIPOWER_TRUE;
           else
             ip->permsgauth_enabled = IPMIPOWER_FALSE;

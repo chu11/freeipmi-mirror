@@ -352,7 +352,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   if (fiid_obj_get(obj_session_hdr, "auth_type", &auth_type) < 0)
     goto cleanup;
 
-  if (auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
+  if (auth_type != IPMI_AUTH_TYPE_NONE)
     {
       if ((len = fiid_obj_set_data(obj_session_hdr,
 				   (uint8_t *)"auth_code",

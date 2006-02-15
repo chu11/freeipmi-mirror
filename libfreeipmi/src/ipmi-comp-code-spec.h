@@ -196,23 +196,23 @@ extern "C" {
 #define IPMI_COMP_CODE_INVALID_SESSION_ID_STR \
 "Invalid session ID in request"
 
-#define IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL                            0x86
-#define IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL_STR \
+#define IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL                            0x86
+#define IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL_STR \
 "Requested maximum privilege level exceeds user and/or " \
 "channel privilege limit"
 
-/* IPMI_CMD_SET_SESSION_PRIV_LEVEL */
+/* IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL */
 
 #define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER               0x81
 #define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER_STR \
 "Requested level not available for this user"
 
-#define IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT              0x82
-#define IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT_STR \
+#define IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT              0x82
+#define IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT_STR \
 "Requested level exceeds Channel and/or User Privilege Limit"
 
-#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH                0x83
-#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH_STR \
+#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION                0x83
+#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION_STR \
 "Cannot disable User Level authentication"
 
 /* IPMI_CMD_CLOSE_SESSION */

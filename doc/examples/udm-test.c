@@ -28,15 +28,15 @@ int
 main (int argc, char **argv)
 {
   char *hostname = NULL; /* ipmi hostname for out-of-band */
-  int auth_type = IPMI_SESSION_AUTH_TYPE_NONE; 
-  /* for out-of-band, it can also be IPMI_SESSION_AUTH_TYPE_MD2, 
-     IPMI_SESSION_AUTH_TYPE_MD5, IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 
-     IPMI_SESSION_AUTH_TYPE_OEM_PROP */
+  int auth_type = IPMI_AUTH_TYPE_NONE; 
+  /* for out-of-band, it can also be IPMI_AUTH_TYPE_MD2, 
+     IPMI_AUTH_TYPE_MD5, IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 
+     IPMI_AUTH_TYPE_OEM_PROP */
   char username[] = ""; /* ipmi username for out-of-band */
   char password[] = ""; /* ipmi user's password for out-of-band */
-  int priv_level = IPMI_PRIV_LEVEL_USER; 
-  /* for out-of-band, can also be IPMI_PRIV_LEVEL_CALLBACK, 
-     IPMI_PRIV_LEVEL_OPERATOR, IPMI_PRIV_LEVEL_ADMIN, IPMI_PRIV_LEVEL_OEM */
+  int priv_level = IPMI_PRIVILEGE_LEVEL_USER; 
+  /* for out-of-band, can also be IPMI_PRIVILEGE_LEVEL_CALLBACK, 
+     IPMI_PRIVILEGE_LEVEL_OPERATOR, IPMI_PRIVILEGE_LEVEL_ADMIN, IPMI_PRIVILEGE_LEVEL_OEM */
   
   int disable_auto_probe = 0; /* to disable automatic probing, set non-zero here */
   int driver_address = 0; /* driver address, if needed */

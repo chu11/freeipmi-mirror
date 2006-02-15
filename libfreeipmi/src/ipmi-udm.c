@@ -71,7 +71,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 		     uint8_t auth_type, 
 		     char *username, 
 		     char *password, 
-		     uint8_t priv_level)
+		     uint8_t privilege_level)
 {
   int status;
   
@@ -96,27 +96,27 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_SESSION_AUTH_TYPE_VALID (auth_type) == 0)
+  if (IPMI_AUTH_TYPE_VALID (auth_type) == 0)
     {
       errno = EINVAL;
       return (-1);
     }
   
   if (username != NULL && 
-      strlen (username) > IPMI_SESSION_MAX_USERNAME_LEN)
+      strlen (username) > IPMI_MAX_USER_NAME_LENGTH)
     {
       errno = EINVAL;
       return (-1);
     }
   
   if (password != NULL && 
-      strlen (password) > IPMI_SESSION_MAX_AUTH_CODE_LEN)
+      strlen (password) > IPMI_MAX_AUTH_CODE_LENGTH)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if (IPMI_PRIV_LEVEL_VALID (priv_level) == 0)
+  if (IPMI_PRIVILEGE_LEVEL_VALID (privilege_level) == 0)
     {
       errno = EINVAL;
       return (-1);
@@ -127,21 +127,21 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->io.outofband.remote_host = *remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
   dev->io.outofband.auth_type = auth_type;
-  memset(dev->io.outofband.username, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
+  memset(dev->io.outofband.username, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (username != NULL)
     {
       memcpy (dev->io.outofband.username, 
 	      username, 
 	      strlen (username));
     }
-  memset(dev->io.outofband.password, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN);
+  memset(dev->io.outofband.password, '\0', IPMI_MAX_AUTH_CODE_LENGTH);
   if (password != NULL)
     {
       memcpy (dev->io.outofband.password, 
 	      password, 
 	      strlen (password));
     }
-  dev->io.outofband.priv_level = priv_level;
+  dev->io.outofband.privilege_level = privilege_level;
   
   dev->io.outofband.rq.tmpl_rmcp_hdr_ptr = &tmpl_rmcp_hdr;
   dev->io.outofband.rs.tmpl_rmcp_hdr_ptr = &tmpl_rmcp_hdr;

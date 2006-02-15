@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.16.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.16.2.3 2006-02-15 05:05:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -271,13 +271,13 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
 	       &cmd);
 
   if (pkt == AUTH_RES) 
-    expected_cmd = IPMI_CMD_GET_CHANNEL_AUTH_CAPS;
+    expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
   else if (pkt == SESS_RES) 
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
   else if (pkt == ACTV_RES) 
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
   else if (pkt == PRIV_RES) 
-    expected_cmd = IPMI_CMD_SET_SESSION_PRIV_LEVEL;
+    expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == CLOS_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
   else if (pkt == CHAS_RES) 

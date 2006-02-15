@@ -51,13 +51,19 @@ libfreeipmi:
        - audit templates (done)
        - audit function names (done)
        - audit parameters (done)
+       - function parameter ordering
+       - udm parameter checking
     - msg-support-cmds
        - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
-       - audit templates
+       - audit templates 
        - audit function names, parameters
+       - .h file ordering (done)
+       - .h file split
+       - function parameter ordering
+       - udm parameter checking
     - watchdog
        - clean function names (done)
        - order code appropriately (done)
@@ -65,12 +71,14 @@ libfreeipmi:
        - missing commands (done)
        - audit templates (done)
        - audit function names, parameters (done)
+       - function parameter ordering
     - rmcp
        - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - audit templates (done)
        - audit function names, parameters (done)
+       - function parameter ordering
   * reg-space default  
   * udm parameter checks
 

@@ -64,15 +64,15 @@ SCM ex_set_bmc_username (SCM scm_userid, SCM scm_username);
 SCM ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status);
 SCM ex_set_bmc_user_password (SCM scm_userid, SCM scm_password);
 SCM ex_set_bmc_user_lan_channel_access (SCM scm_userid, 
-					SCM scm_lan_enable_ipmi_msgs, 
-					SCM scm_lan_enable_link_auth, 
-					SCM scm_lan_enable_restrict_to_callback, 
+					SCM scm_lan_user_ipmi_messaging, 
+					SCM scm_lan_user_link_authentication, 
+					SCM scm_lan_user_restricted_to_callback, 
 					SCM scm_lan_privilege_limit, 
 					SCM scm_lan_session_limit);
 SCM ex_set_bmc_user_serial_channel_access (SCM scm_userid, 
-					   SCM scm_serial_enable_ipmi_msgs, 
-					   SCM scm_serial_enable_link_auth, 
-					   SCM scm_serial_enable_restrict_to_callback, 
+					   SCM scm_serial_user_ipmi_messaging, 
+					   SCM scm_serial_user_link_authentication, 
+					   SCM scm_serial_user_restricted_to_callback, 
 					   SCM scm_serial_privilege_limit, 
 					   SCM scm_serial_session_limit);
 SCM ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode, 

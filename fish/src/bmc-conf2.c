@@ -22,9 +22,9 @@ static int8_t
 set_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t userid, 
 		     uint8_t channel_number, 
-		     uint8_t enable_ipmi_msgs, 
-		     uint8_t enable_link_auth, 
-		     uint8_t enable_restrict_to_callback, 
+		     uint8_t user_ipmi_messaging, 
+		     uint8_t user_link_authentication, 
+		     uint8_t user_restricted_to_callback, 
 		     uint8_t privilege_limit, 
 		     uint8_t session_limit)
 {
@@ -36,9 +36,9 @@ set_bmc_user_access (ipmi_device_t *dev,
   if (ipmi_cmd_set_user_access2 (dev, 
 				 channel_number, 
 				 userid, 
-				 enable_restrict_to_callback, 
-				 enable_link_auth, 
-				 enable_ipmi_msgs, 
+				 user_restricted_to_callback, 
+				 user_link_authentication, 
+				 user_ipmi_messaging, 
 				 privilege_limit, 
 				 session_limit, 
 				 obj_cmd_rs) != 0)
@@ -56,8 +56,8 @@ set_bmc_channel_access (ipmi_device_t *dev,
 			uint8_t channel_number, 
 			uint8_t set_option, 
 			uint8_t access_mode, 
-			uint8_t enable_user_level_auth, 
-			uint8_t enable_per_message_auth, 
+			uint8_t enable_user_level_authentication, 
+			uint8_t enable_per_message_authentication, 
 			uint8_t enable_pef_alerting, 
 			uint8_t channel_privilege_limit)
 {
@@ -70,14 +70,14 @@ set_bmc_channel_access (ipmi_device_t *dev,
   if (ipmi_cmd_set_channel_access2 (dev, 
 				    channel_number, 
 				    access_mode, 
-				    enable_user_level_auth, 
-				    enable_per_message_auth, 
+				    enable_user_level_authentication, 
+				    enable_per_message_authentication, 
 				    enable_pef_alerting, 
 				    (set_option ? IPMI_CHANNEL_ACCESS_SET_VOLATILE : 
 				     IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE), 
 				    channel_privilege_limit, 
-				    (set_option ? IPMI_PRIV_LEVEL_LIMIT_SET_VOLATILE : 
-				     IPMI_PRIV_LEVEL_LIMIT_SET_NON_VOLATILE), 
+				    (set_option ? IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE : 
+				     IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
 				    obj_cmd_rs) != 0)
     goto cleanup;
       
@@ -121,12 +121,12 @@ set_bmc_enable_user (ipmi_device_t *dev,
 		     int user_status)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t password[IPMI_USER_PASSWORD_MAX_LENGTH];
+  uint8_t password[IPMI_MAX_AUTH_CODE_LENGTH];
   int8_t rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
-  memset (password, 0, IPMI_USER_PASSWORD_MAX_LENGTH);
+  memset (password, 0, IPMI_MAX_AUTH_CODE_LENGTH);
   if (ipmi_cmd_set_user_password2 (dev, 
 				   userid, 
 				   (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
@@ -172,18 +172,18 @@ set_bmc_user_password (ipmi_device_t *dev,
 int8_t 
 set_bmc_user_lan_channel_access (ipmi_device_t *dev, 
 				 uint8_t userid, 
-				 uint8_t lan_enable_ipmi_msgs, 
-				 uint8_t lan_enable_link_auth, 
-				 uint8_t lan_enable_restrict_to_callback, 
+				 uint8_t lan_user_ipmi_messaging, 
+				 uint8_t lan_user_link_authentication, 
+				 uint8_t lan_user_restricted_to_callback, 
 				 uint8_t lan_privilege_limit, 
 				 uint8_t lan_session_limit)
 {
   return set_bmc_user_access (dev, 
 			      userid, 
 			      get_lan_channel_number (), 
-			      lan_enable_ipmi_msgs, 
-			      lan_enable_link_auth, 
-			      lan_enable_restrict_to_callback, 
+			      lan_user_ipmi_messaging, 
+			      lan_user_link_authentication, 
+			      lan_user_restricted_to_callback, 
 			      lan_privilege_limit, 
 			      lan_session_limit);
 }
@@ -191,18 +191,18 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 int8_t 
 set_bmc_user_serial_channel_access (ipmi_device_t *dev, 
 				    uint8_t userid, 
-				    uint8_t serial_enable_ipmi_msgs, 
-				    uint8_t serial_enable_link_auth, 
-				    uint8_t serial_enable_restrict_to_callback, 
+				    uint8_t serial_user_ipmi_messaging, 
+				    uint8_t serial_user_link_authentication, 
+				    uint8_t serial_user_restricted_to_callback, 
 				    uint8_t serial_privilege_limit, 
 				    uint8_t serial_session_limit)
 {
   return set_bmc_user_access (dev, 
 			      userid, 
 			      get_serial_channel_number (), 
-			      serial_enable_ipmi_msgs, 
-			      serial_enable_link_auth, 
-			      serial_enable_restrict_to_callback, 
+			      serial_user_ipmi_messaging, 
+			      serial_user_link_authentication, 
+			      serial_user_restricted_to_callback, 
 			      serial_privilege_limit, 
 			      serial_session_limit);
 }
@@ -210,8 +210,8 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 int8_t 
 set_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
 				     uint8_t access_mode, 
-				     uint8_t enable_user_level_auth, 
-				     uint8_t enable_per_message_auth, 
+				     uint8_t enable_user_level_authentication, 
+				     uint8_t enable_per_message_authentication, 
 				     uint8_t enable_pef_alerting, 
 				     uint8_t channel_privilege_limit)
 {
@@ -219,8 +219,8 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 				 get_lan_channel_number (), 
 				 1, 
 				 access_mode, 
-				 (enable_user_level_auth ? 0 : 1), 
-				 (enable_per_message_auth ? 0 : 1), 
+				 (enable_user_level_authentication ? 0 : 1), 
+				 (enable_per_message_authentication ? 0 : 1), 
 				 (enable_pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
@@ -228,8 +228,8 @@ set_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 int8_t 
 set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
 					 uint8_t access_mode, 
-					 uint8_t enable_user_level_auth, 
-					 uint8_t enable_per_message_auth, 
+					 uint8_t enable_user_level_authentication, 
+					 uint8_t enable_per_message_authentication, 
 					 uint8_t enable_pef_alerting, 
 					 uint8_t channel_privilege_limit)
 {
@@ -237,8 +237,8 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 				 get_lan_channel_number (), 
 				 0, 
 				 access_mode, 
-				 (enable_user_level_auth ? 0 : 1), 
-				 (enable_per_message_auth ? 0 : 1), 
+				 (enable_user_level_authentication ? 0 : 1), 
+				 (enable_per_message_authentication ? 0 : 1), 
 				 (enable_pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
@@ -822,8 +822,8 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 int8_t 
 set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					uint8_t access_mode, 
-					uint8_t enable_user_level_auth, 
-					uint8_t enable_per_message_auth, 
+					uint8_t enable_user_level_authentication, 
+					uint8_t enable_per_message_authentication, 
 					uint8_t enable_pef_alerting, 
 					uint8_t channel_privilege_limit)
 {
@@ -831,8 +831,8 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 				 get_serial_channel_number (), 
 				 1, 
 				 access_mode, 
-				 (enable_user_level_auth ? 0 : 1), 
-				 (enable_per_message_auth ? 0 : 1), 
+				 (enable_user_level_authentication ? 0 : 1), 
+				 (enable_per_message_authentication ? 0 : 1), 
 				 (enable_pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
@@ -840,8 +840,8 @@ set_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 int8_t 
 set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
 					    uint8_t access_mode, 
-					    uint8_t enable_user_level_auth, 
-					    uint8_t enable_per_message_auth, 
+					    uint8_t enable_user_level_authentication, 
+					    uint8_t enable_per_message_authentication, 
 					    uint8_t enable_pef_alerting, 
 					    uint8_t channel_privilege_limit)
 {
@@ -849,8 +849,8 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 				 get_serial_channel_number (), 
 				 0, 
 				 access_mode, 
-				 (enable_user_level_auth ? 0 : 1), 
-				 (enable_per_message_auth ? 0 : 1), 
+				 (enable_user_level_authentication ? 0 : 1), 
+				 (enable_per_message_authentication ? 0 : 1), 
 				 (enable_pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
@@ -1087,9 +1087,9 @@ static int8_t
 get_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t userid, 
 		     uint8_t channel_number, 
-		     uint8_t *enable_ipmi_msgs, 
-		     uint8_t *enable_link_auth, 
-		     uint8_t *enable_restrict_to_callback, 
+		     uint8_t *user_ipmi_messaging, 
+		     uint8_t *user_link_authentication, 
+		     uint8_t *user_restricted_to_callback, 
 		     uint8_t *privilege_limit, 
 		     uint8_t *session_limit)
 {
@@ -1113,22 +1113,22 @@ get_bmc_user_access (ipmi_device_t *dev,
   *privilege_limit = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_flags.enable_ipmi_msgs", 
+		    (uint8_t *)"user_ipmi_messaging", 
 		    &val) < 0)
     goto cleanup;
-  *enable_ipmi_msgs = (uint8_t) val;
+  *user_ipmi_messaging = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_flags.enable_link_auth", 
+		    (uint8_t *)"user_link_authentication", 
 		    &val) < 0)
     goto cleanup;
-  *enable_link_auth = (uint8_t) val;
+  *user_link_authentication = (uint8_t) val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_flags.restrict_to_callback", 
+		    (uint8_t *)"user_restricted_to_callback", 
 		    &val) < 0)
     goto cleanup;
-  *enable_restrict_to_callback = (uint8_t) val;
+  *user_restricted_to_callback = (uint8_t) val;
   
   *session_limit = 0;
  
@@ -1144,8 +1144,8 @@ get_bmc_channel_access (ipmi_device_t *dev,
 			uint8_t channel_number, 
 			uint8_t access_type, 
 			uint8_t *access_mode, 
-			uint8_t *user_level_auth, 
-			uint8_t *per_message_auth, 
+			uint8_t *user_level_authentication, 
+			uint8_t *per_message_authentication, 
 			uint8_t *pef_alerting, 
 			uint8_t *privilege_limit)
 {
@@ -1173,13 +1173,13 @@ get_bmc_channel_access (ipmi_device_t *dev,
 		    (uint8_t *)"user_level_authentication", 
 		    &val) < 0)
     goto cleanup;
-  *user_level_auth = (val ? 0 : 1);
+  *user_level_authentication = (val ? 0 : 1);
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"per_message_authentication", 
 		    &val) < 0)
     goto cleanup;
-  *per_message_auth = (val ? 0 : 1);
+  *per_message_authentication = (val ? 0 : 1);
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"pef_alerting", 
@@ -1239,18 +1239,18 @@ get_bmc_username (ipmi_device_t *dev,
 int8_t 
 get_bmc_user_lan_channel_access (ipmi_device_t *dev, 
 				 uint8_t userid, 
-				 uint8_t *enable_ipmi_msgs, 
-				 uint8_t *enable_link_auth, 
-				 uint8_t *enable_restrict_to_callback, 
+				 uint8_t *user_ipmi_messaging, 
+				 uint8_t *user_link_authentication, 
+				 uint8_t *user_restricted_to_callback, 
 				 uint8_t *privilege_limit, 
 				 uint8_t *session_limit)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
 			      get_lan_channel_number (), 
-			      enable_ipmi_msgs, 
-			      enable_link_auth, 
-			      enable_restrict_to_callback, 
+			      user_ipmi_messaging, 
+			      user_link_authentication, 
+			      user_restricted_to_callback, 
 			      privilege_limit, 
 			      session_limit);
 }
@@ -1258,18 +1258,18 @@ get_bmc_user_lan_channel_access (ipmi_device_t *dev,
 int8_t 
 get_bmc_user_serial_channel_access (ipmi_device_t *dev, 
 				    uint8_t userid, 
-				    uint8_t *enable_ipmi_msgs, 
-				    uint8_t *enable_link_auth, 
-				    uint8_t *enable_restrict_to_callback, 
+				    uint8_t *user_ipmi_messaging, 
+				    uint8_t *user_link_authentication, 
+				    uint8_t *user_restricted_to_callback, 
 				    uint8_t *privilege_limit, 
 				    uint8_t *session_limit)
 {
   return get_bmc_user_access (dev, 
 			      userid, 
 			      get_serial_channel_number (), 
-			      enable_ipmi_msgs, 
-			      enable_link_auth, 
-			      enable_restrict_to_callback, 
+			      user_ipmi_messaging, 
+			      user_link_authentication, 
+			      user_restricted_to_callback, 
 			      privilege_limit, 
 			      session_limit);
 }
@@ -1277,8 +1277,8 @@ get_bmc_user_serial_channel_access (ipmi_device_t *dev,
 int8_t 
 get_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
 				     uint8_t *access_mode, 
-				     uint8_t *user_level_auth, 
-				     uint8_t *per_message_auth, 
+				     uint8_t *user_level_authentication, 
+				     uint8_t *per_message_authentication, 
 				     uint8_t *pef_alerting, 
 				     uint8_t *privilege_limit)
 {
@@ -1286,8 +1286,8 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 				 get_lan_channel_number (), 
 				 1, 
 				 access_mode, 
-				 user_level_auth, 
-				 per_message_auth, 
+				 user_level_authentication, 
+				 per_message_authentication, 
 				 pef_alerting, 
 				 privilege_limit);
 }
@@ -1295,8 +1295,8 @@ get_bmc_lan_channel_volatile_access (ipmi_device_t *dev,
 int8_t 
 get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
 					 uint8_t *access_mode, 
-					 uint8_t *user_level_auth, 
-					 uint8_t *per_message_auth, 
+					 uint8_t *user_level_authentication, 
+					 uint8_t *per_message_authentication, 
 					 uint8_t *pef_alerting, 
 					 uint8_t *privilege_limit)
 {
@@ -1304,8 +1304,8 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 				 get_lan_channel_number (), 
 				 0, 
 				 access_mode, 
-				 user_level_auth, 
-				 per_message_auth, 
+				 user_level_authentication, 
+				 per_message_authentication, 
 				 pef_alerting, 
 				 privilege_limit);
 }
@@ -1949,8 +1949,8 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 int8_t 
 get_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					uint8_t *access_mode, 
-					uint8_t *user_level_auth, 
-					uint8_t *per_message_auth, 
+					uint8_t *user_level_authentication, 
+					uint8_t *per_message_authentication, 
 					uint8_t *pef_alerting, 
 					uint8_t *privilege_limit)
 {
@@ -1958,8 +1958,8 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 				 get_serial_channel_number (), 
 				 1, 
 				 access_mode, 
-				 user_level_auth, 
-				 per_message_auth, 
+				 user_level_authentication, 
+				 per_message_authentication, 
 				 pef_alerting, 
 				 privilege_limit);
 }
@@ -1967,8 +1967,8 @@ get_bmc_serial_channel_volatile_access (ipmi_device_t *dev,
 int8_t 
 get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
 					    uint8_t *access_mode, 
-					    uint8_t *user_level_auth, 
-					    uint8_t *per_message_auth, 
+					    uint8_t *user_level_authentication, 
+					    uint8_t *per_message_authentication, 
 					    uint8_t *pef_alerting, 
 					    uint8_t *privilege_limit)
 {
@@ -1976,8 +1976,8 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 				 get_serial_channel_number (), 
 				 0, 
 				 access_mode, 
-				 user_level_auth, 
-				 per_message_auth, 
+				 user_level_authentication, 
+				 per_message_authentication, 
 				 pef_alerting, 
 				 privilege_limit);
 }

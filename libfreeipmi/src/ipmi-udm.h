@@ -100,7 +100,7 @@ struct ipmi_device
       
       uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];
       uint8_t           password[IPMI_INTERFACE_MAX_AUTH_CODE_LEN];
-      uint8_t           priv_level;
+      uint8_t           privilege_level;
       
       struct 
       {
@@ -145,7 +145,7 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 uint8_t auth_type, 
 			 char *username, 
 			 char *password, 
-			 uint8_t priv_level);
+			 uint8_t privilege_level);
 int ipmi_close (ipmi_device_t *dev);
 int ipmi_cmd (ipmi_device_t *dev, 
 	      uint8_t lun, 

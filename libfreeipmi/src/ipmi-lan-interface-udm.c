@@ -30,7 +30,7 @@ _ipmi_lan_pkt_min_size(uint8_t auth_type,
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTH_TYPE_VALID(auth_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
@@ -48,11 +48,11 @@ _ipmi_lan_pkt_min_size(uint8_t auth_type,
 					      (uint8_t *)"ipmi_msg_len")) < 0));
   msg_len += len;
   
-  if (auth_type == IPMI_SESSION_AUTH_TYPE_MD2
-      || auth_type == IPMI_SESSION_AUTH_TYPE_MD5
-      || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY
-      || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP) 
-    msg_len += IPMI_SESSION_MAX_AUTH_CODE_LEN;
+  if (auth_type == IPMI_AUTH_TYPE_MD2
+      || auth_type == IPMI_AUTH_TYPE_MD5
+      || auth_type == IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY
+      || auth_type == IPMI_AUTH_TYPE_OEM_PROP) 
+    msg_len += IPMI_MAX_AUTH_CODE_LENGTH;
   
   return msg_len;
 }
@@ -65,7 +65,7 @@ _ipmi_lan_pkt_size (uint8_t auth_type,
   uint32_t msg_len = 0;
   int32_t len;
   
-  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTH_TYPE_VALID(auth_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
@@ -93,7 +93,7 @@ _ipmi_max_lan_pkt_size (uint8_t auth_type,
   fiid_field_t *tmpl = NULL;
   int32_t rv = -1;
 
-  assert(IPMI_SESSION_AUTH_TYPE_VALID(auth_type)
+  assert(IPMI_AUTH_TYPE_VALID(auth_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
@@ -189,7 +189,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
                                 dev->io.outofband.rq.obj_lan_msg_hdr,
                                 obj_cmd_rq,
                                 dev->io.outofband.password,
-                                IPMI_SESSION_MAX_AUTH_CODE_LEN,
+                                IPMI_MAX_AUTH_CODE_LENGTH,
                                 pkt,
                                 pkt_len) != -1);
 
@@ -248,7 +248,7 @@ printf("DEBUGGING:\n");
                                           bytes_received, 
                                           dev->io.outofband.auth_type,
                                           dev->io.outofband.password,
-                                          IPMI_SESSION_MAX_AUTH_CODE_LEN) == 1);
+                                          IPMI_MAX_AUTH_CODE_LENGTH) == 1);
 
   }
   
@@ -309,7 +309,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
                                 dev->io.outofband.rq.obj_lan_msg_hdr,
                                 obj_cmd_rq,
                                 dev->io.outofband.password,
-                                IPMI_SESSION_MAX_AUTH_CODE_LEN,
+                                IPMI_MAX_AUTH_CODE_LENGTH,
                                 pkt,
                                 pkt_len) != -1);
 
@@ -452,8 +452,8 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                                       (uint8_t *)"session_id")) < 0)
       return (-1);
 
-    if (dev->io.outofband.auth_type != IPMI_SESSION_AUTH_TYPE_NONE)
-      authcode_len = IPMI_SESSION_MAX_AUTH_CODE_LEN;
+    if (dev->io.outofband.auth_type != IPMI_AUTH_TYPE_NONE)
+      authcode_len = IPMI_MAX_AUTH_CODE_LENGTH;
     else
       authcode_len = 0;
 
@@ -519,7 +519,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                          bytes_received, 
                                          dev->io.outofband.auth_type,
                                          dev->io.outofband.password,
-                                         IPMI_SESSION_MAX_AUTH_CODE_LEN) != 1)
+                                         IPMI_MAX_AUTH_CODE_LENGTH) != 1)
       {
 	fiid_template_free (tmpl_var_cmd_rs);
         fiid_obj_destroy(obj_cmd_rs);

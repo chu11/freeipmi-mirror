@@ -21,8 +21,8 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev, 
-				 fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 
+                                                   fiid_obj_t obj_cmd_rs)
 {
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq = NULL;
@@ -36,7 +36,7 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_channel_auth_caps_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs)) < 0)
     goto cleanup;
   
   if (!ret)
@@ -46,14 +46,14 @@ ipmi_cmd_get_channel_auth_caps2 (ipmi_device_t *dev,
     }
   
   local_dev = *dev;
-  local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
+  local_dev.io.outofband.auth_type = IPMI_AUTH_TYPE_NONE;
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_auth_caps_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
     goto cleanup;
 
-  if (fill_cmd_get_channel_auth_caps (IPMI_CHANNEL_CURRENT_CHANNEL,
-				      IPMI_PRIV_LEVEL_USER, 
-				      obj_cmd_rq) < 0)
+  if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_CURRENT_CHANNEL,
+                                                        IPMI_PRIVILEGE_LEVEL_USER, 
+                                                        obj_cmd_rq) < 0)
     goto cleanup;
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
@@ -101,14 +101,14 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
     }
   
   local_dev = *dev;
-  local_dev.io.outofband.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
+  local_dev.io.outofband.auth_type = IPMI_AUTH_TYPE_NONE;
 
   if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
     goto cleanup;
 
   if (fill_cmd_get_session_challenge (dev->io.outofband.auth_type, 
 				      (char *)dev->io.outofband.username,
-				      IPMI_SESSION_MAX_USERNAME_LEN,
+				      IPMI_MAX_USER_NAME_LENGTH,
 				      obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -168,9 +168,9 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_activate_session (dev->io.outofband.auth_type, 
-				 dev->io.outofband.priv_level, 
+				 dev->io.outofband.privilege_level, 
 				 dev->io.outofband.challenge_string, 
-				 IPMI_SESSION_CHALLENGE_STR_LEN, 
+				 IPMI_CHALLENGE_STRING_LENGTH, 
 				 initial_outbound_seq_num, 
 				 obj_cmd_rq) < 0)
     goto cleanup;
@@ -195,8 +195,8 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev, 
-				  fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_session_privilege_level2 (ipmi_device_t *dev, 
+                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -209,7 +209,7 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_set_session_priv_level_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs)) < 0)
     goto cleanup;
   
   if (!ret)
@@ -218,11 +218,11 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
       goto cleanup;
     }
   
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_session_priv_level_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_session_priv_level (dev->io.outofband.priv_level, 
-				       obj_cmd_rq) < 0)
+  if (fill_cmd_set_session_privilege_level (dev->io.outofband.privilege_level, 
+                                            obj_cmd_rq) < 0)
     goto cleanup;
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
@@ -308,6 +308,13 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
+      || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
+      || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
+      || !IPMI_PEF_ALERTING_VALID(pef_alerting)
+      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set_flag)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set_flag)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -457,9 +464,9 @@ int8_t
 ipmi_cmd_set_user_access2 (ipmi_device_t *dev, 
 			   uint8_t channel_number,
 			   uint8_t user_id,
-			   uint8_t restrict_to_callback,
-			   uint8_t enable_link_auth,
-			   uint8_t enable_ipmi_msgs,
+                           uint8_t user_restricted_to_callback,
+                           uint8_t user_link_authentication,
+                           uint8_t user_ipmi_messaging,
 			   uint8_t user_privilege_level_limit,
 			   uint8_t user_session_number_limit, 
 			   fiid_obj_t obj_cmd_rs)
@@ -469,6 +476,10 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
+      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
+      || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
+      || !IPMI_PRIVILEGE_LEVEL_VALID(user_privilege_level_limit)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -489,9 +500,9 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 
   if (fill_cmd_set_user_access (channel_number,
                                 user_id,
-                                restrict_to_callback,
-                                enable_link_auth,
-                                enable_ipmi_msgs,
+                                user_restricted_to_callback,
+                                user_link_authentication,
+                                user_ipmi_messaging,
                                 user_privilege_level_limit,
                                 user_session_number_limit,
                                 obj_cmd_rq) < 0)
@@ -823,7 +834,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   
   uint64_t supported_auth_type = 0;
   uint64_t temp_session_id = 0;
-  uint8_t challenge_str[IPMI_SESSION_CHALLENGE_STR_LEN];
+  uint8_t challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
   uint64_t temp_session_seq_num = 0;
   
   if (!dev)
@@ -834,39 +845,39 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 
   dev->io.outofband.rq_seq = 0;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_auth_caps_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_channel_auth_caps2 (dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_get_channel_authentication_capabilities2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
   switch (dev->io.outofband.auth_type)
     {
-    case IPMI_SESSION_AUTH_TYPE_NONE:
+    case IPMI_AUTH_TYPE_NONE:
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"auth_type.none", 
 			&supported_auth_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_SESSION_AUTH_TYPE_MD2:
+    case IPMI_AUTH_TYPE_MD2:
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"auth_type.md2", 
 			&supported_auth_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_SESSION_AUTH_TYPE_MD5:
+    case IPMI_AUTH_TYPE_MD5:
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"auth_type.md5", 
 			&supported_auth_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
+    case IPMI_AUTH_TYPE_STRAIGHT_PASSWD_KEY:
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"auth_type.straight_passwd_key", 
 			&supported_auth_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_SESSION_AUTH_TYPE_OEM_PROP:
+    case IPMI_AUTH_TYPE_OEM_PROP:
       if (fiid_obj_get (obj_cmd_rs, 
 			(uint8_t *)"auth_type.oem_prop", 
 			&supported_auth_type) < 0)
@@ -896,14 +907,14 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 
   dev->io.outofband.session_id = temp_session_id;
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"challenge_str", 
-			 challenge_str,
-			 IPMI_SESSION_CHALLENGE_STR_LEN) < 0)
+			 (uint8_t *)"challenge_string", 
+			 challenge_string,
+			 IPMI_CHALLENGE_STRING_LENGTH) < 0)
     goto cleanup;
 
   memcpy (dev->io.outofband.challenge_string, 
-	  challenge_str, 
-	  IPMI_SESSION_CHALLENGE_STR_LEN);
+	  challenge_string, 
+	  IPMI_CHALLENGE_STRING_LENGTH);
 
   fiid_obj_destroy(obj_cmd_rs);
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_activate_session_rs)))
@@ -924,9 +935,9 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   dev->io.outofband.session_seq_num = temp_session_seq_num;
   
   fiid_obj_destroy(obj_cmd_rs);
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_session_priv_level_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))
     goto cleanup;
-  if (ipmi_cmd_set_session_priv_level2 (dev, obj_cmd_rs) < 0)
+  if (ipmi_cmd_set_session_privilege_level2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
   fiid_obj_destroy(obj_cmd_rs);

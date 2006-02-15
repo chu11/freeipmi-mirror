@@ -46,11 +46,11 @@ fiid_template_t tmpl_cmd_set_watchdog_timer_rq =
     {1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "pre_timeout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "initial_countdown_value_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -85,11 +85,11 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
     {1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "pre_timeout_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "timer_use_expiration_flag_oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.bios_frb2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.bios_post", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.os_load", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.sms_os", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "initial_countdown_value_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -177,11 +177,11 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved3", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"pre_timeout_interval", pre_timeout_interval);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved4", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag_bios_frb2", timer_use_expiration_flag_bios_frb2);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag_bios_post", timer_use_expiration_flag_bios_post);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag_os_load", timer_use_expiration_flag_os_load);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag_sms_os", timer_use_expiration_flag_sms_os);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag_oem", timer_use_expiration_flag_oem);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.bios_frb2", timer_use_expiration_flag_bios_frb2);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.bios_post", timer_use_expiration_flag_bios_post);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.os_load", timer_use_expiration_flag_os_load);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.sms_os", timer_use_expiration_flag_sms_os);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved5", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved6", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);

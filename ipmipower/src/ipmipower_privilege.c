@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_privilege.c,v 1.4.2.2 2006-02-13 22:21:16 chu11 Exp $
+ *  $Id: ipmipower_privilege.c,v 1.4.2.3 2006-02-15 05:05:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,13 +98,13 @@ ipmipower_ipmi_privilege_type(privilege_type_t priv)
   switch(priv) 
     {
     case PRIVILEGE_TYPE_USER:
-      return IPMI_PRIV_LEVEL_USER;
+      return IPMI_PRIVILEGE_LEVEL_USER;
       break;
     case PRIVILEGE_TYPE_OPERATOR:
-      return IPMI_PRIV_LEVEL_OPERATOR;
+      return IPMI_PRIVILEGE_LEVEL_OPERATOR;
       break;
     case PRIVILEGE_TYPE_ADMIN:
-      return IPMI_PRIV_LEVEL_ADMIN;
+      return IPMI_PRIVILEGE_LEVEL_ADMIN;
       break;
     default:
       err_exit("ipmipower_ipmi_privilege_type: Invalid Privilege Type: %d\n", priv);
