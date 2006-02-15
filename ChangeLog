@@ -1,7 +1,7 @@
 2006-02-15  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/, ipmipower/, fish/: Continued msg-support-cmds
-	cleanup.
+	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and
+	msg-support-cmds cleanup.
 	
 2006-02-14  Albert Chu <chu11@llnl.gov>
 

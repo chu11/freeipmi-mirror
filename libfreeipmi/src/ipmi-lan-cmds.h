@@ -83,44 +83,44 @@
 extern "C" {
 #endif
 
-extern fiid_template_t tmpl_set_lan_conf_param_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_rs;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_rs;
 
-extern fiid_template_t tmpl_set_lan_conf_param_authentication_type_enables_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_ip_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_ip_address_source_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_mac_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_subnet_mask_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_bmc_generated_arp_control_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_gratuitous_arp_interval_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_default_gateway_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_default_gateway_mac_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_backup_gateway_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_backup_gateway_mac_address_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_vlan_id_rq;
-extern fiid_template_t tmpl_set_lan_conf_param_vlan_priority_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_authentication_type_enables_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_ip_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_ip_address_source_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_mac_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_subnet_mask_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_default_gateway_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_default_gateway_mac_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_mac_address_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_vlan_id_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_vlan_priority_rq;
 
-extern fiid_template_t tmpl_get_lan_conf_param_rq;
-extern fiid_template_t tmpl_get_lan_conf_param_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_rq;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_rs;
 
-extern fiid_template_t tmpl_get_lan_conf_param_authentication_type_enables_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_ip_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_ip_address_source_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_mac_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_subnet_mask_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_bmc_generated_arp_control_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_gratuitous_arp_interval_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_default_gateway_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_default_gateway_mac_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_backup_gateway_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_backup_gateway_mac_address_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_vlan_id_rs;
-extern fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_authentication_type_enables_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_ip_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_ip_address_source_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_mac_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_subnet_mask_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_default_gateway_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_default_gateway_mac_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_mac_address_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_id_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs;
 
 extern fiid_template_t tmpl_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_suspend_bmc_arps_rs;
 
-int8_t fill_cmd_set_lan_conf_param (fiid_obj_t obj_data_rq,
+int8_t fill_cmd_set_lan_configuration_parameters (fiid_obj_t obj_data_rq,
                                     uint8_t channel_number,
                                     uint8_t parameter_selector,
                                     uint8_t *configuration_parameter_data,
@@ -205,12 +205,12 @@ int8_t fill_cmd_set_lan_vlan_priority (uint8_t channel_number,
                                        uint8_t vlan_priority,
                                        fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_get_lan_conf_param (uint8_t channel_number,
-                                    uint8_t parameter_type,
-                                    uint8_t parameter_selector,
-                                    uint8_t set_selector,
-                                    uint8_t block_selector,
-                                    fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
+                                                  uint8_t parameter_type,
+                                                  uint8_t parameter_selector,
+                                                  uint8_t set_selector,
+                                                  uint8_t block_selector,
+                                                  fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number,
                                   uint8_t gratuitous_arp_suspend,

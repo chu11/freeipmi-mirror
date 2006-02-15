@@ -160,8 +160,8 @@ extern "C" {
 #define IPMI_CMD_SET_AUX_LOG_STATUS                      0x5B
 
 // LAN Device Commands
-#define IPMI_CMD_SET_LAN_CONF_PARAMS                     0x01
-#define IPMI_CMD_GET_LAN_CONF_PARAMS                     0x02
+#define IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS        0x01
+#define IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS        0x02
 #define IPMI_CMD_SUSPEND_BMC_ARPS                        0x03
 #define IPMI_CMD_GET_IP_UDP_RMCP_STATS                   0x04
 
