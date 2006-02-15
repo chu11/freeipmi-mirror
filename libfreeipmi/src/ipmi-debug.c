@@ -432,7 +432,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
     {
       if ((len = fiid_obj_set_all(obj_cmd,
 				  pkt + indx, 
-				  pkt_len - indx)) < 0)
+				  obj_cmd_len)) < 0)
 	goto cleanup;
       indx += len;
       

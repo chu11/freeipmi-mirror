@@ -2,6 +2,10 @@
 
 	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and
 	msg-support-cmds cleanup.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt),
+	libfreeipmi/src/ipmi-debug.c (ipmi_dump_lan_packet): Fix
+	unassembly bug.
 	
 2006-02-14  Albert Chu <chu11@llnl.gov>
 

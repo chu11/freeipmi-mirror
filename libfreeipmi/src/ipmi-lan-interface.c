@@ -735,7 +735,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   if (obj_cmd_len)
     {
       ERR(!(fiid_obj_clear(obj_cmd) < 0));
-      ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+      ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, obj_cmd_len)) < 0));
       indx += len;
       
       if (pkt_len <= indx)
