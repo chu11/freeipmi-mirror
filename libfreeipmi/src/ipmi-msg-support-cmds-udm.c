@@ -298,9 +298,9 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 			      uint8_t user_level_authentication, 
 			      uint8_t per_message_authentication, 
 			      uint8_t pef_alerting, 
-			      uint8_t channel_access_set_flag, 
+			      uint8_t channel_access_set, 
 			      uint8_t channel_privilege_level_limit, 
-			      uint8_t channel_privilege_level_limit_set_flag, 
+			      uint8_t channel_privilege_level_limit_set, 
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -312,9 +312,9 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
       || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
       || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
       || !IPMI_PEF_ALERTING_VALID(pef_alerting)
-      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set_flag)
+      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
       || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set_flag)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -338,9 +338,9 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
                                    user_level_authentication, 
                                    per_message_authentication, 
                                    pef_alerting, 
-                                   channel_access_set_flag, 
+                                   channel_access_set, 
                                    channel_privilege_level_limit, 
-                                   channel_privilege_level_limit_set_flag,
+                                   channel_privilege_level_limit_set,
                                    obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -364,7 +364,7 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_get_channel_access2 (ipmi_device_t *dev, 
 			      uint8_t channel_number,
-			      uint8_t channel_access_set_flag,
+			      uint8_t channel_access_get,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -372,6 +372,7 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -391,7 +392,7 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_channel_access (channel_number, 
-                                   channel_access_set_flag,
+                                   channel_access_get,
                                    obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -578,12 +579,14 @@ int8_t
 ipmi_cmd_set_user_name2 (ipmi_device_t *dev, 
 			 uint8_t user_id, 
 			 char *user_name, 
+                         unsigned int user_name_len,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
 
   if (!dev
+      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -604,7 +607,7 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
 
   if (fill_cmd_set_user_name (user_id, 
                               user_name, 
-                              ((user_name) ? strlen (user_name) : 0),
+                              user_name_len,
                               obj_cmd_rq) < 0)
     goto cleanup;
 
@@ -676,13 +679,16 @@ int8_t
 ipmi_cmd_set_user_password2 (ipmi_device_t *dev, 
 			     uint8_t user_id, 
 			     uint8_t operation, 
-			     char *user_password,
+			     char *password,
+                             unsigned int password_len,
 			     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
   
   if (!dev
+      || !IPMI_PASSWORD_OPERATION_VALID(operation)
+      || (password && password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -703,8 +709,8 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 
   if (fill_cmd_set_user_password (user_id, 
                                   operation, 
-                                  user_password, 
-                                  ((user_password) ? strlen(user_password) : 0),
+                                  password, 
+                                  password_len,
                                   obj_cmd_rq) < 0)
     goto cleanup;
 

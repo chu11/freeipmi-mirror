@@ -138,10 +138,10 @@ fiid_template_t tmpl_set_channel_access_rq =
     {1, "user_level_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "per_message_authentication", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "pef_alerting", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {2, "channel_access_set_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "channel_access_set", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_privilege_level_limit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {2, "channel_privilege_level_limit_set_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {2, "channel_privilege_level_limit_set", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
@@ -158,7 +158,7 @@ fiid_template_t tmpl_get_channel_access_rq =
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2, "channel_access_get_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "channel_access_get", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -500,9 +500,9 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 			     uint8_t user_level_authentication, 
 			     uint8_t per_message_authentication, 
 			     uint8_t pef_alerting, 
-			     uint8_t channel_access_set_flag, 
+			     uint8_t channel_access_set, 
 			     uint8_t channel_privilege_level_limit, 
-			     uint8_t channel_privilege_level_limit_set_flag,
+			     uint8_t channel_privilege_level_limit_set,
                              fiid_obj_t obj_data_rq)
 {
   int8_t rv;
@@ -512,9 +512,9 @@ fill_cmd_set_channel_access (uint8_t channel_number,
       || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
       || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
       || !IPMI_PEF_ALERTING_VALID(pef_alerting)
-      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set_flag)
+      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
       || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set_flag)
+      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(channel_privilege_level_limit_set)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -559,8 +559,8 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 		pef_alerting);
   
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_access_set_flag", 
-		channel_access_set_flag);
+		(uint8_t *)"channel_access_set", 
+		channel_access_set);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_privilege_level_limit", 
@@ -571,21 +571,21 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 		0);
 
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_privilege_level_limit_set_flag", 
-		channel_privilege_level_limit_set_flag);
+		(uint8_t *)"channel_privilege_level_limit_set", 
+		channel_privilege_level_limit_set);
   
   return 0;
 }
 
 int8_t
 fill_cmd_get_channel_access (uint8_t channel_number,
-			     uint8_t channel_access_get_flag,
+			     uint8_t channel_access_get,
                              fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get_flag)
+      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -618,8 +618,8 @@ fill_cmd_get_channel_access (uint8_t channel_number,
                 0);
 
   FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"channel_access_get_flag",
-		channel_access_get_flag);
+		(uint8_t *)"channel_access_get",
+		channel_access_get);
 
   return 0;
 }
@@ -887,8 +887,8 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
 int8_t 
 fill_cmd_set_user_password (uint8_t user_id, 
 			    uint8_t operation, 
-			    char *user_password,
-                            unsigned int user_password_len,
+			    char *password,
+                            unsigned int password_len,
                             fiid_obj_t obj_data_rq)
 {
   int8_t rv;
@@ -898,7 +898,7 @@ fill_cmd_set_user_password (uint8_t user_id,
    * termination in IPMI packet not required
    */
   if (!IPMI_PASSWORD_OPERATION_VALID(operation)
-      || (user_password && user_password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+      || (password && password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -943,8 +943,8 @@ fill_cmd_set_user_password (uint8_t user_id,
 
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-  if (user_password)
-    strncpy(buf, user_password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+  if (password)
+    strncpy(buf, password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
       
   ERR (!(fiid_obj_set_data (obj_data_rq, 
                             (uint8_t *)"password", 

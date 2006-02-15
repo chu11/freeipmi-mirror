@@ -21,7 +21,7 @@
 #ifndef _IPMI_LAN_CMDS_UDM_H
 #define _IPMI_LAN_CMDS_UDM_H
 
-int8_t ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_authentication_type_enables2 (ipmi_device_t *dev, 
                                                       uint8_t channel_number, 
                                                       uint8_t callback_level_none,
                                                       uint8_t callback_level_md2,
@@ -50,47 +50,47 @@ int8_t ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev,
                                                       uint8_t oem_level_oem_proprietary,
                                                       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_ip_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_ip_address2 (ipmi_device_t *dev, 
                                      uint8_t channel_number, 
                                      uint32_t ip_address, 
                                      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_ip_address_source2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_ip_address_source2 (ipmi_device_t *dev, 
                                             uint8_t channel_number, 
                                             uint8_t ip_address_source, 
                                             fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_subnet_mask2 (ipmi_device_t *dev, 
 				      uint8_t channel_number, 
 				      uint32_t subnet_mask, 
 				      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_mac_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_mac_address2 (ipmi_device_t *dev, 
                                       uint8_t channel_number,
                                       uint64_t mac_address,
                                       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_default_gateway_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_default_gateway_address2 (ipmi_device_t *dev, 
                                                   uint8_t channel_number, 
                                                   uint32_t ip_address, 
                                                   fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_default_gateway_mac_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_default_gateway_mac_address2 (ipmi_device_t *dev, 
                                                       uint8_t channel_number,
                                                       uint64_t mac_address,
                                                       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_backup_gateway_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_backup_gateway_address2 (ipmi_device_t *dev, 
                                                  uint8_t channel_number, 
                                                  uint32_t ip_address, 
                                                  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_backup_gateway_mac_address2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_backup_gateway_mac_address2 (ipmi_device_t *dev, 
                                                      uint8_t channel_number,
                                                      uint64_t mac_address,
                                                      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_bmc_generated_arp_control2 (ipmi_device_t *dev, 
                                                     uint8_t channel_number, 
                                                     uint8_t bmc_generated_gratuitous_arps, 
                                                     uint8_t bmc_generated_arp_responses, 
@@ -101,13 +101,14 @@ int8_t ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 					      uint8_t gratuitous_arp_interval, 
 					      fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_vlan_id2 (ipmi_device_t *dev, 
 				  uint8_t channel_number, 
+				  uint8_t vlan_id_ls,
+                                  uint8_t vlan_id_ms,
 				  uint8_t vlan_id_enable, 
-				  uint32_t vlan_id, 
 				  fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev, 
+int8_t ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev, 
 					uint8_t channel_number,
 					uint32_t vlan_priority,
 					fiid_obj_t obj_cmd_rs);

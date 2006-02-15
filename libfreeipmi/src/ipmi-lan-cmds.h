@@ -120,101 +120,102 @@ extern fiid_template_t tmpl_get_lan_conf_param_vlan_priority_rs;
 extern fiid_template_t tmpl_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_suspend_bmc_arps_rs;
 
-int8_t fill_lan_set_conf_param (fiid_obj_t obj_data_rq,
-                                uint8_t channel_number,
-                                uint8_t parameter_selector,
-                                uint8_t *configuration_parameter_data,
-                                uint8_t configuration_parameter_data_len);
+int8_t fill_cmd_set_lan_conf_param (fiid_obj_t obj_data_rq,
+                                    uint8_t channel_number,
+                                    uint8_t parameter_selector,
+                                    uint8_t *configuration_parameter_data,
+                                    uint8_t configuration_parameter_data_len);
 
-int8_t fill_lan_set_authentication_type_enables (uint8_t channel_number,
-                                                 uint8_t callback_level_none,
-                                                 uint8_t callback_level_md2,
-                                                 uint8_t callback_level_md5,
-                                                 uint8_t callback_level_straight_password,
-                                                 uint8_t callback_level_oem_proprietary,
-                                                 uint8_t user_level_none,
-                                                 uint8_t user_level_md2,
-                                                 uint8_t user_level_md5,
-                                                 uint8_t user_level_straight_password,
-                                                 uint8_t user_level_oem_proprietary,
-                                                 uint8_t operator_level_none,
-                                                 uint8_t operator_level_md2,
-                                                 uint8_t operator_level_md5,
-                                                 uint8_t operator_level_straight_password,
-                                                 uint8_t operator_level_oem_proprietary,
-                                                 uint8_t admin_level_none,
-                                                 uint8_t admin_level_md2,
-                                                 uint8_t admin_level_md5,
-                                                 uint8_t admin_level_straight_password,
-                                                 uint8_t admin_level_oem_proprietary,
-                                                 uint8_t oem_level_none,
-                                                 uint8_t oem_level_md2,
-                                                 uint8_t oem_level_md5,
-                                                 uint8_t oem_level_straight_password,
-                                                 uint8_t oem_level_oem_proprietary,
-                                                 fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_lan_authentication_type_enables (uint8_t channel_number,
+                                                     uint8_t callback_level_none,
+                                                     uint8_t callback_level_md2,
+                                                     uint8_t callback_level_md5,
+                                                     uint8_t callback_level_straight_password,
+                                                     uint8_t callback_level_oem_proprietary,
+                                                     uint8_t user_level_none,
+                                                     uint8_t user_level_md2,
+                                                     uint8_t user_level_md5,
+                                                     uint8_t user_level_straight_password,
+                                                     uint8_t user_level_oem_proprietary,
+                                                     uint8_t operator_level_none,
+                                                     uint8_t operator_level_md2,
+                                                     uint8_t operator_level_md5,
+                                                     uint8_t operator_level_straight_password,
+                                                     uint8_t operator_level_oem_proprietary,
+                                                     uint8_t admin_level_none,
+                                                     uint8_t admin_level_md2,
+                                                     uint8_t admin_level_md5,
+                                                     uint8_t admin_level_straight_password,
+                                                     uint8_t admin_level_oem_proprietary,
+                                                     uint8_t oem_level_none,
+                                                     uint8_t oem_level_md2,
+                                                     uint8_t oem_level_md5,
+                                                     uint8_t oem_level_straight_password,
+                                                     uint8_t oem_level_oem_proprietary,
+                                                     fiid_obj_t obj_data_rq);
  
-int8_t fill_lan_set_ip_address (uint8_t channel_number,
-                                uint32_t ip_address,
-                                fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_lan_ip_address (uint8_t channel_number,
+                                    uint32_t ip_address,
+                                    fiid_obj_t obj_data_rq);
    
-int8_t fill_lan_set_ip_address_source (uint8_t channel_number,
-                                       uint8_t ip_address_source,
+int8_t fill_cmd_set_lan_ip_address_source (uint8_t channel_number,
+                                           uint8_t ip_address_source,
+                                           fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_mac_address (uint8_t channel_number,
+                                     uint64_t mac_address,
+                                     fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_subnet_mask (uint8_t channel_number,
+                                     uint32_t subnet_mask,
+                                     fiid_obj_t obj_data_rq);
+  
+int8_t fill_cmd_set_lan_bmc_generated_arp_control (uint8_t channel_number,
+                                                   uint8_t bmc_generated_gratuitous_arps,
+                                                   uint8_t bmc_generated_arp_responses,
+                                                   fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_gratuitous_arp_interval (uint8_t channel_number,
+                                                 uint8_t gratuitous_arp_interval,
+                                                 fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_default_gateway_address (uint8_t channel_number,
+                                                 uint32_t ip_address,
+                                                 fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_default_gateway_mac_address (uint8_t channel_number,
+                                                     uint64_t mac_address,
+                                                     fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_backup_gateway_address (uint8_t channel_number,
+                                                uint32_t ip_address,
+                                                fiid_obj_t obj_data_rq);
+  
+int8_t fill_cmd_set_lan_backup_gateway_mac_address (uint8_t channel_number,
+                                                    uint64_t mac_address,
+                                                    fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_vlan_id (uint8_t channel_number,
+                                 uint8_t vlan_id_ls,
+                                 uint8_t vlan_id_ms,
+                                 uint8_t vlan_id_enable,
+                                 fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_set_lan_vlan_priority (uint8_t channel_number,
+                                       uint8_t vlan_priority,
                                        fiid_obj_t obj_data_rq);
 
-int8_t fill_lan_set_mac_address (uint8_t channel_number,
-                                 uint64_t mac_address,
-                                 fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_lan_conf_param (uint8_t channel_number,
+                                    uint8_t parameter_type,
+                                    uint8_t parameter_selector,
+                                    uint8_t set_selector,
+                                    uint8_t block_selector,
+                                    fiid_obj_t obj_data_rq);
 
-int8_t fill_lan_set_subnet_mask (uint8_t channel_number,
-                                 uint32_t subnet_mask,
-                                 fiid_obj_t obj_data_rq);
-  
-int8_t fill_lan_set_bmc_generated_arp_control (uint8_t channel_number,
-                                               uint8_t bmc_generated_gratuitous_arps,
-                                               uint8_t bmc_generated_arp_responses,
-                                               fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_gratuitous_arp_interval (uint8_t channel_number,
-                                             uint8_t gratuitous_arp_interval,
-                                             fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_default_gateway_address (uint8_t channel_number,
-                                             uint32_t ip_address,
-                                             fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_default_gateway_mac_address (uint8_t channel_number,
-                                                 uint64_t mac_address,
-                                                 fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_backup_gateway_address (uint8_t channel_number,
-                                            uint32_t ip_address,
-                                            fiid_obj_t obj_data_rq);
-  
-int8_t fill_lan_set_backup_gateway_mac_address (uint8_t channel_number,
-                                                uint64_t mac_address,
-                                                fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_vlan_id (uint8_t channel_number,
-                             uint8_t vlan_id_enable,
-                             uint32_t vlan_id,
-                             fiid_obj_t obj_data_rq);
-
-int8_t fill_lan_set_vlan_priority (uint8_t channel_number,
-                                   uint8_t vlan_priority,
-                                   fiid_obj_t obj_data_rq);
-
-int8_t fill_get_lan_conf_param (uint8_t parameter_selector,
-                                uint8_t channel_number,
-                                uint8_t parameter_type,
-                                uint8_t set_selector,
-                                uint8_t block_selector,
-                                fiid_obj_t obj_data_rq);
-
-int8_t fill_suspend_bmc_arps (uint8_t channel_number,
-                              uint8_t gratuitous_arp_suspend,
-                              uint8_t arp_response_suspend,
-                              fiid_obj_t obj_data_rq);
+int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number,
+                                  uint8_t gratuitous_arp_suspend,
+                                  uint8_t arp_response_suspend,
+                                  fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }

@@ -986,28 +986,28 @@ ex_set_bmc_lan_conf_backup_gateway_mac_address (SCM scm_gateway_mac_address)
 }
 
 SCM 
-ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag, 
-                             SCM scm_vlan_id)
+ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id,
+                             SCM scm_vlan_id_enable)
 {
-  uint8_t vlan_id_flag;
   uint32_t vlan_id;
+  uint8_t vlan_id_enable;
   int retval;
   
   retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
-				     &vlan_id_flag, 
-                                     &vlan_id);
+                                     &vlan_id,
+				     &vlan_id_enable);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  if (scm_boolean_p (scm_vlan_id_flag) == SCM_BOOL_T)
-    vlan_id_flag = gh_scm2bool (scm_vlan_id_flag);
-
   if (scm_integer_p (scm_vlan_id) == SCM_BOOL_T)
     vlan_id = gh_scm2long (scm_vlan_id);
   
+  if (scm_boolean_p (scm_vlan_id_enable) == SCM_BOOL_T)
+    vlan_id_enable = gh_scm2bool (scm_vlan_id_enable);
+
   retval = set_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
-				     vlan_id_flag, 
-                                     vlan_id);
+                                     vlan_id,
+				     vlan_id_enable);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1823,15 +1823,16 @@ ex_get_bmc_lan_conf_backup_gateway_mac_address (SCM scm_gateway_mac_address)
 SCM
 ex_get_bmc_lan_conf_vlan_id ()
 {
-  uint8_t vlan_id_flag = 0;
   uint32_t vlan_id = 0;
+  uint8_t vlan_id_enable = 0;
   int retval;
   SCM return_list = SCM_EOL;
 
   if ((retval = get_bmc_lan_conf_vlan_id (fi_get_ipmi_device (), 
-					  &vlan_id_flag, &vlan_id)) == 0)
-    return_list = gh_list (gh_bool2scm (vlan_id_flag), 
-			   gh_long2scm (vlan_id), 
+					  &vlan_id, 
+                                          &vlan_id_enable)) == 0)
+    return_list = gh_list (gh_long2scm (vlan_id), 
+                           gh_bool2scm (vlan_id_enable),
 			   SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);

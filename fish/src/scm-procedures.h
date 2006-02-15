@@ -92,8 +92,8 @@ SCM ex_set_bmc_lan_conf_default_gateway_address (SCM scm_gateway_address);
 SCM ex_set_bmc_lan_conf_default_gateway_mac_address (SCM scm_gateway_mac_address);
 SCM ex_set_bmc_lan_conf_backup_gateway_address (SCM scm_gateway_address);
 SCM ex_set_bmc_lan_conf_backup_gateway_mac_address (SCM scm_gateway_mac_address);
-SCM ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id_flag,
-                                 SCM scm_vlan_id);
+SCM ex_set_bmc_lan_conf_vlan_id (SCM scm_vlan_id,
+                                 SCM scm_vlan_id_flag);
 SCM ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority);
 
 SCM ex_set_bmc_lan_conf_authentication_type_callback_enables (SCM scm_authentication_type_none, 

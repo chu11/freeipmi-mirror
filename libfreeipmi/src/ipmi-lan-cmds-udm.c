@@ -21,7 +21,7 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_authentication_type_enables2 (ipmi_device_t *dev, 
                                                uint8_t channel_number, 
                                                uint8_t callback_level_none,
                                                uint8_t callback_level_md2,
@@ -98,33 +98,33 @@ ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_authentication_type_enables_rq)))
     goto cleanup;
 
-  if (fill_lan_set_authentication_type_enables (channel_number, 
-                                                callback_level_none,
-                                                callback_level_md2,
-                                                callback_level_md5,
-                                                callback_level_straight_password,
-                                                callback_level_oem_proprietary,
-                                                user_level_none,
-                                                user_level_md2,
-                                                user_level_md5,
-                                                user_level_straight_password,
-                                                user_level_oem_proprietary,
-                                                operator_level_none,
-                                                operator_level_md2,
-                                                operator_level_md5,
-                                                operator_level_straight_password,
-                                                operator_level_oem_proprietary,
-                                                admin_level_none,
-                                                admin_level_md2,
-                                                admin_level_md5,
-                                                admin_level_straight_password,
-                                                admin_level_oem_proprietary,
-                                                oem_level_none,
-                                                oem_level_md2,
-                                                oem_level_md5,
-                                                oem_level_straight_password,
-                                                oem_level_oem_proprietary,
-                                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_authentication_type_enables (channel_number, 
+                                                    callback_level_none,
+                                                    callback_level_md2,
+                                                    callback_level_md5,
+                                                    callback_level_straight_password,
+                                                    callback_level_oem_proprietary,
+                                                    user_level_none,
+                                                    user_level_md2,
+                                                    user_level_md5,
+                                                    user_level_straight_password,
+                                                    user_level_oem_proprietary,
+                                                    operator_level_none,
+                                                    operator_level_md2,
+                                                    operator_level_md5,
+                                                    operator_level_straight_password,
+                                                    operator_level_oem_proprietary,
+                                                    admin_level_none,
+                                                    admin_level_md2,
+                                                    admin_level_md5,
+                                                    admin_level_straight_password,
+                                                    admin_level_oem_proprietary,
+                                                    oem_level_none,
+                                                    oem_level_md2,
+                                                    oem_level_md5,
+                                                    oem_level_straight_password,
+                                                    oem_level_oem_proprietary,
+                                                    obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -145,7 +145,7 @@ ipmi_cmd_lan_set_authentication_type_enables2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_ip_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_ip_address2 (ipmi_device_t *dev, 
                               uint8_t channel_number, 
                               uint32_t ip_address, 
                               fiid_obj_t obj_cmd_rs)
@@ -173,9 +173,9 @@ ipmi_cmd_lan_set_ip_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_ip_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_ip_address (channel_number, 
-                               ip_address,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_ip_address (channel_number, 
+                                   ip_address,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -196,7 +196,7 @@ ipmi_cmd_lan_set_ip_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_ip_address_source2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_ip_address_source2 (ipmi_device_t *dev, 
                                      uint8_t channel_number, 
                                      uint8_t ip_address_source, 
                                      fiid_obj_t obj_cmd_rs)
@@ -224,9 +224,9 @@ ipmi_cmd_lan_set_ip_address_source2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_ip_address_source_rq)))
     goto cleanup;
 
-  if (fill_lan_set_ip_address_source (channel_number, 
-                                      ip_address_source,
-                                      obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_ip_address_source (channel_number, 
+                                          ip_address_source,
+                                          obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -247,7 +247,7 @@ ipmi_cmd_lan_set_ip_address_source2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_mac_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_mac_address2 (ipmi_device_t *dev, 
                                uint8_t channel_number,
                                uint64_t mac_address,
                                fiid_obj_t obj_cmd_rs)
@@ -275,9 +275,9 @@ ipmi_cmd_lan_set_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_mac_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_mac_address (channel_number, 
-                                mac_address,
-                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_mac_address (channel_number, 
+                                    mac_address,
+                                    obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -298,7 +298,7 @@ ipmi_cmd_lan_set_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_subnet_mask2 (ipmi_device_t *dev, 
 			       uint8_t channel_number, 
 			       uint32_t subnet_mask, 
 			       fiid_obj_t obj_cmd_rs)
@@ -326,9 +326,9 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_subnet_mask_rq)))
     goto cleanup;
 
-  if (fill_lan_set_subnet_mask (channel_number, 
-                                subnet_mask,
-                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_subnet_mask (channel_number, 
+                                    subnet_mask,
+                                    obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -349,7 +349,7 @@ ipmi_cmd_lan_set_subnet_mask2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_bmc_generated_arp_control2 (ipmi_device_t *dev, 
                                              uint8_t channel_number, 
                                              uint8_t bmc_generated_gratuitous_arps, 
                                              uint8_t bmc_generated_arp_responses, 
@@ -380,10 +380,10 @@ ipmi_cmd_lan_set_bmc_generated_arp_control2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_bmc_generated_arp_control_rq)))
     goto cleanup;
 
-  if (fill_lan_set_bmc_generated_arp_control (channel_number, 
-                                              bmc_generated_gratuitous_arps, 
-                                              bmc_generated_arp_responses,
-                                              obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_bmc_generated_arp_control (channel_number, 
+                                                  bmc_generated_gratuitous_arps, 
+                                                  bmc_generated_arp_responses,
+                                                  obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -432,9 +432,9 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_gratuitous_arp_interval_rq)))
     goto cleanup;
 
-  if (fill_lan_set_gratuitous_arp_interval (channel_number, 
-                                            gratuitous_arp_interval,
-                                            obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_gratuitous_arp_interval (channel_number, 
+                                                gratuitous_arp_interval,
+                                                obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -455,7 +455,7 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_default_gateway_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_default_gateway_address2 (ipmi_device_t *dev, 
                                            uint8_t channel_number, 
                                            uint32_t ip_address, 
                                            fiid_obj_t obj_cmd_rs)
@@ -483,9 +483,9 @@ ipmi_cmd_lan_set_default_gateway_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_ip_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_default_gateway_address (channel_number, 
-                                            ip_address,
-                                            obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_default_gateway_address (channel_number, 
+                                                ip_address,
+                                                obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -506,7 +506,7 @@ ipmi_cmd_lan_set_default_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_default_gateway_mac_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_default_gateway_mac_address2 (ipmi_device_t *dev, 
                                                uint8_t channel_number,
                                                uint64_t mac_address,
                                                fiid_obj_t obj_cmd_rs)
@@ -534,9 +534,9 @@ ipmi_cmd_lan_set_default_gateway_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_mac_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_default_gateway_mac_address (channel_number, 
-                                                mac_address,
-                                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_default_gateway_mac_address (channel_number, 
+                                                    mac_address,
+                                                    obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -557,7 +557,7 @@ ipmi_cmd_lan_set_default_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_backup_gateway_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_backup_gateway_address2 (ipmi_device_t *dev, 
                                           uint8_t channel_number, 
                                           uint32_t ip_address, 
                                           fiid_obj_t obj_cmd_rs)
@@ -585,9 +585,9 @@ ipmi_cmd_lan_set_backup_gateway_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_ip_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_backup_gateway_address (channel_number, 
-                                           ip_address,
-                                           obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_backup_gateway_address (channel_number, 
+                                               ip_address,
+                                               obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -608,7 +608,7 @@ ipmi_cmd_lan_set_backup_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_backup_gateway_mac_address2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_backup_gateway_mac_address2 (ipmi_device_t *dev, 
                                               uint8_t channel_number,
                                               uint64_t mac_address,
                                               fiid_obj_t obj_cmd_rs)
@@ -636,9 +636,9 @@ ipmi_cmd_lan_set_backup_gateway_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_mac_address_rq)))
     goto cleanup;
 
-  if (fill_lan_set_backup_gateway_mac_address (channel_number, 
-                                               mac_address,
-                                               obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_backup_gateway_mac_address (channel_number, 
+                                                   mac_address,
+                                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -659,10 +659,11 @@ ipmi_cmd_lan_set_backup_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_vlan_id2 (ipmi_device_t *dev, 
 			   uint8_t channel_number, 
+                           uint8_t vlan_id_ls,
+                           uint8_t vlan_id_ms,
 			   uint8_t vlan_id_enable, 
-			   uint32_t vlan_id, 
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -670,6 +671,7 @@ ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_VLAN_ID_ENABLE_VALID(vlan_id_enable)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -688,10 +690,11 @@ ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_vlan_id_rq)))
     goto cleanup;
 
-  if (fill_lan_set_vlan_id (channel_number,
-                            vlan_id_enable,
-                            vlan_id,
-                            obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_vlan_id (channel_number,
+                                vlan_id_ls,
+                                vlan_id_ms,
+                                vlan_id_enable,
+                                obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -712,7 +715,7 @@ ipmi_cmd_lan_set_vlan_id2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev, 
+ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev, 
 				 uint8_t channel_number,
 				 uint32_t vlan_priority,
 				 fiid_obj_t obj_cmd_rs)
@@ -740,9 +743,9 @@ ipmi_cmd_lan_set_vlan_priority2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_conf_param_vlan_priority_rq)))
     goto cleanup;
 
-  if (fill_lan_set_vlan_priority (channel_number,
-                                  vlan_priority,
-                                  obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_vlan_priority (channel_number,
+                                      vlan_priority,
+                                      obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -793,12 +796,12 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -849,12 +852,12 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_IP_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_IP_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -905,12 +908,12 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_IP_ADDRESS_SOURCE, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_IP_ADDRESS_SOURCE, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -961,12 +964,12 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_MAC_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_MAC_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1017,12 +1020,12 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_SUBNET_MASK, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_SUBNET_MASK,                                
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1073,12 +1076,12 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1129,12 +1132,12 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1185,12 +1188,12 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_DEFAULT_GATEWAY_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_DEFAULT_GATEWAY_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1241,12 +1244,12 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1297,12 +1300,12 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1353,12 +1356,12 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS, 
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS, 
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1409,12 +1412,12 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_VLAN_ID,
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_VLAN_ID,
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -1465,12 +1468,12 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_conf_param_rq)))
     goto cleanup;
 
-  if (fill_get_lan_conf_param (IPMI_LAN_PARAM_VLAN_PRIORITY,
-                               channel_number, 
-                               parameter_type, 
-                               set_selector, 
-                               block_selector,
-                               obj_cmd_rq) < 0)
+  if (fill_cmd_get_lan_conf_param (channel_number, 
+                                   parameter_type, 
+                                   IPMI_LAN_PARAM_VLAN_PRIORITY,
+                                   set_selector, 
+                                   block_selector,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

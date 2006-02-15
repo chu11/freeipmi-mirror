@@ -65,7 +65,6 @@ extern "C" {
 #define IPMI_CHANNEL_SESSION_BASED     0x3
 #define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
 
-/* To avoid gcc warnings, added +1 and -1 in comparison */
 #define IPMI_CHANNEL_NUMBER_VALID(__channel_number) \
         (((__channel_number) == IPMI_CHANNEL_SESSION_LESS \
           || (__channel_number) == IPMI_CHANNEL_SINGLE_SESSION \
@@ -243,7 +242,7 @@ int8_t fill_cmd_activate_session (uint8_t authentication_type,
 				  fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_set_session_privilege_level (uint8_t privilege_level, 
-					fiid_obj_t obj_cmd);
+                                             fiid_obj_t obj_cmd);
 
 int8_t fill_cmd_close_session (uint32_t close_session_id, 
 			       fiid_obj_t obj_cmd);
@@ -253,23 +252,22 @@ int8_t fill_cmd_set_channel_access (uint8_t channel_number,
                                     uint8_t user_level_authentication, 
                                     uint8_t per_message_authentication, 
                                     uint8_t pef_alerting, 
-                                    uint8_t channel_access_set_flag, 
+                                    uint8_t channel_access_set, 
                                     uint8_t channel_privilege_level_limit, 
-                                    uint8_t channel_privilege_level_limit_set_flag,
+                                    uint8_t channel_privilege_level_limit_set,
                                     fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_get_channel_access (uint8_t channel_number,
-                                    uint8_t channel_access_set_flag,
+                                    uint8_t channel_access_get,
                                     fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq);
 
-
 int8_t fill_cmd_set_user_access (uint8_t channel_number,
-                                 uint8_t user_id,
-                                 uint8_t user_restricted_to_callback,
-                                 uint8_t user_link_authentication,
                                  uint8_t user_ipmi_messaging,
+                                 uint8_t user_link_authentication,
+                                 uint8_t user_restricted_to_callback,
+                                 uint8_t user_id,
                                  uint8_t user_privilege_level_limit,
                                  uint8_t user_session_number_limit,
                                  fiid_obj_t obj_data_rq);
@@ -287,8 +285,8 @@ int8_t fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq);
        
 int8_t fill_cmd_set_user_password (uint8_t user_id, 
                                    uint8_t operation, 
-                                   char *user_password,
-                                   unsigned int user_password_len,
+                                   char *password,
+                                   unsigned int password_len,
                                    fiid_obj_t obj_data_rq);
       
 int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);

@@ -89,8 +89,8 @@ int8_t set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
 int8_t set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
                                                     char *backup_gateway_mac_address);
 int8_t set_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
-				 uint8_t vlan_id_flag,
-				 uint32_t vlan_id);
+				 uint32_t vlan_id,
+                                 uint8_t vlan_id_enable);
 int8_t set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
 				       uint8_t vlan_priority);
 
@@ -227,7 +227,8 @@ int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev,
 int8_t get_bmc_power_restore_policy (ipmi_device_t *dev, 
 				     uint8_t *power_restore_policy);
 int8_t get_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 
-				 uint8_t *vlan_id_flag, uint32_t *vlan_id);
+                                 uint32_t *vlan_id,
+				 uint8_t *vlan_id_enable);
 int8_t get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
 				       uint8_t *vlan_priority);
 int8_t get_pef_control (ipmi_device_t *dev, 

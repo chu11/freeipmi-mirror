@@ -284,7 +284,7 @@ install_new_procedures (void)
 
   gh_new_procedure ("fi-set-bmc-lan-conf-vlan-id", ex_set_bmc_lan_conf_vlan_id, 2, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-lan-conf-vlan-id VLAN_ID_FLAG VLAN_ID)
+     syntax in scheme: (fi-set-bmc-lan-conf-vlan-id VLAN_ID VLAN_ID_ENABLE)
   */
 
   gh_new_procedure ("fi-set-bmc-lan-conf-vlan-priority", ex_set_bmc_lan_conf_vlan_priority, 1, 0, 0);

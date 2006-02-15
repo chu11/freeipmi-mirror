@@ -42,4 +42,9 @@
 #define IPMI_LAN_PARAM_VLAN_ID                      20
 #define IPMI_LAN_PARAM_VLAN_PRIORITY                21
 
+/* To avoid gcc warnings, added +1 and -1 in comparison */
+#define IPMI_LAN_PARAM_VALID(__lan_param) \
+        (((__lan_param+1) >= IPMI_LAN_PARAM_IP_ADDRESS \
+          && (__lan_param-1) <= IPMI_LAN_PARAM_VLAN_ID) ? 1 : 0)
+
 #endif /* _IPMI_LAN_PARAM_SPEC_H */
