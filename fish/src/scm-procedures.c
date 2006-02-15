@@ -1037,7 +1037,7 @@ ex_set_bmc_lan_conf_authentication_type_callback_enables (SCM scm_authentication
 						SCM scm_authentication_type_straight_password, 
 						SCM scm_authentication_type_oem_proprietary)
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   
   retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
@@ -1073,7 +1073,7 @@ ex_set_bmc_lan_conf_authentication_type_user_enables (SCM scm_authentication_typ
 					    SCM scm_authentication_type_straight_password, 
 					    SCM scm_authentication_type_oem_proprietary)
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   
   retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
@@ -1109,7 +1109,7 @@ ex_set_bmc_lan_conf_authentication_type_operator_enables (SCM scm_authentication
 						SCM scm_authentication_type_straight_password, 
 						SCM scm_authentication_type_oem_proprietary)
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   
   retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
@@ -1145,7 +1145,7 @@ ex_set_bmc_lan_conf_authentication_type_admin_enables (SCM scm_authentication_ty
 					     SCM scm_authentication_type_straight_password, 
 					     SCM scm_authentication_type_oem_proprietary)
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   
   retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
@@ -1181,7 +1181,7 @@ ex_set_bmc_lan_conf_authentication_type_oem_enables (SCM scm_authentication_type
 					   SCM scm_authentication_type_straight_password, 
 					   SCM scm_authentication_type_oem_proprietary)
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   
   retval = get_bmc_lan_conf_authentication_type_enables (fi_get_ipmi_device (), &authentication_type_enables);
@@ -1854,7 +1854,7 @@ ex_get_bmc_lan_conf_vlan_priority ()
 SCM 
 ex_get_bmc_lan_conf_authentication_type_callback_enables ()
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
@@ -1875,7 +1875,7 @@ ex_get_bmc_lan_conf_authentication_type_callback_enables ()
 SCM 
 ex_get_bmc_lan_conf_authentication_type_user_enables ()
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
@@ -1896,7 +1896,7 @@ ex_get_bmc_lan_conf_authentication_type_user_enables ()
 SCM 
 ex_get_bmc_lan_conf_authentication_type_operator_enables ()
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
@@ -1917,7 +1917,7 @@ ex_get_bmc_lan_conf_authentication_type_operator_enables ()
 SCM 
 ex_get_bmc_lan_conf_authentication_type_admin_enables ()
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   
@@ -1938,7 +1938,7 @@ ex_get_bmc_lan_conf_authentication_type_admin_enables ()
 SCM 
 ex_get_bmc_lan_conf_authentication_type_oem_enables ()
 {
-  struct bmc_auth_level authentication_type_enables;
+  struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
   SCM return_list = SCM_EOL;
   

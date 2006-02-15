@@ -28,7 +28,7 @@ struct authentication_type
   uint8_t type_oem_proprietary;
 };
 
-struct bmc_auth_level
+struct bmc_authentication_level
 {
   struct authentication_type callback;
   struct authentication_type user;
@@ -95,7 +95,7 @@ int8_t set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 				       uint8_t vlan_priority);
 
 int8_t set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                                     struct bmc_auth_level *bmc_auth_level);
+                                                     struct bmc_authentication_level *bmc_authentication_level);
 int8_t set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
                                                    uint8_t enable_gratuitous_arps, 
                                                    uint8_t enable_arp_response);
@@ -192,7 +192,7 @@ int8_t get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
 int8_t get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
                                                     char *backup_gateway_mac_address);
 int8_t get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                                     struct bmc_auth_level *bmc_auth_level);
+                                                     struct bmc_authentication_level *bmc_authentication_level);
 int8_t get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
                                                    uint8_t *enable_gratuitous_arps, 
                                                    uint8_t *enable_arp_response);

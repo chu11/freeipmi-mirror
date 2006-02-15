@@ -892,13 +892,13 @@ fill_cmd_set_user_password (uint8_t user_id,
                             fiid_obj_t obj_data_rq)
 {
   int8_t rv;
-  char buf[IPMI_MAX_AUTH_CODE_LENGTH];
+  char buf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
 
-  /* achu: password can be IPMI_MAX_AUTH_CODE_LENGTH length.  Null
+  /* achu: password can be IPMI_MAX_AUTHENTICATION_CODE_LENGTH length.  Null
    * termination in IPMI packet not required
    */
   if (!IPMI_PASSWORD_OPERATION_VALID(operation)
-      || (user_password && user_password_len > IPMI_MAX_AUTH_CODE_LENGTH)
+      || (user_password && user_password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
       || !fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
@@ -942,14 +942,14 @@ fill_cmd_set_user_password (uint8_t user_id,
 			      (uint8_t *)"password") < 0));
 
   /* achu: password must be zero extended */
-  memset(buf, '\0', IPMI_MAX_AUTH_CODE_LENGTH);
+  memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (user_password)
-    strncpy(buf, user_password, IPMI_MAX_AUTH_CODE_LENGTH);
+    strncpy(buf, user_password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
       
   ERR (!(fiid_obj_set_data (obj_data_rq, 
                             (uint8_t *)"password", 
                             (uint8_t *)buf,
-                            IPMI_MAX_AUTH_CODE_LENGTH) < 0));
+                            IPMI_MAX_AUTHENTICATION_CODE_LENGTH) < 0));
 
   return 0;
 }

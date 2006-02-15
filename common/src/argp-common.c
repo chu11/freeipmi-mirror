@@ -100,7 +100,7 @@ common_parse_opt (int key,
 	}
       break;
     case PASSWORD_KEY:
-      if (strlen (arg) > IPMI_MAX_AUTH_CODE_LENGTH)
+      if (strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
 	argp_usage (state);
       else 
 	{

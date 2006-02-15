@@ -110,7 +110,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
     }
   
   if (password != NULL && 
-      strlen (password) > IPMI_MAX_AUTH_CODE_LENGTH)
+      strlen (password) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
     {
       errno = EINVAL;
       return (-1);
@@ -134,7 +134,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
 	      username, 
 	      strlen (username));
     }
-  memset(dev->io.outofband.password, '\0', IPMI_MAX_AUTH_CODE_LENGTH);
+  memset(dev->io.outofband.password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (password != NULL)
     {
       memcpy (dev->io.outofband.password, 

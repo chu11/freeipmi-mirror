@@ -72,16 +72,16 @@ int8_t fill_lan_msg_hdr (uint8_t net_fn,
 int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
                               uint32_t inbound_seq_num, 
                               uint32_t session_id,
-                              uint8_t *auth_code_data, 
-                              uint32_t auth_code_data_len, 
+                              uint8_t *authentication_code_data, 
+                              uint32_t authentication_code_data_len, 
                               fiid_obj_t obj_hdr);
 
 int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
 			       fiid_obj_t obj_lan_session_hdr, 
 			       fiid_obj_t obj_lan_msg_hdr, 
 			       fiid_obj_t obj_cmd, 
-			       uint8_t *auth_code_data,
-			       uint32_t auth_code_data_len,
+			       uint8_t *authentication_code_data,
+			       uint32_t authentication_code_data_len,
 			       uint8_t *pkt, 
 			       uint32_t pkt_len);
 
@@ -107,11 +107,17 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_check_session_seq_num (fiid_obj_t obj_lan_session_hdr, uint32_t session_seq_num);
+int8_t ipmi_lan_check_session_seq_num (fiid_obj_t obj_lan_session_hdr, 
+				       uint32_t session_seq_num);
 
-int8_t ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id);
+int8_t ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, 
+				  uint32_t session_id);
 
-int8_t ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *auth_code_data, uint32_t auth_code_data_len);
+int8_t ipmi_lan_check_session_authcode (uint8_t *pkt, 
+					uint64_t pkt_len, 
+					uint8_t authentication_type, 
+					uint8_t *authentication_code_data, 
+					uint32_t authentication_code_data_len);
 
 int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
 

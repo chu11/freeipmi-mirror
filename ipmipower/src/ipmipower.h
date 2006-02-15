@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.16.2.3 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.16.2.4 2006-02-15 14:46:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -340,7 +340,7 @@ struct ipmipower_config
   hostlist_t        hosts;
   int               hosts_count;
   char              username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char              password[IPMI_MAX_AUTH_CODE_LENGTH+1];
+  char              password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
   power_cmd_t       powercmd;
   char              configfile[MAXPATHLEN+1];
 

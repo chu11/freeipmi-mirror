@@ -25,7 +25,7 @@
 /* XXX: need to remove */
 #define IPMI_INTERFACE_MAX_USERNAME_LEN     16
 #define IPMI_INTERFACE_CHALLENGE_STR_LEN    16
-#define IPMI_INTERFACE_MAX_AUTH_CODE_LEN    16
+#define IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN    16
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3
@@ -99,7 +99,7 @@ struct ipmi_device
       uint8_t           rq_seq;
       
       uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];
-      uint8_t           password[IPMI_INTERFACE_MAX_AUTH_CODE_LEN];
+      uint8_t           password[IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN];
       uint8_t           privilege_level;
       
       struct 

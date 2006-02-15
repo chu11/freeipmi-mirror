@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.14.2.3 2006-02-15 05:05:56 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.14.2.4 2006-02-15 14:46:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -290,9 +290,9 @@ _cmd_password(char **argv)
                   ipmipower_auth_string(conf->authtype));
     }
   else if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTH_CODE_LENGTH)) 
+           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTHENTICATION_CODE_LENGTH)) 
     {
-      memset(conf->password, '\0', IPMI_MAX_AUTH_CODE_LENGTH+1);
+      memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
 
       if (argv[1])
         strcpy(conf->password, argv[1]);

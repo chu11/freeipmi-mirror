@@ -52,7 +52,7 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
       || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
       || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
-    msg_len += IPMI_MAX_AUTH_CODE_LENGTH;
+    msg_len += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
   
   return msg_len;
 }
@@ -189,7 +189,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
                                 dev->io.outofband.rq.obj_lan_msg_hdr,
                                 obj_cmd_rq,
                                 dev->io.outofband.password,
-                                IPMI_MAX_AUTH_CODE_LENGTH,
+                                IPMI_MAX_AUTHENTICATION_CODE_LENGTH,
                                 pkt,
                                 pkt_len) != -1);
 
@@ -248,7 +248,7 @@ printf("DEBUGGING:\n");
                                           bytes_received, 
                                           dev->io.outofband.authentication_type,
                                           dev->io.outofband.password,
-                                          IPMI_MAX_AUTH_CODE_LENGTH) == 1);
+                                          IPMI_MAX_AUTHENTICATION_CODE_LENGTH) == 1);
 
   }
   
@@ -309,7 +309,7 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
                                 dev->io.outofband.rq.obj_lan_msg_hdr,
                                 obj_cmd_rq,
                                 dev->io.outofband.password,
-                                IPMI_MAX_AUTH_CODE_LENGTH,
+                                IPMI_MAX_AUTHENTICATION_CODE_LENGTH,
                                 pkt,
                                 pkt_len) != -1);
 
@@ -453,7 +453,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
       return (-1);
 
     if (dev->io.outofband.authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-      authcode_len = IPMI_MAX_AUTH_CODE_LENGTH;
+      authcode_len = IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
     else
       authcode_len = 0;
 
@@ -519,7 +519,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                          bytes_received, 
                                          dev->io.outofband.authentication_type,
                                          dev->io.outofband.password,
-                                         IPMI_MAX_AUTH_CODE_LENGTH) != 1)
+                                         IPMI_MAX_AUTHENTICATION_CODE_LENGTH) != 1)
       {
 	fiid_template_free (tmpl_var_cmd_rs);
         fiid_obj_destroy(obj_cmd_rs);

@@ -121,12 +121,12 @@ set_bmc_enable_user (ipmi_device_t *dev,
 		     int user_status)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t password[IPMI_MAX_AUTH_CODE_LENGTH];
+  uint8_t password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
   int8_t rv = -1;
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
-  memset (password, 0, IPMI_MAX_AUTH_CODE_LENGTH);
+  memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (ipmi_cmd_set_user_password2 (dev, 
 				   userid, 
 				   (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
@@ -651,7 +651,7 @@ _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
 
 int8_t 
 set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                              struct bmc_auth_level *bmc_auth_level)
+                                              struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -680,59 +680,59 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
   uint8_t oem_level = 0;
   int8_t rv = -1;
 
-  if (bmc_auth_level->callback.type_none)
+  if (bmc_authentication_level->callback.type_none)
     callback_level = BIT_SET (callback_level, 0);
-  if (bmc_auth_level->callback.type_md2)
+  if (bmc_authentication_level->callback.type_md2)
     callback_level = BIT_SET (callback_level, 1);
-  if (bmc_auth_level->callback.type_md5)
+  if (bmc_authentication_level->callback.type_md5)
     callback_level = BIT_SET (callback_level, 2);
-  if (bmc_auth_level->callback.type_straight_password)
+  if (bmc_authentication_level->callback.type_straight_password)
     callback_level = BIT_SET (callback_level, 4);
-  if (bmc_auth_level->callback.type_oem_proprietary)
+  if (bmc_authentication_level->callback.type_oem_proprietary)
     callback_level = BIT_SET (callback_level, 5);
   
-  if (bmc_auth_level->user.type_none)
+  if (bmc_authentication_level->user.type_none)
     user_level = BIT_SET (user_level, 0);
-  if (bmc_auth_level->user.type_md2)
+  if (bmc_authentication_level->user.type_md2)
     user_level = BIT_SET (user_level, 1);
-  if (bmc_auth_level->user.type_md5)
+  if (bmc_authentication_level->user.type_md5)
     user_level = BIT_SET (user_level, 2);
-  if (bmc_auth_level->user.type_straight_password)
+  if (bmc_authentication_level->user.type_straight_password)
     user_level = BIT_SET (user_level, 4);
-  if (bmc_auth_level->user.type_oem_proprietary)
+  if (bmc_authentication_level->user.type_oem_proprietary)
     user_level = BIT_SET (user_level, 5);
   
-  if (bmc_auth_level->operator.type_none)
+  if (bmc_authentication_level->operator.type_none)
     operator_level = BIT_SET (operator_level, 0);
-  if (bmc_auth_level->operator.type_md2)
+  if (bmc_authentication_level->operator.type_md2)
     operator_level = BIT_SET (operator_level, 1);
-  if (bmc_auth_level->operator.type_md5)
+  if (bmc_authentication_level->operator.type_md5)
     operator_level = BIT_SET (operator_level, 2);
-  if (bmc_auth_level->operator.type_straight_password)
+  if (bmc_authentication_level->operator.type_straight_password)
     operator_level = BIT_SET (operator_level, 4);
-  if (bmc_auth_level->operator.type_oem_proprietary)
+  if (bmc_authentication_level->operator.type_oem_proprietary)
     operator_level = BIT_SET (operator_level, 5);
   
-  if (bmc_auth_level->admin.type_none)
+  if (bmc_authentication_level->admin.type_none)
     admin_level = BIT_SET (admin_level, 0);
-  if (bmc_auth_level->admin.type_md2)
+  if (bmc_authentication_level->admin.type_md2)
     admin_level = BIT_SET (admin_level, 1);
-  if (bmc_auth_level->admin.type_md5)
+  if (bmc_authentication_level->admin.type_md5)
     admin_level = BIT_SET (admin_level, 2);
-  if (bmc_auth_level->admin.type_straight_password)
+  if (bmc_authentication_level->admin.type_straight_password)
     admin_level = BIT_SET (admin_level, 4);
-  if (bmc_auth_level->admin.type_oem_proprietary)
+  if (bmc_authentication_level->admin.type_oem_proprietary)
     admin_level = BIT_SET (admin_level, 5);
   
-  if (bmc_auth_level->oem.type_none)
+  if (bmc_authentication_level->oem.type_none)
     oem_level = BIT_SET (oem_level, 0);
-  if (bmc_auth_level->oem.type_md2)
+  if (bmc_authentication_level->oem.type_md2)
     oem_level = BIT_SET (oem_level, 1);
-  if (bmc_auth_level->oem.type_md5)
+  if (bmc_authentication_level->oem.type_md5)
     oem_level = BIT_SET (oem_level, 2);
-  if (bmc_auth_level->oem.type_straight_password)
+  if (bmc_authentication_level->oem.type_straight_password)
     oem_level = BIT_SET (oem_level, 4);
-  if (bmc_auth_level->oem.type_oem_proprietary)
+  if (bmc_authentication_level->oem.type_oem_proprietary)
     oem_level = BIT_SET (oem_level, 5);
 
   if (!(obj_cmd_rq = fiid_obj_create(l_tmpl_set_lan_conf_param_authentication_type_enables_rq)))
@@ -1701,7 +1701,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                              struct bmc_auth_level *bmc_auth_level)
+                                              struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1722,151 +1722,151 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 		    (uint8_t *)"callback_level.none", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->callback.type_none = val;
+  bmc_authentication_level->callback.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"callback_level.md2", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->callback.type_md2 = val;
+  bmc_authentication_level->callback.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"callback_level.md5", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->callback.type_md5 = val;
+  bmc_authentication_level->callback.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"callback_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->callback.type_straight_password = val;
+  bmc_authentication_level->callback.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"callback_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->callback.type_oem_proprietary = val;
+  bmc_authentication_level->callback.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_level.none", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->user.type_none = val;
+  bmc_authentication_level->user.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_level.md2", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->user.type_md2 = val;
+  bmc_authentication_level->user.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_level.md5", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->user.type_md5 = val;
+  bmc_authentication_level->user.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->user.type_straight_password = val;
+  bmc_authentication_level->user.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"user_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->user.type_oem_proprietary = val;
+  bmc_authentication_level->user.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"operator_level.none", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->operator.type_none = val;
+  bmc_authentication_level->operator.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"operator_level.md2", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->operator.type_md2 = val;
+  bmc_authentication_level->operator.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"operator_level.md5", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->operator.type_md5 = val;
+  bmc_authentication_level->operator.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"operator_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->operator.type_straight_password = val;
+  bmc_authentication_level->operator.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"operator_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->operator.type_oem_proprietary = val;
+  bmc_authentication_level->operator.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"admin_level.none", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->admin.type_none = val;
+  bmc_authentication_level->admin.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"admin_level.md2", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->admin.type_md2 = val;
+  bmc_authentication_level->admin.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"admin_level.md5", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->admin.type_md5 = val;
+  bmc_authentication_level->admin.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"admin_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->admin.type_straight_password = val;
+  bmc_authentication_level->admin.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"admin_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->admin.type_oem_proprietary = val;
+  bmc_authentication_level->admin.type_oem_proprietary = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"oem_level.none", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->oem.type_none = val;
+  bmc_authentication_level->oem.type_none = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"oem_level.md2", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->oem.type_md2 = val;
+  bmc_authentication_level->oem.type_md2 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"oem_level.md5", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->oem.type_md5 = val;
+  bmc_authentication_level->oem.type_md5 = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"oem_level.straight_password", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->oem.type_straight_password = val;
+  bmc_authentication_level->oem.type_straight_password = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"oem_level.oem_proprietary", 
 		    &val) < 0)
     goto cleanup;
-  bmc_auth_level->oem.type_oem_proprietary = val;
+  bmc_authentication_level->oem.type_oem_proprietary = val;
   
   rv = 0;
  cleanup:
