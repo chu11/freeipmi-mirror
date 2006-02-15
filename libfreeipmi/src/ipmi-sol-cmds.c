@@ -94,7 +94,7 @@ fill_sol_conf_sol_enable_disable (uint8_t channel_number,
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SOL_CONF_PARAMS);
+		IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 
@@ -147,7 +147,7 @@ fill_get_sol_conf_param (uint8_t parameter_selector,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_SOL_CONF_PARAMS);
+		IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 

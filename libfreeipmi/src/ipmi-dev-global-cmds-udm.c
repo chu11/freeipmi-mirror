@@ -21,7 +21,7 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -32,7 +32,7 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_dev_id_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_device_id_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -41,10 +41,10 @@ ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_dev_id_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
     goto cleanup;
 
-  if (fill_cmd_get_dev_id (obj_cmd_rq) < 0)
+  if (fill_cmd_get_device_id (obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

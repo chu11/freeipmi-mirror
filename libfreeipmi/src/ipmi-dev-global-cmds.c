@@ -20,73 +20,73 @@
 
 #include "freeipmi.h"
   
-fiid_template_t tmpl_cmd_get_dev_id_rq =
+fiid_template_t tmpl_cmd_get_device_id_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_get_dev_id_rs =
+fiid_template_t tmpl_cmd_get_device_id_rs =
 {
   {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
   {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "dev_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-  {4,  "dev_rev.rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* binary encoded */
-  {3,  "dev_rev.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "dev_rev.sdr_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {7,  "firmware_rev1.major_rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "firmware_rev1.dev_available", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "firmware_rev2.minor_rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* BCD encoded */
-  {4,  "ipmi_ver.ms_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {4,  "ipmi_ver.ls_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sensor_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sdr_repo_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sel_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.fru_inventory_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.ipmb_evnt_receiver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.ipmb_evnt_generator", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.bridge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.chassis_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {20, "manf_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {4,  "manf_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {16, "prod_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {32, "aux_firmware_rev_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+  {4,  "device_revision.revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* binary encoded */
+  {3,  "device_revision.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "device_revision.sdr_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {7,  "firmware_revision1.major_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "firmware_revision1.device_available", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "firmware_revision2.minor_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* BCD encoded */
+  {4,  "ipmi_version.ms_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {4,  "ipmi_version.ls_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sensor_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sdr_repository_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sel_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.fru_inventory_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.ipmb_event_receiver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.ipmb_event_generator", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.bridge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.chassis_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {20, "manufacturer_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {4,  "manufacturer_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {16, "product_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {32, "auxiliary_firmware_revision_info", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
   {0,  "", 0}
 };
 
-fiid_template_t tmpl_cmd_get_dev_id_sr870bn4_rs =
+fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
 {
   {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
   {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "dev_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-  {4,  "dev_rev.rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* binary encoded */
-  {3,  "dev_rev.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "dev_rev.sdr_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {7,  "firmware_rev1.major_rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "firmware_rev1.dev_available", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "firmware_rev2.minor_rev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* BCD encoded */
-  {4,  "ipmi_ver.ms_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {4,  "ipmi_ver.ls_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sensor_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sdr_repo_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.sel_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.fru_inventory_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.ipmb_evnt_receiver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.ipmb_evnt_generator", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.bridge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {1,  "additional_dev_support.chassis_dev", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {20, "manf_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {4,  "manf_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {16, "prod_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "aux_firmware_rev_info.boot_code.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "aux_firmware_rev_info.boot_code.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "aux_firmware_rev_info.pia.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-  {8,  "aux_firmware_rev_info.pia.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+  {4,  "device_revision.revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* binary encoded */
+  {3,  "device_revision.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "device_revision.sdr_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {7,  "firmware_revision1.major_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "firmware_revision1.device_available", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "firmware_revision2.minor_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, /* BCD encoded */
+  {4,  "ipmi_version.ms_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {4,  "ipmi_version.ls_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sensor_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sdr_repository_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.sel_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.fru_inventory_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.ipmb_event_receiver", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.ipmb_event_generator", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.bridge", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {1,  "additional_device_support.chassis_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {20, "manufacturer_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {4,  "manufacturer_id.reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {16, "product_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "auxiliary_firmware_revision_info.boot_code.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "auxiliary_firmware_revision_info.boot_code.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "auxiliary_firmware_revision_info.pia.major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+  {8,  "auxiliary_firmware_revision_info.pia.minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
   {0,  "", 0}
 };
 
 int8_t 
-fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
+fill_cmd_get_device_id (fiid_obj_t obj_data_rq)
 { 
   int8_t rv;
 
@@ -96,7 +96,7 @@ fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_cmd_get_dev_id_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_cmd_get_device_id_rq)) < 0)
     return (-1);
   
   if (!rv)
@@ -105,7 +105,7 @@ fill_cmd_get_dev_id (fiid_obj_t obj_data_rq)
       return -1;
     }
 
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEV_ID);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEVICE_ID);
   return (0);
 }
 

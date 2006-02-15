@@ -737,40 +737,40 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
       fiid_obj_t obj_data_rs = NULL;
-      uint64_t manf_id, prod_id;
+      uint64_t manufacturer_id, product_id;
       int8_t rv = -1, err_flag = 0;
 
-      if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+      if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
 	{
 	  err_flag++;
 	  goto cleanup1;
 	}
       
-      if (ipmi_cmd_get_dev_id (dev, obj_data_rs) < 0)
+      if (ipmi_cmd_get_device_id (dev, obj_data_rs) < 0)
 	{
 	  err_flag++;
 	  goto cleanup1;
 	}
       
-      if (fiid_obj_get (obj_data_rs, (uint8_t *)"manf_id.id", &manf_id) < 0)
+      if (fiid_obj_get (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id) < 0)
 	{
 	  err_flag++;
 	  goto cleanup1;
 	}
 
-      if (fiid_obj_get (obj_data_rs, (uint8_t *)"prod_id", &prod_id) < 0)
+      if (fiid_obj_get (obj_data_rs, (uint8_t *)"product_id", &product_id) < 0)
 	{
 	  err_flag++;
 	  goto cleanup1;
 	}
       
-      switch (manf_id)
+      switch (manufacturer_id)
 	{
-	case IPMI_MANF_ID_INTEL:
+	case IPMI_MANUFACTURER_ID_INTEL:
 	case 0xB000157: // Intel 
-	  switch (prod_id)
+	  switch (product_id)
 	    {
-	    case IPMI_PROD_ID_SE7501WV2:
+	    case IPMI_PRODUCT_ID_SE7501WV2:
 	      rv = 7;
 	    }
 	}

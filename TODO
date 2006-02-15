@@ -79,6 +79,17 @@ libfreeipmi:
        - audit templates (done)
        - audit function names, parameters (done)
        - function parameter ordering (done)
+    - dev-global-cmds
+       - clean function names (done)
+       - audit templates (done)
+       - audit function names, parameters (done)
+    - chassis-cmds
+    - pef-cmds
+    - sdr-repo-cmds
+    - sel-cmds
+    - sensor-cmds
+    - serial-cmds
+    - sol-cmds
   * reg-space default  
   * udm parameter checks
 

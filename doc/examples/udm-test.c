@@ -89,12 +89,12 @@ main (int argc, char **argv)
 	}
     }
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
     {
       perror("fiid_obj_create");
       exit (EXIT_FAILURE);
     }
-  if (ipmi_cmd_get_dev_id (&dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (&dev, obj_cmd_rs) != 0)
     {
       perror ("ipmi_cmd()");
       exit (EXIT_FAILURE);

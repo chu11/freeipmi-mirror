@@ -6,6 +6,11 @@
 	* libfreeipmi/src/ipmi-lan-interface.c (unassemble_ipmi_lan_pkt),
 	libfreeipmi/src/ipmi-debug.c (ipmi_dump_lan_packet): Fix
 	unassembly bug.
+
+	* libfreeipmi/src/ipmi-dev-global-cmds.h,
+	libfreeipmi/src/ipmi-dev-global-cmds.c: Cleanup.
+
+	* fish/, bmc-info/, libfreeipmi/: Adjust code appropriately.
 	
 2006-02-14  Albert Chu <chu11@llnl.gov>
 

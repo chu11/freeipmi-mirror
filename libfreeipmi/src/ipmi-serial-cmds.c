@@ -200,7 +200,7 @@ fill_set_serial_connmode (uint8_t channel_number,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION_PARAMETERS);
     
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 
@@ -262,7 +262,7 @@ fill_set_serial_page_blackout_interval (uint8_t channel_number,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 
@@ -308,7 +308,7 @@ fill_set_serial_retry_time (uint8_t channel_number,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION_PARAMETERS);
     
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 
@@ -356,7 +356,7 @@ fill_set_serial_comm_bits (uint8_t channel_number,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONF_PARAM);
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 
@@ -421,7 +421,7 @@ fill_get_serial_conf_param (uint8_t parameter_selector,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_SERIAL_MODEM_CONF_PARAM);
+		IPMI_CMD_GET_SERIAL_MODEM_CONFIGURATION_PARAMETERS);
     
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_number", 

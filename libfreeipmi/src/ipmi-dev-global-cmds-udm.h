@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-int8_t ipmi_cmd_get_dev_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

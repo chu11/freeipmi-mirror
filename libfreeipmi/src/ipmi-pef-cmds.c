@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-cmds.c,v 1.23.2.2 2006-02-13 22:21:17 chu11 Exp $  */
+$Id: ipmi-pef-cmds.c,v 1.23.2.3 2006-02-15 21:01:35 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -649,7 +649,7 @@ fill_kcs_get_pef_conf_param (uint8_t parameter_selector,
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_PEF_CONF_PARAMS);
+		IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_type", 
@@ -696,7 +696,7 @@ fill_kcs_set_pef_control (uint8_t enable_pef,
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_PEF_CONTROL);
@@ -746,7 +746,7 @@ fill_kcs_set_global_action_control (uint8_t enable_alert,
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_ACTION_GLOBAL_CONTROL);
@@ -799,7 +799,7 @@ fill_kcs_set_startup_delay (uint8_t startup_delay, fiid_obj_t obj_data_rq)
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_STARTUP_DELAY);
@@ -834,7 +834,7 @@ fill_kcs_set_alert_startup_delay (uint8_t alert_startup_delay, fiid_obj_t obj_da
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_ALERT_STARTUP_DELAY);
@@ -869,7 +869,7 @@ fill_kcs_set_num_event_filters (uint8_t num_event_filters, fiid_obj_t obj_data_r
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq, 
                 (uint8_t *)"reserved1",
                 0);
@@ -908,7 +908,7 @@ fill_kcs_set_filter_table_entry (const event_filter_table_entry_t *eft_entry,
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_EVENT_FILTER_TABLE);
@@ -1039,7 +1039,7 @@ fill_kcs_set_filter_table_data1 (uint8_t filter_number,
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1);
@@ -1087,7 +1087,7 @@ fill_kcs_set_num_alert_policies (uint8_t num_alert_policies,
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
-                IPMI_CMD_SET_PEF_CONF_PARAMS);
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"parameter_selector",
                 IPMI_PEF_PARAM_NUM_ALERT_POLICY_ENTRIES);
@@ -1128,7 +1128,7 @@ fill_kcs_set_alert_string_keys (uint8_t string_selector,
 
   FIID_OBJ_SET (obj_data_rq, 
                 "cmd", 
-                IPMI_CMD_SET_PEF_CONF_PARAMS); 
+                IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
   FIID_OBJ_SET (obj_data_rq, 
                 "parameter_selector", 
                 IPMI_PEF_PARAM_ALERT_STRING_KEYS); 

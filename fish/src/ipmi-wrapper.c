@@ -410,35 +410,35 @@ display_channel_info ()
 }
 
 int 
-display_get_dev_id ()
+display_get_device_id ()
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
   int rv = -1;
 
-  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_dev_id_rs)))
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
+  if (ipmi_cmd_get_device_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_dev_id()");
+      ipmi_error (cmd_rs, "ipmi_cmd_get_device_id()");
       return (-1);
     }
   
   if (fiid_obj_get(cmd_rs, 
-                   (uint8_t *)"dev_id", 
+                   (uint8_t *)"device_id", 
                    &val) < 0)
     goto cleanup;
   fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"dev_rev.rev", 
+                    (uint8_t *)"device_revision.revision", 
                     &val) < 0)
     goto cleanup;
   fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"dev_rev.sdr_support", 
+                    (uint8_t *)"device_revision.sdr_support", 
                     &val) < 0)
     goto cleanup;
   if (val)
@@ -447,11 +447,11 @@ display_get_dev_id ()
   {
     uint64_t maj, min;
     if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"firmware_rev1.major_rev", 
+                      (uint8_t *)"firmware_revision1.major_revision", 
                       &maj) < 0)
       goto cleanup;
     if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"firmware_rev2.minor_rev", 
+                      (uint8_t *)"firmware_revision2.minor_revision", 
                       &min) < 0)
       goto cleanup;
     fprintf (stdout, "Firmware Revision: %d.%d\n", 
@@ -459,7 +459,7 @@ display_get_dev_id ()
   }
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"firmware_rev1.dev_available", 
+                    (uint8_t *)"firmware_revision1.device_available", 
                     &val) < 0)
     goto cleanup;
   if (val == 0)
@@ -476,11 +476,11 @@ display_get_dev_id ()
   {
     uint64_t ms, ls;
     if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"ipmi_ver.ms_bits", 
+                      (uint8_t *)"ipmi_version.ms_bits", 
                       &ms) < 0)
       goto cleanup;
     if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"ipmi_ver.ls_bits", 
+                      (uint8_t *)"ipmi_version.ls_bits", 
                       &ls) < 0)
       goto cleanup;
     fprintf (stdout, 
@@ -490,56 +490,56 @@ display_get_dev_id ()
   fprintf (stdout, "Additional Device Support:\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.sensor_dev", 
+                    (uint8_t *)"additional_device_support.sensor_device", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [Sensor Device]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.sdr_repo_dev", 
+                    (uint8_t *)"additional_device_support.sdr_repository_device", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [SDR Repository Device]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.sel_dev", 
+                    (uint8_t *)"additional_device_support.sel_device", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [SEL Device]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.fru_inventory_dev", 
+                    (uint8_t *)"additional_device_support.fru_inventory_device", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [FRU Inventory Device]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.ipmb_evnt_receiver", 
+                    (uint8_t *)"additional_device_support.ipmb_event_receiver", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [IPMB Event Receiver]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.ipmb_evnt_generator", 
+                    (uint8_t *)"additional_device_support.ipmb_event_generator", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [IPMB Event Generator]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.bridge", 
+                    (uint8_t *)"additional_device_support.bridge", 
                     &val) < 0)
     goto cleanup;
   if(val)
     fprintf (stdout, "                   [Bridge]\n");
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_dev_support.chassis_dev", 
+                    (uint8_t *)"additional_device_support.chassis_device", 
                     &val) < 0)
     goto cleanup;
 
@@ -547,44 +547,44 @@ display_get_dev_id ()
     fprintf (stdout, "                   [Chassis Device]\n");
   
   {
-    uint64_t manf_id, prod_id;
+    uint64_t manufacturer_id, product_id;
     
-    if (fiid_obj_get (cmd_rs, (uint8_t *)"manf_id.id", &manf_id) < 0)
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id) < 0)
       goto cleanup;
-    fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manf_id);
+    fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
     
-    if (fiid_obj_get (cmd_rs, (uint8_t *)"prod_id", &prod_id) < 0)
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"product_id", &product_id) < 0)
       goto cleanup;
-    fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) prod_id);
+    fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) product_id);
     
-    if (fiid_obj_get (cmd_rs, (uint8_t *)"aux_firmware_rev_info", &val) < 0)
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val) < 0)
       goto cleanup;
 
-    switch (manf_id)
+    switch (manufacturer_id)
       {
-      case IPMI_MANF_ID_INTEL: 
-	switch (prod_id)
+      case IPMI_MANUFACTURER_ID_INTEL: 
+	switch (product_id)
 	  {
 	    /* I am assuming all Intel products will decode alike.
                                  -- Anand Babu <ab@gnu.org.in>  */
-	  case IPMI_PROD_ID_SR870BN4:
+	  case IPMI_PRODUCT_ID_SR870BN4:
 	  default:
 	    {
 	      uint64_t bc_maj, bc_min, pia_maj, pia_min;
 	      if (fiid_obj_get (cmd_rs,
-                                (uint8_t *)"aux_firmware_rev_info.boot_code.major",
+                                (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
                                 &bc_maj) < 0)
                 goto cleanup;
 	      if (fiid_obj_get (cmd_rs,
-                                (uint8_t *)"aux_firmware_rev_info.boot_code.minor",
+                                (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
                                 &bc_min) < 0)
                 goto cleanup;
 	      if (fiid_obj_get (cmd_rs,
-                                (uint8_t *)"aux_firmware_rev_info.pia.major",
+                                (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
                                 &pia_maj) < 0)
                 goto cleanup;
 	      if (fiid_obj_get (cmd_rs,
-                                (uint8_t *)"aux_firmware_rev_info.pia.minor",
+                                (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
                                 &pia_min) < 0)
                 goto cleanup;
               fprintf (stdout, 
