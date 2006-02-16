@@ -75,14 +75,14 @@ SCM ex_set_bmc_user_serial_channel_access (SCM scm_userid,
 					   SCM scm_serial_privilege_limit, 
 					   SCM scm_serial_session_limit);
 SCM ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode, 
-					    SCM scm_enable_user_level_auth, 
-					    SCM scm_enable_per_message_auth, 
-					    SCM scm_enable_pef_alerting, 
+					    SCM scm_user_level_auth, 
+					    SCM scm_per_message_auth, 
+					    SCM scm_pef_alerting, 
 					    SCM scm_channel_privilege_limit);
 SCM ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode, 
-						SCM scm_enable_user_level_auth, 
-						SCM scm_enable_per_message_auth, 
-						SCM scm_enable_pef_alerting, 
+						SCM scm_user_level_auth, 
+						SCM scm_per_message_auth, 
+						SCM scm_pef_alerting, 
 						SCM scm_channel_privilege_limit);
 SCM ex_set_bmc_lan_conf_ip_address_source (SCM scm_ip_address_source);
 SCM ex_set_bmc_lan_conf_ip_address (SCM scm_ip_address);
@@ -121,29 +121,29 @@ SCM ex_set_bmc_lan_conf_authentication_type_oem_enables (SCM scm_authentication_
 							 SCM scm_authentication_type_md5, 
 							 SCM scm_authentication_type_straight_password, 
 							 SCM scm_authentication_type_oem_proprietary);
-SCM ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_enable_gratuitous_arps, 
-						   SCM scm_enable_arp_response);
+SCM ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_bmc_generated_gratuitous_arps, 
+						   SCM scm_bmc_generated_arp_responses);
 SCM ex_set_bmc_lan_conf_gratuitous_arp_interval (SCM scm_gratuitous_arp_interval);
 
 SCM ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode, 
-					       SCM scm_enable_user_level_auth, 
-					       SCM scm_enable_per_message_auth, 
-					       SCM scm_enable_pef_alerting, 
+					       SCM scm_user_level_auth, 
+					       SCM scm_per_message_auth, 
+					       SCM scm_pef_alerting, 
 					       SCM scm_channel_privilege_limit);
 SCM ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode, 
-						   SCM scm_enable_user_level_auth, 
-						   SCM scm_enable_per_message_auth, 
-						   SCM scm_enable_pef_alerting, 
+						   SCM scm_user_level_auth, 
+						   SCM scm_per_message_auth, 
+						   SCM scm_pef_alerting, 
 						   SCM scm_channel_privilege_limit);
-SCM ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode, 
-				      SCM scm_enable_ppp_mode, 
-				      SCM scm_enable_terminal_mode, 
+SCM ex_set_bmc_serial_conf_connection_mode (SCM scm_basic_mode, 
+				      SCM scm_ppp_mode, 
+				      SCM scm_terminal_mode, 
 				      SCM scm_connect_mode);
 SCM ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval);
-SCM ex_set_bmc_serial_conf_call_retry_time (SCM scm_call_retry_time);
-SCM ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup, 
-						   SCM scm_flow_control, 
-						   SCM scm_bit_rate);
+SCM ex_set_bmc_serial_conf_call_retry_interval (SCM scm_call_retry_interval);
+SCM ex_set_bmc_serial_conf_ipmi_messaging_comm_settings (SCM scm_dtr_hangup, 
+                                                         SCM scm_flow_control, 
+                                                         SCM scm_bit_rate);
 SCM ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy);
 SCM ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable, 
 				     SCM scm_pef_event_msgs_enable, 
@@ -183,10 +183,10 @@ SCM ex_get_bmc_lan_conf_bmc_generated_arp_control ();
 SCM ex_get_bmc_lan_conf_gratuitous_arp_interval ();
 SCM ex_get_bmc_serial_channel_volatile_access ();
 SCM ex_get_bmc_serial_channel_non_volatile_access ();
-SCM ex_get_bmc_serial_conf_conn_mode ();
+SCM ex_get_bmc_serial_conf_connection_mode ();
 SCM ex_get_bmc_serial_conf_page_blackout_interval ();
-SCM ex_get_bmc_serial_conf_call_retry_time ();
-SCM ex_get_bmc_serial_conf_ipmi_msg_comm_settings ();
+SCM ex_get_bmc_serial_conf_call_retry_interval ();
+SCM ex_get_bmc_serial_conf_ipmi_messaging_comm_settings ();
 SCM ex_get_bmc_power_restore_policy ();
 SCM ex_get_bmc_pef_conf_pef_control ();
 SCM ex_get_bmc_pef_conf_pef_global_action_control ();

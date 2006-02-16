@@ -806,86 +806,86 @@ ex_set_bmc_user_serial_channel_access (SCM scm_userid,
 
 SCM 
 ex_set_bmc_lan_channel_volatile_access (SCM scm_access_mode, 
-					SCM scm_enable_user_level_authentication, 
-					SCM scm_enable_per_message_authentication, 
-					SCM scm_enable_pef_alerting, 
+					SCM scm_user_level_authentication, 
+					SCM scm_per_message_authentication, 
+					SCM scm_pef_alerting, 
 					SCM scm_channel_privilege_limit)
 {
   uint8_t access_mode; 
-  uint8_t enable_user_level_authentication; 
-  uint8_t enable_per_message_authentication; 
-  uint8_t enable_pef_alerting; 
+  uint8_t user_level_authentication; 
+  uint8_t per_message_authentication; 
+  uint8_t pef_alerting; 
   uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
 						&access_mode, 
-						&enable_user_level_authentication, 
-						&enable_per_message_authentication, 
-						&enable_pef_alerting, 
+						&user_level_authentication, 
+						&per_message_authentication, 
+						&pef_alerting, 
 						&channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
-  if (scm_boolean_p (scm_enable_user_level_authentication) == SCM_BOOL_T)
-    enable_user_level_authentication = gh_scm2bool (scm_enable_user_level_authentication);
-  if (scm_boolean_p (scm_enable_per_message_authentication) == SCM_BOOL_T)
-    enable_per_message_authentication = gh_scm2bool (scm_enable_per_message_authentication);
-  if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+  if (scm_boolean_p (scm_user_level_authentication) == SCM_BOOL_T)
+    user_level_authentication = gh_scm2bool (scm_user_level_authentication);
+  if (scm_boolean_p (scm_per_message_authentication) == SCM_BOOL_T)
+    per_message_authentication = gh_scm2bool (scm_per_message_authentication);
+  if (scm_boolean_p (scm_pef_alerting) == SCM_BOOL_T)
+    pef_alerting = gh_scm2bool (scm_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
   retval = set_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
 						access_mode, 
-						enable_user_level_authentication, 
-						enable_per_message_authentication, 
-						enable_pef_alerting, 
+						user_level_authentication, 
+						per_message_authentication, 
+						pef_alerting, 
 						channel_privilege_limit);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
 ex_set_bmc_lan_channel_non_volatile_access (SCM scm_access_mode, 
-					    SCM scm_enable_user_level_authentication, 
-					    SCM scm_enable_per_message_authentication, 
-					    SCM scm_enable_pef_alerting, 
+					    SCM scm_user_level_authentication, 
+					    SCM scm_per_message_authentication, 
+					    SCM scm_pef_alerting, 
 					    SCM scm_channel_privilege_limit)
 {
   uint8_t access_mode; 
-  uint8_t enable_user_level_authentication; 
-  uint8_t enable_per_message_authentication; 
-  uint8_t enable_pef_alerting; 
+  uint8_t user_level_authentication; 
+  uint8_t per_message_authentication; 
+  uint8_t pef_alerting; 
   uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
 						    &access_mode, 
-						    &enable_user_level_authentication, 
-						    &enable_per_message_authentication, 
-						    &enable_pef_alerting, 
+						    &user_level_authentication, 
+						    &per_message_authentication, 
+						    &pef_alerting, 
 						    &channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
-  if (scm_boolean_p (scm_enable_user_level_authentication) == SCM_BOOL_T)
-    enable_user_level_authentication = gh_scm2bool (scm_enable_user_level_authentication);
-  if (scm_boolean_p (scm_enable_per_message_authentication) == SCM_BOOL_T)
-    enable_per_message_authentication = gh_scm2bool (scm_enable_per_message_authentication);
-  if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+  if (scm_boolean_p (scm_user_level_authentication) == SCM_BOOL_T)
+    user_level_authentication = gh_scm2bool (scm_user_level_authentication);
+  if (scm_boolean_p (scm_per_message_authentication) == SCM_BOOL_T)
+    per_message_authentication = gh_scm2bool (scm_per_message_authentication);
+  if (scm_boolean_p (scm_pef_alerting) == SCM_BOOL_T)
+    pef_alerting = gh_scm2bool (scm_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
   retval = set_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
 						    access_mode, 
-						    enable_user_level_authentication, 
-						    enable_per_message_authentication, 
-						    enable_pef_alerting, 
+						    user_level_authentication, 
+						    per_message_authentication, 
+						    pef_alerting, 
 						    channel_privilege_limit);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
@@ -1032,10 +1032,10 @@ ex_set_bmc_lan_conf_vlan_priority (SCM scm_vlan_priority)
 
 SCM 
 ex_set_bmc_lan_conf_authentication_type_callback_enables (SCM scm_authentication_type_none, 
-						SCM scm_authentication_type_md2, 
-						SCM scm_authentication_type_md5, 
-						SCM scm_authentication_type_straight_password, 
-						SCM scm_authentication_type_oem_proprietary)
+                                                          SCM scm_authentication_type_md2, 
+                                                          SCM scm_authentication_type_md5, 
+                                                          SCM scm_authentication_type_straight_password, 
+                                                          SCM scm_authentication_type_oem_proprietary)
 {
   struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
@@ -1068,10 +1068,10 @@ ex_set_bmc_lan_conf_authentication_type_callback_enables (SCM scm_authentication
 
 SCM 
 ex_set_bmc_lan_conf_authentication_type_user_enables (SCM scm_authentication_type_none, 
-					    SCM scm_authentication_type_md2, 
-					    SCM scm_authentication_type_md5, 
-					    SCM scm_authentication_type_straight_password, 
-					    SCM scm_authentication_type_oem_proprietary)
+                                                      SCM scm_authentication_type_md2, 
+                                                      SCM scm_authentication_type_md5, 
+                                                      SCM scm_authentication_type_straight_password, 
+                                                      SCM scm_authentication_type_oem_proprietary)
 {
   struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
@@ -1104,10 +1104,10 @@ ex_set_bmc_lan_conf_authentication_type_user_enables (SCM scm_authentication_typ
 
 SCM 
 ex_set_bmc_lan_conf_authentication_type_operator_enables (SCM scm_authentication_type_none, 
-						SCM scm_authentication_type_md2, 
-						SCM scm_authentication_type_md5, 
-						SCM scm_authentication_type_straight_password, 
-						SCM scm_authentication_type_oem_proprietary)
+                                                          SCM scm_authentication_type_md2, 
+                                                          SCM scm_authentication_type_md5, 
+                                                          SCM scm_authentication_type_straight_password, 
+                                                          SCM scm_authentication_type_oem_proprietary)
 {
   struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
@@ -1140,10 +1140,10 @@ ex_set_bmc_lan_conf_authentication_type_operator_enables (SCM scm_authentication
 
 SCM 
 ex_set_bmc_lan_conf_authentication_type_admin_enables (SCM scm_authentication_type_none, 
-					     SCM scm_authentication_type_md2, 
-					     SCM scm_authentication_type_md5, 
-					     SCM scm_authentication_type_straight_password, 
-					     SCM scm_authentication_type_oem_proprietary)
+                                                       SCM scm_authentication_type_md2, 
+                                                       SCM scm_authentication_type_md5, 
+                                                       SCM scm_authentication_type_straight_password, 
+                                                       SCM scm_authentication_type_oem_proprietary)
 {
   struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
@@ -1176,10 +1176,10 @@ ex_set_bmc_lan_conf_authentication_type_admin_enables (SCM scm_authentication_ty
 
 SCM 
 ex_set_bmc_lan_conf_authentication_type_oem_enables (SCM scm_authentication_type_none, 
-					   SCM scm_authentication_type_md2, 
-					   SCM scm_authentication_type_md5, 
-					   SCM scm_authentication_type_straight_password, 
-					   SCM scm_authentication_type_oem_proprietary)
+                                                     SCM scm_authentication_type_md2, 
+                                                     SCM scm_authentication_type_md5, 
+                                                     SCM scm_authentication_type_straight_password, 
+                                                     SCM scm_authentication_type_oem_proprietary)
 {
   struct bmc_authentication_level authentication_type_enables;
   uint8_t retval;
@@ -1211,28 +1211,28 @@ ex_set_bmc_lan_conf_authentication_type_oem_enables (SCM scm_authentication_type
 }
 
 SCM 
-ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_enable_gratuitous_arps, 
-                                               SCM scm_enable_arp_response)
+ex_set_bmc_lan_conf_bmc_generated_arp_control (SCM scm_bmc_generated_gratuitous_arps, 
+                                               SCM scm_bmc_generated_arp_responses)
 {
-  uint8_t enable_gratuitous_arps;
-  uint8_t enable_arp_response;
+  uint8_t bmc_generated_gratuitous_arps;
+  uint8_t bmc_generated_arp_responses;
   int retval;
   
   retval = get_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
-                                                       &enable_gratuitous_arps, 
-                                                       &enable_arp_response);
+                                                       &bmc_generated_gratuitous_arps, 
+                                                       &bmc_generated_arp_responses);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  if (scm_boolean_p (scm_enable_gratuitous_arps) == SCM_BOOL_T)
-    enable_gratuitous_arps = gh_scm2bool (scm_enable_gratuitous_arps);
+  if (scm_boolean_p (scm_bmc_generated_gratuitous_arps) == SCM_BOOL_T)
+    bmc_generated_gratuitous_arps = gh_scm2bool (scm_bmc_generated_gratuitous_arps);
   
-  if (scm_boolean_p (scm_enable_arp_response) == SCM_BOOL_T)
-    enable_arp_response = gh_scm2bool (scm_enable_arp_response);
+  if (scm_boolean_p (scm_bmc_generated_arp_responses) == SCM_BOOL_T)
+    bmc_generated_arp_responses = gh_scm2bool (scm_bmc_generated_arp_responses);
   
   retval = set_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
-                                                       enable_gratuitous_arps, 
-                                                       enable_arp_response);
+                                                       bmc_generated_gratuitous_arps, 
+                                                       bmc_generated_arp_responses);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1250,124 +1250,124 @@ ex_set_bmc_lan_conf_gratuitous_arp_interval (SCM scm_gratuitous_arp_interval)
 
 SCM 
 ex_set_bmc_serial_channel_volatile_access (SCM scm_access_mode, 
-					   SCM scm_enable_user_level_authentication, 
-					   SCM scm_enable_per_message_authentication, 
-					   SCM scm_enable_pef_alerting, 
+					   SCM scm_user_level_authentication, 
+					   SCM scm_per_message_authentication, 
+					   SCM scm_pef_alerting, 
 					   SCM scm_channel_privilege_limit)
 {
   uint8_t access_mode; 
-  uint8_t enable_user_level_authentication; 
-  uint8_t enable_per_message_authentication; 
-  uint8_t enable_pef_alerting; 
+  uint8_t user_level_authentication; 
+  uint8_t per_message_authentication; 
+  uint8_t pef_alerting; 
   uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
 						   &access_mode, 
-						   &enable_user_level_authentication, 
-						   &enable_per_message_authentication, 
-						   &enable_pef_alerting, 
+						   &user_level_authentication, 
+						   &per_message_authentication, 
+						   &pef_alerting, 
 						   &channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
-  if (scm_boolean_p (scm_enable_user_level_authentication) == SCM_BOOL_T)
-    enable_user_level_authentication = gh_scm2bool (scm_enable_user_level_authentication);
-  if (scm_boolean_p (scm_enable_per_message_authentication) == SCM_BOOL_T)
-    enable_per_message_authentication = gh_scm2bool (scm_enable_per_message_authentication);
-  if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+  if (scm_boolean_p (scm_user_level_authentication) == SCM_BOOL_T)
+    user_level_authentication = gh_scm2bool (scm_user_level_authentication);
+  if (scm_boolean_p (scm_per_message_authentication) == SCM_BOOL_T)
+    per_message_authentication = gh_scm2bool (scm_per_message_authentication);
+  if (scm_boolean_p (scm_pef_alerting) == SCM_BOOL_T)
+    pef_alerting = gh_scm2bool (scm_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
   retval = set_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
 						   access_mode, 
-						   enable_user_level_authentication, 
-						   enable_per_message_authentication, 
-						   enable_pef_alerting, 
+						   user_level_authentication, 
+						   per_message_authentication, 
+						   pef_alerting, 
 						   channel_privilege_limit);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
 ex_set_bmc_serial_channel_non_volatile_access (SCM scm_access_mode, 
-					       SCM scm_enable_user_level_authentication, 
-					       SCM scm_enable_per_message_authentication, 
-					       SCM scm_enable_pef_alerting, 
+					       SCM scm_user_level_authentication, 
+					       SCM scm_per_message_authentication, 
+					       SCM scm_pef_alerting, 
 					       SCM scm_channel_privilege_limit)
 {
   uint8_t access_mode; 
-  uint8_t enable_user_level_authentication; 
-  uint8_t enable_per_message_authentication; 
-  uint8_t enable_pef_alerting; 
+  uint8_t user_level_authentication; 
+  uint8_t per_message_authentication; 
+  uint8_t pef_alerting; 
   uint8_t channel_privilege_limit;
   int retval;
   
   retval = get_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
 						       &access_mode, 
-						       &enable_user_level_authentication, 
-						       &enable_per_message_authentication, 
-						       &enable_pef_alerting, 
+						       &user_level_authentication, 
+						       &per_message_authentication, 
+						       &pef_alerting, 
 						       &channel_privilege_limit);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
   if (scm_integer_p (scm_access_mode) == SCM_BOOL_T)
     access_mode = gh_scm2long (scm_access_mode);
-  if (scm_boolean_p (scm_enable_user_level_authentication) == SCM_BOOL_T)
-    enable_user_level_authentication = gh_scm2bool (scm_enable_user_level_authentication);
-  if (scm_boolean_p (scm_enable_per_message_authentication) == SCM_BOOL_T)
-    enable_per_message_authentication = gh_scm2bool (scm_enable_per_message_authentication);
-  if (scm_boolean_p (scm_enable_pef_alerting) == SCM_BOOL_T)
-    enable_pef_alerting = gh_scm2bool (scm_enable_pef_alerting);
+  if (scm_boolean_p (scm_user_level_authentication) == SCM_BOOL_T)
+    user_level_authentication = gh_scm2bool (scm_user_level_authentication);
+  if (scm_boolean_p (scm_per_message_authentication) == SCM_BOOL_T)
+    per_message_authentication = gh_scm2bool (scm_per_message_authentication);
+  if (scm_boolean_p (scm_pef_alerting) == SCM_BOOL_T)
+    pef_alerting = gh_scm2bool (scm_pef_alerting);
   if (scm_integer_p (scm_channel_privilege_limit) == SCM_BOOL_T)
     channel_privilege_limit = gh_scm2long (scm_channel_privilege_limit);
   
   retval = set_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
 						       access_mode, 
-						       enable_user_level_authentication, 
-						       enable_per_message_authentication, 
-						       enable_pef_alerting, 
+						       user_level_authentication, 
+						       per_message_authentication, 
+						       pef_alerting, 
 						       channel_privilege_limit);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_serial_conf_conn_mode (SCM scm_enable_basic_mode, 
-				  SCM scm_enable_ppp_mode, 
-				  SCM scm_enable_terminal_mode, 
-				  SCM scm_connect_mode)
+ex_set_bmc_serial_conf_connection_mode (SCM scm_basic_mode, 
+                                        SCM scm_ppp_mode, 
+                                        SCM scm_terminal_mode, 
+                                        SCM scm_connect_mode)
 {
-  uint8_t enable_basic_mode; 
-  uint8_t enable_ppp_mode;
-  uint8_t enable_terminal_mode;
+  uint8_t basic_mode; 
+  uint8_t ppp_mode;
+  uint8_t terminal_mode;
   uint8_t connect_mode;
   int retval;
   
-  retval = get_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
-					  &enable_basic_mode, 
-					  &enable_ppp_mode, 
-					  &enable_terminal_mode, 
-					  &connect_mode);
+  retval = get_bmc_serial_conf_connection_mode (fi_get_ipmi_device (), 
+                                                &basic_mode, 
+                                                &ppp_mode, 
+                                                &terminal_mode, 
+                                                &connect_mode);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  if (scm_boolean_p (scm_enable_basic_mode) == SCM_BOOL_T)
-    enable_basic_mode = gh_scm2bool (scm_enable_basic_mode);
-  if (scm_boolean_p (scm_enable_ppp_mode) == SCM_BOOL_T)
-    enable_ppp_mode = gh_scm2bool (scm_enable_ppp_mode);
-  if (scm_boolean_p (scm_enable_terminal_mode) == SCM_BOOL_T)
-    enable_terminal_mode = gh_scm2bool (scm_enable_terminal_mode);
-  if (scm_integer_p (scm_enable_terminal_mode) == SCM_BOOL_T)
+  if (scm_boolean_p (scm_basic_mode) == SCM_BOOL_T)
+    basic_mode = gh_scm2bool (scm_basic_mode);
+  if (scm_boolean_p (scm_ppp_mode) == SCM_BOOL_T)
+    ppp_mode = gh_scm2bool (scm_ppp_mode);
+  if (scm_boolean_p (scm_terminal_mode) == SCM_BOOL_T)
+    terminal_mode = gh_scm2bool (scm_terminal_mode);
+  if (scm_integer_p (scm_terminal_mode) == SCM_BOOL_T)
     connect_mode = gh_scm2bool (scm_connect_mode);
   
-  retval = set_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
-					  enable_basic_mode, 
-					  enable_ppp_mode, 
-					  enable_terminal_mode, 
-					  connect_mode);
+  retval = set_bmc_serial_conf_connection_mode (fi_get_ipmi_device (), 
+                                                basic_mode, 
+                                                ppp_mode, 
+                                                terminal_mode, 
+                                                connect_mode);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1384,45 +1384,45 @@ ex_set_bmc_serial_conf_page_blackout_interval (SCM scm_page_blackout_interval)
 }
 
 SCM 
-ex_set_bmc_serial_conf_call_retry_time (SCM scm_call_retry_time)
+ex_set_bmc_serial_conf_call_retry_interval (SCM scm_call_retry_interval)
 {
-  uint8_t call_retry_time;
+  uint8_t call_retry_interval;
   int retval;
   
-  call_retry_time = gh_scm2long (scm_call_retry_time);
-  retval = set_bmc_serial_conf_call_retry_time (fi_get_ipmi_device (), 
-						call_retry_time);
+  call_retry_interval = gh_scm2long (scm_call_retry_interval);
+  retval = set_bmc_serial_conf_call_retry_interval (fi_get_ipmi_device (), 
+                                                    call_retry_interval);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
 SCM 
-ex_set_bmc_serial_conf_ipmi_msg_comm_settings (SCM scm_enable_dtr_hangup, 
-					       SCM scm_flow_control, 
-					       SCM scm_bit_rate)
+ex_set_bmc_serial_conf_ipmi_messaging_comm_settings (SCM scm_dtr_hangup, 
+                                                     SCM scm_flow_control, 
+                                                     SCM scm_bit_rate)
 {
-  uint8_t enable_dtr_hangup;
+  uint8_t dtr_hangup;
   uint8_t flow_control;
   uint8_t bit_rate;
   int retval;
   
-  retval = get_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
-						       &enable_dtr_hangup, 
-						       &flow_control, 
-						       &bit_rate);
+  retval = get_bmc_serial_conf_ipmi_messaging_comm_settings (fi_get_ipmi_device (), 
+                                                             &dtr_hangup, 
+                                                             &flow_control, 
+                                                             &bit_rate);
   if (retval)
     return (retval ? SCM_BOOL_F : SCM_BOOL_T);
   
-  if (scm_boolean_p (scm_enable_dtr_hangup) == SCM_BOOL_T)
-    enable_dtr_hangup = gh_scm2bool (scm_enable_dtr_hangup);
+  if (scm_boolean_p (scm_dtr_hangup) == SCM_BOOL_T)
+    dtr_hangup = gh_scm2bool (scm_dtr_hangup);
   if (scm_integer_p (scm_flow_control) == SCM_BOOL_T)
     flow_control = gh_scm2long (scm_flow_control);
   if (scm_integer_p (scm_bit_rate) == SCM_BOOL_T)
     bit_rate = gh_scm2long (scm_bit_rate);
   
-  retval = set_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
-						       enable_dtr_hangup, 
-						       flow_control, 
-						       bit_rate);
+  retval = set_bmc_serial_conf_ipmi_messaging_comm_settings (fi_get_ipmi_device (), 
+                                                             dtr_hangup, 
+                                                             flow_control, 
+                                                             bit_rate);
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
@@ -1654,24 +1654,24 @@ SCM
 ex_get_bmc_lan_channel_volatile_access ()
 {
   uint8_t access_mode = 0;
-  uint8_t enable_user_level_authentication = 0;
-  uint8_t enable_per_message_authentication = 0;
-  uint8_t enable_pef_alerting = 0;
+  uint8_t user_level_authentication = 0;
+  uint8_t per_message_authentication = 0;
+  uint8_t pef_alerting = 0;
   uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_channel_volatile_access (fi_get_ipmi_device (), 
 						     &access_mode, 
-						     &enable_user_level_authentication, 
-						     &enable_per_message_authentication, 
-						     &enable_pef_alerting, 
+						     &user_level_authentication, 
+						     &per_message_authentication, 
+						     &pef_alerting, 
 						     &channel_privilege_limit)) == 0)
     {
       return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_authentication), 
-			     gh_bool2scm (enable_per_message_authentication), 
-			     gh_bool2scm (enable_pef_alerting), 
+			     gh_bool2scm (user_level_authentication), 
+			     gh_bool2scm (per_message_authentication), 
+			     gh_bool2scm (pef_alerting), 
 			     gh_long2scm (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
@@ -1683,24 +1683,24 @@ SCM
 ex_get_bmc_lan_channel_non_volatile_access ()
 {
   uint8_t access_mode = 0;
-  uint8_t enable_user_level_authentication = 0;
-  uint8_t enable_per_message_authentication = 0;
-  uint8_t enable_pef_alerting = 0;
+  uint8_t user_level_authentication = 0;
+  uint8_t per_message_authentication = 0;
+  uint8_t pef_alerting = 0;
   uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_channel_non_volatile_access (fi_get_ipmi_device (), 
 							 &access_mode, 
-							 &enable_user_level_authentication, 
-							 &enable_per_message_authentication, 
-							 &enable_pef_alerting, 
+							 &user_level_authentication, 
+							 &per_message_authentication, 
+							 &pef_alerting, 
 							 &channel_privilege_limit)) == 0)
     {
       return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_authentication), 
-			     gh_bool2scm (enable_per_message_authentication), 
-			     gh_bool2scm (enable_pef_alerting), 
+			     gh_bool2scm (user_level_authentication), 
+			     gh_bool2scm (per_message_authentication), 
+			     gh_bool2scm (pef_alerting), 
 			     gh_long2scm (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
@@ -1960,17 +1960,17 @@ ex_get_bmc_lan_conf_authentication_type_oem_enables ()
 SCM 
 ex_get_bmc_lan_conf_bmc_generated_arp_control ()
 {
-  uint8_t enable_gratuitous_arps;
-  uint8_t enable_arp_response;
+  uint8_t bmc_generated_gratuitous_arps;
+  uint8_t bmc_generated_arp_responses;
   int retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_lan_conf_bmc_generated_arp_control (fi_get_ipmi_device (), 
-                                                            &enable_gratuitous_arps, 
-                                                            &enable_arp_response)) == 0)
+                                                            &bmc_generated_gratuitous_arps, 
+                                                            &bmc_generated_arp_responses)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_gratuitous_arps), 
-			     gh_bool2scm (enable_arp_response), 
+      return_list = gh_list (gh_bool2scm (bmc_generated_gratuitous_arps), 
+			     gh_bool2scm (bmc_generated_arp_responses), 
 			     SCM_UNDEFINED);
     }
   
@@ -1995,24 +1995,24 @@ SCM
 ex_get_bmc_serial_channel_volatile_access ()
 {
   uint8_t access_mode = 0;
-  uint8_t enable_user_level_authentication = 0;
-  uint8_t enable_per_message_authentication = 0;
-  uint8_t enable_pef_alerting = 0;
+  uint8_t user_level_authentication = 0;
+  uint8_t per_message_authentication = 0;
+  uint8_t pef_alerting = 0;
   uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_serial_channel_volatile_access (fi_get_ipmi_device (), 
 							&access_mode, 
-							&enable_user_level_authentication, 
-							&enable_per_message_authentication, 
-							&enable_pef_alerting, 
+							&user_level_authentication, 
+							&per_message_authentication, 
+							&pef_alerting, 
 							&channel_privilege_limit)) == 0)
     {
       return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_authentication), 
-			     gh_bool2scm (enable_per_message_authentication), 
-			     gh_bool2scm (enable_pef_alerting), 
+			     gh_bool2scm (user_level_authentication), 
+			     gh_bool2scm (per_message_authentication), 
+			     gh_bool2scm (pef_alerting), 
 			     gh_long2scm (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
@@ -2024,24 +2024,24 @@ SCM
 ex_get_bmc_serial_channel_non_volatile_access ()
 {
   uint8_t access_mode = 0;
-  uint8_t enable_user_level_authentication = 0;
-  uint8_t enable_per_message_authentication = 0;
-  uint8_t enable_pef_alerting = 0;
+  uint8_t user_level_authentication = 0;
+  uint8_t per_message_authentication = 0;
+  uint8_t pef_alerting = 0;
   uint8_t channel_privilege_limit = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
   if ((retval = get_bmc_serial_channel_non_volatile_access (fi_get_ipmi_device (), 
 							    &access_mode, 
-							    &enable_user_level_authentication, 
-							    &enable_per_message_authentication, 
-							    &enable_pef_alerting, 
+							    &user_level_authentication, 
+							    &per_message_authentication, 
+							    &pef_alerting, 
 							    &channel_privilege_limit)) == 0)
     {
       return_list = gh_list (gh_long2scm (access_mode), 
-			     gh_bool2scm (enable_user_level_authentication), 
-			     gh_bool2scm (enable_per_message_authentication), 
-			     gh_bool2scm (enable_pef_alerting), 
+			     gh_bool2scm (user_level_authentication), 
+			     gh_bool2scm (per_message_authentication), 
+			     gh_bool2scm (pef_alerting), 
 			     gh_long2scm (channel_privilege_limit), 
 			     SCM_UNDEFINED);
     }
@@ -2050,24 +2050,24 @@ ex_get_bmc_serial_channel_non_volatile_access ()
 }
 
 SCM 
-ex_get_bmc_serial_conf_conn_mode ()
+ex_get_bmc_serial_conf_connection_mode ()
 {
-  uint8_t enable_basic_mode = 0;
-  uint8_t enable_ppp_mode = 0;
-  uint8_t enable_terminal_mode = 0;
+  uint8_t basic_mode = 0;
+  uint8_t ppp_mode = 0;
+  uint8_t terminal_mode = 0;
   uint8_t connect_mode = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_conn_mode (fi_get_ipmi_device (), 
-					       &enable_basic_mode, 
-					       &enable_ppp_mode, 
-					       &enable_terminal_mode, 
-					       &connect_mode)) == 0)
+  if ((retval = get_bmc_serial_conf_connection_mode (fi_get_ipmi_device (), 
+                                                     &basic_mode, 
+                                                     &ppp_mode, 
+                                                     &terminal_mode, 
+                                                     &connect_mode)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_basic_mode), 
-			     gh_bool2scm (enable_ppp_mode), 
-			     gh_bool2scm (enable_terminal_mode), 
+      return_list = gh_list (gh_bool2scm (basic_mode), 
+			     gh_bool2scm (ppp_mode), 
+			     gh_bool2scm (terminal_mode), 
 			     gh_long2scm (connect_mode), 
 			     SCM_UNDEFINED);
     }
@@ -2090,34 +2090,34 @@ ex_get_bmc_serial_conf_page_blackout_interval ()
 }
 
 SCM 
-ex_get_bmc_serial_conf_call_retry_time ()
+ex_get_bmc_serial_conf_call_retry_interval ()
 {
-  uint8_t call_retry_time = 0;
+  uint8_t call_retry_interval = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_call_retry_time (fi_get_ipmi_device (), 
-						     &call_retry_time)) == 0)
-    return_list = gh_list (gh_long2scm (call_retry_time), SCM_UNDEFINED);
+  if ((retval = get_bmc_serial_conf_call_retry_interval (fi_get_ipmi_device (), 
+                                                         &call_retry_interval)) == 0)
+    return_list = gh_list (gh_long2scm (call_retry_interval), SCM_UNDEFINED);
   
   return (retval ? SCM_BOOL_F : return_list);
 }
 
 SCM 
-ex_get_bmc_serial_conf_ipmi_msg_comm_settings ()
+ex_get_bmc_serial_conf_ipmi_messaging_comm_settings ()
 {
-  uint8_t enable_dtr_hangup = 0;
+  uint8_t dtr_hangup = 0;
   uint8_t flow_control = 0;
   uint8_t bit_rate = 0;
   int retval;
   SCM return_list = SCM_EOL;
   
-  if ((retval = get_bmc_serial_conf_ipmi_msg_comm_settings (fi_get_ipmi_device (), 
-							    &enable_dtr_hangup, 
-							    &flow_control, 
-							    &bit_rate)) == 0)
+  if ((retval = get_bmc_serial_conf_ipmi_messaging_comm_settings (fi_get_ipmi_device (), 
+                                                                  &dtr_hangup, 
+                                                                  &flow_control, 
+                                                                  &bit_rate)) == 0)
     {
-      return_list = gh_list (gh_bool2scm (enable_dtr_hangup), 
+      return_list = gh_list (gh_bool2scm (dtr_hangup), 
 			     gh_long2scm (flow_control), 
 			     gh_long2scm (bit_rate), 
 			     SCM_UNDEFINED);

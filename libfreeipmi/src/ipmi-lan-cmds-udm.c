@@ -768,7 +768,7 @@ ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev, 
                                                uint8_t channel_number, 
-                                               uint8_t parameter_type, 
+                                               uint8_t get_parameter, 
                                                uint8_t set_selector, 
                                                uint8_t block_selector, 
                                                fiid_obj_t obj_cmd_rs)
@@ -778,6 +778,7 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -797,7 +798,7 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
                                                  set_selector, 
                                                  block_selector,
@@ -824,7 +825,7 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev, 
                               uint8_t channel_number,
-                              uint8_t parameter_type,
+                              uint8_t get_parameter,
                               uint8_t set_selector,
                               uint8_t block_selector,
                               fiid_obj_t obj_cmd_rs)
@@ -834,6 +835,7 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -853,7 +855,7 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_IP_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -880,7 +882,7 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev, 
                                      uint8_t channel_number, 
-                                     uint8_t parameter_type, 
+                                     uint8_t get_parameter, 
                                      uint8_t set_selector, 
                                      uint8_t block_selector, 
                                      fiid_obj_t obj_cmd_rs)
@@ -890,6 +892,7 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -909,7 +912,7 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_IP_ADDRESS_SOURCE, 
                                                  set_selector, 
                                                  block_selector,
@@ -936,7 +939,7 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev, 
                                uint8_t channel_number,
-                               uint8_t parameter_type,
+                               uint8_t get_parameter,
                                uint8_t set_selector,
                                uint8_t block_selector,
                                fiid_obj_t obj_cmd_rs)
@@ -946,6 +949,7 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -965,7 +969,7 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_MAC_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -992,7 +996,7 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev, 
 			       uint8_t channel_number,
-			       uint8_t parameter_type,
+			       uint8_t get_parameter,
 			       uint8_t set_selector,
 			       uint8_t block_selector,
 			       fiid_obj_t obj_cmd_rs)
@@ -1002,6 +1006,7 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1021,7 +1026,7 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_SUBNET_MASK,                                
                                                  set_selector, 
                                                  block_selector,
@@ -1048,7 +1053,7 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev, 
                                              uint8_t channel_number, 
-                                             uint8_t parameter_type, 
+                                             uint8_t get_parameter, 
                                              uint8_t set_selector, 
                                              uint8_t block_selector, 
                                              fiid_obj_t obj_cmd_rs)
@@ -1058,6 +1063,7 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1077,7 +1083,7 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
                                                  set_selector, 
                                                  block_selector,
@@ -1104,7 +1110,7 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev, 
 					   uint8_t channel_number, 
-					   uint8_t parameter_type, 
+					   uint8_t get_parameter, 
 					   uint8_t set_selector, 
 					   uint8_t block_selector, 
 					   fiid_obj_t obj_cmd_rs)
@@ -1114,6 +1120,7 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1133,7 +1140,7 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
                                                  set_selector, 
                                                  block_selector,
@@ -1160,7 +1167,7 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev, 
                                            uint8_t channel_number,
-                                           uint8_t parameter_type,
+                                           uint8_t get_parameter,
                                            uint8_t set_selector,
                                            uint8_t block_selector,
                                            fiid_obj_t obj_cmd_rs)
@@ -1170,6 +1177,7 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1189,7 +1197,7 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_DEFAULT_GATEWAY_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -1216,7 +1224,7 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev, 
                                                uint8_t channel_number,
-                                               uint8_t parameter_type,
+                                               uint8_t get_parameter,
                                                uint8_t set_selector,
                                                uint8_t block_selector,
                                                fiid_obj_t obj_cmd_rs)
@@ -1226,6 +1234,7 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1245,7 +1254,7 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -1272,7 +1281,7 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev, 
                                           uint8_t channel_number,
-                                          uint8_t parameter_type,
+                                          uint8_t get_parameter,
                                           uint8_t set_selector,
                                           uint8_t block_selector,
                                           fiid_obj_t obj_cmd_rs)
@@ -1282,6 +1291,7 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1301,7 +1311,7 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -1328,7 +1338,7 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev, 
                                               uint8_t channel_number,
-                                              uint8_t parameter_type,
+                                              uint8_t get_parameter,
                                               uint8_t set_selector,
                                               uint8_t block_selector,
                                               fiid_obj_t obj_cmd_rs)
@@ -1338,6 +1348,7 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1357,7 +1368,7 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS, 
                                                  set_selector, 
                                                  block_selector,
@@ -1384,7 +1395,7 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev, 
 			   uint8_t channel_number, 
-			   uint8_t parameter_type, 
+			   uint8_t get_parameter, 
 			   uint8_t set_selector, 
 			   uint8_t block_selector, 
 			   fiid_obj_t obj_cmd_rs)
@@ -1394,6 +1405,7 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1413,7 +1425,7 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_VLAN_ID,
                                                  set_selector, 
                                                  block_selector,
@@ -1440,7 +1452,7 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev, 
 				 uint8_t channel_number, 
-				 uint8_t parameter_type, 
+				 uint8_t get_parameter, 
 				 uint8_t set_selector, 
 				 uint8_t block_selector, 
 				 fiid_obj_t obj_cmd_rs)
@@ -1450,6 +1462,7 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -1469,7 +1482,7 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
     goto cleanup;
 
   if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 parameter_type, 
+                                                 get_parameter, 
                                                  IPMI_LAN_PARAM_VLAN_PRIORITY,
                                                  set_selector, 
                                                  block_selector,

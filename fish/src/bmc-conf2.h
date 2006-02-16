@@ -62,15 +62,15 @@ int8_t set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 					   uint8_t serial_session_limit);
 int8_t set_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
 					    uint8_t access_mode, 
-					    uint8_t enable_user_level_authentication, 
-					    uint8_t enable_per_message_authentication, 
-					    uint8_t enable_pef_alerting, 
+					    uint8_t user_level_authentication, 
+					    uint8_t per_message_authentication, 
+					    uint8_t pef_alerting, 
 					    uint8_t channel_privilege_limit);
 int8_t set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
 						uint8_t access_mode, 
-						uint8_t enable_user_level_authentication, 
-						uint8_t enable_per_message_authentication, 
-						uint8_t enable_pef_alerting, 
+						uint8_t user_level_authentication, 
+						uint8_t per_message_authentication, 
+						uint8_t pef_alerting, 
 						uint8_t channel_privilege_limit);
 int8_t set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
                                            uint8_t ip_address_source);
@@ -97,35 +97,35 @@ int8_t set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 int8_t set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
                                                      struct bmc_authentication_level *bmc_authentication_level);
 int8_t set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                                   uint8_t enable_gratuitous_arps, 
-                                                   uint8_t enable_arp_response);
+                                                   uint8_t bmc_generated_gratuitous_arps,
+                                                   uint8_t bmc_generated_arp_responses);
 int8_t set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
                                                  uint8_t gratuitous_arp_interval);
 int8_t set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					       uint8_t access_mode, 
-					       uint8_t enable_user_level_authentication, 
-					       uint8_t enable_per_message_authentication, 
-					       uint8_t enable_pef_alerting, 
+					       uint8_t user_level_authentication, 
+					       uint8_t per_message_authentication, 
+					       uint8_t pef_alerting, 
 					       uint8_t channel_privilege_limit);
 int8_t set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
 						   uint8_t access_mode, 
-						   uint8_t enable_user_level_authentication, 
-						   uint8_t enable_per_message_authentication, 
-						   uint8_t enable_pef_alerting, 
+						   uint8_t user_level_authentication, 
+						   uint8_t per_message_authentication, 
+						   uint8_t pef_alerting, 
 						   uint8_t channel_privilege_limit);
-int8_t set_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-				      uint8_t enable_basic_mode, 
-				      uint8_t enable_ppp_mode, 
-				      uint8_t enable_terminal_mode, 
-				      uint8_t connect_mode);
+int8_t set_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+                                            uint8_t basic_mode, 
+                                            uint8_t ppp_mode, 
+                                            uint8_t terminal_mode, 
+                                            uint8_t connect_mode);
 int8_t set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
 						   uint8_t page_blackout_interval);
-int8_t set_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-					    uint8_t call_retry_time);
-int8_t set_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-						   uint8_t dtr_hangup, 
-						   uint8_t flow_control, 
-						   uint8_t bit_rate);
+int8_t set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+                                                uint8_t call_retry_interval);
+int8_t set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+                                                         uint8_t dtr_hangup, 
+                                                         uint8_t flow_control, 
+                                                         uint8_t bit_rate);
 int8_t set_pef_control (ipmi_device_t *dev, 
 			uint8_t pef_enable, 
 			uint8_t pef_event_msgs_enable, 
@@ -194,8 +194,8 @@ int8_t get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
 int8_t get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
                                                      struct bmc_authentication_level *bmc_authentication_level);
 int8_t get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                                   uint8_t *enable_gratuitous_arps, 
-                                                   uint8_t *enable_arp_response);
+                                                   uint8_t *gratuitous_arps, 
+                                                   uint8_t *arp_response);
 int8_t get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
                                                  uint8_t *gratuitous_arp_interval);
 
@@ -211,19 +211,19 @@ int8_t get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 						   uint8_t *per_message_authentication, 
 						   uint8_t *pef_alerting, 
 						   uint8_t *privilege_limit);
-int8_t get_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-				      uint8_t *enable_basic_mode, 
-				      uint8_t *enable_ppp_mode, 
-				      uint8_t *enable_terminal_mode, 
-				      uint8_t *connect_mode);
+int8_t get_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+                                            uint8_t *basic_mode, 
+                                            uint8_t *ppp_mode, 
+                                            uint8_t *terminal_mode, 
+                                            uint8_t *connect_mode);
 int8_t get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev, 
 						   uint8_t *page_blackout_interval);
-int8_t get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-					    uint8_t *call_retry_time);
-int8_t get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-						   uint8_t *dtr_hangup, 
-						   uint8_t *flow_control, 
-						   uint8_t *bit_rate);
+int8_t get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+                                                uint8_t *call_retry_interval);
+int8_t get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+                                                         uint8_t *dtr_hangup, 
+                                                         uint8_t *flow_control, 
+                                                         uint8_t *bit_rate);
 int8_t get_bmc_power_restore_policy (ipmi_device_t *dev, 
 				     uint8_t *power_restore_policy);
 int8_t get_bmc_lan_conf_vlan_id (ipmi_device_t *dev, 

@@ -79,6 +79,10 @@
 #define IPMI_GET_LAN_PARAMETER                          0x0
 #define IPMI_GET_LAN_PARAMETER_REVISION_ONLY            0x1
 
+#define IPMI_GET_LAN_PARAMETER_VALID(__val) \
+        (((__val) == IPMI_GET_LAN_PARAMETER \
+          || (__val) == IPMI_GET_LAN_PARAMETER_REVISION_ONLY) ? 1 : 0)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -206,7 +210,7 @@ int8_t fill_cmd_set_lan_vlan_priority (uint8_t channel_number,
                                        fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
-                                                  uint8_t parameter_type,
+                                                  uint8_t get_parameter,
                                                   uint8_t parameter_selector,
                                                   uint8_t set_selector,
                                                   uint8_t block_selector,

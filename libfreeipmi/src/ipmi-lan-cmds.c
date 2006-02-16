@@ -220,7 +220,7 @@ fiid_template_t tmpl_get_lan_configuration_parameters_rq =
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {3, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "parameter_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "get_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -440,10 +440,10 @@ fiid_template_t tmpl_cmd_suspend_bmc_arps_rs =
 
 int8_t
 fill_cmd_set_lan_configuration_parameters (fiid_obj_t obj_data_rq,
-                             uint8_t channel_number,
-                             uint8_t parameter_selector,
-                             uint8_t *configuration_parameter_data,
-                             uint8_t configuration_parameter_data_len)
+                                           uint8_t channel_number,
+                                           uint8_t parameter_selector,
+                                           uint8_t *configuration_parameter_data,
+                                           uint8_t configuration_parameter_data_len)
 {
   int8_t rv;
 
@@ -1288,15 +1288,16 @@ fill_cmd_set_lan_vlan_priority (uint8_t channel_number,
 
 int8_t 
 fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
-                             uint8_t parameter_type,
-                             uint8_t parameter_selector, 
-                             uint8_t set_selector,
-                             uint8_t block_selector,
-                             fiid_obj_t obj_data_rq)
+                                           uint8_t get_parameter,
+                                           uint8_t parameter_selector, 
+                                           uint8_t set_selector,
+                                           uint8_t block_selector,
+                                           fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_LAN_PARAMETER_VALID(get_parameter)
       || !IPMI_LAN_PARAM_VALID(parameter_selector)
       || !fiid_obj_valid(obj_data_rq))
     {
@@ -1326,8 +1327,8 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
 		0);
 
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"parameter_type", 
-		parameter_type);
+		(uint8_t *)"get_parameter", 
+		get_parameter);
     
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"parameter_selector", 

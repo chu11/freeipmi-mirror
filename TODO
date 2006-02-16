@@ -29,22 +29,14 @@ libfreeipmi:
   * test bad seq nums
   * chksum_test - confusing, not use?
   * need to test acpi
-  * reset watchdog timer CC specific error message
-  * consistency in templates and functions
-    - user_id.reserved vs. reserved vs. reserved1 etc.
-    - user_name vs. username
-    - channel_num vs. channel_number
-    - priv_ vs. privilege
   * fill_kcs_get_sel_entry
     - why not the other arguments?
   * sensor-event-messages: get_28_event_data3_messages
-  * remove ipmi_chksum_test
   * audit serial/lan/pef/sel/sensors template auditting      
       templates
        - consistent
        - reserved
     - lan-cmds 
-       - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
@@ -54,7 +46,6 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - msg-support-cmds
-       - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
@@ -65,7 +56,6 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - watchdog
-       - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands (done)
@@ -73,30 +63,35 @@ libfreeipmi:
        - audit function names, parameters (done)
        - function parameter ordering (done)
     - rmcp
-       - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - audit templates (done)
        - audit function names, parameters (done)
        - function parameter ordering (done)
     - dev-global-cmds
-       - clean function names (done)
        - audit templates (done)
        - audit function names, parameters (done)
     - chassis-cmds
-       - clean function names (done)
        - order code appropriately (done)
        - parameter checking (done)
        - missing commands
        - audit templates (done)
        - audit function names, parameters (done)
        - function parameter ordering (done)
+    - serial-cmds
+       - order code appropriately (done)
+       - parameter checking (done)
+       - missing commands
+       - audit templates (done) 
+       - audit function names (done)
+       - audit parameters (done)
+       - function parameter ordering (done)
+       - udm parameter checking (done)
+    - sol-cmds
     - pef-cmds
     - sdr-repo-cmds
     - sel-cmds
     - sensor-cmds
-    - serial-cmds
-    - sol-cmds
   * reg-space default  
   * udm parameter checks
 

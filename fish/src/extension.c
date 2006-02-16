@@ -337,9 +337,9 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-serial-channel-non-volatile-access ACCESS-MODE ENABLE-USER-LEVEL-AUTH ENABLE-PER-MESSAGE-AUTH ENABLE-PEF-ALERTING CHANNEL-PRIVILEGE-LIMIT)
   */
   
-  gh_new_procedure ("fi-set-bmc-serial-conf-conn-mode", ex_set_bmc_serial_conf_conn_mode, 4, 0, 0);
+  gh_new_procedure ("fi-set-bmc-serial-conf-connection-mode", ex_set_bmc_serial_conf_connection_mode, 4, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-serial-conf-conn-mode BASIC-MODE PPP-MODE TERMINAL-MODE CONNECT-MODE)
+     syntax in scheme: (fi-set-bmc-serial-conf-connection-mode BASIC-MODE PPP-MODE TERMINAL-MODE CONNECT-MODE)
   */
   
   gh_new_procedure ("fi-set-bmc-serial-conf-page-blackout-interval", ex_set_bmc_serial_conf_page_blackout_interval, 1, 0, 0);
@@ -347,14 +347,14 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-serial-conf-page-blackout-interval PAGE-BLACKOUT-INTERVAL)
   */
   
-  gh_new_procedure ("fi-set-bmc-serial-conf-call-retry-time", ex_set_bmc_serial_conf_call_retry_time, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-serial-conf-call-retry-interval", ex_set_bmc_serial_conf_call_retry_interval, 1, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-serial-conf-call-retry-time CALL-RETRY-TIME)
+     syntax in scheme: (fi-set-bmc-serial-conf-call-retry-interval CALL-RETRY-INTERVAL)
   */
   
-  gh_new_procedure ("fi-set-bmc-serial-conf-ipmi-msg-comm-settings", ex_set_bmc_serial_conf_ipmi_msg_comm_settings, 3, 0, 0);
+  gh_new_procedure ("fi-set-bmc-serial-conf-ipmi-messaging-comm-settings", ex_set_bmc_serial_conf_ipmi_messaging_comm_settings, 3, 0, 0);
   /* 
-     syntax in scheme: (fi-set-bmc-serial-conf-ipmi-msg-comm-settings DTR-HANGUP FLOW-CONTROL BIT-RATE)
+     syntax in scheme: (fi-set-bmc-serial-conf-ipmi-messaging-comm-settings DTR-HANGUP FLOW-CONTROL BIT-RATE)
   */
   
   gh_new_procedure ("fi-set-bmc-power-restore-policy", ex_set_bmc_power_restore_policy, 1, 0, 0);
@@ -491,9 +491,9 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-serial-channel-non-volatile-access)
   */
   
-  gh_new_procedure ("fi-get-bmc-serial-conf-conn-mode", ex_get_bmc_serial_conf_conn_mode, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-serial-conf-connection-mode", ex_get_bmc_serial_conf_connection_mode, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-serial-conf-conn-mode)
+     syntax in scheme: (fi-get-bmc-serial-conf-connection-mode)
   */
   
   gh_new_procedure ("fi-get-bmc-serial-conf-page-blackout-interval", ex_get_bmc_serial_conf_page_blackout_interval, 0, 0, 0);
@@ -501,14 +501,14 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-serial-conf-page-blackout-interval)
   */
   
-  gh_new_procedure ("fi-get-bmc-serial-conf-call-retry-time", ex_get_bmc_serial_conf_call_retry_time, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-serial-conf-call-retry-interval", ex_get_bmc_serial_conf_call_retry_interval, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-serial-conf-call-retry-time)
+     syntax in scheme: (fi-get-bmc-serial-conf-call-retry-interval)
   */
   
-  gh_new_procedure ("fi-get-bmc-serial-conf-ipmi-msg-comm-settings", ex_get_bmc_serial_conf_ipmi_msg_comm_settings, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-serial-conf-ipmi-messaging-comm-settings", ex_get_bmc_serial_conf_ipmi_messaging_comm_settings, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-serial-conf-ipmi-msg-comm-settings)
+     syntax in scheme: (fi-get-bmc-serial-conf-ipmi-messaging-comm-settings)
   */
   
   gh_new_procedure ("fi-get-bmc-power-restore-policy", ex_get_bmc_power_restore_policy, 0, 0, 0);

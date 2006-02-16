@@ -24,52 +24,59 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-int8_t ipmi_cmd_set_serial_connmode2 (ipmi_device_t *dev, 
-				      uint8_t channel_number, 
-				      uint8_t basic_mode_enable,
-				      uint8_t ppp_mode_enable,
-				      uint8_t terminal_mode_enable,
-				      uint8_t direct,
-				      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_serial_page_blackout_interval2 (ipmi_device_t *dev, 
-						    uint8_t channel_number, 
-						    uint8_t page_blackout_interval, 
-						    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_serial_retry_time2 (ipmi_device_t *dev, 
-					uint8_t channel_number, 
-					uint8_t retry_time, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_set_serial_comm_bits2 (ipmi_device_t *dev, 
-				       uint8_t channel_number, 
-				       uint8_t dtr_hangup,
-				       uint8_t flow_control,
-				       uint8_t bit_rate,
-				       fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_serial_connmode2 (ipmi_device_t *dev, 
-				      uint8_t channel_number,
-				      uint8_t parameter_type,
-				      uint8_t set_selector,
-				      uint8_t block_selector,
-				      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_serial_page_blackout2 (ipmi_device_t *dev, 
-					   uint8_t channel_number,
-					   uint8_t parameter_type,
-					   uint8_t set_selector,
-					   uint8_t block_selector,
-					   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_serial_retry_time2 (ipmi_device_t *dev, 
-					uint8_t channel_number,
-					uint8_t parameter_type,
-					uint8_t set_selector,
-					uint8_t block_selector,
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_serial_comm_bits2 (ipmi_device_t *dev, 
-				       uint8_t channel_number,
-				       uint8_t parameter_type,
-				       uint8_t set_selector,
-				       uint8_t block_selector,
-				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_serial_modem_connection_mode2 (ipmi_device_t *dev, 
+                                                   uint8_t channel_number, 
+                                                   uint8_t basic_mode,
+                                                   uint8_t ppp_mode,
+                                                   uint8_t terminal_mode,
+                                                   uint8_t connect_mode,
+                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_serial_modem_ipmi_messaging_comm_settings2 (ipmi_device_t *dev, 
+                                                                uint8_t channel_number, 
+                                                                uint8_t dtr_hangup,
+                                                                uint8_t flow_control,
+                                                                uint8_t bit_rate,
+                                                                fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_serial_modem_page_blackout_interval2 (ipmi_device_t *dev, 
+                                                          uint8_t channel_number, 
+                                                          uint8_t page_blackout_interval, 
+                                                          fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_set_serial_modem_call_retry_interval2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number, 
+                                                       uint8_t call_retry_interval, 
+                                                       fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_serial_modem_connection_mode2 (ipmi_device_t *dev, 
+                                                   uint8_t channel_number,
+                                                   uint8_t get_parameter,
+                                                   uint8_t set_selector,
+                                                   uint8_t block_selector,
+                                                   fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_serial_modem_ipmi_messaging_comm_settings2 (ipmi_device_t *dev, 
+                                                                uint8_t channel_number,
+                                                                uint8_t get_parameter,
+                                                                uint8_t set_selector,
+                                                                uint8_t block_selector,
+                                                                fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_serial_modem_page_blackout_interval2 (ipmi_device_t *dev, 
+                                                          uint8_t channel_number,
+                                                          uint8_t get_parameter,
+                                                          uint8_t set_selector,
+                                                          uint8_t block_selector,
+                                                          fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_serial_modem_call_retry_interval2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number,
+                                                       uint8_t get_parameter,
+                                                       uint8_t set_selector,
+                                                       uint8_t block_selector,
+                                                       fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

@@ -56,9 +56,9 @@ set_bmc_channel_access (ipmi_device_t *dev,
 			uint8_t channel_number, 
 			uint8_t set_option, 
 			uint8_t access_mode, 
-			uint8_t enable_user_level_authentication, 
-			uint8_t enable_per_message_authentication, 
-			uint8_t enable_pef_alerting, 
+			uint8_t user_level_authentication, 
+			uint8_t per_message_authentication, 
+			uint8_t pef_alerting, 
 			uint8_t channel_privilege_limit)
 {
   fiid_obj_t obj_cmd_rs = NULL;
@@ -70,9 +70,9 @@ set_bmc_channel_access (ipmi_device_t *dev,
   if (ipmi_cmd_set_channel_access2 (dev, 
 				    channel_number, 
 				    access_mode, 
-				    enable_user_level_authentication, 
-				    enable_per_message_authentication, 
-				    enable_pef_alerting, 
+				    user_level_authentication, 
+				    per_message_authentication, 
+				    pef_alerting, 
 				    (set_option ? IPMI_CHANNEL_ACCESS_SET_VOLATILE : 
 				     IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE), 
 				    channel_privilege_limit, 
@@ -213,36 +213,36 @@ set_bmc_user_serial_channel_access (ipmi_device_t *dev,
 int8_t 
 set_bmc_lan_channel_volatile_access (ipmi_device_t *dev, 
 				     uint8_t access_mode, 
-				     uint8_t enable_user_level_authentication, 
-				     uint8_t enable_per_message_authentication, 
-				     uint8_t enable_pef_alerting, 
+				     uint8_t user_level_authentication, 
+				     uint8_t per_message_authentication, 
+				     uint8_t pef_alerting, 
 				     uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
 				 1, 
 				 access_mode, 
-				 (enable_user_level_authentication ? 0 : 1), 
-				 (enable_per_message_authentication ? 0 : 1), 
-				 (enable_pef_alerting ? 0 : 1), 
+				 (user_level_authentication ? 0 : 1), 
+				 (per_message_authentication ? 0 : 1), 
+				 (pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
 
 int8_t 
 set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev, 
 					 uint8_t access_mode, 
-					 uint8_t enable_user_level_authentication, 
-					 uint8_t enable_per_message_authentication, 
-					 uint8_t enable_pef_alerting, 
+					 uint8_t user_level_authentication, 
+					 uint8_t per_message_authentication, 
+					 uint8_t pef_alerting, 
 					 uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_lan_channel_number (), 
 				 0, 
 				 access_mode, 
-				 (enable_user_level_authentication ? 0 : 1), 
-				 (enable_per_message_authentication ? 0 : 1), 
-				 (enable_pef_alerting ? 0 : 1), 
+				 (user_level_authentication ? 0 : 1), 
+				 (per_message_authentication ? 0 : 1), 
+				 (pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
 
@@ -786,8 +786,8 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                            uint8_t enable_gratuitous_arps, 
-                                            uint8_t enable_arp_response)
+                                            uint8_t bmc_generated_gratuitous_arps, 
+                                            uint8_t bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -797,8 +797,8 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 
   if (ipmi_cmd_set_lan_bmc_generated_arp_control2 (dev, 
                                                    get_lan_channel_number (), 
-                                                   enable_gratuitous_arps, 
-                                                   enable_arp_response, 
+                                                   bmc_generated_gratuitous_arps, 
+                                                   bmc_generated_arp_responses, 
                                                    obj_cmd_rs) != 0)
     goto cleanup;
     
@@ -836,59 +836,59 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 int8_t 
 set_bmc_serial_channel_volatile_access (ipmi_device_t *dev, 
 					uint8_t access_mode, 
-					uint8_t enable_user_level_authentication, 
-					uint8_t enable_per_message_authentication, 
-					uint8_t enable_pef_alerting, 
+					uint8_t user_level_authentication, 
+					uint8_t per_message_authentication, 
+					uint8_t pef_alerting, 
 					uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
 				 1, 
 				 access_mode, 
-				 (enable_user_level_authentication ? 0 : 1), 
-				 (enable_per_message_authentication ? 0 : 1), 
-				 (enable_pef_alerting ? 0 : 1), 
+				 (user_level_authentication ? 0 : 1), 
+				 (per_message_authentication ? 0 : 1), 
+				 (pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
 
 int8_t 
 set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev, 
 					    uint8_t access_mode, 
-					    uint8_t enable_user_level_authentication, 
-					    uint8_t enable_per_message_authentication, 
-					    uint8_t enable_pef_alerting, 
+					    uint8_t user_level_authentication, 
+					    uint8_t per_message_authentication, 
+					    uint8_t pef_alerting, 
 					    uint8_t channel_privilege_limit)
 {
   return set_bmc_channel_access (dev, 
 				 get_serial_channel_number (), 
 				 0, 
 				 access_mode, 
-				 (enable_user_level_authentication ? 0 : 1), 
-				 (enable_per_message_authentication ? 0 : 1), 
-				 (enable_pef_alerting ? 0 : 1), 
+				 (user_level_authentication ? 0 : 1), 
+				 (per_message_authentication ? 0 : 1), 
+				 (pef_alerting ? 0 : 1), 
 				 channel_privilege_limit);
 }
 
 int8_t 
-set_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-			       uint8_t enable_basic_mode, 
-			       uint8_t enable_ppp_mode, 
-			       uint8_t enable_terminal_mode, 
-			       uint8_t connect_mode)
+set_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+                                     uint8_t basic_mode,
+                                     uint8_t ppp_mode,
+                                     uint8_t terminal_mode,
+                                     uint8_t connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_conf_param_rs)))
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_connmode2 (dev, 
-				     get_serial_channel_number (), 
-				     enable_basic_mode, 
-				     enable_ppp_mode, 
-				     enable_terminal_mode, 
-				     connect_mode, 
-				     obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_connection_mode2 (dev, 
+                                                  get_serial_channel_number (), 
+                                                  basic_mode,
+                                                  ppp_mode,
+                                                  terminal_mode,
+                                                  connect_mode,
+                                                  obj_cmd_rs) != 0)
     goto cleanup;
    
   rv = 0;
@@ -905,36 +905,13 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_page_blackout_interval2 (dev, 
-						   get_serial_channel_number (), 
-						   page_blackout_interval, 
-						   obj_cmd_rs) != 0)
-    goto cleanup;
-  
-  rv = 0;
- cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
-}
-
-int8_t 
-set_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-				     uint8_t call_retry_time)
-{
-  fiid_obj_t obj_cmd_rs = NULL;
-  int8_t rv = -1;
-  
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_conf_param_rs)))
-    goto cleanup;
-
-  if (ipmi_cmd_set_serial_retry_time2 (dev, 
-				       get_serial_channel_number (), 
-				       call_retry_time, 
-				       obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_page_blackout_interval2 (dev, 
+                                                         get_serial_channel_number (), 
+                                                         page_blackout_interval, 
+                                                         obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -945,23 +922,46 @@ set_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
 }
 
 int8_t 
-set_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-					    uint8_t dtr_hangup, 
-					    uint8_t flow_control, 
-					    uint8_t bit_rate)
+set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+                                         uint8_t call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_comm_bits2 (dev, 
-				      get_serial_channel_number (), 
-				      dtr_hangup, 
-				      flow_control, 
-				      bit_rate, 
-				      obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_call_retry_interval2 (dev, 
+                                                      get_serial_channel_number (), 
+                                                      call_retry_interval, 
+                                                      obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);  
+}
+
+int8_t 
+set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+                                                  uint8_t dtr_hangup, 
+                                                  uint8_t flow_control, 
+                                                  uint8_t bit_rate)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_serial_modem_ipmi_messaging_comm_settings2 (dev, 
+                                                               get_serial_channel_number (), 
+                                                               dtr_hangup, 
+                                                               flow_control, 
+                                                               bit_rate, 
+                                                               obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1891,8 +1891,8 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                            uint8_t *enable_gratuitous_arps, 
-                                            uint8_t *enable_arp_response)
+                                            uint8_t *bmc_generated_gratuitous_arps, 
+                                            uint8_t *bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1913,13 +1913,13 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 		    (uint8_t *)"bmc_generated_gratuitous_arps", 
 		    &val) < 0)
     goto cleanup;
-  *enable_gratuitous_arps = val;
+  *bmc_generated_gratuitous_arps = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"bmc_generated_arp_responses", 
 		    &val) < 0)
     goto cleanup;
-  *enable_arp_response = val;
+  *bmc_generated_arp_responses = val;
   
   rv = 0;
  cleanup:
@@ -1997,47 +1997,47 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_conn_mode (ipmi_device_t *dev, 
-			       uint8_t *enable_basic_mode, 
-			       uint8_t *enable_ppp_mode, 
-			       uint8_t *enable_terminal_mode, 
-			       uint8_t *connect_mode)
+get_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
+                                     uint8_t *basic_mode, 
+                                     uint8_t *ppp_mode, 
+                                     uint8_t *terminal_mode, 
+                                     uint8_t *connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_conf_param_connmode_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_connection_mode_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_connmode2 (dev, 
-				     get_serial_channel_number (), 
-				     IPMI_GET_SERIAL_PARAMETER, 
-				     SET_SELECTOR, 
-				     BLOCK_SELECTOR, 
-				     obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_connection_mode2 (dev, 
+                                                  get_serial_channel_number (), 
+                                                  IPMI_GET_SERIAL_PARAMETER, 
+                                                  SET_SELECTOR, 
+                                                  BLOCK_SELECTOR, 
+                                                  obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"basic_mode_enable", 
+		    (uint8_t *)"basic_mode", 
 		    &val) < 0)
     goto cleanup;
-  *enable_basic_mode = val;
+  *basic_mode = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"ppp_mode_enable", 
+		    (uint8_t *)"ppp_mode", 
 		    &val) < 0)
     goto cleanup;
-  *enable_ppp_mode = val;
+  *ppp_mode = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"terminal_mode_enable", 
+		    (uint8_t *)"terminal_mode", 
 		    &val) < 0)
     goto cleanup;
-  *enable_terminal_mode = val;
+  *terminal_mode = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"direct", 
+		    (uint8_t *)"connect_mode", 
 		    &val) < 0)
     goto cleanup;
   *connect_mode = val;
@@ -2057,15 +2057,15 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_conf_param_pageblackout_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_page_blackout_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_page_blackout2 (dev, 
-					  get_serial_channel_number (), 
-					  IPMI_GET_SERIAL_PARAMETER, 
-					  SET_SELECTOR, 
-					  BLOCK_SELECTOR, 
-					  obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_page_blackout_interval2 (dev, 
+                                                         get_serial_channel_number (), 
+                                                         IPMI_GET_SERIAL_PARAMETER, 
+                                                         SET_SELECTOR, 
+                                                         BLOCK_SELECTOR, 
+                                                         obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2082,29 +2082,29 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev, 
-				     uint8_t *call_retry_time)
+get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
+                                         uint8_t *call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_conf_param_retry_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_call_retry_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_retry_time2 (dev, 
-				       get_serial_channel_number (), 
-				       IPMI_GET_SERIAL_PARAMETER, 
-				       SET_SELECTOR, 
-				       BLOCK_SELECTOR, 
-				       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_call_retry_interval2 (dev, 
+                                                      get_serial_channel_number (), 
+                                                      IPMI_GET_SERIAL_PARAMETER, 
+                                                      SET_SELECTOR, 
+                                                      BLOCK_SELECTOR, 
+                                                      obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"retry_time", 
+		    (uint8_t *)"call_retry_interval", 
 		    &val) < 0)
     goto cleanup;
-  *call_retry_time = val;
+  *call_retry_interval = val;
   
   rv = 0;
  cleanup:
@@ -2114,24 +2114,24 @@ get_bmc_serial_conf_call_retry_time (ipmi_device_t *dev,
 }
 
 int8_t 
-get_bmc_serial_conf_ipmi_msg_comm_settings (ipmi_device_t *dev, 
-					    uint8_t *dtr_hangup, 
-					    uint8_t *flow_control, 
-					    uint8_t *bit_rate)
+get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
+                                                  uint8_t *dtr_hangup, 
+                                                  uint8_t *flow_control, 
+                                                  uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_conf_param_commbits_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_ipmi_messaging_comm_settings_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_comm_bits2 (dev, 
-				      get_serial_channel_number (), 
-				      IPMI_GET_SERIAL_PARAMETER, 
-				      SET_SELECTOR, 
-				      BLOCK_SELECTOR, 
-				      obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_ipmi_messaging_comm_settings2 (dev, 
+                                                               get_serial_channel_number (), 
+                                                               IPMI_GET_SERIAL_PARAMETER, 
+                                                               SET_SELECTOR, 
+                                                               BLOCK_SELECTOR, 
+                                                               obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2174,7 +2174,7 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"power_state.power_restore_policy", 
+		    (uint8_t *)"current_power_state.power_restore_policy", 
 		    &val) < 0)
     goto cleanup;
   *power_restore_policy = val;
