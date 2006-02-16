@@ -37,7 +37,7 @@ fiid_template_t tmpl_set_lan_configuration_parameters_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_authentication_type_enables_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_authentication_type_enables_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -86,7 +86,7 @@ fiid_template_t tmpl_set_lan_authentication_type_enables_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_ip_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_ip_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -96,7 +96,7 @@ fiid_template_t tmpl_set_lan_ip_address_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_ip_address_source_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_ip_address_source_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -107,7 +107,7 @@ fiid_template_t tmpl_set_lan_ip_address_source_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_mac_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_mac_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -117,7 +117,7 @@ fiid_template_t tmpl_set_lan_mac_address_rq =
     {0, "", 0}
   };
     
-fiid_template_t tmpl_set_lan_subnet_mask_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_subnet_mask_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -127,7 +127,7 @@ fiid_template_t tmpl_set_lan_subnet_mask_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_bmc_generated_arp_control_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -139,7 +139,7 @@ fiid_template_t tmpl_set_lan_bmc_generated_arp_control_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_gratuitous_arp_interval_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -149,7 +149,7 @@ fiid_template_t tmpl_set_lan_gratuitous_arp_interval_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_default_gateway_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_default_gateway_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -159,7 +159,7 @@ fiid_template_t tmpl_set_lan_default_gateway_address_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_default_gateway_mac_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_default_gateway_mac_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -169,7 +169,7 @@ fiid_template_t tmpl_set_lan_default_gateway_mac_address_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_backup_gateway_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -179,7 +179,7 @@ fiid_template_t tmpl_set_lan_backup_gateway_address_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_backup_gateway_mac_address_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_mac_address_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -189,7 +189,7 @@ fiid_template_t tmpl_set_lan_backup_gateway_mac_address_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_vlan_id_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_vlan_id_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -202,7 +202,7 @@ fiid_template_t tmpl_set_lan_vlan_id_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_lan_vlan_priority_rq =
+fiid_template_t tmpl_set_lan_configuration_parameters_vlan_priority_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -237,7 +237,7 @@ fiid_template_t tmpl_get_lan_configuration_parameters_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_authentication_type_enables_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_authentication_type_enables_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -286,7 +286,7 @@ fiid_template_t tmpl_get_lan_authentication_type_enables_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_ip_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_ip_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -296,7 +296,7 @@ fiid_template_t tmpl_get_lan_ip_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_ip_address_source_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_ip_address_source_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -307,7 +307,7 @@ fiid_template_t tmpl_get_lan_ip_address_source_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_mac_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_mac_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -317,7 +317,7 @@ fiid_template_t tmpl_get_lan_mac_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_subnet_mask_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_subnet_mask_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -328,7 +328,7 @@ fiid_template_t tmpl_get_lan_subnet_mask_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_bmc_generated_arp_control_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -340,7 +340,7 @@ fiid_template_t tmpl_get_lan_bmc_generated_arp_control_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_lan_gratuitous_arp_interval_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -350,7 +350,7 @@ fiid_template_t tmpl_get_lan_gratuitous_arp_interval_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_lan_default_gateway_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_default_gateway_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -360,7 +360,7 @@ fiid_template_t tmpl_get_lan_default_gateway_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_default_gateway_mac_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_default_gateway_mac_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -370,7 +370,7 @@ fiid_template_t tmpl_get_lan_default_gateway_mac_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_backup_gateway_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -380,7 +380,7 @@ fiid_template_t tmpl_get_lan_backup_gateway_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_backup_gateway_mac_address_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_mac_address_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -390,7 +390,7 @@ fiid_template_t tmpl_get_lan_backup_gateway_mac_address_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_lan_vlan_id_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_vlan_id_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -403,7 +403,7 @@ fiid_template_t tmpl_get_lan_vlan_id_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_lan_vlan_priority_rs =
+fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -490,33 +490,33 @@ fill_cmd_set_lan_configuration_parameters (fiid_obj_t obj_data_rq,
 }
 
 int8_t 
-fill_cmd_set_lan_authentication_type_enables (uint8_t channel_number, 
-                                              uint8_t callback_level_none,
-                                              uint8_t callback_level_md2,
-                                              uint8_t callback_level_md5,
-                                              uint8_t callback_level_straight_password,
-                                              uint8_t callback_level_oem_proprietary,
-                                              uint8_t user_level_none,
-                                              uint8_t user_level_md2,
-                                              uint8_t user_level_md5,
-                                              uint8_t user_level_straight_password,
-                                              uint8_t user_level_oem_proprietary,
-                                              uint8_t operator_level_none,
-                                              uint8_t operator_level_md2,
-                                              uint8_t operator_level_md5,
-                                              uint8_t operator_level_straight_password,
-                                              uint8_t operator_level_oem_proprietary,
-                                              uint8_t admin_level_none,
-                                              uint8_t admin_level_md2,
-                                              uint8_t admin_level_md5,
-                                              uint8_t admin_level_straight_password,
-                                              uint8_t admin_level_oem_proprietary,
-                                              uint8_t oem_level_none,
-                                              uint8_t oem_level_md2,
-                                              uint8_t oem_level_md5,
-                                              uint8_t oem_level_straight_password,
-                                              uint8_t oem_level_oem_proprietary,
-                                              fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number, 
+                                                                       uint8_t callback_level_none,
+                                                                       uint8_t callback_level_md2,
+                                                                       uint8_t callback_level_md5,
+                                                                       uint8_t callback_level_straight_password,
+                                                                       uint8_t callback_level_oem_proprietary,
+                                                                       uint8_t user_level_none,
+                                                                       uint8_t user_level_md2,
+                                                                       uint8_t user_level_md5,
+                                                                       uint8_t user_level_straight_password,
+                                                                       uint8_t user_level_oem_proprietary,
+                                                                       uint8_t operator_level_none,
+                                                                       uint8_t operator_level_md2,
+                                                                       uint8_t operator_level_md5,
+                                                                       uint8_t operator_level_straight_password,
+                                                                       uint8_t operator_level_oem_proprietary,
+                                                                       uint8_t admin_level_none,
+                                                                       uint8_t admin_level_md2,
+                                                                       uint8_t admin_level_md5,
+                                                                       uint8_t admin_level_straight_password,
+                                                                       uint8_t admin_level_oem_proprietary,
+                                                                       uint8_t oem_level_none,
+                                                                       uint8_t oem_level_md2,
+                                                                       uint8_t oem_level_md5,
+                                                                       uint8_t oem_level_straight_password,
+                                                                       uint8_t oem_level_oem_proprietary,
+                                                                       fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -552,7 +552,7 @@ fill_cmd_set_lan_authentication_type_enables (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_authentication_type_enables_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_authentication_type_enables_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -756,9 +756,9 @@ _fill_lan_ip(uint8_t parameter_selector,
 }
 
 int8_t 
-fill_cmd_set_lan_ip_address (uint8_t channel_number, 
-                             uint32_t ip_address,
-                             fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number, 
+                                                      uint32_t ip_address,
+                                                      fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -769,7 +769,7 @@ fill_cmd_set_lan_ip_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_ip_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_ip_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -787,9 +787,9 @@ fill_cmd_set_lan_ip_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_ip_address_source (uint8_t channel_number, 
-                                    uint8_t ip_address_source,
-                                    fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_number, 
+                                                             uint8_t ip_address_source,
+                                                             fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -801,7 +801,7 @@ fill_cmd_set_lan_ip_address_source (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_ip_address_source_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_ip_address_source_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -873,9 +873,9 @@ _fill_lan_mac_address(uint8_t parameter_selector,
 }
 
 int8_t 
-fill_cmd_set_lan_mac_address (uint8_t channel_number, 
-                              uint64_t mac_address,
-                              fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number, 
+                                                       uint64_t mac_address,
+                                                       fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -886,7 +886,7 @@ fill_cmd_set_lan_mac_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_mac_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_mac_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -902,9 +902,9 @@ fill_cmd_set_lan_mac_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_subnet_mask (uint8_t channel_number, 
-                              uint32_t subnet_mask,
-                              fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number, 
+                                                       uint32_t subnet_mask,
+                                                       fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -915,7 +915,7 @@ fill_cmd_set_lan_subnet_mask (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_subnet_mask_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_subnet_mask_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -948,10 +948,10 @@ fill_cmd_set_lan_subnet_mask (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_bmc_generated_arp_control (uint8_t channel_number, 
-                                            uint8_t bmc_generated_gratuitous_arps, 
-                                            uint8_t bmc_generated_arp_responses,
-                                            fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t channel_number, 
+                                                                     uint8_t bmc_generated_gratuitous_arps, 
+                                                                     uint8_t bmc_generated_arp_responses,
+                                                                     fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -964,7 +964,7 @@ fill_cmd_set_lan_bmc_generated_arp_control (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_bmc_generated_arp_control_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1005,9 +1005,9 @@ fill_cmd_set_lan_bmc_generated_arp_control (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_gratuitous_arp_interval (uint8_t channel_number, 
-                                          uint8_t gratuitous_arp_interval,
-                                          fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t channel_number, 
+                                                                   uint8_t gratuitous_arp_interval,
+                                                                   fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1018,7 +1018,7 @@ fill_cmd_set_lan_gratuitous_arp_interval (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_gratuitous_arp_interval_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1051,9 +1051,9 @@ fill_cmd_set_lan_gratuitous_arp_interval (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_default_gateway_address (uint8_t channel_number, 
-                                          uint32_t ip_address,
-                                          fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t channel_number, 
+                                                                   uint32_t ip_address,
+                                                                   fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1064,7 +1064,7 @@ fill_cmd_set_lan_default_gateway_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_default_gateway_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_default_gateway_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1082,9 +1082,9 @@ fill_cmd_set_lan_default_gateway_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_default_gateway_mac_address (uint8_t channel_number, 
-                                              uint64_t mac_address,
-                                              fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t channel_number, 
+                                                                       uint64_t mac_address,
+                                                                       fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1095,7 +1095,7 @@ fill_cmd_set_lan_default_gateway_mac_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_default_gateway_mac_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_default_gateway_mac_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1111,9 +1111,9 @@ fill_cmd_set_lan_default_gateway_mac_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_backup_gateway_address (uint8_t channel_number, 
-                                         uint32_t ip_address,
-                                         fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channel_number, 
+                                                                  uint32_t ip_address,
+                                                                  fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1124,7 +1124,7 @@ fill_cmd_set_lan_backup_gateway_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_backup_gateway_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_backup_gateway_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1142,9 +1142,9 @@ fill_cmd_set_lan_backup_gateway_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_backup_gateway_mac_address (uint8_t channel_number, 
-                                             uint64_t mac_address,
-                                             fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t channel_number, 
+                                                                      uint64_t mac_address,
+                                                                      fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1155,7 +1155,7 @@ fill_cmd_set_lan_backup_gateway_mac_address (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_backup_gateway_mac_address_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_backup_gateway_mac_address_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1171,11 +1171,11 @@ fill_cmd_set_lan_backup_gateway_mac_address (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_vlan_id (uint8_t channel_number, 
-                          uint8_t vlan_id_ls,
-                          uint8_t vlan_id_ms,
-                          uint8_t vlan_id_enable,
-                          fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number, 
+                                                   uint8_t vlan_id_ls,
+                                                   uint8_t vlan_id_ms,
+                                                   uint8_t vlan_id_enable,
+                                                   fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1187,7 +1187,7 @@ fill_cmd_set_lan_vlan_id (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_vlan_id_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_vlan_id_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -1232,9 +1232,9 @@ fill_cmd_set_lan_vlan_id (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_lan_vlan_priority (uint8_t channel_number, 
-                                uint8_t vlan_priority,
-                                fiid_obj_t obj_data_rq)
+fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number, 
+                                                         uint8_t vlan_priority,
+                                                         fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -1245,7 +1245,7 @@ fill_cmd_set_lan_vlan_priority (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_vlan_priority_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_lan_configuration_parameters_vlan_priority_rq)) < 0)
     return (-1);
 
   if (!rv)

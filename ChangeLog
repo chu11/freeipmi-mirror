@@ -6,6 +6,13 @@
 	* libfreeipmi/src/ipmi-pef-param-spec.h: Add new entries.
 
 	* libfreeipmi/, fish/: Adjust code appropriately.
+
+	* libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.c, libfreeipmi/src/ipmi-sol-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.c, libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds.h: Alter naming convention.
 	
 2006-02-15  Albert Chu <chu11@llnl.gov>
 

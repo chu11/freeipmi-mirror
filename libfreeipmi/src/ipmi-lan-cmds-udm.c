@@ -21,34 +21,34 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_set_lan_authentication_type_enables2 (ipmi_device_t *dev, 
-                                               uint8_t channel_number, 
-                                               uint8_t callback_level_none,
-                                               uint8_t callback_level_md2,
-                                               uint8_t callback_level_md5,
-                                               uint8_t callback_level_straight_password,
-                                               uint8_t callback_level_oem_proprietary,
-                                               uint8_t user_level_none,
-                                               uint8_t user_level_md2,
-                                               uint8_t user_level_md5,
-                                               uint8_t user_level_straight_password,
-                                               uint8_t user_level_oem_proprietary,
-                                               uint8_t operator_level_none,
-                                               uint8_t operator_level_md2,
-                                               uint8_t operator_level_md5,
-                                               uint8_t operator_level_straight_password,
-                                               uint8_t operator_level_oem_proprietary,
-                                               uint8_t admin_level_none,
-                                               uint8_t admin_level_md2,
-                                               uint8_t admin_level_md5,
-                                               uint8_t admin_level_straight_password,
-                                               uint8_t admin_level_oem_proprietary,
-                                               uint8_t oem_level_none,
-                                               uint8_t oem_level_md2,
-                                               uint8_t oem_level_md5,
-                                               uint8_t oem_level_straight_password,
-                                               uint8_t oem_level_oem_proprietary,
-                                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 
+                                                                        uint8_t channel_number, 
+                                                                        uint8_t callback_level_none,
+                                                                        uint8_t callback_level_md2,
+                                                                        uint8_t callback_level_md5,
+                                                                        uint8_t callback_level_straight_password,
+                                                                        uint8_t callback_level_oem_proprietary,
+                                                                        uint8_t user_level_none,
+                                                                        uint8_t user_level_md2,
+                                                                        uint8_t user_level_md5,
+                                                                        uint8_t user_level_straight_password,
+                                                                        uint8_t user_level_oem_proprietary,
+                                                                        uint8_t operator_level_none,
+                                                                        uint8_t operator_level_md2,
+                                                                        uint8_t operator_level_md5,
+                                                                        uint8_t operator_level_straight_password,
+                                                                        uint8_t operator_level_oem_proprietary,
+                                                                        uint8_t admin_level_none,
+                                                                        uint8_t admin_level_md2,
+                                                                        uint8_t admin_level_md5,
+                                                                        uint8_t admin_level_straight_password,
+                                                                        uint8_t admin_level_oem_proprietary,
+                                                                        uint8_t oem_level_none,
+                                                                        uint8_t oem_level_md2,
+                                                                        uint8_t oem_level_md5,
+                                                                        uint8_t oem_level_straight_password,
+                                                                        uint8_t oem_level_oem_proprietary,
+                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -95,36 +95,36 @@ ipmi_cmd_set_lan_authentication_type_enables2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_authentication_type_enables_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_authentication_type_enables_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_authentication_type_enables (channel_number, 
-                                                    callback_level_none,
-                                                    callback_level_md2,
-                                                    callback_level_md5,
-                                                    callback_level_straight_password,
-                                                    callback_level_oem_proprietary,
-                                                    user_level_none,
-                                                    user_level_md2,
-                                                    user_level_md5,
-                                                    user_level_straight_password,
-                                                    user_level_oem_proprietary,
-                                                    operator_level_none,
-                                                    operator_level_md2,
-                                                    operator_level_md5,
-                                                    operator_level_straight_password,
-                                                    operator_level_oem_proprietary,
-                                                    admin_level_none,
-                                                    admin_level_md2,
-                                                    admin_level_md5,
-                                                    admin_level_straight_password,
-                                                    admin_level_oem_proprietary,
-                                                    oem_level_none,
-                                                    oem_level_md2,
-                                                    oem_level_md5,
-                                                    oem_level_straight_password,
-                                                    oem_level_oem_proprietary,
-                                                    obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_authentication_type_enables (channel_number, 
+                                                                             callback_level_none,
+                                                                             callback_level_md2,
+                                                                             callback_level_md5,
+                                                                             callback_level_straight_password,
+                                                                             callback_level_oem_proprietary,
+                                                                             user_level_none,
+                                                                             user_level_md2,
+                                                                             user_level_md5,
+                                                                             user_level_straight_password,
+                                                                             user_level_oem_proprietary,
+                                                                             operator_level_none,
+                                                                             operator_level_md2,
+                                                                             operator_level_md5,
+                                                                             operator_level_straight_password,
+                                                                             operator_level_oem_proprietary,
+                                                                             admin_level_none,
+                                                                             admin_level_md2,
+                                                                             admin_level_md5,
+                                                                             admin_level_straight_password,
+                                                                             admin_level_oem_proprietary,
+                                                                             oem_level_none,
+                                                                             oem_level_md2,
+                                                                             oem_level_md5,
+                                                                             oem_level_straight_password,
+                                                                             oem_level_oem_proprietary,
+                                                                             obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -145,10 +145,10 @@ ipmi_cmd_set_lan_authentication_type_enables2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_ip_address2 (ipmi_device_t *dev, 
-                              uint8_t channel_number, 
-                              uint32_t ip_address, 
-                              fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number, 
+                                                       uint32_t ip_address, 
+                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -170,12 +170,12 @@ ipmi_cmd_set_lan_ip_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_ip_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_ip_address (channel_number, 
-                                   ip_address,
-                                   obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_ip_address (channel_number, 
+                                                            ip_address,
+                                                            obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -196,10 +196,10 @@ ipmi_cmd_set_lan_ip_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_ip_address_source2 (ipmi_device_t *dev, 
-                                     uint8_t channel_number, 
-                                     uint8_t ip_address_source, 
-                                     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev, 
+                                                              uint8_t channel_number, 
+                                                              uint8_t ip_address_source, 
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -221,12 +221,12 @@ ipmi_cmd_set_lan_ip_address_source2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_ip_address_source_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_source_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_ip_address_source (channel_number, 
-                                          ip_address_source,
-                                          obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_ip_address_source (channel_number, 
+                                                                   ip_address_source,
+                                                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -247,10 +247,10 @@ ipmi_cmd_set_lan_ip_address_source2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_mac_address2 (ipmi_device_t *dev, 
-                               uint8_t channel_number,
-                               uint64_t mac_address,
-                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev, 
+                                                        uint8_t channel_number,
+                                                        uint64_t mac_address,
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -272,12 +272,12 @@ ipmi_cmd_set_lan_mac_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_mac_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_mac_address (channel_number, 
-                                    mac_address,
-                                    obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_mac_address (channel_number, 
+                                                             mac_address,
+                                                             obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -298,10 +298,10 @@ ipmi_cmd_set_lan_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_subnet_mask2 (ipmi_device_t *dev, 
-			       uint8_t channel_number, 
-			       uint32_t subnet_mask, 
-			       fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev, 
+                                                        uint8_t channel_number, 
+                                                        uint32_t subnet_mask, 
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -323,12 +323,12 @@ ipmi_cmd_set_lan_subnet_mask2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_subnet_mask_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_subnet_mask_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_subnet_mask (channel_number, 
-                                    subnet_mask,
-                                    obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_subnet_mask (channel_number, 
+                                                             subnet_mask,
+                                                             obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -349,11 +349,11 @@ ipmi_cmd_set_lan_subnet_mask2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_bmc_generated_arp_control2 (ipmi_device_t *dev, 
-                                             uint8_t channel_number, 
-                                             uint8_t bmc_generated_gratuitous_arps, 
-                                             uint8_t bmc_generated_arp_responses, 
-                                             fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_device_t *dev, 
+                                                                      uint8_t channel_number, 
+                                                                      uint8_t bmc_generated_gratuitous_arps, 
+                                                                      uint8_t bmc_generated_arp_responses, 
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -377,13 +377,13 @@ ipmi_cmd_set_lan_bmc_generated_arp_control2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_bmc_generated_arp_control_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_bmc_generated_arp_control (channel_number, 
-                                                  bmc_generated_gratuitous_arps, 
-                                                  bmc_generated_arp_responses,
-                                                  obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (channel_number, 
+                                                                           bmc_generated_gratuitous_arps, 
+                                                                           bmc_generated_arp_responses,
+                                                                           obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -404,10 +404,10 @@ ipmi_cmd_set_lan_bmc_generated_arp_control2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-				       uint8_t channel_number, 
-				       uint8_t gratuitous_arp_interval, 
-				       fiid_obj_t obj_cmd_rs)
+ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_t *dev, 
+                                                                    uint8_t channel_number, 
+                                                                    uint8_t gratuitous_arp_interval, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -429,12 +429,12 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_gratuitous_arp_interval_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_gratuitous_arp_interval (channel_number, 
-                                                gratuitous_arp_interval,
-                                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (channel_number, 
+                                                                         gratuitous_arp_interval,
+                                                                         obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -455,10 +455,10 @@ ipmi_lan_set_gratuitous_arp_interval2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_default_gateway_address2 (ipmi_device_t *dev, 
-                                           uint8_t channel_number, 
-                                           uint32_t ip_address, 
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_default_gateway_address2 (ipmi_device_t *dev, 
+                                                                    uint8_t channel_number, 
+                                                                    uint32_t ip_address, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -480,12 +480,12 @@ ipmi_cmd_set_lan_default_gateway_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_ip_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_default_gateway_address (channel_number, 
-                                                ip_address,
-                                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_default_gateway_address (channel_number, 
+                                                                         ip_address,
+                                                                         obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -506,10 +506,10 @@ ipmi_cmd_set_lan_default_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_default_gateway_mac_address2 (ipmi_device_t *dev, 
-                                               uint8_t channel_number,
-                                               uint64_t mac_address,
-                                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_device_t *dev, 
+                                                                        uint8_t channel_number,
+                                                                        uint64_t mac_address,
+                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -531,12 +531,12 @@ ipmi_cmd_set_lan_default_gateway_mac_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_mac_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_default_gateway_mac_address (channel_number, 
-                                                    mac_address,
-                                                    obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (channel_number, 
+                                                                             mac_address,
+                                                                             obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -557,10 +557,10 @@ ipmi_cmd_set_lan_default_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_backup_gateway_address2 (ipmi_device_t *dev, 
-                                          uint8_t channel_number, 
-                                          uint32_t ip_address, 
-                                          fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t *dev, 
+                                                                   uint8_t channel_number, 
+                                                                   uint32_t ip_address, 
+                                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -582,12 +582,12 @@ ipmi_cmd_set_lan_backup_gateway_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_ip_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_backup_gateway_address (channel_number, 
-                                               ip_address,
-                                               obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_backup_gateway_address (channel_number, 
+                                                                        ip_address,
+                                                                        obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -608,10 +608,10 @@ ipmi_cmd_set_lan_backup_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_backup_gateway_mac_address2 (ipmi_device_t *dev, 
-                                              uint8_t channel_number,
-                                              uint64_t mac_address,
-                                              fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_device_t *dev, 
+                                                                       uint8_t channel_number,
+                                                                       uint64_t mac_address,
+                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -633,12 +633,12 @@ ipmi_cmd_set_lan_backup_gateway_mac_address2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_mac_address_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_backup_gateway_mac_address (channel_number, 
-                                                   mac_address,
-                                                   obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (channel_number, 
+                                                                            mac_address,
+                                                                            obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -659,12 +659,12 @@ ipmi_cmd_set_lan_backup_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_vlan_id2 (ipmi_device_t *dev, 
-			   uint8_t channel_number, 
-                           uint8_t vlan_id_ls,
-                           uint8_t vlan_id_ms,
-			   uint8_t vlan_id_enable, 
-			   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev, 
+                                                    uint8_t channel_number, 
+                                                    uint8_t vlan_id_ls,
+                                                    uint8_t vlan_id_ms,
+                                                    uint8_t vlan_id_enable, 
+                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -687,14 +687,14 @@ ipmi_cmd_set_lan_vlan_id2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_vlan_id_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_vlan_id_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_vlan_id (channel_number,
-                                vlan_id_ls,
-                                vlan_id_ms,
-                                vlan_id_enable,
-                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_vlan_id (channel_number,
+                                                         vlan_id_ls,
+                                                         vlan_id_ms,
+                                                         vlan_id_enable,
+                                                         obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -715,10 +715,10 @@ ipmi_cmd_set_lan_vlan_id2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev, 
-				 uint8_t channel_number,
-				 uint32_t vlan_priority,
-				 fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev, 
+                                                          uint8_t channel_number,
+                                                          uint32_t vlan_priority,
+                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -740,12 +740,12 @@ ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_vlan_priority_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_vlan_priority_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_lan_vlan_priority (channel_number,
-                                      vlan_priority,
-                                      obj_cmd_rq) < 0)
+  if (fill_cmd_set_lan_configuration_parameters_vlan_priority (channel_number,
+                                                               vlan_priority,
+                                                               obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -766,12 +766,12 @@ ipmi_cmd_set_lan_vlan_priority2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev, 
-                                               uint8_t channel_number, 
-                                               uint8_t get_parameter, 
-                                               uint8_t set_selector, 
-                                               uint8_t block_selector, 
-                                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 
+                                                                        uint8_t channel_number, 
+                                                                        uint8_t get_parameter, 
+                                                                        uint8_t set_selector, 
+                                                                        uint8_t block_selector, 
+                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -785,7 +785,7 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_authentication_type_enables_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_authentication_type_enables_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -823,12 +823,12 @@ ipmi_cmd_lan_get_authentication_type_enables2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev, 
-                              uint8_t channel_number,
-                              uint8_t get_parameter,
-                              uint8_t set_selector,
-                              uint8_t block_selector,
-                              fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number,
+                                                       uint8_t get_parameter,
+                                                       uint8_t set_selector,
+                                                       uint8_t block_selector,
+                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;  
   int8_t ret, rv = -1;
@@ -842,7 +842,7 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_ip_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -880,12 +880,12 @@ ipmi_cmd_lan_get_ip_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev, 
-                                     uint8_t channel_number, 
-                                     uint8_t get_parameter, 
-                                     uint8_t set_selector, 
-                                     uint8_t block_selector, 
-                                     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev, 
+                                                              uint8_t channel_number, 
+                                                              uint8_t get_parameter, 
+                                                              uint8_t set_selector, 
+                                                              uint8_t block_selector, 
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -899,7 +899,7 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_ip_address_source_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_source_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -937,12 +937,12 @@ ipmi_cmd_lan_get_ip_address_source2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev, 
-                               uint8_t channel_number,
-                               uint8_t get_parameter,
-                               uint8_t set_selector,
-                               uint8_t block_selector,
-                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev, 
+                                                        uint8_t channel_number,
+                                                        uint8_t get_parameter,
+                                                        uint8_t set_selector,
+                                                        uint8_t block_selector,
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -956,7 +956,7 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_mac_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -994,12 +994,12 @@ ipmi_cmd_lan_get_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev, 
-			       uint8_t channel_number,
-			       uint8_t get_parameter,
-			       uint8_t set_selector,
-			       uint8_t block_selector,
-			       fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev, 
+                                                        uint8_t channel_number,
+                                                        uint8_t get_parameter,
+                                                        uint8_t set_selector,
+                                                        uint8_t block_selector,
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1013,7 +1013,7 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_subnet_mask_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_subnet_mask_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1051,12 +1051,12 @@ ipmi_cmd_lan_get_subnet_mask2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev, 
-                                             uint8_t channel_number, 
-                                             uint8_t get_parameter, 
-                                             uint8_t set_selector, 
-                                             uint8_t block_selector, 
-                                             fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_device_t *dev, 
+                                                                      uint8_t channel_number, 
+                                                                      uint8_t get_parameter, 
+                                                                      uint8_t set_selector, 
+                                                                      uint8_t block_selector, 
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1070,7 +1070,7 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_bmc_generated_arp_control_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1108,12 +1108,12 @@ ipmi_cmd_lan_get_bmc_generated_arp_control2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev, 
-					   uint8_t channel_number, 
-					   uint8_t get_parameter, 
-					   uint8_t set_selector, 
-					   uint8_t block_selector, 
-					   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_t *dev, 
+                                                                    uint8_t channel_number, 
+                                                                    uint8_t get_parameter, 
+                                                                    uint8_t set_selector, 
+                                                                    uint8_t block_selector, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1127,7 +1127,7 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_gratuitous_arp_interval_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1165,12 +1165,12 @@ ipmi_cmd_lan_get_gratuitous_arp_interval2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev, 
-                                           uint8_t channel_number,
-                                           uint8_t get_parameter,
-                                           uint8_t set_selector,
-                                           uint8_t block_selector,
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_default_gateway_address2 (ipmi_device_t *dev, 
+                                                                    uint8_t channel_number,
+                                                                    uint8_t get_parameter,
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector,
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1184,7 +1184,7 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_default_gateway_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_default_gateway_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1222,12 +1222,12 @@ ipmi_cmd_lan_get_default_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev, 
-                                               uint8_t channel_number,
-                                               uint8_t get_parameter,
-                                               uint8_t set_selector,
-                                               uint8_t block_selector,
-                                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_device_t *dev, 
+                                                                        uint8_t channel_number,
+                                                                        uint8_t get_parameter,
+                                                                        uint8_t set_selector,
+                                                                        uint8_t block_selector,
+                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1241,7 +1241,7 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_mac_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1279,12 +1279,12 @@ ipmi_cmd_lan_get_default_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev, 
-                                          uint8_t channel_number,
-                                          uint8_t get_parameter,
-                                          uint8_t set_selector,
-                                          uint8_t block_selector,
-                                          fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t *dev, 
+                                                                   uint8_t channel_number,
+                                                                   uint8_t get_parameter,
+                                                                   uint8_t set_selector,
+                                                                   uint8_t block_selector,
+                                                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1298,7 +1298,7 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_backup_gateway_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_backup_gateway_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1336,12 +1336,12 @@ ipmi_cmd_lan_get_backup_gateway_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev, 
-                                              uint8_t channel_number,
-                                              uint8_t get_parameter,
-                                              uint8_t set_selector,
-                                              uint8_t block_selector,
-                                              fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_device_t *dev, 
+                                                                       uint8_t channel_number,
+                                                                       uint8_t get_parameter,
+                                                                       uint8_t set_selector,
+                                                                       uint8_t block_selector,
+                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1355,7 +1355,7 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_mac_address_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1393,12 +1393,12 @@ ipmi_cmd_lan_get_backup_gateway_mac_address2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev, 
-			   uint8_t channel_number, 
-			   uint8_t get_parameter, 
-			   uint8_t set_selector, 
-			   uint8_t block_selector, 
-			   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev, 
+                                                    uint8_t channel_number, 
+                                                    uint8_t get_parameter, 
+                                                    uint8_t set_selector, 
+                                                    uint8_t block_selector, 
+                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1412,7 +1412,7 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_vlan_id_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_id_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1450,12 +1450,12 @@ ipmi_cmd_lan_get_vlan_id2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev, 
-				 uint8_t channel_number, 
-				 uint8_t get_parameter, 
-				 uint8_t set_selector, 
-				 uint8_t block_selector, 
-				 fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev, 
+                                                          uint8_t channel_number, 
+                                                          uint8_t get_parameter, 
+                                                          uint8_t set_selector, 
+                                                          uint8_t block_selector, 
+                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -1469,7 +1469,7 @@ ipmi_cmd_lan_get_vlan_priority2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_vlan_priority_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_priority_rs)) < 0)
     goto cleanup;
 
   if (!ret)

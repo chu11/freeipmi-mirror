@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.16.2.3 2006-02-16 21:31:05 chu11 Exp $ */
+/* $Id: ipmi-pef-cmds.h,v 1.16.2.4 2006-02-16 22:14:54 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_CMDS_H
 #define _IPMI_PEF_CMDS_H
@@ -235,28 +235,28 @@ extern fiid_template_t tmpl_arm_pef_postpone_timer_rs;
 
 extern fiid_template_t tmpl_set_pef_configuration_parameters_rq;
 extern fiid_template_t tmpl_set_pef_configuration_parameters_rs;
-extern fiid_template_t tmpl_set_pef_pef_control_rq;
-extern fiid_template_t tmpl_set_pef_pef_action_global_control_rq;
-extern fiid_template_t tmpl_set_pef_pef_startup_delay_rq;
-extern fiid_template_t tmpl_set_pef_pef_alert_startup_delay_rq;
-extern fiid_template_t tmpl_set_pef_event_filter_table_rq;
-extern fiid_template_t tmpl_set_pef_event_filter_table_data1_rq;
-extern fiid_template_t tmpl_set_pef_alert_string_keys_rq;
-extern fiid_template_t tmpl_set_pef_alert_strings_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_pef_control_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_pef_action_global_control_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_pef_startup_delay_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_event_filter_table_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_alert_string_keys_rq;
+extern fiid_template_t tmpl_set_pef_configuration_parameters_alert_strings_rq;
 
 extern fiid_template_t tmpl_get_pef_configuration_parameters_rq;
 extern fiid_template_t tmpl_get_pef_configuration_parameters_rs;
-extern fiid_template_t tmpl_get_pef_pef_control_rs;
-extern fiid_template_t tmpl_get_pef_pef_action_global_control_rs;
-extern fiid_template_t tmpl_get_pef_pef_startup_delay_rs;
-extern fiid_template_t tmpl_get_pef_pef_alert_startup_delay_rs;
-extern fiid_template_t tmpl_get_pef_number_of_event_filters_rs;
-extern fiid_template_t tmpl_get_pef_event_filter_table_rs;
-extern fiid_template_t tmpl_get_pef_event_filter_table_data1_rs;
-extern fiid_template_t tmpl_get_pef_number_of_alert_policy_entries_rs;
-extern fiid_template_t tmpl_get_pef_number_of_alert_strings_rs;
-extern fiid_template_t tmpl_get_pef_alert_string_keys_rs;
-extern fiid_template_t tmpl_get_pef_alert_strings_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_pef_control_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_pef_action_global_control_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_pef_startup_delay_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_pef_alert_startup_delay_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_number_of_event_filters_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_event_filter_table_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_event_filter_table_data1_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_alert_string_keys_rs;
+extern fiid_template_t tmpl_get_pef_configuration_parameters_alert_strings_rs;
 
 extern fiid_template_t tmpl_set_last_processed_event_id_rq;
 extern fiid_template_t tmpl_set_last_processed_event_id_rs;
@@ -280,71 +280,71 @@ int8_t fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_data_rq,
 						  uint8_t *configuration_parameter_data,
 						  uint8_t configuration_parameter_data_len);
 
-int8_t fill_cmd_set_pef_pef_control (uint8_t pef,
-                                     uint8_t pef_event_messages,
-                                     uint8_t pef_startup_delay,
-                                     uint8_t pef_alert_startup_delay,
-                                     fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
+                                                              uint8_t pef_event_messages,
+                                                              uint8_t pef_startup_delay,
+                                                              uint8_t pef_alert_startup_delay,
+                                                              fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_pef_action_global_control (uint8_t alert_action,
-                                                   uint8_t power_down_action,
-                                                   uint8_t reset_action,
-                                                   uint8_t power_cycle_action,
-                                                   uint8_t oem_action,
-                                                   uint8_t diagnostic_interrupt,
-                                                   fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t alert_action,
+                                                                            uint8_t power_down_action,
+                                                                            uint8_t reset_action,
+                                                                            uint8_t power_cycle_action,
+                                                                            uint8_t oem_action,
+                                                                            uint8_t diagnostic_interrupt,
+                                                                            fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_pef_startup_delay (uint8_t pef_startup_delay, 
-                                       fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup_delay, 
+                                                                    fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_pef_alert_startup_delay (uint8_t pef_alert_startup_delay, 
-                                             fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_alert_startup_delay, 
+                                                                          fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_event_filter_table (uint8_t filter_number,
-                                            uint8_t filter_configuration_type,
-                                            uint8_t filter_configuration_enable,
-                                            uint8_t event_filter_action_alert,
-                                            uint8_t event_filter_action_power_off,
-                                            uint8_t event_filter_action_reset,
-                                            uint8_t event_filter_action_power_cycle,
-                                            uint8_t event_filter_action_oem,
-                                            uint8_t event_filter_action_diagnostic_interrupt,
-                                            uint8_t event_filter_action_group_control_operation,
-                                            uint8_t alert_policy_number_policy_number,
-                                            uint8_t alert_policy_number_group_control_selector,
-                                            uint8_t event_severity,
-                                            uint8_t generator_id_byte1,
-                                            uint8_t generator_id_byte2,
-                                            uint8_t sensor_type,
-                                            uint8_t sensor_number,
-                                            uint8_t event_trigger,
-                                            uint16_t event_data1_offset_mask,
-                                            uint8_t event_data1_AND_mask,
-                                            uint8_t event_data1_compare1,
-                                            uint8_t event_data1_compare2,
-                                            uint8_t event_data2_AND_mask,
-                                            uint8_t event_data2_compare1,
-                                            uint8_t event_data2_compare2,
-                                            uint8_t event_data3_AND_mask,
-                                            uint8_t event_data3_compare1,
-                                            uint8_t event_data3_compare2,
-                                            fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_number,
+                                                                     uint8_t filter_configuration_type,
+                                                                     uint8_t filter_configuration_enable,
+                                                                     uint8_t event_filter_action_alert,
+                                                                     uint8_t event_filter_action_power_off,
+                                                                     uint8_t event_filter_action_reset,
+                                                                     uint8_t event_filter_action_power_cycle,
+                                                                     uint8_t event_filter_action_oem,
+                                                                     uint8_t event_filter_action_diagnostic_interrupt,
+                                                                     uint8_t event_filter_action_group_control_operation,
+                                                                     uint8_t alert_policy_number_policy_number,
+                                                                     uint8_t alert_policy_number_group_control_selector,
+                                                                     uint8_t event_severity,
+                                                                     uint8_t generator_id_byte1,
+                                                                     uint8_t generator_id_byte2,
+                                                                     uint8_t sensor_type,
+                                                                     uint8_t sensor_number,
+                                                                     uint8_t event_trigger,
+                                                                     uint16_t event_data1_offset_mask,
+                                                                     uint8_t event_data1_AND_mask,
+                                                                     uint8_t event_data1_compare1,
+                                                                     uint8_t event_data1_compare2,
+                                                                     uint8_t event_data2_AND_mask,
+                                                                     uint8_t event_data2_compare1,
+                                                                     uint8_t event_data2_compare2,
+                                                                     uint8_t event_data3_AND_mask,
+                                                                     uint8_t event_data3_compare1,
+                                                                     uint8_t event_data3_compare2,
+                                                                     fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_event_filter_table_data1 (uint8_t filter_number,
-                                                  uint8_t filter_configuration_type,
-                                                  uint8_t filter_configuration_enable,
-                                                  fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filter_number,
+                                                                           uint8_t filter_configuration_type,
+                                                                           uint8_t filter_configuration_enable,
+                                                                           fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_alert_string_keys (uint8_t string_selector,
-                                           uint8_t filter_number,
-                                           uint8_t set_number_for_string,
-                                           fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_selector,
+                                                                    uint8_t filter_number,
+                                                                    uint8_t set_number_for_string,
+                                                                    fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_set_pef_alert_strings (uint8_t string_selector,
-                                       uint8_t block_selector,
-                                       uint8_t *string_data,
-                                       uint32_t string_data_len,
-                                       fiid_obj_t obj_data_rq);
+int8_t fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector,
+                                                                uint8_t block_selector,
+                                                                uint8_t *string_data,
+                                                                uint32_t string_data_len,
+                                                                fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
 						  uint8_t get_parameter,

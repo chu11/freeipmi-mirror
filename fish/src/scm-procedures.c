@@ -3516,16 +3516,16 @@ ex_get_pef_info ()
 
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_event_filters_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_event_filters_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_number_of_event_filters2 (fi_get_ipmi_device (), 
-                                                     IPMI_GET_PEF_PARAMETER, 
-                                                     SET_SELECTOR, 
-                                                     BLOCK_SELECTOR, 
-                                                     cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2 (fi_get_ipmi_device (), 
+                                                                              IPMI_GET_PEF_PARAMETER, 
+                                                                              SET_SELECTOR, 
+                                                                              BLOCK_SELECTOR, 
+                                                                              cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_event_filters2()");
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2()");
           goto cleanup;
 	}
 
@@ -3547,16 +3547,16 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_alert_policy_entries_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_number_of_alert_policy_entries2 (fi_get_ipmi_device (), 
-                                                            IPMI_GET_PEF_PARAMETER, 
-                                                            SET_SELECTOR, 
-                                                            BLOCK_SELECTOR, 
-                                                            cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2 (fi_get_ipmi_device (), 
+                                                                                     IPMI_GET_PEF_PARAMETER, 
+                                                                                     SET_SELECTOR, 
+                                                                                     BLOCK_SELECTOR, 
+                                                                                     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_number_of_alert_policy_entries2()");
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2()");
           goto cleanup;
 	}
       
@@ -3578,16 +3578,16 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_alert_strings_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_number_of_alert_strings2 (fi_get_ipmi_device (), 
-                                                     IPMI_GET_PEF_PARAMETER, 
-                                                     SET_SELECTOR, 
-                                                     BLOCK_SELECTOR, 
-                                                     cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2 (fi_get_ipmi_device (), 
+                                                                              IPMI_GET_PEF_PARAMETER, 
+                                                                              SET_SELECTOR, 
+                                                                              BLOCK_SELECTOR, 
+                                                                              cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_number_of_alert_strings2()");
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2()");
           goto cleanup;
 	}
 

@@ -21,10 +21,10 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_set_sol_sol_enable2 (ipmi_device_t *dev, 
-			      uint8_t channel_number, 
-			      uint8_t sol_payload, 
-			      fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number, 
+                                                       uint8_t sol_payload, 
+                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -47,12 +47,12 @@ ipmi_cmd_set_sol_sol_enable2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_sol_sol_enable_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_sol_configuration_parameters_sol_enable_rq)))
     goto cleanup;
 
-  if (fill_cmd_set_sol_sol_enable (channel_number, 
-				   sol_payload,
-				   obj_cmd_rq) < 0)
+  if (fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
+                                                            sol_payload,
+                                                            obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -73,12 +73,12 @@ ipmi_cmd_set_sol_sol_enable2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_sol_sol_enable2 (ipmi_device_t *dev, 
-			      uint8_t channel_number,
-			      uint8_t get_parameter,
-			      uint8_t set_selector,
-			      uint8_t block_selector,
-			      fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 
+                                                       uint8_t channel_number,
+                                                       uint8_t get_parameter,
+                                                       uint8_t set_selector,
+                                                       uint8_t block_selector,
+                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -92,7 +92,7 @@ ipmi_cmd_get_sol_sol_enable2 (ipmi_device_t *dev,
       return -1;
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sol_enable_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sol_configuration_parameters_enable_rs)) < 0)
     goto cleanup;
 
   if (!ret)

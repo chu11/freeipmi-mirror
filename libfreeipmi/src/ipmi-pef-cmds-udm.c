@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds-udm.c,v 1.1.4.3 2006-02-16 21:31:05 chu11 Exp $  */
+$Id: ipmi-pef-cmds-udm.c,v 1.1.4.4 2006-02-16 22:14:54 chu11 Exp $  */
 
 #include "freeipmi.h"
 
@@ -113,12 +113,12 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
 }  
 
 int8_t
-ipmi_cmd_set_pef_pef_control2 (ipmi_device_t *dev, 
-                               uint8_t pef, 
-                               uint8_t pef_event_messages, 
-                               uint8_t pef_startup_delay, 
-                               uint8_t pef_alert_startup_delay, 
-                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev, 
+                                                        uint8_t pef, 
+                                                        uint8_t pef_event_messages, 
+                                                        uint8_t pef_startup_delay, 
+                                                        uint8_t pef_alert_startup_delay, 
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -142,14 +142,14 @@ ipmi_cmd_set_pef_pef_control2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_pef_control_rq))) 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_control_rq))) 
     goto cleanup;
 
-  if (fill_cmd_set_pef_pef_control (pef, 
-                                    pef_event_messages,
-                                    pef_startup_delay, 
-                                    pef_alert_startup_delay,
-                                    obj_cmd_rq) < 0)
+  if (fill_cmd_set_pef_configuration_parameters_pef_control (pef, 
+                                                             pef_event_messages,
+                                                             pef_startup_delay, 
+                                                             pef_alert_startup_delay,
+                                                             obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -170,14 +170,14 @@ ipmi_cmd_set_pef_pef_control2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_pef_pef_action_global_control2 (ipmi_device_t *dev, 
-                                             uint8_t alert_action,
-                                             uint8_t power_down_action, 
-                                             uint8_t reset_action,
-                                             uint8_t power_cycle_action, 
-                                             uint8_t oem_action,
-                                             uint8_t diagnostic_interrupt, 
-                                             fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control2 (ipmi_device_t *dev, 
+                                                                      uint8_t alert_action,
+                                                                      uint8_t power_down_action, 
+                                                                      uint8_t reset_action,
+                                                                      uint8_t power_cycle_action, 
+                                                                      uint8_t oem_action,
+                                                                      uint8_t diagnostic_interrupt, 
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -203,63 +203,16 @@ ipmi_cmd_set_pef_pef_action_global_control2 (ipmi_device_t *dev,
       goto cleanup;
     }
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_pef_action_global_control_rq))) 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_action_global_control_rq))) 
     goto cleanup;
 
-  if (fill_cmd_set_pef_pef_action_global_control (alert_action, 
-                                                  power_down_action,
-                                                  reset_action, 
-                                                  power_cycle_action, 
-                                                  oem_action, 
-                                                  diagnostic_interrupt,
-                                                  obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
-
-  rv = 0;
- cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
-  return (rv);
-}
-
-int8_t 
-ipmi_cmd_set_pef_pef_startup_delay2 (ipmi_device_t *dev, 
-                                     uint8_t pef_startup_delay, 
-                                     fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
-  
-  if (!dev || !fiid_obj_valid(obj_cmd_rs))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
-
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_pef_startup_delay_rq))) 
-    goto cleanup;
-
-  if (fill_cmd_set_pef_pef_startup_delay (pef_startup_delay,
-                                          obj_cmd_rq) < 0)
+  if (fill_cmd_set_pef_configuration_parameters_pef_action_global_control (alert_action, 
+                                                                           power_down_action,
+                                                                           reset_action, 
+                                                                           power_cycle_action, 
+                                                                           oem_action, 
+                                                                           diagnostic_interrupt,
+                                                                           obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -280,9 +233,9 @@ ipmi_cmd_set_pef_pef_startup_delay2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_set_pef_pef_alert_startup_delay2 (ipmi_device_t *dev, 
-                                           uint8_t pef_alert_startup_delay, 
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev, 
+                                                              uint8_t pef_startup_delay, 
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -302,11 +255,58 @@ ipmi_cmd_set_pef_pef_alert_startup_delay2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_pef_alert_startup_delay_rq))) 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_startup_delay_rq))) 
     goto cleanup;
 
-  if (fill_cmd_set_pef_pef_alert_startup_delay (pef_alert_startup_delay,
-                                                obj_cmd_rq) < 0)
+  if (fill_cmd_set_pef_configuration_parameters_pef_startup_delay (pef_startup_delay,
+                                                                   obj_cmd_rq) < 0)
+    goto cleanup;
+
+  if (ipmi_cmd (dev, 
+                IPMI_BMC_IPMB_LUN_BMC, 
+                IPMI_NET_FN_TRANSPORT_RQ, 
+                obj_cmd_rq, 
+                obj_cmd_rs) < 0)
+    goto cleanup;
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rq)
+    fiid_obj_destroy(obj_cmd_rq);
+  return (rv);
+}
+
+int8_t 
+ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_t *dev, 
+                                                                    uint8_t pef_alert_startup_delay, 
+                                                                    fiid_obj_t obj_cmd_rs)
+{
+  fiid_obj_t obj_cmd_rq = NULL;
+  int ret, rv = -1;
+  
+  if (!dev || !fiid_obj_valid(obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
+    goto cleanup;
+
+  if (!ret)
+    {
+      errno = EINVAL;
+      goto cleanup;
+    }
+
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq))) 
+    goto cleanup;
+
+  if (fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (pef_alert_startup_delay,
+                                                                         obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -387,38 +387,38 @@ ipmi_cmd_set_event_filter_table2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_event_filter_table_rq))) 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_event_filter_table_rq))) 
     goto cleanup;
 
-  if (fill_cmd_set_pef_event_filter_table (filter_number,
-                                           filter_configuration_type,
-                                           filter_configuration_filter,
-                                           event_filter_action_alert,
-                                           event_filter_action_power_off,
-                                           event_filter_action_reset,
-                                           event_filter_action_power_cycle,
-                                           event_filter_action_oem,
-                                           event_filter_action_diagnostic_interrupt,
-                                           event_filter_action_group_control_operation,
-                                           alert_policy_number_policy_number,
-                                           alert_policy_number_group_control_selector,
-                                           event_severity,
-                                           generator_id_byte1,
-                                           generator_id_byte2,
-                                           sensor_type,
-                                           sensor_number,
-                                           event_trigger,
-                                           event_data1_offset_mask,
-                                           event_data1_AND_mask,
-                                           event_data1_compare1,
-                                           event_data1_compare2,
-                                           event_data2_AND_mask,
-                                           event_data2_compare1,
-                                           event_data2_compare2,
-                                           event_data3_AND_mask,
-                                           event_data3_compare1,
-                                           event_data3_compare2,
-                                           obj_cmd_rq) < 0)
+  if (fill_cmd_set_pef_configuration_parameters_event_filter_table (filter_number,
+                                                                    filter_configuration_type,
+                                                                    filter_configuration_filter,
+                                                                    event_filter_action_alert,
+                                                                    event_filter_action_power_off,
+                                                                    event_filter_action_reset,
+                                                                    event_filter_action_power_cycle,
+                                                                    event_filter_action_oem,
+                                                                    event_filter_action_diagnostic_interrupt,
+                                                                    event_filter_action_group_control_operation,
+                                                                    alert_policy_number_policy_number,
+                                                                    alert_policy_number_group_control_selector,
+                                                                    event_severity,
+                                                                    generator_id_byte1,
+                                                                    generator_id_byte2,
+                                                                    sensor_type,
+                                                                    sensor_number,
+                                                                    event_trigger,
+                                                                    event_data1_offset_mask,
+                                                                    event_data1_AND_mask,
+                                                                    event_data1_compare1,
+                                                                    event_data1_compare2,
+                                                                    event_data2_AND_mask,
+                                                                    event_data2_compare1,
+                                                                    event_data2_compare2,
+                                                                    event_data3_AND_mask,
+                                                                    event_data3_compare1,
+                                                                    event_data3_compare2,
+                                                                    obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -466,13 +466,13 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_event_filter_table_data1_rq))) 
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq))) 
     goto cleanup;
 
-  if (fill_cmd_set_pef_event_filter_table_data1 (filter_number,
-                                                 filter_configuration_type,
-                                                 filter_configuration_filter,
-                                                 obj_cmd_rq) < 0)
+  if (fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (filter_number,
+                                                                          filter_configuration_type,
+                                                                          filter_configuration_filter,
+                                                                          obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -492,14 +492,12 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
   return (rv);
 }
 
-/* XXX */
-
 int8_t 
-ipmi_cmd_get_pef_pef_control2 (ipmi_device_t *dev, 
-                               uint8_t get_parameter, 
-                               uint8_t set_selector, 
-                               uint8_t block_selector, 
-                               fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev, 
+                                                        uint8_t get_parameter, 
+                                                        uint8_t set_selector, 
+                                                        uint8_t block_selector, 
+                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -512,7 +510,7 @@ ipmi_cmd_get_pef_pef_control2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_pef_control_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_control_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -549,11 +547,11 @@ ipmi_cmd_get_pef_pef_control2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_pef_action_global_control2 (ipmi_device_t *dev, 
-                                             uint8_t get_parameter, 
-                                             uint8_t set_selector,
-                                             uint8_t block_selector, 
-                                             fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control2 (ipmi_device_t *dev, 
+                                                                      uint8_t get_parameter, 
+                                                                      uint8_t set_selector,
+                                                                      uint8_t block_selector, 
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -566,7 +564,7 @@ ipmi_cmd_get_pef_pef_action_global_control2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_pef_action_global_control_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_action_global_control_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -603,11 +601,11 @@ ipmi_cmd_get_pef_pef_action_global_control2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_pef_startup_delay2 (ipmi_device_t *dev, 
-                                     uint8_t get_parameter, 
-                                     uint8_t set_selector,
-                                     uint8_t block_selector, 
-                                     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev, 
+                                                              uint8_t get_parameter, 
+                                                              uint8_t set_selector,
+                                                              uint8_t block_selector, 
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -620,7 +618,7 @@ ipmi_cmd_get_pef_pef_startup_delay2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_pef_startup_delay_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_startup_delay_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -657,11 +655,11 @@ ipmi_cmd_get_pef_pef_startup_delay2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_pef_alert_startup_delay2 (ipmi_device_t *dev, 
-                                           uint8_t get_parameter, 
-                                           uint8_t set_selector,
-                                           uint8_t block_selector, 
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_t *dev, 
+                                                                    uint8_t get_parameter, 
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -674,7 +672,7 @@ ipmi_cmd_get_pef_pef_alert_startup_delay2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_pef_alert_startup_delay_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_alert_startup_delay_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -711,11 +709,11 @@ ipmi_cmd_get_pef_pef_alert_startup_delay2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_number_of_event_filters2 (ipmi_device_t *dev, 
-                                           uint8_t get_parameter, 
-                                           uint8_t set_selector,
-                                           uint8_t block_selector, 
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2 (ipmi_device_t *dev, 
+                                                                    uint8_t get_parameter, 
+                                                                    uint8_t set_selector,
+                                                                    uint8_t block_selector, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -728,7 +726,7 @@ ipmi_cmd_get_pef_number_of_event_filters2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_number_of_event_filters_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_event_filters_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -765,11 +763,11 @@ ipmi_cmd_get_pef_number_of_event_filters2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_event_filter_table2 (ipmi_device_t *dev, 
-                                      uint8_t get_parameter, 
-                                      uint8_t set_selector,
-                                      uint8_t block_selector, 
-                                      fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_event_filter_table2 (ipmi_device_t *dev, 
+                                                               uint8_t get_parameter, 
+                                                               uint8_t set_selector,
+                                                               uint8_t block_selector, 
+                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
   int ret, rv = -1;
@@ -782,7 +780,7 @@ ipmi_cmd_get_pef_event_filter_table2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_event_filter_table_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -819,11 +817,11 @@ ipmi_cmd_get_pef_event_filter_table2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_event_filter_table_data1_2 (ipmi_device_t *dev, 
-                                             uint8_t get_parameter, 
-                                             uint8_t set_selector, 
-                                             uint8_t block_selector, 
-                                             fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_2 (ipmi_device_t *dev, 
+                                                                      uint8_t get_parameter, 
+                                                                      uint8_t set_selector, 
+                                                                      uint8_t block_selector, 
+                                                                      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -836,7 +834,7 @@ ipmi_cmd_get_pef_event_filter_table_data1_2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_event_filter_table_data1_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_data1_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -873,11 +871,11 @@ ipmi_cmd_get_pef_event_filter_table_data1_2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_number_of_alert_policy_entries2 (ipmi_device_t *dev,
-                                                  uint8_t get_parameter, 
-                                                  uint8_t set_selector,
-                                                  uint8_t block_selector, 
-                                                  fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2 (ipmi_device_t *dev,
+                                                                           uint8_t get_parameter, 
+                                                                           uint8_t set_selector,
+                                                                           uint8_t block_selector, 
+                                                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -890,7 +888,7 @@ ipmi_cmd_get_pef_number_of_alert_policy_entries2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_number_of_alert_policy_entries_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -927,11 +925,11 @@ ipmi_cmd_get_pef_number_of_alert_policy_entries2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_number_of_alert_strings2 (ipmi_device_t *dev, 
-                                           uint8_t get_parameter, 
-                                           uint8_t set_selector, 
-                                           uint8_t block_selector, 
-                                           fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2 (ipmi_device_t *dev, 
+                                                                    uint8_t get_parameter, 
+                                                                    uint8_t set_selector, 
+                                                                    uint8_t block_selector, 
+                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -944,7 +942,7 @@ ipmi_cmd_get_pef_number_of_alert_strings2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_number_of_alert_strings_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -981,11 +979,11 @@ ipmi_cmd_get_pef_number_of_alert_strings2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
-				     uint8_t get_parameter, 
-				     uint8_t set_selector,
-				     uint8_t block_selector, 
-				     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_alert_string_keys2 (ipmi_device_t *dev,
+                                                              uint8_t get_parameter, 
+                                                              uint8_t set_selector,
+                                                              uint8_t block_selector, 
+                                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -998,7 +996,7 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_alert_string_keys_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_string_keys_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -1035,11 +1033,11 @@ ipmi_cmd_get_pef_alert_string_keys2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
-				uint8_t get_parameter, 
-				uint8_t set_selector,
-				uint8_t block_selector, 
-				fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_pef_configuration_parameters_alert_string2 (ipmi_device_t *dev,
+                                                         uint8_t get_parameter, 
+                                                         uint8_t set_selector,
+                                                         uint8_t block_selector, 
+                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int ret, rv = -1;
@@ -1052,7 +1050,7 @@ ipmi_cmd_get_pef_alert_string2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_alert_strings_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_strings_rs)) < 0)
     goto cleanup;
 
   if (!ret)

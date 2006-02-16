@@ -37,7 +37,7 @@ fiid_template_t tmpl_set_serial_modem_configuration_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_serial_modem_connection_mode_rq =
+fiid_template_t tmpl_set_serial_modem_configuration_connection_mode_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -51,7 +51,7 @@ fiid_template_t tmpl_set_serial_modem_connection_mode_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_serial_modem_ipmi_messaging_comm_settings_rq =
+fiid_template_t tmpl_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -65,7 +65,7 @@ fiid_template_t tmpl_set_serial_modem_ipmi_messaging_comm_settings_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_serial_modem_page_blackout_interval_rq =
+fiid_template_t tmpl_set_serial_modem_configuration_page_blackout_interval_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -75,7 +75,7 @@ fiid_template_t tmpl_set_serial_modem_page_blackout_interval_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_serial_modem_call_retry_interval_rq =
+fiid_template_t tmpl_set_serial_modem_configuration_call_retry_interval_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -107,7 +107,7 @@ fiid_template_t tmpl_get_serial_modem_configuration_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_serial_modem_connection_mode_rs =
+fiid_template_t tmpl_get_serial_modem_configuration_connection_mode_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -121,7 +121,7 @@ fiid_template_t tmpl_get_serial_modem_connection_mode_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_serial_modem_ipmi_messaging_comm_settings_rs =
+fiid_template_t tmpl_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -135,7 +135,7 @@ fiid_template_t tmpl_get_serial_modem_ipmi_messaging_comm_settings_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_serial_modem_page_blackout_interval_rs =
+fiid_template_t tmpl_get_serial_modem_configuration_page_blackout_interval_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -145,7 +145,7 @@ fiid_template_t tmpl_get_serial_modem_page_blackout_interval_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_serial_modem_call_retry_interval_rs =
+fiid_template_t tmpl_get_serial_modem_configuration_call_retry_interval_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -208,12 +208,12 @@ fill_cmd_set_serial_modem_configuration (fiid_obj_t obj_data_rq,
 
 
 int8_t 
-fill_cmd_set_serial_modem_connection_mode (uint8_t channel_number, 
-                                           uint8_t basic_mode,
-                                           uint8_t ppp_mode,
-                                           uint8_t terminal_mode,
-                                           uint8_t connect_mode,
-                                           fiid_obj_t obj_data_rq)
+fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number, 
+                                                         uint8_t basic_mode,
+                                                         uint8_t ppp_mode,
+                                                         uint8_t terminal_mode,
+                                                         uint8_t connect_mode,
+                                                         fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -228,7 +228,7 @@ fill_cmd_set_serial_modem_connection_mode (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_connection_mode_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_configuration_connection_mode_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -277,11 +277,11 @@ fill_cmd_set_serial_modem_connection_mode (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_serial_modem_ipmi_messaging_comm_settings (uint8_t channel_number, 
-                                                        uint8_t dtr_hangup,
-                                                        uint8_t flow_control,
-                                                        uint8_t bit_rate,
-                                                        fiid_obj_t obj_data_rq)
+fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t channel_number, 
+                                                                      uint8_t dtr_hangup,
+                                                                      uint8_t flow_control,
+                                                                      uint8_t bit_rate,
+                                                                      fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -295,7 +295,7 @@ fill_cmd_set_serial_modem_ipmi_messaging_comm_settings (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_ipmi_messaging_comm_settings_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -344,9 +344,9 @@ fill_cmd_set_serial_modem_ipmi_messaging_comm_settings (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_serial_modem_page_blackout_interval (uint8_t channel_number, 
-                                                  uint8_t page_blackout_interval,
-                                                  fiid_obj_t obj_data_rq)
+fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_number, 
+                                                                uint8_t page_blackout_interval,
+                                                                fiid_obj_t obj_data_rq)
 {
   int8_t rv;
   
@@ -357,7 +357,7 @@ fill_cmd_set_serial_modem_page_blackout_interval (uint8_t channel_number,
       return -1;
     }
   
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_page_blackout_interval_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_configuration_page_blackout_interval_rq)) < 0)
     return (-1);
   
   if (!rv)
@@ -390,9 +390,9 @@ fill_cmd_set_serial_modem_page_blackout_interval (uint8_t channel_number,
 }
 
 int8_t 
-fill_cmd_set_serial_modem_call_retry_interval (uint8_t channel_number, 
-                                               uint8_t call_retry_interval,
-                                               fiid_obj_t obj_data_rq)
+fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_number, 
+                                                             uint8_t call_retry_interval,
+                                                             fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -403,7 +403,7 @@ fill_cmd_set_serial_modem_call_retry_interval (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_call_retry_interval_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_serial_modem_configuration_call_retry_interval_rq)) < 0)
     return (-1);
 
   if (!rv)

@@ -37,7 +37,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_sol_enable_rq =
+fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -70,7 +70,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_enable_rs =
+fiid_template_t tmpl_get_sol_configuration_parameters_enable_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -134,9 +134,9 @@ fill_cmd_set_sol_configuration_parameters (fiid_obj_t obj_data_rq,
 
 
 int8_t 
-fill_cmd_set_sol_sol_enable (uint8_t channel_number, 
-			     uint8_t sol_payload,
-			     fiid_obj_t obj_data_rq)
+fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number, 
+                                                      uint8_t sol_payload,
+                                                      fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -148,7 +148,7 @@ fill_cmd_set_sol_sol_enable (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_sol_enable_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq)) < 0)
     return (-1);
 
   if (!rv)
