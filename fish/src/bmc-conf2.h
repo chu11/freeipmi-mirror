@@ -127,17 +127,17 @@ int8_t set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
                                                          uint8_t flow_control, 
                                                          uint8_t bit_rate);
 int8_t set_pef_control (ipmi_device_t *dev, 
-			uint8_t pef_enable, 
-			uint8_t pef_event_msgs_enable, 
-			uint8_t pef_startup_delay_enable, 
-			uint8_t pef_alert_startup_delay_enable);
-int8_t set_pef_global_action_control (ipmi_device_t *dev, 
-				      uint8_t alert_action_enable, 
-				      uint8_t powerdown_action_enable, 
-				      uint8_t reset_action_enable, 
-				      uint8_t powercycle_action_enable, 
-				      uint8_t oem_action_enable, 
-				      uint8_t diag_interrupt_enable);
+			uint8_t pef, 
+			uint8_t pef_event_messages, 
+			uint8_t pef_startup_delay, 
+			uint8_t pef_alert_startup_delay);
+int8_t set_pef_action_global_control (ipmi_device_t *dev, 
+				      uint8_t alert_action, 
+				      uint8_t power_down_action, 
+				      uint8_t reset_action, 
+				      uint8_t power_cycle_action, 
+				      uint8_t oem_action, 
+				      uint8_t diagnostic_interrupt);
 int8_t set_pef_startup_delay (ipmi_device_t *dev, 
 			      uint8_t pef_startup_delay);
 int8_t set_pef_alert_startup_delay (ipmi_device_t *dev, 
@@ -232,17 +232,17 @@ int8_t get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 int8_t get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev, 
 				       uint8_t *vlan_priority);
 int8_t get_pef_control (ipmi_device_t *dev, 
-			uint8_t *pef_enable, 
-			uint8_t *pef_event_msgs_enable, 
-			uint8_t *pef_startup_delay_enable, 
-			uint8_t *pef_alert_startup_delay_enable);
-int8_t get_pef_global_action_control (ipmi_device_t *dev, 
-				      uint8_t *alert_action_enable, 
-				      uint8_t *powerdown_action_enable, 
-				      uint8_t *reset_action_enable, 
-				      uint8_t *powercycle_action_enable, 
-				      uint8_t *oem_action_enable, 
-				      uint8_t *diag_interrupt_enable);
+			uint8_t *pef, 
+			uint8_t *pef_event_messages, 
+			uint8_t *pef_startup_delay, 
+			uint8_t *pef_alert_startup_delay);
+int8_t get_pef_action_global_control (ipmi_device_t *dev, 
+				      uint8_t *alert_action, 
+				      uint8_t *power_down_action, 
+				      uint8_t *reset_action, 
+				      uint8_t *power_cycle_action, 
+				      uint8_t *oem_action, 
+				      uint8_t *diagnostic_interrupt);
 int8_t get_pef_startup_delay (ipmi_device_t *dev, 
 			      uint8_t *pef_startup_delay);
 int8_t get_pef_alert_startup_delay (ipmi_device_t *dev, 

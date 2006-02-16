@@ -995,23 +995,23 @@ set_bmc_power_restore_policy (ipmi_device_t *dev,
 
 int8_t 
 set_pef_control (ipmi_device_t *dev, 
-		 uint8_t pef_enable, 
-		 uint8_t pef_event_msgs_enable, 
-		 uint8_t pef_startup_delay_enable, 
-		 uint8_t pef_alert_startup_delay_enable)
+		 uint8_t pef, 
+		 uint8_t pef_event_messages, 
+		 uint8_t pef_startup_delay, 
+		 uint8_t pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_control2 (dev, 
-				 pef_enable, 
-				 pef_event_msgs_enable, 
-				 pef_startup_delay_enable, 
-				 pef_alert_startup_delay_enable, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_pef_control2 (dev, 
+                                     pef, 
+                                     pef_event_messages, 
+                                     pef_startup_delay, 
+                                     pef_alert_startup_delay, 
+                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1022,28 +1022,28 @@ set_pef_control (ipmi_device_t *dev,
 }
 
 int8_t 
-set_pef_global_action_control (ipmi_device_t *dev, 
-			       uint8_t alert_action_enable, 
-			       uint8_t powerdown_action_enable, 
-			       uint8_t reset_action_enable, 
-			       uint8_t powercycle_action_enable, 
-			       uint8_t oem_action_enable, 
-			       uint8_t diag_interrupt_enable)
+set_pef_action_global_control (ipmi_device_t *dev, 
+			       uint8_t alert_action, 
+			       uint8_t power_down_action, 
+			       uint8_t reset_action, 
+			       uint8_t power_cycle_action, 
+			       uint8_t oem_action, 
+			       uint8_t diagnostic_interrupt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_global_action_control2 (dev, 
-					   alert_action_enable, 
-					   powerdown_action_enable, 
-					   reset_action_enable, 
-					   powercycle_action_enable, 
-					   oem_action_enable, 
-					   diag_interrupt_enable, 
-					   obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_pef_action_global_control2 (dev, 
+                                                   alert_action, 
+                                                   power_down_action, 
+                                                   reset_action, 
+                                                   power_cycle_action, 
+                                                   oem_action, 
+                                                   diagnostic_interrupt, 
+                                                   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1060,12 +1060,12 @@ set_pef_startup_delay (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_startup_delay2 (dev, 
-				   pef_startup_delay, 
-				   obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_pef_startup_delay2 (dev, 
+                                           pef_startup_delay, 
+                                           obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1082,12 +1082,12 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_conf_param_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_alert_startup_delay2 (dev, 
-					 pef_alert_startup_delay, 
-					 obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_pef_alert_startup_delay2 (dev, 
+                                                 pef_alert_startup_delay, 
+                                                 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -2188,48 +2188,48 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
 
 int8_t 
 get_pef_control (ipmi_device_t *dev, 
-		 uint8_t *pef_enable, 
-		 uint8_t *pef_event_msgs_enable, 
-		 uint8_t *pef_startup_delay_enable, 
-		 uint8_t *pef_alert_startup_delay_enable)
+		 uint8_t *pef, 
+		 uint8_t *pef_event_messages, 
+		 uint8_t *pef_startup_delay, 
+		 uint8_t *pef_alert_startup_delay)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_pef_control_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_pef_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_control2 (dev, 
-				 IPMI_GET_PEF_PARAMETER, 
-				 SET_SELECTOR, 
-				 BLOCK_SELECTOR, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_pef_control2 (dev, 
+                                     IPMI_GET_PEF_PARAMETER, 
+                                     SET_SELECTOR, 
+                                     BLOCK_SELECTOR, 
+                                     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_pef", 
+		    (uint8_t *)"pef", 
 		    &val) < 0)
     goto cleanup;
-  *pef_enable = val;
+  *pef = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_pef_event_msgs", 
+		    (uint8_t *)"pef_event_messages", 
 		    &val) < 0)
     goto cleanup;
-  *pef_event_msgs_enable = val;
+  *pef_event_messages = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_startup_delay", 
+		    (uint8_t *)"pef_startup_delay", 
 		    &val) < 0)
     goto cleanup;
-  *pef_startup_delay_enable = val;
+  *pef_startup_delay = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_alert_startup_delay", 
+		    (uint8_t *)"pef_alert_startup_delay", 
 		    &val) < 0)
     goto cleanup;
-  *pef_alert_startup_delay_enable = val;
+  *pef_alert_startup_delay = val;
   
   rv = 0;
  cleanup:
@@ -2239,63 +2239,63 @@ get_pef_control (ipmi_device_t *dev,
 }
 
 int8_t 
-get_pef_global_action_control (ipmi_device_t *dev, 
-			       uint8_t *alert_action_enable, 
-			       uint8_t *powerdown_action_enable, 
-			       uint8_t *reset_action_enable, 
-			       uint8_t *powercycle_action_enable, 
-			       uint8_t *oem_action_enable, 
-			       uint8_t *diag_interrupt_enable)
+get_pef_action_global_control (ipmi_device_t *dev, 
+			       uint8_t *alert_action, 
+			       uint8_t *power_down_action, 
+			       uint8_t *reset_action, 
+			       uint8_t *power_cycle_action, 
+			       uint8_t *oem_action, 
+			       uint8_t *diagnostic_interrupt)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val = 0;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_global_action_control_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_pef_action_global_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_global_action_control2 (dev, 
-					       IPMI_GET_PEF_PARAMETER, 
-					       SET_SELECTOR, 
-					       BLOCK_SELECTOR, 
-					       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_pef_action_global_control2 (dev, 
+                                                   IPMI_GET_PEF_PARAMETER, 
+                                                   SET_SELECTOR, 
+                                                   BLOCK_SELECTOR, 
+                                                   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_alert_action", 
+		    (uint8_t *)"alert_action", 
 		    &val) < 0)
     goto cleanup;
-  *alert_action_enable = val;
+  *alert_action = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_powerdown_action", 
+		    (uint8_t *)"power_down_action", 
 		    &val) < 0)
     goto cleanup;
-  *powerdown_action_enable = val;
+  *power_down_action = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_reset_action", 
+		    (uint8_t *)"reset_action", 
 		    &val) < 0)
     goto cleanup;
-  *reset_action_enable = val;
+  *reset_action = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_powercycle_action", 
+		    (uint8_t *)"power_cycle_action", 
 		    &val) < 0)
     goto cleanup;
-  *powercycle_action_enable = val;
+  *power_cycle_action = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_oem_action", 
+		    (uint8_t *)"oem_action", 
 		    &val) < 0)
     goto cleanup;
-  *oem_action_enable = val;
+  *oem_action = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"enable_diag_interrupt", 
+		    (uint8_t *)"diagnostic_interrupt", 
 		    &val) < 0)
     goto cleanup;
-  *diag_interrupt_enable = val;
+  *diagnostic_interrupt = val;
 
   rv = 0;
  cleanup:
@@ -2312,14 +2312,14 @@ get_pef_startup_delay (ipmi_device_t *dev,
   uint64_t val = 0;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_startup_delay_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_pef_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_startup_delay2 (dev, 
-				       IPMI_GET_PEF_PARAMETER, 
-				       SET_SELECTOR, 
-				       BLOCK_SELECTOR, 
-				       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_pef_startup_delay2 (dev, 
+                                           IPMI_GET_PEF_PARAMETER, 
+                                           SET_SELECTOR, 
+                                           BLOCK_SELECTOR, 
+                                           obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2343,14 +2343,14 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
   uint64_t val = 0;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_alert_startup_delay_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_pef_alert_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_alert_startup_delay2 (dev, 
-					     IPMI_GET_PEF_PARAMETER, 
-					     SET_SELECTOR, 
-					     BLOCK_SELECTOR, 
-					     obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_pef_alert_startup_delay2 (dev, 
+                                                 IPMI_GET_PEF_PARAMETER, 
+                                                 SET_SELECTOR, 
+                                                 BLOCK_SELECTOR, 
+                                                 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 

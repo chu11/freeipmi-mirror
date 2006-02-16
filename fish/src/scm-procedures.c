@@ -1439,39 +1439,39 @@ ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy)
 }
 
 SCM 
-ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable, 
-				 SCM scm_pef_event_msgs_enable, 
-				 SCM scm_pef_startup_delay_enable, 
-				 SCM scm_pef_alert_startup_delay_enable)
+ex_set_bmc_pef_conf_pef_control (SCM scm_pef, 
+				 SCM scm_pef_event_messages, 
+				 SCM scm_pef_startup_delay, 
+				 SCM scm_pef_alert_startup_delay)
 {
-  uint8_t pef_enable = 0;
-  uint8_t pef_event_msgs_enable = 0;
-  uint8_t pef_startup_delay_enable = 0;
-  uint8_t pef_alert_startup_delay_enable = 0;
+  uint8_t pef = 0;
+  uint8_t pef_event_messages = 0;
+  uint8_t pef_startup_delay = 0;
+  uint8_t pef_alert_startup_delay = 0;
   
   if (get_pef_control (fi_get_ipmi_device (), 
-		       &pef_enable, 
-		       &pef_event_msgs_enable, 
-		       &pef_startup_delay_enable, 
-		       &pef_alert_startup_delay_enable) != 0)
+		       &pef, 
+		       &pef_event_messages, 
+		       &pef_startup_delay, 
+		       &pef_alert_startup_delay) != 0)
     {
       return SCM_BOOL_F;
     }
   
-  if (scm_boolean_p (scm_pef_enable) == SCM_BOOL_T)
-    pef_enable = gh_scm2bool (scm_pef_enable);
-  if (scm_boolean_p (scm_pef_event_msgs_enable) == SCM_BOOL_T)
-    pef_event_msgs_enable = gh_scm2bool (scm_pef_event_msgs_enable);
-  if (scm_boolean_p (scm_pef_startup_delay_enable) == SCM_BOOL_T)
-    pef_startup_delay_enable = gh_scm2bool (scm_pef_startup_delay_enable);
-  if (scm_boolean_p (scm_pef_alert_startup_delay_enable) == SCM_BOOL_T)
-    pef_alert_startup_delay_enable = gh_scm2bool (scm_pef_alert_startup_delay_enable);
+  if (scm_boolean_p (scm_pef) == SCM_BOOL_T)
+    pef = gh_scm2bool (scm_pef);
+  if (scm_boolean_p (scm_pef_event_messages) == SCM_BOOL_T)
+    pef_event_messages = gh_scm2bool (scm_pef_event_messages);
+  if (scm_boolean_p (scm_pef_startup_delay) == SCM_BOOL_T)
+    pef_startup_delay = gh_scm2bool (scm_pef_startup_delay);
+  if (scm_boolean_p (scm_pef_alert_startup_delay) == SCM_BOOL_T)
+    pef_alert_startup_delay = gh_scm2bool (scm_pef_alert_startup_delay);
   
   if (set_pef_control (fi_get_ipmi_device (), 
-		       pef_enable, 
-		       pef_event_msgs_enable, 
-		       pef_startup_delay_enable, 
-		       pef_alert_startup_delay_enable) != 0)
+		       pef, 
+		       pef_event_messages, 
+		       pef_startup_delay, 
+		       pef_alert_startup_delay) != 0)
     {
       return SCM_BOOL_F;
     }
@@ -1480,51 +1480,51 @@ ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable,
 }
 
 SCM 
-ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable, 
-					       SCM scm_powerdown_action_enable, 
-					       SCM scm_reset_action_enable, 
-					       SCM scm_powercycle_action_enable, 
-					       SCM scm_oem_action_enable, 
-					       SCM scm_diag_interrupt_enable)
+ex_set_bmc_pef_conf_pef_action_global_control (SCM scm_alert_action, 
+					       SCM scm_power_down_action, 
+					       SCM scm_reset_action, 
+					       SCM scm_power_cycle_action, 
+					       SCM scm_oem_action, 
+					       SCM scm_diagnostic_interrupt)
 {
-  uint8_t alert_action_enable = 0;
-  uint8_t powerdown_action_enable = 0;
-  uint8_t reset_action_enable = 0;
-  uint8_t powercycle_action_enable = 0;
-  uint8_t oem_action_enable = 0;
-  uint8_t diag_interrupt_enable = 0;
+  uint8_t alert_action = 0;
+  uint8_t power_down_action = 0;
+  uint8_t reset_action = 0;
+  uint8_t power_cycle_action = 0;
+  uint8_t oem_action = 0;
+  uint8_t diagnostic_interrupt = 0;
 
-  if (get_pef_global_action_control (fi_get_ipmi_device (), 
-				     &alert_action_enable, 
-				     &powerdown_action_enable, 
-				     &reset_action_enable, 
-				     &powercycle_action_enable, 
-				     &oem_action_enable, 
-				     &diag_interrupt_enable) != 0)
+  if (get_pef_action_global_control (fi_get_ipmi_device (), 
+				     &alert_action, 
+				     &power_down_action, 
+				     &reset_action, 
+				     &power_cycle_action, 
+				     &oem_action, 
+				     &diagnostic_interrupt) != 0)
     {
       return SCM_BOOL_F;
     }
   
-  if (scm_boolean_p (scm_alert_action_enable) == SCM_BOOL_T)
-    alert_action_enable = gh_scm2bool (scm_alert_action_enable);
-  if (scm_boolean_p (scm_powerdown_action_enable) == SCM_BOOL_T)
-    powerdown_action_enable = gh_scm2bool (scm_powerdown_action_enable);
-  if (scm_boolean_p (scm_reset_action_enable) == SCM_BOOL_T)
-    reset_action_enable = gh_scm2bool (scm_reset_action_enable);
-  if (scm_boolean_p (scm_powercycle_action_enable) == SCM_BOOL_T)
-    powercycle_action_enable = gh_scm2bool (scm_powercycle_action_enable);
-  if (scm_boolean_p (scm_oem_action_enable) == SCM_BOOL_T)
-    oem_action_enable = gh_scm2bool (scm_oem_action_enable);
-  if (scm_boolean_p (scm_diag_interrupt_enable) == SCM_BOOL_T)
-    diag_interrupt_enable = gh_scm2bool (scm_diag_interrupt_enable);
+  if (scm_boolean_p (scm_alert_action) == SCM_BOOL_T)
+    alert_action = gh_scm2bool (scm_alert_action);
+  if (scm_boolean_p (scm_power_down_action) == SCM_BOOL_T)
+    power_down_action = gh_scm2bool (scm_power_down_action);
+  if (scm_boolean_p (scm_reset_action) == SCM_BOOL_T)
+    reset_action = gh_scm2bool (scm_reset_action);
+  if (scm_boolean_p (scm_power_cycle_action) == SCM_BOOL_T)
+    power_cycle_action = gh_scm2bool (scm_power_cycle_action);
+  if (scm_boolean_p (scm_oem_action) == SCM_BOOL_T)
+    oem_action = gh_scm2bool (scm_oem_action);
+  if (scm_boolean_p (scm_diagnostic_interrupt) == SCM_BOOL_T)
+    diagnostic_interrupt = gh_scm2bool (scm_diagnostic_interrupt);
   
-  if (set_pef_global_action_control (fi_get_ipmi_device (), 
-				     alert_action_enable, 
-				     powerdown_action_enable, 
-				     reset_action_enable, 
-				     powercycle_action_enable, 
-				     oem_action_enable, 
-				     diag_interrupt_enable) != 0)
+  if (set_pef_action_global_control (fi_get_ipmi_device (), 
+				     alert_action, 
+				     power_down_action, 
+				     reset_action, 
+				     power_cycle_action, 
+				     oem_action, 
+				     diagnostic_interrupt) != 0)
     {
       return SCM_BOOL_F;
     }
@@ -2168,33 +2168,33 @@ ex_get_bmc_pef_conf_pef_control ()
 }
 
 SCM 
-ex_get_bmc_pef_conf_pef_global_action_control ()
+ex_get_bmc_pef_conf_pef_action_global_control ()
 {
   SCM scm_return_list = SCM_EOL;
-  uint8_t alert_action_enable = 0;
-  uint8_t powerdown_action_enable = 0;
-  uint8_t reset_action_enable = 0;
-  uint8_t powercycle_action_enable = 0;
-  uint8_t oem_action_enable = 0;
-  uint8_t diag_interrupt_enable = 0;
+  uint8_t alert_action = 0;
+  uint8_t power_down_action = 0;
+  uint8_t reset_action = 0;
+  uint8_t power_cycle_action = 0;
+  uint8_t oem_action = 0;
+  uint8_t diagnostic_interrupt = 0;
   
-  if (get_pef_global_action_control (fi_get_ipmi_device (), 
-				     &alert_action_enable, 
-				     &powerdown_action_enable, 
-				     &reset_action_enable, 
-				     &powercycle_action_enable, 
-				     &oem_action_enable, 
-				     &diag_interrupt_enable) != 0)
+  if (get_pef_action_global_control (fi_get_ipmi_device (), 
+				     &alert_action, 
+				     &power_down_action, 
+				     &reset_action, 
+				     &power_cycle_action, 
+				     &oem_action, 
+				     &diagnostic_interrupt) != 0)
     {
       return SCM_BOOL_F;
     }
   
-  scm_return_list = gh_list (gh_bool2scm (alert_action_enable), 
-			     gh_bool2scm (powerdown_action_enable), 
-			     gh_bool2scm (reset_action_enable), 
-			     gh_bool2scm (powercycle_action_enable), 
-			     gh_bool2scm (oem_action_enable), 
-			     gh_bool2scm (diag_interrupt_enable), 
+  scm_return_list = gh_list (gh_bool2scm (alert_action), 
+			     gh_bool2scm (power_down_action), 
+			     gh_bool2scm (reset_action), 
+			     gh_bool2scm (power_cycle_action), 
+			     gh_bool2scm (oem_action), 
+			     gh_bool2scm (diagnostic_interrupt), 
 			     SCM_UNDEFINED);
   
   return scm_return_list;
@@ -3428,12 +3428,12 @@ ex_get_pef_info ()
   uint64_t val;
   uint8_t alert_support = 0;
   
-  if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_caps_rs)))
+  if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_capabilities_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_caps2 (fi_get_ipmi_device (), cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_capabilities2 (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_pef_caps2()");
+      ipmi_error (cmd_rs, "ipmi_cmd_get_pef_capabilities2()");
       goto cleanup;
     }
   
@@ -3464,11 +3464,11 @@ ex_get_pef_info ()
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.powerdown", 
+                    (uint8_t *)"action_support.power_down", 
                     &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("powerdown_support"), 
+				       gh_str02scm ("power_down_support"), 
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
@@ -3480,15 +3480,15 @@ ex_get_pef_info ()
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.powercycle", 
+                    (uint8_t *)"action_support.power_cycle", 
                     &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("powercycle_support"), 
+				       gh_str02scm ("power_cycle_support"), 
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.oem", 
+                    (uint8_t *)"action_support.oem_action", 
                     &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
@@ -3496,19 +3496,19 @@ ex_get_pef_info ()
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.diag_interrupt", 
+                    (uint8_t *)"action_support.diagnostic_interrupt", 
                     &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("diag_interrupt_support"), 
+				       gh_str02scm ("diagnostic_interrupt_support"), 
 				       gh_bool2scm (val));
   
   if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"number_of_eft_entries", 
+                    (uint8_t *)"number_of_event_filter_table_entries", 
                     &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("eft_entries_count"), 
+				       gh_str02scm ("event_filter_table_entries_count"), 
 				       gh_ulong2scm (val));
   
   fiid_obj_destroy(cmd_rs);
@@ -3516,21 +3516,21 @@ ex_get_pef_info ()
 
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_event_filters_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_event_filters_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_num_event_filters2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PEF_PARAMETER, 
-					       SET_SELECTOR, 
-					       BLOCK_SELECTOR, 
-					       cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_number_of_event_filters2 (fi_get_ipmi_device (), 
+                                                     IPMI_GET_PEF_PARAMETER, 
+                                                     SET_SELECTOR, 
+                                                     BLOCK_SELECTOR, 
+                                                     cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_event_filters2()");
           goto cleanup;
 	}
 
       if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"num_event_filters", 
+                        (uint8_t *)"number_of_event_filters", 
                         &val) < 0)
         goto cleanup;
 
@@ -3542,26 +3542,26 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_event_filters"), 
+				       gh_str02scm ("number_of_event_filters"), 
 				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_alert_policies_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_num_alert_policies2 (fi_get_ipmi_device (), 
-						IPMI_GET_PEF_PARAMETER, 
-						SET_SELECTOR, 
-						BLOCK_SELECTOR, 
-						cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_number_of_alert_policy_entries2 (fi_get_ipmi_device (), 
+                                                            IPMI_GET_PEF_PARAMETER, 
+                                                            SET_SELECTOR, 
+                                                            BLOCK_SELECTOR, 
+                                                            cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_policies2()");
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_number_of_alert_policy_entries2()");
           goto cleanup;
 	}
       
       if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"num_alert_policies", 
+                        (uint8_t *)"number_of_alert_policy_entries", 
                         &val) < 0)
         goto cleanup;
 
@@ -3573,26 +3573,26 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_alert_policies"), 
+				       gh_str02scm ("number_of_alert_policies"), 
 				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_conf_param_num_alert_strings_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_number_of_alert_strings_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_num_alert_strings2 (fi_get_ipmi_device (), 
-					       IPMI_GET_PEF_PARAMETER, 
-					       SET_SELECTOR, 
-					       BLOCK_SELECTOR, 
-					       cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_number_of_alert_strings2 (fi_get_ipmi_device (), 
+                                                     IPMI_GET_PEF_PARAMETER, 
+                                                     SET_SELECTOR, 
+                                                     BLOCK_SELECTOR, 
+                                                     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_num_alert_strings2()");
+	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_number_of_alert_strings2()");
           goto cleanup;
 	}
 
       if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"num_alert_strings", 
+                        (uint8_t *)"number_of_alert_strings", 
                         &val) < 0)
         goto cleanup;
 
@@ -3604,7 +3604,7 @@ ex_get_pef_info ()
       val = 0;
     }
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
-				       gh_str02scm ("num_alert_strings"), 
+				       gh_str02scm ("number_of_alert_strings"), 
 				       (val ? gh_ulong2scm (val) : SCM_BOOL_F));
   
   fiid_obj_destroy(cmd_rs);

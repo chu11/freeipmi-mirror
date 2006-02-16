@@ -202,7 +202,6 @@ extern "C" {
 "channel privilege limit"
 
 /* IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL */
-
 #define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER               0x81
 #define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER_STR \
 "Requested level not available for this user"
@@ -311,14 +310,33 @@ extern "C" {
 #define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED_STR \
 "parameter not supported."
 
+/* IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID */
+#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS 0x81
+#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID */
+#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS 0x81
+#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_ALERT_IMMEDIATE */
+#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS                    0x81
+#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS_STR \
+"Alert Immediate rejected due to alert already in progress"
+
+#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE                    0x82
+#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
+"Alert Immedate rejected due to IPMI messaging session active on this channel"
+
 /* IPMI_CMD_DELETE_SEL_ENTRY */
-#define IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED                   0x80
-#define IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED_STR \
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED                   0x80
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR \
 "Operation not supported for this Record Type"
 
-#define IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS                         0x81
-#define IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS_STR \
-"Cannot execute command, SEL erase in progress"
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                         0x81
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
 
 #ifdef __cplusplus
 }

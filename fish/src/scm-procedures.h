@@ -145,16 +145,16 @@ SCM ex_set_bmc_serial_conf_ipmi_messaging_comm_settings (SCM scm_dtr_hangup,
                                                          SCM scm_flow_control, 
                                                          SCM scm_bit_rate);
 SCM ex_set_bmc_power_restore_policy (SCM scm_power_restore_policy);
-SCM ex_set_bmc_pef_conf_pef_control (SCM scm_pef_enable, 
-				     SCM scm_pef_event_msgs_enable, 
-				     SCM scm_pef_startup_delay_enable, 
-				     SCM scm_pef_alert_startup_delay_enable);
-SCM ex_set_bmc_pef_conf_pef_global_action_control (SCM scm_alert_action_enable, 
-						   SCM scm_powerdown_action_enable, 
-						   SCM scm_reset_action_enable, 
-						   SCM scm_powercycle_action_enable, 
-						   SCM scm_oem_action_enable, 
-						   SCM scm_diag_interrupt_enable);
+SCM ex_set_bmc_pef_conf_pef_control (SCM scm_pef, 
+				     SCM scm_pef_event_messages, 
+				     SCM scm_pef_startup_delay, 
+				     SCM scm_pef_alert_startup_delay);
+SCM ex_set_bmc_pef_conf_pef_action_global_control (SCM scm_alert_action, 
+						   SCM scm_power_down_action, 
+						   SCM scm_reset_action, 
+						   SCM scm_power_cycle_action, 
+						   SCM scm_oem_action, 
+						   SCM scm_diagnostic_interrupt);
 SCM ex_set_bmc_pef_conf_pef_startup_delay (SCM scm_pef_startup_delay);
 SCM ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay);
 
@@ -189,7 +189,7 @@ SCM ex_get_bmc_serial_conf_call_retry_interval ();
 SCM ex_get_bmc_serial_conf_ipmi_messaging_comm_settings ();
 SCM ex_get_bmc_power_restore_policy ();
 SCM ex_get_bmc_pef_conf_pef_control ();
-SCM ex_get_bmc_pef_conf_pef_global_action_control ();
+SCM ex_get_bmc_pef_conf_pef_action_global_control ();
 SCM ex_get_bmc_pef_conf_pef_startup_delay ();
 SCM ex_get_bmc_pef_conf_pef_alert_startup_delay ();
 

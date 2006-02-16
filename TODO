@@ -28,7 +28,10 @@ libfreeipmi:
     - counters, fiid_obj_create
   * test bad seq nums
   * chksum_test - confusing, not use?
-  * need to test acpi
+  * need to test
+    - acpi
+    - ssif
+    - pef config
   * fill_kcs_get_sel_entry
     - why not the other arguments?
   * re-architect ipmi-error.c stuff to handle different commands with same values.
@@ -98,9 +101,18 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - pef-cmds
+       - order code appropriately (done)
+       - parameter checking (done)
+       - missing commands
+       - audit templates (done)
+       - audit function names (done)
+       - audit parameters (done)
+       - function parameter ordering (done)
+       - udm parameter checking (done)
     - sdr-repo-cmds
     - sel-cmds
     - sensor-cmds
+  * redo naming of config specific templates/functions, format no longer sticks b/c of sol & pef
   * reg-space default  
   * udm parameter checks
 
@@ -112,6 +124,7 @@ fish:
 ipmipower
 ---------
   * compile options to make workarounds automatic for ipmipower
+  * activate session - check auth-type of return
 
 General:
 --------

@@ -364,8 +364,8 @@ install_new_procedures (void)
   
   gh_new_procedure ("fi-set-bmc-pef-conf-pef-control", 
 		    ex_set_bmc_pef_conf_pef_control, 1, 0, 0);
-  gh_new_procedure ("fi-set-bmc-pef-conf-pef-global-action-control", 
-		    ex_set_bmc_pef_conf_pef_global_action_control, 1, 0, 0);
+  gh_new_procedure ("fi-set-bmc-pef-conf-pef-action-global-control", 
+		    ex_set_bmc_pef_conf_pef_action_global_control, 1, 0, 0);
   gh_new_procedure ("fi-set-bmc-pef-conf-pef-startup-delay", 
 		    ex_set_bmc_pef_conf_pef_startup_delay, 1, 0, 0);
   gh_new_procedure ("fi-set-bmc-pef-conf-pef-alert-startup-delay", 
@@ -518,8 +518,8 @@ install_new_procedures (void)
   
   gh_new_procedure ("fi-get-bmc-pef-conf-pef-control", 
 		    ex_get_bmc_pef_conf_pef_control, 0, 0, 0);
-  gh_new_procedure ("fi-get-bmc-pef-conf-pef-global-action-control", 
-		    ex_get_bmc_pef_conf_pef_global_action_control, 0, 0, 0);
+  gh_new_procedure ("fi-get-bmc-pef-conf-pef-action-global-control", 
+		    ex_get_bmc_pef_conf_pef_action_global_control, 0, 0, 0);
   gh_new_procedure ("fi-get-bmc-pef-conf-pef-startup-delay", 
 		    ex_get_bmc_pef_conf_pef_startup_delay, 0, 0, 0);
   gh_new_procedure ("fi-get-bmc-pef-conf-pef-alert-startup-delay", 

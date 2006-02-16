@@ -1,3 +1,12 @@
+2006-02-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-pef-cmds.h,
+	libfreeipmi/src/ipmi-pef-cmds.c: Code cleanup.
+
+	* libfreeipmi/src/ipmi-pef-param-spec.h: Add new entries.
+
+	* libfreeipmi/, fish/: Adjust code appropriately.
+	
 2006-02-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and
