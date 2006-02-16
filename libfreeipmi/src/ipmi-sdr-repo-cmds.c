@@ -177,57 +177,11 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_cmd_get_sensor_record_header (uint16_t record_id, fiid_obj_t obj_data_rq)
-{
-  int8_t rv;
-  int32_t len;
-
-  if (!fiid_obj_valid(obj_data_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sdr_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  if ((len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
-    return (-1);
-
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"cmd",
-		IPMI_CMD_GET_SDR);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"reservation_id",
-		0x0);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"record_id",
-		record_id);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"offset_into_record",
-		0x0);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"bytes_to_read",
-                len);
-  return 0;
-}
-
-int8_t 
-fill_cmd_get_sdr_chunk (uint16_t reservation_id, 
-			uint16_t record_id, 
-			uint8_t offset_into_record, 
-			uint8_t bytes_to_read,
-                        fiid_obj_t obj_data_rq)
+fill_cmd_get_sdr (uint16_t reservation_id, 
+                  uint16_t record_id, 
+                  uint8_t offset_into_record, 
+                  uint8_t bytes_to_read,
+                  fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -267,4 +221,3 @@ fill_cmd_get_sdr_chunk (uint16_t reservation_id,
 		bytes_to_read);
   return 0;
 }
-

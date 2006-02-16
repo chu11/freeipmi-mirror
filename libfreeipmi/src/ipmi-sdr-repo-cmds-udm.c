@@ -163,7 +163,9 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
+  int32_t sensor_record_header_len;
   int32_t len;
+  
   uint8_t *buf = NULL;
 
   if (!dev 
@@ -192,10 +194,17 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
+  if ((sensor_record_header_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
+    goto cleanup;
+
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
     goto cleanup;
 
-  if (fill_cmd_get_sensor_record_header (record_id, obj_cmd_rq) < 0)
+  if (fill_cmd_get_sdr (0,
+                        record_id, 
+                        0,
+                        sensor_record_header_len,
+                        obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -268,11 +277,11 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
     goto cleanup;
 
-  if (fill_cmd_get_sdr_chunk (reservation_id, 
-			      record_id, 
-			      record_offset, 
-			      bytes_read,
-                              obj_cmd_rq) < 0)
+  if (fill_cmd_get_sdr (reservation_id, 
+                        record_id, 
+                        record_offset, 
+                        bytes_read,
+                        obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

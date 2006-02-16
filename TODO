@@ -112,6 +112,7 @@ libfreeipmi:
     - sdr-repo-cmds
     - sel-cmds
     - sensor-cmds
+    - sdr-record-types
   * redo naming of config specific templates/functions, format no longer sticks b/c of sol & pef
   * reg-space default  
   * udm parameter checks

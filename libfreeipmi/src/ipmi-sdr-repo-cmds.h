@@ -50,13 +50,11 @@ int8_t fill_cmd_get_repository_info (fiid_obj_t obj_data_rq);
 int8_t fill_cmd_get_repository_allocation_info (fiid_obj_t obj_data_rq);
 int8_t fill_cmd_reserve_sdr_repository (fiid_obj_t obj_data_rq);
 
-int8_t fill_cmd_get_sensor_record_header (uint16_t record_id, fiid_obj_t obj_data_rq);
-
-int8_t fill_cmd_get_sdr_chunk (uint16_t reservation_id,
-                               uint16_t record_id,
-                               uint8_t offset_into_record,
-                               uint8_t bytes_to_read,
-                               fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_sdr (uint16_t reservation_id,
+                         uint16_t record_id,
+                         uint8_t offset_into_record,
+                         uint8_t bytes_to_read,
+                         fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }
