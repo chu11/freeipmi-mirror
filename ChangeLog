@@ -28,10 +28,10 @@
 	* libfreeipmi/, fish/: Adjusted code appropriately.
 
 	* libfreeipmi/src/ipmi-comp-code-spec.h: Add completion codes for
-	lan, serial-modem, and sol configuration commands.
+	lan, serial-modem, pef, and sol configuration commands.
 
 	* libfreeipmi/src/ipmi-error.c: Add error messages for lan,
-	serial-modem, and sol configuration commands.
+	serial-modem, pef, and sol configuration commands.
 
 	* libfreeipmi/src/ipmi-cmd-spec.h: Add SOL commands.
 

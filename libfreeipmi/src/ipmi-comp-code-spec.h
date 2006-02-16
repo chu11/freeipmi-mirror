@@ -290,6 +290,27 @@ extern "C" {
 #define IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR \
 "parameter not supported."
 
+/* IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED              0x80
+#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS              0x81
+#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS_STR \
+"attempt to set the 'set in progress' value (in parameter #0) " \
+"when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER            0x82
+#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER_STR \
+"attempt to write read-only parameter"
+
+/* IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED              0x80
+#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
 /* IPMI_CMD_DELETE_SEL_ENTRY */
 #define IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED                   0x80
 #define IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED_STR \
