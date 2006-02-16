@@ -907,7 +907,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
     goto cleanup;
 
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"tmp_session_id", 
+		    (uint8_t *)"temp_session_id", 
 		    &temp_session_id) < 0)
     goto cleanup;
 
