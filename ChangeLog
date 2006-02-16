@@ -22,9 +22,25 @@
 	* libfreeipmi/, ipmipower/: Adjusted code appropriately.
 
 	* libfreeipmi/src/ipmi-serial-cmds.h,
-	libfreeipmi/src/ipmi-serial-cmds.c: Code cleanup.
+	libfreeipmi/src/ipmi-serial-cmds.c: Support variable length
+	configuration templates.  Code cleanup.
 
 	* libfreeipmi/, fish/: Adjusted code appropriately.
+
+	* libfreeipmi/src/ipmi-comp-code-spec.h: Add completion codes for
+	lan, serial-modem, and sol configuration commands.
+
+	* libfreeipmi/src/ipmi-error.c: Add error messages for lan,
+	serial-modem, and sol configuration commands.
+
+	* libfreeipmi/src/ipmi-cmd-spec.h: Add SOL commands.
+
+	* libfreeipmi/src/ipmi-sol-param-spec.h: New file.
+
+	* libfreeipmi/src/ipmi-sol-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.c: Code cleanup.
+
+	* libfreeipmi/ : Adjust code appropriately.
 
 2006-02-14  Albert Chu <chu11@llnl.gov>
 
@@ -36,7 +52,8 @@
 	* rmcpping/, ipmipower/, fish/: Adjust code appropriately.
 
 	* libfreeipmi/src/ipmi-lan-cmds.h,
-	libfreeipmi/src/ipmi-lan-cmds.c: Code cleanup.
+	libfreeipmi/src/ipmi-lan-cmds.c: Support variable length
+	configuration templates.  Code cleanup.
 
 	* fish/, libfreeipmi/, bmc-watchdog/: Adjust code appropriately.
 

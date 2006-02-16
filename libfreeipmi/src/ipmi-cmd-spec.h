@@ -178,6 +178,9 @@ extern "C" {
 #define IPMI_CMD_CALLBACK                                   0x19
 #define IPMI_CMD_SET_USER_CALLBACK_OPTS                     0x1A
 #define IPMI_CMD_GET_USER_CALLBACK_OPTS                     0x1B
+#define IPMI_CMD_SOL_ACTIVATING                             0x20
+#define IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS           0x21
+#define IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS           0x22
 
 // Bridge Management Commands (ICMB) 
 #define IPMI_CMD_GET_BRIDGE_STATE                           0x00

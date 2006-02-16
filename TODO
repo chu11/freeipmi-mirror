@@ -31,6 +31,7 @@ libfreeipmi:
   * need to test acpi
   * fill_kcs_get_sel_entry
     - why not the other arguments?
+  * re-architect ipmi-error.c stuff to handle different commands with same values.
   * sensor-event-messages: get_28_event_data3_messages
   * audit serial/lan/pef/sel/sensors template auditting      
       templates
@@ -88,14 +89,14 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - sol-cmds
-       - order code appropriately
-       - parameter checking
+       - order code appropriately (done)
+       - parameter checking (done)
        - missing commands
-       - audit templates 
-       - audit function names
-       - audit parameters
-       - function parameter ordering
-       - udm parameter checking
+       - audit templates (done)
+       - audit function names (done)
+       - audit parameters (done)
+       - function parameter ordering (done)
+       - udm parameter checking (done)
     - pef-cmds
     - sdr-repo-cmds
     - sel-cmds

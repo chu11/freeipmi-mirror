@@ -235,6 +235,7 @@ extern "C" {
 #include "ipmi-serial-modem-param-spec.h"
 #include "ipmi-serial-cmds.h"
 #include "ipmi-serial-cmds-udm.h"
+#include "ipmi-sol-param-spec.h"
 #include "ipmi-sol-cmds.h"
 #include "ipmi-sol-cmds-udm.h"
 #include "ipmi-debug.h"
@@ -350,6 +351,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-serial-cmds.h>
 #include <freeipmi/ipmi-serial-cmds-udm.h>
+#include <freeipmi/ipmi-sol-param-spec.h>
 #include <freeipmi/ipmi-sol-cmds.h>
 #include <freeipmi/ipmi-sol-cmds-udm.h>
 #include <freeipmi/ipmi-debug.h>
