@@ -149,7 +149,7 @@ install_new_procedures (void)
   */
   
   gh_new_procedure ("fi-sensors-get-default-cache-filename", 
-		    ex_get_default_sdr_repo_cache_filename, 0, 0, 0);
+		    ex_get_default_sdr_repository_cache_filename, 0, 0, 0);
   /* example scheme expression
      (display (fi-sensors-get-default-cache-filename))
   */
@@ -545,9 +545,9 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-sdr-cache-filename)
   */
   
-  gh_new_procedure ("fi-get-sdr-repo-info", ex_get_sdr_repo_info, 0, 0, 0);
+  gh_new_procedure ("fi-get-sdr-repository-info", ex_get_sdr_repository_info, 0, 0, 0);
   /* 
-     syntax in scheme: (fi-get-sdr-repo-info)
+     syntax in scheme: (fi-get-sdr-repository-info)
   */
   
   gh_new_procedure ("fi-ipmi-open", ex_ipmi_open, 1, 0, 0);

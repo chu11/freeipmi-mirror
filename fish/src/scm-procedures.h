@@ -37,7 +37,7 @@ SCM ex_ipmi_ping (SCM scm_host, SCM scm_timeout);
 
 SCM ex_get_script_command_line ();
 
-SCM ex_get_default_sdr_repo_cache_filename (void);
+SCM ex_get_default_sdr_repository_cache_filename (void);
 
 SCM ex_sensors_cache_get_current_group ();
 SCM ex_sensors_get_group_list ();
@@ -199,7 +199,7 @@ SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
 SCM ex_get_sdr_record (SCM scm_record_id);
 SCM ex_get_sensor_reading (SCM scm_sdr_record);
 SCM ex_get_sdr_cache_filename ();
-SCM ex_get_sdr_repo_info ();
+SCM ex_get_sdr_repository_info ();
 
 /* udm driver exports */
 SCM ex_ipmi_open (SCM scm_arg_list);
