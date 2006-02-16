@@ -88,6 +88,14 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - sol-cmds
+       - order code appropriately
+       - parameter checking
+       - missing commands
+       - audit templates 
+       - audit function names
+       - audit parameters
+       - function parameter ordering
+       - udm parameter checking
     - pef-cmds
     - sdr-repo-cmds
     - sel-cmds

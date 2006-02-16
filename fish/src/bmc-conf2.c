@@ -1332,7 +1332,7 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_ip_address_source_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_ip_address_source_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_ip_address_source2 (dev, 
@@ -1364,7 +1364,7 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
   uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_ip_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_ip_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_ip_address2 (dev, 
@@ -1402,7 +1402,7 @@ get_bmc_lan_conf_mac_address (ipmi_device_t *dev,
   uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_mac_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_mac_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_mac_address2 (dev, 
@@ -1442,7 +1442,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   uint8_t subnet_mask_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_subnet_mask_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_subnet_mask_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_subnet_mask2 (dev, 
@@ -1480,7 +1480,7 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
   uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_default_gateway_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_default_gateway_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_default_gateway_address2 (dev, 
@@ -1518,7 +1518,7 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
   uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_default_gateway_mac_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_default_gateway_mac_address2 (dev, 
@@ -1558,7 +1558,7 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
   uint8_t ip_address_bytes[4];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_backup_gateway_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_backup_gateway_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_backup_gateway_address2 (dev, 
@@ -1596,7 +1596,7 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
   uint8_t mac_address_bytes[6];
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_backup_gateway_mac_address_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_backup_gateway_mac_address2 (dev, 
@@ -1638,7 +1638,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   uint8_t *ptr;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_vlan_id_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_vlan_id_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_vlan_id2 (dev, 
@@ -1689,7 +1689,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_vlan_priority_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_vlan_priority_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_vlan_priority2 (dev, 
@@ -1721,7 +1721,7 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_authentication_type_enables_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_authentication_type_enables_rs)))
     goto cleanup;
   
   if (ipmi_cmd_lan_get_authentication_type_enables2 (dev, 
@@ -1898,7 +1898,7 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_bmc_generated_arp_control_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_bmc_generated_arp_control2 (dev, 
@@ -1936,7 +1936,7 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
   uint64_t val;
   int8_t rv = -1;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_gratuitous_arp_interval_rs)))
     goto cleanup;
 
   if (ipmi_cmd_lan_get_gratuitous_arp_interval2 (dev, 
