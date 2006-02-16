@@ -26,12 +26,13 @@
 extern "C" {
 #endif
 
-int8_t ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
-				    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
-					  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
-				   fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
+                                          fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev, 
+                                                     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_reserve_sdr_repository2 (ipmi_device_t *dev, 
+                                         fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
                           uint16_t record_id,
                           fiid_obj_t obj_cmd_rs,

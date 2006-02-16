@@ -13,7 +13,11 @@
 	libfreeipmi/src/ipmi-lan-cmds.c,
 	libfreeipmi/src/ipmi-serial-cmds.c,
 	libfreeipmi/src/ipmi-serial-cmds.h: Alter naming convention.
-	
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds.h, libfreeipmi/src/ipmi-sdr-repo-cmds.c: Code cleanup.
+
+	* libfreeipmi/, fish/: Adjust code appropriately.
+
 2006-02-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and

@@ -132,7 +132,7 @@ extern "C" {
 
 // SDR Device Commands
 #define IPMI_CMD_GET_SDR_REPOSITORY_INFO                    0x20
-#define IPMI_CMD_GET_SDR_REPOSITORY_ALLOC_INFO              0x21
+#define IPMI_CMD_GET_SDR_REPOSITORY_ALLOCATION_INFO         0x21
 #define IPMI_CMD_RESERVE_SDR_REPOSITORY                     0x22
 #define IPMI_CMD_GET_SDR                                    0x23
 #define IPMI_CMD_ADD_SDR                                    0x24

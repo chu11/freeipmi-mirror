@@ -22,8 +22,8 @@
 #include "freeipmi.h"
 
 int8_t 
-ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
-			     fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
+                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -34,7 +34,7 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
       return -1;
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_repo_info_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_repository_info_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -43,10 +43,12 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_repo_info_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_repository_info_rq)))
     goto cleanup;
-  if (fill_kcs_get_repo_info (obj_cmd_rq) < 0)
+
+  if (fill_cmd_get_repository_info (obj_cmd_rq) < 0)
     goto cleanup;
+
   if (ipmi_cmd (dev, 
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
@@ -64,8 +66,8 @@ ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
-				   fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev, 
+                                              fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -76,7 +78,7 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
       return -1;
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_repo_alloc_info_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sdr_repository_allocation_info_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -85,16 +87,19 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_repo_alloc_info_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_repository_allocation_info_rq)))
     goto cleanup;
-  if (fill_kcs_get_repo_alloc_info (obj_cmd_rq) < 0)
+
+  if (fill_cmd_get_repository_allocation_info (obj_cmd_rq) < 0)
     goto cleanup;
+
   if (ipmi_cmd (dev, 
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
 		obj_cmd_rs) < 0)
     goto cleanup;
+
   if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
   
@@ -106,8 +111,8 @@ ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
-			    fiid_obj_t obj_cmd_rs)
+ipmi_cmd_reserve_sdr_repository2 (ipmi_device_t *dev, 
+                                  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -118,7 +123,7 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
       return -1;
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_reserve_sdr_repo_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_reserve_sdr_repository_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -127,16 +132,19 @@ ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_reserve_sdr_repo_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_reserve_sdr_repository_rq)))
     goto cleanup;
-  if (fill_kcs_reserve_repo (obj_cmd_rq) < 0)
+
+  if (fill_cmd_reserve_sdr_repository (obj_cmd_rq) < 0)
     goto cleanup;
+
   if (ipmi_cmd (dev, 
 		IPMI_BMC_IPMB_LUN_BMC, 
 		IPMI_NET_FN_STORAGE_RQ, 
 		obj_cmd_rq, 
 		obj_cmd_rs) < 0)
     goto cleanup;
+
   if (ipmi_comp_test (obj_cmd_rs) != 1)
     goto cleanup;
   
@@ -187,7 +195,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sensor_record_header (record_id, obj_cmd_rq) < 0)
+  if (fill_cmd_get_sensor_record_header (record_id, obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -260,7 +268,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sdr_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sdr_chunk (reservation_id, 
+  if (fill_cmd_get_sdr_chunk (reservation_id, 
 			      record_id, 
 			      record_offset, 
 			      bytes_read,
@@ -367,10 +375,10 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       
       rv = -1;
 
-      if (!(local_obj_cmd_rs = fiid_obj_create(tmpl_reserve_sdr_repo_rs)))
+      if (!(local_obj_cmd_rs = fiid_obj_create(tmpl_reserve_sdr_repository_rs)))
 	goto cleanup2;
       
-      if (ipmi_cmd_reserve_sdr_repo2 (dev, local_obj_cmd_rs) < 0)
+      if (ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0)
 	goto cleanup2;
       
       if (fiid_obj_get (local_obj_cmd_rs,  

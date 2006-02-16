@@ -21,7 +21,7 @@
 #include "freeipmi.h"
 
 int 
-ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
+ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint8_t *buf = NULL;
@@ -34,10 +34,10 @@ ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp)
       return -1;
     }
 
-  if (!(obj_data_rs = fiid_obj_create (tmpl_get_sdr_repo_info_rs)))
+  if (!(obj_data_rs = fiid_obj_create (tmpl_get_sdr_repository_info_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sdr_repo_info2 (dev, obj_data_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0)
     return (-1);
   
   if (ipmi_comp_test (obj_data_rs) != 1)
@@ -137,7 +137,7 @@ ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
   if ((cache_fp = fopen (sdr_cache_file, "w")) == NULL)
     return (-1);
   
-  if (ipmi_sdr_repo_info_write (dev, cache_fp) != 0)
+  if (ipmi_sdr_repository_info_write (dev, cache_fp) != 0)
     {
       fclose (cache_fp);
       return (-1);
@@ -154,7 +154,7 @@ ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
 }
 
 int 
-ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file)
+ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, char *sdr_cache_file)
 {
   fiid_obj_t obj_data_rs = NULL;
   struct stat buf;
@@ -162,39 +162,39 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
   int32_t len;
   int rv = -1;
 
-  if (!(sdr_repo_cache && sdr_cache_file))
+  if (!(sdr_repository_cache && sdr_cache_file))
     {
       errno = EINVAL;
       return -1;
     }
 
-  sdr_repo_cache->fd = open (sdr_cache_file, O_RDONLY);
+  sdr_repository_cache->fd = open (sdr_cache_file, O_RDONLY);
   
-  if (sdr_repo_cache->fd <= 0)
+  if (sdr_repository_cache->fd <= 0)
     return (-1);
   
-  if (fstat (sdr_repo_cache->fd, &buf) != 0)
+  if (fstat (sdr_repository_cache->fd, &buf) != 0)
     return (-1);
   
-  sdr_repo_cache->file_length = buf.st_size;
+  sdr_repository_cache->file_length = buf.st_size;
   
-  sdr_repo_cache->cache_start = (uint8_t *) mmap (NULL, 
-						   sdr_repo_cache->file_length, 
-						   PROT_READ, 
-						   MAP_PRIVATE, 
-						   sdr_repo_cache->fd, 
-						   0);
+  sdr_repository_cache->cache_start = (uint8_t *) mmap (NULL, 
+                                                        sdr_repository_cache->file_length, 
+                                                        PROT_READ, 
+                                                        MAP_PRIVATE, 
+                                                        sdr_repository_cache->fd, 
+                                                        0);
   
-  if (sdr_repo_cache->cache_start <= 0)
+  if (sdr_repository_cache->cache_start <= 0)
     goto cleanup;
   
-  if (!(obj_data_rs = fiid_obj_create(tmpl_get_sdr_repo_info_rs)))
-    goto cleanup;
-
-  if ((len = fiid_template_len_bytes (tmpl_get_sdr_repo_info_rs)) < 0)
+  if (!(obj_data_rs = fiid_obj_create(tmpl_get_sdr_repository_info_rs)))
     goto cleanup;
 
-  if (fiid_obj_set_all(obj_data_rs, sdr_repo_cache->cache_start, len) < 0)
+  if ((len = fiid_template_len_bytes (tmpl_get_sdr_repository_info_rs)) < 0)
+    goto cleanup;
+
+  if (fiid_obj_set_all(obj_data_rs, sdr_repository_cache->cache_start, len) < 0)
     goto cleanup;
 
   if (fiid_obj_get (obj_data_rs,
@@ -202,11 +202,11 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
 		    &val) < 0)
     goto cleanup;
 
-  sdr_repo_cache->total_records = (uint32_t) val;
+  sdr_repository_cache->total_records = (uint32_t) val;
   
-  sdr_repo_cache->cache_curr = sdr_repo_cache->cache_start + len;
+  sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + len;
   
-  sdr_repo_cache->cache_curr_rec_no = 1;
+  sdr_repository_cache->cache_curr_rec_no = 1;
   
   rv = 0;
  cleanup:
@@ -216,48 +216,48 @@ ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file
 }
 
 int 
-ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_sdr_repository_cache_unload (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  if (sdr_repo_cache->cache_start)
+  if (sdr_repository_cache->cache_start)
     {
-      if (munmap (sdr_repo_cache->cache_start, sdr_repo_cache->file_length) != 0)
+      if (munmap (sdr_repository_cache->cache_start, sdr_repository_cache->file_length) != 0)
 	return (-1);
     }
   
-  if (sdr_repo_cache->fd)
+  if (sdr_repository_cache->fd)
     {
-      sdr_repo_cache->file_length = 0;
-      close (sdr_repo_cache->fd);
+      sdr_repository_cache->file_length = 0;
+      close (sdr_repository_cache->fd);
     }
   
-  sdr_repo_cache->fd = 0;
-  sdr_repo_cache->file_length = 0;
-  sdr_repo_cache->cache_start = NULL;
+  sdr_repository_cache->fd = 0;
+  sdr_repository_cache->file_length = 0;
+  sdr_repository_cache->cache_start = NULL;
   
   return 0;
 }
 
 int 
-ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
+ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, uint16_t rec_no)
 {
   fiid_obj_t obj_data_rs = NULL;
   int i, rv = -1;
   int32_t hdr_len;
   uint64_t val;
 
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  if (rec_no <= 0 || rec_no > sdr_repo_cache->total_records)
+  if (rec_no <= 0 || rec_no > sdr_repository_cache->total_records)
     {
       errno = ERANGE;
       return (-1);
@@ -269,17 +269,17 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
   if (!(obj_data_rs = fiid_obj_create(tmpl_sdr_sensor_record_header)))
     goto cleanup;
 
-  if (rec_no >= sdr_repo_cache->cache_curr_rec_no)
+  if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
     {
 
-      /* skip (rec_no - sdr_repo_cache->cache_curr_rec_no) records */
-      for (i = 0; i < (rec_no - sdr_repo_cache->cache_curr_rec_no); i++)
+      /* skip (rec_no - sdr_repository_cache->cache_curr_rec_no) records */
+      for (i = 0; i < (rec_no - sdr_repository_cache->cache_curr_rec_no); i++)
         {
 	  if (fiid_obj_clear(obj_data_rs) < 0)
 	    goto cleanup;
 
 	  if (fiid_obj_set_all(obj_data_rs,
-			       sdr_repo_cache->cache_curr,
+			       sdr_repository_cache->cache_curr,
 			       hdr_len) < 0)
 	    goto cleanup;
 
@@ -288,20 +288,20 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
 			   &val) < 0)
 	    goto cleanup;
 	  
-          sdr_repo_cache->cache_curr = (sdr_repo_cache->cache_curr + 
-					hdr_len +
-					val);
+          sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
+                                              hdr_len +
+                                              val);
         }
-      sdr_repo_cache->cache_curr_rec_no += (rec_no - sdr_repo_cache->cache_curr_rec_no);
+      sdr_repository_cache->cache_curr_rec_no += (rec_no - sdr_repository_cache->cache_curr_rec_no);
     }
   else
     {
       int32_t len;
 
-      if ((len = fiid_template_len_bytes (tmpl_get_sdr_repo_info_rs)) < 0)
+      if ((len = fiid_template_len_bytes (tmpl_get_sdr_repository_info_rs)) < 0)
 	goto cleanup;
 
-      sdr_repo_cache->cache_curr = sdr_repo_cache->cache_start + len;
+      sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + len;
 
       for (i = 1; i < rec_no; i++)
         {
@@ -309,7 +309,7 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
 	    goto cleanup;
 
 	  if (fiid_obj_set_all(obj_data_rs,
-			       sdr_repo_cache->cache_curr,
+			       sdr_repository_cache->cache_curr,
 			       hdr_len) < 0)
 	    goto cleanup;
 
@@ -318,11 +318,11 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
 			   &val) < 0)
 	    goto cleanup;
 
-          sdr_repo_cache->cache_curr = (sdr_repo_cache->cache_curr + 
-					hdr_len +
-					val);
+          sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
+                                              hdr_len +
+                                              val);
         }
-      sdr_repo_cache->cache_curr_rec_no = i;
+      sdr_repository_cache->cache_curr_rec_no = i;
     }
   
   rv = 0;
@@ -333,39 +333,39 @@ ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no)
 }
 
 int 
-ipmi_sdr_repo_cache_first (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_sdr_repository_cache_first (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  return (ipmi_sdr_repo_cache_seek (sdr_repo_cache, 1));
+  return (ipmi_sdr_repository_cache_seek (sdr_repository_cache, 1));
 }
 
 int 
-ipmi_sdr_repo_cache_next (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_sdr_repository_cache_next (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
     }
 
-  return (ipmi_sdr_repo_cache_seek (sdr_repo_cache, 
-				    sdr_repo_cache->cache_curr_rec_no + 1));
+  return (ipmi_sdr_repository_cache_seek (sdr_repository_cache, 
+                                          sdr_repository_cache->cache_curr_rec_no + 1));
 }
 
 int 
-ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_is_sensor_reading_available (sdr_repository_cache_t *sdr_repository_cache)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint64_t record_type, val;
   int32_t len;
   int rv = -1;
   
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
@@ -378,7 +378,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
     goto cleanup;
 
   if (fiid_obj_set_all(obj_data_rs,
-		       sdr_repo_cache->cache_curr,
+		       sdr_repository_cache->cache_curr,
 		       len) < 0)
     goto cleanup;
 
@@ -413,7 +413,7 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
 	}
       
       if (fiid_obj_set_all(obj_data_rs,
-			   sdr_repo_cache->cache_curr,
+			   sdr_repository_cache->cache_curr,
 			   len) < 0)
 	goto cleanup;
       
@@ -448,14 +448,14 @@ ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 int 
-ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_sdr_repository_cache_sensor_classify (sdr_repository_cache_t *sdr_repository_cache)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint64_t record_type, val;
   int32_t len;
   int rv = -1;
   
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return -1;
@@ -468,7 +468,7 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
     goto cleanup;
 
   if (fiid_obj_set_all(obj_data_rs,
-		       sdr_repo_cache->cache_curr,
+		       sdr_repository_cache->cache_curr,
 		       len) < 0)
     goto cleanup;
 
@@ -501,7 +501,7 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 	}
       
       if (fiid_obj_set_all(obj_data_rs,
-			   sdr_repo_cache->cache_curr,
+			   sdr_repository_cache->cache_curr,
 			   len) < 0)
 	goto cleanup;
       
@@ -521,7 +521,7 @@ ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 const char *
-ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
+ipmi_sdr_repository_cache_get_sensor_group (sdr_repository_cache_t *sdr_repository_cache)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint64_t record_type, val;
@@ -529,7 +529,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
   char *rv = NULL;
   int8_t sensor_type;
 
-  if (sdr_repo_cache == NULL)
+  if (sdr_repository_cache == NULL)
     {
       errno = EINVAL;
       return NULL;
@@ -542,7 +542,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
     goto cleanup;
 
   if (fiid_obj_set_all(obj_data_rs,
-		       sdr_repo_cache->cache_curr,
+		       sdr_repository_cache->cache_curr,
 		       len) < 0)
     goto cleanup;
 
@@ -575,7 +575,7 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 	}
       
       if (fiid_obj_set_all(obj_data_rs,
-			   sdr_repo_cache->cache_curr,
+			   sdr_repository_cache->cache_curr,
 			   len) < 0)
 	goto cleanup;
       
@@ -595,16 +595,16 @@ ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache)
 }
 
 int
-ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
-                                     uint8_t *buffer,
-                                     size_t len)
+ipmi_sdr_repository_cache_get_sensor_name (sdr_repository_cache_t *sdr_repository_cache,
+                                           uint8_t *buffer,
+                                           size_t len)
 {
   fiid_obj_t obj_data_rs = NULL;
   uint64_t record_type;
   int32_t str_len;
   int rv = -1;
 
-  if (sdr_repo_cache == NULL
+  if (sdr_repository_cache == NULL
       || buffer == NULL)
     {
       errno = EINVAL;
@@ -618,7 +618,7 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
     goto cleanup;
 
   if (fiid_obj_set_all(obj_data_rs,
-		       sdr_repo_cache->cache_curr,
+		       sdr_repository_cache->cache_curr,
 		       len) < 0)
     goto cleanup;
 
@@ -651,7 +651,7 @@ ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
 	}
       
       if (fiid_obj_set_all(obj_data_rs,
-			   sdr_repo_cache->cache_curr,
+			   sdr_repository_cache->cache_curr,
 			   len) < 0)
 	goto cleanup;
       
