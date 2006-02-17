@@ -96,7 +96,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_AUTHENTICATION_TYPE_VALID (authentication_type) == 0)
+  if (IPMI_1_5_AUTHENTICATION_TYPE_VALID (authentication_type) == 0)
     {
       errno = EINVAL;
       return (-1);
@@ -116,7 +116,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  if (IPMI_PRIVILEGE_LEVEL_VALID (privilege_level) == 0)
+  if (IPMI_1_5_PRIVILEGE_LEVEL_VALID (privilege_level) == 0)
     {
       errno = EINVAL;
       return (-1);

@@ -32,11 +32,11 @@
 
 #include "freeipmi.h"
 
-ipmi_chksum_t
+int8_t
 ipmi_chksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
-  register ipmi_chksum_t chksum = 0;
+  register int8_t chksum = 0;
  
   if (buf == NULL || len == 0)
     return (chksum);
@@ -47,45 +47,72 @@ ipmi_chksum (uint8_t *buf, uint64_t len)
   return (-chksum);
 }
 
-int8_t
-ipmi_chksum_test (uint8_t *buf, uint64_t len) 
-{
-  ipmi_chksum_t chksum_val;
-  ipmi_chksum_t chksum_calc;
-
-  if (buf == NULL || len == 0)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  chksum_val = buf[len - 1];
-  chksum_calc = ipmi_chksum(buf, len - 1);
-  return ((chksum_val == chksum_calc) ? 1 : 0);
-}
-
 int8_t 
 ipmi_comp_test (fiid_obj_t obj_cmd)
 {
-  if (!obj_cmd)
+#if defined (IPMI_SYSLOG)
+  uint64_t cmd;
+#endif /* IPMI_SYSLOG */
+  uint64_t comp_code;
+  int32_t len;
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
-  
-  if (IPMI_COMP_CODE (obj_cmd) != IPMI_COMP_CODE_COMMAND_SUCCESS)
+
+#if defined (IPMI_SYSLOG)
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+#endif /* IPMI_SYSLOG */
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+#if defined (IPMI_SYSLOG)
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
+    return (-1);
+#endif /* IPMI_SYSLOG */
+
+  if (fiid_obj_get(obj_cmd, (uint8_t *)"comp_code", &comp_code) < 0)
+    return (-1);
+
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {
 #if defined (IPMI_SYSLOG)
-      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN]; 
+      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN];
       ipmi_strerror_cmd_r (obj_cmd, _str, IPMI_ERR_STR_MAX_LEN);
-      sprintf (errstr, "cmd[%d].comp_code[%d]: %s", obj_cmd[0],
-	       IPMI_COMP_CODE (obj_cmd), _str);
+      sprintf (errstr, "cmd[%llX].comp_code[%llX]: %s",
+               cmd, comp_code, _str);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
 #endif /* IPMI_SYSLOG */
       errno = EIO;
       return (0);
     }
-  return (1); 
+  return (1);
 }
 
 int
@@ -169,73 +196,77 @@ ipmi_open_free_udp_port (void)
   return (-1);
 }
 
-
-int 
-ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len, 
-	      void **virtual_addr, 
-	      void **mapped_addr, size_t *mapped_addr_len)
+int8_t
+ipmi_ipv4_address_string2int(char *src, uint32_t *dest)
 {
-  uint64_t startaddr;
-  uint32_t pad;
-  int mem_fd;
-  extern int errno;
-  
-  if (!(physical_addr_len && virtual_addr && 
-	mapped_addr && mapped_addr_len))
+  unsigned int b1, b2, b3, b4;
+  uint64_t val;
+  int rv;
+
+  if (!src || !dest)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
+  if ((rv = sscanf (src, "%u.%u.%u.%u", &b1, &b2, &b3, &b4)) < 0)
     return (-1);
-  
-  pad = physical_addr % getpagesize ();
-  startaddr = physical_addr - pad;
-  *mapped_addr_len = physical_addr_len + pad;
-  *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
-
-  
-  if (*mapped_addr == MAP_FAILED)
+  if (rv != 4)
     {
-      close (mem_fd);
+      errno = EINVAL;
       return (-1);
     }
 
-  close (mem_fd);
-  *virtual_addr = (*mapped_addr) + pad;
+  val = 0;
+  if (bits_merge (val, 0,  8,  b1, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 8,  16, b2, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 16, 24, b3, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 24, 32, b4, &val) < 0)
+    return (-1);
+
+  *dest = val;
   return (0);
 }
 
-int 
-ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
+int8_t
+ipmi_mac_address_string2int(char *src, uint64_t *dest)
 {
-  return (munmap (mapped_addr, mapped_addr_len));
-}
+  unsigned int b1, b2, b3, b4, b5, b6;
+  uint64_t val;
+  int rv;
 
-int 
-ipmi_get_physical_mem_data (uint64_t physical_address, 
-			    size_t length, 
-			    uint8_t *data)
-{
-  void *virtual_addr = NULL;
-  void *mapped_addr = NULL;
-  size_t mapped_addr_len = 0;
-  
-  if (data == NULL)
+  if (!src || !dest)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if (ipmi_ioremap (physical_address, length, 
-		    &virtual_addr, 
-		    &mapped_addr, &mapped_addr_len) != 0)
+  if ((rv = sscanf (src, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6)) < 0)
     return (-1);
-  
-  memcpy (data, virtual_addr, length);
-  
-  ipmi_iounmap (mapped_addr, mapped_addr_len);
-  
-  return 0;
+  if (rv != 6)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  val = 0;
+  if (bits_merge (val, 0,  8,  b1, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 8,  16, b2, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 16, 24, b3, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 24, 32, b4, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 32, 40, b5, &val) < 0)
+    return (-1);
+  if (bits_merge (val, 40, 48, b6, &val) < 0)
+    return (-1);
+
+  *dest = val;
+  return (0);
 }
+

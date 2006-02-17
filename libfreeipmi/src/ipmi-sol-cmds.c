@@ -20,226 +20,225 @@
 
 #include "freeipmi.h"
 
-fiid_template_t tmpl_set_sol_conf_param_sol_enable_rq =
+fiid_template_t tmpl_set_sol_configuration_parameters_rq =
   {
-    {8, "cmd"}, 
-    {4, "channel_number"}, 
-    {4, "reserved1"}, 
-    {8, "parameter_selector"}, 
-    
-    {1, "sol_payload"}, 
-    {7, "reserved2"}, 
-    
-    {0, ""}
+    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,    "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,    "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,    "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_conf_param_sol_enable_rs =
+fiid_template_t tmpl_set_sol_configuration_parameters_rs =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
-    {0,  ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_conf_param_rq =
+fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq =
   {
-    {8, "cmd"}, 
-    
-    {4, "channel_number"}, 
-    {3, "reserved1"}, 
-    {1, "parameter_type"}, 
-    
-    {8, "parameter_selector"}, 
-    
-    {8, "set_selector"}, 
-    {8, "block_selector"}, 
-    {0, ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_conf_param_sol_enable_rs =
+fiid_template_t tmpl_get_sol_configuration_parameters_rq =
   {
-    {8,  "cmd"}, 
-    {8,  "comp_code"}, 
-    
-    {4, "present_revision"}, 
-    {4, "oldest_revision_parameter"}, 
-    
-    {1, "sol_payload"}, 
-    {7, "reserved2"}, 
-    
-    {0,  ""}
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "get_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "set_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "block_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
   };
 
-int8_t 
-fill_sol_conf_sol_enable_disable (uint8_t channel_number, 
-				  uint8_t sol_payload,
-                                  fiid_obj_t obj_data_rq)
+fiid_template_t tmpl_get_sol_configuration_parameters_rs =
+  {
+    {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,    "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,    "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1024, "configuration_parameter_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_get_sol_configuration_parameters_enable_rs =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0,  "", 0}
+  };
+
+int8_t
+fill_cmd_set_sol_configuration_parameters (fiid_obj_t obj_data_rq,
+					   uint8_t channel_number,
+					   uint8_t parameter_selector,
+					   uint8_t *configuration_parameter_data,
+					   uint8_t configuration_parameter_data_len)
 {
-  if (!obj_data_rq
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+  int8_t rv;
+
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !configuration_parameter_data
+      || !configuration_parameter_data_len
+      || !fiid_obj_valid(obj_data_rq))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_configuration_parameters_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return -1;
     }
+
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"cmd",
+                IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
+
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"channel_number",
+                channel_number);
+
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved",
+                0);
+
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"parameter_selector",
+                parameter_selector);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SOL_CONF_PARAMS);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		tmpl_set_sol_conf_param_sol_enable_rq, 
-		(uint8_t *)"sol_payload", 
-		sol_payload);
+  FIID_OBJ_SET_DATA (obj_data_rq,
+                     (uint8_t *)"configuration_parameter_data",
+                     configuration_parameter_data,
+                     configuration_parameter_data_len);
   
   return 0;
 }
 
+
 int8_t 
-fill_get_sol_conf_param (uint8_t parameter_selector, 
-			 uint8_t channel_number,
-			 uint8_t parameter_type,
-			 uint8_t set_selector,
-			 uint8_t block_selector,
-                         fiid_obj_t obj_data_rq)
+fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number, 
+                                                      uint8_t sol_payload,
+                                                      fiid_obj_t obj_data_rq)
 {
-  if (!obj_data_rq
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
+  int8_t rv;
+
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_SOL_PAYLOAD_VALID(sol_payload)
+      || !fiid_obj_valid(obj_data_rq))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"cmd", 
+		IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"channel_number", 
+		channel_number);
+  
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved1",
+                0);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"parameter_selector", 
+		IPMI_SOL_PARAM_SOL_ENABLE);
+  
+  FIID_OBJ_SET (obj_data_rq, 
+		(uint8_t *)"sol_payload", 
+		sol_payload);
+  
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved2",
+                0);
+
+  return 0;
+}
+
+int8_t 
+fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
+					   uint8_t get_parameter,
+					   uint8_t parameter_selector, 
+					   uint8_t set_selector,
+					   uint8_t block_selector,
+					   fiid_obj_t obj_data_rq)
+{
+  int8_t rv;
+
+  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
+      || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
+      || !fiid_obj_valid(obj_data_rq))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sol_configuration_parameters_rq)) < 0)
+    return (-1);
+
+  if (!rv)
     {
       errno = EINVAL;
       return -1;
     }
 
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_SOL_CONF_PARAMS);
+		IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);
   
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"channel_number", 
 		channel_number);
     
+  FIID_OBJ_SET (obj_data_rq,
+                (uint8_t *)"reserved",
+                0);
+
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
-		(uint8_t *)"parameter_type", 
-		parameter_type);
+		(uint8_t *)"get_parameter", 
+		get_parameter);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"parameter_selector", 
 		parameter_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"set_selector", 
 		set_selector);
     
   FIID_OBJ_SET (obj_data_rq, 
-		tmpl_get_sol_conf_param_rq, 
 		(uint8_t *)"block_selector", 
 		block_selector);
   
   return 0;
-}
-
-int8_t 
-ipmi_cmd_sol_conf_sol_enable_disable2 (ipmi_device_t *dev, 
-				       uint8_t channel_number, 
-				       uint8_t sol_payload, 
-				       fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  
-  if (!dev
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !obj_cmd_rs)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_set_sol_conf_param_sol_enable_rq);
-  ERR (fill_sol_conf_sol_enable_disable (channel_number, 
-					 sol_payload,
-                                         obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_set_sol_conf_param_sol_enable_rq, 
-		 obj_cmd_rs, 
-		 tmpl_set_sol_conf_param_sol_enable_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
-}
-
-int8_t 
-ipmi_cmd_sol_conf_sol_enable2 (ipmi_device_t *dev, 
-			       uint8_t channel_number, 
-			       fiid_obj_t obj_cmd_rs)
-{
-  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
-						channel_number, 
-						IPMI_SOL_PAYLOAD_ENABLE, 
-						obj_cmd_rs);
-}
-
-int8_t 
-ipmi_cmd_sol_conf_sol_disable2 (ipmi_device_t *dev, 
-				uint8_t channel_number, 
-				fiid_obj_t obj_cmd_rs)
-{
-  return ipmi_cmd_sol_conf_sol_enable_disable2 (dev, 
-						channel_number, 
-						IPMI_SOL_PAYLOAD_DISABLE, 
-						obj_cmd_rs);
-}
-
-int8_t 
-ipmi_cmd_sol_conf_get_sol_enable2 (ipmi_device_t *dev, 
-				   uint8_t channel_number,
-				   uint8_t parameter_type,
-				   uint8_t set_selector,
-				   uint8_t block_selector,
-				   fiid_obj_t obj_cmd_rs)
-{
-  fiid_obj_t obj_cmd_rq = NULL;
-  
-  if (!dev
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !obj_cmd_rs)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  FIID_OBJ_ALLOCA (obj_cmd_rq, tmpl_get_sol_conf_param_rq);
-  ERR (fill_get_sol_conf_param (IPMI_SOL_PARAM_SELECTOR_SOL_ENABLE, 
-				channel_number, 
-				parameter_type, 
-				set_selector, 
-				block_selector,
-                                obj_cmd_rq) == 0);
-  ERR (ipmi_cmd (dev, 
-		 IPMI_BMC_IPMB_LUN_BMC, 
-		 IPMI_NET_FN_TRANSPORT_RQ, 
-		 obj_cmd_rq, 
-		 tmpl_get_sol_conf_param_rq, 
-		 obj_cmd_rs, 
-		 tmpl_get_sol_conf_param_sol_enable_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
-  
-  return (0);
 }
 

@@ -1,28 +1,28 @@
 /*
-   ipmi-debug.c - IPMI Debugging Functions
+  ipmi-debug.c - IPMI Debugging Functions
 
-   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+  Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2, or (at your option)
+  any later version.
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
 
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software Foundation,
+  Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 #include "freeipmi.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32
-#define IPMI_DEBUG_MAX_BUF_LEN         1024
-#define IPMI_DEBUG_MAX_PKT_LEN         1024
+#define IPMI_DEBUG_MAX_BUF_LEN        65536
+#define IPMI_DEBUG_MAX_PKT_LEN        65536
 #define IPMI_DEBUG_CHAR_PER_LINE          8
 
 #define _DPRINTF(args) \
@@ -30,6 +30,21 @@
           if((_dprintf args) < 0) \
             return -1; \
         } while(0) 
+
+#define _DPRINTF_CLEANUP(args) \
+        do { \
+          if((_dprintf args) < 0) \
+            goto cleanup; \
+        } while(0) 
+
+#define IPMI_DEBUG_MAX_UNEXPECTED_BYTES 65536
+#define IPMI_DEBUG_MAX_UNEXPECTED_BITS  (IPMI_DEBUG_MAX_UNEXPECTED_BYTES*8)
+
+fiid_template_t tmpl_unexpected =
+  {
+    {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
 
 static int
 _write(int fd, void *buf, size_t n)
@@ -146,7 +161,7 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 }
 
 int8_t
-fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
+ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
 {
   if (_set_prefix_str(prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
     return (-1);
@@ -158,52 +173,83 @@ fiid_obj_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t 
 }
 
 int8_t
-fiid_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj, fiid_template_t tmpl)
+ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj)
 {
-  int i;
-  uint64_t val=0;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
+  fiid_iterator_t iter = NULL;
 
-  if (!(tmpl && obj))
+  if (!fiid_obj_valid(obj))
     {
       errno = EINVAL;
-      return (-1);
+      goto cleanup;
     }
   
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
-    return (-1);
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+    goto cleanup;
 
-  for (i=0; tmpl[i].len != 0; i++)
+  if (!(iter = fiid_iterator_create(obj)))
+    goto cleanup;
+
+  while (!fiid_iterator_end(iter))
     {
-      if (tmpl[i].len <= 64)
-	{
-	  FIID_OBJ_GET (obj, tmpl,(uint8_t *)tmpl[i].key, &val);	
-          if (prefix)
-            _DPRINTF ((fd, "%s[%16LXh] = %s[%2db]\n", prefix, (uint64_t) val, tmpl[i].key, tmpl[i].len));
-          else
-            _DPRINTF ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, tmpl[i].key, tmpl[i].len));
-        } 
+      int32_t field_len;
+      uint8_t *key;
+
+      if (!(key = fiid_iterator_key(iter)))
+        goto cleanup;
+
+      if ((field_len = fiid_iterator_field_len(iter)) < 0)
+        goto cleanup;
+    
+      if (!field_len)
+        {
+          fiid_iterator_next(iter);
+          continue;
+        }
+
+      if (prefix)
+        _DPRINTF_CLEANUP ((fd, "%s", prefix));
+
+      if (field_len <= 64)
+        {
+          uint64_t val = 0;
+
+	  if (fiid_iterator_get (iter, &val) < 0)
+            goto cleanup;
+
+          _DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
+        }
       else
         {
-          if (prefix)
-            _DPRINTF ((fd, "%s[  BYTE ARRAY ... ] = %s[%2dB]\n", prefix, tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
-          else
-            _DPRINTF ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", tmpl[i].key, BITS_ROUND_BYTES(tmpl[i].len)));
-            
-          _output_byte_array(fd, prefix, 
-                             obj + fiid_obj_field_start_bytes(tmpl, (uint8_t *) tmpl[i].key),
-                             BITS_ROUND_BYTES(tmpl[i].len));
+          char buf[IPMI_DEBUG_MAX_BUF_LEN];
+          int len;
+
+          _DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
+     
+          if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
+            goto cleanup;
+       
+          if (_output_byte_array(fd, prefix, buf, len) < 0)
+            goto cleanup;
         }
+
+      fiid_iterator_next(iter);
     }
 
   if (_output_str(fd, prefix, trlr) < 0)
-    return (-1);
+    goto cleanup;
 
+  fiid_iterator_destroy(iter);
   return (0);
+
+ cleanup:
+  if (iter)
+    fiid_iterator_destroy(iter);
+  return (-1);
 }
 
 int8_t
-fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
+ipmi_obj_dump (int fd, fiid_obj_t obj)
 {
   char *hdr = 
     "================================================================\n"
@@ -212,15 +258,14 @@ fiid_obj_dump (int fd, fiid_obj_t obj, fiid_template_t tmpl)
   char *trlr = 
     "================================================================";
 
-  return fiid_obj_dump_perror(fd, NULL, hdr, trlr, obj, tmpl);
+  return ipmi_obj_dump_perror(fd, NULL, hdr, trlr, obj);
 }
 
 int8_t
-fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
-  int32_t obj_cmd_len, obj_msg_trlr_len;
-  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
+  int32_t obj_cmd_len, obj_lan_msg_trlr_len;
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   char *rmcp_hdr = 
     "RMCP Header:\n"
@@ -237,154 +282,237 @@ fiid_obj_dump_lan (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_l
   char *trlr_hdr =
     "IPMI Trailer:\n"
     "--------------";
-  char *extra_hdr =
+  char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
+  fiid_obj_t obj_rmcp_hdr = NULL;
+  fiid_obj_t obj_session_hdr = NULL;
+  fiid_obj_t obj_lan_msg_hdr = NULL;
+  fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_lan_msg_trlr = NULL;
+  fiid_obj_t obj_unexpected = NULL;
+  int32_t len;
+  int8_t rv = -1;
+  uint64_t authentication_type;
 
-  if (!(pkt && tmpl_session && tmpl_cmd))
+  if (!(pkt && tmpl_msg_hdr && tmpl_cmd))
     {
       errno = EINVAL;
-      return (-1);
+      goto cleanup;
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
-    return (-1);
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+    goto cleanup;
 
   /* Dump rmcp header */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_hdr_rmcp))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
-
-  if (pkt_len <= indx)
-    return 0;
   
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+
   /* Dump session header */
   /* Output of session header depends on the auth code */
 
-  if ((pkt_len - indx) < fiid_obj_field_end_bytes (tmpl_session, (uint8_t *)"auth_type"))
+  if (!(obj_session_hdr = fiid_obj_create(tmpl_lan_session_hdr)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_block(obj_session_hdr, 
+                                (uint8_t *)"authentication_type", 
+                                (uint8_t *)"session_id", 
+                                pkt + indx, 
+                                pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (pkt_len <= indx)
     {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               session_hdr, 
+                               NULL, 
+                               obj_session_hdr) < 0)
+	goto cleanup;
+
+      rv = 0;
+      goto cleanup;
     }
-  else 
+
+  if (fiid_obj_get(obj_session_hdr, "authentication_type", &authentication_type) < 0)
+    goto cleanup;
+
+  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {
-      uint8_t auth_type;
-      uint32_t auth_type_offset;
-
-      auth_type_offset = fiid_obj_len_bytes (tmpl_hdr_rmcp) + fiid_obj_field_start_bytes (tmpl_session, (uint8_t *)"auth_type");
-      auth_type = pkt[auth_type_offset];
-
-      if (auth_type == IPMI_SESSION_AUTH_TYPE_NONE)
-        tmpl_session = tmpl_hdr_session;
-      else if (fiid_obj_field_lookup(tmpl_session, (uint8_t *)"auth_calc_data"))
-        tmpl_session = tmpl_hdr_session_auth;
-
-      if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_session))
-        {
-          ERR_EXIT(fiid_obj_len_bytes(tmpl_session) < IPMI_DEBUG_MAX_PKT_LEN);
-          memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-          memcpy(buf, pkt + indx, (pkt_len - indx)); 
-          ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, buf, tmpl_session) != -1);
-        }
-      else 
-        ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, session_hdr, NULL, pkt + indx, tmpl_session) != -1);
+      if ((len = fiid_obj_set_data(obj_session_hdr,
+				   (uint8_t *)"authentication_code",
+				   pkt + indx,
+				   pkt_len - indx)) < 0)
+	goto cleanup;
+      indx += len;
     }
-  indx += fiid_obj_len_bytes (tmpl_session);
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               session_hdr, 
+                               NULL, 
+                               obj_session_hdr) < 0)
+	goto cleanup;
+
+      rv = 0;
+      goto cleanup;
+    }
+
+  if ((len = fiid_obj_set_data(obj_session_hdr,
+			       "ipmi_msg_len",
+			       pkt + indx,
+			       pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+
+  if (ipmi_obj_dump_perror(fd, 
+                           prefix_buf, 
+                           session_hdr, 
+                           NULL, 
+                           obj_session_hdr) < 0)
+    goto cleanup;
+
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* Dump message header */
 
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_msg_hdr))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_msg_hdr) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, buf, tmpl_msg_hdr) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, msg_hdr, NULL, pkt + indx, tmpl_msg_hdr) != -1);
-  indx += fiid_obj_len_bytes (tmpl_msg_hdr);
-
+  if (!(obj_lan_msg_hdr = fiid_obj_create(tmpl_msg_hdr)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_lan_msg_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, msg_hdr, NULL, obj_lan_msg_hdr) < 0)
+    goto cleanup;
+  
   if (pkt_len <= indx)
-    return 0;
-
-  obj_cmd_len = fiid_obj_len_bytes (tmpl_cmd);
-  obj_msg_trlr_len = fiid_obj_len_bytes (tmpl_lan_msg_trlr);
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* Dump command data */
 
-  if ((pkt_len - indx) <= obj_cmd_len)
-    {
-      if ((pkt_len - indx) > obj_msg_trlr_len)
-        obj_cmd_len = (pkt_len - indx) - obj_msg_trlr_len;
-      else
-        obj_cmd_len = (pkt_len - indx);
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, obj_cmd_len); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, buf, tmpl_cmd) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, cmd_hdr, NULL, pkt + indx, tmpl_cmd) != -1);
-  indx += obj_cmd_len;
+  if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+    goto cleanup;
 
-  if (pkt_len <= indx)
-    return 0;
+  if (!(obj_lan_msg_trlr = fiid_obj_create(tmpl_lan_msg_trlr)))
+    goto cleanup;
+  
+  ERR(!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+
+  if ((pkt_len - indx) >= obj_lan_msg_trlr_len)
+    obj_cmd_len = (pkt_len - indx) - obj_lan_msg_trlr_len;
+  else if ((pkt_len - indx) < obj_lan_msg_trlr_len)
+    obj_cmd_len = 0;
+
+  if (obj_cmd_len)
+    {
+      if ((len = fiid_obj_set_all(obj_cmd,
+				  pkt + indx, 
+				  obj_cmd_len)) < 0)
+	goto cleanup;
+      indx += len;
+      
+      if (ipmi_obj_dump_perror(fd, 
+                               prefix_buf, 
+                               cmd_hdr, 
+                               NULL, 
+                               obj_cmd) < 0)
+	goto cleanup;
+
+      if (pkt_len <= indx)
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
+    }
 
   /* Dump trailer */
 
-  if ((pkt_len - indx) < obj_msg_trlr_len)
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_lan_msg_trlr) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, buf, tmpl_lan_msg_trlr) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, trlr_hdr, NULL, pkt + indx, tmpl_lan_msg_trlr) != -1);
-  indx += obj_msg_trlr_len;
-
-  if (pkt_len <= indx)
-    return 0;
-
-  /* Dump extra stuff if packet is extra long */
-
-  if (_output_str(fd, prefix_buf, extra_hdr) < 0)
-    return (-1);
+  if ((len = fiid_obj_set_all(obj_lan_msg_trlr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
   
-  if (_output_byte_array(fd, prefix_buf, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
-    return (-1);
+  if (ipmi_obj_dump_perror(fd, prefix_buf, trlr_hdr, NULL, obj_lan_msg_trlr) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
-  return 0;
+  /* Dump unexpected stuff */
+  
+  if (!(obj_unexpected = fiid_obj_create(tmpl_unexpected)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_unexpected, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_rmcp_hdr)
+    fiid_obj_destroy(obj_rmcp_hdr);
+  if (obj_session_hdr)
+    fiid_obj_destroy(obj_session_hdr);
+  if (obj_lan_msg_hdr)
+    fiid_obj_destroy(obj_lan_msg_hdr);
+  if (obj_cmd)
+    fiid_obj_destroy(obj_cmd);
+  if (obj_lan_msg_trlr)
+    fiid_obj_destroy(obj_lan_msg_trlr);
+  if (obj_unexpected)
+    fiid_obj_destroy(obj_unexpected);
+  return (rv);
 }
 
 int8_t 
-fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
+ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
-  uint8_t buf[IPMI_DEBUG_MAX_PKT_LEN];
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
-  char *rmcp_hdr = 
+  char *rmcp_hdr =
     "RMCP Header:\n"
     "------------";
   char *rmcp_cmd =
     "RMCP Command Data:\n"
     "------------------";
-  char *extra_hdr =
+  char *unexpected_hdr =
     "Unexpected Data:\n"
     "----------------";
+  fiid_obj_t obj_rmcp_hdr = NULL;
+  fiid_obj_t obj_cmd = NULL;
+  fiid_obj_t obj_unexpected = NULL;
+  int32_t len;
+  int8_t rv = -1;
 
   if (!(pkt && tmpl_cmd))
     {
@@ -392,102 +520,120 @@ fiid_obj_dump_rmcp (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_
       return (-1);
     }
 
-  if (fiid_obj_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
+  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);
 
   /* Dump rmcp header */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_hdr_rmcp))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_hdr_rmcp) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, buf, tmpl_hdr_rmcp) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, pkt + indx, tmpl_hdr_rmcp) != -1);
-  indx += fiid_obj_len_bytes (tmpl_hdr_rmcp);
-
+  
+  if (!(obj_rmcp_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0)
+    goto cleanup;
+  
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
   
   /* Dump command data */
-
-  if ((pkt_len - indx) < fiid_obj_len_bytes (tmpl_cmd))
-    {
-      ERR_EXIT(fiid_obj_len_bytes(tmpl_cmd) < IPMI_DEBUG_MAX_PKT_LEN);
-      memset(buf, '\0', IPMI_DEBUG_MAX_PKT_LEN);
-      memcpy(buf, pkt + indx, (pkt_len - indx)); 
-      ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, buf, tmpl_cmd) != -1);
-    }
-  else 
-    ERR_OUT(fiid_obj_dump_perror (fd, prefix_buf, rmcp_cmd, NULL, pkt + indx, tmpl_cmd) != -1);
-  indx += fiid_obj_len_bytes (tmpl_cmd);
-
-  if (pkt_len <= indx)
-    return 0;
-
-  /* Dump extra stuff if packet is extra long */
-
-  if (_output_str(fd, prefix_buf, extra_hdr) < 0)
-    return (-1);
   
-  if (_output_byte_array(fd, prefix_buf, (uint8_t *)pkt+indx, (pkt_len - indx)) < 0)
-    return (-1);
-
-  return 0;
+  if (!(obj_cmd = fiid_obj_create(tmpl_cmd)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, rmcp_cmd, NULL, obj_cmd) < 0)
+    goto cleanup;
+  
+  if (pkt_len <= indx)
+    {
+      rv = 0;
+      goto cleanup;
+    }
+  
+  /* Dump unexpected stuff */
+  
+  if (!(obj_unexpected = fiid_obj_create(tmpl_unexpected)))
+    goto cleanup;
+  
+  if ((len = fiid_obj_set_all(obj_unexpected, pkt + indx, pkt_len - indx)) < 0)
+    goto cleanup;
+  indx += len;
+  
+  if (ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_rmcp_hdr)
+    fiid_obj_destroy(obj_rmcp_hdr);
+  if (obj_cmd)
+    fiid_obj_destroy(obj_cmd);
+  if (obj_unexpected)
+    fiid_obj_destroy(obj_unexpected);
+  return (rv);
 }
 
+/* XXX move out of here */
 uint8_t
 ipmi_kcs_print_state (int fd, uint8_t state)
 {
-    /* we assume we have already ioperm'd the space */
-    _dprintf (fd, "Current KCS state: 0x%x : ", state);
-    if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
-            _dprintf (fd, "IDLE_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
-            _dprintf (fd, "READ_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
-            _dprintf (fd, "WRITE_STATE ");
-    } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
-            _dprintf (fd, "ERROR_STATE ");
-    } else {
-      _dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
-    }
-    if (state & IPMI_KCS_STATUS_REG_IBF) {
-            _dprintf (fd, "IBF ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OBF) {
-            _dprintf (fd, "OBF ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OEM1) {
-            _dprintf (fd, "OEM1 ");
-    }
-    if (state & IPMI_KCS_STATUS_REG_OEM2) {
-            _dprintf (fd, "OEM2 ");
-    }
-    _dprintf (fd, "\n");
-    return (0);
+  /* we assume we have already ioperm'd the space */
+  _dprintf (fd, "Current KCS state: 0x%x : ", state);
+  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
+    _dprintf (fd, "IDLE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
+    _dprintf (fd, "READ_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
+    _dprintf (fd, "WRITE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
+    _dprintf (fd, "ERROR_STATE ");
+  } else {
+    _dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
+  }
+  if (state & IPMI_KCS_STATUS_REG_IBF) {
+    _dprintf (fd, "IBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OBF) {
+    _dprintf (fd, "OBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM1) {
+    _dprintf (fd, "OEM1 ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM2) {
+    _dprintf (fd, "OEM2 ");
+  }
+  _dprintf (fd, "\n");
+  return (0);
 }
 
+/* XXX move out of here */
 int
 ipmi_smic_print_flags (int fd, uint8_t state)
 {
-    _dprintf (fd, "Current SMIC flags: %#x : ", state);
-    if(state & IPMI_SMIC_RX_DATA_RDY) 
-        _dprintf (fd, "RX_DATA_RDY ");
-    if(state & IPMI_SMIC_TX_DATA_RDY)
-        _dprintf (fd, "TX_DATA_RDY ");
-    if(state & IPMI_SMIC_SMI)
-        _dprintf (fd, "SMI ");
-    if(state & IPMI_SMIC_EVT_ATN) 
-        _dprintf (fd, "EVT_ATN ");
-    if(state & IPMI_SMIC_SMS_ATN)
-        _dprintf (fd, "SMS_ATN ");
-    if(state & IPMI_SMIC_BUSY)
-        _dprintf (fd, "BUSY ");
-    _dprintf (fd, "\n");
-    return (0);
+  _dprintf (fd, "Current SMIC flags: %#x : ", state);
+  if(state & IPMI_SMIC_RX_DATA_RDY) 
+    _dprintf (fd, "RX_DATA_RDY ");
+  if(state & IPMI_SMIC_TX_DATA_RDY)
+    _dprintf (fd, "TX_DATA_RDY ");
+  if(state & IPMI_SMIC_SMI)
+    _dprintf (fd, "SMI ");
+  if(state & IPMI_SMIC_EVT_ATN) 
+    _dprintf (fd, "EVT_ATN ");
+  if(state & IPMI_SMIC_SMS_ATN)
+    _dprintf (fd, "SMS_ATN ");
+  if(state & IPMI_SMIC_BUSY)
+    _dprintf (fd, "BUSY ");
+  _dprintf (fd, "\n");
+  return (0);
 }
 
 void

@@ -17,13 +17,13 @@
 
 (use-modules (ice-9 format))
 
-(define (sensors-display-sdr-info sdr-repo-info)
-  (let ((sdr-version  (assoc-ref sdr-repo-info "sdr_version"))
-	(record-count (assoc-ref sdr-repo-info "record_count"))
-	(free-space   (assoc-ref sdr-repo-info "free_space"))
-	(recent-addition-timestamp (assoc-ref sdr-repo-info 
+(define (sensors-display-sdr-info sdr-repository-info)
+  (let ((sdr-version  (assoc-ref sdr-repository-info "sdr_version"))
+	(record-count (assoc-ref sdr-repository-info "record_count"))
+	(free-space   (assoc-ref sdr-repository-info "free_space"))
+	(recent-addition-timestamp (assoc-ref sdr-repository-info 
 					      "recent_addition_timestamp"))
-	(recent-erase-timestamp    (assoc-ref sdr-repo-info 
+	(recent-erase-timestamp    (assoc-ref sdr-repository-info 
 					      "recent_erase_timestamp")))
     (display "SDR Version ") (display sdr-version) (newline)
     (display record-count) (display " records available\n")
@@ -39,7 +39,7 @@
   (letrec ((sdr-record-list '())
 	   (next-record-id  0)
 	   (sdr-record      '())
-	   (sdr-info        (fi-get-sdr-repo-info))
+	   (sdr-info        (fi-get-sdr-repository-info))
 	   (record-count    0)
 	   (record-index    0)
 	   (get-sdr-record 
@@ -68,21 +68,21 @@
 
 (define (load-sdr-cache-file filename)
   (if (fi-load filename)
-      (if (and (defined? 'c-sdr-repo-info) 
+      (if (and (defined? 'c-sdr-repository-info) 
 	       (defined? 'c-sdr-record-list))
-	  (and (list? c-sdr-repo-info)
+	  (and (list? c-sdr-repository-info)
 	       (list? c-sdr-record-list))
 	  #f)
       #f))
 
 (define (create-sdr-cache filename)
-  (let ((sdr-info (fi-get-sdr-repo-info))
+  (let ((sdr-info (fi-get-sdr-repository-info))
 	(record-list (get-sdr-record-list)))
     (catch 'system-error
 	   (lambda ()
 	     (with-output-to-file filename 
 	       (lambda ()
-		 (format #t "(define c-sdr-repo-info '~a)~%" sdr-info)
+		 (format #t "(define c-sdr-repository-info '~a)~%" sdr-info)
 		 (format #t "(define c-sdr-record-list '~a)~%" record-list)))
 	     #t)
 	   (lambda error-info
@@ -90,7 +90,7 @@
 
 (define (init-sdr-cache)
   (let* ((cache-filename (fi-get-sdr-cache-filename))
-	 (sdr-info (fi-get-sdr-repo-info))
+	 (sdr-info (fi-get-sdr-repository-info))
 	 (sdr-recent-addition-timestamp (assoc-ref sdr-info 
 						   "recent_addition_timestamp"))
 	 (sdr-recent-erase-timestamp    (assoc-ref sdr-info 

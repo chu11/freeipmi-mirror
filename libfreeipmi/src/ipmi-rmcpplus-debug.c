@@ -1,3 +1,4 @@
+#if 0
 /* 
    ipmi-rmcpplus-interface.c - IPMI Session Handler
 
@@ -1197,3 +1198,4 @@ fiid_obj_dump_rmcpplus (int fd,
 
   return 0;
 }
+#endif

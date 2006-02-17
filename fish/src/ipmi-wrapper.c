@@ -31,7 +31,7 @@ static int8_t lan_channel_number;
 static uint8_t serial_channel_number_initialized = false;
 static int8_t serial_channel_number;
 
-static unsigned int rmcp_msg_tag = 0;
+static unsigned int rmcp_message_tag = 0;
 
 ipmi_device_t *
 fi_get_ipmi_device ()
@@ -73,10 +73,10 @@ fi_ipmi_open (struct arguments *args)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       args->common.auth_type, 
+			       args->common.authentication_type, 
 			       args->common.username, 
 			       args->common.password, 
-			       args->common.priv_level) != 0)
+			       args->common.privilege_level) != 0)
 	{
 	  perror ("ipmi_open_outofband()");
 	  return (-1);
@@ -201,7 +201,7 @@ get_sdr_cache_filename ()
 channel_info *
 get_channel_info_list ()
 {
-  uint8_t *data_rs = NULL; 
+  fiid_obj_t data_rs = NULL; 
   uint8_t i;
   uint8_t ci;
   uint64_t val;
@@ -209,7 +209,9 @@ get_channel_info_list ()
   if (channel_info_list_initialized)
     return (channel_info_list);
   
-  fiid_obj_alloca (data_rs, tmpl_get_channel_info_rs);
+  if (!(data_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
+    goto cleanup;
+
   for (i = 0, ci = 0; i < 8; i++)
     {
       if (ipmi_cmd_get_channel_info2 (fi_get_ipmi_device (), 
@@ -217,23 +219,24 @@ get_channel_info_list ()
 				      data_rs) != 0)
 	continue;
       
-      fiid_obj_get (data_rs, 
-		    tmpl_get_channel_info_rs, 
-		    (uint8_t *)"actual_channel_number", 
-		    &val);
+      if (fiid_obj_get (data_rs, 
+                        (uint8_t *)"actual_channel_number", 
+                        &val) < 0)
+        goto cleanup;
       channel_info_list[ci].channel_number = (uint8_t) val;
       
-      fiid_obj_get (data_rs, 
-		    tmpl_get_channel_info_rs, 
-		    (uint8_t *)"channel_medium_type", 
-		    &val);
+      if (fiid_obj_get (data_rs, 
+                        (uint8_t *)"channel_medium_type", 
+                        &val) < 0)
+        goto cleanup;
       channel_info_list[ci].medium_type = 
 	channel_info_list[ci].actual_medium_type = (uint8_t) val;
       
-      fiid_obj_get (data_rs, 
-		    tmpl_get_channel_info_rs, 
-		    (uint8_t *)"channel_protocol_type", 
-		    &val);
+      if (fiid_obj_get (data_rs, 
+                        (uint8_t *)"channel_protocol_type", 
+                        &val) < 0)
+        goto cleanup;
+
       channel_info_list[ci].protocol_type = 
 	channel_info_list[ci].actual_protocol_type = (uint8_t) val;
       
@@ -259,7 +262,13 @@ get_channel_info_list ()
   
   channel_info_list_initialized = true;
   
+  fiid_obj_destroy(data_rs);
   return (channel_info_list);
+
+ cleanup:
+  if (data_rs)
+    fiid_obj_destroy(data_rs);
+  return NULL;
 }
 
 int8_t 
@@ -401,55 +410,58 @@ display_channel_info ()
 }
 
 int 
-display_get_dev_id ()
+display_get_device_id ()
 {
   fiid_obj_t cmd_rs = NULL;
   uint64_t val = 0;
-  
-  fiid_obj_alloca (cmd_rs, tmpl_cmd_get_dev_id_rs);
-  if (ipmi_cmd_get_dev_id (fi_get_ipmi_device (), cmd_rs) != 0)
+  int rv = -1;
+
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_device_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_dev_id()");
+      ipmi_error (cmd_rs, "ipmi_cmd_get_device_id()");
       return (-1);
     }
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_id", 
-		&val);
+  if (fiid_obj_get(cmd_rs, 
+                   (uint8_t *)"device_id", 
+                   &val) < 0)
+    goto cleanup;
   fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_rev.rev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"device_revision.revision", 
+                    &val) < 0)
+    goto cleanup;
   fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"dev_rev.sdr_support", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"device_revision.sdr_support", 
+                    &val) < 0)
+    goto cleanup;
   if (val)
     fprintf (stdout, "                   [SDR Support]\n");
   
   {
     uint64_t maj, min;
-    FIID_OBJ_GET (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"firmware_rev1.major_rev", 
-		  &maj);
-    FIID_OBJ_GET (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"firmware_rev2.minor_rev", 
-		  &min);
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"firmware_revision1.major_revision", 
+                      &maj) < 0)
+      goto cleanup;
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"firmware_revision2.minor_revision", 
+                      &min) < 0)
+      goto cleanup;
     fprintf (stdout, "Firmware Revision: %d.%d\n", 
 	     (unsigned int) maj, (unsigned int) min);
   }
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"firmware_rev1.dev_available", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"firmware_revision1.device_available", 
+                    &val) < 0)
+    goto cleanup;
   if (val == 0)
     fprintf (stdout, 
 	     "                   [Device Available (normal operation)]\n");
@@ -463,114 +475,119 @@ display_get_dev_id ()
   
   {
     uint64_t ms, ls;
-    FIID_OBJ_GET (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"ipmi_ver.ms_bits", 
-		  &ms);
-    FIID_OBJ_GET (cmd_rs, 
-		  tmpl_cmd_get_dev_id_rs, 
-		  (uint8_t *)"ipmi_ver.ls_bits", 
-		  &ls);
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"ipmi_version.ms_bits", 
+                      &ms) < 0)
+      goto cleanup;
+    if (fiid_obj_get (cmd_rs, 
+                      (uint8_t *)"ipmi_version.ls_bits", 
+                      &ls) < 0)
+      goto cleanup;
     fprintf (stdout, 
 	     "IPMI Version:      %d.%d\n", (unsigned int) ms, (unsigned int) ls);
   }
   
   fprintf (stdout, "Additional Device Support:\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sensor_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.sensor_device", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [Sensor Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sdr_repo_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.sdr_repository_device", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [SDR Repository Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.sel_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.sel_device", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [SEL Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.fru_inventory_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.fru_inventory_device", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [FRU Inventory Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.ipmb_evnt_receiver", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.ipmb_event_receiver", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [IPMB Event Receiver]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.ipmb_evnt_generator", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.ipmb_event_generator", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [IPMB Event Generator]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.bridge", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.bridge", 
+                    &val) < 0)
+    goto cleanup;
   if(val)
     fprintf (stdout, "                   [Bridge]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		tmpl_cmd_get_dev_id_rs, 
-		(uint8_t *)"additional_dev_support.chassis_dev", 
-		&val);
+  if (fiid_obj_get (cmd_rs, 
+                    (uint8_t *)"additional_device_support.chassis_device", 
+                    &val) < 0)
+    goto cleanup;
+
   if(val)
     fprintf (stdout, "                   [Chassis Device]\n");
   
   {
-    uint64_t manf_id, prod_id;
+    uint64_t manufacturer_id, product_id;
     
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, (uint8_t *)"manf_id.id", &manf_id);
-    fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manf_id);
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id) < 0)
+      goto cleanup;
+    fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
     
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, (uint8_t *)"prod_id", &prod_id);
-    fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) prod_id);
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"product_id", &product_id) < 0)
+      goto cleanup;
+    fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) product_id);
     
-    FIID_OBJ_GET (cmd_rs, tmpl_cmd_get_dev_id_rs, (uint8_t *)"aux_firmware_rev_info", &val);
-    switch (manf_id)
+    if (fiid_obj_get (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val) < 0)
+      goto cleanup;
+
+    switch (manufacturer_id)
       {
-      case IPMI_MANF_ID_INTEL: 
-	switch (prod_id)
+      case IPMI_MANUFACTURER_ID_INTEL: 
+	switch (product_id)
 	  {
 	    /* I am assuming all Intel products will decode alike.
                                  -- Anand Babu <ab@gnu.org.in>  */
-	  case IPMI_PROD_ID_SR870BN4:
+	  case IPMI_PRODUCT_ID_SR870BN4:
 	  default:
 	    {
 	      uint64_t bc_maj, bc_min, pia_maj, pia_min;
-	      FIID_OBJ_GET (cmd_rs,
-			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
-			    (uint8_t *)"aux_firmware_rev_info.boot_code.major",
-			    &bc_maj);
-	      FIID_OBJ_GET (cmd_rs,
-			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
-			    (uint8_t *)"aux_firmware_rev_info.boot_code.minor",
-			    &bc_min);
-	      FIID_OBJ_GET (cmd_rs,
-			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
-			    (uint8_t *)"aux_firmware_rev_info.pia.major",
-			    &pia_maj);
-	      FIID_OBJ_GET (cmd_rs,
-			    tmpl_cmd_get_dev_id_sr870bn4_rs, 
-			    (uint8_t *)"aux_firmware_rev_info.pia.minor",
-			    &pia_min);
-	      fprintf (stdout, 
+	      if (fiid_obj_get (cmd_rs,
+                                (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
+                                &bc_maj) < 0)
+                goto cleanup;
+	      if (fiid_obj_get (cmd_rs,
+                                (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
+                                &bc_min) < 0)
+                goto cleanup;
+	      if (fiid_obj_get (cmd_rs,
+                                (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
+                                &pia_maj) < 0)
+                goto cleanup;
+	      if (fiid_obj_get (cmd_rs,
+                                (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
+                                &pia_min) < 0)
+                goto cleanup;
+              fprintf (stdout, 
 		       "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
 		       (unsigned int) bc_maj, (unsigned int) bc_min, 
 		       (unsigned int) pia_maj, (unsigned int) pia_min);
@@ -583,23 +600,192 @@ display_get_dev_id ()
       }
   }
   
-  return (display_channel_info ());
+  rv = display_channel_info ();
+ cleanup:
+  if (cmd_rs)
+    fiid_obj_destroy(cmd_rs);
+  return (rv);
 }
 
 static unsigned int 
-_get_rmcp_msg_tag (void)
+_get_rmcp_message_tag (void)
 {
-  if (rmcp_msg_tag == 0xFE)
-    rmcp_msg_tag = 0; /* roll over */
+  if (rmcp_message_tag == 0xFE)
+    rmcp_message_tag = 0; /* roll over */
   
-  return (rmcp_msg_tag++);
+  return (rmcp_message_tag++);
+}
+
+int8_t
+ipmi_rmcp_ping (int sockfd, struct sockaddr *hostaddr, unsigned long hostaddr_len, uint32_t message_tag, fiid_obj_t pong)
+{
+  int8_t rv;
+
+  if (!(sockfd && hostaddr && fiid_obj_valid(pong)))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  if ((rv = fiid_obj_template_compare(pong, tmpl_cmd_asf_presence_pong)) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+  
+  {/* asf_presence_ping request */
+    fiid_obj_t obj_hdr = NULL;
+    fiid_obj_t obj_cmd = NULL;
+    int32_t hdr_len, cmd_len;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_len = 0;
+    int status = 0;
+  
+    rv = -1;
+
+    if (!(obj_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+      goto cleanup1;
+
+    if (!(obj_cmd = fiid_obj_create(tmpl_cmd_asf_presence_ping)))
+      goto cleanup1;
+
+    if ((hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+      goto cleanup1;
+
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_ping)) < 0)
+      goto cleanup1;
+	
+    pkt_len = hdr_len + cmd_len;
+    pkt = alloca (pkt_len);
+    if (!pkt)
+      return -1;
+    memset (pkt, 0, pkt_len);
+
+    if (fill_rmcp_hdr_asf (obj_hdr) < 0)
+      goto cleanup1;
+
+    if (fill_cmd_asf_presence_ping (message_tag, obj_cmd) < 0)
+      goto cleanup1;
+
+    if (assemble_rmcp_pkt (obj_hdr, 
+			   obj_cmd, 
+			   pkt, 
+			   pkt_len) < 0)
+      goto cleanup1;
+
+    if ((status = ipmi_lan_sendto (sockfd, 
+				   pkt,
+				   pkt_len,
+				   0, 
+				   hostaddr, 
+				   hostaddr_len)) < 0)
+      goto cleanup1;
+
+    rv = 0;
+  cleanup1:
+    if (obj_hdr)
+      fiid_obj_destroy(obj_hdr);
+    if (obj_cmd)
+      fiid_obj_destroy(obj_cmd);
+    if (rv < 0)
+      return (rv);
+  }
+
+  {/* asf_presence_ping response */ 
+    struct sockaddr_in from, *hostaddr_in;
+    socklen_t fromlen;
+    fiid_obj_t obj_hdr = NULL;
+    int32_t hdr_len, cmd_len;
+    uint8_t *pkt = NULL;
+    uint32_t pkt_len = 0;
+    int32_t recv_len;
+    uint64_t val;
+
+    rv = -1;
+
+    if (!(obj_hdr = fiid_obj_create(tmpl_rmcp_hdr)))
+      goto cleanup2;
+
+    if ((hdr_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0)
+      goto cleanup2;
+
+    if ((cmd_len = fiid_template_len_bytes(tmpl_cmd_asf_presence_pong)) < 0)
+      goto cleanup2;
+
+    pkt_len = hdr_len + cmd_len;
+    pkt = alloca (pkt_len);
+    if (!pkt)
+      return -1;
+    memset (pkt, 0, pkt_len);
+
+    if ((recv_len = ipmi_lan_recvfrom (sockfd,
+				       pkt,
+				       pkt_len,
+				       0, 
+				       (struct sockaddr *)&from, 
+				       &fromlen)) < 0)
+      goto cleanup2;
+
+    hostaddr_in = (struct sockaddr_in *) hostaddr;
+    if ((from.sin_family == AF_INET) && 
+	(from.sin_addr.s_addr != hostaddr_in->sin_addr.s_addr))
+      {
+#if 0
+	printf ("ipmi_ping warning: Reply came from [%s] instead of [%s]." 
+		"Please tune your time-out value to something higher\n", 
+		inet_ntoa (from.sin_addr), inet_ntoa (hostaddr->sin_addr));
+#endif
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+    
+    if (unassemble_rmcp_pkt (pkt, 
+			     recv_len,
+			     obj_hdr, 
+			     pong) < 0)
+      goto cleanup2;
+
+    if (fiid_obj_get(pong,
+		     (uint8_t *)"msg_type",
+		     &val) < 0)
+      goto cleanup2;
+
+    if (val != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
+      {
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+
+    if (fiid_obj_get(pong,
+		     (uint8_t *)"message_tag",
+		     &val) < 0)
+      goto cleanup2;
+
+    if (val != message_tag)
+      {
+	errno = EBADMSG;
+	goto cleanup2;
+      }
+    
+    rv = 0;
+  cleanup2:
+    if (obj_hdr)
+      fiid_obj_destroy(obj_hdr);
+    if (rv < 0)
+      return (rv);
+    }
+
+  return (0);
 }
 
 int 
 ipmi_ping (char *host, unsigned int sock_timeout)
 {
   int sockfd;
-  int status;
+  int status = -1;
   struct sockaddr_in to_addr;
   struct hostent *hostinfo;
   
@@ -642,12 +828,19 @@ ipmi_ping (char *host, unsigned int sock_timeout)
   {
     fiid_obj_t pong = NULL;
     
-    fiid_obj_alloca (pong, tmpl_cmd_asf_presence_pong);
-    status = ipmi_rmcp_ping (sockfd, 
-			     (struct sockaddr *) &to_addr, 
-			     sizeof (struct sockaddr_in), 
-			     _get_rmcp_msg_tag (), 
-			     pong);
+    if (!(pong = fiid_obj_create(tmpl_cmd_asf_presence_pong)))
+      goto cleanup;
+
+    if ((status = ipmi_rmcp_ping (sockfd, 
+                                  (struct sockaddr *) &to_addr, 
+                                  sizeof (struct sockaddr_in), 
+                                  _get_rmcp_message_tag (), 
+                                  pong)) < 0)
+      goto cleanup;
+
+  cleanup:
+    if (pong)
+      fiid_obj_destroy(pong);
   }
   
   close (sockfd);

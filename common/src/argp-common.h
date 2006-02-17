@@ -30,8 +30,8 @@ enum argp_common_option_keys
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
-    AUTH_TYPE_KEY = 'a', 
-    PRIV_LEVEL_KEY = 'l'
+    AUTHENTICATION_TYPE_KEY = 'a', 
+    PRIVILEGE_LEVEL_KEY = 'l'
   };
 
 #define ARGP_COMMON_OPTIONS                                                \
@@ -50,10 +50,10 @@ enum argp_common_option_keys
      "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 5},  \
     {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
      "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 6},  \
-    {"auth-type",      AUTH_TYPE_KEY, "AUTHTYPE", 0, 			   \
+    {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 			   \
      "Use AUTHTYPE instead of NONE.  "				           \
      "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 7},	           \
-    {"priv-level",     PRIV_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
+    {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 8}      
 
@@ -68,8 +68,8 @@ struct common_cmd_args
   char *host;
   char *username;
   char *password;
-  int auth_type;
-  int priv_level;
+  int authentication_type;
+  int privilege_level;
 };
 
 error_t common_parse_opt (int key, 

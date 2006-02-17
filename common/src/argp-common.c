@@ -90,7 +90,7 @@ common_parse_opt (int key,
       cmd_args->host = strdup (arg);
       break;
     case USERNAME_KEY:
-      if (strlen (arg) > IPMI_SESSION_MAX_USERNAME_LEN)
+      if (strlen (arg) > IPMI_MAX_USER_NAME_LENGTH)
 	argp_usage (state);
       else 
 	{
@@ -100,7 +100,7 @@ common_parse_opt (int key,
 	}
       break;
     case PASSWORD_KEY:
-      if (strlen (arg) > IPMI_SESSION_MAX_AUTH_CODE_LEN)
+      if (strlen (arg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
 	argp_usage (state);
       else 
 	{
@@ -109,60 +109,60 @@ common_parse_opt (int key,
 	  cmd_args->password = strdup (arg);
 	}
       break;
-    case AUTH_TYPE_KEY: /* values 0,1,2,4,5 = none,md2,md5,straight,oem */
+    case AUTHENTICATION_TYPE_KEY: /* values 0,1,2,4,5 = none,md2,md5,straight,oem */
       if (strcasecmp (arg, "none") == 0)
 	{
-	  cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
+	  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 	}
       else 
 	if (strcasecmp (arg, "md2") == 0)
 	  {
-	    cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_MD2;
+	    cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD2;
 	  }
 	else 
 	  if (strcasecmp (arg, "md5") == 0)
 	    {
-	      cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_MD5;
+	      cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_MD5;
 	    }
 	  else 
 	    if (strcasecmp (arg, "plain") == 0)
 	      {
-		cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY;
+		cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY;
 	      }
 	    else 
 	      if (strcasecmp (arg, "oem") == 0)
 		{
-		  cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_OEM_PROP;
+		  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_OEM_PROP;
 		}
 	      else 
 		{
 		  argp_usage (state);
 		}
       break;
-    case PRIV_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
+    case PRIVILEGE_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
       if (strcasecmp (arg, "callback") == 0)
 	{
-	  cmd_args->priv_level = IPMI_PRIV_LEVEL_CALLBACK;
+	  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_CALLBACK;
 	}
       else 
 	if (strcasecmp (arg, "user") == 0)
 	  {
-	    cmd_args->priv_level = IPMI_PRIV_LEVEL_USER;
+	    cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 	  }
 	else 
 	  if (strcasecmp (arg, "operator") == 0)
 	    {
-	      cmd_args->priv_level = IPMI_PRIV_LEVEL_OPERATOR;
+	      cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OPERATOR;
 	    }
 	  else 
 	    if (strcasecmp (arg, "admin") == 0)
 	      {
-		cmd_args->priv_level = IPMI_PRIV_LEVEL_ADMIN;
+		cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 	      }
 	    else 
 	      if (strcasecmp (arg, "oem") == 0)
 		{
-		  cmd_args->priv_level = IPMI_PRIV_LEVEL_OEM;
+		  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_OEM;
 		}
 	      else 
 		{
@@ -186,8 +186,8 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
-  cmd_args->auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
-  cmd_args->priv_level = IPMI_PRIV_LEVEL_USER;
+  cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+  cmd_args->privilege_level = IPMI_PRIVILEGE_LEVEL_USER;
 }
 
 void 
@@ -216,7 +216,7 @@ free_common_cmd_args (struct common_cmd_args *cmd_args)
       free (cmd_args->password);
       cmd_args->password = NULL;
     }
-  cmd_args->auth_type = 0;
-  cmd_args->priv_level = 0;
+  cmd_args->authentication_type = 0;
+  cmd_args->privilege_level = 0;
 }
 

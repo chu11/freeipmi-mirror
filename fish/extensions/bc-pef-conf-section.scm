@@ -58,60 +58,60 @@
 				    enable-alert-action)
   (if (list? enable-alert-action)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control enable-alert-action 0 0 0 0 0)))
+      (fi-set-bmc-pef-conf-pef-action-global-control enable-alert-action 0 0 0 0 0)))
 
 (define (checkout-enable-alert-action section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-enable-powerdown-action section-name 
 					enable-powerdowm-action)
   (if (list? enable-powerdown-action)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control 0 enable-powerdowm-action 0 0 0 0)))
+      (fi-set-bmc-pef-conf-pef-action-global-control 0 enable-powerdowm-action 0 0 0 0)))
 
 (define (checkout-enable-powerdown-action section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-enable-reset-action section-name 
 				    enable-reset-action)
   (if (list? enable-reset-action)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control 0 0 enable-reset-action 0 0 0)))
+      (fi-set-bmc-pef-conf-pef-action-global-control 0 0 enable-reset-action 0 0 0)))
 
 (define (checkout-enable-reset-action section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-enable-powercycle-action section-name 
 					 enable-powercycle-action)
   (if (list? enable-powercycle-action)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control 0 0 0 enable-powercycle-action 0 0)))
+      (fi-set-bmc-pef-conf-pef-action-global-control 0 0 0 enable-powercycle-action 0 0)))
 
 (define (checkout-enable-powercycle-action section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (cadddr param-list)) #f)))
 
 (define (commit-enable-oem-action section-name 
 				  enable-oem-action)
   (if (list? enable-oem-action)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control 0 0 0 0 enable-oem-action 0)))
+      (fi-set-bmc-pef-conf-pef-action-global-control 0 0 0 0 enable-oem-action 0)))
 
 (define (checkout-enable-oem-action section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (caddddr param-list)) #f)))
 
 (define (commit-enable-diag-interrupt section-name 
 				      enable-diag-interrupt)
   (if (list? enable-diag-interrupt)
       #t 
-      (fi-set-bmc-pef-conf-pef-global-action-control 0 0 0 0 0 enable-diag-interrupt)))
+      (fi-set-bmc-pef-conf-pef-action-global-control 0 0 0 0 0 enable-diag-interrupt)))
 
 (define (checkout-enable-diag-interrupt section-name)
-  (let ((param-list (fi-get-bmc-pef-conf-pef-global-action-control)))
+  (let ((param-list (fi-get-bmc-pef-conf-pef-action-global-control)))
     (if (list? param-list) (list (cadddddr param-list)) #f)))
 
 (define (commit-pef-startup-delay section-name 

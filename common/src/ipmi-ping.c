@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.1.2.2 2006-02-13 23:54:47 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.1.2.3 2006-02-17 23:59:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@ static int _timeout = 5;
 static int _verbose = 0;
 static int _debug = 0;
 static int _version = IPMI_PING_VERSION_1_5;
-static int _initial_seq_num = -1;
+static int _initial_sequence_number = -1;
 
 /* globals */
 static int _sockfd = 0;
@@ -195,8 +195,8 @@ _output_version(void)
 static void 
 _cmdline_parse(int argc, 
                char **argv,
-               unsigned int min_seq_num,
-               unsigned int max_seq_num,
+               unsigned int min_sequence_number,
+               unsigned int max_sequence_number,
                char *options)
 {
   char c, *ptr;
@@ -207,62 +207,63 @@ _cmdline_parse(int argc,
   while ((c = getopt(argc, argv, options)) != -1) 
     {
       switch (c) 
-      {
-      case 'h':
-        _output_usage(options);
-      case 'V':
-        _output_version();
-      case 'r':
+        {
+        case 'h':
+          _output_usage(options);
+        case 'V':
+          _output_version();
+        case 'r':
         if (!strcmp(optarg, IPMI_PING_VERSION_1_5_STR))
-          _version = IPMI_PING_VERSION_1_5;
+        _version = IPMI_PING_VERSION_1_5;
         else if (!strcmp(optarg, IPMI_PING_VERSION_2_0_STR))
           _version = IPMI_PING_VERSION_2_0;
         else
           ipmi_ping_err_exit("invalid version");
         break;
-      case 'c':
-        _count = strtol(optarg, &ptr, 10);
-        if (ptr != (optarg + strlen(optarg)))
-          ipmi_ping_err_exit("count argument invalid");
-        if (_count == 0)
-          ipmi_ping_err_exit("count must be > 0");
-        break;
-      case 'i':
-        _interval = strtol(optarg, &ptr, 10);
-        if (ptr != (optarg + strlen(optarg)))
-          ipmi_ping_err_exit("interval argument invalid");
-        if (_interval == 0)
-          ipmi_ping_err_exit("interval must be > 0");
-        break;
-      case 'I':
-        _interface = optarg;
-        break;
-      case 't':
-        _timeout = strtol(optarg, &ptr, 10);
-        if (ptr != (optarg + strlen(optarg)))
-          ipmi_ping_err_exit("timeout argument invalid");
-        if (_timeout == 0)
-          ipmi_ping_err_exit("timeout must be > 0");
-        break;
-      case 'v':
-        _verbose++;
-        break;
-      case 's':
-        _initial_seq_num = strtol(optarg, &ptr, 10);
-        if (ptr != (optarg + strlen(optarg)))
-          ipmi_ping_err_exit("initial sequence number invalid");
-        if (_initial_seq_num < min_seq_num || _initial_seq_num > max_seq_num)
-          ipmi_ping_err_exit("initial sequence number out of range");
-        break;
+        case 'c':
+          _count = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            ipmi_ping_err_exit("count argument invalid");
+          if (_count == 0)
+            ipmi_ping_err_exit("count must be > 0");
+          break;
+        case 'i':
+          _interval = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            ipmi_ping_err_exit("interval argument invalid");
+          if (_interval == 0)
+            ipmi_ping_err_exit("interval must be > 0");
+          break;
+        case 'I':
+          _interface = optarg;
+          break;
+        case 't':
+          _timeout = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            ipmi_ping_err_exit("timeout argument invalid");
+          if (_timeout == 0)
+            ipmi_ping_err_exit("timeout must be > 0");
+          break;
+        case 'v':
+          _verbose++;
+          break;
+        case 's':
+          _initial_sequence_number = strtol(optarg, &ptr, 10);
+          if (ptr != (optarg + strlen(optarg)))
+            ipmi_ping_err_exit("initial sequence number invalid");
+          if (_initial_sequence_number < min_sequence_number 
+              || _initial_sequence_number > max_sequence_number)
+            ipmi_ping_err_exit("initial sequence number out of range");
+          break;
 #ifndef NDEBUG
-      case 'd':
-        _debug++;
-        break;
+        case 'd':
+          _debug++;
+          break;
 #endif
-      default:
-        ipmi_ping_err_exit("Command line option error");
-        break;
-      } 
+        default:
+          ipmi_ping_err_exit("Command line option error");
+          break;
+        } 
     }
   
   /* last argument is destination */
@@ -372,7 +373,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
            Ipmi_Ping_ParsePacket _parse, 
            Ipmi_Ping_LatePacket _late) 
 {
-  unsigned int seq_num = 0;
+  unsigned int sequence_number = 0;
   time_t last_send = 0;
   int ret;
 
@@ -382,18 +383,18 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
          && _progname != NULL 
          && _end_result != NULL);
 
-  if (_initial_seq_num < 0)
+  if (_initial_sequence_number < 0)
     {
       int len;
 
-      if ((len = ipmi_get_random((char *)&_initial_seq_num,
-                                 sizeof(_initial_seq_num))) < 0)
+      if ((len = ipmi_get_random((char *)&_initial_sequence_number,
+                                 sizeof(_initial_sequence_number))) < 0)
         ipmi_ping_err_exit("ipmi_get_random: %s", strerror(errno));
-      if (len != sizeof(_initial_seq_num))
+      if (len != sizeof(_initial_sequence_number))
         ipmi_ping_err_exit("ipmi_get_random: invalid len returned");
     }
 
-  seq_num = _initial_seq_num;
+  sequence_number = _initial_sequence_number;
 
   printf("%s %s (%s)\n", _progname, _dest, _dest_ip);
 
@@ -412,7 +413,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
         }
       
       if ((len = _create((char *)buffer, IPMI_PING_MAX_PKT_LEN, 
-                         seq_num, _version, _debug)) < 0)
+                         sequence_number, _version, _debug)) < 0)
         ipmi_ping_err_exit("_create failed: %s", strerror(errno));
         
       rv = ipmi_lan_sendto(_sockfd, buffer, len, 0, 
@@ -453,7 +454,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
                 ipmi_ping_err_exit("ipmi_recvfrom: %s", strerror(errno));
               
               if ((rv = _parse((char *)buffer, len, inet_ntoa(from.sin_addr), 
-                               seq_num, _verbose, _version, _debug)) < 0)
+                               sequence_number, _verbose, _version, _debug)) < 0)
                 ipmi_ping_err_exit("_parse failed: %s", strerror(errno));
 
               /* If rv == 0, the sequence numbers don't match, so
@@ -470,9 +471,9 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
         }
       
       if (received == 0)
-        _late(seq_num);
+        _late(sequence_number);
       
-      seq_num++;
+      sequence_number++;
     }
   
   ret = _end_result(_progname, _dest, _pkt_sent, _pkt_recv);
@@ -483,8 +484,8 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
 void
 ipmi_ping_setup(int argc,
                 char **argv,
-                unsigned int min_seq_num,
-                unsigned int max_seq_num,
+                unsigned int min_sequence_number,
+                unsigned int max_sequence_number,
                 char *options)
 {
 #ifndef NDEBUG
@@ -514,7 +515,7 @@ ipmi_ping_setup(int argc,
     }
   
   _err_init(argv[0]);
-  _cmdline_parse(argc, argv, min_seq_num, max_seq_num, options);
+  _cmdline_parse(argc, argv, min_sequence_number, max_sequence_number, options);
   _setup();
 }
 

@@ -156,8 +156,8 @@ typedef	uint8_t bitstr_t;
 	*(value) = _value; \
 }
 
-uint64_t bits_extract (uint64_t bits, uint8_t start, uint8_t end);
-uint64_t bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val);
+int bits_extract (uint64_t bits, uint8_t start, uint8_t end, uint64_t *result);
+int bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_t *result);
 
 #ifdef __cplusplus
 }

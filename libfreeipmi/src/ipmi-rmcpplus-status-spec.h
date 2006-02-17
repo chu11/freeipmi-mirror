@@ -107,7 +107,10 @@ extern "C" {
 "Illegal or Unrecognized parameter."
 /* Reserved - all others */
 
-
+/* To avoid gcc warnings, added +1 and -1 in comparison */
+#define RMCPPLUS_STATUS_VALID(__status) \
+        (((__status + 1) >= 0x01 \
+          && (__status - 1) <= 0x11) ? 1 : 0)
 
 #ifdef __cplusplus
 }

@@ -1,3 +1,4 @@
+#if 0
 /* 
    ipmi-rmcpplus.c - IPMI Session Handler
 
@@ -573,3 +574,4 @@ fill_rmcpplus_rakp_message_3(uint8_t message_tag,
 
   return (0);
 }
+#endif

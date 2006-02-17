@@ -30,7 +30,7 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+  assert(IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 

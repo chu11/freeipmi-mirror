@@ -21,11 +21,13 @@
 #ifndef _IPMI_SEL_RECORD_TYPES_H
 #define _IPMI_SEL_RECORD_TYPES_H
 
-#define IPMI_SEL_FIRST_ENTRY    0x0 
-#define IPMI_SEL_LAST_ENTRY     0xFFFF 
+#define IPMI_V1_0_EVENT_MESSAGE_FORMAT 0x03
+#define IPMI_V1_5_EVENT_MESSAGE_FORMAT 0x04
 
-#define IPMI_V1_0_EVENT_MESSAGE_FORMAT    0x03
-#define IPMI_V1_5_EVENT_MESSAGE_FORMAT    0x04
+#define IPMI_SEL_RECORD_TYPE_UNKNOWN_RECORD             0x00
+#define IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD        0x02 
+#define IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD     0xDF 
+#define IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD 0xFF 
 
 #define IPMI_SEL_UNSPECIFIED_BYTE                  0x0
 #define IPMI_SEL_TRIGGER_THRESHOLD_VALUE           0x1
@@ -34,28 +36,12 @@
 #define IPMI_SEL_TRIGGER_READING                   0x1
 #define IPMI_SEL_PREV_STATE_SEVERITY               0x1
 
+#define IPMI_SEL_RECORD_ASSERTION_EVENT   0x0
+#define IPMI_SEL_RECORD_DEASSERTION_EVENT 0x1
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-enum ipmi_sel_record_type
-  {
-    IPMI_SEL_UNKNOWN_RECORD, 
-    IPMI_SEL_SYSTEM_EVENT_RECORD = 0x02, 
-    IPMI_SEL_TIMESTAMPED_OEM_RECORD = 0xDF, 
-    IPMI_SEL_NON_TIMESTAMPED_OEM_RECORD = 0xFF 
-  };
-
-struct sel_record
-{
-  uint16_t record_id;
-  char *timestamp;
-  char *sensor_info;
-  char *event_message;
-  char *event_data2_message;
-  char *event_data3_message;
-};
-typedef struct sel_record sel_record_t;
 
 extern fiid_template_t tmpl_sel_record_header;
 
@@ -68,7 +54,6 @@ extern fiid_template_t tmpl_discrete_event_data;
 extern fiid_template_t tmpl_oem_event_data;
 
 int ipmi_get_sel_record_type (uint8_t record_type);
-int get_sel_record (uint8_t *record_data, sel_record_t *sel_record);
 
 #ifdef __cplusplus
 }

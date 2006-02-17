@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.6.2.5 2006-02-13 23:54:48 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.6.2.6 2006-02-17 23:59:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -265,9 +265,9 @@ _cmd_username(char **argv)
   assert(argv != NULL);
 
   if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_SESSION_MAX_USERNAME_LEN)) 
+           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_USER_NAME_LENGTH)) 
     {
-      memset(conf->username, '\0', IPMI_SESSION_MAX_USERNAME_LEN+1);
+      memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
 
       if (argv[1])
         strcpy(conf->username, argv[1]);
@@ -290,9 +290,9 @@ _cmd_password(char **argv)
                   ipmipower_auth_string(conf->authtype));
     }
   else if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_SESSION_MAX_AUTH_CODE_LEN)) 
+           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTHENTICATION_CODE_LENGTH)) 
     {
-      memset(conf->password, '\0', IPMI_SESSION_MAX_AUTH_CODE_LEN+1);
+      memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
 
       if (argv[1])
         strcpy(conf->password, argv[1]);

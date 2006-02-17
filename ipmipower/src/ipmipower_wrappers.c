@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.2.2.3 2006-02-13 23:54:48 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.2.2.4 2006-02-17 23:59:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -160,60 +160,77 @@ Cbuf_peek_to_fd(cbuf_t src, int dstfd, int len)
   return ret;
 }
 
-void * 
-Fiid_obj_calloc(fiid_template_t tmpl) 
+fiid_obj_t
+Fiid_obj_create(fiid_template_t tmpl) 
 {
-  void *ptr;
+  fiid_obj_t obj;
+
   assert(tmpl != NULL);
 
-  if ((ptr = fiid_obj_calloc(tmpl)) == NULL)
+  if ((obj = fiid_obj_create(tmpl)) == NULL)
     err_exit("Fiid_obj_calloc: %s", strerror(errno));
-  return ptr;
-}
-
-void * 
-Fiid_obj_memset(fiid_obj_t obj, int c, fiid_template_t tmpl)
-{
-  void *ptr;
-  assert(obj != NULL && tmpl != NULL);
-  
-  if ((ptr = fiid_obj_memset(obj, c, tmpl)) == NULL)
-    err_exit("Fiid_obj_memset: %s", strerror(errno)); 
-  
   return obj;
 }
 
-void 
-Fiid_obj_free(fiid_obj_t obj) 
+int8_t
+Fiid_obj_clear(fiid_obj_t obj)
 {
-  fiid_obj_free(obj);
+  int8_t rv;
+
+  assert(fiid_obj_valid(obj));
+
+  if ((rv = fiid_obj_clear(obj)) < 0)
+    err_exit("Fiid_obj_clear: %s", strerror(errno)); 
+
+  return rv;
+}
+
+void 
+Fiid_obj_destroy(fiid_obj_t obj) 
+{
+  assert(fiid_obj_valid(obj));
+
+  fiid_obj_destroy(obj);
 }
 
 void
-Fiid_obj_get(fiid_obj_t obj, fiid_template_t tmpl, uint8_t *field, uint64_t *val)
+Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
 {
-  assert(obj !=NULL && tmpl !=NULL && field != NULL && val !=NULL);
+  int8_t rv;
 
-  if (fiid_obj_get(obj, tmpl, field, val) < 0)
+  assert(fiid_obj_valid(obj) && field && val);
+
+  if ((rv = fiid_obj_get(obj, field, val)) < 0)
     err_exit("Fiid_obj_get: %s", strerror(errno));
+
+  if (!rv)
+    err_exit("Fiid_obj_get: No data set");
+  
+  return;
 }
 
 void 
-Fiid_obj_dump_lan(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_session, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd) 
+Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd) 
 {
-  assert(pkt != NULL && tmpl_session != NULL && tmpl_msg_hdr != NULL 
+  assert(pkt != NULL 
+	 && tmpl_msg_hdr != NULL 
          && tmpl_cmd != NULL);
 
-  if (fiid_obj_dump_lan(fd, prefix, hdr, pkt, pkt_len, tmpl_session,
-                        tmpl_msg_hdr, tmpl_cmd) < 0)
-    err_exit("Fiid_obj_dump_lan: %s", strerror(errno));
+  if (ipmi_dump_lan_packet(fd, 
+                           prefix,
+                           hdr,
+                           pkt,
+                           pkt_len,
+                           tmpl_msg_hdr,
+                           tmpl_cmd) < 0)
+    err_exit("Ipmi_dump_lan_packet: %s", strerror(errno));
 }
 
 void 
-Fiid_obj_dump_rmcp(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd) 
+Ipmi_dump_rmcp_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd) 
 {
   assert(pkt != NULL && tmpl_cmd != NULL);
 
-  if (fiid_obj_dump_rmcp(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
-    err_exit("Fiid_obj_dump_lan: %s", strerror(errno));
+  if (ipmi_dump_rmcp_packet(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
+    err_exit("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }

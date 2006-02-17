@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.29.2.6 2006-02-13 23:54:47 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.29.2.7 2006-02-17 23:59:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,12 +62,12 @@
 #include "freeipmi.h"
 
 /* Pre Timeout Interval is 1 byte */
-#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
-#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
+#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
+#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
 
 /* Countdown Seconds is 2 bytes of 100 millisecond chunks */
-#define IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS     0
-#define IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS     6553
+#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS     0
+#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS     6553
 
 #define BMC_WATCHDOG_ERR_BUFLEN                      1024
 #define BMC_WATCHDOG_STR_BUFLEN                      1024
@@ -79,10 +79,10 @@
 
 #define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
 
-#define _FIID_OBJ_GET(__obj, __tmpl, __field, __val, __func) \
+#define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
      uint64_t val; \
-     if (fiid_obj_get((__obj), (__tmpl), (__field), &val) < 0) \
+     if (fiid_obj_get((__obj), (__field), &val) < 0) \
        { \
          _bmclog("%s: fiid_obj_get: %s", (__func), strerror(errno)); \
          goto cleanup; \
@@ -352,41 +352,50 @@ _sleep(unsigned int sleep_len)
 }
 
 static int
-_cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
-     fiid_obj_t cmd_rq, fiid_template_t tmpl_rq,
-     fiid_obj_t cmd_rs, fiid_template_t tmpl_rs)
+_cmd(char *str, 
+     int retry_wait_time, 
+     int retry_attempt, 
+     uint8_t netfn,
+     fiid_obj_t cmd_rq,
+     fiid_obj_t cmd_rs)
 {
   uint64_t comp_code;
   int retry_count = 0;
 
-  assert (str != NULL && retry_wait_time >= 0 && retry_attempt >= 0
+  assert (str != NULL 
+	  && retry_wait_time >= 0 
+	  && retry_attempt >= 0
           && (netfn == IPMI_NET_FN_APP_RQ || netfn == IPMI_NET_FN_TRANSPORT_RQ)
-          && cmd_rq != NULL && tmpl_rq != NULL
-          && cmd_rs != NULL && tmpl_rs != NULL);
+          && cmd_rq != NULL
+          && cmd_rs != NULL);
 
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq, tmpl_rq) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rq) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
   while (1)
     {
-      if (ipmi_cmd (&ipmi_dev, IPMI_BMC_IPMB_LUN_BMC, netfn, 
-		   cmd_rq, tmpl_rq, cmd_rs, tmpl_rs) < 0)
+      if (ipmi_cmd (&ipmi_dev, 
+		    IPMI_BMC_IPMB_LUN_BMC, 
+		    netfn, 
+		    cmd_rq, 
+		    cmd_rs) < 0)
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
-              _bmclog("%s: ipmi_cmd: %s", str, strerror(errno));
+              _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
+                      str, strerror(errno));
               return -1;
             }
           else
             {
               if (retry_count >= retry_attempt)
                 {
-                  _bmclog("%s: ipmi_cmd: BMC too busy: "
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
                           "retry_wait_time=%d, retry_attempt=%d", 
                           str, retry_wait_time, retry_attempt);
                   return -1;
@@ -394,8 +403,8 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
               if (cinfo.debug)
                 {
-                  fprintf(stderr, "%s: ipmi_cmd: BMC busy\n", str);
-                  _bmclog("%s: ipmi_cmd: BMC busy", str);
+                  fprintf(stderr, "%s: ipmi_kcs_cmd_interruptible: BMC busy\n", str);
+                  _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC busy", str);
                 }
 #endif
               _sleep(retry_wait_time);
@@ -409,12 +418,12 @@ _cmd(char *str, int retry_wait_time, int retry_attempt, uint8_t netfn,
 #ifndef NDEBUG
   if (cinfo.debug)
     {
-      if (fiid_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs, tmpl_rs) < 0)
-        _bmclog("%s: fiid_obj_dump_perror: %s", str, strerror(errno));
+      if (ipmi_obj_dump_perror(STDERR_FILENO, str, NULL, NULL, cmd_rs) < 0)
+        _bmclog("%s: ipmi_obj_dump_perror: %s", str, strerror(errno));
     }
 #endif
 
-  _FIID_OBJ_GET(cmd_rs, tmpl_rs, (uint8_t *)"comp_code", &comp_code, str);
+  _FIID_OBJ_GET(cmd_rs, (uint8_t *)"comp_code", &comp_code, str);
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog("%s: cmd error: %Xh", str, comp_code);
@@ -432,16 +441,16 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
   fiid_obj_t cmd_rs = NULL;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_reset_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_reset_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -453,14 +462,16 @@ _reset_watchdog_timer_cmd(int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
     
-  retval = _cmd("Reset Cmd", retry_wait_time, retry_attempt, 
+  retval = _cmd("Reset Cmd", 
+		retry_wait_time, 
+		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
-                cmd_rq, tmpl_cmd_reset_watchdog_timer_rq,
-                cmd_rs, tmpl_cmd_reset_watchdog_timer_rs);
+                cmd_rq,
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -493,16 +504,16 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   ms_byte = ptr[1];
 #endif
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_set_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_set_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -522,14 +533,16 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
     
-  retval = _cmd("Set Cmd", retry_wait_time, retry_attempt, 
+  retval = _cmd("Set Cmd", 
+		retry_wait_time,
+		retry_attempt, 
                 IPMI_NET_FN_APP_RQ,
-                cmd_rq, tmpl_cmd_set_watchdog_timer_rq,
-                cmd_rs, tmpl_cmd_set_watchdog_timer_rs);
+                cmd_rq,
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -569,16 +582,16 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   uint8_t ls_byte, ms_byte;
   int retval = -1;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
     {
-      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rs)) == NULL)
     {
-      _bmclog("_get_watchdog_timer_cmd: fiid_obj_alloc: %s", 
+      _bmclog("_get_watchdog_timer_cmd: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -590,94 +603,80 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  if ((retval =_cmd("Get Cmd", retry_wait_time, retry_attempt, 
+  if ((retval =_cmd("Get Cmd", 
+		    retry_wait_time,
+		    retry_attempt, 
                     IPMI_NET_FN_APP_RQ,
-                    cmd_rq, tmpl_cmd_get_watchdog_timer_rq,
-                    cmd_rs, tmpl_cmd_get_watchdog_timer_rs)) != 0)
+                    cmd_rq, 
+                    cmd_rs)) != 0)
     goto cleanup;
 
   if (timer_use)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timer_use", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use", 
                   timer_use, "_get_watchdog_timer_cmd");
 
   if (timer_state)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timer_state", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_state", 
                   timer_state, "_get_watchdog_timer_cmd");
 
   if (log)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"log", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"log", 
                   log, "_get_watchdog_timer_cmd");
 
   if (timeout_action)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, (uint8_t *)"timeout_action", 
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timeout_action", 
                   timeout_action, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interrupt)
-    _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                  (uint8_t *)"pre_timeout_interrupt", pre_timeout_interrupt, 
-                  "_get_watchdog_timer_cmd");
+    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interrupt", 
+		  pre_timeout_interrupt, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interval)
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"pre_timeout_interval", pre_timeout_interval, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interval", 
+		    pre_timeout_interval, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_frb2)
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_bios_frb2", 
-                    timer_use_expiration_flag_bios_frb2, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_frb2", 
+                    timer_use_expiration_flag_bios_frb2, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_post) 
-     _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                   (uint8_t *)"timer_use_expiration_flag_bios_post", 
-                   timer_use_expiration_flag_bios_post, 
-                   "_get_watchdog_timer_cmd");
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_post", 
+                   timer_use_expiration_flag_bios_post, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_os_load) 
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_os_load", 
-                    timer_use_expiration_flag_os_load, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.os_load", 
+                    timer_use_expiration_flag_os_load, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_sms_os) 
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"timer_use_expiration_flag_sms_os", 
-                    timer_use_expiration_flag_sms_os, 
-                    "_get_watchdog_timer_cmd");
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.sms_os", 
+                    timer_use_expiration_flag_sms_os, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_oem) 
-     _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                   (uint8_t *)"timer_use_expiration_flag_oem", 
-                   timer_use_expiration_flag_oem, 
-                   "_get_watchdog_timer_cmd");
+     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.oem", 
+                   timer_use_expiration_flag_oem, "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)
      {
-       _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                     (uint8_t *)"initial_countdown_value_ls_byte", 
+       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ls_byte", 
                      &ls_byte, "_get_watchdog_timer_cmd");
        
-       _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                     (uint8_t *)"initial_countdown_value_ms_byte", 
+       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ms_byte", 
                      &ms_byte, "_get_watchdog_timer_cmd");
        *initial_countdown_seconds = _time_seconds(ls_byte, ms_byte);
      }
 
   if (present_countdown_seconds)
     {
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"present_countdown_value_ls_byte", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ls_byte", 
                     &ls_byte, "_get_watchdog_timer_cmd");
-      _FIID_OBJ_GET(cmd_rs, tmpl_cmd_get_watchdog_timer_rs, 
-                    (uint8_t *)"present_countdown_value_ms_byte", 
+      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ms_byte", 
                     &ms_byte, "_get_watchdog_timer_cmd");
       *present_countdown_seconds = _time_seconds(ls_byte, ms_byte);
     }
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -691,16 +690,16 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
   int retval = -1;
   int8_t num;
 
-  if ((cmd_rq = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
+  if ((cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)) == NULL)
     {
-      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
 
-  if ((cmd_rs = fiid_obj_alloc(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
+  if ((cmd_rs = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rs)) == NULL)
     {
-      _bmclog("_suspend_bmc_arps: fiid_obj_alloc: %s", 
+      _bmclog("_suspend_bmc_arps: fiid_obj_create: %s", 
               strerror(errno));
       goto cleanup;
     }
@@ -723,14 +722,16 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
     
-  retval = _cmd("Suspend Cmd", retry_wait_time, retry_attempt,
+  retval = _cmd("Suspend Cmd", 
+		retry_wait_time, 
+		retry_attempt,
                 IPMI_NET_FN_TRANSPORT_RQ,
-                cmd_rq, tmpl_cmd_suspend_bmc_arps_rq,
-                cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
+                cmd_rq, 
+                cmd_rs);
 
  cleanup:
-  fiid_obj_free(cmd_rq);
-  fiid_obj_free(cmd_rs);
+  fiid_obj_destroy(cmd_rq);
+  fiid_obj_destroy(cmd_rs);
   return retval;
 }
 
@@ -827,23 +828,23 @@ _usage(void)
             "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
             "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
             "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n",
-            IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2,
-            IPMI_WATCHDOG_TIMER_USE_BIOS_POST,
-            IPMI_WATCHDOG_TIMER_USE_OS_LOAD, 
-            IPMI_WATCHDOG_TIMER_USE_SMS_OS,
-            IPMI_WATCHDOG_TIMER_USE_OEM,
-            IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
-            IPMI_WATCHDOG_STOP_TIMER_DISABLE,
-            IPMI_WATCHDOG_LOG_ENABLE, 
-            IPMI_WATCHDOG_LOG_DISABLE,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD, 
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM,
+            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
+            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_DISABLE,
+            IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE, 
+            IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
   if (cinfo.set)
     fprintf(stderr,
             "  -w         --start-after-set            Start timer after set if timer is stopped\n"
@@ -858,10 +859,10 @@ _usage(void)
             "  -A INT     --arp-response=INT           Suspend ARP Responses\n"
             "             %d = Suspend ARP Responses\n"
             "             %d = Do Not Suspend ARP Responses\n",
-            IPMI_WATCHDOG_GRATUITOUS_ARP_SUSPEND,
-            IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND,
-            IPMI_WATCHDOG_ARP_RESPONSE_SUSPEND,
-            IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND);
+            IPMI_BMC_GENERATED_GRATUITOUS_ARP_SUSPEND,
+            IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND,
+            IPMI_BMC_GENERATED_ARP_RESPONSE_SUSPEND,
+            IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND);
   if (cinfo.daemon)
     fprintf(stderr, 
             "  -e SECS    --reset-period=SECS          Time interval before resetting timer\n");
@@ -1003,35 +1004,35 @@ _cmdline_parse(int argc, char **argv)
           cinfo.timer_use++;
           cinfo.timer_use_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_TIMER_USE_VALID(cinfo.timer_use_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(cinfo.timer_use_val))
             _err_exit("timer user invalid");
           break;
         case 'm':
           cinfo.stop_timer++;
           cinfo.stop_timer_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_STOP_TIMER_VALID(cinfo.stop_timer_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(cinfo.stop_timer_val))
             _err_exit("stop timer value invalid");
           break;
         case 'l':
           cinfo.log++;
           cinfo.log_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_LOG_VALID(cinfo.log_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(cinfo.log_val))
             _err_exit("log value invalid");
           break;
         case 'a':
           cinfo.timeout_action++;
           cinfo.timeout_action_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(cinfo.timeout_action_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(cinfo.timeout_action_val))
             _err_exit("timeout action value invalid");
           break;
         case 'p':
           cinfo.pre_timeout_interrupt++;
           cinfo.pre_timeout_interrupt_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(cinfo.pre_timeout_interrupt_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(cinfo.pre_timeout_interrupt_val))
             _err_exit("pre timeout interrupt value invalid");
           break;
         case 'z':
@@ -1039,8 +1040,8 @@ _cmdline_parse(int argc, char **argv)
           cinfo.pre_timeout_interval_val = (uint8_t)strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("pre timeout interval value invalid");
-          if ((cinfo.pre_timeout_interval_val - 1) < (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS - 1)
-              || (cinfo.pre_timeout_interval_val - 1) > (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS - 1))
+          if ((cinfo.pre_timeout_interval_val - 1) < (IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS - 1)
+              || (cinfo.pre_timeout_interval_val - 1) > (IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS - 1))
             _err_exit("pre timeout interval value out of range");
           break;
         case 'F':
@@ -1063,8 +1064,8 @@ _cmdline_parse(int argc, char **argv)
           cinfo.initial_countdown_seconds_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("initial countdown value invalid");
-          if (cinfo.initial_countdown_seconds_val < IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS
-              || cinfo.initial_countdown_seconds_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
+          if (cinfo.initial_countdown_seconds_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
+              || cinfo.initial_countdown_seconds_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("initial countdown value out of range");
           break;
         case 'w':
@@ -1082,14 +1083,14 @@ _cmdline_parse(int argc, char **argv)
           cinfo.gratuitous_arp++;
           cinfo.gratuitous_arp_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_GRATUITOUS_ARP_VALID(cinfo.gratuitous_arp_val))
+              || !IPMI_BMC_GENERATED_GRATUITOUS_ARP_VALID(cinfo.gratuitous_arp_val))
             _err_exit("gratuitous arp value invalid");
           break;
         case 'A':
           cinfo.arp_response++;
           cinfo.arp_response_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_ARP_RESPONSE_VALID(cinfo.arp_response_val))
+              || !IPMI_BMC_GENERATED_ARP_RESPONSE_VALID(cinfo.arp_response_val))
             _err_exit("arp response value invalid");
           break;
         case 'e':
@@ -1098,8 +1099,8 @@ _cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reset period value invalid");
           if (cinfo.reset_period_val == 0
-              || cinfo.reset_period_val < IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS
-              || cinfo.reset_period_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
+              || cinfo.reset_period_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
+              || cinfo.reset_period_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("reset period value out of range");
           break;
 #ifndef NDEBUG
@@ -1182,7 +1183,7 @@ _set_cmd(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
 
@@ -1226,9 +1227,9 @@ _set_cmd(void)
 static char *
 _log_str(uint8_t log)
 {
-  if (log == IPMI_WATCHDOG_LOG_ENABLE)
+  if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE)
     return "Enabled";
-  else if (log == IPMI_WATCHDOG_LOG_DISABLE)
+  else if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE)
     return "Disabled";
   else
     return "Internal Error, Unknown Log Value";
@@ -1239,9 +1240,9 @@ _log_str(uint8_t log)
 static char *
 _timer_state_str(uint8_t timer_state)
 {
-  if (timer_state == IPMI_WATCHDOG_TIMER_STATE_RUNNING)
+  if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     return "Running";
-  else if (timer_state == IPMI_WATCHDOG_TIMER_STATE_STOPPED)
+  else if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
     return "Stopped";
   else
     return "Internal Error, Unknown Stop Timer Value";
@@ -1252,15 +1253,15 @@ _timer_state_str(uint8_t timer_state)
 static char *
 _timer_use_str(uint8_t timer_use)
 {
-  if (timer_use == IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2)
+  if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2)
     return "BIOS FRB2";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_BIOS_POST)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST)
     return "BIOS POST";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_OS_LOAD)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD)
     return "OS LOAD";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_SMS_OS)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS)
     return "SMS/OS";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_OEM)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM)
     return "OEM";
   else
     return "Reserved";
@@ -1271,13 +1272,13 @@ _timer_use_str(uint8_t timer_use)
 static char *
 _pre_timeout_interrupt_str(uint8_t pre_timeout_interrupt)
 {
-  if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
     return "None";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI)
     return "SMI";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI)
     return "NMI / Diagnostic Interrupt";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
     return "Messaging Interrupt";
   else
     return "Reserved";
@@ -1288,13 +1289,13 @@ _pre_timeout_interrupt_str(uint8_t pre_timeout_interrupt)
 static char *
 _timeout_action_str(uint8_t timeout_action)
 {
-  if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION)
+  if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION)
     return "None";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET)
     return "Hard Reset";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN)
     return "Power Down";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE)
     return "Power Cycle";
   else
     return "Reserved";
@@ -1390,12 +1391,12 @@ _start_cmd(void)
       if (cinfo.gratuitous_arp)
         gratuitous_arp = cinfo.gratuitous_arp_val;
       else
-        gratuitous_arp = IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND;
+        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
 
       if (cinfo.arp_response)
         arp_response = cinfo.arp_response_val;
       else
-        arp_response = IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND;
+        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
         
       if ((ret = _suspend_bmc_arps_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                        BMC_WATCHDOG_RETRY_ATTEMPT,
@@ -1426,7 +1427,7 @@ _stop_cmd(void)
  
   if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
-                                     timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                     timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                      log, timeout_action, pre_timeout_interrupt, 
                                      pre_timeout_interval, 
                                      0, 0, 0, 0, 0,
@@ -1454,10 +1455,10 @@ _clear_cmd(void)
   if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
                                      timer_use,
-                                     IPMI_WATCHDOG_STOP_TIMER_ENABLE,
-                                     IPMI_WATCHDOG_LOG_DISABLE, 
-                                     IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
-                                     IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
+                                     IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE,
+                                     IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE, 
+                                     IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION,
+                                     IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE,
                                      0, 0, 0, 0, 0, 0, 0)) != 0)
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, ret, 
                    "Set Watchdog Timer Error");
@@ -1559,7 +1560,7 @@ _daemon_setup(void)
       break;
     }
 
-  if (timer_state == IPMI_WATCHDOG_TIMER_STATE_RUNNING)
+  if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     _err_exit("watchdog timer must be stopped before running daemon");
 
   timer_use = (cinfo.timer_use) ? cinfo.timer_use_val : timer_use;
@@ -1573,7 +1574,7 @@ _daemon_setup(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
   if (cinfo.reset_period)
@@ -1585,7 +1586,7 @@ _daemon_setup(void)
     {
       if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                          BMC_WATCHDOG_RETRY_ATTEMPT,
-                                         timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                         timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                          log, timeout_action, 
                                          pre_timeout_interrupt, pre_timeout_interval, 
                                          (cinfo.clear_bios_frb2) ? 1 : 0,
@@ -1620,12 +1621,12 @@ _daemon_setup(void)
       if (cinfo.gratuitous_arp)
         gratuitous_arp = cinfo.gratuitous_arp_val;
       else
-        gratuitous_arp = IPMI_WATCHDOG_GRATUITOUS_ARP_NO_SUSPEND;
+        gratuitous_arp = IPMI_BMC_GENERATED_GRATUITOUS_ARP_DO_NOT_SUSPEND;
       
       if (cinfo.arp_response)
         arp_response = cinfo.gratuitous_arp_val;
       else
-        arp_response = IPMI_WATCHDOG_ARP_RESPONSE_NO_SUSPEND;
+        arp_response = IPMI_BMC_GENERATED_ARP_RESPONSE_DO_NOT_SUSPEND;
 
       while (1)
         {
@@ -1729,7 +1730,7 @@ _daemon_cmd(void)
           goto sleep_now;
         }
       
-      if (timer_state == IPMI_WATCHDOG_TIMER_STATE_STOPPED)
+      if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
         {
           _bmclog("timer stopped by another process");
           goto cleanup; 
@@ -1799,7 +1800,7 @@ _daemon_cmd(void)
     {
       if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                          BMC_WATCHDOG_RETRY_ATTEMPT,
-                                         timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                         timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                          log, timeout_action, pre_timeout_interrupt, 
                                          pre_timeout_interval, 
                                          0, 0, 0, 0, 0,

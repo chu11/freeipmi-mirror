@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: list.h,v 1.1.4.1 2006-02-13 23:54:48 chu11 Exp $
+ *  $Id: list.h,v 1.1.4.2 2006-02-17 23:59:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

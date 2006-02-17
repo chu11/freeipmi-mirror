@@ -70,33 +70,64 @@ extern "C" {
         (((__channel_number+1) >= IPMI_CHANNEL_SINGLE_SESSION \
           && (__channel_number-1) <= IPMI_CHANNEL_CURRENT_CHANNEL) ? 1 : 0)
 
+#define IPMI_GET_IPMI_V20_EXTENDED_DATA          0x01
+#define IPMI_GET_IPMI_V15_DATA                   0x00
+
+#define IPMI_GET_IPMI_DATA_VALID(__val) \
+        (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
+          || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
+
 #define IPMI_AUTHENTICATION_TYPE_NONE                0x00
 #define IPMI_AUTHENTICATION_TYPE_MD2                 0x01
 #define IPMI_AUTHENTICATION_TYPE_MD5                 0x02
 #define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY 0x04
 #define IPMI_AUTHENTICATION_TYPE_OEM_PROP            0x05
+#define IPMI_AUTHENTICATION_TYPE_RMCPPLUS            0x06
 
 #define IPMI_AUTHENTICATION_TYPE_VALID(__authentication_type) \
         (((__authentication_type) == IPMI_AUTHENTICATION_TYPE_NONE \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD2 \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD5 \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY \
-          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP) ? 1 : 0) 
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0) 
 
-#define IPMI_PRIVILEGE_LEVEL_RESERVED     0x00
-#define IPMI_PRIVILEGE_LEVEL_CALLBACK     0x01
-#define IPMI_PRIVILEGE_LEVEL_USER         0x02
-#define IPMI_PRIVILEGE_LEVEL_OPERATOR     0x03
-#define IPMI_PRIVILEGE_LEVEL_ADMIN        0x04
-#define IPMI_PRIVILEGE_LEVEL_OEM          0x05
-#define IPMI_PRIVILEGE_LEVEL_NO_ACCESS    0x0F
+#define IPMI_1_5_AUTHENTICATION_TYPE_VALID(__authentication_type) \
+        (((__authentication_type) == IPMI_AUTHENTICATION_TYPE_NONE \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD2 \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD5 \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP) ? 1 : 0)
+
+#define IPMI_2_0_AUTHENTICATION_TYPE_VALID(__authentication_type) \
+        IPMI_AUTHENTICATION_TYPE_VALID((__authentication_type))
+
+#define IPMI_PRIVILEGE_LEVEL_RESERVED      0x00
+#define IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL 0x00 /* IPMI 2.0 */
+#define IPMI_PRIVILEGE_LEVEL_CALLBACK      0x01
+#define IPMI_PRIVILEGE_LEVEL_USER          0x02
+#define IPMI_PRIVILEGE_LEVEL_OPERATOR      0x03
+#define IPMI_PRIVILEGE_LEVEL_ADMIN         0x04
+#define IPMI_PRIVILEGE_LEVEL_OEM           0x05
+#define IPMI_PRIVILEGE_LEVEL_NO_ACCESS     0x0F
 
 #define IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level) \
+        (((__privilege_level) == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_CALLBACK \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_USER \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OPERATOR \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_ADMIN \
+          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OEM) ? 1 : 0)
+
+#define IPMI_1_5_PRIVILEGE_LEVEL_VALID(__privilege_level) \
         (((__privilege_level) == IPMI_PRIVILEGE_LEVEL_CALLBACK \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_USER \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OPERATOR \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_ADMIN \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OEM) ? 1 : 0)
+
+#define IPMI_2_0_PRIVILEGE_LEVEL_VALID(__privilege_level) \
+        IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level)
 
 #define IPMI_MESSAGING_ACCESS_MODE_DISABLED            0x0
 #define IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY       0x1
@@ -201,6 +232,8 @@ extern "C" {
 
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
+extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
+extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rq;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rs;
 extern fiid_template_t tmpl_cmd_activate_session_rq;
@@ -235,6 +268,11 @@ int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 
                                                          fiid_obj_t obj_cmd);
   
+int8_t fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
+                                                             uint8_t maximum_privilege_level, 
+                                                             uint8_t get_ipmi_v20_extended_data,
+                                                             fiid_obj_t obj_cmd);
+
 int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				       char *user_name, 
 				       uint32_t user_name_len, 

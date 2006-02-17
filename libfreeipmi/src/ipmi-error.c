@@ -152,19 +152,19 @@ ipmi_strerror_r (uint8_t cmd,
             case IPMI_COMP_CODE_INVALID_SESSION_ID:
               SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_STR);
 	      
-            case IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL:
-              SNPRINTF_RETURN (IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL_STR);
+            case IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL_STR);
             }
 	  break;
-	case IPMI_CMD_SET_SESSION_PRIV_LEVEL: 
+	case IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL: 
           switch (comp_code)
             {
             case IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER:
               SNPRINTF_RETURN (IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER_STR);
-            case IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT:
-              SNPRINTF_RETURN (IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT_STR);
-            case IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH:
-              SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTH_STR);
+            case IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT_STR);
+            case IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION_STR);
             }
 	  break;
 	case IPMI_CMD_CLOSE_SESSION:
@@ -174,13 +174,129 @@ ipmi_strerror_r (uint8_t cmd,
               SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR);
             }
 	  break;
+	case IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED_STR);
+	    case IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS_STR);
+	    case IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER_STR);
+	    }
+	  break;
+	case IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED_STR);
+	    }
+	  break;
+	case IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED_STR);
+	    case IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS_STR);
+	    case IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER_STR);
+	    case IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER_STR);
+	    }
+	  break;
+	case IPMI_CMD_GET_SERIAL_MODEM_CONFIGURATION:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED_STR);
+	    }
+	  break;
+	case IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED_STR);
+	    case IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS_STR);
+	    case IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR);
+	    }
+	  break;
+	case IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR);
+	    }
+	  break;
+	case IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED_STR);
+	    case IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS_STR);
+	    case IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER_STR);
+	    }
+	  break;
+	case IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS:
+          switch (comp_code)
+            {
+	    case IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED:
+	      SNPRINTF_RETURN (IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED_STR);
+	    }
+	  break;
+        case IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR);
+	    }
+	  break;
+
+        case IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR);
+	    }
+	  break;
+        case IPMI_CMD_ALERT_IMMEDIATE:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS_STR);
+
+            case IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR);
+            }
+          break;
+	  /* XXX duplicate case, need to re-architect */
+#if 0
+	case IPMI_CMD_RESET_WATCHDOG_TIMER:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
+            }
+	  break;
+#endif
+	case IPMI_CMD_GET_SEL_ENTRY:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
+            }
+	  break;
 	case IPMI_CMD_DELETE_SEL_ENTRY:
           switch (comp_code)
             {
-            case IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED:
-              SNPRINTF_RETURN (IPMI_COMP_CODE_SEL_OPERATION_NOT_SUPPORTED_STR);
-            case IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS:
-              SNPRINTF_RETURN (IPMI_COMP_CODE_SEL_ERASE_IN_PROGRESS_STR);
+            case IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR);
+            case IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
             }
 	  break;
 	}
@@ -201,16 +317,54 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 		     char *errstr, 
 		     size_t len)
 {
-  uint8_t cmd, comp_code;
-  
-  if (obj_cmd == NULL || errstr == NULL)
+  uint64_t cmd, comp_code;
+  int32_t _len;
+  int8_t rv;
+
+  if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  cmd = obj_cmd[0];
-  comp_code = obj_cmd[1];
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!rv)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
+    return (-1);
+
+  if (!_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);
   
   return ipmi_strerror_r (cmd, comp_code, errstr, len); 
 }

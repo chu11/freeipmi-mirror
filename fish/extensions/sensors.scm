@@ -111,7 +111,7 @@
 	 (begin 
 	   (cond 
 	    ((sensors-get-sdr-info-option cmd-args)
-	     (sensors-display-sdr-info (fi-get-sdr-repo-info)))
+	     (sensors-display-sdr-info (fi-get-sdr-repository-info)))
 	    ((sensors-get-list-group-option cmd-args)
 	     (sensors-display-group-list))
 	    (else 

@@ -1,3 +1,4 @@
+#if 0
 /* 
    ipmi-rmcpplus-util.c - IPMI Session Handler
 
@@ -1487,3 +1488,4 @@ check_rmcpplus_remote_console_session_id(fiid_template_t tmpl_rmcpplus_msg, fiid
 
   return ((remote_console_session_id == val) ? 1 : 0);
 }
+#endif

@@ -1,3 +1,4 @@
+#if 0
 /* 
    ipmi-rmcpplus-interface.c - IPMI Session Handler
 
@@ -2271,3 +2272,4 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   return (0);
 }
+#endif

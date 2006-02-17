@@ -53,14 +53,30 @@ struct sel_info
 };
 typedef struct sel_info sel_info_t;
 
+struct sel_record
+{
+  uint16_t record_id;
+  char *timestamp;
+  char *sensor_info;
+  char *event_message;
+  char *event_data2_message;
+  char *event_data3_message;
+};
+typedef struct sel_record sel_record_t;
+
 int ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			      sel_descriptor_t *seld, 
 			      uint8_t *record_data,
-                              uint32_t record_data_len);
+                              uint32_t *record_data_len);
 int ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			     sel_descriptor_t *seld, 
 			     uint8_t *record_data,
-                             uint32_t record_data_len);
+                             uint32_t *record_data_len);
+
+int get_sel_record (uint8_t *record_data, 
+		    uint32_t record_data_len, 
+		    sel_record_t *sel_record);
+
 int get_sel_info (ipmi_device_t *dev, 
 		  sel_info_t *pinfo);
 
