@@ -932,6 +932,7 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authent
   uint8_t authentication_code_buf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
 
   if (!pkt 
+      || !IPMI_AUTHENTICATION_TYPE_VALID(auth_type)
       || (authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH))
     {
       errno = EINVAL;
