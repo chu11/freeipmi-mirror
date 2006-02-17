@@ -32,38 +32,36 @@ fiid_template_t tmpl_get_sel_info_rs =
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sel_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sel_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "log_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
+    {16, "entries", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
     {16, "free_space", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    {32, "recent_addition_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    {32, "recent_erase_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1,  "get_sel_alloc_info_cmd_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1,  "reserve_sel_cmd_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1,  "partial_add_sel_entry_cmd_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1,  "delete_sel_cmd_support", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {32, "most_recent_addition_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
+    {32, "most_recent_erase_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1,  "get_sel_allocation_info_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1,  "reserve_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1,  "partial_add_sel_entry_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1,  "delete_sel_command_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {3,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1,  "overflow_flag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-
-fiid_template_t tmpl_get_sel_alloc_info_rq =
+fiid_template_t tmpl_get_sel_allocation_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sel_alloc_info_rs =
+fiid_template_t tmpl_get_sel_allocation_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "no_of_possible_alloc_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "number_of_possible_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "allocation_unit_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "no_of_free_alloc_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {16, "larget_free_block", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8,  "max_record_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "number_of_free_allocation_units", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "largest_free_block", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "maximum_record_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
-
 
 fiid_template_t tmpl_reserve_sel_rq =
   {
@@ -85,8 +83,8 @@ fiid_template_t tmpl_get_sel_entry_rq =
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    {8,  "record_offset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8,  "bytes_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "offset_into_record", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "bytes_to_read", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
@@ -122,13 +120,12 @@ fiid_template_t tmpl_clear_sel_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    {8, "C", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "L", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "R", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "opcode", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "C", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "L", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "R", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
-
 
 fiid_template_t tmpl_clear_sel_rs =
   {
@@ -139,9 +136,8 @@ fiid_template_t tmpl_clear_sel_rs =
     {0, "", 0}
   };
 
-
 int8_t 
-fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
+fill_cmd_get_sel_info (fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -167,7 +163,7 @@ fill_kcs_get_sel_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
+fill_cmd_get_sel_allocation_info (fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -177,7 +173,7 @@ fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sel_alloc_info_rq)) < 0)
+  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sel_allocation_info_rq)) < 0)
     return (-1);
 
   if (!rv)
@@ -193,7 +189,7 @@ fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
+fill_cmd_reserve_sel (fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -219,7 +215,11 @@ fill_kcs_reserve_sel (fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq)
+fill_cmd_get_sel_entry (uint16_t reservation_id,
+                        uint16_t record_id,
+                        uint8_t offset_into_record,
+                        uint8_t bytes_to_read,
+                        fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
@@ -244,25 +244,25 @@ fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq)
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"reservation_id",
-		0);
-  
+		reservation_id);
+
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"record_id", 
 		record_id);
   
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"record_offset",
-		0);
+		(uint8_t *)"offset_into_record",
+		offset_into_record);
 
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"bytes_read", 
-		0xff);
+		(uint8_t *)"bytes_to_read", 
+	        bytes_to_read);
   
   return 0;
 }
 
 int8_t 
-fill_kcs_delete_sel_entry (uint16_t reservation_id, 
+fill_cmd_delete_sel_entry (uint16_t reservation_id, 
 			   uint16_t record_id,
                            fiid_obj_t obj_data_rq)
 {
@@ -299,11 +299,14 @@ fill_kcs_delete_sel_entry (uint16_t reservation_id,
 }
 
 int8_t 
-fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq)
+fill_cmd_clear_sel (uint16_t reservation_id, 
+                    uint8_t operation, 
+                    fiid_obj_t obj_data_rq)
 {
   int8_t rv;
 
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
+      ||!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return (-1);
@@ -339,8 +342,8 @@ fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data
 		'R');
   
   FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"opcode", 
-		opcode);
+		(uint8_t *)"operation", 
+		operation);
   
   return 0;
 }

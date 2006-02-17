@@ -283,6 +283,13 @@ ipmi_strerror_r (uint8_t cmd,
             }
 	  break;
 #endif
+	case IPMI_CMD_GET_SEL_ENTRY:
+          switch (comp_code)
+            {
+            case IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS:
+              SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR);
+            }
+	  break;
 	case IPMI_CMD_DELETE_SEL_ENTRY:
           switch (comp_code)
             {

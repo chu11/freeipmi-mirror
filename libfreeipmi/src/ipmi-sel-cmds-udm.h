@@ -27,20 +27,28 @@ extern "C" {
 
 int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
 			       fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev, 
-				     fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_sel_allocation_info2 (ipmi_device_t *dev, 
+                                          fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_reserve_sel2 (ipmi_device_t *dev, 
 			      fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev, 
-				uint16_t record_id, 
+                                uint16_t reservation_id,
+                                uint16_t record_id,
+                                uint8_t offset_into_record,
+                                uint8_t bytes_to_read,
 				fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev, 
 				   uint16_t reservation_id, 
 				   uint16_t record_id, 
 				   fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_clear_sel2 (ipmi_device_t *dev, 
 			    uint16_t reservation_id, 
-			    uint8_t opcode, 
+			    uint8_t operation, 
 			    fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus

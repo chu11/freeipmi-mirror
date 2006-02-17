@@ -329,6 +329,11 @@ extern "C" {
 #define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
 "Alert Immedate rejected due to IPMI messaging session active on this channel"
 
+/* IPMI_CMD_GET_SEL_ENTRY */
+#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                   0x81
+#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
 /* IPMI_CMD_DELETE_SEL_ENTRY */
 #define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED                   0x80
 #define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR \

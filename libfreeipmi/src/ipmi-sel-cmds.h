@@ -21,11 +21,20 @@
 #ifndef _IPMI_SEL_CMDS_H
 #define _IPMI_SEL_CMDS_H
 
-#define IPMI_SEL_GET_ERASURE_STATUS    0x0
-#define IPMI_SEL_INITIATE_ERASE        0xAA
+#define IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY 0x0000
+#define IPMI_SEL_GET_RECORD_ID_LAST_ENTRY  0xFFFF
 
-#define IPMI_SEL_ERASURE_IN_PROGRESS    0x0
-#define IPMI_SEL_ERASE_COMPLETED        0x1
+#define IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE        0xAA
+#define IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS    0x0
+
+#define IPMI_SEL_CLEAR_OPERATION_VALID(__val) \
+        (((__val) == IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE \
+          || (__val) == IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS) ? 1 : 0)
+
+#define IPMI_SEL_CLEAR_ERASURE_IN_PROGRESS    0x0
+#define IPMI_SEL_CLEAR_ERASE_COMPLETED        0x1
+
+#define IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,8 +43,8 @@ extern "C" {
 extern fiid_template_t tmpl_get_sel_info_rq;
 extern fiid_template_t tmpl_get_sel_info_rs;
 
-extern fiid_template_t tmpl_get_sel_alloc_info_rq;
-extern fiid_template_t tmpl_get_sel_alloc_info_rs;
+extern fiid_template_t tmpl_get_sel_allocation_info_rq;
+extern fiid_template_t tmpl_get_sel_allocation_info_rs;
 
 extern fiid_template_t tmpl_reserve_sel_rq;
 extern fiid_template_t tmpl_reserve_sel_rs;
@@ -49,14 +58,25 @@ extern fiid_template_t tmpl_delete_sel_entry_rs;
 extern fiid_template_t tmpl_clear_sel_rq;
 extern fiid_template_t tmpl_clear_sel_rs;
 
-int8_t fill_kcs_get_sel_info (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_get_sel_alloc_info (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_reserve_sel (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_get_sel_entry (uint16_t record_id, fiid_obj_t obj_data_rq);
-int8_t fill_kcs_delete_sel_entry (uint16_t reservation_id,
+int8_t fill_cmd_get_sel_info (fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_get_sel_allocation_info (fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_reserve_sel (fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_get_sel_entry (uint16_t reservation_id,
+                               uint16_t record_id, 
+                               uint8_t offset_into_record,
+                               uint8_t bytes_to_read,
+                               fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_delete_sel_entry (uint16_t reservation_id,
                                   uint16_t record_id,
                                   fiid_obj_t obj_data_rq);
-int8_t fill_kcs_clear_sel (uint16_t reservation_id, uint8_t opcode, fiid_obj_t obj_data_rq);
+
+int8_t fill_cmd_clear_sel (uint16_t reservation_id, 
+                           uint8_t operation, 
+                           fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }

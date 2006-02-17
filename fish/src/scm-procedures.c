@@ -549,7 +549,7 @@ ex_sel_clear ()
 
   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
 			   reservation_id, 
-			   IPMI_SEL_INITIATE_ERASE, 
+			   IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
 			   obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
@@ -602,7 +602,7 @@ ex_sel_get_clear_status ()
 
   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
 			   reservation_id, 
-			   IPMI_SEL_GET_ERASURE_STATUS, 
+			   IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
 			   obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };

@@ -45,7 +45,7 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_info_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sel_info (obj_cmd_rq) < 0)
+  if (fill_cmd_get_sel_info (obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -63,8 +63,8 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev, 
-			      fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sel_allocation_info2 (ipmi_device_t *dev, 
+                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -75,7 +75,7 @@ ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sel_alloc_info_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sel_allocation_info_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -84,10 +84,10 @@ ipmi_cmd_get_sel_alloc_info2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_alloc_info_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_allocation_info_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sel_alloc_info (obj_cmd_rq) < 0)
+  if (fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -129,7 +129,7 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_reserve_sel_rq)))
     goto cleanup;
 
-  if (fill_kcs_reserve_sel (obj_cmd_rq) < 0)
+  if (fill_cmd_reserve_sel (obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -148,7 +148,10 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
 
 int8_t 
 ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev, 
-			 uint16_t record_id, 
+                         uint16_t reservation_id,
+                         uint16_t record_id,
+                         uint8_t offset_into_record,
+                         uint8_t bytes_to_read,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
@@ -172,7 +175,11 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_entry_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sel_entry (record_id, obj_cmd_rq) < 0)
+  if (fill_cmd_get_sel_entry (reservation_id,
+                              record_id,
+                              offset_into_record,
+                              bytes_to_read,
+                              obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -216,7 +223,7 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_delete_sel_entry_rq)))
     goto cleanup;
 
-  if (fill_kcs_delete_sel_entry (
+  if (fill_cmd_delete_sel_entry (
                                  reservation_id, 
                                  record_id,
                                  obj_cmd_rq) < 0)
@@ -239,13 +246,15 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
 int8_t 
 ipmi_cmd_clear_sel2 (ipmi_device_t *dev, 
 		     uint16_t reservation_id, 
-		     uint8_t opcode, 
+		     uint8_t operation, 
 		     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
   
-  if (!dev || !fiid_obj_valid(obj_cmd_rs))
+  if (!dev 
+      || !IPMI_SEL_CLEAR_OPERATION_VALID(operation)
+      || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
       return (-1);
@@ -263,8 +272,8 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_clear_sel_rq)))
     goto cleanup;
 
-  if (fill_kcs_clear_sel (reservation_id, 
-                          opcode,
+  if (fill_cmd_clear_sel (reservation_id, 
+                          operation,
                           obj_cmd_rq) < 0)
     goto cleanup;
 

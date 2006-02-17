@@ -42,7 +42,10 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sel_entry2 (dev, 
-			       IPMI_SEL_FIRST_ENTRY, 
+                               0,
+			       IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY, 
+                               0,
+                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			       obj_cmd_rs) != 0)
     {
       if (fiid_obj_get (obj_cmd_rs, 
@@ -62,7 +65,7 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
       goto cleanup;
     }
   
-  seld->first_record_id = IPMI_SEL_FIRST_ENTRY;
+  seld->first_record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
   if (fiid_obj_get (obj_cmd_rs, 
 		    (uint8_t *)"next_record_id", 
 		    &val) < 0)
@@ -100,14 +103,17 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
       return (-1);
     }
 
-  if (seld->next_record_id == IPMI_SEL_LAST_ENTRY)
+  if (seld->next_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     goto cleanup;
 
   if (!(obj_cmd_rs = fiid_obj_create (tmpl_get_sel_entry_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_sel_entry2 (dev, 
+                               0,
 			       seld->next_record_id, 
+                               0,
+                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			       obj_cmd_rs) != 0)
     {
       if (fiid_obj_get (obj_cmd_rs, 
@@ -204,7 +210,7 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   pinfo->version_minor = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"log_entry_count", 
+		    (uint8_t *)"entries", 
 		    &val) < 0)
     goto cleanup;
   pinfo->entry_count = val;
@@ -216,38 +222,38 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   pinfo->free_space = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"recent_addition_timestamp", 
+		    (uint8_t *)"most_recent_addition_timestamp", 
 		    &val) < 0)
     goto cleanup;
   pinfo->last_add_time = val;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"recent_erase_timestamp", 
+		    (uint8_t *)"most_recent_erase_timestamp", 
 		    &val) < 0)
     goto cleanup;
   pinfo->last_erase_time = val;
   
   pinfo->flags = 0;
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"get_sel_alloc_info_cmd_support", 
+		    (uint8_t *)"get_sel_allocation_info_command_supported", 
 		    &val) < 0)
     goto cleanup;
   if (val) pinfo->flags |= get_sel_alloc_info_cmd_support;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"reserve_sel_cmd_support", 
+		    (uint8_t *)"reserve_sel_command_supported", 
 		    &val) < 0)
     goto cleanup;
   if (val) pinfo->flags |= reserve_sel_cmd_support;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"partial_add_sel_entry_cmd_support", 
+		    (uint8_t *)"partial_add_sel_entry_command_supported", 
 		    &val) < 0)
     goto cleanup;
   if (val) pinfo->flags |= partial_add_sel_entry_cmd_support;
   
   if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"delete_sel_cmd_support", 
+		    (uint8_t *)"delete_sel_command_supported", 
 		    &val) < 0)
     goto cleanup;
   if (val) pinfo->flags |= delete_sel_cmd_support;

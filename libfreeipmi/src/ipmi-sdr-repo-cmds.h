@@ -30,6 +30,8 @@
 #define IPMI_SDR_IPMB_SLAVE_ADDRESS    0x0
 #define IPMI_SDR_SYSTEM_SOFTWARE_ID    0x1
 
+#define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
+
 #ifdef __cplusplus
 extern "C" {
 #endif

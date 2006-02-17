@@ -110,9 +110,28 @@ libfreeipmi:
        - function parameter ordering (done)
        - udm parameter checking (done)
     - sdr-repo-cmds
+       - order code appropriately (done)
+       - parameter checking (done)
+       - missing commands
+       - cleanup udm/rearchitect udm 
+       - audit templates (done)
+       - audit function names (done)
+       - audit parameters (done)
+       - function parameter ordering (done)
+       - udm parameter checking (done)
     - sel-cmds
+       - order code appropriately (done)
+       - parameter checking (done)
+       - missing commands
+       - cleanup udm/rearchitect udm 
+       - audit templates (done)
+       - audit function names (done)
+       - audit parameters (done)
+       - function parameter ordering (done)
+       - udm parameter checking (done)
     - sensor-cmds
     - sdr-record-types
+    - sel record-types
   * redo naming of config specific templates/functions, format no longer sticks b/c of sol & pef
   * reg-space default  
   * udm parameter checks
