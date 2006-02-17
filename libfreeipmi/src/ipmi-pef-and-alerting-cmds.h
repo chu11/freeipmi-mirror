@@ -1,5 +1,5 @@
 /* 
-   ipmi-pef-cmds.h - IPMI Platform Event Filtering Commands 
+   ipmi-pef-and-alerting-cmds.h - IPMI Platform Event Filtering Commands 
    
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,10 +18,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-cmds.h,v 1.17 2006-02-17 19:34:34 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.1 2006-02-17 22:31:31 chu11 Exp $ */
 
-#ifndef _IPMI_PEF_CMDS_H
-#define _IPMI_PEF_CMDS_H
+#ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
+#define _IPMI_PEF_AND_ALERTING_CMDS_H
 
 #define IPMI_PEF_POSTPONE_TIMER_DISABLE                     0x00
 #define IPMI_PEF_POSTPONE_TIMER_TEMPORARY_DISABLE           0xFE

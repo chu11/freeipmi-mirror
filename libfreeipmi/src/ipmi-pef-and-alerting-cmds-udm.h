@@ -1,5 +1,5 @@
 /* 
-   ipmi-pef-cmds-udm.h - IPMI UDM Platform Event Filtering Commands 
+   ipmi-pef-and-alerting-cmds-udm.h - IPMI UDM Platform Event Filtering Commands 
    
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,10 +18,10 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-cmds-udm.h,v 1.2 2006-02-17 19:34:34 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds-udm.h,v 1.1 2006-02-17 22:31:31 chu11 Exp $ */
 
-#ifndef _IPMI_PEF_CMDS_UDM_H
-#define _IPMI_PEF_CMDS_UDM_H
+#ifndef _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
+#define _IPMI_PEF_AND_ALERTING_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {

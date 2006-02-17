@@ -1,5 +1,5 @@
 /* 
-   ipmi-dev-global-cmds-udm.c - IPMI UDM Device Global Commands
+   ipmi-device-global-cmds-udm.c - IPMI UDM Device Global Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

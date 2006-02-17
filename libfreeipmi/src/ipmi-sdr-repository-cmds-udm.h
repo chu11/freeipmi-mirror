@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-repo-cmds-udm.h - IPMI UDM SDR Repository commands
+   ipmi-sdr-repository-cmds-udm.h - IPMI UDM SDR Repository commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_SDR_REPO_CMDS_UDM_H
-#define _IPMI_SDR_REPO_CMDS_UDM_H
+#ifndef _IPMI_SDR_REPOSITORY_CMDS_UDM_H
+#define _IPMI_SDR_REPOSITORY_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {

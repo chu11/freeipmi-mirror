@@ -1,5 +1,60 @@
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-watchdog.h,
+	libfreeipmi/src/ipmi-watchdog.c: Renamed to
+	ipmi-bmc-watchdog-timer-cmds.h and ipmi-bmc-watchdog-timer-cmds.c
+	respectively.  Cleanup definitions.
+
+	* libfreeipmi/src/ipmi-serial-cmds,
+	libfreeipmi/src/ipmi-serial-cmds.c,
+	libfreeipmi/src/ipmi-serial-cmds-udm.h,
+	libfreeipmi/src/ipmi-serial-cmds-udm.c: Renamed to
+	ipmi-serial-modem-cmds.h, ipmi-serial-modem-cmds.c,
+	ipmi-serial-modem-cmds-udm.h, and ipmi-serial-modem-cmds-udm.c
+	respectively.  
+
+	* libfreeipmi/src/ipmi-serial-modem-param-spec.h: Cleanup definitions.
+	
+	* libfreeipmi/src/ipmi-dev-global-cmds,
+	libfreeipmi/src/ipmi-dev-global-cmds.c,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.h,
+	libfreeipmi/src/ipmi-dev-global-cmds-udm.c: Renamed to
+	ipmi-device-global-cmds.h, ipmi-device-global-cmds.c,
+	ipmi-device-global-cmds-udm.h, and ipmi-device-global-cmds-udm.c
+	respectively.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds,
+	libfreeipmi/src/ipmi-msg-support-cmds.c,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.h,
+	libfreeipmi/src/ipmi-msg-support-cmds-udm.c: Renamed to
+	ipmi-messaging-support-cmds.h, ipmi-messaging-support-cmds.c,
+	ipmi-messaging-support-cmds-udm.h, and ipmi-messaging-support-cmds-udm.c
+	respectively.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cmds,
+	libfreeipmi/src/ipmi-sdr-repo-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-repo-cmds-udm.c: Renamed to
+	ipmi-sdr-repository-cmds.h, ipmi-sdr-repository-cmds.c,
+	ipmi-sdr-repository-cmds-udm.h, and ipmi-sdr-repository-cmds-udm.c
+	respectively.
+
+	* libfreeipmi/src/ipmi-sdr-repo-cache,
+	libfreeipmi/src/ipmi-sdr-repo-cache.c: Renamed to
+	ipmi-sdr-repository-cache-api.h and ipmi-sdr-repository-cache-api.c
+	respectively.
+
+	* libfreeipmi/, fish/, bmc-watchdog/: Adjust code appropriately.
+
+	* libfreeipmi/src/ipmi-sdr-repository-cache-api.h,
+	libfreeipmi/src/ipmi-sdr-repository-cache-api.c
+	(ipmi_is_sensor_reading_available,
+	ipmi_sdr_repository_cache_sensor_classify,
+	ipmi_sdr_repository_cache_get_sensor_group,
+	ipmi_sdr_repository_cache_get_sensor_name): Remove legacy utility functions.
+
+2006-02-17  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-sensor-cmds.h,
 	libfreeipmi/src/ipmi-sensor-cmds.c: Code cleanup.
 

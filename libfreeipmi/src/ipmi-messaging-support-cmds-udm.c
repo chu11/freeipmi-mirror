@@ -1,5 +1,5 @@
 /* 
-   ipmi-msg-support-cmds-udm.c - IPMI UDM Message Support Commands
+   ipmi-messaging-support-cmds-udm.c - IPMI UDM Message Support Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

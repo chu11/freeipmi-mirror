@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-repo-cmds.h - IPMI SDR Repository commands
+   ipmi-sdr-repository-cmds.h - IPMI SDR Repository commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_SDR_REPO_CMDS_H
-#define _IPMI_SDR_REPO_CMDS_H
+#ifndef _IPMI_SDR_REPOSITORY_CMDS_H
+#define _IPMI_SDR_REPOSITORY_CMDS_H
 
 #define IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED    0x0
 #define IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED            0x1

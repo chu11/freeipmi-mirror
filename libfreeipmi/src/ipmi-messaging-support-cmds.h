@@ -1,5 +1,5 @@
 /*
-   ipmi-msg-support-cmds.h - IPMI Message Support Commands
+   ipmi-messaging-support-cmds.h - IPMI Message Support Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_MSG_SUPPORT_CMDS_H
-#define	_IPMI_MSG_SUPPORT_CMDS_H
+#ifndef _IPMI_MESSAGING_SUPPORT_CMDS_H
+#define	_IPMI_MESSAGING_SUPPORT_CMDS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -303,6 +303,6 @@ int8_t ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code);
 }
 #endif
 
-#endif /* ipmi-msg-support-cmds.h */
+#endif /* ipmi-messaging-support-cmds.h */
 
 

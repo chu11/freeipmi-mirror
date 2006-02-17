@@ -2012,7 +2012,7 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
 
   if (ipmi_cmd_get_serial_modem_configuration_connection_mode2 (dev, 
                                                                 get_serial_channel_number (), 
-                                                                IPMI_GET_SERIAL_PARAMETER, 
+                                                                IPMI_GET_SERIAL_MODEM_PARAMETER, 
                                                                 SET_SELECTOR, 
                                                                 BLOCK_SELECTOR, 
                                                                 obj_cmd_rs) != 0)
@@ -2062,7 +2062,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 
   if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval2 (dev, 
                                                                        get_serial_channel_number (), 
-                                                                       IPMI_GET_SERIAL_PARAMETER, 
+                                                                       IPMI_GET_SERIAL_MODEM_PARAMETER, 
                                                                        SET_SELECTOR, 
                                                                        BLOCK_SELECTOR, 
                                                                        obj_cmd_rs) != 0)
@@ -2094,7 +2094,7 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
 
   if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval2 (dev, 
                                                                     get_serial_channel_number (), 
-                                                                    IPMI_GET_SERIAL_PARAMETER, 
+                                                                    IPMI_GET_SERIAL_MODEM_PARAMETER, 
                                                                     SET_SELECTOR, 
                                                                     BLOCK_SELECTOR, 
                                                                     obj_cmd_rs) != 0)
@@ -2128,7 +2128,7 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
 
   if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings2 (dev, 
                                                                              get_serial_channel_number (), 
-                                                                             IPMI_GET_SERIAL_PARAMETER, 
+                                                                             IPMI_GET_SERIAL_MODEM_PARAMETER, 
                                                                              SET_SELECTOR, 
                                                                              BLOCK_SELECTOR, 
                                                                              obj_cmd_rs) != 0)

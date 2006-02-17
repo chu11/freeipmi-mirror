@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-repo-cmds.c - IPMI SDR Repository commands
+   ipmi-sdr-repostitory-cmds.c - IPMI SDR Repository commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

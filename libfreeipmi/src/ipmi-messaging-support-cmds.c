@@ -1,5 +1,5 @@
 /* 
-   ipmi-msg-support-cmds.c - IPMI Message Support Commands
+   ipmi-messaging-support-cmds.c - IPMI Message Support Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

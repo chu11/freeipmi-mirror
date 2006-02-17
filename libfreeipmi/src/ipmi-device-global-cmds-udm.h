@@ -1,5 +1,5 @@
 /*
-   ipmi-dev-global-cmds-udm.h - IPMI UDM Device Global Commands
+   ipmi-device-global-cmds-udm.h - IPMI UDM Device Global Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_DEV_GLOBAL_CMDS_UDM_H
-#define	_IPMI_DEV_GLOBAL_CMDS_UDM_H
+#ifndef _IPMI_DEVICE_GLOBAL_CMDS_UDM_H
+#define	_IPMI_DEVICE_GLOBAL_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -31,4 +31,4 @@ int8_t ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs);
 }
 #endif
 
-#endif /* ipmi-dev-global-cmds.h */
+#endif /* ipmi-device-global-cmds.h */

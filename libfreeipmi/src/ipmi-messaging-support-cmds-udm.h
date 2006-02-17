@@ -1,5 +1,5 @@
 /*
-   ipmi-msg-support-cmds-udm.h - IPMI UDM Message Support Commands
+   ipmi-messaging-support-cmds-udm.h - IPMI UDM Message Support Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_MSG_SUPPORT_CMDS_UDM_H
-#define	_IPMI_MSG_SUPPORT_CMDS_UDM_H
+#ifndef _IPMI_MESSAGING_SUPPORT_CMDS_UDM_H
+#define	_IPMI_MESSAGING_SUPPORT_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -101,6 +101,6 @@ int8_t ipmi_lan_open_session2 (ipmi_device_t *dev);
 }
 #endif
 
-#endif /* ipmi-msg-support-cmds.h */
+#endif /* ipmi-messaging-support-cmds.h */
 
 

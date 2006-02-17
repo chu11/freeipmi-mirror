@@ -1,5 +1,5 @@
 /* 
-   ipmi-serial-cmds-udm.c - IPMI UDM serial port settings commands
+   ipmi-serial-modem-cmds-udm.c - IPMI UDM serial port settings commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -254,7 +254,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode2 (ipmi_device_t *dev,
   
   if (!dev 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SERIAL_PARAMETER_VALID(get_parameter)
+      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -275,7 +275,7 @@ ipmi_cmd_get_serial_modem_configuration_connection_mode2 (ipmi_device_t *dev,
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
-                                               IPMI_SERIAL_PARAM_CONNECTION_MODE, 
+                                               IPMI_SERIAL_MODEM_PARAM_CONNECTION_MODE, 
                                                set_selector, 
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -311,7 +311,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings2 (ipmi_devi
   
   if (!dev 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SERIAL_PARAMETER_VALID(get_parameter)
+      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -332,7 +332,7 @@ ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings2 (ipmi_devi
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
-                                               IPMI_SERIAL_PARAM_IPMI_MESSAGING_COMM_SETTINGS, 
+                                               IPMI_SERIAL_MODEM_PARAM_IPMI_MESSAGING_COMM_SETTINGS, 
                                                set_selector, 
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -368,7 +368,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval2 (ipmi_device_t *dev
   
   if (!dev 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SERIAL_PARAMETER_VALID(get_parameter)
+      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -389,7 +389,7 @@ ipmi_cmd_get_serial_modem_configuration_call_retry_interval2 (ipmi_device_t *dev
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
-                                               IPMI_SERIAL_PARAM_CALL_RETRY_INTERVAL, 
+                                               IPMI_SERIAL_MODEM_PARAM_CALL_RETRY_INTERVAL, 
                                                set_selector, 
                                                block_selector,
                                                obj_cmd_rq) < 0)
@@ -425,7 +425,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval2 (ipmi_device_t *
   
   if (!dev 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SERIAL_PARAMETER_VALID(get_parameter)
+      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_cmd_rs))
     {
       errno = EINVAL;
@@ -446,7 +446,7 @@ ipmi_cmd_get_serial_modem_configuration_page_blackout_interval2 (ipmi_device_t *
 
   if (fill_cmd_get_serial_modem_configuration (channel_number, 
                                                get_parameter, 
-                                               IPMI_SERIAL_PARAM_PAGE_BLACKOUT_INTERVAL, 
+                                               IPMI_SERIAL_MODEM_PARAM_PAGE_BLACKOUT_INTERVAL, 
                                                set_selector, 
                                                block_selector,
                                                obj_cmd_rq) < 0)

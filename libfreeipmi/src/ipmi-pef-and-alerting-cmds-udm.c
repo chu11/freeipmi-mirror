@@ -1,4 +1,4 @@
-/*   ipmi-pef-cmds-udm.c - IPMI UDM Platform Event Filtering Commands 
+/*   ipmi-pef-and-alerting-cmds-udm.c - IPMI UDM Platform Event Filtering Commands 
    
   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-cmds-udm.c,v 1.2 2006-02-17 19:34:34 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.1 2006-02-17 22:31:31 chu11 Exp $  */
 
 #include "freeipmi.h"
 

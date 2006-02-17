@@ -25,16 +25,6 @@
 extern "C" {
 #endif
 
-/* FIXME: Use "Get Channel Info" IPMI command to probe channel info
-   dynamically, instead of using the following macros.
-   -- ab@gnu.org.in */
-#define IPMI_CHANNEL_SR870BN4_IPMB         0x00
-#define IPMI_CHANNEL_SR870BN4_EMP          0x01
-#define IPMI_CHANNEL_SR870BN4_PCI_SMBUS    0x03
-#define IPMI_CHANNEL_SR870BN4_SMM          0x04
-#define IPMI_CHANNEL_SR870BN4_LAN1         0x07
-#define IPMI_CHANNEL_SR870BN4_SMS          0x0F
-
 enum system_software_type
   {
     IPMI_BIOS, 

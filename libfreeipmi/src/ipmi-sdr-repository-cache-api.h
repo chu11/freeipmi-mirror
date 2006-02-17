@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-repo-cache.h - IPMI SDR Caching functions
+   ipmi-sdr-repository-cache-api.h - IPMI SDR Caching functions
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,14 +18,14 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_SDR_REPO_CACHE_H
-#define _IPMI_SDR_REPO_CACHE_H
+#ifndef _IPMI_SDR_REPOSITORY_CACHE_API_H
+#define _IPMI_SDR_REPOSITORY_CACHE_API_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define IPMI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repo-cache"
+#define IPMI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repository-cache"
 
 typedef struct sdr_repository_cache
 {
@@ -45,12 +45,6 @@ int ipmi_sdr_repository_cache_unload (sdr_repository_cache_t *sdr_repository_cac
 int ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, uint16_t rec_no);
 int ipmi_sdr_repository_cache_first (sdr_repository_cache_t *sdr_repository_cache);
 int ipmi_sdr_repository_cache_next (sdr_repository_cache_t *sdr_repository_cache);
-int ipmi_is_sensor_reading_available (sdr_repository_cache_t *sdr_repository_cache);
-int ipmi_sdr_repository_cache_sensor_classify (sdr_repository_cache_t *sdr_repository_cache);
-const char *ipmi_sdr_repository_cache_get_sensor_group (sdr_repository_cache_t *sdr_repository_cache);
-int ipmi_sdr_repository_cache_get_sensor_name (sdr_repository_cache_t *sdr_repository_cache,
-                                               uint8_t *buffer,
-                                               size_t len);
 
 #ifdef __cplusplus
 }

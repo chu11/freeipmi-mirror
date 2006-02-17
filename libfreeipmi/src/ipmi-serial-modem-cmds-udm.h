@@ -1,5 +1,5 @@
 /* 
-   ipmi-serial-cmds-udm.h - IPMI UDM serial port settings commands
+   ipmi-serial-modem-cmds-udm.h - IPMI UDM serial port settings commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_SERIAL_CMDS_UDM_H
-#define	_IPMI_SERIAL_CMDS_UDM_H
+#ifndef _IPMI_SERIAL_MODEM_CMDS_UDM_H
+#define	_IPMI_SERIAL_MODEM_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {

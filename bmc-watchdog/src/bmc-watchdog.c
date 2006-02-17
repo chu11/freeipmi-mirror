@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.42 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.43 2006-02-17 22:31:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,12 +62,12 @@
 #include "freeipmi.h"
 
 /* Pre Timeout Interval is 1 byte */
-#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
-#define IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
+#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
+#define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS  255
 
 /* Countdown Seconds is 2 bytes of 100 millisecond chunks */
-#define IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS     0
-#define IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS     6553
+#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS     0
+#define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS     6553
 
 #define BMC_WATCHDOG_ERR_BUFLEN                      1024
 #define BMC_WATCHDOG_STR_BUFLEN                      1024
@@ -828,23 +828,23 @@ _usage(void)
             "  -S         --clear-sms-os               Clear SMS/OS Timer Use Flag\n"
             "  -O         --clear-oem                  Clear OEM Timer Use Flag\n"
             "  -i SECS    --initial-countdown=SECS     Set initial countdown in seconds\n",
-            IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2,
-            IPMI_WATCHDOG_TIMER_USE_BIOS_POST,
-            IPMI_WATCHDOG_TIMER_USE_OS_LOAD, 
-            IPMI_WATCHDOG_TIMER_USE_SMS_OS,
-            IPMI_WATCHDOG_TIMER_USE_OEM,
-            IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
-            IPMI_WATCHDOG_STOP_TIMER_DISABLE,
-            IPMI_WATCHDOG_LOG_ENABLE, 
-            IPMI_WATCHDOG_LOG_DISABLE,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN,
-            IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI,
-            IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD, 
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS,
+            IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM,
+            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
+            IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_DISABLE,
+            IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE, 
+            IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN,
+            IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI,
+            IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT);
   if (cinfo.set)
     fprintf(stderr,
             "  -w         --start-after-set            Start timer after set if timer is stopped\n"
@@ -1004,35 +1004,35 @@ _cmdline_parse(int argc, char **argv)
           cinfo.timer_use++;
           cinfo.timer_use_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_TIMER_USE_VALID(cinfo.timer_use_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(cinfo.timer_use_val))
             _err_exit("timer user invalid");
           break;
         case 'm':
           cinfo.stop_timer++;
           cinfo.stop_timer_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_STOP_TIMER_VALID(cinfo.stop_timer_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(cinfo.stop_timer_val))
             _err_exit("stop timer value invalid");
           break;
         case 'l':
           cinfo.log++;
           cinfo.log_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_LOG_VALID(cinfo.log_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(cinfo.log_val))
             _err_exit("log value invalid");
           break;
         case 'a':
           cinfo.timeout_action++;
           cinfo.timeout_action_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(cinfo.timeout_action_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(cinfo.timeout_action_val))
             _err_exit("timeout action value invalid");
           break;
         case 'p':
           cinfo.pre_timeout_interrupt++;
           cinfo.pre_timeout_interrupt_val = (uint8_t)strtol(optarg, &ptr, 10);
           if ((ptr != (optarg + strlen(optarg)))
-              || !IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(cinfo.pre_timeout_interrupt_val))
+              || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(cinfo.pre_timeout_interrupt_val))
             _err_exit("pre timeout interrupt value invalid");
           break;
         case 'z':
@@ -1040,8 +1040,8 @@ _cmdline_parse(int argc, char **argv)
           cinfo.pre_timeout_interval_val = (uint8_t)strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("pre timeout interval value invalid");
-          if ((cinfo.pre_timeout_interval_val - 1) < (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MIN_SECS - 1)
-              || (cinfo.pre_timeout_interval_val - 1) > (IPMI_WATCHDOG_PRE_TIMEOUT_INTERVAL_MAX_SECS - 1))
+          if ((cinfo.pre_timeout_interval_val - 1) < (IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS - 1)
+              || (cinfo.pre_timeout_interval_val - 1) > (IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MAX_SECS - 1))
             _err_exit("pre timeout interval value out of range");
           break;
         case 'F':
@@ -1064,8 +1064,8 @@ _cmdline_parse(int argc, char **argv)
           cinfo.initial_countdown_seconds_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("initial countdown value invalid");
-          if (cinfo.initial_countdown_seconds_val < IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS
-              || cinfo.initial_countdown_seconds_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
+          if (cinfo.initial_countdown_seconds_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
+              || cinfo.initial_countdown_seconds_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("initial countdown value out of range");
           break;
         case 'w':
@@ -1099,8 +1099,8 @@ _cmdline_parse(int argc, char **argv)
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("reset period value invalid");
           if (cinfo.reset_period_val == 0
-              || cinfo.reset_period_val < IPMI_WATCHDOG_INITIAL_COUNTDOWN_MIN_SECS
-              || cinfo.reset_period_val > IPMI_WATCHDOG_INITIAL_COUNTDOWN_MAX_SECS)
+              || cinfo.reset_period_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
+              || cinfo.reset_period_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("reset period value out of range");
           break;
 #ifndef NDEBUG
@@ -1183,7 +1183,7 @@ _set_cmd(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
 
@@ -1227,9 +1227,9 @@ _set_cmd(void)
 static char *
 _log_str(uint8_t log)
 {
-  if (log == IPMI_WATCHDOG_LOG_ENABLE)
+  if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_ENABLE)
     return "Enabled";
-  else if (log == IPMI_WATCHDOG_LOG_DISABLE)
+  else if (log == IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE)
     return "Disabled";
   else
     return "Internal Error, Unknown Log Value";
@@ -1240,9 +1240,9 @@ _log_str(uint8_t log)
 static char *
 _timer_state_str(uint8_t timer_state)
 {
-  if (timer_state == IPMI_WATCHDOG_TIMER_STATE_RUNNING)
+  if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     return "Running";
-  else if (timer_state == IPMI_WATCHDOG_TIMER_STATE_STOPPED)
+  else if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
     return "Stopped";
   else
     return "Internal Error, Unknown Stop Timer Value";
@@ -1253,15 +1253,15 @@ _timer_state_str(uint8_t timer_state)
 static char *
 _timer_use_str(uint8_t timer_use)
 {
-  if (timer_use == IPMI_WATCHDOG_TIMER_USE_BIOS_FRB2)
+  if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2)
     return "BIOS FRB2";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_BIOS_POST)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST)
     return "BIOS POST";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_OS_LOAD)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD)
     return "OS LOAD";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_SMS_OS)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_SMS_OS)
     return "SMS/OS";
-  else if (timer_use == IPMI_WATCHDOG_TIMER_USE_OEM)
+  else if (timer_use == IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OEM)
     return "OEM";
   else
     return "Reserved";
@@ -1272,13 +1272,13 @@ _timer_use_str(uint8_t timer_use)
 static char *
 _pre_timeout_interrupt_str(uint8_t pre_timeout_interrupt)
 {
-  if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
     return "None";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_SMI)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_SMI)
     return "SMI";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NMI)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NMI)
     return "NMI / Diagnostic Interrupt";
-  else if (pre_timeout_interrupt == IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
+  else if (pre_timeout_interrupt == IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_MESSAGING_INTERRUPT)
     return "Messaging Interrupt";
   else
     return "Reserved";
@@ -1289,13 +1289,13 @@ _pre_timeout_interrupt_str(uint8_t pre_timeout_interrupt)
 static char *
 _timeout_action_str(uint8_t timeout_action)
 {
-  if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION)
+  if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION)
     return "None";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_HARD_RESET)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_HARD_RESET)
     return "Hard Reset";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_DOWN)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_DOWN)
     return "Power Down";
-  else if (timeout_action == IPMI_WATCHDOG_TIMEOUT_ACTION_POWER_CYCLE)
+  else if (timeout_action == IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_POWER_CYCLE)
     return "Power Cycle";
   else
     return "Reserved";
@@ -1427,7 +1427,7 @@ _stop_cmd(void)
  
   if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
-                                     timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                     timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                      log, timeout_action, pre_timeout_interrupt, 
                                      pre_timeout_interval, 
                                      0, 0, 0, 0, 0,
@@ -1455,10 +1455,10 @@ _clear_cmd(void)
   if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
                                      timer_use,
-                                     IPMI_WATCHDOG_STOP_TIMER_ENABLE,
-                                     IPMI_WATCHDOG_LOG_DISABLE, 
-                                     IPMI_WATCHDOG_TIMEOUT_ACTION_NO_ACTION,
-                                     IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE,
+                                     IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE,
+                                     IPMI_BMC_WATCHDOG_TIMER_LOG_DISABLE, 
+                                     IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_NO_ACTION,
+                                     IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE,
                                      0, 0, 0, 0, 0, 0, 0)) != 0)
     _ipmi_err_exit(IPMI_CMD_SET_WATCHDOG_TIMER, ret, 
                    "Set Watchdog Timer Error");
@@ -1560,7 +1560,7 @@ _daemon_setup(void)
       break;
     }
 
-  if (timer_state == IPMI_WATCHDOG_TIMER_STATE_RUNNING)
+  if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_RUNNING)
     _err_exit("watchdog timer must be stopped before running daemon");
 
   timer_use = (cinfo.timer_use) ? cinfo.timer_use_val : timer_use;
@@ -1574,7 +1574,7 @@ _daemon_setup(void)
   initial_countdown_seconds = (cinfo.initial_countdown_seconds) ? 
     cinfo.initial_countdown_seconds_val : initial_countdown_seconds;
   
-  if ((pre_timeout_interrupt != IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_NONE)
+  if ((pre_timeout_interrupt != IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_NONE)
       && (pre_timeout_interval > initial_countdown_seconds))
     _err_exit("pre-timeout interval greater than initial countdown seconds");
   if (cinfo.reset_period)
@@ -1586,7 +1586,7 @@ _daemon_setup(void)
     {
       if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                          BMC_WATCHDOG_RETRY_ATTEMPT,
-                                         timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                         timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                          log, timeout_action, 
                                          pre_timeout_interrupt, pre_timeout_interval, 
                                          (cinfo.clear_bios_frb2) ? 1 : 0,
@@ -1730,7 +1730,7 @@ _daemon_cmd(void)
           goto sleep_now;
         }
       
-      if (timer_state == IPMI_WATCHDOG_TIMER_STATE_STOPPED)
+      if (timer_state == IPMI_BMC_WATCHDOG_TIMER_TIMER_STATE_STOPPED)
         {
           _bmclog("timer stopped by another process");
           goto cleanup; 
@@ -1800,7 +1800,7 @@ _daemon_cmd(void)
     {
       if ((ret = _set_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                          BMC_WATCHDOG_RETRY_ATTEMPT,
-                                         timer_use, IPMI_WATCHDOG_STOP_TIMER_ENABLE, 
+                                         timer_use, IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_ENABLE, 
                                          log, timeout_action, pre_timeout_interrupt, 
                                          pre_timeout_interval, 
                                          0, 0, 0, 0, 0,

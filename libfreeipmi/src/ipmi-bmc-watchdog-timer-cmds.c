@@ -142,16 +142,16 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
   int8_t rv;
 
   if (!fiid_obj_valid(obj_cmd)
-      || !IPMI_WATCHDOG_LOG_VALID(log)
-      || !IPMI_WATCHDOG_STOP_TIMER_VALID(stop_timer)
-      || !IPMI_WATCHDOG_TIMER_USE_VALID(timer_use)
-      || !IPMI_WATCHDOG_PRE_TIMEOUT_INTERRUPT_VALID(pre_timeout_interrupt)
-      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_frb2)
-      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_post)
-      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_os_load)
-      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_sms_os)
-      || !IPMI_WATCHDOG_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_oem)
-      || !IPMI_WATCHDOG_TIMEOUT_ACTION_VALID(timeout_action))
+      || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(log)
+      || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(stop_timer)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(timer_use)
+      || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(pre_timeout_interrupt)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_frb2)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_post)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_os_load)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_sms_os)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_oem)
+      || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(timeout_action))
     {
       errno = EINVAL;
       return (-1);
