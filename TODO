@@ -59,6 +59,7 @@ libfreeipmi:
     - sensor-cmds
        - missing commands
   * reg-space default  
+  * ipmi_debug - kcsprint and smic print
 
 fish:
 -----
