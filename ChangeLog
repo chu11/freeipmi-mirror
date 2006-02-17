@@ -4,6 +4,8 @@
 	libfreeipmi/src/ipmi-sensor-cmds.c: Code cleanup.
 
 	* libfreeipmi/, fish/: Adjust code appropriately.
+
+	* tagged freeipmi_0_3_0_libfreeipmi_template_function_cleanup
 	
 2006-02-16  Albert Chu <chu11@llnl.gov>
 
