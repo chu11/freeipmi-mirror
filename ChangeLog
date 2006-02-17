@@ -28,6 +28,15 @@
 
 	* libfreeipmi/, fish/: Adjust code appropriately.
 
+	* libfreeipmi/src/ipmi-sel-record-types.c: Cleanup templates.
+
+	* libfreeipmi/src/ipmi-sel-record-types.h,
+	libfreeipmi/src/ipmi-sel-record-types.c,
+	libfreeipmi/src/ipmi-sel-api.h, libfreeipmi/src/ipmi-sel-api.c:
+	Reorganize code.
+
+	* libfreeipmi/, fish/: Adjust code appropriately.
+
 2006-02-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and

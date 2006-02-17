@@ -129,10 +129,10 @@ libfreeipmi:
        - audit parameters (done)
        - function parameter ordering (done)
        - udm parameter checking (done)
-    - sensor-cmds
     - sdr-record-types
         - missing records
     - sel record-types
+    - sensor-cmds
   * redo naming of config specific templates/functions, format no longer sticks b/c of sol & pef
   * reg-space default  
   * udm parameter checks
