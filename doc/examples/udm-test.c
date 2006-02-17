@@ -28,15 +28,15 @@ int
 main (int argc, char **argv)
 {
   char *hostname = NULL; /* ipmi hostname for out-of-band */
-  int auth_type = IPMI_SESSION_AUTH_TYPE_NONE; 
-  /* for out-of-band, it can also be IPMI_SESSION_AUTH_TYPE_MD2, 
-     IPMI_SESSION_AUTH_TYPE_MD5, IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY, 
-     IPMI_SESSION_AUTH_TYPE_OEM_PROP */
+  int authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
+  /* for out-of-band, it can also be IPMI_AUTHENTICATION_TYPE_MD2, 
+     IPMI_AUTHENTICATION_TYPE_MD5, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY, 
+     IPMI_AUTHENTICATION_TYPE_OEM_PROP */
   char username[] = ""; /* ipmi username for out-of-band */
   char password[] = ""; /* ipmi user's password for out-of-band */
-  int priv_level = IPMI_PRIV_LEVEL_USER; 
-  /* for out-of-band, can also be IPMI_PRIV_LEVEL_CALLBACK, 
-     IPMI_PRIV_LEVEL_OPERATOR, IPMI_PRIV_LEVEL_ADMIN, IPMI_PRIV_LEVEL_OEM */
+  int priv_level = IPMI_PRIVILEGE_LEVEL_USER; 
+  /* for out-of-band, can also be IPMI_PRIVILEGE_LEVEL_CALLBACK, 
+     IPMI_PRIVILEGE_LEVEL_OPERATOR, IPMI_PRIVILEGE_LEVEL_ADMIN, IPMI_PRIVILEGE_LEVEL_OEM */
   
   int disable_auto_probe = 0; /* to disable automatic probing, set non-zero here */
   int driver_address = 0; /* driver address, if needed */
@@ -65,7 +65,7 @@ main (int argc, char **argv)
 			       IPMI_MODE_DEFAULT, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
-			       auth_type, 
+			       authentication_type, 
 			       username, 
 			       password, 
 			       priv_level) != 0)
@@ -89,12 +89,17 @@ main (int argc, char **argv)
 	}
     }
   
-  fiid_obj_alloca (obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
-  if (ipmi_cmd_get_dev_id (&dev, obj_cmd_rs) != 0)
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
+    {
+      perror("fiid_obj_create");
+      exit (EXIT_FAILURE);
+    }
+  if (ipmi_cmd_get_device_id (&dev, obj_cmd_rs) != 0)
     {
       perror ("ipmi_cmd()");
+      exit (EXIT_FAILURE);
     }
-  fiid_obj_dump (fileno (stdout), obj_cmd_rs, tmpl_cmd_get_dev_id_rs);
+  ipmi_obj_dump (fileno (stdout), obj_cmd_rs);
   
   if (ipmi_close (&dev) != 0)
     {

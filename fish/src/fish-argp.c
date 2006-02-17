@@ -1,5 +1,5 @@
 /* 
-   $Id: fish-argp.c,v 1.4 2006-02-12 11:16:11 ab Exp $ 
+   $Id: fish-argp.c,v 1.5 2006-02-17 19:34:34 chu11 Exp $ 
    
    fish-argp.c - fish command line argument parser.
    
@@ -174,8 +174,8 @@ fi_set_arguments (struct arguments *args)
   else 
     cmd_args.common.password = NULL;
   
-  cmd_args.common.auth_type = args->common.auth_type;
-  cmd_args.common.priv_level = args->common.priv_level;
+  cmd_args.common.authentication_type = args->common.authentication_type;
+  cmd_args.common.privilege_level = args->common.privilege_level;
   
   if (cmd_args.script_file)
     xfree (cmd_args.script_file);

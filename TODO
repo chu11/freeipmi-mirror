@@ -17,14 +17,49 @@ Al's TODO list
 ==============
 libfreeipmi:
 ------------
-  * IPMI 1.5 Errata - Get Chassis Status 
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
-  * Templates must be encapsulated further
-  * fiid_obj_t must hold additional info
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
+  * gcc 4.0 test/warning
+  * int wraparound corner cases - fiid
+    - uint32_t for max_field_len, but some funcs return int32_t
+    - counters, fiid_obj_create
+  * test bad seq nums
+  * need to test
+    - acpi
+    - ssif
+    - pef config
+  * re-architect ipmi-error.c stuff to handle different commands with same values.
   * sensor-event-messages: get_28_event_data3_messages
-  
+  * cleanup
+    - lan-cmds 
+       - missing commands
+    - msg-support-cmds
+       - missing commands
+       - .h file split
+    - watchdog
+    - rmcp
+    - dev-global-cmds
+    - chassis-cmds
+       - missing commands
+    - serial-cmds
+       - missing commands
+    - sol-cmds
+       - missing commands
+    - pef-cmds
+       - missing commands
+    - sdr-repo-cmds
+       - missing commands
+       - cleanup udm/rearchitect udm 
+    - sel-cmds
+       - missing commands
+    - sdr-record-types
+        - missing records
+    - sel record-types
+    - sensor-cmds
+       - missing commands
+  * reg-space default  
+
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
@@ -33,6 +68,7 @@ fish:
 ipmipower
 ---------
   * compile options to make workarounds automatic for ipmipower
+  * activate session - check auth-type of return
 
 General:
 --------

@@ -25,9 +25,9 @@
 extern "C" {
 #endif
 
-#define IPMI_DEFAULT_SDR_REPO_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repo-cache"
+#define IPMI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repo-cache"
 
-typedef struct sdr_repo_cache
+typedef struct sdr_repository_cache
 {
   int fd;
   size_t file_length;
@@ -35,22 +35,22 @@ typedef struct sdr_repo_cache
   uint8_t *cache_curr;
   uint16_t cache_curr_rec_no;
   uint32_t total_records;
-} sdr_repo_cache_t;
+} sdr_repository_cache_t;
 
-int ipmi_sdr_repo_info_write (ipmi_device_t *dev, FILE *fp);
+int ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp);
 int ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp);
 int ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file);
-int ipmi_sdr_repo_cache_load (sdr_repo_cache_t *sdr_repo_cache, char *sdr_cache_file);
-int ipmi_sdr_repo_cache_unload (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_sdr_repo_cache_seek (sdr_repo_cache_t *sdr_repo_cache, uint16_t rec_no);
-int ipmi_sdr_repo_cache_first (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_sdr_repo_cache_next (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_is_sensor_reading_available (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_sdr_repo_cache_sensor_classify (sdr_repo_cache_t *sdr_repo_cache);
-const char *ipmi_sdr_repo_cache_get_sensor_group (sdr_repo_cache_t *sdr_repo_cache);
-int ipmi_sdr_repo_cache_get_sensor_name (sdr_repo_cache_t *sdr_repo_cache,
-                                         uint8_t *buffer,
-                                         size_t len);
+int ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, char *sdr_cache_file);
+int ipmi_sdr_repository_cache_unload (sdr_repository_cache_t *sdr_repository_cache);
+int ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, uint16_t rec_no);
+int ipmi_sdr_repository_cache_first (sdr_repository_cache_t *sdr_repository_cache);
+int ipmi_sdr_repository_cache_next (sdr_repository_cache_t *sdr_repository_cache);
+int ipmi_is_sensor_reading_available (sdr_repository_cache_t *sdr_repository_cache);
+int ipmi_sdr_repository_cache_sensor_classify (sdr_repository_cache_t *sdr_repository_cache);
+const char *ipmi_sdr_repository_cache_get_sensor_group (sdr_repository_cache_t *sdr_repository_cache);
+int ipmi_sdr_repository_cache_get_sensor_name (sdr_repository_cache_t *sdr_repository_cache,
+                                               uint8_t *buffer,
+                                               size_t len);
 
 #ifdef __cplusplus
 }

@@ -26,114 +26,94 @@
 extern "C" {
 #endif
 
-#define FIID_FIELD_MAX 256
+#define __LFI_FIID_OBJ_SET(bytes, field, val)           \
+do {                                                    \
+    if (fiid_obj_set (bytes, field, val) < 0)           \
+      return (-1);                                      \
+} while (0)
 
-#define FIID_OBJ_ALLOCA(obj, tmpl)                            \
-    obj = (fiid_obj_len_bytes (tmpl) != -1) ?                 \
-      alloca (fiid_obj_len_bytes (tmpl)) : NULL;	      \
-    ERR (obj);						      \
-    memset (obj, 0, fiid_obj_len_bytes (tmpl))
+#define __FI_FIID_OBJ_SET(bytes, field, val)            \
+do {                                                    \
+    if (fiid_obj_set (bytes, field, val) < 0)           \
+    {                                                   \
+      err (1, "fiid_obj_set (%p, \"%s\", %X) error",    \
+	   bytes, field, val);                          \
+    }                                                   \
+} while (0)
 
-#define fiid_obj_alloca(obj, tmpl)                            \
-    obj = (fiid_obj_len_bytes (tmpl) != -1) ?                 \
-      alloca (fiid_obj_len_bytes (tmpl)) : NULL;	      \
-    if (obj)						      \
-      memset (obj, 0, fiid_obj_len_bytes (tmpl))
+#if defined (FREEIPMI_LIBRARY)                                
+#define FIID_OBJ_SET(bytes, field, val)   \
+  __LFI_FIID_OBJ_SET (bytes, field, val)
+#else
+#define FIID_OBJ_SET(bytes, field, val)   \
+  __FI_FIID_OBJ_SET (bytes, field, val)
+#endif
 
-#define FIID_OBJ_ALLOC(obj, tmpl)                             \
+#define __LFI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)   \
 do {                                                          \
-    obj = fiid_obj_calloc (tmpl);                              \
-    ERR (obj);						      \
-} while (0)	
-
-#define __LFI_FIID_OBJ_SET(bytes, tmpl, field, val)           \
-do {                                                          \
-    if (fiid_obj_set (bytes, tmpl, field, val) == -1)         \
+    if (fiid_obj_set_data (bytes, field, val, val_len) < 0)   \
       return (-1);                                            \
 } while (0)
 
-#define __FI_FIID_OBJ_SET(bytes, tmpl, field, val)            \
+#define __FI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
 do {                                                          \
-    if (fiid_obj_set (bytes, tmpl, field, val) == -1)         \
+    if (fiid_obj_set (bytes, field, val, val_len) < 0)        \
     {                                                         \
-      err (1, "fiid_obj_set (%p, %p, \"%s\", %X) error",      \
-	   bytes, tmpl, field, val);                          \
+      err (1, "fiid_obj_set_data (%p, \"%s\", %p, %u) error", \
+	   bytes, field, val, val_len);                       \
     }                                                         \
 } while (0)
 
 #if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_SET(bytes, tmpl, field, val)   \
-  __LFI_FIID_OBJ_SET (bytes, tmpl, field, val)
+#define FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
+  __LFI_FIID_OBJ_SET_DATA (bytes, field, val, val_len)
 #else
-#define FIID_OBJ_SET(bytes, tmpl, field, val)   \
-  __FI_FIID_OBJ_SET (bytes, tmpl, field, val)
+#define FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
+  __FI_FIID_OBJ_SET_DATA (bytes, field, val, val_len)
 #endif
 
-#define __LFI_FIID_OBJ_SET_DATA(bytes, tmpl, field, val, val_len)   \
-do {                                                                \
-    if (fiid_obj_set_data (bytes, tmpl, field, val, val_len) == -1) \
-      return (-1);                                                  \
+#define __LFI_FIID_OBJ_GET(bytes, field, val)            \
+do {                                                     \
+    uint64_t _val = 0, *_val_ptr;                        \
+    _val_ptr = val;                                      \
+    if (fiid_obj_get (bytes, field, &_val) < 0)          \
+      return (-1);                                       \
+    *_val_ptr = _val;                                    \
 } while (0)
 
-#define __FI_FIID_OBJ_SET_DATA(bytes, tmpl, field, val, val_len)    \
-do {                                                                \
-    if (fiid_obj_set (bytes, tmpl, field, val, val_len) == -1)      \
-    {                                                               \
-      err (1, "fiid_obj_set_data (%p, %p, \"%s\", %p, %u) error",   \
-	   bytes, tmpl, field, val, val_len);                       \
-    }                                                               \
+#define __FI_FIID_OBJ_GET(bytes, field, val)             \
+do {                                                     \
+    uint64_t _val = 0, *_val_ptr;                        \
+    _val_ptr = val;                                      \
+    if (fiid_obj_get (bytes, field, &_val) < 0)          \
+    {                                                    \
+      err (1, "fiid_obj_get (%p, \"%s\", %p) error",     \
+	   bytes, field, val);                           \
+    }                                                    \
+    *_val_ptr = _val;                                    \
 } while (0)
 
 #if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_SET_DATA(bytes, tmpl, field, val, val_len)   \
-  __LFI_FIID_OBJ_SET_DATA (bytes, tmpl, field, val, val_len)
+#define FIID_OBJ_GET(bytes, field, val)  \
+  __LFI_FIID_OBJ_GET (bytes, field, val)
 #else
-#define FIID_OBJ_SET_DATA(bytes, tmpl, field, val, val_len)   \
-  __FI_FIID_OBJ_SET_DATA (bytes, tmpl, field, val, val_len)
+#define FIID_OBJ_GET(bytes, field, val)  \
+  __FI_FIID_OBJ_GET (bytes, field, val)
 #endif
 
-#define __LFI_FIID_OBJ_GET(bytes, tmpl, field, val)           \
-do {                                                          \
-    uint64_t _val = 0, *_val_ptr;                            \
-    _val_ptr = val;                                           \
-    if (fiid_obj_get (bytes, tmpl, field, &_val) == -1)       \
-      return (-1);                                            \
-    *_val_ptr = _val;                                         \
+#define __LFI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)    \
+do {                                                           \
+    if (fiid_obj_get_data (bytes, field, val, val_len) < 0)    \
+      return (-1);                                             \
 } while (0)
 
-#define __FI_FIID_OBJ_GET(bytes, tmpl, field, val)            \
-do {                                                          \
-    uint64_t _val = 0, *_val_ptr;                            \
-    _val_ptr = val;                                           \
-    if (fiid_obj_get (bytes, tmpl, field, &_val) == -1)       \
-    {                                                         \
-      err (1, "fiid_obj_get (%p, %p, \"%s\", %p) error",      \
-	   bytes, tmpl, field, val);                          \
-    }                                                         \
-    *_val_ptr = _val;                                         \
-} while (0)
-
-#if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_GET(bytes, tmpl, field, val)  \
-  __LFI_FIID_OBJ_GET (bytes, tmpl, field, val)
-#else
-#define FIID_OBJ_GET(bytes, tmpl, field, val)  \
-  __FI_FIID_OBJ_GET (bytes, tmpl, field, val)
-#endif
-
-#define __LFI_FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)   \
-do {                                                                \
-    if (fiid_obj_get_data (bytes, tmpl, field, val, val_len) == -1) \
-      return (-1);                                                  \
-} while (0)
-
-#define __FI_FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)     \
-do {                                                                 \
-    if (fiid_obj_get_data (bytes, tmpl, field, &val, val_len) == -1) \
-    {                                                                \
-      err (1, "fiid_obj_get_data (%p, %p, \"%s\", %p) error",        \
-	   bytes, tmpl, field, val);                                 \
-    }                                                                \
+#define __FI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)     \
+do {                                                           \
+    if (fiid_obj_get_data (bytes, field, &val, val_len) < 0)   \
+    {                                                          \
+      err (1, "fiid_obj_get_data (%p, \"%s\", %p) error",      \
+	   bytes, field, val);                                 \
+    }                                                          \
 } while (0)
 
 #if defined (FREEIPMI_LIBRARY)                                
@@ -144,77 +124,128 @@ do {                                                                 \
   __FI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
 #endif
 
-#define FIID_OBJ_MEMSET(obj, c, tmpl)                         \
-do {                                                          \
-     uint8_t *__ptr = fiid_obj_memset (obj, c, tmpl);        \
-     ERR(__ptr);                                              \
-} while(0)
+#define FIID_ERR_SUCCESS                         0
+#define FIID_ERR_OBJ_NULL                        1 
+#define FIID_ERR_OBJ_INVALID                     2                   
+#define FIID_ERR_ITERATOR_NULL                   3
+#define FIID_ERR_ITERATOR_INVALID                4
+#define FIID_ERR_PARAMETERS                      5
+#define FIID_ERR_FIELD_NOT_FOUND                 6
+#define FIID_ERR_KEY_INVALID                     7
+#define FIID_ERR_FLAGS_INVALID                   8
+#define FIID_ERR_TEMPLATE_NOT_BYTE_ALIGNED       9
+#define FIID_ERR_OVERFLOW                       10
+#define FIID_ERR_MAX_FIELD_LEN_MISMATCH         11
+#define FIID_ERR_KEY_FIELD_MISMATCH             12
+#define FIID_ERR_FLAGS_FIELD_MISMATCH           13
+#define FIID_ERR_TEMPLATE_LENGTH_MISMATCH       14
+#define FIID_ERR_DATA_NOT_BYTE_ALIGNED          15
+
+#define FIID_ERR_REQUIRED_FIELD_MISSING         16
+#define FIID_ERR_FIXED_LENGTH_FIELD_INVALID     17
+#define FIID_ERR_OUTMEM                         18
+#define FIID_ERR_INTERNAL                       19
+#define FIID_ERR_ERRNUMRANGE                    20
 
 #define fiid_template_make(arg...) __fiid_template_make (1, arg, 0)
 
+#define FIID_FIELD_MAX 256
+
+#define FIID_FIELD_REQUIRED         0x00000001
+#define FIID_FIELD_OPTIONAL         0x00000002
+#define FIID_FIELD_REQUIRED_MASK    0x0000000F
+
+#define FIID_FIELD_REQUIRED_FLAG(__flags) \
+        ((__flags) & FIID_FIELD_REQUIRED_MASK)
+
+#define FIID_FIELD_REQUIRED_FLAG_VALID(__flags) \
+        ((FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_REQUIRED \
+	  || FIID_FIELD_REQUIRED_FLAG(__flags) ==  FIID_FIELD_OPTIONAL) ? 1 : 0)
+  
+#define FIID_FIELD_LENGTH_FIXED     0x00000010
+#define FIID_FIELD_LENGTH_VARIABLE  0x00000020
+#define FIID_FIELD_LENGTH_MASK      0x000000F0
+
+#define FIID_FIELD_LENGTH_FLAG(__flags) \
+        ((__flags) & FIID_FIELD_LENGTH_MASK)
+
+#define FIID_FIELD_LENGTH_FLAG_VALID(__flags) \
+        ((FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_FIXED \
+	  || FIID_FIELD_LENGTH_FLAG(__flags) ==  FIID_FIELD_LENGTH_VARIABLE) ? 1 : 0)
+
+#define FIID_FIELD_FLAGS_DEFAULT    (FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)
+
 typedef struct fiid_field
 {
-  uint32_t len;
+  uint32_t max_field_len;
   char key[FIID_FIELD_MAX];
+  uint32_t flags;
 } fiid_field_t;
 
-/* typedef fiid_field_t fiid_template_t[]; */
-typedef fiid_field_t const fiid_template_t[];
-typedef fiid_field_t const fiid_tmpl_t[];
-typedef uint8_t *fiid_obj_t;
-/* FIID Template for testing. 
-fiid_template_t tmpl_test =
-  {
-    {2,   "netfn.lun"},
-    {6,   "netfn.fn"},
-    {128, "user_name"},
-    {4,   "reserved1"},
-    {17,  "manfid"},
-    {2,   "reserved2"},
-    {1,   "dev_available"}
-  };
-*/
+typedef fiid_field_t fiid_template_t[];
 
-int32_t fiid_obj_len (fiid_template_t tmpl);
-int32_t fiid_obj_len_bytes (fiid_template_t tmpl);
-int32_t fiid_obj_field_start_end (fiid_template_t tmpl, uint8_t *field, 
-				  uint32_t *start, uint32_t *end);
-int8_t fiid_obj_field_lookup (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_start (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_start_bytes (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_end (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_end_bytes (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_len (fiid_template_t tmpl, uint8_t *field);
-int32_t fiid_obj_field_len_bytes (fiid_template_t tmpl, 
-				  uint8_t *field);
-int32_t fiid_obj_block_len (fiid_template_t tmpl, 
-			    uint8_t *field_start, 
-			    uint8_t *field_end);
-int32_t fiid_obj_block_len_bytes (fiid_template_t tmpl, 
-				  uint8_t *field_start, 
-				  uint8_t *field_end);
+typedef struct fiid_obj *fiid_obj_t;
 
-fiid_obj_t fiid_obj_calloc (fiid_template_t tmpl);
-#define fiid_obj_malloc fiid_obj_calloc
-  /* Depricated API (fiid_obj_alloc): for backward compatibility. */
-#define fiid_obj_alloc fiid_obj_calloc
+typedef struct fiid_iterator *fiid_iterator_t;
 
-fiid_obj_t fiid_obj_memset (fiid_obj_t obj, int c, fiid_template_t tmpl);
-int8_t fiid_obj_memset_field (fiid_obj_t obj, int c, 
-			      fiid_template_t tmpl, uint8_t *field);
-void fiid_obj_free (fiid_obj_t obj);
-int8_t fiid_obj_set (fiid_obj_t obj, fiid_template_t tmpl, 
-		     uint8_t *field, uint64_t val);
-int8_t fiid_obj_get (fiid_obj_t obj, fiid_template_t tmpl, 
-		     uint8_t *field, uint64_t *val);
+int8_t fiid_template_field_lookup (fiid_template_t tmpl, char *field);
+int32_t fiid_template_len (fiid_template_t tmpl);
+int32_t fiid_template_len_bytes (fiid_template_t tmpl);
+int32_t fiid_template_field_start (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_end (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_len (fiid_template_t tmpl, char *field);
+int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, 
+				       char *field);
+int32_t fiid_template_block_len (fiid_template_t tmpl, 
+				 char *field_start, 
+				 char *field_end);
+int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
+				       char *field_start, 
+				       char *field_end);
 fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
-int8_t fiid_obj_get_data (fiid_obj_t obj, fiid_template_t tmpl, 
-			  uint8_t *field, 
-			  uint8_t *data, uint32_t data_len);
-int8_t fiid_obj_set_data (fiid_obj_t obj, fiid_template_t tmpl, 
-			  uint8_t *field, uint8_t *data, uint32_t data_len);
-fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj, fiid_template_t tmpl);
+
+char *fiid_strerror(int32_t errnum);
+
+fiid_obj_t fiid_obj_create (fiid_template_t tmpl);
+int8_t fiid_obj_destroy (fiid_obj_t obj);
+fiid_obj_t fiid_obj_dup (fiid_obj_t src_obj);
+int8_t fiid_obj_valid(fiid_obj_t obj);
+int8_t fiid_obj_packet_valid(fiid_obj_t obj);
+fiid_field_t *fiid_obj_template(fiid_obj_t obj);
+int8_t fiid_obj_template_compare(fiid_obj_t obj, fiid_template_t tmpl);
+int32_t fiid_obj_errnum(fiid_obj_t obj);
+
+int32_t fiid_obj_len(fiid_obj_t obj);
+int32_t fiid_obj_len_bytes(fiid_obj_t obj);
+int32_t fiid_obj_field_len(fiid_obj_t obj, char *field);
+int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, char *field);
+
+int8_t fiid_obj_clear (fiid_obj_t obj);
+int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);
+int8_t fiid_obj_field_lookup (fiid_obj_t obj, char *field);
+int8_t fiid_obj_set (fiid_obj_t obj, char *field, uint64_t val);
+int8_t fiid_obj_get (fiid_obj_t obj, char *field, uint64_t *val);
+int32_t fiid_obj_set_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_data (fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_get_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+int32_t fiid_obj_set_all (fiid_obj_t obj, uint8_t *data, uint32_t data_len);
+
+int8_t fiid_obj_set_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
+int8_t fiid_obj_get_block (fiid_obj_t obj, char *field_start, char *field_end, uint8_t *data, uint32_t data_len);
+
+fiid_iterator_t fiid_iterator_create(fiid_obj_t obj);
+int8_t fiid_iterator_destroy(fiid_iterator_t iter);
+int32_t fiid_iterator_errnum(fiid_iterator_t iter);
+int8_t fiid_iterator_reset(fiid_iterator_t iter);
+int8_t fiid_iterator_next(fiid_iterator_t iter);
+int8_t fiid_iterator_end(fiid_iterator_t iter);
+int32_t fiid_iterator_field_len(fiid_iterator_t iter);
+uint8_t *fiid_iterator_key(fiid_iterator_t iter);
+int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
+int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
 
 #ifdef __cplusplus
 }

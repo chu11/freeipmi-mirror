@@ -284,7 +284,7 @@
     (bmc-info-display-version))
    (else 
     (and (fi-ipmi-open cmd-args)
-	 (begin (fi-cmd-get-dev-id-display)
+	 (begin (fi-cmd-get-device-id-display)
 		(fi-ipmi-close))))))
 
 (define (bmc-info args)

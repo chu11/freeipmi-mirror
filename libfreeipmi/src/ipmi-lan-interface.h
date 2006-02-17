@@ -51,64 +51,14 @@ extern "C" {
 */
 
 #define IPMI_LAN_PKT_PAD_SIZE   1
-#define IPMI_LAN_SEQ_NUM_MAX    0x3F /* 111111b */
+#define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
-#define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQ_NUM_MAX + 1)))
+#define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
+#define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
 
-#define IPMI_LAN_PKT_CHKSUM1_BLOCK_INDX(auth_type)                          \
-  (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num") +    \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id") +         \
-   ((auth_type == IPMI_SESSION_AUTH_TYPE_MD2                                \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_MD5                             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)                       \
-    ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len"))
+#define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))
 
-#define IPMI_LAN_PKT_RQ_CHKSUM1_BLOCK_LEN                       \
-  fiid_obj_field_start_bytes (tmpl_lan_msg_hdr_rq, (uint8_t *)"chksum1") 
-
-#define IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_INDX(auth_type)                       \
-  (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num") +    \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id") +         \
-   ((auth_type == IPMI_SESSION_AUTH_TYPE_MD2                                \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_MD5                             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)                       \
-    ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len") +       \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rq, (uint8_t *)"chksum1"))
-
-#define IPMI_LAN_PKT_RQ_CHKSUM2_BLOCK_LEN(tmpl_cmd)            \
-  (fiid_obj_len_bytes (tmpl_lan_msg_hdr_rq) -                  \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rq, (uint8_t *)"chksum1") + \
-   fiid_obj_len_bytes (tmpl_cmd)) 
-   
-#define IPMI_LAN_PKT_RS_CHKSUM1_BLOCK_LEN                      \
-  fiid_obj_field_start_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1")
-
-#define IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_INDX(auth_type)                       \
-  (fiid_obj_len_bytes (tmpl_hdr_rmcp) +                                     \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_type") +          \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_seq_num") +    \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"session_id") +         \
-   ((auth_type == IPMI_SESSION_AUTH_TYPE_MD2                                \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_MD5                             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY             \
-     || auth_type == IPMI_SESSION_AUTH_TYPE_OEM_PROP)                       \
-    ? fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"auth_code") : 0) +  \
-   fiid_obj_field_len_bytes (tmpl_hdr_session_auth, (uint8_t *)"ipmi_msg_len") +       \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1"))
-
-#define IPMI_LAN_PKT_RS_CHKSUM2_BLOCK_LEN(tmpl_cmd)             \
-  (fiid_obj_len_bytes (tmpl_lan_msg_hdr_rs) -                   \
-   fiid_obj_field_end_bytes (tmpl_lan_msg_hdr_rs, (uint8_t *)"chksum1") +  \
-   fiid_obj_len_bytes (tmpl_cmd))
-   
+extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;
@@ -119,24 +69,29 @@ int8_t fill_lan_msg_hdr (uint8_t net_fn,
 			 uint8_t rq_seq, 
 			 fiid_obj_t obj_msg);
 
-int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_hdr_rmcp, 
-			       fiid_obj_t obj_hdr_session, 
-			       fiid_template_t tmpl_hdr_session, 
-			       fiid_obj_t obj_msg_hdr, 
+int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
+                              uint32_t inbound_sequence_number, 
+                              uint32_t session_id,
+                              uint8_t *authentication_code_data, 
+                              uint32_t authentication_code_data_len, 
+                              fiid_obj_t obj_hdr);
+
+int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
+			       fiid_obj_t obj_lan_session_hdr, 
+			       fiid_obj_t obj_lan_msg_hdr, 
 			       fiid_obj_t obj_cmd, 
-			       fiid_template_t tmpl_cmd, 
+			       uint8_t *authentication_code_data,
+			       uint32_t authentication_code_data_len,
 			       uint8_t *pkt, 
 			       uint32_t pkt_len);
 
 int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt, 
 				uint32_t pkt_len, 
-				fiid_template_t tmpl_hdr_session, 
-				fiid_template_t tmpl_cmd, 
-				fiid_obj_t obj_hdr_rmcp, 
-				fiid_obj_t obj_hdr_session, 
-				fiid_obj_t obj_msg_hdr, 
+				fiid_obj_t obj_rmcp_hdr, 
+				fiid_obj_t obj_lan_session_hdr, 
+				fiid_obj_t obj_lan_msg_hdr, 
 				fiid_obj_t obj_cmd, 
-				fiid_obj_t obj_msg_trlr);
+				fiid_obj_t obj_lan_msg_trlr);
 
 ssize_t ipmi_lan_sendto (int sockfd, 
 			 const void *pkt, 
@@ -152,40 +107,21 @@ ssize_t ipmi_lan_recvfrom (int sockfd,
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
 
-int8_t ipmi_lan_cmd (uint32_t sockfd, 
-		     struct sockaddr *hostaddr, 
-		     size_t hostaddr_len, 
-		     uint8_t auth_type, 
-		     uint32_t session_seq_num, 
-		     uint32_t session_id, 
-		     uint8_t *auth_code_data, 
-		     uint32_t auth_code_data_len, 
-		     uint8_t net_fn, 
-		     uint8_t lun, 
-		     uint8_t rq_seq, 
-		     fiid_obj_t obj_cmd_rq, 
-		     fiid_template_t tmpl_cmd_rq, 
-		     fiid_obj_t obj_cmd_rs, 
-		     fiid_template_t tmpl_cmd_rs);
+int8_t ipmi_lan_check_session_sequence_number (fiid_obj_t obj_lan_session_hdr, 
+                                               uint32_t session_sequence_number);
 
-int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
-		      fiid_obj_t obj_cmd_rq, 
-		      fiid_template_t tmpl_cmd_rq, 
-		      fiid_obj_t obj_cmd_rs, 
-		      fiid_template_t tmpl_cmd_rs);
-int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
-			  uint8_t *buf_rq, 
-			  size_t buf_rq_len, 
-			  uint8_t *buf_rs, 
-			  size_t *buf_rs_len);
+int8_t ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, 
+				  uint32_t session_id);
 
-int8_t ipmi_lan_check_net_fn (fiid_template_t tmpl_msg_hdr, 
-			      fiid_obj_t obj_msg_hdr, 
-			      uint8_t net_fn);
+int8_t ipmi_lan_check_session_authcode (uint8_t *pkt, 
+					uint64_t pkt_len, 
+					uint8_t authentication_type, 
+					uint8_t *authentication_code_data, 
+					uint32_t authentication_code_data_len);
 
-int8_t ipmi_lan_check_rq_seq (fiid_template_t tmpl_msg_hdr, 
-			      fiid_obj_t obj_msg_hdr, 
-			      uint8_t rq_seq);
+int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
+
+int8_t ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq);
 
 int8_t ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len);
 

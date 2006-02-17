@@ -29,24 +29,37 @@
    (number->string (bit-extract #b1101101010 4 9) 2)
              => "10110"
 */
-uint64_t
-bits_extract (uint64_t bits, uint8_t start, uint8_t end)
+int
+bits_extract (uint64_t bits, uint8_t start, uint8_t end, uint64_t *result)
 {
+  if (start > end || start > 64 || end > 64 || !result)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   bits >>= start;
   bits <<= ((63 - (end - 1)) + start);
   bits >>= ((63 - (end - 1)) + start);
-  return (bits);
+  *result = bits;
+  return (0);
 }
 
 /* Merges the val composed of the START (inclusive) through END
    (exclusive) bits of N.  The STARTth bit becomes the 0-th bit in the result.
 */
-uint64_t
-bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val)
+int
+bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val, uint64_t *result)
 {
-  uint64_t lsb_ones = 0xFFFFFFFFFFFFFFULL;
-  uint64_t msb_ones = 0xFFFFFFFFFFFFFFULL;
+  uint64_t lsb_ones = 0xFFFFFFFFFFFFFFFFULL;
+  uint64_t msb_ones = 0xFFFFFFFFFFFFFFFFULL;
   
+  if (start > end || start > 64 || end > 64 || !result)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   if (start)
     {
       lsb_ones <<= (64 - start);
@@ -63,6 +76,7 @@ bits_merge (uint64_t bits, uint8_t start, uint8_t end, uint64_t val)
   msb_ones |= lsb_ones;
   bits     |= ~msb_ones;
   msb_ones |= (val << start);
-  return (bits & msb_ones);
+  *result = (bits & msb_ones);
+  return 0;
 }
 

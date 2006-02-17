@@ -47,13 +47,13 @@
 (define (checkout-subnet-mask section-name) 
   (fi-get-bmc-lan-conf-subnet-mask)) 
 
-(define (commit-default-gateway-ip-address section-name gateway-ip-address)
-  (if (list? gateway-ip-address)
+(define (commit-default-gateway-address section-name gateway-address)
+  (if (list? gateway-address)
       #t 
-      (fi-set-bmc-lan-conf-default-gateway-ip-address gateway-ip-address)))
+      (fi-set-bmc-lan-conf-default-gateway-address gateway-address)))
 
-(define (checkout-default-gateway-ip-address section-name) 
-  (fi-get-bmc-lan-conf-default-gateway-ip-address)) 
+(define (checkout-default-gateway-address section-name) 
+  (fi-get-bmc-lan-conf-default-gateway-address)) 
 
 (define (commit-default-gateway-mac-address section-name gateway-mac-address)
   (if (list? gateway-mac-address)
@@ -63,13 +63,13 @@
 (define (checkout-default-gateway-mac-address section-name) 
   (fi-get-bmc-lan-conf-default-gateway-mac-address)) 
 
-(define (commit-backup-gateway-ip-address section-name gateway-ip-address)
-  (if (list? gateway-ip-address)
+(define (commit-backup-gateway-address section-name gateway-address)
+  (if (list? gateway-address)
       #t 
-      (fi-set-bmc-lan-conf-backup-gateway-ip-address gateway-ip-address)))
+      (fi-set-bmc-lan-conf-backup-gateway-address gateway-address)))
 
-(define (checkout-backup-gateway-ip-address section-name) 
-  (fi-get-bmc-lan-conf-backup-gateway-ip-address)) 
+(define (checkout-backup-gateway-address section-name) 
+  (fi-get-bmc-lan-conf-backup-gateway-address)) 
 
 (define (commit-backup-gateway-mac-address section-name gateway-mac-address)
   (if (list? gateway-mac-address)
@@ -79,15 +79,6 @@
 (define (checkout-backup-gateway-mac-address section-name)
   (fi-get-bmc-lan-conf-backup-gateway-mac-address))
 
-(define (checkout-vlan-id-enable section-name) 
-  (let ((param-list (fi-get-bmc-lan-conf-vlan-id)))
-    (if (list? param-list) (list (car param-list)) #f)))
-
-(define (commit-vlan-id-enable section-name vlan-id-enable) 
-  (if (list? vlan-id-enable)
-      #t
-      (fi-set-bmc-lan-conf-vlan-id vlan-id-enable "dummy")))
-
 (define (checkout-vlan-id section-name) 
   (let ((param-list (fi-get-bmc-lan-conf-vlan-id)))
     (if (list? param-list) (list (cadr param-list)) #f)))
@@ -95,7 +86,16 @@
 (define (commit-vlan-id section-name vlan-id) 
   (if (list? vlan-id)
       #t
-      (fi-set-bmc-lan-conf-vlan-id 0 vlan-id)))
+      (fi-set-bmc-lan-conf-vlan-id vlan-id 0)))
+
+(define (checkout-vlan-id-enable section-name) 
+  (let ((param-list (fi-get-bmc-lan-conf-vlan-id)))
+    (if (list? param-list) (list (car param-list)) #f)))
+
+(define (commit-vlan-id-enable section-name vlan-id-enable) 
+  (if (list? vlan-id-enable)
+      #t
+      (fi-set-bmc-lan-conf-vlan-id "dummy" vlan-id-enable)))
 
 (define (checkout-vlan-priority section-name) 
   (fi-get-bmc-lan-conf-vlan-priority)) 
@@ -151,8 +151,8 @@
     ("default_gateway_ip_address" 
      valid-ip-address? 
      get-string 
-     commit-default-gateway-ip-address 
-     checkout-default-gateway-ip-address 
+     commit-default-gateway-address 
+     checkout-default-gateway-address 
      get-string
      same-string-ci?
      "Give valid IP Address")
@@ -167,8 +167,8 @@
     ("backup_gateway_ip_address" 
      valid-ip-address? 
      get-string 
-     commit-backup-gateway-ip-address 
-     checkout-backup-gateway-ip-address 
+     commit-backup-gateway-address 
+     checkout-backup-gateway-address 
      get-string
      same-string-ci?
      "Give valid IP Address")
@@ -180,14 +180,6 @@
      get-string
      same-string-ci?
      "Give valid MAC Address")
-    ("vlan_id_enable" 
-     valid-boolean? 
-     get-boolean
-     commit-vlan-id-enable
-     checkout-vlan-id-enable
-     get-boolean-string
-     same-string-ci?
-     "Possible values: Yes/No")
     ("vlan_id" 
      valid-integer? 
      get-integer
@@ -196,6 +188,14 @@
      any->string
      same-string-ci?
      "Give valid number.")
+    ("vlan_id_enable" 
+     valid-boolean? 
+     get-boolean
+     commit-vlan-id-enable
+     checkout-vlan-id-enable
+     get-boolean-string
+     same-string-ci?
+     "Possible values: Yes/No")
     ("vlan_priority" 
      valid-integer? 
      get-integer

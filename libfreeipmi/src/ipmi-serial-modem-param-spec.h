@@ -29,7 +29,7 @@
 #define IPMI_SERIAL_PARAM_SESSION_INACTIVITY_TIMEOUT            4
 #define IPMI_SERIAL_PARAM_CHANNEL_CALLBACK_CONTROL              5
 #define IPMI_SERIAL_PARAM_SESSION_TERMINATION                   6
-#define IPMI_SERIAL_PARAM_COMM_BITS                             7
+#define IPMI_SERIAL_PARAM_IPMI_MESSAGING_COMM_SETTINGS          7
 #define IPMI_SERIAL_PARAM_MUX_SWITCH_CONTROL                    8
 #define IPMI_SERIAL_PARAM_MODEM_RING_TIME                       9
 #define IPMI_SERIAL_PARAM_MODEM_INIT_STRING                     10
@@ -40,7 +40,7 @@
 #define IPMI_SERIAL_PARAM_COMMUNITY_STRING                      15
 #define IPMI_SERIAL_PARAM_NO_OF_ALERT_DESTINATIONS              16
 #define IPMI_SERIAL_PARAM_DESTINATION_INFO                      17
-#define IPMI_SERIAL_PARAM_RETRY_TIME                            18
+#define IPMI_SERIAL_PARAM_CALL_RETRY_INTERVAL                   18
 #define IPMI_SERIAL_PARAM_DESTINATION_COMM_SETTINGS             19
 #define IPMI_SERIAL_PARAM_NO_OF_DIAL_STRINGS                    20
 #define IPMI_SERIAL_PARAM_DESTINATION_DIAL_STRINGS              21

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.7 2006-02-12 11:16:11 ab Exp $ 
+   $Id: ipmi-locate.c,v 1.8 2006-02-17 19:34:34 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 

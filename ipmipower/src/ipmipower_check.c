@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.16 2006-02-13 17:51:20 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.17 2006-02-17 19:34:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,9 +42,9 @@
 extern struct ipmipower_config *conf;
 
 static int 
-_check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
+_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
-  uint32_t shift_num, wrap_val, max_seq_num = 0xFFFFFFFF;
+  uint32_t shift_num, wrap_val, max_sequence_number = 0xFFFFFFFF;
   uint64_t pktoseq = 0;
   int retval = 0;
 
@@ -67,8 +67,9 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTH_RES || pkt == SESS_RES)
     return 1;
 
-  Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc, 
-               (uint8_t *)"session_seq_num", &pktoseq);
+  Fiid_obj_get(ip->session_res,
+               (uint8_t *)"session_sequence_number", 
+	       &pktoseq);
   
   if (pkt == ACTV_RES)
     {
@@ -77,29 +78,29 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
        * whatever sequence number they give us even if it isn't the
        * initial outbound sequence number.
        */
-      ip->highest_received_seq_num = pktoseq;
+      ip->highest_received_sequence_number = pktoseq;
       return 1;
     }
   
   /* Drop duplicate packet */
-  if (pktoseq == ip->highest_received_seq_num)
+  if (pktoseq == ip->highest_received_sequence_number)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
    * within range 
    */
-  if (ip->highest_received_seq_num > (max_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+  if (ip->highest_received_sequence_number > (max_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
     {
-      wrap_val = IPMIPOWER_SEQ_NUM_WINDOW - (max_seq_num - ip->highest_received_seq_num) - 1;
+      wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (max_sequence_number - ip->highest_received_sequence_number) - 1;
 
-      if (pktoseq > ip->highest_received_seq_num || pktoseq <= wrap_val)
+      if (pktoseq > ip->highest_received_sequence_number || pktoseq <= wrap_val)
         {
-          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
-            shift_num = pktoseq - ip->highest_received_seq_num;
+          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
+            shift_num = pktoseq - ip->highest_received_sequence_number;
           else
-            shift_num = pktoseq + (max_seq_num - ip->highest_received_seq_num) + 1;
+            shift_num = pktoseq + (max_sequence_number - ip->highest_received_sequence_number) + 1;
           
-          ip->highest_received_seq_num = pktoseq;
+          ip->highest_received_sequence_number = pktoseq;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
           retval++;
@@ -107,11 +108,11 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      if (pktoseq > ip->highest_received_seq_num
-          && (pktoseq - ip->highest_received_seq_num) <= IPMIPOWER_SEQ_NUM_WINDOW)
+      if (pktoseq > ip->highest_received_sequence_number
+          && (pktoseq - ip->highest_received_sequence_number) <= IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
         {
-          shift_num = (pktoseq - ip->highest_received_seq_num);
-          ip->highest_received_seq_num = pktoseq;
+          shift_num = (pktoseq - ip->highest_received_sequence_number);
+          ip->highest_received_sequence_number = pktoseq;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
           retval++;
@@ -121,16 +122,16 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Check if sequence number is lower than highest received, is
    * within range, and hasn't been seen yet
    */
-  if (ip->highest_received_seq_num < IPMIPOWER_SEQ_NUM_WINDOW)
+  if (ip->highest_received_sequence_number < IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
     {
-      uint32_t wrap_val = max_seq_num - (IPMIPOWER_SEQ_NUM_WINDOW - ip->highest_received_seq_num) + 1;
+      uint32_t wrap_val = max_sequence_number - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
-      if (pktoseq < ip->highest_received_seq_num || pktoseq >= wrap_val)
+      if (pktoseq < ip->highest_received_sequence_number || pktoseq >= wrap_val)
         {
-          if (pktoseq > ip->highest_received_seq_num && pktoseq <= max_seq_num)
-            shift_num = ip->highest_received_seq_num + (max_seq_num - pktoseq) + 1;
+          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
+            shift_num = ip->highest_received_sequence_number + (max_sequence_number - pktoseq) + 1;
           else
-            shift_num = ip->highest_received_seq_num - pktoseq;
+            shift_num = ip->highest_received_sequence_number - pktoseq;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
@@ -142,10 +143,10 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else
     {
-      if (pktoseq < ip->highest_received_seq_num
-          && pktoseq >= (ip->highest_received_seq_num - IPMIPOWER_SEQ_NUM_WINDOW))
+      if (pktoseq < ip->highest_received_sequence_number
+          && pktoseq >= (ip->highest_received_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
         {
-          shift_num = ip->highest_received_seq_num - pktoseq;
+          shift_num = ip->highest_received_sequence_number - pktoseq;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
@@ -158,8 +159,8 @@ _check_outbound_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   
  out:
   if (!retval)
-    dbg("_check_outbound_seq_num(%s:%d): pktoseq: %u, high: %u",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_seq_num);
+    dbg("_check_outbound_sequence_number(%s:%d): pktoseq: %u, high: %u",
+        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_sequence_number);
   
   return retval;
 }
@@ -177,10 +178,12 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
     return 1;
   else
     {
-      Fiid_obj_get(ip->session_res, tmpl_hdr_session_auth_calc,
-                   (uint8_t *)"session_id", &session_id);
-      Fiid_obj_get(ip->actv_res, tmpl_cmd_activate_session_rs,
-                   (uint8_t *)"session_id", &actv_res_session_id);
+      Fiid_obj_get(ip->session_res, 
+                   (uint8_t *)"session_id", 
+		   &session_id);
+      Fiid_obj_get(ip->actv_res, 
+                   (uint8_t *)"session_id", 
+		   &actv_res_session_id);
     }
   
   if (session_id != actv_res_session_id && session_id != 0)
@@ -212,13 +215,21 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, (uint8_t *)"net_fn", &netfn);
+  Fiid_obj_get(ip->msg_res, (uint8_t *)"net_fn", &netfn);
 
   if (pkt == CHAS_RES || pkt == CTRL_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
   
+#if 0 /* XXX */
+  fiid_obj_dump_perror(STDERR_FILENO,
+                       "test",
+                       "***test***",
+                       NULL,
+                       ip->msg_res);
+#endif
+
   if (netfn != expected_netfn)
     dbg("_check_network_function(%s:%d): netfn bad: %x, expected: %x", 
         ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
@@ -227,7 +238,7 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
 }
 
 static int 
-_check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt) 
+_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t pktrseq = 0;
   uint64_t myrseq = 0;
@@ -235,12 +246,12 @@ _check_requester_seq_num(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  myrseq = ip->ic->ipmi_requester_seq_num_counter % (IPMIPOWER_RSEQ_MAX + 1);
+  myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1);
 
-  Fiid_obj_get(ip->msg_res, tmpl_lan_msg_hdr_rs, (uint8_t *)"rq_seq", &pktrseq);
+  Fiid_obj_get(ip->msg_res, (uint8_t *)"rq_seq", &pktrseq);
 
   if (pktrseq != myrseq)
-    dbg("_check_requester_seq_num(%s:%d): rseq: %x, expected: %x",
+    dbg("_check_requester_sequence_number(%s:%d): rseq: %x, expected: %x",
         ip->ic->hostname, ip->protocol_state, (unsigned int)pktrseq, (unsigned int)myrseq);
   
   return ((pktrseq == myrseq) ? 1 : 0);
@@ -256,23 +267,23 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   
   Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               ipmipower_packet_cmd_template(ip, pkt),
-               (uint8_t *)"cmd", &cmd);
+               (uint8_t *)"cmd", 
+	       &cmd);
 
   if (pkt == AUTH_RES) 
-    expected_cmd = IPMI_CMD_GET_CHANNEL_AUTH_CAPS;
+    expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
   else if (pkt == SESS_RES) 
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
   else if (pkt == ACTV_RES) 
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
   else if (pkt == PRIV_RES) 
-    expected_cmd = IPMI_CMD_SET_SESSION_PRIV_LEVEL;
+    expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == CLOS_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
   else if (pkt == CHAS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CTRL_RES) 
-    expected_cmd = IPMI_CMD_CHASSIS_CTRL;
+    expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
   
   if (cmd != expected_cmd)
     dbg("_check_command(%s:%d): cmd bad: %x", 
@@ -290,8 +301,8 @@ _check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
     
   Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               ipmipower_packet_cmd_template(ip, pkt),
-               (uint8_t *)"comp_code", &cc);
+               (uint8_t *)"comp_code", 
+	       &cc);
   
   if (cc != IPMI_COMP_CODE_COMMAND_SUCCESS)
     dbg("_check_completion_code(%s:%d): cc bad: %x", 
@@ -310,13 +321,13 @@ ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
 
-  if (oseq && !(*oseq = _check_outbound_seq_num(ip, pkt)))
+  if (oseq && !(*oseq = _check_outbound_sequence_number(ip, pkt)))
     e++;
   if (sid && !(*sid = _check_session_id(ip, pkt)))
     e++;
   if (netfn && !(*netfn = _check_network_function(ip, pkt)))
     e++;
-  if (rseq && !(*rseq = _check_requester_seq_num(ip, pkt)))
+  if (rseq && !(*rseq = _check_requester_sequence_number(ip, pkt)))
     e++;
   if (cmd && !(*cmd = _check_command(ip, pkt)))
     e++;

@@ -1,5 +1,5 @@
 /* 
-   ipmi-interface.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
+   ipmi-udm.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -19,41 +19,13 @@
 
 */
 
-#ifndef _IPMI_INTERFACE_H
-#define _IPMI_INTERFACE_H
+#ifndef _IPMI_UDM_H
+#define _IPMI_UDM_H
 
-#define IPMI_SESSION_MAX_USERNAME_LEN     16
-#define IPMI_SESSION_CHALLENGE_STR_LEN    16
-#define IPMI_SESSION_MAX_AUTH_CODE_LEN    16
-
-#define IPMI_SESSION_AUTH_TYPE_NONE                0x00
-#define IPMI_SESSION_AUTH_TYPE_MD2                 0x01
-#define IPMI_SESSION_AUTH_TYPE_MD5                 0x02
-#define IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY 0x04
-#define IPMI_SESSION_AUTH_TYPE_OEM_PROP            0x05
-
-#define IPMI_SESSION_AUTH_TYPE_VALID(__auth_type) \
-        (((__auth_type) == IPMI_SESSION_AUTH_TYPE_NONE \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD2 \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_MD5 \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_STRAIGHT_PASSWD_KEY \
-          || (__auth_type) == IPMI_SESSION_AUTH_TYPE_OEM_PROP) ? 1 : 0) 
-
-#define IPMI_PRIV_LEVEL_RESERVED     0x00
-#define IPMI_PRIV_LEVEL_CALLBACK     0x01
-#define IPMI_PRIV_LEVEL_USER         0x02
-#define IPMI_PRIV_LEVEL_OPERATOR     0x03
-#define IPMI_PRIV_LEVEL_ADMIN        0x04
-#define IPMI_PRIV_LEVEL_OEM          0x05
-#define IPMI_PRIV_LEVEL_NO_ACCESS    0x0F
-
-#define IPMI_PRIV_LEVEL_VALID(__priv_level) \
-        (((__priv_level) == IPMI_PRIV_LEVEL_RESERVED \
-          || (__priv_level) == IPMI_PRIV_LEVEL_CALLBACK \
-          || (__priv_level) == IPMI_PRIV_LEVEL_USER \
-          || (__priv_level) == IPMI_PRIV_LEVEL_OPERATOR \
-          || (__priv_level) == IPMI_PRIV_LEVEL_ADMIN \
-          || (__priv_level) == IPMI_PRIV_LEVEL_OEM) ? 1 : 0)
+/* XXX: need to remove */
+#define IPMI_INTERFACE_MAX_USERNAME_LEN     16
+#define IPMI_INTERFACE_CHALLENGE_STR_LEN    16
+#define IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN    16
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3
@@ -97,8 +69,10 @@ struct ipmi_device
       uint8_t            retry_count:4;
       ipmi_locate_info_t locate_info;
       int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
-      int                mutex_semid;
-      
+
+      ipmi_kcs_ctx_t     kcs_ctx;
+      ipmi_ssif_ctx_t    ssif_ctx;
+
       struct 
       {
 	fiid_template_t *tmpl_hdr_ptr;
@@ -118,38 +92,38 @@ struct ipmi_device
       struct sockaddr    remote_host;
       unsigned int       remote_host_len;
       
-      uint8_t           auth_type;
-      uint8_t           challenge_string[IPMI_SESSION_CHALLENGE_STR_LEN];
+      uint8_t           authentication_type;
+      uint8_t           challenge_string[IPMI_INTERFACE_CHALLENGE_STR_LEN];
       uint32_t          session_id;
-      uint32_t          session_seq_num;
+      uint32_t          session_sequence_number;
       uint8_t           rq_seq;
       
-      uint8_t           username[IPMI_SESSION_MAX_USERNAME_LEN];
-      uint8_t           password[IPMI_SESSION_MAX_AUTH_CODE_LEN];
-      uint8_t           priv_level;
+      uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];
+      uint8_t           password[IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN];
+      uint8_t           privilege_level;
       
       struct 
       {
-	fiid_template_t *tmpl_hdr_rmcp_ptr;
-	fiid_obj_t      obj_hdr_rmcp;
-	fiid_template_t *tmpl_hdr_session_ptr;
-	fiid_obj_t      obj_hdr_session;
-	fiid_template_t *tmpl_msg_hdr_ptr;
-	fiid_obj_t      obj_msg_hdr;
-	fiid_template_t *tmpl_msg_trlr_ptr;
-	fiid_obj_t      obj_msg_trlr;
+	fiid_template_t *tmpl_rmcp_hdr_ptr;
+	fiid_obj_t      obj_rmcp_hdr;
+	fiid_template_t *tmpl_lan_session_hdr_ptr;
+	fiid_obj_t      obj_lan_session_hdr;
+	fiid_template_t *tmpl_lan_msg_hdr_ptr;
+	fiid_obj_t      obj_lan_msg_hdr;
+	fiid_template_t *tmpl_lan_msg_trlr_ptr;
+	fiid_obj_t      obj_lan_msg_trlr;
       } rq;
       
       struct 
       {
-	fiid_template_t *tmpl_hdr_rmcp_ptr;
-	fiid_obj_t      obj_hdr_rmcp;
-	fiid_template_t *tmpl_hdr_session_ptr;
-	fiid_obj_t      obj_hdr_session;
-	fiid_template_t *tmpl_msg_hdr_ptr;
-	fiid_obj_t      obj_msg_hdr;
-	fiid_template_t *tmpl_msg_trlr_ptr;
-	fiid_obj_t      obj_msg_trlr;
+	fiid_template_t *tmpl_rmcp_hdr_ptr;
+	fiid_obj_t      obj_rmcp_hdr;
+	fiid_template_t *tmpl_lan_session_hdr_ptr;
+	fiid_obj_t      obj_lan_session_hdr;
+	fiid_template_t *tmpl_lan_msg_hdr_ptr;
+	fiid_obj_t      obj_lan_msg_hdr;
+	fiid_template_t *tmpl_lan_msg_trlr_ptr;
+	fiid_obj_t      obj_lan_msg_trlr;
       } rs;
     } outofband;
   } io;
@@ -168,22 +142,20 @@ int ipmi_open_outofband (ipmi_device_t *dev,
 			 ipmi_mode_t mode, 
 			 struct sockaddr *remote_host, 
 			 size_t remote_host_len, 
-			 uint8_t auth_type, 
+			 uint8_t authentication_type, 
 			 char *username, 
 			 char *password, 
-			 uint8_t priv_level);
+			 uint8_t privilege_level);
 int ipmi_close (ipmi_device_t *dev);
 int ipmi_cmd (ipmi_device_t *dev, 
 	      uint8_t lun, 
 	      uint8_t net_fn, 
 	      fiid_obj_t obj_cmd_rq, 
-	      fiid_template_t tmpl_cmd_rq, 
-	      fiid_obj_t obj_cmd_rs, 
-	      fiid_template_t tmpl_cmd_rs);
+	      fiid_obj_t obj_cmd_rs);
 int ipmi_cmd_raw (ipmi_device_t *dev, 
 		  uint8_t *in, 
 		  size_t in_len, 
 		  uint8_t *out, 
 		  size_t *out_len);
 
-#endif /* _IPMI_INTERFACE_H */
+#endif /* _IPMI_UDM_H */

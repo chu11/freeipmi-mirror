@@ -43,7 +43,7 @@ int8_t get_serial_channel_number ();
 uint8_t get_lan_channel_number_known ();
 uint8_t get_serial_channel_number_known ();
 
-int display_get_dev_id ();
+int display_get_device_id ();
 
 int ipmi_ping (char *host, unsigned int sock_timeout);
 

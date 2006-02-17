@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.21 2006-02-13 17:51:20 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.22 2006-02-17 19:34:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -70,28 +70,28 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
 {
   assert(ip != NULL);
 
-  Fiid_obj_free(ip->rmcp_req);
-  Fiid_obj_free(ip->rmcp_res);
-  Fiid_obj_free(ip->session_req);
-  Fiid_obj_free(ip->session_res);
-  Fiid_obj_free(ip->msg_req);
-  Fiid_obj_free(ip->msg_res);
-  Fiid_obj_free(ip->trlr_res);
+  Fiid_obj_destroy(ip->rmcp_req);
+  Fiid_obj_destroy(ip->rmcp_res);
+  Fiid_obj_destroy(ip->session_req);
+  Fiid_obj_destroy(ip->session_res);
+  Fiid_obj_destroy(ip->msg_req);
+  Fiid_obj_destroy(ip->msg_res);
+  Fiid_obj_destroy(ip->trlr_res);
 
-  Fiid_obj_free(ip->auth_req);
-  Fiid_obj_free(ip->auth_res);
-  Fiid_obj_free(ip->sess_req);
-  Fiid_obj_free(ip->sess_res);
-  Fiid_obj_free(ip->actv_req);
-  Fiid_obj_free(ip->actv_res);
-  Fiid_obj_free(ip->priv_req);
-  Fiid_obj_free(ip->priv_res);
-  Fiid_obj_free(ip->clos_req);
-  Fiid_obj_free(ip->clos_res);
-  Fiid_obj_free(ip->chas_req);
-  Fiid_obj_free(ip->chas_res);
-  Fiid_obj_free(ip->ctrl_req);
-  Fiid_obj_free(ip->ctrl_res);
+  Fiid_obj_destroy(ip->auth_req);
+  Fiid_obj_destroy(ip->auth_res);
+  Fiid_obj_destroy(ip->sess_req);
+  Fiid_obj_destroy(ip->sess_res);
+  Fiid_obj_destroy(ip->actv_req);
+  Fiid_obj_destroy(ip->actv_res);
+  Fiid_obj_destroy(ip->priv_req);
+  Fiid_obj_destroy(ip->priv_res);
+  Fiid_obj_destroy(ip->clos_req);
+  Fiid_obj_destroy(ip->clos_res);
+  Fiid_obj_destroy(ip->chas_req);
+  Fiid_obj_destroy(ip->chas_res);
+  Fiid_obj_destroy(ip->ctrl_req);
+  Fiid_obj_destroy(ip->ctrl_res);
 
   /* Close all sockets that were saved during the Get Session
    * Challenge phase of the IPMI protocol.
@@ -140,36 +140,36 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
   memset(ip, '\0', sizeof(struct ipmipower_powercmd));
     
-  ip->rmcp_req = Fiid_obj_calloc(tmpl_hdr_rmcp); 
-  ip->rmcp_res = Fiid_obj_calloc(tmpl_hdr_rmcp); 
-  ip->session_req = Fiid_obj_calloc(tmpl_hdr_session_auth_calc); 
-  ip->session_res = Fiid_obj_calloc(tmpl_hdr_session_auth_calc); 
-  ip->msg_req = Fiid_obj_calloc(tmpl_lan_msg_hdr_rq); 
-  ip->msg_res = Fiid_obj_calloc(tmpl_lan_msg_hdr_rs); 
-  ip->trlr_res = Fiid_obj_calloc(tmpl_lan_msg_trlr); 
+  ip->rmcp_req = Fiid_obj_create(tmpl_rmcp_hdr); 
+  ip->rmcp_res = Fiid_obj_create(tmpl_rmcp_hdr); 
+  ip->session_req = Fiid_obj_create(tmpl_lan_session_hdr); 
+  ip->session_res = Fiid_obj_create(tmpl_lan_session_hdr); 
+  ip->msg_req = Fiid_obj_create(tmpl_lan_msg_hdr_rq); 
+  ip->msg_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
+  ip->trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
 
-  ip->auth_req = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rq); 
-  ip->auth_res = Fiid_obj_calloc(tmpl_cmd_get_channel_auth_caps_rs); 
-  ip->sess_req = Fiid_obj_calloc(tmpl_cmd_get_session_challenge_rq); 
-  ip->sess_res = Fiid_obj_calloc(tmpl_cmd_get_session_challenge_rs); 
-  ip->actv_req = Fiid_obj_calloc(tmpl_cmd_activate_session_rq); 
-  ip->actv_res = Fiid_obj_calloc(tmpl_cmd_activate_session_rs); 
-  ip->priv_req = Fiid_obj_calloc(tmpl_cmd_set_session_priv_level_rq); 
-  ip->priv_res = Fiid_obj_calloc(tmpl_cmd_set_session_priv_level_rs); 
-  ip->clos_req = Fiid_obj_calloc(tmpl_cmd_close_session_rq); 
-  ip->clos_res = Fiid_obj_calloc(tmpl_cmd_close_session_rs); 
-  ip->chas_req = Fiid_obj_calloc(tmpl_cmd_get_chassis_status_rq); 
-  ip->chas_res = Fiid_obj_calloc(tmpl_cmd_get_chassis_status_rs); 
-  ip->ctrl_req = Fiid_obj_calloc(tmpl_cmd_chassis_ctrl_rq); 
-  ip->ctrl_res = Fiid_obj_calloc(tmpl_cmd_chassis_ctrl_rs); 
+  ip->auth_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
+  ip->auth_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs); 
+  ip->sess_req = Fiid_obj_create(tmpl_cmd_get_session_challenge_rq); 
+  ip->sess_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
+  ip->actv_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
+  ip->actv_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
+  ip->priv_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
+  ip->priv_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
+  ip->clos_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
+  ip->clos_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
+  ip->chas_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
+  ip->chas_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
+  ip->ctrl_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
+  ip->ctrl_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->initial_outbound_seq_num = get_rand();
-  ip->highest_received_seq_num = ip->initial_outbound_seq_num;
+  ip->initial_outbound_sequence_number = get_rand();
+  ip->highest_received_sequence_number = ip->initial_outbound_sequence_number;
   ip->previously_received_list = 0xFF;
   ip->retry_count = 0;
   ip->error_occurred = IPMIPOWER_FALSE;
@@ -185,9 +185,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * specification 
        */
       if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege = IPMI_PRIV_LEVEL_USER;
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
       else
-        ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
     }
   else
     ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
@@ -227,7 +227,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   /* Must set before ipmipower_packet_create, so requester sequence
    * number is set properly.
    */
-  ip->ic->ipmi_requester_seq_num_counter++;
+  ip->ic->ipmi_requester_sequence_number_counter++;
   
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
@@ -340,21 +340,21 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   
   if (pkt == AUTH_RES || pkt == SESS_RES)
-    at = IPMI_SESSION_AUTH_TYPE_NONE;
+    at = IPMI_AUTHENTICATION_TYPE_NONE;
   else if (pkt == ACTV_RES)
     at = ip->authtype;
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         {
-          at = IPMI_SESSION_AUTH_TYPE_NONE;
+          at = IPMI_AUTHENTICATION_TYPE_NONE;
           check_authcode_retry_flag++;
         }
       else
         at = ip->authtype;
     }
 
-  if (at != IPMI_SESSION_AUTH_TYPE_NONE)
+  if (at != IPMI_AUTHENTICATION_TYPE_NONE)
     {
       if (strlen(conf->password))
         password = (uint8_t *)conf->password;
@@ -364,11 +364,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     password = NULL;
 
-  if ((ret = check_hdr_session_authcode((uint8_t *)buffer, len,
-                                        tmpl_hdr_session_auth_calc,
-                                        at,
-                                        (uint8_t *)password,
-                                        strlen(conf->password))) < 0)
+  if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
+					     len,
+					     at,
+					     (uint8_t *)password,
+					     strlen(conf->password))) < 0)
     err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
@@ -390,7 +390,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
       at = ip->authtype;
 
-      if (at != IPMI_SESSION_AUTH_TYPE_NONE)
+      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
           if (strlen(conf->password))
             password = (uint8_t *)conf->password;
@@ -400,11 +400,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       else
         password = NULL;
 
-      if ((ret = check_hdr_session_authcode((uint8_t *)buffer, len,
-                                            tmpl_hdr_session_auth_calc,
-                                            at,
-                                            (uint8_t *)password,
-                                            strlen(conf->password))) < 0)
+      if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
+					         len,
+					         at,
+					         (uint8_t *)password,
+					         strlen(conf->password))) < 0)
         err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
@@ -630,7 +630,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       uint64_t auth_type_none, auth_type_md2, auth_type_md5, 
         auth_type_straight_passwd_key, auth_status_anonymous_login, 
         auth_status_null_username, auth_status_non_null_username, 
-        auth_status_per_message_auth;
+        auth_status_per_message_authentication;
       int authtype_try_higher_priv = 0;
 
       if ((rv = _recv_packet(ip, AUTH_RES)) != 1) 
@@ -648,23 +648,30 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        * 2) How to authenticate with the remote host.
        */
 
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.none", &auth_type_none);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md2", &auth_type_md2);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.md5", &auth_type_md5);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_type.straight_passwd_key", &auth_type_straight_passwd_key);
-
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.anonymous_login", &auth_status_anonymous_login);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.null_username", &auth_status_null_username);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.non_null_username", &auth_status_non_null_username);
-      Fiid_obj_get(ip->auth_res, tmpl_cmd_get_channel_auth_caps_rs, 
-                   (uint8_t *)"auth_status.per_message_auth", &auth_status_per_message_auth);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_type.none", 
+		   &auth_type_none);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_type.md2", 
+		   &auth_type_md2);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_type.md5", 
+		   &auth_type_md5);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_type.straight_passwd_key", 
+		   &auth_type_straight_passwd_key);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_status.anonymous_login", 
+		   &auth_status_anonymous_login);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_status.null_username",
+		   &auth_status_null_username);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_status.non_null_username", 
+		   &auth_status_non_null_username);
+      Fiid_obj_get(ip->auth_res, 
+                   (uint8_t *)"authentication_status.per_message_authentication",
+		   &auth_status_per_message_authentication);
 
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
@@ -711,7 +718,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                * could be enabled (shame on you evil vendor!!) or
                * authentication at this privilege level isn't allowed.
                */
-              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
                 {
                   /* Time to give up */
 #ifndef NDEBUG	      
@@ -750,7 +757,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
           else
             {
-              if (ip->privilege == IPMI_PRIV_LEVEL_ADMIN)
+              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
                 {
                   /* Time to give up */
                   ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
@@ -768,10 +775,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (authtype_try_higher_priv)
         {
           /* Try a higher privilege level */
-          if (ip->privilege == IPMI_PRIV_LEVEL_USER)
-            ip->privilege = IPMI_PRIV_LEVEL_OPERATOR;
-          else if (ip->privilege == IPMI_PRIV_LEVEL_OPERATOR)
-            ip->privilege = IPMI_PRIV_LEVEL_ADMIN;
+          if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+          else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
           else
             err_exit("_process_ipmi_packets: invalid privilege state: %d", 
                      ip->privilege);
@@ -783,7 +790,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       if (!conf->force_permsg_auth)
         {
-          if (!auth_status_per_message_auth)
+          if (!auth_status_per_message_authentication)
             ip->permsgauth_enabled = IPMIPOWER_TRUE;
           else
             ip->permsgauth_enabled = IPMIPOWER_FALSE;
@@ -863,8 +870,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       Fiid_obj_get(ip->chas_res, 
-                   tmpl_cmd_get_chassis_status_rs,
-                   (uint8_t *)"power_state.power_on",
+                   (uint8_t *)"current_power_state.power_is_on",
                    &power_state);
 
       if (ip->cmd == POWER_CMD_POWER_STATUS) 

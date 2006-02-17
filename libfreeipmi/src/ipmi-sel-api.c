@@ -25,101 +25,589 @@ int
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 
 			  sel_descriptor_t *seld, 
 			  uint8_t *record_data,
-                          uint32_t record_data_len)
+                          uint32_t *record_data_len)
 {
-  fiid_obj_t obj_cmd_rs;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  
-  if (!dev || !seld || !record_data)
+  int rv = -1;
+  int32_t len;
+
+  if (!dev || !seld || !record_data || !record_data_len)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_entry_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_get_sel_entry_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_get_sel_entry2 (dev, 
-			       IPMI_SEL_FIRST_ENTRY, 
+                               0,
+			       IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY, 
+                               0,
+                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			       obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"cmd", &val);
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"cmd",
+			&val) < 0)
+	goto cleanup;
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"comp_code", &val);
+      
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"comp_code", 
+			&val) < 0)
+	goto cleanup;
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
-      return (-1);
+      goto cleanup;
     }
   
-  seld->first_record_id = IPMI_SEL_FIRST_ENTRY;
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_entry_rs, 
-		(uint8_t *)"next_record_id", 
-		&val);
+  seld->first_record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"next_record_id", 
+		    &val) < 0)
+    goto cleanup;
   seld->next_record_id = val;
   
-  fiid_obj_get_data (obj_cmd_rs, 
-		     tmpl_get_sel_entry_rs, 
-		     (uint8_t *)"record_data", 
-		     record_data,
-                     record_data_len);
+  if ((len = fiid_obj_get_data (obj_cmd_rs, 
+                                (uint8_t *)"record_data", 
+                                record_data,
+                                *record_data_len)) < 0)
+    goto cleanup;
+  *record_data_len = len;
   
-  return 0;
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 int 
 ipmi_sel_get_next_entry (ipmi_device_t *dev, 
 			 sel_descriptor_t *seld, 
 			 uint8_t *record_data,
-                         uint32_t record_data_len)
+                         uint32_t *record_data_len)
 {
-  fiid_obj_t obj_cmd_rs;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  
-  if (!dev || !seld || !record_data)
+  int rv = -1;
+  int32_t len;
+
+  if (!dev || !seld || !record_data || !record_data_len)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (seld->next_record_id == IPMI_SEL_LAST_ENTRY)
-    return (-1);
-  
-  fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_entry_rs);
+  if (seld->next_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
+    goto cleanup;
+
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_get_sel_entry_rs)))
+    goto cleanup;
+
   if (ipmi_cmd_get_sel_entry2 (dev, 
+                               0,
 			       seld->next_record_id, 
+                               0,
+                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			       obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"cmd", &val);
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"cmd",
+			&val) < 0)
+	goto cleanup;
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_entry_rs, (uint8_t *)"comp_code", &val);
+
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"comp_code", 
+			&val) < 0)
+	goto cleanup;
       dev->comp_code = val;
+
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"next_record_id", 
+		    &val) < 0)
+    goto cleanup;
+  seld->next_record_id = val;
+  
+  if ((len = fiid_obj_get_data (obj_cmd_rs, 
+                                (uint8_t *)"record_data", 
+                                record_data,
+                                *record_data_len)) < 0)
+    goto cleanup;
+  *record_data_len = len;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static int 
+get_sel_system_event_record (uint8_t *record_data, 
+			     uint32_t record_data_len,
+			     sel_record_t *sel_record)
+{
+  uint16_t record_id;
+  uint32_t timestamp;
+  uint8_t generator_id_type;
+  uint8_t generator_id;
+  uint8_t channel_number;
+  uint8_t sensor_type;
+  uint8_t sensor_number;
+  uint8_t event_type_code;
+  uint8_t event_dir;
+  uint8_t offset_from_event_reading_type_code;
+  uint8_t event_data2_flag;
+  uint8_t event_data3_flag;
+  uint8_t event_data2;
+  uint8_t event_data3;
+  
+  uint64_t val;
+  fiid_obj_t obj = NULL;
+  int8_t rv = -1;
+
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (!(obj = fiid_obj_create(tmpl_sel_system_event_record)))
+    goto cleanup;
+
+  if (fiid_obj_set_all(obj,
+		       record_data,
+		       record_data_len) < 0)
+    goto cleanup;
+
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"record_id", 
+		    &val) < 0)
+    goto cleanup;
+  record_id = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"timestamp", 
+		    &val) < 0)
+    goto cleanup;
+  timestamp = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"generator_id.id_type", 
+		    &val) < 0)
+    goto cleanup;
+  generator_id_type = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"generator_id.id", 
+		    &val) < 0)
+    goto cleanup;
+  generator_id = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"channel_number", 
+		    &val) < 0)
+    goto cleanup;
+  channel_number = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"sensor_type", 
+		    &val) < 0)
+    goto cleanup;
+  sensor_type = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"sensor_number", 
+		    &val) < 0)
+    goto cleanup;
+  sensor_number = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_type_code", 
+		    &val) < 0)
+    goto cleanup;
+  event_type_code = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_dir", 
+		    &val) < 0)
+    goto cleanup;
+  event_dir = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"offset_from_event_reading_type_code", 
+		    &val) < 0)
+    goto cleanup;
+  offset_from_event_reading_type_code = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_data2_flag", 
+		    &val) < 0)
+    goto cleanup;
+  event_data2_flag = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_data3_flag", 
+		    &val) < 0)
+    goto cleanup;
+  event_data3_flag = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_data2", 
+		    &val) < 0)
+    goto cleanup;
+  event_data2 = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"event_data3", 
+		    &val) < 0)
+    goto cleanup;
+  event_data3 = val;
+  
+  sel_record->record_id = record_id;
+  {
+    char buffer[256];
+    time_t time;
+    
+    time = timestamp;
+    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
+    
+    sel_record->timestamp = strdup (buffer);
+  }
+  sel_record->sensor_info = NULL;
+  asprintf (&(sel_record->sensor_info), 
+	    "%s #%d", 
+	    ipmi_get_sensor_group (sensor_type), sensor_number);
+  sel_record->event_message = ipmi_get_event_message (sensor_type, 
+						      offset_from_event_reading_type_code);
+  switch (ipmi_sensor_classify (event_type_code))
+    {
+    case IPMI_SENSOR_CLASS_THRESHOLD:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_READING:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message), 
+		      "OEM code = %02Xh", 
+		      event_data2);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    offset_from_event_reading_type_code, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_TRIGGER_THRESHOLD_VALUE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "Trigger reading = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message), 
+		      "OEM code = %02Xh", 
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    offset_from_event_reading_type_code, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      {
+	sel_record->event_data2_message = NULL;
+	switch (event_data2_flag)
+	  {
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data2_message),
+		      "OEM code = %02Xh",
+		      event_data2);
+	    break;
+	  case IPMI_SEL_PREV_STATE_SEVERITY:
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data2_message = 
+	      ipmi_get_event_data2_message (sensor_type, 
+					    offset_from_event_reading_type_code, 
+					    event_data2);
+	    break;
+	  }
+	
+	sel_record->event_data3_message = NULL;
+	switch (event_data3_flag)
+	  {
+	  case IPMI_SEL_OEM_CODE:
+	    asprintf (&(sel_record->event_data3_message),
+		      "OEM code = %02Xh",
+		      event_data3);
+	    break;
+	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
+	    sel_record->event_data3_message = 
+	      ipmi_get_event_data3_message (sensor_type, 
+					    offset_from_event_reading_type_code, 
+					    event_data3);
+	    break;
+	  }
+	
+	break;
+      }
+    case IPMI_SENSOR_CLASS_OEM:
+      {
+	asprintf (&(sel_record->event_data2_message), 
+		  "Event Data2 = %02Xh", 
+		  event_data2);
+	asprintf (&(sel_record->event_data3_message), 
+		  "Event Data3 = %02Xh", 
+		  event_data3);
+	break;
+      }
+    default:
+      sel_record->event_data2_message = NULL;
+      sel_record->event_data3_message = NULL;
+    }
+  
+  rv = 0;
+ cleanup:
+  if (obj)
+    fiid_obj_destroy(obj);
+  return (rv);
+}
+
+static int 
+get_sel_timestamped_oem_record (uint8_t *record_data, 
+				uint32_t record_data_len,
+				sel_record_t *sel_record)
+{
+  uint16_t record_id;
+  uint32_t timestamp;
+  uint32_t manufacturer_id;
+  uint64_t oem_defined;
+  uint64_t val;
+  fiid_obj_t obj = NULL;
+  int8_t rv = -1;
+
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (!(obj = fiid_obj_create(tmpl_sel_timestamped_oem_record)))
+    goto cleanup;
+  
+  if (fiid_obj_set_all(obj,
+		       record_data,
+		       record_data_len) < 0)
+    goto cleanup;
+
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"record_id", 
+		    &val) < 0)
+    goto cleanup;
+  record_id = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"timestamp", 
+		    &val) < 0)
+    goto cleanup;
+  timestamp = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"manufacturer_id", 
+		    &val) < 0)
+    goto cleanup;
+  manufacturer_id = val;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"oem_defined", 
+		    &val) < 0)
+    goto cleanup;
+  oem_defined = val;
+  
+  sel_record->record_id = record_id;
+  {
+    char buffer[256];
+    time_t time;
+    
+    time = timestamp;
+    strftime (buffer, 256, "%d-%b-%Y %H:%M:%S", localtime (&time));
+    
+    sel_record->timestamp = strdup (buffer);
+  }
+  asprintf (&(sel_record->sensor_info), 
+	    "Manufacturer ID %02Xh", 
+	    manufacturer_id);
+  asprintf (&(sel_record->event_message), 
+	    "OEM Defined = " FI_64 "Xh",
+	    oem_defined);
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
+  
+  rv = 0;
+ cleanup:
+  if (obj)
+    fiid_obj_destroy(obj);
+  return (rv);
+}
+
+static int 
+get_sel_non_timestamped_oem_record (uint8_t *record_data, uint32_t record_data_len, sel_record_t *sel_record)
+{
+  uint16_t record_id;
+  uint64_t val;
+  fiid_obj_t obj = NULL;
+  int8_t rv = -1;
+  uint8_t buf[1024];
+  int32_t len;
+  char *str = NULL;
+  char *tmp_str = NULL;
+  int i;
+
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (!(obj = fiid_obj_create(tmpl_sel_non_timestamped_oem_record)))
+    goto cleanup;
+  
+  if (fiid_obj_set_all(obj,
+		       record_data,
+		       record_data_len) < 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"record_id", 
+		    &val) < 0)
+    goto cleanup;
+  record_id = val;
+  
+  memset(buf, '\0', 1024);
+  if ((len = fiid_obj_get_data(obj,
+			       (uint8_t *)"oem_defined",
+			       buf,
+			       1024)) < 0)
+    goto cleanup;
+  
+  sel_record->record_id = record_id;
+  sel_record->timestamp = NULL;
+  sel_record->sensor_info = NULL;
+  sel_record->event_message = NULL;
+  
+  for (i = 0; i < len; i++)
+    {
+      tmp_str = str;
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s %02X", tmp_str, buf[i]);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%02X", buf[i]);
+    }
+  
+  if (str)
+    {
+      asprintf (&(sel_record->event_message), "OEM defined = %s", str);
+      free (str);
+    }
+  
+  sel_record->event_data2_message = NULL;
+  sel_record->event_data3_message = NULL;
+  
+  rv = 0;
+ cleanup:
+  if (obj)
+    fiid_obj_destroy(obj);
+  return (rv);
+}
+
+int 
+get_sel_record (uint8_t *record_data, 
+		uint32_t record_data_len,
+		sel_record_t *sel_record)
+{
+  fiid_obj_t obj = NULL;
+  uint8_t record_type;
+  uint64_t val;
+  
+  if (!record_data || !sel_record)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  if (!(obj = fiid_obj_create(tmpl_sel_record_header)))
+    return (-1);
+
+  if (fiid_obj_set_all(obj,
+		       record_data,
+		       record_data_len) < 0)
+    {
+      fiid_obj_destroy(obj);
       return (-1);
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_entry_rs, 
-		(uint8_t *)"next_record_id", 
-		&val);
-  seld->next_record_id = val;
+  if (fiid_obj_get (obj, 
+		    (uint8_t *)"record_type",
+		    &val) < 0)
+    {
+      fiid_obj_destroy(obj);
+      return (-1);
+    }
+  record_type = val;
+  fiid_obj_destroy(obj);
+  switch (ipmi_get_sel_record_type (record_type))
+    {
+    case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
+      return get_sel_system_event_record (record_data, record_data_len, sel_record);
+    case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
+      return get_sel_timestamped_oem_record (record_data, record_data_len, sel_record);
+    case IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
+      return get_sel_non_timestamped_oem_record (record_data, record_data_len, sel_record);
+    }
+
   
-  fiid_obj_get_data (obj_cmd_rs, 
-		     tmpl_get_sel_entry_rs, 
-		     (uint8_t *)"record_data", 
-		     record_data,
-                     record_data_len);
-  
-  return 0;
+  return -1;
 }
+
 
 int 
 get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
 {
-  fiid_obj_t obj_cmd_rs;
+  fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
+  int rv = -1;
   
   if (!dev || !pinfo)
     {
@@ -127,86 +615,107 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
       return (-1);
     }
 
-  fiid_obj_alloca (obj_cmd_rs, tmpl_get_sel_info_rs);
+  if (!(obj_cmd_rs = fiid_obj_create (tmpl_get_sel_info_rs)))
+    goto cleanup;
+
+
   if (ipmi_cmd_get_sel_info2 (dev, obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, (uint8_t *)"cmd", &val);
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"cmd",
+			&val) < 0)
+	goto cleanup;
       dev->cmd = val;
-      FIID_OBJ_GET (obj_cmd_rs, tmpl_get_sel_info_rs, (uint8_t *)"comp_code", &val);
+
+      if (fiid_obj_get (obj_cmd_rs, 
+			(uint8_t *)"comp_code", 
+			&val) < 0)
+	goto cleanup;
       dev->comp_code = val;
+
       ipmi_strerror_cmd_r (obj_cmd_rs, 
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
-      return (-1);
+      goto cleanup;
+
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+
+      goto cleanup;
     }
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"sel_version_major", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"sel_version_major", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->version_major = val;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"sel_version_minor", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"sel_version_minor", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->version_minor = val;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"log_entry_count", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"entries", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->entry_count = val;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"free_space", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"free_space", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->free_space = val;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"recent_addition_timestamp", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"most_recent_addition_timestamp", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->last_add_time = val;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"recent_erase_timestamp", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"most_recent_erase_timestamp", 
+		    &val) < 0)
+    goto cleanup;
   pinfo->last_erase_time = val;
   
   pinfo->flags = 0;
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"get_sel_alloc_info_cmd_support", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"get_sel_allocation_info_command_supported", 
+		    &val) < 0)
+    goto cleanup;
   if (val) pinfo->flags |= get_sel_alloc_info_cmd_support;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"reserve_sel_cmd_support", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"reserve_sel_command_supported", 
+		    &val) < 0)
+    goto cleanup;
   if (val) pinfo->flags |= reserve_sel_cmd_support;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"partial_add_sel_entry_cmd_support", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"partial_add_sel_entry_command_supported", 
+		    &val) < 0)
+    goto cleanup;
   if (val) pinfo->flags |= partial_add_sel_entry_cmd_support;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"delete_sel_cmd_support", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"delete_sel_command_supported", 
+		    &val) < 0)
+    goto cleanup;
   if (val) pinfo->flags |= delete_sel_cmd_support;
   
-  fiid_obj_get (obj_cmd_rs, 
-		tmpl_get_sel_info_rs, 
-		(uint8_t *)"overflow_flag", 
-		&val);
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"overflow_flag", 
+		    &val) < 0)
+    goto cleanup;
   if (val) pinfo->flags |= overflow_flag;
   
-  return 0;
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 

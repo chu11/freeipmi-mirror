@@ -22,54 +22,41 @@
 #ifndef _IPMI_SDR_REPO_CMDS_H
 #define _IPMI_SDR_REPO_CMDS_H
 
-#define IPMI_SDR_MODAL_NON_MODAL_REPO_UPDATE_OP_UNSPECIFIED    0x0
-#define IPMI_SDR_NON_MODAL_REPO_UPDATE_OP_SUPPORTED            0x1
-#define IPMI_SDR_MODAL_REPO_UPDATE_OP_SUPPORTED                0x2
-#define IPMI_SDR_MODAL_NON_MODAL_REPO_UPDATE_OP_SUPPORTED      0x3
+#define IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_UNSPECIFIED    0x0
+#define IPMI_SDR_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED            0x1
+#define IPMI_SDR_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED                0x2
+#define IPMI_SDR_MODAL_NON_MODAL_REPOSITORY_UPDATE_OP_SUPPORTED      0x3
 
 #define IPMI_SDR_IPMB_SLAVE_ADDRESS    0x0
 #define IPMI_SDR_SYSTEM_SOFTWARE_ID    0x1
 
-
+#define IPMI_SDR_READ_ENTIRE_RECORD_BYTES_TO_READ  0xFF
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+extern fiid_template_t tmpl_get_sdr_repository_info_rq;
+extern fiid_template_t tmpl_get_sdr_repository_info_rs;
 
-extern fiid_template_t tmpl_get_sdr_repo_info_rq;
-extern fiid_template_t tmpl_get_sdr_repo_info_rs;
+extern fiid_template_t tmpl_get_sdr_repository_allocation_info_rq;
+extern fiid_template_t tmpl_get_sdr_repository_allocation_info_rs;
 
-extern fiid_template_t tmpl_get_sdr_repo_alloc_info_rq;
-extern fiid_template_t tmpl_get_sdr_repo_alloc_info_rs;
-
-extern fiid_template_t tmpl_reserve_sdr_repo_rq;
-extern fiid_template_t tmpl_reserve_sdr_repo_rs;
+extern fiid_template_t tmpl_reserve_sdr_repository_rq;
+extern fiid_template_t tmpl_reserve_sdr_repository_rs;
 
 extern fiid_template_t tmpl_get_sdr_rq;
 extern fiid_template_t tmpl_get_sdr_rs;
 
-int8_t fill_kcs_get_repo_info (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_get_repo_alloc_info (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_reserve_repo (fiid_obj_t obj_data_rq);
-int8_t fill_kcs_get_sensor_record_header (uint16_t record_id, fiid_obj_t obj_data_rq);
-int8_t fill_kcs_get_sdr_chunk (uint16_t reservation_id,
-                               uint16_t record_id,
-                               uint8_t record_offset,
-                               uint8_t bytes_read,
-                               fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_repository_info (fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_repository_allocation_info (fiid_obj_t obj_data_rq);
+int8_t fill_cmd_reserve_sdr_repository (fiid_obj_t obj_data_rq);
 
-int8_t ipmi_cmd_get_sdr_repo_info2 (ipmi_device_t *dev, 
-				    fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr_repo_alloc_info2 (ipmi_device_t *dev, 
-					  fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_reserve_sdr_repo2 (ipmi_device_t *dev, 
-				   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-			  uint16_t record_id, 
-			  fiid_obj_t obj_cmd_rs, 
-			  fiid_obj_t *sensor_record);
-
+int8_t fill_cmd_get_sdr (uint16_t reservation_id,
+                         uint16_t record_id,
+                         uint8_t offset_into_record,
+                         uint8_t bytes_to_read,
+                         fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }

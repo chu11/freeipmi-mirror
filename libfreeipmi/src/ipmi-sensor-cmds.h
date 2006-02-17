@@ -1,5 +1,5 @@
 /* 
-   ipmi-sensor-cmds.c - IPMI sensor commands
+   ipmi-sensor-cmds.h - IPMI sensor commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -26,36 +26,37 @@
 extern "C" {
 #endif
 
+#define IPMI_SENSOR_GET_SENSOR_COUNT  0x00
+#define IPMI_SENSOR_GET_SDR_COUNT     0x01
 
-#define IPMI_SNSR_GET_SENSOR_COUNT  0x00
-#define IPMI_SNSR_GET_SDR_COUNT     0x01
+#define IPMI_SENSOR_STATIC_SENSOR_POPULATION  0x0
+#define IPMI_SENSOR_DYNAMIC_SENSOR_POPULATION 0x1
 
-/* #define IPMI_SDR_LUN_0_HAS_SENSORS  0x00 */
-/* #define IPMI_SDR_LUN_1_HAS_SENSORS  0x01 */
-/* #define IPMI_SDR_LUN_2_HAS_SENSORS  0x02 */
-/* #define IPMI_SDR_LUN_3_HAS_SENSORS  0x03 */
+#define IPMI_SENSOR_SELECTED_EVENT_MESSAGES_DO_NOT_CHANGE_INDIVIDUAL_ENABLES 0x0
+#define IPMI_SENSOR_SELECTED_EVENT_MESSAGES_ENABLE 0x1
+#define IPMI_SENSOR_SELECTED_EVENT_MESSAGES_DISABLE 0x2
+#define IPMI_SENSOR_SELECTED_EVENT_MESSAGES_RESERVED 0x3
 
-#define SET_LOWER_NON_CRITICAL_THRESHOLD       1
-#define SET_LOWER_CRITICAL_THRESHOLD           2 
-#define SET_LOWER_NON_RECOVERABLE_THRESHOLD    4
-#define SET_UPPER_NON_CRITICAL_THRESHOLD       8
-#define SET_UPPER_CRITICAL_THRESHOLD           32
-#define SET_UPPER_NON_RECOVERABLE_THRESHOLD    64
+#define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_ENABLE  0x1
+#define IPMI_SENSOR_SCANNING_ON_THIS_SENSOR_DISABLE 0x0
 
+#define IPMI_SENSOR_ALL_EVENT_MESSAGES_ENABLE  0x1
+#define IPMI_SENSOR_ALL_EVENT_MESSAGES_DISABLE 0x0
 
-/* Intel - Not Implemented */
-extern fiid_template_t tmpl_get_dev_sdr_info_rq;
-extern fiid_template_t tmpl_get_dev_sdr_info_rs;
+/* achu: Yes, this one is backwards.  I don't know why */
+#define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_ENABLED 0x0
+#define IPMI_SENSOR_RE_ARM_ALL_EVENT_STATUS_DISABLED 0x1
+
+/* achu: Yes, this one is backwards.  I don't know why */
+#define IPMI_SENSOR_READING_STATE_UNAVAILABLE 0x1
+#define IPMI_SENSOR_READING_STATE_AVAILABLE 0x0
+
+extern fiid_template_t tmpl_get_device_sdr_info_rq;
+extern fiid_template_t tmpl_get_device_sdr_info_rs;
   
-/* Intel - Not Implemented */
-extern fiid_template_t tmpl_get_dev_sdr_rq;
-extern fiid_template_t tmpl_get_dev_sdr_rs;
+extern fiid_template_t tmpl_get_device_sdr_rq;
+extern fiid_template_t tmpl_get_device_sdr_rs;
 
-/* Intel - Not Implemented */
-extern fiid_template_t tmpl_get_resrve_dev_sdr_repository_rq;
-extern fiid_template_t tmpl_get_resrve_dev_sdr_repository_rs;
-
-/* Intel - Not Implemented */
 extern fiid_template_t tmpl_get_sensor_reading_factors_rq;
 extern fiid_template_t tmpl_get_sensor_reading_factors_rs;
 
@@ -71,55 +72,42 @@ extern fiid_template_t tmpl_set_sensor_thresholds_rs;
 extern fiid_template_t tmpl_get_sensor_thresholds_rq;
 extern fiid_template_t tmpl_get_sensor_thresholds_rs;
 
-extern fiid_template_t tmpl_set_sensor_threshold_event_enable_rq;
-extern fiid_template_t tmpl_set_sensor_threshold_event_enable_rs;
-extern fiid_template_t tmpl_set_sensor_discrete_event_enable_rq;
-extern fiid_template_t tmpl_set_sensor_discrete_event_enable_rs;
+extern fiid_template_t tmpl_set_sensor_event_enable_rq;
+extern fiid_template_t tmpl_set_sensor_event_enable_rs;
+extern fiid_template_t tmpl_set_sensor_event_enable_threshold_rq;
+extern fiid_template_t tmpl_set_sensor_event_enable_discrete_rq;
 
-extern fiid_template_t tmpl_get_sensor_threshold_event_enable_rq;
-extern fiid_template_t tmpl_get_sensor_threshold_event_enable_rs;
-extern fiid_template_t tmpl_get_sensor_discrete_event_enable_rq;
-extern fiid_template_t tmpl_get_sensor_discrete_event_enable_rs;
+extern fiid_template_t tmpl_get_sensor_event_enable_rq;
+extern fiid_template_t tmpl_get_sensor_event_enable_rs;
+extern fiid_template_t tmpl_get_sensor_event_enable_threshold_rs;
+extern fiid_template_t tmpl_get_sensor_event_enable_discrete_rs;
 
-extern fiid_template_t tmpl_re_arm_sensor_threshold_events_rq;
-extern fiid_template_t tmpl_re_arm_sensor_threshold_events_rs;
-extern fiid_template_t tmpl_re_arm_sensor_discrete_events_rq;
-extern fiid_template_t tmpl_re_arm_sensor_discrete_events_rs;
+extern fiid_template_t tmpl_re_arm_sensor_events_rq;
+extern fiid_template_t tmpl_re_arm_sensor_events_rs;
+extern fiid_template_t tmpl_re_arm_sensor_events_threshold_rq;
+extern fiid_template_t tmpl_re_arm_sensor_events_discrete_rq;
 
-extern fiid_template_t tmpl_get_sensor_threshold_event_status_rq;
-extern fiid_template_t tmpl_get_sensor_threshold_event_status_rs;
-extern fiid_template_t tmpl_get_sensor_discrete_event_status_rq;
-extern fiid_template_t tmpl_get_sensor_discrete_event_status_rs;
+extern fiid_template_t tmpl_get_sensor_event_status_rq;
+extern fiid_template_t tmpl_get_sensor_event_status_rs;
+extern fiid_template_t tmpl_get_sensor_event_status_threshold_rq;
+extern fiid_template_t tmpl_get_sensor_event_status_threshold_rs;
+extern fiid_template_t tmpl_get_sensor_event_status_discerete_rq;
+extern fiid_template_t tmpl_get_sensor_event_status_discerete_rs;
 
-extern fiid_template_t tmpl_get_sensor_threshold_reading_rq;
-extern fiid_template_t tmpl_get_sensor_threshold_reading_rs;
-extern fiid_template_t tmpl_get_sensor_discrete_reading_rq;
-extern fiid_template_t tmpl_get_sensor_discrete_reading_rs;
+extern fiid_template_t tmpl_get_sensor_reading_rq;
+extern fiid_template_t tmpl_get_sensor_reading_rs;
+extern fiid_template_t tmpl_get_sensor_reading_threshold_rs;
+extern fiid_template_t tmpl_get_sensor_reading_discrete_rs;
 
-/* Intel - Not Implemented */
 extern fiid_template_t tmpl_set_sensor_type_rq;
 extern fiid_template_t tmpl_set_sensor_type_rs;
 
-/* Intel - Not Implemented */
 extern fiid_template_t tmpl_get_sensor_type_rq;
 extern fiid_template_t tmpl_get_sensor_type_rs;
 
-int8_t fill_kcs_get_threshold_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
 
-int8_t fill_kcs_get_discrete_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
-
-int8_t fill_kcs_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq);
-
-int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
-					uint8_t sensor_number, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
-				       uint8_t sensor_number, 
-				       fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
-					uint8_t sensor_number, 
-					fiid_obj_t obj_cmd_rs);
-
+int8_t fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq);
 
 #ifdef __cplusplus
 }
