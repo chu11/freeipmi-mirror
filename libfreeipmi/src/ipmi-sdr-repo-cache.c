@@ -656,7 +656,7 @@ ipmi_sdr_repository_cache_get_sensor_name (sdr_repository_cache_t *sdr_repositor
 	goto cleanup;
       
       if ((str_len = fiid_obj_field_len_bytes(obj_data_rs,
-					      (uint8_t *)"sensor_id_string")) < 0)
+					      (uint8_t *)"id_string")) < 0)
 	goto cleanup;
 
       if (str_len)
@@ -668,7 +668,7 @@ ipmi_sdr_repository_cache_get_sensor_name (sdr_repository_cache_t *sdr_repositor
 	    }
 	  memset(buffer, '\0', len);
 	  if (fiid_obj_get_data(obj_data_rs,
-				(uint8_t *)"sensor_id_string",
+				(uint8_t *)"id_string",
 				buffer,
 				len) < 0)
 	    goto cleanup;

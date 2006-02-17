@@ -2295,7 +2295,7 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 				    gh_long2scm (record->analog_data_format));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    gh_long2scm (record->sensor_owner_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_number"), 
 				    gh_long2scm (record->sensor_number));
@@ -2307,7 +2307,7 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    gh_long2scm (record->event_reading_type_code));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_unit"), 
 				    gh_long2scm (record->sensor_unit));
@@ -2322,22 +2322,22 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 				    gh_double2scm (record->nominal_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("normal_min"), 
-				    gh_double2scm (record->normal_min));
+				    gh_double2scm (record->normal_minimum));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("normal_max"), 
-				    gh_double2scm (record->normal_max));
+				    gh_double2scm (record->normal_maximum));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_min_reading"), 
-				    gh_double2scm (record->sensor_min_reading));
+				    gh_double2scm (record->sensor_minimum_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_max_reading"), 
-				    gh_double2scm (record->sensor_max_reading));
+				    gh_double2scm (record->sensor_maximum_reading));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("negative_hysteresis"), 
-				    gh_long2scm (record->negative_hysteresis));
+				    gh_long2scm (record->negative_going_threshold_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("positive_hysteresis"), 
-				    gh_long2scm (record->positive_hysteresis));
+				    gh_long2scm (record->positive_going_threshold_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("lower_non_recoverable_threshold"), 
 				    gh_double2scm (record->lower_non_recoverable_threshold));
@@ -2369,7 +2369,7 @@ get_scm_sdr_compact_record (sdr_compact_record_t *record,
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    gh_long2scm (record->sensor_owner_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_number"), 
 				    gh_long2scm (record->sensor_number));
@@ -2381,7 +2381,7 @@ get_scm_sdr_compact_record (sdr_compact_record_t *record,
 				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    gh_long2scm (record->event_reading_type_code));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_unit"), 
 				    gh_long2scm (record->sensor_unit));
@@ -2393,10 +2393,10 @@ get_scm_sdr_compact_record (sdr_compact_record_t *record,
 				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("negative_hysteresis"), 
-				    gh_long2scm (record->negative_hysteresis));
+				    gh_long2scm (record->negative_going_threshold_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("positive_hysteresis"), 
-				    gh_long2scm (record->positive_hysteresis));
+				    gh_long2scm (record->positive_going_threshold_hysteresis));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_name"), 
 				    gh_str02scm (record->sensor_name));
@@ -2410,7 +2410,7 @@ get_scm_sdr_event_only_record (sdr_event_only_record_t *record,
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("slave_system_software_id"), 
-				    gh_long2scm (record->slave_system_software_id));
+				    gh_long2scm (record->sensor_owner_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_number"), 
 				    gh_long2scm (record->sensor_number));
@@ -2422,7 +2422,7 @@ get_scm_sdr_event_only_record (sdr_event_only_record_t *record,
 				    gh_str02scm (ipmi_get_sensor_group (record->sensor_type)));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("event_reading_type"), 
-				    gh_long2scm (record->event_reading_type));
+				    gh_long2scm (record->event_reading_type_code));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("sensor_name"), 
 				    gh_str02scm (record->sensor_name));
@@ -2462,7 +2462,7 @@ get_scm_sdr_generic_device_locator_record (sdr_generic_device_locator_record_t *
 				    gh_long2scm (record->private_bus_id));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("lun_master_write_read_command"), 
-				    gh_long2scm (record->lun_master_write_read_command));
+				    gh_long2scm (record->lun_for_master_write_read_command));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("address_span"), 
 				    gh_long2scm (record->address_span));
@@ -2656,7 +2656,7 @@ scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
   record->analog_data_format = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
-  record->slave_system_software_id = gh_scm2long (scm_value);
+  record->sensor_owner_id = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
@@ -2665,7 +2665,7 @@ scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
   record->sensor_type = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
-  record->event_reading_type = gh_scm2long (scm_value);
+  record->event_reading_type_code = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
   record->sensor_unit = gh_scm2long (scm_value);
@@ -2674,22 +2674,22 @@ scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
   record->nominal_reading = gh_scm2double (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_min"));
-  record->normal_min = gh_scm2double (scm_value);
+  record->normal_minimum = gh_scm2double (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("normal_max"));
-  record->normal_max = gh_scm2double (scm_value);
+  record->normal_maximum = gh_scm2double (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_min_reading"));
-  record->sensor_min_reading = gh_scm2double (scm_value);
+  record->sensor_minimum_reading = gh_scm2double (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_max_reading"));
-  record->sensor_max_reading = gh_scm2double (scm_value);
+  record->sensor_maximum_reading = gh_scm2double (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
-  record->negative_hysteresis = gh_scm2long (scm_value);
+  record->negative_going_threshold_hysteresis = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
-  record->positive_hysteresis = gh_scm2long (scm_value);
+  record->positive_going_threshold_hysteresis = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lower_non_recoverable_threshold"));
   record->lower_non_recoverable_threshold = gh_scm2double (scm_value);
@@ -2742,7 +2742,7 @@ scm2sdr_compact_record (SCM scm_sdr_record, sdr_compact_record_t *record)
   char *sensor_name_ptr = NULL;
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
-  record->slave_system_software_id = gh_scm2long (scm_value);
+  record->sensor_owner_id = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
@@ -2751,16 +2751,16 @@ scm2sdr_compact_record (SCM scm_sdr_record, sdr_compact_record_t *record)
   record->sensor_type = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
-  record->event_reading_type = gh_scm2long (scm_value);
+  record->event_reading_type_code = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_unit"));
   record->sensor_unit = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("negative_hysteresis"));
-  record->negative_hysteresis = gh_scm2long (scm_value);
+  record->negative_going_threshold_hysteresis = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("positive_hysteresis"));
-  record->positive_hysteresis = gh_scm2long (scm_value);
+  record->positive_going_threshold_hysteresis = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
   sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
@@ -2777,7 +2777,7 @@ scm2sdr_event_only_record (SCM scm_sdr_record, sdr_event_only_record_t *record)
   char *sensor_name_ptr = NULL;
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("slave_system_software_id"));
-  record->slave_system_software_id = gh_scm2long (scm_value);
+  record->sensor_owner_id = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_number"));
   record->sensor_number = gh_scm2long (scm_value);
@@ -2786,7 +2786,7 @@ scm2sdr_event_only_record (SCM scm_sdr_record, sdr_event_only_record_t *record)
   record->sensor_type = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("event_reading_type"));
-  record->event_reading_type = gh_scm2long (scm_value);
+  record->event_reading_type_code = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("sensor_name"));
   sensor_name_ptr = gh_scm2newstr (scm_value, NULL);
@@ -2829,7 +2829,7 @@ scm2sdr_generic_device_locator_record (SCM scm_sdr_record, sdr_generic_device_lo
   record->private_bus_id = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("lun_master_write_read_command"));
-  record->lun_master_write_read_command = gh_scm2long (scm_value);
+  record->lun_for_master_write_read_command = gh_scm2long (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("address_span"));
   record->address_span = gh_scm2long (scm_value);
@@ -3007,7 +3007,7 @@ ex_get_sensor_reading (SCM scm_sdr_record)
 					 SCM_BOOL_F : SCM_BOOL_T));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
 					gh_str02scm ("sensor_scanning_flag"), 
-					(sensor_reading.sensor_scanning_flag ? 
+					(sensor_reading.sensor_scanning ? 
 					 SCM_BOOL_T : SCM_BOOL_F));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
 					gh_str02scm ("event_messages_flag"), 

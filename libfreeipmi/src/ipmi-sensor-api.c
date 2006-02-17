@@ -63,10 +63,10 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   sdr_full_record->analog_data_format = analog_data_format;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"slave_system_software_id", 
+		    (uint8_t *)"sensor_owner_id.id", 
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->slave_system_software_id = val;
+  sdr_full_record->sensor_owner_id = val;
   
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"sensor_number", 
@@ -81,13 +81,13 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   sdr_full_record->sensor_type = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type", 
+		    (uint8_t *)"event_reading_type_code", 
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->event_reading_type = val;
+  sdr_full_record->event_reading_type_code = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_base_unit", 
+		    (uint8_t *)"sensor_unit2.base_unit", 
 		    &val) < 0)
     goto cleanup;
   sdr_full_record->sensor_unit = val;
@@ -106,10 +106,10 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"normal_min",
+		    (uint8_t *)"normal_minimum",
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->normal_min = 
+  sdr_full_record->normal_minimum = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
 			      m,
@@ -119,10 +119,10 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"normal_max",
+		    (uint8_t *)"normal_maximum",
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->normal_max = 
+  sdr_full_record->normal_maximum = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
 			      m,
@@ -132,10 +132,10 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_min_reading",
+		    (uint8_t *)"sensor_minimum_reading",
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->sensor_min_reading = 
+  sdr_full_record->sensor_minimum_reading = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
 			      m,
@@ -145,10 +145,10 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_max_reading",
+		    (uint8_t *)"sensor_maximum_reading",
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->sensor_max_reading =
+  sdr_full_record->sensor_maximum_reading =
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
 			      m,
@@ -158,16 +158,16 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"negative_hysteresis", 
+		    (uint8_t *)"negative_going_threshold_hysteresis", 
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->negative_hysteresis = val;
+  sdr_full_record->negative_going_threshold_hysteresis = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"positive_hysteresis", 
+		    (uint8_t *)"positive_going_threshold_hysteresis", 
 		    &val) < 0)
     goto cleanup;
-  sdr_full_record->positive_hysteresis = val;
+  sdr_full_record->positive_going_threshold_hysteresis = val;
   
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"lower_non_recoverable_threshold",
@@ -249,7 +249,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 
   memset(sdr_full_record->sensor_name, '\0', 17);
   if (fiid_obj_get_data (obj,
-			 (uint8_t *)"sensor_id_string",
+			 (uint8_t *)"id_string",
 			 sdr_full_record->sensor_name,
 			 17) < 0)
     goto cleanup;
@@ -284,10 +284,10 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
     goto cleanup;
 
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"slave_system_software_id", 
+		    (uint8_t *)"sensor_owner_id.id", 
 		    &val) < 0)
     goto cleanup;
-  sdr_compact_record->slave_system_software_id = val;
+  sdr_compact_record->sensor_owner_id = val;
   
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"sensor_number", 
@@ -302,32 +302,32 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
   sdr_compact_record->sensor_type = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type", 
+		    (uint8_t *)"event_reading_type_code", 
 		    &val) < 0)
     goto cleanup;
-  sdr_compact_record->event_reading_type = val;
+  sdr_compact_record->event_reading_type_code = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_base_unit", 
+		    (uint8_t *)"sensor_unit2.base_unit", 
 		    &val) < 0)
     goto cleanup;
   sdr_compact_record->sensor_unit = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"negative_hysteresis", 
+		    (uint8_t *)"negative_going_threshold_hysteresis", 
 		    &val) < 0)
     goto cleanup;
-  sdr_compact_record->negative_hysteresis = val;
+  sdr_compact_record->negative_going_threshold_hysteresis = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"positive_hysteresis", 
+		    (uint8_t *)"positive_going_threshold_hysteresis", 
 		    &val) < 0)
     goto cleanup;
-  sdr_compact_record->positive_hysteresis = val;
+  sdr_compact_record->positive_going_threshold_hysteresis = val;
   
   memset(sdr_compact_record->sensor_name, '\0', 17);
   if (fiid_obj_get_data (obj,
-			 (uint8_t *)"sensor_id_string",
+			 (uint8_t *)"id_string",
 			 sdr_compact_record->sensor_name,
 			 17) < 0)
     goto cleanup;
@@ -362,10 +362,10 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
     goto cleanup;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"slave_system_software_id", 
+		    (uint8_t *)"sensor_owner_id.id", 
 		    &val) < 0)
     goto cleanup;
-  sdr_event_only_record->slave_system_software_id = val;
+  sdr_event_only_record->sensor_owner_id = val;
   
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"sensor_number", 
@@ -380,14 +380,14 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
   sdr_event_only_record->sensor_type = val;
   
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type", 
+		    (uint8_t *)"event_reading_type_code", 
 		    &val) < 0)
     goto cleanup;
-  sdr_event_only_record->event_reading_type = val;
+  sdr_event_only_record->event_reading_type_code = val;
   
   memset(sdr_event_only_record->sensor_name, '\0', 17);
   if (fiid_obj_get_data (obj,
-			 (uint8_t *)"sensor_id_string",
+			 (uint8_t *)"id_string",
 			 sdr_event_only_record->sensor_name,
 			 17) < 0)
     goto cleanup;
@@ -483,12 +483,12 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
 		    &val) < 0)
     goto cleanup;
   sdr_generic_device_locator_record->private_bus_id = val;
-  
+
   if (fiid_obj_get (obj, 
-		    (uint8_t *)"lun_master_write_read_command", 
+		    (uint8_t *)"lun_for_master_write_read_command", 
 		    &val) < 0)
     goto cleanup;
-  sdr_generic_device_locator_record->lun_master_write_read_command = val;
+  sdr_generic_device_locator_record->lun_for_master_write_read_command = val;
   
   if (fiid_obj_get (obj, 
 		    (uint8_t *)"address_span", 
@@ -522,7 +522,7 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
   
   memset(sdr_generic_device_locator_record->device_name, '\0', 17);
   if (fiid_obj_get_data (obj,
-			 (uint8_t *)"device_name",
+			 (uint8_t *)"device_id_string",
 			 sdr_generic_device_locator_record->device_name,
 			 17) < 0)
     goto cleanup;
@@ -581,7 +581,7 @@ get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
   
   memset(sdr_logical_fru_device_locator_record->device_name, '\0', 17);
   if (fiid_obj_get_data (obj,
-			 (uint8_t *)"device_id_string",
+			 (uint8_t *)"device_string",
 			 sdr_logical_fru_device_locator_record->device_name,
 			 17) < 0)
     goto cleanup;
@@ -773,7 +773,7 @@ get_sdr_record (ipmi_device_t *dev,
 			   sensor_record_len,
 			   &(sdr_record->record.sdr_full_record));
       
-      if (ipmi_sensor_classify (sdr_record->record.sdr_full_record.event_reading_type) != 
+      if (ipmi_sensor_classify (sdr_record->record.sdr_full_record.event_reading_type_code) != 
 	  IPMI_SENSOR_CLASS_THRESHOLD)
 	{
 	  break;
@@ -939,7 +939,7 @@ get_sensor_reading (ipmi_device_t *dev,
     };
   
   uint8_t slave_sys_soft_id;
-  uint8_t event_reading_type;
+  uint8_t event_reading_type_code;
   uint8_t sensor_number;
   uint8_t sensor_type;
   short b = 0;
@@ -966,11 +966,11 @@ get_sensor_reading (ipmi_device_t *dev,
   switch (sdr_record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
-      slave_sys_soft_id = sdr_record->record.sdr_full_record.slave_system_software_id;
+      slave_sys_soft_id = sdr_record->record.sdr_full_record.sensor_owner_id;
       if (ipmi_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
 	return -1;
       
-      event_reading_type = sdr_record->record.sdr_full_record.event_reading_type;
+      event_reading_type_code = sdr_record->record.sdr_full_record.event_reading_type_code;
       sensor_number = sdr_record->record.sdr_full_record.sensor_number;
       sensor_type = sdr_record->record.sdr_full_record.sensor_type;
       b = sdr_record->record.sdr_full_record.b;
@@ -981,11 +981,11 @@ get_sensor_reading (ipmi_device_t *dev,
       analog_data_format = sdr_record->record.sdr_full_record.analog_data_format;
       break;
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
-      slave_sys_soft_id = sdr_record->record.sdr_compact_record.slave_system_software_id;
+      slave_sys_soft_id = sdr_record->record.sdr_compact_record.sensor_owner_id;
       if (ipmi_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
 	return -1;
       
-      event_reading_type = sdr_record->record.sdr_compact_record.event_reading_type;
+      event_reading_type_code = sdr_record->record.sdr_compact_record.event_reading_type_code;
       sensor_number = sdr_record->record.sdr_compact_record.sensor_number;
       sensor_type = sdr_record->record.sdr_compact_record.sensor_type;
       break;
@@ -993,7 +993,7 @@ get_sensor_reading (ipmi_device_t *dev,
       return -1;
     }
   
-  switch (ipmi_sensor_classify (event_reading_type))
+  switch (ipmi_sensor_classify (event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
       if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_threshold_reading_rs)))
@@ -1060,7 +1060,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			(uint8_t *)"status_sensor_scanning", 
 			&val) < 0)
 	goto cleanup;
-      sensor_reading->sensor_scanning_flag = val;
+      sensor_reading->sensor_scanning = val;
       if (fiid_obj_get (l_obj_cmd_rs, 
 			(uint8_t *)"status_all_event_messages", 
 			&val) < 0)
@@ -1072,7 +1072,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			&val) < 0)
 	goto cleanup;
       sensor_reading->event_message_list = 
-	ipmi_get_generic_event_message_list (event_reading_type, val);
+	ipmi_get_generic_event_message_list (event_reading_type_code, val);
       
       rv = 0;
       break;
@@ -1143,7 +1143,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			(uint8_t *)"status_sensor_scanning", 
 			&val) < 0)
 	goto cleanup;
-      sensor_reading->sensor_scanning_flag = val;
+      sensor_reading->sensor_scanning = val;
       if (fiid_obj_get (l_obj_cmd_rs, 
 			(uint8_t *)"status_all_event_messages", 
 			&val) < 0)
@@ -1155,7 +1155,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			&val) < 0)
 	goto cleanup;
       sensor_reading->event_message_list = 
-	ipmi_get_generic_event_message_list (event_reading_type, val);
+	ipmi_get_generic_event_message_list (event_reading_type_code, val);
       
       rv = 0;
       break;
@@ -1225,7 +1225,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			(uint8_t *)"status_sensor_scanning", 
 			&val) < 0)
 	goto cleanup;
-      sensor_reading->sensor_scanning_flag = val;
+      sensor_reading->sensor_scanning = val;
       if (fiid_obj_get (l_obj_cmd_rs, 
 			(uint8_t *)"status_all_event_messages", 
 			&val) < 0)
@@ -1293,7 +1293,7 @@ get_sensor_reading (ipmi_device_t *dev,
 			(uint8_t *)"status_sensor_scanning", 
 			&val) < 0)
 	goto cleanup;
-      sensor_reading->sensor_scanning_flag = val;
+      sensor_reading->sensor_scanning = val;
       if (fiid_obj_get (l_obj_cmd_rs, 
 			(uint8_t *)"status_all_event_messages", 
 			&val) < 0)

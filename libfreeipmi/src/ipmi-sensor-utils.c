@@ -151,7 +151,7 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
     *b |= 0xFE00;
   
   if (fiid_obj_get (obj,
-		    (uint8_t *)"sensor_unit_analog_data_format",
+		    (uint8_t *)"sensor_unit1.analog_data_format",
 		    &val) < 0)
     goto cleanup;
   *analog_data_format = (uint8_t) val;

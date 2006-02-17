@@ -2133,9 +2133,9 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
 
 /***************************************************/
 char *
-ipmi_get_generic_event_message (uint8_t event_reading_type, uint16_t offset)
+ipmi_get_generic_event_message (uint8_t event_reading_type_code, uint16_t offset)
 {
-  switch (event_reading_type)
+  switch (event_reading_type_code)
     {
     case 0x01: return get_01_generic_event_message (offset);
     case 0x02: return get_02_generic_event_message (offset);
@@ -2239,7 +2239,7 @@ ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_da
 }
 
 char **
-ipmi_get_generic_event_message_list (uint8_t event_reading_type, uint16_t sensor_state)
+ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state)
 {
   char **event_message_list = NULL;
   char *message_list[16];
@@ -2252,7 +2252,7 @@ ipmi_get_generic_event_message_list (uint8_t event_reading_type, uint16_t sensor
       bit = pow (2, offset);
       if (sensor_state & bit)
 	{
-	  message_list[i] = ipmi_get_generic_event_message (event_reading_type, offset);
+	  message_list[i] = ipmi_get_generic_event_message (event_reading_type_code, offset);
 	  if (message_list[i])
 	    i++;
 	}

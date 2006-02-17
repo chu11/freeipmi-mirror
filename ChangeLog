@@ -22,6 +22,10 @@
 
 	* libfreeipmi/, fish/: Adjust code appropriately.
 
+	* libfreeipmi/src/ipmi-sdr-record-types.c: Cleanup templates.
+
+	* libfreeipmi/, fish/: Adjust code appropriately.
+
 2006-02-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, ipmipower/, fish/: Continued lan-cmds and
