@@ -2253,27 +2253,27 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 {
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_lower_non_recoverable_threshold"), 
-				    (record->readable_lower_non_recoverable_threshold ? 
+				    (record->readable_threshold_lower_non_recoverable_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_upper_non_recoverable_threshold"), 
-				    (record->readable_upper_non_recoverable_threshold ? 
+				    (record->readable_threshold_upper_non_recoverable_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_lower_critical_threshold"), 
-				    (record->readable_lower_critical_threshold ? 
+				    (record->readable_threshold_lower_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_upper_critical_threshold"), 
-				    (record->readable_upper_critical_threshold ? 
+				    (record->readable_threshold_upper_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_lower_non_critical_threshold"), 
-				    (record->readable_lower_non_critical_threshold ? 
+				    (record->readable_threshold_lower_non_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("readable_upper_non_critical_threshold"), 
-				    (record->readable_upper_non_critical_threshold ? 
+				    (record->readable_threshold_upper_non_critical_threshold ? 
 				     SCM_BOOL_T : SCM_BOOL_F));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("b"), 
@@ -2715,22 +2715,22 @@ scm2sdr_full_record (SCM scm_sdr_record, sdr_full_record_t *record)
   free (sensor_name_ptr);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_critical_threshold"));
-  record->readable_lower_critical_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_lower_critical_threshold = gh_scm2bool (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_critical_threshold"));
-  record->readable_upper_critical_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_upper_critical_threshold = gh_scm2bool (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_critical_threshold"));
-  record->readable_lower_non_critical_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_lower_non_critical_threshold = gh_scm2bool (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_critical_threshold"));
-  record->readable_upper_non_critical_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_upper_non_critical_threshold = gh_scm2bool (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_lower_non_recoverable_threshold"));
-  record->readable_lower_non_recoverable_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_lower_non_recoverable_threshold = gh_scm2bool (scm_value);
   
   scm_value = scm_assoc_ref (scm_sdr_record, gh_str02scm ("readable_upper_non_recoverable_threshold"));
-  record->readable_upper_non_recoverable_threshold = gh_scm2bool (scm_value);
+  record->readable_threshold_upper_non_recoverable_threshold = gh_scm2bool (scm_value);
   
   return;
 }

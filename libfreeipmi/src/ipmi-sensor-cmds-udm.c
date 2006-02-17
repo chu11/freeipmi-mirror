@@ -21,9 +21,9 @@
 #include "freeipmi.h"
 
 int8_t
-ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
-				 uint8_t sensor_number, 
-				 fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sensor_reading_threshold2 (ipmi_device_t *dev, 
+                                        uint8_t sensor_number, 
+                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -34,7 +34,7 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sensor_threshold_reading_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sensor_reading_threshold_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -43,11 +43,11 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_threshold_reading_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_reading_rq)))
     goto cleanup;
   
-  if (fill_kcs_get_threshold_reading (sensor_number,
-                                      obj_cmd_rq) < 0)
+  if (fill_cmd_get_sensor_reading (sensor_number,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -68,9 +68,9 @@ ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev,
 }
 
 int8_t 
-ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
-				uint8_t sensor_number, 
-				fiid_obj_t obj_cmd_rs)
+ipmi_cmd_get_sensor_reading_discrete2 (ipmi_device_t *dev, 
+                                       uint8_t sensor_number, 
+                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   int8_t ret, rv = -1;
@@ -81,7 +81,7 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sensor_discrete_reading_rs)) < 0)
+  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs)) < 0)
     goto cleanup;
 
   if (!ret)
@@ -90,11 +90,11 @@ ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev,
       goto cleanup;
     }
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_discrete_reading_rq)))
+  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_reading_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_discrete_reading (sensor_number,
-                                     obj_cmd_rq) < 0)
+  if (fill_cmd_get_sensor_reading (sensor_number,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 
@@ -140,8 +140,8 @@ ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev,
   if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sensor_thresholds_rq)))
     goto cleanup;
 
-  if (fill_kcs_get_sensor_thresholds (sensor_number,
-                                      obj_cmd_rq) < 0)
+  if (fill_cmd_get_sensor_reading (sensor_number,
+                                   obj_cmd_rq) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev, 

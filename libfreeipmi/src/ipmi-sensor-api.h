@@ -52,12 +52,12 @@ struct sdr_full_record
   double upper_non_critical_threshold;
   char sensor_name[17];
   /*      threshold masks      */
-  uint8_t readable_lower_critical_threshold;
-  uint8_t readable_upper_critical_threshold;
-  uint8_t readable_lower_non_critical_threshold;
-  uint8_t readable_upper_non_critical_threshold;
-  uint8_t readable_lower_non_recoverable_threshold;
-  uint8_t readable_upper_non_recoverable_threshold;
+  uint8_t readable_threshold_lower_critical_threshold;
+  uint8_t readable_threshold_upper_critical_threshold;
+  uint8_t readable_threshold_lower_non_critical_threshold;
+  uint8_t readable_threshold_upper_non_critical_threshold;
+  uint8_t readable_threshold_lower_non_recoverable_threshold;
+  uint8_t readable_threshold_upper_non_recoverable_threshold;
   /* ************************* */
 };
 typedef struct sdr_full_record sdr_full_record_t;

@@ -805,35 +805,35 @@ get_sdr_record (ipmi_device_t *dev,
 	}
       
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_lower_critical_threshold", 
+			(uint8_t *)"readable_thresholds.lower_critical_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_lower_critical_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_lower_critical_threshold = val;
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_upper_critical_threshold", 
+			(uint8_t *)"readable_thresholds.upper_critical_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_upper_critical_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_upper_critical_threshold = val;
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_lower_non_critical_threshold", 
+			(uint8_t *)"readable_thresholds.lower_non_critical_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_lower_non_critical_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_lower_non_critical_threshold = val;
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_upper_non_critical_threshold", 
+			(uint8_t *)"readable_thresholds.upper_non_critical_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_upper_non_critical_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_upper_non_critical_threshold = val;
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_lower_non_recoverable_threshold", 
+			(uint8_t *)"readable_thresholds.lower_non_recoverable_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_lower_non_recoverable_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_lower_non_recoverable_threshold = val;
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_upper_non_recoverable_threshold", 
+			(uint8_t *)"readable_thresholds.upper_non_recoverable_threshold", 
 			&val) < 0)
 	goto cleanup;
-      sdr_record->record.sdr_full_record.readable_upper_non_recoverable_threshold = val;
+      sdr_record->record.sdr_full_record.readable_threshold_upper_non_recoverable_threshold = val;
       
       break;
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
@@ -899,7 +899,7 @@ get_sensor_reading (ipmi_device_t *dev,
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
 {
-  fiid_template_t l_tmpl_get_sensor_threshold_reading_rs =
+  fiid_template_t l_tmpl_get_sensor_reading_threshold_rs =
     {
       {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -920,7 +920,7 @@ get_sensor_reading (ipmi_device_t *dev,
       {0,  "", 0}
     };
   
-  fiid_template_t l_tmpl_get_sensor_discrete_reading_rs =
+  fiid_template_t l_tmpl_get_sensor_reading_discrete_rs =
     {
       {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -996,14 +996,14 @@ get_sensor_reading (ipmi_device_t *dev,
   switch (ipmi_sensor_classify (event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_threshold_reading_rs)))
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_threshold_rs)))
 	goto cleanup;
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_threshold_reading_rs)))
+      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_threshold_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_threshold_reading2 (dev, 
-					   sensor_number, 
-					   obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_threshold2 (dev, 
+                                                  sensor_number, 
+                                                  obj_cmd_rs) != 0)
 	{
 	  if (fiid_obj_get (obj_cmd_rs,
 			    (uint8_t *)"cmd",
@@ -1077,15 +1077,15 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_discrete_reading_rs)))
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_discrete_reading_rs)))
+      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_discrete_reading2 (dev, 
-					  sensor_number, 
-					  obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
+                                                 sensor_number, 
+                                                 obj_cmd_rs) != 0)
 	{
 	  if (fiid_obj_get (obj_cmd_rs,
 			    (uint8_t *)"cmd",
@@ -1160,15 +1160,15 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_discrete_reading_rs)))
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_discrete_reading_rs)))
+      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_discrete_reading2 (dev, 
-					  sensor_number, 
-					  obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
+                                                 sensor_number, 
+                                                 obj_cmd_rs) != 0)
 	{
 	  if (fiid_obj_get (obj_cmd_rs,
 			    (uint8_t *)"cmd",
@@ -1242,15 +1242,15 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_OEM:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_discrete_reading_rs)))
+      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_discrete_reading_rs)))
+      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
 	goto cleanup;
 
-      if (ipmi_cmd_get_discrete_reading2 (dev, 
-					  sensor_number, 
-					  obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
+                                                 sensor_number, 
+                                                 obj_cmd_rs) != 0)
 	{
 	  if (fiid_obj_get (obj_cmd_rs,
 			    (uint8_t *)"cmd",

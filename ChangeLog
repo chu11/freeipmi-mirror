@@ -1,3 +1,10 @@
+2006-02-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.c: Code cleanup.
+
+	* libfreeipmi/, fish/: Adjust code appropriately.
+	
 2006-02-16  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-pef-cmds.h,

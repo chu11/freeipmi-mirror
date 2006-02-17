@@ -248,7 +248,7 @@ static int8_t
 ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev, 
 			 uint16_t reservation_id, 
 			 uint16_t record_id, 
-			 uint8_t record_offset, 
+			 uint8_t offset_into_record, 
 			 uint8_t bytes_read, 
 			 fiid_obj_t obj_cmd_rs, 
 			 uint8_t *sensor_record_chunk,
@@ -279,7 +279,7 @@ ipmi_cmd_get_sdr_chunk2 (ipmi_device_t *dev,
 
   if (fill_cmd_get_sdr (reservation_id, 
                         record_id, 
-                        record_offset, 
+                        offset_into_record, 
                         bytes_read,
                         obj_cmd_rq) < 0)
     goto cleanup;
@@ -318,7 +318,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   
   uint8_t record_length = 0;
   uint16_t reservation_id = 0;
-  uint8_t record_offset = 0;
+  uint8_t offset_into_record = 0;
   uint8_t bytes_read = 0;
   
   uint8_t chunk_data[16];
@@ -408,11 +408,11 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   record_data = alloca (record_length);
   memset (record_data, 0, record_length);
   
-  for (record_offset = 0; record_offset < record_length; record_offset += 16)
+  for (offset_into_record = 0; offset_into_record < record_length; offset_into_record += 16)
     {
       bytes_read = 16;
-      if ((record_offset + bytes_read) > record_length)
-	bytes_read = record_length - record_offset;
+      if ((offset_into_record + bytes_read) > record_length)
+	bytes_read = record_length - offset_into_record;
       
       if (fiid_obj_clear(obj_cmd_rs) < 0)
 	goto cleanup;
@@ -420,14 +420,14 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       if (ipmi_cmd_get_sdr_chunk2 (dev, 
 				   reservation_id, 
 				   record_id, 
-				   record_offset, 
+				   offset_into_record, 
 				   bytes_read, 
 				   obj_cmd_rs, 
 				   chunk_data,
 				   16) < 0)
 	goto cleanup;
       
-      memcpy (record_data + record_offset, chunk_data, bytes_read);
+      memcpy (record_data + offset_into_record, chunk_data, bytes_read);
     }
   
   if (*sensor_record_len < record_length)

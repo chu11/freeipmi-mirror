@@ -26,12 +26,14 @@
 extern "C" {
 #endif
 
-int8_t ipmi_cmd_get_threshold_reading2 (ipmi_device_t *dev, 
-					uint8_t sensor_number, 
-					fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_discrete_reading2 (ipmi_device_t *dev, 
-				       uint8_t sensor_number, 
-				       fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_reading_threshold2 (ipmi_device_t *dev, 
+                                               uint8_t sensor_number, 
+                                               fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_sensor_reading_discrete2 (ipmi_device_t *dev, 
+                                              uint8_t sensor_number, 
+                                              fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
 					uint8_t sensor_number, 
 					fiid_obj_t obj_cmd_rs);

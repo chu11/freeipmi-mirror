@@ -18,8 +18,6 @@ Al's TODO list
 libfreeipmi:
 ------------
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
-  * Templates must be encapsulated further
-  * fiid_obj_t must hold additional info
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
   * gcc 4.0 test/warning
@@ -27,115 +25,40 @@ libfreeipmi:
     - uint32_t for max_field_len, but some funcs return int32_t
     - counters, fiid_obj_create
   * test bad seq nums
-  * chksum_test - confusing, not use?
   * need to test
     - acpi
     - ssif
     - pef config
-  * fill_kcs_get_sel_entry
-    - why not the other arguments?
   * re-architect ipmi-error.c stuff to handle different commands with same values.
   * sensor-event-messages: get_28_event_data3_messages
-  * audit serial/lan/pef/sel/sensors template auditting      
-      templates
-       - consistent
-       - reserved
+  * cleanup
     - lan-cmds 
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done)
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - msg-support-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done)
-       - audit function names, parameters (done)
-       - .h file ordering (done)
        - .h file split
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - watchdog
-       - order code appropriately (done)
-       - parameter checking (done)
-       - missing commands (done)
-       - audit templates (done)
-       - audit function names, parameters (done)
-       - function parameter ordering (done)
     - rmcp
-       - order code appropriately (done)
-       - parameter checking (done)
-       - audit templates (done)
-       - audit function names, parameters (done)
-       - function parameter ordering (done)
     - dev-global-cmds
-       - audit templates (done)
-       - audit function names, parameters (done)
     - chassis-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done)
-       - audit function names, parameters (done)
-       - function parameter ordering (done)
     - serial-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done) 
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - sol-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done)
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - pef-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - audit templates (done)
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - sdr-repo-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
        - cleanup udm/rearchitect udm 
-       - audit templates (done)
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - sel-cmds
-       - order code appropriately (done)
-       - parameter checking (done)
        - missing commands
-       - cleanup udm/rearchitect udm 
-       - audit templates (done)
-       - audit function names (done)
-       - audit parameters (done)
-       - function parameter ordering (done)
-       - udm parameter checking (done)
     - sdr-record-types
         - missing records
     - sel record-types
     - sensor-cmds
-  * redo naming of config specific templates/functions, format no longer sticks b/c of sol & pef
+       - missing commands
   * reg-space default  
-  * udm parameter checks
 
 fish:
 -----
