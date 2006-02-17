@@ -29,29 +29,6 @@ extern "C" {
 
 #define IPMI_ERR_STR_MAX_LEN                 0x0800
 
-/* RMCP+ and RAKP Message Status Codes
-   -------------------------------- */
-#define RMCPPLUS_STATUS_NO_ERRORS                                                        0x00
-#define RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION                       0x01
-#define RMCPPLUS_STATUS_INVALID_SESSION_ID                                               0x02
-#define RMCPPLUS_STATUS_INVALID_PAYLOAD_TYPE                                             0x03
-#define RMCPPLUS_STATUS_INVALID_AUTHENTICATION_ALGORITHM                                 0x04
-#define RMCPPLUS_STATUS_INVALID_INTEGRITY_ALGORITHM                                      0x05
-#define RMCPPLUS_STATUS_NO_MATCHING_AUTHENTICATION_PAYLOAD                               0x06
-#define RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD                                    0x07
-#define RMCPPLUS_STATUS_INACTIVE_SESSION_ID                                              0x08
-#define RMCPPLUS_STATUS_INVALID_ROLE                                                     0x09
-#define RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED                   0x0A
-#define RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME 0x0B
-#define RMCPPLUS_STATUS_INVALID_NAME_LENGTH                                              0x0C
-#define RMCPPLUS_STATUS_UNAUTHORIZED_NAME                                                0x0D
-#define RMCPPLUS_STATUS_UNAUTHORIZED_GUID                                                0x0E
-#define RMCPPLUS_STATUS_INVALID_INTEGRITY_CHECK_VALUE                                    0x0F
-#define RMCPPLUS_STATUS_INVALID_CONFIDENTIALITY_ALGORITHM                                0x10
-#define RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS          0x11
-#define RMCPPLUS_STATUS_ILLEGAL_OR_UNRECOGNIZED_PARAMETER                                0x12
-/* Reserved - all others */
-
 /* To avoid gcc warnings, added +1 and -1 in comparison */
 #define RMCPPLUS_STATUS_VALID(__status) \
         (((__status + 1) >= 0x01 \

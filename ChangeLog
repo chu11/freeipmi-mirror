@@ -12,8 +12,10 @@
 	libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
-	libfreeipmi/src/ipmi-rmcpplus-util.h,
-	libfreeipmi/src/ipmi-rmcpplus-util.c: New files.
+	libfreeipmi/src/ipmi-rmcpplus-util.h
+	libfreeipmi/src/ipmi-rmcpplus-util.c,
+	libfreeipmi/src/ipmi-rmcpplus-status-spec.h,
+	libfreeipmi/src/ipmi-rmcpplus-status-spec.c: New files.
 
 	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
 
@@ -90,6 +92,13 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2006-02-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-status-spec.h: New file.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c:
+	Adjust appropriately for new definitions.
+
 2006-01-12  Albert Chu <chu11@llnl.gov>
 
 	* Merge in latest from HEAD.

@@ -241,6 +241,7 @@ extern "C" {
 #include "ipmi-rmcpplus.h"
 #include "ipmi-rmcpplus-interface.h"
 #include "ipmi-rmcpplus-util.h"
+#include "ipmi-rmcpplus-status-spec.h"
 
 #ifdef __FreeBSD__
 extern void freeipmi_error(int __status, int __errnum,
@@ -349,6 +350,7 @@ extern char *__progname;
 #include <freeipmi/ipmi-rmcpplus.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-util.h>
+#include <freeipmi/ipmi-rmcpplus-status-spec.h>
 #endif
 
 #ifdef __cplusplus
