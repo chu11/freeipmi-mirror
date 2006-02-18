@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.22 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.23 2006-02-18 00:28:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -628,7 +628,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
   else if (ip->protocol_state == PROTOCOL_STATE_AUTH_SENT) 
     {
       uint64_t auth_type_none, auth_type_md2, auth_type_md5, 
-        auth_type_straight_passwd_key, auth_status_anonymous_login, 
+        auth_type_straight_password_key, auth_status_anonymous_login, 
         auth_status_null_username, auth_status_non_null_username, 
         auth_status_per_message_authentication;
       int authtype_try_higher_priv = 0;
@@ -658,8 +658,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                    (uint8_t *)"authentication_type.md5", 
 		   &auth_type_md5);
       Fiid_obj_get(ip->auth_res, 
-                   (uint8_t *)"authentication_type.straight_passwd_key", 
-		   &auth_type_straight_passwd_key);
+                   (uint8_t *)"authentication_type.straight_password_key", 
+		   &auth_type_straight_password_key);
       Fiid_obj_get(ip->auth_res, 
                    (uint8_t *)"authentication_status.anonymous_login", 
 		   &auth_status_anonymous_login);
@@ -697,7 +697,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (conf->authtype == AUTH_TYPE_AUTO)
 	{
 	  /* Choose the best authentication type available.
-	   * none and null password > md5 > md2 > straight_passwd_key > none
+	   * none and null password > md5 > md2 > straight_password_key > none
 	   */
 	  if (!strlen(conf->password) && auth_type_none)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
@@ -705,8 +705,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
           else if (auth_type_md2)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
-          else if (auth_type_straight_passwd_key)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWD_KEY);
+          else if (auth_type_straight_password_key)
+            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWORD_KEY);
           else if (auth_type_none)
             ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
 	  else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
@@ -748,8 +748,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	   */
  	  if ((conf->authtype == AUTH_TYPE_NONE
                && auth_type_none)
-              || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWD_KEY 
-                  && auth_type_straight_passwd_key)
+              || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWORD_KEY 
+                  && auth_type_straight_password_key)
               || (conf->authtype == AUTH_TYPE_MD2
 		  && auth_type_md2)
 	      || (conf->authtype == AUTH_TYPE_MD5

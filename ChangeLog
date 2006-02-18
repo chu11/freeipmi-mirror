@@ -2,6 +2,8 @@
 
 	* libfreeipmi/src/ipmi-lan-interface.c
 	(ipmi_lan_check_session_authcode): Fix parameter check.
+
+	* Globally change "passwd" to "password".
 	
 2006-02-17  Albert Chu <chu11@llnl.gov>
 

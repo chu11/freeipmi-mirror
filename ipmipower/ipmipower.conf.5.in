@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.11 2006-02-17 19:34:34 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.12 2006-02-18 00:28:25 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,7 +90,7 @@ Specify the default password to use.
 Specify the default authentication type to use.  
 .B Ipmipower 
 currently supports the following authentication types:
-"auto", "none", "straight_passwd_key", "md2", and "md5".
+"auto", "none", "straight_password_key", "md2", and "md5".
 .TP
 .I privilege str
 Specify the default  type to use.  

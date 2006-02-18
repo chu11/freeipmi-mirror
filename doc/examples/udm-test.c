@@ -30,7 +30,7 @@ main (int argc, char **argv)
   char *hostname = NULL; /* ipmi hostname for out-of-band */
   int authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
   /* for out-of-band, it can also be IPMI_AUTHENTICATION_TYPE_MD2, 
-     IPMI_AUTHENTICATION_TYPE_MD5, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY, 
+     IPMI_AUTHENTICATION_TYPE_MD5, IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY, 
      IPMI_AUTHENTICATION_TYPE_OEM_PROP */
   char username[] = ""; /* ipmi username for out-of-band */
   char password[] = ""; /* ipmi user's password for out-of-band */

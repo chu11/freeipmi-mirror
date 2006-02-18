@@ -877,9 +877,9 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
-    case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY:
+    case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
       if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.straight_passwd_key", 
+			(uint8_t *)"authentication_type.straight_password_key", 
 			&supported_authentication_type) < 0)
 	goto cleanup;
       break;
