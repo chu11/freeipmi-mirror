@@ -244,7 +244,6 @@ extern "C" {
 #include "ipmi-sdr-repository-cache-api.h"
 #include "ipmi-sensor-utils.h"
 #include "ipmi-bmc-watchdog-timer-cmds.h"
-#include "ipmi-msg-interface-desc.h"
 #include "ipmi-pef-param-spec.h"
 #include "ipmi-pef-and-alerting-cmds.h"
 #include "ipmi-pef-and-alerting-cmds-udm.h"
@@ -360,7 +359,6 @@ extern char *__progname;
 #include <freeipmi/ipmi-sdr-repository-cache-api.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
-#include <freeipmi/ipmi-msg-interface-desc.h>
 #include <freeipmi/ipmi-pef-and-alerting-cmds.h>
 #include <freeipmi/ipmi-pef-and-alerting-cmds-udm.h>
 #include <freeipmi/ipmi-pef-param-spec.h>

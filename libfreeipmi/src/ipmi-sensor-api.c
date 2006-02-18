@@ -21,6 +21,49 @@
 
 #include "freeipmi.h"
 
+enum system_software_type
+  {
+    IPMI_BIOS,
+    IPMI_SMI_HANDLER,
+    IPMI_SYSTEM_MANAGEMENT_SOFTWARE,
+    IPMI_OEM,
+    IPMI_REMOTE_CONSOLE_SOFTWARE,
+    IPMI_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE,
+    IPMI_SYS_SOFT_ID_RESERVED
+  };
+
+const char *system_software_type_desc[] =
+  {
+    "BIOS",
+    "SMI Handler",
+    "System Management Software",
+    "OEM",
+    "Remote Console software",
+    "Terminal Mode Remote Console software",
+    "Reserved",
+    NULL
+  };
+
+static int
+get_system_software_type (uint8_t system_software_id)
+{
+  /* To avoid "warning: comparison is always true due to limited range of data type" */
+  if ((system_software_id + 1) >= 1 && system_software_id <= 0x0F)
+    return IPMI_BIOS;
+  if (system_software_id >= 0x10 && system_software_id <= 0x1F)
+    return IPMI_SMI_HANDLER;
+  if (system_software_id >= 0x20 && system_software_id <= 0x2F)
+    return IPMI_SYSTEM_MANAGEMENT_SOFTWARE;
+  if (system_software_id >= 0x30 && system_software_id <= 0x3F)
+    return IPMI_OEM;
+  if (system_software_id >= 0x40 && system_software_id <= 0x46)
+    return IPMI_REMOTE_CONSOLE_SOFTWARE;
+  if (system_software_id == 0x47)
+    return IPMI_TERMINAL_MODE_REMOTE_CONSOLE_SOFTWARE;
+
+  return IPMI_SYS_SOFT_ID_RESERVED;
+}
+
 void 
 get_sdr_full_record (uint8_t *sdr_record_data, 
 		     uint32_t sdr_record_data_len,
@@ -967,7 +1010,7 @@ get_sensor_reading (ipmi_device_t *dev,
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
       slave_sys_soft_id = sdr_record->record.sdr_full_record.sensor_owner_id;
-      if (ipmi_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
+      if (get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
 	return -1;
       
       event_reading_type_code = sdr_record->record.sdr_full_record.event_reading_type_code;
@@ -982,7 +1025,7 @@ get_sensor_reading (ipmi_device_t *dev,
       break;
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       slave_sys_soft_id = sdr_record->record.sdr_compact_record.sensor_owner_id;
-      if (ipmi_get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
+      if (get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
 	return -1;
       
       event_reading_type_code = sdr_record->record.sdr_compact_record.event_reading_type_code;
