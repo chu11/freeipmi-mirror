@@ -26,103 +26,66 @@
 extern "C" {
 #endif
 
-#define __LFI_FIID_OBJ_SET(bytes, field, val)           \
-do {                                                    \
-    if (fiid_obj_set (bytes, field, val) < 0)           \
-      return (-1);                                      \
+#define __FIID_OBJ_SET_ERRNO(__obj)            \
+do {                                           \
+  int32_t __errnum = fiid_obj_errnum((__obj)); \
+  if (__errnum == FIID_ERR_SUCCESS)            \
+    errno = 0;                                 \
+  else if (__errnum == FIID_ERR_OUTMEM)        \
+    errno = ENOMEM;                            \
+  else if (__errnum == FIID_ERR_OVERFLOW)      \
+    errno = ENOSPC;                            \
+  else                                         \
+    errno = EINVAL;                            \
 } while (0)
 
-#define __FI_FIID_OBJ_SET(bytes, field, val)            \
-do {                                                    \
-    if (fiid_obj_set (bytes, field, val) < 0)           \
-    {                                                   \
-      err (1, "fiid_obj_set (%p, \"%s\", %X) error",    \
-	   bytes, field, val);                          \
-    }                                                   \
-} while (0)
-
-#if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_SET(bytes, field, val)   \
-  __LFI_FIID_OBJ_SET (bytes, field, val)
-#else
-#define FIID_OBJ_SET(bytes, field, val)   \
-  __FI_FIID_OBJ_SET (bytes, field, val)
-#endif
-
-#define __LFI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)   \
-do {                                                          \
-    if (fiid_obj_set_data (bytes, field, val, val_len) < 0)   \
-      return (-1);                                            \
-} while (0)
-
-#define __FI_FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
-do {                                                          \
-    if (fiid_obj_set (bytes, field, val, val_len) < 0)        \
-    {                                                         \
-      err (1, "fiid_obj_set_data (%p, \"%s\", %p, %u) error", \
-	   bytes, field, val, val_len);                       \
-    }                                                         \
-} while (0)
-
-#if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
-  __LFI_FIID_OBJ_SET_DATA (bytes, field, val, val_len)
-#else
-#define FIID_OBJ_SET_DATA(bytes, field, val, val_len)    \
-  __FI_FIID_OBJ_SET_DATA (bytes, field, val, val_len)
-#endif
-
-#define __LFI_FIID_OBJ_GET(bytes, field, val)            \
+#define FIID_OBJ_SET(__obj, __field, __val)              \
 do {                                                     \
-    uint64_t _val = 0, *_val_ptr;                        \
-    _val_ptr = val;                                      \
-    if (fiid_obj_get (bytes, field, &_val) < 0)          \
-      return (-1);                                       \
-    *_val_ptr = _val;                                    \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+          __FIID_OBJ_SET_ERRNO((__obj));                 \
+         return (-1);                                    \
+      }                                                  \
 } while (0)
 
-#define __FI_FIID_OBJ_GET(bytes, field, val)             \
-do {                                                     \
-    uint64_t _val = 0, *_val_ptr;                        \
-    _val_ptr = val;                                      \
-    if (fiid_obj_get (bytes, field, &_val) < 0)          \
-    {                                                    \
-      err (1, "fiid_obj_get (%p, \"%s\", %p) error",     \
-	   bytes, field, val);                           \
-    }                                                    \
-    *_val_ptr = _val;                                    \
+#define FIID_OBJ_SET_DATA(__obj, __field, __val, __val_len)               \
+do {                                                                      \
+    if (fiid_obj_set_data ((__obj), (__field), (__val), (__val_len)) < 0) \
+      {                                                                   \
+          __FIID_OBJ_SET_ERRNO((__obj));                                  \
+         return (-1);                                                     \
+      }                                                                   \
 } while (0)
 
-#if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_GET(bytes, field, val)  \
-  __LFI_FIID_OBJ_GET (bytes, field, val)
-#else
-#define FIID_OBJ_GET(bytes, field, val)  \
-  __FI_FIID_OBJ_GET (bytes, field, val)
-#endif
-
-#define __LFI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)    \
-do {                                                           \
-    if (fiid_obj_get_data (bytes, field, val, val_len) < 0)    \
-      return (-1);                                             \
+#define FIID_OBJ_GET(__obj, __field, __val)                   \
+do {                                                          \
+    uint64_t __localval = 0, *__localval_ptr;                 \
+    __localval_ptr = (__val);                                 \
+    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
+      {                                                       \
+         __FIID_OBJ_SET_ERRNO((__obj));                       \
+         return (-1);                                         \
+      }                                                       \
+    *__localval_ptr = __localval;                             \
 } while (0)
 
-#define __FI_FIID_OBJ_GET_DATA(bytes, field, val, val_len)     \
-do {                                                           \
-    if (fiid_obj_get_data (bytes, field, &val, val_len) < 0)   \
-    {                                                          \
-      err (1, "fiid_obj_get_data (%p, \"%s\", %p) error",      \
-	   bytes, field, val);                                 \
-    }                                                          \
+#define FIID_OBJ_GET_DATA(__obj, __field, __val, __val_len)                \
+do {                                                                       \
+    if (fiid_obj_get_data ((__obj), (__field), (__val), (__val_len)) < 0)  \
+      {                                                                    \
+          __FIID_OBJ_SET_ERRNO((__obj));                                   \
+         return (-1);                                                      \
+      }                                                                    \
 } while (0)
 
-#if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_GET_DATA(bytes, field, val, val_len)  \
-  __LFI_FIID_OBJ_GET_DATA (bytes, field, val, val_len)
-#else
-#define FIID_OBJ_GET_DATA(bytes, field, val, val_len)  \
-  __FI_FIID_OBJ_GET_DATA (bytes, field, val, val_len)
-#endif
+#define FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)           \
+do {                                                       \
+    if (fiid_obj_template_compare ((__obj), (__tmpl)) < 0) \
+      {                                                    \
+         __FIID_OBJ_SET_ERRNO((__obj));                    \
+         return (-1);                                      \
+      }                                                    \
+} while (0)
 
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 

@@ -43,6 +43,18 @@ typedef struct channel_info
 
 channel_info_t channel_info_list[8];
 
+#define _FIID_OBJ_GET(bytes, field, val)               \
+do {                                                   \
+    uint64_t _val = 0, *_val_ptr;                      \
+    _val_ptr = val;                                    \
+    if (fiid_obj_get (bytes, field, &_val) < 0)        \
+      {                                                \
+        err (1, "fiid_obj_get (%p, \"%s\", %p) error", \
+             bytes, field, val);                       \
+      }                                                \
+    *_val_ptr = _val;                                  \
+} while (0)
+
 int 
 display_get_device_id (ipmi_device_t *dev)
 {
@@ -61,37 +73,37 @@ display_get_device_id (ipmi_device_t *dev)
       return (-1);
     }
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_id", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_id", 
+                 &val);
   fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_revision.revision", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_revision.revision", 
+                 &val);
   fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_revision.sdr_support", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_revision.sdr_support", 
+                 &val);
   if (val)
     fprintf (stdout, "                   [SDR Support]\n");
   
   {
     uint64_t maj, min;
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"firmware_revision1.major_revision", 
-		  &maj);
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"firmware_revision2.minor_revision", 
-		  &min);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"firmware_revision1.major_revision", 
+                   &maj);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"firmware_revision2.minor_revision", 
+                   &min);
     fprintf (stdout, "Firmware Revision: %d.%d\n", 
 	     (unsigned int) maj, (unsigned int) min);
   }
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"firmware_revision1.device_available", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"firmware_revision1.device_available", 
+                 &val);
   if (val == 0)
     fprintf (stdout, 
 	     "                   [Device Available (normal operation)]\n");
@@ -105,83 +117,83 @@ display_get_device_id (ipmi_device_t *dev)
   
   {
     uint64_t ms, ls;
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"ipmi_version.ms_bits", 
-		  &ms);
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"ipmi_version.ls_bits", 
-		  &ls);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"ipmi_version.ms_bits", 
+                   &ms);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"ipmi_version.ls_bits", 
+                   &ls);
     fprintf (stdout, 
 	     "IPMI Version:      %d.%d\n", (unsigned int) ms, (unsigned int) ls);
   }
   
   fprintf (stdout, "Additional Device Support:\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sensor_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sensor_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Sensor Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sdr_repository_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sdr_repository_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [SDR Repository Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sel_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sel_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [SEL Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.fru_inventory_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.fru_inventory_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [FRU Inventory Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.ipmb_event_receiver", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.ipmb_event_receiver", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Receiver]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.ipmb_event_generator", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.ipmb_event_generator", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Generator]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.bridge", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.bridge", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Bridge]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.chassis_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.chassis_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Chassis Device]\n");
   
   {
     uint64_t manufacturer_id, product_id;
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
     fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"product_id", &product_id);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"product_id", &product_id);
     fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) product_id);
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val);
     switch (manufacturer_id)
       {
       case IPMI_MANUFACTURER_ID_INTEL: 
 	switch (product_id)
 	  {
 	    /* I am assuming all Intel products will decode alike.
-                                 -- Anand Babu <ab@gnu.org.in>  */
+               -- Anand Babu <ab@gnu.org.in>  */
 	  case IPMI_PRODUCT_ID_SR870BN4:
 	  default:
 	    {
@@ -208,18 +220,18 @@ display_get_device_id (ipmi_device_t *dev)
 		  exit (EXIT_FAILURE);
 		}
 	      
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
-			    &bc_maj);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
-			    &bc_min);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
-			    &pia_maj);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
-			    &pia_min);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
+                             &bc_maj);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
+                             &bc_min);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
+                             &pia_maj);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
+                             &pia_min);
 	      fprintf (stdout, 
 		       "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
 		       (unsigned int) bc_maj, (unsigned int) bc_min, 

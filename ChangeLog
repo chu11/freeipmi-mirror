@@ -13,6 +13,12 @@
 
 	* libfreeipmi/src/ipmi-sensor-api.c (get_sensor_reading): Use
 	get_system_software_type.
+
+	* libfreeipmi/src/fiid.h: Begin work to localize FIID macros
+	internal only to hte library.
+
+	* bmc-info/src/bmc-info.c (_FIID_OBJ_GET): New macro.  Used
+	throughout bmc-info.c.
 	
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
