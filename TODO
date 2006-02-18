@@ -63,6 +63,8 @@ libfreeipmi:
   * remove need for FREEIPMI_BUILD and FREEIPMI_LIBRARY
   * move fiid and err wrappers into common junk
   * same with bit-ops
+  * "chksum"
+  * "rq", "cmd", "comp_code", "rs", ????
 
 fish:
 -----
