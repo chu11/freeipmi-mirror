@@ -190,7 +190,7 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
   
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
       || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
     msg_len += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
   
@@ -503,7 +503,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		   authentication_code_data,
 		   authentication_code_data_len);
 	  
-	  if (authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY)
+	  if (authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY)
 	    {	 
 	      memcpy (authentication_code_field_ptr,
 		      pwbuf,
@@ -1035,7 +1035,7 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authent
 	  
 	}
     }
-  else /* authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+  else /* authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
 	  || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP */
     {
       if (authentication_code_data)

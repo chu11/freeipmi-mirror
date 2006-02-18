@@ -50,7 +50,7 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
   
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
-      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY
+      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY
       || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
     msg_len += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
   

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.c,v 1.3.2.4 2006-02-17 23:59:49 chu11 Exp $
+ *  $Id: ipmipower_auth.c,v 1.3.2.5 2006-02-18 00:33:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,8 +50,8 @@ ipmipower_auth_index(char *str)
     return AUTH_TYPE_AUTO;
   else if (!strcasecmp(str, "none"))
     return AUTH_TYPE_NONE;
-  else if (!strcasecmp(str, "straight_passwd_key"))
-    return AUTH_TYPE_STRAIGHT_PASSWD_KEY;
+  else if (!strcasecmp(str, "straight_password_key"))
+    return AUTH_TYPE_STRAIGHT_PASSWORD_KEY;
   else if (!strcasecmp(str, "md2"))
     return AUTH_TYPE_MD2;
   else if (!strcasecmp(str, "md5"))
@@ -73,8 +73,8 @@ ipmipower_auth_string(auth_type_t at)
     case AUTH_TYPE_NONE:
       return "none";
       break;
-    case AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      return "straight_passwd_key";
+    case AUTH_TYPE_STRAIGHT_PASSWORD_KEY:
+      return "straight_password_key";
       break;
     case AUTH_TYPE_MD2:
       return "md2";
@@ -92,7 +92,7 @@ ipmipower_auth_string(auth_type_t at)
 char *
 ipmipower_auth_list(void) 
 {
-  return "auto, none, straight_passwd_key, md2, md5";
+  return "auto, none, straight_password_key, md2, md5";
 }
 
 uint8_t
@@ -105,8 +105,8 @@ ipmipower_ipmi_auth_type(auth_type_t at)
     case AUTH_TYPE_NONE:
       return IPMI_AUTHENTICATION_TYPE_NONE;
       break;
-    case AUTH_TYPE_STRAIGHT_PASSWD_KEY:
-      return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY;
+    case AUTH_TYPE_STRAIGHT_PASSWORD_KEY:
+      return IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
       break;
     case AUTH_TYPE_MD2:
       return IPMI_AUTHENTICATION_TYPE_MD2;

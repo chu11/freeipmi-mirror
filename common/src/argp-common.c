@@ -127,7 +127,7 @@ common_parse_opt (int key,
 	  else 
 	    if (strcasecmp (arg, "plain") == 0)
 	      {
-		cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY;
+		cmd_args->authentication_type = IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY;
 	      }
 	    else 
 	      if (strcasecmp (arg, "oem") == 0)

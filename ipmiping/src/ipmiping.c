@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.13 2006-02-17 23:59:49 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.14 2006-02-18 00:33:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -181,7 +181,7 @@ parsepacket(char *buffer,
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  uint64_t req_seq, none, md2, md5, straight_passwd_key, oem, 
+  uint64_t req_seq, none, md2, md5, straight_password_key, oem, 
     anonymous_login, null_username, non_null_username,
     user_level_authentication, per_message_authentication,
     ipmi_v20_extended_capabilities_available, ipmi_v15, ipmi_v20;
@@ -303,8 +303,8 @@ parsepacket(char *buffer,
 		    (uint8_t *)"authentication_type.md5", 
 		    (uint64_t *)&md5);
       _fiid_obj_get(obj_cmd, 
-		    (uint8_t *)"authentication_type.straight_passwd_key", 
-		    (uint64_t *)&straight_passwd_key);
+		    (uint8_t *)"authentication_type.straight_password_key", 
+		    (uint64_t *)&straight_password_key);
       _fiid_obj_get(obj_cmd, 
 		    (uint8_t *)"authentication_type.oem_prop", 
 		    (uint64_t *)&oem);
@@ -323,9 +323,9 @@ parsepacket(char *buffer,
       _fiid_obj_get(obj_cmd, 
 		    (uint8_t *)"authentication_status.per_message_authentication", 
 		    (uint64_t *)&per_message_authentication);
-      printf(", auth: none=%s md2=%s md5=%s passwd=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
+      printf(", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
-             _setstr(straight_passwd_key),_setstr(oem), 
+             _setstr(straight_password_key),_setstr(oem), 
              _setstr(anonymous_login), _setstr(null_username), 
              _setstr(non_null_username), _setstr(user_level_authentication), 
              _setstr(per_message_authentication));

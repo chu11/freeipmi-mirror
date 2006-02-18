@@ -77,18 +77,18 @@ extern "C" {
         (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
           || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
 
-#define IPMI_AUTHENTICATION_TYPE_NONE                0x00
-#define IPMI_AUTHENTICATION_TYPE_MD2                 0x01
-#define IPMI_AUTHENTICATION_TYPE_MD5                 0x02
-#define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY 0x04
-#define IPMI_AUTHENTICATION_TYPE_OEM_PROP            0x05
-#define IPMI_AUTHENTICATION_TYPE_RMCPPLUS            0x06
+#define IPMI_AUTHENTICATION_TYPE_NONE                  0x00
+#define IPMI_AUTHENTICATION_TYPE_MD2                   0x01
+#define IPMI_AUTHENTICATION_TYPE_MD5                   0x02
+#define IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 0x04
+#define IPMI_AUTHENTICATION_TYPE_OEM_PROP              0x05
+#define IPMI_AUTHENTICATION_TYPE_RMCPPLUS              0x06
 
 #define IPMI_AUTHENTICATION_TYPE_VALID(__authentication_type) \
         (((__authentication_type) == IPMI_AUTHENTICATION_TYPE_NONE \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD2 \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD5 \
-          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0) 
 
@@ -96,7 +96,7 @@ extern "C" {
         (((__authentication_type) == IPMI_AUTHENTICATION_TYPE_NONE \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD2 \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_MD5 \
-          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWD_KEY \
+          || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY \
           || (__authentication_type) == IPMI_AUTHENTICATION_TYPE_OEM_PROP) ? 1 : 0)
 
 #define IPMI_2_0_AUTHENTICATION_TYPE_VALID(__authentication_type) \

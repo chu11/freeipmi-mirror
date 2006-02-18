@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.12 2006-02-17 23:59:49 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.13 2006-02-18 00:33:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -200,12 +200,12 @@ typedef enum { LINK_GOOD = 0x01,
                                          (__s) <= LINK_BAD)
 
 /* Authentication Types */
-typedef enum { AUTH_TYPE_INVALID             = 0x00,
-	       AUTH_TYPE_AUTO                = 0x01,
-               AUTH_TYPE_NONE                = 0x02,
-               AUTH_TYPE_STRAIGHT_PASSWD_KEY = 0x03,
-               AUTH_TYPE_MD2                 = 0x04,
-               AUTH_TYPE_MD5                 = 0x05 } auth_type_t;
+typedef enum { AUTH_TYPE_INVALID               = 0x00,
+	       AUTH_TYPE_AUTO                  = 0x01,
+               AUTH_TYPE_NONE                  = 0x02,
+               AUTH_TYPE_STRAIGHT_PASSWORD_KEY = 0x03,
+               AUTH_TYPE_MD2                   = 0x04,
+               AUTH_TYPE_MD5                   = 0x05 } auth_type_t;
 #define AUTH_TYPE_VALID(__a)            ((__a) >= AUTH_TYPE_NONE && \
                                          (__a) <= AUTH_TYPE_MD5)
 #define AUTH_TYPE_VALID_OR_AUTO(__a)    ((__a) >= AUTH_TYPE_AUTO && \

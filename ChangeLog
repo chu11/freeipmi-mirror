@@ -605,6 +605,13 @@
 
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-lan-interface.c
+	(ipmi_lan_check_session_authcode): Fix parameter check.
+
+	* Globally change "passwd" to "password".
+	
+2006-02-17  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-watchdog.h,
 	libfreeipmi/src/ipmi-watchdog.c: Renamed to
 	ipmi-bmc-watchdog-timer-cmds.h and ipmi-bmc-watchdog-timer-cmds.c
