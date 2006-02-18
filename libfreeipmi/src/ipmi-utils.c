@@ -29,6 +29,7 @@
 */
 
 #include "freeipmi.h"
+#include "fiid-wrappers.h"
 
 int8_t
 ipmi_chksum (uint8_t *buf, uint64_t len)
@@ -91,12 +92,10 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
     }
 
 #if defined (IPMI_SYSLOG)
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
-    return (-1);
+  FIID_OBJ_GET (obj_cmd, (uint8_t *)"cmd", &cmd);
 #endif /* IPMI_SYSLOG */
 
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"comp_code", &comp_code) < 0)
-    return (-1);
+  FIID_OBJ_GET (obj_cmd, (uint8_t *)"comp_code", &comp_code);
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     {

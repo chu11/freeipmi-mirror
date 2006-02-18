@@ -19,12 +19,14 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -32,34 +34,20 @@ ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_device_id_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_device_id_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_get_device_id_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_device_id (obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_device_id (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_APP_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }

@@ -20,6 +20,7 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
 
 struct sembuf mutex_lock_buf_interruptible   = {0, -1, IPC_NOWAIT|SEM_UNDO};
 struct sembuf mutex_unlock_buf_interruptible = {0,  1, IPC_NOWAIT|SEM_UNDO};

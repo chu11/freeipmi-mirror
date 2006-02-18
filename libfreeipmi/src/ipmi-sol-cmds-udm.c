@@ -19,6 +19,8 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 
@@ -27,7 +29,7 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -38,37 +40,23 @@ ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev,
       return -1;
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_sol_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_sol_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_sol_configuration_parameters_sol_enable_rq)))
-    goto cleanup;
-
-  if (fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
+  ERR_CLEANUP (!(fill_cmd_set_sol_configuration_parameters_sol_enable (channel_number, 
                                                             sol_payload,
-                                                            obj_cmd_rq) < 0)
-    goto cleanup;
+                                                            obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
-  
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -81,7 +69,7 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -92,40 +80,26 @@ ipmi_cmd_get_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev,
       return -1;
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sol_configuration_parameters_enable_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sol_configuration_parameters_enable_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_sol_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sol_configuration_parameters_rq)))
-    goto cleanup;
-
-  if (fill_cmd_get_sol_configuration_parameters (channel_number, 
+  ERR_CLEANUP (!(fill_cmd_get_sol_configuration_parameters (channel_number, 
 						 get_parameter, 
 						 IPMI_SOL_PARAM_SOL_ENABLE, 
 						 set_selector, 
 						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
+						 obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 

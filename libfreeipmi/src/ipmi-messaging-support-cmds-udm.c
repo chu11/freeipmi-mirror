@@ -19,6 +19,8 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 
@@ -26,7 +28,7 @@ ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev,
 {
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev 
       || dev->type != IPMI_DEVICE_LAN
@@ -36,42 +38,28 @@ ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs)) < 0)
-    goto cleanup;
-  
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs);
   
   local_dev = *dev;
   local_dev.io.outofband.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_channel_authentication_capabilities_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_rq);
 
-  if (fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_CURRENT_CHANNEL,
-                                                        IPMI_PRIVILEGE_LEVEL_USER, 
-                                                        obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_channel_authentication_capabilities (IPMI_CHANNEL_CURRENT_CHANNEL,
+								   IPMI_PRIVILEGE_LEVEL_USER, 
+								   obj_cmd_rq) < 0));
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  if (ipmi_cmd (&local_dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_APP_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (&local_dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -81,7 +69,7 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 {
   ipmi_device_t local_dev;
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev 
       || dev->type != IPMI_DEVICE_LAN
@@ -91,43 +79,29 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_get_session_challenge_rs)) < 0)
-    goto cleanup;
-  
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
   
   local_dev = *dev;
   local_dev.io.outofband.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_get_session_challenge_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
 
-  if (fill_cmd_get_session_challenge (dev->io.outofband.authentication_type, 
-				      (char *)dev->io.outofband.username,
-				      IPMI_MAX_USER_NAME_LENGTH,
-				      obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_session_challenge (dev->io.outofband.authentication_type, 
+						 (char *)dev->io.outofband.username,
+						 IPMI_MAX_USER_NAME_LENGTH,
+						 obj_cmd_rq) < 0));
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  if (ipmi_cmd (&local_dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_APP_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (&local_dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -137,7 +111,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 {
   uint32_t initial_outbound_sequence_number = 0;
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev 
       || dev->type != IPMI_DEVICE_LAN
@@ -147,14 +121,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_activate_session_rs)) < 0)
-    goto cleanup;
-  
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_activate_session_rs);
   
   { 
     /* Random number generation */
@@ -164,33 +131,26 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
     initial_outbound_sequence_number = rand_r (&seedp);
   }
 
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_activate_session_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_activate_session_rq);
 
-  if (fill_cmd_activate_session (dev->io.outofband.authentication_type, 
-				 dev->io.outofband.privilege_level, 
-				 dev->io.outofband.challenge_string, 
-				 IPMI_CHALLENGE_STRING_LENGTH, 
-				 initial_outbound_sequence_number, 
-				 obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_activate_session (dev->io.outofband.authentication_type, 
+					    dev->io.outofband.privilege_level, 
+					    dev->io.outofband.challenge_string, 
+					    IPMI_CHALLENGE_STRING_LENGTH, 
+					    initial_outbound_sequence_number, 
+					    obj_cmd_rq) < 0));
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  if (ipmi_cmd (dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_APP_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -199,7 +159,7 @@ ipmi_cmd_set_session_privilege_level2 (ipmi_device_t *dev,
                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev 
       || dev->type != IPMI_DEVICE_LAN
@@ -209,38 +169,24 @@ ipmi_cmd_set_session_privilege_level2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
   
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
-  
-  if (!(obj_cmd_rq = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_set_session_privilege_level_rq);
 
-  if (fill_cmd_set_session_privilege_level (dev->io.outofband.privilege_level, 
-                                            obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_session_privilege_level (dev->io.outofband.privilege_level, 
+						       obj_cmd_rq) < 0));
 
   dev->lun = IPMI_BMC_IPMB_LUN_BMC;
   dev->net_fn = IPMI_NET_FN_APP_RQ;
-  if (ipmi_cmd (dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_APP_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -249,7 +195,7 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || dev->type != IPMI_DEVICE_LAN
@@ -259,35 +205,21 @@ ipmi_lan_close_session2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_close_session_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_close_session_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_close_session_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_cmd_close_session_rq);
 
-  if (fill_cmd_close_session (dev->io.outofband.session_id, obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_close_session (dev->io.outofband.session_id, obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev,
-                IPMI_BMC_IPMB_LUN_BMC,
-                IPMI_NET_FN_APP_RQ,
-                obj_cmd_rq,
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev,
+			IPMI_BMC_IPMB_LUN_BMC,
+			IPMI_NET_FN_APP_RQ,
+			obj_cmd_rq,
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -304,7 +236,7 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -321,43 +253,29 @@ ipmi_cmd_set_channel_access2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_channel_access_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_channel_access_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_channel_access_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_set_channel_access_rq);
 
-  if (fill_cmd_set_channel_access (channel_number, 
-                                   ipmi_messaging_access_mode, 
-                                   user_level_authentication, 
-                                   per_message_authentication, 
-                                   pef_alerting, 
-                                   channel_access_set, 
-                                   channel_privilege_level_limit, 
-                                   channel_privilege_level_limit_set,
-                                   obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_channel_access (channel_number, 
+					      ipmi_messaging_access_mode, 
+					      user_level_authentication, 
+					      per_message_authentication, 
+					      pef_alerting, 
+					      channel_access_set, 
+					      channel_privilege_level_limit, 
+					      channel_privilege_level_limit_set,
+					      obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -368,7 +286,7 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
 			      fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -379,37 +297,23 @@ ipmi_cmd_get_channel_access2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_channel_access_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_channel_access_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_channel_access_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_get_channel_access_rq);
 
-  if (fill_cmd_get_channel_access (channel_number, 
-                                   channel_access_get,
-                                   obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_channel_access (channel_number, 
+					      channel_access_get,
+					      obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -419,7 +323,7 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -429,35 +333,21 @@ ipmi_cmd_get_channel_info2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_channel_info_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_channel_info_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_channel_info_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_get_channel_info_rq);
 
-  if (fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_channel_info (channel_number, obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev,
-                IPMI_BMC_IPMB_LUN_BMC,
-                IPMI_NET_FN_APP_RQ,
-                obj_cmd_rq,
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev,
+			IPMI_BMC_IPMB_LUN_BMC,
+			IPMI_NET_FN_APP_RQ,
+			obj_cmd_rq,
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -473,7 +363,7 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -487,42 +377,28 @@ ipmi_cmd_set_user_access2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_user_access_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_user_access_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_user_access_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_set_user_access_rq);
 
-  if (fill_cmd_set_user_access (channel_number,
-                                user_ipmi_messaging,
-                                user_link_authentication,
-                                user_restricted_to_callback,
-                                user_id,
-                                user_privilege_level_limit,
-                                user_session_number_limit,
-                                obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_user_access (channel_number,
+					   user_ipmi_messaging,
+					   user_link_authentication,
+					   user_restricted_to_callback,
+					   user_id,
+					   user_privilege_level_limit,
+					   user_session_number_limit,
+					   obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -533,7 +409,7 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -543,35 +419,21 @@ ipmi_cmd_get_user_access2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_user_access_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_user_access_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_user_access_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_get_user_access_rq);
 
-  if (fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_user_access (channel_number, user_id, obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -583,7 +445,7 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
@@ -593,38 +455,24 @@ ipmi_cmd_set_user_name2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_user_name_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_user_name_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_user_name_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_set_user_name_rq);
 
-  if (fill_cmd_set_user_name (user_id, 
-                              user_name, 
-                              user_name_len,
-                              obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_user_name (user_id, 
+					 user_name, 
+					 user_name_len,
+					 obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -634,7 +482,7 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !fiid_obj_valid(obj_cmd_rs))
@@ -643,35 +491,21 @@ ipmi_cmd_get_user_name2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_user_name_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_user_name_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_user_name_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_get_user_name_rq);
 
-  if (fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_user_name (user_id, obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -684,7 +518,7 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 			     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_PASSWORD_OPERATION_VALID(operation)
@@ -695,39 +529,25 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_user_password_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_user_password_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_user_password_rq)))
-    goto cleanup;
+  FIID_OBJ_CREATE (obj_cmd_rq, tmpl_set_user_password_rq);
 
-  if (fill_cmd_set_user_password (user_id, 
-                                  operation, 
-                                  password, 
-                                  password_len,
-                                  obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_user_password (user_id, 
+					     operation, 
+					     password, 
+					     password_len,
+					     obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_APP_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
- 
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_APP_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
+  
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -740,29 +560,14 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
       uint64_t manufacturer_id, product_id;
       int8_t rv = -1, err_flag = 0;
 
-      if (!(obj_data_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
-	{
-	  err_flag++;
-	  goto cleanup1;
-	}
+      FIID_OBJ_CREATE_CLEANUP1(obj_data_rs, tmpl_cmd_get_device_id_rs);
       
       if (ipmi_cmd_get_device_id (dev, obj_data_rs) < 0)
-	{
-	  err_flag++;
-	  goto cleanup1;
-	}
+	goto cleanup1;
       
-      if (fiid_obj_get (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id) < 0)
-	{
-	  err_flag++;
-	  goto cleanup1;
-	}
+      FIID_OBJ_GET_CLEANUP1 (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
 
-      if (fiid_obj_get (obj_data_rs, (uint8_t *)"product_id", &product_id) < 0)
-	{
-	  err_flag++;
-	  goto cleanup1;
-	}
+      FIID_OBJ_GET_CLEANUP1 (obj_data_rs, (uint8_t *)"product_id", &product_id);
       
       switch (manufacturer_id)
 	{
@@ -775,10 +580,10 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 	    }
 	}
 
+      err_flag++;
     cleanup1:
-      if (obj_data_rs)
-	fiid_obj_destroy(obj_data_rs);
-      if (err_flag || rv != -1)
+      FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
+      if (!err_flag || rv != -1)
 	return rv;
     }
   
@@ -788,11 +593,7 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
     int8_t rv = -1, err_flag = 0;
     int i;
     
-    if (!(data_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
-      {
-	err_flag++;
-	goto cleanup2;
-      }
+    FIID_OBJ_CREATE_CLEANUP2(data_rs, tmpl_get_channel_info_rs);
     
     /* Channel numbers range from 0 - 7 */
     for (i = 0; i < 8; i++)
@@ -800,33 +601,21 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 	if (ipmi_cmd_get_channel_info2 (dev, i, data_rs) != 0)
 	  continue;
 	
-	if (fiid_obj_get (data_rs, 
-			  (uint8_t *)"channel_medium_type", 
-			  &val) < 0)
-	  {
-	    err_flag++;
-	    goto cleanup2;
-	  }
-	  
+	FIID_OBJ_GET_CLEANUP2 (data_rs, (uint8_t *)"channel_medium_type", &val);
+	
 	if ((uint8_t) val == channel_medium_type)
 	  {
-	    if (fiid_obj_get (data_rs, 
-			      (uint8_t *)"actual_channel_number", 
-			      &val) < 0)
-	      {
-		err_flag++;
-		goto cleanup2;
-	      }
+	    FIID_OBJ_GET_CLEANUP2 (data_rs, (uint8_t *)"actual_channel_number", &val);
 	      
 	    rv = (int8_t) val;
 	    break;
 	  }
       }
 
+    err_flag++;
   cleanup2:
-    if (data_rs)
-      fiid_obj_destroy(data_rs);
-    if (err_flag || rv != -1)
+    FIID_OBJ_DESTROY_NO_RETURN(data_rs);
+    if (!err_flag || rv != -1)
       return rv;
   }
   
@@ -851,8 +640,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 
   dev->io.outofband.rq_seq = 0;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs);
   
   if (ipmi_cmd_get_channel_authentication_capabilities2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
@@ -860,34 +648,29 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   switch (dev->io.outofband.authentication_type)
     {
     case IPMI_AUTHENTICATION_TYPE_NONE:
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.none", 
-			&supported_authentication_type) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"authentication_type.none", 
+			    &supported_authentication_type);
       break;
     case IPMI_AUTHENTICATION_TYPE_MD2:
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.md2", 
-			&supported_authentication_type) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"authentication_type.md2", 
+			    &supported_authentication_type);
       break;
     case IPMI_AUTHENTICATION_TYPE_MD5:
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.md5", 
-			&supported_authentication_type) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"authentication_type.md5", 
+			    &supported_authentication_type);
       break;
     case IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY:
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.straight_password_key", 
-			&supported_authentication_type) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"authentication_type.straight_password_key", 
+			    &supported_authentication_type);
       break;
     case IPMI_AUTHENTICATION_TYPE_OEM_PROP:
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"authentication_type.oem_prop", 
-			&supported_authentication_type) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"authentication_type.oem_prop", 
+			    &supported_authentication_type);
       break;
     default:
       errno = EINVAL;
@@ -900,56 +683,49 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
       goto cleanup;
     }
   
-  fiid_obj_destroy(obj_cmd_rs);
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_get_session_challenge_rs)))
-    goto cleanup;
+  FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
+
   if (ipmi_cmd_get_session_challenge2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"temp_session_id", 
-		    &temp_session_id) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			(uint8_t *)"temp_session_id", 
+			&temp_session_id);
 
   dev->io.outofband.session_id = temp_session_id;
-  if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"challenge_string", 
-			 challenge_string,
-			 IPMI_CHALLENGE_STRING_LENGTH) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, 
+			     (uint8_t *)"challenge_string", 
+			     challenge_string,
+			     IPMI_CHALLENGE_STRING_LENGTH);
 
   memcpy (dev->io.outofband.challenge_string, 
 	  challenge_string, 
 	  IPMI_CHALLENGE_STRING_LENGTH);
 
-  fiid_obj_destroy(obj_cmd_rs);
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_activate_session_rs)))
-    goto cleanup;
+  FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_activate_session_rs);
   if (ipmi_cmd_activate_session2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"session_id", 
-		    &temp_session_id) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			(uint8_t *)"session_id", 
+			&temp_session_id);
 
   dev->io.outofband.session_id = temp_session_id;
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"initial_inbound_sequence_number", 
-		    &temp_session_sequence_number) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			(uint8_t *)"initial_inbound_sequence_number", 
+			&temp_session_sequence_number);
   dev->io.outofband.session_sequence_number = temp_session_sequence_number;
   
-  fiid_obj_destroy(obj_cmd_rs);
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_cmd_set_session_privilege_level_rs)))
-    goto cleanup;
+  FIID_OBJ_DESTROY(obj_cmd_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
   if (ipmi_cmd_set_session_privilege_level2 (dev, obj_cmd_rs) < 0)
     goto cleanup;
 
-  fiid_obj_destroy(obj_cmd_rs);
+  FIID_OBJ_DESTROY(obj_cmd_rs);
   return (0);
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
   return (-1);
 }

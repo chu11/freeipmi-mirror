@@ -19,13 +19,15 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
 			fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -33,32 +35,21 @@ ipmi_cmd_get_sel_info2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sel_info_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sel_info_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_sel_info_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_info_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_sel_info (obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_sel_info (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_STORAGE_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -67,7 +58,7 @@ ipmi_cmd_get_sel_allocation_info2 (ipmi_device_t *dev,
                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -75,32 +66,21 @@ ipmi_cmd_get_sel_allocation_info2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sel_allocation_info_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sel_allocation_info_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_sel_allocation_info_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_allocation_info_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_sel_allocation_info (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_STORAGE_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -109,7 +89,7 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
 		       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -117,32 +97,21 @@ ipmi_cmd_reserve_sel2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_reserve_sel_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_reserve_sel_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_reserve_sel_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_reserve_sel_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_reserve_sel (obj_cmd_rq) < 0));
 
-  if (fill_cmd_reserve_sel (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_STORAGE_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -155,7 +124,7 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
 			 fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -163,36 +132,25 @@ ipmi_cmd_get_sel_entry2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_sel_entry_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sel_entry_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_sel_entry_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_sel_entry_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_sel_entry (reservation_id,
+					 record_id,
+					 offset_into_record,
+					 bytes_to_read,
+					 obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_sel_entry (reservation_id,
-                              record_id,
-                              offset_into_record,
-                              bytes_to_read,
-                              obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-		IPMI_BMC_IPMB_LUN_BMC, 
-		IPMI_NET_FN_STORAGE_RQ, 
-		obj_cmd_rq, 
-		obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -203,7 +161,7 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -211,35 +169,24 @@ ipmi_cmd_delete_sel_entry2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_delete_sel_entry_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_delete_sel_entry_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_delete_sel_entry_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_delete_sel_entry_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_delete_sel_entry (
+					    reservation_id, 
+					    record_id,
+					    obj_cmd_rq) < 0));
 
-  if (fill_cmd_delete_sel_entry (
-                                 reservation_id, 
-                                 record_id,
-                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_STORAGE_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -250,7 +197,7 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
 		     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev 
       || !IPMI_SEL_CLEAR_OPERATION_VALID(operation)
@@ -260,34 +207,23 @@ ipmi_cmd_clear_sel2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_clear_sel_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_clear_sel_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_clear_sel_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_clear_sel_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_clear_sel (reservation_id, 
+				     operation,
+				     obj_cmd_rq) < 0));
 
-  if (fill_cmd_clear_sel (reservation_id, 
-                          operation,
-                          obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_STORAGE_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_STORAGE_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 

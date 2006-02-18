@@ -25,14 +25,14 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int
 ipmi_ssif_cmd2 (ipmi_device_t *dev,
                 fiid_obj_t obj_cmd_rq,
                 fiid_obj_t obj_cmd_rs)
 {
-  int8_t rv;
-
   if (!(dev
         && fiid_obj_valid(obj_cmd_rq)
         && fiid_obj_valid(obj_cmd_rs)))
@@ -41,14 +41,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  if ((rv = fiid_obj_packet_valid(obj_cmd_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
   {
     uint8_t *pkt;
@@ -81,8 +74,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     size_t bytes_read = 0;
     int32_t hdr_len, cmd_len;
     fiid_field_t *tmpl = NULL;
-
-    rv = -1;
+    int8_t rv = -1;
 
     if ((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rs.tmpl_hdr_ptr))) < 0)
       goto cleanup;
@@ -125,8 +117,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 
     rv = 0;
   cleanup:
-    if (tmpl)
-      fiid_template_free(tmpl);
+    FIID_TEMPLATE_FREE_NO_RETURN(tmpl);
     if (rv < 0)
       return (rv);
   }

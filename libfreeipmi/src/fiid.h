@@ -26,67 +26,6 @@
 extern "C" {
 #endif
 
-#define __FIID_OBJ_SET_ERRNO(__obj)            \
-do {                                           \
-  int32_t __errnum = fiid_obj_errnum((__obj)); \
-  if (__errnum == FIID_ERR_SUCCESS)            \
-    errno = 0;                                 \
-  else if (__errnum == FIID_ERR_OUTMEM)        \
-    errno = ENOMEM;                            \
-  else if (__errnum == FIID_ERR_OVERFLOW)      \
-    errno = ENOSPC;                            \
-  else                                         \
-    errno = EINVAL;                            \
-} while (0)
-
-#define FIID_OBJ_SET(__obj, __field, __val)              \
-do {                                                     \
-    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
-      {                                                  \
-          __FIID_OBJ_SET_ERRNO((__obj));                 \
-         return (-1);                                    \
-      }                                                  \
-} while (0)
-
-#define FIID_OBJ_SET_DATA(__obj, __field, __val, __val_len)               \
-do {                                                                      \
-    if (fiid_obj_set_data ((__obj), (__field), (__val), (__val_len)) < 0) \
-      {                                                                   \
-          __FIID_OBJ_SET_ERRNO((__obj));                                  \
-         return (-1);                                                     \
-      }                                                                   \
-} while (0)
-
-#define FIID_OBJ_GET(__obj, __field, __val)                   \
-do {                                                          \
-    uint64_t __localval = 0, *__localval_ptr;                 \
-    __localval_ptr = (__val);                                 \
-    if (fiid_obj_get ((__obj), (__field), &__localval) < 0)   \
-      {                                                       \
-         __FIID_OBJ_SET_ERRNO((__obj));                       \
-         return (-1);                                         \
-      }                                                       \
-    *__localval_ptr = __localval;                             \
-} while (0)
-
-#define FIID_OBJ_GET_DATA(__obj, __field, __val, __val_len)                \
-do {                                                                       \
-    if (fiid_obj_get_data ((__obj), (__field), (__val), (__val_len)) < 0)  \
-      {                                                                    \
-          __FIID_OBJ_SET_ERRNO((__obj));                                   \
-         return (-1);                                                      \
-      }                                                                    \
-} while (0)
-
-#define FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)           \
-do {                                                       \
-    if (fiid_obj_template_compare ((__obj), (__tmpl)) < 0) \
-      {                                                    \
-         __FIID_OBJ_SET_ERRNO((__obj));                    \
-         return (-1);                                      \
-      }                                                    \
-} while (0)
-
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 
 #define FIID_ERR_OBJ_INVALID                     2                   

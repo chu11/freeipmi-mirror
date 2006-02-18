@@ -20,6 +20,8 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 /* XXX - need to clean this up */
 static int32_t
@@ -109,8 +111,7 @@ _ipmi_max_lan_pkt_size (uint8_t authentication_type,
   
   rv = msg_len;
  cleanup:
-  if (tmpl)
-    fiid_template_free(tmpl);
+  FIID_TEMPLATE_FREE_NO_RETURN(tmpl);
   return (rv);
 }
 
@@ -125,8 +126,6 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	       fiid_obj_t obj_cmd_rq, 
 	       fiid_obj_t obj_cmd_rs)
 {
-  int8_t rv;
-
   if (!(dev 
         && dev->io.outofband.local_sockfd 
         && fiid_obj_valid(obj_cmd_rq)
@@ -136,14 +135,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((rv = fiid_obj_packet_valid(obj_cmd_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
   if (fiid_obj_clear(dev->io.outofband.rq.obj_rmcp_hdr) < 0)
     return (-1);
@@ -351,40 +343,30 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
   
   {
     uint64_t val = 0;
-    fiid_obj_t obj_hdr;
+    fiid_obj_t obj_hdr = NULL;
     fiid_template_t tmpl_hdr_cmd = 
       {
 	{2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	{6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	{0, "", 0}
       };
+    int8_t err_flag = 0;
     
-    if (!(obj_hdr = fiid_obj_create(tmpl_hdr_cmd)))
-      return (-1);
+    FIID_OBJ_CREATE_CLEANUP1 (obj_hdr, tmpl_hdr_cmd);
 
-    if (fiid_obj_set_all(obj_hdr,
-                         buf_rq,
-                         buf_rq_len) < 0)
-      {
-        fiid_obj_destroy(obj_hdr);
-        return (-1);
-      }
+    FIID_OBJ_SET_ALL_CLEANUP1 (obj_hdr, buf_rq, buf_rq_len);
 
-    if (fiid_obj_get (obj_hdr, (uint8_t *)"lun", &val) < 0)
-      {
-        fiid_obj_destroy(obj_hdr);
-        return (-1);
-      }
+    FIID_OBJ_GET_CLEANUP1 (obj_hdr, (uint8_t *)"lun", &val);
     dev->lun = val;
 
-    if (fiid_obj_get (obj_hdr, (uint8_t *)"net_fn", &val) < 0)
-      {
-        fiid_obj_destroy(obj_hdr);
-        return (-1);
-      }
+    FIID_OBJ_GET_CLEANUP1 (obj_hdr, (uint8_t *)"net_fn", &val);
     dev->net_fn = val;
 
-    fiid_obj_destroy(obj_hdr);
+    err_flag++;
+  cleanup1:
+    FIID_OBJ_DESTROY_NO_RETURN(obj_hdr);
+    if (!err_flag)
+      return (-1);
   }
   
   {
@@ -392,6 +374,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     size_t obj_cmd_rq_len = 0;
     fiid_field_t *tmpl_var_cmd_rq = NULL;
     int8_t retval = 0;
+    int8_t err_flag = 0;
 
     obj_cmd_rq_len = buf_rq_len - 1;
 
@@ -400,30 +383,19 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                                 FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)))
       return (-1);
 
-    if (!(obj_cmd_rq = fiid_obj_create(tmpl_var_cmd_rq)))
-      {
-        fiid_template_free (tmpl_var_cmd_rq);
-        return (-1);
-      }
+    FIID_OBJ_CREATE_CLEANUP2 (obj_cmd_rq, tmpl_var_cmd_rq);
     
-    if (fiid_obj_set_all(obj_cmd_rq,
-                         buf_rq + 1,
-                         buf_rq_len - 1) < 0)
-      {
-        fiid_obj_destroy(obj_cmd_rq);
-        fiid_template_free (tmpl_var_cmd_rq);
-        return (-1);
-      }
+    FIID_OBJ_SET_ALL_CLEANUP2 (obj_cmd_rq, buf_rq + 1, buf_rq_len - 1);
 
     if ((retval = ipmi_lan_cmd_raw_send (dev, obj_cmd_rq)) < 0)
-      {
-        fiid_obj_destroy(obj_cmd_rq);
-        fiid_template_free (tmpl_var_cmd_rq);
-        return (-1);
-      }
+      goto cleanup2;
 
-    fiid_obj_destroy(obj_cmd_rq);
-    fiid_template_free (tmpl_var_cmd_rq);
+    err_flag++;
+  cleanup2:
+    FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rq);
+    FIID_TEMPLATE_FREE_NO_RETURN (tmpl_var_cmd_rq);
+    if (!err_flag)
+      return (-1);
   }
   
   {
@@ -440,17 +412,18 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     int32_t bytes_received;
     int32_t pkt_hdrs_size;
     int32_t rmcp_len, hdr_len, session_len, authcode_len, ipmi_msg_len, trlr_len;
+    int8_t err_flag = 0;
 
     if ((rmcp_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_rmcp_hdr_ptr))) < 0)
-      return (-1);
+      goto cleanup3;
 
     if ((hdr_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_lan_msg_hdr_ptr))) < 0)
-      return (-1);
+      goto cleanup3;
 
     if ((session_len = fiid_template_block_len_bytes (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
                                                       (uint8_t *)"authentication_type",
                                                       (uint8_t *)"session_id")) < 0)
-      return (-1);
+      goto cleanup3;
 
     if (dev->io.outofband.authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
       authcode_len = IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
@@ -459,10 +432,10 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 
     if ((ipmi_msg_len = fiid_template_field_len_bytes (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
                                                        (uint8_t *)"ipmi_msg_len")) < 0)
-      return (-1);
+      goto cleanup3;
                                                           
     if ((trlr_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr))) < 0)
-      return (-1);
+      goto cleanup3;
     
     pkt_hdrs_size = rmcp_len + hdr_len + session_len + authcode_len + ipmi_msg_len + trlr_len;
     
@@ -478,7 +451,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                              0, 
                                              (struct sockaddr *) &from, 
                                              &fromlen)) < 0)
-      return (-1);
+      goto cleanup3;
 
     ERR (bytes_received >= pkt_hdrs_size);
     
@@ -487,20 +460,15 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     if ((buf_rs_len_in - 1) < obj_cmd_rs_len)
       {
         errno = EINVAL;
-        return (-1);
+	goto cleanup3;
       }
 
     if (!(tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), 
                                                 (uint8_t *)"COMMAND_RS_DATA",
                                                 FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)))
-      return (-1);
+      goto cleanup3;
 
-    if (!(obj_cmd_rs = fiid_obj_create(tmpl_var_cmd_rs)))
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-        fiid_obj_destroy(obj_cmd_rs);
-        return (-1);
-      }
+    FIID_OBJ_CREATE_CLEANUP3(obj_cmd_rs, tmpl_var_cmd_rs);
 
     if (unassemble_ipmi_lan_pkt(pkt,
                                 bytes_received,
@@ -509,38 +477,30 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                 dev->io.outofband.rs.obj_lan_msg_hdr,
                                 obj_cmd_rs,
                                 dev->io.outofband.rs.obj_lan_msg_trlr) < 0)
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-        fiid_obj_destroy(obj_cmd_rs);
-	return (-1);
-      }
+      goto cleanup3;
 
     if (ipmi_lan_check_session_authcode (pkt, 
                                          bytes_received, 
                                          dev->io.outofband.authentication_type,
                                          dev->io.outofband.password,
                                          IPMI_MAX_AUTHENTICATION_CODE_LENGTH) != 1)
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-        fiid_obj_destroy(obj_cmd_rs);
-	return (-1);
-      }
+      goto cleanup3;
 
     if (fiid_obj_get_all(obj_cmd_rs,
                          buf_rs + 1,
                          buf_rs_len_in - 1) < 0)
-      {
-	fiid_template_free (tmpl_var_cmd_rs);
-        fiid_obj_destroy(obj_cmd_rs);
-	return (-1);
-      }
-    
-    fiid_template_free (tmpl_var_cmd_rs);
-    fiid_obj_destroy(obj_cmd_rs);
-    
+      goto cleanup3;
+
+    err_flag++;
+  cleanup3:    
+    FIID_OBJ_DESTROY_NO_RETURN (obj_cmd_rs);
+    FIID_TEMPLATE_FREE_NO_RETURN (tmpl_var_cmd_rs);
+    if (!err_flag)
+      return (-1);
+
     {
       uint64_t val = 0;
-      fiid_obj_t obj_hdr;
+      fiid_obj_t obj_hdr = NULL;
       fiid_template_t tmpl_hdr_cmd = 
 	{
 	  {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -548,48 +508,38 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 	  {0, "", 0}
 	};
       
-      if (!(obj_hdr = fiid_obj_create(tmpl_hdr_cmd)))
-        return (-1);
-
-      if (fiid_obj_get (dev->io.outofband.rs.obj_lan_msg_hdr, 
-                        (uint8_t *)"rq_lun", &val) < 0)
-        {
-          fiid_obj_destroy(obj_hdr);
-          return (-1);
-        }
-
+      err_flag = 0;
+      
+      FIID_OBJ_CREATE_CLEANUP4(obj_hdr, tmpl_hdr_cmd);
+      
+      FIID_OBJ_GET_CLEANUP4 (dev->io.outofband.rs.obj_lan_msg_hdr, 
+			     (uint8_t *)"rq_lun", 
+			     &val);
+      
       if (fiid_obj_set (obj_hdr,
-                        (uint8_t *)"lun",
-                        val) < 0)
-        {
-          fiid_obj_destroy(obj_hdr);
-          return (-1);
-        }
-
-      if (fiid_obj_get (dev->io.outofband.rs.obj_lan_msg_hdr, 
-                        (uint8_t *)"net_fn", &val) < 0)
-        {
-          fiid_obj_destroy(obj_hdr);
-          return (-1);
-        }
-
+			(uint8_t *)"lun",
+			val) < 0)
+	goto cleanup4;
+      
+      FIID_OBJ_GET_CLEANUP4 (dev->io.outofband.rs.obj_lan_msg_hdr, 
+			     (uint8_t *)"net_fn", 
+			     &val);
+      
       if (fiid_obj_set(obj_hdr,
-                       (uint8_t *)"net_fn", 
-                       val) < 0)
-        {
-          fiid_obj_destroy(obj_hdr);
-          return (-1);
-        }
-        
+		       (uint8_t *)"net_fn", 
+		       val) < 0)
+	goto cleanup4;
+      
       if (fiid_obj_get_all(obj_hdr,
-                           buf_rs,
-                           1) < 0)
-        {
-          fiid_obj_destroy(obj_hdr);
-          return (-1);
-        }
-
-      fiid_obj_destroy(obj_hdr);
+			   buf_rs,
+			   1) < 0)
+	goto cleanup4;
+      
+      err_flag++;
+    cleanup4:
+      FIID_OBJ_DESTROY_NO_RETURN(obj_hdr);
+      if (!err_flag)
+	return (-1);
       *buf_rs_len = obj_cmd_rs_len + 1;
     }
   }

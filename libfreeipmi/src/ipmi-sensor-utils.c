@@ -19,6 +19,7 @@
 */
 
 #include "freeipmi.h"
+#include "fiid-wrappers.h"
 
 double 
 ipmi_sensor_decode_value (char r_exponent, 
@@ -30,14 +31,6 @@ ipmi_sensor_decode_value (char r_exponent,
 			  uint8_t raw_data)
 {
   double dval = 0.0;
-  
-/*   printf ("r_exponent: %d\n", r_exponent); */
-/*   printf ("b_exponent: %d\n", b_exponent); */
-/*   printf ("m: %d\n", m); */
-/*   printf ("b: %d\n", b); */
-/*   printf ("linear: %d\n", linear); */
-/*   printf ("is_signed: %d\n", is_signed); */
-/*   printf ("raw_data: %d\n", raw_data); */
   
   if (analog_data_format == 0x00)
     dval = (double) raw_data;
@@ -98,67 +91,41 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_full_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP (obj, tmpl_sdr_full_sensor_record);
   
-  if (fiid_obj_set_all(obj,
-		       sensor_record,
-		       sensor_record_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sensor_record, sensor_record_len);
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"r_exponent", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"r_exponent", &val);
   *r_exponent = (char) val;
   if (*r_exponent & 0x08)
     *r_exponent |= 0xF0;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_exponent", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"b_exponent", &val);
   *b_exponent = (char) val;
   if (*b_exponent & 0x08)
     *b_exponent |= 0xF0;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"m_ls", 
-		    &m_ls) < 0)
-    goto cleanup;
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"m_ms", 
-		    &m_ms) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"m_ls", &m_ls);
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"m_ms", &m_ms);
   if (bits_merge (m_ls, 8, 10, m_ms, &val) < 0)
     goto cleanup;
   *m = (short) val;
   if (*m & 0x200)
     *m |= 0xFE00;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_ls", 
-		    &b_ls) < 0)
-    goto cleanup;
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"b_ms", 
-		    &b_ms) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"b_ls", &b_ls);
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"b_ms", &b_ms);
   if (bits_merge (b_ls, 8, 10, b_ms, &val) < 0)
     goto cleanup;
   *b = (short) val;
   if (*b & 0x200)
     *b |= 0xFE00;
   
-  if (fiid_obj_get (obj,
-		    (uint8_t *)"sensor_unit1.analog_data_format",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_unit1.analog_data_format", &val);
   *analog_data_format = (uint8_t) val;
 
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 

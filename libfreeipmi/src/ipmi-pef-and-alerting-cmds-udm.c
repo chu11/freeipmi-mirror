@@ -17,15 +17,17 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.1 2006-02-17 22:31:31 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.2 2006-02-18 21:02:16 chu11 Exp $  */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_get_pef_capabilities2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -33,35 +35,21 @@ ipmi_cmd_get_pef_capabilities2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_capabilities_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_capabilities_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_capabilities_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_capabilities_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_capabilities (obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_capabilities (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -71,7 +59,7 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
 				  fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -79,36 +67,22 @@ ipmi_cmd_arm_pef_postpone_timer2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_arm_pef_postpone_timer_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_arm_pef_postpone_timer_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_arm_pef_postpone_timer_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_arm_pef_postpone_timer_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_arm_pef_postpone_timer (pef_postpone_timeout,
+						  obj_cmd_rq) < 0));
 
-  if (fill_cmd_arm_pef_postpone_timer (pef_postpone_timeout,
-                                       obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }  
 
@@ -121,7 +95,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
 
   if (!dev 
       || !IPMI_PEF_EVENT_MESSAGES_VALID(pef_event_messages)
@@ -133,39 +107,25 @@ ipmi_cmd_set_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_control_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_control_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_pef_control (pef, 
+									pef_event_messages,
+									pef_startup_delay, 
+									pef_alert_startup_delay,
+									obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_pef_configuration_parameters_pef_control (pef, 
-                                                             pef_event_messages,
-                                                             pef_startup_delay, 
-                                                             pef_alert_startup_delay,
-                                                             obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -180,7 +140,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control2 (ipmi_devic
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_PEF_POWER_DOWN_ACTION_VALID(power_down_action)
@@ -194,41 +154,27 @@ ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control2 (ipmi_devic
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
-
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
   
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_action_global_control_rq))) 
-    goto cleanup;
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_action_global_control_rq); 
 
-  if (fill_cmd_set_pef_configuration_parameters_pef_action_global_control (alert_action, 
-                                                                           power_down_action,
-                                                                           reset_action, 
-                                                                           power_cycle_action, 
-                                                                           oem_action, 
-                                                                           diagnostic_interrupt,
-                                                                           obj_cmd_rq) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_pef_action_global_control (alert_action, 
+										      power_down_action,
+										      reset_action, 
+										      power_cycle_action, 
+										      oem_action, 
+										      diagnostic_interrupt,
+										      obj_cmd_rq) < 0));
 
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -238,7 +184,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev
                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -246,36 +192,22 @@ ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_startup_delay_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_startup_delay_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_pef_startup_delay (pef_startup_delay,
+									      obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_pef_configuration_parameters_pef_startup_delay (pef_startup_delay,
-                                                                   obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -285,7 +217,7 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -293,36 +225,22 @@ ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (pef_alert_startup_delay,
+										    obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (pef_alert_startup_delay,
-                                                                         obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -359,7 +277,7 @@ ipmi_cmd_set_event_filter_table2 (ipmi_device_t *dev,
                                   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
@@ -378,63 +296,49 @@ ipmi_cmd_set_event_filter_table2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_event_filter_table_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_event_filter_table_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_event_filter_table (filter_number,
+									       filter_configuration_type,
+									       filter_configuration_filter,
+									       event_filter_action_alert,
+									       event_filter_action_power_off,
+									       event_filter_action_reset,
+									       event_filter_action_power_cycle,
+									       event_filter_action_oem,
+									       event_filter_action_diagnostic_interrupt,
+									       event_filter_action_group_control_operation,
+									       alert_policy_number_policy_number,
+									       alert_policy_number_group_control_selector,
+									       event_severity,
+									       generator_id_byte1,
+									       generator_id_byte2,
+									       sensor_type,
+									       sensor_number,
+									       event_trigger,
+									       event_data1_offset_mask,
+									       event_data1_AND_mask,
+									       event_data1_compare1,
+									       event_data1_compare2,
+									       event_data2_AND_mask,
+									       event_data2_compare1,
+									       event_data2_compare2,
+									       event_data3_AND_mask,
+									       event_data3_compare1,
+									       event_data3_compare2,
+									       obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_pef_configuration_parameters_event_filter_table (filter_number,
-                                                                    filter_configuration_type,
-                                                                    filter_configuration_filter,
-                                                                    event_filter_action_alert,
-                                                                    event_filter_action_power_off,
-                                                                    event_filter_action_reset,
-                                                                    event_filter_action_power_cycle,
-                                                                    event_filter_action_oem,
-                                                                    event_filter_action_diagnostic_interrupt,
-                                                                    event_filter_action_group_control_operation,
-                                                                    alert_policy_number_policy_number,
-                                                                    alert_policy_number_group_control_selector,
-                                                                    event_severity,
-                                                                    generator_id_byte1,
-                                                                    generator_id_byte2,
-                                                                    sensor_type,
-                                                                    sensor_number,
-                                                                    event_trigger,
-                                                                    event_data1_offset_mask,
-                                                                    event_data1_AND_mask,
-                                                                    event_data1_compare1,
-                                                                    event_data1_compare2,
-                                                                    event_data2_AND_mask,
-                                                                    event_data2_compare1,
-                                                                    event_data2_compare2,
-                                                                    event_data3_AND_mask,
-                                                                    event_data3_compare1,
-                                                                    event_data3_compare2,
-                                                                    obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -446,7 +350,7 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
 				   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
@@ -457,38 +361,24 @@ ipmi_cmd_set_filter_table_data1_2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_pef_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (filter_number,
+										     filter_configuration_type,
+										     filter_configuration_filter,
+										     obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (filter_number,
-                                                                          filter_configuration_type,
-                                                                          filter_configuration_filter,
-                                                                          obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -500,7 +390,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -510,39 +400,25 @@ ipmi_cmd_get_pef_configuration_parameters_pef_control2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_control_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_control_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_CONTROL,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_CONTROL,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -554,7 +430,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control2 (ipmi_devic
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -564,39 +440,25 @@ ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control2 (ipmi_devic
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_action_global_control_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_action_global_control_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_ACTION_GLOBAL_CONTROL,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_ACTION_GLOBAL_CONTROL,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -608,7 +470,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev
                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -618,39 +480,25 @@ ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay2 (ipmi_device_t *dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_startup_delay_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_startup_delay_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_STARTUP_DELAY,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_STARTUP_DELAY,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -662,7 +510,7 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -672,39 +520,25 @@ ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_alert_startup_delay_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_pef_alert_startup_delay_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_ALERT_STARTUP_DELAY,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_PEF_ALERT_STARTUP_DELAY,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -716,7 +550,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -726,39 +560,25 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_event_filters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_event_filters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_EVENT_FILTERS,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_EVENT_FILTERS,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -770,7 +590,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table2 (ipmi_device_t *de
                                                                fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL; 
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -780,39 +600,25 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table2 (ipmi_device_t *de
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_EVENT_FILTER_TABLE,
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -824,7 +630,7 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_2 (ipmi_devic
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -834,39 +640,25 @@ ipmi_cmd_get_pef_configuration_parameters_event_filter_table_data1_2 (ipmi_devic
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_data1_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_event_filter_table_data1_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
+							    get_parameter,
+							    set_selector,
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_EVENT_FILTER_TABLE_DATA_1,
-						 get_parameter,
-						 set_selector,
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -878,7 +670,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2 (ipmi_
                                                                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -888,39 +680,25 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2 (ipmi_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_ALERT_POLICY_ENTRIES,
+							    get_parameter,
+							    set_selector,
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_ALERT_POLICY_ENTRIES,
-						 get_parameter,
-						 set_selector,
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -932,7 +710,7 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -942,39 +720,25 @@ ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_ALERT_STRINGS, 
+							    get_parameter, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_NUMBER_OF_ALERT_STRINGS, 
-						 get_parameter, 
-						 set_selector, 
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -986,7 +750,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys2 (ipmi_device_t *dev
                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -996,39 +760,25 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string_keys2 (ipmi_device_t *dev
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_string_keys_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_string_keys_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_ALERT_STRING_KEYS,
+							    get_parameter,
+							    set_selector,
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_ALERT_STRING_KEYS,
-						 get_parameter,
-						 set_selector,
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1040,7 +790,7 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string2 (ipmi_device_t *dev,
                                                          fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
@@ -1050,39 +800,25 @@ ipmi_cmd_get_pef_configuration_parameters_alert_string2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_strings_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_pef_configuration_parameters_alert_strings_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_pef_configuration_parameters_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_ALERT_STRINGS,
+							    get_parameter,
+							    set_selector,
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_pef_configuration_parameters (IPMI_PEF_PARAM_ALERT_STRINGS,
-						 get_parameter,
-						 set_selector,
-						 block_selector,
-						 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-  
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1093,7 +829,7 @@ ipmi_cmd_set_last_processed_event_id2 (ipmi_device_t *dev,
                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev 
       || !IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID(set_record_id_for_last_record)
@@ -1103,37 +839,23 @@ ipmi_cmd_set_last_processed_event_id2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_last_processed_event_id_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_last_processed_event_id_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_last_processed_event_id_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_last_processed_event_id_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_last_processed_event_id (set_record_id_for_last_record,
+						       record_id,
+						       obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_last_processed_event_id (set_record_id_for_last_record,
-                                            record_id,
-                                            obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1141,7 +863,7 @@ int8_t
 ipmi_cmd_get_last_processed_event_id2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -1149,35 +871,21 @@ ipmi_cmd_get_last_processed_event_id2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_last_processed_event_id_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_last_processed_event_id_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_last_processed_event_id_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_last_processed_event_id_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_last_processed_event_id (obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_last_processed_event_id (obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1191,7 +899,7 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
 			   fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
 
   if (!dev 
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1205,40 +913,26 @@ ipmi_cmd_alert_immediate2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_alert_immediate_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_alert_immediate_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_alert_immediate_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_alert_immediate_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_alert_immediate (channel_number,
+					   destination_selector,
+					   operation,
+					   string_selector,
+					   send_alert_string,
+					   obj_cmd_rq) < 0));
 
-  if (fill_cmd_alert_immediate (channel_number,
-                                destination_selector,
-                                operation,
-                                string_selector,
-                                send_alert_string,
-                                obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1253,7 +947,7 @@ ipmi_cmd_pet_acknowledge2 (ipmi_device_t *dev,
                            fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int ret, rv = -1;
+  int rv = -1;
   
   if (!dev || !fiid_obj_valid(obj_cmd_rs))
     {
@@ -1261,41 +955,27 @@ ipmi_cmd_pet_acknowledge2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_pet_acknowledge_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_pet_acknowledge_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_pet_acknowledge_rq); 
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_pet_acknowledge_rq))) 
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_pet_acknowledge (sequence_number,
+					   local_timestamp,
+					   event_source_type,
+					   sensor_device,
+					   sensor_number,
+					   event_data,
+					   obj_cmd_rq) < 0));
 
-  if (fill_cmd_pet_acknowledge (sequence_number,
-                                local_timestamp,
-                                event_source_type,
-                                sensor_device,
-                                sensor_number,
-                                event_data,
-                                obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_SENSOR_EVENT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_SENSOR_EVENT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 

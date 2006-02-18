@@ -9,7 +9,7 @@ libfreeipmi_la_SOURCES= bit-ops.c libfreeipmi.c xmalloc.c fiid.c ipmi-locate.c s
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm
 
-noinst_HEADERS = xmalloc.h
+noinst_HEADERS = err-wrappers.h fiid-wrappers.h xmalloc.h
 # These are headers visible as <freeipmi/freeipmi.h>
 modincludedir = $(includedir)/freeipmi
 

@@ -19,6 +19,7 @@
 */
 
 #include "freeipmi.h"
+#include "fiid-wrappers.h"
 
 int 
 ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
@@ -34,8 +35,7 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
       return -1;
     }
 
-  if (!(obj_data_rs = fiid_obj_create (tmpl_get_sdr_repository_info_rs)))
-    goto cleanup;
+  FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
   if (ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0)
     return (-1);
@@ -62,8 +62,7 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
 
   rv = 0;
  cleanup:
-  if (obj_data_rs)
-    fiid_obj_destroy(obj_data_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
   if (buf)
     free(buf);
   return (rv);
@@ -72,8 +71,8 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
 int 
 ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 {
-  uint16_t record_id = 0;
-  fiid_obj_t obj_cmd_rs = NULL;
+  uint16_t next_record_id = 0;
+  fiid_obj_t obj_data_rs = NULL;
   uint64_t val = 0;
   uint8_t sensor_record_buf[1024];
   uint32_t sensor_record_len;
@@ -85,29 +84,24 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       return (-1);
     }
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sdr_rs)))
-    goto cleanup;
+  FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_rs);
 
-  record_id = 0;
-  while (record_id != 0xFFFF)
+  next_record_id = 0;
+  while (next_record_id != 0xFFFF)
     {
-      if (fiid_obj_clear (obj_cmd_rs) < 0)
+      if (fiid_obj_clear (obj_data_rs) < 0)
 	goto cleanup;
 
       sensor_record_len = 1024;
       if (ipmi_cmd_get_sdr2 (dev, 
-			     record_id, 
-			     obj_cmd_rs, 
+			     next_record_id, 
+			     obj_data_rs, 
 			     sensor_record_buf,
 			     &sensor_record_len) < 0)
 	goto cleanup;
       
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"next_record_id", 
-			&val) < 0)
-	goto cleanup;
-
-      record_id = (uint16_t) val;
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"next_record_id", &val);
+      next_record_id = (uint16_t) val;
       
       if (fwrite (sensor_record_buf,
 		  sensor_record_len,
@@ -118,8 +112,7 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
   return (rv);
 }
 
@@ -188,19 +181,14 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   if (sdr_repository_cache->cache_start <= 0)
     goto cleanup;
   
-  if (!(obj_data_rs = fiid_obj_create(tmpl_get_sdr_repository_info_rs)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
   if ((len = fiid_template_len_bytes (tmpl_get_sdr_repository_info_rs)) < 0)
     goto cleanup;
 
-  if (fiid_obj_set_all(obj_data_rs, sdr_repository_cache->cache_start, len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs, sdr_repository_cache->cache_start, len);
 
-  if (fiid_obj_get (obj_data_rs,
-		    (uint8_t *)"record_count", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_count", &val);
 
   sdr_repository_cache->total_records = (uint32_t) val;
   
@@ -210,8 +198,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   
   rv = 0;
  cleanup:
-  if (obj_data_rs)
-    fiid_obj_destroy(obj_data_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
   return (rv);
 }
 
@@ -263,12 +250,11 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
       return (-1);
     }
 
+  FIID_OBJ_CREATE(obj_data_rs, tmpl_sdr_sensor_record_header);
+
   if ((hdr_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
     goto cleanup;
   
-  if (!(obj_data_rs = fiid_obj_create(tmpl_sdr_sensor_record_header)))
-    goto cleanup;
-
   if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
     {
 
@@ -278,15 +264,11 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 	  if (fiid_obj_clear(obj_data_rs) < 0)
 	    goto cleanup;
 
-	  if (fiid_obj_set_all(obj_data_rs,
-			       sdr_repository_cache->cache_curr,
-			       hdr_len) < 0)
-	    goto cleanup;
+	  FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs,
+				    sdr_repository_cache->cache_curr,
+				    hdr_len);
 
-	  if (fiid_obj_get(obj_data_rs,
-			   (uint8_t *)"record_length",
-			   &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
 	  
           sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
                                               hdr_len +
@@ -308,15 +290,11 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 	  if (fiid_obj_clear(obj_data_rs) < 0)
 	    goto cleanup;
 
-	  if (fiid_obj_set_all(obj_data_rs,
-			       sdr_repository_cache->cache_curr,
-			       hdr_len) < 0)
-	    goto cleanup;
+	  FIID_OBJ_SET_ALL_CLEANUP(obj_data_rs,
+				   sdr_repository_cache->cache_curr,
+				   hdr_len);
 
-	  if (fiid_obj_get(obj_data_rs,
-			   (uint8_t *)"record_length",
-			   &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
 
           sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
                                               hdr_len +
@@ -327,8 +305,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
   
   rv = 0;
  cleanup:
-  if (obj_data_rs)
-    fiid_obj_destroy(obj_data_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
   return (rv);
 }
 

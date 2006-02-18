@@ -19,6 +19,7 @@
 */
 
 #include "freeipmi.h"
+#include "fiid-wrappers.h"
 
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
   {
@@ -118,22 +119,13 @@ fiid_template_t tmpl_set_power_restore_policy_rs =
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 { 
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_chassis_status_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_chassis_status_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
@@ -142,8 +134,6 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
 int8_t
 fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!IPMI_CHASSIS_CONTROL_VALID(chassis_control)
       || !fiid_obj_valid(obj_cmd))
     {
@@ -151,14 +141,7 @@ fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd)
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_control_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_control_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CONTROL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_control", chassis_control);
@@ -171,8 +154,6 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 			   uint8_t *force_identify,
                            fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if ((force_identify 
        && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify))
       || !fiid_obj_valid(obj_cmd))
@@ -181,14 +162,7 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_chassis_identify_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_identify_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
   if (identify_interval)
@@ -207,8 +181,6 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 int8_t 
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy)
       || !fiid_obj_valid(obj_cmd))
     {
@@ -216,26 +188,14 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_
       return -1;
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_set_power_restore_policy_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_set_power_restore_policy_rq);
 
   FIID_OBJ_SET (obj_cmd,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY);
   
-  FIID_OBJ_SET (obj_cmd, 
-		(uint8_t *)"power_restore_policy", 
-		power_restore_policy);
-
-  FIID_OBJ_SET (obj_cmd,
-		(uint8_t *)"power_restore_policy.reserved",
-		0);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy", power_restore_policy);
+  FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy.reserved", 0);
   
   return 0;
 }

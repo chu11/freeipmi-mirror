@@ -19,6 +19,8 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 int8_t 
 ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 
@@ -51,7 +53,7 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_dev
                                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -86,61 +88,47 @@ ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_authentication_type_enables_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_authentication_type_enables_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_authentication_type_enables (channel_number, 
+											callback_level_none,
+											callback_level_md2,
+											callback_level_md5,
+											callback_level_straight_password,
+											callback_level_oem_proprietary,
+											user_level_none,
+											user_level_md2,
+											user_level_md5,
+											user_level_straight_password,
+											user_level_oem_proprietary,
+											operator_level_none,
+											operator_level_md2,
+											operator_level_md5,
+											operator_level_straight_password,
+											operator_level_oem_proprietary,
+											admin_level_none,
+											admin_level_md2,
+											admin_level_md5,
+											admin_level_straight_password,
+											admin_level_oem_proprietary,
+											oem_level_none,
+											oem_level_md2,
+											oem_level_md5,
+											oem_level_straight_password,
+											oem_level_oem_proprietary,
+											obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_authentication_type_enables (channel_number, 
-                                                                             callback_level_none,
-                                                                             callback_level_md2,
-                                                                             callback_level_md5,
-                                                                             callback_level_straight_password,
-                                                                             callback_level_oem_proprietary,
-                                                                             user_level_none,
-                                                                             user_level_md2,
-                                                                             user_level_md5,
-                                                                             user_level_straight_password,
-                                                                             user_level_oem_proprietary,
-                                                                             operator_level_none,
-                                                                             operator_level_md2,
-                                                                             operator_level_md5,
-                                                                             operator_level_straight_password,
-                                                                             operator_level_oem_proprietary,
-                                                                             admin_level_none,
-                                                                             admin_level_md2,
-                                                                             admin_level_md5,
-                                                                             admin_level_straight_password,
-                                                                             admin_level_oem_proprietary,
-                                                                             oem_level_none,
-                                                                             oem_level_md2,
-                                                                             oem_level_md5,
-                                                                             oem_level_straight_password,
-                                                                             oem_level_oem_proprietary,
-                                                                             obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -151,7 +139,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -161,37 +149,23 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_ip_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_ip_address (channel_number, 
+								       ip_address,
+								       obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_ip_address (channel_number, 
-                                                            ip_address,
-                                                            obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -202,7 +176,7 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev
                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -212,37 +186,23 @@ ipmi_cmd_set_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_ip_address_source_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_source_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_ip_address_source (channel_number, 
+									      ip_address_source,
+									      obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_ip_address_source (channel_number, 
-                                                                   ip_address_source,
-                                                                   obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -253,7 +213,7 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -263,37 +223,23 @@ ipmi_cmd_set_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_mac_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_mac_address (channel_number, 
+									mac_address,
+									obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_mac_address (channel_number, 
-                                                             mac_address,
-                                                             obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -304,7 +250,7 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -314,37 +260,23 @@ ipmi_cmd_set_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_subnet_mask_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_subnet_mask_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_subnet_mask (channel_number, 
+									subnet_mask,
+									obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_subnet_mask (channel_number, 
-                                                             subnet_mask,
-                                                             obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -356,7 +288,7 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_devic
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -368,38 +300,24 @@ ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_devic
       return (-1);
     }
 
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (channel_number, 
+										      bmc_generated_gratuitous_arps, 
+										      bmc_generated_arp_responses,
+										      obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (channel_number, 
-                                                                           bmc_generated_gratuitous_arps, 
-                                                                           bmc_generated_arp_responses,
-                                                                           obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -410,7 +328,7 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -420,37 +338,23 @@ ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (channel_number, 
+										    gratuitous_arp_interval,
+										    obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (channel_number, 
-                                                                         gratuitous_arp_interval,
-                                                                         obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -461,7 +365,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -471,37 +375,23 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_address2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_ip_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_default_gateway_address (channel_number, 
+										    ip_address,
+										    obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_default_gateway_address (channel_number, 
-                                                                         ip_address,
-                                                                         obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -512,7 +402,7 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_dev
                                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -522,37 +412,23 @@ ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_mac_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (channel_number, 
+											mac_address,
+											obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (channel_number, 
-                                                                             mac_address,
-                                                                             obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -563,7 +439,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -573,37 +449,23 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_ip_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_ip_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_backup_gateway_address (channel_number, 
+										   ip_address,
+										   obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_backup_gateway_address (channel_number, 
-                                                                        ip_address,
-                                                                        obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -614,7 +476,7 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_devi
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -624,37 +486,23 @@ ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_devi
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_mac_address_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_mac_address_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (channel_number, 
+										       mac_address,
+										       obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (channel_number, 
-                                                                            mac_address,
-                                                                            obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -667,7 +515,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev,
                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -678,39 +526,25 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_vlan_id_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_vlan_id_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_vlan_id (channel_number,
+								    vlan_id_ls,
+								    vlan_id_ms,
+								    vlan_id_enable,
+								    obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_vlan_id (channel_number,
-                                                         vlan_id_ls,
-                                                         vlan_id_ms,
-                                                         vlan_id_enable,
-                                                         obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -721,7 +555,7 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev,
                                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -731,37 +565,23 @@ ipmi_cmd_set_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_set_lan_configuration_parameters_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_vlan_priority_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_set_lan_configuration_parameters_vlan_priority_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_set_lan_configuration_parameters_vlan_priority (channel_number,
+									  vlan_priority,
+									  obj_cmd_rq) < 0));
 
-  if (fill_cmd_set_lan_configuration_parameters_vlan_priority (channel_number,
-                                                               vlan_priority,
-                                                               obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -774,7 +594,7 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables2 (ipmi_dev
                                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -785,40 +605,26 @@ ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables2 (ipmi_dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_authentication_type_enables_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_authentication_type_enables_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -831,7 +637,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev,
                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;  
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
 
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -842,40 +648,26 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_IP_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_IP_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -888,7 +680,7 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev
                                                               fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -899,40 +691,26 @@ ipmi_cmd_get_lan_configuration_parameters_ip_address_source2 (ipmi_device_t *dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_source_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_ip_address_source_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_IP_ADDRESS_SOURCE, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_IP_ADDRESS_SOURCE, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -945,7 +723,7 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -956,40 +734,26 @@ ipmi_cmd_get_lan_configuration_parameters_mac_address2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_MAC_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_MAC_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1002,7 +766,7 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev,
                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1013,40 +777,26 @@ ipmi_cmd_get_lan_configuration_parameters_subnet_mask2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_subnet_mask_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_subnet_mask_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_SUBNET_MASK,                                
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_SUBNET_MASK,                                
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1059,7 +809,7 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_devic
                                                                       fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1070,40 +820,26 @@ ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control2 (ipmi_devic
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1116,7 +852,7 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1127,40 +863,26 @@ ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1173,7 +895,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address2 (ipmi_device_
                                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1184,40 +906,26 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_address2 (ipmi_device_
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_default_gateway_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_default_gateway_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_DEFAULT_GATEWAY_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_DEFAULT_GATEWAY_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1230,7 +938,7 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_dev
                                                                         fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1241,40 +949,26 @@ ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address2 (ipmi_dev
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_DEFAULT_GATEWAY_MAC_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1287,7 +981,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t
                                                                    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1298,40 +992,26 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address2 (ipmi_device_t
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_backup_gateway_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_backup_gateway_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_BACKUP_GATEWAY_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1344,7 +1024,7 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_devi
                                                                        fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1355,40 +1035,26 @@ ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address2 (ipmi_devi
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_mac_address_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS, 
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_BACKUP_GATEWAY_MAC_ADDRESS, 
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1401,7 +1067,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev,
                                                     fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1412,40 +1078,26 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_id2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_id_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_id_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_VLAN_ID,
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_VLAN_ID,
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1458,7 +1110,7 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev,
                                                           fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1469,40 +1121,26 @@ ipmi_cmd_get_lan_configuration_parameters_vlan_priority2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_priority_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_lan_configuration_parameters_vlan_priority_rs);
+  
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  ERR_CLEANUP (!(fill_cmd_get_lan_configuration_parameters (channel_number, 
+							    get_parameter, 
+							    IPMI_LAN_PARAM_VLAN_PRIORITY,
+							    set_selector, 
+							    block_selector,
+							    obj_cmd_rq) < 0));
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_get_lan_configuration_parameters_rq)))
-    goto cleanup;
-
-  if (fill_cmd_get_lan_configuration_parameters (channel_number, 
-                                                 get_parameter, 
-                                                 IPMI_LAN_PARAM_VLAN_PRIORITY,
-                                                 set_selector, 
-                                                 block_selector,
-                                                 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }
 
@@ -1514,7 +1152,7 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
 			    fiid_obj_t obj_cmd_rs)
 {
   fiid_obj_t obj_cmd_rq = NULL;
-  int8_t ret, rv = -1;
+  int8_t rv = -1;
   
   if (!dev
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -1524,37 +1162,23 @@ ipmi_cmd_suspend_bmc_arps2 (ipmi_device_t *dev,
       return (-1);
     }
   
-  if ((ret = fiid_obj_template_compare(obj_cmd_rs, tmpl_cmd_suspend_bmc_arps_rs)) < 0)
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_suspend_bmc_arps_rs);
 
-  if (!ret)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  FIID_OBJ_CREATE(obj_cmd_rq, tmpl_cmd_suspend_bmc_arps_rq);
 
-  if (!(obj_cmd_rq = fiid_obj_create(tmpl_cmd_suspend_bmc_arps_rq)))
-    goto cleanup;
+  ERR_CLEANUP (!(fill_cmd_suspend_bmc_arps (channel_number, 
+					    gratuitous_arp_suspend, 
+					    arp_response_suspend,
+					    obj_cmd_rq) < 0));
 
-  if (fill_cmd_suspend_bmc_arps (channel_number, 
-				 gratuitous_arp_suspend, 
-				 arp_response_suspend,
-				 obj_cmd_rq) < 0)
-    goto cleanup;
-
-  if (ipmi_cmd (dev, 
-                IPMI_BMC_IPMB_LUN_BMC, 
-                IPMI_NET_FN_TRANSPORT_RQ, 
-                obj_cmd_rq, 
-                obj_cmd_rs) < 0)
-    goto cleanup;
-
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
-    goto cleanup;
+  ERR_IPMI_CMD_CLEANUP (dev, 
+			IPMI_BMC_IPMB_LUN_BMC, 
+			IPMI_NET_FN_TRANSPORT_RQ, 
+			obj_cmd_rq, 
+			obj_cmd_rs);
 
   rv = 0;
  cleanup:
-  if (obj_cmd_rq)
-    fiid_obj_destroy(obj_cmd_rq);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rq);
   return (rv);
 }

@@ -20,6 +20,8 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
 
 #define IPMI_KCS_SLEEP_USECS            0x01
 
@@ -610,8 +612,6 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 		   uint8_t fn, 
 		   fiid_obj_t obj_hdr)
 {
-  int8_t rv;
-
   if (!IPMI_BMC_LUN_VALID(lun)
       || !IPMI_NET_FN_VALID(fn)
       || !fiid_obj_valid(obj_hdr))
@@ -620,14 +620,7 @@ fill_hdr_ipmi_kcs (uint8_t lun,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_hdr_kcs);
 
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"lun", lun);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"net_fn", fn);
@@ -641,7 +634,6 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr,
 		       uint32_t pkt_len)
 {
   int32_t obj_cmd_len, obj_hdr_len;
-  int8_t rv;
 
   if (!(fiid_obj_valid(obj_hdr)
         && fiid_obj_valid(obj_cmd)
@@ -651,32 +643,9 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_hdr_kcs);
+  FIID_OBJ_PACKET_VALID(obj_hdr);
+  FIID_OBJ_PACKET_VALID(obj_cmd);
 
   obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
   ERR(obj_hdr_len != -1);
@@ -703,7 +672,6 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
 {
   uint32_t indx = 0;
   int32_t len;
-  int8_t rv;
 
   if (!(pkt
         && fiid_obj_valid(obj_hdr)
@@ -713,22 +681,15 @@ unassemble_ipmi_kcs_pkt (uint8_t *pkt,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_hdr_kcs);
 
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
+  FIID_OBJ_SET_ALL_LEN (len, obj_hdr, pkt + indx, pkt_len - indx);
   indx += len;
 
   if (pkt_len <= indx)
     return 0;
 
-  ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
+  FIID_OBJ_SET_ALL_LEN (len, obj_cmd, pkt + indx, pkt_len - indx);
   indx += len;
 
   return 0;

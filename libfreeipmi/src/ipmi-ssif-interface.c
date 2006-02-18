@@ -25,6 +25,7 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
 
 extern int errno;
 

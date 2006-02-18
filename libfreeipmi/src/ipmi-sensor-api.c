@@ -20,6 +20,7 @@
 */
 
 #include "freeipmi.h"
+#include "fiid-wrappers.h"
 
 enum system_software_type
   {
@@ -76,8 +77,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   char r_exponent;
   char b_exponent;
   uint8_t linear;
-  uint8_t analog_data_format;
-  
+  uint8_t analog_data_format;  
   fiid_obj_t obj = NULL;
 
   if (!sdr_record_data || !sdr_full_record)
@@ -86,13 +86,9 @@ get_sdr_full_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_full_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_full_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj,sdr_record_data, sdr_record_data_len);
  
   ipmi_sensor_get_decode_params (sdr_record_data, 
 				 sdr_record_data_len,
@@ -105,40 +101,22 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   sdr_full_record->linear = linear;
   sdr_full_record->analog_data_format = analog_data_format;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_owner_id.id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_owner_id.id", &val);
   sdr_full_record->sensor_owner_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_number", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_number", &val);
   sdr_full_record->sensor_number = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_type", &val);
   sdr_full_record->sensor_type = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type_code", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_reading_type_code", &val);
   sdr_full_record->event_reading_type_code = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_unit2.base_unit", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_unit2.base_unit", &val);
   sdr_full_record->sensor_unit = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"nominal_reading", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"nominal_reading", &val);
   sdr_full_record->nominal_reading = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -148,10 +126,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"normal_minimum",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"normal_minimum", &val);
   sdr_full_record->normal_minimum = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -161,10 +136,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"normal_maximum",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"normal_maximum", &val);
   sdr_full_record->normal_maximum = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -174,10 +146,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_minimum_reading",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_minimum_reading", &val);
   sdr_full_record->sensor_minimum_reading = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -187,10 +156,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_maximum_reading",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_maximum_reading", &val);
   sdr_full_record->sensor_maximum_reading =
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -200,22 +166,13 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"negative_going_threshold_hysteresis", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"negative_going_threshold_hysteresis", &val);
   sdr_full_record->negative_going_threshold_hysteresis = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"positive_going_threshold_hysteresis", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"positive_going_threshold_hysteresis", &val);
   sdr_full_record->positive_going_threshold_hysteresis = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"lower_non_recoverable_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lower_non_recoverable_threshold", &val);
   sdr_full_record->lower_non_recoverable_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -225,10 +182,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"upper_non_recoverable_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"upper_non_recoverable_threshold", &val);
   sdr_full_record->upper_non_recoverable_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -238,10 +192,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"lower_critical_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lower_critical_threshold", &val);
   sdr_full_record->lower_critical_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -251,10 +202,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"upper_critical_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"upper_critical_threshold", &val);
   sdr_full_record->upper_critical_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -264,10 +212,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"lower_non_critical_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lower_non_critical_threshold", &val);
   sdr_full_record->lower_non_critical_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -277,10 +222,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      analog_data_format,
 			      val);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"upper_non_critical_threshold",
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"upper_non_critical_threshold", &val);
   sdr_full_record->upper_non_critical_threshold = 
     ipmi_sensor_decode_value (r_exponent,
 			      b_exponent,
@@ -291,15 +233,13 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 			      val);
 
   memset(sdr_full_record->sensor_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"id_string",
-			 sdr_full_record->sensor_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"id_string",
+			     sdr_full_record->sensor_name,
+			     17);
 
  cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -318,66 +258,39 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_compact_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_compact_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_owner_id.id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_owner_id.id", &val);
   sdr_compact_record->sensor_owner_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_number", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_number", &val);
   sdr_compact_record->sensor_number = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_type", &val);
   sdr_compact_record->sensor_type = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type_code", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_reading_type_code", &val);
   sdr_compact_record->event_reading_type_code = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_unit2.base_unit", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_unit2.base_unit", &val);
   sdr_compact_record->sensor_unit = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"negative_going_threshold_hysteresis", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"negative_going_threshold_hysteresis", &val);
   sdr_compact_record->negative_going_threshold_hysteresis = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"positive_going_threshold_hysteresis", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"positive_going_threshold_hysteresis", &val);
   sdr_compact_record->positive_going_threshold_hysteresis = val;
   
   memset(sdr_compact_record->sensor_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"id_string",
-			 sdr_compact_record->sensor_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"id_string",
+			     sdr_compact_record->sensor_name,
+			     17);
 
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -386,8 +299,7 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
 			   uint32_t sdr_record_data_len,
 			   sdr_event_only_record_t *sdr_event_only_record)
 {
-  uint64_t val;
-  
+  uint64_t val;  
   fiid_obj_t obj = NULL;
 
   if (!sdr_record_data || !sdr_event_only_record)
@@ -396,48 +308,30 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_event_only_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_event_only_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_owner_id.id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_owner_id.id", &val);
   sdr_event_only_record->sensor_owner_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_number", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_number", &val);
   sdr_event_only_record->sensor_number = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"sensor_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_type", &val);
   sdr_event_only_record->sensor_type = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"event_reading_type_code", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_reading_type_code", &val);
   sdr_event_only_record->event_reading_type_code = val;
   
   memset(sdr_event_only_record->sensor_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"id_string",
-			 sdr_event_only_record->sensor_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"id_string",
+			     sdr_event_only_record->sensor_name,
+			     17);
 
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -455,29 +349,18 @@ get_sdr_entity_association_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_entity_association_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_entity_association_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"container_entity_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"container_entity_id", &val);
   sdr_entity_association_record->container_entity_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"container_entity_instance", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"container_entity_instance", &val);
   sdr_entity_association_record->container_entity_instance = val;
   
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -495,84 +378,48 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_generic_device_locator_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_generic_device_locator_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
    
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"direct_access_address", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"direct_access_address", &val);
   sdr_generic_device_locator_record->direct_access_address = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"channel_number", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"channel_number", &val);
   sdr_generic_device_locator_record->channel_number = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"device_slave_address", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"device_slave_address", &val);
   sdr_generic_device_locator_record->device_slave_address = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"private_bus_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"private_bus_id", &val);
   sdr_generic_device_locator_record->private_bus_id = val;
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"lun_for_master_write_read_command", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lun_for_master_write_read_command", &val);
   sdr_generic_device_locator_record->lun_for_master_write_read_command = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"address_span", 
-		    &val) < 0)    
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"address_span", &val);    
   sdr_generic_device_locator_record->address_span = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"device_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"device_type", &val);
   sdr_generic_device_locator_record->device_type = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"device_type_modifier", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"device_type_modifier", &val);
   sdr_generic_device_locator_record->device_type_modifier = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"entity_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"entity_id", &val);
   sdr_generic_device_locator_record->entity_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"entity_instance", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"entity_instance", &val);
   sdr_generic_device_locator_record->entity_instance = val;
   
   memset(sdr_generic_device_locator_record->device_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"device_id_string",
-			 sdr_generic_device_locator_record->device_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"device_id_string",
+			     sdr_generic_device_locator_record->device_name,
+			     17);
 
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -590,48 +437,30 @@ get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_logical_fru_device_locator_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_logical_fru_device_locator_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"device_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"device_type", &val);
   sdr_logical_fru_device_locator_record->device_type = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"device_type_modifier", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"device_type_modifier", &val);
   sdr_logical_fru_device_locator_record->device_type_modifier = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"fru_entity_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"fru_entity_id", &val);
   sdr_logical_fru_device_locator_record->fru_entity_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"fru_entity_instance", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"fru_entity_instance", &val);
   sdr_logical_fru_device_locator_record->fru_entity_instance = val;
   
   memset(sdr_logical_fru_device_locator_record->device_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"device_string",
-			 sdr_logical_fru_device_locator_record->device_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"device_string",
+			     sdr_logical_fru_device_locator_record->device_name,
+			     17);
  
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -649,36 +478,24 @@ get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_management_controller_device_locator_sensor_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_management_controller_device_locator_sensor_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"entity_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"entity_id", &val);
   sdr_management_controller_device_locator_record->entity_id = val;
   
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"entity_instance", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"entity_instance", &val);
   sdr_management_controller_device_locator_record->entity_instance = val;
   
   memset(sdr_management_controller_device_locator_record->device_name, '\0', 17);
-  if (fiid_obj_get_data (obj,
-			 (uint8_t *)"device_id_string",
-			 sdr_management_controller_device_locator_record->device_name,
-			 17) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP (obj,
+			     (uint8_t *)"device_id_string",
+			     sdr_management_controller_device_locator_record->device_name,
+			     17);
   
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -697,31 +514,23 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
       return;
     }
 
-  if (!(obj = fiid_obj_create(tmpl_sdr_oem_record)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_oem_record);
 
-  if (fiid_obj_set_all(obj,
-		       sdr_record_data,
-		       sdr_record_data_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
 
-  if (fiid_obj_get (obj, 
-		    (uint8_t *)"manufacturer_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"manufacturer_id", &val);
   sdr_oem_record->manufacturer_id = val;
 
   memset(sdr_oem_record->oem_data, '\0', 55);
-  if ((len = fiid_obj_get_data (obj,
-				(uint8_t *)"oem_data",
-				sdr_oem_record->oem_data,
-				55)) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
+				 obj,
+				 (uint8_t *)"oem_data",
+				 sdr_oem_record->oem_data,
+				 55);
   sdr_oem_record->oem_data_length = len;
 
-cleanup:
-  if (obj)
-    fiid_obj_destroy(obj);
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
   return;
 }
 
@@ -746,11 +555,8 @@ get_sdr_record (ipmi_device_t *dev,
       return (-1);
     }
 
-  if (!(obj_cmd_rs = fiid_obj_create (tmpl_get_sdr_rs)))
-    goto cleanup;
-
-  if (!(obj_sdr_record = fiid_obj_create (tmpl_sdr_sensor_record_header)))
-    goto cleanup;
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_get_sdr_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_sdr_record, tmpl_sdr_sensor_record_header);
 
   sensor_record_len = 1024;
   if (ipmi_cmd_get_sdr2 (dev, 
@@ -759,16 +565,10 @@ get_sdr_record (ipmi_device_t *dev,
 			 sensor_record,
 			 &sensor_record_len) < 0)
     {
-      if (fiid_obj_get (obj_cmd_rs,
-                        (uint8_t *)"cmd",
-                        &val) < 0)
-        goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
       
-      if (fiid_obj_get (obj_cmd_rs,
-                        (uint8_t *)"comp_code",
-                        &val) < 0)
-        goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs,
                            dev->errmsg,
@@ -778,37 +578,17 @@ get_sdr_record (ipmi_device_t *dev,
   
   memset (sdr_record, 0, sizeof (sdr_record_t));
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"next_record_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"next_record_id", &val);
   *next_record_id = val;
   
-  if (fiid_obj_set_all(obj_sdr_record,
-		       sensor_record,
-		       sensor_record_len) < 0)
-    goto cleanup;
+  FIID_OBJ_SET_ALL_CLEANUP (obj_sdr_record, sensor_record, sensor_record_len);
   
-  if (fiid_obj_get (obj_sdr_record, 
-		    (uint8_t *)"record_id", 
-		    &val) < 0)
-    goto cleanup;
-
-  if (fiid_obj_get (obj_sdr_record, 
-		    (uint8_t *)"record_id", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_sdr_record, (uint8_t *)"record_id", &val);
   sdr_record->record_id = val;
   
-  if (fiid_obj_get (obj_sdr_record, 
-		    (uint8_t *)"record_type", 
-		    &val) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_CLEANUP (obj_sdr_record, (uint8_t *)"record_type", &val);
   sdr_record->record_type = val;
   
-  fiid_obj_destroy(obj_cmd_rs);
-  obj_cmd_rs = NULL;
-
   switch (sdr_record->record_type)
     {
     case IPMI_SDR_FORMAT_FULL_RECORD:
@@ -822,23 +602,16 @@ get_sdr_record (ipmi_device_t *dev,
 	  break;
 	}
       
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_thresholds_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_thresholds_rs);
 
       if (ipmi_cmd_get_sensor_thresholds2 (dev, 
 					   sdr_record->record.sdr_full_record.sensor_number, 
 					   obj_cmd_rs) != 0)
 	{
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"cmd",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"comp_code",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs,
 			       dev->errmsg,
@@ -847,35 +620,29 @@ get_sdr_record (ipmi_device_t *dev,
 	  break;
 	}
       
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.lower_critical_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.lower_critical_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_lower_critical_threshold = val;
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.upper_critical_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.upper_critical_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_upper_critical_threshold = val;
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.lower_non_critical_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.lower_non_critical_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_lower_non_critical_threshold = val;
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.upper_non_critical_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.upper_non_critical_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_upper_non_critical_threshold = val;
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.lower_non_recoverable_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.lower_non_recoverable_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_lower_non_recoverable_threshold = val;
-      if (fiid_obj_get (obj_cmd_rs, 
-			(uint8_t *)"readable_thresholds.upper_non_recoverable_threshold", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
+			    (uint8_t *)"readable_thresholds.upper_non_recoverable_threshold", 
+			    &val);
       sdr_record->record.sdr_full_record.readable_threshold_upper_non_recoverable_threshold = val;
       
       break;
@@ -930,10 +697,8 @@ get_sdr_record (ipmi_device_t *dev,
   
   rv = 0;
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
-  if (obj_sdr_record)
-    fiid_obj_destroy(obj_sdr_record);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_sdr_record);
   return (rv);
 }
 
@@ -1039,25 +804,17 @@ get_sensor_reading (ipmi_device_t *dev,
   switch (ipmi_sensor_classify (event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_threshold_rs)))
-	goto cleanup;
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_threshold_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_threshold_rs);
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_threshold_rs);
 
       if (ipmi_cmd_get_sensor_reading_threshold2 (dev, 
                                                   sensor_number, 
                                                   obj_cmd_rs) != 0)
 	{
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"cmd",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"comp_code",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs,
 			       dev->errmsg,
@@ -1070,15 +827,10 @@ get_sensor_reading (ipmi_device_t *dev,
 				  1024)) < 0)
 	goto cleanup;
 
-      if (fiid_obj_set_all(l_obj_cmd_rs,
-			   buf,
-			   len) < 0)
-	goto cleanup;
+      FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_reading", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, (uint8_t *)"sensor_reading", &val);
+
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
 	{
 	  sensor_reading->current_reading = ipmi_sensor_decode_value (r_exponent, 
@@ -1094,52 +846,40 @@ get_sensor_reading (ipmi_device_t *dev,
 	  sensor_reading->current_reading = val;
 	}
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_reading_availability", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_reading_availability", 
+			    &val);
       sensor_reading->reading_availability_flag = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_sensor_scanning", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_sensor_scanning", 
+			    &val);
       sensor_reading->sensor_scanning = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_all_event_messages", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_all_event_messages", 
+			    &val);
       sensor_reading->event_messages_flag = val;
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_state", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"sensor_state", 
+			    &val);
       sensor_reading->event_message_list = 
 	ipmi_get_generic_event_message_list (event_reading_type_code, val);
       
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
                                                  sensor_number, 
                                                  obj_cmd_rs) != 0)
 	{
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"cmd",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"comp_code",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs,
 			       dev->errmsg,
@@ -1152,15 +892,9 @@ get_sensor_reading (ipmi_device_t *dev,
 				  1024)) < 0)
 	goto cleanup;
 
-      if (fiid_obj_set_all(l_obj_cmd_rs,
-			   buf,
-			   len) < 0)
-	goto cleanup;
+      FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_reading", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, (uint8_t *)"sensor_reading", &val);
 
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
 	{
@@ -1177,52 +911,40 @@ get_sensor_reading (ipmi_device_t *dev,
 	  sensor_reading->current_reading = val;
 	}
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_reading_availability", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_reading_availability", 
+			    &val);
       sensor_reading->reading_availability_flag = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_sensor_scanning", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_sensor_scanning", 
+			    &val);
       sensor_reading->sensor_scanning = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_all_event_messages", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_all_event_messages", 
+			    &val);
       sensor_reading->event_messages_flag = val;
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_state", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"sensor_state", 
+			    &val);
       sensor_reading->event_message_list = 
 	ipmi_get_generic_event_message_list (event_reading_type_code, val);
       
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
                                                  sensor_number, 
                                                  obj_cmd_rs) != 0)
 	{
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"cmd",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"comp_code",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs,
 			       dev->errmsg,
@@ -1235,15 +957,10 @@ get_sensor_reading (ipmi_device_t *dev,
 				  1024)) < 0)
 	goto cleanup;
 
-      if (fiid_obj_set_all(l_obj_cmd_rs,
-			   buf,
-			   len) < 0)
-	goto cleanup;
+      FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_reading", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, (uint8_t *)"sensor_reading", &val);
+
       if (sdr_record->record_type == IPMI_SDR_FORMAT_FULL_RECORD)
 	{
 	  sensor_reading->current_reading = ipmi_sensor_decode_value (r_exponent, 
@@ -1259,52 +976,40 @@ get_sensor_reading (ipmi_device_t *dev,
 	  sensor_reading->current_reading = val;
 	}
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_reading_availability", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_reading_availability", 
+			    &val);
       sensor_reading->reading_availability_flag = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_sensor_scanning", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_sensor_scanning", 
+			    &val);
       sensor_reading->sensor_scanning = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_all_event_messages", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_all_event_messages", 
+			    &val);
       sensor_reading->event_messages_flag = val;
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_state", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"sensor_state", 
+			    &val);
       sensor_reading->event_message_list = 
 	ipmi_get_event_message_list (sensor_type, val);
       
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_OEM:
-      if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
 
-      if (!(l_obj_cmd_rs = fiid_obj_create(l_tmpl_get_sensor_reading_discrete_rs)))
-	goto cleanup;
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
                                                  sensor_number, 
                                                  obj_cmd_rs) != 0)
 	{
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"cmd",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
 	  
-	  if (fiid_obj_get (obj_cmd_rs,
-			    (uint8_t *)"comp_code",
-			    &val) < 0)
-	    goto cleanup;
+	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
 	  dev->comp_code = val;
 	  ipmi_strerror_cmd_r (obj_cmd_rs,
 			       dev->errmsg,
@@ -1317,36 +1022,28 @@ get_sensor_reading (ipmi_device_t *dev,
 				  1024)) < 0)
 	goto cleanup;
 
-      if (fiid_obj_set_all(l_obj_cmd_rs,
-			   buf,
-			   len) < 0)
-	goto cleanup;
+      FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_reading", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"sensor_reading",
+			    &val);
       sensor_reading->current_reading = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_reading_availability", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_reading_availability", 
+			    &val);
       sensor_reading->reading_availability_flag = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_sensor_scanning", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_sensor_scanning", 
+			    &val);
       sensor_reading->sensor_scanning = val;
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"status_all_event_messages", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"status_all_event_messages", 
+			    &val);
       sensor_reading->event_messages_flag = val;
       
-      if (fiid_obj_get (l_obj_cmd_rs, 
-			(uint8_t *)"sensor_state", 
-			&val) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
+			    (uint8_t *)"sensor_state", 
+			    &val);
 
       {
 	char *event_message = NULL;
@@ -1363,9 +1060,7 @@ get_sensor_reading (ipmi_device_t *dev,
     }
   
  cleanup:
-  if (obj_cmd_rs)
-    fiid_obj_destroy(obj_cmd_rs);
-  if (l_obj_cmd_rs)
-    fiid_obj_destroy(l_obj_cmd_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_cmd_rs);
+  FIID_OBJ_DESTROY_NO_RETURN(l_obj_cmd_rs);
   return (rv);
 }
