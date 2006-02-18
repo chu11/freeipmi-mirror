@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+  /* XXX need to do includes */
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
