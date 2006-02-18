@@ -822,10 +822,10 @@ get_sensor_reading (ipmi_device_t *dev,
 	  goto cleanup;
 	}
 
-      if ((len = fiid_obj_get_all(obj_cmd_rs,
-				  buf,
-				  1024)) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
+				   obj_cmd_rs,
+				   buf,
+				   1024);
 
       FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
       
@@ -887,10 +887,10 @@ get_sensor_reading (ipmi_device_t *dev,
 	  goto cleanup;
 	}
       
-      if ((len = fiid_obj_get_all(obj_cmd_rs,
-				  buf,
-				  1024)) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
+				   obj_cmd_rs,
+				   buf,
+				   1024);
 
       FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 
@@ -952,10 +952,10 @@ get_sensor_reading (ipmi_device_t *dev,
 	  goto cleanup;
 	}
       
-      if ((len = fiid_obj_get_all(obj_cmd_rs,
-				  buf,
-				  1024)) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
+				   obj_cmd_rs,
+				   buf,
+				   1024);
 
       FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 
@@ -1017,10 +1017,10 @@ get_sensor_reading (ipmi_device_t *dev,
 	  goto cleanup;
 	}
       
-      if ((len = fiid_obj_get_all(obj_cmd_rs,
-				  buf,
-				  1024)) < 0)
-	goto cleanup;
+      FIID_OBJ_GET_ALL_LEN_CLEANUP(len,
+				   obj_cmd_rs,
+				   buf,
+				   1024);
 
       FIID_OBJ_SET_ALL_CLEANUP (l_obj_cmd_rs, buf, len);
 

@@ -148,8 +148,8 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
     }
 
   memset (pkt, '\0', pkt_len);
-  ERR((obj_rmcp_hdr_len = fiid_obj_get_all(obj_rmcp_hdr, pkt, pkt_len)) != -1);
-  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_rmcp_hdr_len, pkt_len - obj_rmcp_hdr_len)) != -1);
+  FIID_OBJ_GET_ALL_LEN (obj_rmcp_hdr_len, obj_rmcp_hdr, pkt, pkt_len);
+  FIID_OBJ_GET_ALL_LEN (obj_cmd_len, obj_cmd, pkt + obj_rmcp_hdr_len, pkt_len - obj_rmcp_hdr_len);
   return (obj_rmcp_hdr_len + obj_cmd_len);
 }  
 

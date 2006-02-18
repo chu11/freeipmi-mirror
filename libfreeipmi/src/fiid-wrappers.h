@@ -411,6 +411,39 @@ do {                                                                         \
       }                                                                      \
 } while (0)
 
+#define FIID_OBJ_GET_ALL_CLEANUP(__obj, __data, __data_len)                  \
+do {                                                                         \
+    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_SYSLOG((__obj));                                             \
+         __FIID_TRACE((__obj));                                              \
+         __FIID_OBJ_SET_ERRNO((__obj));                                      \
+         goto cleanup;                                                       \
+      }                                                                      \
+} while (0)
+
+#define FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)              \
+do {                                                                        \
+    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
+      {                                                                     \
+         __FIID_SYSLOG((__obj));                                            \
+         __FIID_TRACE((__obj));                                             \
+         __FIID_OBJ_SET_ERRNO((__obj));                                     \
+         return (-1);                                                       \
+      }                                                                     \
+} while (0)
+
+#define FIID_OBJ_GET_ALL_LEN_CLEANUP(__len, __obj, __data, __data_len)      \
+do {                                                                        \
+    if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
+      {                                                                     \
+         __FIID_SYSLOG((__obj));                                            \
+         __FIID_TRACE((__obj));                                             \
+         __FIID_OBJ_SET_ERRNO((__obj));                                     \
+         goto cleanup;                                                      \
+      }                                                                     \
+} while (0)
+
 #define FIID_OBJ_PACKET_VALID(__obj)                   \
 do {                                                   \
     int __ret;                                         \

@@ -52,8 +52,7 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
   if (!(buf = (uint8_t *)malloc(len)))
     goto cleanup;
 
-  if (fiid_obj_get_all(obj_data_rs, buf, len) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_ALL_CLEANUP (obj_data_rs, buf, len);
 
   if (fwrite (buf, len, 1, fp) < 0)
     goto cleanup;

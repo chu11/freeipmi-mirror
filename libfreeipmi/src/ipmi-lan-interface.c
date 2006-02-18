@@ -323,8 +323,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
   indx = 0;
 
-  if ((len = fiid_obj_get_all(obj_rmcp_hdr, pkt + indx, pkt_len - indx)) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_rmcp_hdr, pkt + indx, pkt_len - indx);
   indx += len;
 
   if ((len = fiid_obj_get_block(obj_lan_session_hdr,
@@ -376,10 +375,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   msg_data_count += len;
   chksum_data_count += len;
 
-  if ((len = fiid_obj_get_all(obj_cmd,
-			      pkt + indx,
-			      pkt_len - indx)) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_cmd, pkt + indx, pkt_len - indx);
   indx += len;
   msg_data_count += len;
   chksum_data_count += len;
@@ -390,10 +386,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   
   FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, (uint8_t *)&chksum, sizeof(chksum));
   
-  if ((len = fiid_obj_get_all(obj_lan_msg_trlr,
-			      pkt + indx,
-			      pkt_len - indx)) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_lan_msg_trlr, pkt + indx, pkt_len - indx);
   indx += len;
   msg_data_count += len;
 
