@@ -141,6 +141,127 @@ do {                                           \
     fiid_obj_destroy((__obj));                 \
 } while (0)
 
+#define FIID_OBJ_LEN(__len, __obj)                       \
+do {                                                     \
+    if (((__len) = fiid_obj_len ((__obj))) < 0)          \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_LEN_BYTES(__len, __obj)                 \
+do {                                                     \
+    if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_LEN_BYTES_CLEANUP(__len, __obj)         \
+do {                                                     \
+    if (((__len) = fiid_obj_len_bytes ((__obj))) < 0)    \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         goto cleanup;                                   \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_FIELD_LEN(__len, __obj, __field)                        \
+do {                                                                     \
+    if (((__len) = fiid_obj_field_len ((__obj), (__field))) < 0)         \
+      {                                                                  \
+         __FIID_SYSLOG((__obj));                                         \
+         __FIID_TRACE((__obj));                                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                                  \
+         return (-1);                                                    \
+      }                                                                  \
+} while (0)
+
+#define FIID_OBJ_FIELD_LEN_BYTES(__len, __obj, __field)                  \
+do {                                                                     \
+    if (((__len) = fiid_obj_field_len_bytes ((__obj), (__field))) < 0)   \
+      {                                                                  \
+         __FIID_SYSLOG((__obj));                                         \
+         __FIID_TRACE((__obj));                                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                                  \
+         return (-1);                                                    \
+      }                                                                  \
+} while (0)
+
+#define FIID_OBJ_FIELD_LEN_BYTES_CLEANUP(__len, __obj, __field)          \
+do {                                                                     \
+    if (((__len) = fiid_obj_field_len_bytes ((__obj), (__field))) < 0)   \
+      {                                                                  \
+         __FIID_SYSLOG((__obj));                                         \
+         __FIID_TRACE((__obj));                                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                                  \
+         goto cleanup;                                                   \
+      }                                                                  \
+} while (0)
+
+#define FIID_OBJ_CLEAR(__obj)                            \
+do {                                                     \
+    if (fiid_obj_clear ((__obj)) < 0)                    \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_CLEAR_CLEANUP(__obj)                    \
+do {                                                     \
+    if (fiid_obj_clear ((__obj)) < 0)                    \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         goto cleanup;                                   \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_CLEAR_FIELD(__obj, __field)             \
+do {                                                     \
+    if (fiid_obj_clear_field ((__obj), (__field)) < 0)   \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_FIELD_LOOKUP(__obj, __field)            \
+do {                                                     \
+    if (fiid_obj_field_lookup ((__obj), (__field)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+         return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_FIELD_LOOKUP_RV(__rv, __obj, __field)              \
+do {                                                                \
+    if (((__rv) = fiid_obj_field_lookup ((__obj), (__field))) < 0)  \
+      {                                                             \
+         __FIID_SYSLOG((__obj));                                    \
+         __FIID_TRACE((__obj));                                     \
+         __FIID_OBJ_SET_ERRNO((__obj));                             \
+         return (-1);                                               \
+      }                                                             \
+} while (0)
+
 #define FIID_OBJ_SET(__obj, __field, __val)              \
 do {                                                     \
     if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
@@ -149,6 +270,61 @@ do {                                                     \
          __FIID_TRACE((__obj));                          \
          __FIID_OBJ_SET_ERRNO((__obj));                  \
          return (-1);                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_SET_CLEANUP(__obj, __field, __val)      \
+do {                                                     \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+        goto cleanup;                                    \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_SET_CLEANUP1(__obj, __field, __val)     \
+do {                                                     \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+        goto cleanup1;                                   \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_SET_CLEANUP2(__obj, __field, __val)     \
+do {                                                     \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+        goto cleanup2;                                   \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_SET_CLEANUP3(__obj, __field, __val)     \
+do {                                                     \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+        goto cleanup3;                                   \
+      }                                                  \
+} while (0)
+
+#define FIID_OBJ_SET_CLEANUP4(__obj, __field, __val)     \
+do {                                                     \
+    if (fiid_obj_set ((__obj), (__field), (__val)) < 0)  \
+      {                                                  \
+         __FIID_SYSLOG((__obj));                         \
+         __FIID_TRACE((__obj));                          \
+         __FIID_OBJ_SET_ERRNO((__obj));                  \
+        goto cleanup4;                                   \
       }                                                  \
 } while (0)
 
@@ -271,6 +447,50 @@ do {                                                                        \
          __FIID_OBJ_SET_ERRNO((__obj));                                     \
          goto cleanup;                                                      \
       }                                                                     \
+} while (0)
+
+#define FIID_OBJ_SET_BLOCK(__obj, __field_start, __field_end, __data, __data_len)                    \
+do {                                                                                                 \
+    if (fiid_obj_set_block ((__obj), (__field_start), (__field_end), (__data), (__data_len)) < 0)    \
+      {                                                                                              \
+         __FIID_SYSLOG((__obj));                                                                     \
+         __FIID_TRACE((__obj));                                                                      \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                              \
+         return (-1);                                                                                \
+      }                                                                                              \
+} while (0)
+
+#define FIID_OBJ_SET_BLOCK_CLEANUP(__obj, __field_start, __field_end, __data, __data_len)            \
+do {                                                                                                 \
+    if (fiid_obj_set_block ((__obj), (__field_start), (__field_end), (__data), (__data_len)) < 0)    \
+      {                                                                                              \
+         __FIID_SYSLOG((__obj));                                                                     \
+         __FIID_TRACE((__obj));                                                                      \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                              \
+         goto cleanup;                                                                               \
+      }                                                                                              \
+} while (0)
+
+#define FIID_OBJ_SET_BLOCK_LEN(__len, __obj, __field_start, __field_end, __data, __data_len)                  \
+do {                                                                                                          \
+    if (((__len) = fiid_obj_set_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
+      {                                                                                                       \
+         __FIID_SYSLOG((__obj));                                                                              \
+         __FIID_TRACE((__obj));                                                                               \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
+         return (-1);                                                                                         \
+      }                                                                                                       \
+} while (0)
+
+#define FIID_OBJ_SET_BLOCK_LEN_CLEANUP(__len, __obj, __field_start, __field_end, __data, __data_len)          \
+do {                                                                                                          \
+    if (((__len) = fiid_obj_set_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
+      {                                                                                                       \
+         __FIID_SYSLOG((__obj));                                                                              \
+         __FIID_TRACE((__obj));                                                                               \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
+         goto cleanup;                                                                                        \
+      }                                                                                                       \
 } while (0)
 
 #define FIID_OBJ_GET(__obj, __field, __val)                   \
@@ -423,6 +643,50 @@ do {                                                                         \
       }                                                                      \
 } while (0)
 
+#define FIID_OBJ_GET_ALL_CLEANUP1(__obj, __data, __data_len)                 \
+do {                                                                         \
+    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_SYSLOG((__obj));                                             \
+         __FIID_TRACE((__obj));                                              \
+         __FIID_OBJ_SET_ERRNO((__obj));                                      \
+         goto cleanup1;                                                      \
+      }                                                                      \
+} while (0)
+
+#define FIID_OBJ_GET_ALL_CLEANUP2(__obj, __data, __data_len)                 \
+do {                                                                         \
+    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_SYSLOG((__obj));                                             \
+         __FIID_TRACE((__obj));                                              \
+         __FIID_OBJ_SET_ERRNO((__obj));                                      \
+         goto cleanup2;                                                      \
+      }                                                                      \
+} while (0)
+
+#define FIID_OBJ_GET_ALL_CLEANUP3(__obj, __data, __data_len)                 \
+do {                                                                         \
+    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_SYSLOG((__obj));                                             \
+         __FIID_TRACE((__obj));                                              \
+         __FIID_OBJ_SET_ERRNO((__obj));                                      \
+         goto cleanup3;                                                      \
+      }                                                                      \
+} while (0)
+
+#define FIID_OBJ_GET_ALL_CLEANUP4(__obj, __data, __data_len)                 \
+do {                                                                         \
+    if (fiid_obj_get_all ((__obj), (__data), (__data_len)) < 0)              \
+      {                                                                      \
+         __FIID_SYSLOG((__obj));                                             \
+         __FIID_TRACE((__obj));                                              \
+         __FIID_OBJ_SET_ERRNO((__obj));                                      \
+         goto cleanup4;                                                      \
+      }                                                                      \
+} while (0)
+
 #define FIID_OBJ_GET_ALL_LEN(__len, __obj, __data, __data_len)              \
 do {                                                                        \
     if (((__len) = fiid_obj_get_all ((__obj), (__data), (__data_len))) < 0) \
@@ -443,6 +707,50 @@ do {                                                                        \
          __FIID_OBJ_SET_ERRNO((__obj));                                     \
          goto cleanup;                                                      \
       }                                                                     \
+} while (0)
+
+#define FIID_OBJ_GET_BLOCK(__obj, __field_start, __field_end, __data, __data_len)                    \
+do {                                                                                                 \
+    if (fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len)) < 0)    \
+      {                                                                                              \
+         __FIID_SYSLOG((__obj));                                                                     \
+         __FIID_TRACE((__obj));                                                                      \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                              \
+         return (-1);                                                                                \
+      }                                                                                              \
+} while (0)
+
+#define FIID_OBJ_GET_BLOCK_CLEANUP(__obj, __field_start, __field_end, __data, __data_len)            \
+do {                                                                                                 \
+    if (fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len)) < 0)    \
+      {                                                                                              \
+         __FIID_SYSLOG((__obj));                                                                     \
+         __FIID_TRACE((__obj));                                                                      \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                              \
+         goto cleanup;                                                                               \
+      }                                                                                              \
+} while (0)
+
+#define FIID_OBJ_GET_BLOCK_LEN(__len, __obj, __field_start, __field_end, __data, __data_len)                  \
+do {                                                                                                          \
+    if (((__len) = fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
+      {                                                                                                       \
+         __FIID_SYSLOG((__obj));                                                                              \
+         __FIID_TRACE((__obj));                                                                               \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
+         return (-1);                                                                                         \
+      }                                                                                                       \
+} while (0)
+
+#define FIID_OBJ_GET_BLOCK_LEN_CLEANUP(__len, __obj, __field_start, __field_end, __data, __data_len)          \
+do {                                                                                                          \
+    if (((__len) = fiid_obj_get_block ((__obj), (__field_start), (__field_end), (__data), (__data_len))) < 0) \
+      {                                                                                                       \
+         __FIID_SYSLOG((__obj));                                                                              \
+         __FIID_TRACE((__obj));                                                                               \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                                       \
+         goto cleanup;                                                                                        \
+      }                                                                                                       \
 } while (0)
 
 #define FIID_OBJ_PACKET_VALID(__obj)                   \

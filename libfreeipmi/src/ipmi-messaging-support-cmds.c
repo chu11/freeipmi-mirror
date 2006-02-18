@@ -357,7 +357,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_cmd, (uint8_t *)"user_name") < 0));
+  FIID_OBJ_CLEAR_FIELD(obj_cmd, (uint8_t *)"user_name");
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
@@ -399,7 +399,7 @@ fill_cmd_activate_session (uint8_t authentication_type,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
-  ERR (!(fiid_obj_clear_field (obj_cmd, (uint8_t *)"challenge_string") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_cmd, (uint8_t *)"challenge_string");
   
   /* achu: challenge string must be zero extended */
   memset(buf, '\0', IPMI_CHALLENGE_STRING_LENGTH);
@@ -665,8 +665,7 @@ fill_cmd_set_user_name (uint8_t user_id,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_data_rq, 
-			      (uint8_t *)"user_name") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"user_name");
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
@@ -737,8 +736,7 @@ fill_cmd_set_user_password (uint8_t user_id,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_data_rq, 
-			      (uint8_t *)"password") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"password");
 
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -765,8 +763,7 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
       return (-1);
     }
 
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return (-1);
+  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"cmd");
   
   if (!rv)
     {
@@ -791,8 +788,7 @@ ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
       return (-1);
     }
 
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
+  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");
   
   if (!rv)
     {

@@ -43,9 +43,8 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
   if (ipmi_comp_test (obj_data_rs) != 1)
     goto cleanup;
  
-  if ((len = fiid_obj_len_bytes (obj_data_rs)) < 0)
-    goto cleanup;
-
+  FIID_OBJ_LEN_BYTES_CLEANUP (len, obj_data_rs); 
+      
   if (!len)
     goto cleanup;
 
@@ -88,8 +87,7 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
   next_record_id = 0;
   while (next_record_id != 0xFFFF)
     {
-      if (fiid_obj_clear (obj_data_rs) < 0)
-	goto cleanup;
+      FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
 
       sensor_record_len = 1024;
       if (ipmi_cmd_get_sdr2 (dev, 
@@ -260,8 +258,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
       /* skip (rec_no - sdr_repository_cache->cache_curr_rec_no) records */
       for (i = 0; i < (rec_no - sdr_repository_cache->cache_curr_rec_no); i++)
         {
-	  if (fiid_obj_clear(obj_data_rs) < 0)
-	    goto cleanup;
+	  FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
 
 	  FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs,
 				    sdr_repository_cache->cache_curr,
@@ -286,8 +283,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 
       for (i = 1; i < rec_no; i++)
         {
-	  if (fiid_obj_clear(obj_data_rs) < 0)
-	    goto cleanup;
+	  FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
 
 	  FIID_OBJ_SET_ALL_CLEANUP(obj_data_rs,
 				   sdr_repository_cache->cache_curr,

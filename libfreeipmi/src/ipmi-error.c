@@ -328,36 +328,28 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
   
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return (-1);
-
+  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"cmd");
   if (!rv)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
-
+   FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");
   if (!rv)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return (-1);
-
+  FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"cmd");
   if (!_len)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((_len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
-
+  FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"comp_code");
   if (!_len)
     {
       errno = EINVAL;

@@ -158,8 +158,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 			obj_cmd_rq, 
 			obj_cmd_rs);
 
-  if ((len = fiid_obj_field_len_bytes (obj_cmd_rs, (uint8_t *)"record_data")) < 0)
-    goto cleanup;
+  FIID_OBJ_FIELD_LEN_BYTES_CLEANUP (len, obj_cmd_rs, (uint8_t *)"record_data");
   
   if (!(buf = (uint8_t *)malloc(len)))
     goto cleanup;
@@ -310,8 +309,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       if ((offset_into_record + bytes_read) > record_length)
 	bytes_read = record_length - offset_into_record;
       
-      if (fiid_obj_clear(obj_cmd_rs) < 0)
-	goto cleanup;
+      FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
 
       if (ipmi_cmd_get_sdr_chunk2 (dev, 
 				   reservation_id, 

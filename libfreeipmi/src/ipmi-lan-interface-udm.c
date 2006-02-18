@@ -73,7 +73,7 @@ _ipmi_lan_pkt_size (uint8_t authentication_type,
 
   ERR(!((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0));
   msg_len += len;
-  ERR(!((len = fiid_obj_len_bytes (obj_cmd)) < 0));
+  FIID_OBJ_LEN_BYTES (len, obj_cmd);
   msg_len += len;
 
   return msg_len;
@@ -137,22 +137,14 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
   
   FIID_OBJ_PACKET_VALID(obj_cmd_rq);
 
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_rmcp_hdr) < 0)
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_session_hdr) < 0)
-     return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_msg_hdr) < 0)
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_msg_trlr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_rmcp_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_session_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_msg_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_msg_trlr) < 0) 
-    return (-1);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_rmcp_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_session_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_msg_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_msg_trlr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_rmcp_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_session_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_msg_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_msg_trlr); 
   
   {
     uint8_t *pkt;
@@ -186,9 +178,9 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
                                 pkt_len) != -1);
 
 #if 0
-printf("DEBUGGING:\n");
-
-	fiid_obj_dump_lan(STDERR_FILENO,
+    printf("DEBUGGING:\n");
+    
+    ipmi_dump_lan_packet (STDERR_FILENO,
 			  NULL,
 			  NULL,
 			  pkt,
@@ -257,22 +249,14 @@ ipmi_lan_cmd_raw_send (ipmi_device_t *dev,
       return (-1);
     }
 
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_rmcp_hdr) < 0)
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_session_hdr) < 0)
-     return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_msg_hdr) < 0)
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rq.obj_lan_msg_trlr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_rmcp_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_session_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_msg_hdr) < 0) 
-    return (-1);
-  if (fiid_obj_clear(dev->io.outofband.rs.obj_lan_msg_trlr) < 0) 
-    return (-1);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_rmcp_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_session_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_msg_hdr);
+  FIID_OBJ_CLEAR(dev->io.outofband.rq.obj_lan_msg_trlr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_rmcp_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_session_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_msg_hdr); 
+  FIID_OBJ_CLEAR(dev->io.outofband.rs.obj_lan_msg_trlr); 
   
   {
     uint8_t *pkt;
@@ -486,10 +470,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
                                          IPMI_MAX_AUTHENTICATION_CODE_LENGTH) != 1)
       goto cleanup3;
 
-    if (fiid_obj_get_all(obj_cmd_rs,
-                         buf_rs + 1,
-                         buf_rs_len_in - 1) < 0)
-      goto cleanup3;
+    FIID_OBJ_GET_ALL_CLEANUP3 (obj_cmd_rs, buf_rs + 1, buf_rs_len_in - 1);
 
     err_flag++;
   cleanup3:    
@@ -516,24 +497,15 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 			     (uint8_t *)"rq_lun", 
 			     &val);
       
-      if (fiid_obj_set (obj_hdr,
-			(uint8_t *)"lun",
-			val) < 0)
-	goto cleanup4;
+      FIID_OBJ_SET_CLEANUP4 (obj_hdr, (uint8_t *)"lun", val);
       
       FIID_OBJ_GET_CLEANUP4 (dev->io.outofband.rs.obj_lan_msg_hdr, 
 			     (uint8_t *)"net_fn", 
 			     &val);
       
-      if (fiid_obj_set(obj_hdr,
-		       (uint8_t *)"net_fn", 
-		       val) < 0)
-	goto cleanup4;
+      FIID_OBJ_SET_CLEANUP4 (obj_hdr, (uint8_t *)"net_fn", val);
       
-      if (fiid_obj_get_all(obj_hdr,
-			   buf_rs,
-			   1) < 0)
-	goto cleanup4;
+      FIID_OBJ_GET_ALL_CLEANUP4 (obj_hdr, buf_rs, 1);
       
       err_flag++;
     cleanup4:

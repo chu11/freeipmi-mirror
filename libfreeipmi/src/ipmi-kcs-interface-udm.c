@@ -44,7 +44,7 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     int32_t hdr_len, cmd_len;
 
     ERR(!((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rq.tmpl_hdr_ptr))) < 0));
-    ERR(!((cmd_len = fiid_obj_len_bytes(obj_cmd_rq)) < 0));
+    FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
     pkt_len = hdr_len + cmd_len;
     pkt = alloca (pkt_len);
     memset (pkt, 0, pkt_len);

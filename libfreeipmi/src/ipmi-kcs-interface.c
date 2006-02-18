@@ -647,10 +647,8 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr,
   FIID_OBJ_PACKET_VALID(obj_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
 
-  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
-  ERR(obj_hdr_len != -1);
-  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
-  ERR(obj_cmd_len != -1);
+  FIID_OBJ_LEN_BYTES (obj_hdr_len, obj_hdr);
+  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
 
   if (pkt_len < (obj_hdr_len + obj_cmd_len))
     {
