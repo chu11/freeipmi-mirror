@@ -61,6 +61,9 @@ libfreeipmi:
   * reg-space default  
   * ipmi_debug - kcsprint and smic print
   * remove need for FREEIPMI_BUILD and FREEIPMI_LIBRARY
+  * move fiid and err wrappers into common junk
+  * same with bit-ops
+
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
