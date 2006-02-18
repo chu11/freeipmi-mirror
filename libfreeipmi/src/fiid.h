@@ -117,11 +117,11 @@ do {                                                           \
 } while (0)
 
 #if defined (FREEIPMI_LIBRARY)                                
-#define FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)  \
-  __LFI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
+#define FIID_OBJ_GET_DATA(bytes, field, val, val_len)  \
+  __LFI_FIID_OBJ_GET_DATA (bytes, field, val, val_len)
 #else
-#define FIID_OBJ_GET_DATA(bytes, tmpl, field, val, val_len)  \
-  __FI_FIID_OBJ_GET_DATA (bytes, tmpl, field, val, val_len)
+#define FIID_OBJ_GET_DATA(bytes, field, val, val_len)  \
+  __FI_FIID_OBJ_GET_DATA (bytes, field, val, val_len)
 #endif
 
 #define FIID_ERR_SUCCESS                         0
