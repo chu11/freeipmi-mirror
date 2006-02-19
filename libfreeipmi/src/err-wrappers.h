@@ -106,6 +106,16 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_CLEANUP3(expr)                                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup3;                                                    \
+    }                                                                   \
+} while (0)
+
 #define ERR_EXIT(expr)                                                  \
 do {                                                                    \
   if (!(expr))                                                          \

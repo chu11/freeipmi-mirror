@@ -19,6 +19,7 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
 double 

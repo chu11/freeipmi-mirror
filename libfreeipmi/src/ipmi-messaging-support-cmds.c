@@ -773,7 +773,6 @@ int8_t
 ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
 {
   uint64_t comp_code_recv;
-  int8_t rv;
 
   if (!obj_cmd)
     {

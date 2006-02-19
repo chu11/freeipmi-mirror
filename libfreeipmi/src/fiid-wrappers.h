@@ -270,6 +270,46 @@ do {                                                                            
     }                                                                                           \
 } while (0)
 
+#define FIID_TEMPLATE_BLOCK_LEN_BYTES_CLEANUP(__len, __tmpl, __field_start, __field_end)        \
+do {                                                                                            \
+  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0) \
+    {                                                                                           \
+      __FIID_SYSLOG;                                                                            \
+      __FIID_TRACE;                                                                             \
+      goto cleanup;                                                                             \
+    }                                                                                           \
+} while (0)
+
+#define FIID_TEMPLATE_BLOCK_LEN_BYTES_CLEANUP1(__len, __tmpl, __field_start, __field_end)       \
+do {                                                                                            \
+  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0) \
+    {                                                                                           \
+      __FIID_SYSLOG;                                                                            \
+      __FIID_TRACE;                                                                             \
+      goto cleanup1;                                                                            \
+    }                                                                                           \
+} while (0)
+
+#define FIID_TEMPLATE_BLOCK_LEN_BYTES_CLEANUP2(__len, __tmpl, __field_start, __field_end)       \
+do {                                                                                            \
+  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0) \
+    {                                                                                           \
+      __FIID_SYSLOG;                                                                            \
+      __FIID_TRACE;                                                                             \
+      goto cleanup2;                                                                            \
+    }                                                                                           \
+} while (0)
+
+#define FIID_TEMPLATE_BLOCK_LEN_BYTES_CLEANUP3(__len, __tmpl, __field_start, __field_end)       \
+do {                                                                                            \
+  if (((__len) = fiid_template_block_len_bytes ((__tmpl), (__field_start), (__field_end))) < 0) \
+    {                                                                                           \
+      __FIID_SYSLOG;                                                                            \
+      __FIID_TRACE;                                                                             \
+      goto cleanup3;                                                                            \
+    }                                                                                           \
+} while (0)
+
 #define FIID_TEMPLATE_FREE_NO_RETURN(__tmpl)   \
 do {                                           \
   if ((__tmpl))                                \
