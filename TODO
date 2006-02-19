@@ -58,6 +58,7 @@ libfreeipmi:
     - sel record-types
     - sensor-cmds
        - missing commands
+  * eliminate need for clean2,3,4
   * reg-space default  
   * ipmi_debug - kcsprint and smic print
   * remove need for FREEIPMI_BUILD and FREEIPMI_LIBRARY
@@ -65,6 +66,8 @@ libfreeipmi:
   * same with bit-ops
   * "chksum"
   * "rq", "cmd", "comp_code", "rs", ????
+  * template raw for all raw functions
+    - begininning with tmpl_lan_raw
 
 fish:
 -----

@@ -1247,223 +1247,230 @@ get_10_event_data2_message (int offset, uint8_t event_data)
 }
 
 static char *
+_get_12_event_data2_message_offset_03(int offset, uint8_t event_data)
+{
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {4, "log_entry_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t log_type;
+  uint8_t log_entry_action;
+  char *str = NULL;
+  char *str1 = NULL;
+  char *str2 = NULL;
+  fiid_obj_t obj = NULL;
+
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_type", &val);
+  log_type = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_entry_action", &val);
+  log_entry_action = val;
+          
+  if (log_type <= 0x02)
+    str1 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[log_type]);
+  
+  if (log_entry_action <= 0x05)
+    str2 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[log_entry_action]);
+  
+  if (str1 || str2)
+    {
+      asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
+		((str1 && str2) ? "; " : ""), (str2 ? str2 : ""));
+    }
+	
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return str;
+}
+
+static char *
+_get_12_event_data2_message_offset_04(int offset, uint8_t event_data)
+{
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {1, "alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "power_off", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t alert, power_off, reset, power_cycle, oem_action, diagnostic_interrupt;
+  char *str = NULL;
+  char *tmp_str = NULL;
+  char *rv = NULL;
+  fiid_obj_t obj = NULL;
+  const char *msg = NULL;
+     
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"alert", &val);
+  alert = val;
+	
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_off", &val);
+  power_off = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"reset", &val);
+  reset = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_cycle", &val);
+  power_cycle = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"oem_action", &val);
+  oem_action = val;
+
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"diagnostic_interrupt", &val);
+  diagnostic_interrupt = val;
+  
+  if (alert)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[0];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+  
+  if (power_off)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[1];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+  
+  if (reset)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[2];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+  
+  if (power_cycle)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[3];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+	
+  if (oem_action)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[4];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+  
+  if (diagnostic_interrupt)
+    {
+      tmp_str = str;
+      msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[5];
+      if (str)
+	{
+	  str = NULL;
+	  asprintf (&str, "%s; %s", tmp_str, msg);
+	  free (tmp_str);
+	}
+      else
+	asprintf (&str, "%s", msg);
+    }
+  
+  rv = str;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return rv;
+}
+
+static char *
+_get_12_event_data2_message_offset_05(int offset, uint8_t event_data)
+{
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "timestamp_clock_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "first_second", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t timestamp_clock_type;
+  uint8_t first_second;
+  char *str = NULL;
+  fiid_obj_t obj = NULL;
+        
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timestamp_clock_type", &val);
+  timestamp_clock_type = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"first_second", &val);
+  first_second = val;
+  
+  asprintf (&str, "%s; %s", 
+	    (timestamp_clock_type ? "SDR Timestamp Clock updated" : 
+	     "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)"), 
+	    (first_second ? "event is second of pair" : "event is first of pair"));
+	
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return str;
+}
+
+static char *
 get_12_event_data2_message (int offset, uint8_t event_data)
 {
   switch (offset)
     {
     case 0x03:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {4, "log_entry_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t log_type;
-	uint8_t log_entry_action;
-	char *str = NULL;
-	char *str1 = NULL;
-	char *str2 = NULL;
-	fiid_obj_t obj = NULL;
-
-	FIID_OBJ_CREATE_CLEANUP1(obj, tmpl_event_data2);
-
-        FIID_OBJ_SET_ALL_CLEANUP1(obj, &event_data, sizeof(uint8_t));
-        
-        FIID_OBJ_GET_CLEANUP1 (obj, (uint8_t *)"log_type", &val);
-	log_type = val;
-
-        FIID_OBJ_GET_CLEANUP1 (obj, (uint8_t *)"log_entry_action", &val);
-	log_entry_action = val;
-          
-        if (log_type <= 0x02)
-          str1 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[log_type]);
-
-        if (log_entry_action <= 0x05)
-          str2 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[log_entry_action]);
-
-	if (str1 || str2)
-	  {
-	    asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
-		      ((str1 && str2) ? "; " : ""), (str2 ? str2 : ""));
-	  }
-	
-      cleanup1:
-	FIID_OBJ_DESTROY_NO_RETURN(obj);
-	return str;
-      }
+      return _get_12_event_data2_message_offset_03(offset, event_data);
     case 0x04:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {1, "alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "power_off", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t alert;
-	uint8_t power_off;
-	uint8_t reset;
-	uint8_t power_cycle;
-	uint8_t oem_action;
-	uint8_t diagnostic_interrupt;
-	char *str = NULL;
-	char *tmp_str = NULL;
-	char *str_ptr = NULL;
-        fiid_obj_t obj = NULL;
-	const char *msg = NULL;
-     
-        FIID_OBJ_CREATE_CLEANUP2(obj, tmpl_event_data2);
-        
-        FIID_OBJ_SET_ALL_CLEANUP2(obj, &event_data, sizeof(uint8_t));
-        
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"alert", &val);
-        alert = val;
-
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"power_off", &val);
-        power_off = val;
-
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"reset", &val);
-        reset = val;
-
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"power_cycle", &val);
-        power_cycle = val;
-
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"oem_action", &val);
-        oem_action = val;
-
-        FIID_OBJ_GET_CLEANUP2 (obj, (uint8_t *)"diagnostic_interrupt", &val);
-        diagnostic_interrupt = val;
-
-	if (alert)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[0];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (power_off)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[1];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (reset)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[2];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (power_cycle)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[3];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (oem_action)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[4];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (diagnostic_interrupt)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[5];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	str_ptr = str;
-      cleanup2:
-	FIID_OBJ_DESTROY_NO_RETURN(obj);
-	return str_ptr;
-      }
+      return _get_12_event_data2_message_offset_04(offset, event_data);
     case 0x05:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {4, "timestamp_clock_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "first_second", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t timestamp_clock_type;
-	uint8_t first_second;
-	char *str = NULL;
-        fiid_obj_t obj = NULL;
-        
-        FIID_OBJ_CREATE_CLEANUP3(obj, tmpl_event_data2);
-
-        FIID_OBJ_SET_ALL_CLEANUP3(obj, &event_data, sizeof(uint8_t));
-        
-        FIID_OBJ_GET_CLEANUP3 (obj, (uint8_t *)"timestamp_clock_type", &val);
-	timestamp_clock_type = val;
-        
-        FIID_OBJ_GET_CLEANUP3 (obj, (uint8_t *)"first_second", &val);
-	first_second = val;
-
-	asprintf (&str, "%s; %s", 
-		  (timestamp_clock_type ? "SDR Timestamp Clock updated" : 
-		   "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)"), 
-		  (first_second ? "event is second of pair" : "event is first of pair"));
-	
-      cleanup3:
-	FIID_OBJ_DESTROY_NO_RETURN(obj);
-	return str;
-      }
+      return _get_12_event_data2_message_offset_05(offset, event_data);
     }
   
   return NULL;
@@ -1800,24 +1807,24 @@ get_10_event_data3_message (int offset, uint8_t event_data)
 	char *str = NULL;
         fiid_obj_t obj = NULL;
         
-	FIID_OBJ_CREATE_CLEANUP1(obj, tmpl_event_data3);
+	FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
         
-        FIID_OBJ_SET_ALL_CLEANUP1(obj, &event_data, sizeof(uint8_t));
+        FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data, sizeof(uint8_t));
       
-        FIID_OBJ_GET_CLEANUP1 (obj, (uint8_t *)"event_offset", &val);
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_offset", &val);
 	event_offset = val;
 
-        FIID_OBJ_GET_CLEANUP1 (obj, (uint8_t *)"assertion_deassertion_e", &val);
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"assertion_deassertion_e", &val);
 	assertion_deassertion_event = val;
 
-        FIID_OBJ_GET_CLEANUP1 (obj, (uint8_t *)"logging_disabled_all_ev", &val);
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"logging_disabled_all_ev", &val);
 	logging_disabled_all_events = val;
         
 	asprintf (&str, "Event Offset %d; %s%s", event_offset, 
 		  (assertion_deassertion_event ? "assertion event" : "deassertion event"), 
 		  (logging_disabled_all_events ? 
 		   "; logging has been disabled for all events of given type" : ""));
-      cleanup1:
+      cleanup:
 	FIID_OBJ_DESTROY_NO_RETURN(obj);
 	return str;
       }

@@ -554,19 +554,21 @@ ipmi_cmd_set_user_password2 (ipmi_device_t *dev,
 int8_t
 ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 {
+  fiid_obj_t obj_data_rs = NULL;
+  uint64_t manufacturer_id, product_id;
+  int8_t rv = -1;
+  uint64_t val;
+  int i;
+    
   if (channel_medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
     {
-      fiid_obj_t obj_data_rs = NULL;
-      uint64_t manufacturer_id, product_id;
-      int8_t rv = -1, err_flag = 0;
-
-      FIID_OBJ_CREATE_CLEANUP1(obj_data_rs, tmpl_cmd_get_device_id_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_cmd_get_device_id_rs);
       
-      ERR_CLEANUP1 (!(ipmi_cmd_get_device_id (dev, obj_data_rs) < 0));
+      ERR_CLEANUP (!(ipmi_cmd_get_device_id (dev, obj_data_rs) < 0));
       
-      FIID_OBJ_GET_CLEANUP1 (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
 
-      FIID_OBJ_GET_CLEANUP1 (obj_data_rs, (uint8_t *)"product_id", &product_id);
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"product_id", &product_id);
       
       switch (manufacturer_id)
 	{
@@ -576,49 +578,35 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 	    {
 	    case IPMI_PRODUCT_ID_SE7501WV2:
 	      rv = 7;
+	      goto cleanup;
 	    }
 	}
 
-      err_flag++;
-    cleanup1:
       FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
-      if (!err_flag || rv != -1)
-	return rv;
     }
   
-  {
-    fiid_obj_t data_rs = NULL;
-    uint64_t val;
-    int8_t rv = -1, err_flag = 0;
-    int i;
-    
-    FIID_OBJ_CREATE_CLEANUP2(data_rs, tmpl_get_channel_info_rs);
-    
-    /* Channel numbers range from 0 - 7 */
-    for (i = 0; i < 8; i++)
-      {
-	if (ipmi_cmd_get_channel_info2 (dev, i, data_rs) != 0)
-	  continue;
-	
-	FIID_OBJ_GET_CLEANUP2 (data_rs, (uint8_t *)"channel_medium_type", &val);
-	
-	if ((uint8_t) val == channel_medium_type)
-	  {
-	    FIID_OBJ_GET_CLEANUP2 (data_rs, (uint8_t *)"actual_channel_number", &val);
-	      
-	    rv = (int8_t) val;
-	    break;
-	  }
-      }
-
-    err_flag++;
-  cleanup2:
-    FIID_OBJ_DESTROY_NO_RETURN(data_rs);
-    if (!err_flag || rv != -1)
-      return rv;
-  }
+  FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_get_channel_info_rs);
   
-  return (-1);
+  /* Channel numbers range from 0 - 7 */
+  for (i = 0; i < 8; i++)
+    {
+      if (ipmi_cmd_get_channel_info2 (dev, i, obj_data_rs) != 0)
+	continue;
+	
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"channel_medium_type", &val);
+      
+      if ((uint8_t) val == channel_medium_type)
+	{
+	  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"actual_channel_number", &val);
+	  
+	  rv = (int8_t) val;
+	  break;
+	}
+    }
+
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
+  return (rv);
 }
 
 int8_t 

@@ -148,20 +148,16 @@ fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_nu
 }
 
 static int32_t
-_ipmi_lan_pkt_min_size(uint8_t authentication_type,
-                       fiid_template_t tmpl_lan_msg, 
-                       fiid_obj_t obj_cmd)
+_ipmi_lan_pkt_rq_min_size(uint8_t authentication_type, fiid_obj_t obj_cmd)
 {
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-         && tmpl_lan_msg
-         && fiid_obj_valid(obj_cmd));
+  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type) && fiid_obj_valid(obj_cmd));
 
   FIID_TEMPLATE_LEN_BYTES (len, tmpl_rmcp_hdr);
   msg_len += len;
-  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg);
+  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg_hdr_rq);
   msg_len += len;
   FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg_trlr);
   msg_len += len;
@@ -170,10 +166,6 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
 				 (uint8_t *)"authentication_type",
 				 (uint8_t *)"session_id");
   msg_len += len;
-  FIID_TEMPLATE_FIELD_LEN_BYTES (len,
-				 tmpl_lan_session_hdr,
-				 (uint8_t *)"ipmi_msg_len");
-  msg_len += len;
   
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
       || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
@@ -181,35 +173,17 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
       || authentication_type == IPMI_AUTHENTICATION_TYPE_OEM_PROP) 
     msg_len += IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
   
-  return msg_len;
-}
-                       
-static int32_t 
-_ipmi_lan_pkt_size (uint8_t authentication_type, 
-		    fiid_template_t tmpl_lan_msg, 
-		    fiid_obj_t obj_cmd)
-{
-  uint32_t msg_len = 0;
-  int32_t len;
-  
-  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-         && tmpl_lan_msg
-         && fiid_obj_valid(obj_cmd));
-
-  ERR(!((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0));
+  FIID_TEMPLATE_FIELD_LEN_BYTES (len,
+				 tmpl_lan_session_hdr,
+				 (uint8_t *)"ipmi_msg_len");
   msg_len += len;
+
   FIID_OBJ_LEN_BYTES (len, obj_cmd);
   msg_len += len;
 
   return msg_len;
 }
-
-static int32_t 
-_ipmi_lan_pkt_rq_size (uint8_t authentication_type, fiid_obj_t obj_cmd)
-{
-  return _ipmi_lan_pkt_size(authentication_type, tmpl_lan_msg_hdr_rq, obj_cmd);
-}
-
+                       
 /*
   Complete IPMI LAN Request Packet
   +----------------------+
@@ -308,7 +282,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
       return -1;
     }
   
-  required_len = _ipmi_lan_pkt_rq_size((uint8_t)authentication_type, obj_cmd);
+  required_len = _ipmi_lan_pkt_rq_min_size((uint8_t)authentication_type, obj_cmd);
   if (pkt_len < required_len) 
     {
       errno = EMSGSIZE;

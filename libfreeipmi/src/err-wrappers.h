@@ -85,36 +85,6 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_CLEANUP1(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      goto cleanup1;                                                    \
-    }                                                                   \
-} while (0)
-
-#define ERR_CLEANUP2(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      goto cleanup2;                                                    \
-    }                                                                   \
-} while (0)
-
-#define ERR_CLEANUP3(expr)                                              \
-do {                                                                    \
-  if (!(expr))                                                          \
-    {                                                                   \
-      __IPMI_SYSLOG;                                                    \
-      __IPMI_TRACE;                                                     \
-      goto cleanup3;                                                    \
-    }                                                                   \
-} while (0)
-
 #define ERR_EXIT(expr)                                                  \
 do {                                                                    \
   if (!(expr))                                                          \

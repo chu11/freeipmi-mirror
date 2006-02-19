@@ -240,6 +240,10 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
   uint8_t *record_data = NULL;
   int8_t rv = -1;
 
+  fiid_obj_t sensor_record_header = NULL;
+  fiid_obj_t local_obj_cmd_rs = NULL;
+  int32_t hdr_len;
+
   if (!dev 
       || !fiid_obj_valid(obj_cmd_rs)
       || !sensor_record
@@ -251,51 +255,30 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sdr_rs);
 
-  {
-    fiid_obj_t sensor_record_header = NULL;
-    int32_t hdr_len;
-
-    FIID_OBJ_CREATE_CLEANUP1(sensor_record_header, tmpl_sdr_sensor_record_header);
+  FIID_OBJ_CREATE_CLEANUP(sensor_record_header, tmpl_sdr_sensor_record_header);
     
-    FIID_TEMPLATE_LEN_BYTES_CLEANUP1 (hdr_len, tmpl_sdr_sensor_record_header);
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP (hdr_len, tmpl_sdr_sensor_record_header);
 
-    ERR_CLEANUP1 (!(ipmi_cmd_get_sensor_record_header2 (dev, 
-							record_id, 
-							obj_cmd_rs, 
-							sensor_record_header) < 0));
-
-    FIID_OBJ_GET_CLEANUP1 (sensor_record_header, (uint8_t *)"record_length", &val);
-    record_length = val;
-    record_length += hdr_len;
-
-    rv = 0;
-  cleanup1:
-    FIID_OBJ_DESTROY_NO_RETURN(sensor_record_header);
-    if (rv < 0)
-      return (rv);
-  }
+  ERR_CLEANUP (!(ipmi_cmd_get_sensor_record_header2 (dev, 
+						     record_id, 
+						     obj_cmd_rs, 
+						     sensor_record_header) < 0));
+  
+  FIID_OBJ_GET_CLEANUP (sensor_record_header, (uint8_t *)"record_length", &val);
+  record_length = val;
+  record_length += hdr_len;
   
   /* achu: where does the 16 come from? */
   if (record_length > 16)
     {
-      fiid_obj_t local_obj_cmd_rs = NULL;
+      FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
       
-      rv = -1;
-
-      FIID_OBJ_CREATE_CLEANUP2(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
+      ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0));
       
-      ERR_CLEANUP2 (!(ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0));
-      
-      FIID_OBJ_GET_CLEANUP2 (local_obj_cmd_rs, (uint8_t *)"reservation_id", &val);
+      FIID_OBJ_GET_CLEANUP (local_obj_cmd_rs, (uint8_t *)"reservation_id", &val);
       reservation_id = (uint16_t) val;
-      rv = 0;
-    cleanup2:
-      FIID_OBJ_DESTROY_NO_RETURN(local_obj_cmd_rs);
-      if (rv < 0)
-	return (rv);
     }
   
-  rv = -1;
   record_data = alloca (record_length);
   memset (record_data, 0, record_length);
   
@@ -306,7 +289,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 	bytes_read = record_length - offset_into_record;
       
       FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
-
+      
       ERR_CLEANUP (!(ipmi_cmd_get_sdr_chunk2 (dev, 
 					      reservation_id, 
 					      record_id, 
@@ -320,12 +303,14 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
     }
   
   ERR_CLEANUP (!(*sensor_record_len < record_length));
-
+  
   memcpy(sensor_record, record_data, record_length);
   *sensor_record_len = record_length;
   
   rv = 0;
  cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(sensor_record_header);
+  FIID_OBJ_DESTROY_NO_RETURN(local_obj_cmd_rs);
   return (rv);
 }
 
