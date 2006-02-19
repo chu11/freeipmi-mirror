@@ -1,7 +1,7 @@
 2006-02-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Continued code cleanup.
-	
+
 2006-02-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid-wrappers.h: New file.

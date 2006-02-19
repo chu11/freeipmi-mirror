@@ -39,8 +39,6 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
   FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
   ERR_CLEANUP (!(ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0));
-  
-  ERR_CLEANUP (!(ipmi_comp_test (obj_data_rs) != 1));
  
   FIID_OBJ_LEN_BYTES_CLEANUP (len, obj_data_rs); 
       
@@ -112,30 +110,22 @@ int
 ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
 {
   FILE *cache_fp;
-  
+  int rv = -1;
+
   if (!dev || !sdr_cache_file)
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((cache_fp = fopen (sdr_cache_file, "w")) == NULL)
-    return (-1);
+  ERR_CLEANUP ((cache_fp = fopen (sdr_cache_file, "w")));
+  ERR_CLEANUP (!(ipmi_sdr_repository_info_write (dev, cache_fp) != 0));
+  ERR_CLEANUP (!(ipmi_sdr_records_write (dev, cache_fp) != 0));
   
-  if (ipmi_sdr_repository_info_write (dev, cache_fp) != 0)
-    {
-      fclose (cache_fp);
-      return (-1);
-    }
-  
-  if (ipmi_sdr_records_write (dev, cache_fp) != 0)
-    {
-      fclose (cache_fp);
-      return (-1);
-    }
-  
+  rv = 0;
+ cleanup:
   fclose (cache_fp);
-  return (0);
+  return (rv);
 }
 
 int 
@@ -153,24 +143,21 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
       return -1;
     }
 
-  sdr_repository_cache->fd = open (sdr_cache_file, O_RDONLY);
+  sdr_repository_cache->fd = -1;
+  sdr_repository_cache->cache_start = NULL;
+
+  ERR_CLEANUP (!((sdr_repository_cache->fd = open (sdr_cache_file, O_RDONLY)) < 0));
   
-  if (sdr_repository_cache->fd <= 0)
-    return (-1);
-  
-  if (fstat (sdr_repository_cache->fd, &buf) != 0)
-    return (-1);
+  ERR_CLEANUP (!(fstat (sdr_repository_cache->fd, &buf) < 0));
   
   sdr_repository_cache->file_length = buf.st_size;
   
-  sdr_repository_cache->cache_start = (uint8_t *) mmap (NULL, 
-                                                        sdr_repository_cache->file_length, 
-                                                        PROT_READ, 
-                                                        MAP_PRIVATE, 
-                                                        sdr_repository_cache->fd, 
-                                                        0);
-  
-  ERR_CLEANUP (!(sdr_repository_cache->cache_start <= 0));
+  ERR_CLEANUP ((sdr_repository_cache->cache_start = (uint8_t *) mmap (NULL, 
+								      sdr_repository_cache->file_length, 
+								      PROT_READ, 
+								      MAP_PRIVATE, 
+								      sdr_repository_cache->fd, 
+								      0)));
   
   FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
@@ -188,6 +175,15 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   
   rv = 0;
  cleanup:
+  if (rv < 0)
+    {
+      if (sdr_repository_cache->fd >= 0)
+	close(sdr_repository_cache->fd);
+      if (sdr_repository_cache->cache_start)
+	munmap (sdr_repository_cache->cache_start, sdr_repository_cache->file_length);
+      sdr_repository_cache->fd = -1;
+      sdr_repository_cache->cache_start = NULL;
+    }
   FIID_OBJ_DESTROY_NO_RETURN(obj_data_rs);
   return (rv);
 }
@@ -208,12 +204,9 @@ ipmi_sdr_repository_cache_unload (sdr_repository_cache_t *sdr_repository_cache)
     }
   
   if (sdr_repository_cache->fd)
-    {
-      sdr_repository_cache->file_length = 0;
-      close (sdr_repository_cache->fd);
-    }
+    close (sdr_repository_cache->fd);
   
-  sdr_repository_cache->fd = 0;
+  sdr_repository_cache->fd = -1;
   sdr_repository_cache->file_length = 0;
   sdr_repository_cache->cache_start = NULL;
   
@@ -224,8 +217,8 @@ int
 ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, uint16_t rec_no)
 {
   fiid_obj_t obj_data_rs = NULL;
-  int i, rv = -1;
-  int32_t hdr_len;
+  int iterations, iteration_start, i, rv = -1;
+  int32_t hdr_len, info_len;
   uint64_t val;
 
   if (sdr_repository_cache == NULL)
@@ -246,48 +239,36 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
   
   if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
     {
-
-      /* skip (rec_no - sdr_repository_cache->cache_curr_rec_no) records */
-      for (i = 0; i < (rec_no - sdr_repository_cache->cache_curr_rec_no); i++)
-        {
-	  FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
-
-	  FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs,
-				    sdr_repository_cache->cache_curr,
-				    hdr_len);
-
-	  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
-	  
-          sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
-                                              hdr_len +
-                                              val);
-        }
-      sdr_repository_cache->cache_curr_rec_no += (rec_no - sdr_repository_cache->cache_curr_rec_no);
+      iteration_start = 0;
+      iterations = (rec_no - sdr_repository_cache->cache_curr_rec_no);
     }
   else
     {
-      int32_t len;
-
-      FIID_TEMPLATE_LEN_BYTES_CLEANUP(len, tmpl_get_sdr_repository_info_rs);
-
-      sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + len;
-
-      for (i = 1; i < rec_no; i++)
-        {
-	  FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
-
-	  FIID_OBJ_SET_ALL_CLEANUP(obj_data_rs,
-				   sdr_repository_cache->cache_curr,
-				   hdr_len);
-
-	  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
-
-          sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
-                                              hdr_len +
-                                              val);
-        }
-      sdr_repository_cache->cache_curr_rec_no = i;
+      FIID_TEMPLATE_LEN_BYTES_CLEANUP(info_len, tmpl_get_sdr_repository_info_rs);
+      sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + info_len;
+      iteration_start = 1;
+      iterations = rec_no;
     }
+
+  for (i = iteration_start; i < iterations; i++)
+    {
+      FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
+
+      FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs,
+				sdr_repository_cache->cache_curr,
+				hdr_len);
+
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
+      
+      sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
+					  hdr_len +
+					  val);
+    }
+  
+  if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
+    sdr_repository_cache->cache_curr_rec_no += (rec_no - sdr_repository_cache->cache_curr_rec_no);
+  else
+    sdr_repository_cache->cache_curr_rec_no = i;
   
   rv = 0;
  cleanup:
