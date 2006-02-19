@@ -755,7 +755,6 @@ int8_t
 ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 {
   uint64_t cmd_recv;
-  int8_t rv;
 
   if (!obj_cmd)
     {
@@ -763,13 +762,7 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"cmd");
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
 
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
 
@@ -788,13 +781,7 @@ ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code_recv);
 

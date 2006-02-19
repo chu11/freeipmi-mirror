@@ -180,8 +180,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   
   FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
-  if ((len = fiid_template_len_bytes (tmpl_get_sdr_repository_info_rs)) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP(len, tmpl_get_sdr_repository_info_rs);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs, sdr_repository_cache->cache_start, len);
 
@@ -249,8 +248,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 
   FIID_OBJ_CREATE(obj_data_rs, tmpl_sdr_sensor_record_header);
 
-  if ((hdr_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP (hdr_len, tmpl_sdr_sensor_record_header);
   
   if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
     {
@@ -276,8 +274,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
     {
       int32_t len;
 
-      if ((len = fiid_template_len_bytes (tmpl_get_sdr_repository_info_rs)) < 0)
-	goto cleanup;
+      FIID_TEMPLATE_LEN_BYTES_CLEANUP(len, tmpl_get_sdr_repository_info_rs);
 
       sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + len;
 

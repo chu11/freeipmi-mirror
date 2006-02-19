@@ -36,18 +36,20 @@ _ipmi_lan_pkt_min_size(uint8_t authentication_type,
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  ERR(!((len = fiid_template_len_bytes (tmpl_rmcp_hdr)) < 0));
+  FIID_TEMPLATE_LEN_BYTES (len, tmpl_rmcp_hdr);
   msg_len += len;
-  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg)) < 0));
+  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg);
   msg_len += len;
-  ERR(!((len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+  FIID_TEMPLATE_LEN_BYTES (len, tmpl_lan_msg_trlr);
   msg_len += len;
-  ERR(!((len = fiid_template_block_len_bytes (tmpl_lan_session_hdr,
-					      (uint8_t *)"authentication_type",
-					      (uint8_t *)"session_id")) < 0));
+  FIID_TEMPLATE_BLOCK_LEN_BYTES (len,
+				 tmpl_lan_session_hdr,
+				 (uint8_t *)"authentication_type",
+				 (uint8_t *)"session_id");
   msg_len += len;
-  ERR(!((len = fiid_template_field_len_bytes (tmpl_lan_session_hdr,
-					      (uint8_t *)"ipmi_msg_len")) < 0));
+  FIID_TEMPLATE_FIELD_LEN_BYTES (len,
+				 tmpl_lan_session_hdr,
+				 (uint8_t *)"ipmi_msg_len");
   msg_len += len;
   
   if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
@@ -105,8 +107,7 @@ _ipmi_max_lan_pkt_size (uint8_t authentication_type,
   
   if (!(tmpl = fiid_obj_template(obj_cmd)))
     goto cleanup;
-  if ((len = fiid_template_len_bytes(tmpl)) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP(len, tmpl);
   msg_len += len;
   
   rv = msg_len;
@@ -398,28 +399,25 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     int32_t rmcp_len, hdr_len, session_len, authcode_len, ipmi_msg_len, trlr_len;
     int8_t err_flag = 0;
 
-    if ((rmcp_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_rmcp_hdr_ptr))) < 0)
-      goto cleanup3;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP3 (rmcp_len, *(dev->io.outofband.rs.tmpl_rmcp_hdr_ptr));
 
-    if ((hdr_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_lan_msg_hdr_ptr))) < 0)
-      goto cleanup3;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP3 (hdr_len, *(dev->io.outofband.rs.tmpl_lan_msg_hdr_ptr));
 
-    if ((session_len = fiid_template_block_len_bytes (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
-                                                      (uint8_t *)"authentication_type",
-                                                      (uint8_t *)"session_id")) < 0)
-      goto cleanup3;
+    FIID_TEMPLATE_BLOCK_LEN_BYTES_CLEANUP3 (session_len, 
+					    *(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
+					    (uint8_t *)"authentication_type",
+					    (uint8_t *)"session_id");
 
     if (dev->io.outofband.authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
       authcode_len = IPMI_MAX_AUTHENTICATION_CODE_LENGTH;
     else
       authcode_len = 0;
 
-    if ((ipmi_msg_len = fiid_template_field_len_bytes (*(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
-                                                       (uint8_t *)"ipmi_msg_len")) < 0)
-      goto cleanup3;
+    FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP3 (ipmi_msg_len, 
+					    *(dev->io.outofband.rs.tmpl_lan_session_hdr_ptr),
+					    (uint8_t *)"ipmi_msg_len");
                                                           
-    if ((trlr_len = fiid_template_len_bytes (*(dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr))) < 0)
-      goto cleanup3;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP3 (trlr_len, *(dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr));
     
     pkt_hdrs_size = rmcp_len + hdr_len + session_len + authcode_len + ipmi_msg_len + trlr_len;
     

@@ -48,7 +48,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     uint32_t pkt_len;
     int32_t hdr_len, cmd_len;
 
-    ERR(!((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rq.tmpl_hdr_ptr))) < 0));
+    FIID_TEMPLATE_LEN_BYTES(hdr_len, *(dev->io.inband.rq.tmpl_hdr_ptr));
     FIID_OBJ_LEN_BYTES (cmd_len, obj_cmd_rq);
     pkt_len = hdr_len + cmd_len;
 
@@ -76,12 +76,10 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     fiid_field_t *tmpl = NULL;
     int8_t rv = -1;
 
-    if ((hdr_len = fiid_template_len_bytes(*(dev->io.inband.rs.tmpl_hdr_ptr))) < 0)
-      goto cleanup;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP(hdr_len, *(dev->io.inband.rs.tmpl_hdr_ptr));
     if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
       goto cleanup;
-    if ((cmd_len = fiid_template_len_bytes(tmpl)) < 0)
-      goto cleanup;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
     pkt_len = hdr_len + cmd_len;
 
     pkt = alloca (pkt_len);
@@ -89,8 +87,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
       goto cleanup;
     memset (pkt, 0, pkt_len);
 
-    if ((read_len = ipmi_ssif_read (dev->io.inband.ssif_ctx, (char *)pkt, bytes_read)) < 0)
-      goto cleanup;
+    ERR_CLEANUP (!((read_len = ipmi_ssif_read (dev->io.inband.ssif_ctx, (char *)pkt, bytes_read)) < 0));
 
     if (read_len != pkt_len)
       {
@@ -109,11 +106,10 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 #endif
         goto cleanup;
       }
-    if (unassemble_ipmi_kcs_pkt (pkt,
-                                 read_len,
-                                 dev->io.inband.rs.obj_hdr,
-                                 obj_cmd_rs) < 0)
-      goto cleanup;
+    ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
+					    read_len,
+					    dev->io.inband.rs.obj_hdr,
+					    obj_cmd_rs) < 0));
 
     rv = 0;
   cleanup:

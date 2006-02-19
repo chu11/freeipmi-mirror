@@ -143,8 +143,8 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
   FIID_OBJ_CREATE(obj_cmd_rq, tmpl_get_sdr_rq);
 
-  if ((sensor_record_header_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP(sensor_record_header_len,
+				  tmpl_sdr_sensor_record_header);
 
   ERR_CLEANUP (!(fill_cmd_get_sdr (0,
 				   record_id, 
@@ -258,14 +258,12 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 
     FIID_OBJ_CREATE_CLEANUP1(sensor_record_header, tmpl_sdr_sensor_record_header);
     
-    if ((hdr_len = fiid_template_len_bytes (tmpl_sdr_sensor_record_header)) < 0)
-      goto cleanup1;
+    FIID_TEMPLATE_LEN_BYTES_CLEANUP1 (hdr_len, tmpl_sdr_sensor_record_header);
 
-    if (ipmi_cmd_get_sensor_record_header2 (dev, 
-					    record_id, 
-					    obj_cmd_rs, 
-					    sensor_record_header) < 0)
-      goto cleanup1;
+    ERR_CLEANUP1 (!(ipmi_cmd_get_sensor_record_header2 (dev, 
+							record_id, 
+							obj_cmd_rs, 
+							sensor_record_header) < 0));
 
     FIID_OBJ_GET_CLEANUP1 (sensor_record_header, (uint8_t *)"record_length", &val);
     record_length = val;
@@ -287,8 +285,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
 
       FIID_OBJ_CREATE_CLEANUP2(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
       
-      if (ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0)
-	goto cleanup2;
+      ERR_CLEANUP2 (!(ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_CLEANUP2 (local_obj_cmd_rs, (uint8_t *)"reservation_id", &val);
       reservation_id = (uint16_t) val;
@@ -311,15 +308,14 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       
       FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
 
-      if (ipmi_cmd_get_sdr_chunk2 (dev, 
-				   reservation_id, 
-				   record_id, 
-				   offset_into_record, 
-				   bytes_read, 
-				   obj_cmd_rs, 
-				   chunk_data,
-				   16) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_cmd_get_sdr_chunk2 (dev, 
+					      reservation_id, 
+					      record_id, 
+					      offset_into_record, 
+					      bytes_read, 
+					      obj_cmd_rs, 
+					      chunk_data,
+					      16) < 0));
       
       memcpy (record_data + offset_into_record, chunk_data, bytes_read);
     }

@@ -63,13 +63,7 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
     }
 
 #if defined (IPMI_SYSLOG)
-  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"cmd");
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
 #endif /* IPMI_SYSLOG */
 
   FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");

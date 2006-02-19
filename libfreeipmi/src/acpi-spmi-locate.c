@@ -621,7 +621,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   memdata = alloca (rsdp_window_size);
   memset (memdata, 0, rsdp_window_size);
   
-  acpi_rsdp_descriptor_len = fiid_template_len_bytes (tmpl_acpi_rsdp_descriptor);
+  FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
+			   tmpl_acpi_rsdp_descriptor);
   
   if (ipmi_get_physical_mem_data (rsdp_window_base_addr, 
 				  rsdp_window_size, memdata) != 0)
@@ -739,16 +740,16 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
   if (signature == NULL || acpi_table == NULL || acpi_table_length == NULL)
     return (-1);
 
-  if ((len = fiid_template_field_len_bytes (tmpl_acpi_table_hdr, 
-					    (uint8_t *)"signature")) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(len, 
+					tmpl_acpi_table_hdr, 
+					(uint8_t *)"signature");
 
   table_signature_length = len + 1;
   table_signature = alloca (table_signature_length);
   memset (table_signature, 0, table_signature_length);
   
-  if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
-    goto cleanup;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_table_hdr_length,
+				   tmpl_acpi_table_hdr);
 
   FIID_OBJ_CREATE_CLEANUP(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
 
@@ -834,13 +835,12 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
 
-  if ((acpi_table_hdr_length = fiid_template_len_bytes (tmpl_acpi_table_hdr)) < 0)
-    goto cleanup1;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP1 (acpi_table_hdr_length, tmpl_acpi_table_hdr);
 
   FIID_OBJ_CREATE_CLEANUP1(obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor);
 
-  if ((acpi_rsdp_descriptor_length = fiid_template_len_bytes (tmpl_acpi_rsdp_descriptor)) < 0)
-    goto cleanup1;
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP1 (acpi_rsdp_descriptor_length, 
+				    tmpl_acpi_rsdp_descriptor);
 
   if (ipmi_acpi_get_rsdp (IPMI_ACPI_LO_RSDP_WINDOW_BASE,
 			  IPMI_ACPI_LO_RSDP_WINDOW_SIZE,
@@ -903,8 +903,7 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
 
 	  FIID_OBJ_CREATE_CLEANUP2(obj_table, tmpl_table_address);
 	  
-	  if ((len_table = fiid_template_len_bytes(tmpl_table_address)) < 0)
-	    goto cleanup2;
+	  FIID_TEMPLATE_LEN_BYTES_CLEANUP2 (len_table, tmpl_table_address);
 	  
 	  FIID_OBJ_SET_ALL_CLEANUP2(obj_table,
 				    (rsdt_xsdt_table_data + (i * 4)),
@@ -924,8 +923,7 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
 	  
 	  FIID_OBJ_CREATE_CLEANUP2(obj_table, tmpl_table_address);
 	  
-	  if ((len_table = fiid_template_len_bytes(tmpl_table_address)) < 0)
-	    goto cleanup2;
+	  FIID_TEMPLATE_LEN_BYTES_CLEANUP2 (len_table, tmpl_table_address);
 	  
 	  FIID_OBJ_SET_ALL_CLEANUP2(obj_table,
 				    (rsdt_xsdt_table_data + (i * 4)),
@@ -1012,8 +1010,7 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
       printf ("__DEBUG__ instance = %d, signature = [%s] found\n", 
 	      instance, IPMI_ACPI_SPMI_SIG);
 
-      if ((acpi_spmi_table_descriptor_len = fiid_template_len_bytes(tmpl_acpi_spmi_table_descriptor)) < 0)
-	goto cleanup;
+      FIID_TEMPLATE_LEN_BYTES_CLEANUP (acpi_spmi_table_descriptor_len, tmpl_acpi_spmi_table_descriptor);
 
       if (acpi_spmi_table_descriptor_len < table_data_length)
 	copy_length = acpi_spmi_table_descriptor_len;

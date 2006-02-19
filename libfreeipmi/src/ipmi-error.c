@@ -320,7 +320,6 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 {
   uint64_t cmd, comp_code;
   int32_t _len;
-  int8_t rv;
 
   if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
     {
@@ -328,19 +327,8 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
       return (-1);
     }
   
-  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"cmd");
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-   FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
   FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"cmd");
   if (!_len)
