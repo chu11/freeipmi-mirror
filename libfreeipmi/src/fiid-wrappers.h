@@ -34,7 +34,7 @@ extern "C" {
 #define FIID_WRAPPER_STR_MAX_LEN 4096
 
 #if defined (IPMI_SYSLOG)
-#define __FIID_SYSLOG
+#define __FIID_SYSLOG                                                   \
 do {                                                                    \
   extern int errno;                                                     \
   int save_errno = errno;                                               \
@@ -67,7 +67,7 @@ do {                                                               \
 #endif /* IPMI_SYSLOG */
 
 #if defined (IPMI_TRACE)
-#define __FIID_TRACE                                                    
+#define __FIID_TRACE                                                    \
 do {                                                                    \
   extern int errno;                                                     \
   int save_errno = errno;                                               \

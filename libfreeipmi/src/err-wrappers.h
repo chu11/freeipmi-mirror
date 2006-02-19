@@ -19,7 +19,6 @@
 
 */
 
-
 #ifndef _ERR_WRAPPERS_H
 #define	_ERR_WRAPPERS_H
 
@@ -59,7 +58,7 @@ do {                                                                    \
   fprintf (stderr,                                                      \
            "%s: %d: %s: errno (%d): expression failed\n", __FILE__,     \
            __LINE__, __PRETTY_FUNCTION__, save_errno);                  \
-  fflush (stderr);                                                  
+  fflush (stderr);                                                      \
   errno = save_errno;                                                   \
 } while (0)
 #else
