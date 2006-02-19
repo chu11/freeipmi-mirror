@@ -562,8 +562,7 @@ ipmi_get_channel_number2 (ipmi_device_t *dev, uint8_t channel_medium_type)
 
       FIID_OBJ_CREATE_CLEANUP1(obj_data_rs, tmpl_cmd_get_device_id_rs);
       
-      if (ipmi_cmd_get_device_id (dev, obj_data_rs) < 0)
-	goto cleanup1;
+      ERR_CLEANUP1 (!(ipmi_cmd_get_device_id (dev, obj_data_rs) < 0));
       
       FIID_OBJ_GET_CLEANUP1 (obj_data_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
 
@@ -642,8 +641,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   
   FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_channel_authentication_capabilities_rs);
   
-  if (ipmi_cmd_get_channel_authentication_capabilities2 (dev, obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_cmd_get_channel_authentication_capabilities2 (dev, obj_cmd_rs) < 0));
 
   switch (dev->io.outofband.authentication_type)
     {
@@ -685,9 +683,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   
   FIID_OBJ_DESTROY(obj_cmd_rs);
   FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_session_challenge_rs);
-
-  if (ipmi_cmd_get_session_challenge2 (dev, obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_cmd_get_session_challenge2 (dev, obj_cmd_rs) < 0));
 
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
 			(uint8_t *)"temp_session_id", 
@@ -705,8 +701,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 
   FIID_OBJ_DESTROY(obj_cmd_rs);
   FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_activate_session_rs);
-  if (ipmi_cmd_activate_session2 (dev, obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_cmd_activate_session2 (dev, obj_cmd_rs) < 0));
 
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, 
 			(uint8_t *)"session_id", 
@@ -720,8 +715,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
   
   FIID_OBJ_DESTROY(obj_cmd_rs);
   FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_set_session_privilege_level_rs);
-  if (ipmi_cmd_set_session_privilege_level2 (dev, obj_cmd_rs) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_cmd_set_session_privilege_level2 (dev, obj_cmd_rs) < 0));
 
   FIID_OBJ_DESTROY(obj_cmd_rs);
   return (0);

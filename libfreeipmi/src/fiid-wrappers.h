@@ -980,6 +980,28 @@ do {                                                   \
       }                                                \
 } while (0)
 
+#define FIID_OBJ_TEMPLATE(__ptr, __obj)                \
+do {                                                   \
+    if (!(__ptr = fiid_obj_template((__obj))))         \
+      {                                                \
+        __FIID_OBJ_SYSLOG((__obj));                    \
+        __FIID_OBJ_TRACE((__obj));                     \
+	__FIID_OBJ_SET_ERRNO((__obj));                 \
+        return (-1);                                   \
+      }                                                \
+} while (0)
+
+#define FIID_OBJ_TEMPLATE_CLEANUP(__ptr, __obj)        \
+do {                                                   \
+    if (!(__ptr = fiid_obj_template((__obj))))         \
+      {                                                \
+        __FIID_OBJ_SYSLOG((__obj));                    \
+        __FIID_OBJ_TRACE((__obj));                     \
+	__FIID_OBJ_SET_ERRNO((__obj));                 \
+        goto cleanup;                                  \
+      }                                                \
+} while (0)
+
 #define FIID_OBJ_TEMPLATE_COMPARE(__obj, __tmpl)                     \
 do {                                                                 \
     int __ret;                                                       \

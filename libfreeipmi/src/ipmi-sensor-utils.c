@@ -107,16 +107,14 @@ ipmi_sensor_get_decode_params (uint8_t *sensor_record,
   
   FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"m_ls", &m_ls);
   FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"m_ms", &m_ms);
-  if (bits_merge (m_ls, 8, 10, m_ms, &val) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(bits_merge (m_ls, 8, 10, m_ms, &val) < 0));
   *m = (short) val;
   if (*m & 0x200)
     *m |= 0xFE00;
   
   FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"b_ls", &b_ls);
   FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"b_ms", &b_ms);
-  if (bits_merge (b_ls, 8, 10, b_ms, &val) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(bits_merge (b_ls, 8, 10, b_ms, &val) < 0));
   *b = (short) val;
   if (*b & 0x200)
     *b |= 0xFE00;

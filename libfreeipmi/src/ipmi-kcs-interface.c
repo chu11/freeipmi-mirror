@@ -104,8 +104,7 @@ ipmi_kcs_ctx_create(void)
   ctx->mode = IPMI_KCS_MODE_DEFAULT;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
   
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return ctx;
@@ -455,18 +454,18 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   int32_t count = 0;
 
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    goto cleanup;
-  
+    return (-1); 
+ 
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
-      goto cleanup;
+      return (-1); 
     }
   
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
-      goto cleanup;
+      return (-1); 
     }
 
   if (ctx->mode == IPMI_KCS_MODE_BLOCKING)

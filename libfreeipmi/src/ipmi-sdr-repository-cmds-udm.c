@@ -160,8 +160,7 @@ ipmi_cmd_get_sensor_record_header2 (ipmi_device_t *dev,
 
   FIID_OBJ_FIELD_LEN_BYTES_CLEANUP (len, obj_cmd_rs, (uint8_t *)"record_data");
   
-  if (!(buf = (uint8_t *)malloc(len)))
-    goto cleanup;
+  ERR_CLEANUP ((buf = (uint8_t *)malloc(len)));
 
   FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs, (uint8_t *)"record_data", buf,	len);
 
@@ -320,8 +319,7 @@ ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
       memcpy (record_data + offset_into_record, chunk_data, bytes_read);
     }
   
-  if (*sensor_record_len < record_length)
-    goto cleanup;
+  ERR_CLEANUP (!(*sensor_record_len < record_length));
 
   memcpy(sensor_record, record_data, record_length);
   *sensor_record_len = record_length;

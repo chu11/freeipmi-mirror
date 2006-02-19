@@ -183,7 +183,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
   if (!fiid_obj_valid(obj))
     {
       errno = EINVAL;
-      goto cleanup;
+      return (-1);
     }
   
   ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));
@@ -297,7 +297,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   if (!(pkt && tmpl_msg_hdr && tmpl_cmd))
     {
       errno = EINVAL;
-      goto cleanup;
+      return (-1);
     }
 
   ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));

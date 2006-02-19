@@ -19,6 +19,7 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
 int 
@@ -37,24 +38,20 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
 
   FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
-  if (ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0)
-    return (-1);
+  ERR_CLEANUP (!(ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0));
   
-  if (ipmi_comp_test (obj_data_rs) != 1)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_comp_test (obj_data_rs) != 1));
  
   FIID_OBJ_LEN_BYTES_CLEANUP (len, obj_data_rs); 
       
   if (!len)
     goto cleanup;
 
-  if (!(buf = (uint8_t *)malloc(len)))
-    goto cleanup;
+  ERR_CLEANUP ((buf = (uint8_t *)malloc(len)));
 
   FIID_OBJ_GET_ALL_CLEANUP (obj_data_rs, buf, len);
 
-  if (fwrite (buf, len, 1, fp) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!(fwrite (buf, len, 1, fp) < 0));
 
   return (0);
 
@@ -90,21 +87,19 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
 
       sensor_record_len = 1024;
-      if (ipmi_cmd_get_sdr2 (dev, 
-			     next_record_id, 
-			     obj_data_rs, 
-			     sensor_record_buf,
-			     &sensor_record_len) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
+					next_record_id, 
+					obj_data_rs, 
+					sensor_record_buf,
+					&sensor_record_len) < 0));
       
       FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"next_record_id", &val);
       next_record_id = (uint16_t) val;
       
-      if (fwrite (sensor_record_buf,
-		  sensor_record_len,
-		  1, 
-		  fp) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(fwrite (sensor_record_buf,
+			     sensor_record_len,
+			     1, 
+			     fp) < 0));
     }
   
   rv = 0;
@@ -175,8 +170,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
                                                         sdr_repository_cache->fd, 
                                                         0);
   
-  if (sdr_repository_cache->cache_start <= 0)
-    goto cleanup;
+  ERR_CLEANUP (!(sdr_repository_cache->cache_start <= 0));
   
   FIID_OBJ_CREATE_CLEANUP(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 

@@ -54,7 +54,6 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
 #endif /* IPMI_SYSLOG */
   uint64_t comp_code;
   int32_t len;
-  int8_t rv;
 
   if (!fiid_obj_valid(obj_cmd))
     {
@@ -66,13 +65,7 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
 #endif /* IPMI_SYSLOG */
 
-  FIID_OBJ_FIELD_LOOKUP_RV (rv, obj_cmd, (uint8_t *)"comp_code");
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"comp_code");
 

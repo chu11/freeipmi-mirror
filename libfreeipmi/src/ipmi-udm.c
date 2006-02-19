@@ -141,8 +141,7 @@ ipmi_open_outofband (ipmi_device_t *dev,
   FIID_OBJ_CREATE_CLEANUP (dev->io.outofband.rs.obj_lan_msg_trlr, *(dev->io.outofband.rs.tmpl_lan_msg_trlr_ptr));
   
   /* Open client (local) UDP socket */
-  if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
-    goto cleanup;
+  ERR_CLEANUP (!((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1));
 
   /* Note that ipmi_lan_open_session itself calls ipmi_lan_cmd many
      times internally, at this point everything must be set to go
@@ -221,20 +220,16 @@ ipmi_open_inband (ipmi_device_t *dev,
 	  goto cleanup;
 	}
 
-      if (!(dev->io.inband.kcs_ctx = ipmi_kcs_ctx_create()))
-	goto cleanup;
+      ERR_CLEANUP ((dev->io.inband.kcs_ctx = ipmi_kcs_ctx_create()));
       
-      if (ipmi_kcs_ctx_set_bmc_iobase_addr(dev->io.inband.kcs_ctx, 
-                                           dev->io.inband.locate_info.base_addr.bmc_iobase_addr) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_kcs_ctx_set_bmc_iobase_addr(dev->io.inband.kcs_ctx, 
+						      dev->io.inband.locate_info.base_addr.bmc_iobase_addr) < 0));
 
-      if (ipmi_kcs_ctx_set_register_space(dev->io.inband.kcs_ctx, 
-                                          dev->io.inband.locate_info.reg_space) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_kcs_ctx_set_register_space(dev->io.inband.kcs_ctx, 
+						     dev->io.inband.locate_info.reg_space) < 0));
 
-      if (ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
-                                         IPMI_POLL_INTERVAL_USECS) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
+						    IPMI_POLL_INTERVAL_USECS) < 0));
 
       if (dev->mode == IPMI_MODE_DEFAULT)
         temp_mode = IPMI_KCS_MODE_BLOCKING;
@@ -243,11 +238,9 @@ ipmi_open_inband (ipmi_device_t *dev,
       else
         temp_mode = IPMI_KCS_MODE_DEFAULT;
       
-      if (ipmi_kcs_ctx_set_mode(dev->io.inband.kcs_ctx, temp_mode) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_kcs_ctx_set_mode(dev->io.inband.kcs_ctx, temp_mode) < 0));
 
-      if (ipmi_kcs_ctx_io_init(dev->io.inband.kcs_ctx) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_kcs_ctx_io_init(dev->io.inband.kcs_ctx) < 0));
 
       break;
     case IPMI_DEVICE_SMIC:
@@ -288,16 +281,13 @@ ipmi_open_inband (ipmi_device_t *dev,
       dev->type = driver_type;
       dev->mode = mode;
 
-      if (!(dev->io.inband.ssif_ctx = ipmi_ssif_ctx_create()))
-	goto cleanup;
+      ERR_CLEANUP ((dev->io.inband.ssif_ctx = ipmi_ssif_ctx_create()));
       
-      if (ipmi_ssif_ctx_set_i2c_device(dev->io.inband.ssif_ctx, 
-				       dev->io.inband.driver_device) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_ssif_ctx_set_i2c_device(dev->io.inband.ssif_ctx, 
+						  dev->io.inband.driver_device) < 0));
  
-      if (ipmi_ssif_ctx_set_ipmb_addr(dev->io.inband.ssif_ctx, 
-				      dev->io.inband.driver_address) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_ssif_ctx_set_ipmb_addr(dev->io.inband.ssif_ctx, 
+						 dev->io.inband.driver_address) < 0));
 
       if (dev->mode == IPMI_MODE_DEFAULT)
         temp_mode = IPMI_SSIF_MODE_BLOCKING;
@@ -306,12 +296,9 @@ ipmi_open_inband (ipmi_device_t *dev,
       else
         temp_mode = IPMI_SSIF_MODE_DEFAULT;
       
-      if (ipmi_ssif_ctx_set_mode(dev->io.inband.ssif_ctx, 
-                                temp_mode) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_ssif_ctx_set_mode(dev->io.inband.ssif_ctx, temp_mode) < 0));
 
-      if (ipmi_ssif_ctx_io_init(dev->io.inband.ssif_ctx) < 0)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_ssif_ctx_io_init(dev->io.inband.ssif_ctx) < 0));
 
       break;
     default:

@@ -101,12 +101,12 @@ _ipmi_max_lan_pkt_size (uint8_t authentication_type,
          && tmpl_lan_msg
          && fiid_obj_valid(obj_cmd));
 
-  if ((len = _ipmi_lan_pkt_min_size(authentication_type, tmpl_lan_msg, obj_cmd)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((len = _ipmi_lan_pkt_min_size(authentication_type, 
+					       tmpl_lan_msg, 
+					       obj_cmd)) < 0));
   msg_len += len;
   
-  if (!(tmpl = fiid_obj_template(obj_cmd)))
-    goto cleanup;
+  FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd);
   FIID_TEMPLATE_LEN_BYTES_CLEANUP(len, tmpl);
   msg_len += len;
   
@@ -372,8 +372,7 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     
     FIID_OBJ_SET_ALL_CLEANUP2 (obj_cmd_rq, buf_rq + 1, buf_rq_len - 1);
 
-    if ((retval = ipmi_lan_cmd_raw_send (dev, obj_cmd_rq)) < 0)
-      goto cleanup2;
+    ERR_CLEANUP2 (!((retval = ipmi_lan_cmd_raw_send (dev, obj_cmd_rq)) < 0));
 
     err_flag++;
   cleanup2:
@@ -427,14 +426,12 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
     pkt = alloca (pkt_max_size);
     ERR (pkt);
     memset (pkt, 0, pkt_max_size);
-    if ((bytes_received = ipmi_lan_recvfrom (dev->io.outofband.local_sockfd, 
-                                             pkt, 
-                                             pkt_max_size, 
-                                             0, 
-                                             (struct sockaddr *) &from, 
-                                             &fromlen)) < 0)
-      goto cleanup3;
-
+    ERR_CLEANUP3 (!((bytes_received = ipmi_lan_recvfrom (dev->io.outofband.local_sockfd, 
+							 pkt, 
+							 pkt_max_size, 
+							 0, 
+							 (struct sockaddr *) &from, 
+							 &fromlen)) < 0));
     ERR (bytes_received >= pkt_hdrs_size);
     
     obj_cmd_rs_len = (bytes_received - pkt_hdrs_size);
@@ -445,28 +442,25 @@ ipmi_lan_cmd_raw2 (ipmi_device_t *dev,
 	goto cleanup3;
       }
 
-    if (!(tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), 
-                                                (uint8_t *)"COMMAND_RS_DATA",
-                                                FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)))
-      goto cleanup3;
+    ERR_CLEANUP3 ((tmpl_var_cmd_rs = fiid_template_make ((obj_cmd_rs_len * 8), 
+							 (uint8_t *)"COMMAND_RS_DATA",
+							 FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED)));
 
     FIID_OBJ_CREATE_CLEANUP3(obj_cmd_rs, tmpl_var_cmd_rs);
 
-    if (unassemble_ipmi_lan_pkt(pkt,
-                                bytes_received,
-                                dev->io.outofband.rs.obj_rmcp_hdr,
-                                dev->io.outofband.rs.obj_lan_session_hdr,
-                                dev->io.outofband.rs.obj_lan_msg_hdr,
-                                obj_cmd_rs,
-                                dev->io.outofband.rs.obj_lan_msg_trlr) < 0)
-      goto cleanup3;
+    ERR_CLEANUP3 (!(unassemble_ipmi_lan_pkt(pkt,
+					    bytes_received,
+					    dev->io.outofband.rs.obj_rmcp_hdr,
+					    dev->io.outofband.rs.obj_lan_session_hdr,
+					    dev->io.outofband.rs.obj_lan_msg_hdr,
+					    obj_cmd_rs,
+					    dev->io.outofband.rs.obj_lan_msg_trlr) < 0));
 
-    if (ipmi_lan_check_session_authcode (pkt, 
-                                         bytes_received, 
-                                         dev->io.outofband.authentication_type,
-                                         dev->io.outofband.password,
-                                         IPMI_MAX_AUTHENTICATION_CODE_LENGTH) != 1)
-      goto cleanup3;
+    ERR_CLEANUP3 (!(ipmi_lan_check_session_authcode (pkt, 
+						     bytes_received, 
+						     dev->io.outofband.authentication_type,
+						     dev->io.outofband.password,
+						     IPMI_MAX_AUTHENTICATION_CODE_LENGTH) != 1));
 
     FIID_OBJ_GET_ALL_CLEANUP3 (obj_cmd_rs, buf_rs + 1, buf_rs_len_in - 1);
 

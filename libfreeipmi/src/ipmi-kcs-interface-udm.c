@@ -69,8 +69,7 @@ ipmi_kcs_cmd2 (ipmi_device_t *dev,
     int8_t rv = -1;
 
     FIID_TEMPLATE_LEN_BYTES_CLEANUP(hdr_len, *(dev->io.inband.rs.tmpl_hdr_ptr));
-    if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
-      goto cleanup;
+    FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
     FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
     pkt_len = hdr_len + cmd_len;
 

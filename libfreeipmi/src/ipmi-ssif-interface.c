@@ -118,15 +118,13 @@ ipmi_ssif_ctx_create(void)
       goto cleanup;
     }
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
-  if (!(ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
-    goto cleanup;
+  ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
   ctx->ipmb_addr = IPMI_DEFAULT_IPMB_ADDRESS;
   ctx->mode = IPMI_SSIF_MODE_DEFAULT;
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
 
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return ctx;
@@ -320,18 +318,18 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   int32_t count;
 
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
-    goto cleanup;
+    return (-1);
 
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      goto cleanup;
+      return (-1);
     }
 
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
-      goto cleanup;
+      return (-1);
     }
 
   if (ctx->mode == IPMI_SSIF_MODE_BLOCKING)

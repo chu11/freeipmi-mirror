@@ -77,8 +77,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     int8_t rv = -1;
 
     FIID_TEMPLATE_LEN_BYTES_CLEANUP(hdr_len, *(dev->io.inband.rs.tmpl_hdr_ptr));
-    if (!(tmpl = fiid_obj_template(obj_cmd_rs)))
-      goto cleanup;
+    FIID_OBJ_TEMPLATE_CLEANUP(tmpl, obj_cmd_rs);
     FIID_TEMPLATE_LEN_BYTES_CLEANUP(cmd_len, tmpl);
     pkt_len = hdr_len + cmd_len;
 
@@ -89,23 +88,6 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 
     ERR_CLEANUP (!((read_len = ipmi_ssif_read (dev->io.inband.ssif_ctx, (char *)pkt, bytes_read)) < 0));
 
-    if (read_len != pkt_len)
-      {
-#if 0
-        int i;
-        fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
-        fprintf (stderr,
-                 "received packet size: %d\n"
-                 "expected packet size: %d\n",
-                 (int)bytes_read,
-                 pkt_len);
-        fprintf (stderr, "packet data:\n");
-        for (i = 0; i < bytes_read; i++)
-          fprintf (stderr, "%02X ", pkt[i]);
-        fprintf (stderr, "\n");
-#endif
-        goto cleanup;
-      }
     ERR_CLEANUP (!(unassemble_ipmi_kcs_pkt (pkt,
 					    read_len,
 					    dev->io.inband.rs.obj_hdr,

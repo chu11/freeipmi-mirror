@@ -524,12 +524,6 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
       goto cleanup;
-
-      ipmi_strerror_cmd_r (obj_cmd_rs, 
-			   dev->errmsg, 
-			   IPMI_ERR_STR_MAX_LEN);
-
-      goto cleanup;
     }
   
   FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"sel_version_major", &val);
