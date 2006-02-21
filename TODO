@@ -31,6 +31,7 @@ libfreeipmi:
     - pef config
   * re-architect ipmi-error.c stuff to handle different commands with same values.
   * sensor-event-messages: get_28_event_data3_messages
+  * fix sdr cache-api to be good.
   * cleanup
     - lan-cmds 
        - missing commands
@@ -68,6 +69,13 @@ libfreeipmi:
   * "rq", "cmd", "comp_code", "rs", ????
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
+  * to fix the various APIs
+    - step one, make event messages generic
+    - move "sensor-state" functions into convenience functions
+      only for ipmi-sensors
+  * to fix sdr cache api
+    - first need kcs/ssif inband cmd/raw
+    - then can get rid of *dev
 
 fish:
 -----

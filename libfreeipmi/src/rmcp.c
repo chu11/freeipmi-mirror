@@ -74,7 +74,7 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
 
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"version", RMCP_VER_1_0);
+  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"version", RMCP_VERSION_1_0);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
   FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.class", message_class);

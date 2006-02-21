@@ -33,12 +33,12 @@ int8_t ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev,
 int8_t ipmi_cmd_reserve_sdr_repository2 (ipmi_device_t *dev, 
                                          fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev,
-                          uint16_t record_id,
-                          fiid_obj_t obj_cmd_rs,
-                          uint8_t *sensor_record,
-                          uint32_t *sensor_record_len);
-
+int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
+			  uint16_t reservation_id, 
+			  uint16_t record_id, 
+			  uint8_t offset_into_record, 
+			  uint8_t bytes_to_read, 
+			  fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

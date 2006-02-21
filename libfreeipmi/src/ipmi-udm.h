@@ -22,10 +22,11 @@
 #ifndef _IPMI_UDM_H
 #define _IPMI_UDM_H
 
-/* XXX: need to remove */
-#define IPMI_INTERFACE_MAX_USERNAME_LEN     16
-#define IPMI_INTERFACE_CHALLENGE_STR_LEN    16
-#define IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN    16
+#if defined (FREEIPMI_BUILD)
+#include "ipmi-messaging-support-cmds.h"
+#else
+#include <freeipmi/ipmi-messaging-support-cmds.h>
+#endif
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3
@@ -62,14 +63,7 @@ struct ipmi_device
   {
     struct 
     {
-      unsigned long      poll_interval_usecs; /* obsolete entry */
-      int                disable_auto_probe;
-      uint16_t           driver_address; /* also known as sms_io_base/ipmb_addr */
-      char               *driver_device; /* also known as dev_name */
-      uint8_t            retry_count:4;
       ipmi_locate_info_t locate_info;
-      int                dev_fd; /* Used by FreeBSD /dev/io, SSIF /dev/i2c-0 */ 
-
       ipmi_kcs_ctx_t     kcs_ctx;
       ipmi_ssif_ctx_t    ssif_ctx;
 
@@ -93,13 +87,13 @@ struct ipmi_device
       unsigned int       remote_host_len;
       
       uint8_t           authentication_type;
-      uint8_t           challenge_string[IPMI_INTERFACE_CHALLENGE_STR_LEN];
+      uint8_t           challenge_string[IPMI_CHALLENGE_STRING_LENGTH];
       uint32_t          session_id;
       uint32_t          session_sequence_number;
       uint8_t           rq_seq;
       
-      uint8_t           username[IPMI_INTERFACE_MAX_USERNAME_LEN];
-      uint8_t           password[IPMI_INTERFACE_MAX_AUTHENTICATION_CODE_LEN];
+      uint8_t           username[IPMI_MAX_USER_NAME_LENGTH];
+      uint8_t           password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
       uint8_t           privilege_level;
       
       struct 

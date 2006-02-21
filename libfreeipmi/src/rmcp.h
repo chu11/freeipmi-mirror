@@ -27,17 +27,13 @@
 extern "C" {
 #endif
 
-#define IP_HDR_TTL_BMC_DEFAULT   0x40
-
-#define RMCP_VER_1_0             0x06 // RMCP Version 1.0
+#define RMCP_VERSION_1_0         0x06 // RMCP Version 1.0
 
 #define RMCP_AUX_BUS_SHUNT       0x26F
 #define RMCP_PRI_RMCP_PORT  RMCP_AUX_BUS_SHUNT
 
 #define RMCP_SECURE_AUX_BUS      0x298
 #define RMCP_SEC_RMCP_PORT  RMCP_SECURE_AUX_BUS 
-
-#define RMCP_RESERVED            0x00
 
 #define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK         0xFF
 
@@ -59,6 +55,8 @@ extern "C" {
 #define RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG 0x40
 
 #define RMCP_ASF_MESSAGE_TAG_MAX 0xFE
+
+#define IP_HDR_TTL_BMC_DEFAULT   0x40
 
 extern fiid_template_t tmpl_rmcp_hdr;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;

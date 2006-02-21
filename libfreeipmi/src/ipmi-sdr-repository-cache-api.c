@@ -85,11 +85,11 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
       FIID_OBJ_CLEAR_CLEANUP (obj_data_rs);
 
       sensor_record_len = 1024;
-      ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
-					next_record_id, 
-					obj_data_rs, 
-					sensor_record_buf,
-					&sensor_record_len) < 0));
+      ERR_CLEANUP (!(get_sdr_sensor_record (dev, 
+					    next_record_id, 
+					    obj_data_rs, 
+					    sensor_record_buf,
+					    &sensor_record_len) < 0));
       
       FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"next_record_id", &val);
       next_record_id = (uint16_t) val;

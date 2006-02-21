@@ -20,6 +20,7 @@
 */
 
 #include "freeipmi.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
 enum system_software_type
@@ -535,6 +536,116 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
 }
 
 int8_t 
+get_sdr_sensor_record (ipmi_device_t *dev, 
+		       uint16_t record_id, 
+		       fiid_obj_t obj_cmd_rs, 
+		       uint8_t *sensor_record,
+		       uint32_t *sensor_record_len)
+{
+  uint64_t val = 0;
+  
+  uint8_t record_length = 0;
+  uint16_t reservation_id = 0;
+  uint8_t offset_into_record = 0;
+  uint8_t bytes_to_read = 0; 
+  uint8_t chunk_data[16];
+  uint8_t *record_data = NULL;
+  int8_t rv = -1;
+
+  fiid_obj_t sensor_record_header = NULL;
+  fiid_obj_t local_obj_cmd_rs = NULL;
+  int32_t sensor_record_header_len;
+  uint8_t *sensor_record_header_buf = NULL;
+
+  if (!dev 
+      || !fiid_obj_valid(obj_cmd_rs)
+      || !sensor_record
+      || !sensor_record_len)
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sdr_rs);
+
+  FIID_OBJ_CREATE_CLEANUP(sensor_record_header, tmpl_sdr_sensor_record_header);
+    
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP (sensor_record_header_len, 
+				   tmpl_sdr_sensor_record_header);
+
+  ERR_CLEANUP ((sensor_record_header_buf = alloca (sensor_record_header_len)));
+  memset (sensor_record_header_buf, 0, sensor_record_header_len);
+
+  ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
+				    0,
+				    record_id, 
+				    0, 
+				    sensor_record_header_len, 
+				    obj_cmd_rs)));
+  
+  FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs,
+			     (uint8_t *)"record_data",
+			     sensor_record_header_buf,
+			     sensor_record_header_len);
+  
+  FIID_OBJ_SET_ALL_CLEANUP (sensor_record_header, 
+			    sensor_record_header_buf, 
+			    sensor_record_header_len);
+
+  FIID_OBJ_GET_CLEANUP (sensor_record_header, (uint8_t *)"record_length", &val);
+  record_length = val;
+  record_length += sensor_record_header_len;
+  
+  /* achu: where does the 16 come from? */
+  if (record_length > 16)
+    {
+      FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
+      
+      ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0));
+      
+      FIID_OBJ_GET_CLEANUP (local_obj_cmd_rs, (uint8_t *)"reservation_id", &val);
+      reservation_id = (uint16_t) val;
+    }
+  
+  ERR_CLEANUP ((record_data = alloca (record_length)));
+  memset (record_data, 0, record_length);
+  
+  for (offset_into_record = 0; offset_into_record < record_length; offset_into_record += 16)
+    {
+      bytes_to_read = 16;
+      if ((offset_into_record + bytes_to_read) > record_length)
+	bytes_to_read = record_length - offset_into_record;
+      
+      FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
+      
+      ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
+					reservation_id, 
+					record_id, 
+					offset_into_record, 
+					bytes_to_read, 
+					obj_cmd_rs) < 0));
+      
+      FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs,
+				 (uint8_t *)"record_data",
+				 chunk_data,
+				 16);
+
+      memcpy (record_data + offset_into_record, chunk_data, bytes_to_read);
+    }
+  
+  ERR_CLEANUP (!(*sensor_record_len < record_length));
+  
+  memcpy(sensor_record, record_data, record_length);
+  *sensor_record_len = record_length;
+  
+  rv = 0;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(sensor_record_header);
+  FIID_OBJ_DESTROY_NO_RETURN(local_obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
 get_sdr_record (ipmi_device_t *dev, 
 		uint16_t record_id, 
 		uint16_t *next_record_id, 
@@ -559,11 +670,11 @@ get_sdr_record (ipmi_device_t *dev,
   FIID_OBJ_CREATE_CLEANUP (obj_sdr_record, tmpl_sdr_sensor_record_header);
 
   sensor_record_len = 1024;
-  if (ipmi_cmd_get_sdr2 (dev, 
-			 record_id, 
-			 obj_cmd_rs, 
-			 sensor_record,
-			 &sensor_record_len) < 0)
+  if (get_sdr_sensor_record (dev, 
+			     record_id, 
+			     obj_cmd_rs, 
+			     sensor_record,
+			     &sensor_record_len) < 0)
     {
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
@@ -1064,3 +1175,4 @@ get_sensor_reading (ipmi_device_t *dev,
   FIID_OBJ_DESTROY_NO_RETURN(l_obj_cmd_rs);
   return (rv);
 }
+

@@ -1,3 +1,20 @@
+2006-02-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-repository-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-repository-cmds-udm.c
+	(ipmi_cmd_get_sdr_chunk2): Renamed ipmi_cmd_get_sdr2.  Adjusted to
+	fit UDM model.
+
+	* libfreeipmi/src/ipmi-sdr-repository-cmds-udm.c
+	(ipmi_cmd_get_sensor_record_header2): Removed function.
+
+	* libfreeipmi/src/ipmi-sdr-repository-cmds-udm.c
+	(ipmi_cmd_get_sdr2): Renamed to get_sdr_sensor_record and put
+	into ipmi-sensor-api.h and ipmi-sensor-api.c.  Adjusted based on
+	above changes.
+
+	* libfreeipmi/: Various minor code cleanup.
+
 2006-02-19  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Continued code cleanup.
