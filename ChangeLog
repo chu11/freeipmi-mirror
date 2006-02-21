@@ -1,3 +1,25 @@
+2006-02-21  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c: Fix string arrays and
+	definitions to match IPMI spec and make similar to the rest of
+	libfreeipmi.  Make abbreviations match standards.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_is_oem_reserved_sensor_type): Removed function.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c
+	(ipmi_sensor_classify, ipmi_get_sensor_group): Move to
+	ipmi-sensor-api.h and ipmi-sensor-api.c.  These functions do not
+	match against a part of the IPMI spec and are convenience
+	functions.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c: Renamed
+	ipmi_sensor_units_short to ipmi_sensor_units_abbreviated.
+
 2006-02-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repository-cmds-udm.h,

@@ -1176,3 +1176,32 @@ get_sensor_reading (ipmi_device_t *dev,
   return (rv);
 }
 
+int 
+ipmi_sensor_classify (uint8_t event_reading_type_code)
+{
+  if (event_reading_type_code == 0x01)
+    return IPMI_SENSOR_CLASS_THRESHOLD;
+  
+  if (event_reading_type_code >= 0x02 && event_reading_type_code <= 0x0C)
+    return IPMI_SENSOR_CLASS_GENERIC_DISCRETE;
+  
+  if (event_reading_type_code == 0x6F)
+    return IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE;
+  
+  if (event_reading_type_code >= 0x70 && event_reading_type_code <= 0x7F)
+    return IPMI_SENSOR_CLASS_OEM;
+  
+  return IPMI_SENSOR_CLASS_NOT_AVAILABLE;
+}
+
+const char *
+ipmi_get_sensor_group (int sensor_type)
+{
+  if (IPMI_SENSOR_TYPE_VALID(sensor_type))
+    return (ipmi_sensor_types[sensor_type]);
+  
+  if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
+    return ipmi_oem_sensor_type;
+
+  return NULL;
+}

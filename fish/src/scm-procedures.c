@@ -2313,7 +2313,7 @@ get_scm_sdr_full_record (sdr_full_record_t *record,
 				    gh_long2scm (record->sensor_unit));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("unit_short_string"), 
-				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+				    gh_str02scm (ipmi_sensor_units_abbreviated[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("unit_string"), 
 				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));
@@ -2387,7 +2387,7 @@ get_scm_sdr_compact_record (sdr_compact_record_t *record,
 				    gh_long2scm (record->sensor_unit));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("unit_short_string"), 
-				    gh_str02scm (ipmi_sensor_units_short[record->sensor_unit]));
+				    gh_str02scm (ipmi_sensor_units_abbreviated[record->sensor_unit]));
   scm_sdr_record = scm_assoc_set_x (scm_sdr_record, 
 				    gh_str02scm ("unit_string"), 
 				    gh_str02scm (ipmi_sensor_units[record->sensor_unit]));

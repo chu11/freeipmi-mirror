@@ -25,177 +25,162 @@
 extern "C" {
 #endif
 
-enum ipmi_sensor_type
-  {
-    IPMI_SENSOR_TYPE_UNKNOWN, 
-    IPMI_SENSOR_TYPE_TEMPERATURE, 
-    IPMI_SENSOR_TYPE_VOLTAGE, 
-    IPMI_SENSOR_TYPE_CURRENT, 
-    IPMI_SENSOR_TYPE_FAN, 
-    IPMI_SENSOR_TYPE_PLATFORM_CHASSIS_INTRUSION, 
-    IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION, 
-    IPMI_SENSOR_TYPE_PROCESSOR, 
-    IPMI_SENSOR_TYPE_POWER_SUPPLY, 
-    IPMI_SENSOR_TYPE_POWER_UNIT, 
-    IPMI_SENSOR_TYPE_COOLING_DEVICE, 
-    IPMI_SENSOR_TYPE_FRU_SENSOR, 
-    IPMI_SENSOR_TYPE_MEMORY, 
-    IPMI_SENSOR_TYPE_DRIVE_SLOT, 
-    IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE, 
-    IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE, 
-    IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED, 
-    IPMI_SENSOR_TYPE_WATCHDOG1, 
-    IPMI_SENSOR_TYPE_SYSTEM_EVENT, 
-    IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT, 
-    IPMI_SENSOR_TYPE_BUTTON, 
-    IPMI_SENSOR_TYPE_BOARD, 
-    IPMI_SENSOR_TYPE_MICROCONTROLLER, 
-    IPMI_SENSOR_TYPE_ADD_IN_CARD, 
-    IPMI_SENSOR_TYPE_CHASSIS, 
-    IPMI_SENSOR_TYPE_CHIP_SET, 
-    IPMI_SENSOR_TYPE_OTHER_FRU, 
-    IPMI_SENSOR_TYPE_CABLE_INTERCONNECT, 
-    IPMI_SENSOR_TYPE_TERMINATOR, 
-    IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED, 
-    IPMI_SENSOR_TYPE_BOOT_ERROR, 
-    IPMI_SENSOR_TYPE_OS_BOOT, 
-    IPMI_SENSOR_TYPE_OS_CRITICAL_STOP, 
-    IPMI_SENSOR_TYPE_SLOT_CONNECTOR, 
-    IPMI_SENSOR_TYPE_ACPI_POWER_STATE, 
-    IPMI_SENSOR_TYPE_WATCHDOG2, 
-    IPMI_SENSOR_TYPE_PLATFORM_ALERT, 
-    IPMI_SENSOR_TYPE_ENTITY_PRESENCE, 
-    IPMI_SENSOR_TYPE_MONITOR_ASIC, 
-    IPMI_SENSOR_TYPE_LAN, 
-    IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH, 
-    IPMI_SENSOR_TYPE_BATTERY, 
-    IPMI_SENSOR_TYPE_SESSION_AUDIT, 
-    IPMI_SENSOR_TYPE_VERSION_CHANGE, 
-    IPMI_SENSOR_TYPE_FRU_STATE
-  };
-  
-enum ipmi_sensor_unit_type_code
-  {
-    IPMI_SENSOR_UNIT_UNSPECIFIED, 
-    IPMI_SENSOR_UNIT_DEGREES_C, 
-    IPMI_SENSOR_UNIT_DEGREES_F, 
-    IPMI_SENSOR_UNIT_DEGREES_K, 
-    IPMI_SENSOR_UNIT_VOLTS, 
-    IPMI_SENSOR_UNIT_AMPS, 
-    IPMI_SENSOR_UNIT_WATTS, 
-    IPMI_SENSOR_UNIT_JOULES, 
-    IPMI_SENSOR_UNIT_COULOMBS, 
-    IPMI_SENSOR_UNIT_VA, 
-    IPMI_SENSOR_UNIT_NITS, 
-    IPMI_SENSOR_UNIT_LUMEN, 
-    IPMI_SENSOR_UNIT_LUX, 
-    IPMI_SENSOR_UNIT_CANDELA, 
-    IPMI_SENSOR_UNIT_KPA, 
-    IPMI_SENSOR_UNIT_PSI, 
-    IPMI_SENSOR_UNIT_NEWTON, 
-    IPMI_SENSOR_UNIT_CFM, 
-    IPMI_SENSOR_UNIT_RPM, 
-    IPMI_SENSOR_UNIT_HZ, 
-    IPMI_SENSOR_UNIT_MICROSECOND, 
-    IPMI_SENSOR_UNIT_MILLISECOND, 
-    IPMI_SENSOR_UNIT_SECOND, 
-    IPMI_SENSOR_UNIT_MINUTE, 
-    IPMI_SENSOR_UNIT_HOUR, 
-    IPMI_SENSOR_UNIT_DAY, 
-    IPMI_SENSOR_UNIT_WEEK, 
-    IPMI_SENSOR_UNIT_MIL, 
-    IPMI_SENSOR_UNIT_INCHES, 
-    IPMI_SENSOR_UNIT_FEET, 
-    IPMI_SENSOR_UNIT_CU_IN, 
-    IPMI_SENSOR_UNIT_CU_FEET, 
-    IPMI_SENSOR_UNIT_MM, 
-    IPMI_SENSOR_UNIT_CM, 
-    IPMI_SENSOR_UNIT_M, 
-    IPMI_SENSOR_UNIT_CU_CM, 
-    IPMI_SENSOR_UNIT_CU_M, 
-    IPMI_SENSOR_UNIT_LITERS, 
-    IPMI_SENSOR_UNIT_FLUID_OUNCE, 
-    IPMI_SENSOR_UNIT_RADIANS, 
-    IPMI_SENSOR_UNIT_STERADIANS, 
-    IPMI_SENSOR_UNIT_REVOLUTIONS, 
-    IPMI_SENSOR_UNIT_CYCLES, 
-    IPMI_SENSOR_UNIT_GRAVITIES, 
-    IPMI_SENSOR_UNIT_OUNCE, 
-    IPMI_SENSOR_UNIT_POUND, 
-    IPMI_SENSOR_UNIT_FT_LB, 
-    IPMI_SENSOR_UNIT_OZ_IN, 
-    IPMI_SENSOR_UNIT_GAUSS, 
-    IPMI_SENSOR_UNIT_GILBERTS, 
-    IPMI_SENSOR_UNIT_HENRY, 
-    IPMI_SENSOR_UNIT_MILLIHENRY, 
-    IPMI_SENSOR_UNIT_FARAD, 
-    IPMI_SENSOR_UNIT_MICROFARAD, 
-    IPMI_SENSOR_UNIT_OHMS, 
-    IPMI_SENSOR_UNIT_SIEMENS, 
-    IPMI_SENSOR_UNIT_MOLE, 
-    IPMI_SENSOR_UNIT_BECQUEREL, 
-    IPMI_SENSOR_UNIT_PPM, 
-    IPMI_SENSOR_UNIT_RESERVED, 
-    IPMI_SENSOR_UNIT_DECIBELS, 
-    IPMI_SENSOR_UNIT_DBA, 
-    IPMI_SENSOR_UNIT_DBC, 
-    IPMI_SENSOR_UNIT_GRAY, 
-    IPMI_SENSOR_UNIT_SIEVERT, 
-    IPMI_SENSOR_UNIT_COLOR_TEMP_DEG_K, 
-    IPMI_SENSOR_UNIT_BIT, 
-    IPMI_SENSOR_UNIT_KILOBIT, 
-    IPMI_SENSOR_UNIT_MEGABIT, 
-    IPMI_SENSOR_UNIT_GIGABIT, 
-    IPMI_SENSOR_UNIT_BYTE, 
-    IPMI_SENSOR_UNIT_KILOBYTE, 
-    IPMI_SENSOR_UNIT_MEGABYTE, 
-    IPMI_SENSOR_UNIT_GIGABYTE, 
-    IPMI_SENSOR_UNIT_WORD, 
-    IPMI_SENSOR_UNIT_DWORD, 
-    IPMI_SENSOR_UNIT_LINE, 
-    IPMI_SENSOR_UNIT_HIT, 
-    IPMI_SENSOR_UNIT_MISS, 
-    IPMI_SENSOR_UNIT_RETRY, 
-    IPMI_SENSOR_UNIT_RESET, 
-    IPMI_SENSOR_UNIT_OVERRUN_OVERFLOW, 
-    IPMI_SENSOR_UNIT_UNDERRUN, 
-    IPMI_SENSOR_UNIT_COLLISION, 
-    IPMI_SENSOR_UNIT_PACKETS, 
-    IPMI_SENSOR_UNIT_MESSAGES, 
-    IPMI_SENSOR_UNIT_CHARACTERS, 
-    IPMI_SENSOR_UNIT_ERROR, 
-    IPMI_SENSOR_UNIT_CORRECTABLE_ERROR, 
-    IPMI_SENSOR_UNIT_UNCORRECTABLE_ERROR
-  };
+#define IPMI_SENSOR_TYPE_RESERVED                   0x00 
+#define IPMI_SENSOR_TYPE_TEMPERATURE                   0x01 
+#define IPMI_SENSOR_TYPE_VOLTAGE                       0x02 
+#define IPMI_SENSOR_TYPE_CURRENT                       0x03
+#define IPMI_SENSOR_TYPE_FAN                           0x04
+#define IPMI_SENSOR_TYPE_PLATFORM_CHASSIS_INTRUSION    0x05
+#define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION   0x06
+#define IPMI_SENSOR_TYPE_PROCESSOR                     0x07
+#define IPMI_SENSOR_TYPE_POWER_SUPPLY                  0x08
+#define IPMI_SENSOR_TYPE_POWER_UNIT                    0x09
+#define IPMI_SENSOR_TYPE_COOLING_DEVICE                0x0A
+#define IPMI_SENSOR_TYPE_FRU_SENSOR                    0x0B
+#define IPMI_SENSOR_TYPE_MEMORY                        0x0C
+#define IPMI_SENSOR_TYPE_DRIVE_SLOT                    0x0D
+#define IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE            0x0E
+#define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE               0x0F
+#define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED        0x10
+#define IPMI_SENSOR_TYPE_WATCHDOG1                     0x11
+#define IPMI_SENSOR_TYPE_SYSTEM_EVENT                  0x12
+#define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT            0x13
+#define IPMI_SENSOR_TYPE_BUTTON                        0x14
+#define IPMI_SENSOR_TYPE_BOARD                         0x15
+#define IPMI_SENSOR_TYPE_MICROCONTROLLER               0x16
+#define IPMI_SENSOR_TYPE_ADD_IN_CARD                   0x17
+#define IPMI_SENSOR_TYPE_CHASSIS                       0x18
+#define IPMI_SENSOR_TYPE_CHIP_SET                      0x19
+#define IPMI_SENSOR_TYPE_OTHER_FRU                     0x1A
+#define IPMI_SENSOR_TYPE_CABLE_INTERCONNECT            0x1B
+#define IPMI_SENSOR_TYPE_TERMINATOR                    0x1C
+#define IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED         0x1D
+#define IPMI_SENSOR_TYPE_BOOT_ERROR                    0x1E
+#define IPMI_SENSOR_TYPE_OS_BOOT                       0x1F
+#define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP              0x20
+#define IPMI_SENSOR_TYPE_SLOT_CONNECTOR                0x21
+#define IPMI_SENSOR_TYPE_ACPI_POWER_STATE              0x22
+#define IPMI_SENSOR_TYPE_WATCHDOG2                     0x23
+#define IPMI_SENSOR_TYPE_PLATFORM_ALERT                0x24
+#define IPMI_SENSOR_TYPE_ENTITY_PRESENCE               0x25
+#define IPMI_SENSOR_TYPE_MONITOR_ASIC                  0x26
+#define IPMI_SENSOR_TYPE_LAN                           0x27
+#define IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH   0x28
+#define IPMI_SENSOR_TYPE_BATTERY                       0x29
+#define IPMI_SENSOR_TYPE_SESSION_AUDIT                 0x2A
+#define IPMI_SENSOR_TYPE_VERSION_CHANGE                0x2B
+#define IPMI_SENSOR_TYPE_FRU_STATE                     0x2C
 
-enum ipmi_sensor_category
-  {
-    IPMI_SENSOR_CATEGORY_UNSPECIFIED, 
-    IPMI_SENSOR_CATEGORY_THRESHOLD, 
-    IPMI_SENSOR_CATEGORY_GENERIC, 
-    IPMI_SENSOR_CATEGORY_SENSOR_SPECIFIC, 
-    IPMI_SENSOR_CATEGORY_OEM
-  };
+#define IPMI_SENSOR_TYPE_VALID(__sensor_type) \
+        (((__sensor_type) >= IPMI_SENSOR_TYPE_RESERVED \
+          && (__sensor_type) <= IPMI_SENSOR_TYPE_FRU_STATE) ? 1 : 0)
 
-enum ipmi_sensor_class
-  {
-    IPMI_SENSOR_CLASS_NOT_AVAILABLE, 
-    IPMI_SENSOR_CLASS_THRESHOLD, 
-    IPMI_SENSOR_CLASS_GENERIC_DISCRETE, 
-    IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE, 
-    IPMI_SENSOR_CLASS_OEM
-  };
+#define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type) \
+        (((__sensor_type) >= 0xC0 \
+          && (__sensor_type) <= 0xFF) ? 1 : 0)
+
+#define IPMI_SENSOR_UNIT_UNSPECIFIED             0
+#define IPMI_SENSOR_UNIT_DEGREES_C               1
+#define IPMI_SENSOR_UNIT_DEGREES_F               2
+#define IPMI_SENSOR_UNIT_DEGREES_K               3
+#define IPMI_SENSOR_UNIT_VOLTS                   4
+#define IPMI_SENSOR_UNIT_AMPS                    5
+#define IPMI_SENSOR_UNIT_WATTS                   6
+#define IPMI_SENSOR_UNIT_JOULES                  7
+#define IPMI_SENSOR_UNIT_COULOMBS                8
+#define IPMI_SENSOR_UNIT_VA                      9
+#define IPMI_SENSOR_UNIT_NITS                   10
+#define IPMI_SENSOR_UNIT_LUMEN                  11
+#define IPMI_SENSOR_UNIT_LUX                    12
+#define IPMI_SENSOR_UNIT_CANDELA                13
+#define IPMI_SENSOR_UNIT_KPA                    14
+#define IPMI_SENSOR_UNIT_PSI                    15
+#define IPMI_SENSOR_UNIT_NEWTON                 16
+#define IPMI_SENSOR_UNIT_CFM                    17
+#define IPMI_SENSOR_UNIT_RPM                    18
+#define IPMI_SENSOR_UNIT_HZ                     19
+#define IPMI_SENSOR_UNIT_MICROSECOND            20
+#define IPMI_SENSOR_UNIT_MILLISECOND            21  
+#define IPMI_SENSOR_UNIT_SECOND                 22
+#define IPMI_SENSOR_UNIT_MINUTE                 23
+#define IPMI_SENSOR_UNIT_HOUR                   24
+#define IPMI_SENSOR_UNIT_DAY                    25
+#define IPMI_SENSOR_UNIT_WEEK                   26
+#define IPMI_SENSOR_UNIT_MIL                    27
+#define IPMI_SENSOR_UNIT_INCHES                 28
+#define IPMI_SENSOR_UNIT_FEET                   29
+#define IPMI_SENSOR_UNIT_CU_IN                  30
+#define IPMI_SENSOR_UNIT_CU_FEET                31
+#define IPMI_SENSOR_UNIT_MM                     32
+#define IPMI_SENSOR_UNIT_CM                     33
+#define IPMI_SENSOR_UNIT_M                      34
+#define IPMI_SENSOR_UNIT_CU_CM                  35
+#define IPMI_SENSOR_UNIT_CU_M                   36
+#define IPMI_SENSOR_UNIT_LITERS                 37
+#define IPMI_SENSOR_UNIT_FLUID_OUNCE            38
+#define IPMI_SENSOR_UNIT_RADIANS                39 
+#define IPMI_SENSOR_UNIT_STERADIANS             40
+#define IPMI_SENSOR_UNIT_REVOLUTIONS            41
+#define IPMI_SENSOR_UNIT_CYCLES                 42
+#define IPMI_SENSOR_UNIT_GRAVITIES              43
+#define IPMI_SENSOR_UNIT_OUNCE                  44
+#define IPMI_SENSOR_UNIT_POUND                  45
+#define IPMI_SENSOR_UNIT_FT_LB                  46
+#define IPMI_SENSOR_UNIT_OZ_IN                  47
+#define IPMI_SENSOR_UNIT_GAUSS                  48
+#define IPMI_SENSOR_UNIT_GILBERTS               49
+#define IPMI_SENSOR_UNIT_HENRY                  50
+#define IPMI_SENSOR_UNIT_MILLIHENRY             51
+#define IPMI_SENSOR_UNIT_FARAD                  52
+#define IPMI_SENSOR_UNIT_MICROFARAD             53
+#define IPMI_SENSOR_UNIT_OHMS                   54
+#define IPMI_SENSOR_UNIT_SIEMENS                55
+#define IPMI_SENSOR_UNIT_MOLE                   56
+#define IPMI_SENSOR_UNIT_BECQUEREL              57
+#define IPMI_SENSOR_UNIT_PPM                    58
+#define IPMI_SENSOR_UNIT_RESERVED               59
+#define IPMI_SENSOR_UNIT_DECIBELS               60
+#define IPMI_SENSOR_UNIT_DBA                    61
+#define IPMI_SENSOR_UNIT_DBC                    62
+#define IPMI_SENSOR_UNIT_GRAY                   63
+#define IPMI_SENSOR_UNIT_SIEVERT                64
+#define IPMI_SENSOR_UNIT_COLOR_TEMP_DEG_K       65
+#define IPMI_SENSOR_UNIT_BIT                    66
+#define IPMI_SENSOR_UNIT_KILOBIT                67
+#define IPMI_SENSOR_UNIT_MEGABIT                68
+#define IPMI_SENSOR_UNIT_GIGABIT                69
+#define IPMI_SENSOR_UNIT_BYTE                   70
+#define IPMI_SENSOR_UNIT_KILOBYTE               71
+#define IPMI_SENSOR_UNIT_MEGABYTE               72
+#define IPMI_SENSOR_UNIT_GIGABYTE               73
+#define IPMI_SENSOR_UNIT_WORD                   74
+#define IPMI_SENSOR_UNIT_DWORD                  75
+#define IPMI_SENSOR_UNIT_QWORD                  76
+#define IPMI_SENSOR_UNIT_LINE                   77
+#define IPMI_SENSOR_UNIT_HIT                    78
+#define IPMI_SENSOR_UNIT_MISS                   79
+#define IPMI_SENSOR_UNIT_RETRY                  80
+#define IPMI_SENSOR_UNIT_RESET                  81
+#define IPMI_SENSOR_UNIT_OVERRUN_OVERFLOW       82
+#define IPMI_SENSOR_UNIT_UNDERRUN               83
+#define IPMI_SENSOR_UNIT_COLLISION              84
+#define IPMI_SENSOR_UNIT_PACKETS                85
+#define IPMI_SENSOR_UNIT_MESSAGES               86
+#define IPMI_SENSOR_UNIT_CHARACTERS             87
+#define IPMI_SENSOR_UNIT_ERROR                  88
+#define IPMI_SENSOR_UNIT_CORRECTABLE_ERROR      89
+#define IPMI_SENSOR_UNIT_UNCORRECTABLE_ERROR    90
+#define IPMI_SENSOR_UNIT_FATAL_ERROR            91
+#define IPMI_SENSOR_UNIT_GRAMS                  92
+
+#define IPMI_SENSOR_UNIT_VALID(__sensor_unit) \
+        (((__sensor_unit) >= IPMI_SENSOR_UNIT_UNSPECIFIED \
+          && (__sensor_unit) <= IPMI_SENSOR_UNIT_GRAMS) ? 1 : 0)
 
 extern const char *const ipmi_sensor_types[];
 extern const char *const ipmi_oem_sensor_type;
 extern const char *const ipmi_sensor_units[];
-extern const char *const ipmi_sensor_units_short[];
-
-int ipmi_sensor_classify (uint8_t event_reading_type_code);
-
-int ipmi_is_oem_reserved_sensor_type (int sensor_type);
-
-const char *ipmi_get_sensor_group (int sensor_type);
+extern const char *const ipmi_sensor_units_abbreviated[];
 
 #ifdef __cplusplus
 }

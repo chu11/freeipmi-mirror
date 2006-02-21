@@ -162,6 +162,15 @@ struct sensor_reading
 };
 typedef struct sensor_reading sensor_reading_t;
 
+enum ipmi_sensor_class
+  {
+    IPMI_SENSOR_CLASS_NOT_AVAILABLE, 
+    IPMI_SENSOR_CLASS_THRESHOLD, 
+    IPMI_SENSOR_CLASS_GENERIC_DISCRETE, 
+    IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE, 
+    IPMI_SENSOR_CLASS_OEM
+  };
+
 void get_sdr_full_record (uint8_t *sdr_record_data, 
 			  uint32_t sdr_record_data_len,
 			  sdr_full_record_t *sdr_full_record);
@@ -197,7 +206,13 @@ int8_t get_sdr_record (ipmi_device_t *dev,
 			 uint16_t record_id, 
 			 uint16_t *next_record_id, 
 			 sdr_record_t *sdr_record);
+
 int8_t get_sensor_reading (ipmi_device_t *dev, 
 			     sdr_record_t *sdr_record, 
 			     sensor_reading_t *sensor_reading);
+
+int ipmi_sensor_classify (uint8_t event_reading_type_code);
+
+const char *ipmi_get_sensor_group (int sensor_type);
+
 #endif

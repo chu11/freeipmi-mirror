@@ -76,6 +76,7 @@ libfreeipmi:
   * to fix sdr cache api
     - first need kcs/ssif inband cmd/raw
     - then can get rid of *dev
+  * split sensor-types into sensor-types-spec and sensor-units-spec
 
 fish:
 -----
