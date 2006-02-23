@@ -61,6 +61,8 @@
 	macros/definitions to ipmi-common.h.  Move WORDSIZE code to
 	ipmi-common.h.
 
+	* libfreeipmi/: Several typo/logic bug fixes.
+
 2006-02-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-types.h,
