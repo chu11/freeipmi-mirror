@@ -476,7 +476,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
   rv = indx;
  cleanup:
-  if (pkt)
+  if (rv < 0)
     memset(pkt, '\0', pkt_len);
   FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
   return rv;

@@ -325,6 +325,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
+
   return (0);
 }
 
