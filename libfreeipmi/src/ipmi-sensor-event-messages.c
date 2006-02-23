@@ -1677,6 +1677,7 @@ _get_event_message(uint16_t offset,
       errno = ENOSPC;
       return (-1);
     }
+
   return (0);
 }
 
