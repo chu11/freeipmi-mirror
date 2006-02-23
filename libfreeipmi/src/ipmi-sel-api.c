@@ -541,10 +541,13 @@ get_sel_record (uint8_t *record_data,
     {
     case IPMI_SEL_RECORD_TYPE_SYSTEM_EVENT_RECORD:
       rv = get_sel_system_event_record (record_data, record_data_len, sel_record);
+      break;
     case IPMI_SEL_RECORD_TYPE_TIMESTAMPED_OEM_RECORD:
       rv = get_sel_timestamped_oem_record (record_data, record_data_len, sel_record);
+      break;
     case IPMI_SEL_RECORD_TYPE_NON_TIMESTAMPED_OEM_RECORD:
       rv = get_sel_non_timestamped_oem_record (record_data, record_data_len, sel_record);
+      break;
     }
 
  cleanup:
