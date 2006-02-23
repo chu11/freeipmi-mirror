@@ -41,6 +41,7 @@ _ipmi_lan_cmd_send(ipmi_device_t *dev, fiid_obj_t obj_cmd_rq)
 {
   uint8_t *pkt;
   int32_t pkt_len = 1024;
+  int32_t send_len = 0;
 
   assert(dev
 	 && dev->io.outofband.local_sockfd 
@@ -67,21 +68,21 @@ _ipmi_lan_cmd_send(ipmi_device_t *dev, fiid_obj_t obj_cmd_rq)
 			     NULL,
 			     0,
 			     dev->io.outofband.rq.obj_lan_session_hdr) != -1);
-  ERR (assemble_ipmi_lan_pkt (dev->io.outofband.rq.obj_rmcp_hdr,
-			      dev->io.outofband.rq.obj_lan_session_hdr,
-			      dev->io.outofband.rq.obj_lan_msg_hdr,
-			      obj_cmd_rq,
-			      dev->io.outofband.password,
-			      IPMI_MAX_AUTHENTICATION_CODE_LENGTH,
-			      pkt,
-			      pkt_len) != -1);
+  ERR ((send_len = assemble_ipmi_lan_pkt (dev->io.outofband.rq.obj_rmcp_hdr,
+					  dev->io.outofband.rq.obj_lan_session_hdr,
+					  dev->io.outofband.rq.obj_lan_msg_hdr,
+					  obj_cmd_rq,
+					  dev->io.outofband.password,
+					  IPMI_MAX_AUTHENTICATION_CODE_LENGTH,
+					  pkt,
+					  pkt_len)) != -1);
 
   dev->io.outofband.session_sequence_number++;
   IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
   
   ERR (!(ipmi_lan_sendto (dev->io.outofband.local_sockfd, 
 			  pkt, 
-			  pkt_len, 
+			  send_len, 
 			  0, 
 			  &(dev->io.outofband.remote_host), 
 			  dev->io.outofband.remote_host_len) < 0));
@@ -151,7 +152,6 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
     }
   
   FIID_OBJ_PACKET_VALID(obj_cmd_rq);
-
   ERR (!(_ipmi_lan_cmd_send(dev, obj_cmd_rq) < 0));
   ERR (!(_ipmi_lan_cmd_recv(dev, obj_cmd_rs) < 0));
   
