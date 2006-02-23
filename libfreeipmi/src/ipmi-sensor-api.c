@@ -19,7 +19,7 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
@@ -826,9 +826,9 @@ get_sensor_reading (ipmi_device_t *dev,
       {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_reading_availability", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       {6, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -847,9 +847,9 @@ get_sensor_reading (ipmi_device_t *dev,
       {8, "sensor_reading", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       {5, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_reading_availability", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-      {1, "status_all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reading_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "sensor_scanning", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "all_event_messages", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       
       {15, "sensor_state", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {1, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -958,15 +958,15 @@ get_sensor_reading (ipmi_device_t *dev,
 	}
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_reading_availability", 
+			    (uint8_t *)"reading_state", 
 			    &val);
-      sensor_reading->reading_availability_flag = val;
+      sensor_reading->reading_state = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_sensor_scanning", 
+			    (uint8_t *)"sensor_scanning", 
 			    &val);
       sensor_reading->sensor_scanning = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_all_event_messages", 
+			    (uint8_t *)"all_event_messages", 
 			    &val);
       sensor_reading->event_messages_flag = val;
       
@@ -1023,15 +1023,15 @@ get_sensor_reading (ipmi_device_t *dev,
 	}
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_reading_availability", 
+			    (uint8_t *)"reading_state", 
 			    &val);
-      sensor_reading->reading_availability_flag = val;
+      sensor_reading->reading_state = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_sensor_scanning", 
+			    (uint8_t *)"sensor_scanning", 
 			    &val);
       sensor_reading->sensor_scanning = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_all_event_messages", 
+			    (uint8_t *)"all_event_messages", 
 			    &val);
       sensor_reading->event_messages_flag = val;
       
@@ -1088,15 +1088,15 @@ get_sensor_reading (ipmi_device_t *dev,
 	}
       
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_reading_availability", 
+			    (uint8_t *)"reading_state", 
 			    &val);
-      sensor_reading->reading_availability_flag = val;
+      sensor_reading->reading_state = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_sensor_scanning", 
+			    (uint8_t *)"sensor_scanning", 
 			    &val);
       sensor_reading->sensor_scanning = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_all_event_messages", 
+			    (uint8_t *)"all_event_messages", 
 			    &val);
       sensor_reading->event_messages_flag = val;
       
@@ -1140,15 +1140,15 @@ get_sensor_reading (ipmi_device_t *dev,
 			    &val);
       sensor_reading->current_reading = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_reading_availability", 
+			    (uint8_t *)"reading_state", 
 			    &val);
-      sensor_reading->reading_availability_flag = val;
+      sensor_reading->reading_state = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_sensor_scanning", 
+			    (uint8_t *)"sensor_scanning", 
 			    &val);
       sensor_reading->sensor_scanning = val;
       FIID_OBJ_GET_CLEANUP (l_obj_cmd_rs, 
-			    (uint8_t *)"status_all_event_messages", 
+			    (uint8_t *)"all_event_messages", 
 			    &val);
       sensor_reading->event_messages_flag = val;
       
@@ -1203,5 +1203,98 @@ ipmi_get_sensor_group (int sensor_type)
   if (IPMI_SENSOR_TYPE_IS_OEM (sensor_type))
     return ipmi_oem_sensor_type;
 
+  return NULL;
+}
+
+char **
+ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state)
+{
+  char **event_message_list = NULL;
+  char *message_list[16];
+  char buf[1024];
+  int indx = 0;
+  uint16_t offset;
+  uint16_t bit; 
+  int i;
+  
+  for (offset = 0; offset < 16; offset++)
+    {
+      bit = pow (2, offset);
+      if (sensor_state & bit)
+	{
+	  if (ipmi_get_generic_event_message (event_reading_type_code,
+					      offset,
+					      buf,
+					      1024) < 0)
+	    goto cleanup;
+
+	  message_list[indx] = strdup(buf);
+	  if (!message_list[indx])
+	    goto cleanup;
+	  else
+	    indx++;
+	  
+	}
+    }
+  
+  if (indx)
+    {
+      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      for (offset = 0; offset < indx; offset++)
+	event_message_list[offset] = message_list[offset];
+      event_message_list[indx] = NULL;
+    }
+  
+  return event_message_list;
+
+ cleanup:
+  for (i = 0; i < indx; i++)
+    free(message_list[indx]);
+  return NULL;
+}
+
+char **
+ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state)
+{
+  char **event_message_list = NULL;
+  char *message_list[16];
+  char buf[1024];
+  int indx = 0;
+  uint16_t offset;
+  uint16_t bit; 
+  int i;
+  
+  for (offset = 0; offset < 16; offset++)
+    {
+      bit = pow (2, offset);
+      if (sensor_state & bit)
+	{
+	  if (ipmi_get_sensor_type_code_message (sensor_type_code,
+						 offset,
+						 buf,
+						 1024) < 0)
+	    goto cleanup;
+
+	  message_list[indx] = strdup(buf);
+	  if (!message_list[indx])
+	    goto cleanup;
+	  else
+	    indx++;
+	}
+    }
+  
+  if (indx)
+    {
+      event_message_list = (char **) malloc (sizeof (char *) * (indx + 1));
+      for (offset = 0; offset < indx; offset++)
+	event_message_list[offset] = message_list[offset];
+      event_message_list[indx] = NULL;
+    }
+  
+  return event_message_list;
+
+ cleanup:
+  for (i = 0; i < indx; i++)
+    free(message_list[indx]);
   return NULL;
 }

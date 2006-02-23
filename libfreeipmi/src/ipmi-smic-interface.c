@@ -19,7 +19,9 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
+#include "ipmi-inband.h"
+
 #include <linux/types.h>
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)

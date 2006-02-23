@@ -19,7 +19,8 @@
 
 #if HAVE_CONFIG_H
 # include "config.h"
-# include "freeipmi.h"
+/* XXX NEED TO FIX */
+# include "freeipmi-build.h"
 #else 
 # include <freeipmi/freeipmi.h>
 #endif

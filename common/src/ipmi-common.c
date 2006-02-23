@@ -32,7 +32,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <error.h>
 #include <argp.h>
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "ipmi-common.h"
 
 int

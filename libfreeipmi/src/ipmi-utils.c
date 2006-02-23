@@ -28,8 +28,10 @@
    yield 0.
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "fiid-wrappers.h"
+
+#include "bit-ops.h"
 
 int8_t
 ipmi_chksum (uint8_t *buf, uint64_t len)

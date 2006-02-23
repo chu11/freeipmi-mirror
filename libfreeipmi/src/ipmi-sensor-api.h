@@ -155,7 +155,7 @@ typedef struct sdr_record sdr_record_t;
 struct sensor_reading
 {
   double current_reading;
-  uint8_t reading_availability_flag;
+  uint8_t reading_state;
   uint8_t sensor_scanning;
   uint8_t event_messages_flag;
   char **event_message_list;
@@ -214,5 +214,8 @@ int8_t get_sensor_reading (ipmi_device_t *dev,
 int ipmi_sensor_classify (uint8_t event_reading_type_code);
 
 const char *ipmi_get_sensor_group (int sensor_type);
+
+char **ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state);
+char **ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state);
 
 #endif

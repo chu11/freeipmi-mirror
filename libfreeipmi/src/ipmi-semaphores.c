@@ -19,8 +19,17 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
 #include "err-wrappers.h"
+
+#include "ipmi-semaphores.h"
 
 struct sembuf mutex_lock_buf_interruptible   = {0, -1, IPC_NOWAIT|SEM_UNDO};
 struct sembuf mutex_unlock_buf_interruptible = {0,  1, IPC_NOWAIT|SEM_UNDO};

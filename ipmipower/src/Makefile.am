@@ -15,7 +15,7 @@ noinst_HEADERS=argv.h cbuf.h conffile.h error.h fd.h hostlist.h hprintf.h \
 	ipmipower_privilege.h ipmipower_prompt.h ipmipower_util.h \
 	ipmipower_wrappers.h list.h wrappers.h
  
-AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
+AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/src -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 -DWITH_LSD_NOMEM_ERROR_FUNC=1
  

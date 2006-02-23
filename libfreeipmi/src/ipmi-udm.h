@@ -22,11 +22,8 @@
 #ifndef _IPMI_UDM_H
 #define _IPMI_UDM_H
 
-#if defined (FREEIPMI_BUILD)
+/* XXX - FIX after include file reorg */
 #include "ipmi-messaging-support-cmds.h"
-#else
-#include <freeipmi/ipmi-messaging-support-cmds.h>
-#endif
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3

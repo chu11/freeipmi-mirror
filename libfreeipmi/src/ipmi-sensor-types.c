@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 const char *const ipmi_sensor_types[] = 
   {

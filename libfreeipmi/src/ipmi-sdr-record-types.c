@@ -19,7 +19,7 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 fiid_template_t tmpl_sdr_sensor_record_header = 
   {

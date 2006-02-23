@@ -15,7 +15,19 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 
-#include "freeipmi.h"
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif
+#include <errno.h>
+#include <syslog.h>
+
+#include "xmalloc.h"
+#include "ipmi-common.h"
 
 /* Prototypes for functions defined here.  */
 #if defined (__STDC__) && __STDC__
@@ -44,7 +56,7 @@ fixup_null_alloc (n)
 
 /* Allocate N bytes of memory dynamically, with error checking.  */
 __VOID *
-ipmi_xmalloc (n)
+xmalloc (n)
      size_t n;
 {
   __VOID *p;
@@ -60,7 +72,7 @@ ipmi_xmalloc (n)
 
 /* Allocate memory for N elements of S bytes, with error checking.  */
 __VOID *
-ipmi_xcalloc (n, s)
+xcalloc (n, s)
      size_t n, s;
 {
   __VOID *p;
@@ -75,12 +87,12 @@ ipmi_xcalloc (n, s)
    with error checking.
    If P is NULL, run xmalloc.  */
 __VOID *
-ipmi_xrealloc (p, n)
+xrealloc (p, n)
      __VOID *p;
      size_t n;
 {
   if (p == 0)
-    return ipmi_xmalloc (n);
+    return xmalloc (n);
   p = realloc (p, n);
   if (p == 0)
     p = fixup_null_alloc (n);
@@ -89,12 +101,12 @@ ipmi_xrealloc (p, n)
 
 /* Make a copy of a string in a newly allocated block of memory. */
 char *
-ipmi_xstrdup (str)
+xstrdup (str)
      char *str;
 {
   __VOID *p;
 
-  p = ipmi_xmalloc (strlen (str) + 1);
+  p = xmalloc (strlen (str) + 1);
   strcpy (p, str);
   return p;
 }

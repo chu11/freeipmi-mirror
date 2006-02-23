@@ -21,6 +21,7 @@ libfreeipmi:
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
   * gcc 4.0 test/warning
+  * bool/true/false crap
   * int wraparound corner cases - fiid
     - uint32_t for max_field_len, but some funcs return int32_t
     - counters, fiid_obj_create
@@ -30,8 +31,8 @@ libfreeipmi:
     - ssif
     - pef config
   * re-architect ipmi-error.c stuff to handle different commands with same values.
-  * sensor-event-messages: get_28_event_data3_messages
   * fix sdr cache-api to be good.
+  * applications should #include <freeipmi/freeipmi.h>, not freeipmi-build.h
   * cleanup
     - lan-cmds 
        - missing commands
@@ -77,6 +78,10 @@ libfreeipmi:
     - first need kcs/ssif inband cmd/raw
     - then can get rid of *dev
   * split sensor-types into sensor-types-spec and sensor-units-spec
+  * get event messages function that is passed fiids
+  * locate-info stuff in libfreeipmi, remove
+  * freeipmi_getline - out of libfreeipmi
+    - maybe other stuff, i don't know right now, perhaps into common
 
 fish:
 -----

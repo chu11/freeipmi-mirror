@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md5.c,v 1.8 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmi-md5.c,v 1.9 2006-02-23 14:58:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,7 +24,7 @@
  *  59 Temple Place, Suite 330, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 static uint8_t padding[64] = 
   {

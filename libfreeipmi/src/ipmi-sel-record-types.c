@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 fiid_template_t tmpl_sel_record_header = 
   {

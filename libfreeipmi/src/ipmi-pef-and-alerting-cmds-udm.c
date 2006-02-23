@@ -17,9 +17,9 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.2 2006-02-18 21:02:16 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.3 2006-02-23 14:58:47 chu11 Exp $  */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 

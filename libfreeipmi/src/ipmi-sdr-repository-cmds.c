@@ -19,7 +19,7 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "fiid-wrappers.h"
 
 fiid_template_t tmpl_get_sdr_repository_info_rq =

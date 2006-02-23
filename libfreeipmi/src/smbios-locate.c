@@ -22,7 +22,9 @@
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
+
+#include "xmalloc.h"
 
 fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {
@@ -272,7 +274,7 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 		    {
 		      if (is_ipmi_dev_info (type, dev_info_p))
 			{
-			  result = ipmi_xmalloc (size);
+			  result = xmalloc (size);
 			  if (result != NULL)
 			    {
 			      status = 0;

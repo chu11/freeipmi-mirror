@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "fiid-wrappers.h"
 
 fiid_template_t tmpl_cmd_reset_watchdog_timer_rq =

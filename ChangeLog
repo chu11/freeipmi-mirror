@@ -1,3 +1,66 @@
+2006-02-23  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.h,
+	libfreeipmi/src/ipmi-sensor-event-messages.c: Re-organized for
+	generic use.
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.h,
+	libfreeipmi/src/ipmi-sensor-event-messages.c
+	(ipmi_get_generic_event_message_list,
+	ipmi_get_event_message_list): Move to ipmi-sensors-api.h and
+	ipmi-sensors-api.c.  These are convenience functions specifically
+	for the sensors api, not generic functions.
+
+	* libfreeipmi/src/bit-ops.h, libfreeipmi/src/bit-ops.c: Moved
+	files into convenience libraries in common/src.
+
+	* libfreeipmi/src/freeipmi.h, libfreeipmi/src/Makefile.am,
+	common/src/Makefile.am, fish/src/Makefile.am: Adjusted
+	appropriately for bit-ops.h and bit-ops.c reorganization.
+
+	* libfreeipmi/src/xmalloc.h, libfreeipmi/src/xmalloc.c: Remove
+	"ipmi_" prefix on functions.
+
+	* libfreeipmi/: Adjust code appropriately for function name changes.
+
+	* libfreeipmi/src/xmalloc.h, libfreeipmi/src/xmalloc.c: Moved
+	files into convenience libraries in common/src.
+
+	* libfreeipmi/src/freeipmi.h, libfreeipmi/src/Makefile.am,
+	common/src/Makefile.am: Adjusted appropriately for xmalloc.h and
+	xmalloc.c reorganization.
+	
+	* libfreeipmi/src/ipmi-inband.h: New file.
+
+	* libfreeipmi/src/freeipmi-build.h: New file.
+
+	* libfreeipmi/src/freeipmi.h: Remove code moved to new files.
+
+	* libfreeipmi/src/freeipmi-build.h: Split off build specific stuff
+	from freeipmi.h.
+
+	* Globally remove -DFREEIPMI_BUILD and -DFREEIPMI_LIBRARY from
+	Makefiles.
+
+	* Globally replace "freeipmi.h" with "freeipmi-build.h" until .h
+	file reorganization is done later on.
+	
+	* libfreeipmi/src/Makefile.am, libfreeipmi/src/freeipmi-build.h:
+	Split off ipmi-semaphores.h to non-disted.
+
+	* libfreeipmi/, fish/: Adjusted includes appropriately.
+
+	* libfreeipmi/src/acpi-spmi-locate.c (ipmi_acpi_get_rsdp,
+	ipmi_acpi_get_firmware_table): Remove strdupa calls, which are
+	meaningless.
+
+	* libfreeipmi/src/freeipmi-build.h (strdupa, strndupa): Removed
+	macros.  
+
+	* libfreeipmi/src/freeipmi-build.h: Moved all bool, true, false
+	macros/definitions to ipmi-common.h.  Move WORDSIZE code to
+	ipmi-common.h.
+
 2006-02-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-types.h,

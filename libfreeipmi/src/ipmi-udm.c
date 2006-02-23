@@ -20,7 +20,7 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 

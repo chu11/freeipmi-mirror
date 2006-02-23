@@ -3003,7 +3003,7 @@ ex_get_sensor_reading (SCM scm_sdr_record)
 					gh_double2scm (sensor_reading.current_reading));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
 					gh_str02scm ("reading_availability_flag"), 
-					(sensor_reading.reading_availability_flag ? 
+					(sensor_reading.reading_state ? 
 					 SCM_BOOL_F : SCM_BOOL_T));
   scm_sensor_reading = scm_assoc_set_x (scm_sensor_reading, 
 					gh_str02scm ("sensor_scanning_flag"), 

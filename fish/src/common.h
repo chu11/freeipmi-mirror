@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.6 2006-02-17 19:34:34 chu11 Exp $ 
+   $Id: common.h,v 1.7 2006-02-23 14:58:47 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -23,7 +23,7 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 #include <argp.h>
 #include <pwd.h>

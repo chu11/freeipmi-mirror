@@ -26,7 +26,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <netinet/in.h>
 #include <netdb.h>
 #include <argp.h>
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 #include "argp-common.h"
 #include "ipmi-raw-argp.h"

@@ -24,10 +24,11 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
+#include "ipmi-semaphores.h"
 
-extern int errno;
+#include "xmalloc.h"
 
 static inline int32_t
 ipmi_i2c_smbus_access (int file, char read_write, uint8_t command, int size, 
@@ -112,7 +113,7 @@ ipmi_ssif_ctx_create(void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_ssif_ctx_t)ipmi_xmalloc(sizeof(struct ipmi_ssif_ctx))))
+  if (!(ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -131,7 +132,7 @@ ipmi_ssif_ctx_create(void)
 
  cleanup:
   if (ctx)
-    ipmi_xfree(ctx);
+    xfree(ctx);
   return (NULL);
 }
 
@@ -146,7 +147,7 @@ ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
   if (ctx->i2c_device)
     free(ctx->i2c_device);
   close(ctx->i2c_fd);
-  ipmi_xfree(ctx);
+  xfree(ctx);
   return (0);
 }
 

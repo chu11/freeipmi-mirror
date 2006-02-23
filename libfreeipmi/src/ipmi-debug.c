@@ -18,9 +18,11 @@
   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+
+#include "bit-ops.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32
 #define IPMI_DEBUG_MAX_BUF_LEN        65536

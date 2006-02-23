@@ -19,7 +19,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
@@ -666,7 +666,7 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
 			      (uint8_t *)"rsdt_physical_address", 
 			      &rsdt_xsdt_address);
 
-		rsdt_xsdt_signature = strdupa (IPMI_ACPI_RSDT_SIG);
+		rsdt_xsdt_signature = IPMI_ACPI_RSDT_SIG;
 	      }
 	    else 
 	      {
@@ -674,10 +674,11 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
 			      (uint8_t *)"xsdt_physical_address", 
 			      &rsdt_xsdt_address);
 
-		rsdt_xsdt_signature = strdupa (IPMI_ACPI_XSDT_SIG);
+		rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
 	      }
 	    
-	    if (ipmi_acpi_get_table (rsdt_xsdt_address, rsdt_xsdt_signature, 
+	    if (ipmi_acpi_get_table (rsdt_xsdt_address, 
+				     rsdt_xsdt_signature, 
 				     &rsdt_xsdt_table, 
 				     &rsdt_xsdt_table_length) == 0)
 	      {
@@ -873,14 +874,14 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
       FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, 
 			    (uint8_t *)"rsdt_physical_address", 
 			    &rsdt_xsdt_address);
-      rsdt_xsdt_signature = strdupa (IPMI_ACPI_RSDT_SIG);
+      rsdt_xsdt_signature = IPMI_ACPI_RSDT_SIG;
     }
   else 
     {
       FIID_OBJ_GET_CLEANUP (obj_acpi_rsdp_descriptor, 
 			    (uint8_t *)"xsdt_physical_address", 
 			    &rsdt_xsdt_address);
-      rsdt_xsdt_signature = strdupa (IPMI_ACPI_XSDT_SIG);
+      rsdt_xsdt_signature = IPMI_ACPI_XSDT_SIG;
     }
   
   ERR_CLEANUP (!(ipmi_acpi_get_table (rsdt_xsdt_address, rsdt_xsdt_signature, 

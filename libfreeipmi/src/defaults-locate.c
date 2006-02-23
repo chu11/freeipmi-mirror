@@ -18,7 +18,7 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 
 ipmi_locate_info_t*
 defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)

@@ -19,8 +19,11 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
+
+#include "ipmi-common.h"
 
 int 
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 
@@ -223,8 +226,19 @@ get_sel_system_event_record (uint8_t *record_data,
   asprintf (&(sel_record->sensor_info), 
 	    "%s #%d", 
 	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  sel_record->event_message = ipmi_get_event_message (sensor_type, 
-						      offset_from_event_reading_type_code);
+  {
+    char buffer[1024];
+    int rv;
+
+    rv = ipmi_get_sensor_type_code_message(sensor_type,
+					   offset_from_event_reading_type_code,
+					   buffer,
+					   1024);
+    if (!rv)
+      ERR_CLEANUP ((sel_record->event_message = strdup(buffer)));
+    else
+      sel_record->event_message = NULL;
+  }
   switch (ipmi_sensor_classify (event_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
@@ -243,10 +257,20 @@ get_sel_system_event_record (uint8_t *record_data,
 		      event_data2);
 	    break;
 	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    sel_record->event_data2_message = 
-	      ipmi_get_event_data2_message (sensor_type, 
-					    offset_from_event_reading_type_code, 
-					    event_data2);
+	    {
+	      char buffer[1024];
+	      int rv;
+
+	      rv = ipmi_get_event_data2_message (sensor_type, 
+						 offset_from_event_reading_type_code, 
+						 event_data2,
+						 buffer,
+						 1024);
+	      if (!rv)
+		ERR_CLEANUP ((sel_record->event_data2_message = strdup(buffer)));
+	      else
+		sel_record->event_data2_message = NULL;
+	    }
 	    break;
 	  }
 	
@@ -264,10 +288,21 @@ get_sel_system_event_record (uint8_t *record_data,
 		      event_data3);
 	    break;
 	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    sel_record->event_data3_message = 
-	      ipmi_get_event_data3_message (sensor_type, 
-					    offset_from_event_reading_type_code, 
-					    event_data3);
+	    {
+	      char buffer[1024];
+	      int rv;
+
+	      rv = ipmi_get_event_data3_message (sensor_type, 
+						 offset_from_event_reading_type_code, 
+						 event_data2,
+						 event_data3,
+						 buffer,
+						 1024);
+	      if (!rv)
+		ERR_CLEANUP ((sel_record->event_data3_message = strdup(buffer)));
+	      else
+		sel_record->event_data3_message = NULL;
+	    }
 	    break;
 	  }
 	
@@ -286,11 +321,20 @@ get_sel_system_event_record (uint8_t *record_data,
 	    break;
 	  case IPMI_SEL_PREV_STATE_SEVERITY:
 	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    sel_record->event_data2_message = 
-	      ipmi_get_event_data2_message (sensor_type, 
-					    offset_from_event_reading_type_code, 
-					    event_data2);
-	    break;
+	    {
+	      char buffer[1024];
+	      int rv;
+
+	      rv = ipmi_get_event_data2_message (sensor_type, 
+						 offset_from_event_reading_type_code, 
+						 event_data2,
+						 buffer,
+						 1024);
+	      if (!rv)
+		ERR_CLEANUP ((sel_record->event_data2_message = strdup(buffer)));
+	      else
+		sel_record->event_data2_message = NULL;
+	    }
 	  }
 	
 	sel_record->event_data3_message = NULL;
@@ -302,10 +346,21 @@ get_sel_system_event_record (uint8_t *record_data,
 		      event_data3);
 	    break;
 	  case IPMI_SEL_SENSOR_SPECIFIC_EVENT_EXT_CODE:
-	    sel_record->event_data3_message = 
-	      ipmi_get_event_data3_message (sensor_type, 
-					    offset_from_event_reading_type_code, 
-					    event_data3);
+	    {
+	      char buffer[1024];
+	      int rv;
+
+	      rv = ipmi_get_event_data3_message (sensor_type, 
+						 offset_from_event_reading_type_code, 
+						 event_data2,
+						 event_data3,
+						 buffer,
+						 1024);
+	      if (!rv)
+		ERR_CLEANUP ((sel_record->event_data3_message = strdup(buffer)));
+	      else
+		sel_record->event_data3_message = NULL;
+	    }
 	    break;
 	  }
 	

@@ -19,9 +19,13 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-inband.h"
+#include "ipmi-semaphores.h"
+
+#include "xmalloc.h"
 
 #define IPMI_KCS_SLEEP_USECS            0x01
 
@@ -92,7 +96,7 @@ ipmi_kcs_ctx_create(void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_kcs_ctx_t)ipmi_xmalloc(sizeof(struct ipmi_kcs_ctx))))
+  if (!(ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -111,7 +115,7 @@ ipmi_kcs_ctx_create(void)
 
  cleanup:
   if (ctx)
-    ipmi_xfree(ctx);
+    xfree(ctx);
   return (NULL);
 }
 
@@ -128,7 +132,7 @@ ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
   close(ctx->dev_fd);
 #endif
 #endif /* __FreeBSD__ */
-  ipmi_xfree(ctx);
+  xfree(ctx);
   return (0);
 }
 

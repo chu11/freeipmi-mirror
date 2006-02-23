@@ -32,7 +32,7 @@
 #include <error.h>
 #include <argp.h>
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "argp-common.h"
 
 error_t 

@@ -19,7 +19,7 @@
 
 */
 
-#include "freeipmi.h"
+#include "freeipmi-build.h"
 #include "fiid-wrappers.h"
 
 #define SNPRINTF_RETURN(arg...)    \

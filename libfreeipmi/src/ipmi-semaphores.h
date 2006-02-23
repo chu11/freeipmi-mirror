@@ -32,6 +32,10 @@
 extern "C" {
 #endif
 
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+
 #define IPMI_IPCKEY  "/var/lib/" PACKAGE_NAME "/ipckey"
 
 #define IPMI_OUTOFBAND_PROJ_ID    0x01

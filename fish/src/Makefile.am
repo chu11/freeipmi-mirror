@@ -4,6 +4,7 @@ fish_SOURCES=fish.c xmalloc.c fi-utils.c interpreter.c \
 	fi-commands.c bmc-conf2.c fish-argp.c ../../common/src/argp-common.c
 
 fish_LDADD = ../../common/src/libipmicommon.la \
+	     ../../common/src/libbitops.la \
 	     ../../libfreeipmi/src/libfreeipmi.la \
 	     $(GUILE_LDFLAGS) $(READLINE_LIBS)
 
@@ -13,7 +14,7 @@ noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 	../../common/src/argp-common.h
 
 AM_CFLAGS = -Wall  -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
+	-I$(srcdir)/../../libfreeipmi/src -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check

@@ -19,7 +19,14 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <errno.h>
 
 /* Return the integer composed of the START (inclusive) through END
    (exclusive) bits of N.  The STARTth bit becomes the 0-th bit in the result.

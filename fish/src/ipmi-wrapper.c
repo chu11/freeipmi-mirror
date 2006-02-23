@@ -17,6 +17,8 @@
 
 #include "common.h"
 
+#include "ipmi-common.h"
+
 static ipmi_device_t dev;
 static int dev_opened = false;
 

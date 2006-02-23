@@ -21,11 +21,27 @@
 #ifndef _IPMI_SENSOR_EVENT_MESSAGES_H
 #define _IPMI_SENSOR_EVENT_MESSAGES_H
 
-char *ipmi_get_generic_event_message (uint8_t event_reading_type_code, uint16_t offset);
-char *ipmi_get_event_message (int sensor_type_code, int offset);
-char *ipmi_get_event_data2_message (int sensor_type_code, int offset, uint8_t event_data);
-char *ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_data);
-char **ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state);
-char **ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state);
+int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
+				    uint16_t offset,
+				    char *buf,
+				    unsigned int buflen);
+
+int ipmi_get_sensor_type_code_message (int sensor_type_code,
+				       int offset,
+				       char *buf,
+				       unsigned int buflen);
+
+int ipmi_get_event_data2_message (int sensor_type_code,
+				  int offset,
+				  uint8_t event_data2,
+				  char *buf,
+				  unsigned int buflen);
+
+int ipmi_get_event_data3_message (int sensor_type_code,
+				  int offset,
+				  uint8_t event_data2,
+				  uint8_t event_data3,
+				  char *buf,
+				  unsigned int buflen);
 
 #endif
