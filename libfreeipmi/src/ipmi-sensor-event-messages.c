@@ -1665,7 +1665,7 @@ _get_event_message(uint16_t offset,
 
   assert(buf && buflen);
 
-  if (offset <= offset_max)
+  if (offset > offset_max)
     {
       errno = EINVAL;
       return (-1);

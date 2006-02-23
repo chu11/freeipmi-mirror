@@ -1226,7 +1226,7 @@ ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t s
 					      offset,
 					      buf,
 					      1024) < 0)
-	    goto cleanup;
+            continue;
 
 	  message_list[indx] = strdup(buf);
 	  if (!message_list[indx])
@@ -1273,7 +1273,7 @@ ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state)
 						 offset,
 						 buf,
 						 1024) < 0)
-	    goto cleanup;
+            continue;
 
 	  message_list[indx] = strdup(buf);
 	  if (!message_list[indx])
