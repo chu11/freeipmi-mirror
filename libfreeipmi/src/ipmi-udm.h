@@ -24,6 +24,7 @@
 
 /* XXX - FIX after include file reorg */
 #include "ipmi-messaging-support-cmds.h"
+#include "ipmi-locate.h"
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3

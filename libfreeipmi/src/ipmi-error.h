@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #define IPMI_ERR_STR_MAX_LEN                 0x0800
 
 int8_t ipmi_strerror_r (uint8_t cmd, 

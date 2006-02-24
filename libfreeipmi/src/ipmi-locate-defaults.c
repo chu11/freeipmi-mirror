@@ -20,6 +20,20 @@
 
 #include "freeipmi-build.h"
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "ipmi-locate.h"
+
 ipmi_locate_info_t*
 ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
 {
@@ -67,6 +81,9 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
       pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
       pinfo->reg_space = 1;
       break;
+    case IPMI_INTERFACE_RESERVED:
+    default:
+      goto cleanup;
     }
 
   return (pinfo);

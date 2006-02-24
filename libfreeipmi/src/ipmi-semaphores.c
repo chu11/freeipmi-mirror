@@ -27,6 +27,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 
 #include "ipmi-semaphores.h"

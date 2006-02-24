@@ -22,9 +22,71 @@
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <limits.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
+#include "ipmi-locate.h"
+#include "ipmi-ssif-interface.h"
 
 #include "xmalloc.h"
+
+/* SMBIOS Reference Specification: map area between 000f0000 and
+   000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
+   with a 4 byte "_SM_" signature.  */
+
+#define IPMI_SMBIOS_ENTRY_CSUM_OFFSET 	0x4
+#define IPMI_SMBIOS_ENTRY_LEN_OFFSET 	0x5
+#define IPMI_SMBIOS_ENTRY_ANCHOR_OFFSET 	0x10
+#define IPMI_SMBIOS_ENTRY_ANCHOR_CSUM_OFFSET 0x15
+
+#define IPMI_SMBIOS_IPMI_DEV_INFO_SIG 		38
+#define IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET 	0x4
+
+#define IPMI_SMBIOS_AREA_START 		0x000f0000
+#define IPMI_SMBIOS_AREA_END 		0x000fffff
+#define IPMI_SMBIOS_AREA_LEN 		((IPMI_SMBIOS_AREA_END - IPMI_SMBIOS_AREA_START) + 1)
+#define IPMI_SMBIOS_AREA_ALIGN 		16
+#define IPMI_SMBIOS_ENTRY_TLEN_OFFSET 	0x16
+#define IPMI_SMBIOS_ENTRY_PTR_OFFSET 	0x18
+#define IPMI_SMBIOS_DEV_INFO_LEN_OFFSET 	0x1
+#define IPMI_SMBIOS_IPMI_DEV_INFO_VER_OFFSET 	0x5
+#define IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET 	0x6
+#define IPMI_SMBIOS_IPMI_DEV_INFO_NVSTOR_OFFSET 	0x7
+#define IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET 	0x8
+#define IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET 	0x10
+#define IPMI_SMBIOS_LSB_BIT 				4
+#define IPMI_SMBIOS_REGSPACING_SHIFT 		        6
+#define IPMI_SMBIOS_REGSPACING_MASK 			0x3
+#define IPMI_SMBIOS_INTINFO_PRESENT_BIT 		3
+#define IPMI_SMBIOS_INTINFO_POLARITY_BIT 		1
+#define IPMI_SMBIOS_INTINFO_TRIGGER_BIT 		0
+#define IPMI_SMBIOS_DEV_INFO_INTNUM_OFFSET 		0x11
+
+#define IPMI_SMBIOS_REG_SPACE_1BYTE_BOUND    0x00
+#define IPMI_SMBIOS_REG_SPACE_4BYTE_BOUND    0x01
+#define IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND   0x02
+#define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
 fiid_template_t tmpl_smbios_ipmi_device_info_record =
   {

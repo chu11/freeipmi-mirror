@@ -19,7 +19,22 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <assert.h>
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 
 #include "bit-ops.h"
 #include "xmalloc.h"

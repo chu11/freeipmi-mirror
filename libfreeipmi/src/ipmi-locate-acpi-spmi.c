@@ -19,9 +19,70 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-locate.h"
+#include "ipmi-ssif-interface.h"
+
+#define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY
+#define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO     IPMI_ADDRESS_SPACE_ID_SYSTEM_IO
+#define IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS         IPMI_ADDRESS_SPACE_ID_SMBUS
+
+/* Certain ACPI table field widths are architecture specific */
+#define IPMI_ACPI_MACHINE_WIDTH         (sizeof (void *) * 8)
+
+/* Constants used in searching for the RSDP (Root System Description
+   Pointer) in low memory */
+#define IPMI_ACPI_LO_RSDP_WINDOW_BASE        0           /* Physical Address */
+#define IPMI_ACPI_HI_RSDP_WINDOW_BASE        0xE0000     /* Physical Address */
+#define IPMI_ACPI_LO_RSDP_WINDOW_SIZE        0x400
+#define IPMI_ACPI_HI_RSDP_WINDOW_SIZE        0x20000
+#define IPMI_ACPI_RSDP_SCAN_STEP             16
+
+/*
+ *  Values for description table header signatures
+ */
+#define IPMI_ACPI_RSDP_NAME   "RSDP"
+#define IPMI_ACPI_RSDP_SIG    "RSD PTR "  /* RSDT Pointer signature */
+#define IPMI_ACPI_APIC_SIG    "APIC"      /* Multiple APIC Description Table */
+#define IPMI_ACPI_DSDT_SIG    "DSDT"      /* Differentiated System Description Table */
+#define IPMI_ACPI_FADT_SIG    "FACP"      /* Fixed ACPI Description Table */
+#define IPMI_ACPI_FACS_SIG    "FACS"      /* Firmware ACPI Control Structure */
+#define IPMI_ACPI_PSDT_SIG    "PSDT"      /* Persistent System Description Table */
+#define IPMI_ACPI_RSDT_SIG    "RSDT"      /* Root System Description Table */
+#define IPMI_ACPI_XSDT_SIG    "XSDT"      /* Extended  System Description Table */
+#define IPMI_ACPI_SSDT_SIG    "SSDT"      /* Secondary System Description Table */
+#define IPMI_ACPI_SBST_SIG    "SBST"      /* Smart Battery Specification Table */
+#define IPMI_ACPI_SPIC_SIG    "SPIC"      /* IOSAPIC table */
+#define IPMI_ACPI_BOOT_SIG    "BOOT"      /* Boot table */
+#define IPMI_ACPI_SPMI_SIG    "SPMI"      /* Service Processor Management Interface */
+
+/* RSDP checksums */
+#define IPMI_ACPI_RSDP_CHECKSUM_LENGTH       20
+#define IPMI_ACPI_RSDP_XCHECKSUM_LENGTH      36
 
 fiid_template_t tmpl_acpi_rsdp_descriptor =  /* Root System Descriptor Pointer */
   {

@@ -18,7 +18,17 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "ipmi-locate.h"
+#include "ipmi-ssif-interface.h"
 
 #ifdef UNTESTED /* __linux */           /* this code uses the /proc filesystem */
 

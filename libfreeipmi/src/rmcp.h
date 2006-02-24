@@ -27,6 +27,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 /* XXX - FIX after include file reorg */
 #include "fiid.h"
 

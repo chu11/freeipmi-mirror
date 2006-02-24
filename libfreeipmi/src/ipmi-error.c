@@ -19,8 +19,24 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <errno.h>
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "fiid-wrappers.h"
+#include "ipmi-cmd-spec.h"
+#include "ipmi-comp-code-spec.h"
+#include "ipmi-kcs-interface.h"
 
 #define SNPRINTF_RETURN(arg...)    \
 do				   \

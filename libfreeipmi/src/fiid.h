@@ -26,6 +26,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #define FIID_ERR_SUCCESS                         0
 #define FIID_ERR_OBJ_NULL                        1 
 #define FIID_ERR_OBJ_INVALID                     2                   

@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.11 2006-02-24 05:46:08 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.12 2006-02-24 17:08:15 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -24,6 +24,8 @@
 #include <stdlib.h>
 
 #include "freeipmi-build.h"
+#include "ipmi-locate.h"
+
 #include "ipmi-locate-argp.h"
 #include "ipmi-common.h"
 

@@ -44,11 +44,9 @@
 #endif /* IPMI_SYSLOG */
 
 #include "freeipmi-portability.h"
-
 #include "fiid.h"
 #include "fiid-wrappers.h"
 #include "ipmi-comp-code-spec.h"
-#include "rmcp.h"
 
 #include "bit-ops.h"
 

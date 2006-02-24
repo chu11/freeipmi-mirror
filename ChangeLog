@@ -1,3 +1,23 @@
+2006-02-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.h,
+	libfreeipmi/src/ipmi-locate-smbios.h: Remove files.  Move #defines
+	into ipmi-locate-acpi-spmi.c and ipmi-locate-smbios.c
+	respectively.
+
+	* libfreeipmi/src/fiid.c, libfreeipmi/src/ipmi-debug.c,
+	libfreeipmi/src/ipmi-error.c, libfreeipmi/src/ipmi-semaphores.c,
+	libfreeipmi/src/ipmi-locate-defaults.c,
+	libfreeipmi/src/ipmi-locate-smbios.c,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
+	libfreeipmi/src/ipmi-locate-pci.c,
+	libfreeipmi/src/ipmi-sensor-types-spec.c,
+	libfreeipmi/src/ipmi-sensor-units-spec,
+	libfreeipmi/src/ipmi-sdr-record-types.c: Remove need for
+	freeipmi-build.h.
+
+	* libfreeipmi/src/Makefile.am: Cleanup.
+
 2006-02-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-udm.c (ipmi_open_inband): Fix seg-fault

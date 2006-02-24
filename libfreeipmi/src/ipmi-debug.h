@@ -25,6 +25,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
+  /* XXX */
+#include "fiid.h"
+
 #define IPMI_DEBUG_DEFAULT_FD   STDERR_FILENO
   
 int8_t ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len);

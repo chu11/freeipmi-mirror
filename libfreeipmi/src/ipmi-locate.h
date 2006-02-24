@@ -25,6 +25,8 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY 0x00
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
