@@ -188,8 +188,18 @@ ipmi_open_inband (ipmi_device_t *dev,
     case IPMI_DEVICE_KCS:
       if (disable_auto_probe)
 	{
-	  ipmi_locate_info_t *locate_info = &(dev->io.inband.locate_info);
+	  ipmi_locate_info_t *locate_info;
 	  
+	  if (!driver_device)
+	    {
+	      errno = EINVAL;
+	      return (-1);
+	    }
+	  
+	  if (!(locate_info = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
+	    goto cleanup;
+	  memset(locate_info, '\0', sizeof(struct ipmi_locate_info));
+
 	  locate_info->ipmi_ver_major = 1;
 	  locate_info->ipmi_ver_minor = 5;
 	  locate_info->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
@@ -202,20 +212,24 @@ ipmi_open_inband (ipmi_device_t *dev,
 	}
       else 
 	{
-	  ERR (ipmi_locate (IPMI_INTERFACE_KCS, &(dev->io.inband.locate_info)) != NULL);
+	  ERR ((dev->io.inband.locate_info = ipmi_locate (IPMI_INTERFACE_KCS)));
 	  if (driver_device)
-	    ERR ((dev->io.inband.locate_info.bmc_i2c_dev_name = strdup(driver_device)));
+	    {
+	      if (dev->io.inband.locate_info->bmc_i2c_dev_name)
+		free (dev->io.inband.locate_info->bmc_i2c_dev_name);
+	      ERR ((dev->io.inband.locate_info->bmc_i2c_dev_name = strdup(driver_device)));
+	    }
 	  if (driver_address)
-	    dev->io.inband.locate_info.base_addr.bmc_iobase_addr = driver_address;
+	    dev->io.inband.locate_info->base_addr.bmc_iobase_addr = driver_address;
 	  if (reg_space)
-	    dev->io.inband.locate_info.reg_space = reg_space;
+	    dev->io.inband.locate_info->reg_space = reg_space;
 	}
       dev->type = driver_type;
       dev->mode = mode;
       
       /* At this point we only support SYSTEM_IO, i.e. inb/outb style IO. 
 	 If we cant find the bass address, we better exit. -- Anand Babu */
-      if (dev->io.inband.locate_info.addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
+      if (dev->io.inband.locate_info->addr_space_id != IPMI_ADDRESS_SPACE_ID_SYSTEM_IO)
 	{
 	  errno = ENODEV;
 	  goto cleanup;
@@ -224,10 +238,10 @@ ipmi_open_inband (ipmi_device_t *dev,
       ERR_CLEANUP ((dev->io.inband.kcs_ctx = ipmi_kcs_ctx_create()));
       
       ERR_CLEANUP (!(ipmi_kcs_ctx_set_bmc_iobase_addr(dev->io.inband.kcs_ctx, 
-						      dev->io.inband.locate_info.base_addr.bmc_iobase_addr) < 0));
+						      dev->io.inband.locate_info->base_addr.bmc_iobase_addr) < 0));
 
       ERR_CLEANUP (!(ipmi_kcs_ctx_set_register_space(dev->io.inband.kcs_ctx, 
-						     dev->io.inband.locate_info.reg_space) < 0));
+						     dev->io.inband.locate_info->reg_space) < 0));
 
       ERR_CLEANUP (!(ipmi_kcs_ctx_set_poll_interval(dev->io.inband.kcs_ctx, 
 						    IPMI_POLL_INTERVAL_USECS) < 0));
@@ -245,7 +259,7 @@ ipmi_open_inband (ipmi_device_t *dev,
 
       break;
     case IPMI_DEVICE_SMIC:
-      ERR (ipmi_locate (IPMI_INTERFACE_SMIC, &(dev->io.inband.locate_info)) != NULL);
+      ERR ((dev->io.inband.locate_info = ipmi_locate (IPMI_INTERFACE_SMIC)));
       break;
     case IPMI_DEVICE_BT:
       errno = ENOTSUP;
@@ -253,8 +267,18 @@ ipmi_open_inband (ipmi_device_t *dev,
     case IPMI_DEVICE_SSIF:
       if (disable_auto_probe)
 	{
-	  ipmi_locate_info_t *locate_info = &(dev->io.inband.locate_info);
+	  ipmi_locate_info_t *locate_info;
 	  
+	  if (!driver_device)
+	    {
+	      errno = EINVAL;
+	      return (-1);
+	    }
+
+	  if (!(locate_info = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
+	    goto cleanup;
+	  memset(locate_info, '\0', sizeof(struct ipmi_locate_info));
+
 	  locate_info->ipmi_ver_major = 1;
 	  locate_info->ipmi_ver_minor = 5;
 	  locate_info->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
@@ -267,13 +291,17 @@ ipmi_open_inband (ipmi_device_t *dev,
 	}
       else 
 	{
-	  ERR (ipmi_locate (IPMI_INTERFACE_SSIF, &(dev->io.inband.locate_info)) != NULL);
+	  ERR ((dev->io.inband.locate_info = ipmi_locate (IPMI_INTERFACE_SSIF)));
 	  if (driver_device)
-	    ERR ((dev->io.inband.locate_info.bmc_i2c_dev_name = strdup(driver_device)));
+	    {
+	      if (dev->io.inband.locate_info->bmc_i2c_dev_name)
+		free (dev->io.inband.locate_info->bmc_i2c_dev_name);
+	      ERR ((dev->io.inband.locate_info->bmc_i2c_dev_name = strdup(driver_device)));
+	    }
 	  if (driver_address)
-	    dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr = driver_address;
+	    dev->io.inband.locate_info->base_addr.bmc_smbus_slave_addr = driver_address;
 	  if (reg_space)
-	    dev->io.inband.locate_info.reg_space = reg_space;
+	    dev->io.inband.locate_info->reg_space = reg_space;
 	}
       dev->type = driver_type;
       dev->mode = mode;
@@ -281,10 +309,10 @@ ipmi_open_inband (ipmi_device_t *dev,
       ERR_CLEANUP ((dev->io.inband.ssif_ctx = ipmi_ssif_ctx_create()));
       
       ERR_CLEANUP (!(ipmi_ssif_ctx_set_i2c_device(dev->io.inband.ssif_ctx, 
-						  dev->io.inband.locate_info.bmc_i2c_dev_name) < 0));
+						  dev->io.inband.locate_info->bmc_i2c_dev_name) < 0));
  
       ERR_CLEANUP (!(ipmi_ssif_ctx_set_ipmb_addr(dev->io.inband.ssif_ctx, 
-						 dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr) < 0));
+						 dev->io.inband.locate_info->base_addr.bmc_smbus_slave_addr) < 0));
 
       if (dev->mode == IPMI_MODE_DEFAULT)
         temp_mode = IPMI_SSIF_MODE_BLOCKING;
@@ -445,7 +473,7 @@ ipmi_inband_close (ipmi_device_t *dev)
       return (-1);
     }
 
-  ipmi_locate_free (&(dev->io.inband.locate_info));
+  ipmi_locate_destroy (dev->io.inband.locate_info);
   ipmi_inband_free (dev);
   
   return (0);

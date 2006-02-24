@@ -110,7 +110,7 @@ pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 /* pinfo = pointer to information structure filled in by this function */
 
 ipmi_locate_info_t*
-ipmi_locate_pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 {
   unsigned dfn;
   unsigned vendor;
@@ -124,16 +124,26 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
   int items;
   int i;
   int status;
+  ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
     {
       errno = EINVAL;
       return NULL;
     }
 
+  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
+    goto cleanup;
+  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
+  pinfo->interface_type = type;
+  if (type == IPMI_INTERFACE_SSIF)
+    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+
   status = 1;
   fp_devices = fopen ("/proc/bus/pci/devices", "r");
-  if (fp_devices == NULL) goto failure;
+  if (fp_devices == NULL) 
+    goto cleanup;
+
   while (fgets (buf, sizeof(buf), fp_devices) != NULL) {
     pci_class_regs_t regs;
 
@@ -171,25 +181,30 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 	      }
 	  }
 	else
-	  goto failure;
+	  goto cleanup;
       }
     else
-      {
-	status = -1;
-	goto failure;
-      }
+      goto cleanup;
   }
- failure:
-  if (fp_devices != NULL) fclose (fp_devices);
+
+ cleanup:
+  if (fp_devices != NULL)
+    fclose (fp_devices);
+  ipmi_locate_destroy(pinfo);
   return NULL;
 }
 
 #else  /* __linux */
 
 ipmi_locate_info_t*
-ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type)
 {
-  pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_PCI;
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
+    {
+      errno = EINVAL;
+      return NULL;
+    }
+
   return NULL;
 }
 

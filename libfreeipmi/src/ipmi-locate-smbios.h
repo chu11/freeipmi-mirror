@@ -58,6 +58,4 @@
 #define IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND   0x02
 #define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
-ipmi_locate_info_t* ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
-
 #endif

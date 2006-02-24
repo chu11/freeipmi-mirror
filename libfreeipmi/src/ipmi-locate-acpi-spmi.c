@@ -1146,20 +1146,27 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
 }
 
 ipmi_locate_info_t*
-ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, 
-				    ipmi_locate_info_t* pinfo)
+ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
+  ipmi_locate_info_t *pinfo = NULL;
   ipmi_locate_info_t *rv = NULL;
   extern int errno;
-  
-  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
     {
       errno = EINVAL;
       return NULL;
     }
-  
+
+  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
+    goto cleanup;
+  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
+  pinfo->interface_type = type;
+  if (type == IPMI_INTERFACE_SSIF)
+    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_table_hdr, tmpl_acpi_table_hdr);
@@ -1201,6 +1208,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type,
     pinfo->ipmi_ver_major = ipmi_ver_maj;
     pinfo->ipmi_ver_minor = ipmi_ver_min;
   }  
+
   /* Interface type - KCS, SMIC, SSIF, BT */
   {
     uint64_t interface_type;
@@ -1208,24 +1216,14 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type,
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  (uint8_t *)"interface_type", 
 			  &interface_type);
-
-    switch (interface_type)
+    
+    if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
       {
-      case IPMI_INTERFACE_KCS:
-      case IPMI_INTERFACE_SMIC:
-      case IPMI_INTERFACE_BT:
-      case IPMI_INTERFACE_SSIF:
-	{
-	  pinfo->interface_type = interface_type;
-	  break;
-	}
-      case IPMI_INTERFACE_RESERVED:
-      default:
-	{
-	  errno = ENODEV;
-	  goto cleanup;
-	}
+	errno = ENODEV;
+	goto cleanup;
       }
+
+    pinfo->interface_type = interface_type;
   }
   
   /* Address space id (memory mapped, IO mapped, SMBus) and IO base address */
@@ -1283,6 +1281,8 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type,
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_table_hdr);
   FIID_OBJ_DESTROY_NO_RETURN (obj_acpi_spmi_table_descriptor);
-  return (pinfo);
+  if (!rv)
+    ipmi_locate_destroy(pinfo);
+  return (rv);
 }
 

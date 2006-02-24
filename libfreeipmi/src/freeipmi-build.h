@@ -140,8 +140,6 @@ extern "C" {
 #include "ipmi-locate.h"
 #include "ipmi-locate-smbios.h"
 #include "ipmi-locate-acpi-spmi.h"
-#include "ipmi-locate-pci.h"
-#include "ipmi-locate-defaults.h"
 #include "rmcp.h"
 #include "ipmi-cmd-spec.h"
 #include "ipmi-netfn-spec.h"

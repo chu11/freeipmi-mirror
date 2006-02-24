@@ -59,19 +59,4 @@
 #define IPMI_ACPI_RSDP_CHECKSUM_LENGTH       20
 #define IPMI_ACPI_RSDP_XCHECKSUM_LENGTH      36
 
-/*******************************************************************************
- *
- * FUNCTION:
- * ipmi_locate_acpi_spmi_get_dev_info
- *
- * PARAMETERS:  
- *   type    = which interface (KCS, SMIC, BT)
- *   pinfo   = pointer to information structure filled in by this function
- *
- * RETURNS:
- *   pinfo if successful, NULL otherwise 
- ******************************************************************************/
-ipmi_locate_info_t *ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type, 
-							ipmi_locate_info_t *pinfo);
-
 #endif

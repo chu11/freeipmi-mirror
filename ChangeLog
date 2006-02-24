@@ -1,5 +1,27 @@
 2006-02-23  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-udm.c (ipmi_open_inband): Fix seg-fault
+	corner case and mem-leak corner case.
+
+	* ipmi-locate/src/ipmi-locate.c: Fix various mem-leaks.
+	
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.c,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.h,
+	libfreeipmi/src/ipmi-locate-pci.c,
+	libfreeipmi/src/ipmi-locate-pci.h,
+	libfreeipmi/src/ipmi-locate-smbios.c,
+	libfreeipmi/src/ipmi-locate-smbios.h,
+	libfreeipmi/src/ipmi-locate-defaults.c, and
+	libfreeipmi/src/ipmi-locate-defaults.h: Redo locate function interfaces.
+
+	* libfreeipmi/src/ipmi-locate-pci.h,
+	libfreeipmi/src/ipmi-locate-defaults.h: Remove files.
+
+	* libfreeipmi/, ipmi-locate/: Adjust for function style changes
+	appropriately.
+
+2006-02-23  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-md2.h, libfreeipmi/src/ipmi-md2.c,
 	libfreeipmi/src/ipmi-md5.h, libfreeipmi/src/ipmi-md5.c: Moved into
 	common/src into md2.h, md2.c, md5.h, and md5.c respectively.

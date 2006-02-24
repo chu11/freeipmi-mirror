@@ -53,19 +53,16 @@ enum ipmi_interface_type
   IPMI_INTERFACE_SMIC = 2,
   IPMI_INTERFACE_BT = 3,
   IPMI_INTERFACE_SSIF = 4,
-  /* Note: If you add a new interface here, don't forget to update
-  "IPMI_INTERFACE_MAX" macro below. */
-  IPMI_INTERFACE_LAN = 0xF,
+  /* Note: If you add a new interface here, don't forget to update 
+     "IPMI_INTERFACE_MAX" macro below. */
 };
 typedef enum ipmi_interface_type ipmi_interface_type_t;
 
 #define IPMI_INTERFACE_TYPE_VALID(__val) \
-        (((__val) == IPMI_INTERFACE_RESERVED \
-	  || (__val) == IPMI_INTERFACE_KCS \
+        (((__val) == IPMI_INTERFACE_KCS \
 	  || (__val) == IPMI_INTERFACE_SMIC \
 	  || (__val) == IPMI_INTERFACE_BT \
-	  || (__val) == IPMI_INTERFACE_SSIF \
-	  || (__val) == IPMI_INTERFACE_LAN) ? 1 : 0)
+	  || (__val) == IPMI_INTERFACE_SSIF) ? 1 : 0)
 
 #define IPMI_INTERFACE_MAX  IPMI_INTERFACE_SSIF
 #define IPMI_INTERFACE_LAST IPMI_INTERFACE_MAX
@@ -76,7 +73,6 @@ struct ipmi_locate_info
   uint8_t ipmi_ver_minor;
   ipmi_locate_driver_type_t locate_driver_type;
   uint8_t locate_driver;
-  /* uint8_t interface_type;  *//* KCS, SMIC, BT, SSIF */
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char *bmc_i2c_dev_name;
   uint8_t addr_space_id;  /* Memory mapped, IO mapped, SMBus*/
@@ -89,8 +85,17 @@ struct ipmi_locate_info
 };
 typedef struct ipmi_locate_info ipmi_locate_info_t;
 
-ipmi_locate_info_t* ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
-void ipmi_locate_free (ipmi_locate_info_t* pinfo);
+ipmi_locate_info_t* ipmi_locate (ipmi_interface_type_t type);
+
+ipmi_locate_info_t* ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type);
+
+ipmi_locate_info_t* ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type);
+
+ipmi_locate_info_t *ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type);
+
+ipmi_locate_info_t* ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type);
+
+void ipmi_locate_destroy (ipmi_locate_info_t* pinfo);
 
 #ifdef __cplusplus
 }

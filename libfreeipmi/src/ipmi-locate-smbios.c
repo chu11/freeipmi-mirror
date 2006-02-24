@@ -310,22 +310,29 @@ copy_impi_dev_info (ipmi_interface_type_t type)
    RETURNS:
    pinfo if successful, NULL otherwise */
 ipmi_locate_info_t*
-ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
 {
   uint8_t* bufp;
   uint8_t version;
   uint64_t addr;
   uint64_t strobed;
+  ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
     {
       errno = EINVAL;
       return NULL;
     }
 
-  bufp = copy_impi_dev_info (type);
-  if (bufp == NULL)
-    return (NULL);
+  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
+    goto cleanup;
+  memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
+  pinfo->interface_type = type;
+  if (type == IPMI_INTERFACE_SSIF)
+    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+
+  if (!(bufp = copy_impi_dev_info (type)))
+    goto cleanup;
 
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_SMBIOS;
 
@@ -336,13 +343,11 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t*
   pinfo->interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
   if (pinfo->interface_type != type)
     {
-      free (bufp);
       errno = ENODEV;
-      return (NULL);
+      goto cleanup;
     }
 
   strobed = addr = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
-
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
     {
       uint8_t modifier;
@@ -355,10 +360,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t*
 
       reg_space_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
       if (ipmi_smbios_reg_space (reg_space_boundary, &pinfo->reg_space) == -1)
-	{
-	  free (bufp);
-	  return (NULL);
-	}
+	goto cleanup;
     }
 
   if (pinfo->interface_type == IPMI_INTERFACE_SSIF)
@@ -382,40 +384,10 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t*
 
   free (bufp);
   return (pinfo);
-}
 
-#ifdef IPMI_SMBIOS_MAIN
-int
-main (int argc, char** argv)
-{
-  smbios_dev_info_t idi;
-  int status;
-
-  if (smbios_get_dev_info (atoi(argv[1]), &idi, &status) == &idi)
-    {
-      printf ("%s", "Success!\n");
-      printf ("interface type = %d\n", idi.type);
-      printf ("version = %d.%d\n", idi.version.major, idi.version.minor);
-      printf ("i2c slave address = %x\n", idi.i2c_slave_addr);
-      printf ("nvstor address = %x\n", idi.nvstor_dev_addr);
-      printf ("BMC io memory mapped = %s\n", (idi.bmc_io_mapped ? "true" : "false"));
-      if (idi.bmc_io_mapped)
-	printf ("BMC memory mapped registers start = %llx\n", idi.base.bmc_membase_addr);
-      else
-	printf ("BMC IO registers start = %llx\n", idi.base.bmc_iobase_addr);
-      printf ("BMC register address spacing = %d\n", 1 << idi.reg_spacing);
-      if (idi.intr.intinfo_specified)
-	{
-	  printf ("BMC interrupt polarity = %s\n", (idi.intr.intinfo_polarity_high ? "high" : "low"));
-	  printf ("BMC interrupt trigger = %s\n", (idi.intr.intinfo_trigger_level ? "level" : "edge"));
-	}
-      printf ("BMC interrupt number = %x\n", idi.intr_num);
-      exit (0);
-    }
-  else
-    {
-      printf ("%s", "Failure :-(\n");
-      exit (1);
-    }
+ cleanup:
+  if (bufp)
+    free(bufp);
+  ipmi_locate_destroy(pinfo);
+  return (NULL);
 }
-#endif

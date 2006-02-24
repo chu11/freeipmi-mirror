@@ -13,12 +13,12 @@ libfreeipmi_la_LIBADD = \
 ../../common/src/libmd5.la \
 ../../common/src/libxmalloc.la
 
-noinst_HEADERS = err-wrappers.h fiid-wrappers.h ipmi-inband.h freeipmi-build.h ipmi-semaphores.h
+noinst_HEADERS = err-wrappers.h fiid-wrappers.h ipmi-inband.h freeipmi-build.h ipmi-semaphores.h ipmi-locate-smbios.h ipmi-locate-acpi-spmi.h
 
 # These are headers visible as <freeipmi/freeipmi.h>
 modincludedir = $(includedir)/freeipmi
 
-modinclude_HEADERS = freeipmi.h fiid.h ipmi-locate.h ipmi-locate-smbios.h ipmi-locate-acpi-spmi.h ipmi-locate-pci.h ipmi-locate-defaults.h ipmi-cmd-spec.h ipmi-netfn-spec.h ipmi-udm.h ipmi-ipmb-interface.h ipmi-lan-interface.h ipmi-kcs-interface.h ipmi-smic-interface.h ipmi-ssif-interface.h rmcp.h ipmi-utils.h ipmi-error.h ipmi-messaging-support-cmds.h ipmi-chassis-cmds.h ipmi-device-global-cmds.h ipmi-sdr-record-types.h ipmi-sdr-repository-cmds.h ipmi-sensor-types-spec.h ipmi-sensor-units-spec.h ipmi-sensor-cmds.h ipmi-sel-record-types.h ipmi-sel-cmds.h ipmi-lan-param-spec.h ipmi-lan-cmds.h ipmi-sol-cmds.h ipmi-sol-param-spec.h ipmi-serial-modem-param-spec.h ipmi-serial-modem-cmds.h ipmi-sdr-repository-cache-api.h ipmi-sensor-utils.h ipmi-debug.h ipmi-bmc-watchdog-timer-cmds.h ipmi-pef-and-alerting-cmds.h ipmi-pef-param-spec.h ipmi-sensor-event-messages.h ipmi-sensor-api.h ipmi-sel-api.h ipmi-comp-code-spec.h ipmi-sensor-cmds-udm.h ipmi-sel-cmds-udm.h ipmi-lan-cmds-udm.h ipmi-chassis-cmds-udm.h ipmi-device-global-cmds-udm.h ipmi-pef-and-alerting-cmds-udm.h ipmi-sdr-repository-cmds-udm.h ipmi-serial-modem-cmds-udm.h ipmi-sol-cmds-udm.h ipmi-messaging-support-cmds-udm.h ipmi-lan-interface-udm.h ipmi-kcs-interface-udm.h ipmi-ssif-interface-udm.h
+modinclude_HEADERS = freeipmi.h fiid.h ipmi-locate.h ipmi-cmd-spec.h ipmi-netfn-spec.h ipmi-udm.h ipmi-ipmb-interface.h ipmi-lan-interface.h ipmi-kcs-interface.h ipmi-smic-interface.h ipmi-ssif-interface.h rmcp.h ipmi-utils.h ipmi-error.h ipmi-messaging-support-cmds.h ipmi-chassis-cmds.h ipmi-device-global-cmds.h ipmi-sdr-record-types.h ipmi-sdr-repository-cmds.h ipmi-sensor-types-spec.h ipmi-sensor-units-spec.h ipmi-sensor-cmds.h ipmi-sel-record-types.h ipmi-sel-cmds.h ipmi-lan-param-spec.h ipmi-lan-cmds.h ipmi-sol-cmds.h ipmi-sol-param-spec.h ipmi-serial-modem-param-spec.h ipmi-serial-modem-cmds.h ipmi-sdr-repository-cache-api.h ipmi-sensor-utils.h ipmi-debug.h ipmi-bmc-watchdog-timer-cmds.h ipmi-pef-and-alerting-cmds.h ipmi-pef-param-spec.h ipmi-sensor-event-messages.h ipmi-sensor-api.h ipmi-sel-api.h ipmi-comp-code-spec.h ipmi-sensor-cmds-udm.h ipmi-sel-cmds-udm.h ipmi-lan-cmds-udm.h ipmi-chassis-cmds-udm.h ipmi-device-global-cmds-udm.h ipmi-pef-and-alerting-cmds-udm.h ipmi-sdr-repository-cmds-udm.h ipmi-serial-modem-cmds-udm.h ipmi-sol-cmds-udm.h ipmi-messaging-support-cmds-udm.h ipmi-lan-interface-udm.h ipmi-kcs-interface-udm.h ipmi-ssif-interface-udm.h
 
 ../../common/src/libbitops.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

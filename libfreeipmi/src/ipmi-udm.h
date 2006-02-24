@@ -60,7 +60,7 @@ struct ipmi_device
   {
     struct 
     {
-      ipmi_locate_info_t locate_info;
+      ipmi_locate_info_t *locate_info;
       ipmi_kcs_ctx_t     kcs_ctx;
       ipmi_ssif_ctx_t    ssif_ctx;
 

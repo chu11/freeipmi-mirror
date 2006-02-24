@@ -23,10 +23,10 @@
 
 #include "xmalloc.h"
 
-typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t, ipmi_locate_info_t*));
+typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t));
 
 ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate (ipmi_interface_type_t type)
 {
   static ipmi_locate_func things_to_try[] =
     {
@@ -36,26 +36,21 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
       ipmi_locate_defaults_get_dev_info,
       NULL
     };
-  ipmi_locate_info_t* pinfo2;
+  ipmi_locate_info_t* pinfo;
   int i;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
     {
       errno = EINVAL;
       return NULL;
     }
   
-  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  pinfo->interface_type = type;
-  if (type == IPMI_INTERFACE_SSIF)
-    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
-   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
-      pinfo2 = (*things_to_try[i])(type, pinfo);
+      pinfo = (*things_to_try[i])(type);
       
-      if (pinfo2 != NULL)
-	return (pinfo2);
+      if (pinfo)
+	return (pinfo);
     }
 
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
@@ -63,8 +58,12 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 }
 
 void
-ipmi_locate_free (ipmi_locate_info_t* pinfo)
+ipmi_locate_destroy (ipmi_locate_info_t* pinfo)
 {
   if (pinfo)
-    xfree (pinfo->bmc_i2c_dev_name);
+    {
+      if (pinfo->bmc_i2c_dev_name)
+	xfree (pinfo->bmc_i2c_dev_name);
+      xfree (pinfo);
+    }
 }
