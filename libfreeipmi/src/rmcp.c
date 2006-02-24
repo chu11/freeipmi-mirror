@@ -28,7 +28,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <errno.h>
@@ -36,8 +35,6 @@
 #include "rmcp.h"
 
 #include "freeipmi-portability.h"
-
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 

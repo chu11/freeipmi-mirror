@@ -18,9 +18,37 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <errno.h>
+
+#include "ipmi-sdr-repository-cache-api.h"
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-udm.h"
+#include "ipmi-sensor-api.h"
+#include "ipmi-sdr-record-types.h"
+#include "ipmi-sdr-repository-cmds.h"
+#include "ipmi-sdr-repository-cmds-udm.h"
 
 int 
 ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)

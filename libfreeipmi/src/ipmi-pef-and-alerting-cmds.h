@@ -18,10 +18,14 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.1 2006-02-17 22:31:31 chu11 Exp $ */
+/* $Id: ipmi-pef-and-alerting-cmds.h,v 1.2 2006-02-24 20:05:07 chu11 Exp $ */
 
 #ifndef _IPMI_PEF_AND_ALERTING_CMDS_H
 #define _IPMI_PEF_AND_ALERTING_CMDS_H
+
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
 
 #define IPMI_PEF_POSTPONE_TIMER_DISABLE                     0x00
 #define IPMI_PEF_POSTPONE_TIMER_TEMPORARY_DISABLE           0xFE

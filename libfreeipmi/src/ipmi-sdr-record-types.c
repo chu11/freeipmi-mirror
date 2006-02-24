@@ -26,8 +26,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ipmi-sdr-record-types.h"
+
 #include "freeipmi-portability.h"
-#include "fiid.h"
 
 fiid_template_t tmpl_sdr_sensor_record_header = 
   {

@@ -12,10 +12,46 @@
 	libfreeipmi/src/ipmi-locate-acpi-spmi.c,
 	libfreeipmi/src/ipmi-locate-pci.c,
 	libfreeipmi/src/ipmi-sensor-types-spec.c,
-	libfreeipmi/src/ipmi-sensor-units-spec,
+	libfreeipmi/src/ipmi-sensor-event-messages.c,
+	libfreeipmi/src/ipmi-sensor-units-spec.c,
+	libfreeipmi/src/ipmi-sensor-utils.c,
+	libfreeipmi/src/ipmi-bmc-watchdog-timer-cmds.c,
+	libfreeipmi/src/ipmi-chassis-cmds.c,
+	libfreeipmi/src/ipmi-device-global-cmds.c,
+	libfreeipmi/src/ipmi-lan-cmds.c,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/src/ipmi-pef-and-alerting-cmds.c,
+	libfreeipmi/src/ipmi-sdr-repository-cmds.c,
+	libfreeipmi/src/ipmi-sel-cmds.c,
+	libfreeipmi/src/ipmi-sensor-cmds.c,
+	libfreeipmi/src/ipmi-serial-modem-cmds.c,
+	libfreeipmi/src/ipmi-sol-cmds.c,
 	libfreeipmi/src/ipmi-sdr-record-types.c: Remove need for
 	freeipmi-build.h.
 
+	* libfreeipmi/src/fiid.h, libfreeipmi/src/ipmi-debug.h,
+	libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-semaphores.h,
+	libfreeipmi/src/ipmi-locate-defaults.h,
+	libfreeipmi/src/ipmi-locate-smbios.h,
+	libfreeipmi/src/ipmi-locate-acpi-spmi.h,
+	libfreeipmi/src/ipmi-locate-pci.h,
+	libfreeipmi/src/ipmi-sensor-types-spec.h,
+	libfreeipmi/src/ipmi-sensor-event-messages.h,
+	libfreeipmi/src/ipmi-sensor-units-spec.h,
+	libfreeipmi/src/ipmi-sensor-utils.h,
+	libfreeipmi/src/ipmi-bmc-watchdog-timer-cmds.h,
+	libfreeipmi/src/ipmi-chassis-cmds.h,
+	libfreeipmi/src/ipmi-device-global-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-pef-and-alerting-cmds.h,
+	libfreeipmi/src/ipmi-sdr-repository-cmds.h,
+	libfreeipmi/src/ipmi-sel-cmds.h,
+	libfreeipmi/src/ipmi-sensor-cmds.h,
+	libfreeipmi/src/ipmi-serial-modem-cmds.h,
+	libfreeipmi/src/ipmi-sol-cmds.h,
+	libfreeipmi/src/ipmi-sdr-record-types.h: Fix includes.
+	
 	* libfreeipmi/src/Makefile.am: Cleanup.
 
 2006-02-23  Albert Chu <chu11@llnl.gov>

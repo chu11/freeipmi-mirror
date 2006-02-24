@@ -21,6 +21,10 @@
 #ifndef _IPMI_SERIAL_MODEM_CMDS_H
 #define	_IPMI_SERIAL_MODEM_CMDS_H
 
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_BASIC_MODE_ENABLE                             0x1
 #define IPMI_BASIC_MODE_DISABLE                            0x0
 

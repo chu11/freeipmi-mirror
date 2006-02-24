@@ -22,6 +22,8 @@
 #ifndef _IPMI_SENSOR_UTILS_H
 #define _IPMI_SENSOR_UTILS_H
 
+#include <stdint.h>
+
 double ipmi_sensor_decode_value (char r_exponent, 
 				 char b_exponent, 
 				 short m, 

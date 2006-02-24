@@ -21,6 +21,10 @@
 #ifndef _IPMI_SEL_CMDS_H
 #define _IPMI_SEL_CMDS_H
 
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY 0x0000
 #define IPMI_SEL_GET_RECORD_ID_LAST_ENTRY  0xFFFF
 

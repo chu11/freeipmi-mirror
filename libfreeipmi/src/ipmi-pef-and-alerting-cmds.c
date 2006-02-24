@@ -17,10 +17,23 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.3 2006-02-23 14:58:47 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.4 2006-02-24 20:05:07 chu11 Exp $  */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "ipmi-pef-and-alerting-cmds.h"
+#include "ipmi-pef-param-spec.h"
+
+#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "ipmi-cmd-spec.h"
+#include "ipmi-messaging-support-cmds.h" /* XXX */
 
 fiid_template_t tmpl_get_pef_capabilities_rq =
   {

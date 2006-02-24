@@ -18,8 +18,22 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+#include <errno.h>
+
+#include "ipmi-lan-cmds.h"
+#include "ipmi-lan-param-spec.h"
+
+#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "ipmi-cmd-spec.h"
+#include "ipmi-messaging-support-cmds.h" /* XXX */
 
 fiid_template_t tmpl_set_lan_configuration_parameters_rq = 
   {

@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_MAX_USER_NAME_LENGTH           16
 #define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16
 #define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH

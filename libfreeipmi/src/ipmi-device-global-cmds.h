@@ -25,6 +25,9 @@
 extern "C" {
 #endif
 
+  /* XXX */
+#include "fiid.h"
+
 #define IPMI_DEVICE_ID_UNSPECIFIED        0x00
 #define IPMI_MANUFACTURER_ID_UNSPECIFIED  0x000000
 #define IPMI_MANUFACTURER_ID_RESERVED     0x0FFFFF

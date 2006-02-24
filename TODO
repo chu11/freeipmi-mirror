@@ -39,6 +39,8 @@ libfreeipmi:
     - msg-support-cmds
        - missing commands
        - .h file split
+         - channel
+         - lan stuff
     - watchdog
     - rmcp
     - dev-global-cmds

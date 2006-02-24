@@ -37,11 +37,12 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <errno.h>
 #if defined (IPMI_SYSLOG)
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
+
+#include "ipmi-utils.h"
 
 #include "freeipmi-portability.h"
 #include "fiid.h"

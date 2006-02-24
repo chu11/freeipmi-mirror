@@ -18,9 +18,22 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
-#include "err-wrappers.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "ipmi-messaging-support-cmds.h"
+
+#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "ipmi-cmd-spec.h"
 
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {

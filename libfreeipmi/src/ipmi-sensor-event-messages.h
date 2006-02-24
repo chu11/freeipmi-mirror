@@ -21,6 +21,8 @@
 #ifndef _IPMI_SENSOR_EVENT_MESSAGES_H
 #define _IPMI_SENSOR_EVENT_MESSAGES_H
 
+#include <stdint.h>
+
 int ipmi_get_generic_event_message (uint8_t event_reading_type_code,
 				    uint16_t offset,
 				    char *buf,

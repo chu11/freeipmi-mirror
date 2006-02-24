@@ -22,6 +22,9 @@
 #ifndef _IPMI_SDR_RECORD_TYPES_H
 #define _IPMI_SDR_RECORD_TYPES_H
 
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_SDR_FORMAT_FULL_RECORD                        0x01
 #define IPMI_SDR_FORMAT_COMPACT_RECORD                     0x02
 #define IPMI_SDR_FORMAT_EVENT_ONLY_RECORD                  0x03

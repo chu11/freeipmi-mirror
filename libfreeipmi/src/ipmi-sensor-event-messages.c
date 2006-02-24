@@ -18,8 +18,25 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
+
+#include "ipmi-sensor-event-messages.h"
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "fiid-wrappers.h"
+
 
 /*********************************
  * Generic Event Reading Strings *

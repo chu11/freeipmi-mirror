@@ -28,7 +28,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mman.h>
@@ -40,11 +39,12 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
+#include "ipmi-locate.h"
+
 #include "freeipmi-portability.h"
 #include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-locate.h"
 #include "ipmi-ssif-interface.h"
 
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY

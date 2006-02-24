@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_FRB2                        0x1
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_BIOS_POST                        0x2
 #define IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_OS_LOAD                          0x3

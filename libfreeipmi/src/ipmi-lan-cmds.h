@@ -21,6 +21,10 @@
 #ifndef _IPMI_LAN_CMDS_H
 #define _IPMI_LAN_CMDS_H
 
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_AUTHENTICATION_TYPE_ENABLE                0x1
 #define IPMI_AUTHENTICATION_TYPE_DISABLE               0x0
 

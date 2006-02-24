@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+
 #define IPMI_POWER_RESTORE_POLICY_POWERED_OFF_AFTER_AC_RETURNS  0x00
 #define IPMI_POWER_RESTORE_POLICY_POWER_RESTORED_TO_STATE       0x01
 #define IPMI_POWER_RESTORE_POLICY_POWERS_UP_AFTER_AC_RETURNS    0x02

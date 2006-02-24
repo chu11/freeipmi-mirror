@@ -18,9 +18,22 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <errno.h>
+
+#include "rmcp.h"
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-sdr-record-types.h"
 
 #include "bit-ops.h"
 

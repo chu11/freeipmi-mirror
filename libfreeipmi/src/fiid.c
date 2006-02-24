@@ -29,12 +29,12 @@
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <assert.h>
 #include <errno.h>
 
-#include "freeipmi-portability.h"
 #include "fiid.h"
+
+#include "freeipmi-portability.h"
 
 #include "bit-ops.h"
 #include "xmalloc.h"

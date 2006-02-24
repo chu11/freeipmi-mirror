@@ -21,6 +21,10 @@
 #ifndef _IPMI_SOL_CMDS_H
 #define _IPMI_SOL_CMDS_H
 
+#include <stdint.h>
+/* XXX */
+#include "fiid.h"
+
 #define IPMI_SOL_PAYLOAD_DISABLE    0x0
 #define IPMI_SOL_PAYLOAD_ENABLE     0x1
 

@@ -23,11 +23,11 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <errno.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-locate.h"
+
+#include "freeipmi-portability.h"
 #include "ipmi-ssif-interface.h"
 
 #ifdef UNTESTED /* __linux */           /* this code uses the /proc filesystem */

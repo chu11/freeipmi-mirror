@@ -31,8 +31,9 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi-portability.h"
 #include "ipmi-locate.h"
+
+#include "freeipmi-portability.h"
 
 ipmi_locate_info_t*
 ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)

@@ -31,7 +31,6 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -44,9 +43,10 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
+#include "ipmi-locate.h"
+
 #include "freeipmi-portability.h"
 #include "fiid.h"
-#include "ipmi-locate.h"
 #include "ipmi-ssif-interface.h"
 
 #include "xmalloc.h"

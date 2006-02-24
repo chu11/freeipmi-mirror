@@ -18,8 +18,19 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "ipmi-sensor-cmds.h"
+
+#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "ipmi-cmd-spec.h"
 
 fiid_template_t tmpl_get_device_sdr_info_rq =
   {

@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+
 #define IPMI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repository-cache"
 
 typedef struct sdr_repository_cache

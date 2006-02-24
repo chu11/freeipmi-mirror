@@ -28,11 +28,11 @@
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
-#include <stdint.h>
 #include <errno.h>
 
+#include "ipmi-debug.h"
+
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "ipmi-comp-code-spec.h"
