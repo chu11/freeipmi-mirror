@@ -18,9 +18,41 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#ifdef __FreeBSD__
+#include <sys/time.h>
+#else  /* !__FreeBSD */
+#include <time.h>
+#endif /* !__FreeBSD */
+#endif /* !HAVE_SYS_TIME_H */
+#endif	/* !TIME_WITH_SYS_TIME */
+
+#include "ipmi-messaging-support-cmds-udm.h"
+#include "ipmi-messaging-support-cmds.h"
+
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-device-global-cmds.h"
+#include "ipmi-device-global-cmds-udm.h"
 
 int8_t 
 ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 

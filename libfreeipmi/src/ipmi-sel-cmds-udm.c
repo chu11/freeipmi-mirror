@@ -18,9 +18,25 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "ipmi-sel-cmds-udm.h"
+#include "ipmi-sel-cmds.h"
+
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 

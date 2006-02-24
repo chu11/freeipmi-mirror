@@ -22,6 +22,11 @@
 #ifndef _IPMI_SENSOR_API_H
 #define _IPMI_SENSOR_API_H
 
+#include <stdint.h>
+
+/* XXX */
+#include "ipmi-udm.h"
+
 struct sdr_full_record
 {
   /* requires to decode values */

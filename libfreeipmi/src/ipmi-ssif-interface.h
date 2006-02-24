@@ -27,6 +27,8 @@
 #ifndef IPMI_SSIF_INTERFACE_H
 #define IPMI_SSIF_INTERFACE_H
 
+#include <stdint.h>
+
 #define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
 #define IPMI_DEFAULT_IPMB_ADDRESS  0x42
 #define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20

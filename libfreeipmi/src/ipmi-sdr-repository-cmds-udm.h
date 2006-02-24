@@ -26,6 +26,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+#include "fiid.h"
+
 int8_t ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
                                           fiid_obj_t obj_cmd_rs);
 int8_t ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev, 

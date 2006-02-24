@@ -25,6 +25,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+
 /*
   Complete IPMI LAN Request Packet
   +----------------------+

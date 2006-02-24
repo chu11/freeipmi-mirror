@@ -25,6 +25,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+#include "fiid.h"
+
 int8_t ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 
                                                           fiid_obj_t obj_cmd_rs);
 

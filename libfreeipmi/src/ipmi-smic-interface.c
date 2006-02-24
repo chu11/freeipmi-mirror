@@ -19,12 +19,24 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <linux/types.h>
+#include <errno.h>
+
+#include "ipmi-smic-interface.h"
+
+#include "freeipmi-portability.h"
 #include "ipmi-inband.h"
 
 #include "ipmi-common.h"
-
-#include <linux/types.h>
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_smic_dev_io_fd = -1;

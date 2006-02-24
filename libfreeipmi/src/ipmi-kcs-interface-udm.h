@@ -25,6 +25,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+#include "ipmi-udm.h"
+
 /* High level calls */
 /* BMC treats "write followed by a read" as one transaction. It is
    highly recommended to use ipmi_kcs_cmd instead. Otherwise make sure

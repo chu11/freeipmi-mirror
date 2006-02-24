@@ -20,10 +20,22 @@
 
 */
 
-#include "freeipmi-build.h"
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "ipmi-udm.h"
+
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-locate.h"
 #include "ipmi-utils.h"
+#include "ipmi-kcs-interface.h"
+#include "ipmi-ssif-interface.h"
 
 #include "ipmi-common.h"
 

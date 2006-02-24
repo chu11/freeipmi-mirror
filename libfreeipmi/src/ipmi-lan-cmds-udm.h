@@ -21,6 +21,11 @@
 #ifndef _IPMI_LAN_CMDS_UDM_H
 #define _IPMI_LAN_CMDS_UDM_H
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+#include "fiid.h"
+
 int8_t ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 
                                                                                uint8_t channel_number, 
                                                                                uint8_t callback_level_none,

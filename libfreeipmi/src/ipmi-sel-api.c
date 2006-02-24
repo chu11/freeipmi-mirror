@@ -19,9 +19,22 @@
 
 */
 
-#include "freeipmi-build.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "ipmi-sel-api.h"
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-sel-cmds-udm.h"
+#include "ipmi-sensor-event-messages.h"
 
 #include "ipmi-common.h"
 

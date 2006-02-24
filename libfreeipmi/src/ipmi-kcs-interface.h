@@ -26,6 +26,10 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC1620    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC9416    0x0CA2

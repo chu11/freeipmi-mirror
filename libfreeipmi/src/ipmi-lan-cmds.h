@@ -125,8 +125,8 @@ extern fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_mac_
 extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_id_rs;
 extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs;
 
-extern fiid_template_t tmpl_suspend_bmc_arps_rq;
-extern fiid_template_t tmpl_suspend_bmc_arps_rs;
+extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
+extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
 
 int8_t fill_cmd_set_lan_configuration_parameters (fiid_obj_t obj_data_rq,
                                                   uint8_t channel_number,

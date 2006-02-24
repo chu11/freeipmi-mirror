@@ -25,6 +25,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+#include "fiid.h"
+
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 
                                                               uint8_t channel_number, 
                                                               uint8_t sol_payload, 

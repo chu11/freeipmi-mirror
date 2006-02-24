@@ -22,6 +22,10 @@
 #ifndef _IPMI_SEL_API_H
 #define _IPMI_SEL_API_H
 
+#include <stdint.h>
+/* XXX */
+#include "ipmi-udm.h"
+
 #define SEL_RECORD_SIZE 16
 
 struct sel_descriptor

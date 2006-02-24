@@ -22,9 +22,9 @@
 #ifndef _IPMI_UDM_H
 #define _IPMI_UDM_H
 
-/* XXX - FIX after include file reorg */
 #include <sys/socket.h>
 
+/* XXX - FIX after include file reorg */
 #include "ipmi-error.h"
 #include "ipmi-kcs-interface.h"
 #include "ipmi-ssif-interface.h"

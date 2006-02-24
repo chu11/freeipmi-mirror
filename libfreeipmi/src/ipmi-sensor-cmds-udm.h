@@ -26,6 +26,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "ipmi-udm.h"
+#include "fiid.h"
+
 int8_t ipmi_cmd_get_sensor_reading_threshold2 (ipmi_device_t *dev, 
                                                uint8_t sensor_number, 
                                                fiid_obj_t obj_cmd_rs);

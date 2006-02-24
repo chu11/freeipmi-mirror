@@ -44,7 +44,6 @@
 #include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-udm.h"
 #include "ipmi-sensor-api.h"
 #include "ipmi-sdr-record-types.h"
 #include "ipmi-sdr-repository-cmds.h"

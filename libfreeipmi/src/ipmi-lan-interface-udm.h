@@ -25,6 +25,11 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+#include "ipmi-udm.h"
+
 int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
 		      fiid_obj_t obj_cmd_rq, 
 		      fiid_obj_t obj_cmd_rs);

@@ -94,8 +94,6 @@ extern fiid_template_t tmpl_cmd_set_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_set_watchdog_timer_rs;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rs;
-extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
-extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
 
 int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd);
 

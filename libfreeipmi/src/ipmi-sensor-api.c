@@ -19,9 +19,35 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#if defined (IPMI_SYSLOG)
+#include <syslog.h>
+#endif /* IPMI_SYSLOG */
+
+#include "ipmi-sensor-api.h"
+
+#include "freeipmi-portability.h"
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-sdr-record-types.h"
+#include "ipmi-sdr-repository-cmds.h"
+#include "ipmi-sensor-cmds.h"
+#include "ipmi-sensor-types-spec.h"
+#include "ipmi-sensor-utils.h"
+#include "ipmi-sensor-cmds-udm.h"
+#include "ipmi-sdr-repository-cmds-udm.h"
+#include "ipmi-sensor-event-messages.h"
 
 enum system_software_type
   {
@@ -797,12 +823,14 @@ get_sdr_record (ipmi_device_t *dev,
     case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
     default:
       {
+#if defined (IPMI_SYSLOG)
 	char errstr[IPMI_ERR_STR_MAX_LEN];
 	snprintf (errstr, IPMI_ERR_STR_MAX_LEN, 
 		  "%s: record_type = %02Xh and record_id = %d not handled.  "
 		  "Please report to freeipmi-devel@gnu.org\n", 
 		  __PRETTY_FUNCTION__, sdr_record->record_type, sdr_record->record_type);
 	syslog (LOG_MAKEPRI(LOG_LOCAL1, LOG_ERR), errstr);
+#endif /* IPMI_SYSLOG */
       }
     }
   

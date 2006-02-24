@@ -27,6 +27,11 @@
 #ifndef IPMI_SSIF_INTERFACE_UDM_H
 #define IPMI_SSIF_INTERFACE_UDM_H
 
+#include <stdint.h>
+  /* XXX */
+#include "fiid.h"
+#include "ipmi-udm.h"
+
 int ipmi_ssif_cmd2 (ipmi_device_t *dev, 
 		    fiid_obj_t obj_cmd_rq, 
 		    fiid_obj_t obj_cmd_rs);

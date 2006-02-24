@@ -19,6 +19,20 @@
 
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "ipmi-kcs-interface-udm.h"
+#include "ipmi-kcs-interface.h"
+
 #include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"

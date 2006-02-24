@@ -1,5 +1,5 @@
 /* 
-   ipmi-inband-macros.h - macros for inband communication
+   ipmi-inband.h - macros for inband communication
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_INBAND_MACROS_H
-#define	_IPMI_INBAND_MACROS_H 1
+#ifndef _IPMI_INBAND_H
+#define	_IPMI_INBAND_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,5 +59,5 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-inband-macros.h */
+#endif /* ipmi-inband.h */
 

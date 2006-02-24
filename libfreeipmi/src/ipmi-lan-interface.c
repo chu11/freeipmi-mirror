@@ -19,10 +19,30 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <assert.h>
+#include <errno.h>
+
+#include "ipmi-lan-interface.h"
+
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-messaging-support-cmds.h"
+#include "ipmi-netfn-spec.h"
 #include "ipmi-utils.h"
+#include "rmcp.h"
 
 #include "md2.h"
 #include "md5.h"

@@ -26,7 +26,28 @@
 	libfreeipmi/src/ipmi-sensor-cmds.c,
 	libfreeipmi/src/ipmi-serial-modem-cmds.c,
 	libfreeipmi/src/ipmi-sol-cmds.c,
-	libfreeipmi/src/ipmi-sdr-record-types.c: Remove need for
+	libfreeipmi/src/ipmi-bmc-watchdog-timer-cmds-udm.c,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.c,
+	libfreeipmi/src/ipmi-device-global-cmds-udm.c,
+	libfreeipmi/src/ipmi-lan-cmds-udm.c,
+	libfreeipmi/src/ipmi-messaging-support-cmds-udm.c,
+	libfreeipmi/src/ipmi-pef-and-alerting-cmds-udm.c,
+	libfreeipmi/src/ipmi-sdr-repository-cmds-udm.c,
+	libfreeipmi/src/ipmi-sel-cmds-udm.c,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.c,
+	libfreeipmi/src/ipmi-serial-modem-cmds-udm.c,
+	libfreeipmi/src/ipmi-sol-cmds-udm.c,
+	libfreeipmi/src/ipmi-sdr-record-types.c,
+	libfreeipmi/src/ipmi-sdr-repository-cache-api.c,
+	libfreeipmi/src/ipmi-sensor-api.c,
+	libfreeipmi/src/ipmi-sel-api.c,
+	libfreeipmi/src/ipmi-kcs-interface.c,
+	libfreeipmi/src/ipmi-kcs-interface-udm.c,
+	libfreeipmi/src/ipmi-lan-interface.c,
+	libfreeipmi/src/ipmi-lan-interface-udm.c,
+	libfreeipmi/src/ipmi-smic-interface.c,
+	libfreeipmi/src/ipmi-ssif-interface.c,
+	libfreeipmi/src/ipmi-ssif-interface-udm.c: Remove need for
 	freeipmi-build.h.
 
 	* libfreeipmi/src/fiid.h, libfreeipmi/src/ipmi-debug.h,
@@ -50,7 +71,29 @@
 	libfreeipmi/src/ipmi-sensor-cmds.h,
 	libfreeipmi/src/ipmi-serial-modem-cmds.h,
 	libfreeipmi/src/ipmi-sol-cmds.h,
-	libfreeipmi/src/ipmi-sdr-record-types.h: Fix includes.
+	libfreeipmi/src/ipmi-bmc-watchdog-timer-cmds-udm.h,
+	libfreeipmi/src/ipmi-chassis-cmds-udm.h,
+	libfreeipmi/src/ipmi-device-global-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-cmds-udm.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds-udm.h,
+	libfreeipmi/src/ipmi-pef-and-alerting-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-repository-cmds-udm.h,
+	libfreeipmi/src/ipmi-sel-cmds-udm.h,
+	libfreeipmi/src/ipmi-sensor-cmds-udm.h,
+	libfreeipmi/src/ipmi-serial-modem-cmds-udm.h,
+	libfreeipmi/src/ipmi-sol-cmds-udm.h,
+	libfreeipmi/src/ipmi-sdr-record-types.h,
+	libfreeipmi/src/ipmi-sdr-repository-cache-api.h,
+	libfreeipmi/src/ipmi-sensor-api.h,
+	libfreeipmi/src/ipmi-sel-api.h
+	libfreeipmi/src/ipmi-ipmb-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface-udm.h,
+	libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-lan-interface-udm.h,
+	libfreeipmi/src/ipmi-smic-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface-udm.h: Fix includes.
 	
 	* libfreeipmi/src/Makefile.am: Cleanup.
 

@@ -25,7 +25,6 @@
 extern "C" {
 #endif
 
-
 /* BMC IPMI LUNs */
 
 /* BMC commands and Event Request Messages:
