@@ -1,5 +1,5 @@
 /* 
-   acpi-spmi-locate.c - ACPI tables driver to locate IPMI interfaces
+   ipmi-locate-acpi-spmi.c - ACPI tables driver to locate IPMI interfaces
    using SPMI table.
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
@@ -518,7 +518,40 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
     {0,  "", 0}
   };
 
-uint8_t 
+static uint8_t ipmi_acpi_table_checksum (uint8_t *buffer, size_t len);
+static int ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, 
+			       size_t rsdp_window_size,
+			       fiid_obj_t obj_acpi_rsdp_descriptor);
+static int ipmi_acpi_get_table (uint64_t table_address, 
+				char *signature,
+				uint8_t **acpi_table, 
+				uint32_t *acpi_table_length);
+static int ipmi_acpi_get_firmware_table (char *signature, 
+					 int table_instance,
+					 fiid_obj_t obj_acpi_table_hdr,
+					 uint8_t **sign_table_data,
+					 uint32_t *sign_table_data_length);
+static int ipmi_acpi_get_spmi_table (uint8_t interface_type,
+				     fiid_obj_t obj_acpi_table_hdr,
+				     fiid_obj_t obj_acpi_spmi_table_descriptor);
+
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   ipmi_acpi_table_checksum
+ *
+ * PARAMETERS:
+ *   buffer  - Buffer to checksum
+ *   length  - Size of the buffer
+ *
+ * RETURNS:
+ *   8 bit checksum of buffer. NON-ZERO = checksum failed.
+ *
+ * DESCRIPTION:
+ *   Computes an 8 bit checksum of the buffer(length) and returns it.
+ *
+ ******************************************************************************/
+static uint8_t 
 ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 {
   int i = 0;
@@ -533,7 +566,7 @@ ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
   return sum;
 }
 
-int
+static int
 ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
               void **virtual_addr,
               void **mapped_addr, size_t *mapped_addr_len)
@@ -570,13 +603,13 @@ ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
   return (0);
 }
 
-int
+static int
 ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
 {
   return (munmap (mapped_addr, mapped_addr_len));
 }
 
-int
+static int
 ipmi_get_physical_mem_data (uint64_t physical_address,
                             size_t length,
                             uint8_t *data)
@@ -603,7 +636,30 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
   return 0;
 }
 
-int 
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   ipmi_acpi_get_rsdp
+ *
+ * PARAMETERS:
+ *   rsdp_window_base_addr  - Starting pointer for search
+ *   rsdp_window_wize       - Maximum length to search
+ *   obj_acpi_rsdp_descriptor  - Initialized rsdp descriptor object
+ *
+ * RETURN:
+ *   A return value of 0 means success. RSDP descriptor is returned
+ *   through obj_acpi_rsdp_descriptor parameter.
+ *
+ * DESCRIPTION:
+ *   Search a block of memory for the RSDP signature.
+ *
+ * NOTE:
+ *   The RSDP must be either in the first 1_k of the Extended BIOS
+ *   Data Area or between E0000 and FFFFF (ACPI 1.0 section 5.2.2;
+ *   assertion #421).
+ *
+ ******************************************************************************/
+static int 
 ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size, 
 		    fiid_obj_t obj_acpi_rsdp_descriptor)
 {
@@ -722,7 +778,26 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   return (-1);
 }
 
-int 
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   ipmi_acpi_get_table
+ *
+ * PARAMETERS:
+ *   table_address     - ACPI table physical address
+ *   signature         - signature of the table
+ *   acpi_table        - ACPI table in malloc'ed memory
+ *   acpi_table_length - ACPI table length
+ *
+ * RETURN:
+ *   A return value of 0 means success. ACPI table (including header) is
+ *   returned through acpi_table parameter.
+ *
+ * DESCRIPTION:
+ *   Retrieve any ACPI table (including header) pointed by table address.
+ *
+ ******************************************************************************/
+static int 
 ipmi_acpi_get_table (uint64_t table_address, char *signature, 
 		     uint8_t **acpi_table, uint32_t *acpi_table_length)
 {
@@ -800,7 +875,29 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
   return (rv);
 }
 
-int 
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   ipmi_acpi_get_firmware_table
+ *
+ * PARAMETERS:
+ *   signature               - ACPI signature for firmware table header
+ *   table_instance          - Which instance of the firmware table
+ *   obj_acpi_table_hdr      - Initialized ACPI table header
+ *   sign_table_data         - Initialized with malloc'ed ACPI firmware table data
+ *   sign_table_data_length  - ACPI table DATA length
+ *
+ * RETURN:
+ *   Return 0 for success. ACPI table header and firmware table DATA are
+ *   returned through obj_acpi_table_hdr and signed_table_data
+ *   parameters.
+ *
+ * DESCRIPTION:
+ *   Top level call for any ACPI firmware table by table signature string.
+ *   It gets table header and data from RSDT/XSDT.
+ *
+ ******************************************************************************/
+static int 
 ipmi_acpi_get_firmware_table (char *signature, int table_instance, 
 			      fiid_obj_t obj_acpi_table_hdr, 
 			      uint8_t **sign_table_data, 
@@ -957,7 +1054,26 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
   return (rv);
 }
 
-int 
+/*******************************************************************************
+ *
+ * FUNCTION:
+ *   ipmi_acpi_get_spmi_table
+ *
+ * PARAMETERS:
+ *   interface_type           - Type of interface to look for (KCS, SSIF, SMIC, BT)
+ *   obj_acpi_table_hdr       - Initialized ACPI table header
+ *   acpi_table_firmware      - Initialized ACPI firmware table
+ *
+ * RETURN:
+ *   Return 0 for success. ACPI table header and SPMI table is
+ *   returned through obj_acpi_table_hdr and obj_acpi_spmi_table_descriptor
+ *   parameters.
+ *
+ * DESCRIPTION:
+ *   Get SPMI table for the given interface type.
+ *
+ ******************************************************************************/
+static int 
 ipmi_acpi_get_spmi_table (uint8_t interface_type,
 			  fiid_obj_t obj_acpi_table_hdr,
 			  fiid_obj_t obj_acpi_spmi_table_descriptor)
@@ -1030,18 +1146,18 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
 }
 
 ipmi_locate_info_t*
-acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type, 
-			ipmi_locate_info_t* pinfo)
+ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type, 
+				    ipmi_locate_info_t* pinfo)
 {
   fiid_obj_t obj_acpi_table_hdr = NULL;
   fiid_obj_t obj_acpi_spmi_table_descriptor = NULL;
   ipmi_locate_info_t *rv = NULL;
   extern int errno;
   
-  if (pinfo == NULL)
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
     {
       errno = EINVAL;
-      return (NULL);
+      return NULL;
     }
   
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_ACPI;
@@ -1050,7 +1166,7 @@ acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type,
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
 
-  if (ipmi_acpi_get_spmi_table (interface_type,
+  if (ipmi_acpi_get_spmi_table (type,
 				obj_acpi_table_hdr,
 				obj_acpi_spmi_table_descriptor) != 0)
     goto cleanup;

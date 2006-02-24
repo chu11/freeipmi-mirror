@@ -1,5 +1,5 @@
 /* 
-   defaults-locate.c - Return default locate info for IPMI interfaces.
+   ipmi-locate-defaults.c - Return default locate info for IPMI interfaces.
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -21,8 +21,14 @@
 #include "freeipmi-build.h"
 
 ipmi_locate_info_t*
-defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+    {
+      errno = EINVAL;
+      return NULL;
+    }
+
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_DEFAULTS;
   switch (type){
   case IPMI_INTERFACE_KCS:

@@ -28,44 +28,28 @@ typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t, ipmi_loc
 ipmi_locate_info_t*
 ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
-  extern int errno;
-  
   static ipmi_locate_func things_to_try[] =
     {
-      smbios_get_dev_info,
-      acpi_spmi_get_dev_info,
-      pci_get_dev_info,
-      defaults_get_dev_info,
+      ipmi_locate_smbios_get_dev_info,
+      ipmi_locate_acpi_spmi_get_dev_info,
+      ipmi_locate_pci_get_dev_info,
+      ipmi_locate_defaults_get_dev_info,
       NULL
     };
-
-  int i;
   ipmi_locate_info_t* pinfo2;
-  
-  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  int i;
 
-  switch (type)
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
     {
-    case IPMI_INTERFACE_KCS:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_SMIC:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_BT:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_SSIF:
-      pinfo->interface_type = type;
-      pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
-      break;
-    case IPMI_INTERFACE_LAN:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_RESERVED:
-      break;
+      errno = EINVAL;
+      return NULL;
     }
   
+  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
+  pinfo->interface_type = type;
+  if (type == IPMI_INTERFACE_SSIF)
+    pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
+   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
       pinfo2 = (*things_to_try[i])(type, pinfo);
@@ -81,5 +65,6 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 void
 ipmi_locate_free (ipmi_locate_info_t* pinfo)
 {
-  xfree (pinfo->bmc_i2c_dev_name);
+  if (pinfo)
+    xfree (pinfo->bmc_i2c_dev_name);
 }

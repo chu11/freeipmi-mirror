@@ -30,10 +30,10 @@ extern "C" {
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-locate.h>
-#include <freeipmi/smbios-locate.h>
-#include <freeipmi/acpi-spmi-locate.h>
-#include <freeipmi/pci-locate.h>
-#include <freeipmi/defaults-locate.h>
+#include <freeipmi/ipmi-locate-smbios.h>
+#include <freeipmi/ipmi-locate-acpi-spmi.h>
+#include <freeipmi/ipmi-locate-pci.h>
+#include <freeipmi/ipmi-locate-defaults.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>

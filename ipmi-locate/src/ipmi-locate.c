@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.9 2006-02-23 14:58:47 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.10 2006-02-24 02:31:24 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -110,7 +110,7 @@ smbios_probe_display ()
   
   printf ("Probing KCS device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (smbios_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
+  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -123,7 +123,7 @@ smbios_probe_display ()
   
   printf ("Probing SMIC device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (smbios_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
+  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -136,7 +136,7 @@ smbios_probe_display ()
   
   printf ("Probing BT device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (smbios_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
+  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -149,7 +149,7 @@ smbios_probe_display ()
   
   printf ("Probing SSIF device using SMBIOS... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (smbios_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
+  if (ipmi_locate_smbios_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -173,7 +173,7 @@ acpi_probe_display ()
   
   printf ("Probing KCS device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (acpi_spmi_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
+  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -186,7 +186,7 @@ acpi_probe_display ()
   
   printf ("Probing SMIC device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (acpi_spmi_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
+  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -199,7 +199,7 @@ acpi_probe_display ()
   
   printf ("Probing BT device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (acpi_spmi_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
+  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -212,7 +212,7 @@ acpi_probe_display ()
   
   printf ("Probing SSIF device using ACPI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (acpi_spmi_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
+  if (ipmi_locate_acpi_spmi_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -236,7 +236,7 @@ pci_probe_display ()
   
   printf ("Probing KCS device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (pci_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
+  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -249,7 +249,7 @@ pci_probe_display ()
   
   printf ("Probing SMIC device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (pci_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
+  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -262,7 +262,7 @@ pci_probe_display ()
   
   printf ("Probing BT device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (pci_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
+  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -275,7 +275,7 @@ pci_probe_display ()
   
   printf ("Probing SSIF device using PCI... ");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (pci_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
+  if (ipmi_locate_pci_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
     {
       printf ("done\n");
       display_ipmi_locate_info (pinfo);
@@ -299,7 +299,7 @@ defaults_display ()
   
   printf ("KCS device default values:\n");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (defaults_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
+  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_KCS, pinfo) != NULL)
     {
       display_ipmi_locate_info (pinfo);
     }
@@ -307,7 +307,7 @@ defaults_display ()
   
   printf ("SMIC device default values:\n");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (defaults_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
+  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_SMIC, pinfo) != NULL)
     {
       display_ipmi_locate_info (pinfo);
     }
@@ -315,7 +315,7 @@ defaults_display ()
   
   printf ("BT device default values:\n");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (defaults_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
+  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_BT, pinfo) != NULL)
     {
       display_ipmi_locate_info (pinfo);
     }
@@ -323,7 +323,7 @@ defaults_display ()
   
   printf ("SSIF device default values:\n");
   memset (pinfo, 0, sizeof (ipmi_locate_info_t));
-  if (defaults_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
+  if (ipmi_locate_defaults_get_dev_info (IPMI_INTERFACE_SSIF, pinfo) != NULL)
     {
       display_ipmi_locate_info (pinfo);
     }

@@ -1,5 +1,5 @@
 /* 
-   smbios-locate.h - SMBIOS driver to locate IPMI interfaces.
+   ipmi-locate-smbios.h - SMBIOS driver to locate IPMI interfaces.
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -22,8 +22,8 @@
    000fffff.  The IPMI Entry Structure begins on a 16-byte boundary,
    with a 4 byte "_SM_" signature.  */
 
-#ifndef _SMBIOS_LOCATE_H
-#define _SMBIOS_LOCATE_H 1
+#ifndef _IPMI_LOCATE_SMBIOS_H
+#define _IPMI_LOCATE_SMBIOS_H 1
 
 #define IPMI_SMBIOS_ENTRY_CSUM_OFFSET 	0x4
 #define IPMI_SMBIOS_ENTRY_LEN_OFFSET 	0x5
@@ -58,7 +58,6 @@
 #define IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND   0x02
 #define IPMI_SMBIOS_REG_SPACE_RESERVED       0x03
 
-int ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space);
-ipmi_locate_info_t* smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
+ipmi_locate_info_t* ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo);
 
 #endif

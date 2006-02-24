@@ -25,8 +25,6 @@
 extern "C" {
 #endif
 
-#define IPMI_REG_SPACE_DEFAULT   0x01
-
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY 0x00
 #define IPMI_ADDRESS_SPACE_ID_SYSTEM_IO     0x01
 #define IPMI_ADDRESS_SPACE_ID_SMBUS         0x04
@@ -41,15 +39,12 @@ enum ipmi_locate_driver_type
 };
 typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
 
-#define IPMI_LOCATE_DRIVER
-/* USE ipmi_interface_type_t INSTEAD --Anand Babu */
-/* #define IPMI_INTERFACE_RESERVED   0x00 */
-/* #define IPMI_INTERFACE_KCS        0x01 */
-/* #define IPMI_INTERFACE_SMIC       0x02 */
-/* #define IPMI_INTERFACE_BT         0x03 */
-/* #define IPMI_INTERFACE_SSIF       0x04 */
-/* #define IPMI_INTERFACE_MAX        IPMI_INTERFACE_SSIF */
-/* 5-255 Reserved */
+#define IPMI_LOCATE_DRIVER_VALID(__val) \
+        (((__val) == IPMI_LOCATE_DRIVER_NONE \
+	  || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS \
+	  || (__val) == IPMI_LOCATE_DRIVER_SMBIOS \
+	  || (__val) == IPMI_LOCATE_DRIVER_ACPI \
+	  || (__val) == IPMI_LOCATE_DRIVER_PCI) ? 1 : 0)
 
 enum ipmi_interface_type
 {
@@ -60,9 +55,17 @@ enum ipmi_interface_type
   IPMI_INTERFACE_SSIF = 4,
   /* Note: If you add a new interface here, don't forget to update
   "IPMI_INTERFACE_MAX" macro below. */
-  IPMI_INTERFACE_LAN = 0xF
+  IPMI_INTERFACE_LAN = 0xF,
 };
 typedef enum ipmi_interface_type ipmi_interface_type_t;
+
+#define IPMI_INTERFACE_TYPE_VALID(__val) \
+        (((__val) == IPMI_INTERFACE_RESERVED \
+	  || (__val) == IPMI_INTERFACE_KCS \
+	  || (__val) == IPMI_INTERFACE_SMIC \
+	  || (__val) == IPMI_INTERFACE_BT \
+	  || (__val) == IPMI_INTERFACE_SSIF \
+	  || (__val) == IPMI_INTERFACE_LAN) ? 1 : 0)
 
 #define IPMI_INTERFACE_MAX  IPMI_INTERFACE_SSIF
 #define IPMI_INTERFACE_LAST IPMI_INTERFACE_MAX

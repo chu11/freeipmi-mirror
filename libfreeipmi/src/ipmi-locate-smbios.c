@@ -1,5 +1,5 @@
 /* 
-   smbios-locate.c - SMBIOS driver to locate IPMI interfaces.
+   ipmi-locate-smbios.c - SMBIOS driver to locate IPMI interfaces.
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -102,8 +102,7 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
     {0, "", 0}
   };
 
-
-int
+static int
 ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space)
 {
   extern int errno;
@@ -311,12 +310,18 @@ copy_impi_dev_info (ipmi_interface_type_t type)
    RETURNS:
    pinfo if successful, NULL otherwise */
 ipmi_locate_info_t*
-smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
   uint8_t* bufp;
   uint8_t version;
   uint64_t addr;
   uint64_t strobed;
+
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+    {
+      errno = EINVAL;
+      return NULL;
+    }
 
   bufp = copy_impi_dev_info (type);
   if (bufp == NULL)

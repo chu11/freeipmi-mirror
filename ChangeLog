@@ -43,6 +43,18 @@
 	putting specific includes into .c files so freeipmi-build.h need
 	is limited.
 
+	* libfreeipmi/src/acpi-spmi-locate.c,
+	libfreeipmi/src/acpi-spmi-locate.h, libfreeipmi/src/pci-locate.c,
+	libfreeipmi/src/pci-locate.h, libfreeipmi/src/smbios-locate.c,
+	libfreeipmi/src/smbios-locate.h,
+	libfreeipmi/src/defaults-locate.h,
+	libfreeipmi/src/defaults-locate.c: Renamed to
+	ipmi-locate-acpi-spmi.c, ipmi-locate-acpi-spmi.h,
+	ipmi-locate-pci.c, ipmi-locate-pci.h, ipmi-locate-smbios.c,
+	ipmi-locate-smbios.h, ipmi-locate-defaults.c, and
+	ipmi-locate-defaults.h.  Adjusted function naming appropriately.
+	Added parameter checks and various minor code cleanup.
+
 	* common/, ipmiping/, fish/, ipmipower/, libfreeipmi/: Adjust
 	makefiles and code for various location changes, include changes,
 	define, or function name changes.

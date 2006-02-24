@@ -1,5 +1,5 @@
 /* 
-   pci-locate.c - Locate IPMI interfaces by scanning PCI bus information
+   ipmi-locate-pci.c - Locate IPMI interfaces by scanning PCI bus information
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -110,7 +110,7 @@ pci_get_regs (uint8_t bus, uint8_t dev, uint16_t func, pci_class_regs_t* pregs)
 /* pinfo = pointer to information structure filled in by this function */
 
 ipmi_locate_info_t*
-pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 {
   unsigned dfn;
   unsigned vendor;
@@ -124,6 +124,12 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
   int items;
   int i;
   int status;
+
+  if (!IPMI_INTERFACE_TYPE_VALID(type) || !pinfo)
+    {
+      errno = EINVAL;
+      return NULL;
+    }
 
   status = 1;
   fp_devices = fopen ("/proc/bus/pci/devices", "r");
@@ -181,7 +187,7 @@ pci_get_dev_info (ipmi_interface_t type, ipmi_locate_info_t* pinfo)
 #else  /* __linux */
 
 ipmi_locate_info_t*
-pci_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 {
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_PCI;
   return NULL;
