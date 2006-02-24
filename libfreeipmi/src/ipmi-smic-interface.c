@@ -22,6 +22,8 @@
 #include "freeipmi-build.h"
 #include "ipmi-inband.h"
 
+#include "ipmi-common.h"
+
 #include <linux/types.h>
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
@@ -37,6 +39,28 @@ fiid_template_t tmpl_hdr_smic =
     {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
+
+#if 0
+static int
+ipmi_smic_print_flags (int fd, uint8_t state)
+{
+  ipmi_dprintf (fd, "Current SMIC flags: %#x : ", state);
+  if(state & IPMI_SMIC_RX_DATA_RDY) 
+    ipmi_dprintf (fd, "RX_DATA_RDY ");
+  if(state & IPMI_SMIC_TX_DATA_RDY)
+    ipmi_dprintf (fd, "TX_DATA_RDY ");
+  if(state & IPMI_SMIC_SMI)
+    ipmi_dprintf (fd, "SMI ");
+  if(state & IPMI_SMIC_EVT_ATN) 
+    ipmi_dprintf (fd, "EVT_ATN ");
+  if(state & IPMI_SMIC_SMS_ATN)
+    ipmi_dprintf (fd, "SMS_ATN ");
+  if(state & IPMI_SMIC_BUSY)
+    ipmi_dprintf (fd, "BUSY ");
+  ipmi_dprintf (fd, "\n");
+  return (0);
+}
+#endif /* 0x */
 
 uint64_t 
 ipmi_smic_get_poll_count ()

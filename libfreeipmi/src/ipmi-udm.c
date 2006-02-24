@@ -23,6 +23,9 @@
 #include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-utils.h"
+
+#include "ipmi-common.h"
 
 fiid_template_t tmpl_inband_hdr =
   {

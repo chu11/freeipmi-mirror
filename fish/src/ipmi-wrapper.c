@@ -824,7 +824,7 @@ ipmi_ping (char *host, unsigned int sock_timeout)
   }
   
   to_addr.sin_family = AF_INET;
-  to_addr.sin_port   = htons (RMCP_PRI_RMCP_PORT);
+  to_addr.sin_port   = htons (RMCP_PRIMARY_RMCP_PORT);
   to_addr.sin_addr   = *(struct in_addr *) hostinfo->h_addr;
   
   {

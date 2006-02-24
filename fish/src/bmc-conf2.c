@@ -18,6 +18,9 @@
 
 #include "common.h"
 
+/* XXX need to fix after include reorg */
+#include "ipmi-utils.h"
+
 #include "bit-ops.h"
 
 static int8_t 
@@ -718,7 +721,7 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
+  if (ipmi_completion_code_check (obj_cmd_rs) != 1)
     goto cleanup;
   
   rv = 0;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.5 2006-02-23 14:58:47 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.6 2006-02-24 01:34:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -342,7 +342,7 @@ _setup(void)
 
   memset(&_destaddr, '\0', sizeof(_destaddr));
   _destaddr.sin_family = AF_INET;
-  _destaddr.sin_port = htons(RMCP_PRI_RMCP_PORT);
+  _destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
     
   if ((hptr = gethostbyname(_dest)) == NULL)
     ipmi_ping_err_exit("gethostbyname: %s", hstrerror(h_errno));

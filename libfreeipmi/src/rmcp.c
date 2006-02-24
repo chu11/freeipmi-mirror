@@ -19,7 +19,25 @@
 
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <errno.h>
+
+#include "rmcp.h"
+
+#include "freeipmi-portability.h"
+
+#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 
@@ -181,7 +199,7 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
 }
 
 int8_t
-ipmi_rmcp_message_tag_chk (uint8_t message_tag, fiid_obj_t pong)
+ipmi_rmcp_check_message_tag (uint8_t message_tag, fiid_obj_t pong)
 {
   uint64_t val;
 

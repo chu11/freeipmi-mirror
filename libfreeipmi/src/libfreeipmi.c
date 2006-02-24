@@ -18,9 +18,22 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "freeipmi-build.h"
 
 #ifdef __FreeBSD__
+
+#if __GNUC__
+#define _program_name   __progname
+#define program_invocation_short_name	__progname
+extern char *__progname;
+#else  /* !__GNUC__ */
+#define _program_name   (NULL)
+#define	program_invocation_short_name	(NULL)
+#endif /* !__GNUC__ */
 
 #include <readline/readline.h>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.18 2006-02-23 14:58:47 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.19 2006-02-24 01:34:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -194,13 +194,13 @@ parsepacket(char *buffer,
     }
 #endif
 
-  if ((ret = ipmi_lan_check_chksum((uint8_t *)buffer, buflen)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_chksum: %s", strerror(errno));
+  if ((ret = ipmi_lan_check_checksum((uint8_t *)buffer, buflen)) < 0)
+    ipmi_ping_err_exit("ipmi_lan_check_checksum: %s", strerror(errno));
 
   if (!ret)
     {
 #ifndef NDEBUG
-      fprintf(stderr, "%s(%d): chksum failed\n", __FUNCTION__, __LINE__);
+      fprintf(stderr, "%s(%d): checksum failed\n", __FUNCTION__, __LINE__);
 #endif /* NDEBUG */
       retval = 0;
       goto cleanup;

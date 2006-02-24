@@ -26,11 +26,13 @@
 extern "C" {
 #endif
 
-  /* XXX need to do includes */
+/* XXX need to do includes */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#include "ipmi-utils.h"
 
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 
@@ -102,7 +104,7 @@ do {                                                                    \
                            (__netfn),                                   \
                            (__rq),                                      \
                            (__rs)) < 0));                               \
-  ERR_CLEANUP (ipmi_comp_test ((__rs)) == 1);                           \
+  ERR_CLEANUP (ipmi_completion_code_check ((__rs)) == 1);               \
 } while (0)
 
 #ifdef __cplusplus

@@ -25,6 +25,7 @@
 #include "ipmi-inband.h"
 #include "ipmi-semaphores.h"
 
+#include "ipmi-common.h"
 #include "xmalloc.h"
 
 #define IPMI_KCS_SLEEP_USECS            0x01
@@ -446,9 +447,40 @@ ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
     ipmi_kcs_read_byte (ctx);
 }
 
-/*
- * Standard write loop. 
- */
+#if 0
+static uint8_t
+ipmi_kcs_print_state (int fd, uint8_t state)
+{
+  /* we assume we have already ioperm'd the space */
+  ipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
+  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
+    ipmi_dprintf (fd, "IDLE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
+    ipmi_dprintf (fd, "READ_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
+    ipmi_dprintf (fd, "WRITE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
+    ipmi_dprintf (fd, "ERROR_STATE ");
+  } else {
+    ipmi_dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
+  }
+  if (state & IPMI_KCS_STATUS_REG_IBF) {
+    ipmi_dprintf (fd, "IBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OBF) {
+    ipmi_dprintf (fd, "OBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM1) {
+    ipmi_dprintf (fd, "OEM1 ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM2) {
+    ipmi_dprintf (fd, "OEM2 ");
+  }
+  ipmi_dprintf (fd, "\n");
+  return (0);
+}
+#endif /* 0 */
+
 int32_t
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx, 
 		uint8_t *buf, 

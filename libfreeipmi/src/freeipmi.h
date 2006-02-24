@@ -56,7 +56,8 @@ extern "C" {
 #include <freeipmi/ipmi-sdr-repository-cmds-udm.h>
 #include <freeipmi/ipmi-sensor-cmds.h>
 #include <freeipmi/ipmi-sensor-cmds-udm.h>
-#include <freeipmi/ipmi-sensor-types.h>
+#include <freeipmi/ipmi-sensor-types-spec.h>
+#include <freeipmi/ipmi-sensor-units-spec.h>
 #include <freeipmi/ipmi-sel-record-types.h>
 #include <freeipmi/ipmi-sel-cmds.h>
 #include <freeipmi/ipmi-sel-cmds-udm.h>
@@ -70,8 +71,6 @@ extern "C" {
 #include <freeipmi/ipmi-sol-cmds.h>
 #include <freeipmi/ipmi-sol-cmds-udm.h>
 #include <freeipmi/ipmi-debug.h>
-#include <freeipmi/ipmi-md2.h>
-#include <freeipmi/ipmi-md5.h>
 #include <freeipmi/ipmi-sdr-repository-cache-api.h>
 #include <freeipmi/ipmi-sensor-utils.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>

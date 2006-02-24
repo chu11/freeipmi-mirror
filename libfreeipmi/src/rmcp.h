@@ -27,15 +27,18 @@
 extern "C" {
 #endif
 
-#define RMCP_VERSION_1_0         0x06 // RMCP Version 1.0
+/* XXX - FIX after include file reorg */
+#include "fiid.h"
 
-#define RMCP_AUX_BUS_SHUNT       0x26F
-#define RMCP_PRI_RMCP_PORT  RMCP_AUX_BUS_SHUNT
+#define RMCP_VERSION_1_0              0x06 // RMCP Version 1.0
 
-#define RMCP_SECURE_AUX_BUS      0x298
-#define RMCP_SEC_RMCP_PORT  RMCP_SECURE_AUX_BUS 
+#define RMCP_AUX_BUS_SHUNT            0x26F
+#define RMCP_PRIMARY_RMCP_PORT        RMCP_AUX_BUS_SHUNT
 
-#define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK         0xFF
+#define RMCP_SECURE_AUX_BUS           0x298
+#define RMCP_SECONDARY_RMCP_PORT      RMCP_SECURE_AUX_BUS 
+
+#define RMCP_HDR_SEQ_NUM_NO_RMCP_ACK  0xFF
 
 #define RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL   0x0
 #define RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_ACK      0x1
@@ -56,23 +59,28 @@ extern "C" {
 
 #define RMCP_ASF_MESSAGE_TAG_MAX 0xFE
 
-#define IP_HDR_TTL_BMC_DEFAULT   0x40
-
 extern fiid_template_t tmpl_rmcp_hdr;
 extern fiid_template_t tmpl_cmd_asf_presence_ping;
 extern fiid_template_t tmpl_cmd_asf_presence_pong;
 
 int8_t fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr);
+
 int8_t fill_rmcp_hdr_ipmi (fiid_obj_t obj_rmcp_hdr);
+
 int8_t fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr);
+
 /* MESSAGE_TAG:
    achu: Consecutive ping messages should use different message tags,
    ranging from 0x00 to 0xFE.  This is because the RMCP consumers may
    optionally discard duplicate messages.  */
+
 int8_t fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd);
+
 int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, uint32_t pkt_len);
+
 int32_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
-int8_t ipmi_rmcp_message_tag_chk (uint8_t message_tag, fiid_obj_t pong);
+
+int8_t ipmi_rmcp_check_message_tag (uint8_t message_tag, fiid_obj_t pong);
 
 #ifdef __cplusplus
 }

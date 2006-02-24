@@ -28,28 +28,47 @@
    yield 0.
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <stdint.h>
+#include <errno.h>
+#if defined (IPMI_SYSLOG)
+#include <syslog.h>
+#endif /* IPMI_SYSLOG */
+
+#include "freeipmi-portability.h"
+
+#include "fiid.h"
 #include "fiid-wrappers.h"
+#include "ipmi-comp-code-spec.h"
+#include "rmcp.h"
 
 #include "bit-ops.h"
 
 int8_t
-ipmi_chksum (uint8_t *buf, uint64_t len)
+ipmi_checksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
-  register int8_t chksum = 0;
+  register int8_t checksum = 0;
  
   if (buf == NULL || len == 0)
-    return (chksum);
+    return (checksum);
 
   for (; i < len; i++)
-    chksum = (chksum + buf[i]) % 256;
+    checksum = (checksum + buf[i]) % 256;
 
-  return (-chksum);
+  return (-checksum);
 }
 
 int8_t 
-ipmi_comp_test (fiid_obj_t obj_cmd)
+ipmi_completion_code_check (fiid_obj_t obj_cmd)
 {
 #if defined (IPMI_SYSLOG)
   uint64_t cmd;
@@ -95,51 +114,8 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
       errno = EIO;
       return (0);
     }
+
   return (1);
-}
-
-int
-ipmi_open_free_udp_port (void)
-{
-  int sockfd;
-  int sockname_len;
-  struct sockaddr_in sockname;
-  int free_port=1025;
-  int err;
-  extern int errno;
-
-  sockfd = socket (AF_INET, SOCK_DGRAM, 0);
-  if (sockfd < 0)
-    return (-1);
-
-  for (; free_port < 65535; free_port++)
-    {
-      /* Instead of probing if the current (may be the client side)
-      system has IPMI LAN support too, it is easier to avoid these two
-      RMCP reserved ports. -- Anand Babu*/
-      if ((free_port == RMCP_AUX_BUS_SHUNT) || 
-	  (free_port == RMCP_SECURE_AUX_BUS))
-	continue;
-
-      memset (&sockname, 0, sizeof (struct sockaddr_in));
-      sockname.sin_family = AF_INET;
-      sockname.sin_port   = htons (free_port);
-      sockname.sin_addr.s_addr = htonl (INADDR_ANY);
-      sockname_len = sizeof (struct sockaddr_in);
-      
-      if ((err = bind (sockfd, (struct sockaddr *) &sockname, sockname_len)) == 0)
-	return sockfd;
-      else
-	{
-	  if (errno == EADDRINUSE)
-	    continue;
-	  else
-	    return (-1);
-	}
-    }
-  close (sockfd);
-  errno = EBUSY;
-  return (-1);
 }
 
 int8_t

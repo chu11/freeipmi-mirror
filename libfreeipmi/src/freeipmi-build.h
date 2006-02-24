@@ -128,23 +128,13 @@ extern "C" {
 #  endif
 # endif
 
-#else /* HAVE_CONFIG_H */
-# include <string.h>
-# include <stdarg.h>
-# include <unistd.h>
-# include <alloca.h>
-# include <fcntl.h>
-# include <sys/time.h>
-# include <time.h>
-# include <libintl.h>
-#endif /* HAVE_CONFIG_H */
+#endif /* !HAVE_CONFIG_H */
 
 #if defined(__FreeBSD__) && !defined(EBADMSG)
 # define EBADMSG    ENOMSG
 #endif
 
 #include "fiid.h"
-#include "ipmi-utils.h"
 #include "ipmi-comp-code-spec.h"
 #include "ipmi-error.h"
 #include "ipmi-locate.h"
@@ -173,7 +163,8 @@ extern "C" {
 #include "ipmi-sdr-repository-cmds.h"
 #include "ipmi-sdr-repository-cmds-udm.h"
 #include "ipmi-sdr-record-types.h"
-#include "ipmi-sensor-types.h"
+#include "ipmi-sensor-types-spec.h"
+#include "ipmi-sensor-units-spec.h"
 #include "ipmi-sensor-cmds.h"
 #include "ipmi-sensor-cmds-udm.h"
 #include "ipmi-sel-record-types.h"
@@ -189,8 +180,6 @@ extern "C" {
 #include "ipmi-sol-cmds.h"
 #include "ipmi-sol-cmds-udm.h"
 #include "ipmi-debug.h"
-#include "ipmi-md2.h"
-#include "ipmi-md5.h"
 #include "ipmi-sdr-repository-cache-api.h"
 #include "ipmi-sensor-utils.h"
 #include "ipmi-bmc-watchdog-timer-cmds.h"

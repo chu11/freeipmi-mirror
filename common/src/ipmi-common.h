@@ -66,4 +66,9 @@ int ipmi_is_root ();
 
 void ipmi_error (fiid_obj_t obj_cmd, const char *s);
 
+/* Portable version of the extremely unportable Linux dprintf() */
+int ipmi_dprintf(int fd, char *fmt, ...);
+
+int ipmi_open_free_udp_port (void);
+
 #endif

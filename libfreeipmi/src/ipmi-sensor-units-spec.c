@@ -18,59 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
-
-const char *const ipmi_sensor_types[] = 
-  {
-    "Reserved", 
-    "Temperature",
-    "Voltage",
-    "Current",
-    "Fan",
-    "Platform Chassis Intrusion",
-    "Platform Security Violation",
-    "Processor",
-    "Power Supply",
-    "Power Unit",
-    "Cooling Device",
-    "FRU Sensor",
-    "Memory",
-    "Drive Slot",
-    "Post Memory Resize",
-    "System Firmware",
-    "Event Logging Disabled",
-    "Watchdog1",
-    "System Event",
-    "Critical Interrupt",
-    "Button",
-    "Board",
-    "Microcontroller",
-    "Add In Card",
-    "Chassis",
-    "Chip Set",
-    "Other Fru",
-    "Cable Interconnect",
-    "Terminator",
-    "System Boot Initiated",
-    "Boot Error",
-    "OS Boot",
-    "OS Critical Stop",
-    "Slot Connector",
-    "ACPI Power State",
-    "Watchdog 2",
-    "Platform Alert",
-    "Entity Presence",
-    "Monitor Asic",
-    "LAN",
-    "Management Subsystem Health",
-    "Battery",
-    "Session Audit",
-    "Version Change",
-    "FRU State",
-    NULL
-  };
-
-const char *const ipmi_oem_sensor_type = "OEM Reserved";
+#include <stdio.h>
+#include <stdlib.h>
 
 const char *const ipmi_sensor_units[] = 
   {

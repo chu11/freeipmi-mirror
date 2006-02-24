@@ -25,15 +25,22 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
+#include <stdarg.h>
 #endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <errno.h>
 #include <error.h>
 #include <argp.h>
 
 #include "freeipmi-build.h"
 #include "ipmi-common.h"
+
+#define IPMI_DPRINTF_MAX_BUF_LEN 65536
 
 int
 ipmi_is_root ()
@@ -85,4 +92,88 @@ ipmi_error (fiid_obj_t obj_cmd, const char *s)
 	   (s ? ": " : ""), 
            (uint8_t)cmd,
 	   errmsg);
+}
+
+static int
+_write(int fd, void *buf, size_t n)
+{
+  /* chu: by Chris Dunlap <dunlap6 at llnl dot gov> */
+  size_t nleft;
+  ssize_t nwritten;
+  unsigned char *p;
+
+  p = buf;
+  nleft = n;
+  while (nleft > 0)
+    {
+      if ((nwritten = write (fd, p, nleft)) < 0)
+        {
+          if (errno == EINTR)
+            continue;
+          else
+            return (-1);
+        }
+      nleft -= nwritten;
+      p += nwritten;
+    }
+  return (n);
+}
+
+int
+ipmi_dprintf(int fd, char *fmt, ...)
+{
+  va_list ap;
+  int len, rv;
+  char buf[IPMI_DPRINTF_MAX_BUF_LEN];
+
+  va_start(ap, fmt);
+  len = vsnprintf(buf, IPMI_DPRINTF_MAX_BUF_LEN, fmt, ap);
+  rv = _write(fd, buf, len);
+  va_end(ap);
+
+  return rv;
+}
+
+int
+ipmi_open_free_udp_port (void)
+{
+  int sockfd;
+  int sockname_len;
+  struct sockaddr_in sockname;
+  int free_port=1025;
+  int err;
+  extern int errno;
+
+  sockfd = socket (AF_INET, SOCK_DGRAM, 0);
+  if (sockfd < 0)
+    return (-1);
+
+  for (; free_port < 65535; free_port++)
+    {
+      /* Instead of probing if the current (may be the client side)
+      system has IPMI LAN support too, it is easier to avoid these two
+      RMCP reserved ports. -- Anand Babu*/
+      if ((free_port == RMCP_AUX_BUS_SHUNT) ||
+          (free_port == RMCP_SECURE_AUX_BUS))
+        continue;
+
+      memset (&sockname, 0, sizeof (struct sockaddr_in));
+      sockname.sin_family = AF_INET;
+      sockname.sin_port   = htons (free_port);
+      sockname.sin_addr.s_addr = htonl (INADDR_ANY);
+      sockname_len = sizeof (struct sockaddr_in);
+
+      if ((err = bind (sockfd, (struct sockaddr *) &sockname, sockname_len)) == 0)
+        return sockfd;
+      else
+        {
+          if (errno == EADDRINUSE)
+            continue;
+          else
+            return (-1);
+        }
+    }
+  close (sockfd);
+  errno = EBUSY;
+  return (-1);
 }

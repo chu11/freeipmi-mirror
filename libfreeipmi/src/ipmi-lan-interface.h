@@ -123,7 +123,7 @@ int8_t ipmi_lan_check_net_fn (fiid_obj_t obj_lan_msg_hdr, uint8_t net_fn);
 
 int8_t ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq);
 
-int8_t ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len);
+int8_t ipmi_lan_check_checksum (uint8_t *pkt, uint64_t pkt_len);
 
 #ifdef __cplusplus
 }

@@ -22,6 +22,10 @@
 #include "freeipmi-build.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-utils.h"
+
+#include "md2.h"
+#include "md5.h"
 
 fiid_template_t tmpl_lan_session_hdr =
   {
@@ -39,7 +43,7 @@ fiid_template_t tmpl_lan_msg_hdr_rq =
     {8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "chksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "checksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -52,7 +56,7 @@ fiid_template_t tmpl_lan_msg_hdr_rs =
     {8, "rq_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rq_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "chksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "checksum1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "rs_addr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "rs_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "rq_seq", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -62,7 +66,7 @@ fiid_template_t tmpl_lan_msg_hdr_rs =
 /* IPMI LAN Message Trailer */
 fiid_template_t tmpl_lan_msg_trlr = 
   {
-    {8, "chksum2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "checksum2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -72,9 +76,9 @@ fill_lan_msg_hdr (uint8_t net_fn,
 		  uint8_t rq_seq, 
 		  fiid_obj_t obj_msg)
 {
-  uint8_t chksum_buf[1024];
-  int32_t chksum_len;
-  int8_t chksum;
+  uint8_t checksum_buf[1024];
+  int32_t checksum_len;
+  int8_t checksum;
 
   if (!IPMI_NET_FN_VALID(net_fn)
       || !IPMI_BMC_LUN_VALID(rs_lun)
@@ -91,15 +95,15 @@ fill_lan_msg_hdr (uint8_t net_fn,
   FIID_OBJ_SET (obj_msg, (uint8_t *)"net_fn", net_fn);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
   
-  FIID_OBJ_GET_BLOCK_LEN (chksum_len,
+  FIID_OBJ_GET_BLOCK_LEN (checksum_len,
 			  obj_msg, 
 			  (uint8_t *)"rs_addr", 
 			  (uint8_t *)"net_fn", 
-			  chksum_buf, 
+			  checksum_buf, 
 			  1024);
 
-  chksum = ipmi_chksum(chksum_buf, chksum_len);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"chksum1", chksum);
+  checksum = ipmi_checksum(checksum_buf, checksum_len);
+  FIID_OBJ_SET (obj_msg, (uint8_t *)"checksum1", checksum);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_seq", rq_seq);
@@ -209,15 +213,15 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   uint64_t authentication_type;
   uint32_t indx, required_len;
   uint8_t *authentication_code_field_ptr = NULL;
-  uint8_t *chksum_data_ptr = NULL;
+  uint8_t *checksum_data_ptr = NULL;
   uint8_t *msg_data_ptr = NULL;
   uint8_t *ipmi_msg_len_ptr = NULL;
   uint32_t msg_data_count = 0;
-  uint32_t chksum_data_count = 0;
+  uint32_t checksum_data_count = 0;
   int32_t len, req_len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  int8_t chksum;
+  int8_t checksum;
   int32_t rv = -1;
 
   if (!fiid_obj_valid(obj_rmcp_hdr)
@@ -323,13 +327,13 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   FIID_OBJ_GET_BLOCK_LEN_CLEANUP(len,
 				 obj_lan_msg_hdr,
 				 (uint8_t *)"rs_addr",
-				 (uint8_t *)"chksum1",
+				 (uint8_t *)"checksum1",
 				 pkt + indx,
 				 pkt_len - indx);
   indx += len;
   msg_data_count += len;
 
-  chksum_data_ptr = (pkt + indx);
+  checksum_data_ptr = (pkt + indx);
 
   FIID_OBJ_GET_BLOCK_LEN_CLEANUP(len,
 				 obj_lan_msg_hdr,
@@ -339,18 +343,18 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 				 pkt_len - indx);
   indx += len;
   msg_data_count += len;
-  chksum_data_count += len;
+  checksum_data_count += len;
 
   FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_cmd, pkt + indx, pkt_len - indx);
   indx += len;
   msg_data_count += len;
-  chksum_data_count += len;
+  checksum_data_count += len;
 
   FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
-  chksum = ipmi_chksum (chksum_data_ptr, chksum_data_count);
+  checksum = ipmi_checksum (checksum_data_ptr, checksum_data_count);
   
-  FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, (uint8_t *)&chksum, sizeof(chksum));
+  FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, (uint8_t *)&checksum, sizeof(checksum));
   
   FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_lan_msg_trlr, pkt + indx, pkt_len - indx);
   indx += len;
@@ -432,35 +436,35 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
-		  ipmi_md2_t ctx;
-		  uint8_t digest[IPMI_MD2_DIGEST_LEN];
+		  md2_t ctx;
+		  uint8_t digest[MD2_DIGEST_LEN];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == IPMI_MD2_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LEN);
 		  
-		  ipmi_md2_init(&ctx);
-		  ipmi_md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  ipmi_md2_update_data(&ctx, session_id_buf, session_id_len);
-		  ipmi_md2_update_data(&ctx, msg_data_ptr, msg_data_count);
-		  ipmi_md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
-		  ipmi_md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  ipmi_md2_finish(&ctx, digest, IPMI_MD2_DIGEST_LEN);
+		  md2_init(&ctx);
+		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md2_update_data(&ctx, session_id_buf, session_id_len);
+		  md2_update_data(&ctx, msg_data_ptr, msg_data_count);
+		  md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
+		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md2_finish(&ctx, digest, MD2_DIGEST_LEN);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
-		  ipmi_md5_t ctx;
-		  uint8_t digest[IPMI_MD5_DIGEST_LEN];
+		  md5_t ctx;
+		  uint8_t digest[MD5_DIGEST_LEN];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == IPMI_MD5_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LEN);
 		  
-		  ipmi_md5_init(&ctx);
-		  ipmi_md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  ipmi_md5_update_data(&ctx, session_id_buf, session_id_len);
-		  ipmi_md5_update_data(&ctx, msg_data_ptr, msg_data_count);
-		  ipmi_md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
-		  ipmi_md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  ipmi_md5_finish(&ctx, digest, IPMI_MD5_DIGEST_LEN);
+		  md5_init(&ctx);
+		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md5_update_data(&ctx, session_id_buf, session_id_len);
+		  md5_update_data(&ctx, msg_data_ptr, msg_data_count);
+		  md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
+		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  md5_finish(&ctx, digest, MD5_DIGEST_LEN);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}
@@ -494,7 +498,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   |  Checksum            |
   +----------------------+
   Optional Arguments : (pass NULL to ignore)
-  rmcp_hdr, session, msg, cmd and chksum
+  rmcp_hdr, session, msg, cmd and checksum
 */
 
 int8_t 
@@ -846,43 +850,43 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authent
       memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
       if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 	{
-	  ipmi_md2_t ctx;
+	  md2_t ctx;
 	  
-	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == IPMI_MD2_DIGEST_LEN);
+	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LEN);
 	  
-	  ipmi_md2_init(&ctx);
-	  ipmi_md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-	  ipmi_md2_update_data(&ctx,
+	  md2_init(&ctx);
+	  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md2_update_data(&ctx,
 			       pkt + session_id_offset,
 			       session_id_len);
-	  ipmi_md2_update_data(&ctx,
+	  md2_update_data(&ctx,
 			       pkt + data_offset,
 			       pkt_len - data_offset);
-	  ipmi_md2_update_data(&ctx,
+	  md2_update_data(&ctx,
 			       pkt + session_sequence_number_offset,
 			       session_sequence_number_len);
-	  ipmi_md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-	  ipmi_md2_finish(&ctx, authentication_code_buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md2_finish(&ctx, authentication_code_buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 	}
       else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 	{
-	  ipmi_md5_t ctx;
+	  md5_t ctx;
 	  
-	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == IPMI_MD5_DIGEST_LEN);
+	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LEN);
 	  
-	  ipmi_md5_init(&ctx);
-	  ipmi_md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-	  ipmi_md5_update_data(&ctx,
+	  md5_init(&ctx);
+	  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md5_update_data(&ctx,
 			       pkt + session_id_offset,
 			       session_id_len);
-	  ipmi_md5_update_data(&ctx,
+	  md5_update_data(&ctx,
 			       pkt + data_offset,
 			       pkt_len - data_offset);
-	  ipmi_md5_update_data(&ctx,
+	  md5_update_data(&ctx,
 			       pkt + session_sequence_number_offset,
 			       session_sequence_number_len);
-	  ipmi_md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-	  ipmi_md5_finish(&ctx, authentication_code_buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+	  md5_finish(&ctx, authentication_code_buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 	  
 	}
     }
@@ -955,15 +959,15 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
 }
 
 int8_t 
-ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
+ipmi_lan_check_checksum (uint8_t *pkt, uint64_t pkt_len)
 {
   uint8_t authentication_type;
   uint32_t authentication_type_offset;
   int32_t rmcp_hdr_len, msg_hdr_len1, msg_hdr_len2, authentication_code_len;
   int32_t authentication_type_start_bytes;
-  int32_t chksum1_block_index, chksum1_block_len, 
-    chksum2_block_index, chksum2_block_len;
-  int8_t chksum1_recv, chksum1_calc, chksum2_recv, chksum2_calc;
+  int32_t checksum1_block_index, checksum1_block_len, 
+    checksum2_block_index, checksum2_block_len;
+  int8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
 
   if (pkt == NULL)
     {
@@ -994,33 +998,33 @@ ipmi_lan_check_chksum (uint8_t *pkt, uint64_t pkt_len)
 				tmpl_lan_session_hdr,
 				(uint8_t *)"ipmi_msg_len");
 
-  chksum1_block_index = rmcp_hdr_len + msg_hdr_len1 + authentication_code_len + msg_hdr_len2;
+  checksum1_block_index = rmcp_hdr_len + msg_hdr_len1 + authentication_code_len + msg_hdr_len2;
 
-  FIID_TEMPLATE_BLOCK_LEN_BYTES(chksum1_block_len,
+  FIID_TEMPLATE_BLOCK_LEN_BYTES(checksum1_block_len,
 				tmpl_lan_msg_hdr_rs,
 				(uint8_t *)"rq_addr",
 				(uint8_t *)"net_fn");
 
-  if (pkt_len < (chksum1_block_index + chksum1_block_len + 1))
+  if (pkt_len < (checksum1_block_index + checksum1_block_len + 1))
     return (0);
 
-  chksum1_calc = ipmi_chksum(pkt + chksum1_block_index, chksum1_block_len);
-  chksum1_recv = pkt[chksum1_block_index + chksum1_block_len];
+  checksum1_calc = ipmi_checksum(pkt + checksum1_block_index, checksum1_block_len);
+  checksum1_recv = pkt[checksum1_block_index + checksum1_block_len];
 
-  if (chksum1_calc != chksum1_recv)
+  if (checksum1_calc != checksum1_recv)
     return (0);
 
-  chksum2_block_index = chksum1_block_index + chksum1_block_len + 1;
+  checksum2_block_index = checksum1_block_index + checksum1_block_len + 1;
 
-  if (pkt_len <= (chksum2_block_index + 1))
+  if (pkt_len <= (checksum2_block_index + 1))
     return (0);
 
-  chksum2_block_len = pkt_len - chksum2_block_index - 1;
+  checksum2_block_len = pkt_len - checksum2_block_index - 1;
   
-  chksum2_calc = ipmi_chksum(pkt + chksum2_block_index, chksum2_block_len);
-  chksum2_recv = pkt[chksum2_block_index + chksum2_block_len];
+  checksum2_calc = ipmi_checksum(pkt + checksum2_block_index, checksum2_block_len);
+  checksum2_recv = pkt[checksum2_block_index + checksum2_block_len];
 
-  if (chksum2_calc != chksum2_recv)
+  if (checksum2_calc != checksum2_recv)
     return (0);
 
   return (1);

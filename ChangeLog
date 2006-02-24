@@ -1,5 +1,54 @@
 2006-02-23  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-md2.h, libfreeipmi/src/ipmi-md2.c,
+	libfreeipmi/src/ipmi-md5.h, libfreeipmi/src/ipmi-md5.c: Moved into
+	common/src into md2.h, md2.c, md5.h, and md5.c respectively.
+
+	* libfreeipmi/src/rmcp.h, libfreeipmi/src/rmcp.c
+	(ipmi_rmcp_message_tag_chk): Rename to
+	ipmi_rmcp_check_message_tag.
+
+	* libfreeipmi/src/rmcp.h: RMCP_PRI_RMCP_PORT renamed to
+	RMCP_PRIMARY_RMCP_PORT and RMCP_SEC_RMCP_PORT renamed to
+	RMCP_SECONDARY_RMCP_PORT.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_chksum): Renamed to ipmi_checksum.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_comp_test): Renamed to ipmi_completion_code_check.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_check_chksum):
+	Renamed to ipmi_lan_check_checksum.
+	
+	* libfreeipmi/src/ipmi-lan-interface.c: Globally use "checksum"
+	instead of "chksum" in templates and code.
+	
+	* libfreeipmi/src/ipmi-debug.c (_dprintf, _write): Move into
+	common/src/ipmi-common.h and ipmi-common.c.
+
+	* libfreeipmi/src/ipmi-debug.c (ipmi_smic_print_flags,
+	ipmi_kcs_print_flags): Move to ipmi-smic-interface.c and
+	ipmi-kcs-interface.c appropriately.
+
+	* libfreeipmi/src/ipmi-sensor-types.h,
+	libfreeipmi/src/ipmi-sensor-types.c: Split into
+	ipmi-sensor-types-spec.h, ipmi-sensor-types-spec.c,
+	ipmi-sensor-units-spec.h, ipmi-sensor-units-spec.c.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_open_free_udp_port): Move to ipmi-common.h and ipmi-common.c.
+
+	* libfreeipmi/src/ipmi-utils.c, libfreeipmi/src/rmcp.c: Begin
+	putting specific includes into .c files so freeipmi-build.h need
+	is limited.
+
+	* common/, ipmiping/, fish/, ipmipower/, libfreeipmi/: Adjust
+	makefiles and code for various location changes, include changes,
+	define, or function name changes.
+
+2006-02-23  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-sensor-event-messages.h,
 	libfreeipmi/src/ipmi-sensor-event-messages.c: Re-organized for
 	generic use.

@@ -1,5 +1,5 @@
 /* 
-   ipmi-sensor-types.h - IPMI Sensor Types
+   ipmi-sensor-units-spec.h - IPMI Sensor Units
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,66 +18,12 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#ifndef _IPMI_SENSOR_TYPES_H
-#define _IPMI_SENSOR_TYPES_H
+#ifndef _IPMI_SENSOR_UNITS_SPEC_H
+#define _IPMI_SENSOR_UNITS_SPEC_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#define IPMI_SENSOR_TYPE_RESERVED                   0x00 
-#define IPMI_SENSOR_TYPE_TEMPERATURE                   0x01 
-#define IPMI_SENSOR_TYPE_VOLTAGE                       0x02 
-#define IPMI_SENSOR_TYPE_CURRENT                       0x03
-#define IPMI_SENSOR_TYPE_FAN                           0x04
-#define IPMI_SENSOR_TYPE_PLATFORM_CHASSIS_INTRUSION    0x05
-#define IPMI_SENSOR_TYPE_PLATFORM_SECURITY_VIOLATION   0x06
-#define IPMI_SENSOR_TYPE_PROCESSOR                     0x07
-#define IPMI_SENSOR_TYPE_POWER_SUPPLY                  0x08
-#define IPMI_SENSOR_TYPE_POWER_UNIT                    0x09
-#define IPMI_SENSOR_TYPE_COOLING_DEVICE                0x0A
-#define IPMI_SENSOR_TYPE_FRU_SENSOR                    0x0B
-#define IPMI_SENSOR_TYPE_MEMORY                        0x0C
-#define IPMI_SENSOR_TYPE_DRIVE_SLOT                    0x0D
-#define IPMI_SENSOR_TYPE_POST_MEMORY_RESIZE            0x0E
-#define IPMI_SENSOR_TYPE_SYSTEM_FIRMWARE               0x0F
-#define IPMI_SENSOR_TYPE_EVENT_LOGGING_DISABLED        0x10
-#define IPMI_SENSOR_TYPE_WATCHDOG1                     0x11
-#define IPMI_SENSOR_TYPE_SYSTEM_EVENT                  0x12
-#define IPMI_SENSOR_TYPE_CRITICAL_INTERRUPT            0x13
-#define IPMI_SENSOR_TYPE_BUTTON                        0x14
-#define IPMI_SENSOR_TYPE_BOARD                         0x15
-#define IPMI_SENSOR_TYPE_MICROCONTROLLER               0x16
-#define IPMI_SENSOR_TYPE_ADD_IN_CARD                   0x17
-#define IPMI_SENSOR_TYPE_CHASSIS                       0x18
-#define IPMI_SENSOR_TYPE_CHIP_SET                      0x19
-#define IPMI_SENSOR_TYPE_OTHER_FRU                     0x1A
-#define IPMI_SENSOR_TYPE_CABLE_INTERCONNECT            0x1B
-#define IPMI_SENSOR_TYPE_TERMINATOR                    0x1C
-#define IPMI_SENSOR_TYPE_SYSTEM_BOOT_INITIATED         0x1D
-#define IPMI_SENSOR_TYPE_BOOT_ERROR                    0x1E
-#define IPMI_SENSOR_TYPE_OS_BOOT                       0x1F
-#define IPMI_SENSOR_TYPE_OS_CRITICAL_STOP              0x20
-#define IPMI_SENSOR_TYPE_SLOT_CONNECTOR                0x21
-#define IPMI_SENSOR_TYPE_ACPI_POWER_STATE              0x22
-#define IPMI_SENSOR_TYPE_WATCHDOG2                     0x23
-#define IPMI_SENSOR_TYPE_PLATFORM_ALERT                0x24
-#define IPMI_SENSOR_TYPE_ENTITY_PRESENCE               0x25
-#define IPMI_SENSOR_TYPE_MONITOR_ASIC                  0x26
-#define IPMI_SENSOR_TYPE_LAN                           0x27
-#define IPMI_SENSOR_TYPE_MANAGEMENT_SUBSYSTEM_HEALTH   0x28
-#define IPMI_SENSOR_TYPE_BATTERY                       0x29
-#define IPMI_SENSOR_TYPE_SESSION_AUDIT                 0x2A
-#define IPMI_SENSOR_TYPE_VERSION_CHANGE                0x2B
-#define IPMI_SENSOR_TYPE_FRU_STATE                     0x2C
-
-#define IPMI_SENSOR_TYPE_VALID(__sensor_type) \
-        (((__sensor_type) >= IPMI_SENSOR_TYPE_RESERVED \
-          && (__sensor_type) <= IPMI_SENSOR_TYPE_FRU_STATE) ? 1 : 0)
-
-#define IPMI_SENSOR_TYPE_IS_OEM(__sensor_type) \
-        (((__sensor_type) >= 0xC0 \
-          && (__sensor_type) <= 0xFF) ? 1 : 0)
 
 #define IPMI_SENSOR_UNIT_UNSPECIFIED             0
 #define IPMI_SENSOR_UNIT_DEGREES_C               1
@@ -177,8 +123,6 @@ extern "C" {
         (((__sensor_unit) >= IPMI_SENSOR_UNIT_UNSPECIFIED \
           && (__sensor_unit) <= IPMI_SENSOR_UNIT_GRAMS) ? 1 : 0)
 
-extern const char *const ipmi_sensor_types[];
-extern const char *const ipmi_oem_sensor_type;
 extern const char *const ipmi_sensor_units[];
 extern const char *const ipmi_sensor_units_abbreviated[];
 

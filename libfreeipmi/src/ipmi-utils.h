@@ -26,9 +26,14 @@
 extern "C" {
 #endif
 
-int8_t ipmi_chksum (uint8_t *buf, uint64_t len);
-int8_t ipmi_comp_test (fiid_obj_t obj_cmd);
-int ipmi_open_free_udp_port (void);
+#include <stdint.h>
+
+/* XXX fix after reorg */
+#include "fiid.h"
+
+int8_t ipmi_checksum (uint8_t *buf, uint64_t len);
+
+int8_t ipmi_completion_code_check (fiid_obj_t obj_cmd);
 
 int8_t ipmi_ipv4_address_string2int(char *src, uint32_t *dest);
 

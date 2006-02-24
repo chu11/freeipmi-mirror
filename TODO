@@ -70,10 +70,6 @@ libfreeipmi:
   * "rq", "cmd", "comp_code", "rs", ????
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
-  * to fix the various APIs
-    - step one, make event messages generic
-    - move "sensor-state" functions into convenience functions
-      only for ipmi-sensors
   * to fix sdr cache api
     - first need kcs/ssif inband cmd/raw
     - then can get rid of *dev
@@ -82,6 +78,7 @@ libfreeipmi:
   * locate-info stuff in libfreeipmi, remove
   * freeipmi_getline - out of libfreeipmi
     - maybe other stuff, i don't know right now, perhaps into common
+  * autoconf getopt
 
 fish:
 -----

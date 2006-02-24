@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-md2.c,v 1.9 2006-02-23 14:58:47 chu11 Exp $
+ *  $Id: md2.c,v 1.1 2006-02-24 01:34:16 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,7 +24,19 @@
  *  59 Temple Place, Suite 330, Boston, MA  02110-1301  USA.
 \*****************************************************************************/
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif
+#include <errno.h>
+
+#include "md2.h"
 
 static char padding[16][16] = 
   {
@@ -82,15 +94,15 @@ static unsigned char S[256] =
     0xDB, 0x99, 0x8D, 0x33, 0x9F, 0x11, 0x83, 0x14
   };
 
-#define L               ctx->l  
-#define X               ctx->x 
-#define C               ctx->c
-#define M               ctx->m
-#define Mlen            ctx->mlen
-#define IPMI_MD2_MAGIC  0xf00fd00d 
+#define L          ctx->l  
+#define X          ctx->x 
+#define C          ctx->c
+#define M          ctx->m
+#define Mlen       ctx->mlen
+#define MD2_MAGIC  0xf00fd00d 
 
 int 
-ipmi_md2_init(ipmi_md2_t *ctx) 
+md2_init(md2_t *ctx) 
 {
 
   if (ctx == NULL) 
@@ -99,26 +111,26 @@ ipmi_md2_init(ipmi_md2_t *ctx)
       return -1;
     }
 
-  ctx->magic = IPMI_MD2_MAGIC;
+  ctx->magic = MD2_MAGIC;
 
   L = 0;
   Mlen = 0;
-  memset(X, '\0', IPMI_MD2_BUFFER_LEN);
-  memset(C, '\0', IPMI_MD2_CHKSUM_LEN);
-  memset(M, '\0', IPMI_MD2_BLOCK_LEN);
+  memset(X, '\0', MD2_BUFFER_LEN);
+  memset(C, '\0', MD2_CHKSUM_LEN);
+  memset(M, '\0', MD2_BLOCK_LEN);
 
   return 0;
 }
 
 static void 
-_ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx) 
+_md2_update_digest_and_checksum(md2_t *ctx) 
 {
   int j, k;
   uint8_t c, t;
 
   /* Update X */
 
-  for (j = 0; j < IPMI_MD2_BLOCK_LEN; j++) 
+  for (j = 0; j < MD2_BLOCK_LEN; j++) 
     {
       X[16+j] = M[j];
       X[32+j] = (X[16+j] ^ X[j]);
@@ -126,9 +138,9 @@ _ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx)
   
   t = 0;
 
-  for (j = 0; j < IPMI_MD2_ROUNDS_LEN; j++) 
+  for (j = 0; j < MD2_ROUNDS_LEN; j++) 
     {
-      for (k = 0; k < IPMI_MD2_BUFFER_LEN; k++) 
+      for (k = 0; k < MD2_BUFFER_LEN; k++) 
         {
           t = X[k] = (X[k] ^ S[t]);
         }
@@ -147,7 +159,7 @@ _ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx)
    * Set C[j] to C[j] xor S[c xor L].
    */
   
-  for (j = 0; j < IPMI_MD2_BLOCK_LEN; j++) 
+  for (j = 0; j < MD2_BLOCK_LEN; j++) 
     {
       c = M[j];
       C[j] = C[j] ^ S[c ^ L];
@@ -156,10 +168,10 @@ _ipmi_md2_update_digest_and_checksum(ipmi_md2_t *ctx)
 }
 
 int 
-ipmi_md2_update_data(ipmi_md2_t *ctx, uint8_t *buf, unsigned int buflen) 
+md2_update_data(md2_t *ctx, uint8_t *buf, unsigned int buflen) 
 {
 
-  if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC || buf == NULL) 
+  if (ctx == NULL || ctx->magic != MD2_MAGIC || buf == NULL) 
     {
       errno = EINVAL;
       return -1;
@@ -168,19 +180,19 @@ ipmi_md2_update_data(ipmi_md2_t *ctx, uint8_t *buf, unsigned int buflen)
   if (buflen == 0)
     return 0;
 
-  if ((Mlen + buflen) >= IPMI_MD2_BLOCK_LEN) 
+  if ((Mlen + buflen) >= MD2_BLOCK_LEN) 
     {
       unsigned int bufcount;
       
-      bufcount = (IPMI_MD2_BLOCK_LEN - Mlen);
+      bufcount = (MD2_BLOCK_LEN - Mlen);
       memcpy(M + Mlen, buf, bufcount);
-      _ipmi_md2_update_digest_and_checksum(ctx);
+      _md2_update_digest_and_checksum(ctx);
     
-      while ((buflen - bufcount) >= IPMI_MD2_BLOCK_LEN) 
+      while ((buflen - bufcount) >= MD2_BLOCK_LEN) 
         {
-          memcpy(M, buf + bufcount, IPMI_MD2_BLOCK_LEN);
-          bufcount += IPMI_MD2_BLOCK_LEN;
-          _ipmi_md2_update_digest_and_checksum(ctx);
+          memcpy(M, buf + bufcount, MD2_BLOCK_LEN);
+          bufcount += MD2_BLOCK_LEN;
+          _md2_update_digest_and_checksum(ctx);
         }
       
       Mlen = buflen - bufcount;
@@ -198,34 +210,34 @@ ipmi_md2_update_data(ipmi_md2_t *ctx, uint8_t *buf, unsigned int buflen)
 }
 
 static void 
-_ipmi_md2_append_padding_and_checksum(ipmi_md2_t *ctx) 
+_md2_append_padding_and_checksum(md2_t *ctx) 
 {
   unsigned int padlen;
   int padindex;
 
-  padlen = IPMI_MD2_PADDING_LEN - Mlen;
+  padlen = MD2_PADDING_LEN - Mlen;
   padindex = padlen - 1;
 
-  ipmi_md2_update_data(ctx, (uint8_t *)padding[padindex], (int)padlen);
+  md2_update_data(ctx, (uint8_t *)padding[padindex], (int)padlen);
   
-  ipmi_md2_update_data(ctx, C, IPMI_MD2_CHKSUM_LEN);
+  md2_update_data(ctx, C, MD2_CHKSUM_LEN);
 }
 
 int 
-ipmi_md2_finish(ipmi_md2_t *ctx, uint8_t *digest, unsigned int digestlen) 
+md2_finish(md2_t *ctx, uint8_t *digest, unsigned int digestlen) 
 {
   
-  if (ctx == NULL || ctx->magic != IPMI_MD2_MAGIC 
-      || digest == NULL || digestlen < IPMI_MD2_DIGEST_LEN) 
+  if (ctx == NULL || ctx->magic != MD2_MAGIC 
+      || digest == NULL || digestlen < MD2_DIGEST_LEN) 
     {
       errno = EINVAL;
       return -1;
     }
   
-  _ipmi_md2_append_padding_and_checksum(ctx);
-  memcpy(digest, X, IPMI_MD2_DIGEST_LEN);
+  _md2_append_padding_and_checksum(ctx);
+  memcpy(digest, X, MD2_DIGEST_LEN);
   
-  ctx->magic = ~IPMI_MD2_MAGIC;
-  return IPMI_MD2_DIGEST_LEN;
+  ctx->magic = ~MD2_MAGIC;
+  return MD2_DIGEST_LEN;
 }
 

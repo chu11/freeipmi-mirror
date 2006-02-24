@@ -23,21 +23,22 @@
 #include "fiid-wrappers.h"
 
 #include "bit-ops.h"
+#include "ipmi-common.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32
 #define IPMI_DEBUG_MAX_BUF_LEN        65536
 #define IPMI_DEBUG_MAX_PKT_LEN        65536
 #define IPMI_DEBUG_CHAR_PER_LINE          8
 
-#define _DPRINTF(args) \
+#define IPMI_DPRINTF(args) \
         do { \
-          if((_dprintf args) < 0) \
+          if((ipmi_dprintf args) < 0) \
             return -1; \
         } while(0) 
 
-#define _DPRINTF_CLEANUP(args) \
+#define IPMI_DPRINTF_CLEANUP(args) \
         do { \
-          if((_dprintf args) < 0) \
+          if((ipmi_dprintf args) < 0) \
             goto cleanup; \
         } while(0) 
 
@@ -49,47 +50,6 @@ fiid_template_t tmpl_unexpected =
     {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
-
-static int
-_write(int fd, void *buf, size_t n)
-{
-  /* chu: by Chris Dunlap <dunlap6 at llnl dot gov> */
-  size_t nleft;
-  ssize_t nwritten;
-  unsigned char *p;
-
-  p = buf;
-  nleft = n;
-  while (nleft > 0) 
-    {
-      if ((nwritten = write (fd, p, nleft)) < 0) 
-        {
-          if (errno == EINTR)
-            continue;
-          else
-            return (-1);
-        }
-      nleft -= nwritten;
-      p += nwritten;
-    }
-  return (n);
-}
-
-/* Portable version of the extremely unportable Linux dprintf() */
-static int
-_dprintf(int fd, char *fmt, ...)
-{
-  va_list ap;
-  int len, rv;
-  char buf[IPMI_DEBUG_MAX_BUF_LEN];
-
-  va_start(ap, fmt);
-  len = vsnprintf(buf, IPMI_DEBUG_MAX_BUF_LEN, fmt, ap);
-  rv = _write(fd, buf, len);
-  va_end(ap);
-
-  return rv;
-}
 
 static int8_t
 _set_prefix_str(char *buf, unsigned int buflen, char *prefix)
@@ -121,19 +81,19 @@ _output_str(int fd, char *prefix, char *str)
       char *ptr = str;
 
       if (prefix)
-        _DPRINTF((fd, "%s", prefix));
+        IPMI_DPRINTF((fd, "%s", prefix));
       while (*ptr != '\0')
         {
           if (*ptr == '\n')
             {
-              _DPRINTF((fd, "%c", *ptr++));
+              IPMI_DPRINTF((fd, "%c", *ptr++));
               if (prefix)
-                _DPRINTF((fd, "%s", prefix));
+                IPMI_DPRINTF((fd, "%s", prefix));
             }
           else
-            _DPRINTF((fd, "%c", *ptr++));
+            IPMI_DPRINTF((fd, "%c", *ptr++));
         }
-      _DPRINTF((fd, "\n"));
+      IPMI_DPRINTF((fd, "\n"));
     }
 
   return 0;
@@ -151,14 +111,14 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
     {
       int i = 0;
       if (prefix)
-        _DPRINTF ((fd, "%s", prefix));
-      _DPRINTF ((fd, "[ "));
+        IPMI_DPRINTF ((fd, "%s", prefix));
+      IPMI_DPRINTF ((fd, "[ "));
       while (count < buf_len && i < IPMI_DEBUG_CHAR_PER_LINE)
 	{
-	  _DPRINTF ((fd, "%02Xh ", buf[count++]));
+	  IPMI_DPRINTF ((fd, "%02Xh ", buf[count++]));
 	  i++;
 	}
-      _DPRINTF ((fd, "]\n"));
+      IPMI_DPRINTF ((fd, "]\n"));
     }
 
   return 0;
@@ -211,7 +171,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         }
 
       if (prefix)
-        _DPRINTF_CLEANUP ((fd, "%s", prefix));
+        IPMI_DPRINTF_CLEANUP ((fd, "%s", prefix));
 
       if (field_len <= 64)
         {
@@ -220,14 +180,14 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
 	  if (fiid_iterator_get (iter, &val) < 0)
             goto cleanup;
 
-          _DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
+          IPMI_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
       else
         {
           char buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
-          _DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
+          IPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
      
           if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
             goto cleanup;
@@ -543,60 +503,6 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
   FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected);
   return (rv);
-}
-
-/* XXX move out of here */
-uint8_t
-ipmi_kcs_print_state (int fd, uint8_t state)
-{
-  /* we assume we have already ioperm'd the space */
-  _dprintf (fd, "Current KCS state: 0x%x : ", state);
-  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
-    _dprintf (fd, "IDLE_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
-    _dprintf (fd, "READ_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
-    _dprintf (fd, "WRITE_STATE ");
-  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
-    _dprintf (fd, "ERROR_STATE ");
-  } else {
-    _dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
-  }
-  if (state & IPMI_KCS_STATUS_REG_IBF) {
-    _dprintf (fd, "IBF ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OBF) {
-    _dprintf (fd, "OBF ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OEM1) {
-    _dprintf (fd, "OEM1 ");
-  }
-  if (state & IPMI_KCS_STATUS_REG_OEM2) {
-    _dprintf (fd, "OEM2 ");
-  }
-  _dprintf (fd, "\n");
-  return (0);
-}
-
-/* XXX move out of here */
-int
-ipmi_smic_print_flags (int fd, uint8_t state)
-{
-  _dprintf (fd, "Current SMIC flags: %#x : ", state);
-  if(state & IPMI_SMIC_RX_DATA_RDY) 
-    _dprintf (fd, "RX_DATA_RDY ");
-  if(state & IPMI_SMIC_TX_DATA_RDY)
-    _dprintf (fd, "TX_DATA_RDY ");
-  if(state & IPMI_SMIC_SMI)
-    _dprintf (fd, "SMI ");
-  if(state & IPMI_SMIC_EVT_ATN) 
-    _dprintf (fd, "EVT_ATN ");
-  if(state & IPMI_SMIC_SMS_ATN)
-    _dprintf (fd, "SMS_ATN ");
-  if(state & IPMI_SMIC_BUSY)
-    _dprintf (fd, "BUSY ");
-  _dprintf (fd, "\n");
-  return (0);
 }
 
 void

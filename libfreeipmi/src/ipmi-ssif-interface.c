@@ -28,6 +28,7 @@
 #include "err-wrappers.h"
 #include "ipmi-semaphores.h"
 
+#include "ipmi-common.h"
 #include "xmalloc.h"
 
 static inline int32_t

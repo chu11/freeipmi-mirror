@@ -519,7 +519,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
   };
 
 uint8_t 
-ipmi_acpi_table_chksum (uint8_t *buffer, size_t len)
+ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 {
   int i = 0;
   uint8_t sum = 0;
@@ -639,8 +639,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
 	continue;
       
       /* now check the checksum */
-      if (ipmi_acpi_table_chksum (&memdata[i], 
-				  IPMI_ACPI_RSDP_CHECKSUM_LENGTH) == 0)
+      if (ipmi_acpi_table_checksum (&memdata[i], 
+				    IPMI_ACPI_RSDP_CHECKSUM_LENGTH) == 0)
 	{
 	  FIID_OBJ_SET_ALL(obj_acpi_rsdp_descriptor,
 			   &memdata[i], 
@@ -707,8 +707,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
 	      return (-1);
 	    
 	    /* now check the checksum */
-	    if (ipmi_acpi_table_chksum (memdata, 
-					IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
+	    if (ipmi_acpi_table_checksum (memdata, 
+					  IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
 	      return (-1);
 	    
 	    /* we found another RSDP */
@@ -787,7 +787,7 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
 				  table) != 0)
     goto cleanup;
   
-  if (ipmi_acpi_table_chksum (table, table_length) != 0)
+  if (ipmi_acpi_table_checksum (table, table_length) != 0)
     goto cleanup;
   
   *acpi_table = malloc (table_length);
