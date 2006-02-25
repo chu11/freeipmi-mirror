@@ -1,5 +1,22 @@
 2006-02-24  Albert Chu <chu11@llnl.gov>
 
+	* Continue include reorganization to prepare for libfreeipmi
+	rearchitecture.
+
+	* common/src/argp-common.c, common/src/ipmi-ping.c,
+	bmc-info/src/bmc-info.c, bmc-info/src/bmc-info-argp.c,
+	bmc-watchdog/src/bmc-watchdog.c, doc/examples/udm-test.c,
+	ipmi-locate/src/ipmi-locate.c, ipmiping/src/ipmiping.c,
+	ipmipower/src/ipmipower_wrappers.h, ipmipower/src/ipmipower.h,
+	rmcpping/src/rmcpping.c, ipmi-raw/src/ipmi-raw.c,
+	ipmi-raw/src/ipmi-raw-argp.c, fish/src/common.h: Remove need for
+	freeipmi-build.h.
+
+	* common/src/argp-common.h, common/src/md2.h, common/src/md5.h:
+	Fix up includes.
+
+2006-02-24  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.h,
 	libfreeipmi/src/ipmi-locate-smbios.h: Remove files.  Move #defines
 	into ipmi-locate-acpi-spmi.c and ipmi-locate-smbios.c

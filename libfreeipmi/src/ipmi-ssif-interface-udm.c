@@ -38,7 +38,7 @@
 #include "ipmi-ssif-interface-udm.h"
 #include "ipmi-ssif-interface.h"
 
-#include "freeipmi-build.h"
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 

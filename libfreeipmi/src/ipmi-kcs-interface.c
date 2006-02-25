@@ -28,6 +28,10 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#include <assert.h>
 #include <errno.h>
 
 #include "ipmi-kcs-interface.h"
@@ -36,7 +40,9 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "ipmi-inband.h"
+#include "ipmi-netfn-spec.h"
 #include "ipmi-semaphores.h"
+#include "ipmi-ipmb-interface.h"
 
 #include "ipmi-common.h"
 #include "xmalloc.h"

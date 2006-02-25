@@ -25,14 +25,15 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include <error.h>
 #include <argp.h>
 
-#include "freeipmi-build.h"
+/* XXX */
+#include "ipmi-messaging-support-cmds.h"
 #include "argp-common.h"
 
 error_t 

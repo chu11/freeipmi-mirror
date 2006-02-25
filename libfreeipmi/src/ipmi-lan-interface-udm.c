@@ -28,12 +28,15 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <assert.h>
 #include <errno.h>
 
 #include "ipmi-lan-interface-udm.h"
 #include "ipmi-lan-interface.h"
 
-#include "freeipmi-build.h"
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "rmcp.h"

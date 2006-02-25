@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.13 2006-02-23 14:58:48 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.14 2006-02-25 02:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,10 +32,20 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
-#include <errno.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
-#include "freeipmi-build.h"
+#include <errno.h>
+
+#include "fiid.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-lan-interface.h"
+#include "ipmi-debug.h"
+#include "rmcp.h"
+
 #include "ipmi-ping.h"
 
 #define _supported(x)   (x) ? "supported" : "not-supported"

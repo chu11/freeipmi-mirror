@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.19 2006-02-24 01:34:16 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.20 2006-02-25 02:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,10 +32,23 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
-#include <errno.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
-#include "freeipmi-build.h"
+#include <errno.h>
+
+#include "fiid.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-lan-interface.h"
+#include "ipmi-messaging-support-cmds.h"
+#include "rmcp.h"
+#include "ipmi-debug.h"
+#include "ipmi-comp-code-spec.h"
+#include "ipmi-cmd-spec.h"
+
 #include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"

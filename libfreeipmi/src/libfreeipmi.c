@@ -22,7 +22,14 @@
 #include <config.h>
 #endif
 
-#include "freeipmi-build.h"
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <errno.h>
 
 #ifdef __FreeBSD__
 

@@ -26,6 +26,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <sys/socket.h>
+
   /* XXX */
 #include "fiid.h"
 

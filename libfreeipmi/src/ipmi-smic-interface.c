@@ -28,7 +28,11 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <linux/types.h>
+#include <err.h>
 #include <errno.h>
 
 #include "ipmi-smic-interface.h"

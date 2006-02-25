@@ -36,6 +36,9 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "ipmi-comp-code-spec.h"
+#include "rmcp.h"
+#include "ipmi-lan-interface.h"
+#include "ipmi-messaging-support-cmds.h"
 
 #include "bit-ops.h"
 #include "ipmi-common.h"

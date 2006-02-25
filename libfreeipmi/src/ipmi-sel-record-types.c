@@ -18,7 +18,16 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "fiid.h"
+#include "ipmi-sel-record-types.h"
 
 fiid_template_t tmpl_sel_record_header = 
   {

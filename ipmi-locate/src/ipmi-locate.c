@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.12 2006-02-24 17:08:15 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.13 2006-02-25 02:44:00 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -22,10 +22,30 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#include <sys/resource.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#ifdef __FreeBSD__
+#include <sys/time.h>
+#else  /* !__FreeBSD */
+#include <time.h>
+#endif /* !__FreeBSD */
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
+#include <errno.h>
 
-#include "freeipmi-build.h"
 #include "ipmi-locate.h"
-
 #include "ipmi-locate-argp.h"
 #include "ipmi-common.h"
 
@@ -105,7 +125,6 @@ display_ipmi_locate_info (ipmi_locate_info_t *info)
 void 
 smbios_probe_display ()
 {
-  extern int errno;
   ipmi_locate_info_t *pinfo = NULL;
   
   printf ("Probing KCS device using SMBIOS... ");
@@ -166,7 +185,6 @@ smbios_probe_display ()
 void 
 acpi_probe_display ()
 {
-  extern int errno;
   ipmi_locate_info_t *pinfo = NULL;
   
   printf ("Probing KCS device using ACPI... ");
@@ -227,7 +245,6 @@ acpi_probe_display ()
 void 
 pci_probe_display ()
 {
-  extern int errno;
   ipmi_locate_info_t *pinfo = NULL;
   
   printf ("Probing KCS device using PCI... ");
@@ -288,7 +305,6 @@ pci_probe_display ()
 void 
 defaults_display ()
 {
-  extern int errno;
   ipmi_locate_info_t *pinfo = NULL;
   
   printf ("KCS device default values:\n");

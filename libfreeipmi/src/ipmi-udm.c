@@ -20,11 +20,18 @@
 
 */
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
 #include "ipmi-udm.h"
@@ -34,8 +41,14 @@
 #include "fiid-wrappers.h"
 #include "ipmi-locate.h"
 #include "ipmi-utils.h"
+#include "ipmi-lan-interface.h"
+#include "ipmi-lan-interface-udm.h"
 #include "ipmi-kcs-interface.h"
 #include "ipmi-ssif-interface.h"
+#include "ipmi-kcs-interface-udm.h"
+#include "ipmi-ssif-interface-udm.h"
+#include "ipmi-messaging-support-cmds-udm.h"
+#include "rmcp.h"
 
 #include "ipmi-common.h"
 

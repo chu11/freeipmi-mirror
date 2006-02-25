@@ -33,7 +33,7 @@
 #include "ipmi-kcs-interface-udm.h"
 #include "ipmi-kcs-interface.h"
 
-#include "freeipmi-build.h"
+#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 

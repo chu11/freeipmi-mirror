@@ -1,5 +1,5 @@
 /* 
-   $Id: garpd.c,v 1.5 2006-02-17 19:34:34 chu11 Exp $
+   $Id: garpd.c,v 1.6 2006-02-25 02:44:00 chu11 Exp $
 
    garpd - Gratuitous ARP Daemon - Send Gratuitous ARPs for each ARP
    MAC address mapping from the config file.
@@ -40,25 +40,25 @@
 #include <stdarg.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+#endif /* HAVE_FCNTL_H */
 #include <errno.h>
 #include <getopt.h>
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/select.h>
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else  /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 
 #include <netdb.h>
 #include <sys/socket.h>

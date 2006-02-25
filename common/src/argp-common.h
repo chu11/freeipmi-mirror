@@ -20,6 +20,9 @@
 #ifndef _ARGP_COMMON_H
 #define _ARGP_COMMON_H
 
+/* XXX */
+#include "ipmi-udm.h"
+
 enum argp_common_option_keys
   { 
     DRIVER_TYPE_KEY = 'D', 
@@ -56,8 +59,6 @@ enum argp_common_option_keys
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
      "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 8}      
-
-
 
 struct common_cmd_args 
 {

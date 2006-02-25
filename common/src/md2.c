@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md2.c,v 1.1 2006-02-24 01:34:16 chu11 Exp $
+ *  $Id: md2.c,v 1.2 2006-02-25 02:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,7 +30,6 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdint.h>
 #if STDC_HEADERS
 #include <string.h>
 #endif

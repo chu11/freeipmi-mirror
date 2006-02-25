@@ -18,8 +18,6 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi-build.h"
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -34,6 +32,9 @@
 #include "ipmi-locate.h"
 
 #include "freeipmi-portability.h"
+#include "ipmi-kcs-interface.h"
+#include "ipmi-smic-interface.h"
+#include "ipmi-ssif-interface.h"
 
 ipmi_locate_info_t*
 ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)

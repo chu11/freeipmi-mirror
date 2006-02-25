@@ -19,12 +19,30 @@
 
 */
 
+#if HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#ifdef __FreeBSD__
+#include <sys/time.h>
+#else  /* !__FreeBSD */
+#include <time.h>
+#endif /* !__FreeBSD */
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
 
 #include "ipmi-sel-api.h"
@@ -33,8 +51,11 @@
 #include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "ipmi-sel-cmds.h"
 #include "ipmi-sel-cmds-udm.h"
+#include "ipmi-sel-record-types.h"
 #include "ipmi-sensor-event-messages.h"
+#include "ipmi-sensor-api.h"
 
 #include "ipmi-common.h"
 

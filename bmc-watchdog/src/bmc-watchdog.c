@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.44 2006-02-23 14:58:47 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.45 2006-02-25 02:44:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,7 +59,22 @@
 # endif
 #endif
 
-#include "freeipmi-build.h"
+/* XXX use freeipmi.h when redone */
+#include "fiid.h"
+#include "ipmi-bmc-watchdog-timer-cmds.h"
+#include "ipmi-kcs-interface.h"
+#include "ipmi-lan-cmds.h"
+#include "ipmi-cmd-spec.h"
+#include "ipmi-netfn-spec.h"
+#include "ipmi-udm.h"
+#include "ipmi-ipmb-interface.h"
+#include "ipmi-comp-code-spec.h"
+#include "ipmi-kcs-interface-udm.h"
+#include "ipmi-messaging-support-cmds.h"
+#include "ipmi-messaging-support-cmds-udm.h"
+#ifndef NDEBUG
+#include "ipmi-debug.h"
+#endif
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
@@ -69,15 +84,15 @@
 #define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS     0
 #define IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS     6553
 
-#define BMC_WATCHDOG_ERR_BUFLEN                      1024
-#define BMC_WATCHDOG_STR_BUFLEN                      1024
-#define BMC_WATCHDOG_PKT_BUFLEN                      1024
-#define BMC_WATCHDOG_RESET_PERIOD_DEFAULT            60
+#define BMC_WATCHDOG_ERR_BUFLEN           1024
+#define BMC_WATCHDOG_STR_BUFLEN           1024
+#define BMC_WATCHDOG_PKT_BUFLEN           1024
+#define BMC_WATCHDOG_RESET_PERIOD_DEFAULT   60
 
-#define BMC_WATCHDOG_RETRY_WAIT_TIME                 1
-#define BMC_WATCHDOG_RETRY_ATTEMPT                   5
+#define BMC_WATCHDOG_RETRY_WAIT_TIME         1
+#define BMC_WATCHDOG_RETRY_ATTEMPT           5
 
-#define BMC_WATCHDOG_LOGFILE                         "/var/log/freeipmi/bmc-watchdog.log"
+#define BMC_WATCHDOG_LOGFILE                 "/var/log/freeipmi/bmc-watchdog.log"
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
