@@ -1,7 +1,7 @@
 lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
-	libfreeipmi.c \
+	freeipmi-portability.c \
 	fiid.c \
 	rmcp.c \
 	ipmi-error.c \

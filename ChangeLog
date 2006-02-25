@@ -15,6 +15,10 @@
 	* common/src/argp-common.h, common/src/md2.h, common/src/md5.h:
 	Fix up includes.
 
+	* libfreeipmi/src/libfreeipmi.c: Renamed to freeipmi-portability.c.
+
+	* libfreeipmi/src/Makefile.am: Adjust for file name change.
+
 2006-02-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.h,
