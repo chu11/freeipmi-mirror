@@ -21,6 +21,12 @@
 	* fish/, libfreeipmi/: Adjust makefiles and code appropriately for
 	new location of includes and convenience libraries.
 
+	* common/src/ipmi-sel-api.c, bmc-info/src/bmc-info.c,
+	fish/src/common.h, ipmi-locate/src/ipmi-locate.c,
+	ipmi-raw/src/ipmi-raw.c,
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c::Fix include
+	typo with sys/time.h and time.h.
+
 2006-02-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/, libfreeipmi/include/freeipmi: Move
