@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 /* High level calls */
 /* BMC treats "write followed by a read" as one transaction. It is

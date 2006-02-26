@@ -1,3 +1,5 @@
+SUBDIRS = udm
+
 lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
@@ -17,6 +19,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan-interface.c \
 	ipmi-smic-interface.c \
 	ipmi-ssif-interface.c \
+	ipmi-semaphores.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \
 	ipmi-device-global-cmds.c \
@@ -35,21 +38,6 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sdr-repository-cache-api.c \
 	ipmi-sel-api.c \
 	ipmi-sensor-api.c \
-	ipmi-udm.c \
-	ipmi-kcs-interface-udm.c \
-	ipmi-lan-interface-udm.c \
-	ipmi-ssif-interface-udm.c \
-	ipmi-chassis-cmds-udm.c \
-	ipmi-device-global-cmds-udm.c \
-	ipmi-lan-cmds-udm.c \
-	ipmi-messaging-support-cmds-udm.c \
-	ipmi-pef-and-alerting-cmds-udm.c \
-	ipmi-sel-cmds-udm.c \
-	ipmi-sdr-repository-cmds-udm.c \
-	ipmi-sensor-cmds-udm.c \
-	ipmi-serial-modem-cmds-udm.c \
-	ipmi-sol-cmds-udm.c \
-	ipmi-semaphores.c \
 	freeipmi-portability.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm
@@ -62,6 +50,7 @@ libfreeipmi_la_CFLAGS = \
 	-D_REENTRANT
 
 libfreeipmi_la_LIBADD = \
+	udm/libudm.la \
 	../../common/src/libbitops.la \
 	../../common/src/libipmicommon.la \
 	../../common/src/libmd2.la \
@@ -74,6 +63,9 @@ noinst_HEADERS = \
 	ipmi-inband.h \
 	ipmi-semaphores.h \
 	freeipmi-portability.h
+
+udm/libudm.la: force-dependency-check
+	$(MAKE) -C $(dir $@) $(notdir $@)
 
 ../../common/src/libbitops.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

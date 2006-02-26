@@ -1,3 +1,11 @@
+2006-02-26  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/udm, libfreeipmi/src/udm: Partition
+	off .c and .h files for udm into subdirectories.
+
+	* Globally adjust makefiles and includes to work off new include
+	locations.
+
 2006-02-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/, libfreeipmi/include/freeipmi: Move

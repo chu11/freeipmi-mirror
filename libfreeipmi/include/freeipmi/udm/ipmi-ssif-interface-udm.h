@@ -29,7 +29,7 @@
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 int ipmi_ssif_cmd2 (ipmi_device_t *dev, 
 		    fiid_obj_t obj_cmd_rq, 

@@ -48,10 +48,10 @@
 #include "freeipmi/ipmi-sel-api.h"
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sel-cmds.h"
-#include "freeipmi/ipmi-sel-cmds-udm.h"
 #include "freeipmi/ipmi-sel-record-types.h"
 #include "freeipmi/ipmi-sensor-event-messages.h"
 #include "freeipmi/ipmi-sensor-api.h"
+#include "freeipmi/udm/ipmi-sel-cmds-udm.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"

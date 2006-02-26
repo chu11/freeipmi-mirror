@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 
                                                               uint8_t channel_number, 

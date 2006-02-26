@@ -23,7 +23,7 @@
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 int8_t ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 
                                                                                uint8_t channel_number, 

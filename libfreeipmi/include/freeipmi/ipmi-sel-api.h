@@ -23,7 +23,7 @@
 #define _IPMI_SEL_API_H
 
 #include <stdint.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 #define SEL_RECORD_SIZE 16
 

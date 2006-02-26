@@ -63,20 +63,20 @@ extern "C" {
 #include <freeipmi/ipmi-sdr-repository-cache-api.h>
 #include <freeipmi/ipmi-sel-api.h>
 #include <freeipmi/ipmi-sensor-api.h>
-#include <freeipmi/ipmi-udm.h>
-#include <freeipmi/ipmi-kcs-interface-udm.h>
-#include <freeipmi/ipmi-lan-interface-udm.h>
-#include <freeipmi/ipmi-ssif-interface-udm.h>
-#include <freeipmi/ipmi-chassis-cmds-udm.h>
-#include <freeipmi/ipmi-device-global-cmds-udm.h>
-#include <freeipmi/ipmi-lan-cmds-udm.h>
-#include <freeipmi/ipmi-messaging-support-cmds-udm.h>
-#include <freeipmi/ipmi-pef-and-alerting-cmds-udm.h>
-#include <freeipmi/ipmi-sdr-repository-cmds-udm.h>
-#include <freeipmi/ipmi-sensor-cmds-udm.h>
-#include <freeipmi/ipmi-sel-cmds-udm.h>
-#include <freeipmi/ipmi-serial-modem-cmds-udm.h>
-#include <freeipmi/ipmi-sol-cmds-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-kcs-interface-udm.h>
+#include <freeipmi/udm/ipmi-lan-interface-udm.h>
+#include <freeipmi/udm/ipmi-ssif-interface-udm.h>
+#include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
+#include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
+#include <freeipmi/udm/ipmi-lan-cmds-udm.h>
+#include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
+#include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sdr-repository-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sensor-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sel-cmds-udm.h>
+#include <freeipmi/udm/ipmi-serial-modem-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sol-cmds-udm.h>
 
 #ifdef __cplusplus
 }

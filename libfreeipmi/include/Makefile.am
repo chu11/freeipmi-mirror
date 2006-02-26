@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.1 2006-02-26 02:10:50 chu11 Exp $
+## $Id: Makefile.am,v 1.2 2006-02-26 17:57:38 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -41,17 +41,17 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sdr-repository-cache-api.h \
 	freeipmi/ipmi-sel-api.h \
 	freeipmi/ipmi-sensor-api.h \
-	freeipmi/ipmi-udm.h \
-	freeipmi/ipmi-kcs-interface-udm.h \
-	freeipmi/ipmi-lan-interface-udm.h \
-	freeipmi/ipmi-ssif-interface-udm.h \
-	freeipmi/ipmi-chassis-cmds-udm.h \
-	freeipmi/ipmi-device-global-cmds-udm.h \
-	freeipmi/ipmi-lan-cmds-udm.h \
-	freeipmi/ipmi-messaging-support-cmds-udm.h \
-	freeipmi/ipmi-pef-and-alerting-cmds-udm.h \
-	freeipmi/ipmi-sdr-repository-cmds-udm.h \
-	freeipmi/ipmi-sensor-cmds-udm.h \
-	freeipmi/ipmi-sel-cmds-udm.h \
-	freeipmi/ipmi-serial-modem-cmds-udm.h \
-	freeipmi/ipmi-sol-cmds-udm.h
+	freeipmi/udm/ipmi-udm.h \
+	freeipmi/udm/ipmi-kcs-interface-udm.h \
+	freeipmi/udm/ipmi-lan-interface-udm.h \
+	freeipmi/udm/ipmi-ssif-interface-udm.h \
+	freeipmi/udm/ipmi-chassis-cmds-udm.h \
+	freeipmi/udm/ipmi-device-global-cmds-udm.h \
+	freeipmi/udm/ipmi-lan-cmds-udm.h \
+	freeipmi/udm/ipmi-messaging-support-cmds-udm.h \
+	freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h \
+	freeipmi/udm/ipmi-sdr-repository-cmds-udm.h \
+	freeipmi/udm/ipmi-sensor-cmds-udm.h \
+	freeipmi/udm/ipmi-sel-cmds-udm.h \
+	freeipmi/udm/ipmi-serial-modem-cmds-udm.h \
+	freeipmi/udm/ipmi-sol-cmds-udm.h

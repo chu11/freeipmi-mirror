@@ -42,8 +42,8 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-sdr-repository-cmds-udm.h"
 #include "freeipmi/ipmi-sensor-api.h"
+#include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"

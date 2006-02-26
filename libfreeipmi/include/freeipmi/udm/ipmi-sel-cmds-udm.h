@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 int8_t ipmi_cmd_get_sel_info2 (ipmi_device_t *dev, 
 			       fiid_obj_t obj_cmd_rs);

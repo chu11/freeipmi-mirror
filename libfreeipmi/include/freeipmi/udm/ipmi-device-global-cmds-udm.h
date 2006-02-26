@@ -1,5 +1,5 @@
-/* 
-   ipmi-lan-interface-udm.h - IPMI UDM LAN Interface
+/*
+   ipmi-device-global-cmds-udm.h - IPMI UDM Device Global Commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,30 +18,20 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_LAN_INTERFACE_UDM_H
-#define	_IPMI_LAN_INTERFACE_UDM_H	1
+#ifndef _IPMI_DEVICE_GLOBAL_CMDS_UDM_H
+#define	_IPMI_DEVICE_GLOBAL_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_lan_cmd2 (ipmi_device_t *dev, 
-		      fiid_obj_t obj_cmd_rq, 
-		      fiid_obj_t obj_cmd_rs);
-int8_t ipmi_lan_cmd_raw2 (ipmi_device_t *dev, 
-			  uint8_t *buf_rq, 
-			  size_t buf_rq_len, 
-			  uint8_t *buf_rs, 
-			  size_t *buf_rs_len);
+int8_t ipmi_cmd_get_device_id (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-lan-interface.h */
-
-
+#endif /* ipmi-device-global-cmds.h */

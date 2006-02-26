@@ -27,7 +27,7 @@ extern "C" {
 
 #include <stdio.h>
 #include <stdint.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
 #define IPMI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repository-cache"
 

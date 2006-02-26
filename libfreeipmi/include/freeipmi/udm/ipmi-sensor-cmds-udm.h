@@ -1,5 +1,5 @@
 /* 
-   ipmi-sdr-repository-cmds-udm.h - IPMI UDM SDR Repository commands
+   ipmi-sensor-cmds-udm.h - IPMI UDM sensor commands
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_SDR_REPOSITORY_CMDS_UDM_H
-#define _IPMI_SDR_REPOSITORY_CMDS_UDM_H
+#ifndef _IPMI_SENSOR_CMDS_UDM_H
+#define _IPMI_SENSOR_CMDS_UDM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,24 +28,23 @@ extern "C" {
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
-#include <freeipmi/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
-                                          fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev, 
-                                                     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_reserve_sdr_repository2 (ipmi_device_t *dev, 
-                                         fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_reading_threshold2 (ipmi_device_t *dev, 
+                                               uint8_t sensor_number, 
+                                               fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-			  uint16_t reservation_id, 
-			  uint16_t record_id, 
-			  uint8_t offset_into_record, 
-			  uint8_t bytes_to_read, 
-			  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sensor_reading_discrete2 (ipmi_device_t *dev, 
+                                              uint8_t sensor_number, 
+                                              fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_sensor_thresholds2 (ipmi_device_t *dev, 
+					uint8_t sensor_number, 
+					fiid_obj_t obj_cmd_rs);
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+#endif /* ipmi-sensor-cmds-udm.h */
