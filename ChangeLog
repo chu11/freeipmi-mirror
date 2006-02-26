@@ -6,6 +6,8 @@
 	* Globally adjust makefiles and includes to work off new include
 	locations.
 
+	* Remove '2' suffix from all UDM functions.
+
 2006-02-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/, libfreeipmi/include/freeipmi: Move

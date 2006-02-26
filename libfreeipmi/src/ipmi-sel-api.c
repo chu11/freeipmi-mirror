@@ -78,12 +78,12 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_entry_rs);
 
-  if (ipmi_cmd_get_sel_entry2 (dev, 
-                               0,
-			       IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY, 
-                               0,
-                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sel_entry (dev, 
+			      0,
+			      IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY, 
+			      0,
+			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+			      obj_cmd_rs) != 0)
     {
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
@@ -135,12 +135,12 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_entry_rs);
 
-  if (ipmi_cmd_get_sel_entry2 (dev, 
-                               0,
-			       seld->next_record_id, 
-                               0,
-                               IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
-			       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sel_entry (dev, 
+			      0,
+			      seld->next_record_id, 
+			      0,
+			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
+			      obj_cmd_rs) != 0)
     {
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;
@@ -604,7 +604,7 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_info_rs);
 
-  if (ipmi_cmd_get_sel_info2 (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_sel_info (dev, obj_cmd_rs) != 0)
     {
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
       dev->cmd = val;

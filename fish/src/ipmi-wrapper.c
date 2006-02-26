@@ -214,9 +214,9 @@ get_channel_info_list ()
 
   for (i = 0, ci = 0; i < 8; i++)
     {
-      if (ipmi_cmd_get_channel_info2 (fi_get_ipmi_device (), 
-				      i, 
-				      data_rs) != 0)
+      if (ipmi_cmd_get_channel_info (fi_get_ipmi_device (), 
+				     i, 
+				     data_rs) != 0)
 	continue;
       
       if (fiid_obj_get (data_rs, 
@@ -277,8 +277,8 @@ get_lan_channel_number ()
   if (lan_channel_number_initialized)
     return lan_channel_number;
   
-  lan_channel_number = ipmi_get_channel_number2 (fi_get_ipmi_device (), 
-						 IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  lan_channel_number = ipmi_get_channel_number (fi_get_ipmi_device (), 
+						IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
   if (!(lan_channel_number < 0))
     lan_channel_number_initialized = true;
   return lan_channel_number;
@@ -290,8 +290,8 @@ get_serial_channel_number ()
   if (serial_channel_number_initialized)
     return serial_channel_number;
   
-  serial_channel_number = ipmi_get_channel_number2 (fi_get_ipmi_device (), 
-						    IPMI_CHANNEL_MEDIUM_TYPE_RS232);
+  serial_channel_number = ipmi_get_channel_number (fi_get_ipmi_device (), 
+						   IPMI_CHANNEL_MEDIUM_TYPE_RS232);
   if (!(serial_channel_number < 0))
     serial_channel_number_initialized = true;
   return serial_channel_number;

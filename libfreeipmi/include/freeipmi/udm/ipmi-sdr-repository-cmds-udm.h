@@ -30,19 +30,20 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
-                                          fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_get_sdr_repository_allocation_info2 (ipmi_device_t *dev, 
-                                                     fiid_obj_t obj_cmd_rs);
-int8_t ipmi_cmd_reserve_sdr_repository2 (ipmi_device_t *dev, 
-                                         fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_info (ipmi_device_t *dev, 
+					 fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_get_sdr2 (ipmi_device_t *dev, 
-			  uint16_t reservation_id, 
-			  uint16_t record_id, 
-			  uint8_t offset_into_record, 
-			  uint8_t bytes_to_read, 
-			  fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_sdr_repository_allocation_info (ipmi_device_t *dev, 
+						    fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_reserve_sdr_repository (ipmi_device_t *dev, 
+					fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_sdr (ipmi_device_t *dev, 
+			 uint16_t reservation_id, 
+			 uint16_t record_id, 
+			 uint8_t offset_into_record, 
+			 uint8_t bytes_to_read, 
+			 fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

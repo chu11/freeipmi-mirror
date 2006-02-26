@@ -469,8 +469,8 @@ ex_sel_delete_entry (SCM scm_record_id)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
-			     obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
+			    obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -492,10 +492,10 @@ ex_sel_delete_entry (SCM scm_record_id)
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_delete_sel_entry_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_delete_sel_entry2 (fi_get_ipmi_device (), 
-				  reservation_id, 
-				  record_id, 
-				  obj_cmd_rs) != 0)
+  if (ipmi_cmd_delete_sel_entry (fi_get_ipmi_device (), 
+				 reservation_id, 
+				 record_id, 
+				 obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -524,8 +524,8 @@ ex_sel_clear ()
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
-			     obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
+			    obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -547,10 +547,10 @@ ex_sel_clear ()
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
-			   reservation_id, 
-			   IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
-			   obj_cmd_rs) != 0)
+  if (ipmi_cmd_clear_sel (fi_get_ipmi_device (), 
+			  reservation_id, 
+			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
+			  obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -577,8 +577,8 @@ ex_sel_get_clear_status ()
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (), 
-			     obj_cmd_rs) != 0)
+  if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
+			    obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -600,10 +600,10 @@ ex_sel_get_clear_status ()
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (), 
-			   reservation_id, 
-			   IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
-			   obj_cmd_rs) != 0)
+  if (ipmi_cmd_clear_sel (fi_get_ipmi_device (), 
+			  reservation_id, 
+			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
+			  obj_cmd_rs) != 0)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
@@ -3062,7 +3062,7 @@ ex_get_sdr_repository_info ()
   if (!(cmd_rs = fiid_obj_create(tmpl_get_sdr_repository_info_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_sdr_repository_info2 (fi_get_ipmi_device (), cmd_rs) != 0)
+  if (ipmi_cmd_get_sdr_repository_info (fi_get_ipmi_device (), cmd_rs) != 0)
     {
       ipmi_error (cmd_rs, "ipmi_cmd_get_sdr_repository_info2()");
       goto cleanup;
@@ -3431,7 +3431,7 @@ ex_get_pef_info ()
   if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_capabilities_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_capabilities2 (fi_get_ipmi_device (), cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_capabilities (fi_get_ipmi_device (), cmd_rs) != 0)
     {
       ipmi_error (cmd_rs, "ipmi_cmd_get_pef_capabilities2()");
       goto cleanup;
@@ -3519,11 +3519,11 @@ ex_get_pef_info ()
       if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_event_filters_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2 (fi_get_ipmi_device (), 
-                                                                              IPMI_GET_PEF_PARAMETER, 
-                                                                              SET_SELECTOR, 
-                                                                              BLOCK_SELECTOR, 
-                                                                              cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (fi_get_ipmi_device (), 
+									     IPMI_GET_PEF_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2()");
           goto cleanup;
@@ -3550,11 +3550,11 @@ ex_get_pef_info ()
       if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2 (fi_get_ipmi_device (), 
-                                                                                     IPMI_GET_PEF_PARAMETER, 
-                                                                                     SET_SELECTOR, 
-                                                                                     BLOCK_SELECTOR, 
-                                                                                     cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (fi_get_ipmi_device (), 
+										    IPMI_GET_PEF_PARAMETER, 
+										    SET_SELECTOR, 
+										    BLOCK_SELECTOR, 
+										    cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2()");
           goto cleanup;
@@ -3581,11 +3581,11 @@ ex_get_pef_info ()
       if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs)))
         goto cleanup;
 
-      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2 (fi_get_ipmi_device (), 
-                                                                              IPMI_GET_PEF_PARAMETER, 
-                                                                              SET_SELECTOR, 
-                                                                              BLOCK_SELECTOR, 
-                                                                              cmd_rs) != 0)
+      if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (fi_get_ipmi_device (), 
+									     IPMI_GET_PEF_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     cmd_rs) != 0)
 	{
 	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2()");
           goto cleanup;

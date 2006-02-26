@@ -602,12 +602,12 @@ get_sdr_sensor_record (ipmi_device_t *dev,
   ERR_CLEANUP ((sensor_record_header_buf = alloca (sensor_record_header_len)));
   memset (sensor_record_header_buf, 0, sensor_record_header_len);
 
-  ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
-				    0,
-				    record_id, 
-				    0, 
-				    sensor_record_header_len, 
-				    obj_cmd_rs)));
+  ERR_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
+				   0,
+				   record_id, 
+				   0, 
+				   sensor_record_header_len, 
+				   obj_cmd_rs)));
   
   FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs,
 			     (uint8_t *)"record_data",
@@ -627,7 +627,7 @@ get_sdr_sensor_record (ipmi_device_t *dev,
     {
       FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
       
-      ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository2 (dev, local_obj_cmd_rs) < 0));
+      ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository (dev, local_obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_CLEANUP (local_obj_cmd_rs, (uint8_t *)"reservation_id", &val);
       reservation_id = (uint16_t) val;
@@ -644,12 +644,12 @@ get_sdr_sensor_record (ipmi_device_t *dev,
       
       FIID_OBJ_CLEAR_CLEANUP (obj_cmd_rs);
       
-      ERR_CLEANUP (!(ipmi_cmd_get_sdr2 (dev, 
-					reservation_id, 
-					record_id, 
-					offset_into_record, 
-					bytes_to_read, 
-					obj_cmd_rs) < 0));
+      ERR_CLEANUP (!(ipmi_cmd_get_sdr (dev, 
+				       reservation_id, 
+				       record_id, 
+				       offset_into_record, 
+				       bytes_to_read, 
+				       obj_cmd_rs) < 0));
       
       FIID_OBJ_GET_DATA_CLEANUP (obj_cmd_rs,
 				 (uint8_t *)"record_data",
@@ -741,9 +741,9 @@ get_sdr_record (ipmi_device_t *dev,
       
       FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_thresholds_rs);
 
-      if (ipmi_cmd_get_sensor_thresholds2 (dev, 
-					   sdr_record->record.sdr_full_record.sensor_number, 
-					   obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_thresholds (dev, 
+					  sdr_record->record.sdr_full_record.sensor_number, 
+					  obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
@@ -946,9 +946,9 @@ get_sensor_reading (ipmi_device_t *dev,
       FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_threshold_rs);
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_threshold_rs);
 
-      if (ipmi_cmd_get_sensor_reading_threshold2 (dev, 
-                                                  sensor_number, 
-                                                  obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_threshold (dev, 
+						 sensor_number, 
+						 obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
@@ -1011,9 +1011,9 @@ get_sensor_reading (ipmi_device_t *dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
-                                                 sensor_number, 
-                                                 obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
+						sensor_number, 
+						obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
@@ -1076,9 +1076,9 @@ get_sensor_reading (ipmi_device_t *dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
-                                                 sensor_number, 
-                                                 obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
+						sensor_number, 
+						obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;
@@ -1141,9 +1141,9 @@ get_sensor_reading (ipmi_device_t *dev,
 
       FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
 
-      if (ipmi_cmd_get_sensor_reading_discrete2 (dev, 
-                                                 sensor_number, 
-                                                 obj_cmd_rs) != 0)
+      if (ipmi_cmd_get_sensor_reading_discrete (dev, 
+						sensor_number, 
+						obj_cmd_rs) != 0)
 	{
 	  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
 	  dev->cmd = val;

@@ -29,12 +29,12 @@ extern "C" {
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int8_t ipmi_cmd_get_chassis_status2 (ipmi_device_t *dev, 
-				     fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_get_chassis_status (ipmi_device_t *dev, 
+				    fiid_obj_t obj_cmd_rs);
 
-int8_t ipmi_cmd_set_power_restore_policy2 (ipmi_device_t *dev, 
-					   uint8_t power_restore_policy, 
-					   fiid_obj_t obj_cmd_rs);
+int8_t ipmi_cmd_set_power_restore_policy (ipmi_device_t *dev, 
+					  uint8_t power_restore_policy, 
+					  fiid_obj_t obj_cmd_rs);
 
 #ifdef __cplusplus
 }

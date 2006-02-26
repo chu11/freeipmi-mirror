@@ -65,7 +65,7 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
 
   FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
-  ERR_CLEANUP (!(ipmi_cmd_get_sdr_repository_info2 (dev, obj_data_rs) != 0));
+  ERR_CLEANUP (!(ipmi_cmd_get_sdr_repository_info (dev, obj_data_rs) != 0));
  
   FIID_OBJ_LEN_BYTES_CLEANUP (len, obj_data_rs); 
       

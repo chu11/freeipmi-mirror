@@ -293,9 +293,9 @@ get_channel_info_list (ipmi_device_t *dev)
 
   for (i = 0, ci = 0; i < 8; i++)
     {
-      if (ipmi_cmd_get_channel_info2 (dev, 
-				      i, 
-				      data_rs) != 0)
+      if (ipmi_cmd_get_channel_info (dev, 
+				     i, 
+				     data_rs) != 0)
 	continue;
       
       fiid_obj_get (data_rs, 
