@@ -1,3 +1,12 @@
+2006-02-25  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/, libfreeipmi/include/freeipmi: Move
+	distributed files into libfreeipmi/include/freeipmi.
+
+	* Globally re-work includes to work off "freeipmi/X" .h files.
+
+	* libfreeipmi/src/freeipmi-build.h: Removed file.
+	
 2006-02-24  Albert Chu <chu11@llnl.gov>
 
 	* Continue include reorganization to prepare for libfreeipmi
@@ -117,6 +126,8 @@
 	libfreeipmi/src/ipmi-ssif-interface-udm.h: Fix includes.
 	
 	* libfreeipmi/src/Makefile.am: Cleanup.
+
+	* libfreeipmi/src/freeipmi-portability.h: New file.
 
 2006-02-23  Albert Chu <chu11@llnl.gov>
 

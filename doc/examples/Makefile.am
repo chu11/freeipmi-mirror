@@ -4,7 +4,7 @@ LIBFREEIPMI_EXAMPLES = udm-test.c
 noinst_PROGRAMS  = udm-test
 udm_test_SOURCES = $(LIBFREEIPMI_EXAMPLES)
 udm_test_LDADD   = ../../libfreeipmi/src/libfreeipmi.la
-AM_CFLAGS        = -Wall -I$(srcdir)/../../libfreeipmi/src \
+AM_CFLAGS        = -Wall -I$(srcdir)/../../libfreeipmi/include \
 	-D_GNU_SOURCE -DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 -DWITH_LSD_NOMEM_ERROR_FUNC=1
 

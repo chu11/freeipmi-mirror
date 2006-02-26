@@ -18,9 +18,6 @@
 
 #include "common.h"
 
-/* XXX need to fix after include reorg */
-#include "ipmi-utils.h"
-
 #include "bit-ops.h"
 
 static int8_t 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.45 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.46 2006-02-26 02:10:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,22 +59,7 @@
 # endif
 #endif
 
-/* XXX use freeipmi.h when redone */
-#include "fiid.h"
-#include "ipmi-bmc-watchdog-timer-cmds.h"
-#include "ipmi-kcs-interface.h"
-#include "ipmi-lan-cmds.h"
-#include "ipmi-cmd-spec.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-udm.h"
-#include "ipmi-ipmb-interface.h"
-#include "ipmi-comp-code-spec.h"
-#include "ipmi-kcs-interface-udm.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "ipmi-messaging-support-cmds-udm.h"
-#ifndef NDEBUG
-#include "ipmi-debug.h"
-#endif
+#include <freeipmi/freeipmi.h>
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0

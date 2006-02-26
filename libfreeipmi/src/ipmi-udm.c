@@ -34,21 +34,21 @@
 #endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
-#include "ipmi-udm.h"
+#include "freeipmi/ipmi-udm.h"
+#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-kcs-interface-udm.h"
+#include "freeipmi/ipmi-messaging-support-cmds-udm.h"
+#include "freeipmi/ipmi-lan-interface.h"
+#include "freeipmi/ipmi-lan-interface-udm.h"
+#include "freeipmi/ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-interface-udm.h"
+#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/rmcp.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-locate.h"
-#include "ipmi-utils.h"
-#include "ipmi-lan-interface.h"
-#include "ipmi-lan-interface-udm.h"
-#include "ipmi-kcs-interface.h"
-#include "ipmi-ssif-interface.h"
-#include "ipmi-kcs-interface-udm.h"
-#include "ipmi-ssif-interface-udm.h"
-#include "ipmi-messaging-support-cmds-udm.h"
-#include "rmcp.h"
 
 #include "ipmi-common.h"
 

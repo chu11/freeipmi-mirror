@@ -20,8 +20,7 @@
 #ifndef _ARGP_COMMON_H
 #define _ARGP_COMMON_H
 
-/* XXX */
-#include "ipmi-udm.h"
+#include "freeipmi/ipmi-udm.h"
 
 enum argp_common_option_keys
   { 

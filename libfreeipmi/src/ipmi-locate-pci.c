@@ -25,10 +25,10 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-locate.h"
+#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
-#include "ipmi-ssif-interface.h"
 
 #ifdef UNTESTED /* __linux */           /* this code uses the /proc filesystem */
 

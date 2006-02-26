@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "ipmi-locate.h"
+#include "freeipmi/ipmi-locate.h"
 
 #include "freeipmi-portability.h"
 

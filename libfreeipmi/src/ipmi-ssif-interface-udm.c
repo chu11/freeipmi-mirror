@@ -35,8 +35,8 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-ssif-interface-udm.h"
-#include "ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-interface-udm.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"

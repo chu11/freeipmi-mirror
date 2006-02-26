@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.20 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.21 2006-02-26 02:10:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -39,15 +39,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "fiid.h"
-#include "ipmi-ipmb-interface.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-lan-interface.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "rmcp.h"
-#include "ipmi-debug.h"
-#include "ipmi-comp-code-spec.h"
-#include "ipmi-cmd-spec.h"
+#include <freeipmi/freeipmi.h>
 
 #include "ipmi-ping.h"
 

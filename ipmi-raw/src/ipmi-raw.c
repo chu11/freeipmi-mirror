@@ -48,11 +48,9 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #endif /* !__FreeBSD */
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
-
 #include <argp.h>
 
-#include "ipmi-udm.h"
-#include "rmcp.h"
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 #include "ipmi-raw-argp.h"

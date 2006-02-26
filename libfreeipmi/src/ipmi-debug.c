@@ -30,15 +30,15 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-debug.h"
+#include "freeipmi/ipmi-debug.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
+#include "freeipmi/ipmi-lan-interface.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/rmcp.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-comp-code-spec.h"
-#include "rmcp.h"
-#include "ipmi-lan-interface.h"
-#include "ipmi-messaging-support-cmds.h"
 
 #include "bit-ops.h"
 #include "ipmi-common.h"

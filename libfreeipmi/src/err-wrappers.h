@@ -26,13 +26,17 @@
 extern "C" {
 #endif
 
-/* XXX need to do includes */
-
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
 
-#include "ipmi-utils.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <syslog.h>
+#include <errno.h>
+
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-utils.h"
 
 #define ERR_WRAPPER_STR_MAX_LEN 4096
 

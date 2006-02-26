@@ -33,6 +33,7 @@ libfreeipmi:
   * re-architect ipmi-error.c stuff to handle different commands with same values.
   * fix sdr cache-api to be good.
   * applications should #include <freeipmi/freeipmi.h>, not freeipmi-build.h
+  * ipmi-ipmb-interface - right filename?
   * cleanup
     - lan-cmds 
        - missing commands

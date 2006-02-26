@@ -44,7 +44,7 @@
 #include <sys/ioctl.h>
 #include <errno.h>
 
-#include "ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"

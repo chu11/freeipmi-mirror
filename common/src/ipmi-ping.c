@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.7 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.8 2006-02-26 02:10:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,10 +64,9 @@
 #endif
 #include <assert.h>
 
-#include "ipmi-ping.h"
+#include <freeipmi/freeipmi.h>
 
-#include "ipmi-lan-interface.h"
-#include "rmcp.h"
+#include "ipmi-ping.h"
 
 #ifndef INET_ADDRSTRLEN 
 #define INET_ADDRSTRLEN 16

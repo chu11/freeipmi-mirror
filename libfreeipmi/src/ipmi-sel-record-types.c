@@ -26,8 +26,8 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "fiid.h"
-#include "ipmi-sel-record-types.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sel-record-types.h"
 
 fiid_template_t tmpl_sel_record_header = 
   {

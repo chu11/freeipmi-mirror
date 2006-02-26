@@ -27,13 +27,13 @@
 #include <math.h>
 #include <errno.h>
 
-#include "rmcp.h"
+#include "freeipmi/ipmi-sensor-utils.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sdr-record-types.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-sdr-record-types.h"
 
 #include "bit-ops.h"
 

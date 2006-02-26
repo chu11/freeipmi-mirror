@@ -30,13 +30,13 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-error.h"
+#include "freeipmi/ipmi-error.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
+#include "freeipmi/ipmi-kcs-interface.h"
 
 #include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
-#include "ipmi-cmd-spec.h"
-#include "ipmi-comp-code-spec.h"
-#include "ipmi-kcs-interface.h"
 
 #define SNPRINTF_RETURN(arg...)    \
 do				   \

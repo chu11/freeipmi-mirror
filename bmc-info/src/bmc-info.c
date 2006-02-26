@@ -52,11 +52,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <err.h>
 #include <argp.h>
 
-#include "fiid.h"
-#include "ipmi-device-global-cmds-udm.h"
-#include "ipmi-messaging-support-cmds-udm.h"
-#include "ipmi-device-global-cmds.h"
-#include "rmcp.h"
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 #include "bmc-info-argp.h"

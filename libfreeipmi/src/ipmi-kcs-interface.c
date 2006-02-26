@@ -34,15 +34,15 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "ipmi-inband.h"
-#include "ipmi-netfn-spec.h"
 #include "ipmi-semaphores.h"
-#include "ipmi-ipmb-interface.h"
 
 #include "ipmi-common.h"
 #include "xmalloc.h"

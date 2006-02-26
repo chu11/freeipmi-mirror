@@ -26,11 +26,11 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "ipmi-sensor-cmds.h"
+#include "freeipmi/ipmi-sensor-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
 
 #include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
-#include "ipmi-cmd-spec.h"
 
 fiid_template_t tmpl_get_device_sdr_info_rq =
   {

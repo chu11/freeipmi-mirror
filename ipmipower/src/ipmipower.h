@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.20 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.21 2006-02-26 02:10:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,16 +44,7 @@
 #include <sys/param.h>
 #include <netinet/in.h>
 
-/* XXX */
-#include "fiid.h"
-#include "ipmi-chassis-cmds.h"
-#include "ipmi-lan-interface.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-cmd-spec.h"
-#include "ipmi-comp-code-spec.h"
-#include "rmcp.h"
-#include "ipmi-ipmb-interface.h"
+#include <freeipmi/freeipmi.h>
 
 #include "hostlist.h"
 #include "cbuf.h"

@@ -43,16 +43,16 @@
 #endif /* !HAVE_SYS_TIME_H */
 #endif	/* !TIME_WITH_SYS_TIME */
 
-#include "ipmi-messaging-support-cmds-udm.h"
-#include "ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-messaging-support-cmds-udm.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-device-global-cmds.h"
+#include "freeipmi/ipmi-device-global-cmds-udm.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
-#include "ipmi-device-global-cmds.h"
-#include "ipmi-device-global-cmds-udm.h"
 
 int8_t 
 ipmi_cmd_get_channel_authentication_capabilities2 (ipmi_device_t *dev, 

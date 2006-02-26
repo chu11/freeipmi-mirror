@@ -35,7 +35,7 @@
 #include <err.h>
 #include <errno.h>
 
-#include "ipmi-smic-interface.h"
+#include "freeipmi/ipmi-smic-interface.h"
 
 #include "freeipmi-portability.h"
 #include "ipmi-inband.h"

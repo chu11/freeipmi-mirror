@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.8 2006-02-25 02:44:00 chu11 Exp $ 
+   $Id: common.h,v 1.9 2006-02-26 02:10:50 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -60,35 +60,7 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 
-#include "ipmi-udm.h"
-#include "ipmi-lan-interface.h"
-#include "ipmi-device-global-cmds.h"
-#include "ipmi-device-global-cmds-udm.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "ipmi-messaging-support-cmds-udm.h"
-#include "ipmi-lan-cmds.h"
-#include "ipmi-lan-cmds-udm.h"
-#include "ipmi-pef-and-alerting-cmds.h"
-#include "ipmi-pef-and-alerting-cmds-udm.h"
-#include "ipmi-serial-modem-cmds.h"
-#include "ipmi-serial-modem-cmds-udm.h"
-#include "ipmi-sensor-api.h"
-#include "ipmi-sel-api.h"
-#include "ipmi-sel-cmds.h"
-#include "ipmi-sel-cmds-udm.h"
-#include "ipmi-sensor-types-spec.h"
-#include "ipmi-sensor-units-spec.h"
-#include "ipmi-sdr-record-types.h"
-#include "ipmi-sdr-repository-cmds.h"
-#include "ipmi-sdr-repository-cmds-udm.h"
-#include "ipmi-sdr-repository-cache-api.h"
-#include "rmcp.h"
-#include "ipmi-cmd-spec.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-lan-param-spec.h"
-#include "ipmi-ipmb-interface.h"
-#include "ipmi-chassis-cmds.h"
-#include "ipmi-chassis-cmds-udm.h"
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 #include "ipmi-common.h"

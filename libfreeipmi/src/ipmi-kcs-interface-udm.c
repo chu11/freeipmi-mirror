@@ -30,8 +30,8 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-kcs-interface-udm.h"
-#include "ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-kcs-interface-udm.h"
+#include "freeipmi/ipmi-kcs-interface.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"

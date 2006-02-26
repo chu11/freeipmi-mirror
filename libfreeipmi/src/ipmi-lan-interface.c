@@ -33,16 +33,16 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-lan-interface.h"
+#include "freeipmi/ipmi-lan-interface.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-netfn-spec.h"
+#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/rmcp.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-ipmb-interface.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-utils.h"
-#include "rmcp.h"
 
 #include "md2.h"
 #include "md5.h"

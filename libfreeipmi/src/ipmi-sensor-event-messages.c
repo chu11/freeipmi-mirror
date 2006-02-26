@@ -31,12 +31,11 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/fiid.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "fiid-wrappers.h"
-
 
 /*********************************
  * Generic Event Reading Strings *

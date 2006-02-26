@@ -29,15 +29,15 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-serial-modem-cmds-udm.h"
-#include "ipmi-serial-modem-cmds.h"
-#include "ipmi-serial-modem-param-spec.h"
+#include "freeipmi/ipmi-serial-modem-cmds-udm.h"
+#include "freeipmi/ipmi-serial-modem-cmds.h"
+#include "freeipmi/ipmi-serial-modem-param-spec.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_set_serial_modem_configuration_connection_mode2 (ipmi_device_t *dev, 

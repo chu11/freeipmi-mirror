@@ -33,13 +33,13 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "ipmi-lan-interface-udm.h"
-#include "ipmi-lan-interface.h"
+#include "freeipmi/ipmi-lan-interface-udm.h"
+#include "freeipmi/ipmi-lan-interface.h"
+#include "freeipmi/rmcp.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "rmcp.h"
 
 fiid_template_t tmpl_lan_raw_hdr = 
   {

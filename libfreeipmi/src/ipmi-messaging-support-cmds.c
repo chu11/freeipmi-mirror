@@ -29,11 +29,11 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
 
 #include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
-#include "ipmi-cmd-spec.h"
 
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {

@@ -29,15 +29,15 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-lan-cmds-udm.h"
-#include "ipmi-lan-cmds.h"
-#include "ipmi-lan-param-spec.h"
+#include "freeipmi/ipmi-lan-cmds-udm.h"
+#include "freeipmi/ipmi-lan-cmds.h"
+#include "freeipmi/ipmi-lan-param-spec.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_set_lan_configuration_parameters_authentication_type_enables2 (ipmi_device_t *dev, 

@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-record-types.h"
 
 #include "freeipmi-portability.h"
 

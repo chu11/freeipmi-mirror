@@ -29,12 +29,12 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-locate.h"
+#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-smic-interface.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
-#include "ipmi-kcs-interface.h"
-#include "ipmi-smic-interface.h"
-#include "ipmi-ssif-interface.h"
 
 ipmi_locate_info_t*
 ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)

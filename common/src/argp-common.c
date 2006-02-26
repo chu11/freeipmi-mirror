@@ -32,8 +32,8 @@
 #include <error.h>
 #include <argp.h>
 
-/* XXX */
-#include "ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+
 #include "argp-common.h"
 
 error_t 

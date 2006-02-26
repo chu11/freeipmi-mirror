@@ -28,14 +28,7 @@
 #endif /* STDC_HEADERS */
 #include <netdb.h>
 
-/* XXX NEED TO FIX */
-#include "fiid.h"
-#include "ipmi-device-global-cmds.h"
-#include "ipmi-device-global-cmds-udm.h"
-#include "ipmi-messaging-support-cmds.h"
-#include "ipmi-udm.h"
-#include "ipmi-debug.h"
-#include "rmcp.h"
+#include <freeipmi/freeipmi.h>
 
 int 
 main (int argc, char **argv)

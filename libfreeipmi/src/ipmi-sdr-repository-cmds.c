@@ -27,11 +27,11 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
 
 #include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
-#include "ipmi-cmd-spec.h"
 
 fiid_template_t tmpl_get_sdr_repository_info_rq =
   {

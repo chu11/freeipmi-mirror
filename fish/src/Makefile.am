@@ -14,7 +14,7 @@ noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 	../../common/src/argp-common.h
 
 AM_CFLAGS = -Wall  -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/src -D_GNU_SOURCE \
+	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check

@@ -43,11 +43,11 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "ipmi-locate.h"
+#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
-#include "ipmi-ssif-interface.h"
 
 #include "xmalloc.h"
 

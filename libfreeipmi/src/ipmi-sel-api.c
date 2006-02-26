@@ -45,17 +45,17 @@
 #endif  /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
 
-#include "ipmi-sel-api.h"
+#include "freeipmi/ipmi-sel-api.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sel-cmds.h"
+#include "freeipmi/ipmi-sel-cmds-udm.h"
+#include "freeipmi/ipmi-sel-record-types.h"
+#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-api.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-sel-cmds.h"
-#include "ipmi-sel-cmds-udm.h"
-#include "ipmi-sel-record-types.h"
-#include "ipmi-sensor-event-messages.h"
-#include "ipmi-sensor-api.h"
 
 #include "ipmi-common.h"
 

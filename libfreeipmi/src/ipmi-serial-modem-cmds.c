@@ -26,13 +26,13 @@
 #include <stdlib.h>
 #include <errno.h>
 
-#include "ipmi-serial-modem-cmds.h"
-#include "ipmi-serial-modem-param-spec.h"
+#include "freeipmi/ipmi-serial-modem-cmds.h"
+#include "freeipmi/ipmi-serial-modem-param-spec.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX */
 
 #include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
-#include "ipmi-cmd-spec.h"
-#include "ipmi-messaging-support-cmds.h" /* XXX */
 
 fiid_template_t tmpl_set_serial_modem_configuration_rq =
   {

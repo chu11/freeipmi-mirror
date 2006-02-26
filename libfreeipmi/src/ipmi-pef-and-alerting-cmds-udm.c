@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 Boston, MA 02111-1307, USA.
 
-$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.4 2006-02-24 22:50:11 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.5 2006-02-26 02:10:50 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -30,15 +30,15 @@ $Id: ipmi-pef-and-alerting-cmds-udm.c,v 1.4 2006-02-24 22:50:11 chu11 Exp $  */
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-pef-and-alerting-cmds-udm.h"
-#include "ipmi-pef-and-alerting-cmds.h"
-#include "ipmi-pef-param-spec.h"
+#include "freeipmi/ipmi-pef-and-alerting-cmds-udm.h"
+#include "freeipmi/ipmi-pef-and-alerting-cmds.h"
+#include "freeipmi/ipmi-pef-param-spec.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_get_pef_capabilities2 (ipmi_device_t *dev, fiid_obj_t obj_cmd_rs)

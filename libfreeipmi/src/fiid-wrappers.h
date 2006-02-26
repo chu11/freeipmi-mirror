@@ -26,10 +26,16 @@
 extern "C" {
 #endif
 
-  /* XXX need to do includes */
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <syslog.h>
+#include <errno.h>
+
+#include "freeipmi/fiid.h"
 
 #define FIID_WRAPPER_STR_MAX_LEN 4096
 

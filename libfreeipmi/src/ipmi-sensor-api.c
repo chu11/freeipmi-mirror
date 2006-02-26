@@ -34,20 +34,20 @@
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
 
-#include "ipmi-sensor-api.h"
+#include "freeipmi/ipmi-sensor-api.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-sdr-repository-cmds-udm.h"
+#include "freeipmi/ipmi-sensor-cmds.h"
+#include "freeipmi/ipmi-sensor-cmds-udm.h"
+#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/ipmi-sensor-types-spec.h"
+#include "freeipmi/ipmi-sensor-utils.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-sdr-record-types.h"
-#include "ipmi-sdr-repository-cmds.h"
-#include "ipmi-sensor-cmds.h"
-#include "ipmi-sensor-types-spec.h"
-#include "ipmi-sensor-utils.h"
-#include "ipmi-sensor-cmds-udm.h"
-#include "ipmi-sdr-repository-cmds-udm.h"
-#include "ipmi-sensor-event-messages.h"
 
 enum system_software_type
   {

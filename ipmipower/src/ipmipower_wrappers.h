@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.10 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.11 2006-02-26 02:10:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -37,9 +37,7 @@
 #include "error.h"
 #include "conffile.h"
 
-/* XXX */
-#include "ipmi-debug.h"
-#include "fiid.h"
+#include <freeipmi/freeipmi.h>
 
 /* Cbuf_create
  * - Create cbuf buffer

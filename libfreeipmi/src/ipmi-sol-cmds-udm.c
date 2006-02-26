@@ -29,15 +29,15 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-sol-cmds-udm.h"
-#include "ipmi-sol-cmds.h"
-#include "ipmi-sol-param-spec.h"
+#include "freeipmi/ipmi-sol-cmds-udm.h"
+#include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/ipmi-sol-param-spec.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_set_sol_configuration_parameters_sol_enable2 (ipmi_device_t *dev, 

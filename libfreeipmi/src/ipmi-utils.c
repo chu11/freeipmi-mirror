@@ -42,12 +42,12 @@
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
 
-#include "ipmi-utils.h"
+#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "fiid-wrappers.h"
-#include "ipmi-comp-code-spec.h"
 
 #include "bit-ops.h"
 

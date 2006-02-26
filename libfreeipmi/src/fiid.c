@@ -32,7 +32,7 @@
 #include <assert.h>
 #include <errno.h>
 
-#include "fiid.h"
+#include "freeipmi/fiid.h"
 
 #include "freeipmi-portability.h"
 

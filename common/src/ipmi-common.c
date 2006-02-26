@@ -39,9 +39,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 
 #include "ipmi-common.h"
 
-#include "ipmi-error.h"
-#include "rmcp.h"
-
 #define IPMI_DPRINTF_MAX_BUF_LEN 65536
 
 int

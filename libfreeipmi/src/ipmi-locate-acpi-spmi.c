@@ -39,13 +39,13 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "ipmi-locate.h"
+#include "freeipmi/ipmi-locate.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
-#include "fiid.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-ssif-interface.h"
 
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO     IPMI_ADDRESS_SPACE_ID_SYSTEM_IO

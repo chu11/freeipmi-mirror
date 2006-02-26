@@ -30,14 +30,14 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "ipmi-sdr-repository-cmds-udm.h"
-#include "ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-sdr-repository-cmds-udm.h"
+#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-ipmb-interface.h"
+#include "freeipmi/ipmi-netfn-spec.h"
 
 #include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-#include "ipmi-netfn-spec.h"
-#include "ipmi-ipmb-interface.h"
 
 int8_t 
 ipmi_cmd_get_sdr_repository_info2 (ipmi_device_t *dev, 
