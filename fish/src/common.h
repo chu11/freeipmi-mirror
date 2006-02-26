@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.10 2006-02-26 22:49:33 chu11 Exp $ 
+   $Id: common.h,v 1.11 2006-02-26 23:13:27 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -49,11 +49,7 @@
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>
 #else /* !HAVE_SYS_TIME_H */
-#ifdef __FreeBSD__
-#include <sys/time.h>
-#else  /* !__FreeBSD */
 #include <time.h>
-#endif /* !__FreeBSD */
 #endif /* !HAVE_SYS_TIME_H */
 #endif  /* !TIME_WITH_SYS_TIME */
 #include <netinet/in.h>

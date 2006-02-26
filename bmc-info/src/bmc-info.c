@@ -39,11 +39,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>
 #else /* !HAVE_SYS_TIME_H */
-#ifdef __FreeBSD__
-#include <sys/time.h>
-#else  /* !__FreeBSD */
 #include <time.h>
-#endif /* !__FreeBSD */
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <sys/socket.h>

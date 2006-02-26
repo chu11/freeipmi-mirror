@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.14 2006-02-26 02:10:50 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.15 2006-02-26 23:13:27 chu11 Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -36,11 +36,7 @@
 #if HAVE_SYS_TIME_H
 #include <sys/time.h>
 #else /* !HAVE_SYS_TIME_H */
-#ifdef __FreeBSD__
-#include <sys/time.h>
-#else  /* !__FreeBSD */
 #include <time.h>
-#endif /* !__FreeBSD */
 #endif /* !HAVE_SYS_TIME_H */
 #endif /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
