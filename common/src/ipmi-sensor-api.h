@@ -23,7 +23,8 @@
 #define _IPMI_SENSOR_API_H
 
 #include <stdint.h>
-#include <freeipmi/udm/ipmi-udm.h>
+
+#include "freeipmi/udm/ipmi-udm.h"
 
 struct sdr_full_record
 {

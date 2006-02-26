@@ -23,6 +23,7 @@
 #include <config.h>
 #endif
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -45,19 +46,19 @@
 #endif  /* !TIME_WITH_SYS_TIME */
 #include <errno.h>
 
-#include "freeipmi/ipmi-sel-api.h"
+#include "ipmi-sel-api.h"
+
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sel-cmds.h"
 #include "freeipmi/ipmi-sel-record-types.h"
 #include "freeipmi/ipmi-sensor-event-messages.h"
-#include "freeipmi/ipmi-sensor-api.h"
 #include "freeipmi/udm/ipmi-sel-cmds-udm.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
+#include "ipmi-sensor-api.h"
 
 int 
 ipmi_sel_get_first_entry (ipmi_device_t *dev, 

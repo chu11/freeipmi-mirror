@@ -31,11 +31,10 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 
-#include "freeipmi-portability.h"
+#include "bit-ops.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-
-#include "bit-ops.h"
+#include "freeipmi-portability.h"
 
 double 
 ipmi_sensor_decode_value (char r_exponent, 

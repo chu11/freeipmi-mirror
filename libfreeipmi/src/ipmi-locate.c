@@ -30,7 +30,6 @@
 #include "freeipmi/ipmi-locate.h"
 
 #include "freeipmi-portability.h"
-
 #include "xmalloc.h"
 
 typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t));

@@ -35,8 +35,8 @@
 #include "freeipmi/ipmi-comp-code-spec.h"
 #include "freeipmi/ipmi-kcs-interface.h"
 
-#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 #define SNPRINTF_RETURN(arg...)    \
 do				   \

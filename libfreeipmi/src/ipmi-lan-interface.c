@@ -40,10 +40,9 @@
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-
+#include "freeipmi-portability.h"
 #include "md2.h"
 #include "md5.h"
 

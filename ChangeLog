@@ -8,6 +8,19 @@
 
 	* Remove '2' suffix from all UDM functions.
 
+	* libfreeipmi/src/ipmi-sdr-repository-cache-api.c,
+	libfreeipmi/src/ipmi-sel-api.c, libfreeipmi/src/ipmi-sensor-api.c,
+	libfreeipmi/include/freeipmi/ipmi-sdr-repository-cache-api.h,
+	libfreeipmi/include/freeipmi/ipmi-sel-api.h,
+	libfreeipmi/include/freeipmi/ipmi-sensor-api.h,
+	libfreeipmi/src/fiid-wrappers.h, libfreeipmi/src/err-wrappers.h,
+	libfreeipmi/src/freeipmi-portability.h,
+	libfreeipmi/src/freeipmi-portability.c: Move to common/src/ as
+	convenience libraries and headers.
+
+	* fish/, libfreeipmi/: Adjust makefiles and code appropriately for
+	new location of includes and convenience libraries.
+
 2006-02-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/, libfreeipmi/include/freeipmi: Move

@@ -46,10 +46,9 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
 
-#include "freeipmi-portability.h"
-#include "fiid-wrappers.h"
-
 #include "bit-ops.h"
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 int8_t
 ipmi_checksum (uint8_t *buf, uint64_t len)

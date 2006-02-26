@@ -23,6 +23,7 @@
 #include <config.h>
 #endif
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -34,7 +35,8 @@
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
 
-#include "freeipmi/ipmi-sensor-api.h"
+#include "ipmi-sensor-api.h"
+
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
@@ -45,9 +47,9 @@
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 #include "freeipmi/udm/ipmi-sensor-cmds-udm.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 enum system_software_type
   {

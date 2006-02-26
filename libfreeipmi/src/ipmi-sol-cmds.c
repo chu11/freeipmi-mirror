@@ -31,8 +31,8 @@
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX */
 
-#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_set_sol_configuration_parameters_rq =
   {

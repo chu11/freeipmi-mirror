@@ -43,9 +43,9 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-interface.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY
 #define IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO     IPMI_ADDRESS_SPACE_ID_SYSTEM_IO

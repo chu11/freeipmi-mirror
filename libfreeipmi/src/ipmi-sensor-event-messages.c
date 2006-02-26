@@ -35,6 +35,7 @@
 #include "freeipmi/fiid.h"
 
 #include "freeipmi-portability.h"
+
 #include "fiid-wrappers.h"
 
 /*********************************

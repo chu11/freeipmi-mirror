@@ -27,11 +27,10 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-chassis-cmds.h"
-
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_get_chassis_status_rq =
   {

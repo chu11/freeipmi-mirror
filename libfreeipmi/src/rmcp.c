@@ -33,9 +33,9 @@
 
 #include "freeipmi/rmcp.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_rmcp_hdr =
   {

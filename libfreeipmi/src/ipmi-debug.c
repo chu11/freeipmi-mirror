@@ -36,11 +36,10 @@
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/rmcp.h"
 
-#include "freeipmi-portability.h"
+#include "bit-ops.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
-
-#include "bit-ops.h"
+#include "freeipmi-portability.h"
 #include "ipmi-common.h"
 
 #define IPMI_DEBUG_MAX_PREFIX_LEN        32

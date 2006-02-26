@@ -38,16 +38,17 @@
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
 
-#include "freeipmi/ipmi-sdr-repository-cache-api.h"
+#include "ipmi-sdr-repository-cache-api.h"
+
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-sdr-record-types.h"
 #include "freeipmi/ipmi-sdr-repository-cmds.h"
-#include "freeipmi/ipmi-sensor-api.h"
 #include "freeipmi/udm/ipmi-sdr-repository-cmds-udm.h"
 
-#include "freeipmi-portability.h"
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
+#include "ipmi-sensor-api.h"
 
 int 
 ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)

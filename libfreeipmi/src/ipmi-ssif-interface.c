@@ -46,11 +46,11 @@
 
 #include "freeipmi/ipmi-ssif-interface.h"
 
-#include "freeipmi-portability.h"
-#include "err-wrappers.h"
 #include "ipmi-semaphores.h"
 
+#include "err-wrappers.h"
 #include "ipmi-common.h"
+#include "freeipmi-portability.h"
 #include "xmalloc.h"
 
 static inline int32_t

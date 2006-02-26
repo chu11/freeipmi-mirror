@@ -27,11 +27,10 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-bmc-watchdog-timer-cmds.h"
-
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "freeipmi-portability.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_reset_watchdog_timer_rq =
   {

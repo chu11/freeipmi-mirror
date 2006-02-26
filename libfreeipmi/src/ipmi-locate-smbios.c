@@ -48,7 +48,6 @@
 #include "freeipmi/ipmi-ssif-interface.h"
 
 #include "freeipmi-portability.h"
-
 #include "xmalloc.h"
 
 /* SMBIOS Reference Specification: map area between 000f0000 and

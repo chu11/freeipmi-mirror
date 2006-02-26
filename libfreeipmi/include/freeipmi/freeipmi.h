@@ -60,9 +60,6 @@ extern "C" {
 #include <freeipmi/ipmi-sel-record-types.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #include <freeipmi/ipmi-sensor-utils.h>
-#include <freeipmi/ipmi-sdr-repository-cache-api.h>
-#include <freeipmi/ipmi-sel-api.h>
-#include <freeipmi/ipmi-sensor-api.h>
 #include <freeipmi/udm/ipmi-udm.h>
 #include <freeipmi/udm/ipmi-kcs-interface-udm.h>
 #include <freeipmi/udm/ipmi-lan-interface-udm.h>
