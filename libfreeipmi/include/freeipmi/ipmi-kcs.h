@@ -1,5 +1,5 @@
 /* 
-   ipmi-lan-interface.h - IPMI LAN Interface
+   ipmi-kcs.h - IPMI KCS
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -16,38 +16,36 @@
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
+
 */
 
-#ifndef _IPMI_LAN_INTERFACE_H
-#define	_IPMI_LAN_INTERFACE_H	1
+#ifndef _IPMI_KCS_H
+#define _IPMI_KCS_H 1
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <sys/types.h>
-#include <sys/socket.h>
+#include <stdint.h>
+#include <freeipmi/fiid.h>
 
-#define IPMI_LAN_PKT_PAD_SIZE   1
+extern fiid_template_t tmpl_hdr_kcs;
 
-ssize_t ipmi_lan_sendto (int sockfd, 
-			 const void *pkt, 
-			 size_t pkt_len, 
-			 int flags, 
-			 const struct sockaddr *to, 
-			 unsigned int tolen);
-
-ssize_t ipmi_lan_recvfrom (int sockfd, 
-			   void *pkt, 
-			   size_t pkt_len, 
-			   int flags, 
-			   struct sockaddr *from, 
-			   unsigned int *fromlen);
+int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
+			  uint8_t fn, 
+			  fiid_obj_t obj_hdr);
+int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
+                               fiid_obj_t obj_cmd, 
+                               uint8_t *pkt, 
+                               uint32_t pkt_len);
+int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
+                                 uint32_t pkt_len, 
+                                 fiid_obj_t obj_hdr, 
+                                 fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ipmi-lan-interface.h */
-
+#endif /* ipmi-kcs.h */
 

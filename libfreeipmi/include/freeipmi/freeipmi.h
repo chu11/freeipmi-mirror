@@ -44,8 +44,11 @@ extern "C" {
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-locate.h>
+#include <freeipmi/ipmi-kcs.h>
 #include <freeipmi/ipmi-kcs-interface.h>
+#include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
+#include <freeipmi/ipmi-lan-utils.h>
 #include <freeipmi/ipmi-ssif-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>

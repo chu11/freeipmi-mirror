@@ -107,8 +107,8 @@ ipmi_i2c_smbus_write_block_data (int file, uint8_t command, uint8_t length, uint
 static char * ipmi_ssif_ctx_errmsg[] =
   {
     "success",
-    "fiid object is null",
-    "fiid object is invalid",
+    "ssif context is null",
+    "ssif context is invalid",
     "invalid parameter",
     "permission denied",
     "io not initialized",

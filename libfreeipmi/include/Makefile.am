@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.5 2006-02-28 01:56:10 chu11 Exp $
+## $Id: Makefile.am,v 1.6 2006-02-28 17:40:18 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -22,8 +22,11 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-error.h \
 	freeipmi/ipmi-utils.h \
 	freeipmi/ipmi-locate.h \
+	freeipmi/ipmi-kcs.h \
 	freeipmi/ipmi-kcs-interface.h \
+	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
+	freeipmi/ipmi-lan-utils.h \
 	freeipmi/ipmi-ssif-interface.h \
 	freeipmi/ipmi-smic-interface.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \

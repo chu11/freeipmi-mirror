@@ -27,7 +27,8 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-#include <freeipmi/fiid.h>
+
+  /* XXX - audit, do we need this stuff? */
 
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC1620    0x0CA2
@@ -87,8 +88,6 @@ extern "C" {
 
 /* Reserved - all others */
 
-extern fiid_template_t tmpl_hdr_kcs;
-
 #define IPMI_KCS_CTX_ERR_SUCCESS         0
 #define IPMI_KCS_CTX_ERR_NULL            1
 #define IPMI_KCS_CTX_ERR_INVALID         2
@@ -132,18 +131,6 @@ int32_t ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
 int32_t ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
                        uint8_t* bytes,
                        uint32_t bytes_len);
-
-int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
-			  uint8_t fn, 
-			  fiid_obj_t obj_hdr);
-int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
-                               fiid_obj_t obj_cmd, 
-                               uint8_t *pkt, 
-                               uint32_t pkt_len);
-int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
-                                 uint32_t pkt_len, 
-                                 fiid_obj_t obj_hdr, 
-                                 fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus
 }

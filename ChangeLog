@@ -1,5 +1,17 @@
 2006-02-28  Albert Chu <chu11@llnl.gov>
 
+	* libfreeipmi/src/ipmi-lan-interface.h,
+	libfreeipmi/src/ipmi-lan-interface.c: Split off code into
+	ipmi-lan.h, ipmi-lan.c, ipmi-lan-utils.h, and ipmi-lan-utils.c.
+
+	* libfreeipmi/src/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c: Split off code into
+	ipmi-kcs.h and ipmi-kcs.c.
+
+	* Globally re-adjust code for new files and includes.
+	
+2006-02-28  Albert Chu <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
 	(ipmi_completion_code_check): Rename to
 	ipmi_check_completion_code_success for consistency with other
