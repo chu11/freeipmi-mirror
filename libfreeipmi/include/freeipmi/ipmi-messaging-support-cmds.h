@@ -230,10 +230,6 @@ int8_t fill_cmd_set_user_password (uint8_t user_id,
                                    unsigned int password_len,
                                    fiid_obj_t obj_data_rq);
       
-int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);
-
-int8_t ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code);
-
 #ifdef __cplusplus
 }
 #endif

@@ -24,20 +24,13 @@
 
 #include <stdint.h>
 
-double ipmi_sensor_decode_value (char r_exponent, 
-				 char b_exponent, 
-				 short m, 
-				 short b, 
-				 char linear, 
-				 uint8_t analog_data_format, 
-				 uint8_t raw_data);
-void ipmi_sensor_get_decode_params (uint8_t *sensor_record, 
-				    uint32_t sensor_record_len,
-				    uint8_t *analog_data_format,
-				    char *r_exponent, 
-				    char *b_exponent, 
-				    char *linear, 
-				    short *b, 
-				    short *m);
+int ipmi_sensor_decode_value (char r_exponent, 
+			      char b_exponent, 
+			      short m, 
+			      short b, 
+			      char linear, 
+			      uint8_t analog_data_format, 
+			      uint8_t raw_data,
+			      double *value);
 
-#endif
+#endif /* _IPMI_SENSOR_UTILS_H */

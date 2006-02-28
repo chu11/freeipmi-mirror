@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.22 2006-02-28 01:56:10 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.23 2006-02-28 12:59:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -244,7 +244,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_check_comp_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS)) < 0)
+  if ((ret = ipmi_check_completion_code_success(obj_cmd)) < 0)
     ipmi_ping_err_exit("ipmi_check_comp_code: %s", strerror(errno));
 
   if (!ret)

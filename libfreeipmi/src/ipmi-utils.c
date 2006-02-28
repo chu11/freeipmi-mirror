@@ -65,24 +65,44 @@ ipmi_checksum (uint8_t *buf, uint64_t len)
   return (-checksum);
 }
 
-int8_t 
-ipmi_completion_code_check (fiid_obj_t obj_cmd)
+int8_t
+ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 {
-#if defined (IPMI_SYSLOG)
-  uint64_t cmd;
-#endif /* IPMI_SYSLOG */
-  uint64_t comp_code;
+  uint64_t cmd_recv;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd))
+  if (!obj_cmd)
     {
       errno = EINVAL;
       return (-1);
     }
 
-#if defined (IPMI_SYSLOG)
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
-#endif /* IPMI_SYSLOG */
+
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"cmd");
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
+
+  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
+}
+
+int8_t
+ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
+{
+  uint64_t completion_code_recv;
+  int32_t len;
+
+  if (!obj_cmd)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
@@ -94,26 +114,15 @@ ipmi_completion_code_check (fiid_obj_t obj_cmd)
       return (-1);
     }
 
-#if defined (IPMI_SYSLOG)
-  FIID_OBJ_GET (obj_cmd, (uint8_t *)"cmd", &cmd);
-#endif /* IPMI_SYSLOG */
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &completion_code_recv);
 
-  FIID_OBJ_GET (obj_cmd, (uint8_t *)"comp_code", &comp_code);
+  return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
+}
 
-  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    {
-#if defined (IPMI_SYSLOG)
-      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_cmd, _str, IPMI_ERR_STR_MAX_LEN);
-      sprintf (errstr, "cmd[%llX].comp_code[%llX]: %s",
-               cmd, comp_code, _str);
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
-#endif /* IPMI_SYSLOG */
-      errno = EIO;
-      return (0);
-    }
-
-  return (1);
+int8_t 
+ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
+{
+  return ipmi_check_completion_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
 }
 
 int8_t

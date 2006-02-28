@@ -175,6 +175,15 @@ enum ipmi_sensor_class
     IPMI_SENSOR_CLASS_OEM
   };
 
+int ipmi_sensor_get_decode_parameters (uint8_t *sensor_record, 
+				       uint32_t sensor_record_len,
+				       uint8_t *analog_data_format,
+				       char *r_exponent, 
+				       char *b_exponent, 
+				       char *linear, 
+				       short *b, 
+				       short *m);
+
 void get_sdr_full_record (uint8_t *sdr_record_data, 
 			  uint32_t sdr_record_data_len,
 			  sdr_full_record_t *sdr_full_record);

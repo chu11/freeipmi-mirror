@@ -768,38 +768,3 @@ fill_cmd_set_user_password (uint8_t user_id,
   return 0;
 }
 
-int8_t
-ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
-{
-  uint64_t cmd_recv;
-
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
-
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
-
-  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
-}
-
-int8_t
-ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
-{
-  uint64_t comp_code_recv;
-
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
-
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code_recv);
-
-  return ((((uint8_t)comp_code_recv) == comp_code) ? 1 : 0);
-}

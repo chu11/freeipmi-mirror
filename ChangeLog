@@ -1,3 +1,40 @@
+2006-02-28  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_completion_code_check): Rename to
+	ipmi_check_completion_code_success for consistency with other
+	functions.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
+	(ipmi_check_comp_code): Renamed to ipmi_check_completion_code.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
+	(ipmi_check_completion_code, ipmi_check_cmd): Moved to
+	ipmi-utils.c and ipmi-utils.h respectively.
+
+	* common/src/err-wrappers.h: Adjust for function name changes.
+
+	* libfreeipmi/src/ipmi-sensor-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h
+	(ipmi_sensor_decode_value, ipmi_sensor_get_decode_params): Modify
+	to return error values.
+	
+	* libfreeipmi/src/ipmi-sensor-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h
+	(ipmi_sensor_get_decode_params): Rename to
+	ipmi_sensor_get_decode_parameters.
+
+	* common/src/ipmi-sensor-api.c, ipmiping/src/ipmiping.c,
+	fish/src/bmc-conf2.c: Adjust for function name and parameter
+	changes.
+
+	* libfreeipmi/src/ipmi-sensor-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h
+	(ipmi_sensor_get_decode_parameters): Move to ipmi-sensors-api.c
+	and ipmi-sensors-api.h respectively.
+
 2006-02-27  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
@@ -8,9 +45,9 @@
 	* common/src/, bmc-info/, bmc-watchdog/: Adjust code appropriately
 	to use new functions.
 
-	* libfreeipmi/src/ipmi-messaging-support-cmds.h: Split off
-	channel, privilege level, and authentication type defines into
-	ipmi-channel-spec.h, ipmi-privilege-level-spec.h, and
+	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h:
+	Split off channel, privilege level, and authentication type
+	defines into ipmi-channel-spec.h, ipmi-privilege-level-spec.h, and
 	ipmi-authentication-type-spec.h respectively.  Fix defines and
 	validity checks for channels.
 

@@ -31,7 +31,11 @@ extern "C" {
 
 int8_t ipmi_checksum (uint8_t *buf, uint64_t len);
 
-int8_t ipmi_completion_code_check (fiid_obj_t obj_cmd);
+int8_t ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd);
+
+int8_t ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code);
+
+int8_t ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
 int8_t ipmi_ipv4_address_string2int(char *src, uint32_t *dest);
 

@@ -718,7 +718,7 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (ipmi_completion_code_check (obj_cmd_rs) != 1)
+  if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
     goto cleanup;
   
   rv = 0;

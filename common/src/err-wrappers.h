@@ -108,7 +108,7 @@ do {                                                                    \
                            (__netfn),                                   \
                            (__rq),                                      \
                            (__rs)) < 0));                               \
-  ERR_CLEANUP (ipmi_completion_code_check ((__rs)) == 1);               \
+  ERR_CLEANUP (ipmi_check_completion_code_success ((__rs)) == 1);       \
 } while (0)
 
 #ifdef __cplusplus
