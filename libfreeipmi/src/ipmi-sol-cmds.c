@@ -28,8 +28,8 @@
 
 #include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/ipmi-sol-param-spec.h"
+#include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX */
 
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"

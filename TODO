@@ -92,6 +92,8 @@ Bala's TODO List:
   * bmc-config --auto-configure
   * sensors will be simplified with Scheme <DONE>
   * dual fiid for ipmi_kcs_lan_set_auth_type_enables
+  * convert ipmi-sensors, ipmi-sel, bmc-config to C based tools rather
+    than Scheme based tools
 
 Ian's TODO List:
 ================

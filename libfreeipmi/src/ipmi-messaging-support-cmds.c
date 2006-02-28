@@ -31,6 +31,7 @@
 
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-channel-spec.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 

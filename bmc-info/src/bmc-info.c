@@ -58,9 +58,7 @@ typedef struct channel_info
 {
   uint8_t channel_number;
   uint8_t medium_type;
-  uint8_t actual_medium_type;
   uint8_t protocol_type;
-  uint8_t actual_protocol_type;
 } channel_info_t;
 
 channel_info_t channel_info_list[8];
@@ -304,31 +302,12 @@ get_channel_info_list (ipmi_device_t *dev)
       fiid_obj_get (data_rs, 
 		    (uint8_t *)"channel_medium_type", 
 		    &val);
-      channel_info_list[ci].medium_type = 
-	channel_info_list[ci].actual_medium_type = (uint8_t) val;
+      channel_info_list[ci].medium_type = (uint8_t) val;
       
       fiid_obj_get (data_rs, 
 		    (uint8_t *)"channel_protocol_type", 
 		    &val);
-      channel_info_list[ci].protocol_type = 
-	channel_info_list[ci].actual_protocol_type = (uint8_t) val;
-      
-      if (channel_info_list[ci].actual_medium_type >= 0x0D && 
-	  channel_info_list[ci].actual_medium_type <= 0x5F)
-	channel_info_list[ci].medium_type = IPMI_CHANNEL_MEDIUM_TYPE_RESERVED;
-      
-      if (channel_info_list[ci].actual_medium_type >= 0x60 && 
-	  channel_info_list[ci].actual_medium_type <= 0x7F)
-	channel_info_list[ci].medium_type = IPMI_CHANNEL_MEDIUM_TYPE_OEM;
-      
-      if (channel_info_list[ci].actual_protocol_type == 0x03 || 
-	  (channel_info_list[ci].actual_protocol_type >= 0x0A && 
-	   channel_info_list[ci].actual_protocol_type <= 0x1B))
-	channel_info_list[ci].protocol_type = IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED;
-      
-      if (channel_info_list[ci].actual_protocol_type >= 0x1C && 
-	  channel_info_list[ci].actual_protocol_type <= 0x1F)
-	channel_info_list[ci].protocol_type = IPMI_CHANNEL_PROTOCOL_TYPE_OEM;
+      channel_info_list[ci].protocol_type = (uint8_t) val;
       
       ci++;
     }
@@ -348,90 +327,60 @@ display_channel_info (ipmi_device_t *dev)
   printf ("Channel Information:\n");
   for (i = 0; i < 8; i++)
     {
-      if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RESERVED)
-	continue;
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
+        continue;
       
       printf ("       Channel No: %d\n", channel_list[i].channel_number);
       
-      switch (channel_list[i].medium_type)
-	{
-	case IPMI_CHANNEL_MEDIUM_TYPE_RESERVED:
-	  printf ("      Medium Type: %s\n", "Reserved");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_IPMB:
-	  printf ("      Medium Type: %s\n", "IPMB (I2C)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10:
-	  printf ("      Medium Type: %s\n", "ICMB v1.0");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09:
-	  printf ("      Medium Type: %s\n", "ICMB v0.9");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3:
-	  printf ("      Medium Type: %s\n", "802.3 LAN");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_RS232:
-	  printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN:
-	  printf ("      Medium Type: %s\n", "Other LAN");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS:
-	  printf ("      Medium Type: %s\n", "PCI SMBus");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11:
-	  printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20:
-	  printf ("      Medium Type: %s\n", "SMBus v2.0");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_USB_1X:
-	  printf ("      Medium Type: %s\n", "USB 1.x");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_USB_2X:
-	  printf ("      Medium Type: %s\n", "USB 2.x");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE:
-	  printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_OEM:
-	  printf ("      Medium Type: %s\n", "OEM");
-	  break;
-	}
-      
-      switch (channel_list[i].protocol_type)
-	{
-	case IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED:
-	  printf ("    Protocol Type: %s\n", "Reserved");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_IPMB:
-	  printf ("    Protocol Type: %s\n", "IPMB-1.0");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10:
-	  printf ("    Protocol Type: %s\n", "ICMB-1.0");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X:
-	  printf ("    Protocol Type: %s\n", "IPMI-SMBus");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_KCS:
-	  printf ("    Protocol Type: %s\n", "KCS");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_SMIC:
-	  printf ("    Protocol Type: %s\n", "SMIC");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_10:
-	  printf ("    Protocol Type: %s\n", "BT-10");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_15:
-	  printf ("    Protocol Type: %s\n", "BT-15");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_TMODE:
-	  printf ("    Protocol Type: %s\n", "TMODE");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_OEM:
-	  printf ("    Protocol Type: %s\n", "OEM");
-	  break;
-	}
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
+        printf ("      Medium Type: %s\n", "Reserved");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
+        printf ("      Medium Type: %s\n", "IPMB (I2C)");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
+        printf ("      Medium Type: %s\n", "ICMB v1.0");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
+        printf ("      Medium Type: %s\n", "ICMB v0.9");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+        printf ("      Medium Type: %s\n", "802.3 LAN");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
+        printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
+        printf ("      Medium Type: %s\n", "Other LAN");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
+        printf ("      Medium Type: %s\n", "PCI SMBus");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
+        printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
+        printf ("      Medium Type: %s\n", "SMBus v2.0");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
+        printf ("      Medium Type: %s\n", "USB 1.x");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
+        printf ("      Medium Type: %s\n", "USB 2.x");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
+        printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
+      else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM(channel_info_list[i].medium_type))
+        printf ("      Medium Type: %s\n", "OEM");
+
+      if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(channel_info_list[i].protocol_type))
+        printf ("    Protocol Type: %s\n", "Reserved");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
+        printf ("    Protocol Type: %s\n", "IPMB-1.0");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
+        printf ("    Protocol Type: %s\n", "ICMB-1.0");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
+        printf ("    Protocol Type: %s\n", "IPMI-SMBus");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
+        printf ("    Protocol Type: %s\n", "KCS");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
+        printf ("    Protocol Type: %s\n", "SMIC");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
+        printf ("    Protocol Type: %s\n", "BT-10");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
+        printf ("    Protocol Type: %s\n", "BT-15");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
+        printf ("    Protocol Type: %s\n", "TMODE");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(channel_info_list[i].protocol_type))
+        printf ("    Protocol Type: %s\n", "OEM");
     }
   
   return 0;

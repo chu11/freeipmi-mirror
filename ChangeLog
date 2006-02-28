@@ -9,10 +9,17 @@
 	to use new functions.
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.h: Split off
-	privilege level and authentication type defines into
-	ipmi-privilege-level-spec.h and ipmi-authentication-type-spec.h.
+	channel, privilege level, and authentication type defines into
+	ipmi-channel-spec.h, ipmi-privilege-level-spec.h, and
+	ipmi-authentication-type-spec.h respectively.  Fix defines and
+	validity checks for channels.
 
-	* Adjust various code for new include files.
+	* libfreeipmi/: Adjust for new include files.
+
+	* bmc-info/src/bmc-info.c (display_channel_info,
+	get_channel_info_list), fish/src/ipmi-wrapper.h,
+	fish/src/ipmi-wrapper.c (get_channel_info_list, : Use new defines
+	and checkers appropriately.
 	
 2006-02-26  Albert Chu <chu11@llnl.gov>
 

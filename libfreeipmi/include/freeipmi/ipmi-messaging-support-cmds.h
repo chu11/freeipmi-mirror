@@ -33,46 +33,6 @@ extern "C" {
 #define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH
 #define IPMI_CHALLENGE_STRING_LENGTH        16
 
-/* channel medium type */
-#define IPMI_CHANNEL_MEDIUM_TYPE_RESERVED       0x0 /* 0x0D to 0x5F */
-#define IPMI_CHANNEL_MEDIUM_TYPE_IPMB           0x1
-#define IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10        0x2
-#define IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09        0x3
-#define IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3      0x4
-#define IPMI_CHANNEL_MEDIUM_TYPE_RS232          0x5
-#define IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN      0x6
-#define IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS      0x7
-#define IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11    0x8
-#define IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20       0x9
-#define IPMI_CHANNEL_MEDIUM_TYPE_USB_1X         0xA
-#define IPMI_CHANNEL_MEDIUM_TYPE_USB_2X         0xB
-#define IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE      0xC
-#define IPMI_CHANNEL_MEDIUM_TYPE_OEM            0x7F /* 0x60 to 0x7F */
-
-/* channel protocol type */
-#define IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED       0x0 /* 0x03, 0x0A to 0x1B */
-#define IPMI_CHANNEL_PROTOCOL_TYPE_IPMB           0x1
-#define IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10        0x2
-#define IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X    0x4
-#define IPMI_CHANNEL_PROTOCOL_TYPE_KCS            0x5
-#define IPMI_CHANNEL_PROTOCOL_TYPE_SMIC           0x6
-#define IPMI_CHANNEL_PROTOCOL_TYPE_BT_10          0x7
-#define IPMI_CHANNEL_PROTOCOL_TYPE_BT_15          0x8
-#define IPMI_CHANNEL_PROTOCOL_TYPE_TMODE          0x9
-#define IPMI_CHANNEL_PROTOCOL_TYPE_OEM            0x1F /* 0x1C to 0x1F */
-
-/* channel session support */
-#define IPMI_CHANNEL_SESSION_LESS      0x0
-#define IPMI_CHANNEL_SINGLE_SESSION    0x1
-#define IPMI_CHANNEL_MULTI_SESSION     0x2
-#define IPMI_CHANNEL_SESSION_BASED     0x3
-#define IPMI_CHANNEL_CURRENT_CHANNEL   0xE
-
-/* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_CHANNEL_NUMBER_VALID(__channel_number) \
-        (((__channel_number+1) >= IPMI_CHANNEL_SINGLE_SESSION \
-          && (__channel_number-1) <= IPMI_CHANNEL_CURRENT_CHANNEL) ? 1 : 0)
-
 #define IPMI_MESSAGING_ACCESS_MODE_DISABLED            0x0
 #define IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY       0x1
 #define IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE    0x2

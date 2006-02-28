@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.6 2006-02-26 22:49:34 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.7 2006-02-28 01:56:10 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -29,8 +29,8 @@ $Id: ipmi-pef-and-alerting-cmds.c,v 1.6 2006-02-26 22:49:34 chu11 Exp $  */
 
 #include "freeipmi/ipmi-pef-and-alerting-cmds.h"
 #include "freeipmi/ipmi-pef-param-spec.h"
+#include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX */
 
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"

@@ -27,6 +27,7 @@ extern "C" {
 
 #include <freeipmi/fiid.h>
 #include <freeipmi/ipmi-authentication-type-spec.h>
+#include <freeipmi/ipmi-channel-spec.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
