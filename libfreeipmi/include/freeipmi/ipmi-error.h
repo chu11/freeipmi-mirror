@@ -33,12 +33,16 @@ extern "C" {
 #define IPMI_ERR_STR_MAX_LEN                 0x0800
 
 int8_t ipmi_strerror_r (uint8_t cmd, 
+                        uint8_t netfn,
 			uint8_t comp_code, 
 			char *errstr, 
 			size_t len);
+
 int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd, 
+                            uint8_t netfn,
 			    char *errstr, 
 			    size_t len);
+
 int8_t ipmi_kcs_strstatus_r (uint8_t status_code, 
 			     char *errstr, 
 			     size_t len);

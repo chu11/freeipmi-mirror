@@ -41,7 +41,7 @@
   }
 */
 
-/* returns current freehoo version */
+/* returns current fish version */
 SCM
 ex_version (void)
 {
@@ -474,7 +474,10 @@ ex_sel_delete_entry (SCM scm_record_id)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -499,7 +502,10 @@ ex_sel_delete_entry (SCM scm_record_id)
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -529,7 +535,10 @@ ex_sel_clear ()
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -554,7 +563,10 @@ ex_sel_clear ()
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs,
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -582,7 +594,10 @@ ex_sel_get_clear_status ()
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs,
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -607,7 +622,10 @@ ex_sel_get_clear_status ()
     {
       char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
       
-      ipmi_strerror_cmd_r (obj_cmd_rs, errmsg, IPMI_ERR_STR_MAX_LEN);
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           (fi_get_ipmi_device ())->net_fn,
+                           errmsg, 
+                           IPMI_ERR_STR_MAX_LEN);
       fprintf (stderr, "%s\n", 
 	       errmsg);
       goto cleanup;
@@ -3064,7 +3082,9 @@ ex_get_sdr_repository_info ()
 
   if (ipmi_cmd_get_sdr_repository_info (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_sdr_repository_info2()");
+      ipmi_error (cmd_rs, 
+                  (fi_get_ipmi_device ())->net_fn,
+                  "ipmi_cmd_get_sdr_repository_info2()");
       goto cleanup;
     }
   
@@ -3147,7 +3167,9 @@ ex_get_bmc_info ()
 
   if (ipmi_cmd_get_device_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_device_id()");
+      ipmi_error (cmd_rs, 
+                  (fi_get_ipmi_device ())->net_fn,
+                  "ipmi_cmd_get_device_id()");
       goto cleanup;
     }
   
@@ -3433,7 +3455,9 @@ ex_get_pef_info ()
 
   if (ipmi_cmd_get_pef_capabilities (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_pef_capabilities2()");
+      ipmi_error (cmd_rs, 
+                  (fi_get_ipmi_device ())->net_fn,
+                  "ipmi_cmd_get_pef_capabilities2()");
       goto cleanup;
     }
   
@@ -3525,7 +3549,9 @@ ex_get_pef_info ()
 									     BLOCK_SELECTOR, 
 									     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2()");
+	  ipmi_error (cmd_rs, 
+                      (fi_get_ipmi_device ())->net_fn,
+                      "ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters2()");
           goto cleanup;
 	}
 
@@ -3556,7 +3582,9 @@ ex_get_pef_info ()
 										    BLOCK_SELECTOR, 
 										    cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2()");
+	  ipmi_error (cmd_rs, 
+                      (fi_get_ipmi_device ())->net_fn,
+                      "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries2()");
           goto cleanup;
 	}
       
@@ -3587,7 +3615,9 @@ ex_get_pef_info ()
 									     BLOCK_SELECTOR, 
 									     cmd_rs) != 0)
 	{
-	  ipmi_error (cmd_rs, "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2()");
+	  ipmi_error (cmd_rs, 
+                      (fi_get_ipmi_device ())->net_fn,
+                      "ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings2()");
           goto cleanup;
 	}
 

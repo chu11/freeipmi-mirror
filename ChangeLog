@@ -1,3 +1,13 @@
+2006-02-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(ipmi_strerror_r, ipmi_strerror_cmd_r): common/src/ipmi-common.h,
+	common/src/ipmi-common.c (ipmi_error): Support netfn input
+	parameter for command error codes/strings.
+
+	* common/src/, bmc-info/, bmc-watchdog/: Adjust code appropriately
+	to use new functions.
+	
 2006-02-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/udm, libfreeipmi/src/udm: Partition

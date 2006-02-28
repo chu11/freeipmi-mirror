@@ -51,7 +51,7 @@ ipmi_is_root ()
 }
 
 void 
-ipmi_error (fiid_obj_t obj_cmd, const char *s)
+ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s)
 {
   char errmsg[IPMI_ERR_STR_MAX_LEN] = { 0 };
   uint64_t cmd;
@@ -79,7 +79,7 @@ ipmi_error (fiid_obj_t obj_cmd, const char *s)
       return;
     }
 
-  if (ipmi_strerror_cmd_r (obj_cmd, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
+  if (ipmi_strerror_cmd_r (obj_cmd, netfn, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
     return;
   
   if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)

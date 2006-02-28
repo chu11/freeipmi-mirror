@@ -421,7 +421,9 @@ display_get_device_id ()
 
   if (ipmi_cmd_get_device_id (fi_get_ipmi_device (), cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_device_id()");
+      ipmi_error (cmd_rs, 
+                  (fi_get_ipmi_device ())->net_fn,
+                  "ipmi_cmd_get_device_id()");
       return (-1);
     }
   

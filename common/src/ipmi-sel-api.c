@@ -88,6 +88,7 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
       FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
       goto cleanup;
@@ -146,6 +147,7 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
       dev->comp_code = val;
 
       ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
       goto cleanup;
@@ -610,6 +612,7 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
       dev->comp_code = val;
 
       ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
 			   dev->errmsg, 
 			   IPMI_ERR_STR_MAX_LEN);
       goto cleanup;
