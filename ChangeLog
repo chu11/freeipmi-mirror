@@ -7,6 +7,12 @@
 
 	* common/src/, bmc-info/, bmc-watchdog/: Adjust code appropriately
 	to use new functions.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.h: Split off
+	privilege level and authentication type defines into
+	ipmi-privilege-level-spec.h and ipmi-authentication-type-spec.h.
+
+	* Adjust various code for new include files.
 	
 2006-02-26  Albert Chu <chu11@llnl.gov>
 

@@ -34,6 +34,7 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-lan-interface.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-netfn-spec.h"

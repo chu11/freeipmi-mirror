@@ -32,7 +32,8 @@
 #include <error.h>
 #include <argp.h>
 
-#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "argp-common.h"
 

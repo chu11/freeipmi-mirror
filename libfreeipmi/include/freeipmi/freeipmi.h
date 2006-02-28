@@ -26,12 +26,14 @@ extern "C" {
 #endif
 
 #include <freeipmi/fiid.h>
+#include <freeipmi/ipmi-authentication-type-spec.h>
 #include <freeipmi/ipmi-cmd-spec.h>
 #include <freeipmi/ipmi-comp-code-spec.h>
 #include <freeipmi/ipmi-ipmb-interface.h>
 #include <freeipmi/ipmi-lan-param-spec.h>
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
+#include <freeipmi/ipmi-privilege-level-spec.h>
 #include <freeipmi/ipmi-sensor-types-spec.h>
 #include <freeipmi/ipmi-sensor-units-spec.h>
 #include <freeipmi/ipmi-serial-modem-param-spec.h>

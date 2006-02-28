@@ -1,15 +1,17 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.3 2006-02-26 22:49:33 chu11 Exp $
+## $Id: Makefile.am,v 1.4 2006-02-28 00:47:56 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
 	freeipmi/fiid.h \
+	freeipmi/ipmi-authentication-type-spec.h \
 	freeipmi/ipmi-cmd-spec.h \
 	freeipmi/ipmi-comp-code-spec.h \
 	freeipmi/ipmi-ipmb-interface.h \
 	freeipmi/ipmi-lan-param-spec.h \
 	freeipmi/ipmi-netfn-spec.h \
 	freeipmi/ipmi-pef-param-spec.h \
+	freeipmi/ipmi-privilege-level-spec.h \
 	freeipmi/ipmi-sensor-types-spec.h \
 	freeipmi/ipmi-sensor-units-spec.h \
 	freeipmi/ipmi-serial-modem-param-spec.h \
