@@ -28,8 +28,6 @@ extern "C" {
 
 #include <stdint.h>
 
-  /* XXX - audit, do we need this stuff? */
-
 #define IPMI_KCS_SMS_IO_BASE_DEFAULT    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC1620    0x0CA2
 #define IPMI_KCS_SMS_IO_BASE_CDC9416    0x0CA2

@@ -15,7 +15,10 @@
 	* libfreeipmi/src/rmcp.h, libfreeipmi/src/rmcp.c: Split
 	off some code into rmcp-utils.h and rmcp-utils.c.
 
-	* Globally re-adjust code for new files and includes.
+	* libfreeipmi/src/ipmi-messaging-support-cmds.h
+	(IPMI_MAX_AUTHENTICATION_CODE_LENGTH): Move define to ipmi-lan.h.
+	
+	* Globally re-adjust code for new files, includes, and define locations.
 	
 2006-02-28  Albert Chu <chu11@llnl.gov>
 

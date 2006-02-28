@@ -28,14 +28,15 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-  /* XXX -  look into removing these defines */
+#define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16
 
-#define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
-
+/* XXX -  These two should be defined somewhere else, what are they doing here? */
 #define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
 #define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
 
-#define IPMI_LAN_RQ_SEQ_INC(rq_seq) (rq_seq = ((rq_seq + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))
+#define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
+
+#define IPMI_LAN_RQ_SEQ_INC(__rq_seq) ((__rq_seq) = (((__rq_seq) + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))
 
 extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;

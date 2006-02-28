@@ -34,7 +34,6 @@
 #include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp.h"

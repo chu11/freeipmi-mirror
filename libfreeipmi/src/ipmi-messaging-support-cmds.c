@@ -33,6 +33,7 @@
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-channel-spec.h"
 #include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "fiid-wrappers.h"

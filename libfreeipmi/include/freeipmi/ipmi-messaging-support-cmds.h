@@ -26,10 +26,10 @@ extern "C" {
 #endif
 
 #include <stdint.h>
+#include <freeipmi/ipmi-lan.h>
 #include <freeipmi/fiid.h>
 
 #define IPMI_MAX_USER_NAME_LENGTH           16
-#define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16
 #define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH
 #define IPMI_CHALLENGE_STRING_LENGTH        16
 
