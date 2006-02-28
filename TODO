@@ -30,35 +30,18 @@ libfreeipmi:
     - ssif
     - pef config
   * re-architect ipmi-error.c stuff to handle different commands with same values.
-  * cleanup
+  * missing cmds
     - lan-cmds 
-       - missing commands
     - msg-support-cmds
-       - missing commands
-       - .h file split
-         - channel
-         - lan stuff
-    - watchdog
-    - rmcp
-    - dev-global-cmds
     - chassis-cmds
-       - missing commands
     - serial-cmds
-       - missing commands
     - sol-cmds
-       - missing commands
     - pef-cmds
-       - missing commands
     - sdr-repo-cmds
-       - missing commands
-       - cleanup udm/rearchitect udm 
     - sel-cmds
-       - missing commands
     - sdr-record-types
-        - missing records
     - sel record-types
     - sensor-cmds
-       - missing commands
   * reg-space default  
   * "rq", "cmd", "comp_code", "rs", ????
   * template raw for all raw functions
