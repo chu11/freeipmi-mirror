@@ -7,6 +7,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-types-spec.c \
 	ipmi-sensor-units-spec.c \
 	rmcp.c \
+	rmcp-utils.c \
 	ipmi-debug.c \
 	ipmi-error.c \
 	ipmi-utils.c \

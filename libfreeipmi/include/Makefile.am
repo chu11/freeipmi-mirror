@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.6 2006-02-28 17:40:18 chu11 Exp $
+## $Id: Makefile.am,v 1.7 2006-02-28 17:52:07 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -18,6 +18,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-serial-modem-param-spec.h \
 	freeipmi/ipmi-sol-param-spec.h \
 	freeipmi/rmcp.h \
+	freeipmi/rmcp-utils.h \
 	freeipmi/ipmi-debug.h \
 	freeipmi/ipmi-error.h \
 	freeipmi/ipmi-utils.h \

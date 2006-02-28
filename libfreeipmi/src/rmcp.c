@@ -194,24 +194,3 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
   return 0;
 }
 
-int8_t
-ipmi_rmcp_check_message_tag (uint8_t message_tag, fiid_obj_t pong)
-{
-  uint64_t val;
-
-  if (!fiid_obj_valid(pong))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  FIID_OBJ_TEMPLATE_COMPARE(pong, tmpl_cmd_asf_presence_pong);
-
-  FIID_OBJ_GET (pong, (uint8_t *)"message_tag", &val);
-
-  if (message_tag == val)
-    return 1;
-  else
-    return 0;
-}
-

@@ -80,8 +80,6 @@ int32_t assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t 
 
 int32_t unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd);
 
-int8_t ipmi_rmcp_check_message_tag (uint8_t message_tag, fiid_obj_t pong);
-
 #ifdef __cplusplus
 }
 #endif
