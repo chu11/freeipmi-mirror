@@ -412,42 +412,5 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
   return ipmi_strerror_r (cmd, netfn, comp_code, errstr, len); 
 }
 
-int8_t 
-ipmi_kcs_strstatus_r (uint8_t status_code, 
-		      char *errstr, 
-		      size_t len)
-{
-  if (errstr == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-  
-  switch (status_code)
-    {
-    case IPMI_KCS_STATUS_NO_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
-      
-    case IPMI_KCS_STATUS_ABORTED_BY_CMD:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
-      
-    case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
-      
-    case IPMI_KCS_STATUS_LEN_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
-      
-    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
-      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
-    }
-  
-  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
-      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
-    {
-      SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
-    }
-  
-  SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
-};
 
 

@@ -19,6 +19,14 @@
 	(IPMI_MAX_AUTHENTICATION_CODE_LENGTH): Move define to ipmi-lan.h.
 	
 	* Globally re-adjust code for new files, includes, and define locations.
+
+	* libfreeipmi/src/ipmi-error.c, libfreeipmi/include/freeipmi/ipmi-error.h
+	(ipmi_kcs_strstatus_r): Moved to ipmi-kcs-interface.c.
+
+	* libfreeipmi/include/freeipmi/ipmi-kcs-interface.h,
+	libfreeipmi/include/freeipmi/ipmi-ssif-interface.h: Cleaned up by
+	moving #defines into ipmi-kcs-interface.c and
+	ipmi-ssif-interface.c.
 	
 2006-02-28  Albert Chu <chu11@llnl.gov>
 

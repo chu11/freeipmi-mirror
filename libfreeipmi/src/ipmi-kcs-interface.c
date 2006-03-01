@@ -45,9 +45,60 @@
 #include "ipmi-common.h"
 #include "xmalloc.h"
 
-/* XXX what do we need here? */
-
 #define IPMI_KCS_SLEEP_USECS            0x01
+
+/* KCS Interface Status Register Bits */
+/* Scheme BIT Calculator Example
+  To BIN: 
+  (format #f "[~8,'0b]" #x80) => "[10000000]"
+  To HEX:
+  (format #f "[0x~2,'0x]" #b10000000) => "[0x80]"
+*/
+#define IPMI_KCS_STATUS_REG_S1          0x80
+#define IPMI_KCS_STATUS_REG_S0          0x40
+#define IPMI_KCS_STATUS_REG_STATE       (IPMI_KCS_STATUS_REG_S0 | IPMI_KCS_STATUS_REG_S1)
+#define IPMI_KCS_STATUS_REG_OEM2        0x20
+#define IPMI_KCS_STATUS_REG_OEM1        0x10
+#define IPMI_KCS_STATUS_REG_CD          0x08 /* last-written (command or data) */
+#define IPMI_KCS_STATUS_REG_SMS_ATN     0x04
+#define IPMI_KCS_STATUS_REG_IBF         0x02
+#define IPMI_KCS_STATUS_REG_OBF         0x01
+
+/* IPMI KCS Interface State Bits */ 
+#define IPMI_KCS_STATE_IDLE   0x00
+#define IPMI_KCS_STATE_READ   IPMI_KCS_STATUS_REG_S0
+#define IPMI_KCS_STATE_WRITE  IPMI_KCS_STATUS_REG_S1
+#define IPMI_KCS_STATE_ERROR  (IPMI_KCS_STATUS_REG_S0 & IPMI_KCS_STATUS_REG_S1)
+
+/* IPMI KCS Interface Status Codes */
+#define IPMI_KCS_STATUS_NO_ERROR             0x00
+#define IPMI_KCS_STATUS_SUCCESS              IPMI_KCS_STATUS_NO_ERR
+#define IPMI_KCS_STATUS_OK                   IPMI_KCS_STATUS_NO_ERR
+
+#define IPMI_KCS_STATUS_NO_ERROR_STR \
+"No error"
+          
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD         0x01
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD_STR \
+"Aborted by command (Transfer in progress was " \
+"aborted by SMS issuing the Abort/Status control code)"
+
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE      0x02
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR \
+"Illegal control code"
+
+#define IPMI_KCS_STATUS_LEN_ERROR              0x06
+#define IPMI_KCS_STATUS_LEN_ERROR_STR \
+"Length error (e.g.overrun)"
+
+#define IPMI_KCS_STATUS_OEM_ERROR_BEGIN        0xC0
+#define IPMI_KCS_STATUS_OEM_ERROR_END          0xFE
+
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR      0xFF
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR \
+"Unspecified error"
+
+/* Reserved - all others */
 
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
@@ -489,6 +540,45 @@ ipmi_kcs_print_state (int fd, uint8_t state)
   ipmi_dprintf (fd, "\n");
   return (0);
 }
+
+int8_t 
+ipmi_kcs_strstatus_r (uint8_t status_code, 
+		      char *errstr, 
+		      size_t len)
+{
+  if (errstr == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  switch (status_code)
+    {
+    case IPMI_KCS_STATUS_NO_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
+      
+    case IPMI_KCS_STATUS_ABORTED_BY_CMD:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
+      
+    case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
+      
+    case IPMI_KCS_STATUS_LEN_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
+      
+    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
+    }
+  
+  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
+      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
+    {
+      SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
+    }
+  
+  SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
+};
+
 #endif /* 0 */
 
 int32_t
