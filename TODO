@@ -29,7 +29,6 @@ libfreeipmi:
     - acpi
     - ssif
     - pef config
-  * re-architect ipmi-error.c stuff to handle different commands with same values.
   * missing cmds
     - lan-cmds 
     - msg-support-cmds
@@ -48,6 +47,7 @@ libfreeipmi:
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
   * autoconf getopt
+  * lan ctx interface?
 
 fish:
 -----
