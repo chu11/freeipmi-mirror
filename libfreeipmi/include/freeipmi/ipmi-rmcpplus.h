@@ -21,6 +21,9 @@
 #ifndef _IPMI_RMCPPLUS_H
 #define _IPMI_RMCPPLUS_H
 
+#include <stdint.h>
+#include <freeipmi/fiid.h>
+
 /**************************
  * IPMI 2.0 Payload Types *
  **************************/
@@ -42,6 +45,14 @@
           || (__payload_type) == IPMI_PAYLOAD_TYPE_SOL \
           || (__payload_type) == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT \
           || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
+          || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
+          || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1 \
+          || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2 \
+          || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3 \
+          || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4) ? 1 : 0)
+
+#define IPMI_PAYLOAD_TYPE_SESSION_SETUP(__payload_type) \
+        (((__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST \
           || (__payload_type) == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE \
           || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1 \
           || (__payload_type) == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2 \
@@ -118,21 +129,21 @@
  ***************************************/
 
 #define IPMI_AUTHENTICATION_PAYLOAD_TYPE                  0x00
-#define IPMI_AUTHENTICATION_PAYLOAD_LEN                   0x08
+#define IPMI_AUTHENTICATION_PAYLOAD_LENGTH                0x08
 #define IPMI_INTEGRITY_PAYLOAD_TYPE                       0x01
-#define IPMI_INTEGRITY_PAYLOAD_LEN                        0x08
+#define IPMI_INTEGRITY_PAYLOAD_LENGTH                     0x08
 #define IPMI_CONFIDENTIALITY_PAYLOAD_TYPE                 0x02
-#define IPMI_CONFIDENTIALITY_PAYLOAD_LEN                  0x08
+#define IPMI_CONFIDENTIALITY_PAYLOAD_LENGTH               0x08
 
-#define IPMI_USERNAME_PRIVILEGE_LOOKUP                    0x0
+#define IPMI_USER_NAME_PRIVILEGE_LOOKUP                   0x0
 #define IPMI_NAME_ONLY_LOOKUP                             0x1
 
-#define IPMI_USERNAME_LOOKUP_VALID(__username_lookup_flag) \
-        (((__username_lookup_flag) == IPMI_USERNAME_PRIVILEGE_LOOKUP \
+#define IPMI_USER_NAME_LOOKUP_VALID(__username_lookup_flag) \
+        (((__username_lookup_flag) == IPMI_USER_NAME_PRIVILEGE_LOOKUP \
          || (__username_lookup_flag) == IPMI_NAME_ONLY_LOOKUP) ? 1 : 0)
 
-#define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LEN             16
-#define IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN             16
+#define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH          16
+#define IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH          16
 #define IPMI_MANAGED_SYSTEM_GUID_LEN                      16
 
 #define IPMI_NEXT_HEADER                                  0x07
@@ -154,7 +165,11 @@
 #define IPMI_INTEGRITY_PAD_MULTIPLE                       4
 #define IPMI_INTEGRITY_PAD_DATA                           0xFF
 
-#define IPMI_MAX_PAYLOAD_LEN                              65536
+#define IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH      64
+#define IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH            64
+#define IPMI_MAX_PAYLOAD_LENGTH                           65536
+#define IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH           64
+#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
 /* achu: b/c ipmi_msg_len is 2 bytes */
 
 #define IPMI_MAX_K_UID_LEN                                20
@@ -169,7 +184,6 @@ extern "C" {
 
 extern fiid_template_t tmpl_rmcpplus_hdr_session;
 extern fiid_template_t tmpl_rmcpplus_trlr_session;
-extern fiid_template_t tmpl_rmcpplus_trlr_session_calc;
 
 extern fiid_template_t tmpl_rmcpplus_payload;
 
@@ -181,9 +195,9 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_2;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_3;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
 
-int8_t fill_rmcpplus_hdr_session (uint8_t payload_type, uint8_t payload_authenticated, uint8_t payload_encrypted, uint32_t oem_iana, uint16_t oem_payload_id, uint32_t session_id, uint32_t session_seq_num, fiid_obj_t obj_hdr);
+int8_t fill_rmcpplus_hdr_session (uint8_t payload_type, uint8_t payload_authenticated, uint8_t payload_encrypted, uint32_t oem_iana, uint16_t oem_payload_id, uint32_t session_id, uint32_t session_sequence_number, fiid_obj_t obj_hdr);
 
-int8_t fill_rmcpplus_trlr_session(fiid_template_t tmpl_trlr_session, uint8_t *auth_code_data, uint32_t auth_code_data_len, fiid_obj_t obj_trlr);
+int8_t fill_rmcpplus_trlr_session(uint8_t *authentication_code_data, uint32_t authentication_code_data_len, fiid_obj_t obj_trlr);
 
 int8_t fill_rmcpplus_payload(uint8_t *confidentiality_header, uint32_t confidentiality_header_len, uint8_t *payload_data, uint32_t payload_data_len, uint8_t *confidentiality_trailer, uint32_t confidentiality_trailer_len, fiid_obj_t obj_cmd);
 

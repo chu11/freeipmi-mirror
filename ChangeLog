@@ -97,6 +97,10 @@
 	* libfreeipmi/src/ipmi-rmcpplus-util.h,
 	libfreeipmi/src/ipmi-rmcpplus-util.c: Rename to
 	ipmi-rmcpplus-utils.h and ipmi-rmcpplus-utils.c.
+
+	* libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus.h: Cleaned up for
+	merges from head.
 	
 2006-02-17  Albert Chu <chu11@llnl.gov>
 

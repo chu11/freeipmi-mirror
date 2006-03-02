@@ -1,6 +1,6 @@
 #if 0
 /* 
-   ipmi-rmcpplus-interface.c - IPMI Session Handler
+   ipmi-rmcpplus-interface.c - IPMI RMCPPLUS Interface
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
