@@ -12,8 +12,8 @@
 	libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
-	libfreeipmi/src/ipmi-rmcpplus-util.h
-	libfreeipmi/src/ipmi-rmcpplus-util.c,
+	libfreeipmi/src/ipmi-rmcpplus-utils.h
+	libfreeipmi/src/ipmi-rmcpplus-utils.c,
 	libfreeipmi/src/ipmi-rmcpplus-status-spec.h,
 	libfreeipmi/src/ipmi-rmcpplus-status-spec.c: New files.
 
@@ -44,7 +44,7 @@
 	files.
 
 	* libfreeipmi/src/freeipmi.h: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-util.h.  Removed
+	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-utils.h.  Removed
 	ipmi-hmac.c, ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
@@ -74,7 +74,7 @@
 
 	IPMIPOWER
 
-	* ipmipower/src/ipmipower_util.c (get_rand): Utilize
+	* ipmipower/src/ipmipower_utils.c (get_rand): Utilize
 	ipmi_get_random.
 
 	AUTOCONF/AUTOMAKE
@@ -83,8 +83,8 @@
 
 	* libfreeipmi/src/Makefile.am: Added ipmi-rmcpplus.h,
 	ipmi-rmcpplus.c, ipmi-rmcpplus-interface.h,
-	ipmi-rmcpplus-interface.c, ipmi-rmcpplus-util.h,
-	ipmi-rmcpplus-util.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
+	ipmi-rmcpplus-interface.c, ipmi-rmcpplus-utils.h,
+	ipmi-rmcpplus-utils.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
 	ipmi-sha1.c, ipmi-sha1.h.  Added libgcrypt into build.
 	
 	MISC
@@ -92,6 +92,12 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2006-03-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-util.h,
+	libfreeipmi/src/ipmi-rmcpplus-util.c: Rename to
+	ipmi-rmcpplus-utils.h and ipmi-rmcpplus-utils.c.
+	
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-status-spec.h: New file.

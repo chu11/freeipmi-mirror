@@ -55,8 +55,6 @@ libfreeipmi:
   * autoconf getopt
   * autoconf pthread finding
   * lan ctx interface?
-  * rmcpplus-util -> utils
-  * 20->2_0, 15->1_5
 
 fish:
 -----

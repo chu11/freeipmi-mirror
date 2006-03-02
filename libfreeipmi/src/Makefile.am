@@ -24,7 +24,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-rmcpplus.c \
 	ipmi-rmcpplus-debug.c \
 	ipmi-rmcpplus-interface.c \
-	ipmi-rmcpplus-util.c \
+	ipmi-rmcpplus-utils.c \
 	ipmi-smic-interface.c \
 	ipmi-ssif-interface.c \
 	ipmi-semaphores.c \
