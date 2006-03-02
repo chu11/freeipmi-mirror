@@ -18,11 +18,17 @@
 */
 
 #if HAVE_CONFIG_H
-# include "config.h"
-# include "freeipmi.h"
-#else 
-# include <freeipmi/freeipmi.h>
+#include "config.h"
 #endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <netdb.h>
+
+#include <freeipmi/freeipmi.h>
 
 int 
 main (int argc, char **argv)

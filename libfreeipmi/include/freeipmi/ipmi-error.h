@@ -43,6 +43,10 @@ int8_t ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
 			    char *errstr, 
 			    size_t len);
 
+int8_t rmcpplus_status_strerror_r(uint8_t rmcpplus_status_code,
+				  char *errstr,
+				  size_t len);
+
 #ifdef __cplusplus
 }
 #endif

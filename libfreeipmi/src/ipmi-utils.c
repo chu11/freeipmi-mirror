@@ -28,63 +28,67 @@
    yield 0.
 */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if defined (IPMI_SYSLOG)
+#include <syslog.h>
+#endif /* IPMI_SYSLOG */
 #include <gcrypt.h>
 
-#include "freeipmi.h"
+#include "freeipmi/ipmi-utils.h"
+#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-comp-code-spec.h"
+
+#include "bit-ops.h"
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 int8_t
-ipmi_chksum (uint8_t *buf, uint64_t len)
+ipmi_checksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;
-  register int8_t chksum = 0;
+  register int8_t checksum = 0;
  
   if (buf == NULL || len == 0)
-    return (chksum);
+    return (checksum);
 
   for (; i < len; i++)
-    chksum = (chksum + buf[i]) % 256;
+    checksum = (checksum + buf[i]) % 256;
 
-  return (-chksum);
+  return (-checksum);
 }
 
-int8_t 
-ipmi_comp_test (fiid_obj_t obj_cmd)
+int8_t
+ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 {
-#if defined (IPMI_SYSLOG)
-  uint64_t cmd;
-#endif /* IPMI_SYSLOG */
-  uint64_t comp_code;
+  uint64_t cmd_recv;
   int32_t len;
-  int8_t rv;
 
-  if (!fiid_obj_valid(obj_cmd))
+  if (!obj_cmd)
     {
       errno = EINVAL;
       return (-1);
     }
 
-#if defined (IPMI_SYSLOG)
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return (-1);
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
 
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-#endif /* IPMI_SYSLOG */
-
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"cmd");
 
   if (!len)
     {
@@ -92,27 +96,42 @@ ipmi_comp_test (fiid_obj_t obj_cmd)
       return (-1);
     }
 
-#if defined (IPMI_SYSLOG)
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
-    return (-1);
-#endif /* IPMI_SYSLOG */
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
 
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"comp_code", &comp_code) < 0)
-    return (-1);
+  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
+}
 
-  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
+int8_t
+ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
+{
+  uint64_t completion_code_recv;
+  int32_t len;
+
+  if (!obj_cmd)
     {
-#if defined (IPMI_SYSLOG)
-      char errstr[IPMI_ERR_STR_MAX_LEN], _str[IPMI_ERR_STR_MAX_LEN];
-      ipmi_strerror_cmd_r (obj_cmd, _str, IPMI_ERR_STR_MAX_LEN);
-      sprintf (errstr, "cmd[%llX].comp_code[%llX]: %s",
-               cmd, comp_code, _str);
-      syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
-#endif /* IPMI_SYSLOG */
-      errno = EIO;
-      return (0);
+      errno = EINVAL;
+      return (-1);
     }
-  return (1);
+
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
+
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"comp_code");
+
+  if (!len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &completion_code_recv);
+
+  return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
+}
+
+int8_t 
+ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
+{
+  return ipmi_check_completion_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
 }
 
 int
@@ -150,50 +169,6 @@ ipmi_get_random(char *buf, unsigned int buflen)
  gcrypt_rand:
   gcry_randomize((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
   return buflen;
-}
-
-int
-ipmi_open_free_udp_port (void)
-{
-  int sockfd;
-  int sockname_len;
-  struct sockaddr_in sockname;
-  int free_port=1025;
-  int err;
-  extern int errno;
-
-  sockfd = socket (AF_INET, SOCK_DGRAM, 0);
-  if (sockfd < 0)
-    return (-1);
-
-  for (; free_port < 65535; free_port++)
-    {
-      /* Instead of probing if the current (may be the client side)
-      system has IPMI LAN support too, it is easier to avoid these two
-      RMCP reserved ports. -- Anand Babu*/
-      if ((free_port == RMCP_AUX_BUS_SHUNT) || 
-	  (free_port == RMCP_SECURE_AUX_BUS))
-	continue;
-
-      memset (&sockname, 0, sizeof (struct sockaddr_in));
-      sockname.sin_family = AF_INET;
-      sockname.sin_port   = htons (free_port);
-      sockname.sin_addr.s_addr = htonl (INADDR_ANY);
-      sockname_len = sizeof (struct sockaddr_in);
-      
-      if ((err = bind (sockfd, (struct sockaddr *) &sockname, sockname_len)) == 0)
-	return sockfd;
-      else
-	{
-	  if (errno == EADDRINUSE)
-	    continue;
-	  else
-	    return (-1);
-	}
-    }
-  close (sockfd);
-  errno = EBUSY;
-  return (-1);
 }
 
 int8_t

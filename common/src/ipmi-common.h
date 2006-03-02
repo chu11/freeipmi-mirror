@@ -20,8 +20,55 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #ifndef _IPMI_COMMON_H
 #define _IPMI_COMMON_H
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#ifndef __cplusplus
+
+#include <freeipmi/freeipmi.h>
+
+#if !defined(__STDC_VERSION__) || (__STDC_VERSION__ < 199901L)
+# if !defined(__GNUC__) ||(__GNUC__ < 3)
+  typedef char _Bool;           /* For C compilers without _Bool */
+# endif
+#endif
+ 
+#define bool  _Bool
+#define true  1
+#define false 0
+ 
+#else
+ 
+  /* C++ */
+#define bool  bool
+#define true  true
+#define false false
+#endif
+#define __bool_true_false_are_defined 1
+
+#if  __WORDSIZE == 64
+#define FI_64 "%l"
+#else
+#define FI_64 "%ll"
+#endif
+
+# if ENABLE_NLS
+#  include <libintl.h>
+#  define _(Text) gettext (Text)
+# else
+#  define textdomain(Domain)
+#  define _(Text) Text
+# endif
+# define N_(Text) Text
+
 int ipmi_is_root ();
 
-void ipmi_error (fiid_obj_t obj_cmd, const char *s);
+void ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s);
+
+/* Portable version of the extremely unportable Linux dprintf() */
+int ipmi_dprintf(int fd, char *fmt, ...);
+
+int ipmi_open_free_udp_port (void);
 
 #endif

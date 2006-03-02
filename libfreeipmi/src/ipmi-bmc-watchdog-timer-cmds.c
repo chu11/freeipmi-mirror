@@ -18,7 +18,19 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-bmc-watchdog-timer-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_reset_watchdog_timer_rq =
   {
@@ -102,22 +114,13 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
 int8_t
 fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_reset_watchdog_timer_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_reset_watchdog_timer_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
   return (0);
@@ -139,8 +142,6 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
                              uint8_t initial_countdown_value_ms_byte, 
                              fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_cmd)
       || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(log)
       || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(stop_timer)
@@ -157,14 +158,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_set_watchdog_timer_rq)) < 0)
-      return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_set_watchdog_timer_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use", timer_use);
@@ -193,22 +187,13 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
 int8_t
 fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_watchdog_timer_rq)) < 0)
-      return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_watchdog_timer_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
   return (0);

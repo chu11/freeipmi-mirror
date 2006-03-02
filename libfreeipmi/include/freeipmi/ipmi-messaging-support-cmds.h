@@ -33,6 +33,13 @@ extern "C" {
 #define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH
 #define IPMI_CHALLENGE_STRING_LENGTH        16
 
+#define IPMI_GET_IPMI_V20_EXTENDED_DATA     0x01
+#define IPMI_GET_IPMI_V15_DATA              0x00
+
+#define IPMI_GET_IPMI_DATA_VALID(__val) \
+        (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
+	  || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
+
 #define IPMI_MESSAGING_ACCESS_MODE_DISABLED            0x0
 #define IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY       0x1
 #define IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE    0x2
@@ -136,6 +143,8 @@ extern "C" {
 
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
+extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
+extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rq;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rs;
 extern fiid_template_t tmpl_cmd_activate_session_rq;
@@ -170,6 +179,11 @@ int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 
                                                          fiid_obj_t obj_cmd);
   
+int8_t fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
+							     uint8_t maximum_privilege_level,
+							     uint8_t get_ipmi_v20_extended_data,
+							     fiid_obj_t obj_cmd);
+
 int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				       char *user_name, 
 				       uint32_t user_name_len, 

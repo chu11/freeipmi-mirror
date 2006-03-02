@@ -19,11 +19,86 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#include <assert.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-kcs-interface.h"
+
+#include "ipmi-inband.h"
+#include "ipmi-semaphores.h"
+
+#include "err-wrappers.h"
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
+#include "ipmi-common.h"
+#include "xmalloc.h"
 
 #define IPMI_KCS_SLEEP_USECS            0x01
 
-#define IPMI_KCS_HDR_LEN                0x01
+/* KCS Interface Status Register Bits */
+/* Scheme BIT Calculator Example
+  To BIN: 
+  (format #f "[~8,'0b]" #x80) => "[10000000]"
+  To HEX:
+  (format #f "[0x~2,'0x]" #b10000000) => "[0x80]"
+*/
+#define IPMI_KCS_STATUS_REG_S1          0x80
+#define IPMI_KCS_STATUS_REG_S0          0x40
+#define IPMI_KCS_STATUS_REG_STATE       (IPMI_KCS_STATUS_REG_S0 | IPMI_KCS_STATUS_REG_S1)
+#define IPMI_KCS_STATUS_REG_OEM2        0x20
+#define IPMI_KCS_STATUS_REG_OEM1        0x10
+#define IPMI_KCS_STATUS_REG_CD          0x08 /* last-written (command or data) */
+#define IPMI_KCS_STATUS_REG_SMS_ATN     0x04
+#define IPMI_KCS_STATUS_REG_IBF         0x02
+#define IPMI_KCS_STATUS_REG_OBF         0x01
+
+/* IPMI KCS Interface State Bits */ 
+#define IPMI_KCS_STATE_IDLE   0x00
+#define IPMI_KCS_STATE_READ   IPMI_KCS_STATUS_REG_S0
+#define IPMI_KCS_STATE_WRITE  IPMI_KCS_STATUS_REG_S1
+#define IPMI_KCS_STATE_ERROR  (IPMI_KCS_STATUS_REG_S0 & IPMI_KCS_STATUS_REG_S1)
+
+/* IPMI KCS Interface Status Codes */
+#define IPMI_KCS_STATUS_NO_ERROR             0x00
+#define IPMI_KCS_STATUS_SUCCESS              IPMI_KCS_STATUS_NO_ERR
+#define IPMI_KCS_STATUS_OK                   IPMI_KCS_STATUS_NO_ERR
+
+#define IPMI_KCS_STATUS_NO_ERROR_STR \
+"No error"
+          
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD         0x01
+#define IPMI_KCS_STATUS_ABORTED_BY_CMD_STR \
+"Aborted by command (Transfer in progress was " \
+"aborted by SMS issuing the Abort/Status control code)"
+
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE      0x02
+#define IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR \
+"Illegal control code"
+
+#define IPMI_KCS_STATUS_LEN_ERROR              0x06
+#define IPMI_KCS_STATUS_LEN_ERROR_STR \
+"Length error (e.g.overrun)"
+
+#define IPMI_KCS_STATUS_OEM_ERROR_BEGIN        0xC0
+#define IPMI_KCS_STATUS_OEM_ERROR_END          0xFE
+
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR      0xFF
+#define IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR \
+"Unspecified error"
+
+/* Reserved - all others */
 
 /* IPMI KCS SMS Interface Registers */
 #define IPMI_KCS_REG_DATAIN(sms_io_base)   (sms_io_base)
@@ -43,20 +118,13 @@
 #define IPMI_KCS_CTRL_READ             0x68 /* Request the next data byte */
 /* reserved      0x69 - 0x6F */
 
-fiid_template_t tmpl_hdr_kcs =
-  {
-    {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0, "", 0}
-  };
-
 #define IPMI_KCS_CTX_MAGIC 0xabbaadda
 
 static char * ipmi_kcs_ctx_errmsg[] =
   {
     "success",
-    "fiid object is null",
-    "fiid object is invalid",
+    "kcs context is null",
+    "kcs context is invalid",
     "invalid parameter",
     "permission denied",
     "invalid io parameter",
@@ -90,7 +158,7 @@ ipmi_kcs_ctx_create(void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_kcs_ctx_t)ipmi_xmalloc(sizeof(struct ipmi_kcs_ctx))))
+  if (!(ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))))
     {
       errno = ENOMEM;
       goto cleanup;
@@ -102,15 +170,14 @@ ipmi_kcs_ctx_create(void)
   ctx->mode = IPMI_KCS_MODE_DEFAULT;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
   
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return ctx;
 
  cleanup:
   if (ctx)
-    ipmi_xfree(ctx);
+    xfree(ctx);
   return (NULL);
 }
 
@@ -127,7 +194,7 @@ ipmi_kcs_ctx_destroy(ipmi_kcs_ctx_t ctx)
   close(ctx->dev_fd);
 #endif
 #endif /* __FreeBSD__ */
-  ipmi_xfree(ctx);
+  xfree(ctx);
   return (0);
 }
 
@@ -441,9 +508,79 @@ ipmi_kcs_clear_obf (ipmi_kcs_ctx_t ctx)
     ipmi_kcs_read_byte (ctx);
 }
 
-/*
- * Standard write loop. 
- */
+#if 0
+static uint8_t
+ipmi_kcs_print_state (int fd, uint8_t state)
+{
+  /* we assume we have already ioperm'd the space */
+  ipmi_dprintf (fd, "Current KCS state: 0x%x : ", state);
+  if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_IDLE) {
+    ipmi_dprintf (fd, "IDLE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_READ) {
+    ipmi_dprintf (fd, "READ_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_WRITE) {
+    ipmi_dprintf (fd, "WRITE_STATE ");
+  } else if ((state & IPMI_KCS_STATUS_REG_STATE) == IPMI_KCS_STATE_ERROR) {
+    ipmi_dprintf (fd, "ERROR_STATE ");
+  } else {
+    ipmi_dprintf (fd, "UNKNOWN_STATE "); /* cannot happen */
+  }
+  if (state & IPMI_KCS_STATUS_REG_IBF) {
+    ipmi_dprintf (fd, "IBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OBF) {
+    ipmi_dprintf (fd, "OBF ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM1) {
+    ipmi_dprintf (fd, "OEM1 ");
+  }
+  if (state & IPMI_KCS_STATUS_REG_OEM2) {
+    ipmi_dprintf (fd, "OEM2 ");
+  }
+  ipmi_dprintf (fd, "\n");
+  return (0);
+}
+
+int8_t 
+ipmi_kcs_strstatus_r (uint8_t status_code, 
+		      char *errstr, 
+		      size_t len)
+{
+  if (errstr == NULL)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  switch (status_code)
+    {
+    case IPMI_KCS_STATUS_NO_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_NO_ERROR_STR);
+      
+    case IPMI_KCS_STATUS_ABORTED_BY_CMD:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ABORTED_BY_CMD_STR);
+      
+    case IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_ILLEGAL_CTRL_CODE_STR);
+      
+    case IPMI_KCS_STATUS_LEN_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_LEN_ERROR_STR); 
+      
+    case IPMI_KCS_STATUS_UNSPECIFIED_ERROR:
+      SNPRINTF_RETURN (IPMI_KCS_STATUS_UNSPECIFIED_ERROR_STR); 
+    }
+  
+  if ((status_code >= IPMI_KCS_STATUS_OEM_ERROR_BEGIN) &&
+      (status_code <= IPMI_KCS_STATUS_OEM_ERROR_END))
+    {
+      SNPRINTF_RETURN ("OEM status code %02Xh.", status_code);
+    }
+  
+  SNPRINTF_RETURN ("Unknown KCS interface status code %02Xh.", status_code);
+};
+
+#endif /* 0 */
+
 int32_t
 ipmi_kcs_write (ipmi_kcs_ctx_t ctx, 
 		uint8_t *buf, 
@@ -453,18 +590,18 @@ ipmi_kcs_write (ipmi_kcs_ctx_t ctx,
   int32_t count = 0;
 
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
-    goto cleanup;
-  
+    return (-1); 
+ 
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
-      goto cleanup;
+      return (-1); 
     }
   
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_IO_INIT;
-      goto cleanup;
+      return (-1); 
     }
 
   if (ctx->mode == IPMI_KCS_MODE_BLOCKING)
@@ -603,133 +740,4 @@ ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
  cleanup_unlock:
   IPMI_MUTEX_UNLOCK (ctx->semid);
   return (rv);
-}
-
-int8_t
-fill_hdr_ipmi_kcs (uint8_t lun, 
-		   uint8_t fn, 
-		   fiid_obj_t obj_hdr)
-{
-  int8_t rv;
-
-  if (!IPMI_BMC_LUN_VALID(lun)
-      || !IPMI_NET_FN_VALID(fn)
-      || !fiid_obj_valid(obj_hdr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"lun", lun);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"net_fn", fn);
-  return 0;
-}
-
-int32_t 
-assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
-		       fiid_obj_t obj_cmd, 
-		       uint8_t *pkt, 
-		       uint32_t pkt_len)
-{
-  int32_t obj_cmd_len, obj_hdr_len;
-  int8_t rv;
-
-  if (!(fiid_obj_valid(obj_hdr)
-        && fiid_obj_valid(obj_cmd)
-        && pkt))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_packet_valid(obj_hdr)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_packet_valid(obj_cmd)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  obj_hdr_len = fiid_obj_len_bytes (obj_hdr);
-  ERR(obj_hdr_len != -1);
-  obj_cmd_len = fiid_obj_len_bytes (obj_cmd);
-  ERR(obj_cmd_len != -1);
-
-  if (pkt_len < (obj_hdr_len + obj_cmd_len))
-    {
-      errno = EMSGSIZE;
-      return (-1);
-    }
-
-  memset (pkt, 0, pkt_len);
-  ERR((obj_hdr_len = fiid_obj_get_all(obj_hdr, pkt, pkt_len)) != -1);
-  ERR((obj_cmd_len = fiid_obj_get_all(obj_cmd, pkt + obj_hdr_len, pkt_len - obj_hdr_len)) != -1);
-  return (obj_hdr_len + obj_cmd_len);
-}
-
-int32_t 
-unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
-			 uint32_t pkt_len, 
-			 fiid_obj_t obj_hdr, 
-			 fiid_obj_t obj_cmd)
-{
-  uint32_t indx = 0;
-  int32_t len;
-  int8_t rv;
-
-  if (!(pkt
-        && fiid_obj_valid(obj_hdr)
-        && fiid_obj_valid(obj_cmd)))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  if ((rv = fiid_obj_template_compare(obj_hdr, tmpl_hdr_kcs)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  ERR(!((len = fiid_obj_set_all(obj_hdr, pkt + indx, pkt_len - indx)) < 0));
-  indx += len;
-
-  if (pkt_len <= indx)
-    return 0;
-
-  ERR(!((len = fiid_obj_set_all(obj_cmd, pkt + indx, pkt_len - indx)) < 0));
-  indx += len;
-
-  return 0;
 }

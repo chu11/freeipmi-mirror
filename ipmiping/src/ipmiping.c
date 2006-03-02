@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.2.2.14 2006-02-18 00:33:34 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.2.2.15 2006-03-02 04:52:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,10 +32,15 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
-#include <errno.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <assert.h>
-#include "freeipmi.h"
+#include <errno.h>
+
+#include <freeipmi/freeipmi.h>
+
 #include "ipmi-ping.h"
 
 #define _setstr(x)   (x) ? "set" : "clear"
@@ -121,14 +126,14 @@ createpacket(char *buffer,
 
   if (version == IPMI_PING_VERSION_1_5)
     {
-      if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_CURRENT_CHANNEL,
+      if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                            IPMI_PRIVILEGE_LEVEL_USER, 
                                                            obj_cmd) < 0)
         ipmi_ping_err_exit("fill_cmd_get_channel_authentication_capabilities: %s", strerror(errno));
     }
   else
     {
-      if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_CURRENT_CHANNEL,
+      if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                                                IPMI_PRIVILEGE_LEVEL_USER, 
                                                                IPMI_GET_IPMI_V20_EXTENDED_DATA, 
                                                                obj_cmd) < 0)
@@ -222,13 +227,13 @@ parsepacket(char *buffer,
     }
 #endif
 
-  if ((ret = ipmi_lan_check_chksum((uint8_t *)buffer, buflen)) < 0)
-    ipmi_ping_err_exit("ipmi_lan_check_chksum: %s", strerror(errno));
+  if ((ret = ipmi_lan_check_checksum((uint8_t *)buffer, buflen)) < 0)
+    ipmi_ping_err_exit("ipmi_lan_check_checksum: %s", strerror(errno));
 
   if (!ret)
     {
 #ifndef NDEBUG
-      fprintf(stderr, "%s(%d): chksum failed\n", __FUNCTION__, __LINE__);
+      fprintf(stderr, "%s(%d): checksum failed\n", __FUNCTION__, __LINE__);
 #endif /* NDEBUG */
       retval = 0;
       goto cleanup;
@@ -267,7 +272,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  if ((ret = ipmi_check_comp_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS)) < 0)
+  if ((ret = ipmi_check_completion_code_success(obj_cmd)) < 0)
     ipmi_ping_err_exit("ipmi_check_comp_code: %s", strerror(errno));
 
   if (!ret)

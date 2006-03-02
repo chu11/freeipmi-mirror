@@ -18,7 +18,21 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-sol-cmds.h"
+#include "freeipmi/ipmi-sol-param-spec.h"
+#include "freeipmi/ipmi-channel-spec.h" 
+#include "freeipmi/ipmi-cmd-spec.h"
+
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_set_sol_configuration_parameters_rq =
   {
@@ -88,8 +102,6 @@ fill_cmd_set_sol_configuration_parameters (fiid_obj_t obj_data_rq,
 					   uint8_t *configuration_parameter_data,
 					   uint8_t configuration_parameter_data_len)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !configuration_parameter_data
       || !configuration_parameter_data_len
@@ -99,30 +111,15 @@ fill_cmd_set_sol_configuration_parameters (fiid_obj_t obj_data_rq,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_configuration_parameters_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_sol_configuration_parameters_rq);
 
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
 
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"channel_number",
-                channel_number);
-
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved",
-                0);
-
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"parameter_selector",
-                parameter_selector);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"parameter_selector", parameter_selector);
   
   FIID_OBJ_SET_DATA (obj_data_rq,
                      (uint8_t *)"configuration_parameter_data",
@@ -138,8 +135,6 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                       uint8_t sol_payload,
                                                       fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_SOL_PAYLOAD_VALID(sol_payload)
       || !fiid_obj_valid(obj_data_rq))
@@ -148,38 +143,17 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq);
   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved1",
-                0);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_SOL_PARAM_SOL_ENABLE);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"sol_payload", 
-		sol_payload);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved2",
-                0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"parameter_selector", IPMI_SOL_PARAM_SOL_ENABLE);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"sol_payload", sol_payload);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
 
   return 0;
 }
@@ -192,8 +166,6 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 					   uint8_t block_selector,
 					   fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
       || !fiid_obj_valid(obj_data_rq))
@@ -202,42 +174,18 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sol_configuration_parameters_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sol_configuration_parameters_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-    
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved",
-                0);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"get_parameter", 
-		get_parameter);
-    
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"parameter_selector", 
-		parameter_selector);
-    
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"set_selector", 
-		set_selector);
-    
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"block_selector", 
-		block_selector);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"get_parameter", get_parameter);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"set_selector", set_selector);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"block_selector", block_selector);
   
   return 0;
 }

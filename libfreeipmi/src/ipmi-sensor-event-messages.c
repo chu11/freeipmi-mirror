@@ -18,12 +18,31 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-/* 
- * Generic Event Reading Strings
- */
-const char *const ipmi_generic_event_reading_type_code_01_desc[] =
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#include <stdarg.h>
+#endif /* STDC_HEADERS */
+#include <assert.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-sensor-event-messages.h"
+#include "freeipmi/fiid.h"
+
+#include "freeipmi-portability.h"
+
+#include "fiid-wrappers.h"
+
+/*********************************
+ * Generic Event Reading Strings *
+ *********************************/
+
+static char * ipmi_generic_event_reading_type_code_01_desc[] =
   {
     "Lower Non-critical - going low",
     "Lower Non-critical - going high",
@@ -39,44 +58,49 @@ const char *const ipmi_generic_event_reading_type_code_01_desc[] =
     "Upper Non-recoverable - going high",
     NULL
   };
+int ipmi_generic_event_reading_type_code_01_desc_max = 0x0B;
 
-const char *const ipmi_generic_event_reading_type_code_02_desc[] =
+static char * ipmi_generic_event_reading_type_code_02_desc[] =
   {
     "Transition to Idle",
     "Transition to Active",
     "Transition to Busy",
     NULL
   };
+int ipmi_generic_event_reading_type_code_02_desc_max = 0x02;
 
-const char *const ipmi_generic_event_reading_type_code_03_desc[] =
-  {
+static char * ipmi_generic_event_reading_type_code_03_desc[] =  {
     "State Deasserted",
     "State Asserted",
     NULL
   };
+int ipmi_generic_event_reading_type_code_03_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_04_desc[] =
+static char * ipmi_generic_event_reading_type_code_04_desc[] =
   {
     "Predictive Failure deasserted",
     "Predictive Failure asserted",
     NULL
   };
+int ipmi_generic_event_reading_type_code_04_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_05_desc[] =
+static char * ipmi_generic_event_reading_type_code_05_desc[] =
   {
     "Limit Not Exceeded",
     "Limit Exceeded",
     NULL
   };
+int ipmi_generic_event_reading_type_code_05_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_06_desc[] =
+static char * ipmi_generic_event_reading_type_code_06_desc[] =
   {
     "Performance Met",
     "Performance Lags",
     NULL
   };
+int ipmi_generic_event_reading_type_code_06_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_07_desc[] =
+static char * ipmi_generic_event_reading_type_code_07_desc[] =
   {
     "transition to OK",
     "transition to Non-Critical from OK",
@@ -89,22 +113,25 @@ const char *const ipmi_generic_event_reading_type_code_07_desc[] =
     "Informational",
     NULL
   };
+int ipmi_generic_event_reading_type_code_07_desc_max = 0x08;
 
-const char *const ipmi_generic_event_reading_type_code_08_desc[] =
+static char * ipmi_generic_event_reading_type_code_08_desc[] =
   {
     "Device Removed/Device Absent",
     "Device Inserted/Device Present",
     NULL
   };
+int ipmi_generic_event_reading_type_code_08_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_09_desc[] =
+static char * ipmi_generic_event_reading_type_code_09_desc[] =
   {
     "Device Disabled",
     "Device Enabled",
     NULL
   };
+int ipmi_generic_event_reading_type_code_09_desc_max = 0x01;
 
-const char *const ipmi_generic_event_reading_type_code_0A_desc[] =
+static char * ipmi_generic_event_reading_type_code_0A_desc[] =
   {
     "transition to Running",
     "transition to In Test",
@@ -117,8 +144,9 @@ const char *const ipmi_generic_event_reading_type_code_0A_desc[] =
     "Install Error",
     NULL
   };
+int ipmi_generic_event_reading_type_code_0A_desc_max = 0x08;
 
-const char *const ipmi_generic_event_reading_type_code_0B_desc[] =
+static char * ipmi_generic_event_reading_type_code_0B_desc[] =
   {
     "Fully Redundant (formerly \"Redundancy Regained\")",
     "Redundancy Lost",
@@ -130,8 +158,9 @@ const char *const ipmi_generic_event_reading_type_code_0B_desc[] =
     "Redundancy Degraded from Non-redundant",
     NULL
   };
+int ipmi_generic_event_reading_type_code_0B_desc_max = 0x07;
 
-const char *const ipmi_generic_event_reading_type_code_0C_desc[] =
+static char * ipmi_generic_event_reading_type_code_0C_desc[] =
   {
     "D0 Power State",
     "D1 Power State",
@@ -139,51 +168,42 @@ const char *const ipmi_generic_event_reading_type_code_0C_desc[] =
     "D3 Power State",
     NULL
   };
+int ipmi_generic_event_reading_type_code_0C_desc_max = 0x03;
 
-const char *const ipmi_generic_event_reading_type_code_0D_desc[] =
-  {
-    "Drive Presence",
-    "Drive Fault",
-    "Predictive Failure",
-    "Hot Spare",
-    "Consistency Check / Parity Check in progress",
-    "In Critical Array",
-    "In Failed Array",
-    "Rebuild/Remap in progress",
-    "Rebuild/Remap Aborted (was not completed normally)",
-    NULL
-  };
+/*********************** 
+ * Sensor Type Strings *
+ ***********************/
 
-/* 
- * Sensor Type Strings
- */
-
-const char *const ipmi_sensor_type_code_01_desc[] =
+static char * ipmi_sensor_type_code_01_desc[] =
   {
     "Temperature",
     NULL
   };
+int ipmi_sensor_type_code_01_desc_max = 0x00;
 
-const char *const ipmi_sensor_type_code_02_desc[] =
+static char * ipmi_sensor_type_code_02_desc[] =
   {
     "Voltage",
     NULL
   };
+int ipmi_sensor_type_code_02_desc_max = 0x00;
 
-const char *const ipmi_sensor_type_code_03_desc[] =
+static char * ipmi_sensor_type_code_03_desc[] =
   {
     "Current",
     NULL
   };
+int ipmi_sensor_type_code_03_desc_max = 0x00;
 
-const char *const ipmi_sensor_type_code_04_desc[] =
+static char * ipmi_sensor_type_code_04_desc[] =
   {
     "Fan",
     NULL
   };
+int ipmi_sensor_type_code_04_desc_max = 0x00;
 
 /* achu: 'undock' removed as noted in errata */
-const char *const ipmi_sensor_type_code_05_desc[] =
+static char * ipmi_sensor_type_code_05_desc[] =
   {
     "General Chassis Intrusion",
     "Drive Bay intrusion",
@@ -194,8 +214,9 @@ const char *const ipmi_sensor_type_code_05_desc[] =
     "FAN area intrusion (supports detection of hot plug fan tampering)",
     NULL
   };
+int ipmi_sensor_type_code_05_desc_max = 0x06;
 
-const char *const ipmi_sensor_type_code_06_desc[] =
+static char * ipmi_sensor_type_code_06_desc[] =
   {
     "Secure Mode (Front Panel Lockout) Violation attempt",
     "Pre-boot Password Violation - user password",
@@ -205,8 +226,9 @@ const char *const ipmi_sensor_type_code_06_desc[] =
     "Out-of-band Access Password Violation",
     NULL
   };
+int ipmi_sensor_type_code_06_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_07_desc[] =
+static char * ipmi_sensor_type_code_07_desc[] =
   {
     "IERR",
     "Thermal Trip",
@@ -221,8 +243,9 @@ const char *const ipmi_sensor_type_code_07_desc[] =
     "Processor Automatically Throttled (processor throttling triggered by a hardware-based mechanism operating independent from system software, such as automatic thermal throttling or throttling to limit power consumption.)",
     NULL
   };
+int ipmi_sensor_type_code_07_desc_max = 0x0A;
 
-const char *const ipmi_sensor_type_code_08_desc[] =
+static char * ipmi_sensor_type_code_08_desc[] =
   {
     "Presence detected",
     "Power Supply Failure detected",
@@ -233,8 +256,9 @@ const char *const ipmi_sensor_type_code_08_desc[] =
     "Configuration error",
     NULL
   };
+int ipmi_sensor_type_code_08_desc_max = 0x06;
 
-const char *const ipmi_sensor_type_code_09_desc[] =
+static char * ipmi_sensor_type_code_09_desc[] =
   {
     "Power Off/Power Down",
     "Power Cycle",
@@ -246,9 +270,10 @@ const char *const ipmi_sensor_type_code_09_desc[] =
     "Predictive Failure",
     NULL
   };
+int ipmi_sensor_type_code_09_desc_max = 0x07;
 
 /* achu: new additions as stated in errata */
-const char *const ipmi_sensor_type_code_0C_desc[] =
+static char * ipmi_sensor_type_code_0C_desc[] =
   {
     "Correctable ECC/other correctable memory error",
     "Uncorrectable ECC/other uncorrectable memory error",
@@ -262,16 +287,33 @@ const char *const ipmi_sensor_type_code_0C_desc[] =
     "Memory Automatically Throttled",
     NULL
   };
+int ipmi_sensor_type_code_0C_desc_max = 0x09;
 
-const char *const ipmi_sensor_type_code_0F_desc[] =
+static char * ipmi_sensor_type_code_0D_desc[] =
+  {
+    "Drive Presence",
+    "Drive Fault",
+    "Predictive Failure",
+    "Hot Spare",
+    "Consistency Check / Parity Check in progress",
+    "In Critical Array",
+    "In Failed Array",
+    "Rebuild/Remap in progress",
+    "Rebuild/Remap Aborted (was not completed normally)",
+    NULL
+  };
+int ipmi_sensor_type_code_0D_desc_max = 0x08;
+
+static char * ipmi_sensor_type_code_0F_desc[] =
   {
     "System Firmware Error (POST Error)",
     "System Firmware Hang",
     "System Firmware Progress",
     NULL
   };
+int ipmi_sensor_type_code_0F_desc_max = 0x02;
 
-const char *const ipmi_sensor_type_code_10_desc[] =
+static char * ipmi_sensor_type_code_10_desc[] =
   {
     "Correctable Memory Error Logging Disabled",
     "Event `Type' Logging Disabled",
@@ -281,8 +323,9 @@ const char *const ipmi_sensor_type_code_10_desc[] =
     "SEL Almost Full",
     NULL
   };
+int ipmi_sensor_type_code_10_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_11_desc[] =
+static char * ipmi_sensor_type_code_11_desc[] =
   {
     "BIOS Watchdog Reset",
     "OS Watchdog Reset",
@@ -294,8 +337,9 @@ const char *const ipmi_sensor_type_code_11_desc[] =
     "OS Watchdog pre-timeout Interrupt, non-NMI",
     NULL
   };
+int ipmi_sensor_type_code_11_desc_max = 0x07;
 
-const char *const ipmi_sensor_type_code_12_desc[] =
+static char * ipmi_sensor_type_code_12_desc[] =
   {
     "System Reconfigured",
     "OEM System Boot Event",
@@ -305,8 +349,9 @@ const char *const ipmi_sensor_type_code_12_desc[] =
     "Timestamp Clock Synch",
     NULL
   };
+int ipmi_sensor_type_code_12_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_13_desc[] =
+static char * ipmi_sensor_type_code_13_desc[] =
   {
     "Front Panel NMI/Diagnostic Interrupt",
     "Bus Timeout",
@@ -320,8 +365,9 @@ const char *const ipmi_sensor_type_code_13_desc[] =
     "Fatal NMI (port 61h, bit 7)",
     NULL
   };
+int ipmi_sensor_type_code_13_desc_max = 0x09;
 
-const char *const ipmi_sensor_type_code_14_desc[] =
+static char * ipmi_sensor_type_code_14_desc[] =
   {
     "Power Button pressed",
     "Sleep Button pressed",
@@ -330,22 +376,25 @@ const char *const ipmi_sensor_type_code_14_desc[] =
     "FRU service request button (pressed, service, e.g. removal/replacement, requested)",
     NULL
   };
+int ipmi_sensor_type_code_14_desc_max = 0x04;
 
-const char *const ipmi_sensor_type_code_19_desc[] =
+static char * ipmi_sensor_type_code_19_desc[] =
   {
     "Soft Power Control Failure (chipset did not respond to BMC request to change system power state)", 
     NULL
   };
+int ipmi_sensor_type_code_19_desc_max = 0x00;
 
-const char *const ipmi_sensor_type_code_1B_desc[] =
+static char * ipmi_sensor_type_code_1B_desc[] =
   {
     "Cable/Interconnect is connected",
     "Configuration Error - Incorrect cable connected / Incorrect inerconnection",
     NULL
   };
+int ipmi_sensor_type_code_1B_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-const char *const ipmi_sensor_type_code_1D_desc[] =
+static char * ipmi_sensor_type_code_1D_desc[] =
   {
     "Initiated by power up",
     "Initiated by hard reset",
@@ -357,8 +406,9 @@ const char *const ipmi_sensor_type_code_1D_desc[] =
     "System Restart",
     NULL
   };
+int ipmi_sensor_type_code_1D_desc_max = 0x07;
 
-const char *const ipmi_sensor_type_code_1E_desc[] =
+static char * ipmi_sensor_type_code_1E_desc[] =
   {
     "No bootable media",
     "Non-bootable diskette left in drive",
@@ -367,8 +417,9 @@ const char *const ipmi_sensor_type_code_1E_desc[] =
     "Timeout waiting for user selection of boot source",
     NULL
   };
+int ipmi_sensor_type_code_1E_desc_max = 0x04;
 
-const char *const ipmi_sensor_type_code_1F_desc[] =
+static char * ipmi_sensor_type_code_1F_desc[] =
   {
     "A: boot completed",
     "C: boot completed",
@@ -379,9 +430,10 @@ const char *const ipmi_sensor_type_code_1F_desc[] =
     "boot completed - boot device not specified",
     NULL
   };
+int ipmi_sensor_type_code_1F_desc_max = 0x06;
 
 /* achu: modified per errata */
-const char *const ipmi_sensor_type_code_20_desc[] =
+static char * ipmi_sensor_type_code_20_desc[] =
   {
     "Critical stop during OS load / initialization.  Unexpected error during system startup.  Stopped waiting for input or power cycle/reset.",
     "Run-time Critical Stop (a.k.a. 'core dump', 'blue screen')",
@@ -391,8 +443,9 @@ const char *const ipmi_sensor_type_code_20_desc[] =
     "Agent Not Responding.  Graceful shutdown request to agent via BMC did not occur due to missing or malfunctioning local agent.",
     NULL
   };
+int ipmi_sensor_type_code_20_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_21_desc[] =
+static char * ipmi_sensor_type_code_21_desc[] =
   {
     "Fault Status asserted",
     "Identify Status asserted",
@@ -406,8 +459,9 @@ const char *const ipmi_sensor_type_code_21_desc[] =
     "Slot holds spare device",
     NULL
   };
+int ipmi_sensor_type_code_21_desc_max = 0x09;
 
-const char *const ipmi_sensor_type_code_22_desc[] =
+static char * ipmi_sensor_type_code_22_desc[] =
   {
     "S0/G0 \"working\"",
     "S1 \"sleeping with system h/w & processor context maintained\"",
@@ -426,8 +480,9 @@ const char *const ipmi_sensor_type_code_22_desc[] =
     "Unknown",
     NULL
   };
+int ipmi_sensor_type_code_22_desc_max = 0x0E;
 
-const char *const ipmi_sensor_type_code_23_desc[] =
+static char * ipmi_sensor_type_code_23_desc[] =
   {
     "Timer expired, status only (no action, no interrupt)",
     "Hard Reset",
@@ -440,8 +495,9 @@ const char *const ipmi_sensor_type_code_23_desc[] =
     "Timer interrupt",
     NULL
   };
+int ipmi_sensor_type_code_23_desc_max = 0x08;
 
-const char *const ipmi_sensor_type_code_24_desc[] =
+static char * ipmi_sensor_type_code_24_desc[] =
   {
     "platform generated page",
     "platform generated LAN alert",
@@ -449,24 +505,27 @@ const char *const ipmi_sensor_type_code_24_desc[] =
     "platform generated SNMP trap, OEM format",
     NULL
   };
+int ipmi_sensor_type_code_24_desc_max = 0x03;
 
-const char *const ipmi_sensor_type_code_25_desc[] =
+static char * ipmi_sensor_type_code_25_desc[] =
   {
     "Entity Present",
     "Entity Absent",
     "Entity Disabled",
     NULL
   };
+int ipmi_sensor_type_code_25_desc_max = 0x02;
 
-const char *const ipmi_sensor_type_code_27_desc[] =
+static char * ipmi_sensor_type_code_27_desc[] =
   {
     "LAN Heartbeat Lost",
     "LAN Heartbeat",
     NULL
   };
+int ipmi_sensor_type_code_27_desc_max = 0x01;
 
 /* achu: new additions as stated in errata */
-const char *const ipmi_sensor_type_code_28_desc[] =
+static char * ipmi_sensor_type_code_28_desc[] =
   {
     "sensor access degraded or unavailable",
     "controller access degraded or unavailable",
@@ -476,23 +535,26 @@ const char *const ipmi_sensor_type_code_28_desc[] =
     "FRU failure",
     NULL
   };
+int ipmi_sensor_type_code_28_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_29_desc[] =
+static char * ipmi_sensor_type_code_29_desc[] =
   {
     "battery low (predictive failure)",
     "battery failed",
     "battery presence detected",
     NULL
   };
+int ipmi_sensor_type_code_29_desc_max = 0x02;
 
-const char *const ipmi_sensor_type_code_2A_desc[] =
+static char * ipmi_sensor_type_code_2A_desc[] =
   {
     "Session Activated",
     "Session Deactivated",
     NULL
   };
+int ipmi_sensor_type_code_2A_desc_max = 0x01;
 
-const char *const ipmi_sensor_type_code_2B_desc[] =
+static char * ipmi_sensor_type_code_2B_desc[] =
   {
     "Hardware change detected with associated Entity",
     "Firmware or software change detected with associated Entity",
@@ -504,8 +566,9 @@ const char *const ipmi_sensor_type_code_2B_desc[] =
     "Software or F/W Change detected with associated Entity was successful",
     NULL
   };
+int ipmi_sensor_type_code_2B_desc_max = 0x07;
 
-const char *const ipmi_sensor_type_code_2C_desc[] =
+static char * ipmi_sensor_type_code_2C_desc[] =
   {
     "FRU Not Installed",
     "FRU Inactive (in standby or `hot spare' state)",
@@ -517,12 +580,13 @@ const char *const ipmi_sensor_type_code_2C_desc[] =
     "FRU Communication Lost",
     NULL
   };
+int ipmi_sensor_type_code_2C_desc_max = 0x07;
 
-/* 
- * Sensor Type Strings for Event Data 2
- */
+/****************************************
+ * Sensor Type Strings for Event Data 2 *
+ ****************************************/
 
-const char *const ipmi_sensor_type_code_0F_event_data_2_offset_00_desc[] =
+static char * ipmi_sensor_type_code_0F_event_data2_offset_00_desc[] =
   {
     "Unspecified",
     "No system memory is physically installed in the system",
@@ -540,8 +604,9 @@ const char *const ipmi_sensor_type_code_0F_event_data_2_offset_00_desc[] =
     "CPU speed matching failure",
     NULL
   };
+int ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max = 0x0D;
 
-const char *const ipmi_sensor_type_code_0F_event_data_2_offset_01_desc[] =
+static char * ipmi_sensor_type_code_0F_event_data2_offset_01_desc[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -570,8 +635,9 @@ const char *const ipmi_sensor_type_code_0F_event_data_2_offset_01_desc[] =
     "Primary processor initialization",
     NULL
   };
+int ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max = 0x18;
 
-const char *const ipmi_sensor_type_code_0F_event_data_2_offset_02_desc[] =
+static char * ipmi_sensor_type_code_0F_event_data2_offset_02_desc[] =
   {
     "Unspecified",
     "Memory initialization",
@@ -600,8 +666,9 @@ const char *const ipmi_sensor_type_code_0F_event_data_2_offset_02_desc[] =
     "Primary processor initialization",
     NULL
   };
+int ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max = 0x18;
 
-const char *const ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[] =
+static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[] =
   {
    "Log entry action = entry added",
    "Log entry action = entry added because event did not be map to standard IPMI event",
@@ -611,16 +678,18 @@ const char *const ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_acti
    "Log entry action = log enabled",
    NULL
   };
+int ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[] =
+static char * ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[] =
   {
     "Log Type = MCA log",
     "Log Type = OEM1",
     "Log Type = OEM2",
     NULL
   };
+int ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max = 0x02;
 
-const char *const ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[] =
+static char * ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[] =
   {
     "Alert",
     "power off",
@@ -630,8 +699,25 @@ const char *const ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_des
     "Diagnostic Interrupt (NMI)",
     NULL,
   };
+int ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc_max = 0x05;
 
-const char *const ipmi_sensor_type_code_19_event_data_2_offset_00_desc[] =
+static char * ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[] =
+  {
+    "event is first of pair",
+    "event is second of pair",
+    NULL,
+  };
+int ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc[] =
+  {
+    "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)",
+    "SDR Timestamp Clock updated",
+    NULL,
+  };
+int ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_19_event_data2_offset_00_desc[] =
   {
     "Requested power state = S0/G0 \"working\"",
     "Requested power state = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -648,8 +734,9 @@ const char *const ipmi_sensor_type_code_19_event_data_2_offset_00_desc[] =
     "Requested power state = Legacy OFF state",
     NULL,
   };
+int ipmi_sensor_type_code_19_event_data2_offset_00_desc_max = 0x0C;
 
-const char *const ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_desc[] =
+static char * ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[] =
   {
     "unknown",
     "Chassis Control command",
@@ -665,8 +752,9 @@ const char *const ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_
     "power-up via RTC (system real time clock) wakeup",
     NULL
   };
+int ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max = 0x0B;
 
-const char *const ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[] =
+static char * ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[] =
   {
     "Slot/Connector Type = PCI",
     "Slot/Connector Type = Drive Array",
@@ -679,8 +767,9 @@ const char *const ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector
     "Slot/Connector Type = FAN",
     NULL
   };
+int ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max = 0x08;
 
-const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type_desc[] =
+static char * ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[] =
   {
     "Interrupt type = none",
     "Interrupt type = SMI",
@@ -700,8 +789,9 @@ const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type
     "Interrupt type = unspecified",
     NULL,
   };
+int ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max = 0x0F;
 
-const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_expiration_desc[] =
+static char * ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[] =
   {
     "reserved",
     "Timer use at expiration = BIOS FRB2",
@@ -721,8 +811,17 @@ const char *const ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_e
     "Timer use at expiration = unspecified",
     NULL
   };
+int ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max = 0x0F;
 
-const char *const ipmi_sensor_type_code_2B_event_data_2_offset_07_version_change_type_desc[] =
+static char * ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[] = 
+  {
+    "device is not a logical FRU Device",
+    "device is logical FRU Device (accessed via FRU commands to mgmt. controller",
+    NULL
+  };
+int ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[] =
   {
     "Version change type = unspecified",
     "Version change type = management controller device ID (change in one or more fields from `Get Device ID')",
@@ -750,8 +849,9 @@ const char *const ipmi_sensor_type_code_2B_event_data_2_offset_07_version_change
     "Version change type = board/FRU hardware configuration change (e.g. strap, jumper, cable change, etc.)",
     NULL
   };
+int ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max = 0x17;
 
-const char *const ipmi_sensor_type_code_2C_event_data_2_offset_07_cause_of_state_change_desc[] =
+static char * ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[] =
   {
     "Cause of state change = Normal State Change",
     "Cause of state change = Change Commanded by software external to FRU",
@@ -771,20 +871,38 @@ const char *const ipmi_sensor_type_code_2C_event_data_2_offset_07_cause_of_state
     "Cause of state change = State Change, Cause Unknown",
     NULL
   };
+int ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc_max = 0x0F;
 
 /* 
  * Sensor Type Strings for Event Data 3
  */
 
-const char *const ipmi_sensor_type_code_08_event_data_3_offset_06_error_type_desc[] = 
+static char * ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[] = 
   {
     "Vendor mismatch",
     "Revision mismatch",
     "Processor missing or unexpected/unsupported condition",
     NULL
   };
+int ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max = 0x02;
 
-const char *const ipmi_sensor_type_code_19_event_data_3_offset_00_desc[] =
+static char * ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[] =
+  {
+    "deassertion event",
+    "assertion event",
+    NULL
+  };
+int ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[] =
+  {
+    "",
+    "logging has been disabled for all events of given type",
+    NULL
+  };
+int ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max = 0x01;
+
+static char * ipmi_sensor_type_code_19_event_data3_offset_00_desc[] =
   {
     "Power state at time of request = S0/G0 \"working\"",
     "Power state at time of request = S1 \"sleeping with system h/w & processor context maintained\"",
@@ -802,8 +920,9 @@ const char *const ipmi_sensor_type_code_19_event_data_3_offset_00_desc[] =
     "Power state at time of request = unknown",
     NULL
   };
+int ipmi_sensor_type_code_19_event_data3_offset_00_desc_max = 0x0D;
 
-const char *const ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[] =
+static char * ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[] =
   {
     "Session deactivatation cause unspecified. This value is also used for Session Activated events",
     "Session deactivated by Close Session command",
@@ -811,752 +930,281 @@ const char *const ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_c
     "Session deactivated by configuration change",
     NULL
   };
+int ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max = 0x03;
 
-/**********************************************************/
-/***********      event message functions   ***************/
-/**********************************************************/
-static char *
-get_01_generic_event_message (uint16_t offset)
+static int
+_snprintf(char *buf, unsigned int buflen, char *fmt, ...)
 {
-  if (offset <= 0x0B)
-    return strdup(ipmi_generic_event_reading_type_code_01_desc[offset]);
-  
-  return NULL;
+  int rv;
+  va_list ap;
+
+  assert(buf && buflen && fmt);
+
+  va_start(ap, fmt);
+  rv = vsnprintf (buf, buflen, fmt, ap);
+  va_end(ap);
+
+  if (rv >= (buflen - 1))  /* -1 to account for '\0' */
+    {
+      errno = ENOSPC;
+      return (-1);
+    }
+  return (0);
 }
 
-static char *
-get_02_generic_event_message (uint16_t offset)
+static int
+get_05_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
-  if (offset <= 0x02)
-    return strdup(ipmi_generic_event_reading_type_code_02_desc[offset]);
-  
-  return NULL;
-}
+  assert(buf && buflen);
 
-static char *
-get_03_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_03_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_04_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_04_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_05_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_05_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_06_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_06_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_07_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x08)
-    return strdup(ipmi_generic_event_reading_type_code_07_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_08_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_08_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_09_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_generic_event_reading_type_code_09_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0A_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x0A)
-    return strdup(ipmi_generic_event_reading_type_code_0A_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0B_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_generic_event_reading_type_code_0B_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0C_generic_event_message (uint16_t offset)
-{
-  if (offset <= 0x03)
-    return strdup(ipmi_generic_event_reading_type_code_0C_desc[offset]);
-  return NULL;
-}
-
-/**********************************************************/
-/***********      event message functions   ***************/
-/**********************************************************/
-static char *
-get_01_event_message (int offset)
-{
-  if (offset <= 0x00)
-    return strdup(ipmi_sensor_type_code_01_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_02_event_message (int offset)
-{
-  if (offset <= 0x00)
-    return strdup(ipmi_sensor_type_code_02_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_03_event_message (int offset)
-{
-  if (offset <= 0x00)
-    return strdup(ipmi_sensor_type_code_03_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_04_event_message (int offset)
-{
-  if (offset <= 0x00)
-    return strdup(ipmi_sensor_type_code_04_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_05_event_message (int offset)
-{
-  if (offset <= 0x06)
-    return strdup(ipmi_sensor_type_code_05_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_06_event_message (int offset)
-{
-  if (offset <= 0x05)
-    return strdup(ipmi_sensor_type_code_06_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_07_event_message (int offset)
-{
-  if (offset <= 0x0A)
-    return strdup(ipmi_sensor_type_code_07_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_08_event_message (int offset)
-{
-  if (offset <= 0x06)
-    return strdup(ipmi_sensor_type_code_08_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_09_event_message (int offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_sensor_type_code_09_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0C_event_message (int offset)
-{
-  if (offset <= 0x09)
-    return strdup(ipmi_sensor_type_code_0C_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0D_event_message (int offset)
-{
-  if (offset <= 0x08)
-    return strdup(ipmi_generic_event_reading_type_code_0D_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_0F_event_message (int offset)
-{
-  if (offset <= 0x02)
-    return strdup(ipmi_sensor_type_code_0F_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_10_event_message (int offset)
-{
-  if (offset <= 0x05)
-    return strdup(ipmi_sensor_type_code_10_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_11_event_message (int offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_sensor_type_code_11_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_12_event_message (int offset)
-{
-  if (offset <= 0x05)
-    return strdup(ipmi_sensor_type_code_12_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_13_event_message (int offset)
-{
-  if (offset <= 0x09)
-    return strdup(ipmi_sensor_type_code_13_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_14_event_message (int offset)
-{
-  if (offset <= 0x04)
-    return strdup(ipmi_sensor_type_code_14_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_19_event_message (int offset)
-{
-  if (offset <= 0x00)
-    return strdup(ipmi_sensor_type_code_19_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_1B_event_message (int offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_sensor_type_code_1B_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_1D_event_message (int offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_sensor_type_code_1D_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_1E_event_message (int offset)
-{
-  if (offset <= 0x04)
-    return strdup(ipmi_sensor_type_code_1E_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_1F_event_message (int offset)
-{
-  if (offset <= 0x06)
-    return strdup(ipmi_sensor_type_code_1F_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_20_event_message (int offset)
-{
-  if (offset <= 0x05)
-    return strdup(ipmi_sensor_type_code_20_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_21_event_message (int offset)
-{
-  if (offset <= 0x09)
-    return strdup(ipmi_sensor_type_code_21_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_22_event_message (int offset)
-{
-  if (offset <= 0x0E)
-    return strdup(ipmi_sensor_type_code_22_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_23_event_message (int offset)
-{
-  if (offset <= 0x08)
-    return strdup(ipmi_sensor_type_code_23_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_24_event_message (int offset)
-{
-  if (offset <= 0x03)
-    return strdup(ipmi_sensor_type_code_24_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_25_event_message (int offset)
-{
-  if (offset <= 0x02)
-    return strdup(ipmi_sensor_type_code_25_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_27_event_message (int offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_sensor_type_code_27_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_28_event_message (int offset)
-{
-  if (offset <= 0x05)
-    return strdup(ipmi_sensor_type_code_28_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_29_event_message (int offset)
-{
-  if (offset <= 0x02)
-    return strdup(ipmi_sensor_type_code_29_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_2A_event_message (int offset)
-{
-  if (offset <= 0x01)
-    return strdup(ipmi_sensor_type_code_2A_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_2B_event_message (int offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_sensor_type_code_2B_desc[offset]);
-  return NULL;
-}
-
-static char *
-get_2C_event_message (int offset)
-{
-  if (offset <= 0x07)
-    return strdup(ipmi_sensor_type_code_2C_desc[offset]);
-  return NULL;
-}
-
-/**********************************************************/
-/***********  event_data2 message functions  **************/
-/**********************************************************/
-static char *
-get_05_event_data2_message (int offset, uint8_t event_data)
-{
   if (offset == 0x04)
-    {
-      char *str = NULL;
-      asprintf (&str, "Network controller #%d", event_data);
-      return str;
-    }
+    return _snprintf(buf, buflen, "Network controller #%d", event_data2);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_0F_event_data2_message (int offset, uint8_t event_data)
+static int
+get_0F_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
-  switch (offset)
-    {
-    case 0x00:
-      if (event_data <= 0x0D)
-        return strdup(ipmi_sensor_type_code_0F_event_data_2_offset_00_desc[event_data]);
-      return NULL;
-    case 0x01:
-    case 0x02:
-      if (event_data <= 0x19)
-        return strdup(ipmi_sensor_type_code_0F_event_data_2_offset_01_desc[event_data]);
-      return NULL;
-    }
+  assert(buf && buflen);
+
+  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_00_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_00_desc[event_data2]);
+  if (offset == 0x01 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_01_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_01_desc[event_data2]);
+  if (offset == 0x02 && event_data2 <= ipmi_sensor_type_code_0F_event_data2_offset_02_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_0F_event_data2_offset_02_desc[event_data2]);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_10_event_data2_message (int offset, uint8_t event_data)
+static int
+get_10_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
-  switch (offset)
-    {
-    case 0x00:
-      {
-	char *str = NULL;
-	asprintf (&str, "Memory module/device #%d", event_data);
-	return str;
-      }
-    case 0x01:
-      {
-	char *str = NULL;
-	asprintf (&str, "Event/Reading Type Code #%d", event_data);
-	return str;
-      }
-    }
-  
-  return NULL;
-}
+  assert(buf && buflen);
 
-static char *
-get_12_event_data2_message (int offset, uint8_t event_data)
-{
-  switch (offset)
-    {
-    case 0x03:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {4, "log_entry_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t log_type;
-	uint8_t log_entry_action;
-	char *str = NULL;
-	char *str1 = NULL;
-	char *str2 = NULL;
-	fiid_obj_t obj = NULL;
-
-        if (!(obj = fiid_obj_create(tmpl_event_data2)))
-          return NULL;
-
-        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        
-        if (fiid_obj_get(obj,
-                         (uint8_t *)"log_type",
-                         &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-	log_type = val;
-
-        if (fiid_obj_get(obj,
-                         (uint8_t *)"log_entry_action",
-                         &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-	log_entry_action = val;
-          
-	fiid_obj_destroy(obj);
-
-        if (log_type <= 0x02)
-          str1 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_entry_action_desc[log_type]);
-
-        if (log_entry_action <= 0x05)
-          str2 = strdupa(ipmi_sensor_type_code_12_event_data_2_offset_03_log_type_desc[log_entry_action]);
-
-	if (str1 || str2)
-	  {
-	    asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
-		      ((str1 && str2) ? "; " : ""), (str2 ? str2 : ""));
-	  }
-	
-	return str;
-      }
-    case 0x04:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {1, "alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "power_off", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t alert;
-	uint8_t power_off;
-	uint8_t reset;
-	uint8_t power_cycle;
-	uint8_t oem_action;
-	uint8_t diagnostic_interrupt;
-	char *str = NULL;
-	char *tmp_str = NULL;
-        fiid_obj_t obj = NULL;
-	const char *msg = NULL;
-     
-        if (!(obj = fiid_obj_create(tmpl_event_data2)))
-          return NULL;
-        
-        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"alert", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        alert = val;
-
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"power_off", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        power_off = val;
-
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"reset", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        reset = val;
-
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"power_cycle", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        power_cycle = val;
-
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"oem_action", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        oem_action = val;
-
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"diagnostic_interrupt", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        diagnostic_interrupt = val;
-
-	fiid_obj_destroy(obj);
-
-	if (alert)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[0];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (power_off)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[1];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (reset)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[2];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (power_cycle)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[3];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (oem_action)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[4];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	if (diagnostic_interrupt)
-	  {
-	    tmp_str = str;
-            msg = ipmi_sensor_type_code_12_event_data_2_offset_04_pef_action_desc[5];
-	    if (str)
-	      {
-		str = NULL;
-		asprintf (&str, "%s; %s", tmp_str, msg);
-		free (tmp_str);
-	      }
-	    else
-	      asprintf (&str, "%s", msg);
-	  }
-	
-	return str;
-      }
-    case 0x05:
-      {
-	fiid_template_t tmpl_event_data2 = 
-	  {
-	    {4, "timestamp_clock_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {1, "first_second", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-	    {0, "", 0}
-	  };
-	uint64_t val;
-	uint8_t timestamp_clock_type;
-	uint8_t first_second;
-	char *str = NULL;
-	
-        fiid_obj_t obj = NULL;
-        
-        if (!(obj = fiid_obj_create(tmpl_event_data2)))
-          return NULL;
-        
-        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"timestamp_clock_type", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-	timestamp_clock_type = val;
-        
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"first_second", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-	first_second = val;
-
-        fiid_obj_destroy(obj);
-	
-	asprintf (&str, "%s; %s", 
-		  (timestamp_clock_type ? "SDR Timestamp Clock updated" : 
-		   "SEL Timestamp Clock updated (Also used when both SEL and SDR Timestamp clocks are linked together)"), 
-		  (first_second ? "event is second of pair" : "event is first of pair"));
-	
-	return str;
-      }
-    }
-  
-  return NULL;
-}
-
-static char *
-get_19_event_data2_message (int offset, uint8_t event_data)
-{
   if (offset == 0x00)
-    {
-      if (event_data <= 0x0C)
-        return strdup (ipmi_sensor_type_code_19_event_data_2_offset_00_desc[event_data]);
-    }
+    return _snprintf(buf, buflen, "Memory module/device #%d", event_data2);
+  if (offset == 0x01)
+    return _snprintf(buf, buflen, "Event/Reading Type Code #%d", event_data2);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_1D_event_data2_message (int offset, uint8_t event_data)
+static int
+_get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "log_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {4, "log_entry_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t log_type;
+  uint8_t log_entry_action;
+  char *str1 = NULL;
+  char *str2 = NULL;
+  fiid_obj_t obj = NULL;
+  int rv = -1;
+
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_type", &val);
+  log_type = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_entry_action", &val);
+  log_entry_action = val;
+          
+  if (log_type <= ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max)
+    str1 = ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc[log_type];
+  
+  if (log_entry_action <= ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc_max)
+    str2 = ipmi_sensor_type_code_12_event_data2_offset_03_log_type_desc[log_entry_action];
+  
+  if (str1 || str2)
+    rv = _snprintf (buf, buflen, "%s%s%s", 
+		    (str1 ? str1 : ""), 
+		    ((str1 && str2) ? "; " : ""), 
+		    (str2 ? str2 : ""));
+	
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return rv;
+}
+
+static int
+_strcat12(char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
+{
+  if (flag)
+    {
+      str_len += strlen(ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
+      if (str_len < buflen)
+	{
+	  if (str_len)
+	    strcat(buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
+	  else
+	    {
+	      strcat(buf, "; ");
+	      strcat(buf, "%s");
+	    }
+	  return str_len;
+	}
+      else
+	{
+	  errno = ENOSPC;
+	  return -1;
+	}
+    }
+  return str_len;
+}
+static int
+_get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+{
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {1, "alert", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "power_off", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "reset", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "power_cycle", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "oem_action", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "diagonstic_interrupt", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t alert, power_off, reset, power_cycle, oem_action, diagnostic_interrupt;
+  fiid_obj_t obj = NULL;
+  int str_len = 0;
+  int rv = -1; 
+
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"alert", &val);
+  alert = val;
+	
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_off", &val);
+  power_off = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"reset", &val);
+  reset = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_cycle", &val);
+  power_cycle = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"oem_action", &val);
+  oem_action = val;
+
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"diagnostic_interrupt", &val);
+  diagnostic_interrupt = val;
+
+  memset(buf, '0', buflen);
+
+  if ((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0)
+    goto cleanup;
+
+  if ((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0)
+    goto cleanup;
+
+  if ((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0)
+    goto cleanup;
+  
+  if ((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0)
+    goto cleanup;
+  
+  if ((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0)
+    goto cleanup;
+  
+  if ((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return rv;
+}
+
+static int
+_get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+{
+  fiid_template_t tmpl_event_data2 = 
+    {
+      {4, "timestamp_clock_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {1, "first_second", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+      {0, "", 0}
+    };
+  uint64_t val;
+  uint8_t timestamp_clock_type;
+  uint8_t first_second;
+  char *str1 = NULL;
+  char *str2 = NULL;
+  fiid_obj_t obj = NULL;
+  int rv = -1;
+
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
+  
+  FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timestamp_clock_type", &val);
+  timestamp_clock_type = val;
+  
+  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"first_second", &val);
+  first_second = val;
+  
+  if (timestamp_clock_type <= ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max)
+    str1 = ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc[timestamp_clock_type];
+
+  if (first_second <= ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc_max)
+    str2 = ipmi_sensor_type_code_12_event_data2_offset_05_first_second_desc[first_second];
+
+  rv = _snprintf(buf, buflen, "%s; %s", str1, str2);
+
+ cleanup:
+  FIID_OBJ_DESTROY_NO_RETURN(obj);
+  return rv;
+}
+
+static int
+get_12_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+{
+  assert(buf && buflen);
+
+  if (offset == 0x03)
+    return _get_12_event_data2_message_offset_03(offset, event_data2, buf, buflen);
+  if (offset == 0x04)
+    return _get_12_event_data2_message_offset_04(offset, event_data2, buf, buflen);
+  if (offset == 0x05)
+    return _get_12_event_data2_message_offset_05(offset, event_data2, buf, buflen);
+
+  errno = EINVAL;
+  return -1;
+}
+
+static int
+get_19_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+{
+  assert(buf && buflen);
+
+  if (offset == 0x00 && event_data2 <= ipmi_sensor_type_code_19_event_data2_offset_00_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data2_offset_00_desc[event_data2]);
+  
+  errno = EINVAL;
+  return -1;
+}
+
+static int
+get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
+{
+  assert(buf && buflen);
+
   if (offset == 0x07)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1566,38 +1214,32 @@ get_1D_event_data2_message (int offset, uint8_t event_data)
 	  {0, "", 0}
 	};
       uint64_t val;
-      
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
 
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"restart_cause", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"restart_cause", &val);
 
-      fiid_obj_destroy(obj);
+      if (val <= ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max)
+        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
 
-      if (val <= 0x08)
-        return strdup(ipmi_sensor_type_code_1D_event_data_2_offset_07_restart_cause_desc[val]);
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_21_event_data2_message (int offset, uint8_t event_data)
+static int
+get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x09)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1607,38 +1249,32 @@ get_21_event_data2_message (int offset, uint8_t event_data)
 	  {0, "", 0}
 	};
       uint64_t val;
-      
       fiid_obj_t obj = NULL;
+      int rv = -1;
      
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"slot_connector_type", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"slot_connector_type", &val);
+     
+      if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
+        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
 
-      fiid_obj_destroy(obj);
-      
-      if (val <= 0x08)
-        return strdup(ipmi_sensor_type_code_21_event_data_2_offset_09_slot_connector_type_desc[val]);
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_23_event_data2_message (int offset, uint8_t event_data)
+static int
+get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x08)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1650,69 +1286,51 @@ get_23_event_data2_message (int offset, uint8_t event_data)
       uint64_t val;
       uint8_t timer_at_expiration;
       uint8_t interrupt_type;
-      char *str = NULL;
       char *str1 = NULL;
       char *str2 = NULL;
-      
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"timer_at_expiration", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timer_at_expiration", &val);
       timer_at_expiration = val;
 
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"interrupt_type", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"interrupt_type", &val);
       interrupt_type = val;
 
-      fiid_obj_destroy(obj);
+      if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
+        str1 = ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc[timer_at_expiration];
 
-      if (timer_at_expiration <= 0x0F)
-        str1 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_timer_use_at_expiration_desc[timer_at_expiration]);
-
-      if (interrupt_type <= 0x0F)
-        str2 = strdupa (ipmi_sensor_type_code_23_event_data_2_offset_08_interrupt_type_desc[interrupt_type]);
+      if (interrupt_type <= ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc_max)
+        str2 = ipmi_sensor_type_code_23_event_data2_offset_08_interrupt_type_desc[interrupt_type];
 
       if (str1 || str2)
-	{
-	  asprintf (&str, "%s%s%s", (str1 ? str1 : ""), 
-		    ((str1 && str2) ? "; " : ""), 
-		    (str1 ? str1 : ""));
-	}
+	rv = _snprintf (buf, buflen, "%s%s%s", 
+			(str1 ? str1 : ""), 
+			((str1 && str2) ? "; " : ""), 
+			(str2 ? str2 : ""));
       
-      return str;
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_28_event_data2_message (int offset, uint8_t event_data)
+static int
+get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  int rv = -1;
+
+  assert(buf && buflen);
+
   if (offset == 0x00 || offset == 0x04)
-    {
-      char *str = NULL;
-      asprintf (&str, "Sensor Number #%d", event_data);
-      return str;
-    }
+    rv = _snprintf (buf, buflen, "Sensor Number #%d", event_data2);
   else if (offset == 0x05)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1720,64 +1338,48 @@ get_28_event_data2_message (int offset, uint8_t event_data)
           {3, "private_bus_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
           {2, "lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
           {2, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-          {1, "logical_fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+          {1, "fru_device", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
 	  {0, "", 0}
 	};
       uint64_t val;
-      char *str = NULL;
-      uint8_t private_bus_id, lun, logical_fru_device;
-      
+      uint8_t private_bus_id, lun, fru_device;
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      char *str = NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"private_bus_id", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"private_bus_id", &val);
       private_bus_id = val;
 
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"lun", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lun", &val);
       lun = val;
 
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"logical_fru_device", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
-      logical_fru_device = val;
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"fru_device", &val);
+      fru_device = val;
+  
+      if (fru_device <= ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max)
+	str = ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc[fru_device];
 
-      fiid_obj_destroy(obj);
       
-      asprintf (&str, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", (logical_fru_device) ? "device is logical FRU Device (accessed via FRU commands to mgmt. controller" : "device is not a logical FRU Device", lun, private_bus_id);
-      return str;
-      
+      rv = _snprintf(buf, buflen, "%s; LUN for Master Write-Read command or FRU Command #%d; Private bus ID #%d", str, lun, private_bus_id);
+
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
 
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_2A_event_data2_message (int offset, uint8_t event_data)
+static int
+get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x01)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1787,52 +1389,46 @@ get_2A_event_data2_message (int offset, uint8_t event_data)
 	  {0, "", 0}
 	};
       uint64_t val;
-      char *str = NULL;
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"user_id", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
-        
-      fiid_obj_destroy(obj);
-      
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"user_id", &val);
+             
       if (val == 0x0)
-	return strdup ("User ID for user that activated session = Unspecified");
-      asprintf (&str, "User ID for user that activated session = %d", (int) val);
-      return str;
+	rv = _snprintf(buf, buflen, "User ID for user that activated session = Unspecified");
+      else
+	rv = _snprintf(buf, buflen, "User ID for user that activated session #%d", (int) val);
+
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_2B_event_data2_message (int offset, uint8_t event_data)
+static int
+get_2B_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
-  if (offset == 0x07)
-    {
-      if (event_data <= 0x17)
-        return strdup(ipmi_sensor_type_code_2B_event_data_2_offset_07_version_change_type_desc[event_data]);
-    }
+  assert(buf && buflen);
+
+  if (offset == 0x07 && event_data2 <= ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_2B_event_data2_offset_07_version_change_type_desc[event_data2]);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_2C_event_data2_message (int offset, uint8_t event_data)
+static int
+get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x07)
     {
       fiid_template_t tmpl_event_data2 = 
@@ -1846,55 +1442,37 @@ get_2C_event_data2_message (int offset, uint8_t event_data)
       uint8_t cause_of_state_change;
       char *str = NULL;
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data2)))
-        return NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data2);
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"previous_state_offset", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
-        
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"previous_state_offset", &val);
       previous_state_offset = val;
 
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"cause_os_state_change", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
-
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"cause_os_state_change", &val);
       cause_of_state_change = val;
-      fiid_obj_destroy(obj);
       
       if (cause_of_state_change <= 0x0F)
-        {
-          asprintf (&str, "Previous state offset value = %d; %s", 
-                    previous_state_offset, 
-                    ipmi_sensor_type_code_2C_event_data_2_offset_07_cause_of_state_change_desc[cause_of_state_change]);
-          return str;
-        }
+	str = ipmi_sensor_type_code_2C_event_data2_offset_07_cause_of_state_change_desc[cause_of_state_change];
+
+      rv = _snprintf (buf, buflen, "Previous state offset value = %d; %s", previous_state_offset, str);
+
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-/**********************************************************/
-/***********  event_data3 message functions  **************/
-/**********************************************************/
-static char *
-get_08_event_data3_message (int offset, uint8_t event_data)
+static int
+get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x06)
     {
       fiid_template_t tmpl_event_data3 = 
@@ -1905,48 +1483,43 @@ get_08_event_data3_message (int offset, uint8_t event_data)
 	};
       uint64_t val;      
       fiid_obj_t obj = NULL;
-     
-      if (!(obj = fiid_obj_create(tmpl_event_data3)))
-        return NULL;
+      int rv = -1;
+
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
+
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
-      if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_type", &val);
       
-      if (fiid_obj_get (obj,
-                        (uint8_t *)"event_type", 
-                        &val) < 0)
-        {
-          fiid_obj_destroy(obj);
-          return NULL;
-        }
-      
-      fiid_obj_destroy(obj);
-      if (val <= 0x2)
-        return strdup(ipmi_sensor_type_code_08_event_data_3_offset_06_error_type_desc[val]);
+      if (val <= ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max)
+        rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
+
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_0C_event_data3_message (int offset, uint8_t event_data)
+static int
+get_0C_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x08)
-    {
-      char *str = NULL;
-      asprintf (&str, "Memory module/device #%d", event_data);
-      return str;
-    }
+    return _snprintf (buf, buflen, "Memory module/device #%d", event_data3);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_10_event_data3_message (int offset, uint8_t event_data)
+static int
+get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   switch (offset)
     {
     case 0x01:
@@ -1963,119 +1536,98 @@ get_10_event_data3_message (int offset, uint8_t event_data)
 	uint8_t event_offset;
 	uint8_t assertion_deassertion_event;
 	uint8_t logging_disabled_all_events;
-	char *str = NULL;
         fiid_obj_t obj = NULL;
+	char *str1 = NULL;
+	char *str2 = NULL;
+	int rv = -1;
         
-        if (!(obj = fiid_obj_create(tmpl_event_data3)))
-          return NULL;
+	FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
         
-        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
+        FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"event_offset", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_offset", &val);
 	event_offset = val;
 
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"assertion_deassertion_e", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"assertion_deassertion_e", &val);
 	assertion_deassertion_event = val;
 
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"logging_disabled_all_ev", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
+        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"logging_disabled_all_ev", &val);
 	logging_disabled_all_events = val;
-        
-        fiid_obj_destroy(obj);
-	
-	asprintf (&str, "Event Offset %d; %s%s", event_offset, 
-		  (assertion_deassertion_event ? "assertion event" : "deassertion event"), 
-		  (logging_disabled_all_events ? 
-		   "; logging has been disabled for all events of given type" : ""));
-	
-	return str;
+
+        if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
+	  str1 = ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc[assertion_deassertion_event];
+
+	if (logging_disabled_all_events <= ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc_max)
+	  str2 = ipmi_sensor_type_code_10_event_data3_offset_01_logging_disabled_all_events_desc[logging_disabled_all_events];
+
+	rv = _snprintf (buf, buflen, "Event Offset #%d; %s%s%s", 
+			event_offset, (str1 ? str1 : ""), ((str1 && str2 && strlen(str2)) ? "; " : ""), (str2 ? str2 : ""));
+
+      cleanup:
+	FIID_OBJ_DESTROY_NO_RETURN(obj);
+	return rv;
       }
     case 0x05:
-      {
-	char *str = NULL;
-	asprintf (&str, "%d%% full", event_data);
-	return str;
-      }
+      return _snprintf (buf, buflen, "%d% full", event_data3);
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_19_event_data3_message (int offset, uint8_t event_data)
+static int
+get_19_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
-  if (offset == 0x00)
-    {
-      if (event_data <= 0x0D)
-        return strdup(ipmi_sensor_type_code_19_event_data_3_offset_00_desc[event_data]);
-    }
+  assert(buf && buflen);
+
+  if (offset == 0x00 && event_data3 <= ipmi_sensor_type_code_19_event_data3_offset_00_desc_max)
+    return _snprintf (buf, buflen, ipmi_sensor_type_code_19_event_data3_offset_00_desc[event_data3]);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_1D_event_data3_message (int offset, uint8_t event_data)
+static int
+get_1D_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x07)
-    {
-      char *str = NULL;
-      asprintf (&str, "Channel Number used to deliver command that generated restart #%d", event_data);
-      return str;
-    }
+    return _snprintf (buf, buflen, "Channel Number used to deliver command that generated restart #%d", event_data3);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_21_event_data3_message (int offset, uint8_t event_data)
+static int
+get_21_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x09)
-    {
-      char *str = NULL;
-      asprintf (&str, "Slot/Connector# %d", event_data);
-      return str;
-    }
+    return _snprintf (buf, buflen, "Slot/Connector# %d", event_data3);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_28_event_data3_message (int offset, uint8_t event_data)
+static int
+get_28_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x05)
-    {
-      /* XXX: achu: this code logic cannot support this function, 
-       * since it requires info from the event data 2
-       */ 
-    }
+    return _snprintf (buf, buflen, "FRU Device ID/Slave Address #%d", event_data3);
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-static char *
-get_2A_event_data3_message (int offset, uint8_t event_data)
+static int
+get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3, char *buf, unsigned int buflen)
 {
+  assert(buf && buflen);
+
   if (offset == 0x01)
     {
       fiid_template_t tmpl_event_data3 = 
@@ -2088,214 +1640,211 @@ get_2A_event_data3_message (int offset, uint8_t event_data)
       uint64_t val;
       uint8_t channel_number;
       uint8_t deactivation_cause;
+      fiid_obj_t obj = NULL;
       char *str = NULL;
-      
-        fiid_obj_t obj = NULL;
-        
-        if (!(obj = fiid_obj_create(tmpl_event_data3)))
-          return NULL;
-        
-        if (fiid_obj_set_all(obj, &event_data, sizeof(uint8_t)) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-      
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"channel_number", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        channel_number = val;
+      int rv = -1;
 
-        if (fiid_obj_get (obj,
-                          (uint8_t *)"deactivation_cause", 
-                          &val) < 0)
-          {
-            fiid_obj_destroy(obj);
-            return NULL;
-          }
-        deactivation_cause = val;
-        
-        fiid_obj_destroy(obj);
+      FIID_OBJ_CREATE_CLEANUP(obj, tmpl_event_data3);
 
-        if (deactivation_cause <= 0x03)
-          {
-            asprintf (&str, "Channel number that session was activated/deactivated = %d; %s", channel_number, ipmi_sensor_type_code_2A_event_data_3_offset_01_deactivation_cause_desc[deactivation_cause]);
-            return str;
-          }
+      FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
+      
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"channel_number", &val);
+      channel_number = val;
+      
+      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"deactivation_cause", &val);
+      deactivation_cause = val;
+      
+      if (deactivation_cause <= ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max)
+	str = ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc[deactivation_cause];
+
+      rv = _snprintf (buf, buflen, "Channel number that session was activated/deactivated = %d%s%s", 
+		      channel_number, (str) ? "; " : "", str); 
+
+    cleanup:
+      FIID_OBJ_DESTROY_NO_RETURN(obj);
+      return rv;
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
 /***************************************************/
-char *
-ipmi_get_generic_event_message (uint8_t event_reading_type_code, uint16_t offset)
+
+static int
+_get_event_message(uint16_t offset, 
+		   char *buf, 
+		   unsigned int buflen,
+		   uint16_t offset_max,
+		   char *string_array[])
 {
+  int rv;
+
+  assert(buf && buflen);
+
+  if (offset > offset_max)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  rv = snprintf(buf, buflen, string_array[offset]);
+  if (rv >= (buflen - 1))	/* -1 to account for '\0' */
+    {
+      errno = ENOSPC;
+      return (-1);
+    }
+
+  return (0);
+}
+
+int
+ipmi_get_generic_event_message (uint8_t event_reading_type_code, 
+				uint16_t offset,
+				char *buf,
+				unsigned int buflen)
+{
+  assert(buf && buflen);
+  if (!buf || !buflen)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   switch (event_reading_type_code)
     {
-    case 0x01: return get_01_generic_event_message (offset);
-    case 0x02: return get_02_generic_event_message (offset);
-    case 0x03: return get_03_generic_event_message (offset);
-    case 0x04: return get_04_generic_event_message (offset);
-    case 0x05: return get_05_generic_event_message (offset);
-    case 0x06: return get_06_generic_event_message (offset);
-    case 0x07: return get_07_generic_event_message (offset);
-    case 0x08: return get_08_generic_event_message (offset);
-    case 0x09: return get_09_generic_event_message (offset);
-    case 0x0A: return get_0A_generic_event_message (offset);
-    case 0x0B: return get_0B_generic_event_message (offset);
-    case 0x0C: return get_0C_generic_event_message (offset);
+    case 0x01: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_01_desc_max, ipmi_generic_event_reading_type_code_01_desc);
+    case 0x02: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_02_desc_max, ipmi_generic_event_reading_type_code_02_desc);
+    case 0x03: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_03_desc_max, ipmi_generic_event_reading_type_code_03_desc);
+    case 0x04: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_04_desc_max, ipmi_generic_event_reading_type_code_04_desc);
+    case 0x05: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_05_desc_max, ipmi_generic_event_reading_type_code_05_desc);
+    case 0x06: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_06_desc_max, ipmi_generic_event_reading_type_code_06_desc);
+    case 0x07: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_07_desc_max, ipmi_generic_event_reading_type_code_07_desc);
+    case 0x08: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_08_desc_max, ipmi_generic_event_reading_type_code_08_desc);
+    case 0x09: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_09_desc_max, ipmi_generic_event_reading_type_code_09_desc);
+    case 0x0A: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_0A_desc_max, ipmi_generic_event_reading_type_code_0A_desc);
+    case 0x0B: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_0B_desc_max, ipmi_generic_event_reading_type_code_0B_desc);
+    case 0x0C: return _get_event_message(offset, buf, buflen, ipmi_generic_event_reading_type_code_0C_desc_max, ipmi_generic_event_reading_type_code_0C_desc);
     }
   
-  return NULL;
+  return -1;
 }
 
-char *
-ipmi_get_event_message (int sensor_type_code, int offset)
+int
+ipmi_get_sensor_type_code_message (int sensor_type_code, 
+				   int offset, 
+				   char *buf, 
+				   unsigned int buflen)
 {
+  assert(buf && buflen);
+  if (!buf || !buflen)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   switch (sensor_type_code)
     {
-    case 0x01: return get_01_event_message (offset);
-    case 0x02: return get_02_event_message (offset);
-    case 0x03: return get_03_event_message (offset);
-    case 0x04: return get_04_event_message (offset);
-    case 0x05: return get_05_event_message (offset);
-    case 0x06: return get_06_event_message (offset);
-    case 0x07: return get_07_event_message (offset);
-    case 0x08: return get_08_event_message (offset);
-    case 0x09: return get_09_event_message (offset);
-    case 0x0C: return get_0C_event_message (offset);
-    case 0x0D: return get_0D_event_message (offset);
-    case 0x0F: return get_0F_event_message (offset);
-    case 0x10: return get_10_event_message (offset);
-    case 0x11: return get_11_event_message (offset);
-    case 0x12: return get_12_event_message (offset);
-    case 0x13: return get_13_event_message (offset);
-    case 0x14: return get_14_event_message (offset);
-    case 0x19: return get_19_event_message (offset);
-    case 0x1B: return get_1B_event_message (offset);
-    case 0x1D: return get_1D_event_message (offset);
-    case 0x1E: return get_1E_event_message (offset);
-    case 0x1F: return get_1F_event_message (offset);
-    case 0x20: return get_20_event_message (offset);
-    case 0x21: return get_21_event_message (offset);
-    case 0x22: return get_22_event_message (offset);
-    case 0x23: return get_23_event_message (offset);
-    case 0x24: return get_24_event_message (offset);
-    case 0x25: return get_25_event_message (offset);
-    case 0x27: return get_27_event_message (offset);
-    case 0x28: return get_28_event_message (offset);
-    case 0x29: return get_29_event_message (offset);
-    case 0x2A: return get_2A_event_message (offset);
-    case 0x2B: return get_2B_event_message (offset);
-    case 0x2C: return get_2C_event_message (offset);
+    case 0x01: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_01_desc_max, ipmi_sensor_type_code_01_desc);
+    case 0x02: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_02_desc_max, ipmi_sensor_type_code_02_desc);
+    case 0x03: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_03_desc_max, ipmi_sensor_type_code_03_desc);
+    case 0x04: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_04_desc_max, ipmi_sensor_type_code_04_desc);
+    case 0x05: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_05_desc_max, ipmi_sensor_type_code_05_desc);
+    case 0x06: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_06_desc_max, ipmi_sensor_type_code_06_desc);
+    case 0x07: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_07_desc_max, ipmi_sensor_type_code_07_desc);
+    case 0x08: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_08_desc_max, ipmi_sensor_type_code_08_desc);
+    case 0x09: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_09_desc_max, ipmi_sensor_type_code_09_desc);
+    case 0x0C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_0C_desc_max, ipmi_sensor_type_code_0C_desc);
+    case 0x0D: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_0D_desc_max, ipmi_sensor_type_code_0D_desc);
+    case 0x0F: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_0F_desc_max, ipmi_sensor_type_code_0F_desc);
+    case 0x10: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_10_desc_max, ipmi_sensor_type_code_10_desc);
+    case 0x11: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_11_desc_max, ipmi_sensor_type_code_11_desc);
+    case 0x12: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_12_desc_max, ipmi_sensor_type_code_12_desc);
+    case 0x13: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_13_desc_max, ipmi_sensor_type_code_13_desc);
+    case 0x14: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_14_desc_max, ipmi_sensor_type_code_14_desc);
+    case 0x19: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_19_desc_max, ipmi_sensor_type_code_19_desc);
+    case 0x1B: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_1B_desc_max, ipmi_sensor_type_code_1B_desc);
+    case 0x1D: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_1D_desc_max, ipmi_sensor_type_code_1D_desc);
+    case 0x1E: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_1E_desc_max, ipmi_sensor_type_code_1E_desc);
+    case 0x1F: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_1F_desc_max, ipmi_sensor_type_code_1F_desc);
+    case 0x20: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_20_desc_max, ipmi_sensor_type_code_20_desc);
+    case 0x21: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_21_desc_max, ipmi_sensor_type_code_21_desc);
+    case 0x22: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_22_desc_max, ipmi_sensor_type_code_22_desc);
+    case 0x23: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_23_desc_max, ipmi_sensor_type_code_23_desc);
+    case 0x24: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_24_desc_max, ipmi_sensor_type_code_24_desc);
+    case 0x25: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_25_desc_max, ipmi_sensor_type_code_25_desc);
+    case 0x27: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_27_desc_max, ipmi_sensor_type_code_27_desc);
+    case 0x28: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_28_desc_max, ipmi_sensor_type_code_28_desc);
+    case 0x29: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_29_desc_max, ipmi_sensor_type_code_29_desc);
+    case 0x2A: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2A_desc_max, ipmi_sensor_type_code_2A_desc);
+    case 0x2B: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2B_desc_max, ipmi_sensor_type_code_2B_desc);
+    case 0x2C: return _get_event_message(offset, buf, buflen, ipmi_sensor_type_code_2C_desc_max, ipmi_sensor_type_code_2C_desc);
     }
   
-  return NULL;
+  errno = EINVAL;
+  return (-1);
 }
 
-char *
-ipmi_get_event_data2_message (int sensor_type_code, int offset, uint8_t event_data)
+int
+ipmi_get_event_data2_message (int sensor_type_code, 
+			      int offset, 
+			      uint8_t event_data2, 
+			      char *buf, 
+			      unsigned int buflen)
 {
+  if (!buf || !buflen)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   switch (sensor_type_code)
     {
-    case 0x05: return get_05_event_data2_message (offset, event_data);
-    case 0x0F: return get_0F_event_data2_message (offset, event_data);
-    case 0x10: return get_10_event_data2_message (offset, event_data);
-    case 0x12: return get_12_event_data2_message (offset, event_data);
-    case 0x19: return get_19_event_data2_message (offset, event_data);
-    case 0x1D: return get_1D_event_data2_message (offset, event_data);
-    case 0x21: return get_21_event_data2_message (offset, event_data);
-    case 0x23: return get_23_event_data2_message (offset, event_data);
-    case 0x28: return get_28_event_data2_message (offset, event_data);
-    case 0x2A: return get_2A_event_data2_message (offset, event_data);
-    case 0x2B: return get_2B_event_data2_message (offset, event_data);
-    case 0x2C: return get_2C_event_data2_message (offset, event_data);
+    case 0x05: return get_05_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x0F: return get_0F_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x10: return get_10_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x12: return get_12_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x19: return get_19_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x1D: return get_1D_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x21: return get_21_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x23: return get_23_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x28: return get_28_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x2A: return get_2A_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x2B: return get_2B_event_data2_message (offset, event_data2, buf, buflen);
+    case 0x2C: return get_2C_event_data2_message (offset, event_data2, buf, buflen);
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-char *
-ipmi_get_event_data3_message (int sensor_type_code, int offset, uint8_t event_data)
+int
+ipmi_get_event_data3_message (int sensor_type_code, 
+			      int offset, 
+			      uint8_t event_data2, 
+			      uint8_t event_data3, 
+			      char *buf, 
+			      unsigned int buflen)
 {
+  if (!buf || !buflen)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   switch (sensor_type_code)
     {
-    case 0x08: return get_08_event_data3_message (offset, event_data);
-    case 0x0C: return get_0C_event_data3_message (offset, event_data);
-    case 0x10: return get_10_event_data3_message (offset, event_data);
-    case 0x19: return get_19_event_data3_message (offset, event_data);
-    case 0x1D: return get_1D_event_data3_message (offset, event_data);
-    case 0x21: return get_21_event_data3_message (offset, event_data);
-    case 0x28: return get_28_event_data3_message (offset, event_data);
-    case 0x2A: return get_2A_event_data3_message (offset, event_data);
+    case 0x08: return get_08_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x0C: return get_0C_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x10: return get_10_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x19: return get_19_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x1D: return get_1D_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x21: return get_21_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x28: return get_28_event_data3_message (offset, event_data2, event_data3, buf, buflen);
+    case 0x2A: return get_2A_event_data3_message (offset, event_data2, event_data3, buf, buflen);
     }
   
-  return NULL;
+  errno = EINVAL;
+  return -1;
 }
 
-char **
-ipmi_get_generic_event_message_list (uint8_t event_reading_type_code, uint16_t sensor_state)
-{
-  char **event_message_list = NULL;
-  char *message_list[16];
-  int i = 0;
-  uint16_t offset;
-  uint16_t bit; 
-  
-  for (offset = 0; offset < 16; offset++)
-    {
-      bit = pow (2, offset);
-      if (sensor_state & bit)
-	{
-	  message_list[i] = ipmi_get_generic_event_message (event_reading_type_code, offset);
-	  if (message_list[i])
-	    i++;
-	}
-    }
-  
-  if (i != 0)
-    {
-      event_message_list = (char **) malloc (sizeof (char *) * (i + 1));
-      for (offset = 0; offset < i; offset++)
-	event_message_list[offset] = message_list[offset];
-      event_message_list[i] = NULL;
-    }
-  
-  return event_message_list;
-}
-
-char **
-ipmi_get_event_message_list (int sensor_type_code, uint16_t sensor_state)
-{
-  char **event_message_list = NULL;
-  char *message_list[16];
-  int i = 0;
-  uint16_t offset;
-  uint16_t bit; 
-  
-  for (offset = 0; offset < 16; offset++)
-    {
-      bit = pow (2, offset);
-      if (sensor_state & bit)
-	{
-	  message_list[i] = ipmi_get_event_message (sensor_type_code, offset);
-	  if (message_list[i])
-	    i++;
-	}
-    }
-  
-  if (i != 0)
-    {
-      event_message_list = (char **) malloc (sizeof (char *) * (i + 1));
-      for (offset = 0; offset < i; offset++)
-	event_message_list[offset] = message_list[offset];
-      event_message_list[i] = NULL;
-    }
-  
-  return event_message_list;
-}

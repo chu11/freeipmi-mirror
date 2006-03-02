@@ -19,8 +19,28 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <linux/types.h>
+#include <err.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-smic-interface.h"
+
+#include "ipmi-inband.h"
+
+#include "ipmi-common.h"
+#include "freeipmi-portability.h"
 
 #if defined(__FreeBSD__) && !defined(USE_IOPERM)
 static int ipmi_smic_dev_io_fd = -1;
@@ -35,6 +55,28 @@ fiid_template_t tmpl_hdr_smic =
     {6, "net_fn", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
+
+#if 0
+static int
+ipmi_smic_print_flags (int fd, uint8_t state)
+{
+  ipmi_dprintf (fd, "Current SMIC flags: %#x : ", state);
+  if(state & IPMI_SMIC_RX_DATA_RDY) 
+    ipmi_dprintf (fd, "RX_DATA_RDY ");
+  if(state & IPMI_SMIC_TX_DATA_RDY)
+    ipmi_dprintf (fd, "TX_DATA_RDY ");
+  if(state & IPMI_SMIC_SMI)
+    ipmi_dprintf (fd, "SMI ");
+  if(state & IPMI_SMIC_EVT_ATN) 
+    ipmi_dprintf (fd, "EVT_ATN ");
+  if(state & IPMI_SMIC_SMS_ATN)
+    ipmi_dprintf (fd, "SMS_ATN ");
+  if(state & IPMI_SMIC_BUSY)
+    ipmi_dprintf (fd, "BUSY ");
+  ipmi_dprintf (fd, "\n");
+  return (0);
+}
+#endif /* 0x */
 
 uint64_t 
 ipmi_smic_get_poll_count ()

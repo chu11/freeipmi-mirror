@@ -18,6 +18,8 @@
 
 #include "common.h"
 
+#include "bit-ops.h"
+
 static int8_t 
 set_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t channel_number, 
@@ -33,15 +35,15 @@ set_bmc_user_access (ipmi_device_t *dev,
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_access_rs)))
     goto cleanup;
-  if (ipmi_cmd_set_user_access2 (dev, 
-				 channel_number, 
-				 user_ipmi_messaging, 
-				 user_link_authentication, 
-				 user_restricted_to_callback, 
-				 userid, 
-				 privilege_limit, 
-				 session_limit, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_access (dev, 
+				channel_number, 
+				user_ipmi_messaging, 
+				user_link_authentication, 
+				user_restricted_to_callback, 
+				userid, 
+				privilege_limit, 
+				session_limit, 
+				obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -67,18 +69,18 @@ set_bmc_channel_access (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_channel_access2 (dev, 
-				    channel_number, 
-				    access_mode, 
-				    user_level_authentication, 
-				    per_message_authentication, 
-				    pef_alerting, 
-				    (set_option ? IPMI_CHANNEL_ACCESS_SET_VOLATILE : 
-				     IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE), 
-				    channel_privilege_limit, 
-				    (set_option ? IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE : 
-				     IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
-				    obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_channel_access (dev, 
+				   channel_number, 
+				   access_mode, 
+				   user_level_authentication, 
+				   per_message_authentication, 
+				   pef_alerting, 
+				   (set_option ? IPMI_CHANNEL_ACCESS_SET_VOLATILE : 
+				    IPMI_CHANNEL_ACCESS_SET_NON_VOLATILE), 
+				   channel_privilege_limit, 
+				   (set_option ? IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VOLATILE : 
+				    IPMI_PRIVILEGE_LEVEL_LIMIT_SET_NON_VOLATILE), 
+				   obj_cmd_rs) != 0)
     goto cleanup;
       
   rv = 0;
@@ -102,11 +104,11 @@ set_bmc_username (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_name_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_name2 (dev, 
-			       userid, 
-			       (char *)username, 
-			       (username) ? strlen((char *)username) : 0,
-			       obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_name (dev, 
+			      userid, 
+			      (char *)username, 
+			      (username) ? strlen((char *)username) : 0,
+			      obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -128,13 +130,13 @@ set_bmc_enable_user (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
   memset (password, 0, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-  if (ipmi_cmd_set_user_password2 (dev, 
-				   userid, 
-				   (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
-				    IPMI_PASSWORD_OPERATION_DISABLE_USER), 
-				   (char *)password, 
-				   0,
-				   obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_password (dev, 
+				  userid, 
+				  (user_status ? IPMI_PASSWORD_OPERATION_ENABLE_USER :
+				   IPMI_PASSWORD_OPERATION_DISABLE_USER), 
+				  (char *)password, 
+				  0,
+				  obj_cmd_rs) != 0)
     goto cleanup;
   
   
@@ -157,12 +159,12 @@ set_bmc_user_password (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password2 (dev, 
-				   userid, 
-				   IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
-				   (char *)password, 
-				   (password) ? strlen((char *)password) : 0,
-				   obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_password (dev, 
+				  userid, 
+				  IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
+				  (char *)password, 
+				  (password) ? strlen((char *)password) : 0,
+				  obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -256,10 +258,10 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source2 (dev, 
-                                                                    get_lan_channel_number (), 
-                                                                    ip_address_source, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address_source (dev, 
+								   get_lan_channel_number (), 
+								   ip_address_source, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -283,10 +285,10 @@ set_bmc_lan_conf_ip_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_ip_address2 (dev, 
-                                                             get_lan_channel_number (), 
-                                                             ip_address_val, 
-                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_ip_address (dev, 
+							    get_lan_channel_number (), 
+							    ip_address_val, 
+							    obj_cmd_rs) != 0)
     goto cleanup;
     
   rv = 0;
@@ -301,7 +303,6 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
                               char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
   uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
@@ -311,10 +312,10 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_mac_address2 (dev, 
-                                                              get_lan_channel_number (), 
-                                                              mac_address_val, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_mac_address (dev, 
+							     get_lan_channel_number (), 
+							     mac_address_val, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -329,28 +330,19 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 			      char *subnet_mask)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4;
-  uint64_t subnet_mask_val = 0;
+  uint32_t subnet_mask_val = 0;
   int8_t rv = -1;
   
-  sscanf (subnet_mask, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (subnet_mask_val, 0,  8,  b1, &subnet_mask_val) < 0)
+  if (ipmi_ipv4_address_string2int(subnet_mask, &subnet_mask_val) < 0)
     goto cleanup;
-  if (bits_merge (subnet_mask_val, 8,  16, b2, &subnet_mask_val) < 0)
-    goto cleanup;
-  if (bits_merge (subnet_mask_val, 16, 24, b3, &subnet_mask_val) < 0)
-    goto cleanup;
-  if (bits_merge (subnet_mask_val, 24, 32, b4, &subnet_mask_val) < 0)
-    goto cleanup;
-  
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask2 (dev, 
-                                                              get_lan_channel_number (), 
-                                                              subnet_mask_val, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_subnet_mask (dev, 
+							     get_lan_channel_number (), 
+							     subnet_mask_val, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -365,28 +357,19 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
                                           char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4;
-  uint64_t ip_address_val = 0;
+  uint32_t ip_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (default_gateway_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
+  if (ipmi_ipv4_address_string2int(default_gateway_address, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
-    goto cleanup;
-  
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address2 (dev, 
-                                                                          get_lan_channel_number (), 
-                                                                          ip_address_val, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_address (dev, 
+									 get_lan_channel_number (), 
+									 ip_address_val, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -401,33 +384,19 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
                                               char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4, b5, b6;
   uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (default_gateway_mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", 
-	  &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
+  if (ipmi_mac_address_string2int(default_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
-  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
-    goto cleanup;
-  
+ 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address2 (dev, 
-                                                                              get_lan_channel_number (), 
-                                                                              mac_address_val, 
-                                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_default_gateway_mac_address (dev, 
+									     get_lan_channel_number (), 
+									     mac_address_val, 
+									     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -442,28 +411,19 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
                                          char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4;
-  uint64_t ip_address_val = 0;
+  uint32_t ip_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (backup_gateway_address, "%u.%u.%u.%u", &b1, &b2, &b3, &b4);
-  if (bits_merge (ip_address_val, 0,  8,  b1, &ip_address_val) < 0)
+  if (ipmi_ipv4_address_string2int(backup_gateway_address, &ip_address_val) < 0)
     goto cleanup;
-  if (bits_merge (ip_address_val, 8,  16, b2, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 16, 24, b3, &ip_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (ip_address_val, 24, 32, b4, &ip_address_val) < 0)
-    goto cleanup;
-  
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address2 (dev, 
-                                                                         get_lan_channel_number (), 
-                                                                         ip_address_val, 
-                                                                         obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_address (dev, 
+									get_lan_channel_number (), 
+									ip_address_val, 
+									obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -478,33 +438,19 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
                                              char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  
-  unsigned int b1, b2, b3, b4, b5, b6;
   uint64_t mac_address_val = 0;
   int8_t rv = -1;
   
-  sscanf (backup_gateway_mac_address, "%02X:%02X:%02X:%02X:%02X:%02X", 
-	  &b1, &b2, &b3, &b4, &b5, &b6);
-  if (bits_merge (mac_address_val, 0,  8,  b1, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 8,  16, b2, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 16, 24, b3, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 24, 32, b4, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 32, 40, b5, &mac_address_val) < 0)
-    goto cleanup;
-  if (bits_merge (mac_address_val, 40, 48, b6, &mac_address_val) < 0)
+  if (ipmi_mac_address_string2int(backup_gateway_mac_address, &mac_address_val) < 0)
     goto cleanup;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address2 (dev, 
-                                                                             get_lan_channel_number (), 
-                                                                             mac_address_val, 
-                                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (dev, 
+									    get_lan_channel_number (), 
+									    mac_address_val, 
+									    obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -535,12 +481,12 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   ms_val = ptr[1];
 #endif
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id2 (dev, 
-                                                          get_lan_channel_number (), 
-                                                          ls_val,
-                                                          ms_val,
-                                                          vlan_id_enable, 
-                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (dev, 
+							 get_lan_channel_number (), 
+							 ls_val,
+							 ms_val,
+							 vlan_id_enable, 
+							 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -560,10 +506,10 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority2 (dev, 
-                                                                get_lan_channel_number (), 
-                                                                vlan_priority, 
-                                                                obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_vlan_priority (dev, 
+							       get_lan_channel_number (), 
+							       vlan_priority, 
+							       obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -772,7 +718,7 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
                 obj_cmd_rs) < 0)
     goto cleanup;
 
-  if (ipmi_comp_test (obj_cmd_rs) != 1)
+  if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
     goto cleanup;
   
   rv = 0;
@@ -795,11 +741,11 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control2 (dev, 
-                                                                            get_lan_channel_number (), 
-                                                                            bmc_generated_gratuitous_arps, 
-                                                                            bmc_generated_arp_responses, 
-                                                                            obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (dev, 
+									   get_lan_channel_number (), 
+									   bmc_generated_gratuitous_arps, 
+									   bmc_generated_arp_responses, 
+									   obj_cmd_rs) != 0)
     goto cleanup;
     
   rv = 0;
@@ -820,10 +766,10 @@ set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval2 (dev, 
-                                                                          get_lan_channel_number (), 
-                                                                          gratuitous_arp_interval, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (dev, 
+									 get_lan_channel_number (), 
+									 gratuitous_arp_interval, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
     
   rv = 0;
@@ -882,13 +828,13 @@ set_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_connection_mode2 (dev, 
-                                                                get_serial_channel_number (), 
-                                                                basic_mode,
-                                                                ppp_mode,
-                                                                terminal_mode,
-                                                                connect_mode,
-                                                                obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_configuration_connection_mode (dev, 
+							       get_serial_channel_number (), 
+							       basic_mode,
+							       ppp_mode,
+							       terminal_mode,
+							       connect_mode,
+							       obj_cmd_rs) != 0)
     goto cleanup;
    
   rv = 0;
@@ -908,10 +854,10 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval2 (dev, 
-                                                                       get_serial_channel_number (), 
-                                                                       page_blackout_interval, 
-                                                                       obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_configuration_page_blackout_interval (dev, 
+								      get_serial_channel_number (), 
+								      page_blackout_interval, 
+								      obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -931,10 +877,10 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval2 (dev, 
-                                                                    get_serial_channel_number (), 
-                                                                    call_retry_interval, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_configuration_call_retry_interval (dev, 
+								   get_serial_channel_number (), 
+								   call_retry_interval, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -956,12 +902,12 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_serial_modem_configuration_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings2 (dev, 
-                                                                             get_serial_channel_number (), 
-                                                                             dtr_hangup, 
-                                                                             flow_control, 
-                                                                             bit_rate, 
-                                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
+									    get_serial_channel_number (), 
+									    dtr_hangup, 
+									    flow_control, 
+									    bit_rate, 
+									    obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -981,9 +927,9 @@ set_bmc_power_restore_policy (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_power_restore_policy_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_power_restore_policy2 (dev, 
-					  power_restore_policy, 
-					  obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_power_restore_policy (dev, 
+					 power_restore_policy, 
+					 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1006,12 +952,12 @@ set_pef_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_control2 (dev, 
-                                                              pef, 
-                                                              pef_event_messages, 
-                                                              pef_startup_delay, 
-                                                              pef_alert_startup_delay, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_control (dev, 
+							     pef, 
+							     pef_event_messages, 
+							     pef_startup_delay, 
+							     pef_alert_startup_delay, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1036,14 +982,14 @@ set_pef_action_global_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control2 (dev, 
-                                                                            alert_action, 
-                                                                            power_down_action, 
-                                                                            reset_action, 
-                                                                            power_cycle_action, 
-                                                                            oem_action, 
-                                                                            diagnostic_interrupt, 
-                                                                            obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_action_global_control (dev, 
+									   alert_action, 
+									   power_down_action, 
+									   reset_action, 
+									   power_cycle_action, 
+									   oem_action, 
+									   diagnostic_interrupt, 
+									   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1063,9 +1009,9 @@ set_pef_startup_delay (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay2 (dev, 
-                                                                    pef_startup_delay, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_startup_delay (dev, 
+								   pef_startup_delay, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1085,9 +1031,9 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_pef_configuration_parameters_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay2 (dev, 
-                                                                          pef_alert_startup_delay, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (dev, 
+									 pef_alert_startup_delay, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1114,10 +1060,10 @@ get_bmc_user_access (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_user_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_user_access2 (dev, 
-				 channel_number, 
-				 userid, 
-				 obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_user_access (dev, 
+				channel_number, 
+				userid, 
+				obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1170,11 +1116,11 @@ get_bmc_channel_access (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_channel_access_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_channel_access2 (dev, 
-				    channel_number, 
-				    (access_type ? IPMI_CHANNEL_ACCESS_GET_VOLATILE :
-				     IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
-				    obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_channel_access (dev, 
+				   channel_number, 
+				   (access_type ? IPMI_CHANNEL_ACCESS_GET_VOLATILE :
+				    IPMI_CHANNEL_ACCESS_GET_NON_VOLATILE), 
+				   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1232,9 +1178,9 @@ get_bmc_username (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_user_name_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_user_name2 (dev, 
-			       userid, 
-			       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_user_name (dev, 
+			      userid, 
+			      obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1335,12 +1281,12 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_ip_address_source_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source2 (dev, 
-                                                                    get_lan_channel_number (), 
-                                                                    IPMI_GET_LAN_PARAMETER, 
-                                                                    SET_SELECTOR, 
-                                                                    BLOCK_SELECTOR, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address_source (dev, 
+								   get_lan_channel_number (), 
+								   IPMI_GET_LAN_PARAMETER, 
+								   SET_SELECTOR, 
+								   BLOCK_SELECTOR, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1367,12 +1313,12 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_ip_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_ip_address2 (dev, 
-                                                             get_lan_channel_number (), 
-                                                             IPMI_GET_LAN_PARAMETER, 
-                                                             SET_SELECTOR, 
-                                                             BLOCK_SELECTOR, 
-                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_ip_address (dev, 
+							    get_lan_channel_number (), 
+							    IPMI_GET_LAN_PARAMETER, 
+							    SET_SELECTOR, 
+							    BLOCK_SELECTOR, 
+							    obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1405,12 +1351,12 @@ get_bmc_lan_conf_mac_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_mac_address2 (dev, 
-                                                              get_lan_channel_number (), 
-                                                              IPMI_GET_LAN_PARAMETER, 
-                                                              SET_SELECTOR, 
-                                                              BLOCK_SELECTOR, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_mac_address (dev, 
+							     get_lan_channel_number (), 
+							     IPMI_GET_LAN_PARAMETER, 
+							     SET_SELECTOR, 
+							     BLOCK_SELECTOR, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1445,12 +1391,12 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_subnet_mask_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask2 (dev, 
-                                                              get_lan_channel_number (), 
-                                                              IPMI_GET_LAN_PARAMETER, 
-                                                              SET_SELECTOR, 
-                                                              BLOCK_SELECTOR, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_subnet_mask (dev, 
+							     get_lan_channel_number (), 
+							     IPMI_GET_LAN_PARAMETER, 
+							     SET_SELECTOR, 
+							     BLOCK_SELECTOR, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1483,12 +1429,12 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_default_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address2 (dev, 
-                                                                          get_lan_channel_number (), 
-                                                                          IPMI_GET_LAN_PARAMETER, 
-                                                                          SET_SELECTOR, 
-                                                                          BLOCK_SELECTOR, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_address (dev, 
+									 get_lan_channel_number (), 
+									 IPMI_GET_LAN_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1521,12 +1467,12 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_default_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address2 (dev, 
-                                                                              get_lan_channel_number (), 
-                                                                              IPMI_GET_LAN_PARAMETER, 
-                                                                              SET_SELECTOR, 
-                                                                              BLOCK_SELECTOR, 
-                                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_default_gateway_mac_address (dev, 
+									     get_lan_channel_number (), 
+									     IPMI_GET_LAN_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1561,12 +1507,12 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_backup_gateway_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address2 (dev, 
-                                                                         get_lan_channel_number (), 
-                                                                         IPMI_GET_LAN_PARAMETER, 
-                                                                         SET_SELECTOR, 
-                                                                         BLOCK_SELECTOR, 
-                                                                         obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_address (dev, 
+									get_lan_channel_number (), 
+									IPMI_GET_LAN_PARAMETER, 
+									SET_SELECTOR, 
+									BLOCK_SELECTOR, 
+									obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1599,12 +1545,12 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_backup_gateway_mac_address_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address2 (dev, 
-                                                                             get_lan_channel_number (), 
-                                                                             IPMI_GET_LAN_PARAMETER, 
-                                                                             SET_SELECTOR, 
-                                                                             BLOCK_SELECTOR, 
-                                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_backup_gateway_mac_address (dev, 
+									    get_lan_channel_number (), 
+									    IPMI_GET_LAN_PARAMETER, 
+									    SET_SELECTOR, 
+									    BLOCK_SELECTOR, 
+									    obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
@@ -1641,12 +1587,12 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_vlan_id_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id2 (dev, 
-                                                          get_lan_channel_number (), 
-                                                          IPMI_GET_LAN_PARAMETER, 
-                                                          SET_SELECTOR, 
-                                                          BLOCK_SELECTOR, 
-                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_id (dev, 
+							 get_lan_channel_number (), 
+							 IPMI_GET_LAN_PARAMETER, 
+							 SET_SELECTOR, 
+							 BLOCK_SELECTOR, 
+							 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1692,12 +1638,12 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_vlan_priority_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority2 (dev, 
-                                                                get_lan_channel_number (), 
-                                                                IPMI_GET_LAN_PARAMETER, 
-                                                                SET_SELECTOR, 
-                                                                BLOCK_SELECTOR, 
-                                                                obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_vlan_priority (dev, 
+							       get_lan_channel_number (), 
+							       IPMI_GET_LAN_PARAMETER, 
+							       SET_SELECTOR, 
+							       BLOCK_SELECTOR, 
+							       obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1724,12 +1670,12 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_authentication_type_enables_rs)))
     goto cleanup;
   
-  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables2 (dev, 
-                                                                              get_lan_channel_number (), 
-                                                                              IPMI_GET_LAN_PARAMETER, 
-                                                                              SET_SELECTOR, 
-                                                                              BLOCK_SELECTOR, 
-                                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (dev, 
+									     get_lan_channel_number (), 
+									     IPMI_GET_LAN_PARAMETER, 
+									     SET_SELECTOR, 
+									     BLOCK_SELECTOR, 
+									     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1901,12 +1847,12 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control2 (dev, 
-                                                                            get_lan_channel_number (), 
-                                                                            IPMI_GET_LAN_PARAMETER, 
-                                                                            SET_SELECTOR, 
-                                                                            BLOCK_SELECTOR, 
-                                                                            obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_bmc_generated_arp_control (dev, 
+									   get_lan_channel_number (), 
+									   IPMI_GET_LAN_PARAMETER, 
+									   SET_SELECTOR, 
+									   BLOCK_SELECTOR, 
+									   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -1939,12 +1885,12 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval2 (dev, 
-                                                                          get_lan_channel_number (), 
-                                                                          IPMI_GET_LAN_PARAMETER, 
-                                                                          SET_SELECTOR, 
-                                                                          BLOCK_SELECTOR, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_lan_configuration_parameters_gratuitous_arp_interval (dev, 
+									 get_lan_channel_number (), 
+									 IPMI_GET_LAN_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2010,12 +1956,12 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_configuration_connection_mode_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_connection_mode2 (dev, 
-                                                                get_serial_channel_number (), 
-                                                                IPMI_GET_SERIAL_MODEM_PARAMETER, 
-                                                                SET_SELECTOR, 
-                                                                BLOCK_SELECTOR, 
-                                                                obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_configuration_connection_mode (dev, 
+							       get_serial_channel_number (), 
+							       IPMI_GET_SERIAL_MODEM_PARAMETER, 
+							       SET_SELECTOR, 
+							       BLOCK_SELECTOR, 
+							       obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2060,12 +2006,12 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_configuration_page_blackout_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval2 (dev, 
-                                                                       get_serial_channel_number (), 
-                                                                       IPMI_GET_SERIAL_MODEM_PARAMETER, 
-                                                                       SET_SELECTOR, 
-                                                                       BLOCK_SELECTOR, 
-                                                                       obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_configuration_page_blackout_interval (dev, 
+								      get_serial_channel_number (), 
+								      IPMI_GET_SERIAL_MODEM_PARAMETER, 
+								      SET_SELECTOR, 
+								      BLOCK_SELECTOR, 
+								      obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2092,12 +2038,12 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_configuration_call_retry_interval_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval2 (dev, 
-                                                                    get_serial_channel_number (), 
-                                                                    IPMI_GET_SERIAL_MODEM_PARAMETER, 
-                                                                    SET_SELECTOR, 
-                                                                    BLOCK_SELECTOR, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_configuration_call_retry_interval (dev, 
+								   get_serial_channel_number (), 
+								   IPMI_GET_SERIAL_MODEM_PARAMETER, 
+								   SET_SELECTOR, 
+								   BLOCK_SELECTOR, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2126,12 +2072,12 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_serial_modem_configuration_ipmi_messaging_comm_settings_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings2 (dev, 
-                                                                             get_serial_channel_number (), 
-                                                                             IPMI_GET_SERIAL_MODEM_PARAMETER, 
-                                                                             SET_SELECTOR, 
-                                                                             BLOCK_SELECTOR, 
-                                                                             obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_serial_modem_configuration_ipmi_messaging_comm_settings (dev, 
+									    get_serial_channel_number (), 
+									    IPMI_GET_SERIAL_MODEM_PARAMETER, 
+									    SET_SELECTOR, 
+									    BLOCK_SELECTOR, 
+									    obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2170,7 +2116,7 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_chassis_status_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_chassis_status2 (dev, obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_chassis_status (dev, obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2200,11 +2146,11 @@ get_pef_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_pef_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_control2 (dev, 
-                                                              IPMI_GET_PEF_PARAMETER, 
-                                                              SET_SELECTOR, 
-                                                              BLOCK_SELECTOR, 
-                                                              obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_control (dev, 
+							     IPMI_GET_PEF_PARAMETER, 
+							     SET_SELECTOR, 
+							     BLOCK_SELECTOR, 
+							     obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2254,11 +2200,11 @@ get_pef_action_global_control (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_pef_action_global_control_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control2 (dev, 
-                                                                            IPMI_GET_PEF_PARAMETER, 
-                                                                            SET_SELECTOR, 
-                                                                            BLOCK_SELECTOR, 
-                                                                            obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_action_global_control (dev, 
+									   IPMI_GET_PEF_PARAMETER, 
+									   SET_SELECTOR, 
+									   BLOCK_SELECTOR, 
+									   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2315,11 +2261,11 @@ get_pef_startup_delay (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_pef_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay2 (dev, 
-                                                                    IPMI_GET_PEF_PARAMETER, 
-                                                                    SET_SELECTOR, 
-                                                                    BLOCK_SELECTOR, 
-                                                                    obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_startup_delay (dev, 
+								   IPMI_GET_PEF_PARAMETER, 
+								   SET_SELECTOR, 
+								   BLOCK_SELECTOR, 
+								   obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2346,11 +2292,11 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_pef_alert_startup_delay_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay2 (dev, 
-                                                                          IPMI_GET_PEF_PARAMETER, 
-                                                                          SET_SELECTOR, 
-                                                                          BLOCK_SELECTOR, 
-                                                                          obj_cmd_rs) != 0)
+  if (ipmi_cmd_get_pef_configuration_parameters_pef_alert_startup_delay (dev, 
+									 IPMI_GET_PEF_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   if (fiid_obj_get (obj_cmd_rs, 
@@ -2378,12 +2324,12 @@ check_bmc_user_password (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password2 (dev, 
-				   userid, 
-				   IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
-				   (char *)password, 
-				   (password) ? strlen((char *)password) : 0,
-				   obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_password (dev, 
+				  userid, 
+				  IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
+				  (char *)password, 
+				  (password) ? strlen((char *)password) : 0,
+				  obj_cmd_rs) != 0)
     {
       uint64_t comp_code;
 

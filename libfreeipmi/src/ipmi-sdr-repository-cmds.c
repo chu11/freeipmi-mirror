@@ -19,7 +19,19 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-sdr-repository-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_get_sdr_repository_info_rq =
   {
@@ -101,22 +113,13 @@ fiid_template_t tmpl_get_sdr_rs =
 int8_t 
 fill_cmd_get_repository_info (fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sdr_repository_info_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_repository_info_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
@@ -127,22 +130,13 @@ fill_cmd_get_repository_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_cmd_get_repository_allocation_info (fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sdr_repository_allocation_info_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_repository_allocation_info_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
@@ -153,22 +147,13 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_data_rq)
 int8_t 
 fill_cmd_reserve_sdr_repository (fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_reserve_sdr_repository_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_reserve_sdr_repository_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
@@ -183,41 +168,21 @@ fill_cmd_get_sdr (uint16_t reservation_id,
                   uint8_t bytes_to_read,
                   fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_sdr_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_rq);
 
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"cmd",
 		IPMI_CMD_GET_SDR);
   
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"reservation_id",
-		reservation_id);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"record_id",
-		record_id);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"offset_into_record",
-		offset_into_record);
-  
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"bytes_to_read",
-		bytes_to_read);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"offset_into_record", offset_into_record);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"bytes_to_read", bytes_to_read);
   return 0;
 }

@@ -17,16 +17,38 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 #include <error.h>
+#if STDC_HEADERS
 #include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif  /* HAVE_UNISTD_H */
+#include <sys/resource.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <err.h>
 #include <argp.h>
-#include "freeipmi.h"
+
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 #include "bmc-info-argp.h"
@@ -36,12 +58,22 @@ typedef struct channel_info
 {
   uint8_t channel_number;
   uint8_t medium_type;
-  uint8_t actual_medium_type;
   uint8_t protocol_type;
-  uint8_t actual_protocol_type;
 } channel_info_t;
 
 channel_info_t channel_info_list[8];
+
+#define _FIID_OBJ_GET(bytes, field, val)               \
+do {                                                   \
+    uint64_t _val = 0, *_val_ptr;                      \
+    _val_ptr = val;                                    \
+    if (fiid_obj_get (bytes, field, &_val) < 0)        \
+      {                                                \
+        err (1, "fiid_obj_get (%p, \"%s\", %p) error", \
+             bytes, field, val);                       \
+      }                                                \
+    *_val_ptr = _val;                                  \
+} while (0)
 
 int 
 display_get_device_id (ipmi_device_t *dev)
@@ -57,41 +89,43 @@ display_get_device_id (ipmi_device_t *dev)
 
   if (ipmi_cmd_get_device_id (dev, cmd_rs) != 0)
     {
-      ipmi_error (cmd_rs, "ipmi_cmd_get_device_id()");
+      ipmi_error (cmd_rs, 
+                  dev->net_fn,
+                  "ipmi_cmd_get_device_id()");
       return (-1);
     }
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_id", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_id", 
+                 &val);
   fprintf (stdout, "Device ID:         %X\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_revision.revision", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_revision.revision", 
+                 &val);
   fprintf (stdout, "Device Revision:   %d\n", (unsigned int) val);
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"device_revision.sdr_support", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"device_revision.sdr_support", 
+                 &val);
   if (val)
     fprintf (stdout, "                   [SDR Support]\n");
   
   {
     uint64_t maj, min;
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"firmware_revision1.major_revision", 
-		  &maj);
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"firmware_revision2.minor_revision", 
-		  &min);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"firmware_revision1.major_revision", 
+                   &maj);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"firmware_revision2.minor_revision", 
+                   &min);
     fprintf (stdout, "Firmware Revision: %d.%d\n", 
 	     (unsigned int) maj, (unsigned int) min);
   }
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"firmware_revision1.device_available", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"firmware_revision1.device_available", 
+                 &val);
   if (val == 0)
     fprintf (stdout, 
 	     "                   [Device Available (normal operation)]\n");
@@ -105,83 +139,83 @@ display_get_device_id (ipmi_device_t *dev)
   
   {
     uint64_t ms, ls;
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"ipmi_version.ms_bits", 
-		  &ms);
-    FIID_OBJ_GET (cmd_rs, 
-		  (uint8_t *)"ipmi_version.ls_bits", 
-		  &ls);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"ipmi_version.ms_bits", 
+                   &ms);
+    _FIID_OBJ_GET (cmd_rs, 
+                   (uint8_t *)"ipmi_version.ls_bits", 
+                   &ls);
     fprintf (stdout, 
 	     "IPMI Version:      %d.%d\n", (unsigned int) ms, (unsigned int) ls);
   }
   
   fprintf (stdout, "Additional Device Support:\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sensor_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sensor_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Sensor Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sdr_repository_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sdr_repository_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [SDR Repository Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.sel_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.sel_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [SEL Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.fru_inventory_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.fru_inventory_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [FRU Inventory Device]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.ipmb_event_receiver", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.ipmb_event_receiver", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Receiver]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.ipmb_event_generator", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.ipmb_event_generator", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [IPMB Event Generator]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.bridge", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.bridge", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Bridge]\n");
   
-  FIID_OBJ_GET (cmd_rs, 
-		(uint8_t *)"additional_device_support.chassis_device", 
-		&val);
+  _FIID_OBJ_GET (cmd_rs, 
+                 (uint8_t *)"additional_device_support.chassis_device", 
+                 &val);
   if(val)
     fprintf (stdout, "                   [Chassis Device]\n");
   
   {
     uint64_t manufacturer_id, product_id;
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"manufacturer_id.id", &manufacturer_id);
     fprintf (stdout, "Manufacturer ID:   %Xh\n", (unsigned int) manufacturer_id);
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"product_id", &product_id);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"product_id", &product_id);
     fprintf (stdout, "Product ID:        %Xh\n", (unsigned int) product_id);
     
-    FIID_OBJ_GET (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val);
+    _FIID_OBJ_GET (cmd_rs, (uint8_t *)"auxiliary_firmware_revision_info", &val);
     switch (manufacturer_id)
       {
       case IPMI_MANUFACTURER_ID_INTEL: 
 	switch (product_id)
 	  {
 	    /* I am assuming all Intel products will decode alike.
-                                 -- Anand Babu <ab@gnu.org.in>  */
+               -- Anand Babu <ab@gnu.org.in>  */
 	  case IPMI_PRODUCT_ID_SR870BN4:
 	  default:
 	    {
@@ -208,18 +242,18 @@ display_get_device_id (ipmi_device_t *dev)
 		  exit (EXIT_FAILURE);
 		}
 	      
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
-			    &bc_maj);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
-			    &bc_min);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
-			    &pia_maj);
-	      FIID_OBJ_GET (intel_rs,
-			    (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
-			    &pia_min);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.boot_code.major",
+                             &bc_maj);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.boot_code.minor",
+                             &bc_min);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.pia.major",
+                             &pia_maj);
+	      _FIID_OBJ_GET (intel_rs,
+                             (uint8_t *)"auxiliary_firmware_revision_info.pia.minor",
+                             &pia_min);
 	      fprintf (stdout, 
 		       "Aux Firmware Revision Info: Boot Code v%02x.%2x, PIA v%02x.%2x\n",
 		       (unsigned int) bc_maj, (unsigned int) bc_min, 
@@ -255,9 +289,9 @@ get_channel_info_list (ipmi_device_t *dev)
 
   for (i = 0, ci = 0; i < 8; i++)
     {
-      if (ipmi_cmd_get_channel_info2 (dev, 
-				      i, 
-				      data_rs) != 0)
+      if (ipmi_cmd_get_channel_info (dev, 
+				     i, 
+				     data_rs) != 0)
 	continue;
       
       fiid_obj_get (data_rs, 
@@ -268,31 +302,12 @@ get_channel_info_list (ipmi_device_t *dev)
       fiid_obj_get (data_rs, 
 		    (uint8_t *)"channel_medium_type", 
 		    &val);
-      channel_info_list[ci].medium_type = 
-	channel_info_list[ci].actual_medium_type = (uint8_t) val;
+      channel_info_list[ci].medium_type = (uint8_t) val;
       
       fiid_obj_get (data_rs, 
 		    (uint8_t *)"channel_protocol_type", 
 		    &val);
-      channel_info_list[ci].protocol_type = 
-	channel_info_list[ci].actual_protocol_type = (uint8_t) val;
-      
-      if (channel_info_list[ci].actual_medium_type >= 0x0D && 
-	  channel_info_list[ci].actual_medium_type <= 0x5F)
-	channel_info_list[ci].medium_type = IPMI_CHANNEL_MEDIUM_TYPE_RESERVED;
-      
-      if (channel_info_list[ci].actual_medium_type >= 0x60 && 
-	  channel_info_list[ci].actual_medium_type <= 0x7F)
-	channel_info_list[ci].medium_type = IPMI_CHANNEL_MEDIUM_TYPE_OEM;
-      
-      if (channel_info_list[ci].actual_protocol_type == 0x03 || 
-	  (channel_info_list[ci].actual_protocol_type >= 0x0A && 
-	   channel_info_list[ci].actual_protocol_type <= 0x1B))
-	channel_info_list[ci].protocol_type = IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED;
-      
-      if (channel_info_list[ci].actual_protocol_type >= 0x1C && 
-	  channel_info_list[ci].actual_protocol_type <= 0x1F)
-	channel_info_list[ci].protocol_type = IPMI_CHANNEL_PROTOCOL_TYPE_OEM;
+      channel_info_list[ci].protocol_type = (uint8_t) val;
       
       ci++;
     }
@@ -312,90 +327,60 @@ display_channel_info (ipmi_device_t *dev)
   printf ("Channel Information:\n");
   for (i = 0; i < 8; i++)
     {
-      if (channel_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RESERVED)
-	continue;
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
+        continue;
       
       printf ("       Channel No: %d\n", channel_list[i].channel_number);
       
-      switch (channel_list[i].medium_type)
-	{
-	case IPMI_CHANNEL_MEDIUM_TYPE_RESERVED:
-	  printf ("      Medium Type: %s\n", "Reserved");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_IPMB:
-	  printf ("      Medium Type: %s\n", "IPMB (I2C)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10:
-	  printf ("      Medium Type: %s\n", "ICMB v1.0");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09:
-	  printf ("      Medium Type: %s\n", "ICMB v0.9");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3:
-	  printf ("      Medium Type: %s\n", "802.3 LAN");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_RS232:
-	  printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN:
-	  printf ("      Medium Type: %s\n", "Other LAN");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS:
-	  printf ("      Medium Type: %s\n", "PCI SMBus");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11:
-	  printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20:
-	  printf ("      Medium Type: %s\n", "SMBus v2.0");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_USB_1X:
-	  printf ("      Medium Type: %s\n", "USB 1.x");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_USB_2X:
-	  printf ("      Medium Type: %s\n", "USB 2.x");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE:
-	  printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
-	  break;
-	case IPMI_CHANNEL_MEDIUM_TYPE_OEM:
-	  printf ("      Medium Type: %s\n", "OEM");
-	  break;
-	}
-      
-      switch (channel_list[i].protocol_type)
-	{
-	case IPMI_CHANNEL_PROTOCOL_TYPE_RESERVED:
-	  printf ("    Protocol Type: %s\n", "Reserved");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_IPMB:
-	  printf ("    Protocol Type: %s\n", "IPMB-1.0");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10:
-	  printf ("    Protocol Type: %s\n", "ICMB-1.0");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X:
-	  printf ("    Protocol Type: %s\n", "IPMI-SMBus");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_KCS:
-	  printf ("    Protocol Type: %s\n", "KCS");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_SMIC:
-	  printf ("    Protocol Type: %s\n", "SMIC");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_10:
-	  printf ("    Protocol Type: %s\n", "BT-10");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_BT_15:
-	  printf ("    Protocol Type: %s\n", "BT-15");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_TMODE:
-	  printf ("    Protocol Type: %s\n", "TMODE");
-	  break;
-	case IPMI_CHANNEL_PROTOCOL_TYPE_OEM:
-	  printf ("    Protocol Type: %s\n", "OEM");
-	  break;
-	}
+      if (IPMI_CHANNEL_MEDIUM_TYPE_IS_RESERVED(channel_info_list[i].medium_type))
+        printf ("      Medium Type: %s\n", "Reserved");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_IPMB)
+        printf ("      Medium Type: %s\n", "IPMB (I2C)");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_10)
+        printf ("      Medium Type: %s\n", "ICMB v1.0");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_ICMB_09)
+        printf ("      Medium Type: %s\n", "ICMB v0.9");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+        printf ("      Medium Type: %s\n", "802.3 LAN");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_RS232)
+        printf ("      Medium Type: %s\n", "Asynch. Serial/Modem (RS-232)");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_OTHER_LAN)
+        printf ("      Medium Type: %s\n", "Other LAN");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_PCI_SMBUS)
+        printf ("      Medium Type: %s\n", "PCI SMBus");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_10_11)
+        printf ("      Medium Type: %s\n", "SMBus v1.0/1.1");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SMBUS_20)
+        printf ("      Medium Type: %s\n", "SMBus v2.0");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_1X)
+        printf ("      Medium Type: %s\n", "USB 1.x");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_USB_2X)
+        printf ("      Medium Type: %s\n", "USB 2.x");
+      else if (channel_info_list[i].medium_type == IPMI_CHANNEL_MEDIUM_TYPE_SYS_IFACE)
+        printf ("      Medium Type: %s\n", "System Interface (KCS, SMIC, or BT)");
+      else if (IPMI_CHANNEL_MEDIUM_TYPE_IS_OEM(channel_info_list[i].medium_type))
+        printf ("      Medium Type: %s\n", "OEM");
+
+      if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_RESERVED(channel_info_list[i].protocol_type))
+        printf ("    Protocol Type: %s\n", "Reserved");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IPMB)
+        printf ("    Protocol Type: %s\n", "IPMB-1.0");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_ICMB_10)
+        printf ("    Protocol Type: %s\n", "ICMB-1.0");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMBUS_1X_2X)
+        printf ("    Protocol Type: %s\n", "IPMI-SMBus");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_KCS)
+        printf ("    Protocol Type: %s\n", "KCS");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_SMIC)
+        printf ("    Protocol Type: %s\n", "SMIC");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_10)
+        printf ("    Protocol Type: %s\n", "BT-10");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_BT_15)
+        printf ("    Protocol Type: %s\n", "BT-15");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_TMODE)
+        printf ("    Protocol Type: %s\n", "TMODE");
+      else if (IPMI_CHANNEL_PROTOCOL_TYPE_IS_OEM(channel_info_list[i].protocol_type))
+        printf ("    Protocol Type: %s\n", "OEM");
     }
   
   return 0;

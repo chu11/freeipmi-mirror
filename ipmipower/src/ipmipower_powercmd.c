@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.14 2006-02-18 00:33:34 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.15 2006-03-02 04:52:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -328,8 +328,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_dump(ip, pkt, buffer, len);
       
-  if ((ret = ipmi_lan_check_chksum((uint8_t *)buffer, len)) < 0)
-    err_exit("_recv_packet(%s:%d): ipmi_lan_check_chksum: %s",
+  if ((ret = ipmi_lan_check_checksum((uint8_t *)buffer, len)) < 0)
+    err_exit("_recv_packet(%s:%d): ipmi_lan_check_checksum: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (!ret) 

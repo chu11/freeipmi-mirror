@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.2.2.3 2006-02-17 23:59:49 chu11 Exp $ 
+   $Id: common.h,v 1.2.2.4 2006-03-02 04:52:27 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -23,7 +23,9 @@
 #ifndef _COMMON_H
 #define _COMMON_H
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <argp.h>
 #include <pwd.h>
@@ -31,9 +33,36 @@
 #include <guile/gh.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/resource.h>
+#if TIME_WITH_SYS_TIME
+#include <sys/time.h>
+#include <time.h>
+#else /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif /* !HAVE_SYS_TIME_H */
+#endif  /* !TIME_WITH_SYS_TIME */
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+
+#include <freeipmi/freeipmi.h>
 
 #include "argp-common.h"
 #include "ipmi-common.h"
+#include "ipmi-sdr-repository-cache-api.h"
+#include "ipmi-sel-api.h"
+#include "ipmi-sensor-api.h"
 
 #include "xmalloc.h"
 #include "fish-argp.h"

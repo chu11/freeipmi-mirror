@@ -24,9 +24,112 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-extern int errno;
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <sys/types.h>
+#include <sys/stat.h>
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <sys/ioctl.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-ssif-interface.h"
+
+#include "ipmi-semaphores.h"
+
+#include "err-wrappers.h"
+#include "ipmi-common.h"
+#include "freeipmi-portability.h"
+#include "xmalloc.h"
+
+/* function error codes */
+#define IPMI_SSIF_SUCCESS         0x00
+#define IPMI_SSIF_UNDEF_ERROR     0xFFFF
+
+#define IPMI_SSIF_UNKNOWN_INTERFACE       0x1000
+#define IPMI_SSIF_ISA_MESSAGE_OVERFLOW    0x1100
+#define IPMI_SSIF_BAD_ISA_STATE           0x1200
+#define IPMI_SSIF_BMC_WRITE_STATE_FAIL    0x1300
+#define IPMI_SSIF_BMC_READ_STATE_FAIL     0x1400
+#define IPMI_SSIF_SMS_READY_TIMEOUT       0x1500
+#define IPMI_SSIF_ERROR_READING_SMS       0x1600
+#define IPMI_SSIF_PACKET_NUMBER_MISMATCH  0x1700
+#define IPMI_SSIF_PACKET_SIZE_MISMATCH    0x1800
+#define IPMI_SSIF_I2C_RETRY_ERROR         0x1900
+#define IPMI_SSIF_SMS_SEND_ERROR_ON_FLUSH 0x2000
+#define IPMI_SSIF_ISA_TIMEOUT_IN_IBF      0x2100
+#define IPMI_SSIF_ISA_TIMEOUT_IN_OBF      0x2200
+
+/* Response Packet Offsets */
+#define IPMI_SSIF_RSP_OFFSET_COMPCODE 0x03
+
+/* SMBus */
+#define IPMI_SSIF_SMB_IPMI_REQUEST    2
+#define IPMI_SSIF_SMB_IPMI_RESPONSE   3
+
+/* this is for i2c-dev.c	*/
+#define IPMI_I2C_SLAVE       0x0703  /* Change slave address                 */
+			             /* Attn.: Slave address is 7 or 10 bits */
+#define IPMI_I2C_SLAVE_FORCE 0x0706  /* Change slave address                 */
+                                     /* Attn.: Slave address is 7 or 10 bits */
+				     /* This changes the address, even if it */
+				     /* is already taken!                    */
+
+#define IPMI_I2C_SMBUS       0x0720  /* SMBus-level access */
+
+/* SMBus transaction types (size parameter in the above functions) 
+   Note: these no longer correspond to the (arbitrary) PIIX4 internal codes! */
+#define IPMI_I2C_SMBUS_QUICK                0
+#define IPMI_I2C_SMBUS_BYTE                 1
+#define IPMI_I2C_SMBUS_BYTE_DATA            2 
+#define IPMI_I2C_SMBUS_WORD_DATA            3
+#define IPMI_I2C_SMBUS_PROC_CALL            4
+#define IPMI_I2C_SMBUS_BLOCK_DATA           5
+#define IPMI_I2C_SMBUS_I2C_BLOCK_DATA       6
+#define IPMI_I2C_SMBUS_BLOCK_PROC_CALL      7     /* SMBus 2.0 */
+#define IPMI_I2C_SMBUS_BLOCK_DATA_PEC       8     /* SMBus 2.0 */
+#define IPMI_I2C_SMBUS_PROC_CALL_PEC        9     /* SMBus 2.0 */
+#define IPMI_I2C_SMBUS_BLOCK_PROC_CALL_PEC  10    /* SMBus 2.0 */
+#define IPMI_I2C_SMBUS_WORD_DATA_PEC        11    /* SMBus 2.0 */
+
+/* 
+ * Data for SMBus Messages 
+ */
+#define IPMI_I2C_SMBUS_BLOCK_MAX	32	/* As specified in SMBus standard */	
+#define IPMI_I2C_SMBUS_I2C_BLOCK_MAX	32	/* Not specified but we use same structure */
+
+/* smbus_access read or write markers */
+#define IPMI_I2C_SMBUS_READ	1
+#define IPMI_I2C_SMBUS_WRITE	0
+
+
+union ipmi_i2c_smbus_data {
+  uint8_t byte;
+  uint16_t word;
+  uint8_t block[IPMI_I2C_SMBUS_BLOCK_MAX + 3]; /* block[0] is used for length */
+                          /* one more for read length in block process call */
+	                                            /* and one more for PEC */
+};
+
+/* Note: 10-bit addresses are NOT supported! */
+/* This is the structure as used in the I2C_SMBUS ioctl call */
+struct ipmi_i2c_smbus_ioctl_data {
+	char read_write;
+	uint8_t command;
+	int size;
+	union ipmi_i2c_smbus_data *data;
+};
 
 static inline int32_t
 ipmi_i2c_smbus_access (int file, char read_write, uint8_t command, int size, 
@@ -82,8 +185,8 @@ ipmi_i2c_smbus_write_block_data (int file, uint8_t command, uint8_t length, uint
 static char * ipmi_ssif_ctx_errmsg[] =
   {
     "success",
-    "fiid object is null",
-    "fiid object is invalid",
+    "ssif context is null",
+    "ssif context is invalid",
     "invalid parameter",
     "permission denied",
     "io not initialized",
@@ -111,28 +214,26 @@ ipmi_ssif_ctx_create(void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_ssif_ctx_t)ipmi_xmalloc(sizeof(struct ipmi_ssif_ctx))))
+  if (!(ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))))
     {
       errno = ENOMEM;
       goto cleanup;
     }
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
-  if (!(ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)))
-    goto cleanup;
+  ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
   ctx->ipmb_addr = IPMI_DEFAULT_IPMB_ADDRESS;
   ctx->mode = IPMI_SSIF_MODE_DEFAULT;
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
 
-  if ((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
 
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return ctx;
 
  cleanup:
   if (ctx)
-    ipmi_xfree(ctx);
+    xfree(ctx);
   return (NULL);
 }
 
@@ -147,7 +248,7 @@ ipmi_ssif_ctx_destroy(ipmi_ssif_ctx_t ctx)
   if (ctx->i2c_device)
     free(ctx->i2c_device);
   close(ctx->i2c_fd);
-  ipmi_xfree(ctx);
+  xfree(ctx);
   return (0);
 }
 
@@ -319,18 +420,18 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
   int32_t count;
 
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
-    goto cleanup;
+    return (-1);
 
   if (!buf || !buf_len)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
-      goto cleanup;
+      return (-1);
     }
 
   if (!ctx->io_init)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
-      goto cleanup;
+      return (-1);
     }
 
   if (ctx->mode == IPMI_SSIF_MODE_BLOCKING)

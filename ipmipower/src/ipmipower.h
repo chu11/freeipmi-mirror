@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.13 2006-02-18 00:33:34 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.14 2006-03-02 04:52:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -44,7 +44,8 @@
 #include <sys/param.h>
 #include <netinet/in.h>
 
-#include "freeipmi.h"
+#include <freeipmi/freeipmi.h>
+
 #include "hostlist.h"
 #include "cbuf.h"
 #include "list.h"

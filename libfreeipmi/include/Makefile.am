@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7 2006-02-28 17:52:07 chu11 Exp $
+## $Id: Makefile.am,v 1.7.2.1 2006-03-02 04:52:27 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -13,6 +13,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-netfn-spec.h \
 	freeipmi/ipmi-pef-param-spec.h \
 	freeipmi/ipmi-privilege-level-spec.h \
+	freeipmi/ipmi-rmcpplus-status-spec.h \
 	freeipmi/ipmi-sensor-types-spec.h \
 	freeipmi/ipmi-sensor-units-spec.h \
 	freeipmi/ipmi-serial-modem-param-spec.h \
@@ -28,6 +29,10 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
+	freeipmi/ipmi-rmcpplus.h \
+	freeipmi/ipmi-rmcpplus-debug.h \
+	freeipmi/ipmi-rmcpplus-interface.h \
+	freeipmi/ipmi-rmcpplus-util.h \
 	freeipmi/ipmi-ssif-interface.h \
 	freeipmi/ipmi-smic-interface.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \

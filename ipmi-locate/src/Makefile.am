@@ -7,7 +7,7 @@ ipmi_locate_LDADD = ../../common/src/libipmicommon.la \
 noinst_HEADERS=ipmi-locate-argp.h
  
 AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/src -DFREEIPMI_BUILD -D_GNU_SOURCE \
+	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
 	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
 	-DWITH_LSD_FATAL_ERROR_FUNC=1 -DWITH_LSD_NOMEM_ERROR_FUNC=1
  

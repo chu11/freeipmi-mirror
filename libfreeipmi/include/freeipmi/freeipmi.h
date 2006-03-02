@@ -35,6 +35,7 @@ extern "C" {
 #include <freeipmi/ipmi-netfn-spec.h>
 #include <freeipmi/ipmi-pef-param-spec.h>
 #include <freeipmi/ipmi-privilege-level-spec.h>
+#include <freeipmi/ipmi-rmcpplus-status-spec.h>
 #include <freeipmi/ipmi-sensor-types-spec.h>
 #include <freeipmi/ipmi-sensor-units-spec.h>
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
@@ -49,6 +50,10 @@ extern "C" {
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
+#include <freeipmi/ipmi-rmcpplus.h>
+#include <freeipmi/ipmi-rmcpplus-debug.h>
+#include <freeipmi/ipmi-rmcpplus-interface.h>
+#include <freeipmi/ipmi-rmcpplus-util.h>
 #include <freeipmi/ipmi-ssif-interface.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>

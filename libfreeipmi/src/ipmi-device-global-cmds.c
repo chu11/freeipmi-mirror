@@ -18,8 +18,20 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
-  
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-device-global-cmds.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+
+#include "freeipmi-portability.h"
+#include "fiid-wrappers.h"
+
 fiid_template_t tmpl_cmd_get_device_id_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -88,22 +100,13 @@ fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
 int8_t 
 fill_cmd_get_device_id (fiid_obj_t obj_data_rq)
 { 
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_cmd_get_device_id_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_cmd_get_device_id_rq);
 
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEVICE_ID);
   return (0);

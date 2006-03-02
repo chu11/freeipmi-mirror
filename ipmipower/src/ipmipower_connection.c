@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_connection.c,v 1.3.2.10 2006-02-17 23:59:49 chu11 Exp $
+ *  $Id: ipmipower_connection.c,v 1.3.2.11 2006-03-02 04:52:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -164,7 +164,7 @@ _connection_setup(struct ipmipower_connection *ic, char *hostname)
   /* Determine the destination address */
   bzero(&(ic->destaddr), sizeof(struct sockaddr_in));
   ic->destaddr.sin_family = AF_INET;
-  ic->destaddr.sin_port = htons(RMCP_PRI_RMCP_PORT);
+  ic->destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
         
   errno = 0;
   if ((result = gethostbyname(ic->hostname)) == NULL) 

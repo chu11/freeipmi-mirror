@@ -24,9 +24,7 @@ typedef struct channel_info
 {
   uint8_t channel_number;
   uint8_t medium_type;
-  uint8_t actual_medium_type;
   uint8_t protocol_type;
-  uint8_t actual_protocol_type;
 } channel_info;
 
 ipmi_device_t *fi_get_ipmi_device ();

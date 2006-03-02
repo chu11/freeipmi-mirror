@@ -1,4 +1,4 @@
-SUBDIRS = src 
+SUBDIRS = include src 
 
 CLEANFILES = 
 DISTCLEANFILES = .deps/*.P

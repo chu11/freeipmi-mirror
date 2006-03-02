@@ -19,7 +19,16 @@
 
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+
+#include "freeipmi/ipmi-sdr-record-types.h"
+
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_sdr_sensor_record_header = 
   {

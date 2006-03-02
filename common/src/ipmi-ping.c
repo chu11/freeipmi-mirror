@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.1.2.3 2006-02-17 23:59:48 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.1.2.4 2006-03-02 04:52:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,8 +64,9 @@
 #endif
 #include <assert.h>
 
+#include <freeipmi/freeipmi.h>
+
 #include "ipmi-ping.h"
-#include "freeipmi.h"
 
 #ifndef INET_ADDRSTRLEN 
 #define INET_ADDRSTRLEN 16
@@ -356,7 +357,7 @@ _setup(void)
 
   memset(&_destaddr, '\0', sizeof(_destaddr));
   _destaddr.sin_family = AF_INET;
-  _destaddr.sin_port = htons(RMCP_PRI_RMCP_PORT);
+  _destaddr.sin_port = htons(RMCP_PRIMARY_RMCP_PORT);
     
   if ((hptr = gethostbyname(_dest)) == NULL)
     ipmi_ping_err_exit("gethostbyname: %s", hstrerror(h_errno));

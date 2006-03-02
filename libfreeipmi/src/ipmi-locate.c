@@ -19,57 +19,47 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
-typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t, ipmi_locate_info_t*));
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+
+#include "freeipmi/ipmi-locate.h"
+
+#include "freeipmi-portability.h"
+#include "xmalloc.h"
+
+typedef ipmi_locate_info_t* ((*ipmi_locate_func)(ipmi_interface_type_t));
 
 ipmi_locate_info_t*
-ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
+ipmi_locate (ipmi_interface_type_t type)
 {
-  extern int errno;
-  
   static ipmi_locate_func things_to_try[] =
     {
-      smbios_get_dev_info,
-      acpi_spmi_get_dev_info,
-      pci_get_dev_info,
-      defaults_get_dev_info,
+      ipmi_locate_smbios_get_dev_info,
+      ipmi_locate_acpi_spmi_get_dev_info,
+      ipmi_locate_pci_get_dev_info,
+      ipmi_locate_defaults_get_dev_info,
       NULL
     };
-
+  ipmi_locate_info_t* pinfo;
   int i;
-  ipmi_locate_info_t* pinfo2;
-  
-  memset (pinfo, 0, sizeof (ipmi_locate_info_t));
 
-  switch (type)
+  if (!IPMI_INTERFACE_TYPE_VALID(type))
     {
-    case IPMI_INTERFACE_KCS:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_SMIC:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_BT:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_SSIF:
-      pinfo->interface_type = type;
-      pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
-      break;
-    case IPMI_INTERFACE_LAN:
-      pinfo->interface_type = type;
-      break;
-    case IPMI_INTERFACE_RESERVED:
-      break;
+      errno = EINVAL;
+      return NULL;
     }
   
   for (i = 0; things_to_try[i] != NULL; i++)
     {
-      pinfo2 = (*things_to_try[i])(type, pinfo);
+      pinfo = (*things_to_try[i])(type);
       
-      if (pinfo2 != NULL)
-	return (pinfo2);
+      if (pinfo)
+	return (pinfo);
     }
 
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_NONE;
@@ -77,7 +67,12 @@ ipmi_locate (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
 }
 
 void
-ipmi_locate_free (ipmi_locate_info_t* pinfo)
+ipmi_locate_destroy (ipmi_locate_info_t* pinfo)
 {
-  ipmi_xfree (pinfo->bmc_i2c_dev_name);
+  if (pinfo)
+    {
+      if (pinfo->bmc_i2c_dev_name)
+	xfree (pinfo->bmc_i2c_dev_name);
+      xfree (pinfo);
+    }
 }

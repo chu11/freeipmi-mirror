@@ -18,7 +18,26 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
-#include "freeipmi.h"
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#ifdef STDC_HEADERS
+#include <string.h>
+#endif /* STDC_HEADERS */
+#include <errno.h>
+
+#include "freeipmi/ipmi-messaging-support-cmds.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-channel-spec.h"
+#include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-lan.h"
+#include "freeipmi/ipmi-privilege-level-spec.h"
+
+#include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {
@@ -346,8 +365,6 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                   uint8_t maximum_privilege_level, 
                                                   fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
       || !fiid_obj_valid(obj_cmd))
@@ -356,14 +373,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
       return (-1);
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_number", channel_number); 
@@ -390,14 +400,7 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
       return (-1);
     }
   
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_v20_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_number", channel_number); 
@@ -405,6 +408,7 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"get_ipmi_v20_extended_data,", get_ipmi_v20_extended_data);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
+
   return (0);
 }
 
@@ -414,7 +418,6 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
 				uint32_t user_name_len, 
 				fiid_obj_t obj_cmd)
 {
-  int8_t rv;
   char buf[IPMI_MAX_USER_NAME_LENGTH];
 
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
@@ -428,14 +431,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_get_session_challenge_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_session_challenge_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
@@ -445,17 +441,17 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_cmd, (uint8_t *)"user_name") < 0));
+  FIID_OBJ_CLEAR_FIELD(obj_cmd, (uint8_t *)"user_name");
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
     strncpy(buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
   
-  ERR (!(fiid_obj_set_data (obj_cmd, 
-                            (uint8_t *)"user_name", 
-                            (uint8_t *)buf,
-                            IPMI_MAX_USER_NAME_LENGTH) < 0));
+  FIID_OBJ_SET_DATA (obj_cmd, 
+		     (uint8_t *)"user_name", 
+		     (uint8_t *)buf,
+		     IPMI_MAX_USER_NAME_LENGTH);
   
   return (0);
 }
@@ -468,7 +464,6 @@ fill_cmd_activate_session (uint8_t authentication_type,
 			   uint32_t initial_outbound_sequence_number, 
 			   fiid_obj_t obj_cmd)
 {
-  int8_t rv;
   char buf[IPMI_CHALLENGE_STRING_LENGTH];
 
   if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
@@ -481,30 +476,23 @@ fill_cmd_activate_session (uint8_t authentication_type,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_activate_session_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_activate_session_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_SESSION);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
-  ERR (!(fiid_obj_clear_field (obj_cmd, (uint8_t *)"challenge_string") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_cmd, (uint8_t *)"challenge_string");
   
   /* achu: challenge string must be zero extended */
   memset(buf, '\0', IPMI_CHALLENGE_STRING_LENGTH);
   memcpy(buf, challenge_string, challenge_string_len);
   
-  ERR (!(fiid_obj_set_data (obj_cmd,
-                            (uint8_t *)"challenge_string",
-                            (uint8_t *)buf,
-                            IPMI_CHALLENGE_STRING_LENGTH) < 0));
+  FIID_OBJ_SET_DATA (obj_cmd,
+		     (uint8_t *)"challenge_string",
+		     (uint8_t *)buf,
+		     IPMI_CHALLENGE_STRING_LENGTH);
 
   FIID_OBJ_SET (obj_cmd, 
                 (uint8_t *)"initial_outbound_sequence_number", 
@@ -517,8 +505,6 @@ int8_t
 fill_cmd_set_session_privilege_level (uint8_t privilege_level, 
                                       fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!IPMI_1_5_PRIVILEGE_LEVEL_VALID(privilege_level)
       || !fiid_obj_valid(obj_cmd))
     {
@@ -526,14 +512,7 @@ fill_cmd_set_session_privilege_level (uint8_t privilege_level,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_set_session_privilege_level_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_set_session_privilege_level_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"privilege_level", privilege_level);
@@ -545,22 +524,13 @@ int8_t
 fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_cmd, tmpl_cmd_close_session_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_close_session_rq);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CLOSE_SESSION);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"session_id", close_session_id);
@@ -578,8 +548,6 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 			     uint8_t channel_privilege_level_limit_set,
                              fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
       || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
@@ -594,59 +562,32 @@ fill_cmd_set_channel_access (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_channel_access_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_channel_access_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_CHANNEL_ACCESS);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"reserved1",
-		0);
-  
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"ipmi_messaging_access_mode", 
 		ipmi_messaging_access_mode);
-  
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"user_level_authentication", 
 		user_level_authentication);
-  
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"per_message_authentication", 
 		per_message_authentication);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"pef_alerting", 
-		pef_alerting);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_access_set", 
-		channel_access_set);
-  
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"pef_alerting", pef_alerting);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_access_set", channel_access_set);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_privilege_level_limit", 
 		channel_privilege_level_limit);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"reserved2",
-		0);
-
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"channel_privilege_level_limit_set", 
 		channel_privilege_level_limit_set);
-  
   return 0;
 }
 
@@ -655,8 +596,6 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 			     uint8_t channel_access_get,
                              fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
       || !fiid_obj_valid(obj_data_rq))
@@ -665,34 +604,16 @@ fill_cmd_get_channel_access (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_channel_access_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_channel_access_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_CHANNEL_ACCESS);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved1",
-                0);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved2",
-                0);
-
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"channel_access_get",
-		channel_access_get);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_access_get", channel_access_get);
 
   return 0;
 }
@@ -700,8 +621,6 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 int8_t 
 fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
     {
@@ -709,26 +628,14 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq)
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_channel_info_rq)) < 0)
-    return (-1);
-
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_channel_info_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_CHANNEL_INFO_CMD);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"reserved",
-		0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
   
   return 0;
 }
@@ -743,8 +650,6 @@ fill_cmd_set_user_access (uint8_t channel_number,
 			  uint8_t user_session_number_limit,
                           fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
       || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
@@ -756,62 +661,33 @@ fill_cmd_set_user_access (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_user_access_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_access_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_USER_ACCESS_CMD);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"channel_number", 
-		channel_number);
-
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"user_ipmi_messaging", 
-                user_ipmi_messaging);
-  
+		user_ipmi_messaging);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"user_link_authentication", 
 		user_link_authentication);
-
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"user_restricted_to_callback", 
                 user_restricted_to_callback);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"change_bits_in_byte", 
-		1);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id", 
-		user_id);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved1",
-                0);
-
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"change_bits_in_byte", 1);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"user_privilege_level_limit",
 		user_privilege_level_limit);
-
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved2",
-                0);
- 
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"user_session_number_limit",
 		user_session_number_limit);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved3",
-                0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved3", 0);
 
   return 0;
 }
@@ -821,8 +697,6 @@ fill_cmd_get_user_access (uint8_t channel_number,
 			  uint8_t user_id,
                           fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !fiid_obj_valid(obj_data_rq))
     {
@@ -830,34 +704,16 @@ fill_cmd_get_user_access (uint8_t channel_number,
       return (-1);
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_user_access_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_user_access_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_USER_ACCESS_CMD);
   
-  FIID_OBJ_SET (obj_data_rq,
-		(uint8_t *)"channel_number",
-		channel_number);
-
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved1",
-                0);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id", 
-		user_id);
-  
-  FIID_OBJ_SET (obj_data_rq,
-                (uint8_t *)"reserved2",
-                0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
 
   return 0;
 }
@@ -868,7 +724,6 @@ fill_cmd_set_user_name (uint8_t user_id,
                         unsigned int user_name_len,
                         fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
   char buf[IPMI_MAX_USER_NAME_LENGTH];
 
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
@@ -881,43 +736,30 @@ fill_cmd_set_user_name (uint8_t user_id,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_user_name_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_name_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_USER_NAME);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id", 
-		user_id);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id.reserved", 
-                0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
   
   /* achu: The BMC may ignore any '\0' characters that indicate the
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_data_rq, 
-			      (uint8_t *)"user_name") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"user_name");
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
     strncpy(buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
       
-  ERR (!(fiid_obj_set_data (obj_data_rq, 
-                            (uint8_t *)"user_name", 
-                            (uint8_t *)buf,
-                            IPMI_MAX_USER_NAME_LENGTH) < 0));
+  FIID_OBJ_SET_DATA (obj_data_rq, 
+		     (uint8_t *)"user_name", 
+		     (uint8_t *)buf,
+		     IPMI_MAX_USER_NAME_LENGTH);
   
   return 0;
 }
@@ -925,34 +767,20 @@ fill_cmd_set_user_name (uint8_t user_id,
 int8_t 
 fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
-
   if (!fiid_obj_valid(obj_data_rq))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_get_user_name_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_user_name_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_USER_NAME_CMD);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id", 
-		user_id);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id.reserved", 
-                0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
 
   return 0;
 }
@@ -964,7 +792,6 @@ fill_cmd_set_user_password (uint8_t user_id,
                             unsigned int password_len,
                             fiid_obj_t obj_data_rq)
 {
-  int8_t rv;
   char buf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
 
   /* achu: password can be IPMI_MAX_AUTHENTICATION_CODE_LENGTH length.  Null
@@ -978,103 +805,33 @@ fill_cmd_set_user_password (uint8_t user_id,
       return -1;
     }
 
-  if ((rv = fiid_obj_template_compare(obj_data_rq, tmpl_set_user_password_rq)) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_password_rq);
 
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_USER_PASSWORD_CMD);
   
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id", 
-		user_id);
-  
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"user_id.reserved", 
-                0);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"operation", 
-		operation);
-
-  FIID_OBJ_SET (obj_data_rq, 
-		(uint8_t *)"operation.reserved", 
-		0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation", operation);
+  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation.reserved", 0);
   
   /* achu: The BMC may ignore any '\0' characters that indicate the
    * end of the string.  So we need to guarantee the buffer is
    * completely cleared before setting anything.
    */
-  ERR (!(fiid_obj_clear_field(obj_data_rq, 
-			      (uint8_t *)"password") < 0));
+  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"password");
 
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (password)
     strncpy(buf, password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
       
-  ERR (!(fiid_obj_set_data (obj_data_rq, 
-                            (uint8_t *)"password", 
-                            (uint8_t *)buf,
-                            IPMI_MAX_AUTHENTICATION_CODE_LENGTH) < 0));
+  FIID_OBJ_SET_DATA (obj_data_rq, 
+		     (uint8_t *)"password", 
+		     (uint8_t *)buf,
+		     IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 
   return 0;
 }
 
-int8_t
-ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
-{
-  uint64_t cmd_recv;
-  int8_t rv;
-
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
-
-  return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
-}
-
-int8_t
-ipmi_check_comp_code(fiid_obj_t obj_cmd, uint8_t comp_code)
-{
-  uint64_t comp_code_recv;
-  int8_t rv;
-
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"comp_code")) < 0)
-    return (-1);
-  
-  if (!rv)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code_recv);
-
-  return ((((uint8_t)comp_code_recv) == comp_code) ? 1 : 0);
-}

@@ -1,5 +1,5 @@
 /* 
-   $Id: bmc-info-argp.c,v 1.1.2.3 2006-02-17 23:59:48 chu11 Exp $ 
+   $Id: bmc-info-argp.c,v 1.1.2.4 2006-03-02 04:52:27 chu11 Exp $ 
    
    bmc-info-argp.c - displays BMC information.
    
@@ -20,8 +20,11 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <argp.h>
-#include "freeipmi.h"
 
 #include "argp-common.h"
 #include "bmc-info-argp.h"

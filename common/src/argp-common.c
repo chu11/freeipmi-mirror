@@ -25,14 +25,16 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include <error.h>
 #include <argp.h>
 
-#include "freeipmi.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-privilege-level-spec.h"
+
 #include "argp-common.h"
 
 error_t 

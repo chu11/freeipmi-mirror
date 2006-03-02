@@ -35,38 +35,28 @@ libfreeipmi:
     - acpi
     - ssif
     - pef config
-  * re-architect ipmi-error.c stuff to handle different commands with same values.
-  * sensor-event-messages: get_28_event_data3_messages
-  * cleanup
+  * missing cmds
     - lan-cmds 
-       - missing commands
     - msg-support-cmds
-       - missing commands
-       - .h file split
-    - watchdog
-    - rmcp
-    - dev-global-cmds
     - chassis-cmds
-       - missing commands
     - serial-cmds
-       - missing commands
     - sol-cmds
-       - missing commands
     - pef-cmds
-       - missing commands
     - sdr-repo-cmds
-       - missing commands
-       - cleanup udm/rearchitect udm 
     - sel-cmds
-       - missing commands
     - sdr-record-types
-        - missing records
     - sel record-types
     - sensor-cmds
-       - missing commands
   * reg-space default  
-  * ipmi_debug - kcsprint and smic print
+  * "rq", "cmd", "comp_code", "rs", ????
+  * template raw for all raw functions
+    - begininning with tmpl_lan_raw
+  * get event messages function that is passed fiids
+  * autoconf getopt
   * autoconf pthread finding
+  * lan ctx interface?
+  * rmcpplus-util -> utils
+  * 20->2_0, 15->1_5
 
 fish:
 -----
@@ -94,6 +84,8 @@ Bala's TODO List:
   * bmc-config --auto-configure
   * sensors will be simplified with Scheme <DONE>
   * dual fiid for ipmi_kcs_lan_set_auth_type_enables
+  * convert ipmi-sensors, ipmi-sel, bmc-config to C based tools rather
+    than Scheme based tools
 
 Ian's TODO List:
 ================
