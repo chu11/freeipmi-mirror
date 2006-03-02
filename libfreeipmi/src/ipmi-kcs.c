@@ -59,6 +59,7 @@ fill_hdr_ipmi_kcs (uint8_t lun,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_hdr_kcs);
 
+  FIID_OBJ_CLEAR (obj_hdr);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"lun", lun);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"net_fn", fn);
   return 0;

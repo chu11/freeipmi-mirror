@@ -1,3 +1,7 @@
+2006-03-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Clear objects before setting in all fill functions.
+	
 2006-02-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-lan-interface.h,

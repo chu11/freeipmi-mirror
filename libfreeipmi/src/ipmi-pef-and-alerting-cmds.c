@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.7 2006-02-28 01:56:10 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.8 2006-03-02 05:58:51 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -469,6 +469,7 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_pef_capabilities_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
                 IPMI_CMD_GET_PEF_CAPABILITIES);
@@ -486,6 +487,7 @@ fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_da
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_arm_pef_postpone_timer_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_ARM_PEF_POSTPONE_TIMER);
@@ -511,13 +513,12 @@ fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
-
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"parameter_selector", parameter_selector);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
-
   FIID_OBJ_SET_DATA (obj_data_rq,
                      (uint8_t *)"configuration_parameter_data",
                      configuration_parameter_data,
@@ -545,6 +546,7 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_pef_control_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -585,6 +587,7 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_pef_action_global_control_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -613,6 +616,7 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_pef_startup_delay_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -635,6 +639,7 @@ fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_a
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -697,6 +702,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_event_filter_table_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -798,6 +804,7 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS);
@@ -832,6 +839,7 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_alert_string_keys_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
                 "cmd", 
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
@@ -868,6 +876,7 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_pef_configuration_parameters_alert_strings_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
                 "cmd", 
                 IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS); 
@@ -903,6 +912,7 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_pef_configuration_parameters_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS);
@@ -929,6 +939,7 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_last_processed_event_id_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID);
@@ -951,6 +962,7 @@ fill_cmd_get_last_processed_event_id (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_last_processed_event_id_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID);
@@ -978,6 +990,7 @@ fill_cmd_alert_immediate (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_alert_immediate_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_ALERT_IMMEDIATE);
@@ -1009,6 +1022,7 @@ fill_cmd_pet_acknowledge (uint16_t sequence_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_pet_acknowledge_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_PET_ACKNOWLEDGE);

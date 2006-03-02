@@ -187,10 +187,10 @@ fill_cmd_set_serial_modem_configuration (fiid_obj_t obj_data_rq,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_serial_modem_configuration_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
                 (uint8_t *)"cmd",
                 IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);
-
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"parameter_selector", parameter_selector);
@@ -225,10 +225,10 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_serial_modem_configuration_connection_mode_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);
-    
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);    
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq,
@@ -262,10 +262,10 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);
-  
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number); 
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq,
@@ -294,10 +294,10 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_serial_modem_configuration_page_blackout_interval_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);
-  
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_data_rq, 
@@ -324,10 +324,10 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_serial_modem_configuration_call_retry_interval_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);
-    
+		IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION);    
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
   FIID_OBJ_SET (obj_data_rq, 
@@ -356,6 +356,7 @@ fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_serial_modem_configuration_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SERIAL_MODEM_CONFIGURATION);

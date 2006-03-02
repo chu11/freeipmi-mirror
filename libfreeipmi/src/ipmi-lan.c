@@ -108,6 +108,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_msg, tmpl_lan_msg_hdr_rq);
 
+  FIID_OBJ_CLEAR (obj_msg);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"net_fn", net_fn);
   FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
@@ -141,6 +142,7 @@ fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_nu
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_lan_session_hdr);
 
+  FIID_OBJ_CLEAR (obj_hdr);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_sequence_number", inbound_sequence_number);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);

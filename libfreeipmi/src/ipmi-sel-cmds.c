@@ -159,6 +159,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_info_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SEL_DEV_CMDS_GET_SEL_INFO);
@@ -176,6 +177,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_allocation_info_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ALLOCATION_INFO);
@@ -193,6 +195,7 @@ fill_cmd_reserve_sel (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_reserve_sel_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_RESERVE_SEL);
@@ -214,10 +217,10 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_entry_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ENTRY);
-
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"offset_into_record", offset_into_record);
@@ -239,10 +242,10 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_delete_sel_entry_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_DELETE_SEL_ENTRY);
-  
+		IPMI_CMD_DELETE_SEL_ENTRY); 
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
   
@@ -263,10 +266,10 @@ fill_cmd_clear_sel (uint16_t reservation_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_clear_sel_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_CLEAR_SEL);
-  
+		IPMI_CMD_CLEAR_SEL);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"C", 'C');
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"L", 'L');
