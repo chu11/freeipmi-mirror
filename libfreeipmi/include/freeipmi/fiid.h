@@ -100,8 +100,7 @@ int32_t fiid_template_field_start_bytes (fiid_template_t tmpl, char *field);
 int32_t fiid_template_field_end (fiid_template_t tmpl, char *field);
 int32_t fiid_template_field_end_bytes (fiid_template_t tmpl, char *field);
 int32_t fiid_template_field_len (fiid_template_t tmpl, char *field);
-int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, 
-				       char *field);
+int32_t fiid_template_field_len_bytes (fiid_template_t tmpl, char *field);
 int32_t fiid_template_block_len (fiid_template_t tmpl, 
 				 char *field_start, 
 				 char *field_end);
@@ -126,6 +125,8 @@ int32_t fiid_obj_len(fiid_obj_t obj);
 int32_t fiid_obj_len_bytes(fiid_obj_t obj);
 int32_t fiid_obj_field_len(fiid_obj_t obj, char *field);
 int32_t fiid_obj_field_len_bytes(fiid_obj_t obj, char *field);
+int32_t fiid_obj_block_len(fiid_obj_t obj, char *field_start, char *field_end);
+int32_t fiid_obj_block_len_bytes(fiid_obj_t obj, char *field_start, char *field_end);
 
 int8_t fiid_obj_clear (fiid_obj_t obj);
 int8_t fiid_obj_clear_field (fiid_obj_t obj, char *field);

@@ -2,6 +2,15 @@
 
 	* Globally rename ipmi_lan_check_session_authcode to
 	ipmi_lan_check_session_authentication_code.
+
+	* libfreeipmi/src/fiid.c (_fiid_obj_block_len): Removed function.
+
+	* libfreeipmi/src/fiid.c, libfreeipmi/include/freeipmi/fiid.h
+	(fiid_obj_block_len, fiid_obj_block_len_bytes): New functions.
+
+	* common/src/fiid-wrappers.h (FIID_OBJ_BLOCK_LEN,
+	FIID_OBJ_BLOCK_LEN_BYTES, FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP): New
+	wrappers.
 	
 2006-03-01  Albert Chu <chu11@llnl.gov>
 

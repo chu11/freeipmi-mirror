@@ -48,6 +48,8 @@ libfreeipmi:
   * get event messages function that is passed fiids
   * autoconf getopt
   * lan ctx interface?
+  * len -> length globally?
+    md2/md5
 
 fish:
 -----

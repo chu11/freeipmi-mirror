@@ -341,6 +341,39 @@ do {                                                                     \
       }                                                                  \
 } while (0)
 
+#define FIID_OBJ_BLOCK_LEN(__len, __obj, __field_start, __field_end)                          \
+do {                                                                                          \
+    if (((__len) = fiid_obj_block_len ((__obj), (__field_start), (__field_end))) < 0)         \
+      {                                                                                       \
+         __FIID_OBJ_SYSLOG((__obj));                                                          \
+         __FIID_OBJ_TRACE((__obj));                                                           \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                       \
+         return (-1);                                                                         \
+      }                                                                                       \
+} while (0)
+
+#define FIID_OBJ_BLOCK_LEN_BYTES(__len, __obj, __field_start, __field_end)                    \
+do {                                                                                          \
+    if (((__len) = fiid_obj_block_len_bytes ((__obj), (__field_start), (__field_end))) < 0)   \
+      {                                                                                       \
+         __FIID_OBJ_SYSLOG((__obj));                                                          \
+         __FIID_OBJ_TRACE((__obj));                                                           \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                       \
+         return (-1);                                                                         \
+      }                                                                                       \
+} while (0)
+
+#define FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(__len, __obj, __field_start, __field_end)            \
+do {                                                                                          \
+    if (((__len) = fiid_obj_block_len_bytes ((__obj), (__field_start), (__field_end))) < 0)   \
+      {                                                                                       \
+         __FIID_OBJ_SYSLOG((__obj));                                                          \
+         __FIID_OBJ_TRACE((__obj));                                                           \
+         __FIID_OBJ_SET_ERRNO((__obj));                                                       \
+         goto cleanup;                                                                        \
+      }                                                                                       \
+} while (0)
+
 #define FIID_OBJ_CLEAR(__obj)                            \
 do {                                                     \
     if (fiid_obj_clear ((__obj)) < 0)                    \
