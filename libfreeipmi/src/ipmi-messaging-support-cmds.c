@@ -373,12 +373,6 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
 
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD(obj_cmd, (uint8_t *)"user_name");
-
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
@@ -420,7 +414,6 @@ fill_cmd_activate_session (uint8_t authentication_type,
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_CLEAR_FIELD (obj_cmd, (uint8_t *)"challenge_string");
   
   /* achu: challenge string must be zero extended */
   memset(buf, '\0', IPMI_CHALLENGE_STRING_LENGTH);
@@ -684,12 +677,6 @@ fill_cmd_set_user_name (uint8_t user_id,
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
   
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"user_name");
-
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
@@ -755,12 +742,6 @@ fill_cmd_set_user_password (uint8_t user_id,
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation", operation);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation.reserved", 0);
   
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"password");
-
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (password)

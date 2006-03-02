@@ -147,12 +147,6 @@ fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_nu
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_sequence_number", inbound_sequence_number);
   FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);
  
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD (obj_hdr, (uint8_t *)"authentication_code");
-  
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE 
       && authentication_code_data)
     {
