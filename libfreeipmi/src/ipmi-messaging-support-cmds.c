@@ -375,6 +375,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_channel_authentication_capabilities_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"channel_number", channel_number); 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
@@ -389,8 +390,6 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
                                                       uint8_t get_ipmi_v20_extended_data,
                                                       fiid_obj_t obj_cmd)
 {
-  int8_t rv;
-
   if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
       || !IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
       || !IPMI_GET_IPMI_DATA_VALID(get_ipmi_v20_extended_data)
@@ -433,15 +432,10 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_session_challenge_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_SESSION_CHALLENGE);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
-
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD(obj_cmd, (uint8_t *)"user_name");
 
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
@@ -478,12 +472,12 @@ fill_cmd_activate_session (uint8_t authentication_type,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_activate_session_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_SESSION);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"authentication_type", authentication_type);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_CLEAR_FIELD (obj_cmd, (uint8_t *)"challenge_string");
   
   /* achu: challenge string must be zero extended */
   memset(buf, '\0', IPMI_CHALLENGE_STRING_LENGTH);
@@ -514,6 +508,7 @@ fill_cmd_set_session_privilege_level (uint8_t privilege_level,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_set_session_privilege_level_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"privilege_level", privilege_level);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
@@ -532,6 +527,7 @@ fill_cmd_close_session (uint32_t close_session_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_close_session_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CLOSE_SESSION);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"session_id", close_session_id);
   return (0);
@@ -564,10 +560,10 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_channel_access_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_CHANNEL_ACCESS);
-  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq, 
@@ -606,10 +602,10 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_channel_access_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_CHANNEL_ACCESS);
-  
+		IPMI_CMD_GET_CHANNEL_ACCESS);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved2", 0);
@@ -630,10 +626,10 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_channel_info_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_CHANNEL_INFO_CMD);
-  
+		IPMI_CMD_GET_CHANNEL_INFO_CMD);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved", 0);
   
@@ -663,10 +659,10 @@ fill_cmd_set_user_access (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_access_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_USER_ACCESS_CMD);
-  
+		IPMI_CMD_SET_USER_ACCESS_CMD);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"user_ipmi_messaging", 
@@ -706,10 +702,10 @@ fill_cmd_get_user_access (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_user_access_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_USER_ACCESS_CMD);
-  
+		IPMI_CMD_GET_USER_ACCESS_CMD);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
@@ -738,19 +734,13 @@ fill_cmd_set_user_name (uint8_t user_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_name_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_USER_NAME);
-  
+		IPMI_CMD_SET_USER_NAME);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
   
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"user_name");
-
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
@@ -775,10 +765,10 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq)
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_user_name_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_USER_NAME_CMD);
-  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
 
@@ -807,21 +797,15 @@ fill_cmd_set_user_password (uint8_t user_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_set_user_password_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_USER_PASSWORD_CMD);
-  
+		IPMI_CMD_SET_USER_PASSWORD_CMD);  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id", user_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"user_id.reserved", 0);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation", operation);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation.reserved", 0);
   
-  /* achu: The BMC may ignore any '\0' characters that indicate the
-   * end of the string.  So we need to guarantee the buffer is
-   * completely cleared before setting anything.
-   */
-  FIID_OBJ_CLEAR_FIELD (obj_data_rq, (uint8_t *)"password");
-
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (password)

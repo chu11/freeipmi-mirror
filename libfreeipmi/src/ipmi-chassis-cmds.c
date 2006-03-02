@@ -154,6 +154,7 @@ fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_control_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CONTROL);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_control", chassis_control);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
@@ -174,6 +175,8 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
     }
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_identify_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd);
 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
   if (identify_interval)
@@ -201,10 +204,11 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_set_power_restore_policy_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
+
   FIID_OBJ_SET (obj_cmd,
 		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_POWER_RESTORE_POLICY);
-  
+		IPMI_CMD_SET_POWER_RESTORE_POLICY); 
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy", power_restore_policy);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy.reserved", 0);
   

@@ -121,6 +121,7 @@ fill_cmd_get_repository_info (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_repository_info_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SDR_REPOSITORY_INFO);
@@ -138,6 +139,7 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_repository_allocation_info_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SDR_REPOSITORY_ALLOCATION_INFO);
@@ -155,6 +157,7 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_reserve_sdr_repository_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_RESERVE_SDR_REPOSITORY);
@@ -176,10 +179,10 @@ fill_cmd_get_sdr (uint16_t reservation_id,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sdr_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq,
 		(uint8_t *)"cmd",
 		IPMI_CMD_GET_SDR);
-  
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
   FIID_OBJ_SET (obj_data_rq, (uint8_t *)"offset_into_record", offset_into_record);

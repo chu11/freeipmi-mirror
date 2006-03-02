@@ -729,10 +729,10 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sensor_reading_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_SENSOR_READING); 
-  
+		IPMI_CMD_GET_SENSOR_READING);   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"sensor_number", 
 		sensor_number);
@@ -751,10 +751,10 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sensor_thresholds_rq);
 
+  FIID_OBJ_CLEAR (obj_data_rq);
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_SENSOR_THRESHOLDS); 
-  
+		IPMI_CMD_GET_SENSOR_THRESHOLDS);   
   FIID_OBJ_SET (obj_data_rq, 
 		(uint8_t *)"sensor_number", 
 		sensor_number);

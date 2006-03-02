@@ -52,8 +52,7 @@ libfreeipmi:
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
-  * autoconf getopt
-  * autoconf pthread finding
+  * autoconf getopt, pthread
   * lan ctx interface?
 
 fish:

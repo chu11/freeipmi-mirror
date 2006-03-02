@@ -98,7 +98,7 @@ ipmi_lan_check_session_id (fiid_obj_t obj_lan_session_hdr, uint32_t session_id)
 }
 
 int8_t 
-ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *authentication_code_data, uint32_t authentication_code_data_len)
+ipmi_lan_check_session_authentication_code (uint8_t *pkt, uint64_t pkt_len, uint8_t authentication_type, uint8_t *authentication_code_data, uint32_t authentication_code_data_len)
 {
   uint8_t authentication_type_recv;
   int32_t rmcp_hdr_len, authentication_type_index, authentication_code_index;
@@ -124,7 +124,7 @@ ipmi_lan_check_session_authcode (uint8_t *pkt, uint64_t pkt_len, uint8_t authent
 
   authentication_type_recv = pkt[authentication_type_offset];
 
-  /* authcode check fails if authentication types do not match */
+  /* authentication code check fails if authentication types do not match */
   if (authentication_type != authentication_type_recv)
     return 0;
 

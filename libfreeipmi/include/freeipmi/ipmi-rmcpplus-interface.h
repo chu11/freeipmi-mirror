@@ -1,5 +1,5 @@
 /*
-   ipmi-rmcpplus-interface.h - IPMI LAN Commands
+   ipmi-rmcpplus-interface.h - IPMI RMCPPLUS Interface
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 

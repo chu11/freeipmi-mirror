@@ -1,5 +1,5 @@
 /*
-   ipmi-rmcpplus.h - IPMI LAN Commands
+   ipmi-rmcpplus.h - IPMI RMCPPLUS
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,7 +19,7 @@
 */
 
 #ifndef _IPMI_RMCPPLUS_H
-#define _IPMI_RMCPPLUS_H
+#define _IPMI_RMCPPLUS_H 
 
 #include <stdint.h>
 #include <freeipmi/fiid.h>
@@ -100,7 +100,6 @@
 #define IPMI_INTEGRITY_ALGORITHM_MD5_128                  0x03
 /* C0h - FFh - OEM */
 /* all other reserved */
-
 #define IPMI_INTEGRITY_ALGORITHM_VALID(__algorithm) \
         (((__algorithm) == IPMI_INTEGRITY_ALGORITHM_NONE \
           || (__algorithm) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
@@ -144,23 +143,23 @@
 
 #define IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH          16
 #define IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH          16
-#define IPMI_MANAGED_SYSTEM_GUID_LEN                      16
+#define IPMI_MANAGED_SYSTEM_GUID_LENGTH                   16
 
 #define IPMI_NEXT_HEADER                                  0x07
 
-#define IPMI_KEY_CONSTANT_LEN                             20
+#define IPMI_KEY_CONSTANT_LENGTH                          20
 
-#define IPMI_HMAC_SHA1_DIGEST_LEN                         20
-#define IPMI_HMAC_MD5_DIGEST_LEN                          16
-#define IPMI_HMAC_SHA1_96_DIGEST_LEN                      12
+#define IPMI_HMAC_SHA1_DIGEST_LENGTH                      20
+#define IPMI_HMAC_MD5_DIGEST_LENGTH                       16
+#define IPMI_HMAC_SHA1_96_DIGEST_LENGTH                   12
 
-#define IPMI_AES_CBC_128_IV_LEN                           16
-#define IPMI_AES_CBC_128_KEY_LEN                          16
-#define IPMI_AES_CBC_128_BLOCK_LEN                        16
+#define IPMI_AES_CBC_128_IV_LENGTH                        16
+#define IPMI_AES_CBC_128_KEY_LENGTH                       16
+#define IPMI_AES_CBC_128_BLOCK_LENGTH                     16
 
-#define IPMI_HMAC_SHA1_96_AUTHCODE_LEN                    12
-#define IPMI_HMAC_MD5_128_AUTHCODE_LEN                    16
-#define IPMI_MD5_128_AUTHCODE_LEN                         16
+#define IPMI_HMAC_SHA1_96_AUTHCODE_LENGTH                 12
+#define IPMI_HMAC_MD5_128_AUTHCODE_LENGTH                 16
+#define IPMI_MD5_128_AUTHCODE_LENGTH                      16
 
 #define IPMI_INTEGRITY_PAD_MULTIPLE                       4
 #define IPMI_INTEGRITY_PAD_DATA                           0xFF
@@ -172,11 +171,11 @@
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
 /* achu: b/c ipmi_msg_len is 2 bytes */
 
-#define IPMI_MAX_K_UID_LEN                                20
-#define IPMI_MAX_K_G_LEN                                  20
-#define IPMI_MAX_SIK_KEY_LEN                              20
+#define IPMI_MAX_K_UID_LENGTH                             20
+#define IPMI_MAX_K_G_LENGTH                               20
+#define IPMI_MAX_SIK_KEY_LENGTH                           20
 
-#define IPMI_MAX_KEY_DATA_LEN                             1024
+#define IPMI_MAX_KEY_DATA_LENGTH                          1024
  
 #ifdef __cplusplus
 extern "C" {

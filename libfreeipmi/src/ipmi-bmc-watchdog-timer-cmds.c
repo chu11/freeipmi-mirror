@@ -122,6 +122,7 @@ fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd)
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_reset_watchdog_timer_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
   return (0);
 }
@@ -160,6 +161,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_set_watchdog_timer_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use", timer_use);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
@@ -195,6 +197,7 @@ fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd)
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_watchdog_timer_rq);
 
+  FIID_OBJ_CLEAR (obj_cmd);
   FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
   return (0);
 }

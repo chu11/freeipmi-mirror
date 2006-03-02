@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.15 2006-03-02 04:52:27 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.16 2006-03-02 19:33:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -364,12 +364,12 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     password = NULL;
 
-  if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
-					     len,
-					     at,
-					     (uint8_t *)password,
-					     strlen(conf->password))) < 0)
-    err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
+  if ((ret = ipmi_lan_check_session_authentication_code((uint8_t *)buffer, 
+                                                        len,
+                                                        at,
+                                                        (uint8_t *)password,
+                                                        strlen(conf->password))) < 0)
+    err_exit("_recv_packet(%s:%d): ipmi_lan_check_session_authentication_code: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
       
   /* IPMI Workaround (achu)
@@ -400,12 +400,12 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       else
         password = NULL;
 
-      if ((ret = ipmi_lan_check_session_authcode((uint8_t *)buffer, 
-					         len,
-					         at,
-					         (uint8_t *)password,
-					         strlen(conf->password))) < 0)
-        err_exit("_recv_packet(%s:%d): check_hdr_session_authcode: %s",
+      if ((ret = ipmi_lan_check_session_authentication_code((uint8_t *)buffer, 
+                                                            len,
+                                                            at,
+                                                            (uint8_t *)password,
+                                                            strlen(conf->password))) < 0)
+        err_exit("_recv_packet(%s:%d): ipmi_lan_check_session_authentication_code: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
       if (ret)

@@ -101,7 +101,11 @@
 	* libfreeipmi/src/ipmi-rmcpplus.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus.h: Cleaned up for
 	merges from head.
-	
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h: Cleaned up for
+	merges from head.
+
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-status-spec.h: New file.
@@ -613,6 +617,15 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2006-03-02  Albert Chu <chu11@llnl.gov>
+
+	* Globally rename ipmi_lan_check_session_authcode to
+	ipmi_lan_check_session_authentication_code.
+	
+2006-03-01  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Clear objects before setting in all fill functions.
+	
 2006-02-28  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-lan-interface.h,
