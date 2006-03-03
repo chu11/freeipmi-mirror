@@ -275,6 +275,28 @@ do {                                           \
     }                                          \
 } while (0)
 
+#define FIID_OBJ_DUP(__obj_dest, __obj_src)             \
+do {                                                    \
+     if (!((__obj_dest) = fiid_obj_dup((__obj_src))))   \
+       {                                                \
+         __FIID_OBJ_SYSLOG((__obj));                    \
+         __FIID_OBJ_TRACE((__obj));                     \
+         __FIID_OBJ_SET_ERRNO((__obj));                 \
+         return (-1);                                   \
+       }                                                \
+} while (0)
+
+#define FIID_OBJ_DUP_CLEANUP(__obj_dest, __obj_src)     \
+do {                                                    \
+     if (!((__obj_dest) = fiid_obj_dup((__obj_src))))   \
+       {                                                \
+         __FIID_OBJ_SYSLOG((__obj));                    \
+         __FIID_OBJ_TRACE((__obj));                     \
+         __FIID_OBJ_SET_ERRNO((__obj));                 \
+         goto cleanup;                                  \
+       }                                                \
+} while (0)
+
 #define FIID_OBJ_LEN(__len, __obj)                       \
 do {                                                     \
     if (((__len) = fiid_obj_len ((__obj))) < 0)          \
@@ -791,6 +813,23 @@ do {                                                                 \
       {                                                              \
 	errno = EINVAL;                                              \
 	return (-1);                                                 \
+      }                                                              \
+} while (0)
+
+#define FIID_OBJ_TEMPLATE_COMPARE_CLEANUP(__obj, __tmpl)             \
+do {                                                                 \
+    int __ret;                                                       \
+    if ((__ret = fiid_obj_template_compare ((__obj), (__tmpl))) < 0) \
+      {                                                              \
+         __FIID_OBJ_SYSLOG((__obj));                                 \
+         __FIID_OBJ_TRACE((__obj));                                  \
+         __FIID_OBJ_SET_ERRNO((__obj));                              \
+         goto cleanup;                                               \
+      }                                                              \
+    if (!__ret)                                                      \
+      {                                                              \
+	errno = EINVAL;                                              \
+	goto cleanup;                                                \
       }                                                              \
 } while (0)
 
