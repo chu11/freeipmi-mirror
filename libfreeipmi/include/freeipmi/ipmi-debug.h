@@ -30,6 +30,8 @@ extern "C" {
 
 #define IPMI_DEBUG_DEFAULT_FD   STDERR_FILENO
   
+extern fiid_template_t tmpl_unexpected_data;
+
 int8_t ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len);
 int8_t ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t obj);
 int8_t ipmi_obj_dump (int fd, fiid_obj_t obj);

@@ -107,6 +107,7 @@ int32_t fiid_template_block_len (fiid_template_t tmpl,
 int32_t fiid_template_block_len_bytes (fiid_template_t tmpl, 
 				       char *field_start, 
 				       char *field_end);
+int8_t fiid_template_compare(fiid_template_t tmpl1, fiid_template_t tmpl2);
 fiid_field_t *__fiid_template_make (uint8_t dummy, ...);
 void fiid_template_free (fiid_field_t *tmpl_dynamic);
 

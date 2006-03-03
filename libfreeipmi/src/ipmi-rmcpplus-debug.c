@@ -159,10 +159,8 @@ _dump_rmcpplus_payload_data(int fd,
   int32_t rv = -1;
 
   if (!tmpl_msg_hdr
-#if 0
       || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
 	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-#endif
       || !tmpl_cmd
       || !pkt
       || !lan_msg_len)
@@ -240,10 +238,8 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
   int32_t rv = -1;
 
   if (!tmpl_msg_hdr
-#if 0
       || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
 	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-#endif
       || !tmpl_cmd
       || !pkt
       || !ipmi_payload_len)
@@ -308,10 +304,8 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
   if (!tmpl_msg_hdr
-#if 0
       || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
 	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-#endif
       || !tmpl_cmd
       || !confidentiality_key
       || !pkt
@@ -439,7 +433,6 @@ _dump_rmcpplus_payload_special(int fd,
        && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
        && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
       /* XXX need to dump regardless of matching? */
-#if 0
       || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
 	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
       || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -452,7 +445,6 @@ _dump_rmcpplus_payload_special(int fd,
 	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
       || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
 	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
-#endif
       || !tmpl_msg_hdr
       || !tmpl_cmd
       || !pkt)
@@ -534,10 +526,8 @@ _dump_rmcpplus_payload(int fd,
           && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
       || !ipmi_payload_len
       || !tmpl_msg_hdr
-#if 0
       || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
 	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-#endif
       || !tmpl_cmd
       || !pkt
       || !ipmi_payload_len)
@@ -737,10 +727,8 @@ ipmi_obj_dump_rmcpplus (int fd,
 
   if (!pkt
       || !tmpl_msg_hdr
-#if 0
       || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
 	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-#endif
       || !tmpl_cmd)
     {
       errno = EINVAL;
@@ -821,14 +809,12 @@ ipmi_obj_dump_rmcpplus (int fd,
   /* Dump extra stuff if packet is longer than expected */
   if ((pkt_len - indx) > 0)
     {
-#if 0
       FIID_OBJ_CREATE_CLEANUP(obj_unexpected_data, tmpl_unexpected_data);
 
       FIID_OBJ_SET_ALL_LEN_CLEANUP (obj_len, obj_unexpected_data, pkt + indx, pkt_len - indx);
       indx += obj_len;
 
       ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, extra_hdr, NULL, obj_unexpected_data) < 0));
-#endif
     }
 
   rv = 0;

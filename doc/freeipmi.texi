@@ -4047,7 +4047,14 @@ Gartuitous ARP. How ever there are other uses for GARP like IP address
 conflicts, IP address take over, ARP updates in a clustered
 environment, NIC link status updates. 
 
-@subsection Gratuitous ARP Theory
+@menu
+* Gratuitous ARP Theory::       
+* garpd options::               
+* garpd.conf::                  
+@end menu
+
+@node Gratuitous ARP Theory, garpd options, garpd, garpd
+@section Gratuitous ARP Theory
 Gratuitous ARP: Usually ARP works as follows. Host A sends out an ARP
 request for the hardware address of an IP address on host B. Host B
 sees the request and sends an ARP reply containing the hardware
@@ -4069,12 +4076,7 @@ any ARP request where the ARP reply is addressed to the broadcast
 hardware address.  All hosts on the LAN will receive the ARP reply and
 refresh their ARP cache accordingly.
 
-@menu
-* garpd options::               Command-line arguments.
-* garpd.conf::                  Example configuration file.
-@end menu
-
-@node garpd options, garpd.conf, garpd, garpd
+@node garpd options, garpd.conf, Gratuitous ARP Theory, garpd
 @section Command-line arguments
 garpd [OPTIONS...]
 
@@ -4258,8 +4260,7 @@ debian-ia64:~#
 @item CVS:           @uref{https://savannah.gnu.org/cvs/?group=freeipmi}
 @end itemize
 
-@subsection For everything else...
-Contact Anand Babu @email{ab@@gnu.org.in}
+Contact FreeIPMI Core Team <ab(@@)gnu.org.in>
 
 @node Authors, Copying, Contact us, Top
 @chapter Authors
