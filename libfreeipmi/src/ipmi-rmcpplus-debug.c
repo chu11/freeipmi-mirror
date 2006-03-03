@@ -29,7 +29,6 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
-#include "freeipmi/ipmi-rmcpplus-debug.h"
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-debug.h"
@@ -677,20 +676,20 @@ _dump_rmcpplus_session_trlr(int fd,
 }
 
 int32_t
-ipmi_obj_dump_rmcpplus (int fd, 
-                        char *prefix, 
-                        char *hdr, 
-                        uint8_t authentication_algorithm,
-                        uint8_t integrity_algorithm,
-                        uint8_t confidentiality_algorithm,
-                        uint8_t *integrity_key,
-                        uint32_t integrity_key_len,
-                        uint8_t *confidentiality_key,
-                        uint32_t confidentiality_key_len,
-                        uint8_t *pkt, 
-                        uint32_t pkt_len, 
-                        fiid_template_t tmpl_msg_hdr, 
-                        fiid_template_t tmpl_cmd)
+ipmi_dump_rmcpplus_packet (int fd, 
+                           char *prefix, 
+                           char *hdr, 
+                           uint8_t authentication_algorithm,
+                           uint8_t integrity_algorithm,
+                           uint8_t confidentiality_algorithm,
+                           uint8_t *integrity_key,
+                           uint32_t integrity_key_len,
+                           uint8_t *confidentiality_key,
+                           uint32_t confidentiality_key_len,
+                           uint8_t *pkt, 
+                           uint32_t pkt_len, 
+                           fiid_template_t tmpl_msg_hdr, 
+                           fiid_template_t tmpl_cmd)
 {
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;

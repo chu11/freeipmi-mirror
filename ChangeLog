@@ -8,7 +8,6 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus.h,
 	libfreeipmi/src/ipmi-rmcpplus.c,
-	libfreeipmi/src/ipmi-rmcpplus-debug.h,
 	libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
@@ -17,35 +16,32 @@
 	libfreeipmi/src/ipmi-rmcpplus-status-spec.h,
 	libfreeipmi/src/ipmi-rmcpplus-status-spec.c: New files.
 
-	* libfreeipmi/src/ipmi-error.h: Added RMCP+ Status Codes.
+	* libfreeipmi/include/freeipmi/ipmi-debug.h
+	(ipmi_dump_rmcpplus_packet): New function.
 
 	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
 	(rmcpplus_status_strerror_r): New function.
 
 	* libfreeipmi/src/ipmi-interface.h: Added
-	IPMI_SESSION_AUTH_TYPE_RMCPPLUS, IPMI_1_5_SESSION_AUTH_TYPE_VALID,
-	and IPMI_1_5_PRIV_LEVEL_VALID macros.  Adjusted
-	IPMI_SESSION_AUTH_TYPE_VALID and IPMI_PRIV_LEVEL_VALID for ipmi
-	2.0 appropriately.
+	IPMI_SESSION_AUTHENTICATION_TYPE_RMCPPLUS,
+	IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID, and
+	IPMI_1_5_PRIVILEGE_LEVEL_VALID macros.  Adjusted
+	IPMI_SESSION_AUTHENTICATION_TYPE_VALID and
+	IPMI_PRIVILEGE_LEVEL_VALID for ipmi 2.0 appropriately.
 	
 	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
 	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
 	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
-	ipmi_open_outofband): Use new IPMI_1_5_SESSION_AUTH_TYPE_VALID
+	ipmi_open_outofband): Use new IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID
 	macro.
 
 	* libfreeipmi/src/ipmi-msg-support-cmds.c
 	(fill_cmd_get_channel_auth_caps, fill_cmd_activate_session,
 	fill_cmd_set_session_priv_level), libfreeipmi/src/ipmi-interface.c
-	(ipmi_open_outofband): Use new IPMI_1_5_PRIV_LEVEL_VALID.
+	(ipmi_open_outofband): Use new IPMI_1_5_PRIVILEGE_LEVEL_VALID.
 	
-	* libfreeipmi/src/ipmi-hmac.c, libfreeipmi/src/ipmi-hmac.h,
-	libfreeipmi/src/ipmi-sha1.c, libfreeipmi/src/ipmi-sha1.h: Removed
-	files.
-
 	* libfreeipmi/src/freeipmi.h: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-utils.h.  Removed
-	ipmi-hmac.c, ipmi-hmac.h, ipmi-sha1.c, ipmi-sha1.h.
+	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-utils.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
 	#define checks for /dev/urandom and /dev/random.
@@ -55,10 +51,10 @@
 
 	RMCPPING and IPMIPING
 	
-	* libfreeipmi/src/ipmi-msg-support-cmds.h,
-	libfreeipmi/src/ipmi-msg-support-cmds.c
-	(IPMI_GET_IPMI_V20_EXTENDED_DATA,
-	tmpl_cmd_get_channel_auth_caps_v20_rq,
+	* libfreeipmi/src/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(IPMI_GET_IPMI_V20_EXTENDED_DATA, IPMI_GET_IPMI_V15_DATA,
+	IPMI_GET_IPMI_DATA_VALID, tmpl_cmd_get_channel_auth_caps_v20_rq,
 	tmpl_cmd_get_channel_auth_caps_v20_rs,
 	fill_cmd_get_channel_auth_caps_v20): New templates and functions.
 
@@ -81,11 +77,8 @@
 
 	* configure.ac: Add libgcrypt check.
 
-	* libfreeipmi/src/Makefile.am: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus.c, ipmi-rmcpplus-interface.h,
-	ipmi-rmcpplus-interface.c, ipmi-rmcpplus-utils.h,
-	ipmi-rmcpplus-utils.c.  Removed ipmi-hmac.c, ipmi-hmac.h,
-	ipmi-sha1.c, ipmi-sha1.h.  Added libgcrypt into build.
+	* libfreeipmi/src/Makefile.am, libfreeipmi/include/Makefile.am:
+	Added appropriate new files and libraries.
 	
 	MISC
 	
@@ -97,6 +90,16 @@
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-debug.h: Cleaned up for
 	merges from head.
+
+	* Various code cleanup to make code and API style match rest of
+	the library.
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus-debug.h: Removed file.
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c (ipmi_obj_dump_rmcpplus):
+	Renamed to ipmi_dump_rmcpplus_packet.
+
+	* libfreeipmi/include/freeipmi/ipmi-debug.h: Added rmcpplus debug function.
 	
 2006-03-02  Albert Chu <chu11@llnl.gov>
 
