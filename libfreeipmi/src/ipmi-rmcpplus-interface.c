@@ -483,8 +483,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       copy_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
       
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
-    return (-1);
+  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
       
   ERR_EXIT (crypt_digest_len == expected_digest_len);
       
@@ -765,19 +764,15 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   FIID_OBJ_CREATE_CLEANUP (obj_payload, tmpl_rmcpplus_payload);
 
-  if ((payload_len = _construct_payload(payload_type,
-                                        payload_encrypted,
-                                        authentication_algorithm,
-                                        confidentiality_algorithm,
-                                        obj_lan_msg_hdr,
-                                        obj_cmd,
-                                        confidentiality_key,
-                                        confidentiality_key_len,
-                                        obj_payload)) < 0)
-    {
-      ipmi_debug("_construct_payload: %s", strerror(errno));
-      return (-1);
-    }
+  ERR (!((payload_len = _construct_payload(payload_type,
+                                           payload_encrypted,
+                                           authentication_algorithm,
+                                           confidentiality_algorithm,
+                                           obj_lan_msg_hdr,
+                                           obj_cmd,
+                                           confidentiality_key,
+                                           confidentiality_key_len,
+                                           obj_payload)) < 0));
   
   /* 
    * Copy IPMI Payload Length into packet
@@ -820,11 +815,9 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       FIID_OBJ_DUP_CLEANUP (obj_rmcpplus_session_trlr_temp, obj_rmcpplus_session_trlr);
 
-      if (_construct_session_trlr_pad(integrity_algorithm,
-                                      (indx - obj_rmcp_hdr_len),
-                                      obj_rmcpplus_session_trlr_temp) < 0)
-        return (-1);
-
+      ERR (!(_construct_session_trlr_pad(integrity_algorithm,
+                                         (indx - obj_rmcp_hdr_len),
+                                         obj_rmcpplus_session_trlr_temp) < 0));
 
       FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                        obj_rmcpplus_session_trlr_temp,
@@ -843,15 +836,14 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
        * call must be done after the pad, pad length, and next header are copied into 
        * the pkt buffer.
        */
-      if ((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
-                                                                                 integrity_key,
-                                                                                 integrity_key_len,
-                                                                                 obj_rmcpplus_session_trlr_temp,
-                                                                                 pkt + obj_rmcp_hdr_len,
-                                                                                 indx - obj_rmcp_hdr_len,
-                                                                                 authentication_code_buf,
-                                                                                 IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-        return (-1);
+      ERR (!((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
+                                                                                    integrity_key,
+                                                                                    integrity_key_len,
+                                                                                    obj_rmcpplus_session_trlr_temp,
+                                                                                    pkt + obj_rmcp_hdr_len,
+                                                                                    indx - obj_rmcp_hdr_len,
+                                                                                    authentication_code_buf,
+                                                                                    IPMI_MAX_PAYLOAD_LENGTH)) < 0));
 
       if (authentication_code_len)
         {
@@ -1092,12 +1084,11 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   
   /* achu: User is responsible for checking if padding is not corrupt  */
   
-  if (_deconstruct_payload_buf(obj_lan_msg_hdr, 
-			       obj_cmd, 
-			       obj_lan_msg_trlr,
-			       payload_buf,
-			       cmd_data_len) < 0)
-    return (-1);
+  ERR (!(_deconstruct_payload_buf(obj_lan_msg_hdr, 
+                                  obj_cmd, 
+                                  obj_lan_msg_trlr,
+                                  payload_buf,
+                                  cmd_data_len) < 0));
 
   return (0);
 }
@@ -1233,7 +1224,7 @@ _deconstruct_payload(uint8_t payload_type,
   return (0);
 }
 
-/* XXX cleanup API, no more obj_payload */
+/* XXX: Should bother with obj_payload?  How else do you check the confidentiality pad? */
 int32_t
 unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               uint8_t integrity_algorithm,
@@ -1275,10 +1266,10 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
-  FIID_OBJ_TEMPLATE_COMPARE(obj_payload, tmpl_rmcpplus_payload);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
   FIID_OBJ_TEMPLATE_COMPARE(obj_payload, tmpl_rmcpplus_payload);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
   /*
    * Extract RMCP header
@@ -1394,22 +1385,18 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   /* 
    * Deconstruct/Decrypt Payload
    */
-  if (_deconstruct_payload(payload_type,
-                           payload_encrypted,
-                           authentication_algorithm,
-                           confidentiality_algorithm,
-                           obj_payload,
-                           obj_lan_msg_hdr,
-                           obj_cmd,
-                           obj_lan_msg_trlr,
-                           confidentiality_key,
-                           confidentiality_key_len,
-                           pkt + indx,
-                           ipmi_payload_len) < 0)
-    {
-      ipmi_debug("_deconstruct_payload: %s", strerror(errno));
-      return (-1);
-    } 
+  ERR (!(_deconstruct_payload(payload_type,
+                              payload_encrypted,
+                              authentication_algorithm,
+                              confidentiality_algorithm,
+                              obj_payload,
+                              obj_lan_msg_hdr,
+                              obj_cmd,
+                              obj_lan_msg_trlr,
+                              confidentiality_key,
+                              confidentiality_key_len,
+                              pkt + indx,
+                              ipmi_payload_len) < 0));
   indx += ipmi_payload_len;
 
   if (pkt_len <= indx)

@@ -235,7 +235,6 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
   return (0);
 }
 
-/* XXX Fix to copy new API style of libfreeipmi */
 int8_t
 fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
                            uint32_t authentication_code_data_len,
@@ -252,11 +251,9 @@ fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
   
   FIID_OBJ_CLEAR (obj_trlr);
 
-  /* Unlike fill_session_hdr in IPMI 1.5, we only need to copy data.
-   * No checking is required.  The difficult part of computing hashes
-   * and checking for correct input is done during the packet
-   * assembly.  Padding calculations will also be done during packet
-   * assembly.
+  /* Computing hashes and checking for correct input is done during
+   * the packet assembly.  Padding calculations will also be done
+   * during packet assembly.
    */
 
   FIID_OBJ_SET (obj_trlr, "next_header", IPMI_NEXT_HEADER);
