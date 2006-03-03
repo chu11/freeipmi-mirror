@@ -28,9 +28,9 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-int32_t assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_rmcpplus_hdr_session, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_obj_t obj_rmcpplus_trlr_session, uint8_t *pkt, uint32_t pkt_len);
+int32_t assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_rmcpplus_session_hdr, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_obj_t obj_rmcpplus_session_trlr, uint8_t *pkt, uint32_t pkt_len);
 
-int32_t unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_rmcpplus_hdr_session, fiid_obj_t obj_payload, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_obj_t obj_lan_msg_trlr, fiid_obj_t obj_rmcpplus_trlr_session);
+int32_t unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, uint8_t *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_rmcpplus_session_hdr, fiid_obj_t obj_payload, fiid_obj_t obj_msg_hdr, fiid_obj_t obj_cmd, fiid_obj_t obj_lan_msg_trlr, fiid_obj_t obj_rmcpplus_session_trlr);
 
 #ifdef __cplusplus
 }

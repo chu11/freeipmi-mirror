@@ -993,21 +993,21 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
 }
 
 int8_t
-ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_trlr_session)
+ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
 {
   uint8_t integrity_pad[IPMI_MAX_PAYLOAD_LENGTH];
   uint64_t pad_length;
   int i;
     
-  if (!fiid_obj_valid(obj_rmcpplus_trlr_session))
+  if (!fiid_obj_valid(obj_rmcpplus_session_trlr))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_trlr_session, tmpl_rmcpplus_trlr_session);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
-  FIID_OBJ_GET(obj_rmcpplus_trlr_session, "pad_length", &pad_length);
+  FIID_OBJ_GET(obj_rmcpplus_session_trlr, "pad_length", &pad_length);
 
   if (!pad_length)
     return (1);
@@ -1018,7 +1018,7 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_trlr_session)
       return (-1);
     }
 
-  FIID_OBJ_GET_DATA(obj_rmcpplus_trlr_session,
+  FIID_OBJ_GET_DATA(obj_rmcpplus_session_trlr,
                     "integrity_pad",
                     integrity_pad,
                     IPMI_MAX_PAYLOAD_LENGTH);
@@ -1286,7 +1286,7 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
 				 uint32_t integrity_key_len,
 				 uint8_t *authentication_code_data,
 				 uint32_t authentication_code_data_len,
-				 fiid_obj_t obj_rmcpplus_trlr_session)
+				 fiid_obj_t obj_rmcpplus_session_trlr)
 {
   int32_t rmcp_header_len;
   int hash_algorithm, hash_flags, crypt_digest_len;
@@ -1299,13 +1299,13 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
   if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
       || !pkt
       || !pkt_len
-      || !fiid_obj_valid(obj_rmcpplus_trlr_session))
+      || !fiid_obj_valid(obj_rmcpplus_session_trlr))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_trlr_session, tmpl_rmcpplus_trlr_session);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
     {
@@ -1337,7 +1337,7 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
   ERR_EXIT (!((rmcp_header_len = fiid_template_len_bytes(tmpl_rmcp_hdr)) < 0));
 
   FIID_OBJ_GET_DATA_LEN(authentication_code_len,
-                        obj_rmcpplus_trlr_session,
+                        obj_rmcpplus_session_trlr,
                         "authentication_code",
                         authentication_code,
                         IPMI_MAX_PAYLOAD_LENGTH);
@@ -1406,21 +1406,21 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
 }
 
 int8_t
-ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t payload_type)
+ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_session_hdr, uint8_t payload_type)
 {
   uint64_t val;
   int32_t len;
 
   if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
-      || !obj_rmcpplus_hdr_session)
+      || !obj_rmcpplus_session_hdr)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_hdr_session, tmpl_rmcpplus_hdr_session);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_hdr_session, (uint8_t *)"payload_type");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type");
 
   if (!len)
     {
@@ -1428,7 +1428,7 @@ ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t pa
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_rmcpplus_hdr_session, "payload_type", &val);
+  FIID_OBJ_GET(obj_rmcpplus_session_hdr, "payload_type", &val);
 
   return ((payload_type == val) ? 1 : 0);
 }

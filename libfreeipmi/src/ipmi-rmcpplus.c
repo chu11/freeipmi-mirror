@@ -38,7 +38,7 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_rmcpplus_hdr_session = 
+fiid_template_t tmpl_rmcpplus_session_hdr = 
   {
     {4,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -56,7 +56,7 @@ fiid_template_t tmpl_rmcpplus_hdr_session =
   };
 
 /* doesn't exist if session_id = 0h */
-fiid_template_t tmpl_rmcpplus_trlr_session = 
+fiid_template_t tmpl_rmcpplus_session_trlr = 
   {
     {32,  "integrity_pad", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},     
     {8,   "pad_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -191,7 +191,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
 
 
 int8_t
-fill_rmcpplus_hdr_session (uint8_t payload_type, 
+fill_rmcpplus_session_hdr (uint8_t payload_type, 
                            uint8_t payload_authenticated, 
                            uint8_t payload_encrypted, 
                            uint32_t oem_iana, 
@@ -214,7 +214,7 @@ fill_rmcpplus_hdr_session (uint8_t payload_type,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_rmcpplus_hdr_session);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_rmcpplus_session_hdr);
 
   FIID_OBJ_CLEAR (obj_hdr);
 
@@ -237,7 +237,7 @@ fill_rmcpplus_hdr_session (uint8_t payload_type,
 
 /* XXX Fix to copy new API style of libfreeipmi */
 int8_t
-fill_rmcpplus_trlr_session(uint8_t *authentication_code_data,
+fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
                            uint32_t authentication_code_data_len,
                            fiid_obj_t obj_trlr)
 {
@@ -248,11 +248,11 @@ fill_rmcpplus_trlr_session(uint8_t *authentication_code_data,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_trlr, tmpl_rmcpplus_trlr_session);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_trlr, tmpl_rmcpplus_session_trlr);
   
   FIID_OBJ_CLEAR (obj_trlr);
 
-  /* Unlike fill_hdr_session in IPMI 1.5, we only need to copy data.
+  /* Unlike fill_session_hdr in IPMI 1.5, we only need to copy data.
    * No checking is required.  The difficult part of computing hashes
    * and checking for correct input is done during the packet
    * assembly.  Padding calculations will also be done during packet
