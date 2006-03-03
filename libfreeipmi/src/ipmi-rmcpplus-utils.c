@@ -1207,7 +1207,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
         }
 
       /* achu: For some reason they want SHA1_96 for this check, sigh */
-      compare_len = IPMI_HMAC_SHA1_96_AUTHCODE_LENGTH;
+      compare_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
@@ -1312,21 +1312,21 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
-      compare_digest_len = IPMI_HMAC_SHA1_96_AUTHCODE_LENGTH;
+      compare_digest_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
     }
   else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
-      compare_digest_len = IPMI_HMAC_MD5_128_AUTHCODE_LENGTH;
+      compare_digest_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   else
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
       expected_digest_len = MD5_DIGEST_LEN;
-      compare_digest_len = IPMI_MD5_128_AUTHCODE_LENGTH;
+      compare_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   
   if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)

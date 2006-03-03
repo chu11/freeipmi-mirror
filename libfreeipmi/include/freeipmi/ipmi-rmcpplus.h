@@ -157,9 +157,9 @@
 #define IPMI_AES_CBC_128_KEY_LENGTH                       16
 #define IPMI_AES_CBC_128_BLOCK_LENGTH                     16
 
-#define IPMI_HMAC_SHA1_96_AUTHCODE_LENGTH                 12
-#define IPMI_HMAC_MD5_128_AUTHCODE_LENGTH                 16
-#define IPMI_MD5_128_AUTHCODE_LENGTH                      16
+#define IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH      12
+#define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
+#define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
 
 #define IPMI_INTEGRITY_PAD_MULTIPLE                       4
 #define IPMI_INTEGRITY_PAD_DATA                           0xFF
