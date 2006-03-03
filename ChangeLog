@@ -106,6 +106,10 @@
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h: Cleaned up for
 	merges from head.
 
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-interface.h: Cleaned up for
+	merges from head.
+
 2006-02-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-status-spec.h: New file.
