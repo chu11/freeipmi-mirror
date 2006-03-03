@@ -279,9 +279,9 @@ do {                                           \
 do {                                                    \
      if (!((__obj_dest) = fiid_obj_dup((__obj_src))))   \
        {                                                \
-         __FIID_OBJ_SYSLOG((__obj));                    \
-         __FIID_OBJ_TRACE((__obj));                     \
-         __FIID_OBJ_SET_ERRNO((__obj));                 \
+         __FIID_OBJ_SYSLOG((__obj_src));                \
+         __FIID_OBJ_TRACE((__obj_src));                 \
+         __FIID_OBJ_SET_ERRNO((__obj_src));             \
          return (-1);                                   \
        }                                                \
 } while (0)
@@ -290,9 +290,9 @@ do {                                                    \
 do {                                                    \
      if (!((__obj_dest) = fiid_obj_dup((__obj_src))))   \
        {                                                \
-         __FIID_OBJ_SYSLOG((__obj));                    \
-         __FIID_OBJ_TRACE((__obj));                     \
-         __FIID_OBJ_SET_ERRNO((__obj));                 \
+         __FIID_OBJ_SYSLOG((__obj_src));                \
+         __FIID_OBJ_TRACE((__obj_src));                 \
+         __FIID_OBJ_SET_ERRNO((__obj_src));             \
          goto cleanup;                                  \
        }                                                \
 } while (0)
