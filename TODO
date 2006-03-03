@@ -54,6 +54,8 @@ libfreeipmi:
   * get event messages function that is passed fiids
   * autoconf getopt, pthread
   * lan ctx interface?
+  * len -> length globally?
+    md2/md5
   * rmcpplus hdr_session / session_hdr ?
 
 fish:
