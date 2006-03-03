@@ -1,3 +1,8 @@
+2006-03-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/fiid.c, libfreeipmi/include/freeipmi/fiid.h
+	(fidd_template_compare): New function.
+	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 
 	* doc/freeipmi.texi: fixed syntax errors that prevented PDF
@@ -19,7 +24,7 @@
 	FIID_OBJ_BLOCK_LEN_BYTES, FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP,
 	FIID_OBJ_DUP, FIID_OBJ_DUP_CLEANUP,
 	FIID_OBJ_TEMPLATE_COMPARE_CLEANUP): New wrappers.
-	
+
 2006-03-01  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Clear objects before setting in all fill functions.

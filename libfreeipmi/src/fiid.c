@@ -399,6 +399,35 @@ fiid_template_block_len_bytes (fiid_template_t tmpl,
   return (BITS_ROUND_BYTES (len));
 }
 
+int8_t 
+fiid_template_compare(fiid_template_t tmpl1, fiid_template_t tmpl2)
+{
+  int i;
+
+  if (!tmpl1 || !tmpl2)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
+  for (i = 0; tmpl1[i].max_field_len != 0; i++)
+    {
+      if (tmpl1[i].max_field_len != tmpl2[i].max_field_len)
+	return (0);
+      
+      if (strcmp(tmpl1[i].key, tmpl2[i].key))
+	return (0);
+
+      if (tmpl1[i].flags != tmpl2[i].flags)
+	return (0);
+    }
+
+  if (tmpl2[i].max_field_len != 0)
+    return (0);
+
+  return (1);
+}
+
 fiid_field_t * 
 __fiid_template_make (uint8_t dummy, ...)
 {
