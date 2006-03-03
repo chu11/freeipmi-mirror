@@ -632,8 +632,9 @@
 	(fiid_obj_block_len, fiid_obj_block_len_bytes): New functions.
 
 	* common/src/fiid-wrappers.h (FIID_OBJ_BLOCK_LEN,
-	FIID_OBJ_BLOCK_LEN_BYTES, FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP): New
-	wrappers.
+	FIID_OBJ_BLOCK_LEN_BYTES, FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP,
+	FIID_OBJ_DUP, FIID_OBJ_DUP_CLEANUP,
+	FIID_OBJ_TEMPLATE_COMPARE_CLEANUP): New wrappers.
 	
 2006-03-01  Albert Chu <chu11@llnl.gov>
 
