@@ -747,7 +747,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   /* 
    * Copy Session Header into packet
    */
-#if 0                           /* XXX */
   FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                    obj_rmcpplus_hdr_session,
                                    (uint8_t *)"authentication_type",
@@ -759,7 +758,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                  (uint8_t *)"session_sequence_number",
                                  pkt + indx,
                                  pkt_len - indx);
-#endif
   indx += len;
 
   /* 
@@ -818,11 +816,9 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
           return (-1);
         }
 
-#if 0                           /* XXX */
       FIID_OBJ_TEMPLATE_COMPARE_CLEANUP(obj_rmcpplus_trlr_session, tmpl_rmcpplus_trlr_session);
 
       FIID_OBJ_DUP_CLEANUP (obj_rmcpplus_trlr_session_temp, obj_rmcpplus_trlr_session);
-#endif
 
       if (_construct_trlr_session_pad(integrity_algorithm,
                                       (indx - obj_rmcp_hdr_len),
@@ -830,7 +826,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         return (-1);
 
 
-#if 0                           /* XXX */
       FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                        obj_rmcpplus_trlr_session_temp,
                                        (uint8_t *)"integrity_pad",
@@ -842,7 +837,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                      (uint8_t *)"next_header",
                                      pkt + indx,
                                      pkt_len - indx);
-#endif
       indx += len;
 
       /* achu: Note that the integrity code is all data prior to the authcode, so this 

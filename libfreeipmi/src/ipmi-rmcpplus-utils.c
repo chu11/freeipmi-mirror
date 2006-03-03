@@ -462,15 +462,9 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
       || !managed_system_random_number
-<<<<<<< ipmi-rmcpplus-utils.c
-      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN
-      || !IPMI_PRIV_LEVEL_VALID(requested_privilege_level)
-      || (!user_name && user_name_len != 0)
-=======
       || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || !IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
       || (!user_name && user_name_len != 0)
->>>>>>> 1.1.2.3
       || !sik
       || !sik_len)
     {
@@ -846,18 +840,11 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !managed_system_random_number
-<<<<<<< ipmi-rmcpplus-utils.c
-      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LEN
-      || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
-      || (user_name && user_name_length > IPMI_USER_NAME_MAX_LENGTH)
-      || (!user_name && user_name_length))
-=======
       || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
       || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
       || (!user_name && user_name_length)
       || !key_exchange_authentication_code)
->>>>>>> 1.1.2.3
     {
       errno = EINVAL;
       return (-1);
@@ -1006,12 +993,7 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
 }
 
 int8_t
-<<<<<<< ipmi-rmcpplus-utils.c
-ipmi_rmcpplus_check_integrity_pad(fiid_template_t tmpl_rmcpplus_trlr_session,
-				  fiid_obj_t obj_rmcpplus_trlr_session)
-=======
 ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_trlr_session)
->>>>>>> 1.1.2.3
 {
   uint8_t integrity_pad[IPMI_MAX_PAYLOAD_LENGTH];
   uint64_t pad_length;
@@ -1084,19 +1066,11 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
       || !managed_system_random_number
       || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || !managed_system_guid
-<<<<<<< ipmi-rmcpplus-utils.c
-      || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LEN
-      || !IPMI_PRIV_LEVEL_VALID(requested_maximum_privilege_level)
-      || (user_name && user_name_length > IPMI_USER_NAME_MAX_LENGTH)
-      || (!user_name && user_name_length)
-      || !obj_msg)
-=======
       || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH
       || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
       || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
       || (!user_name && user_name_length)
       || !fiid_obj_valid(obj_msg))
->>>>>>> 1.1.2.3
     {
       errno = EINVAL;
       return -1;
@@ -1305,17 +1279,6 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
 }
 
 int8_t 
-<<<<<<< ipmi-rmcpplus-utils.c
-ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
-				 uint8_t *pkt,
-				 uint32_t pkt_len,
-				 uint8_t *integrity_key,
-				 uint32_t integrity_key_len,
-				 uint8_t *auth_code_data,
-				 uint32_t auth_code_data_len,
-				 fiid_template_t tmpl_trlr_session,
-				 fiid_obj_t obj_rmcpplus_trlr_session)
-=======
 ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
 				 uint8_t *pkt,
 				 uint32_t pkt_len,
@@ -1324,7 +1287,6 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
 				 uint8_t *authentication_code_data,
 				 uint32_t authentication_code_data_len,
 				 fiid_obj_t obj_rmcpplus_trlr_session)
->>>>>>> 1.1.2.3
 {
   int32_t rmcp_header_len;
   int hash_algorithm, hash_flags, crypt_digest_len;
@@ -1472,14 +1434,8 @@ ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_hdr_session, uint8_t pa
 }
 
 int8_t
-<<<<<<< ipmi-rmcpplus-utils.c
-ipmi_rmcpplus_check_status_code(fiid_template_t tmpl_cmd,
-				fiid_obj_t obj_cmd,
-				uint8_t status_code)
-=======
 ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
 				uint8_t status_code)
->>>>>>> 1.1.2.3
 {
   uint64_t val;
   int32_t len;
@@ -1514,11 +1470,7 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
 }
                             
 int8_t 
-<<<<<<< ipmi-rmcpplus-utils.c
-ipmi_rmcpplus_check_message_tag(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint8_t message_tag)
-=======
 ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_msg, uint8_t message_tag)
->>>>>>> 1.1.2.3
 {
   uint64_t val;
   int32_t len;
@@ -1554,11 +1506,7 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_msg, uint8_t message_tag)
 }
 
 int8_t 
-<<<<<<< ipmi-rmcpplus-utils.c
-ipmi_rmcpplus_check_remote_console_session_id(fiid_template_t tmpl_rmcpplus_msg, fiid_obj_t obj_msg, uint32_t remote_console_session_id)
-=======
 ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_msg, uint32_t remote_console_session_id)
->>>>>>> 1.1.2.3
 {
   uint64_t val;
   int32_t len;
