@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/fiid.c, libfreeipmi/include/freeipmi/fiid.h
 	(fidd_template_compare): New function.
+
+	* libfreeipmi/include/freeipmi/ipmi-debug.h: Export unexecpted
+	data template.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 

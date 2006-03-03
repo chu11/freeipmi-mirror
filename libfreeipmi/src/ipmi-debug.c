@@ -62,7 +62,7 @@
 #define IPMI_DEBUG_MAX_UNEXPECTED_BYTES 65536
 #define IPMI_DEBUG_MAX_UNEXPECTED_BITS  (IPMI_DEBUG_MAX_UNEXPECTED_BYTES*8)
 
-fiid_template_t tmpl_unexpected =
+fiid_template_t tmpl_unexpected_data =
   {
     {IPMI_DEBUG_MAX_UNEXPECTED_BITS, "unexpected_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
@@ -268,7 +268,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  fiid_obj_t obj_unexpected = NULL;
+  fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
   int8_t rv = -1;
   uint64_t authentication_type;
@@ -428,12 +428,12 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
 
   /* Dump unexpected stuff */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_unexpected, tmpl_unexpected);
+  FIID_OBJ_CREATE_CLEANUP (obj_unexpected_data, tmpl_unexpected_data);
   
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected, pkt + indx, pkt_len - indx);
+  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
   indx += len;
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected_data) < 0));
   
   rv = 0;
  cleanup:
@@ -442,7 +442,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_hdr);
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
   FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected_data);
   return (rv);
 }
 
@@ -462,7 +462,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
     "----------------";
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
-  fiid_obj_t obj_unexpected = NULL;
+  fiid_obj_t obj_unexpected_data = NULL;
   int32_t len;
   int8_t rv = -1;
 
@@ -507,18 +507,18 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   
   /* Dump unexpected stuff */
   
-  FIID_OBJ_CREATE_CLEANUP (obj_unexpected, tmpl_unexpected);
+  FIID_OBJ_CREATE_CLEANUP (obj_unexpected_data, tmpl_unexpected_data);
   
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected, pkt + indx, pkt_len - indx);
+  FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_unexpected_data, pkt + indx, pkt_len - indx);
   indx += len;
   
-  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, unexpected_hdr, NULL, obj_unexpected_data) < 0));
   
   rv = 0;
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN(obj_rmcp_hdr);
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_unexpected_data);
   return (rv);
 }
 
