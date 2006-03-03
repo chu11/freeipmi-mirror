@@ -30,7 +30,8 @@ extern "C" {
 #include <freeipmi/fiid.h>
 
 #define IPMI_MAX_USER_NAME_LENGTH           16
-#define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH
+  /* XXX Max is 20 for IPMI 2.0 */
+#define IPMI_MAX_PASSOWRD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH 
 #define IPMI_CHALLENGE_STRING_LENGTH        16
 
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA     0x01

@@ -427,6 +427,8 @@ static int32_t
 _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
                                             uint8_t *integrity_key,
                                             uint32_t integrity_key_len,
+                                            uint8_t *authentication_code_data,
+                                            uint32_t authentication_code_data_len,
                                             fiid_obj_t obj_rmcpplus_session_trlr,
                                             uint8_t *pkt_data,
                                             uint32_t pkt_data_len,
@@ -437,11 +439,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   unsigned int expected_digest_len, copy_digest_len, hash_data_len, integrity_digest_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LENGTH];
-  int32_t authentication_code_len;
-
+  int32_t len, authentication_code_len;
+  
   if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128)
+      || (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+          && authentication_code_data 
+          && authentication_code_data_len > IPMI_MAX_PASSOWRD_LENGTH)
       || !fiid_obj_valid(obj_rmcpplus_session_trlr)
       || !pkt_data
       || !pkt_data_len
@@ -455,10 +460,26 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
-  ERR (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
+  /* Check if the user provided an authentication code, if so, use it */
 
   memset(authentication_code_buf, '\0', authentication_code_buf_len);
-      
+
+  FIID_OBJ_FIELD_LEN_BYTES(len,
+                           obj_rmcpplus_session_trlr,
+                           (uint8_t *)"authentication_code");
+
+  if (len)
+    {
+      FIID_OBJ_GET_DATA_LEN(len,
+                            obj_rmcpplus_session_trlr,
+                            (uint8_t *)"authentication_code",
+                            authentication_code_buf,
+                            authentication_code_buf_len);
+      return (len);
+    }
+
+  ERR (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
+
   /* Note: Integrity Key for HMAC_SHA1_95 and HMAC_MD5_128 is K1 */
            
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
@@ -491,31 +512,34 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       
   hash_data_len = 0;
       
-  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+      && authentication_code_data
+      && authentication_code_data_len)
     {
-      /* SPEC: achu: Zero Pad? */
+      /* SPEC: achu: Zero Pad is not specified.  And even if we were
+       * supposed to, we don't know if we should Zero pad to 16 or 20 bytes.
+       *
+       * For now, we'll assume no zero pad.  Therefore, if it is a NULL
+       * password, we won't be be including a password in the hash.
+       */
 
-      /* XXX need to copy in authentication_code_data */
-#if 0
       memcpy(hash_data + hash_data_len, 
-             buffer, 
-             len);
-      hash_data_len += ;
-#endif
+             authentication_code_data, 
+             authentication_code_data_len);
+      hash_data_len += authentication_code_data_len;
     }
   
   memcpy(hash_data + hash_data_len, pkt_data, pkt_data_len);
   hash_data_len += pkt_data_len;
   
-  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
+      && authentication_code_data
+      && authentication_code_data_len)
     {
-      /* XXX need to copy in authentication_code_data */
-#if 0
       memcpy(hash_data + hash_data_len, 
-             buffer, 
-             len);
-      hash_data_len += ;
-#endif
+             authentication_code_data, 
+             authentication_code_data_len);
+      hash_data_len += authentication_code_data_len;
     }
   
   if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
@@ -557,6 +581,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                             uint32_t integrity_key_len,
                             uint8_t *confidentiality_key,
                             uint32_t confidentiality_key_len,
+                            uint8_t *authentication_code_data,
+                            uint32_t authentication_code_data_len,
                             fiid_obj_t obj_rmcp_hdr,
                             fiid_obj_t obj_rmcpplus_session_hdr,
                             fiid_obj_t obj_lan_msg_hdr,
@@ -660,6 +686,18 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       return (-1);
     }
 
+  /*
+   * Can't use FIID_OBJ_PACKET_VALID() on obj_rmcpplus_session_trlr b/c
+   * integrity pad, pad length, and authentication code may not be set.
+   */
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_trlr, (uint8_t *)"next_header");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_trlr, (uint8_t *)"next_header");
+  if (len != req_len)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+
   FIID_OBJ_GET (obj_rmcpplus_session_hdr, 
                 "payload_type",
                 &payload_type);
@@ -695,10 +733,9 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
        && (payload_authenticated || payload_encrypted || session_id || session_seq_num))
       || (session_id 
           && payload_authenticated
-          /* XXX fix for API change */
-          /* XXX need to think about this */
-          && (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm) 
-              || !fiid_obj_valid(obj_rmcpplus_session_trlr)))
+          && (integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+              && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+              && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted))
     {
@@ -799,7 +836,6 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   FIID_OBJ_GET_ALL_LEN_CLEANUP(obj_len, obj_payload, pkt + indx, pkt_len - indx);
   indx += obj_len;
 
-  /* XXX work on API */
   if (session_id && payload_authenticated)
     {
       uint8_t authentication_code_buf[IPMI_MAX_PAYLOAD_LENGTH];
@@ -839,6 +875,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERR (!((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
                                                                                     integrity_key,
                                                                                     integrity_key_len,
+                                                                                    authentication_code_data,
+                                                                                    authentication_code_data_len,
                                                                                     obj_rmcpplus_session_trlr_temp,
                                                                                     pkt + obj_rmcp_hdr_len,
                                                                                     indx - obj_rmcp_hdr_len,
@@ -1364,10 +1402,9 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
        && (payload_authenticated || payload_encrypted || session_id || session_seq_num))
       || (session_id 
           && payload_authenticated
-          /* XXX fix for API change */
-          /* XXX need to think about this */
-          && (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-              || !fiid_obj_valid(obj_rmcpplus_session_trlr)))
+          && (integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+              && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+              && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128))
       || (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && payload_encrypted)
       || !ipmi_payload_len)
@@ -1378,7 +1415,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
   if (pkt_len - indx < ipmi_payload_len)
     {
-      /* XXX add debugging */
+      ipmi_debug("unassemble_ipmi_rmcpplus_pkt: Shorten payload length");
       ipmi_payload_len = pkt_len - indx;
     }
 
@@ -1452,8 +1489,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 	  return (-1);
 	}
       
-      /* XXX add debugging */
-      if (pad_length > (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len))
+      if (pad_length >= (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len))
         pad_length = (pkt_len - indx - authentication_code_len - pad_length_field_len - next_header_field_len);
       
       FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
