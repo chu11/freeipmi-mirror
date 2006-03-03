@@ -1,3 +1,10 @@
+2006-03-02  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi.texi: fixed syntax errors that prevented PDF
+	creation. 
+	
+	* doc/authors.texi: fixed email address to evade spammers.
+
 2006-03-02  Albert Chu <chu11@llnl.gov>
 
 	* Globally rename ipmi_lan_check_session_authcode to
