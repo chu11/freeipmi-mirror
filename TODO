@@ -52,6 +52,8 @@ libfreeipmi:
     md2/md5
   * admin -> administrator?
   * spec file dir directives for freeipmi and udm
+  * obj_msg_hdr -> obj_lan_msg_hdr
+
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
