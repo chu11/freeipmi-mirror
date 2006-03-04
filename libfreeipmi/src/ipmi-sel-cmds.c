@@ -29,6 +29,7 @@
 #include "freeipmi/ipmi-sel-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -151,11 +152,7 @@ fiid_template_t tmpl_clear_sel_rs =
 int8_t 
 fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_info_rq);
 
@@ -169,11 +166,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_allocation_info_rq);
 
@@ -187,11 +180,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 int8_t 
 fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_reserve_sel_rq);
 
@@ -209,11 +198,7 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
                         uint8_t bytes_to_read,
                         fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_entry_rq);
 
@@ -234,11 +219,7 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
 			   uint16_t record_id,
                            fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_delete_sel_entry_rq);
 
@@ -257,12 +238,8 @@ fill_cmd_clear_sel (uint16_t reservation_id,
                     uint8_t operation, 
                     fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
-      ||!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_SEL_CLEAR_OPERATION_VALID(operation)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_clear_sel_rq);
 

@@ -635,33 +635,28 @@ ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
   uint64_t startaddr;
   uint32_t pad;
   int mem_fd;
-  extern int errno;
 
-  if (!(physical_addr_len && virtual_addr &&
-        mapped_addr && mapped_addr_len))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (physical_addr_len 
+	      && virtual_addr 
+	      && mapped_addr 
+	      && mapped_addr_len);
 
-  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
-    return (-1);
+  ERR (!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
 
   pad = physical_addr % getpagesize ();
   startaddr = physical_addr - pad;
   *mapped_addr_len = physical_addr_len + pad;
   *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
 
-
-  if (*mapped_addr == MAP_FAILED)
-    {
-      close (mem_fd);
-      return (-1);
-    }
+  ERR_CLEANUP (*mapped_addr != MAP_FAILED);
 
   close (mem_fd);
   *virtual_addr = (*mapped_addr) + pad;
   return (0);
+
+ cleanup:
+  close (mem_fd);
+  return (-1);
 }
 
 static int
@@ -679,16 +674,11 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
   void *mapped_addr = NULL;
   size_t mapped_addr_len = 0;
 
-  if (data == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (data);
 
-  if (ipmi_ioremap (physical_address, length,
-                    &virtual_addr,
-                    &mapped_addr, &mapped_addr_len) != 0)
-    return (-1);
+  ERR (!(ipmi_ioremap (physical_address, length,
+		       &virtual_addr,
+		       &mapped_addr, &mapped_addr_len) != 0));
 
   memcpy (data, virtual_addr, length);
 
@@ -728,11 +718,7 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   int acpi_rsdp_descriptor_len;
   int i;
 
-  if (!fiid_obj_valid(obj_acpi_rsdp_descriptor))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_acpi_rsdp_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor);
   
@@ -742,9 +728,8 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
 			   tmpl_acpi_rsdp_descriptor);
   
-  if (ipmi_get_physical_mem_data (rsdp_window_base_addr, 
-				  rsdp_window_size, memdata) != 0)
-    return (-1);
+  ERR (!(ipmi_get_physical_mem_data (rsdp_window_base_addr, 
+				     rsdp_window_size, memdata) != 0));
   
   /* Search from given start addr for the requested length  */
   for (i = 0; i < rsdp_window_size; i += IPMI_ACPI_RSDP_SCAN_STEP)
@@ -812,21 +797,18 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
 
 	    memdata = alloca (acpi_rsdp_descriptor_len);
 	    memset (memdata, 0, acpi_rsdp_descriptor_len);
-	    if (ipmi_get_physical_mem_data (rsdt_xsdt_address, 
-					    acpi_rsdp_descriptor_len, 
-					    memdata) != 0)
-	      return (-1);
+	    ERR (!(ipmi_get_physical_mem_data (rsdt_xsdt_address, 
+					       acpi_rsdp_descriptor_len, 
+					       memdata) != 0));
 	    
 	    /* check RSDP signature */
-	    if (strncmp ((char *)memdata, 
-			 IPMI_ACPI_RSDP_SIG, 
-			 strlen (IPMI_ACPI_RSDP_SIG)) != 0)
-	      return (-1);
+	    ERR (!(strncmp ((char *)memdata, 
+			    IPMI_ACPI_RSDP_SIG, 
+			    strlen (IPMI_ACPI_RSDP_SIG)) != 0));
 	    
 	    /* now check the checksum */
-	    if (ipmi_acpi_table_checksum (memdata, 
-					  IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0)
-	      return (-1);
+	    ERR (!(ipmi_acpi_table_checksum (memdata, 
+					     IPMI_ACPI_RSDP_CHECKSUM_LENGTH) != 0));
 	    
 	    /* we found another RSDP */
 	    memcpy (obj_acpi_rsdp_descriptor, memdata, acpi_rsdp_descriptor_len);
@@ -875,8 +857,7 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
   int32_t len;
   int rv = -1;
 
-  if (signature == NULL || acpi_table == NULL || acpi_table_length == NULL)
-    return (-1);
+  ERR (signature && acpi_table && acpi_table_length);
 
   FIID_TEMPLATE_FIELD_LEN_BYTES_CLEANUP(len, 
 					tmpl_acpi_table_hdr, 
@@ -895,36 +876,31 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
 
   memset (acpi_table_buf, 0, acpi_table_hdr_length);
   
-  if (ipmi_get_physical_mem_data (table_address, 
-				  acpi_table_hdr_length, 
-				  acpi_table_buf) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_get_physical_mem_data (table_address, 
+					     acpi_table_hdr_length, 
+					     acpi_table_buf) != 0));
   
   FIID_OBJ_SET_ALL_CLEANUP(obj_acpi_table_hdr,
 			   acpi_table_buf,
 			   acpi_table_hdr_length);
 
-  if (fiid_obj_get_data (obj_acpi_table_hdr, 
-			 (uint8_t *)"signature", 
-			 (uint8_t *)table_signature, 
-			 table_signature_length) < 0)
-    goto cleanup;
+  FIID_OBJ_GET_DATA_CLEANUP(obj_acpi_table_hdr, 
+			    (uint8_t *)"signature", 
+			    (uint8_t *)table_signature, 
+			    table_signature_length);
 
-  if (strcmp (table_signature, signature) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(strcmp (table_signature, signature) != 0));
   
   FIID_OBJ_GET_CLEANUP (obj_acpi_table_hdr, (uint8_t *)"length", &val);
   table_length = val;
   
   table = alloca (table_length);
   memset (table, 0, table_length);
-  if (ipmi_get_physical_mem_data (table_address, 
-				  table_length, 
-				  table) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_get_physical_mem_data (table_address, 
+					     table_length, 
+					     table) != 0));
   
-  if (ipmi_acpi_table_checksum (table, table_length) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_acpi_table_checksum (table, table_length) != 0));
   
   *acpi_table = malloc (table_length);
   memcpy (*acpi_table, table, table_length);
@@ -998,11 +974,10 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
       {0,  "", 0}
     };
 
-  if (signature == NULL 
-      || !fiid_obj_valid(obj_acpi_table_hdr)
-      || sign_table_data == NULL 
-      || sign_table_data_length == NULL)
-    return (-1);
+  ERR (signature  
+       && fiid_obj_valid(obj_acpi_table_hdr)
+       && sign_table_data  
+       && sign_table_data_length);
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
 
@@ -1149,12 +1124,8 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   int32_t acpi_spmi_table_descriptor_len;
   int rv = -1;
 
-  if (!fiid_obj_valid(obj_acpi_table_hdr)
-      || !fiid_obj_valid(obj_acpi_spmi_table_descriptor))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_acpi_table_hdr)
+	      && fiid_obj_valid(obj_acpi_spmi_table_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
@@ -1215,14 +1186,9 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
   ipmi_locate_info_t *rv = NULL;
   extern int errno;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
-  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
-    goto cleanup;
+  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
   memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
   pinfo->interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
@@ -1234,10 +1200,9 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
 
-  if (ipmi_acpi_get_spmi_table (type,
-				obj_acpi_table_hdr,
-				obj_acpi_spmi_table_descriptor) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_acpi_get_spmi_table (type,
+					   obj_acpi_table_hdr,
+					   obj_acpi_spmi_table_descriptor) != 0));
   
   /* I don't see any reason to perform this check now -- Anand Babu */
   /* This field must always be 01h to be compatible with any software
@@ -1278,11 +1243,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 			  (uint8_t *)"interface_type", 
 			  &interface_type);
     
-    if (!IPMI_INTERFACE_TYPE_VALID(interface_type))
-      {
-	errno = ENODEV;
-	goto cleanup;
-      }
+    ERR_ENODEV_CLEANUP(IPMI_INTERFACE_TYPE_VALID(interface_type));
 
     pinfo->interface_type = interface_type;
   }
@@ -1321,10 +1282,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 	  break;
 	}
       default:
-	{
-	  errno = ENODEV;
-	  goto cleanup;
-	}
+	ERR_ENODEV_CLEANUP(0);
       }
   }
   

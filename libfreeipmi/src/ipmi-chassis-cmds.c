@@ -29,6 +29,7 @@
 #include "freeipmi/ipmi-chassis-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -130,11 +131,7 @@ fiid_template_t tmpl_set_power_restore_policy_rs =
 int8_t
 fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 { 
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
 
@@ -145,12 +142,8 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHASSIS_CONTROL_VALID(chassis_control)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHASSIS_CONTROL_VALID(chassis_control)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_chassis_control_rq);
 
@@ -166,13 +159,9 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 			   uint8_t *force_identify,
                            fiid_obj_t obj_cmd_rq)
 {
-  if ((force_identify 
-       && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify))
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (!(force_identify 
+		&& IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify))
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
 
@@ -195,12 +184,8 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 int8_t 
 fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy)
+	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_power_restore_policy_rq);
 

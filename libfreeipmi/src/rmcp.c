@@ -79,12 +79,8 @@ fiid_template_t tmpl_cmd_asf_presence_pong =
 int8_t
 fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr) 
 {
-  if (!RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
-      || !fiid_obj_valid(obj_rmcp_hdr))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (RMCP_HDR_MESSAGE_CLASS_VALID(message_class)
+	      && fiid_obj_valid(obj_rmcp_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
 
@@ -114,11 +110,7 @@ fill_rmcp_hdr_asf (fiid_obj_t obj_rmcp_hdr)
 int8_t
 fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
 {
-  if (!fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
 
@@ -138,14 +130,10 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
 {
   uint32_t obj_cmd_len, obj_rmcp_hdr_len;
 
-  if (!fiid_obj_valid(obj_rmcp_hdr) 
-      || !fiid_obj_valid(obj_cmd)
-      || !pkt
-      || !pkt_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr) 
+	      && fiid_obj_valid(obj_cmd)
+	      && pkt
+	      && pkt_len);
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
@@ -155,11 +143,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
   FIID_OBJ_LEN_BYTES (obj_rmcp_hdr_len, obj_rmcp_hdr);
   FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
 
-  if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
-    {
-      errno = EMSGSIZE;
-      return -1;
-    }
+  ERR_EMSGSIZE (!(pkt_len < (obj_rmcp_hdr_len + obj_cmd_len)));
 
   memset (pkt, '\0', pkt_len);
   FIID_OBJ_GET_ALL_LEN (obj_rmcp_hdr_len, obj_rmcp_hdr, pkt, pkt_len);
@@ -173,13 +157,9 @@ unassemble_rmcp_pkt (void *pkt, uint32_t pkt_len, fiid_obj_t obj_rmcp_hdr, fiid_
   uint32_t indx = 0;
   int32_t len;
 
-  if (!pkt
-      || !fiid_obj_valid(obj_rmcp_hdr)
-      || !fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (pkt
+	      && fiid_obj_valid(obj_rmcp_hdr)
+	      && fiid_obj_valid(obj_cmd));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_pong);

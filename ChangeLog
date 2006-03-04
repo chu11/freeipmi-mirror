@@ -1,4 +1,4 @@
-------------------------------------------------------------
+-----------------------------------------------------------
 2005-XX-XX  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch.  See ChangeLog in
@@ -93,6 +93,9 @@
 	libfreeipmi/src/ipmi-rmcpplus-utils.c (ipmi_calculate_keys): New
 	function.
 	
+	* common/, libfreeipmi/: Use new error macros.  Some general code
+	cleanup and bug fixing.
+
 2006-03-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c,
@@ -650,6 +653,13 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2006-03-04  Albert Chu <chu11@llnl.gov>
+
+	* common/src/err-wrappers.h; New macros for errno returns.
+
+	* common/, libfreeipmi/: Use new macros.  Some general code
+	cleanup and bug fixing.
+	
 2006-03-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/fiid.c, libfreeipmi/include/freeipmi/fiid.h

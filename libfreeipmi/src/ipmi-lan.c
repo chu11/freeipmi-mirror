@@ -90,13 +90,9 @@ fiid_template_t tmpl_lan_msg_trlr =
 int8_t
 fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_number, uint32_t session_id, uint8_t *authentication_code_data, uint32_t authentication_code_data_len, fiid_obj_t obj_lan_session_hdr)
 {
-  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-      || (authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
-      || !fiid_obj_valid(obj_lan_session_hdr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+	      && !(authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+	      && fiid_obj_valid(obj_lan_session_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
 
@@ -132,14 +128,10 @@ fill_lan_msg_hdr (uint8_t net_fn,
   int32_t checksum_len;
   int8_t checksum;
 
-  if (!IPMI_NET_FN_VALID(net_fn)
-      || !IPMI_BMC_LUN_VALID(rs_lun)
-      || (rq_seq > IPMI_LAN_SEQUENCE_NUMBER_MAX)
-      || !fiid_obj_valid(obj_lan_msg_hdr))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_NET_FN_VALID(net_fn)
+	      && IPMI_BMC_LUN_VALID(rs_lun)
+	      && !(rq_seq > IPMI_LAN_SEQUENCE_NUMBER_MAX)
+	      && fiid_obj_valid(obj_lan_msg_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
 
@@ -237,16 +229,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   int8_t checksum;
   int32_t rv = -1;
 
-  if (!fiid_obj_valid(obj_rmcp_hdr)
-      || !fiid_obj_valid(obj_lan_session_hdr) 
-      || !fiid_obj_valid(obj_lan_msg_hdr) 
-      || !fiid_obj_valid(obj_cmd) 
-      || (authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
-      || !pkt)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr)
+	      && fiid_obj_valid(obj_lan_session_hdr) 
+	      && fiid_obj_valid(obj_lan_msg_hdr) 
+	      && fiid_obj_valid(obj_cmd) 
+	      && !(authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+	      && pkt);
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
@@ -259,52 +247,28 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    */
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_session_hdr, (uint8_t *)"authentication_type");
-
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_session_hdr, (uint8_t *)"authentication_type");
-  
-  if (len != req_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len == req_len);
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_session_hdr, (uint8_t *)"session_sequence_number");
-
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_session_hdr, (uint8_t *)"session_sequence_number");
-  
-  if (len != req_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len == req_len);
 
   FIID_OBJ_FIELD_LEN (len, obj_lan_session_hdr, (uint8_t *)"session_id");
-
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_session_hdr, (uint8_t *)"session_id");
-  
-  if (len != req_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len == req_len);
 
   FIID_OBJ_PACKET_VALID(obj_lan_msg_hdr);
   FIID_OBJ_PACKET_VALID(obj_cmd);
 
   FIID_OBJ_GET (obj_lan_session_hdr, (uint8_t *)"authentication_type", &authentication_type);
-
-  if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE
+	      || authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
+	      || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5
+	      || authentication_type == IPMI_AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
   
   required_len = _ipmi_lan_pkt_rq_min_size((uint8_t)authentication_type, obj_cmd);
-  if (pkt_len < required_len) 
-    {
-      errno = EMSGSIZE;
-      return -1;
-    }
+  ERR_EMSGSIZE (!(pkt_len < required_len));
 
   memset (pkt, 0, pkt_len);
 
@@ -418,8 +382,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		      pwbuf,
 		      IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 	    }
-	  else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2
-		   || authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
+	  else /* IPMI_AUTHENTICATION_TYPE_MD2 || IPMI_AUTHENTICATION_TYPE_MD5 */
 	    {
 	      uint8_t session_id_buf[1024];
 	      uint8_t session_sequence_number_buf[1024];
@@ -430,22 +393,14 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 					     (uint8_t *)"session_id",
 					     session_id_buf,
 					     1024);
-	      if (!session_id_len)
-		{
-		  errno = EINVAL;
-		  goto cleanup;
-		}
+	      ERR_EINVAL_CLEANUP (session_id_len);
 	      
 	      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_sequence_number_len,
 					     obj_lan_session_hdr,
 					     (uint8_t *)"session_sequence_number",
 					     session_sequence_number_buf,
 					     1024);
-	      if (!session_sequence_number_len)
-		{
-		  errno = EINVAL;
-		  goto cleanup;
-		}
+	      ERR_EINVAL_CLEANUP (session_sequence_number_len);
 
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
@@ -481,12 +436,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}
-	    }
-	  else
-	    {
-	      /* Unsupported authentication type */
-	      errno = EINVAL;
-	      goto cleanup;
 	    }
 	}
     }
@@ -528,16 +477,12 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   uint32_t obj_cmd_len, obj_lan_msg_trlr_len;
   int32_t len;
 
-  if (!pkt
-      || !fiid_obj_valid(obj_rmcp_hdr)
-      || !fiid_obj_valid(obj_lan_session_hdr) 
-      || !fiid_obj_valid(obj_lan_msg_hdr) 
-      || !fiid_obj_valid(obj_cmd)
-      || !fiid_obj_valid(obj_lan_msg_trlr))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (pkt
+	      && fiid_obj_valid(obj_rmcp_hdr)
+	      && fiid_obj_valid(obj_lan_session_hdr) 
+	      && fiid_obj_valid(obj_lan_msg_hdr) 
+	      && fiid_obj_valid(obj_cmd)
+	      && fiid_obj_valid(obj_lan_msg_trlr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
@@ -565,11 +510,7 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
 		(uint8_t *)"authentication_type", 
 		&authentication_type);
 
-  if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type));
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {

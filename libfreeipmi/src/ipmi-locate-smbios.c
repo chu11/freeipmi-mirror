@@ -47,6 +47,7 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-interface.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 
@@ -166,13 +167,11 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
 static int
 ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space)
 {
-  extern int errno;
-  if (!(reg_space))
-    {
-      *reg_space = 0;
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (reg_space 
+	      && (reg_space_boundary == IPMI_SMBIOS_REG_SPACE_1BYTE_BOUND
+		  || reg_space_boundary == IPMI_SMBIOS_REG_SPACE_4BYTE_BOUND
+		  || reg_space_boundary == IPMI_SMBIOS_REG_SPACE_16BYTE_BOUND
+		  || reg_space_boundary == IPMI_SMBIOS_REG_SPACE_RESERVED));
 
   switch (reg_space_boundary)
     {
@@ -187,9 +186,7 @@ ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space)
       return (0);
     case IPMI_SMBIOS_REG_SPACE_RESERVED:
     default:
-      *reg_space = 0;
-      errno = EINVAL;
-      return (-1);
+      ERR_EXIT(0);
     }
 }
 
@@ -334,16 +331,11 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 		    {
 		      if (is_ipmi_dev_info (type, dev_info_p))
 			{
-			  result = xmalloc (size);
+			  ERR_NULL_RETURN ((result = xmalloc (size)));
 			  if (result != NULL)
 			    {
 			      status = 0;
 			      memcpy (result, dev_info_p, size);
-			    }
-			  else
-			    {
-			      errno = ENOMEM;
-			      status = -1;
 			    }
 			  break;
 			}
@@ -379,21 +371,15 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
   uint64_t strobed;
   ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
-  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
-    goto cleanup;
+  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
   memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
   pinfo->interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
 
-  if (!(bufp = copy_impi_dev_info (type)))
-    goto cleanup;
+  ERR_CLEANUP ((bufp = copy_impi_dev_info (type)));
 
   pinfo->locate_driver_type = IPMI_LOCATE_DRIVER_SMBIOS;
 
@@ -402,11 +388,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
   pinfo->ipmi_ver_minor = version & 0xf;
 
   pinfo->interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
-  if (pinfo->interface_type != type)
-    {
-      errno = ENODEV;
-      goto cleanup;
-    }
+  ERR_ENODEV_CLEANUP (pinfo->interface_type == type);
 
   strobed = addr = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
@@ -420,8 +402,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
       strobed = (strobed & ~1) | lsb;
 
       reg_space_boundary = (modifier >> IPMI_SMBIOS_REGSPACING_SHIFT) & IPMI_SMBIOS_REGSPACING_MASK;
-      if (ipmi_smbios_reg_space (reg_space_boundary, &pinfo->reg_space) == -1)
-	goto cleanup;
+      ERR_CLEANUP (!(ipmi_smbios_reg_space (reg_space_boundary, &pinfo->reg_space) == -1));
     }
 
   if (pinfo->interface_type == IPMI_INTERFACE_SSIF)

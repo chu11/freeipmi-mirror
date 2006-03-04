@@ -214,11 +214,8 @@ ipmi_ssif_ctx_create(void)
 {
   ipmi_ssif_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))))
-    {
-      errno = ENOMEM;
-      goto cleanup;
-    }
+  ERR_CLEANUP ((ctx = (ipmi_ssif_ctx_t)xmalloc(sizeof(struct ipmi_ssif_ctx))));
+
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
   ctx->ipmb_addr = IPMI_DEFAULT_IPMB_ADDRESS;

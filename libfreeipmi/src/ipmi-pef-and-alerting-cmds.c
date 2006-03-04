@@ -17,7 +17,7 @@ along with GNU Emacs; see the file COPYING.  If not, write to
 the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 Boston, MA 02110-1301, USA.
 
-$Id: ipmi-pef-and-alerting-cmds.c,v 1.1.2.4 2006-03-04 03:40:18 chu11 Exp $  */
+$Id: ipmi-pef-and-alerting-cmds.c,v 1.1.2.5 2006-03-04 20:37:02 chu11 Exp $  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -32,6 +32,7 @@ $Id: ipmi-pef-and-alerting-cmds.c,v 1.1.2.4 2006-03-04 03:40:18 chu11 Exp $  */
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -461,11 +462,7 @@ fiid_template_t tmpl_pet_acknowledge_rs =
 int8_t 
 fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));;
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_pef_capabilities_rq);
 
@@ -479,11 +476,7 @@ fill_cmd_get_pef_capabilities (fiid_obj_t obj_cmd_rq)
 int8_t
 fill_cmd_arm_pef_postpone_timer (uint8_t pef_postpone_timeout, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));;
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_arm_pef_postpone_timer_rq);
 
@@ -503,13 +496,9 @@ fill_cmd_set_pef_configuration_parameters (fiid_obj_t obj_cmd_rq,
                                            uint8_t *configuration_parameter_data,
                                            uint8_t configuration_parameter_data_len)
 {
-  if (!configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (configuration_parameter_data
+	      && configuration_parameter_data_len
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_rq);
 
@@ -534,15 +523,11 @@ fill_cmd_set_pef_configuration_parameters_pef_control (uint8_t pef,
                                                        uint8_t pef_alert_startup_delay,
                                                        fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PEF_VALID(pef)
-      || !IPMI_PEF_EVENT_MESSAGES_VALID(pef_event_messages)
-      || !IPMI_PEF_STARTUP_DELAY_VALID(pef_startup_delay)
-      || !IPMI_PEF_ALERT_STARTUP_DELAY_VALID(pef_alert_startup_delay)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PEF_VALID(pef)
+	      && IPMI_PEF_EVENT_MESSAGES_VALID(pef_event_messages)
+	      && IPMI_PEF_STARTUP_DELAY_VALID(pef_startup_delay)
+	      && IPMI_PEF_ALERT_STARTUP_DELAY_VALID(pef_alert_startup_delay)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_control_rq);
 
@@ -573,17 +558,13 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
                                                                      uint8_t diagnostic_interrupt,
                                                                      fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PEF_ALERT_ACTION_VALID(alert_action)
-      || !IPMI_PEF_POWER_DOWN_ACTION_VALID(power_down_action)
-      || !IPMI_PEF_RESET_ACTION_VALID(reset_action)
-      || !IPMI_PEF_POWER_CYCLE_ACTION_VALID(power_cycle_action)
-      || !IPMI_PEF_OEM_ACTION_VALID(oem_action)
-      || !IPMI_PEF_DIAGNOSTIC_INTERRUPT_VALID(diagnostic_interrupt)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PEF_ALERT_ACTION_VALID(alert_action)
+	      && IPMI_PEF_POWER_DOWN_ACTION_VALID(power_down_action)
+	      && IPMI_PEF_RESET_ACTION_VALID(reset_action)
+	      && IPMI_PEF_POWER_CYCLE_ACTION_VALID(power_cycle_action)
+	      && IPMI_PEF_OEM_ACTION_VALID(oem_action)
+	      && IPMI_PEF_DIAGNOSTIC_INTERRUPT_VALID(diagnostic_interrupt)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_action_global_control_rq);
 
@@ -608,11 +589,7 @@ fill_cmd_set_pef_configuration_parameters_pef_action_global_control (uint8_t ale
 int8_t
 fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup_delay, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_startup_delay_rq);
 
@@ -631,11 +608,7 @@ fill_cmd_set_pef_configuration_parameters_pef_startup_delay (uint8_t pef_startup
 int8_t
 fill_cmd_set_pef_configuration_parameters_pef_alert_startup_delay (uint8_t pef_alert_startup_delay, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_pef_alert_startup_delay_rq);
 
@@ -684,21 +657,17 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table (uint8_t filter_num
                                                               uint8_t event_data3_compare2,
                                                               fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
-      || !IPMI_FILTER_CONFIGURATION_FILTER_VALID(filter_configuration_filter)
-      || !IPMI_EVENT_FILTER_ACTION_ALERT_VALID(event_filter_action_alert)
-      || !IPMI_EVENT_FILTER_ACTION_POWER_OFF_VALID(event_filter_action_power_off)
-      || !IPMI_EVENT_FILTER_ACTION_RESET_VALID(event_filter_action_reset)
-      || !IPMI_EVENT_FILTER_ACTION_POWER_CYCLE_VALID(event_filter_action_power_cycle)
-      || !IPMI_EVENT_FILTER_ACTION_OEM_VALID(event_filter_action_oem)
-      || !IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_VALID(event_filter_action_diagnostic_interrupt)
-      || !IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_VALID(event_filter_action_group_control_operation)
-      || !IPMI_EVENT_SEVERITY_VALID(event_severity)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
+	      && IPMI_FILTER_CONFIGURATION_FILTER_VALID(filter_configuration_filter)
+	      && IPMI_EVENT_FILTER_ACTION_ALERT_VALID(event_filter_action_alert)
+	      && IPMI_EVENT_FILTER_ACTION_POWER_OFF_VALID(event_filter_action_power_off)
+	      && IPMI_EVENT_FILTER_ACTION_RESET_VALID(event_filter_action_reset)
+	      && IPMI_EVENT_FILTER_ACTION_POWER_CYCLE_VALID(event_filter_action_power_cycle)
+	      && IPMI_EVENT_FILTER_ACTION_OEM_VALID(event_filter_action_oem)
+	      && IPMI_EVENT_FILTER_ACTION_DIAGNOSTIC_INTERRUPT_VALID(event_filter_action_diagnostic_interrupt)
+	      && IPMI_EVENT_FILTER_ACTION_GROUP_CONTROL_OPERATION_VALID(event_filter_action_group_control_operation)
+	      && IPMI_EVENT_SEVERITY_VALID(event_severity)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_event_filter_table_rq);
 
@@ -794,13 +763,9 @@ fill_cmd_set_pef_configuration_parameters_event_filter_table_data1 (uint8_t filt
                                                                     uint8_t filter_configuration_filter,
                                                                     fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
-      || !IPMI_FILTER_CONFIGURATION_FILTER_VALID(filter_configuration_filter)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_FILTER_CONFIGURATION_FILTER_TYPE_VALID(filter_configuration_type)
+	      && IPMI_FILTER_CONFIGURATION_FILTER_VALID(filter_configuration_filter)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_event_filter_table_data1_rq);
 
@@ -830,12 +795,8 @@ fill_cmd_set_pef_configuration_parameters_alert_string_keys (uint8_t string_sele
                                                              uint8_t set_number_for_string,
                                                              fiid_obj_t obj_cmd_rq)
 { 
-  if (!IPMI_STRING_SELECTOR_VALID(string_selector)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_STRING_SELECTOR_VALID(string_selector)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_alert_string_keys_rq);
 
@@ -865,14 +826,10 @@ fill_cmd_set_pef_configuration_parameters_alert_strings (uint8_t string_selector
                                                          uint32_t string_data_len,
                                                          fiid_obj_t obj_cmd_rq)
 { 
-  if (!IPMI_STRING_SELECTOR_VALID(string_selector)
-      || !string_data
-      || !string_data_len
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_STRING_SELECTOR_VALID(string_selector)
+	      && string_data
+	      && string_data_len
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_pef_configuration_parameters_alert_strings_rq);
 
@@ -903,12 +860,8 @@ fill_cmd_get_pef_configuration_parameters (uint8_t parameter_selector,
 					   uint8_t block_selector,
 					   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_GET_PEF_PARAMETER_VALID(get_parameter)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_pef_configuration_parameters_rq);
 
@@ -930,12 +883,8 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
                                       uint16_t record_id,
                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID(set_record_id_for_last_record)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_SET_RECORD_ID_FOR_LAST_RECORD_PROCESSED_VALID(set_record_id_for_last_record)
+	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_last_processed_event_id_rq);
 
@@ -954,11 +903,7 @@ fill_cmd_set_last_processed_event_id (uint8_t set_record_id_for_last_record,
 int8_t
 fill_cmd_get_last_processed_event_id (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_last_processed_event_id_rq);
 
@@ -977,16 +922,12 @@ fill_cmd_alert_immediate (uint8_t channel_number,
                           uint8_t send_alert_string,
                           fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_ALERT_IMMEDIATE_OPERATION_VALID(operation)
-      || !IPMI_STRING_SELECTOR_VALID(string_selector)
-      || !IPMI_SEND_ALERT_STRING_VALID(send_alert_string)
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_ALERT_IMMEDIATE_OPERATION_VALID(operation)
+	      && IPMI_STRING_SELECTOR_VALID(string_selector)
+	      && IPMI_SEND_ALERT_STRING_VALID(send_alert_string)
+	      && IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_alert_immediate_rq);
 
@@ -1014,11 +955,7 @@ fill_cmd_pet_acknowledge (uint16_t sequence_number,
                           uint32_t event_data, 
                           fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_pet_acknowledge_rq);
 

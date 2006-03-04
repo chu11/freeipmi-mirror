@@ -35,6 +35,7 @@
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -200,19 +201,15 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
                            uint32_t session_sequence_number, 
                            fiid_obj_t obj_rmcpplus_session_hdr)
 {
-  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
-      || !IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
-      || !IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
-      || (IPMI_PAYLOAD_TYPE_SESSION_SETUP(payload_type)
-          && (payload_authenticated 
-	      || payload_encrypted 
-	      || session_id 
-	      || session_sequence_number))
-      || !fiid_obj_valid(obj_rmcpplus_session_hdr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PAYLOAD_TYPE_VALID(payload_type)
+	      && IPMI_PAYLOAD_AUTHENTICATED_FLAG_VALID(payload_authenticated)
+	      && IPMI_PAYLOAD_ENCRYPTED_FLAG_VALID(payload_encrypted)
+	      && !(IPMI_PAYLOAD_TYPE_SESSION_SETUP(payload_type)
+		   && (payload_authenticated 
+		       || payload_encrypted 
+		       || session_id 
+		       || session_sequence_number))
+	      && fiid_obj_valid(obj_rmcpplus_session_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
 
@@ -241,12 +238,8 @@ fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
                            uint32_t authentication_code_data_len,
                            fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  if ((authentication_code_data && authentication_code_data_len > IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH)
-      || !fiid_obj_valid(obj_rmcpplus_session_trlr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (!(authentication_code_data && authentication_code_data_len > IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH)
+	      && fiid_obj_valid(obj_rmcpplus_session_trlr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
   
@@ -277,14 +270,10 @@ fill_rmcpplus_payload(uint8_t *confidentiality_header,
                       uint32_t confidentiality_trailer_len,
                       fiid_obj_t obj_cmd_rq)
 {
-  if ((confidentiality_header && confidentiality_header_len > IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH)
-      || (payload_data && payload_data_len > IPMI_MAX_PAYLOAD_LENGTH)
-      || (confidentiality_trailer && confidentiality_trailer_len > IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH) 
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (!(confidentiality_header && confidentiality_header_len > IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH)
+	      && !(payload_data && payload_data_len > IPMI_MAX_PAYLOAD_LENGTH)
+	      && !(confidentiality_trailer && confidentiality_trailer_len > IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH) 
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_payload);
 
@@ -320,15 +309,11 @@ fill_rmcpplus_open_session (uint8_t message_tag,
                             uint8_t confidentiality_algorithm,
                             fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-      || !IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+	      && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+	      && IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_open_session_rq);
 
@@ -420,16 +405,12 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
 {
   char buf[IPMI_MAX_USER_NAME_LENGTH];
 
-  if (!remote_console_random_number
-      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
-      || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
-      || !IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup_flag)
-      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (remote_console_random_number
+	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+	      && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup_flag)
+	      && !(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_rakp_message_1);
 
@@ -485,13 +466,9 @@ fill_rmcpplus_rakp_message_3(uint8_t message_tag,
                              uint32_t key_exchange_authentication_code_len,
                              fiid_obj_t obj_cmd_rq)
 {
-  if ((key_exchange_authentication_code && key_exchange_authentication_code_len > IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)
-      || !RMCPPLUS_STATUS_VALID(rmcpplus_status_code)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (!(key_exchange_authentication_code && key_exchange_authentication_code_len > IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)
+	      && RMCPPLUS_STATUS_VALID(rmcpplus_status_code)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_rakp_message_3);
 

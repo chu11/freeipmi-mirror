@@ -62,22 +62,18 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
 
   /* key can be NULL, indicating a empty key */
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-      || (key && !key_len)
-      || !remote_console_random_number
-      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
-      || !managed_system_random_number
-      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
-      || !IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
-      || (user_name && !user_name_len)
-      || !sik
-      || !sik_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && !(key && !key_len)
+	      && remote_console_random_number
+	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+	      && managed_system_random_number
+	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
+	      && !(user_name && !user_name_len)
+	      && sik
+	      && sik_len);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
@@ -103,11 +99,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   ERR_EXIT (crypt_digest_len == expected_digest_len);
 
-  if (sik_len < expected_digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (!(sik_len < expected_digest_len));
 
   key_len = (key_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : key_len;
   
@@ -168,15 +160,10 @@ _calculate_k_rakp_none(uint8_t *k,
    * rakp is none.  So we're just going to say a NULL key.
    */
 
-  if (!k
-      || !k_len
-      || !constant
-      || !constant_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_none: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (k
+	      && k_len
+	      && constant
+	      && constant_len);
  
   memset(k, '\0', k_len);
   return (k_len);
@@ -195,21 +182,16 @@ _calculate_k_rakp_hmac(int hash_algorithm,
   int computed_digest_len;
   unsigned int crypt_digest_len;
   
-  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
-      || !sik_key
-      || !sik_key_len
-      || !k
-      || !k_len
-      || !constant
-      || !constant_len
-      || k_len < expected_digest_len 
-      || constant_len < expected_digest_len 
-      || sik_key_len < expected_digest_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_hmac: Invalid parameters");
-      return (-1);
-    } 
+  ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
+	      && sik_key
+	      && sik_key_len
+	      && k
+	      && k_len
+	      && constant
+	      && constant_len
+	      && !(k_len < expected_digest_len)
+	      && !(constant_len < expected_digest_len)
+	      && !(sik_key_len < expected_digest_len));
 
   ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
   ERR (crypt_digest_len == expected_digest_len);
@@ -242,17 +224,12 @@ _calculate_k_rakp_hmac_sha1(uint8_t *sik_key,
                             uint8_t *constant,
                             uint32_t constant_len)
 {
-  if (!sik_key
-      || !sik_key_len
-      || !k
-      || !k_len
-      || !constant
-      || !constant_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_hmac_sha1: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (sik_key
+	      && sik_key_len
+	      && k
+	      && k_len
+	      && constant
+	      && constant_len);
 
   return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_SHA1,
                                 IPMI_HMAC_SHA1_DIGEST_LENGTH,
@@ -272,17 +249,12 @@ _calculate_k_rakp_hmac_md5(uint8_t *sik_key,
                            uint8_t *constant,
                            uint32_t constant_len)
 {
-  if (!sik_key
-      || !sik_key_len
-      || !k
-      || !k_len
-      || !constant
-      || !constant_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_hmac_md5: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (sik_key
+	      && sik_key_len
+	      && k
+	      && k_len
+	      && constant
+	      && constant_len);
 
   return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_MD5,
                                 IPMI_HMAC_MD5_DIGEST_LENGTH,
@@ -303,21 +275,16 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                   uint8_t *constant,
                   uint32_t constant_len)
 {
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-      || ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-	   || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-	  && (!sik_key || !sik_key_len))
-      || !k
-      || !k_len
-      || !constant
-      || !constant_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_calculate_k: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && !((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+		    || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+		   && (!sik_key || !sik_key_len))
+	      && k
+	      && k_len
+	      && constant
+	      && constant_len);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     return _calculate_k_rakp_none(k, k_len, constant, constant_len);
@@ -407,22 +374,18 @@ ipmi_calculate_keys(uint8_t payload_type,
   uint8_t sik_key[IPMI_MAX_PAYLOAD_LENGTH];
   int32_t sik_key_len;
 
-  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
-      || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-	  && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-      || !integrity_key
-      || !(*integrity_key)
-      || !integrity_key_len
-      || !(*integrity_key_len)
-      || !confidentiality_key
-      || !(*confidentiality_key)
-      || !confidentiality_key_len
-      || !(*confidentiality_key_len))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PAYLOAD_TYPE_VALID(payload_type)
+	      && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+	      && integrity_key
+	      && (*integrity_key)
+	      && integrity_key_len
+	      && (*integrity_key_len)
+	      && confidentiality_key
+	      && (*confidentiality_key)
+	      && confidentiality_key_len
+	      && (*confidentiality_key_len));
 
   integrity_key_buf = *integrity_key;
   integrity_key_buf_len = *integrity_key_len;
@@ -442,18 +405,14 @@ ipmi_calculate_keys(uint8_t payload_type,
       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
       || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
     {
-      if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-	  || (authentication_code_data && !authentication_code_data)
-	  || !remote_console_random_number
-	  || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
-	  || !managed_system_random_number
-	  || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
-	  || !IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
-	  || (user_name && !user_name_len))
-	{
-	  errno = EINVAL;
-	  return (-1);
-	}
+      ERR_EINVAL (IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+		  && !(authentication_code_data && !authentication_code_data)
+		  && remote_console_random_number
+		  && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+		  && managed_system_random_number
+		  && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+		  && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
+		  && !(user_name && !user_name_len));
       
       ERR (!((sik_key_len = ipmi_calculate_sik(authentication_algorithm,
 					       authentication_code_data,
@@ -486,24 +445,16 @@ ipmi_calculate_keys(uint8_t payload_type,
 					 k1,
 					 IPMI_MAX_PAYLOAD_LENGTH)) < 0));
       
-      if (integrity_key_buf_len < k1_len)
-	{
-	  errno = EMSGSIZE;
-	  return (-1);
-	}
+      ERR_EMSGSIZE (!(integrity_key_buf_len < k1_len));
       
       memcpy(integrity_key_buf, k1, k1_len);
       *integrity_key_len = k1_len;
     }
   else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
     {
-      if (authentication_code_data
-	  && (!authentication_code_data_len
-	      || integrity_key_buf_len < authentication_code_data_len))
-	{
-	  errno = EMSGSIZE;
-	  return (-1);
-	}
+      ERR_EMSGSIZE (!(authentication_code_data
+		      && (!authentication_code_data_len
+			  || integrity_key_buf_len < authentication_code_data_len)));
       
       memset(integrity_key_buf, '\0', integrity_key_buf_len);
       if (authentication_code_data)
@@ -531,11 +482,7 @@ ipmi_calculate_keys(uint8_t payload_type,
 					 k2,
 					 IPMI_MAX_PAYLOAD_LENGTH)) < 0));
       
-      if (confidentiality_key_buf_len < k2_len)
-	{
-	  errno = EMSGSIZE;
-	  return (-1);
-	}
+      ERR_EMSGSIZE (!(confidentiality_key_buf_len < k2_len));
       
       memcpy(confidentiality_key_buf, k2, k2_len);
       *confidentiality_key_len = k2_len;
@@ -565,19 +512,15 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len, expected_digest_len;
   
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-      || !managed_system_random_number
-      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
-      || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
-      || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
-      || (!user_name && user_name_length)
-      || !key_exchange_authentication_code)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && managed_system_random_number
+	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+	      && !(user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
+	      && !(!user_name && user_name_length)
+	      && key_exchange_authentication_code);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
     {
@@ -586,11 +529,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
     }
   else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      if (key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LENGTH)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+      ERR_EINVAL (!(key_exchange_authentication_code_len < IPMI_HMAC_SHA1_DIGEST_LENGTH));
 
       expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
@@ -598,11 +537,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
     }
   else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
-      if (key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+      ERR_EINVAL (!(key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LENGTH));
 
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
@@ -652,13 +587,9 @@ int8_t
 ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
 				fiid_obj_t obj_rmcpplus_payload)
 {
-  if ((confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-       && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-      || !fiid_obj_valid(obj_rmcpplus_payload))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL ((confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+	       || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+	      && fiid_obj_valid(obj_rmcpplus_payload));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
@@ -706,11 +637,7 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
   uint64_t pad_length;
   int i;
     
-  if (!fiid_obj_valid(obj_rmcpplus_session_trlr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_rmcpplus_session_trlr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
@@ -764,23 +691,19 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
   uint32_t key_exchange_authentication_code_len;
   int32_t compare_len;
 
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-      || !remote_console_random_number
-      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
-      || !managed_system_random_number
-      || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
-      || !managed_system_guid
-      || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH
-      || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
-      || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
-      || (!user_name && user_name_length)
-      || !fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && remote_console_random_number
+	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+	      && managed_system_random_number
+	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+	      && managed_system_guid
+	      && !(managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+	      && !(user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
+	      && !(!user_name && user_name_length)
+	      && fiid_obj_valid(obj_cmd));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_2);
 
@@ -885,28 +808,20 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
   uint8_t integrity_check_value[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t integrity_check_value_len;
 
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-      || !remote_console_random_number
-      || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
-      || !managed_system_guid
-      || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH
-      || !fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && remote_console_random_number
+	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
+	      && managed_system_guid
+	      && !(managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH)
+	      && fiid_obj_valid(obj_cmd));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_4);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      if (!sik_key || sik_key_len < IPMI_HMAC_SHA1_DIGEST_LENGTH)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+      ERR_EINVAL (!(!sik_key || sik_key_len < IPMI_HMAC_SHA1_DIGEST_LENGTH));
 
       /* achu: For some reason they want SHA1_96 for this check, sigh */
       compare_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
@@ -915,11 +830,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
     }
   else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
-      if (!sik_key || sik_key_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+      ERR_EINVAL (!(!sik_key || sik_key_len < IPMI_HMAC_MD5_DIGEST_LENGTH));
 
       compare_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
@@ -987,17 +898,13 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
   uint8_t authentication_code[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t authentication_code_len;
   
-  if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_NONE
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128)
-      || !pkt
-      || !pkt_len
-      || !fiid_obj_valid(obj_rmcpplus_session_trlr))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+	      && pkt
+	      && pkt_len
+	      && fiid_obj_valid(obj_rmcpplus_session_trlr));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
@@ -1023,8 +930,7 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
       compare_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
-    return (-1);
+  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
      
   ERR_EXIT (crypt_digest_len == expected_digest_len);
   
@@ -1097,22 +1003,13 @@ ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_session_hdr, uint8_t pa
   uint64_t val;
   int32_t len;
 
-  if (!IPMI_PAYLOAD_TYPE_VALID(payload_type)
-      || !obj_rmcpplus_session_hdr)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PAYLOAD_TYPE_VALID(payload_type)
+	      && fiid_obj_valid(obj_rmcpplus_session_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
 
   FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type");
-
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_rmcpplus_session_hdr, "payload_type", &val);
 
@@ -1126,29 +1023,15 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
   uint64_t val;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd)
-      || !RMCPPLUS_STATUS_VALID(status_code))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd)
+	      && RMCPPLUS_STATUS_VALID(status_code)
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"rmcpplus_status_code");
-
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, "rmcpplus_status_code", &val);
 
@@ -1161,30 +1044,16 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd, uint8_t message_tag)
   uint64_t val;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd)
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"message_tag");
-
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, "message_tag", &val);
 
@@ -1197,29 +1066,15 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remot
   uint64_t val;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_cmd))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1
-      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd)
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
   
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"remote_console_session_id");
+  ERR_EINVAL (len);
   
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
   FIID_OBJ_GET(obj_cmd, "remote_console_session_id", &val);
 
   return ((remote_console_session_id == val) ? 1 : 0);

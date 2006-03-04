@@ -67,11 +67,7 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
   int rv = -1;
   int32_t len;
 
-  if (!dev || !seld || !record_data || !record_data_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (dev && seld && record_data && record_data_len);
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_entry_rs);
 
@@ -122,11 +118,7 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   int rv = -1;
   int32_t len;
 
-  if (!dev || !seld || !record_data || !record_data_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (dev && seld && record_data && record_data_len);
 
   if (seld->next_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     return (-1);
@@ -193,11 +185,7 @@ get_sel_system_event_record (uint8_t *record_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
 
-  if (!record_data || !sel_record)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_system_event_record);
 
@@ -433,11 +421,7 @@ get_sel_timestamped_oem_record (uint8_t *record_data,
   fiid_obj_t obj = NULL;
   int8_t rv = -1;
 
-  if (!record_data || !sel_record)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_timestamped_oem_record);
   
@@ -494,11 +478,7 @@ get_sel_non_timestamped_oem_record (uint8_t *record_data, uint32_t record_data_l
   char *tmp_str = NULL;
   int i;
 
-  if (!record_data || !sel_record)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_non_timestamped_oem_record);
   
@@ -557,11 +537,7 @@ get_sel_record (uint8_t *record_data,
   uint64_t val;
   int rv = -1;
 
-  if (!record_data || !sel_record)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (record_data && sel_record);
 
   FIID_OBJ_CREATE (obj, tmpl_sel_record_header);
 
@@ -595,11 +571,7 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   uint64_t val;
   int rv = -1;
   
-  if (!dev || !pinfo)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (dev && pinfo);
 
   FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_info_rs);
 

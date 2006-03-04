@@ -56,16 +56,12 @@ _dump_rmcpplus_session_hdr(int fd,
   unsigned int indx = 0;
   int32_t obj_len, rv = -1;
 
-  if (!pkt
-      || !payload_type
-      || !payload_authenticated
-      || !payload_encrypted
-      || !session_id
-      || !ipmi_payload_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (pkt
+	      && payload_type
+	      && payload_authenticated
+	      && payload_encrypted
+	      && session_id
+	      && ipmi_payload_len);
   
   /*
    * Extract auth_type and payload information
@@ -158,17 +154,12 @@ _dump_rmcpplus_payload_data(int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  if (!tmpl_lan_msg_hdr
-      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-      || !tmpl_cmd
-      || !pkt
-      || !lan_msg_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_data: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd
+	      && pkt
+	      && lan_msg_len);
   
   /* Dump message header */
 
@@ -237,17 +228,12 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
   fiid_obj_t obj_rmcpplus_payload = NULL;
   int32_t rv = -1;
 
-  if (!tmpl_lan_msg_hdr
-      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-      || !tmpl_cmd
-      || !pkt
-      || !ipmi_payload_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_confidentiality_none: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd
+	      && pkt
+	      && ipmi_payload_len);
 
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
@@ -303,45 +289,26 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
-  if (!tmpl_lan_msg_hdr
-      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-      || !tmpl_cmd
-      || !confidentiality_key
-      || !pkt
-      || !ipmi_payload_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_confidentiality_aes_cbc_128: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL (tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd
+	      && confidentiality_key
+	      && pkt
+	      && ipmi_payload_len);
   
   ERR_CLEANUP (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LENGTH));
   
-  if (confidentiality_key_len < IPMI_AES_CBC_128_KEY_LENGTH)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  ERR_EINVAL_CLEANUP (!(confidentiality_key_len < IPMI_AES_CBC_128_KEY_LENGTH));
   confidentiality_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
   
   ERR_CLEANUP (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LENGTH);
-  
-  if (ipmi_payload_len < IPMI_AES_CBC_128_BLOCK_LENGTH)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  ERR_EINVAL_CLEANUP (!(ipmi_payload_len < IPMI_AES_CBC_128_BLOCK_LENGTH));
 
   payload_data_len = ipmi_payload_len - IPMI_AES_CBC_128_BLOCK_LENGTH;
-
-  if (payload_data_len <= 0)
-    {
-      errno = EINVAL;
-      goto cleanup;
-    }
+  ERR_EINVAL_CLEANUP (!(payload_data_len <= 0));
 
   memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LENGTH);
   indx += IPMI_AES_CBC_128_BLOCK_LENGTH;
@@ -365,20 +332,10 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   ERR_CLEANUP (!(decrypt_len != payload_data_len));
   
   pad_len = payload_buf[payload_data_len - 1];
-  if (pad_len > IPMI_AES_CBC_128_BLOCK_LENGTH)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_confidentiality_aes_cbc_128: invalid pad_len");
-      goto cleanup;
-    }
+  ERR_EINVAL_CLEANUP (!(pad_len > IPMI_AES_CBC_128_BLOCK_LENGTH));
   
   cmd_data_len = payload_data_len - pad_len - 1;
-  if (cmd_data_len <= 0)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_confidentiality_aes_cbc_128: invalid cmd_data_len");
-      goto cleanup;
-    }
+  ERR_EINVAL_CLEANUP (!(cmd_data_len <= 0));
   
   FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
 		    "payload_data",
@@ -426,33 +383,28 @@ _dump_rmcpplus_payload_special(int fd,
   fiid_obj_t obj_cmd = NULL;
   int32_t rv = -1;
 
-  if ((payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-       && payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-      /* XXX need to dump regardless of matching? */
-      || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
-      || (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rs) != 1))
-      || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1))
-      || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_2) != 1))
-      || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
-      || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
-	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
-      || !tmpl_lan_msg_hdr
-      || !tmpl_cmd
-      || !pkt)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload_special: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+	      /* XXX need to dump regardless of matching? */
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rs) != 1))
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1))
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_2) != 1))
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
+	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
+		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
+	      && tmpl_lan_msg_hdr
+	      && tmpl_cmd
+	      && pkt);
   
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
@@ -514,28 +466,23 @@ _dump_rmcpplus_payload(int fd,
                        uint8_t *pkt, 
                        uint32_t ipmi_payload_len)
 {
-  if ((payload_type != IPMI_PAYLOAD_TYPE_IPMI
-       && payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-       && payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-      || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-      || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-          && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-      || !ipmi_payload_len
-      || !tmpl_lan_msg_hdr
-      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-      || !tmpl_cmd
-      || !pkt
-      || !ipmi_payload_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_dump_rmcpplus_payload: Invalid parameters");
-      return (-1);
-    }
+  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+	      && ipmi_payload_len
+	      && tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd
+	      && pkt
+	      && ipmi_payload_len);
 
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
@@ -594,14 +541,10 @@ _dump_rmcpplus_session_trlr(int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_NONE
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128));
 
   if (!session_id)
     return (0);
@@ -735,15 +678,11 @@ ipmi_dump_rmcpplus_packet (int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  if (!pkt
-      || !tmpl_lan_msg_hdr
-      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
-      || !tmpl_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (pkt
+	      && tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd);
 
   ERR_CLEANUP (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_MAX_PAYLOAD_LENGTH) < 0));
 

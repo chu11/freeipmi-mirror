@@ -78,14 +78,10 @@ ipmi_crypt_hash(int hash_algorithm,
   unsigned int gcry_md_digest_len;
   uint8_t *digestPtr;
 
-  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
-      || (hash_data && !hash_data_len)
-      || !digest
-      || !digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
+	      && !(hash_data && !hash_data_len)
+	      && digest
+	      && digest_len);
     
   ERR (!(_ipmi_init_crypt() < 0));
 
@@ -126,11 +122,7 @@ ipmi_crypt_hash_digest_len(int hash_algorithm)
 {
   int gcry_md_algorithm;
 
-  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm));
 
   ERR (!(_ipmi_init_crypt() < 0));
 
@@ -159,27 +151,16 @@ _cipher_crypt(int cipher_algorithm,
   gcry_cipher_hd_t h;
   gcry_error_t e;
 
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
-      || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
-      || !data
-      || !data_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
+	      && IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
+	      && iv
+	      && iv_len
+	      && data
+	      && data_len);
 
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    {
-      if (!iv || !iv_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      gcry_cipher_algorithm = GCRY_CIPHER_AES;
-      expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
-      expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LENGTH;
-    }
+  gcry_cipher_algorithm = GCRY_CIPHER_AES;
+  expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
+  expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LENGTH;
 
   if (cipher_mode == IPMI_CRYPT_CIPHER_MODE_NONE)
     gcry_cipher_mode = GCRY_CIPHER_MODE_NONE;
@@ -190,33 +171,18 @@ _cipher_crypt(int cipher_algorithm,
   
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(cipher_algorithm)) < 0));
 
-  if (cipher_keylen < expected_cipher_key_len
-      || cipher_blocklen != expected_cipher_block_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR (!(cipher_keylen < expected_cipher_key_len
+	 || cipher_blocklen != expected_cipher_block_len));
 
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    {
-      if (iv_len < cipher_blocklen)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+  ERR_EINVAL (!(iv_len < cipher_blocklen));
 
-      if (data_len % cipher_blocklen != 0)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+  ERR_EINVAL ((data_len % cipher_blocklen == 0));
 
-      if (iv_len > cipher_blocklen)
-        iv_len = cipher_blocklen;
-
-      if (key && key_len > expected_cipher_key_len)
-        key_len = expected_cipher_key_len;
-    }
+  if (iv_len > cipher_blocklen)
+    iv_len = cipher_blocklen;
+  
+  if (key && key_len > expected_cipher_key_len)
+    key_len = expected_cipher_key_len;
 
   ERR (!(_ipmi_init_crypt() < 0));
 
@@ -300,15 +266,10 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
   gcry_error_t e;
   size_t len;
 
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
-      || !IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
+	      && IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info));
 
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    gcry_cipher_algorithm = GCRY_CIPHER_AES;
+  gcry_cipher_algorithm = GCRY_CIPHER_AES;
 
   if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)
     gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;

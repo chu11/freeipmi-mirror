@@ -115,17 +115,13 @@ ipmi_sensor_get_decode_parameters (uint8_t *sensor_record,
   
   fiid_obj_t obj = NULL;
 
-  if (!sensor_record 
-      || !analog_data_format
-      || !r_exponent
-      || !b_exponent
-      || !linear
-      || !b
-      || !m)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (sensor_record 
+	      && analog_data_format
+	      && r_exponent
+	      && b_exponent
+	      && linear
+	      && b
+	      && m);
 
   FIID_OBJ_CREATE_CLEANUP (obj, tmpl_sdr_full_sensor_record);
   
@@ -180,11 +176,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   uint8_t analog_data_format;  
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_full_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_full_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_full_sensor_record);
 
@@ -367,11 +359,7 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
   
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_compact_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_compact_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_compact_sensor_record);
 
@@ -417,11 +405,7 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
   uint64_t val;  
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_event_only_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_event_only_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_event_only_sensor_record);
 
@@ -458,11 +442,7 @@ get_sdr_entity_association_record (uint8_t *sdr_record_data,
   uint64_t val;
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_entity_association_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_entity_association_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_entity_association_sensor_record);
 
@@ -487,11 +467,7 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
   uint64_t val;
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_generic_device_locator_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_generic_device_locator_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_generic_device_locator_sensor_record);
 
@@ -546,11 +522,7 @@ get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
   uint64_t val;
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_logical_fru_device_locator_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_logical_fru_device_locator_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_logical_fru_device_locator_sensor_record);
 
@@ -587,11 +559,7 @@ get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
   uint64_t val;
   fiid_obj_t obj = NULL;
 
-  if (!sdr_record_data || !sdr_management_controller_device_locator_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_management_controller_device_locator_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_management_controller_device_locator_sensor_record);
 
@@ -623,11 +591,7 @@ get_sdr_oem_record (uint8_t *sdr_record_data,
   fiid_obj_t obj = NULL;
   int32_t len;
 
-  if (!sdr_record_data || !sdr_oem_record)
-    {
-      errno = EINVAL;
-      return;
-    }
+  ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_oem_record);
 
   FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_oem_record);
 
@@ -671,14 +635,10 @@ get_sdr_sensor_record (ipmi_device_t *dev,
   int32_t sensor_record_header_len;
   uint8_t *sensor_record_header_buf = NULL;
 
-  if (!dev 
-      || !fiid_obj_valid(obj_cmd_rs)
-      || !sensor_record
-      || !sensor_record_len)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (dev 
+	      && fiid_obj_valid(obj_cmd_rs)
+	      && sensor_record
+	      && sensor_record_len);
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sdr_rs);
 
@@ -772,13 +732,9 @@ get_sdr_record (ipmi_device_t *dev,
   uint64_t val = 0;
   int8_t rv = -1;
 
-  if (!dev
-      || !next_record_id
-      || !sdr_record)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (dev
+	      && next_record_id
+	      && sdr_record);
 
   FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_get_sdr_rs);
   FIID_OBJ_CREATE_CLEANUP (obj_sdr_record, tmpl_sdr_sensor_record_header);
@@ -992,13 +948,9 @@ get_sensor_reading (ipmi_device_t *dev,
   int32_t len;
   uint64_t val;
   
-  if (!dev
-      || !sdr_record
-      || !sensor_reading)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (dev
+	      && sdr_record
+	      && sensor_reading);
 
   switch (sdr_record->record_type)
     {
