@@ -57,6 +57,7 @@ libfreeipmi:
   * len -> length globally?
     md2/md5
   * rmcpplus hdr_session / session_hdr ?
+  * need wrapper util function to generate write keys
 
 fish:
 -----
