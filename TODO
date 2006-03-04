@@ -54,12 +54,9 @@ libfreeipmi:
   * get event messages function that is passed fiids
   * autoconf getopt, pthread
   * lan ctx interface?
-  * len -> length globally?
-    md2/md5
-  * admin -> administrator?
-  * rmcpplus hdr_session / session_hdr ?
+  * len -> length
+    - fiid?
   * need wrapper util function to generate write keys
-  * obj_payload -> obj_rmcpplus_payload
 
 fish:
 -----

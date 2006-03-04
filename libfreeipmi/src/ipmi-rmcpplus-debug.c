@@ -145,7 +145,7 @@ _dump_rmcpplus_payload_data(int fd,
                             char *msg_hdr,
                             char *cmd_hdr,
                             char *trlr_hdr,
-                            fiid_template_t tmpl_msg_hdr,
+                            fiid_template_t tmpl_lan_msg_hdr,
                             fiid_template_t tmpl_cmd,
                             uint8_t *pkt,
                             uint32_t lan_msg_len)
@@ -157,9 +157,9 @@ _dump_rmcpplus_payload_data(int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  if (!tmpl_msg_hdr
-      || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+  if (!tmpl_lan_msg_hdr
+      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
+	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
       || !tmpl_cmd
       || !pkt
       || !lan_msg_len)
@@ -171,7 +171,7 @@ _dump_rmcpplus_payload_data(int fd,
   
   /* Dump message header */
 
-  FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_hdr, tmpl_msg_hdr);
+  FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_hdr, tmpl_lan_msg_hdr);
   FIID_OBJ_SET_ALL_LEN_CLEANUP(len, 
 			       obj_lan_msg_hdr,
 			       pkt + indx,
@@ -228,17 +228,17 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                             char *msg_hdr,
                                             char *cmd_hdr,
                                             char *trlr_hdr,
-                                            fiid_template_t tmpl_msg_hdr,
+                                            fiid_template_t tmpl_lan_msg_hdr,
                                             fiid_template_t tmpl_cmd,
                                             uint8_t *pkt,
                                             uint32_t ipmi_payload_len)
 {
-  fiid_obj_t obj_payload = NULL;
+  fiid_obj_t obj_rmcpplus_payload = NULL;
   int32_t rv = -1;
 
-  if (!tmpl_msg_hdr
-      || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+  if (!tmpl_lan_msg_hdr
+      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
+	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
       || !tmpl_cmd
       || !pkt
       || !ipmi_payload_len)
@@ -248,9 +248,9 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
       return (-1);
     }
 
-  FIID_OBJ_CREATE_CLEANUP(obj_payload, tmpl_rmcpplus_payload);
+  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
-  FIID_OBJ_SET_DATA_CLEANUP (obj_payload, 
+  FIID_OBJ_SET_DATA_CLEANUP (obj_rmcpplus_payload, 
                              "payload_data",
                              pkt,
                              ipmi_payload_len);
@@ -259,21 +259,21 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
 				       prefix,
 				       payload_hdr,
 				       NULL,
-				       obj_payload) < 0));
+				       obj_rmcpplus_payload) < 0));
 
   ERR_CLEANUP (!(_dump_rmcpplus_payload_data(fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
                                              trlr_hdr,
-                                             tmpl_msg_hdr,
+                                             tmpl_lan_msg_hdr,
                                              tmpl_cmd,
                                              pkt,
                                              ipmi_payload_len) < 0));
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_payload);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
   return (rv);
 }
 
@@ -284,7 +284,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    char *msg_hdr,
                                                    char *cmd_hdr,
                                                    char *trlr_hdr,
-                                                   fiid_template_t tmpl_msg_hdr,
+                                                   fiid_template_t tmpl_lan_msg_hdr,
                                                    fiid_template_t tmpl_cmd,
                                                    uint8_t *confidentiality_key,
                                                    uint32_t confidentiality_key_len,
@@ -296,15 +296,15 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
   int32_t payload_data_len, decrypt_len, cmd_data_len;
-  fiid_obj_t obj_payload = NULL;
+  fiid_obj_t obj_rmcpplus_payload = NULL;
   unsigned int indx = 0;
   int32_t rv = -1;
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
-  if (!tmpl_msg_hdr
-      || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+  if (!tmpl_lan_msg_hdr
+      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
+	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
       || !tmpl_cmd
       || !confidentiality_key
       || !pkt
@@ -346,9 +346,9 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   indx += IPMI_AES_CBC_128_BLOCK_LENGTH;
   memcpy(payload_buf, pkt + indx, payload_data_len);
 
-  FIID_OBJ_CREATE_CLEANUP(obj_payload, tmpl_rmcpplus_payload);
+  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
-  FIID_OBJ_SET_DATA_CLEANUP(obj_payload,
+  FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
                             "confidentiality_header",
                             iv,
                             IPMI_AES_CBC_128_BLOCK_LENGTH);
@@ -379,12 +379,12 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
       goto cleanup;
     }
   
-  FIID_OBJ_SET_DATA(obj_payload,
+  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
 		    "payload_data",
 		    payload_buf,
 		    cmd_data_len);
   
-  FIID_OBJ_SET_DATA(obj_payload,
+  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
 		    "confidentiality_trailer",
 		    payload_buf + cmd_data_len,
 		    pad_len + 1);
@@ -393,20 +393,20 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 				       prefix,
 				       payload_hdr,
 				       NULL,
-				       obj_payload) < 0));
+				       obj_rmcpplus_payload) < 0));
   
   ERR_CLEANUP (!(_dump_rmcpplus_payload_data(fd,
                                              prefix,
                                              msg_hdr,
                                              cmd_hdr,
                                              trlr_hdr,
-                                             tmpl_msg_hdr,
+                                             tmpl_lan_msg_hdr,
                                              tmpl_cmd,
                                              payload_buf,
                                              cmd_data_len) < 0));
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_payload);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
   return (rv);  
 }
 
@@ -416,12 +416,12 @@ _dump_rmcpplus_payload_special(int fd,
                                char *payload_hdr,
                                char *cmd_hdr,
                                uint8_t payload_type,
-                               fiid_template_t tmpl_msg_hdr,
+                               fiid_template_t tmpl_lan_msg_hdr,
                                fiid_template_t tmpl_cmd,
                                uint8_t *pkt,
                                uint32_t ipmi_payload_len)
 {
-  fiid_obj_t obj_payload = NULL;
+  fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_cmd = NULL;
   int32_t rv = -1;
 
@@ -444,7 +444,7 @@ _dump_rmcpplus_payload_special(int fd,
 	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
       || (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
 	  && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
-      || !tmpl_msg_hdr
+      || !tmpl_lan_msg_hdr
       || !tmpl_cmd
       || !pkt)
     {
@@ -453,9 +453,9 @@ _dump_rmcpplus_payload_special(int fd,
       return (-1);
     }
   
-  FIID_OBJ_CREATE_CLEANUP(obj_payload, tmpl_rmcpplus_payload);
+  FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
-  FIID_OBJ_SET_DATA_CLEANUP(obj_payload, 
+  FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload, 
 			    "payload_data",
 			    pkt,
 			    ipmi_payload_len);
@@ -464,7 +464,7 @@ _dump_rmcpplus_payload_special(int fd,
 				       prefix,
 				       payload_hdr,
 				       NULL,
-				       obj_payload) < 0));
+				       obj_rmcpplus_payload) < 0));
 
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
     FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_rq);
@@ -491,7 +491,7 @@ _dump_rmcpplus_payload_special(int fd,
 
   rv = 0;
  cleanup:
-  FIID_OBJ_DESTROY_NO_RETURN(obj_payload);
+  FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
   FIID_OBJ_DESTROY_NO_RETURN(obj_cmd);
   return (rv);
 }
@@ -506,7 +506,7 @@ _dump_rmcpplus_payload(int fd,
                        uint8_t payload_type,
                        uint8_t authentication_algorithm,
                        uint8_t confidentiality_algorithm,
-                       fiid_template_t tmpl_msg_hdr, 
+                       fiid_template_t tmpl_lan_msg_hdr, 
                        fiid_template_t tmpl_cmd,
                        uint8_t *confidentiality_key,
                        uint32_t confidentiality_key_len,
@@ -524,9 +524,9 @@ _dump_rmcpplus_payload(int fd,
       || (confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
           && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
       || !ipmi_payload_len
-      || !tmpl_msg_hdr
-      || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+      || !tmpl_lan_msg_hdr
+      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
+	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
       || !tmpl_cmd
       || !pkt
       || !ipmi_payload_len)
@@ -545,7 +545,7 @@ _dump_rmcpplus_payload(int fd,
                                                            msg_hdr,
                                                            cmd_hdr,
                                                            trlr_hdr,
-                                                           tmpl_msg_hdr,
+                                                           tmpl_lan_msg_hdr,
                                                            tmpl_cmd,
                                                            pkt,
                                                            ipmi_payload_len);
@@ -556,7 +556,7 @@ _dump_rmcpplus_payload(int fd,
                                                                   msg_hdr,
                                                                   cmd_hdr,
                                                                   trlr_hdr,
-                                                                  tmpl_msg_hdr,
+                                                                  tmpl_lan_msg_hdr,
                                                                   tmpl_cmd,
                                                                   confidentiality_key,
                                                                   confidentiality_key_len,
@@ -569,7 +569,7 @@ _dump_rmcpplus_payload(int fd,
                                           payload_hdr,
                                           cmd_hdr,
                                           payload_type,
-                                          tmpl_msg_hdr,
+                                          tmpl_lan_msg_hdr,
                                           tmpl_cmd,
                                           pkt,
                                           ipmi_payload_len);
@@ -699,12 +699,11 @@ ipmi_dump_rmcpplus_packet (int fd,
                            uint32_t confidentiality_key_len,
                            uint8_t *pkt, 
                            uint32_t pkt_len, 
-                           fiid_template_t tmpl_msg_hdr, 
+                           fiid_template_t tmpl_lan_msg_hdr, 
                            fiid_template_t tmpl_cmd)
 {
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, ipmi_payload_len;
-  uint8_t buf[IPMI_MAX_PAYLOAD_LENGTH];
   char prefix_buf[IPMI_MAX_PAYLOAD_LENGTH];
   fiid_obj_t obj_rmcp_hdr = NULL;
   fiid_obj_t obj_unexpected_data = NULL;
@@ -736,9 +735,9 @@ ipmi_dump_rmcpplus_packet (int fd,
   int32_t rv = -1;
 
   if (!pkt
-      || !tmpl_msg_hdr
-      || (fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
-	  && fiid_template_compare(tmpl_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
+      || !tmpl_lan_msg_hdr
+      || (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) != 1
+	  && fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) != 1)
       || !tmpl_cmd)
     {
       errno = EINVAL;
@@ -789,7 +788,7 @@ ipmi_dump_rmcpplus_packet (int fd,
                                         payload_type,
                                         authentication_algorithm,
                                         confidentiality_algorithm,
-                                        tmpl_msg_hdr, 
+                                        tmpl_lan_msg_hdr, 
                                         tmpl_cmd,
                                         confidentiality_key,
                                         confidentiality_key_len,

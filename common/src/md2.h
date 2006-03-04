@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md2.h,v 1.2.2.1 2006-03-02 04:52:27 chu11 Exp $
+ *  $Id: md2.h,v 1.2.2.2 2006-03-04 03:40:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,20 +33,20 @@ extern "C" {
 
 #include <stdint.h>
 
-#define MD2_BLOCK_LEN   16
-#define MD2_BUFFER_LEN  48
-#define MD2_CHKSUM_LEN  16
-#define MD2_DIGEST_LEN  16
-#define MD2_PADDING_LEN 16
-#define MD2_ROUNDS_LEN  18
+#define MD2_BLOCK_LENGTH   16
+#define MD2_BUFFER_LENGTH  48
+#define MD2_CHKSUM_LENGTH  16
+#define MD2_DIGEST_LENGTH  16
+#define MD2_PADDING_LENGTH 16
+#define MD2_ROUNDS_LENGTH  18
 
 typedef struct __md2 {
   uint32_t magic;
   uint8_t l;
   unsigned int mlen;
-  uint8_t x[MD2_BUFFER_LEN];
-  uint8_t c[MD2_CHKSUM_LEN];
-  uint8_t m[MD2_BLOCK_LEN];
+  uint8_t x[MD2_BUFFER_LENGTH];
+  uint8_t c[MD2_CHKSUM_LENGTH];
+  uint8_t m[MD2_BLOCK_LENGTH];
 } md2_t;
 
 int md2_init(md2_t *ctx);

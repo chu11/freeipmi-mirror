@@ -112,18 +112,18 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
   };
 
 int8_t
-fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd)
+fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_reset_watchdog_timer_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reset_watchdog_timer_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_RESET_WATCHDOG_TIMER);
   return (0);
 }
 
@@ -141,9 +141,9 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
                              uint8_t timer_use_expiration_flag_oem, 
                              uint8_t initial_countdown_value_ls_byte, 
                              uint8_t initial_countdown_value_ms_byte, 
-                             fiid_obj_t obj_cmd)
+                             fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd)
+  if (!fiid_obj_valid(obj_cmd_rq)
       || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(log)
       || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(stop_timer)
       || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(timer_use)
@@ -159,45 +159,45 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_set_watchdog_timer_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_watchdog_timer_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use", timer_use);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"stop_timer", stop_timer);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"log", log);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timeout_action", timeout_action);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"pre_timeout_interrupt", pre_timeout_interrupt);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved3", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"pre_timeout_interval", pre_timeout_interval);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved4", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.bios_frb2", timer_use_expiration_flag_bios_frb2);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.bios_post", timer_use_expiration_flag_bios_post);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.os_load", timer_use_expiration_flag_os_load);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.sms_os", timer_use_expiration_flag_sms_os);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved5", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved6", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"initial_countdown_value_ms_byte", initial_countdown_value_ms_byte);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_SET_WATCHDOG_TIMER);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use", timer_use);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"stop_timer", stop_timer);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"log", log);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timeout_action", timeout_action);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"pre_timeout_interrupt", pre_timeout_interrupt);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved3", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"pre_timeout_interval", pre_timeout_interval);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved4", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use_expiration_flag.bios_frb2", timer_use_expiration_flag_bios_frb2);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use_expiration_flag.bios_post", timer_use_expiration_flag_bios_post);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use_expiration_flag.os_load", timer_use_expiration_flag_os_load);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use_expiration_flag.sms_os", timer_use_expiration_flag_sms_os);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved5", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved6", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"initial_countdown_value_ms_byte", initial_countdown_value_ms_byte);
 
   return (0);
 }
 
 int8_t
-fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd)
+fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_watchdog_timer_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_watchdog_timer_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_WATCHDOG_TIMER);
   return (0);
 }

@@ -181,7 +181,7 @@ ipmi_lan_check_session_authentication_code (uint8_t *pkt, uint64_t pkt_len, uint
 	{
 	  md2_t ctx;
 	  
-	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LEN);
+	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LENGTH);
 	  
 	  md2_init(&ctx);
 	  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -201,7 +201,7 @@ ipmi_lan_check_session_authentication_code (uint8_t *pkt, uint64_t pkt_len, uint
 	{
 	  md5_t ctx;
 	  
-	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LEN);
+	  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LENGTH);
 	  
 	  md5_init(&ctx);
 	  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);

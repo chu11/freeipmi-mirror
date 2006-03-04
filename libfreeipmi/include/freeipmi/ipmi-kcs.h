@@ -33,14 +33,14 @@ extern fiid_template_t tmpl_hdr_kcs;
 
 int8_t fill_hdr_ipmi_kcs (uint8_t lun, 
 			  uint8_t fn, 
-			  fiid_obj_t obj_hdr);
-int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_hdr, 
+			  fiid_obj_t obj_kcs_hdr);
+int32_t assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr, 
                                fiid_obj_t obj_cmd, 
                                uint8_t *pkt, 
                                uint32_t pkt_len);
 int32_t unassemble_ipmi_kcs_pkt (uint8_t *pkt, 
                                  uint32_t pkt_len, 
-                                 fiid_obj_t obj_hdr, 
+                                 fiid_obj_t obj_kcs_hdr, 
                                  fiid_obj_t obj_cmd);
 
 #ifdef __cplusplus

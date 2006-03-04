@@ -932,16 +932,16 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
 
 int8_t
 ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
-				fiid_obj_t obj_payload)
+				fiid_obj_t obj_rmcpplus_payload)
 {
   if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
-      || !fiid_obj_valid(obj_payload))
+      || !fiid_obj_valid(obj_rmcpplus_payload))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_payload, tmpl_rmcpplus_payload);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
     /* No padding */
@@ -954,7 +954,7 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
       int i;
 
       FIID_OBJ_GET_DATA_LEN(confidentiality_trailer_len,
-                            obj_payload,
+                            obj_rmcpplus_payload,
                             "confidentiality_trailer",
                             confidentiality_trailer,
                             IPMI_MAX_PAYLOAD_LENGTH);
@@ -1048,7 +1048,7 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
 								    uint8_t requested_maximum_privilege_level,
 								    uint8_t *user_name,
 								    uint8_t user_name_length,
-								    fiid_obj_t obj_msg)
+								    fiid_obj_t obj_cmd)
 {
   uint8_t priv_byte = 0;
   uint8_t buf[IPMI_MAX_PAYLOAD_LENGTH];
@@ -1070,13 +1070,13 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
       || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
       || (user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
       || (!user_name && user_name_length)
-      || !fiid_obj_valid(obj_msg))
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_msg, tmpl_rmcpplus_rakp_message_2);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_2);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
@@ -1097,7 +1097,7 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
     }
 
   FIID_OBJ_GET_DATA_LEN(key_exchange_authentication_code_len,
-                        obj_msg,
+                        obj_cmd,
                         "key_exchange_authentication_code",
                         key_exchange_authentication_code,
                         IPMI_MAX_PAYLOAD_LENGTH);
@@ -1174,7 +1174,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
 							 uint32_t managed_system_session_id,
 							 uint8_t *managed_system_guid,
 							 uint32_t managed_system_guid_len,
-							 fiid_obj_t obj_msg)
+							 fiid_obj_t obj_cmd)
 {
   uint8_t buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t buf_index = 0;
@@ -1190,13 +1190,13 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
       || !managed_system_guid
       || managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH
-      || !fiid_obj_valid(obj_msg))
+      || !fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return -1;
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_msg, tmpl_rmcpplus_rakp_message_4);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_4);
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
@@ -1230,7 +1230,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
     }
 
   FIID_OBJ_GET_DATA_LEN(integrity_check_value_len,
-                        obj_msg,
+                        obj_cmd,
                         "integrity_check_value_len",
                         integrity_check_value,
                         IPMI_MAX_PAYLOAD_LENGTH);
@@ -1325,7 +1325,7 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
-      expected_digest_len = MD5_DIGEST_LEN;
+      expected_digest_len = MD5_DIGEST_LENGTH;
       compare_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   
@@ -1470,29 +1470,29 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
 }
                             
 int8_t 
-ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_msg, uint8_t message_tag)
+ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd, uint8_t message_tag)
 {
   uint64_t val;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_msg))
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_open_session_rq) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_open_session_rs) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_1) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_2) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_3) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_4) != 1)
+  if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_FIELD_LEN (len, obj_msg, (uint8_t *)"message_tag");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"message_tag");
 
   if (!len)
     {
@@ -1500,33 +1500,33 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_msg, uint8_t message_tag)
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg, "message_tag", &val);
+  FIID_OBJ_GET(obj_cmd, "message_tag", &val);
 
   return ((message_tag == val) ? 1 : 0);
 }
 
 int8_t 
-ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_msg, uint32_t remote_console_session_id)
+ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remote_console_session_id)
 {
   uint64_t val;
   int32_t len;
 
-  if (!fiid_obj_valid(obj_msg))
+  if (!fiid_obj_valid(obj_cmd))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  if (fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_open_session_rq) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_open_session_rs) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_2) != 1
-      && fiid_obj_template_compare(obj_msg, tmpl_rmcpplus_rakp_message_4) != 1)
+  if (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1
+      && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) != 1)
     {
       errno = EINVAL;
       return (-1);
     }
   
-  FIID_OBJ_FIELD_LEN (len, obj_msg, (uint8_t *)"remote_console_session_id");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"remote_console_session_id");
   
   if (!len)
     {
@@ -1534,7 +1534,7 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_msg, uint32_t remot
       return (-1);
     }
 
-  FIID_OBJ_GET(obj_msg, "remote_console_session_id", &val);
+  FIID_OBJ_GET(obj_cmd, "remote_console_session_id", &val);
 
   return ((remote_console_session_id == val) ? 1 : 0);
 }

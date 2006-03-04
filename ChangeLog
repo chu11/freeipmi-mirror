@@ -104,6 +104,8 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c: Fix various bugs.
+
+	* libfreeipmi/: Various variable name changes for consistency.
 	
 2006-03-02  Albert Chu <chu11@llnl.gov>
 
@@ -645,6 +647,26 @@
 	data template.
 
 	* libfreeipmi/include/Makefile.am: Add freeipmi.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-debug.h: Move defines into
+	ipmi-debug.c.
+
+	* common/src/md2.h, common/src/md2.c, common/src/md5.h,
+	common/src/md5.c: 'LEN' -> 'LENGTH'.
+
+	* libfreeipmi/: Adjust code for #define changes.
+
+	* freeipmi.spec.in: Add %dir directives for /usr/include/freeipmi
+	and /usr/include/freeipmi/udm.
+
+	* libfreeipmi/: Various variable name changes for consistency.
+	Several function parameter ordering changes for consistency.
+
+	* configure.ac: Autoconfed getopt.h.
+
+	* bmc-watchdog/src/bmc-watchdog.c, common/src/ipmi-ping.c,
+	garpd/src/garpd.c, ipmipower/src/ipmipower_config.c: Check for
+	HAVE_GETOPT_H.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 

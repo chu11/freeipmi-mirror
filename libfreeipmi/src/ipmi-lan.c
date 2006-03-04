@@ -87,65 +87,23 @@ fiid_template_t tmpl_lan_msg_trlr =
     {0, "", 0}
   };
 
-int8_t 
-fill_lan_msg_hdr (uint8_t net_fn, 
-		  uint8_t rs_lun, 
-		  uint8_t rq_seq, 
-		  fiid_obj_t obj_msg)
-{
-  uint8_t checksum_buf[1024];
-  int32_t checksum_len;
-  int8_t checksum;
-
-  if (!IPMI_NET_FN_VALID(net_fn)
-      || !IPMI_BMC_LUN_VALID(rs_lun)
-      || (rq_seq > IPMI_LAN_SEQUENCE_NUMBER_MAX)
-      || !fiid_obj_valid(obj_msg))
-    {
-      errno = EINVAL;
-      return -1;
-    }
-
-  FIID_OBJ_TEMPLATE_COMPARE(obj_msg, tmpl_lan_msg_hdr_rq);
-
-  FIID_OBJ_CLEAR (obj_msg);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"net_fn", net_fn);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"rs_lun", rs_lun);
-  
-  FIID_OBJ_GET_BLOCK_LEN (checksum_len,
-			  obj_msg, 
-			  (uint8_t *)"rs_addr", 
-			  (uint8_t *)"net_fn", 
-			  checksum_buf, 
-			  1024);
-
-  checksum = ipmi_checksum(checksum_buf, checksum_len);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"checksum1", checksum);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
-  FIID_OBJ_SET (obj_msg, (uint8_t *)"rq_seq", rq_seq);
-
-  return (0);
-}
-
 int8_t
-fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_number, uint32_t session_id, uint8_t *authentication_code_data, uint32_t authentication_code_data_len, fiid_obj_t obj_hdr)
+fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_number, uint32_t session_id, uint8_t *authentication_code_data, uint32_t authentication_code_data_len, fiid_obj_t obj_lan_session_hdr)
 {
-  if (!IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type)
+  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
       || (authentication_code_data && authentication_code_data_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
-      || !fiid_obj_valid(obj_hdr))
+      || !fiid_obj_valid(obj_lan_session_hdr))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_hdr, tmpl_lan_session_hdr);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_session_hdr, tmpl_lan_session_hdr);
 
-  FIID_OBJ_CLEAR (obj_hdr);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"authentication_type", authentication_type);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_sequence_number", inbound_sequence_number);
-  FIID_OBJ_SET (obj_hdr, (uint8_t *)"session_id", session_id);
+  FIID_OBJ_CLEAR (obj_lan_session_hdr);
+  FIID_OBJ_SET (obj_lan_session_hdr, (uint8_t *)"authentication_type", authentication_type);
+  FIID_OBJ_SET (obj_lan_session_hdr, (uint8_t *)"session_sequence_number", inbound_sequence_number);
+  FIID_OBJ_SET (obj_lan_session_hdr, (uint8_t *)"session_id", session_id);
  
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE 
       && authentication_code_data)
@@ -155,11 +113,53 @@ fill_lan_session_hdr  (uint8_t authentication_type, uint32_t inbound_sequence_nu
       memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
       memcpy(buf, authentication_code_data, authentication_code_data_len);
       
-     FIID_OBJ_SET_DATA (obj_hdr,
+     FIID_OBJ_SET_DATA (obj_lan_session_hdr,
 			(uint8_t *)"authentication_code",
 			(uint8_t *)buf,
 			IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
     }
+
+  return (0);
+}
+
+int8_t 
+fill_lan_msg_hdr (uint8_t net_fn, 
+		  uint8_t rs_lun, 
+		  uint8_t rq_seq, 
+		  fiid_obj_t obj_lan_msg_hdr)
+{
+  uint8_t checksum_buf[1024];
+  int32_t checksum_len;
+  int8_t checksum;
+
+  if (!IPMI_NET_FN_VALID(net_fn)
+      || !IPMI_BMC_LUN_VALID(rs_lun)
+      || (rq_seq > IPMI_LAN_SEQUENCE_NUMBER_MAX)
+      || !fiid_obj_valid(obj_lan_msg_hdr))
+    {
+      errno = EINVAL;
+      return -1;
+    }
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+
+  FIID_OBJ_CLEAR (obj_lan_msg_hdr);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"net_fn", net_fn);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rs_lun", rs_lun);
+  
+  FIID_OBJ_GET_BLOCK_LEN (checksum_len,
+			  obj_lan_msg_hdr, 
+			  (uint8_t *)"rs_addr", 
+			  (uint8_t *)"net_fn", 
+			  checksum_buf, 
+			  1024);
+
+  checksum = ipmi_checksum(checksum_buf, checksum_len);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"checksum1", checksum);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_seq", rq_seq);
 
   return (0);
 }
@@ -450,9 +450,9 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
 		  md2_t ctx;
-		  uint8_t digest[MD2_DIGEST_LEN];
+		  uint8_t digest[MD2_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LENGTH);
 		  
 		  md2_init(&ctx);
 		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -460,16 +460,16 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  md2_finish(&ctx, digest, MD2_DIGEST_LEN);
+		  md2_finish(&ctx, digest, MD2_DIGEST_LENGTH);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
 		  md5_t ctx;
-		  uint8_t digest[MD5_DIGEST_LEN];
+		  uint8_t digest[MD5_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LENGTH);
 		  
 		  md5_init(&ctx);
 		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -477,7 +477,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md5_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  md5_finish(&ctx, digest, MD5_DIGEST_LEN);
+		  md5_finish(&ctx, digest, MD5_DIGEST_LENGTH);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}

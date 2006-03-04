@@ -1,5 +1,5 @@
 /* 
-   $Id: garpd.c,v 1.2.2.4 2006-03-02 04:52:27 chu11 Exp $
+   $Id: garpd.c,v 1.2.2.5 2006-03-04 03:40:18 chu11 Exp $
 
    garpd - Gratuitous ARP Daemon - Send Gratuitous ARPs for each ARP
    MAC address mapping from the config file.
@@ -45,7 +45,9 @@
 #include <fcntl.h>
 #endif /* HAVE_FCNTL_H */
 #include <errno.h>
+#if HAVE_GETOPT_H
 #include <getopt.h>
+#endif
 #include <stdint.h>
 #include <sys/stat.h>
 #include <sys/select.h>

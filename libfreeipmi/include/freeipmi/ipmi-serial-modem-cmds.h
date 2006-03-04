@@ -107,39 +107,40 @@ extern fiid_template_t tmpl_get_serial_modem_configuration_ipmi_messaging_comm_s
 extern fiid_template_t tmpl_get_serial_modem_configuration_page_blackout_interval_rs;
 extern fiid_template_t tmpl_get_serial_modem_configuration_call_retry_interval_rs;
   
-int8_t fill_cmd_set_serial_modem_configuration (fiid_obj_t obj_data_rq,
-                                                uint8_t channel_number,
+int8_t fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                                 uint8_t parameter_selector,
                                                 uint8_t *configuration_parameter_data,
-                                                uint8_t configuration_parameter_data_len);
+                                                uint8_t configuration_parameter_data_len,
+						fiid_obj_t obj_cmd_rq);
+                                                
 
 int8_t fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
                                                                 uint8_t basic_mode,
                                                                 uint8_t ppp_mode,
                                                                 uint8_t terminal_mode,
                                                                 uint8_t connect_mode,
-                                                                fiid_obj_t obj_data_rq);
+                                                                fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t channel_number,
                                                                              uint8_t dtr_hangup,
                                                                              uint8_t flow_control,
                                                                              uint8_t bit_rate,
-                                                                             fiid_obj_t obj_data_rq);
+                                                                             fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_number,
                                                                        uint8_t page_blackout_interval,
-                                                                       fiid_obj_t obj_data_rq);
+                                                                       fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_number,
                                                                     uint8_t call_retry_interval,
-                                                                    fiid_obj_t obj_data_rq);
+                                                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
                                                 uint8_t parameter_type,
                                                 uint8_t parameter_selector,
                                                 uint8_t set_selector,
                                                 uint8_t block_selector,
-                                                fiid_obj_t obj_data_rq);
+                                                fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
