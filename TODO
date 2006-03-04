@@ -46,10 +46,10 @@ libfreeipmi:
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
-  * autoconf getopt
   * lan ctx interface?
   * len -> length
     - fiid?
+  * template "tagging" mechanism to make template compares faster
 
 fish:
 -----
