@@ -28,6 +28,9 @@
 #include <string.h>
 #include <stdarg.h>
 #endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #include <errno.h>
 
 #include "freeipmi/ipmi-debug.h"
@@ -46,6 +49,7 @@
 #define IPMI_DEBUG_MAX_BUF_LEN        65536
 #define IPMI_DEBUG_MAX_PKT_LEN        65536
 #define IPMI_DEBUG_CHAR_PER_LINE          8
+#define IPMI_DEBUG_DEFAULT_FD STDERR_FILENO
 
 #define IPMI_DPRINTF(args) \
         do { \
