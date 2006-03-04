@@ -51,7 +51,7 @@ libfreeipmi:
   * len -> length globally?
     md2/md5
   * admin -> administrator?
-
+  * spec file dir directives for freeipmi and udm
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
