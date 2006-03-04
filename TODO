@@ -49,7 +49,6 @@ libfreeipmi:
   * lan ctx interface?
   * len -> length
     - fiid?
-  * err-einval wrapper
   * template "tagging" mechanism to make template compares faster
 
 fish:

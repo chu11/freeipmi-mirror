@@ -176,6 +176,17 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_ENOSPC_CLEANUP(expr)                                        \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = ENOSPC;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define ERR_ENODEV(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \
