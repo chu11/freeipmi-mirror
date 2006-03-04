@@ -28,7 +28,9 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
+#if HAVE_PTHREAD_H
 #include <pthread.h>
+#endif /* HAVE_PTHREAD_H */
 #include <gcrypt.h>
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 

@@ -52,12 +52,10 @@ libfreeipmi:
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
-  * autoconf getopt, pthread
   * lan ctx interface?
   * len -> length
     - fiid?
   * need wrapper util function to generate write keys
-  * rakp utils - return 0 if authentication none?
 
 fish:
 -----

@@ -626,7 +626,8 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
   uint32_t key_exchange_authentication_code_len;
   int32_t compare_len;
 
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+       authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
@@ -746,7 +747,8 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
   uint8_t integrity_check_value[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t integrity_check_value_len;
 
-  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
        && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
@@ -853,7 +855,8 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
   uint8_t authentication_code[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t authentication_code_len;
   
-  if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+  if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_NONE
+       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
        && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128)
       || !pkt
