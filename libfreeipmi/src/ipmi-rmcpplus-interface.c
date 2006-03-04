@@ -389,7 +389,7 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
                             fiid_obj_t obj_rmcpplus_session_trlr)
 {
   int32_t authentication_code_len;
-  int8_t pad_len, pad_length_field_len, next_header_field_len;
+  int8_t pad_length, pad_length_field_len, next_header_field_len;
   uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
                                                     IPMI_INTEGRITY_PAD_DATA,
                                                     IPMI_INTEGRITY_PAD_DATA,
@@ -410,15 +410,19 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
   ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
   ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
   
-  pad_len = IPMI_INTEGRITY_PAD_MULTIPLE - ((ipmi_msg_len + pad_length_field_len + next_header_field_len + authentication_code_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
+  pad_length = IPMI_INTEGRITY_PAD_MULTIPLE - ((ipmi_msg_len + pad_length_field_len + next_header_field_len + authentication_code_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
 
   FIID_OBJ_CLEAR_FIELD (obj_rmcpplus_session_trlr, "integrity_pad");
 
-  if (pad_len)
+  if (pad_length)
     FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
                        "integrity_pad",
                        pad_bytes,
-                       pad_len);
+                       pad_length);
+
+  FIID_OBJ_SET (obj_rmcpplus_session_trlr,
+		"pad_length",
+		pad_length);
   
   return (0);
 }
@@ -1029,7 +1033,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
 {
   uint8_t iv[IPMI_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
-  uint8_t pad_len;
+  uint8_t pad_length;
   int cipher_keylen, cipher_blocklen;
   int32_t payload_data_len, decrypt_len, cmd_data_len, indx = 0;
 
@@ -1100,15 +1104,15 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
                                                   payload_data_len)) < 0));
   ERR (!((decrypt_len != payload_data_len)));
 
-  pad_len = payload_buf[payload_data_len - 1];
-  if (pad_len > IPMI_AES_CBC_128_BLOCK_LENGTH)
+  pad_length = payload_buf[payload_data_len - 1];
+  if (pad_length > IPMI_AES_CBC_128_BLOCK_LENGTH)
     {
       errno = EINVAL;
-      ipmi_debug("_deconstruct_payload_confidentiality_aes_cbc_128: invalid pad_len");
+      ipmi_debug("_deconstruct_payload_confidentiality_aes_cbc_128: invalid pad_length");
       return (-1);
     }
 
-  cmd_data_len = payload_data_len - pad_len - 1;
+  cmd_data_len = payload_data_len - pad_length - 1;
   if (cmd_data_len <= 0)
     {
       errno = EINVAL;
@@ -1124,7 +1128,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   FIID_OBJ_SET_DATA(obj_payload,
                     "confidentiality_trailer",
                     payload_buf + cmd_data_len,
-                    pad_len + 1);
+                    pad_length + 1);
   
   /* achu: User is responsible for checking if padding is not corrupt  */
   
@@ -1473,7 +1477,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
       ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
       ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
       
-      /* achu: There needs to be atleast the next_header and pad_len fields */
+      /* achu: There needs to be atleast the next_header and pad_length fields */
       if ((pkt_len - indx) < (authentication_code_len + pad_length_field_len + next_header_field_len))
         return 0;
 
