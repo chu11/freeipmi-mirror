@@ -719,21 +719,21 @@ fiid_template_t tmpl_get_sensor_type_rs =
   };
 
 int8_t 
-fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
+fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sensor_reading_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sensor_reading_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SENSOR_READING);   
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"sensor_number", 
 		sensor_number);
   
@@ -741,21 +741,21 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq)
 }
 
 int8_t 
-fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq)
+fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sensor_thresholds_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SENSOR_THRESHOLDS);   
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"sensor_number", 
 		sensor_number);
   

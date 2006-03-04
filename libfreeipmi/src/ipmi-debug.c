@@ -244,7 +244,7 @@ ipmi_obj_dump (int fd, fiid_obj_t obj)
 }
 
 int8_t
-ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd)
+ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd)
 {
   uint32_t indx = 0;
   int32_t obj_cmd_len, obj_lan_msg_trlr_len;
@@ -277,7 +277,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   int8_t rv = -1;
   uint64_t authentication_type;
 
-  if (!(pkt && tmpl_msg_hdr && tmpl_cmd))
+  if (!(pkt && tmpl_lan_msg_hdr && tmpl_cmd))
     {
       errno = EINVAL;
       return (-1);
@@ -370,7 +370,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
 
   /* Dump message header */
 
-  FIID_OBJ_CREATE_CLEANUP (obj_lan_msg_hdr, tmpl_msg_hdr);
+  FIID_OBJ_CREATE_CLEANUP (obj_lan_msg_hdr, tmpl_lan_msg_hdr);
   
   FIID_OBJ_SET_ALL_LEN_CLEANUP (len, obj_lan_msg_hdr, pkt + indx, pkt_len - indx);
   indx += len;

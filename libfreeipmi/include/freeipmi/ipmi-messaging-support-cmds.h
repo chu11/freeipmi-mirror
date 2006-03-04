@@ -168,25 +168,25 @@ extern fiid_template_t tmpl_set_user_password_rs;
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 
-                                                         fiid_obj_t obj_cmd);
+                                                         fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				       char *user_name, 
 				       uint32_t user_name_len, 
-				       fiid_obj_t obj_cmd);
+				       fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_activate_session (uint8_t authentication_type, 
 				  uint8_t maximum_privilege_level, 
 				  uint8_t *challenge_string, 
 				  uint32_t challenge_string_len, 
 				  uint32_t initial_outbound_sequence_number, 
-				  fiid_obj_t obj_cmd);
+				  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_session_privilege_level (uint8_t privilege_level, 
-                                             fiid_obj_t obj_cmd);
+                                             fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_close_session (uint32_t close_session_id, 
-			       fiid_obj_t obj_cmd);
+			       fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_channel_access (uint8_t channel_number, 
                                     uint8_t ipmi_messaging_access_mode, 
@@ -196,13 +196,13 @@ int8_t fill_cmd_set_channel_access (uint8_t channel_number,
                                     uint8_t channel_access_set, 
                                     uint8_t channel_privilege_level_limit, 
                                     uint8_t channel_privilege_level_limit_set,
-                                    fiid_obj_t obj_data_rq);
+                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_channel_access (uint8_t channel_number,
                                     uint8_t channel_access_get,
-                                    fiid_obj_t obj_data_rq);
+                                    fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_user_access (uint8_t channel_number,
                                  uint8_t user_ipmi_messaging,
@@ -211,24 +211,24 @@ int8_t fill_cmd_set_user_access (uint8_t channel_number,
                                  uint8_t user_id,
                                  uint8_t user_privilege_level_limit,
                                  uint8_t user_session_number_limit,
-                                 fiid_obj_t obj_data_rq);
+                                 fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_user_access (uint8_t channel_number,
                                  uint8_t user_id,
-                                 fiid_obj_t obj_data_rq);
+                                 fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_user_name (uint8_t user_id, 
                                char *user_name,
                                unsigned int user_name_len,
-                               fiid_obj_t obj_data_rq);
+                               fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq);
        
 int8_t fill_cmd_set_user_password (uint8_t user_id, 
                                    uint8_t operation, 
                                    char *password,
                                    unsigned int password_len,
-                                   fiid_obj_t obj_data_rq);
+                                   fiid_obj_t obj_cmd_rq);
       
 #ifdef __cplusplus
 }

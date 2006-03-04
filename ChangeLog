@@ -15,6 +15,12 @@
 	common/src/md5.c: 'LEN' -> 'LENGTH'.
 
 	* libfreeipmi/: Adjust code for #define changes.
+
+	* freeipmi.spec.in: Add %dir directives for /usr/include/freeipmi
+	and /usr/include/freeipmi/udm.
+
+	* libfreeipmi/: Various variable name changes for consistency.
+	Several function parameter ordering changes for consistency.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 

@@ -108,9 +108,9 @@ extern fiid_template_t tmpl_set_sensor_type_rs;
 extern fiid_template_t tmpl_get_sensor_type_rq;
 extern fiid_template_t tmpl_get_sensor_type_rs;
 
-int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

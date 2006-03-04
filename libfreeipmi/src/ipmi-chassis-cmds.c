@@ -128,64 +128,64 @@ fiid_template_t tmpl_set_power_restore_policy_rs =
   };
 
 int8_t
-fill_cmd_get_chassis_status (fiid_obj_t obj_cmd)
+fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
 { 
-  if (!fiid_obj_valid(obj_cmd))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return -1;
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_get_chassis_status_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
 
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
 
 int8_t
-fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd)
+fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_CHASSIS_CONTROL_VALID(chassis_control)
-      || !fiid_obj_valid(obj_cmd))
+      || !fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return -1;
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_control_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_chassis_control_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CONTROL);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"chassis_control", chassis_control);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CONTROL);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"chassis_control", chassis_control);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
   return 0;
 }  
 
 int8_t
 fill_cmd_chassis_identify (uint8_t *identify_interval, 
 			   uint8_t *force_identify,
-                           fiid_obj_t obj_cmd)
+                           fiid_obj_t obj_cmd_rq)
 {
   if ((force_identify 
        && !IPMI_CHASSIS_FORCE_IDENTIFY_VALID(*force_identify))
-      || !fiid_obj_valid(obj_cmd))
+      || !fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_chassis_identify_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_chassis_identify_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
   if (identify_interval)
     {
-      FIID_OBJ_SET (obj_cmd, (uint8_t *)"identify_interval", *identify_interval);
+      FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"identify_interval", *identify_interval);
       if (force_identify)
 	{
-	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"force_identify", *force_identify);
-	  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
+	  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"force_identify", *force_identify);
+	  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
 	}
     }
 
@@ -193,24 +193,24 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 }  
 
 int8_t 
-fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd)
+fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy)
-      || !fiid_obj_valid(obj_cmd))
+      || !fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return -1;
     }
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_set_power_restore_policy_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_power_restore_policy_rq);
 
-  FIID_OBJ_CLEAR (obj_cmd);
+  FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd,
+  FIID_OBJ_SET (obj_cmd_rq,
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY); 
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy", power_restore_policy);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"power_restore_policy.reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"power_restore_policy", power_restore_policy);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"power_restore_policy.reserved", 0);
   
   return 0;
 }

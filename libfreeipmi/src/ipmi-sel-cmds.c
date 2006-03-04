@@ -149,54 +149,54 @@ fiid_template_t tmpl_clear_sel_rs =
   };
 
 int8_t 
-fill_cmd_get_sel_info (fiid_obj_t obj_data_rq)
+fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_info_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_SEL_DEV_CMDS_GET_SEL_INFO);
   return 0;
 }
 
 int8_t 
-fill_cmd_get_sel_allocation_info (fiid_obj_t obj_data_rq)
+fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_allocation_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_allocation_info_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ALLOCATION_INFO);
   return 0;
 }
 
 int8_t 
-fill_cmd_reserve_sel (fiid_obj_t obj_data_rq)
+fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_reserve_sel_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_reserve_sel_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_RESERVE_SEL);
   return 0;
@@ -207,24 +207,24 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
                         uint16_t record_id,
                         uint8_t offset_into_record,
                         uint8_t bytes_to_read,
-                        fiid_obj_t obj_data_rq)
+                        fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_get_sel_entry_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_entry_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_GET_SEL_ENTRY);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"offset_into_record", offset_into_record);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"bytes_to_read", bytes_to_read);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reservation_id", reservation_id);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"record_id", record_id);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"offset_into_record", offset_into_record);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"bytes_to_read", bytes_to_read);
   
   return 0;
 }
@@ -232,22 +232,22 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
 int8_t 
 fill_cmd_delete_sel_entry (uint16_t reservation_id, 
 			   uint16_t record_id,
-                           fiid_obj_t obj_data_rq)
+                           fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_data_rq))
+  if (!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_delete_sel_entry_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_delete_sel_entry_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_DELETE_SEL_ENTRY); 
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"record_id", record_id);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reservation_id", reservation_id);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"record_id", record_id);
   
   return 0;
 }
@@ -255,26 +255,26 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
 int8_t 
 fill_cmd_clear_sel (uint16_t reservation_id, 
                     uint8_t operation, 
-                    fiid_obj_t obj_data_rq)
+                    fiid_obj_t obj_cmd_rq)
 {
   if (!IPMI_SEL_CLEAR_OPERATION_VALID(operation)
-      ||!fiid_obj_valid(obj_data_rq))
+      ||!fiid_obj_valid(obj_cmd_rq))
     {
       errno = EINVAL;
       return (-1);
     }
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_data_rq, tmpl_clear_sel_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_clear_sel_rq);
 
-  FIID_OBJ_CLEAR (obj_data_rq);
-  FIID_OBJ_SET (obj_data_rq, 
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, 
 		(uint8_t *)"cmd", 
 		IPMI_CMD_CLEAR_SEL);  
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"reservation_id", reservation_id);
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"C", 'C');
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"L", 'L');
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"R", 'R');
-  FIID_OBJ_SET (obj_data_rq, (uint8_t *)"operation", operation);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reservation_id", reservation_id);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"C", 'C');
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"L", 'L');
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"R", 'R');
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"operation", operation);
   
   return 0;
 }

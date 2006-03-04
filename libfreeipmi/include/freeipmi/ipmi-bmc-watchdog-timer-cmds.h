@@ -94,7 +94,7 @@ extern fiid_template_t tmpl_cmd_set_watchdog_timer_rs;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rq;
 extern fiid_template_t tmpl_cmd_get_watchdog_timer_rs;
 
-int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd);
+int8_t fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use,
                                     uint8_t stop_timer, 
@@ -109,9 +109,9 @@ int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use,
                                     uint8_t timer_use_expiration_flag_oem, 
                                     uint8_t initial_countdown_value_ls_byte, 
                                     uint8_t initial_countdown_value_ms_byte, 
-                                    fiid_obj_t obj_cmd);
+                                    fiid_obj_t obj_cmd_rq);
 
-int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd);
+int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

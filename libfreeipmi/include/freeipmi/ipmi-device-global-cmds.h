@@ -42,7 +42,7 @@ extern fiid_template_t tmpl_cmd_get_device_id_rq;
 extern fiid_template_t tmpl_cmd_get_device_id_rs;
 extern fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs;
 
-int8_t fill_cmd_get_device_id (fiid_obj_t obj_data_rq);
+int8_t fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }

@@ -50,11 +50,11 @@ extern fiid_template_t tmpl_get_sol_configuration_parameters_rq;
 extern fiid_template_t tmpl_get_sol_configuration_parameters_rs;
 extern fiid_template_t tmpl_get_sol_configuration_parameters_enable_rs;
 
-int8_t fill_cmd_set_sol_configuration_parameters (fiid_obj_t obj_data_rq,
-						  uint8_t channel_number,
+int8_t fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 						  uint8_t parameter_selector,
 						  uint8_t *configuration_parameter_data,
-						  uint8_t configuration_parameter_data_len);
+						  uint8_t configuration_parameter_data_len,
+						  fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number, 
                                                              uint8_t sol_payload,

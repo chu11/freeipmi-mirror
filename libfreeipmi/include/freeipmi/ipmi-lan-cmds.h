@@ -127,11 +127,11 @@ extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
 
-int8_t fill_cmd_set_lan_configuration_parameters (fiid_obj_t obj_data_rq,
-                                                  uint8_t channel_number,
+int8_t fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t parameter_selector,
                                                   uint8_t *configuration_parameter_data,
-                                                  uint8_t configuration_parameter_data_len);
+                                                  uint8_t configuration_parameter_data_len,
+						  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t channel_number,
                                                                               uint8_t callback_level_none,
@@ -159,70 +159,70 @@ int8_t fill_cmd_set_lan_configuration_parameters_authentication_type_enables (ui
                                                                               uint8_t oem_level_md5,
                                                                               uint8_t oem_level_straight_password,
                                                                               uint8_t oem_level_oem_proprietary,
-                                                                              fiid_obj_t obj_data_rq);
+                                                                              fiid_obj_t obj_cmd_rq);
  
 int8_t fill_cmd_set_lan_configuration_parameters_ip_address (uint8_t channel_number,
                                                              uint32_t ip_address,
-                                                             fiid_obj_t obj_data_rq);
+                                                             fiid_obj_t obj_cmd_rq);
    
 int8_t fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_number,
                                                                     uint8_t ip_address_source,
-                                                                    fiid_obj_t obj_data_rq);
+                                                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_mac_address (uint8_t channel_number,
                                                               uint64_t mac_address,
-                                                              fiid_obj_t obj_data_rq);
+                                                              fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
                                                               uint32_t subnet_mask,
-                                                              fiid_obj_t obj_data_rq);
+                                                              fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t channel_number,
                                                                             uint8_t bmc_generated_gratuitous_arps,
                                                                             uint8_t bmc_generated_arp_responses,
-                                                                            fiid_obj_t obj_data_rq);
+                                                                            fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t channel_number,
                                                                           uint8_t gratuitous_arp_interval,
-                                                                          fiid_obj_t obj_data_rq);
+                                                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_default_gateway_address (uint8_t channel_number,
                                                                           uint32_t ip_address,
-                                                                          fiid_obj_t obj_data_rq);
+                                                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_default_gateway_mac_address (uint8_t channel_number,
                                                                               uint64_t mac_address,
-                                                                              fiid_obj_t obj_data_rq);
+                                                                              fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_address (uint8_t channel_number,
                                                                          uint32_t ip_address,
-                                                                         fiid_obj_t obj_data_rq);
+                                                                         fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t channel_number,
                                                                              uint64_t mac_address,
-                                                                             fiid_obj_t obj_data_rq);
+                                                                             fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
                                                           uint8_t vlan_id_ls,
                                                           uint8_t vlan_id_ms,
                                                           uint8_t vlan_id_enable,
-                                                          fiid_obj_t obj_data_rq);
+                                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
                                                                 uint8_t vlan_priority,
-                                                                fiid_obj_t obj_data_rq);
+                                                                fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t get_parameter,
                                                   uint8_t parameter_selector,
                                                   uint8_t set_selector,
                                                   uint8_t block_selector,
-                                                  fiid_obj_t obj_data_rq);
+                                                  fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_suspend_bmc_arps (uint8_t channel_number,
                                   uint8_t gratuitous_arp_suspend,
                                   uint8_t arp_response_suspend,
-                                  fiid_obj_t obj_data_rq);
+                                  fiid_obj_t obj_cmd_rq);
 
 #ifdef __cplusplus
 }
