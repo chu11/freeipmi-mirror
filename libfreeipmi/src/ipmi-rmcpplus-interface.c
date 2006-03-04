@@ -725,12 +725,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 "session_sequence_number",
                 &session_sequence_number);
 
-  if (((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-        || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+  if ((IPMI_PAYLOAD_TYPE_SESSION_SETUP(payload_type)
        && (payload_authenticated 
 	   || payload_encrypted 
 	   || session_id 
@@ -1400,12 +1395,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 "ipmi_payload_len",
                 &ipmi_payload_len);
 
-  if (((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-        || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-        || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+  if ((IPMI_PAYLOAD_TYPE_SESSION_SETUP(payload_type)
        && (payload_authenticated 
 	   || payload_encrypted 
 	   || session_id 
