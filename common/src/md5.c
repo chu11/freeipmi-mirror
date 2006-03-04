@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.c,v 1.2 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: md5.c,v 1.3 2006-03-04 02:47:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -133,7 +133,7 @@ md5_init(md5_t *ctx)
   ctx->bytes_mod_64 = 0;
   ctx->bit_count[0] = 0;
   ctx->bit_count[1] = 0;
-  memset(M, '\0', MD5_BLOCK_LEN);
+  memset(M, '\0', MD5_BLOCK_LENGTH);
     
   /* initial values are listed low-order byte first */
   A = 0x67452301;
@@ -148,13 +148,13 @@ static void
 _md5_update_digest(md5_t *ctx) 
 {
   uint32_t AA, BB, CC, DD;
-  uint32_t X[MD5_BLOCK_WORDS_LEN];
+  uint32_t X[MD5_BLOCK_WORDS_LENGTH];
   int j;
   
   /* Note there are no endian issues here, compiler is required to
    * handle shifts correctly
    */
-  for (j = 0; j < MD5_BLOCK_WORDS_LEN; j++)
+  for (j = 0; j < MD5_BLOCK_WORDS_LENGTH; j++)
     X[j] = ((uint32_t)M[j*4]  
             | ((uint32_t)M[j*4+1] << 8) 
             | ((uint32_t)M[j*4+2] << 16) 
@@ -277,21 +277,21 @@ md5_update_data(md5_t *ctx, uint8_t *buf, unsigned int buflen)
   if (buflen == 0)
     return 0;
 
-  if ((Mlen + buflen) >= MD5_BLOCK_LEN) 
+  if ((Mlen + buflen) >= MD5_BLOCK_LENGTH) 
     {
       unsigned int bufcount;
       
-      bufcount = (MD5_BLOCK_LEN - Mlen);
+      bufcount = (MD5_BLOCK_LENGTH - Mlen);
       memcpy(M + Mlen, buf, bufcount);
       _md5_update_digest(ctx);
       _md5_update_count(ctx, bufcount);
 
-      while ((buflen - bufcount) >= MD5_BLOCK_LEN) 
+      while ((buflen - bufcount) >= MD5_BLOCK_LENGTH) 
         {
-          memcpy(M, buf + bufcount, MD5_BLOCK_LEN);
-          bufcount += MD5_BLOCK_LEN;
+          memcpy(M, buf + bufcount, MD5_BLOCK_LENGTH);
+          bufcount += MD5_BLOCK_LENGTH;
           _md5_update_digest(ctx);
-          _md5_update_count(ctx, MD5_BLOCK_LEN);
+          _md5_update_count(ctx, MD5_BLOCK_LENGTH);
         }
 
       Mlen = buflen - bufcount;
@@ -350,7 +350,7 @@ md5_finish(md5_t *ctx, uint8_t *digest, unsigned int digestlen)
 {
 
   if (ctx == NULL || ctx->magic != MD5_MAGIC 
-      || digest == NULL || digestlen < MD5_DIGEST_LEN) 
+      || digest == NULL || digestlen < MD5_DIGEST_LENGTH) 
     {
       errno = EINVAL;
       return -1;
@@ -380,5 +380,5 @@ md5_finish(md5_t *ctx, uint8_t *digest, unsigned int digestlen)
   digest[15] = (D & 0xff000000) >> 24;
   
   ctx->magic = ~MD5_MAGIC;
-  return MD5_DIGEST_LEN;
+  return MD5_DIGEST_LENGTH;
 }

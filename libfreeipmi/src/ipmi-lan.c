@@ -450,9 +450,9 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
 		  md2_t ctx;
-		  uint8_t digest[MD2_DIGEST_LEN];
+		  uint8_t digest[MD2_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD2_DIGEST_LENGTH);
 		  
 		  md2_init(&ctx);
 		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -460,16 +460,16 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  md2_finish(&ctx, digest, MD2_DIGEST_LEN);
+		  md2_finish(&ctx, digest, MD2_DIGEST_LENGTH);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
 		  md5_t ctx;
-		  uint8_t digest[MD5_DIGEST_LEN];
+		  uint8_t digest[MD5_DIGEST_LENGTH];
 		  
-		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LEN);
+		  ERR_EXIT(IPMI_MAX_AUTHENTICATION_CODE_LENGTH == MD5_DIGEST_LENGTH);
 		  
 		  md5_init(&ctx);
 		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -477,7 +477,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md5_update_data(&ctx, msg_data_ptr, msg_data_count);
 		  md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-		  md5_finish(&ctx, digest, MD5_DIGEST_LEN);
+		  md5_finish(&ctx, digest, MD5_DIGEST_LENGTH);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		}

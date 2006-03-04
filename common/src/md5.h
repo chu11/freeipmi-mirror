@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md5.h,v 1.2 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: md5.h,v 1.3 2006-03-04 02:47:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,9 +33,9 @@ extern "C" {
 
 #include <stdint.h>
 
-#define MD5_BLOCK_LEN       64
-#define MD5_BLOCK_WORDS_LEN (MD5_BLOCK_LEN/4)
-#define MD5_DIGEST_LEN      16
+#define MD5_BLOCK_LENGTH       64
+#define MD5_BLOCK_WORDS_LENGTH (MD5_BLOCK_LENGTH/4)
+#define MD5_DIGEST_LENGTH      16
 
 typedef struct __md5 {
   uint32_t magic;
@@ -46,7 +46,7 @@ typedef struct __md5 {
   uint32_t b;
   uint32_t c;
   uint32_t d;
-  uint8_t m[MD5_BLOCK_LEN];
+  uint8_t m[MD5_BLOCK_LENGTH];
 } md5_t;
 
 int md5_init(md5_t *ctx);

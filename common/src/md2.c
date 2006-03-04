@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: md2.c,v 1.2 2006-02-25 02:44:00 chu11 Exp $
+ *  $Id: md2.c,v 1.3 2006-03-04 02:47:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,9 +114,9 @@ md2_init(md2_t *ctx)
 
   L = 0;
   Mlen = 0;
-  memset(X, '\0', MD2_BUFFER_LEN);
-  memset(C, '\0', MD2_CHKSUM_LEN);
-  memset(M, '\0', MD2_BLOCK_LEN);
+  memset(X, '\0', MD2_BUFFER_LENGTH);
+  memset(C, '\0', MD2_CHKSUM_LENGTH);
+  memset(M, '\0', MD2_BLOCK_LENGTH);
 
   return 0;
 }
@@ -129,7 +129,7 @@ _md2_update_digest_and_checksum(md2_t *ctx)
 
   /* Update X */
 
-  for (j = 0; j < MD2_BLOCK_LEN; j++) 
+  for (j = 0; j < MD2_BLOCK_LENGTH; j++) 
     {
       X[16+j] = M[j];
       X[32+j] = (X[16+j] ^ X[j]);
@@ -137,9 +137,9 @@ _md2_update_digest_and_checksum(md2_t *ctx)
   
   t = 0;
 
-  for (j = 0; j < MD2_ROUNDS_LEN; j++) 
+  for (j = 0; j < MD2_ROUNDS_LENGTH; j++) 
     {
-      for (k = 0; k < MD2_BUFFER_LEN; k++) 
+      for (k = 0; k < MD2_BUFFER_LENGTH; k++) 
         {
           t = X[k] = (X[k] ^ S[t]);
         }
@@ -158,7 +158,7 @@ _md2_update_digest_and_checksum(md2_t *ctx)
    * Set C[j] to C[j] xor S[c xor L].
    */
   
-  for (j = 0; j < MD2_BLOCK_LEN; j++) 
+  for (j = 0; j < MD2_BLOCK_LENGTH; j++) 
     {
       c = M[j];
       C[j] = C[j] ^ S[c ^ L];
@@ -179,18 +179,18 @@ md2_update_data(md2_t *ctx, uint8_t *buf, unsigned int buflen)
   if (buflen == 0)
     return 0;
 
-  if ((Mlen + buflen) >= MD2_BLOCK_LEN) 
+  if ((Mlen + buflen) >= MD2_BLOCK_LENGTH) 
     {
       unsigned int bufcount;
       
-      bufcount = (MD2_BLOCK_LEN - Mlen);
+      bufcount = (MD2_BLOCK_LENGTH - Mlen);
       memcpy(M + Mlen, buf, bufcount);
       _md2_update_digest_and_checksum(ctx);
     
-      while ((buflen - bufcount) >= MD2_BLOCK_LEN) 
+      while ((buflen - bufcount) >= MD2_BLOCK_LENGTH) 
         {
-          memcpy(M, buf + bufcount, MD2_BLOCK_LEN);
-          bufcount += MD2_BLOCK_LEN;
+          memcpy(M, buf + bufcount, MD2_BLOCK_LENGTH);
+          bufcount += MD2_BLOCK_LENGTH;
           _md2_update_digest_and_checksum(ctx);
         }
       
@@ -214,12 +214,12 @@ _md2_append_padding_and_checksum(md2_t *ctx)
   unsigned int padlen;
   int padindex;
 
-  padlen = MD2_PADDING_LEN - Mlen;
+  padlen = MD2_PADDING_LENGTH - Mlen;
   padindex = padlen - 1;
 
   md2_update_data(ctx, (uint8_t *)padding[padindex], (int)padlen);
   
-  md2_update_data(ctx, C, MD2_CHKSUM_LEN);
+  md2_update_data(ctx, C, MD2_CHKSUM_LENGTH);
 }
 
 int 
@@ -227,16 +227,16 @@ md2_finish(md2_t *ctx, uint8_t *digest, unsigned int digestlen)
 {
   
   if (ctx == NULL || ctx->magic != MD2_MAGIC 
-      || digest == NULL || digestlen < MD2_DIGEST_LEN) 
+      || digest == NULL || digestlen < MD2_DIGEST_LENGTH) 
     {
       errno = EINVAL;
       return -1;
     }
   
   _md2_append_padding_and_checksum(ctx);
-  memcpy(digest, X, MD2_DIGEST_LEN);
+  memcpy(digest, X, MD2_DIGEST_LENGTH);
   
   ctx->magic = ~MD2_MAGIC;
-  return MD2_DIGEST_LEN;
+  return MD2_DIGEST_LENGTH;
 }
 

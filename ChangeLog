@@ -10,6 +10,11 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-debug.h: Move defines into
 	ipmi-debug.c.
+
+	* common/src/md2.h, common/src/md2.c, common/src/md5.h,
+	common/src/md5.c: 'LEN' -> 'LENGTH'.
+
+	* libfreeipmi/: Adjust code for #define changes.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 

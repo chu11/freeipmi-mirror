@@ -48,11 +48,11 @@ libfreeipmi:
   * get event messages function that is passed fiids
   * autoconf getopt
   * lan ctx interface?
-  * len -> length globally?
-    md2/md5
   * admin -> administrator?
   * spec file dir directives for freeipmi and udm
   * obj_msg_hdr -> obj_lan_msg_hdr
+  * len -> length
+    - fiid?
 
 fish:
 -----
