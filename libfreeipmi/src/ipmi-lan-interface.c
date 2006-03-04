@@ -32,6 +32,7 @@
 
 #include "freeipmi/ipmi-lan-interface.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 ssize_t 
@@ -47,11 +48,7 @@ ipmi_lan_sendto (int sockfd,
   size_t _pkt_len;
   size_t pad_len = 0;
 
-  if (pkt == NULL || pkt_len < 0)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (pkt && pkt_len);
 
   /*
     Note from Table 12-8, RMCP Packet for IPMI via Ethernet footnote
@@ -68,9 +65,7 @@ ipmi_lan_sendto (int sockfd,
       _pkt_len == 112 ||
       _pkt_len == 128 ||
       _pkt_len == 156)
-    {
-      pad_len += IPMI_LAN_PKT_PAD_SIZE;
-    }
+    pad_len += IPMI_LAN_PKT_PAD_SIZE;
 
   _pkt_len += pad_len;
   _pkt = alloca (_pkt_len);         
@@ -98,11 +93,7 @@ ipmi_lan_recvfrom (int sockfd,
   size_t recv_buf_len;
   size_t pad_len = 0;
 
-  if (pkt == NULL || pkt_len < 0)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (pkt && pkt_len);
 
   if (pkt_len < 1024)
     recv_buf_len = 1024;
@@ -116,9 +107,7 @@ ipmi_lan_recvfrom (int sockfd,
       recv_buf_len == 112 ||
       recv_buf_len == 128 ||
       recv_buf_len == 156)
-    {
-      pad_len = IPMI_LAN_PKT_PAD_SIZE;
-    }
+    pad_len = IPMI_LAN_PKT_PAD_SIZE;
 
   recv_buf_len += pad_len;
   recv_buf = alloca (recv_buf_len);
@@ -135,3 +124,4 @@ ipmi_lan_recvfrom (int sockfd,
   /* if (recv_buf) free (recv_buf); */
   return (recv_buf_len);
 }
+

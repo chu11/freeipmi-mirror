@@ -637,21 +637,17 @@ ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
   int mem_fd;
   extern int errno;
 
-  if (!(physical_addr_len && virtual_addr &&
-        mapped_addr && mapped_addr_len))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (physical_addr_len 
+	      && virtual_addr 
+	      && mapped_addr 
+	      && mapped_addr_len);
 
-  if ((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) == -1)
-    return (-1);
+  ERR (!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
 
   pad = physical_addr % getpagesize ();
   startaddr = physical_addr - pad;
   *mapped_addr_len = physical_addr_len + pad;
   *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
-
 
   if (*mapped_addr == MAP_FAILED)
     {
@@ -679,16 +675,11 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
   void *mapped_addr = NULL;
   size_t mapped_addr_len = 0;
 
-  if (data == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (data);
 
-  if (ipmi_ioremap (physical_address, length,
-                    &virtual_addr,
-                    &mapped_addr, &mapped_addr_len) != 0)
-    return (-1);
+  ERR (!(ipmi_ioremap (physical_address, length,
+		       &virtual_addr,
+		       &mapped_addr, &mapped_addr_len) != 0));
 
   memcpy (data, virtual_addr, length);
 
@@ -728,11 +719,7 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   int acpi_rsdp_descriptor_len;
   int i;
 
-  if (!fiid_obj_valid(obj_acpi_rsdp_descriptor))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_acpi_rsdp_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_rsdp_descriptor, tmpl_acpi_rsdp_descriptor);
   
@@ -1149,12 +1136,8 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   int32_t acpi_spmi_table_descriptor_len;
   int rv = -1;
 
-  if (!fiid_obj_valid(obj_acpi_table_hdr)
-      || !fiid_obj_valid(obj_acpi_spmi_table_descriptor))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_acpi_table_hdr)
+	      && fiid_obj_valid(obj_acpi_spmi_table_descriptor));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_table_hdr, tmpl_acpi_table_hdr);
   FIID_OBJ_TEMPLATE_COMPARE(obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
@@ -1215,11 +1198,7 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
   ipmi_locate_info_t *rv = NULL;
   extern int errno;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
   if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
     goto cleanup;
@@ -1234,10 +1213,9 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
 
   FIID_OBJ_CREATE_CLEANUP (obj_acpi_spmi_table_descriptor, tmpl_acpi_spmi_table_descriptor);
 
-  if (ipmi_acpi_get_spmi_table (type,
-				obj_acpi_table_hdr,
-				obj_acpi_spmi_table_descriptor) != 0)
-    goto cleanup;
+  ERR_CLEANUP (!(ipmi_acpi_get_spmi_table (type,
+					   obj_acpi_table_hdr,
+					   obj_acpi_spmi_table_descriptor) != 0));
   
   /* I don't see any reason to perform this check now -- Anand Babu */
   /* This field must always be 01h to be compatible with any software

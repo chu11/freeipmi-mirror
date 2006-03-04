@@ -34,6 +34,7 @@
 #include "freeipmi/ipmi-smic-interface.h"
 #include "freeipmi/ipmi-ssif-interface.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 ipmi_locate_info_t*
@@ -41,11 +42,7 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
 {
   ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
   if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
     goto cleanup;

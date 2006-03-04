@@ -163,11 +163,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
   char prefix_buf[IPMI_DEBUG_MAX_PREFIX_LEN];
   fiid_iterator_t iter = NULL;
 
-  if (!fiid_obj_valid(obj))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj));
   
   ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));
 
@@ -277,11 +273,7 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   int8_t rv = -1;
   uint64_t authentication_type;
 
-  if (!(pkt && tmpl_lan_msg_hdr && tmpl_cmd))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (pkt && tmpl_lan_msg_hdr && tmpl_cmd);
 
   ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));
 
@@ -470,11 +462,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   int32_t len;
   int8_t rv = -1;
 
-  if (!(pkt && tmpl_cmd))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (pkt && tmpl_cmd);
 
   if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
     return (-1);

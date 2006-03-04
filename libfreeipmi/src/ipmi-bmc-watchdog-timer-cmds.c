@@ -29,6 +29,7 @@
 #include "freeipmi/ipmi-bmc-watchdog-timer-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -114,11 +115,7 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
 int8_t
 fill_cmd_reset_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reset_watchdog_timer_rq);
 
@@ -143,21 +140,17 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
                              uint8_t initial_countdown_value_ms_byte, 
                              fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq)
-      || !IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(log)
-      || !IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(stop_timer)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(timer_use)
-      || !IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(pre_timeout_interrupt)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_frb2)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_post)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_os_load)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_sms_os)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_oem)
-      || !IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(timeout_action))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq)
+	      && IPMI_BMC_WATCHDOG_TIMER_LOG_VALID(log)
+	      && IPMI_BMC_WATCHDOG_TIMER_STOP_TIMER_VALID(stop_timer)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_VALID(timer_use)
+	      && IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERRUPT_VALID(pre_timeout_interrupt)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_frb2)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_bios_post)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_os_load)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_sms_os)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMER_USE_EXPIRATION_VALID(timer_use_expiration_flag_oem)
+	      && IPMI_BMC_WATCHDOG_TIMER_TIMEOUT_ACTION_VALID(timeout_action));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_watchdog_timer_rq);
 
@@ -189,11 +182,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
 int8_t
 fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_watchdog_timer_rq);
 

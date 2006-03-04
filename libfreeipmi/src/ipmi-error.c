@@ -36,6 +36,7 @@
 #include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -53,11 +54,7 @@ ipmi_strerror_r (uint8_t cmd,
 		 char *errstr, 
 		 size_t len)
 {
-  if (errstr == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (errstr);
   
   switch (comp_code)
     {
@@ -141,11 +138,7 @@ ipmi_strerror_r (uint8_t cmd,
   /* Command specific completion codes */
   if ((comp_code >= 0x80) && (comp_code <= 0xBE)) 
     {
-      if (!IPMI_NET_FN_VALID(netfn))
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+      ERR_EINVAL (IPMI_NET_FN_VALID(netfn));
       
       switch (netfn)
         {
@@ -355,8 +348,7 @@ ipmi_strerror_r (uint8_t cmd,
           break;
           
         default:
-          errno = EINVAL;
-          return (-1);
+	  ERR_EINVAL (0);
         }
 
       SNPRINTF_RETURN ("No error message found for command "
@@ -383,28 +375,16 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
   int32_t _len;
 
   /* The netfn need not be valid */
-  if (!fiid_obj_valid(obj_cmd) || errstr == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd) && errstr);
   
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
   FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"cmd");
-  if (!_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (_len);
 
   FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"comp_code");
-  if (!_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (_len);
 
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);

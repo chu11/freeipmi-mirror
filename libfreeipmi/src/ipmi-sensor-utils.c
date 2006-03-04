@@ -30,6 +30,7 @@
 #include "freeipmi/ipmi-sensor-utils.h"
 #include "freeipmi/fiid.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 int
@@ -44,11 +45,10 @@ ipmi_sensor_decode_value (char r_exponent,
 {
   double dval = 0.0;
   
-  if (!value)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  /* XXX need to define analog data format somewhere */
+  ERR_EINVAL (value && (analog_data_format == 0x00
+			|| analog_data_format == 0x01
+			|| analog_data_format == 0x02));
 
   if (analog_data_format == 0x00)
     dval = (double) raw_data;
@@ -58,13 +58,8 @@ ipmi_sensor_decode_value (char r_exponent,
         raw_data++;
       dval = (double) ((char) raw_data);
     }
-  else if (analog_data_format == 0x02)
-    dval = (double) ((char) raw_data);
   else
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    dval = (double) ((char) raw_data);
     
   dval *= (double) m;
   dval += (b * pow (10, b_exponent));

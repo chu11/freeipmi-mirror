@@ -31,6 +31,7 @@
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -176,14 +177,10 @@ fill_cmd_set_serial_modem_configuration (uint8_t channel_number,
                                          uint8_t configuration_parameter_data_len,
 					 fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && configuration_parameter_data
+	      && configuration_parameter_data_len
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_serial_modem_configuration_rq);
 
@@ -212,16 +209,12 @@ fill_cmd_set_serial_modem_configuration_connection_mode (uint8_t channel_number,
                                                          uint8_t connect_mode,
                                                          fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_BASIC_MODE_VALID(basic_mode)
-      || !IPMI_PPP_MODE_VALID(ppp_mode)
-      || !IPMI_TERMINAL_MODE_VALID(terminal_mode)
-      || !IPMI_CONNECT_MODE_VALID(connect_mode)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_BASIC_MODE_VALID(basic_mode)
+	      && IPMI_PPP_MODE_VALID(ppp_mode)
+	      && IPMI_TERMINAL_MODE_VALID(terminal_mode)
+	      && IPMI_CONNECT_MODE_VALID(connect_mode)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_serial_modem_configuration_connection_mode_rq);
 
@@ -250,15 +243,11 @@ fill_cmd_set_serial_modem_configuration_ipmi_messaging_comm_settings (uint8_t ch
                                                                       uint8_t bit_rate,
                                                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_DTR_HANGUP_VALID(dtr_hangup)
-      || !IPMI_FLOW_CONTROL_VALID(flow_control)
-      || !IPMI_BIT_RATE_VALID(bit_rate)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_DTR_HANGUP_VALID(dtr_hangup)
+	      && IPMI_FLOW_CONTROL_VALID(flow_control)
+	      && IPMI_BIT_RATE_VALID(bit_rate)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_serial_modem_configuration_ipmi_messaging_comm_settings_rq);
 
@@ -285,12 +274,8 @@ fill_cmd_set_serial_modem_configuration_page_blackout_interval (uint8_t channel_
                                                                 uint8_t page_blackout_interval,
                                                                 fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_serial_modem_configuration_page_blackout_interval_rq);
 
@@ -315,12 +300,8 @@ fill_cmd_set_serial_modem_configuration_call_retry_interval (uint8_t channel_num
                                                              uint8_t call_retry_interval,
                                                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_serial_modem_configuration_call_retry_interval_rq);
 
@@ -346,13 +327,9 @@ fill_cmd_get_serial_modem_configuration (uint8_t channel_number,
                                          uint8_t block_selector,
                                          fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_GET_SERIAL_MODEM_PARAMETER_VALID(get_parameter)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_serial_modem_configuration_rq);
 

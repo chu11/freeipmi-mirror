@@ -81,6 +81,81 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_NULL_RETURN(expr)                                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_VOID_RETURN(expr)                                           \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return;                                                           \
+    }                                                                   \
+} while (0)
+
+#define ERR_EINVAL(expr)                                                \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_EINVAL_CLEANUP(expr)                                        \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define ERR_EINVAL_NULL_RETURN(expr)                                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (NULL);                                                    \
+    }                                                                   \
+} while (0)
+
+#define ERR_EINVAL_VOID_RETURN(expr)                                    \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EINVAL;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return;                                                           \
+    }                                                                   \
+} while (0)
+
+#define ERR_ENOSPC(expr)                                                \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = ENOSPC;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
 #define ERR_CLEANUP(expr)                                               \
 do {                                                                    \
   if (!(expr))                                                          \

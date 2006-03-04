@@ -546,11 +546,7 @@ ipmi_kcs_strstatus_r (uint8_t status_code,
 		      char *errstr, 
 		      size_t len)
 {
-  if (errstr == NULL)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (errstr);
   
   switch (status_code)
     {

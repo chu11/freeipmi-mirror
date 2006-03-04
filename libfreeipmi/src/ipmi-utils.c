@@ -47,6 +47,7 @@
 #include "freeipmi/ipmi-comp-code-spec.h"
 
 #include "bit-ops.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -71,21 +72,13 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
   uint64_t cmd_recv;
   int32_t len;
 
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (obj_cmd);
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"cmd");
 
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
 
@@ -98,21 +91,13 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
   uint64_t completion_code_recv;
   int32_t len;
 
-  if (!obj_cmd)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (obj_cmd);
 
   FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
 
   FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"comp_code");
 
-  if (!len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &completion_code_recv);
 
@@ -132,29 +117,17 @@ ipmi_ipv4_address_string2int(char *src, uint32_t *dest)
   uint64_t val;
   int rv;
 
-  if (!src || !dest)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (src && dest);
   
-  if ((rv = sscanf (src, "%u.%u.%u.%u", &b1, &b2, &b3, &b4)) < 0)
-    return (-1);
-  if (rv != 4)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR (!((rv = sscanf (src, "%u.%u.%u.%u", &b1, &b2, &b3, &b4)) < 0));
+
+  ERR_EINVAL (rv == 4);
 
   val = 0;
-  if (bits_merge (val, 0,  8,  b1, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 8,  16, b2, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 16, 24, b3, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 24, 32, b4, &val) < 0)
-    return (-1);
+  ERR (!(bits_merge (val, 0,  8,  b1, &val) < 0));
+  ERR (!(bits_merge (val, 8,  16, b2, &val) < 0));
+  ERR (!(bits_merge (val, 16, 24, b3, &val) < 0));
+  ERR (!(bits_merge (val, 24, 32, b4, &val) < 0));
 
   *dest = val;
   return (0);
@@ -167,33 +140,19 @@ ipmi_mac_address_string2int(char *src, uint64_t *dest)
   uint64_t val;
   int rv;
 
-  if (!src || !dest)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (src && dest);
   
-  if ((rv = sscanf (src, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6)) < 0)
-    return (-1);
-  if (rv != 6)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR (!((rv = sscanf (src, "%02X:%02X:%02X:%02X:%02X:%02X", &b1, &b2, &b3, &b4, &b5, &b6)) < 0));
+
+  ERR_EINVAL (rv == 6);
 
   val = 0;
-  if (bits_merge (val, 0,  8,  b1, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 8,  16, b2, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 16, 24, b3, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 24, 32, b4, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 32, 40, b5, &val) < 0)
-    return (-1);
-  if (bits_merge (val, 40, 48, b6, &val) < 0)
-    return (-1);
+  ERR (!(bits_merge (val, 0,  8,  b1, &val) < 0));
+  ERR (!(bits_merge (val, 8,  16, b2, &val) < 0));
+  ERR (!(bits_merge (val, 16, 24, b3, &val) < 0));
+  ERR (!(bits_merge (val, 24, 32, b4, &val) < 0));
+  ERR (!(bits_merge (val, 32, 40, b5, &val) < 0));
+  ERR (!(bits_merge (val, 40, 48, b6, &val) < 0));
 
   *dest = val;
   return (0);

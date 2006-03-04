@@ -31,6 +31,7 @@
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -102,14 +103,10 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 					   uint8_t configuration_parameter_data_len,
 					   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !configuration_parameter_data
-      || !configuration_parameter_data_len
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && configuration_parameter_data
+	      && configuration_parameter_data_len
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_rq);
 
@@ -135,13 +132,9 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
                                                       uint8_t sol_payload,
                                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_SOL_PAYLOAD_VALID(sol_payload)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_SOL_PAYLOAD_VALID(sol_payload)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq);
   
@@ -166,13 +159,9 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 					   uint8_t block_selector,
 					   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sol_configuration_parameters_rq);
 

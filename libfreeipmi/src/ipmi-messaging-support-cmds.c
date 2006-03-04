@@ -36,6 +36,7 @@
 #include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
@@ -327,13 +328,9 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                   uint8_t maximum_privilege_level, 
                                                   fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_rq);
 
@@ -358,13 +355,9 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
    * termination in IPMI packet not required
    */
-  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-      || (user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+	      && !(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_session_challenge_rq);
 
@@ -396,15 +389,11 @@ fill_cmd_activate_session (uint8_t authentication_type,
 {
   char buf[IPMI_CHALLENGE_STRING_LENGTH];
 
-  if (!IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-      || !IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
-      || !challenge_string
-      || challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+	      && challenge_string
+	      && !(challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_session_rq);
 
@@ -435,12 +424,8 @@ int8_t
 fill_cmd_set_session_privilege_level (uint8_t privilege_level, 
                                       fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_session_privilege_level_rq);
 
@@ -455,11 +440,7 @@ int8_t
 fill_cmd_close_session (uint32_t close_session_id, 
 			fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_close_session_rq);
 
@@ -480,19 +461,15 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 			     uint8_t channel_privilege_level_limit_set,
                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
-      || !IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
-      || !IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
-      || !IPMI_PEF_ALERTING_VALID(pef_alerting)
-      || !IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
-      || !IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_MESSAGING_ACCESS_MODE_VALID(ipmi_messaging_access_mode)
+	      && IPMI_USER_LEVEL_AUTHENTICATION_VALID(user_level_authentication)
+	      && IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
+	      && IPMI_PEF_ALERTING_VALID(pef_alerting)
+	      && IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
+	      && IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_channel_access_rq);
 
@@ -528,13 +505,9 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 			     uint8_t channel_access_get,
                              fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_access_rq);
 
@@ -553,12 +526,8 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 int8_t 
 fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq)
-      || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq)
+	      && IPMI_CHANNEL_NUMBER_VALID(channel_number));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_info_rq);
 
@@ -582,16 +551,12 @@ fill_cmd_set_user_access (uint8_t channel_number,
 			  uint8_t user_session_number_limit,
                           fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
-      || !IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
-      || !IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
-      || !IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && IPMI_USER_IPMI_MESSAGING_VALID(user_ipmi_messaging)
+	      && IPMI_USER_LINK_AUTHENTICATION_VALID(user_link_authentication)
+	      && IPMI_USER_RESTRICTED_TO_CALLBACK_VALID(user_restricted_to_callback)
+	      && IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_access_rq);
 
@@ -629,12 +594,8 @@ fill_cmd_get_user_access (uint8_t channel_number,
 			  uint8_t user_id,
                           fiid_obj_t obj_cmd_rq)
 {
-  if (!IPMI_CHANNEL_NUMBER_VALID(channel_number)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_access_rq);
 
@@ -661,12 +622,8 @@ fill_cmd_set_user_name (uint8_t user_id,
   /* achu: user_name can be IPMI_MAX_USER_NAME_LENGTH length.  Null
    * termination in IPMI packet not required
    */
-  if ((user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (!(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_name_rq);
 
@@ -693,11 +650,7 @@ fill_cmd_set_user_name (uint8_t user_id,
 int8_t 
 fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
 {
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_name_rq);
 
@@ -723,13 +676,9 @@ fill_cmd_set_user_password (uint8_t user_id,
   /* achu: password can be IPMI_MAX_AUTHENTICATION_CODE_LENGTH length.  Null
    * termination in IPMI packet not required
    */
-  if (!IPMI_PASSWORD_OPERATION_VALID(operation)
-      || (password && password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
-      || !fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (IPMI_PASSWORD_OPERATION_VALID(operation)
+	      && !(password && password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_password_rq);
 

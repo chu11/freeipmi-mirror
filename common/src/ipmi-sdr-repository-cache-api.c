@@ -58,11 +58,7 @@ ipmi_sdr_repository_info_write (ipmi_device_t *dev, FILE *fp)
   int32_t len;
   int rv = -1;
 
-  if (!dev || !fp)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL(dev && fp);
 
   FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_repository_info_rs);
 
@@ -99,11 +95,7 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
   uint32_t sensor_record_len;
   int rv = -1;
 
-  if (!dev || !fp)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL(dev && fp);
   
   FIID_OBJ_CREATE(obj_data_rs, tmpl_get_sdr_rs);
 
@@ -140,11 +132,7 @@ ipmi_sdr_cache_create (ipmi_device_t *dev, char *sdr_cache_file)
   FILE *cache_fp;
   int rv = -1;
 
-  if (!dev || !sdr_cache_file)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL(dev && sdr_cache_file);
 
   ERR_CLEANUP ((cache_fp = fopen (sdr_cache_file, "w")));
   ERR_CLEANUP (!(ipmi_sdr_repository_info_write (dev, cache_fp) != 0));
@@ -165,11 +153,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   int32_t len;
   int rv = -1;
 
-  if (!(sdr_repository_cache && sdr_cache_file))
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (sdr_repository_cache && sdr_cache_file);
 
   sdr_repository_cache->fd = -1;
   sdr_repository_cache->cache_start = NULL;
@@ -219,11 +203,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
 int 
 ipmi_sdr_repository_cache_unload (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repository_cache == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (sdr_repository_cache);
 
   if (sdr_repository_cache->cache_start)
     {
@@ -249,11 +229,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
   int32_t hdr_len, info_len;
   uint64_t val;
 
-  if (sdr_repository_cache == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (sdr_repository_cache);
 
   if (rec_no <= 0 || rec_no > sdr_repository_cache->total_records)
     {
@@ -307,11 +283,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 int 
 ipmi_sdr_repository_cache_first (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repository_cache == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (sdr_repository_cache);
 
   return (ipmi_sdr_repository_cache_seek (sdr_repository_cache, 1));
 }
@@ -319,11 +291,7 @@ ipmi_sdr_repository_cache_first (sdr_repository_cache_t *sdr_repository_cache)
 int 
 ipmi_sdr_repository_cache_next (sdr_repository_cache_t *sdr_repository_cache)
 {
-  if (sdr_repository_cache == NULL)
-    {
-      errno = EINVAL;
-      return -1;
-    }
+  ERR_EINVAL (sdr_repository_cache);
 
   return (ipmi_sdr_repository_cache_seek (sdr_repository_cache, 
                                           sdr_repository_cache->cache_curr_rec_no + 1));

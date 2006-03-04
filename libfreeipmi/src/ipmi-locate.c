@@ -29,6 +29,7 @@
 
 #include "freeipmi/ipmi-locate.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 
@@ -48,11 +49,7 @@ ipmi_locate (ipmi_interface_type_t type)
   ipmi_locate_info_t* pinfo;
   int i;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
   
   for (i = 0; things_to_try[i] != NULL; i++)
     {

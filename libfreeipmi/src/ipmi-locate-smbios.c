@@ -47,6 +47,7 @@
 #include "freeipmi/fiid.h"
 #include "freeipmi/ipmi-ssif-interface.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 #include "xmalloc.h"
 
@@ -379,11 +380,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
   uint64_t strobed;
   ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
   if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
     goto cleanup;

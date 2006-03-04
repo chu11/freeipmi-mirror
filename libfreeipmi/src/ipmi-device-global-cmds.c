@@ -29,8 +29,9 @@
 #include "freeipmi/ipmi-device-global-cmds.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 
-#include "freeipmi-portability.h"
+#include "err-wrappers.h"
 #include "fiid-wrappers.h"
+#include "freeipmi-portability.h"
 
 fiid_template_t tmpl_cmd_get_device_id_rq =
   {
@@ -100,11 +101,7 @@ fiid_template_t tmpl_cmd_get_device_id_sr870bn4_rs =
 int8_t 
 fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
 { 
-  if (!fiid_obj_valid(obj_cmd_rq))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_device_id_rq);
 

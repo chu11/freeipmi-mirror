@@ -28,6 +28,7 @@
 #include "freeipmi/ipmi-locate.h"
 #include "freeipmi/ipmi-ssif-interface.h"
 
+#include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 #ifdef UNTESTED /* __linux */           /* this code uses the /proc filesystem */
@@ -136,11 +137,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
   int status;
   ipmi_locate_info_t *pinfo = NULL;
 
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
   if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
     goto cleanup;
@@ -209,11 +206,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 ipmi_locate_info_t*
 ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type)
 {
-  if (!IPMI_INTERFACE_TYPE_VALID(type))
-    {
-      errno = EINVAL;
-      return NULL;
-    }
+  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
   return NULL;
 }
