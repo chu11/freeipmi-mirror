@@ -56,8 +56,10 @@ libfreeipmi:
   * lan ctx interface?
   * len -> length globally?
     md2/md5
+  * admin -> administrator?
   * rmcpplus hdr_session / session_hdr ?
   * need wrapper util function to generate write keys
+  * obj_payload -> obj_rmcpplus_payload
 
 fish:
 -----
