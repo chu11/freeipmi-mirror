@@ -3,7 +3,7 @@
 	* common/src/err-wrappers.h; New macros for errno returns.
 
 	* common/, libfreeipmi/: Use new macros.  Some general code
-	cleanup and fixing.
+	cleanup and bug fixing.
 	
 2006-03-03  Albert Chu <chu11@llnl.gov>
 

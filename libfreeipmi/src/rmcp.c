@@ -143,11 +143,7 @@ assemble_rmcp_pkt (fiid_obj_t obj_rmcp_hdr, fiid_obj_t obj_cmd, uint8_t *pkt, ui
   FIID_OBJ_LEN_BYTES (obj_rmcp_hdr_len, obj_rmcp_hdr);
   FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
 
-  if (pkt_len < (obj_rmcp_hdr_len + obj_cmd_len))
-    {
-      errno = EMSGSIZE;
-      return -1;
-    }
+  ERR_EMSGSIZE (!(pkt_len < (obj_rmcp_hdr_len + obj_cmd_len)));
 
   memset (pkt, '\0', pkt_len);
   FIID_OBJ_GET_ALL_LEN (obj_rmcp_hdr_len, obj_rmcp_hdr, pkt, pkt_len);

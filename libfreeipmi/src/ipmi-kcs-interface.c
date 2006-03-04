@@ -158,11 +158,8 @@ ipmi_kcs_ctx_create(void)
 {
   ipmi_kcs_ctx_t ctx = NULL;
 
-  if (!(ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))))
-    {
-      errno = ENOMEM;
-      goto cleanup;
-    }
+  ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))));
+
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->bmc_iobase_addr = IPMI_KCS_SMS_IO_BASE_DEFAULT;
   ctx->reg_space = 1;

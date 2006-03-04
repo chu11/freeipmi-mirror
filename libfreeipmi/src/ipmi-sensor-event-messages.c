@@ -944,11 +944,8 @@ _snprintf(char *buf, unsigned int buflen, char *fmt, ...)
   rv = vsnprintf (buf, buflen, fmt, ap);
   va_end(ap);
 
-  if (rv >= (buflen - 1))  /* -1 to account for '\0' */
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+  /* -1 to account for '\0' */
+  ERR_ENOSPC(!(rv >= (buflen - 1)));
   return (0);
 }
 
@@ -1041,22 +1038,16 @@ _strcat12(char *buf, unsigned int buflen, uint8_t flag, int str_len, int index)
   if (flag)
     {
       str_len += strlen(ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
-      if (str_len < buflen)
-	{
-	  if (str_len)
-	    strcat(buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
-	  else
-	    {
-	      strcat(buf, "; ");
-	      strcat(buf, "%s");
-	    }
-	  return str_len;
-	}
+      ERR_ENOSPC (!(str_len < buflen));
+
+      if (str_len)
+	strcat(buf, ipmi_sensor_type_code_12_event_data2_offset_04_pef_action_desc[index]);
       else
 	{
-	  errno = ENOSPC;
-	  return -1;
+	  strcat(buf, "; ");
+	  strcat(buf, "%s");
 	}
+      return str_len;
     }
   return str_len;
 }
@@ -1104,23 +1095,17 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
 
   memset(buf, '0', buflen);
 
-  if ((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, alert, str_len, 0)) < 0));
 
-  if ((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_off, str_len, 1)) < 0));
 
-  if ((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, reset, str_len, 2)) < 0));
   
-  if ((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, power_cycle, str_len, 3)) < 0));
   
-  if ((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, oem_action, str_len, 4)) < 0));
   
-  if ((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0)
-    goto cleanup;
+  ERR_CLEANUP (!((str_len = _strcat12(buf, buflen, diagnostic_interrupt, str_len, 5)) < 0));
   
   rv = 0;
  cleanup:
@@ -1665,11 +1650,9 @@ _get_event_message(uint16_t offset,
   ERR_EINVAL (!(offset > offset_max));
 
   rv = snprintf(buf, buflen, string_array[offset]);
-  if (rv >= (buflen - 1))	/* -1 to account for '\0' */
-    {
-      errno = ENOSPC;
-      return (-1);
-    }
+
+  /* -1 to account for '\0' */
+  ERR_ENOSPC(!(rv >= (buflen - 1)));
 
   return (0);
 }

@@ -42,10 +42,11 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
 {
   ipmi_locate_info_t *pinfo = NULL;
 
-  ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
+  ERR_EINVAL_NULL_RETURN (type == IPMI_INTERFACE_KCS
+			  || type == IPMI_INTERFACE_SMIC
+			  || type == IPMI_INTERFACE_SSIF);
 
-  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
-    goto cleanup;
+  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
   memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
   pinfo->interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
@@ -70,8 +71,6 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
       pinfo->base_addr.bmc_iobase_addr = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
       pinfo->reg_space = 1;
       break;
-    case IPMI_INTERFACE_BT:
-      goto cleanup;
     case IPMI_INTERFACE_SSIF:
       pinfo->ipmi_ver_major = 1;
       pinfo->ipmi_ver_minor = 5;
@@ -80,9 +79,8 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
       pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
       pinfo->reg_space = 1;
       break;
-    case IPMI_INTERFACE_RESERVED:
     default:
-      goto cleanup;
+      ERR_EXIT(0);
     }
 
   return (pinfo);

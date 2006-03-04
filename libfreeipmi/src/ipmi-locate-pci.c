@@ -139,17 +139,14 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 
   ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));
 
-  if (!(pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))))
-    goto cleanup;
+  ERR_CLEANUP ((pinfo = (ipmi_locate_info_t *)malloc(sizeof(struct ipmi_locate_info))));
   memset(pinfo, '\0', sizeof(struct ipmi_locate_info));
   pinfo->interface_type = type;
   if (type == IPMI_INTERFACE_SSIF)
     pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
 
   status = 1;
-  fp_devices = fopen ("/proc/bus/pci/devices", "r");
-  if (fp_devices == NULL) 
-    goto cleanup;
+  ERR_CLEANUP ((fp_devices = fopen ("/proc/bus/pci/devices", "r")));
 
   while (fgets (buf, sizeof(buf), fp_devices) != NULL) {
     pci_class_regs_t regs;
@@ -158,44 +155,39 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 		    &dfn, &vendor, &irq,
 		    &base_addr[0], &base_addr[1], &base_addr[2], &base_addr[3], &base_addr[4], &base_addr[5]);
     pinfo->intr_num = (uint16_t)irq;
-    if (items == 9)
+    
+    ERR_CLEANUP (items == 9);
+
+    bus = dfn >> 8U;
+    dev = PCI_SLOT(dfn & 0xff);
+    func = PCI_FUNC(dfn & 0xff);
+    ERR_CLEANUP (pci_get_regs (bus, dev, func, &regs, &status));
+
+    if (regs.pci_class != IPMI_CLASS ||
+	regs.pci_subclass != IPMI_SUBCLASS ||
+	regs.pci_prog_interface + 1 != type)
+      continue;
+
+    for (i = 0; i < 6; i++)
       {
-	bus = dfn >> 8U;
-	dev = PCI_SLOT(dfn & 0xff);
-	func = PCI_FUNC(dfn & 0xff);
-	if (pci_get_regs (bus, dev, func, &regs, &status) != NULL)
+	if (base_addr[i] == 0 || base_addr[i] == ~0) continue;
+	switch (base_addr[i] & PCI_BASE_ADDRESS_SPACE)
 	  {
-	    if (regs.pci_class != IPMI_CLASS ||
-		regs.pci_subclass != IPMI_SUBCLASS ||
-		regs.pci_prog_interface + 1 != type)
-	      continue;
-
-	    for (i = 0; i < 6; i++)
-	      {
-		if (base_addr[i] == 0 || base_addr[i] == ~0) continue;
-		switch (base_addr[i] & PCI_BASE_ADDRESS_SPACE)
-		  {
-		  case past_io:
-		    pinfo->bmc_io_mapped = 0;
-		    pinfo->base.bmc_iobase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_IO_MASK;
-		    return pinfo;
-
-		  case past_memory:
-		    pinfo->bmc_io_mapped = 1;
-		    pinfo->base.bmc_membase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
-		    return pinfo;
-		  }
-	      }
+	  case past_io:
+	    pinfo->bmc_io_mapped = 0;
+	    pinfo->base.bmc_iobase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_IO_MASK;
+	    return pinfo;
+	    
+	  case past_memory:
+	    pinfo->bmc_io_mapped = 1;
+	    pinfo->base.bmc_membase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
+	    return pinfo;
 	  }
-	else
-	  goto cleanup;
       }
-    else
-      goto cleanup;
   }
 
  cleanup:
-  if (fp_devices != NULL)
+  if (fp_devices)
     fclose (fp_devices);
   ipmi_locate_destroy(pinfo);
   return NULL;

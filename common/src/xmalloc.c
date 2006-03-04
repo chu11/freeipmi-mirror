@@ -24,7 +24,9 @@
 #include <string.h>
 #endif
 #include <errno.h>
+#if defined (IPMI_SYSLOG)
 #include <syslog.h>
+#endif
 
 #include "xmalloc.h"
 #include "ipmi-common.h"
@@ -45,7 +47,9 @@ fixup_null_alloc (n)
     p = malloc ((size_t) 1);
   if (p == 0)
     {
+#if defined (IPMI_SYSLOG)
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), _("Memory exhausted"));
+#endif
       errno = ENOMEM;
     }
   else 

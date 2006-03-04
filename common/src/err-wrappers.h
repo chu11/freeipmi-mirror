@@ -81,6 +81,26 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_CLEANUP(expr)                                               \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define ERR_EXIT(expr)                                                  \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      exit(1);                                                          \
+    }                                                                   \
+} while (0)
+
 #define ERR_NULL_RETURN(expr)                                           \
 do {                                                                    \
   if (!(expr))                                                          \
@@ -156,23 +176,58 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
-#define ERR_CLEANUP(expr)                                               \
+#define ERR_ENODEV(expr)                                                \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      errno = ENODEV;                                                   \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_ENODEV_CLEANUP(expr)                                        \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = ENODEV;                                                   \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
       goto cleanup;                                                     \
     }                                                                   \
 } while (0)
 
-#define ERR_EXIT(expr)                                                  \
+#define ERR_ENOTSUP(expr)                                               \
 do {                                                                    \
   if (!(expr))                                                          \
     {                                                                   \
+      errno = ENOTSUP;                                                  \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
-      exit(1);                                                          \
+      return (-1);                                                      \
+    }                                                                   \
+} while (0)
+
+#define ERR_ENOTSUP_CLEANUP(expr)                                       \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = ENOTSUP;                                                  \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
+#define ERR_EMSGSIZE(expr)                                              \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EMSGSIZE;                                                 \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      return (-1);                                                      \
     }                                                                   \
 } while (0)
 

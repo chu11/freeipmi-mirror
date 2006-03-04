@@ -53,14 +53,12 @@
 
 #define IPMI_DPRINTF(args) \
         do { \
-          if((ipmi_dprintf args) < 0) \
-            return -1; \
+          ERR (!((ipmi_dprintf args) < 0)); \
         } while(0) 
 
 #define IPMI_DPRINTF_CLEANUP(args) \
         do { \
-          if((ipmi_dprintf args) < 0) \
-            goto cleanup; \
+          ERR_CLEANUP (!((ipmi_dprintf args) < 0)); \
         } while(0) 
 
 #define IPMI_DEBUG_MAX_UNEXPECTED_BYTES 65536
@@ -75,8 +73,7 @@ fiid_template_t tmpl_unexpected_data =
 static int8_t
 _set_prefix_str(char *buf, unsigned int buflen, char *prefix)
 {
-  if (!buf || buflen <= 3)
-    return (-1);
+  ERR (buf && buflen > 3);
 
   memset(buf, '\0', buflen);
   if (prefix)
@@ -148,11 +145,9 @@ _output_byte_array(int fd, char *prefix, uint8_t *buf, uint32_t buf_len)
 int8_t
 ipmi_dump_setup(int fd, char *prefix, char *hdr, char *prefix_buf, uint32_t prefix_buf_len)
 {
-  if (_set_prefix_str(prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0)
-    return (-1);
+  ERR (!(_set_prefix_str(prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN, prefix) < 0));
 
-  if (_output_str(fd, prefix_buf, hdr) < 0)
-    return (-1);
+  ERR (!(_output_str(fd, prefix_buf, hdr) < 0));
 
   return (0);
 }
@@ -167,19 +162,16 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
   
   ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));
 
-  if (!(iter = fiid_iterator_create(obj)))
-    goto cleanup;
+  FIID_ITERATOR_CREATE (iter, obj);
 
   while (!fiid_iterator_end(iter))
     {
       int32_t field_len;
       uint8_t *key;
 
-      if (!(key = fiid_iterator_key(iter)))
-        goto cleanup;
+      FIID_ITERATOR_KEY_CLEANUP(key, iter);
 
-      if ((field_len = fiid_iterator_field_len(iter)) < 0)
-        goto cleanup;
+      FIID_ITERATOR_FIELD_LEN_CLEANUP(field_len, iter);
     
       if (!field_len)
         {
@@ -194,8 +186,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         {
           uint64_t val = 0;
 
-	  if (fiid_iterator_get (iter, &val) < 0)
-            goto cleanup;
+	  FIID_ITERATOR_GET_CLEANUP (iter, &val);
 
           IPMI_DPRINTF_CLEANUP ((fd, "[%16LXh] = %s[%2db]\n", (uint64_t) val, key, field_len));
         }
@@ -205,9 +196,8 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
           int len;
 
           IPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));
-     
-          if ((len = fiid_iterator_get_data(iter, buf, IPMI_DEBUG_MAX_BUF_LEN)) < 0)
-            goto cleanup;
+
+	  FIID_ITERATOR_GET_DATA_LEN_CLEANUP(len, iter, buf, IPMI_DEBUG_MAX_BUF_LEN);
        
           ERR_CLEANUP (!(_output_byte_array(fd, prefix, buf, len) < 0));
         }
@@ -464,8 +454,7 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
 
   ERR_EINVAL (pkt && tmpl_cmd);
 
-  if (ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0)
-    return (-1);
+  ERR (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_DEBUG_MAX_PREFIX_LEN) < 0));
 
   /* Dump rmcp header */
   

@@ -81,11 +81,7 @@ assemble_ipmi_kcs_pkt (fiid_obj_t obj_kcs_hdr,
   FIID_OBJ_LEN_BYTES (obj_kcs_hdr_len, obj_kcs_hdr);
   FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
 
-  if (pkt_len < (obj_kcs_hdr_len + obj_cmd_len))
-    {
-      errno = EMSGSIZE;
-      return (-1);
-    }
+  ERR_EMSGSIZE (!(pkt_len < (obj_kcs_hdr_len + obj_cmd_len)));
 
   memset (pkt, 0, pkt_len);
   FIID_OBJ_GET_ALL_LEN (obj_kcs_hdr_len, obj_kcs_hdr, pkt, pkt_len);
