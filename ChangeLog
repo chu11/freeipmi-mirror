@@ -5,6 +5,8 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-debug.h: Export unexecpted
 	data template.
+
+	* libfreeipmi/include/Makefile.am: Add freeipmi.h.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 
