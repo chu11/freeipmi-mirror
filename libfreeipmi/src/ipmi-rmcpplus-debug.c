@@ -582,6 +582,8 @@ static int32_t
 _dump_rmcpplus_session_trlr(int fd,
                             char *prefix,
                             char *session_trlr_hdr,
+			    uint64_t session_id,
+			    uint64_t payload_authenticated,
                             uint8_t integrity_algorithm,
                             uint8_t *pkt,
                             uint32_t pkt_len)
@@ -600,15 +602,23 @@ _dump_rmcpplus_session_trlr(int fd,
       return (-1);
     }
 
-  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+  if (!session_id)
+    return (0);
+
+  if (payload_authenticated)
+    {
+      if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+	authentication_code_len = 0;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+	authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+	authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
+      else /* integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 */
+	authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
+    }
+  else
     authentication_code_len = 0;
-  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
-    authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
-  else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
-    authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
-  else /* integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128 */
-    authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
-  
+
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
 
   ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0));
@@ -621,7 +631,8 @@ _dump_rmcpplus_session_trlr(int fd,
     }
   else if (pkt_len < (pad_length_field_len + next_header_field_len))
     authentication_code_len = 0;
-  else if (pkt_len < (authentication_code_len + pad_length_field_len + next_header_field_len))
+  else if (authentication_code_len 
+	   && pkt_len < (authentication_code_len + pad_length_field_len + next_header_field_len))
     authentication_code_len = pkt_len - pad_length_field_len - next_header_field_len;
   
   pad_length = pkt_len - pad_length_field_len - next_header_field_len - authentication_code_len;
@@ -791,19 +802,18 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   /* Dump trailer */
 
-  if (session_id && payload_authenticated)
-    {
-      ERR_CLEANUP (!((obj_len = _dump_rmcpplus_session_trlr(fd,
-                                                            prefix_buf,
-                                                            session_trlr_hdr,
-                                                            integrity_algorithm,
-                                                            pkt + indx,
-                                                            pkt_len - indx)) < 0));
-      indx += obj_len;
+  ERR_CLEANUP (!((obj_len = _dump_rmcpplus_session_trlr(fd,
+							prefix_buf,
+							session_trlr_hdr,
+							session_id,
+							payload_authenticated,
+							integrity_algorithm,
+							pkt + indx,
+							pkt_len - indx)) < 0));
+  indx += obj_len;
 
-      if (pkt_len <= indx)
-        return 0;
-    }
+  if (pkt_len <= indx)
+    return 0;
   
   /* Dump extra stuff if packet is longer than expected */
   if ((pkt_len - indx) > 0)

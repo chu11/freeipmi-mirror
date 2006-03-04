@@ -43,17 +43,17 @@ extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;
 extern fiid_template_t tmpl_lan_msg_trlr;
 
-int8_t fill_lan_msg_hdr (uint8_t net_fn, 
-			 uint8_t rs_lun, 
-			 uint8_t rq_seq, 
-			 fiid_obj_t obj_msg);
-
 int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
                               uint32_t inbound_sequence_number, 
                               uint32_t session_id,
                               uint8_t *authentication_code_data, 
                               uint32_t authentication_code_data_len, 
                               fiid_obj_t obj_hdr);
+
+int8_t fill_lan_msg_hdr (uint8_t net_fn, 
+			 uint8_t rs_lun, 
+			 uint8_t rq_seq, 
+			 fiid_obj_t obj_msg);
 
 int32_t assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr, 
 			       fiid_obj_t obj_lan_session_hdr, 
