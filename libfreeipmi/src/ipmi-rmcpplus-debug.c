@@ -680,7 +680,7 @@ _dump_rmcpplus_session_trlr(int fd,
                                        NULL, 
                                        obj_rmcpplus_session_trlr) < 0));
 
-  rv = 0;
+  rv = indx;
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_session_trlr);
   return (rv);
