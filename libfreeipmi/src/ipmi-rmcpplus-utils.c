@@ -211,19 +211,8 @@ _calculate_k_rakp_hmac(int hash_algorithm,
       return (-1);
     } 
 
-  if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_hmac: ipmi_crypt_hash_digest_len");
-      return (-1);
-    }
-
-  if (crypt_digest_len != expected_digest_len)
-    {
-      errno = EINVAL;
-      ipmi_debug("_calculate_k_rakp_hmac: Invalid parameters");
-      return (-1);
-    }
+  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
+  ERR (crypt_digest_len == expected_digest_len);
 
   /* SPEC: achu: I believe the length of the constant you pass in
    * is the digest_len, atleast according to IPMI 2.0 Spec Section
@@ -499,7 +488,7 @@ ipmi_calculate_keys(uint8_t payload_type,
       
       if (integrity_key_buf_len < k1_len)
 	{
-	  errno = EINVAL;
+	  errno = EMSGSIZE;
 	  return (-1);
 	}
       
@@ -512,7 +501,7 @@ ipmi_calculate_keys(uint8_t payload_type,
 	  && (!authentication_code_data_len
 	      || integrity_key_buf_len < authentication_code_data_len))
 	{
-	  errno = EINVAL;
+	  errno = EMSGSIZE;
 	  return (-1);
 	}
       
@@ -544,7 +533,7 @@ ipmi_calculate_keys(uint8_t payload_type,
       
       if (confidentiality_key_buf_len < k2_len)
 	{
-	  errno = EINVAL;
+	  errno = EMSGSIZE;
 	  return (-1);
 	}
       
@@ -653,12 +642,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
 				       buf_index,
 				       digest,
 				       IPMI_MAX_PAYLOAD_LENGTH)) < 0));
-      
-  if (digest_len != expected_digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR (digest_len == expected_digest_len);
   
   memcpy(key_exchange_authentication_code, digest, digest_len);
   return (digest_len);
@@ -695,18 +679,12 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
                             IPMI_MAX_PAYLOAD_LENGTH);
 
       if (!confidentiality_trailer_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+	return (0);
 
       pad_len = confidentiality_trailer[confidentiality_trailer_len - 1];
 
       if ((confidentiality_trailer_len - 1) != pad_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
+	return (0);
 
       for (i = 0; i < pad_len; i++)
         {
@@ -742,10 +720,7 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
     return (1);
 
   if (pad_length > IPMI_INTEGRITY_PAD_MULTIPLE)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+    return (0);
 
   FIID_OBJ_GET_DATA(obj_rmcpplus_session_trlr,
                     "integrity_pad",
@@ -981,21 +956,15 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
   memcpy(buf + buf_index, managed_system_guid, IPMI_MANAGED_SYSTEM_GUID_LENGTH);
   buf_index += IPMI_MANAGED_SYSTEM_GUID_LENGTH;
 
-  if ((digest_len = ipmi_crypt_hash(hash_algorithm,
-                                    hash_flags,
-                                    sik_key,
-                                    sik_key_len,
-                                    buf,
-                                    buf_index,
-                                    digest,
-                                    IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-    return (-1);
-
-  if (digest_len < compare_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
+  ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,
+				       hash_flags,
+				       sik_key,
+				       sik_key_len,
+				       buf,
+				       buf_index,
+				       digest,
+				       IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+  ERR (!(digest_len < compare_len));
 
   return (memcmp(digest, integrity_check_value, compare_len) ? 0 : 1);
 }

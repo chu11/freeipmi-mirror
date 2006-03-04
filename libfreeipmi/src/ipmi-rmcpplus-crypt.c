@@ -159,7 +159,7 @@ _cipher_crypt(int cipher_algorithm,
   gcry_cipher_hd_t h;
   gcry_error_t e;
 
-  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm)
+  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
       || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
       || !data
       || !data_len)
@@ -179,12 +179,6 @@ _cipher_crypt(int cipher_algorithm,
       gcry_cipher_algorithm = GCRY_CIPHER_AES;
       expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
       expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LENGTH;
-    }
-  else
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
-      return (-1);
     }
 
   if (cipher_mode == IPMI_CRYPT_CIPHER_MODE_NONE)
@@ -306,7 +300,7 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
   gcry_error_t e;
   size_t len;
 
-  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm)
+  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES
       || !IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info))
     {
       errno = EINVAL;
@@ -315,12 +309,6 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
 
   if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
     gcry_cipher_algorithm = GCRY_CIPHER_AES;
-  else
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
-      return (-1);
-    }
 
   if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)
     gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;
