@@ -593,7 +593,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 {
   unsigned int indx = 0;
   int32_t obj_rmcp_hdr_len;
-  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_seq_num;
+  uint64_t payload_type, payload_authenticated, payload_encrypted, session_id, session_sequence_number;
   int32_t payload_len;
   fiid_obj_t obj_payload = NULL;
   fiid_obj_t obj_session_hdr_temp = NULL;
@@ -721,8 +721,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 &session_id);
 
   FIID_OBJ_GET (obj_rmcpplus_session_hdr,
-                "session_seq_num",
-                &session_seq_num);
+                "session_sequence_number",
+                &session_sequence_number);
 
   if (((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
         || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
@@ -730,7 +730,10 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-       && (payload_authenticated || payload_encrypted || session_id || session_seq_num))
+       && (payload_authenticated 
+	   || payload_encrypted 
+	   || session_id 
+	   || session_sequence_number))
       || (session_id 
           && payload_authenticated == IPMI_PAYLOAD_FLAG_AUTHENTICATED
           && (integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
@@ -1287,7 +1290,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   unsigned int indx = 0;
   int32_t obj_rmcp_hdr_len, obj_len;
   uint64_t payload_type, payload_authenticated, payload_encrypted, 
-    session_id, session_seq_num, ipmi_payload_len;
+    session_id, session_sequence_number, ipmi_payload_len;
 
   if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
       || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
@@ -1389,8 +1392,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                 &session_id);
   
   FIID_OBJ_GET (obj_rmcpplus_session_hdr,
-                "session_seq_num",
-                &session_seq_num);
+                "session_sequence_number",
+                &session_sequence_number);
 
   FIID_OBJ_GET (obj_rmcpplus_session_hdr,
                 "ipmi_payload_len",
@@ -1402,7 +1405,10 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
         || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-       && (payload_authenticated || payload_encrypted || session_id || session_seq_num))
+       && (payload_authenticated 
+	   || payload_encrypted 
+	   || session_id 
+	   || session_sequence_number))
       || (session_id 
           && payload_authenticated
           && (integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96

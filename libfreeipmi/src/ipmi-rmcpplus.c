@@ -219,6 +219,7 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
   FIID_OBJ_CLEAR (obj_hdr);
 
   FIID_OBJ_SET (obj_hdr, "authentication_type", IPMI_AUTHENTICATION_TYPE_RMCPPLUS);
+  FIID_OBJ_SET (obj_hdr, "reserved", 0);
   FIID_OBJ_SET (obj_hdr, "payload_type", payload_type);
   FIID_OBJ_SET (obj_hdr, "payload_type.authenticated", payload_authenticated);
   FIID_OBJ_SET (obj_hdr, "payload_type.encrypted", payload_encrypted);
@@ -337,6 +338,12 @@ fill_rmcpplus_open_session (uint8_t message_tag,
                 "message_tag", 
                 message_tag);
   FIID_OBJ_SET (obj_cmd, 
+                "reserved1", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved2", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
                 "requested_maximum_privilege_level", 
                 requested_maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd,
@@ -345,30 +352,57 @@ fill_rmcpplus_open_session (uint8_t message_tag,
   FIID_OBJ_SET (obj_cmd,
                 "authentication_payload.payload_type",
                 IPMI_AUTHENTICATION_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved3", 
+                0);
   FIID_OBJ_SET (obj_cmd,
                 "authentication_payload.payload_length",
                 IPMI_AUTHENTICATION_PAYLOAD_LENGTH);
   FIID_OBJ_SET (obj_cmd,
                 "authentication_payload.authentication_algorithm",
                 authentication_algorithm);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved4", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved5", 
+                0);
   FIID_OBJ_SET (obj_cmd,
                 "integrity_payload.payload_type",
                 IPMI_INTEGRITY_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved6", 
+                0);
   FIID_OBJ_SET (obj_cmd,
                 "integrity_payload.payload_length",
                 IPMI_INTEGRITY_PAYLOAD_LENGTH);
   FIID_OBJ_SET (obj_cmd,
                 "integrity_payload.integrity_algorithm",
                 integrity_algorithm);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved7", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved8", 
+                0);
   FIID_OBJ_SET (obj_cmd,
                 "confidentiality_payload.payload_type",
                 IPMI_CONFIDENTIALITY_PAYLOAD_TYPE);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved9", 
+                0);
   FIID_OBJ_SET (obj_cmd,
                 "confidentiality_payload.payload_length",
                 IPMI_CONFIDENTIALITY_PAYLOAD_LENGTH);
   FIID_OBJ_SET (obj_cmd,
                 "confidentiality_payload.confidentiality_algorithm",
                 confidentiality_algorithm);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved10", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved11", 
+                0);
 
   return (0);
 }
@@ -405,6 +439,9 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                 "message_tag", 
                 message_tag);
   FIID_OBJ_SET (obj_cmd, 
+                "reserved1", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
                 "managed_system_session_id", 
                 managed_system_session_id);
   FIID_OBJ_SET_DATA (obj_cmd,
@@ -417,6 +454,12 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
   FIID_OBJ_SET (obj_cmd, 
                 "name_only_lookup", 
                 name_only_lookup_flag);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved2", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved3", 
+                0);
   FIID_OBJ_SET (obj_cmd, 
                 "user_name_length", 
                 user_name_len);
@@ -457,6 +500,12 @@ fill_rmcpplus_rakp_message_3(uint8_t message_tag,
   FIID_OBJ_SET (obj_cmd, 
                 "message_tag", 
                 message_tag);
+  FIID_OBJ_SET (obj_cmd, 
+                "reserved1", 
+                0);
+  FIID_OBJ_SET (obj_cmd, 
+                "rmcpplus_status_code", 
+                rmcpplus_status_code);
   FIID_OBJ_SET (obj_cmd, 
                 "managed_system_session_id", 
                 managed_system_session_id);
