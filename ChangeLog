@@ -21,6 +21,12 @@
 
 	* libfreeipmi/: Various variable name changes for consistency.
 	Several function parameter ordering changes for consistency.
+
+	* configure.ac: Autoconfed getopt.h.
+
+	* bmc-watchdog/src/bmc-watchdog.c, common/src/ipmi-ping.c,
+	garpd/src/garpd.c, ipmipower/src/ipmipower_config.c: Check for
+	HAVE_GETOPT_H.
 	
 2006-03-02  Anand Babu  <ab@zresearch.com>
 

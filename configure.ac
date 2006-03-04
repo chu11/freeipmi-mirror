@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.44 2006-02-26 17:57:38 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.45 2006-03-04 03:26:29 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -171,7 +171,7 @@ dnl Checks for header files.
 AC_HEADER_STDC
 AC_HEADER_TIME
 AC_HEADER_SYS_WAIT
-AC_CHECK_HEADERS([unistd.h fcntl.h])
+AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h])
 
 dnl Check for random number paths
 AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.8 2006-02-26 02:10:50 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.9 2006-03-04 03:26:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -51,7 +51,9 @@
 #include <arpa/inet.h>
 #include <net/if.h>
 #include <netdb.h>
+#if HAVE_GETOPT_H
 #include <getopt.h>
+#endif
 #if TIME_WITH_SYS_TIME
 # include <sys/time.h>
 # include <time.h>
