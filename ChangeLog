@@ -8,6 +8,8 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus.h,
 	libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/src/ipmi-rmcpplus-crypt.h,
+	libfreeipmi/src/ipmi-rmcpplus-crypt.c,
 	libfreeipmi/src/ipmi-rmcpplus-debug.c,
 	libfreeipmi/src/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
@@ -106,6 +108,10 @@
 	libfreeipmi/src/ipmi-rmcpplus-interface.c: Fix various bugs.
 
 	* libfreeipmi/: Various variable name changes for consistency.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.c: Split off some
+	code into ipmi-rmcpplus-crypt.c and ipmi-rmcpplus-crypt.h.
 	
 2006-03-02  Albert Chu <chu11@llnl.gov>
 

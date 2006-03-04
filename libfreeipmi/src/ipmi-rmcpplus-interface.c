@@ -31,6 +31,7 @@
 
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus.h"
+#include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-debug.h"
@@ -546,18 +547,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       hash_data_len += authentication_code_data_len;
     }
   
-  if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
-                                              hash_flags,
-                                              integrity_key,
-                                              integrity_key_len,
-                                              hash_data,
-                                              hash_data_len,
-                                              integrity_digest,
-                                              IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-    {
-      ipmi_debug("ipmi_crypt_hash: %s", strerror(errno));
-      return (-1);
-    }
+  ERR (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+						 hash_flags,
+						 integrity_key,
+						 integrity_key_len,
+						 hash_data,
+						 hash_data_len,
+						 integrity_digest,
+						 IPMI_MAX_PAYLOAD_LENGTH)) < 0));
   
   if (integrity_digest_len != crypt_digest_len)
     {

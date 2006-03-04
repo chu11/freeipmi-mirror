@@ -57,6 +57,7 @@ libfreeipmi:
   * len -> length
     - fiid?
   * need wrapper util function to generate write keys
+  * rakp utils - return 0 if authentication none?
 
 fish:
 -----

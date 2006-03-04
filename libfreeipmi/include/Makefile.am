@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7.2.4 2006-03-04 01:13:16 chu11 Exp $
+## $Id: Makefile.am,v 1.7.2.5 2006-03-04 05:32:26 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -31,6 +31,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
 	freeipmi/ipmi-rmcpplus.h \
+	freeipmi/ipmi-rmcpplus-crypt.h \
 	freeipmi/ipmi-rmcpplus-interface.h \
 	freeipmi/ipmi-rmcpplus-utils.h \
 	freeipmi/ipmi-ssif-interface.h \

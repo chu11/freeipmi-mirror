@@ -151,6 +151,7 @@
 
 #define IPMI_HMAC_SHA1_DIGEST_LENGTH                      20
 #define IPMI_HMAC_MD5_DIGEST_LENGTH                       16
+#define IPMI_MD5_DIGEST_LENGTH                            16
 #define IPMI_HMAC_SHA1_96_DIGEST_LENGTH                   12
 
 #define IPMI_AES_CBC_128_IV_LENGTH                        16

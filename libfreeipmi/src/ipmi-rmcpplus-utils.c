@@ -28,13 +28,11 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
-#include <pthread.h>
-#include <gcrypt.h>
-GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
+#include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX  - only for IPMI_MAX_USER_NAME_LENGTH */
 #include "freeipmi/ipmi-privilege-level-spec.h"
@@ -43,404 +41,6 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
-#include "md5.h"
-
-static int8_t
-_ipmi_init_crypt(void)
-{
-  gcry_error_t e;
-
-  /* XXX: achu: This is my lazy approach to thread safety.  All crypt
-   * functions must continually re-init.  I need to come up with a
-   * more creative/better method later.
-   */
-
-  if ((e = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_control: %s", gcry_strerror(e));
-      return (-1);
-    }
-
-  if (!gcry_check_version(GCRYPT_VERSION))
-    {
-      ipmi_debug("gcry_check_version");
-      return (-1);
-    }
-
-  if ((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_control: %s", gcry_strerror(e));
-      return (-1);
-    }
-
-  if ((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_control: %s", gcry_strerror(e));
-      return (-1);
-    }
-
-  return (0);
-}
-
-int32_t
-ipmi_crypt_hash(int hash_algorithm,
-                int hash_flags,
-                uint8_t *key,
-                uint32_t key_len,
-                uint8_t *hash_data,
-                uint32_t hash_data_len,
-                uint8_t *digest,
-                uint32_t digest_len)
-{
-  gcry_md_hd_t h;
-  gcry_error_t e;
-  int gcry_md_algorithm, gcry_md_flags = 0;
-  unsigned int gcry_md_digest_len;
-  uint8_t *digestPtr;
-
-  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm)
-      || (hash_data && !hash_data_len)
-      || !digest
-      || !digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-    
-  if (_ipmi_init_crypt() < 0)
-    return (-1);
-
-  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
-    gcry_md_algorithm = GCRY_MD_SHA1;
-  else
-    gcry_md_algorithm = GCRY_MD_MD5;
-
-  if (hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC)
-    gcry_md_flags |= GCRY_MD_FLAG_HMAC;
-
-  if ((gcry_md_digest_len = gcry_md_get_algo_dlen(gcry_md_algorithm)) > digest_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if ((e = gcry_md_open(&h, gcry_md_algorithm, gcry_md_flags)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_md_open: %s", gcry_strerror(e));
-      return (-1);
-    }
-      
-  if (!h)
-    {
-      ipmi_debug("gcry_md_open: NULL handle return");
-      return (-1);
-    }
-
-  /* achu: Technically any key length can be supplied.  We'll assume
-   * callers have checked if the key is of a length they care about.
-   */
-  if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
-    {
-      if ((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_md_setkey: %s", gcry_strerror(e));
-          return (-1);
-        }
-    }
-
-  if (hash_data && hash_data_len)
-    gcry_md_write(h, (void *)hash_data, hash_data_len);
-
-  gcry_md_final(h);
-
-  if (!(digestPtr = gcry_md_read(h, gcry_md_algorithm)))
-    {
-      ipmi_debug("gcry_md_read: NULL digest return");
-      return (-1);
-    }
-
-  memcpy(digest, digestPtr, gcry_md_digest_len);
-  gcry_md_close(h);
-  return (gcry_md_digest_len);
-}
-
-int32_t
-ipmi_crypt_hash_digest_len(int hash_algorithm)
-{
-  int gcry_md_algorithm;
-
-  if (!IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (_ipmi_init_crypt() < 0)
-    return (-1);
-
-  if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
-    gcry_md_algorithm = GCRY_MD_SHA1;
-  else
-    gcry_md_algorithm = GCRY_MD_MD5;
-
-  return gcry_md_get_algo_dlen(gcry_md_algorithm);
-}
-
-static int32_t
-_cipher_crypt(int cipher_algorithm,
-              int cipher_mode,
-              uint8_t *key,
-              uint32_t key_len,
-              uint8_t *iv,
-              uint32_t iv_len,
-              uint8_t *data,
-              uint32_t data_len,
-              int encrypt_flag)
-{
-  int gcry_cipher_algorithm, gcry_cipher_mode = 0;
-  int cipher_keylen, cipher_blocklen;
-  int expected_cipher_key_len, expected_cipher_block_len;
-  gcry_cipher_hd_t h;
-  gcry_error_t e;
-
-  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm)
-      || !IPMI_CRYPT_CIPHER_MODE_VALID(cipher_mode)
-      || !data
-      || !data_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    {
-      if (!iv || !iv_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      gcry_cipher_algorithm = GCRY_CIPHER_AES;
-      expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
-      expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LENGTH;
-    }
-  else
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
-      return (-1);
-    }
-
-  if (cipher_mode == IPMI_CRYPT_CIPHER_MODE_NONE)
-    gcry_cipher_mode = GCRY_CIPHER_MODE_NONE;
-  else
-    gcry_cipher_mode = GCRY_CIPHER_MODE_CBC;
-
-  if ((cipher_keylen = ipmi_crypt_cipher_key_len(cipher_algorithm)) < 0)
-    {
-      ipmi_debug("ipmi_crypt_cipher_encrypt: ipmi_crypt_cipher_key_len");
-      return (-1);
-    }
-  
-  if ((cipher_blocklen = ipmi_crypt_cipher_block_len(cipher_algorithm)) < 0)
-    {
-      ipmi_debug("ipmi_crypt_cipher_encrypt: ipmi_crypt_cipher_block_len");
-      return (-1);
-    }
-
-  if (cipher_keylen < expected_cipher_key_len
-      || cipher_blocklen != expected_cipher_block_len)
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    {
-      if (iv_len < cipher_blocklen)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      if (data_len % cipher_blocklen != 0)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      if (iv_len > cipher_blocklen)
-        iv_len = cipher_blocklen;
-
-      if (key && key_len > expected_cipher_key_len)
-        key_len = expected_cipher_key_len;
-    }
-
-  if (_ipmi_init_crypt() < 0)
-    return (-1);
-
-  if ((e = gcry_cipher_open(&h,
-                            gcry_cipher_algorithm,
-                            gcry_cipher_mode,
-                            0) != GPG_ERR_NO_ERROR))
-    {
-      ipmi_debug("gcry_cipher_open: %s", gcry_strerror(e));
-      return (-1);
-    }
-  
-  if (key && key_len)
-    {
-      if ((e = gcry_cipher_setkey(h,
-                                  (void *)key,
-                                  key_len)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_setkey: %s", gcry_strerror(e));
-          return (-1);
-        }
-    }
-
-  if (iv && iv_len)
-    {
-      if ((e = gcry_cipher_setiv(h, (void *)iv, iv_len)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_setiv: %s", gcry_strerror(e));
-          return (-1);
-        }
-    }
-
-  if (encrypt_flag)
-    {
-      if ((e = gcry_cipher_encrypt(h,
-                                   (void *)data,
-                                   data_len,
-                                   NULL,
-                                   0)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_encrypt: %s", gcry_strerror(e));
-          return (-1);
-        }
-    }
-  else
-    {
-      if ((e = gcry_cipher_decrypt(h,
-                                   (void *)data,
-                                   data_len,
-                                   NULL,
-                                   0)) != GPG_ERR_NO_ERROR)
-        {
-          ipmi_debug("gcry_cipher_decrypt: %s", gcry_strerror(e));
-          return (-1);
-        }
-    }
-
-  gcry_cipher_close(h);
-
-  return (data_len);
-}
-
-int32_t
-ipmi_crypt_cipher_encrypt(int cipher_algorithm,
-                          int cipher_mode,
-                          uint8_t *key,
-                          uint32_t key_len,
-                          uint8_t *iv,
-                          uint32_t iv_len,
-                          uint8_t *data,
-                          uint32_t data_len)
-{
-  return _cipher_crypt(cipher_algorithm,
-                       cipher_mode,
-                       key,
-                       key_len,
-                       iv,
-                       iv_len,
-                       data,
-                       data_len,
-                       1);
-}
-
-int32_t
-ipmi_crypt_cipher_decrypt(int cipher_algorithm,
-                          int cipher_mode,
-                          uint8_t *key,
-                          uint32_t key_len,
-                          uint8_t *iv,
-                          uint32_t iv_len,
-                          uint8_t *data,
-                          uint32_t data_len)
-{
-  return _cipher_crypt(cipher_algorithm,
-                       cipher_mode,
-                       key,
-                       key_len,
-                       iv,
-                       iv_len,
-                       data,
-                       data_len,
-                       0);
-}
-
-static int32_t
-_ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
-{
-  int gcry_cipher_algorithm, gcry_crypt_cipher_info_what;
-  gcry_error_t e;
-  size_t len;
-
-  if (!IPMI_CRYPT_CIPHER_ALGORITHM_VALID(cipher_algorithm))
-    {
-      errno = EINVAL;
-      return (-1);
-    }
-
-  if (!IPMI_CRYPT_CIPHER_INFO_VALID(cipher_info))
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
-      return (-1);
-    }
-  
-  if (cipher_algorithm == IPMI_CRYPT_CIPHER_AES)
-    gcry_cipher_algorithm = GCRY_CIPHER_AES;
-  else
-    {
-      errno = EINVAL;
-      ipmi_debug("_ipmi_crypt_cipher_info: Invalid parameters");
-      return (-1);
-    }
-
-  if (cipher_info == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH)
-    gcry_crypt_cipher_info_what = GCRYCTL_GET_KEYLEN;
-  else
-    gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
-
-  if (_ipmi_init_crypt() < 0)
-    return (-1);
-
-  if ((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
-                                 gcry_crypt_cipher_info_what,
-                                 NULL,
-                                 &len)) != GPG_ERR_NO_ERROR)
-    {
-      ipmi_debug("gcry_cipher_algo_info: %s", gcry_strerror(e));
-      return (-1);
-    }
-
-  return (len);
-}
-                        
-
-int32_t
-ipmi_crypt_cipher_key_len(int cipher_algorithm)
-{
-  return _ipmi_crypt_cipher_info(cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH);
-}
-
-int32_t 
-ipmi_crypt_cipher_block_len(int cipher_algorithm)
-{
-  return _ipmi_crypt_cipher_info(cipher_algorithm, IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH);
-}
 
 int32_t 
 ipmi_calculate_sik(uint8_t authentication_algorithm,
@@ -456,8 +56,15 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
                    uint8_t *sik,
                    uint32_t sik_len)
 {
+  int hash_algorithm, hash_flags, expected_digest_len, crypt_digest_len, 
+    computed_digest_len;
+  unsigned int hash_data_len;
+  uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
+
   /* key can be NULL, indicating a empty key */
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || (key && !key_len)
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
@@ -478,100 +85,77 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
       memset(sik, '\0', sik_len);
       return (0);
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-           || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+
+  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
-      int hash_algorithm, hash_flags, expected_digest_len, crypt_digest_len, 
-        computed_digest_len;
-      unsigned int hash_data_len;
-      uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
-      
-      if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
-        {
-          hash_algorithm = IPMI_CRYPT_HASH_SHA1;
-          hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
-          expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
-        }
-      else
-        {
-          hash_algorithm = IPMI_CRYPT_HASH_MD5;
-          hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
-          expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
-        }
-
-      if ((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0)
-        return (-1);
-
-      ERR_EXIT (crypt_digest_len == expected_digest_len);
-
-      if (sik_len < expected_digest_len)
-        {
-          errno = EINVAL;
-          return (-1);
-        }
-
-      key_len = (key_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : key_len;
-
-      memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
-
-      /* 
-       * Build up data for hashing.
-       */
-
-      hash_data_len = 0;
-      memcpy(hash_data + hash_data_len, 
-             (void *)remote_console_random_number, 
-             remote_console_random_number_len);
-      hash_data_len += remote_console_random_number_len;
-
-      memcpy(hash_data + hash_data_len, 
-             (void *)managed_system_random_number,
-             managed_system_random_number_len);
-      hash_data_len += managed_system_random_number_len;
-
-      memcpy(hash_data + hash_data_len, 
-             (void *)&requested_privilege_level, 
-             sizeof(uint8_t));
-      hash_data_len += sizeof(uint8_t);
-
-      memcpy(hash_data + hash_data_len, 
-             (void *)&user_name_len, 
-             sizeof(uint8_t));
-      hash_data_len += sizeof(uint8_t);
-
-      if (user_name && user_name_len > 0)
-        {
-          memcpy(hash_data + hash_data_len, (void *)user_name, user_name_len);
-          hash_data_len += user_name_len;
-        }
-
-      if ((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
-                                                  hash_flags,
-                                                  key,
-                                                  key_len,
-                                                  hash_data,
-                                                  hash_data_len,
-                                                  sik,
-                                                  sik_len)) < 0)
-        return (-1);
-
-      if (computed_digest_len != crypt_digest_len)
-        {
-          ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
-          return (-1);
-        }
-
-      return (computed_digest_len);
+      hash_algorithm = IPMI_CRYPT_HASH_SHA1;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+      expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
     }
   else
     {
-      /* achu: Even though the algorithm is legit, we don't support it yet :-( */
+      hash_algorithm = IPMI_CRYPT_HASH_MD5;
+      hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
+      expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
+    }
+
+  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
+
+  ERR_EXIT (crypt_digest_len == expected_digest_len);
+
+  if (sik_len < expected_digest_len)
+    {
       errno = EINVAL;
       return (-1);
     }
 
-  /* NOT REACHED */
-  return (0);
+  key_len = (key_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : key_len;
+  
+  memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
+
+  /* 
+   * Build up data for hashing.
+   */
+  
+  hash_data_len = 0;
+  memcpy(hash_data + hash_data_len, 
+	 (void *)remote_console_random_number, 
+	 remote_console_random_number_len);
+  hash_data_len += remote_console_random_number_len;
+  
+  memcpy(hash_data + hash_data_len, 
+	 (void *)managed_system_random_number,
+	 managed_system_random_number_len);
+  hash_data_len += managed_system_random_number_len;
+
+  memcpy(hash_data + hash_data_len, 
+	 (void *)&requested_privilege_level, 
+	 sizeof(uint8_t));
+  hash_data_len += sizeof(uint8_t);
+
+  memcpy(hash_data + hash_data_len, 
+	 (void *)&user_name_len, 
+	 sizeof(uint8_t));
+  hash_data_len += sizeof(uint8_t);
+
+  if (user_name && user_name_len > 0)
+    {
+      memcpy(hash_data + hash_data_len, (void *)user_name, user_name_len);
+      hash_data_len += user_name_len;
+    }
+
+  ERR (!((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
+						 hash_flags,
+						 key,
+						 key_len,
+						 hash_data,
+						 hash_data_len,
+						 sik,
+						 sik_len)) < 0));
+
+  ERR (!(computed_digest_len != crypt_digest_len));
+
+  return (computed_digest_len);
 }
 
 static int32_t
@@ -647,21 +231,16 @@ _calculate_k_rakp_hmac(int hash_algorithm,
    * value repeated up to the HMAC block size in length starting
    * with the constant 01h".
    */
-  if ((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
-                                              GCRY_MD_FLAG_HMAC,
-                                              sik_key,
-                                              crypt_digest_len,
-                                              constant,
-                                              crypt_digest_len,
-                                              k,
-                                              k_len)) < 0)
-    return (-1);
+  ERR (!((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
+						 IPMI_CRYPT_HASH_FLAGS_HMAC,
+						 sik_key,
+						 crypt_digest_len,
+						 constant,
+						 crypt_digest_len,
+						 k,
+						 k_len)) < 0));
 
-  if (computed_digest_len != crypt_digest_len)
-    {
-      ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
-      return (-1);
-    }
+  ERR (!(computed_digest_len != crypt_digest_len));
 
   return (computed_digest_len);
 }
@@ -735,7 +314,9 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                   uint8_t *constant,
                   uint32_t constant_len)
 {
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	   || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	  && (!sik_key || !sik_key_len))
@@ -758,19 +339,13 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                                        k_len, 
                                        constant, 
                                        constant_len);
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     return _calculate_k_rakp_hmac_md5(sik_key, 
                                       sik_key_len, 
                                       k, 
                                       k_len, 
                                       constant, 
                                       constant_len);
-  else
-    {
-      /* achu: Even though the algorithm is legit, we don't support it yet :-( */
-      errno = EINVAL;
-      return (-1);
-    }
 
   /* NOT REACHED */
   return (0);
@@ -838,7 +413,9 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   uint8_t hash_algorithm, hash_flags;
   int32_t digest_len, expected_digest_len;
   
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || !managed_system_random_number
       || managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH
       || !IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
@@ -867,7 +444,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
       if (key_exchange_authentication_code_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
         {
@@ -878,11 +455,6 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
-    }
-  else
-    {
-      errno = EINVAL;
-      return (-1);
     }
 
   memset(buf, '\0', IPMI_MAX_PAYLOAD_LENGTH);
@@ -910,15 +482,14 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
       buf_index++;
     }
 
-  if ((digest_len = ipmi_crypt_hash(hash_algorithm,
-                                    hash_flags,
-                                    authentication_key,
-                                    authentication_key_len,
-                                    buf,
-                                    buf_index,
-                                    digest,
-                                    IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-    return (-1);
+  ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,
+				       hash_flags,
+				       authentication_key,
+				       authentication_key_len,
+				       buf,
+				       buf_index,
+				       digest,
+				       IPMI_MAX_PAYLOAD_LENGTH)) < 0));
       
   if (digest_len != expected_digest_len)
     {
@@ -934,7 +505,8 @@ int8_t
 ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
 				fiid_obj_t obj_rmcpplus_payload)
 {
-  if (!IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
+  if ((confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+       && confidentiality_algorithm != IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
       || !fiid_obj_valid(obj_rmcpplus_payload))
     {
       errno = EINVAL;
@@ -946,7 +518,7 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
     /* No padding */
     return (1);
-  else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+  else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
     {
       uint8_t confidentiality_trailer[IPMI_MAX_PAYLOAD_LENGTH];
       int32_t confidentiality_trailer_len;
@@ -980,12 +552,6 @@ ipmi_rmcpplus_check_payload_pad(uint8_t confidentiality_algorithm,
         }
 
       return (1);
-    }
-  else
-    {
-      /* achu: Even though the algorithm is legit, we don't support it yet :-( */
-      errno = EINVAL;
-      return (-1);
     }
 
   /* NOT REACHED */
@@ -1060,7 +626,8 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
   uint32_t key_exchange_authentication_code_len;
   int32_t compare_len;
 
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
       || !managed_system_random_number
@@ -1084,16 +651,11 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
       compare_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
-    }
-  else
-    {
-      errno = EINVAL;
-      return (-1);
     }
 
   FIID_OBJ_GET_DATA_LEN(key_exchange_authentication_code_len,
@@ -1149,15 +711,14 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
       buf_index += user_name_length;
     }
 
-  if ((digest_len = ipmi_crypt_hash(hash_algorithm,
-                                    hash_flags,
-                                    authentication_key,
-                                    authentication_key_len,
-                                    buf,
-                                    buf_index,
-                                    digest,
-                                    IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-    return (-1);
+  ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,
+				       hash_flags,
+				       authentication_key,
+				       authentication_key_len,
+				       buf,
+				       buf_index,
+				       digest,
+				       IPMI_MAX_PAYLOAD_LENGTH)) < 0));
 
   if (key_exchange_authentication_code_len != digest_len)
     return (0);
@@ -1185,7 +746,8 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
   uint8_t integrity_check_value[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t integrity_check_value_len;
 
-  if (!IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+  if ((authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+       && authentication_algorithm != IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
       || !remote_console_random_number
       || remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH
       || !managed_system_guid
@@ -1211,7 +773,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
       if (!sik_key || sik_key_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
         {
@@ -1222,11 +784,6 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
       compare_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
-    }
-  else
-    {
-      errno = EINVAL;
-      return (-1);
     }
 
   FIID_OBJ_GET_DATA_LEN(integrity_check_value_len,
@@ -1296,7 +853,9 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
   uint8_t authentication_code[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t authentication_code_len;
   
-  if (!IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+  if ((integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
+       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
+       && integrity_algorithm != IPMI_INTEGRITY_ALGORITHM_MD5_128)
       || !pkt
       || !pkt_len
       || !fiid_obj_valid(obj_rmcpplus_session_trlr))
@@ -1321,11 +880,11 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
       expected_digest_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       compare_digest_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
-  else
+  else	/* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = 0;
-      expected_digest_len = MD5_DIGEST_LENGTH;
+      expected_digest_len = IPMI_MD5_DIGEST_LENGTH;
       compare_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
   
@@ -1383,24 +942,16 @@ ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm,
       hash_data_len += authentication_code_data_len;
     }
 
-  if ((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
-                                              hash_flags,
-                                              integrity_key,
-                                              integrity_key_len,
-                                              hash_data,
-                                              hash_data_len,
-                                              integrity_digest,
-                                              IPMI_MAX_PAYLOAD_LENGTH)) < 0)
-    {
-      ipmi_debug("ipmi_crypt_hash: %s", strerror(errno));
-      return (-1);
-    }
+  ERR (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+						 hash_flags,
+						 integrity_key,
+						 integrity_key_len,
+						 hash_data,
+						 hash_data_len,
+						 integrity_digest,
+						 IPMI_MAX_PAYLOAD_LENGTH)) < 0));
 
-  if (integrity_digest_len != crypt_digest_len)
-    {
-      ipmi_debug("ipmi_crypt_hash: invalid digest length returned");
-      return (-1);
-    }
+  ERR (!(integrity_digest_len != crypt_digest_len));
 
   return (memcmp(integrity_digest, authentication_code, compare_digest_len) ? 0 : 1);
 }

@@ -28,46 +28,6 @@ extern "C" {
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
-#define IPMI_CRYPT_HASH_SHA1             0x00
-#define IPMI_CRYPT_HASH_MD5              0x01
-
-#define IPMI_CRYPT_HASH_ALGORITHM_VALID(__hash_algorithm) \
-        (((__hash_algorithm) == IPMI_CRYPT_HASH_SHA1 \
-          || (__hash_algorithm) == IPMI_CRYPT_HASH_MD5) ? 1 : 0)
-
-#define IPMI_CRYPT_HASH_FLAGS_HMAC       0x01
-
-#define IPMI_CRYPT_CIPHER_AES            0x00
-
-#define IPMI_CRYPT_CIPHER_ALGORITHM_VALID(__cipher_algorithm) \
-        (((__cipher_algorithm) == IPMI_CRYPT_CIPHER_AES) ? 1 : 0)
-
-#define IPMI_CRYPT_CIPHER_MODE_NONE      0x00
-#define IPMI_CRYPT_CIPHER_MODE_CBC       0x01
-
-#define IPMI_CRYPT_CIPHER_MODE_VALID(__cipher_mode) \
-        (((__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_NONE \
-          || (__cipher_mode) == IPMI_CRYPT_CIPHER_MODE_CBC) ? 1 : 0)
-
-#define IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH   0x00
-#define IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH 0x01
-
-#define IPMI_CRYPT_CIPHER_INFO_VALID(__cipher_info) \
-        (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH \
-          || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH) ? 1 : 0)
-
-int32_t ipmi_crypt_hash(int hash_algorithm, int hash_flags, uint8_t *key, uint32_t key_len, uint8_t *hash_data, uint32_t hash_data_len, uint8_t *digest, uint32_t digest_len);
-
-int32_t ipmi_crypt_hash_digest_len(int hash_algorithm);
-
-int32_t ipmi_crypt_cipher_encrypt(int cipher_algorithm, int cipher_mode, uint8_t *key, uint32_t key_len, uint8_t *iv, uint32_t iv_len, uint8_t *data, uint32_t data_len);
-
-int32_t ipmi_crypt_cipher_decrypt(int cipher_algorithm, int cipher_mode, uint8_t *key, uint32_t key_len, uint8_t *iv, uint32_t iv_len, uint8_t *data, uint32_t data_len);
-
-int32_t ipmi_crypt_cipher_key_len(int cipher_algorithm);
-
-int32_t ipmi_crypt_cipher_block_len(int cipher_algorithm);
-
 int32_t ipmi_calculate_sik(uint8_t authentication_algorithm, uint8_t *key, uint32_t key_len, uint8_t *remote_console_random_number, uint32_t remote_console_random_number_len, uint8_t *managed_system_random_number, uint32_t managed_system_random_number_len, uint8_t requested_privilege_level, uint8_t *user_name, uint8_t user_name_len, uint8_t *sik, uint32_t sik_len);
 
 int32_t ipmi_calculate_k1(uint8_t authentication_algorithm, uint8_t *sik_key, uint32_t sik_key_len, uint8_t *k1, uint32_t k1_len);
