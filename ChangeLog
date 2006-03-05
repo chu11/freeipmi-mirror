@@ -94,6 +94,10 @@
 	'keys' and 'keys_len' parameters to 'k_g' and 'k_g_len' to make
 	more sense and match the ipmi spec.
 
+	* common/src/fiid-wrappers.h,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c,
+	libfreeipmi/src/ipmi-rmcpplus-interface.c: Various bug fixes.
+
 2006-03-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-utils.h,
