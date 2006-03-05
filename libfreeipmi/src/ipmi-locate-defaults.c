@@ -30,9 +30,9 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
-#include "freeipmi/ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-kcs-api.h"
 #include "freeipmi/ipmi-smic-interface.h"
-#include "freeipmi/ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-api.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"

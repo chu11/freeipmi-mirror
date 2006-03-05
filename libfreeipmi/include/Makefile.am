@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.8 2006-03-04 00:39:35 chu11 Exp $
+## $Id: Makefile.am,v 1.9 2006-03-05 16:44:22 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -25,11 +25,11 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-utils.h \
 	freeipmi/ipmi-locate.h \
 	freeipmi/ipmi-kcs.h \
-	freeipmi/ipmi-kcs-interface.h \
+	freeipmi/ipmi-kcs-api.h \
 	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
-	freeipmi/ipmi-ssif-interface.h \
+	freeipmi/ipmi-ssif-api.h
 	freeipmi/ipmi-smic-interface.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
 	freeipmi/ipmi-chassis-cmds.h \
@@ -46,10 +46,11 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-sel-record-types.h \
 	freeipmi/ipmi-sensor-event-messages.h \
 	freeipmi/ipmi-sensor-utils.h \
+	freeipmi/udm/udm.h \
 	freeipmi/udm/ipmi-udm.h \
-	freeipmi/udm/ipmi-kcs-interface-udm.h \
+	freeipmi/udm/ipmi-kcs-api-udm.h \
 	freeipmi/udm/ipmi-lan-interface-udm.h \
-	freeipmi/udm/ipmi-ssif-interface-udm.h \
+	freeipmi/udm/ipmi-ssif-api-udm.h \
 	freeipmi/udm/ipmi-chassis-cmds-udm.h \
 	freeipmi/udm/ipmi-device-global-cmds-udm.h \
 	freeipmi/udm/ipmi-lan-cmds-udm.h \

@@ -17,12 +17,12 @@ libfreeipmi_la_SOURCES = \
 	ipmi-locate-pci.c \
 	ipmi-locate-smbios.c \
 	ipmi-kcs.c \
-	ipmi-kcs-interface.c \
+	ipmi-kcs-api.c \
 	ipmi-lan.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
 	ipmi-smic-interface.c \
-	ipmi-ssif-interface.c \
+	ipmi-ssif-api.c \
 	ipmi-semaphores.c \
 	ipmi-bmc-watchdog-timer-cmds.c \
 	ipmi-chassis-cmds.c \

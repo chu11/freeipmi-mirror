@@ -1,12 +1,7 @@
 /* 
-   ipmi-ssif-interface-udm.h: IPMI UDM - SMBus System Interface - SMS Interface
+   udm.h: IPMI Unified Driver Model (API interface for all IPMI drivers)
 
    Copyright (C) 2005 FreeIPMI Core Team
-
-   Based on ipmitool.c provided by Amitoj Singh <amitoj@fnal.gov> and 
-   Don Holmgren <djholm@fnal.gov>
-
-   Under GNU/Linux, requires i2c-dev, i2c-i801, i2c-core drivers version >= 2.8.7
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,20 +19,22 @@
 
 */
 
-#ifndef IPMI_SSIF_INTERFACE_UDM_H
-#define IPMI_SSIF_INTERFACE_UDM_H
+#ifndef _UDM_H
+#define _UDM_H
 
-#include <stdint.h>
-#include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
+#include <freeipmi/udm/ipmi-kcs-api-udm.h>
+#include <freeipmi/udm/ipmi-lan-interface-udm.h>
+#include <freeipmi/udm/ipmi-ssif-api-udm.h>
+#include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
+#include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
+#include <freeipmi/udm/ipmi-lan-cmds-udm.h>
+#include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
+#include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sdr-repository-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sensor-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sel-cmds-udm.h>
+#include <freeipmi/udm/ipmi-serial-modem-cmds-udm.h>
+#include <freeipmi/udm/ipmi-sol-cmds-udm.h>
 
-int ipmi_ssif_cmd (ipmi_device_t *dev, 
-		   fiid_obj_t obj_cmd_rq, 
-		   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_ssif_cmd_raw (ipmi_device_t *dev, 
-			  uint8_t *buf_rq, 
-			  size_t buf_rq_len, 
-			  uint8_t *buf_rs, 
-			  size_t *buf_rs_len);
-
-#endif /* IPMI_SSIF_INTERFACE_UDM_H */
+#endif /* _UDM_H */

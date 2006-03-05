@@ -29,6 +29,7 @@
 #include <netdb.h>
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 int 
 main (int argc, char **argv)

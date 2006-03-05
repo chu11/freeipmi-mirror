@@ -1,5 +1,5 @@
 /* 
-   ipmi-ssif-interface.c: IPMI - SMBus System Interface - SMS Interface
+   ipmi-ssif-api.c: IPMI - SMBus System Interface - SMS Api
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -44,7 +44,7 @@
 #include <sys/ioctl.h>
 #include <errno.h>
 
-#include "freeipmi/ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-api.h"
 
 #include "ipmi-semaphores.h"
 

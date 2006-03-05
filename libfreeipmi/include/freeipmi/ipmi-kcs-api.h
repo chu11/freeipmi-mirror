@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs-interface.h - IPMI KCS SMS Interface
+   ipmi-kcs-api.h - IPMI KCS SMS Api
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -19,8 +19,8 @@
 
 */
 
-#ifndef _IPMI_KCS_INTERFACE_H
-#define _IPMI_KCS_INTERFACE_H 1
+#ifndef _IPMI_KCS_API_H
+#define _IPMI_KCS_API_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -78,5 +78,5 @@ int32_t ipmi_kcs_read (ipmi_kcs_ctx_t ctx,
 }
 #endif
 
-#endif /* ipmi-kcs-interface.h */
+#endif /* ipmi-kcs-api.h */
 

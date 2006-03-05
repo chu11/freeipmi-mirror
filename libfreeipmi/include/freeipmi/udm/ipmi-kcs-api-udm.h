@@ -1,5 +1,5 @@
 /* 
-   ipmi-kcs-interface-udm.h - IPMI UDM KCS SMS Interface
+   ipmi-kcs-api-udm.h - IPMI UDM KCS SMS Api
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_KCS_INTERFACE_UDM_H
-#define _IPMI_KCS_INTERFACE_UDM_H 1
+#ifndef _IPMI_KCS_API_UDM_H
+#define _IPMI_KCS_API_UDM_H 1
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,5 +47,5 @@ int8_t ipmi_kcs_cmd_raw (ipmi_device_t *dev,
 }
 #endif
 
-#endif /* ipmi-kcs-interface.h */
+#endif /* ipmi-kcs-api-udm.h */
 

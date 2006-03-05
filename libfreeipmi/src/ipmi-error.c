@@ -33,7 +33,6 @@
 #include "freeipmi/ipmi-error.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
-#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 
 #include "err-wrappers.h"

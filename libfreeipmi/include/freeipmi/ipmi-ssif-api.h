@@ -1,5 +1,5 @@
 /* 
-   ipmi-ssif-interface.h: IPMI - SMBus System Interface - SMS Interface
+   ipmi-ssif-api.h: IPMI - SMBus System Interface - SMS Api
 
    Copyright (C) 2005 FreeIPMI Core Team
 
@@ -24,13 +24,14 @@
 
 */
 
-#ifndef IPMI_SSIF_INTERFACE_H
-#define IPMI_SSIF_INTERFACE_H
+#ifndef IPMI_SSIF_API_H
+#define IPMI_SSIF_API_H
 
 #include <stdint.h>
 
 #define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
 #define IPMI_DEFAULT_IPMB_ADDRESS  0x42
+/* XXX put this somewhere else */
 #define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20
 
 #define IPMI_SSIF_CTX_ERR_SUCCESS         0
@@ -80,4 +81,4 @@ int32_t ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
 			uint8_t* buf,
 			uint32_t buf_len);
 
-#endif /* IPMI_SSIF_INTERFACE_H */
+#endif /* IPMI_SSIF_API_H */

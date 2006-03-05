@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.49 2006-03-04 03:26:29 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.50 2006-03-05 16:44:21 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,6 +62,7 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0

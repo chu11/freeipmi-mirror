@@ -107,7 +107,7 @@ do {                                                                    \
     {                                                                   \
       __IPMI_SYSLOG;                                                    \
       __IPMI_TRACE;                                                     \
-      return (-1);                                                      \
+      return (NULL);                                                    \
     }                                                                   \
 } while (0)
 
