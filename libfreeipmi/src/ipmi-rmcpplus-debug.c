@@ -401,6 +401,10 @@ _dump_rmcpplus_payload_special(int fd,
 	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
 	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
 	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+	      && tmpl_lan_msg_hdr
+	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+	      && tmpl_cmd
 	      /* XXX need to dump regardless of matching? */
 	      && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
 		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
@@ -414,8 +418,6 @@ _dump_rmcpplus_payload_special(int fd,
 		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
 	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
 		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
-	      && tmpl_lan_msg_hdr
-	      && tmpl_cmd
 	      && pkt);
   
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);

@@ -102,6 +102,9 @@ ipmi_crypt_hash(int hash_algorithm,
   /* achu: Technically any key length can be supplied.  We'll assume
    * callers have checked if the key is of a length they care about.
    */
+  /* SPEC: There is no indication that if a NULL password/key is used,
+   * that a zero padded password of some length should be the key.
+   */
   if ((hash_flags & IPMI_CRYPT_HASH_FLAGS_HMAC) && key && key_len)
     ERR (!((e = gcry_md_setkey(h, key, key_len)) != GPG_ERR_NO_ERROR));
 

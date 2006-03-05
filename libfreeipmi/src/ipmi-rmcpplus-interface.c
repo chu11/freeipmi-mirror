@@ -51,7 +51,7 @@ _construct_payload_buf(fiid_obj_t obj_lan_msg_hdr,
                        uint8_t *payload_buf,
                        uint32_t payload_buf_len)
 {
-  int32_t obj_lan_msg_hdr_len, obj_lan_msg_trlr_len, checksum_start_offset, checksum_block_len;
+  int32_t obj_lan_msg_hdr_len, obj_lan_msg_trlr_len, checksum_start_offset;
   uint32_t payload_len;
   uint8_t checksum;
   int32_t obj_cmd_len;
@@ -86,15 +86,14 @@ _construct_payload_buf(fiid_obj_t obj_lan_msg_hdr,
 
   FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
 
-  checksum = ipmi_checksum (payload_buf + checksum_start_offset, checksum_block_len);
-
   ERR_EXIT (!((checksum_start_offset = fiid_template_field_end_bytes (tmpl_lan_msg_hdr_rq, "checksum1")) < 0));
-  checksum_block_len = obj_lan_msg_hdr_len - checksum_start_offset + obj_cmd_len;
+
+  checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, (uint8_t *)&checksum, sizeof(checksum));
 
   FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_lan_msg_trlr, payload_buf + indx, payload_buf_len - indx);
-  len += indx;
+  indx += len;
   
   rv = indx;
  cleanup:
