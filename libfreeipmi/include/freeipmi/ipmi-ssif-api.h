@@ -31,8 +31,6 @@
 
 #define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
 #define IPMI_DEFAULT_IPMB_ADDRESS  0x42
-/* XXX put this somewhere else */
-#define IPMI_SSIF_SMBUS_SLAVE_ADDR 0x20
 
 #define IPMI_SSIF_CTX_ERR_SUCCESS         0
 #define IPMI_SSIF_CTX_ERR_NULL            1
@@ -64,11 +62,11 @@ int32_t ipmi_ssif_ctx_errnum(ipmi_ssif_ctx_t ctx);
 char *ipmi_ssif_ctx_strerror(int32_t errnum);
 
 int8_t ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device);
-int8_t ipmi_ssif_ctx_get_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_addr);
+int8_t ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address);
 int8_t ipmi_ssif_ctx_get_mode(ipmi_ssif_ctx_t ctx, uint8_t *mode);
 
 int8_t ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char *i2c_device);
-int8_t ipmi_ssif_ctx_set_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t ipmb_addr);
+int8_t ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address);
 int8_t ipmi_ssif_ctx_set_mode(ipmi_ssif_ctx_t ctx, uint8_t mode);
 
 int8_t ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx);

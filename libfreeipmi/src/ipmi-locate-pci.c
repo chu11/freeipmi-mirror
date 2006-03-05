@@ -129,7 +129,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
   unsigned dev;
   unsigned func;
   unsigned irq;
-  uint64_t base_addr[6];
+  uint64_t base_address[6];
   char buf[512];
   FILE* fp_devices;
   int items;
@@ -153,7 +153,7 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 
     items = sscanf (buf, "%x %x %x " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64 " " FORMAT_X64,
 		    &dfn, &vendor, &irq,
-		    &base_addr[0], &base_addr[1], &base_addr[2], &base_addr[3], &base_addr[4], &base_addr[5]);
+		    &base_address[0], &base_address[1], &base_address[2], &base_address[3], &base_address[4], &base_address[5]);
     pinfo->intr_num = (uint16_t)irq;
     
     ERR_CLEANUP (items == 9);
@@ -170,17 +170,17 @@ ipmi_locate_pci_get_dev_info (ipmi_interface_t type)
 
     for (i = 0; i < 6; i++)
       {
-	if (base_addr[i] == 0 || base_addr[i] == ~0) continue;
-	switch (base_addr[i] & PCI_BASE_ADDRESS_SPACE)
+	if (base_address[i] == 0 || base_address[i] == ~0) continue;
+	switch (base_address[i] & PCI_BASE_ADDRESS_SPACE)
 	  {
 	  case past_io:
 	    pinfo->bmc_io_mapped = 0;
-	    pinfo->base.bmc_iobase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_IO_MASK;
+	    pinfo->base.bmc_iobase_address = base_address[i] & ~PCI_BASE_ADDRESS_IO_MASK;
 	    return pinfo;
 	    
 	  case past_memory:
 	    pinfo->bmc_io_mapped = 1;
-	    pinfo->base.bmc_membase_addr = base_addr[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
+	    pinfo->base.bmc_membase_address = base_address[i] & ~PCI_BASE_ADDRESS_MEM_MASK;
 	    return pinfo;
 	  }
       }

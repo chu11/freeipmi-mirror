@@ -39,6 +39,7 @@ extern "C" {
 #include <freeipmi/ipmi-sensor-units-spec.h>
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-sol-param-spec.h>
+#include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-error.h>

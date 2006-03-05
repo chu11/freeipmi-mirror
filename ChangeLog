@@ -20,13 +20,22 @@
 	libfreeipmi/src/udm/ipmi-kcs-interface-udm.c: Renamed to
 	ipmi-kcs-api-udm.h and ipmi-kcs-api-udm.c respectively.
 
-	* libfreeipmi/: Adjust makefiles and code appropriately.
-
 	* common/src/err-wrappers.h (ERR_NULL_RETURN): Fix bug.
 
 	* libfreeipmi/include/freeipmi/freeipmi.h: Move all udm stuff to
 	libfreeipmi/include/freeipmi/udm/udm.h.
 
+	* libfreeipmi/include/freeipmi/ipmi-slave-address-spec.h: New file.  
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h,
+	libfreeipmi/include/freeipmi/ipmi-lan.h: Remove defines duplicated
+	by ipmi-slave-address-spec.h.
+
+	* libfreeipmi/: Adjust makefiles and code appropriately for new
+	includes and defines.  
+
+	* Attempted to convert "addr" abbreviation to "address" globally.
+	
 2006-03-04  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h; New macros for errno returns.

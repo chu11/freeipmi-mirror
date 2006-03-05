@@ -202,7 +202,7 @@ struct ipmi_ssif_ctx {
   uint32_t magic;
   int32_t errnum;
   char *i2c_device;
-  uint8_t ipmb_addr;
+  uint8_t ipmb_address;
   uint8_t mode;
   int i2c_fd;
   int io_init;
@@ -218,7 +218,7 @@ ipmi_ssif_ctx_create(void)
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
-  ctx->ipmb_addr = IPMI_DEFAULT_IPMB_ADDRESS;
+  ctx->ipmb_address = IPMI_DEFAULT_IPMB_ADDRESS;
   ctx->mode = IPMI_SSIF_MODE_DEFAULT;
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
@@ -287,18 +287,18 @@ ipmi_ssif_ctx_get_i2c_device(ipmi_ssif_ctx_t ctx, char **i2c_device)
 }
 
 int8_t
-ipmi_ssif_ctx_get_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_addr)
+ipmi_ssif_ctx_get_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t *ipmb_address)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  if (!ipmb_addr)
+  if (!ipmb_address)
     {
       ctx->errnum = IPMI_SSIF_CTX_ERR_PARAMETERS;
       return (-1);
     }
 
-  *ipmb_addr = ctx->ipmb_addr;
+  *ipmb_address = ctx->ipmb_address;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -347,12 +347,12 @@ ipmi_ssif_ctx_set_i2c_device(ipmi_ssif_ctx_t ctx, char* i2c_device)
 }
 
 int8_t
-ipmi_ssif_ctx_set_ipmb_addr(ipmi_ssif_ctx_t ctx, uint8_t ipmb_addr)
+ipmi_ssif_ctx_set_ipmb_address(ipmi_ssif_ctx_t ctx, uint8_t ipmb_address)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
 
-  ctx->ipmb_addr = ipmb_addr;
+  ctx->ipmb_address = ipmb_address;
   ctx->errnum = IPMI_SSIF_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -394,8 +394,8 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       return (-1);
     }
 
-  /* zresearch webserver ipmb_addr: 0x341A */
-  if (ioctl (ctx->i2c_fd, IPMI_I2C_SLAVE, ctx->ipmb_addr) < 0)
+  /* zresearch webserver ipmb_address: 0x341A */
+  if (ioctl (ctx->i2c_fd, IPMI_I2C_SLAVE, ctx->ipmb_address) < 0)
     {
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;

@@ -30,10 +30,6 @@ extern "C" {
 
 #define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16
 
-/* XXX -  These two should be defined somewhere else, what are they doing here? */
-#define IPMI_SLAVE_ADDR_BMC            0x20 /* 12.4 */
-#define IPMI_SLAVE_ADDR_SWID           0x81 /* 5.5 */
-
 #define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
 #define IPMI_LAN_RQ_SEQ_INC(__rq_seq) ((__rq_seq) = (((__rq_seq) + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))

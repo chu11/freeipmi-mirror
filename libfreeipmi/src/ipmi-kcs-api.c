@@ -140,7 +140,7 @@ static char * ipmi_kcs_ctx_errmsg[] =
 struct ipmi_kcs_ctx {
   uint32_t magic;
   int32_t errnum;
-  uint16_t bmc_iobase_addr;
+  uint16_t bmc_iobase_address;
   uint8_t reg_space;
   uint8_t mode;
   uint32_t poll_interval;
@@ -161,7 +161,7 @@ ipmi_kcs_ctx_create(void)
   ERR_CLEANUP ((ctx = (ipmi_kcs_ctx_t)xmalloc(sizeof(struct ipmi_kcs_ctx))));
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
-  ctx->bmc_iobase_addr = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+  ctx->bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
   ctx->reg_space = 1;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->mode = IPMI_KCS_MODE_DEFAULT;
@@ -216,18 +216,18 @@ ipmi_kcs_ctx_errnum(ipmi_kcs_ctx_t ctx)
 }
 
 int8_t 
-ipmi_kcs_ctx_get_bmc_iobase_addr(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_addr)
+ipmi_kcs_ctx_get_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t *bmc_iobase_address)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  if (!bmc_iobase_addr)
+  if (!bmc_iobase_address)
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1);
     }
   
-  *bmc_iobase_addr = ctx->bmc_iobase_addr;
+  *bmc_iobase_address = ctx->bmc_iobase_address;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -284,12 +284,12 @@ ipmi_kcs_ctx_get_mode(ipmi_kcs_ctx_t ctx, uint8_t *mode)
 }
 
 int8_t 
-ipmi_kcs_ctx_set_bmc_iobase_addr(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_addr)
+ipmi_kcs_ctx_set_bmc_iobase_address(ipmi_kcs_ctx_t ctx, uint16_t bmc_iobase_address)
 {
   if (!(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC))
     return (-1);
 
-  ctx->bmc_iobase_addr = bmc_iobase_addr;
+  ctx->bmc_iobase_address = bmc_iobase_address;
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return (0);
 }
@@ -343,7 +343,7 @@ ipmi_kcs_ctx_io_init(ipmi_kcs_ctx_t ctx)
 #ifdef __FreeBSD__
 #ifdef USE_IOPERM
   /* i386_set_ioperm has known problems on FBSD 5.x (bus errors). */
-  if (i386_set_ioperm (ctx->bmc_iobase_addr, 0x02, 0x01) != 0)
+  if (i386_set_ioperm (ctx->bmc_iobase_address, 0x02, 0x01) != 0)
     {
       if (errno == EPERM || errno == EACCES)
         ctx->errnum = IPMI_KCS_CTX_ERR_PERMISSION;
@@ -384,7 +384,7 @@ ipmi_kcs_get_status (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_STATUS (ctx->bmc_iobase_addr, ctx->reg_space));
+  return _INB (IPMI_KCS_REG_STATUS (ctx->bmc_iobase_address, ctx->reg_space));
 }
 
 /*
@@ -422,7 +422,7 @@ ipmi_kcs_read_byte (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  return _INB (IPMI_KCS_REG_DATAOUT (ctx->bmc_iobase_addr));
+  return _INB (IPMI_KCS_REG_DATAOUT (ctx->bmc_iobase_address));
 }
 
 /*
@@ -433,7 +433,7 @@ ipmi_kcs_read_next (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (ctx->bmc_iobase_addr));
+  _OUTB (IPMI_KCS_CTRL_READ, IPMI_KCS_REG_DATAIN (ctx->bmc_iobase_address));
 }
 /*
  * Set up channel for writing.
@@ -443,7 +443,7 @@ ipmi_kcs_start_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->bmc_iobase_addr, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_START, IPMI_KCS_REG_CMD (ctx->bmc_iobase_address, ctx->reg_space));
 }
 
 /*
@@ -454,7 +454,7 @@ ipmi_kcs_write_byte (ipmi_kcs_ctx_t ctx, uint8_t byte)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (byte, IPMI_KCS_REG_DATAIN (ctx->bmc_iobase_addr));
+  _OUTB (byte, IPMI_KCS_REG_DATAIN (ctx->bmc_iobase_address));
 }
 
 /* 
@@ -465,7 +465,7 @@ ipmi_kcs_end_write (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->bmc_iobase_addr, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_WRITE_END, IPMI_KCS_REG_CMD (ctx->bmc_iobase_address, ctx->reg_space));
 }
 
 #if 0
@@ -477,7 +477,7 @@ ipmi_kcs_get_abort (ipmi_kcs_ctx_t ctx)
 {
   assert(ctx && ctx->magic == IPMI_KCS_CTX_MAGIC);
 
-  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->bmc_iobase_addr, ctx->reg_space));
+  _OUTB (IPMI_KCS_CTRL_GET_ABORT, IPMI_KCS_REG_CMD (ctx->bmc_iobase_address, ctx->reg_space));
 }
 #endif
 

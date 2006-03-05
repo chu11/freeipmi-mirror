@@ -50,6 +50,7 @@ libfreeipmi:
   * len -> length
     - fiid?
   * template "tagging" mechanism to make template compares faster
+  * allow configuration of the slave addr into lan_msg_hdr
 
 fish:
 -----

@@ -580,7 +580,7 @@ fiid_template_t tmpl_acpi_spmi_table_descriptor_pci_ipmi =
   };
 
 static uint8_t ipmi_acpi_table_checksum (uint8_t *buffer, size_t len);
-static int ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, 
+static int ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, 
 			       size_t rsdp_window_size,
 			       fiid_obj_t obj_acpi_rsdp_descriptor);
 static int ipmi_acpi_get_table (uint64_t table_address, 
@@ -628,30 +628,30 @@ ipmi_acpi_table_checksum (uint8_t *buffer, size_t len)
 }
 
 static int
-ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
-              void **virtual_addr,
-              void **mapped_addr, size_t *mapped_addr_len)
+ipmi_ioremap (uint64_t physical_address, size_t physical_address_len,
+              void **virtual_address,
+              void **mapped_address, size_t *mapped_address_len)
 {
-  uint64_t startaddr;
+  uint64_t startaddress;
   uint32_t pad;
   int mem_fd;
 
-  ERR_EINVAL (physical_addr_len 
-	      && virtual_addr 
-	      && mapped_addr 
-	      && mapped_addr_len);
+  ERR_EINVAL (physical_address_len 
+	      && virtual_address 
+	      && mapped_address 
+	      && mapped_address_len);
 
   ERR (!((mem_fd = open ("/dev/mem", O_RDONLY|O_SYNC)) < 0));
 
-  pad = physical_addr % getpagesize ();
-  startaddr = physical_addr - pad;
-  *mapped_addr_len = physical_addr_len + pad;
-  *mapped_addr = mmap (NULL, *mapped_addr_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
+  pad = physical_address % getpagesize ();
+  startaddress = physical_address - pad;
+  *mapped_address_len = physical_address_len + pad;
+  *mapped_address = mmap (NULL, *mapped_address_len, PROT_READ, MAP_PRIVATE, mem_fd, startaddress);
 
-  ERR_CLEANUP (*mapped_addr != MAP_FAILED);
+  ERR_CLEANUP (*mapped_address != MAP_FAILED);
 
   close (mem_fd);
-  *virtual_addr = (*mapped_addr) + pad;
+  *virtual_address = (*mapped_address) + pad;
   return (0);
 
  cleanup:
@@ -660,9 +660,9 @@ ipmi_ioremap (uint64_t physical_addr, size_t physical_addr_len,
 }
 
 static int
-ipmi_iounmap (void *mapped_addr, size_t mapped_addr_len)
+ipmi_iounmap (void *mapped_address, size_t mapped_address_len)
 {
-  return (munmap (mapped_addr, mapped_addr_len));
+  return (munmap (mapped_address, mapped_address_len));
 }
 
 static int
@@ -670,19 +670,19 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
                             size_t length,
                             uint8_t *data)
 {
-  void *virtual_addr = NULL;
-  void *mapped_addr = NULL;
-  size_t mapped_addr_len = 0;
+  void *virtual_address = NULL;
+  void *mapped_address = NULL;
+  size_t mapped_address_len = 0;
 
   ERR_EINVAL (data);
 
   ERR (!(ipmi_ioremap (physical_address, length,
-		       &virtual_addr,
-		       &mapped_addr, &mapped_addr_len) != 0));
+		       &virtual_address,
+		       &mapped_address, &mapped_address_len) != 0));
 
-  memcpy (data, virtual_addr, length);
+  memcpy (data, virtual_address, length);
 
-  ipmi_iounmap (mapped_addr, mapped_addr_len);
+  ipmi_iounmap (mapped_address, mapped_address_len);
 
   return 0;
 }
@@ -693,7 +693,7 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
  *   ipmi_acpi_get_rsdp
  *
  * PARAMETERS:
- *   rsdp_window_base_addr  - Starting pointer for search
+ *   rsdp_window_base_address  - Starting pointer for search
  *   rsdp_window_wize       - Maximum length to search
  *   obj_acpi_rsdp_descriptor  - Initialized rsdp descriptor object
  *
@@ -711,7 +711,7 @@ ipmi_get_physical_mem_data (uint64_t physical_address,
  *
  ******************************************************************************/
 static int 
-ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size, 
+ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_address, size_t rsdp_window_size, 
 		    fiid_obj_t obj_acpi_rsdp_descriptor)
 {
   uint8_t *memdata = NULL;
@@ -728,10 +728,10 @@ ipmi_acpi_get_rsdp (uint64_t rsdp_window_base_addr, size_t rsdp_window_size,
   FIID_TEMPLATE_LEN_BYTES (acpi_rsdp_descriptor_len,
 			   tmpl_acpi_rsdp_descriptor);
   
-  ERR (!(ipmi_get_physical_mem_data (rsdp_window_base_addr, 
+  ERR (!(ipmi_get_physical_mem_data (rsdp_window_base_address, 
 				     rsdp_window_size, memdata) != 0));
   
-  /* Search from given start addr for the requested length  */
+  /* Search from given start address for the requested length  */
   for (i = 0; i < rsdp_window_size; i += IPMI_ACPI_RSDP_SCAN_STEP)
     {
       /* check RSDP signature */
@@ -1250,35 +1250,35 @@ ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t type)
   
   /* Address space id (memory mapped, IO mapped, SMBus) and IO base address */
   {
-    uint64_t addr_space_id;
-    uint64_t base_addr;
+    uint64_t address_space_id;
+    uint64_t base_address;
 
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  (uint8_t *)"base_address.address_space_id", 
-			  &addr_space_id);
+			  &address_space_id);
 
     FIID_OBJ_GET_CLEANUP (obj_acpi_spmi_table_descriptor, 
 			  (uint8_t *)"base_address.address", 
-			  &base_addr);
+			  &base_address);
 
-    switch (addr_space_id)
+    switch (address_space_id)
       {
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_MEMORY:
 	{
-	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  pinfo->base_addr.bmc_iobase_addr = base_addr;
+	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+	  pinfo->base_address.bmc_iobase_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SYSTEM_IO:
 	{
-	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  pinfo->base_addr.bmc_membase_addr = base_addr;
+	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+	  pinfo->base_address.bmc_membase_address = base_address;
 	  break;
 	}
       case IPMI_ACPI_ADDRESS_SPACE_ID_SMBUS:
 	{
-	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	  pinfo->base_addr.bmc_smbus_slave_addr = base_addr;
+	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+	  pinfo->base_address.bmc_smbus_slave_address = base_address;
 	  break;
 	}
       default:

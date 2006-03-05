@@ -59,4 +59,4 @@ extern "C" {
 }
 #endif
 
-#endif /* ipmi-cmd-spec.h */
+#endif /* ipmi-netfn-spec.h */
