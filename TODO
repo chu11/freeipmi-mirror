@@ -51,6 +51,9 @@ libfreeipmi:
   * allow configuration of the slave addr into lan_msg_hdr??
   * assemble_raw, unassemble_raw
     - then using these, adjust udm-raw
+  * need _recv_pkt in ipmipower to return a CC code so we can detect
+    if we are ipmi 2.0 or ipmi 1.5.
+    - need values returned from "ipmi_check" stuff
 
 fish:
 -----
