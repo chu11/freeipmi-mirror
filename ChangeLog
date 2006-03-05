@@ -1,3 +1,9 @@
+2006-03-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Update completion
+	code error codes and strings based on updated IPMI 2.0 spec.
+	
 2006-03-04  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h; New macros for errno returns.
