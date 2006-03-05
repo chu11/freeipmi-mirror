@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.20 2006-02-28 01:56:10 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.21 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,7 +38,7 @@
 #include <stdint.h>
 
 #include "ipmipower_packet.h"
-#include "ipmipower_auth.h"
+#include "ipmipower_authentication.h"
 #include "ipmipower_wrappers.h"
 
 extern struct ipmipower_config *conf;
@@ -50,33 +50,33 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
-  if (pkt == AUTH_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return &tmpl_cmd_get_channel_authentication_capabilities_rq[0];
-  else if (pkt == AUTH_RES)
+  else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return &tmpl_cmd_get_channel_authentication_capabilities_rs[0];
-  else if (pkt == SESS_REQ)
+  else if (pkt == GET_SESSION_CHALLENGE_REQ)
     return &tmpl_cmd_get_session_challenge_rq[0];
-  else if (pkt == SESS_RES)
+  else if (pkt == GET_SESSION_CHALLENGE_RES)
     return &tmpl_cmd_get_session_challenge_rs[0];
-  else if (pkt == ACTV_REQ)
+  else if (pkt == ACTIVATE_SESSION_REQ)
     return &tmpl_cmd_activate_session_rq[0];
-  else if (pkt == ACTV_RES)
+  else if (pkt == ACTIVATE_SESSION_RES)
     return &tmpl_cmd_activate_session_rs[0];
-  else if (pkt == PRIV_REQ)
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ)
     return &tmpl_cmd_set_session_privilege_level_rq[0];
-  else if (pkt == PRIV_RES)
+  else if (pkt == SET_SESSION_PRIVILEGE_RES)
     return &tmpl_cmd_set_session_privilege_level_rs[0];
-  else if (pkt == CLOS_REQ)
+  else if (pkt == CLOSE_SESSION_REQ)
     return &tmpl_cmd_close_session_rq[0];
-  else if (pkt == CLOS_RES)
+  else if (pkt == CLOSE_SESSION_RES)
     return &tmpl_cmd_close_session_rs[0];
-  else if (pkt == CHAS_REQ)
+  else if (pkt == CHASSIS_STATUS_REQ)
     return &tmpl_cmd_get_chassis_status_rq[0];
-  else if (pkt == CHAS_RES)
+  else if (pkt == CHASSIS_STATUS_RES)
     return &tmpl_cmd_get_chassis_status_rs[0];
-  else if (pkt == CTRL_REQ)
+  else if (pkt == CHASSIS_CONTROL_REQ)
     return &tmpl_cmd_chassis_control_rq[0];
-  else if (pkt == CTRL_RES)
+  else if (pkt == CHASSIS_CONTROL_RES)
     return &tmpl_cmd_chassis_control_rs[0];
   else
     err_exit("ipmipower_packet_cmd_template: Invalid packet type(%s:%d)",
@@ -91,33 +91,33 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
-  if (pkt == AUTH_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return ip->auth_req;
-  else if (pkt == AUTH_RES)
+  else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return ip->auth_res;
-  else if (pkt == SESS_REQ)
+  else if (pkt == GET_SESSION_CHALLENGE_REQ)
     return ip->sess_req;
-  else if (pkt == SESS_RES)
+  else if (pkt == GET_SESSION_CHALLENGE_RES)
     return ip->sess_res;
-  else if (pkt == ACTV_REQ)
+  else if (pkt == ACTIVATE_SESSION_REQ)
     return ip->actv_req;
-  else if (pkt == ACTV_RES)
+  else if (pkt == ACTIVATE_SESSION_RES)
     return ip->actv_res;
-  else if (pkt == PRIV_REQ)
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ)
     return ip->priv_req;
-  else if (pkt == PRIV_RES)
+  else if (pkt == SET_SESSION_PRIVILEGE_RES)
     return ip->priv_res;
-  else if (pkt == CLOS_REQ)
+  else if (pkt == CLOSE_SESSION_REQ)
     return ip->clos_req;
-  else if (pkt == CLOS_RES)
+  else if (pkt == CLOSE_SESSION_RES)
     return ip->clos_res;
-  else if (pkt == CHAS_REQ)
+  else if (pkt == CHASSIS_STATUS_REQ)
     return ip->chas_req;
-  else if (pkt == CHAS_RES)
+  else if (pkt == CHASSIS_STATUS_RES)
     return ip->chas_res;
-  else if (pkt == CTRL_REQ)
+  else if (pkt == CHASSIS_CONTROL_REQ)
     return ip->ctrl_req;
-  else if (pkt == CTRL_RES)
+  else if (pkt == CHASSIS_CONTROL_RES)
     return ip->ctrl_res;
   else
     err_exit("ipmipower_packet_cmd_obj: Invalid packet type(%s:%d)",
@@ -138,72 +138,72 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (conf->ipmidump)
     {
       char *hdr;
-      if (pkt == AUTH_REQ)
+      if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
         hdr = 
           "============================================\n"
           "= Get Authentication Capabilities Request  =\n"
           "============================================";
-      else if (pkt == AUTH_RES)
+      else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
         hdr = 
           "============================================\n"
           "= Get Authentication Capabilities Response =\n"
           "============================================";
-      else if (pkt == SESS_REQ)
+      else if (pkt == GET_SESSION_CHALLENGE_REQ)
         hdr = 
           "============================================\n"
           "= Get Session Challenge Request            =\n"
           "============================================";
-      else if (pkt == SESS_RES)
+      else if (pkt == GET_SESSION_CHALLENGE_RES)
         hdr = 
           "============================================\n"
           "= Get Session Challenge Response           =\n"
           "============================================";
-      else if (pkt == ACTV_REQ)
+      else if (pkt == ACTIVATE_SESSION_REQ)
         hdr = 
           "============================================\n"
           "= Activate Session Request                 =\n"
           "============================================";
-      else if (pkt == ACTV_RES)
+      else if (pkt == ACTIVATE_SESSION_RES)
         hdr = 
           "============================================\n"
           "= Activate Session Response                =\n"
           "============================================";
-      else if (pkt == PRIV_REQ)
+      else if (pkt == SET_SESSION_PRIVILEGE_REQ)
         hdr = 
           "============================================\n"
           "= Set Session Privilege Request            =\n"
           "============================================";
-      else if (pkt == PRIV_RES)
+      else if (pkt == SET_SESSION_PRIVILEGE_RES)
         hdr = 
           "============================================\n"
           "= Set Session Privilege Response           =\n"
           "============================================";
-      else if (pkt == CLOS_REQ)
+      else if (pkt == CLOSE_SESSION_REQ)
         hdr = 
           "============================================\n"
           "= Close Session Request                    =\n"
           "============================================";
-      else if (pkt == CLOS_RES)
+      else if (pkt == CLOSE_SESSION_RES)
         hdr = 
           "============================================\n"
           "= Close Session Response                   =\n"
           "============================================";
-      else if (pkt == CHAS_REQ)
+      else if (pkt == CHASSIS_STATUS_REQ)
         hdr = 
           "============================================\n"
           "= Get Chassis Status Request               =\n"
           "============================================";
-      else if (pkt == CHAS_RES)
+      else if (pkt == CHASSIS_STATUS_RES)
         hdr = 
           "============================================\n"
           "= Get Chassis Status Response              =\n"
           "============================================";
-      else if (pkt == CTRL_REQ)
+      else if (pkt == CHASSIS_CONTROL_REQ)
         hdr = 
           "============================================\n"
           "= Chassis Control Request                  =\n"
           "============================================";
-      else if (pkt == CTRL_RES)
+      else if (pkt == CHASSIS_CONTROL_RES)
         hdr = 
           "============================================\n"
           "= Chassis Control Response                 =\n"
@@ -281,7 +281,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     err_exit("ipmipower_packet_create(%s: %d): fill_rmcp_hdr_ipmi: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-  if (pkt == AUTH_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
       if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE, 
                                0, 
@@ -318,7 +318,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == SESS_REQ)
+  else if (pkt == GET_SESSION_CHALLENGE_REQ)
     {
       uint8_t *username;
 
@@ -343,7 +343,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         username = NULL;
 
-      if (fill_cmd_get_session_challenge(ip->authtype, 
+      if (fill_cmd_get_session_challenge(ip->authentication_type, 
                                          (char *)username, 
                                          strlen(conf->username),
                                          ip->sess_req) < 0)
@@ -363,7 +363,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == ACTV_REQ)
+  else if (pkt == ACTIVATE_SESSION_REQ)
     {
       uint64_t temp_session_id;
       uint8_t *password;
@@ -377,7 +377,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       Fiid_obj_get(ip->sess_res, (uint8_t *)"temp_session_id", &temp_session_id);
       
-      if (fill_lan_session_hdr(ip->authtype, 
+      if (fill_lan_session_hdr(ip->authentication_type, 
                                0,
                                (uint32_t)temp_session_id, 
                                NULL,
@@ -404,7 +404,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 	err_exit("ipmipower_packet_create(%s: %d): empty challenge string",
                  ip->ic->hostname, ip->protocol_state);
 
-      if (fill_cmd_activate_session(ip->authtype, 
+      if (fill_cmd_activate_session(ip->authentication_type, 
 				    ip->privilege, 
 				    challenge_string,
 				    challenge_string_len,
@@ -426,7 +426,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == PRIV_REQ)
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ)
     {
       uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
@@ -436,7 +436,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        at = ip->authtype;
+        at = ip->authentication_type;
 
       if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
@@ -502,7 +502,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == CLOS_REQ)
+  else if (pkt == CLOSE_SESSION_REQ)
     {
       uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
@@ -511,7 +511,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        at = ip->authtype;
+        at = ip->authentication_type;
 
       if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
@@ -563,7 +563,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == CHAS_REQ)
+  else if (pkt == CHASSIS_STATUS_REQ)
     {
       uint64_t initial_inbound_sequence_number;
       uint64_t session_id;
@@ -572,7 +572,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        at = ip->authtype;
+        at = ip->authentication_type;
 
       if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
@@ -624,7 +624,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == CTRL_REQ) 
+  else if (pkt == CHASSIS_CONTROL_REQ) 
     {
       uint8_t command = 0;
       uint64_t initial_inbound_sequence_number;
@@ -641,7 +641,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
         at = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        at = ip->authtype;
+        at = ip->authentication_type;
 
       if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
@@ -773,7 +773,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (cc == IPMI_COMP_CODE_COMMAND_SUCCESS)
     err_exit("ipmipower_packet_errmsg(%s:%d:%d): called with cc == SUCCESS",
              ip->ic->hostname, ip->protocol_state, pkt);
-  else if (pkt == SESS_RES 
+  else if (pkt == GET_SESSION_CHALLENGE_RES 
            && (cc == IPMI_COMP_CODE_INVALID_USERNAME 
                || cc == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
     {
@@ -783,7 +783,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       return MSG_TYPE_PERMISSION;
 #endif
     }
-  else if (pkt == ACTV_RES 
+  else if (pkt == ACTIVATE_SESSION_RES 
            && cc == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
     {
 #ifndef NDEBUG
@@ -792,7 +792,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       return MSG_TYPE_PERMISSION;
 #endif
     }
-  else if (pkt == PRIV_RES 
+  else if (pkt == SET_SESSION_PRIVILEGE_RES 
            && (cc == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
                || cc == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
                || cc == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
@@ -803,12 +803,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       return MSG_TYPE_PERMISSION;
 #endif
     }
-  else if (pkt == ACTV_RES 
+  else if (pkt == ACTIVATE_SESSION_RES 
            && (cc == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
                || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
                || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
     return MSG_TYPE_BMCBUSY;
-  else if (pkt == CTRL_RES 
+  else if (pkt == CHASSIS_CONTROL_RES 
            && cc == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
     return MSG_TYPE_OPERATION;
   

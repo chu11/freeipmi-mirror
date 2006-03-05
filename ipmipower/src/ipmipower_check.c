@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.17 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.18 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,14 +64,15 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
    */
 
   /* Outbound sequence numbers have not started yet */ 
-  if (pkt == AUTH_RES || pkt == SESS_RES)
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+      || pkt == GET_SESSION_CHALLENGE_RES)
     return 1;
 
   Fiid_obj_get(ip->session_res,
                (uint8_t *)"session_sequence_number", 
 	       &pktoseq);
   
-  if (pkt == ACTV_RES)
+  if (pkt == ACTIVATE_SESSION_RES)
     {
       /* achu: On some buggy BMCs the initial outbound sequence number on
        * the activate session response is off by one.  So we just accept
@@ -174,7 +175,9 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  if (pkt == AUTH_RES || pkt == SESS_RES || pkt == ACTV_RES)
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+      || pkt == GET_SESSION_CHALLENGE_RES 
+      || pkt == ACTIVATE_SESSION_RES)
     return 1;
   else
     {
@@ -217,7 +220,8 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
     
   Fiid_obj_get(ip->msg_res, (uint8_t *)"net_fn", &netfn);
 
-  if (pkt == CHAS_RES || pkt == CTRL_RES)
+  if (pkt == CHASSIS_STATUS_RES 
+      || pkt == CHASSIS_CONTROL_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
@@ -270,19 +274,19 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
                (uint8_t *)"cmd", 
 	       &cmd);
 
-  if (pkt == AUTH_RES) 
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES) 
     expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
-  else if (pkt == SESS_RES) 
+  else if (pkt == GET_SESSION_CHALLENGE_RES) 
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
-  else if (pkt == ACTV_RES) 
+  else if (pkt == ACTIVATE_SESSION_RES) 
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
-  else if (pkt == PRIV_RES) 
+  else if (pkt == SET_SESSION_PRIVILEGE_RES) 
     expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
-  else if (pkt == CLOS_RES) 
+  else if (pkt == CLOSE_SESSION_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
-  else if (pkt == CHAS_RES) 
+  else if (pkt == CHASSIS_STATUS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
-  else if (pkt == CTRL_RES) 
+  else if (pkt == CHASSIS_CONTROL_RES) 
     expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
   
   if (cmd != expected_cmd)

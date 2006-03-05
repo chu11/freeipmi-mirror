@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.11 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.12 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -76,7 +76,7 @@ struct ipmipower_connection *ics = NULL;
 
 /* Array of hostlists for short output */
 int output_hostrange_flag = 0;
-hostlist_t output_hostrange[MSG_TYPE_NUM];
+hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 
 /* 
  * _security_initialization
@@ -132,7 +132,7 @@ _setup(void)
         exit(1);		/* error message output in the above call */
     }
 
-  for (i = 0; i < MSG_TYPE_NUM; i++) 
+  for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
     {
       if ((output_hostrange[i] = hostlist_create(NULL)) == NULL)
         err_exit("hostlist_create() error");
@@ -190,7 +190,7 @@ _cleanup(void)
 
   ipmipower_connection_array_destroy(ics, conf->hosts_count);
 
-  for (i = 0; i < MSG_TYPE_NUM; i++)
+  for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++)
     hostlist_destroy(output_hostrange[i]);
 
   hostlist_destroy(conf->hosts);
@@ -457,7 +457,7 @@ main(int argc, char *argv[])
       /* Check for appropriate privilege first */
       if (conf->privilege_set
           && conf->privilege == PRIVILEGE_TYPE_USER 
-          && POWER_CMD_REQUIRES_OPERATOR(conf->powercmd))
+          && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(conf->powercmd))
         err_exit("power operation requires atleast operator privilege");
 
       for (i = 0; i <  conf->hosts_count; i++) 

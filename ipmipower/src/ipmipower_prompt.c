@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.15 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.16 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,7 +47,7 @@
 #include "ipmipower_config.h"
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
-#include "ipmipower_auth.h"
+#include "ipmipower_authentication.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
@@ -85,23 +85,23 @@ static void
 _cmd_advanced(void) 
 {
   cbuf_printf(ttyout, 
-              "authtype str                    - set a new authentication type\n"
-              "privilege str                   - set a new privilege type\n"
-              "on-if-off [on|off]              - toggle on-if-off functionality\n"
-              "outputtype str                  - set a new output type\n"
-              "force-permsg-auth [on|off]      - toggle force-permsg-auth functionality\n"
-              "accept-session-id-zero [on|off] - toggle accept-session-id-zero functionality\n"
-              "check-unexpected-authcode [on|off] - toggle check-unexpected-authcode functionality\n");
+              "authentication_type str              - set a new authentication type\n"
+              "privilege str                        - set a new privilege type\n"
+              "on-if-off [on|off]                   - toggle on-if-off functionality\n"
+              "outputtype str                       - set a new output type\n"
+              "force-permsg-authentication [on|off] - toggle force-permsg-auth functionality\n"
+              "accept-session-id-zero [on|off]      - toggle accept-session-id-zero functionality\n"
+              "check-unexpected-authcode [on|off]   - toggle check-unexpected-authcode functionality\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "debug [on|off]                  - toggle debug to stderr\n"
-              "ipmidump [on|off]               - toggle IPMI dump output\n"
-              "rmcpdump [on|off]               - toggle RMCP dump output\n"
-	      "log [on|off]                    - toggle logging\n"
-	      "logfile [str]                   - set a new logfile (no str for default)\n");
+              "debug [on|off]                       - toggle debug to stderr\n"
+              "ipmidump [on|off]                    - toggle IPMI dump output\n"
+              "rmcpdump [on|off]                    - toggle RMCP dump output\n"
+	      "log [on|off]                         - toggle logging\n"
+	      "logfile [str]                        - set a new logfile (no str for default)\n");
 #endif /* ifndef NDEBUG */
   cbuf_printf(ttyout,
-              "config                          - output current configuration\n");
+              "config                               - output current configuration\n");
 } 
 
 static void
@@ -203,7 +203,8 @@ _cmd_power(char **argv, power_cmd_t cmd)
     }
 
   /* Check for correct privilege type */
-  if (conf->privilege == PRIVILEGE_TYPE_USER && POWER_CMD_REQUIRES_OPERATOR(cmd))
+  if (conf->privilege == PRIVILEGE_TYPE_USER 
+      && POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(cmd))
     {
       cbuf_printf(ttyout, "power operation requires atleast operator privilege");
       return;
@@ -284,10 +285,10 @@ _cmd_password(char **argv)
 {
   assert(argv != NULL);
 
-  if (argv[1] && conf->authtype == AUTH_TYPE_NONE)
+  if (argv[1] && conf->authentication_type == AUTHENTICATION_TYPE_NONE)
     {
-      cbuf_printf(ttyout, "password cannot be set for authtype \"%s\"\n",
-                  ipmipower_auth_string(conf->authtype));
+      cbuf_printf(ttyout, "password cannot be set for authentication_type \"%s\"\n",
+                  ipmipower_authentication_type_string(conf->authentication_type));
     }
   else if (argv[1] == NULL 
            || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTHENTICATION_CODE_LENGTH)) 
@@ -309,27 +310,28 @@ _cmd_password(char **argv)
 }
 
 static void 
-_cmd_authtype(char **argv) 
+_cmd_authentication_type(char **argv) 
 {
   assert(argv != NULL);
 
   if (argv[1] != NULL) 
     {
-      auth_type_t at = ipmipower_auth_index(argv[1]);
-      if (at == AUTH_TYPE_INVALID)
-        cbuf_printf(ttyout, "%s invalid authtype\n", argv[1]);
-      else if (at == AUTH_TYPE_NONE && strlen(conf->password) > 0)
-        cbuf_printf(ttyout, "password cannot be set for authtype \"%s\"\n", 
-                    argv[1]);
+      authentication_type_t at = ipmipower_authentication_type_index(argv[1]);
+      if (at == AUTHENTICATION_TYPE_INVALID)
+        cbuf_printf(ttyout, "%s invalid authentication_type\n", argv[1]);
+      else if (at == AUTHENTICATION_TYPE_NONE && strlen(conf->password) > 0)
+        cbuf_printf(ttyout, 
+		    "password cannot be set for authentication_type \"%s\"\n", 
+		    argv[1]);
       else 
         {
-          conf->authtype = at;
-          cbuf_printf(ttyout, "authtype is now %s\n", argv[1]);
+          conf->authentication_type = at;
+          cbuf_printf(ttyout, "authentication_type is now %s\n", argv[1]);
         }
     }
   else
-    cbuf_printf(ttyout, "authtype must be specified: %s\n",
-                ipmipower_auth_list());
+    cbuf_printf(ttyout, "authentication_type must be specified: %s\n",
+                ipmipower_authentication_type_list());
 }
 
 static void 
@@ -537,53 +539,53 @@ _cmd_config(void)
 #endif
     }
   else
-    cbuf_printf(ttyout, "Hostnames:                 NONE\n");
+    cbuf_printf(ttyout, "Hostnames:                    NONE\n");
 
-  cbuf_printf(ttyout, "Username:                  %s\n", 
+  cbuf_printf(ttyout, "Username:                     %s\n", 
               (strlen(conf->username)) ? conf->username : "NULL");
 
 #ifndef NDEBUG
-  cbuf_printf(ttyout, "Password:                  %s\n", 
+  cbuf_printf(ttyout, "Password:                     %s\n", 
               (strlen(conf->password)) ? conf->password : "NULL");
 #else
-  cbuf_printf(ttyout, "Password:                  *****\n");
+  cbuf_printf(ttyout, "Password:                     *****\n");
 #endif
 
-  cbuf_printf(ttyout, "Authtype:                  %s\n", 
-              ipmipower_auth_string(conf->authtype));
-  cbuf_printf(ttyout, "Privilege:                 %s\n", 
+  cbuf_printf(ttyout, "Authentication_Type:          %s\n", 
+              ipmipower_authentication_type_string(conf->authentication_type));
+  cbuf_printf(ttyout, "Privilege:                    %s\n", 
               ipmipower_privilege_string(conf->privilege));
-  cbuf_printf(ttyout, "On-If-Off:                 %s\n",
+  cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "OutputType:                %s\n",
+  cbuf_printf(ttyout, "OutputType:                   %s\n",
               ipmipower_output_string(conf->outputtype));
-  cbuf_printf(ttyout, "Force-Permsg_auth:         %s\n",
-              (conf->force_permsg_auth) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Accept-Session-ID-Zero:    %s\n",
+  cbuf_printf(ttyout, "Force-Permsg_authentication:  %s\n",
+              (conf->force_permsg_authentication) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Accept-Session-ID-Zero:       %s\n",
               (conf->accept_session_id_zero) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Check-Unexpected-Authcode:    %s\n",
               (conf->check_unexpected_authcode) ? "enabled" : "disabled");
               
 #ifndef NDEBUG
-  cbuf_printf(ttyout, "Debug:                     %s\n", 
+  cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
-  cbuf_printf(ttyout, "Ipmidump:                  %s\n", 
+  cbuf_printf(ttyout, "Ipmidump:                     %s\n", 
               (conf->ipmidump) ? "on" : "off");
-  cbuf_printf(ttyout, "Rmcpdump:                  %s\n", 
+  cbuf_printf(ttyout, "Rmcpdump:                     %s\n", 
               (conf->rmcpdump) ? "on" : "off");
-  cbuf_printf(ttyout, "Logging:                   %s\n",
+  cbuf_printf(ttyout, "Logging:                      %s\n",
 	      (conf->log) ? "on" : "off");
   if (conf->log)
-    cbuf_printf(ttyout, "Logfile:                   %s\n", conf->logfile);
+    cbuf_printf(ttyout, "Logfile:                      %s\n", conf->logfile);
 #endif
-  cbuf_printf(ttyout, "Timeout:                   %d ms\n", conf->timeout_len);
-  cbuf_printf(ttyout, "Retry Timeout:             %d ms\n", conf->retry_timeout_len);
-  cbuf_printf(ttyout, "Retry Backoff Count:       %d\n", conf->retry_backoff_count);
-  cbuf_printf(ttyout, "Ping Interval:             %d ms\n", conf->ping_interval_len);
-  cbuf_printf(ttyout, "Ping Timeout:              %d ms\n", conf->ping_timeout_len);
-  cbuf_printf(ttyout, "Ping Packet Count:         %d\n", conf->ping_packet_count);
-  cbuf_printf(ttyout, "Ping Percent:              %d percent\n", conf->ping_percent);
-  cbuf_printf(ttyout, "Ping Consec Count:         %d\n", conf->ping_consec_count);
+  cbuf_printf(ttyout, "Timeout:                      %d ms\n", conf->timeout_len);
+  cbuf_printf(ttyout, "Retry Timeout:                %d ms\n", conf->retry_timeout_len);
+  cbuf_printf(ttyout, "Retry Backoff Count:          %d\n", conf->retry_backoff_count);
+  cbuf_printf(ttyout, "Ping Interval:                %d ms\n", conf->ping_interval_len);
+  cbuf_printf(ttyout, "Ping Timeout:                 %d ms\n", conf->ping_timeout_len);
+  cbuf_printf(ttyout, "Ping Packet Count:            %d\n", conf->ping_packet_count);
+  cbuf_printf(ttyout, "Ping Percent:                 %d percent\n", conf->ping_percent);
+  cbuf_printf(ttyout, "Ping Consec Count:            %d\n", conf->ping_consec_count);
 }
 
 static void 
@@ -719,16 +721,16 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_version();
             else if (strcmp(argv[0], "quit") == 0)
               quit = 1;
-            else if (strcmp(argv[0], "authtype") == 0)
-              _cmd_authtype(argv);
+            else if (strcmp(argv[0], "authentication_type") == 0)
+              _cmd_authentication_type(argv);
             else if (strcmp(argv[0], "privilege") == 0)
               _cmd_privilege(argv);
             else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)
               _cmd_outputtype(argv);
-            else if (strcmp(argv[0], "force-permsg-auth") == 0)
-              _cmd_set_flag(argv, &conf->force_permsg_auth, "force-permsg-auth");
+            else if (strcmp(argv[0], "force-permsg-authentication") == 0)
+              _cmd_set_flag(argv, &conf->force_permsg_authentication, "force-permsg-authentication");
             else if (strcmp(argv[0], "accept-session-id-zero") == 0)
               _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
             else if (strcmp(argv[0], "check-unexpected-authcode") == 0)

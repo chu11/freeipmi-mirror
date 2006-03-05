@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.15 2006-03-04 03:26:29 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.16 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,7 +41,7 @@
 #endif
 
 #include "ipmipower_config.h"
-#include "ipmipower_auth.h"
+#include "ipmipower_authentication.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
 #include "ipmipower_util.h"
@@ -79,11 +79,11 @@ ipmipower_config_setup(void)
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
-  conf->authtype = AUTH_TYPE_AUTO;
+  conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
-  conf->force_permsg_auth = IPMIPOWER_FALSE;
+  conf->force_permsg_authentication = IPMIPOWER_FALSE;
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode = IPMIPOWER_FALSE;
 #ifndef NDEBUG
@@ -108,10 +108,10 @@ ipmipower_config_setup(void)
   conf->hosts_set = IPMIPOWER_FALSE;
   conf->username_set = IPMIPOWER_FALSE;
   conf->password_set = IPMIPOWER_FALSE;
-  conf->authtype_set = IPMIPOWER_FALSE;
+  conf->authentication_type_set = IPMIPOWER_FALSE;
   conf->privilege_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
-  conf->force_permsg_auth_set = IPMIPOWER_FALSE;
+  conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
@@ -134,8 +134,8 @@ _config_common_checks(char *str)
           || conf->hosts_count > IPMIPOWER_MAXNODES))
     err_exit("%s: invalid number of hostnames", str);
     
-  if (conf->authtype == AUTH_TYPE_INVALID) 
-    err_exit("%s: invalid authtype", str);
+  if (conf->authentication_type == AUTHENTICATION_TYPE_INVALID) 
+    err_exit("%s: invalid authentication_type", str);
 
   if (conf->privilege == PRIVILEGE_TYPE_INVALID)
     err_exit("%s: invalid privilege", str);
@@ -232,42 +232,42 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 #if HAVE_GETOPT_LONG
   struct option long_options[] = 
     {
-      {"hostnames",                 1, NULL, 'h'},
-      {"username",                  1, NULL, 'u'},
-      {"password",                  1, NULL, 'p'},
-      {"on",                        0, NULL, 'n'},
-      {"off",                       0, NULL, 'f'},
-      {"cycle",                     0, NULL, 'c'},
-      {"reset",                     0, NULL, 'r'},
-      {"stat",                      0, NULL, 's'},
-      {"pulse",                     0, NULL, 'j'},
-      {"soft",                      0, NULL, 'k'},
-      {"help",                      0, NULL, 'H'},
-      {"version",                   0, NULL, 'V'},
-      {"config",                    1, NULL, 'C'}, 
+      {"hostnames",                   1, NULL, 'h'},
+      {"username",                    1, NULL, 'u'},
+      {"password",                    1, NULL, 'p'},
+      {"on",                          0, NULL, 'n'},
+      {"off",                         0, NULL, 'f'},
+      {"cycle",                       0, NULL, 'c'},
+      {"reset",                       0, NULL, 'r'},
+      {"stat",                        0, NULL, 's'},
+      {"pulse",                       0, NULL, 'j'},
+      {"soft",                        0, NULL, 'k'},
+      {"help",                        0, NULL, 'H'},
+      {"version",                     0, NULL, 'V'},
+      {"config",                      1, NULL, 'C'}, 
 
-      {"authtype",                  1, NULL, 'a'},  
-      {"privilege",                 1, NULL, 'l'},
-      {"on-if-off",                 0, NULL, 'g'},
-      {"outputtype",                1, NULL, 'o'},
-      {"force-permsg-auth",         0, NULL, 'P'},
-      {"accept-session-id-zero",    0, NULL, 'S'},
-      {"check-unexpected-authcode", 0, NULL, 'U'},
+      {"authentication-type",         1, NULL, 'a'},  
+      {"privilege",                   1, NULL, 'l'},
+      {"on-if-off",                   0, NULL, 'g'},
+      {"outputtype",                  1, NULL, 'o'},
+      {"force-permsg-authentication", 0, NULL, 'P'},
+      {"accept-session-id-zero",      0, NULL, 'S'},
+      {"check-unexpected-authcode",   0, NULL, 'U'},
 #ifndef NDEBUG
-      {"debug",                     0, NULL, 'D'},
-      {"ipmidump",                  0, NULL, 'I'},
-      {"rmcpdump",                  0, NULL, 'R'},
-      {"log",                       0, NULL, 'L'},
-      {"logfile",                   1, NULL, 'F'},
+      {"debug",                       0, NULL, 'D'},
+      {"ipmidump",                    0, NULL, 'I'},
+      {"rmcpdump",                    0, NULL, 'R'},
+      {"log",                         0, NULL, 'L'},
+      {"logfile",                     1, NULL, 'F'},
 #endif
-      {"timeout" ,               1, NULL, 't'},
-      {"retry-timeout",             1, NULL, 'y'},
-      {"retry-backoff-count",       1, NULL, 'b'},
-      {"ping-interval",             1, NULL, 'i'},
-      {"ping-timeout",              1, NULL, 'z'},
-      {"ping-packet-count",         1, NULL, 'v'},
-      {"ping-percent",              1, NULL, 'w'},
-      {"ping-consec-count",         1, NULL, 'x'},
+      {"timeout" ,                    1, NULL, 't'},
+      {"retry-timeout",               1, NULL, 'y'},
+      {"retry-backoff-count",         1, NULL, 'b'},
+      {"ping-interval",               1, NULL, 'i'},
+      {"ping-timeout",                1, NULL, 'z'},
+      {"ping-packet-count",           1, NULL, 'v'},
+      {"ping-percent",                1, NULL, 'w'},
+      {"ping-consec-count",           1, NULL, 'x'},
       {0, 0, 0, 0},
     };
 #endif
@@ -334,9 +334,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: configuration file pathname too long");
           strcpy(conf->configfile, optarg);
           break;
-        case 'a':       /* --authtype */
-          conf->authtype = ipmipower_auth_index(optarg);
-          conf->authtype_set = IPMIPOWER_TRUE;
+        case 'a':       /* --authentication-type */
+          conf->authentication_type = ipmipower_authentication_type_index(optarg);
+          conf->authentication_type_set = IPMIPOWER_TRUE;
           break;
         case 'l':       /* --privilege */
           conf->privilege = ipmipower_privilege_index(optarg);
@@ -350,9 +350,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->outputtype = ipmipower_output_index(optarg);
           conf->outputtype_set = IPMIPOWER_TRUE;
           break;
-        case 'P':       /* --force-permsg-auth */
-          conf->force_permsg_auth = IPMIPOWER_TRUE;
-          conf->force_permsg_auth_set = IPMIPOWER_TRUE;
+        case 'P':       /* --force-permsg-authentication */
+          conf->force_permsg_authentication = IPMIPOWER_TRUE;
+          conf->force_permsg_authentication_set = IPMIPOWER_TRUE;
           break;
         case 'S':       /* --accept-session-id-zero */
           conf->accept_session_id_zero = IPMIPOWER_TRUE;
@@ -476,15 +476,15 @@ _cb_hostnames(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
-_cb_authtype(conffile_t cf, struct conffile_data *data,
+_cb_authentication_type(conffile_t cf, struct conffile_data *data,
              char *optionname, int option_type, void *option_ptr, 
              int option_data, void *app_ptr, int app_data) 
 {
-  if (conf->authtype_set == IPMIPOWER_TRUE)
+  if (conf->authentication_type_set == IPMIPOWER_TRUE)
       return 0;
 
-  /* Incorrect authtype checked in _config_common_checks */
-  conf->authtype = ipmipower_auth_index(data->string);
+  /* Incorrect authentication_type checked in _config_common_checks */
+  conf->authentication_type = ipmipower_authentication_type_index(data->string);
   return 0;
 }
 
@@ -577,9 +577,10 @@ _cb_password(conffile_t cf, struct conffile_data *data,
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int hostnames_flag, username_flag, password_flag, authtype_flag, 
-    privilege_flag, on_if_off_flag, outputtype_flag, force_permsg_auth_flag, 
-    accept_session_id_zero_flag, check_unexpected_authcode_flag, timeout_flag, 
+  int hostnames_flag, username_flag, password_flag, authentication_type_flag, 
+    privilege_flag, on_if_off_flag, outputtype_flag, 
+    force_permsg_authentication_flag, accept_session_id_zero_flag, 
+    check_unexpected_authcode_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
     ping_consec_count_flag;
@@ -592,17 +593,17 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &username_flag, NULL, 0},
       {"password", CONFFILE_OPTION_STRING, -1, _cb_password, 
        1, 0, &password_flag, NULL, 0},
-      {"authtype", CONFFILE_OPTION_STRING, -1, _cb_authtype, 
-       1, 0, &authtype_flag, NULL, 0},
+      {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
+       1, 0, &authentication_type_flag, NULL, 0},
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
        1, 0, &privilege_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
        1, 0, &outputtype_flag, NULL, 0},
-      {"force_permsg_auth", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &force_permsg_auth_flag, &(conf->force_permsg_auth), 
-       conf->force_permsg_auth_set},
+      {"force_permsg_authentication", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &force_permsg_authentication_flag, &(conf->force_permsg_authentication), 
+       conf->force_permsg_authentication_set},
       {"accept_session_id_zero", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &accept_session_id_zero_flag, &(conf->accept_session_id_zero), 
        conf->accept_session_id_zero_set},
@@ -679,7 +680,8 @@ ipmipower_config_check_values(void)
   if (conf->powercmd != POWER_CMD_NONE && conf->hosts == NULL)
     err_exit("Error: Must specify target hostnames in non-interactive mode");
 
-  if (conf->authtype == AUTH_TYPE_NONE && strlen(conf->password) > 0)
+  if (conf->authentication_type == AUTHENTICATION_TYPE_NONE 
+      && strlen(conf->password) > 0)
     err_exit("Error: password cannot be set for authentication type \"%s\"",
-             ipmipower_auth_string(conf->authtype));
+             ipmipower_authentication_type_string(conf->authentication_type));
 }

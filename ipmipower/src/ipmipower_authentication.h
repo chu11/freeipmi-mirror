@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_auth.h,v 1.5 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_authentication.h,v 1.1 2006-03-05 19:18:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,24 +30,24 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_auth_index
- * - Return the index of the specified authtype 
+/* ipmipower_authentication_type_index
+ * - Return the index of the specified authentication_type 
  */
-auth_type_t ipmipower_auth_index(char *str);
+authentication_type_t ipmipower_authentication_type_index(char *str);
 
-/* ipmipower_auth_string
- * - Return static string description of authtype 
+/* ipmipower_authentication_type_string
+ * - Return static string description of authentication_type 
  */
-char *ipmipower_auth_string(auth_type_t at);
+char *ipmipower_authentication_type_string(authentication_type_t at);
 
-/* ipmipower_auth_list
- * - Return static string list of all available auth types
+/* ipmipower_authentication_type_list
+ * - Return static string list of all available authentication types
  */
-char *ipmipower_auth_list(void);
+char *ipmipower_authentication_type_list(void);
 
-/* ipmipower_ipmi_auth_type
- * - Return IPMI auth type according to auth_type_t type
+/* ipmipower_ipmi_authentication_type
+ * - Return IPMI authentication type according to authentication_type_t type
  */
-uint8_t ipmipower_ipmi_auth_type(auth_type_t at);
+uint8_t ipmipower_ipmi_authentication_type(authentication_type_t at);
 
 #endif /* _IPMIPOWER_AUTH_H */

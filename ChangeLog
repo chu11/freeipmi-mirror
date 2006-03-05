@@ -38,6 +38,13 @@
 	includes and defines.  
 
 	* Attempted to convert "addr" abbreviation to "address" globally.
+
+	* ipmipower/src/ipmipower_auth.h, ipmipower/src/ipmipower_auth.c:
+	Renamed to ipmipower_authentication.h and
+	ipmipower_authentication.c respectively.
+	
+	* ipmipower/: Various code cleanup.  Various minor re-architecture
+	of code to eventually support ipmi 2.0.
 	
 2006-03-04  Albert Chu <chu11@llnl.gov>
 
