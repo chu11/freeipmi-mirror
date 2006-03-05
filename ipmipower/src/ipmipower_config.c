@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.16 2006-03-05 19:18:38 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.17 2006-03-05 22:47:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -477,8 +477,8 @@ _cb_hostnames(conffile_t cf, struct conffile_data *data,
 
 static int 
 _cb_authentication_type(conffile_t cf, struct conffile_data *data,
-             char *optionname, int option_type, void *option_ptr, 
-             int option_data, void *app_ptr, int app_data) 
+			char *optionname, int option_type, void *option_ptr, 
+			int option_data, void *app_ptr, int app_data) 
 {
   if (conf->authentication_type_set == IPMIPOWER_TRUE)
       return 0;
