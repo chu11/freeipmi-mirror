@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.18 2006-03-05 19:18:38 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.19 2006-03-05 19:25:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -226,14 +226,6 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
   
-#if 0 /* XXX */
-  fiid_obj_dump_perror(STDERR_FILENO,
-                       "test",
-                       "***test***",
-                       NULL,
-                       ip->msg_res);
-#endif
-
   if (netfn != expected_netfn)
     dbg("_check_network_function(%s:%d): netfn bad: %x, expected: %x", 
         ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
