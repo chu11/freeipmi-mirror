@@ -32,8 +32,6 @@ extern "C" {
 
 #define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
-#define IPMI_LAN_RQ_SEQ_INC(__rq_seq) ((__rq_seq) = (((__rq_seq) + 1) % (IPMI_LAN_SEQUENCE_NUMBER_MAX + 1)))
-
 extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;
 extern fiid_template_t tmpl_lan_msg_hdr_rs;

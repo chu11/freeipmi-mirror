@@ -31,6 +31,9 @@
 	libfreeipmi/include/freeipmi/ipmi-lan.h: Remove defines duplicated
 	by ipmi-slave-address-spec.h.
 
+	* libfreeipmi/include/freeipmi/ipmi-lan.h (IPMI_LAN_RQ_SEQ_INC):
+	Removed macro.
+
 	* libfreeipmi/: Adjust makefiles and code appropriately for new
 	includes and defines.  
 
