@@ -29,8 +29,8 @@ extern "C" {
 #include <freeipmi/fiid.h>
 
 int32_t ipmi_calculate_sik(uint8_t authentication_algorithm, 
-			   uint8_t *key, 
-			   uint32_t key_len, 
+			   uint8_t *k_g, 
+			   uint32_t k_g_len, 
 			   uint8_t *remote_console_random_number, 
 			   uint32_t remote_console_random_number_len, 
 			   uint8_t *managed_system_random_number, 

@@ -44,8 +44,8 @@
 
 int32_t 
 ipmi_calculate_sik(uint8_t authentication_algorithm,
-                   uint8_t *key,
-                   uint32_t key_len,
+                   uint8_t *k_g,
+                   uint32_t k_g_len,
                    uint8_t *remote_console_random_number,
                    uint32_t remote_console_random_number_len,
                    uint8_t *managed_system_random_number,
@@ -61,11 +61,11 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
   unsigned int hash_data_len;
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
 
-  /* key can be NULL, indicating a empty key */
+  /* k_g can be NULL, indicating a empty k_g */
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-	      && !(key && !key_len)
+	      && !(k_g && !k_g_len)
 	      && remote_console_random_number
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 	      && managed_system_random_number
@@ -101,7 +101,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   ERR_EINVAL (!(sik_len < expected_digest_len));
 
-  key_len = (key_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : key_len;
+  k_g_len = (k_g_len > IPMI_MAX_SIK_KEY_LENGTH) ? IPMI_MAX_SIK_KEY_LENGTH : k_g_len;
   
   memset(hash_data, '\0', IPMI_MAX_KEY_DATA_LENGTH);
 
@@ -138,8 +138,8 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 
   ERR (!((computed_digest_len =  ipmi_crypt_hash(hash_algorithm,
 						 hash_flags,
-						 key,
-						 key_len,
+						 k_g,
+						 k_g_len,
 						 hash_data,
 						 hash_data_len,
 						 sik,
