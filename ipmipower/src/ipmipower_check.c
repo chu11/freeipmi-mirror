@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.19 2006-03-05 19:25:14 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.20 2006-03-05 19:40:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,7 +68,7 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == GET_SESSION_CHALLENGE_RES)
     return 1;
 
-  Fiid_obj_get(ip->session_res,
+  Fiid_obj_get(ip->obj_lan_session_hdr_res,
                (uint8_t *)"session_sequence_number", 
 	       &pktoseq);
   
@@ -181,10 +181,10 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
     return 1;
   else
     {
-      Fiid_obj_get(ip->session_res, 
+      Fiid_obj_get(ip->obj_lan_session_hdr_res, 
                    (uint8_t *)"session_id", 
 		   &session_id);
-      Fiid_obj_get(ip->actv_res, 
+      Fiid_obj_get(ip->obj_activate_session_res, 
                    (uint8_t *)"session_id", 
 		   &actv_res_session_id);
     }
@@ -218,7 +218,7 @@ _check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  Fiid_obj_get(ip->msg_res, (uint8_t *)"net_fn", &netfn);
+  Fiid_obj_get(ip->obj_lan_msg_hdr_res, (uint8_t *)"net_fn", &netfn);
 
   if (pkt == CHASSIS_STATUS_RES 
       || pkt == CHASSIS_CONTROL_RES)
@@ -244,7 +244,7 @@ _check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
     
   myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1);
 
-  Fiid_obj_get(ip->msg_res, (uint8_t *)"rq_seq", &pktrseq);
+  Fiid_obj_get(ip->obj_lan_msg_hdr_res, (uint8_t *)"rq_seq", &pktrseq);
 
   if (pktrseq != myrseq)
     dbg("_check_requester_sequence_number(%s:%d): rseq: %x, expected: %x",

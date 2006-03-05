@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.22 2006-03-05 19:18:38 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.23 2006-03-05 19:40:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -338,28 +338,28 @@ struct ipmipower_powercmd {
 
     struct ipmipower_connection *ic;
   
-    fiid_obj_t rmcp_req;
-    fiid_obj_t rmcp_res;
-    fiid_obj_t session_req;
-    fiid_obj_t session_res;
-    fiid_obj_t msg_req;
-    fiid_obj_t msg_res;
-    fiid_obj_t trlr_res;
+    fiid_obj_t obj_rmcp_hdr_req;
+    fiid_obj_t obj_rmcp_hdr_res;
+    fiid_obj_t obj_lan_session_hdr_req;
+    fiid_obj_t obj_lan_session_hdr_res;
+    fiid_obj_t obj_lan_msg_hdr_req;
+    fiid_obj_t obj_lan_msg_hdr_res;
+    fiid_obj_t obj_lan_msg_trlr_res;
 
-    fiid_obj_t auth_req;
-    fiid_obj_t auth_res;
-    fiid_obj_t sess_req;
-    fiid_obj_t sess_res;
-    fiid_obj_t actv_req;
-    fiid_obj_t actv_res;
-    fiid_obj_t priv_req;
-    fiid_obj_t priv_res;
-    fiid_obj_t clos_req;
-    fiid_obj_t clos_res;
-    fiid_obj_t chas_req;
-    fiid_obj_t chas_res;
-    fiid_obj_t ctrl_req;
-    fiid_obj_t ctrl_res;
+    fiid_obj_t obj_authentication_capabilities_req;
+    fiid_obj_t obj_authentication_capabilities_res;
+    fiid_obj_t obj_get_session_challenge_req;
+    fiid_obj_t obj_get_session_challenge_res;
+    fiid_obj_t obj_activate_session_req;
+    fiid_obj_t obj_activate_session_res;
+    fiid_obj_t obj_set_session_privilege_req;
+    fiid_obj_t obj_set_session_privilege_res;
+    fiid_obj_t obj_close_session_req;
+    fiid_obj_t obj_close_session_res;
+    fiid_obj_t obj_chassis_status_req;
+    fiid_obj_t obj_chassis_status_res;
+    fiid_obj_t obj_chassis_control_req;
+    fiid_obj_t obj_chassis_control_res;
 
     List sockets_to_close;
 };
