@@ -192,6 +192,11 @@ _dump_rmcpplus_payload_data(int fd,
 				    pkt + indx,
 				    obj_cmd_len);
       indx += len;
+      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, 
+					   prefix, 
+					   cmd_hdr, 
+					   NULL, 
+					   obj_cmd) < 0));
 
       if (lan_msg_len <= indx)
 	return 0;
@@ -204,6 +209,13 @@ _dump_rmcpplus_payload_data(int fd,
 				obj_lan_msg_trlr,
 				pkt + indx,
 				lan_msg_len - indx);
+  indx += len;
+  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
+				       prefix, 
+				       trlr_hdr, 
+				       NULL, 
+				       obj_lan_msg_trlr) < 0));
+
 
   rv = 0;
  cleanup:

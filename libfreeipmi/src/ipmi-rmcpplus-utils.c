@@ -79,7 +79,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
     {
       /* SPEC: Not sure what to do */
       memset(sik, '\0', sik_len);
-      return (0);
+      return ((sik_len < IPMI_MAX_SIK_KEY_LENGTH) ? sik_len : IPMI_MAX_SIK_KEY_LENGTH);
     }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
@@ -88,7 +88,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
       expected_digest_len = IPMI_HMAC_SHA1_DIGEST_LENGTH;
     }
-  else
+  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
     {
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
@@ -166,7 +166,7 @@ _calculate_k_rakp_none(uint8_t *k,
 	      && constant_len);
  
   memset(k, '\0', k_len);
-  return (k_len);
+  return ((k_len < IPMI_MAX_K_UID_LENGTH) ? k_len : IPMI_MAX_K_UID_LENGTH);
 }
 
 static int32_t
