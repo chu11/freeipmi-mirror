@@ -45,8 +45,9 @@
 #include "ipmi-common.h"
 #include "xmalloc.h"
 
-#define IPMI_KCS_SLEEP_USECS            0x01
+#define IPMI_KCS_SLEEP_USECS                0x01
 
+#define IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT 1
 /* KCS Interface Status Register Bits */
 /* Scheme BIT Calculator Example
   To BIN: 
@@ -162,7 +163,7 @@ ipmi_kcs_ctx_create(void)
 
   ctx->magic = IPMI_KCS_CTX_MAGIC;
   ctx->bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
-  ctx->reg_space = 1;
+  ctx->reg_space = IPMI_KCS_SMS_REGISTER_SPACE_DEFAULT;
   ctx->poll_interval = IPMI_KCS_SLEEP_USECS;
   ctx->mode = IPMI_KCS_MODE_DEFAULT;
   ctx->io_init = 0;
