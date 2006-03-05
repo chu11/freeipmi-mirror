@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.27 2006-03-05 19:40:38 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.28 2006-03-05 19:48:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -165,14 +165,15 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;
+  ip->error_occurred = IPMIPOWER_FALSE;
+  ip->retry_count = 0;
+  ip->close_timeout = 0;
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
   ip->initial_outbound_sequence_number = get_rand();
   ip->highest_received_sequence_number = ip->initial_outbound_sequence_number;
   ip->previously_received_list = 0xFF;
-  ip->retry_count = 0;
-  ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
   /* ip->authentication_type is set after Get Authentication Capabilities
@@ -192,7 +193,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   else
     ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
 
-  ip->close_timeout = 0;
   ip->ic = ic;
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
@@ -387,7 +387,9 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * here is our second session-authcode check attempt under these
    * circumstances.
    */
-  if (conf->check_unexpected_authcode == IPMIPOWER_TRUE && !ret && check_authcode_retry_flag)
+  if (conf->check_unexpected_authcode == IPMIPOWER_TRUE 
+      && !ret 
+      && check_authcode_retry_flag)
     {
       dbg("_recv_packet(%s:%d): retry authcode check", 
 	  ip->ic->hostname, ip->protocol_state, strerror(errno));

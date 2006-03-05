@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.23 2006-03-05 19:40:38 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.24 2006-03-05 19:48:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -324,17 +324,20 @@ struct ipmipower_powercmd {
     power_cmd_t cmd;
     protocol_state_t protocol_state; 
 
+    /* Protocol State Machine Variables */
     struct timeval time_begin;
+    ipmipower_bool_t error_occurred;
+    unsigned int retry_count;
+    uint8_t close_timeout;
+
+    /* Protocol Maintenance Variables */
     unsigned int session_inbound_count;
     uint32_t initial_outbound_sequence_number;
     uint32_t highest_received_sequence_number;
     unsigned int previously_received_list;
-    unsigned int retry_count;
-    ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
     uint8_t authentication_type;
     uint8_t privilege;
-    uint8_t close_timeout;
 
     struct ipmipower_connection *ic;
   
