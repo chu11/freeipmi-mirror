@@ -33,7 +33,6 @@
 #include "freeipmi/ipmi-error.h"
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
-#include "freeipmi/ipmi-kcs-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 
@@ -127,6 +126,9 @@ ipmi_strerror_r (uint8_t cmd,
 
     case IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED:
       SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED_STR);
+
+    case IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL:
+      SNPRINTF_RETURN (IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL_STR);
 
     case IPMI_COMP_CODE_UNSPECIFIED_ERROR:
       SNPRINTF_RETURN (IPMI_COMP_CODE_UNSPECIFIED_ERROR_STR);

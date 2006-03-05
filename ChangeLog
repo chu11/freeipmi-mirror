@@ -664,6 +664,47 @@
 	support for ipmi 2.0 ping.
 ------------------------------------------------------------
 
+2006-03-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Update completion
+	code error codes and strings based on updated IPMI 2.0 spec.
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-interface.h,
+	libfreeipmi/src/ipmi-ssif-interface.c: Renamed to ipmi-ssif-api.h
+	and ipmi-ssif-api.c respectively.
+
+	* libfreeipmi/include/freeipmi/ipmi-kcs-interface.h,
+	libfreeipmi/src/ipmi-kcs-interface.c: Renamed to ipmi-kcs-api.h
+	and ipmi-kcs-api.c respectively.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-ssif-interface-udm.h,
+	libfreeipmi/src/udm/ipmi-ssif-interface-udm.c: Renamed to
+	ipmi-ssif-api-udm.h and ipmi-ssif-api-udm.c respectively.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-kcs-interface-udm.h,
+	libfreeipmi/src/udm/ipmi-kcs-interface-udm.c: Renamed to
+	ipmi-kcs-api-udm.h and ipmi-kcs-api-udm.c respectively.
+
+	* common/src/err-wrappers.h (ERR_NULL_RETURN): Fix bug.
+
+	* libfreeipmi/include/freeipmi/freeipmi.h: Move all udm stuff to
+	libfreeipmi/include/freeipmi/udm/udm.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-slave-address-spec.h: New file.  
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h,
+	libfreeipmi/include/freeipmi/ipmi-lan.h: Remove defines duplicated
+	by ipmi-slave-address-spec.h.
+
+	* libfreeipmi/include/freeipmi/ipmi-lan.h (IPMI_LAN_RQ_SEQ_INC):
+	Removed macro.
+
+	* libfreeipmi/: Adjust makefiles and code appropriately for new
+	includes and defines.  
+
+	* Attempted to convert "addr" abbreviation to "address" globally.
+	
 2006-03-04  Albert Chu <chu11@llnl.gov>
 
 	* common/src/err-wrappers.h; New macros for errno returns.

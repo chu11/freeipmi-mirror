@@ -45,7 +45,7 @@
 
 #include "freeipmi/ipmi-locate.h"
 #include "freeipmi/fiid.h"
-#include "freeipmi/ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-api.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
@@ -73,7 +73,7 @@
 #define IPMI_SMBIOS_IPMI_DEV_INFO_VER_OFFSET 	0x5
 #define IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET 	0x6
 #define IPMI_SMBIOS_IPMI_DEV_INFO_NVSTOR_OFFSET 	0x7
-#define IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET 	0x8
+#define IPMI_SMBIOS_IPMI_DEV_INFO_ADDRESS_OFFSET 	0x8
 #define IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET 	0x10
 #define IPMI_SMBIOS_LSB_BIT 				4
 #define IPMI_SMBIOS_REGSPACING_SHIFT 		        6
@@ -118,7 +118,7 @@ fiid_template_t tmpl_smbios_ipmi_device_info_record =
        device exists for this BMC, the field is set to
        0FFh. */
     {8, "nv_storage_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "base_addr.io_mapped_or_mem_mapped", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "base_address.io_mapped_or_mem_mapped", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     /* Identifies the base address (either memory-
        mapped or I/O) of the BMC. If the least-
        significant bit of the field is a 1, the address is
@@ -255,16 +255,16 @@ is_ipmi_dev_info (ipmi_interface_type_t type, uint8_t* dev_info_p)
 
 /* map_physmem
    ARGUMENTS:
-   physaddr = physical address to access
+   physaddress = physical address to access
    len = length of area to access
    startp = place to store pointer to unmap (caller responsible for unmapping)
    totallen = length of area to unmap
    RETURNS:
    pointer to area of physical memory at physmem */
 static uint8_t*
-map_physmem (uint32_t physaddr, size_t len, void** startp, size_t* totallen)
+map_physmem (uint32_t physaddress, size_t len, void** startp, size_t* totallen)
 {
-  uint32_t startaddr;
+  uint32_t startaddress;
   uint32_t pad;
   int mem_fd;
 
@@ -275,10 +275,10 @@ map_physmem (uint32_t physaddr, size_t len, void** startp, size_t* totallen)
 
   if (mem_fd != -1)
     {
-      pad = physaddr % sysconf (_SC_PAGESIZE);
-      startaddr = physaddr - pad;
+      pad = physaddress % sysconf (_SC_PAGESIZE);
+      startaddress = physaddress - pad;
       *totallen = len + pad;
-      *startp = mmap (NULL, *totallen, PROT_READ, MAP_PRIVATE, mem_fd, startaddr);
+      *startp = mmap (NULL, *totallen, PROT_READ, MAP_PRIVATE, mem_fd, startaddress);
       close (mem_fd);
 
       if (*startp != MAP_FAILED)
@@ -367,7 +367,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
 {
   uint8_t* bufp;
   uint8_t version;
-  uint64_t addr;
+  uint64_t address;
   uint64_t strobed;
   ipmi_locate_info_t *pinfo = NULL;
 
@@ -390,7 +390,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
   pinfo->interface_type = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_TYPE_OFFSET];
   ERR_ENODEV_CLEANUP (pinfo->interface_type == type);
 
-  strobed = addr = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDR_OFFSET);
+  strobed = address = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDRESS_OFFSET);
   if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
     {
       uint8_t modifier;
@@ -407,20 +407,20 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
 
   if (pinfo->interface_type == IPMI_INTERFACE_SSIF)
     {
-      pinfo->addr_space_id  = IPMI_ADDRESS_SPACE_ID_SMBUS;
-      pinfo->base_addr.bmc_smbus_slave_addr = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
+      pinfo->address_space_id  = IPMI_ADDRESS_SPACE_ID_SMBUS;
+      pinfo->base_address.bmc_smbus_slave_address = bufp[IPMI_SMBIOS_IPMI_DEV_INFO_I2C_OFFSET];
     }
   else
     {
-      if ((addr & 1) != 0)
+      if ((address & 1) != 0)
 	{
-	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-	  pinfo->base_addr.bmc_iobase_addr = strobed;
+	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+	  pinfo->base_address.bmc_iobase_address = strobed;
 	}
       else
 	{
-	  pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
-	  pinfo->base_addr.bmc_membase_addr = strobed;
+	  pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_MEMORY;
+	  pinfo->base_address.bmc_membase_address = strobed;
 	}
     }
 

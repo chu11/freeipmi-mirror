@@ -135,12 +135,19 @@ extern "C" {
 
 #define IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL                  0xD4
 #define IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL_STR \
-"Cannot execute command. Insufficient privilege level."
+"Cannot execute command due to innsufficient privilege level or other " \
+"security-based restriction (e.g. disabled for 'firmware firewall')."
 
 #define IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED               0xD5
 #define IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED_STR \
 "Cannot execute command. Command, or request parameter(s), not " \
 "supported in present state."
+
+#define IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL                     0xD6
+#define IPMI_COMP_CODE_REQUEST_PARAMETER_ILLEGAL_STR \
+"Cannot execute command. Parameter is illegal because command " \
+"sub-function has been disabled or is unavailable " \
+"(e.g. disabled for 'firmware firewall')."
 
 #define IPMI_COMP_CODE_UNSPECIFIED_ERROR                             0xFF
 #define IPMI_COMP_CODE_UNSPECIFIED_ERROR_STR \

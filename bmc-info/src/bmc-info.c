@@ -49,6 +49,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA
 #include <argp.h>
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
 #include "bmc-info-argp.h"

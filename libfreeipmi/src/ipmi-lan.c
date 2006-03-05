@@ -35,6 +35,7 @@
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-ipmb-interface.h"
 #include "freeipmi/ipmi-netfn-spec.h"
+#include "freeipmi/ipmi-slave-address-spec.h"
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/rmcp.h"
 
@@ -136,7 +137,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
 
   FIID_OBJ_CLEAR (obj_lan_msg_hdr);
-  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rs_addr", IPMI_SLAVE_ADDR_BMC);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rs_addr", IPMI_LAN_SLAVE_ADDRESS_BMC);
   FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"net_fn", net_fn);
   FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rs_lun", rs_lun);
   
@@ -149,7 +150,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 
   checksum = ipmi_checksum(checksum_buf, checksum_len);
   FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"checksum1", checksum);
-  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_addr", IPMI_SLAVE_ADDR_SWID);
+  FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_addr", IPMI_LAN_SOFTWARE_ID_REMOTE_CONSOLE_SOFTWARE);
   FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_lun", IPMI_BMC_IPMB_LUN_BMC);
   FIID_OBJ_SET (obj_lan_msg_hdr, (uint8_t *)"rq_seq", rq_seq);
 

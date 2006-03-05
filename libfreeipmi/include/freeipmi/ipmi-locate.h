@@ -77,12 +77,12 @@ struct ipmi_locate_info
   uint8_t locate_driver;
   ipmi_interface_type_t interface_type; /* KCS, SMIC, BT, SSIF */
   char *bmc_i2c_dev_name;
-  uint8_t addr_space_id;  /* Memory mapped, IO mapped, SMBus*/
+  uint8_t address_space_id;  /* Memory mapped, IO mapped, SMBus*/
   union {
-    uint64_t bmc_iobase_addr;
-    uint64_t bmc_membase_addr;
-    uint8_t  bmc_smbus_slave_addr:7; /* ipmb_addr */
-  } base_addr;
+    uint64_t bmc_iobase_address;
+    uint64_t bmc_membase_address;
+    uint8_t  bmc_smbus_slave_address:7; /* ipmb_address */
+  } base_address;
   uint8_t reg_space; /* Register spacing in bytes */
 };
 typedef struct ipmi_locate_info ipmi_locate_info_t;

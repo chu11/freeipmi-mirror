@@ -40,20 +40,21 @@ extern "C" {
 #include <freeipmi/ipmi-sensor-units-spec.h>
 #include <freeipmi/ipmi-serial-modem-param-spec.h>
 #include <freeipmi/ipmi-sol-param-spec.h>
+#include <freeipmi/ipmi-slave-address-spec.h>
 #include <freeipmi/rmcp.h>
 #include <freeipmi/ipmi-debug.h>
 #include <freeipmi/ipmi-error.h>
 #include <freeipmi/ipmi-utils.h>
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/ipmi-kcs.h>
-#include <freeipmi/ipmi-kcs-interface.h>
+#include <freeipmi/ipmi-kcs-api.h>
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
 #include <freeipmi/ipmi-rmcpplus.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-utils.h>
-#include <freeipmi/ipmi-ssif-interface.h>
+#include <freeipmi/ipmi-ssif-api.h>
 #include <freeipmi/ipmi-smic-interface.h>
 #include <freeipmi/ipmi-bmc-watchdog-timer-cmds.h>
 #include <freeipmi/ipmi-chassis-cmds.h>
@@ -70,20 +71,6 @@ extern "C" {
 #include <freeipmi/ipmi-sel-record-types.h>
 #include <freeipmi/ipmi-sensor-event-messages.h>
 #include <freeipmi/ipmi-sensor-utils.h>
-#include <freeipmi/udm/ipmi-udm.h>
-#include <freeipmi/udm/ipmi-kcs-interface-udm.h>
-#include <freeipmi/udm/ipmi-lan-interface-udm.h>
-#include <freeipmi/udm/ipmi-ssif-interface-udm.h>
-#include <freeipmi/udm/ipmi-chassis-cmds-udm.h>
-#include <freeipmi/udm/ipmi-device-global-cmds-udm.h>
-#include <freeipmi/udm/ipmi-lan-cmds-udm.h>
-#include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
-#include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sdr-repository-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sensor-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sel-cmds-udm.h>
-#include <freeipmi/udm/ipmi-serial-modem-cmds-udm.h>
-#include <freeipmi/udm/ipmi-sol-cmds-udm.h>
 
 #ifdef __cplusplus
 }

@@ -25,14 +25,14 @@
 #include <sys/socket.h>
 
 #include <freeipmi/ipmi-error.h>
-#include <freeipmi/ipmi-kcs-interface.h>
+#include <freeipmi/ipmi-kcs-api.h>
 #include <freeipmi/ipmi-locate.h>
 #include <freeipmi/ipmi-messaging-support-cmds.h>
-#include <freeipmi/ipmi-ssif-interface.h>
+#include <freeipmi/ipmi-ssif-api.h>
 
 #define IPMI_MAX_DRIVERS  5
 #define IPMI_MAX_RETRIES  3
-#define IPMI_POLL_INTERVAL_USECS  0x01
+#define IPMI_POLL_INTERVAL_USECS 60
 
 enum ipmi_mode
   {

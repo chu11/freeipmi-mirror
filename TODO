@@ -47,8 +47,6 @@ libfreeipmi:
     - sdr-record-types
     - sel record-types
     - sensor-cmds
-  * reg-space default  
-  * "rq", "cmd", "comp_code", "rs", ????
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
@@ -56,6 +54,9 @@ libfreeipmi:
   * len -> length
     - fiid?
   * template "tagging" mechanism to make template compares faster
+  * allow configuration of the slave addr into lan_msg_hdr??
+  * assemble_raw, unassemble_raw
+    - then using these, adjust udm-raw
 
 fish:
 -----

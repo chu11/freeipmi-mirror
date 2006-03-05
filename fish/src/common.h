@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.2.2.4 2006-03-02 04:52:27 chu11 Exp $ 
+   $Id: common.h,v 1.2.2.5 2006-03-05 17:44:15 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -57,6 +57,7 @@
 #include <netdb.h>
 
 #include <freeipmi/freeipmi.h>
+#include <freeipmi/udm/udm.h>
 
 #include "argp-common.h"
 #include "ipmi-common.h"

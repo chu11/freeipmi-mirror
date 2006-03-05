@@ -30,9 +30,10 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-locate.h"
-#include "freeipmi/ipmi-kcs-interface.h"
+#include "freeipmi/ipmi-kcs-api.h"
+#include "freeipmi/ipmi-slave-address-spec.h"
 #include "freeipmi/ipmi-smic-interface.h"
-#include "freeipmi/ipmi-ssif-interface.h"
+#include "freeipmi/ipmi-ssif-api.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
@@ -59,24 +60,24 @@ ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type)
       pinfo->ipmi_ver_major = 1;
       pinfo->ipmi_ver_minor = 5;
       pinfo->interface_type = IPMI_INTERFACE_KCS;
-      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-      pinfo->base_addr.bmc_iobase_addr = IPMI_KCS_SMS_IO_BASE_DEFAULT;
+      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      pinfo->base_address.bmc_iobase_address = IPMI_KCS_SMS_IO_BASE_DEFAULT;
       pinfo->reg_space = 1;
       break;
     case IPMI_INTERFACE_SMIC:
       pinfo->ipmi_ver_major = 1;
       pinfo->ipmi_ver_minor = 5;
       pinfo->interface_type = IPMI_INTERFACE_SMIC;
-      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
-      pinfo->base_addr.bmc_iobase_addr = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
+      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SYSTEM_IO;
+      pinfo->base_address.bmc_iobase_address = IPMI_SMIC_SMS_IO_BASE_DEFAULT;
       pinfo->reg_space = 1;
       break;
     case IPMI_INTERFACE_SSIF:
       pinfo->ipmi_ver_major = 1;
       pinfo->ipmi_ver_minor = 5;
       pinfo->interface_type = IPMI_INTERFACE_SSIF;
-      pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-      pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
+      pinfo->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
+      pinfo->base_address.bmc_smbus_slave_address = IPMI_SSIF_SMBUS_SLAVE_ADDRESS;
       pinfo->reg_space = 1;
       break;
     default:
