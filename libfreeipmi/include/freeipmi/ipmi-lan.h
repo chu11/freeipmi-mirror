@@ -30,7 +30,7 @@ extern "C" {
 
 #define IPMI_MAX_AUTHENTICATION_CODE_LENGTH 16
 
-#define IPMI_LAN_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
+#define IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX    0x3F /* 111111b */
 
 extern fiid_template_t tmpl_lan_session_hdr;
 extern fiid_template_t tmpl_lan_msg_hdr_rq;

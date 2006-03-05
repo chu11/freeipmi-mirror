@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.12 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.13 2006-03-05 22:44:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -124,7 +124,7 @@ ipmipower_ping_process_pings(int *timeout)
             err_exit("fill_rmcp_hdr_asf: %s", strerror(errno));
 
           if (fill_cmd_asf_presence_ping((ics[i].ping_sequence_number_counter % 
-                                          (IPMIPOWER_PING_TAG_MAX + 1)), 
+                                          (RMCP_ASF_MESSAGE_TAG_MAX + 1)), 
                                          rmcp_ping) < 0)
             err_exit("fill_cmd_asf_presence_ping: %s", strerror(errno));
             

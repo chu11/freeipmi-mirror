@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.22 2006-03-05 19:40:38 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.23 2006-03-05 22:44:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -294,7 +294,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -333,7 +333,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -390,7 +390,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -482,7 +482,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -544,7 +544,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -605,7 +605,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -687,7 +687,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       
       if (fill_lan_msg_hdr(IPMI_NET_FN_CHASSIS_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
-                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1)), 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));

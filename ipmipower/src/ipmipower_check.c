@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.20 2006-03-05 19:40:38 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.21 2006-03-05 22:44:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -242,7 +242,7 @@ _check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMIPOWER_RSEQ_MAX + 1);
+  myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, (uint8_t *)"rq_seq", &pktrseq);
 

@@ -131,7 +131,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 
   ERR_EINVAL (IPMI_NET_FN_VALID(net_fn)
 	      && IPMI_BMC_LUN_VALID(rs_lun)
-	      && !(rq_seq > IPMI_LAN_SEQUENCE_NUMBER_MAX)
+	      && !(rq_seq > IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX)
 	      && fiid_obj_valid(obj_lan_msg_hdr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rq);

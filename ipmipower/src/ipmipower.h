@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.24 2006-03-05 19:48:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.25 2006-03-05 22:44:43 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -103,16 +103,6 @@
 /* 
  * ipmi specifics for ipmipower
  */
-
-/* RMCP ASF Presence ping message tag 
- * - Use max 0xFE, b/c 0xFF indicates a unidirectional packet
- */
-#define IPMIPOWER_PING_TAG_MAX           0xFE
-
-/* IPMI Requester Sequence Number
- * - Requester Sequence Number is 6 bits, not 8 
- */
-#define IPMIPOWER_RSEQ_MAX               0x3F
 
 /* IPMI allowable sequence number range window
  */
