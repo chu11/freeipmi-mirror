@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.8.2.14 2006-03-02 04:52:27 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.8.2.15 2006-03-05 19:59:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -129,132 +129,193 @@
 /* ipmipower_bool_t
  * - boolean type
  */
-typedef enum { IPMIPOWER_TRUE  = 1,
-               IPMIPOWER_FALSE = 0} ipmipower_bool_t;
+typedef enum 
+  { 
+    IPMIPOWER_TRUE  = 1,
+    IPMIPOWER_FALSE = 0,
+  } ipmipower_bool_t;
 
 /* power_cmd_t 
  * - power control commands 
  */
-typedef enum { POWER_CMD_NONE             = 0x00,
-               POWER_CMD_POWER_OFF        = 0x01,
-               POWER_CMD_POWER_ON         = 0x02,
-               POWER_CMD_POWER_CYCLE      = 0x03,
-               POWER_CMD_POWER_RESET      = 0x04,
-               POWER_CMD_POWER_STATUS     = 0x05,
-               POWER_CMD_PULSE_DIAG_INTR  = 0x06, 
-               POWER_CMD_SOFT_SHUTDOWN_OS = 0x07} power_cmd_t;
-#define POWER_CMD_VALID(__c)             ((__c) > POWER_CMD_NONE && \
-                                          (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
+typedef enum 
+  { 
+    POWER_CMD_NONE             = 0x00,
+    POWER_CMD_POWER_OFF        = 0x01,
+    POWER_CMD_POWER_ON         = 0x02,
+    POWER_CMD_POWER_CYCLE      = 0x03,
+    POWER_CMD_POWER_RESET      = 0x04,
+    POWER_CMD_POWER_STATUS     = 0x05,
+    POWER_CMD_PULSE_DIAG_INTR  = 0x06, 
+    POWER_CMD_SOFT_SHUTDOWN_OS = 0x07,
+  } power_cmd_t;
 
-#define POWER_CMD_REQUIRES_OPERATOR(__c) ((__c) == POWER_CMD_POWER_OFF \
-                                          || (__c) == POWER_CMD_POWER_ON \
-                                          || (__c) == POWER_CMD_POWER_CYCLE \
-                                          || (__c) == POWER_CMD_POWER_RESET \
-                                          || (__c) == POWER_CMD_PULSE_DIAG_INTR \
-                                          || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
+#define POWER_CMD_VALID(__c) \
+  ((__c) > POWER_CMD_NONE && \
+   (__c) <= POWER_CMD_SOFT_SHUTDOWN_OS)
+
+#define POWER_CMD_REQUIRES_OPERATOR_PRIVILEGE(__c) \
+  ((__c) == POWER_CMD_POWER_OFF \
+   || (__c) == POWER_CMD_POWER_ON \
+   || (__c) == POWER_CMD_POWER_CYCLE \
+   || (__c) == POWER_CMD_POWER_RESET \
+   || (__c) == POWER_CMD_PULSE_DIAG_INTR \
+   || (__c) == POWER_CMD_SOFT_SHUTDOWN_OS)
 
 /* packet_type_t
  * - packet types stored internally in an ipmipower_powercmd structure.
  * - Request types are *_REQ, Response types are *_RES
  */
-typedef enum { AUTH_REQ = 0x11, AUTH_RES = 0x21,
-               SESS_REQ = 0x12, SESS_RES = 0x22,
-               ACTV_REQ = 0x13, ACTV_RES = 0x23,
-               PRIV_REQ = 0x14, PRIV_RES = 0x24, 
-               CLOS_REQ = 0x15, CLOS_RES = 0x25,
-               CHAS_REQ = 0x16, CHAS_RES = 0x26,
-               CTRL_REQ = 0x17, CTRL_RES = 0x27 } packet_type_t;
-#define PACKET_TYPE_REQ_MASK           0x10
-#define PACKET_TYPE_RES_MASK           0x20
-#define PACKET_TYPE_PKT_MASK           0x07
-#define PACKET_TYPE_VALID_REQ(__p)       (((__p) & PACKET_TYPE_REQ_MASK) && \
-                                          ((__p) & PACKET_TYPE_PKT_MASK))
-#define PACKET_TYPE_VALID_RES(__p)       (((__p) & PACKET_TYPE_RES_MASK) && \
-                                          ((__p) & PACKET_TYPE_PKT_MASK))
-#define PACKET_TYPE_VALID_PKT(__p)       (PACKET_TYPE_VALID_REQ(__p) || \
-                                          PACKET_TYPE_VALID_RES(__p))
+typedef enum 
+  { 
+    AUTHENTICATION_CAPABILITIES_REQ = 0x101, 
+    AUTHENTICATION_CAPABILITIES_RES = 0x201,
+    GET_SESSION_CHALLENGE_REQ       = 0x102, 
+    GET_SESSION_CHALLENGE_RES       = 0x202,
+    ACTIVATE_SESSION_REQ            = 0x103, 
+    ACTIVATE_SESSION_RES            = 0x203,
+    SET_SESSION_PRIVILEGE_REQ       = 0x104, 
+    SET_SESSION_PRIVILEGE_RES       = 0x204, 
+    CLOSE_SESSION_REQ               = 0x105, 
+    CLOSE_SESSION_RES               = 0x205,
+    CHASSIS_STATUS_REQ              = 0x106, 
+    CHASSIS_STATUS_RES              = 0x206,
+    CHASSIS_CONTROL_REQ             = 0x107, 
+    CHASSIS_CONTROL_RES             = 0x207, 
+  } packet_type_t;
+
+#define PACKET_TYPE_REQ_MASK           0x100
+#define PACKET_TYPE_RES_MASK           0x200
+#define PACKET_TYPE_PKT_MASK           0x077
+
+#define PACKET_TYPE_VALID_REQ(__p) \
+  (((__p) & PACKET_TYPE_REQ_MASK) && \
+   ((__p) & PACKET_TYPE_PKT_MASK))
+
+#define PACKET_TYPE_VALID_RES(__p) \
+  (((__p) & PACKET_TYPE_RES_MASK) && \
+   ((__p) & PACKET_TYPE_PKT_MASK))
+
+#define PACKET_TYPE_VALID_PKT(__p) \
+  (PACKET_TYPE_VALID_REQ(__p) || \
+   PACKET_TYPE_VALID_RES(__p))
 
 /* Protocol States */
-typedef enum { PROTOCOL_STATE_START     = 0x00,
-               PROTOCOL_STATE_AUTH_SENT = 0x01,
-               PROTOCOL_STATE_SESS_SENT = 0x02,
-               PROTOCOL_STATE_ACTV_SENT = 0x03,
-               PROTOCOL_STATE_PRIV_SENT = 0x04,
-               PROTOCOL_STATE_CHAS_SENT = 0x05,
-               PROTOCOL_STATE_CTRL_SENT = 0x06,
-               PROTOCOL_STATE_CLOS_SENT = 0x07,
-               PROTOCOL_STATE_END       = 0x08 } protocol_state_t;
-#define PROTOCOL_STATE_VALID(__s)       ((__s) >= PROTOCOL_STATE_START && \
-                                         (__s) <= PROTOCOL_STATE_END)
+typedef enum 
+  { 
+    PROTOCOL_STATE_START                            = 0x00,
+    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT = 0x01,
+    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT       = 0x02,
+    PROTOCOL_STATE_ACTIVATE_SESSION_SENT            = 0x03,
+    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT       = 0x04,
+    PROTOCOL_STATE_CHASSIS_STATUS_SENT              = 0x05,
+    PROTOCOL_STATE_CHASSIS_CONTROL_SENT             = 0x06,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT               = 0x07,
+    PROTOCOL_STATE_END                              = 0x08,
+  } protocol_state_t;
+
+#define PROTOCOL_STATE_VALID(__s) \
+  ((__s) >= PROTOCOL_STATE_START && \
+   (__s) <= PROTOCOL_STATE_END)
 
 /* Discovery States */
-typedef enum { STATE_DISCOVERED     = 0x01,
-               STATE_UNDISCOVERED   = 0x02,
-               STATE_BADCONNECTION  = 0x03} discover_state_t;
-#define DISCOVER_STATE_VALID(__s)       ((__s) >= STATE_DISCOVERED && \
-                                         (__s) <= STATE_BADCONNECTION)
+typedef enum 
+  { 
+    STATE_DISCOVERED     = 0x01,
+    STATE_UNDISCOVERED   = 0x02,
+    STATE_BADCONNECTION  = 0x03,
+  } discover_state_t;
+
+#define DISCOVER_STATE_VALID(__s) \
+  ((__s) >= STATE_DISCOVERED && \
+   (__s) <= STATE_BADCONNECTION)
 
 /* Link States */
-typedef enum { LINK_GOOD = 0x01,
-               LINK_BAD  = 0x02} link_state_t;
-#define LINK_STATE_VALID(__s)           ((__s) >= LINK_GOOD && \
-                                         (__s) <= LINK_BAD)
+typedef enum 
+  {
+    LINK_GOOD = 0x01,
+    LINK_BAD  = 0x02,
+  } link_state_t;
+
+#define LINK_STATE_VALID(__s) \
+  ((__s) >= LINK_GOOD && \
+   (__s) <= LINK_BAD)
 
 /* Authentication Types */
-typedef enum { AUTH_TYPE_INVALID               = 0x00,
-	       AUTH_TYPE_AUTO                  = 0x01,
-               AUTH_TYPE_NONE                  = 0x02,
-               AUTH_TYPE_STRAIGHT_PASSWORD_KEY = 0x03,
-               AUTH_TYPE_MD2                   = 0x04,
-               AUTH_TYPE_MD5                   = 0x05 } auth_type_t;
-#define AUTH_TYPE_VALID(__a)            ((__a) >= AUTH_TYPE_NONE && \
-                                         (__a) <= AUTH_TYPE_MD5)
-#define AUTH_TYPE_VALID_OR_AUTO(__a)    ((__a) >= AUTH_TYPE_AUTO && \
-				         (__a) <= AUTH_TYPE_MD5)
+typedef enum 
+  { 
+    AUTHENTICATION_TYPE_INVALID               = 0x00,
+    AUTHENTICATION_TYPE_AUTO                  = 0x01,
+    AUTHENTICATION_TYPE_NONE                  = 0x02,
+    AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY = 0x03,
+    AUTHENTICATION_TYPE_MD2                   = 0x04,
+    AUTHENTICATION_TYPE_MD5                   = 0x05,
+  } authentication_type_t;
+
+#define AUTHENTICATION_TYPE_VALID(__a) \
+  ((__a) >= AUTHENTICATION_TYPE_NONE && \
+   (__a) <= AUTHENTICATION_TYPE_MD5)
+
+#define AUTHENTICATION_TYPE_VALID_OR_AUTO(__a) \
+  ((__a) >= AUTHENTICATION_TYPE_AUTO && \
+   (__a) <= AUTHENTICATION_TYPE_MD5)
 
 /* Privilege Types */
-typedef enum { PRIVILEGE_TYPE_INVALID   = 0x00,
-	       PRIVILEGE_TYPE_AUTO      = 0x01,
-               PRIVILEGE_TYPE_USER      = 0x02,
-               PRIVILEGE_TYPE_OPERATOR  = 0x03,
-               PRIVILEGE_TYPE_ADMIN     = 0x04 } privilege_type_t;
-#define PRIVILEGE_TYPE_VALID(__p)            ((__p) >= PRIVILEGE_TYPE_USER && \
-                                              (__p) <= PRIVILEGE_TYPE_ADMIN)
-#define PRIVILEGE_TYPE_VALID_OR_AUTO(__p)    ((__p) >= PRIVILEGE_TYPE_AUTO && \
-				              (__p) <= PRIVILEGE_TYPE_ADMIN)
+typedef enum 
+  {
+    PRIVILEGE_TYPE_INVALID   = 0x00,
+    PRIVILEGE_TYPE_AUTO      = 0x01,
+    PRIVILEGE_TYPE_USER      = 0x02,
+    PRIVILEGE_TYPE_OPERATOR  = 0x03,
+    PRIVILEGE_TYPE_ADMIN     = 0x04,
+  } privilege_type_t;
+
+#define PRIVILEGE_TYPE_VALID(__p) \
+  ((__p) >= PRIVILEGE_TYPE_USER && \
+   (__p) <= PRIVILEGE_TYPE_ADMIN)
+
+#define PRIVILEGE_TYPE_VALID_OR_AUTO(__p) \
+  ((__p) >= PRIVILEGE_TYPE_AUTO && \
+   (__p) <= PRIVILEGE_TYPE_ADMIN)
 
 /* Output Types */
 typedef enum { OUTPUT_TYPE_INVALID   = 0,
                OUTPUT_TYPE_NONE      = 1,
                OUTPUT_TYPE_NEWLINE   = 2,
                OUTPUT_TYPE_HOSTRANGE = 3} output_type_t;
-#define OUTPUT_TYPE_VALID(__o)          ((__o) >= OUTPUT_TYPE_NONE && \
-                                         (__o) <= OUTPUT_TYPE_HOSTRANGE)
+
+#define OUTPUT_TYPE_VALID(__o) \
+  ((__o) >= OUTPUT_TYPE_NONE && \
+   (__o) <= OUTPUT_TYPE_HOSTRANGE)
 
 /* Msg Types */
-typedef enum { MSG_TYPE_SUCCESS                 =  0,
-               MSG_TYPE_ON                      =  1,
-               MSG_TYPE_OFF                     =  2,
-               MSG_TYPE_OK                      =  3,
-               MSG_TYPE_PERMISSION              =  4,
-               MSG_TYPE_USERNAME                =  5,
-               MSG_TYPE_PASSWORD                =  6,
-               MSG_TYPE_PRIVILEGE               =  7,
-               MSG_TYPE_OPERATION               =  8,
-               MSG_TYPE_AUTHTYPE                =  9,
-	       MSG_TYPE_AUTO                    = 10,
-               MSG_TYPE_GIVEN_PRIVILEGE         = 11,
-               MSG_TYPE_TIMEDOUT                = 12,
-               MSG_TYPE_NOTDISCOVERED           = 13,
-               MSG_TYPE_BADCONNECTION           = 14,
-               MSG_TYPE_UNKNOWNNODE             = 15,
-               MSG_TYPE_RESOURCES               = 16,
-               MSG_TYPE_BMCBUSY                 = 17,
-               MSG_TYPE_BMCERROR                = 18 } msg_type_t;
-#define MSG_TYPE_VALID(__m)             ((__m) >= MSG_TYPE_SUCCESS && \
-                                         (__m) <= MSG_TYPE_BMCERROR)
-#define MSG_TYPE_NUM                  (MSG_TYPE_BMCERROR+1)
+typedef enum 
+  { 
+    MSG_TYPE_SUCCESS                 =  0,
+    MSG_TYPE_ON                      =  1,
+    MSG_TYPE_OFF                     =  2,
+    MSG_TYPE_OK                      =  3,
+    MSG_TYPE_PERMISSION              =  4,
+    MSG_TYPE_USERNAME                =  5,
+    MSG_TYPE_PASSWORD                =  6,
+    MSG_TYPE_PRIVILEGE               =  7,
+    MSG_TYPE_OPERATION               =  8,
+    MSG_TYPE_AUTHENTICATION_TYPE     =  9,
+    MSG_TYPE_AUTO                    = 10,
+    MSG_TYPE_GIVEN_PRIVILEGE         = 11,
+    MSG_TYPE_TIMEDOUT                = 12,
+    MSG_TYPE_NOTDISCOVERED           = 13,
+    MSG_TYPE_BADCONNECTION           = 14,
+    MSG_TYPE_UNKNOWNNODE             = 15,
+    MSG_TYPE_RESOURCES               = 16,
+    MSG_TYPE_BMCBUSY                 = 17,
+    MSG_TYPE_BMCERROR                = 18,
+  } msg_type_t;
+#define MSG_TYPE_VALID(__m) \
+  ((__m) >= MSG_TYPE_SUCCESS && \
+   (__m) <= MSG_TYPE_BMCERROR)
 
+#define MSG_TYPE_NUM_ENTRIES (MSG_TYPE_BMCERROR+1)
 
 /* ipmipower_powercmd
  * - Stores all information needed to execute a power command
@@ -263,42 +324,45 @@ struct ipmipower_powercmd {
     power_cmd_t cmd;
     protocol_state_t protocol_state; 
 
+    /* Protocol State Machine Variables */
     struct timeval time_begin;
+    ipmipower_bool_t error_occurred;
+    unsigned int retry_count;
+    uint8_t close_timeout;
+
+    /* Protocol Maintenance Variables */
     unsigned int session_inbound_count;
     uint32_t initial_outbound_sequence_number;
     uint32_t highest_received_sequence_number;
     unsigned int previously_received_list;
-    unsigned int retry_count;
-    ipmipower_bool_t error_occurred;
     ipmipower_bool_t permsgauth_enabled;
-    uint8_t authtype;
+    uint8_t authentication_type;
     uint8_t privilege;
-    uint8_t close_timeout;
 
     struct ipmipower_connection *ic;
   
-    fiid_obj_t rmcp_req;
-    fiid_obj_t rmcp_res;
-    fiid_obj_t session_req;
-    fiid_obj_t session_res;
-    fiid_obj_t msg_req;
-    fiid_obj_t msg_res;
-    fiid_obj_t trlr_res;
+    fiid_obj_t obj_rmcp_hdr_req;
+    fiid_obj_t obj_rmcp_hdr_res;
+    fiid_obj_t obj_lan_session_hdr_req;
+    fiid_obj_t obj_lan_session_hdr_res;
+    fiid_obj_t obj_lan_msg_hdr_req;
+    fiid_obj_t obj_lan_msg_hdr_res;
+    fiid_obj_t obj_lan_msg_trlr_res;
 
-    fiid_obj_t auth_req;
-    fiid_obj_t auth_res;
-    fiid_obj_t sess_req;
-    fiid_obj_t sess_res;
-    fiid_obj_t actv_req;
-    fiid_obj_t actv_res;
-    fiid_obj_t priv_req;
-    fiid_obj_t priv_res;
-    fiid_obj_t clos_req;
-    fiid_obj_t clos_res;
-    fiid_obj_t chas_req;
-    fiid_obj_t chas_res;
-    fiid_obj_t ctrl_req;
-    fiid_obj_t ctrl_res;
+    fiid_obj_t obj_authentication_capabilities_req;
+    fiid_obj_t obj_authentication_capabilities_res;
+    fiid_obj_t obj_get_session_challenge_req;
+    fiid_obj_t obj_get_session_challenge_res;
+    fiid_obj_t obj_activate_session_req;
+    fiid_obj_t obj_activate_session_res;
+    fiid_obj_t obj_set_session_privilege_req;
+    fiid_obj_t obj_set_session_privilege_res;
+    fiid_obj_t obj_close_session_req;
+    fiid_obj_t obj_close_session_res;
+    fiid_obj_t obj_chassis_status_req;
+    fiid_obj_t obj_chassis_status_res;
+    fiid_obj_t obj_chassis_control_req;
+    fiid_obj_t obj_chassis_control_res;
 
     List sockets_to_close;
 };
@@ -338,57 +402,57 @@ struct ipmipower_connection
  */
 struct ipmipower_config 
 {
-  hostlist_t        hosts;
-  int               hosts_count;
-  char              username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char              password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
-  power_cmd_t       powercmd;
-  char              configfile[MAXPATHLEN+1];
+  hostlist_t            hosts;
+  int                   hosts_count;
+  char                  username[IPMI_MAX_USER_NAME_LENGTH+1];
+  char                  password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
+  power_cmd_t           powercmd;
+  char                  configfile[MAXPATHLEN+1];
 
-  auth_type_t       authtype;
-  privilege_type_t  privilege;
-  ipmipower_bool_t  on_if_off;
-  output_type_t     outputtype;
-  ipmipower_bool_t  force_permsg_auth;
-  ipmipower_bool_t  accept_session_id_zero;
-  ipmipower_bool_t  check_unexpected_authcode;
+  authentication_type_t authentication_type;
+  privilege_type_t      privilege;
+  ipmipower_bool_t      on_if_off;
+  output_type_t         outputtype;
+  ipmipower_bool_t      force_permsg_authentication;
+  ipmipower_bool_t      accept_session_id_zero;
+  ipmipower_bool_t      check_unexpected_authcode;
   
 #ifndef NDEBUG
-  ipmipower_bool_t  debug;
-  ipmipower_bool_t  ipmidump;
-  ipmipower_bool_t  rmcpdump;
-  ipmipower_bool_t  log;
-  char              logfile[MAXPATHLEN+1];
-  int               logfile_fd;
+  ipmipower_bool_t      debug;
+  ipmipower_bool_t      ipmidump;
+  ipmipower_bool_t      rmcpdump;
+  ipmipower_bool_t      log;
+  char                  logfile[MAXPATHLEN+1];
+  int                   logfile_fd;
 #endif
-  int               timeout_len;
-  int               retry_timeout_len;
-  int               retry_backoff_count; 
-  int               ping_interval_len;
-  int               ping_timeout_len;
-  int               ping_packet_count;
-  int               ping_percent;
-  int               ping_consec_count;
+  int                   timeout_len;
+  int                   retry_timeout_len;
+  int                   retry_backoff_count; 
+  int                   ping_interval_len;
+  int                   ping_timeout_len;
+  int                   ping_packet_count;
+  int                   ping_percent;
+  int                   ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
-  ipmipower_bool_t  hosts_set;
-  ipmipower_bool_t  username_set;
-  ipmipower_bool_t  password_set;
-  ipmipower_bool_t  authtype_set;
-  ipmipower_bool_t  privilege_set;
-  ipmipower_bool_t  on_if_off_set;
-  ipmipower_bool_t  force_permsg_auth_set;
-  ipmipower_bool_t  accept_session_id_zero_set;
-  ipmipower_bool_t  check_unexpected_authcode_set;
-  ipmipower_bool_t  outputtype_set;
-  ipmipower_bool_t  timeout_len_set;
-  ipmipower_bool_t  retry_timeout_len_set;
-  ipmipower_bool_t  retry_backoff_count_set;
-  ipmipower_bool_t  ping_interval_len_set;
-  ipmipower_bool_t  ping_timeout_len_set; 
-  ipmipower_bool_t  ping_consec_count_set;
-  ipmipower_bool_t  ping_packet_count_set;
-  ipmipower_bool_t  ping_percent_set;
+  ipmipower_bool_t      hosts_set;
+  ipmipower_bool_t      username_set;
+  ipmipower_bool_t      password_set;
+  ipmipower_bool_t      authentication_type_set;
+  ipmipower_bool_t      privilege_set;
+  ipmipower_bool_t      on_if_off_set;
+  ipmipower_bool_t      force_permsg_authentication_set;
+  ipmipower_bool_t      accept_session_id_zero_set;
+  ipmipower_bool_t      check_unexpected_authcode_set;
+  ipmipower_bool_t      outputtype_set;
+  ipmipower_bool_t      timeout_len_set;
+  ipmipower_bool_t      retry_timeout_len_set;
+  ipmipower_bool_t      retry_backoff_count_set;
+  ipmipower_bool_t      ping_interval_len_set;
+  ipmipower_bool_t      ping_timeout_len_set; 
+  ipmipower_bool_t      ping_consec_count_set;
+  ipmipower_bool_t      ping_packet_count_set;
+  ipmipower_bool_t      ping_percent_set;
 };
 
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;

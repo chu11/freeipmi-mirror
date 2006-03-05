@@ -1,6 +1,6 @@
 sbin_PROGRAMS=ipmipower
 ipmipower_SOURCES=argv.c cbuf.c conffile.c error.c fd.c hostlist.c hprintf.c \
-	ipmipower_auth.c ipmipower_check.c ipmipower_config.c \
+	ipmipower_authentication.c ipmipower_check.c ipmipower_config.c \
 	ipmipower_connection.c ipmipower.c ipmipower_output.c \
 	ipmipower_packet.c ipmipower_ping.c ipmipower_powercmd.c \
 	ipmipower_privilege.c ipmipower_prompt.c ipmipower_util.c \
@@ -9,7 +9,7 @@ ipmipower_SOURCES=argv.c cbuf.c conffile.c error.c fd.c hostlist.c hprintf.c \
 ipmipower_LDADD = ../../libfreeipmi/src/libfreeipmi.la
  
 noinst_HEADERS=argv.h cbuf.h conffile.h error.h fd.h hostlist.h hprintf.h \
-	ipmipower_auth.h ipmipower_check.h ipmipower_config.h \
+	ipmipower_authentication.h ipmipower_check.h ipmipower_config.h \
 	ipmipower_connection.h ipmipower.h ipmipower_output.h \
 	ipmipower_packet.h ipmipower_ping.h ipmipower_powercmd.h \
 	ipmipower_privilege.h ipmipower_prompt.h ipmipower_util.h \

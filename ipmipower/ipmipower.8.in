@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.10.2.7 2006-02-18 00:33:34 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.10.2.8 2006-03-05 19:59:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -128,7 +128,7 @@ The following advanced options are used to change the default behavior
 of 
 .B ipmipower.
 .TP
-.I "-a, --authtype str"
+.I "-a, --authentication-type str"
 Sets the authentication type to use with 
 .B ipmipower.  
 The currently available authentication types are "auto", "none",
@@ -167,7 +167,7 @@ the number of nodes being power controlled is quite large.  However,
 hostrange output will only output after all machines have completed
 their power control operation.
 .TP
-.I "-P, --force-permsg-auth"
+.I "-P, --force-permsg-authentication"
 Forces 
 .B ipmipower
 to use IPMI per message authentication regardless of what is
@@ -364,7 +364,7 @@ output network help menu
 quit
 .B ipmipower.
 .TP
-.I "authtype str"
+.I "authentication_type str"
 specify a new authentication type, auto, none, straight_password_key, md2, or md5.
 .TP
 .I "privilege str"
@@ -374,8 +374,8 @@ toggle on-if-off functionality.
 .TP
 .I "outputtype str"
 specify a new output type, none, newline, or hostrange.
-.I "force-permsg-auth [on|off]"
-toggle force-permsg-auth functionality.
+.I "force-permsg-authentication [on|off]"
+toggle force-permsg-authentication functionality.
 .I "accept-session-id-zero [on|off]"
 toggle accept-session-id-zero functionality.
 .I "check-unexpected-authcode [on|off]"
@@ -551,7 +551,7 @@ later revisions of
 
 IBM eServer 325: The remote BMC will advertise that Per Message
 Authentication is disabled, but actually require it for the protocol.
-In order to work around this issue, the -P (--force-permsg-auth)
+In order to work around this issue, the -P (--force-permsg-authentication)
 option must be set.  The option will force Per Message Authentication
 to be used no matter what is advertised by the remote BMC.
 

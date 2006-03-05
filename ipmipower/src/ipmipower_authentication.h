@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.h,v 1.1 2006-03-05 19:18:38 chu11 Exp $
+ *  $Id: ipmipower_authentication.h,v 1.1.2.1 2006-03-05 19:59:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).

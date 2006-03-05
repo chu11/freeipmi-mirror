@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.4.2.5 2006-02-18 00:33:34 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.4.2.6 2006-03-05 19:59:57 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -86,7 +86,7 @@ Specify the default username to use.
 .I password str
 Specify the default password to use.
 .TP
-.I authtype str
+.I authentication-type str
 Specify the default authentication type to use.  
 .B Ipmipower 
 currently supports the following authentication types:
@@ -107,7 +107,7 @@ Specify the default outputtype type to use.
 currently supports the following output types: "none", "newline", and
 "hostrange".
 .TP
-.I force_permsg_auth enable|disable
+.I force_permsg_authentication enable|disable
 Specify if the permsg-auth flag is forced by default.
 .TP
 .I accept_session_id_zero enable|disable

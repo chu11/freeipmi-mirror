@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.6.2.3 2006-02-17 23:59:49 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.6.2.4 2006-03-05 19:59:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,7 +41,7 @@
 
 extern cbuf_t ttyout;
 extern struct ipmipower_config *conf;
-extern hostlist_t output_hostrange[MSG_TYPE_NUM];
+extern hostlist_t output_hostrange[MSG_TYPE_NUM_ENTRIES];
 
 static char *ipmipower_outputs[] = 
   {
@@ -54,8 +54,8 @@ static char *ipmipower_outputs[] =
     "invalid password",
     "cannot obtain proper privilege level",
     "invalid operation",
-    "invalid authtype",
-    "usable authtype/privilege combination not found",
+    "invalid authentication type",
+    "usable authentication type/privilege combination not found",
     "cannot authenticate at given privilege",
     "timed out",
     "not discovered",
@@ -91,7 +91,7 @@ ipmipower_output_finish(void)
       int i, rv;
       char buffer[IPMIPOWER_HOSTLIST_BUFLEN];
       
-      for (i = 0; i < MSG_TYPE_NUM; i++) 
+      for (i = 0; i < MSG_TYPE_NUM_ENTRIES; i++) 
         {
           if (hostlist_count(output_hostrange[i]) > 0) {
             memset(buffer, '\0', IPMIPOWER_HOSTLIST_BUFLEN); 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.11.2.16 2006-03-02 19:33:35 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.11.2.17 2006-03-05 19:59:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -47,7 +47,7 @@
 #endif
 
 #include "ipmipower.h"
-#include "ipmipower_auth.h"
+#include "ipmipower_authentication.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -70,28 +70,28 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
 {
   assert(ip != NULL);
 
-  Fiid_obj_destroy(ip->rmcp_req);
-  Fiid_obj_destroy(ip->rmcp_res);
-  Fiid_obj_destroy(ip->session_req);
-  Fiid_obj_destroy(ip->session_res);
-  Fiid_obj_destroy(ip->msg_req);
-  Fiid_obj_destroy(ip->msg_res);
-  Fiid_obj_destroy(ip->trlr_res);
+  Fiid_obj_destroy(ip->obj_rmcp_hdr_req);
+  Fiid_obj_destroy(ip->obj_rmcp_hdr_res);
+  Fiid_obj_destroy(ip->obj_lan_session_hdr_req);
+  Fiid_obj_destroy(ip->obj_lan_session_hdr_res);
+  Fiid_obj_destroy(ip->obj_lan_msg_hdr_req);
+  Fiid_obj_destroy(ip->obj_lan_msg_hdr_res);
+  Fiid_obj_destroy(ip->obj_lan_msg_trlr_res);
 
-  Fiid_obj_destroy(ip->auth_req);
-  Fiid_obj_destroy(ip->auth_res);
-  Fiid_obj_destroy(ip->sess_req);
-  Fiid_obj_destroy(ip->sess_res);
-  Fiid_obj_destroy(ip->actv_req);
-  Fiid_obj_destroy(ip->actv_res);
-  Fiid_obj_destroy(ip->priv_req);
-  Fiid_obj_destroy(ip->priv_res);
-  Fiid_obj_destroy(ip->clos_req);
-  Fiid_obj_destroy(ip->clos_res);
-  Fiid_obj_destroy(ip->chas_req);
-  Fiid_obj_destroy(ip->chas_res);
-  Fiid_obj_destroy(ip->ctrl_req);
-  Fiid_obj_destroy(ip->ctrl_res);
+  Fiid_obj_destroy(ip->obj_authentication_capabilities_req);
+  Fiid_obj_destroy(ip->obj_authentication_capabilities_res);
+  Fiid_obj_destroy(ip->obj_get_session_challenge_req);
+  Fiid_obj_destroy(ip->obj_get_session_challenge_res);
+  Fiid_obj_destroy(ip->obj_activate_session_req);
+  Fiid_obj_destroy(ip->obj_activate_session_res);
+  Fiid_obj_destroy(ip->obj_set_session_privilege_req);
+  Fiid_obj_destroy(ip->obj_set_session_privilege_res);
+  Fiid_obj_destroy(ip->obj_close_session_req);
+  Fiid_obj_destroy(ip->obj_close_session_res);
+  Fiid_obj_destroy(ip->obj_chassis_status_req);
+  Fiid_obj_destroy(ip->obj_chassis_status_res);
+  Fiid_obj_destroy(ip->obj_chassis_control_req);
+  Fiid_obj_destroy(ip->obj_chassis_control_res);
 
   /* Close all sockets that were saved during the Get Session
    * Challenge phase of the IPMI protocol.
@@ -140,42 +140,43 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
   memset(ip, '\0', sizeof(struct ipmipower_powercmd));
     
-  ip->rmcp_req = Fiid_obj_create(tmpl_rmcp_hdr); 
-  ip->rmcp_res = Fiid_obj_create(tmpl_rmcp_hdr); 
-  ip->session_req = Fiid_obj_create(tmpl_lan_session_hdr); 
-  ip->session_res = Fiid_obj_create(tmpl_lan_session_hdr); 
-  ip->msg_req = Fiid_obj_create(tmpl_lan_msg_hdr_rq); 
-  ip->msg_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
-  ip->trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
+  ip->obj_rmcp_hdr_req = Fiid_obj_create(tmpl_rmcp_hdr); 
+  ip->obj_rmcp_hdr_res = Fiid_obj_create(tmpl_rmcp_hdr); 
+  ip->obj_lan_session_hdr_req = Fiid_obj_create(tmpl_lan_session_hdr); 
+  ip->obj_lan_session_hdr_res = Fiid_obj_create(tmpl_lan_session_hdr); 
+  ip->obj_lan_msg_hdr_req = Fiid_obj_create(tmpl_lan_msg_hdr_rq); 
+  ip->obj_lan_msg_hdr_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
+  ip->obj_lan_msg_trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
 
-  ip->auth_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
-  ip->auth_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs); 
-  ip->sess_req = Fiid_obj_create(tmpl_cmd_get_session_challenge_rq); 
-  ip->sess_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
-  ip->actv_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
-  ip->actv_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
-  ip->priv_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
-  ip->priv_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
-  ip->clos_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
-  ip->clos_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
-  ip->chas_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
-  ip->chas_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
-  ip->ctrl_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
-  ip->ctrl_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
+  ip->obj_authentication_capabilities_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
+  ip->obj_authentication_capabilities_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs); 
+  ip->obj_get_session_challenge_req = Fiid_obj_create(tmpl_cmd_get_session_challenge_rq); 
+  ip->obj_get_session_challenge_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
+  ip->obj_activate_session_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
+  ip->obj_activate_session_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
+  ip->obj_set_session_privilege_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
+  ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
+  ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
+  ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
+  ip->obj_chassis_status_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
+  ip->obj_chassis_status_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
+  ip->obj_chassis_control_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
+  ip->obj_chassis_control_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
 
   ip->cmd = cmd;
   ip->protocol_state = PROTOCOL_STATE_START;
+  ip->error_occurred = IPMIPOWER_FALSE;
+  ip->retry_count = 0;
+  ip->close_timeout = 0;
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
   ip->initial_outbound_sequence_number = get_rand();
   ip->highest_received_sequence_number = ip->initial_outbound_sequence_number;
   ip->previously_received_list = 0xFF;
-  ip->retry_count = 0;
-  ip->error_occurred = IPMIPOWER_FALSE;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
-  /* ip->authtype is set after Get Authentication Capabilities
+  /* ip->authentication_type is set after Get Authentication Capabilities
    * Response is received 
    */
 
@@ -192,7 +193,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   else
     ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
 
-  ip->close_timeout = 0;
   ip->ic = ic;
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
@@ -233,13 +233,13 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
                      
-  if (pkt == AUTH_REQ)
-    ip->protocol_state = PROTOCOL_STATE_AUTH_SENT;
-  else if (pkt == SESS_REQ)
-    ip->protocol_state = PROTOCOL_STATE_SESS_SENT;
-  else if (pkt == ACTV_REQ) 
+  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+    ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
+  else if (pkt == GET_SESSION_CHALLENGE_REQ)
+    ip->protocol_state = PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
+  else if (pkt == ACTIVATE_SESSION_REQ) 
     {
-      ip->protocol_state = PROTOCOL_STATE_ACTV_SENT;
+      ip->protocol_state = PROTOCOL_STATE_ACTIVATE_SESSION_SENT;
 
       /* IPMI Workaround (achu)
        *
@@ -256,16 +256,19 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
 	  }
       }
     }
-  else if (pkt == PRIV_REQ)
-    ip->protocol_state = PROTOCOL_STATE_PRIV_SENT;
-  else if (pkt == CLOS_REQ)
-    ip->protocol_state = PROTOCOL_STATE_CLOS_SENT;
-  else if (pkt == CHAS_REQ)
-    ip->protocol_state = PROTOCOL_STATE_CHAS_SENT;
-  else if (pkt == CTRL_REQ)
-    ip->protocol_state = PROTOCOL_STATE_CTRL_SENT;
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ)
+    ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT;
+  else if (pkt == CLOSE_SESSION_REQ)
+    ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
+  else if (pkt == CHASSIS_STATUS_REQ)
+    ip->protocol_state = PROTOCOL_STATE_CHASSIS_STATUS_SENT;
+  else if (pkt == CHASSIS_CONTROL_REQ)
+    ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
 
-  if (pkt == PRIV_REQ || pkt == CLOS_REQ || pkt == CHAS_REQ || pkt == CTRL_REQ) 
+  if (pkt == SET_SESSION_PRIVILEGE_REQ 
+      || pkt == CLOSE_SESSION_REQ 
+      || pkt == CHASSIS_STATUS_REQ 
+      || pkt == CHASSIS_CONTROL_REQ) 
     ip->session_inbound_count++;
 
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
@@ -339,10 +342,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       return 0;
     }
   
-  if (pkt == AUTH_RES || pkt == SESS_RES)
+  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+      || pkt == GET_SESSION_CHALLENGE_RES)
     at = IPMI_AUTHENTICATION_TYPE_NONE;
-  else if (pkt == ACTV_RES)
-    at = ip->authtype;
+  else if (pkt == ACTIVATE_SESSION_RES)
+    at = ip->authentication_type;
   else
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
@@ -351,7 +355,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           check_authcode_retry_flag++;
         }
       else
-        at = ip->authtype;
+        at = ip->authentication_type;
     }
 
   if (at != IPMI_AUTHENTICATION_TYPE_NONE)
@@ -383,12 +387,14 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * here is our second session-authcode check attempt under these
    * circumstances.
    */
-  if (conf->check_unexpected_authcode == IPMIPOWER_TRUE && !ret && check_authcode_retry_flag)
+  if (conf->check_unexpected_authcode == IPMIPOWER_TRUE 
+      && !ret 
+      && check_authcode_retry_flag)
     {
       dbg("_recv_packet(%s:%d): retry authcode check", 
 	  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-      at = ip->authtype;
+      at = ip->authentication_type;
 
       if (at != IPMI_AUTHENTICATION_TYPE_NONE)
         {
@@ -448,7 +454,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
    * accept the packet under most circumstances.  We'll just close the
    * session anyways.
    */
-  if (pkt == CLOS_RES && sid_flag && netfn_flag && cmd_flag)
+  if (pkt == CLOSE_SESSION_RES && sid_flag && netfn_flag && cmd_flag)
     {
       ip->retry_count = 0;  /* important to reset */
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
@@ -473,7 +479,7 @@ _has_timed_out(ipmipower_powercmd_t ip)
   if (millisec_diff(&cur_time, &(ip->time_begin)) >= conf->timeout_len) 
     {
       /* Don't bother outputting timeout if we have finished the power control operation */
-      if (ip->protocol_state != PROTOCOL_STATE_CLOS_SENT)
+      if (ip->protocol_state != PROTOCOL_STATE_CLOSE_SESSION_SENT)
         ipmipower_output(MSG_TYPE_TIMEDOUT, ip->ic->hostname);
       return 1;
     }
@@ -516,9 +522,9 @@ _retry_packets(ipmipower_powercmd_t ip)
   dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
       ip->ic->hostname, ip->protocol_state, ip->retry_count);
 
-  if (ip->protocol_state == PROTOCOL_STATE_AUTH_SENT)
-    _send_packet(ip, AUTH_REQ, 1);
-  else if (ip->protocol_state == PROTOCOL_STATE_SESS_SENT) 
+  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
+    _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
     {
       /* IPMI Workaround (achu)
        *
@@ -566,17 +572,17 @@ _retry_packets(ipmipower_powercmd_t ip)
 
       ip->ic->ipmi_fd = new_fd;
 
-      _send_packet(ip, SESS_REQ, 1);
+      _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 1);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_ACTV_SENT)
-    _send_packet(ip, ACTV_REQ, 1);
-  else if (ip->protocol_state == PROTOCOL_STATE_PRIV_SENT)
-    _send_packet(ip, PRIV_REQ, 1);
-  else if (ip->protocol_state == PROTOCOL_STATE_CHAS_SENT)
-    _send_packet(ip, CHAS_REQ, 1);
-  else if (ip->protocol_state == PROTOCOL_STATE_CTRL_SENT)
-    _send_packet(ip, CTRL_REQ, 1);
-  else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT)
+  else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
+    _send_packet(ip, ACTIVATE_SESSION_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT)
+    _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT)
+    _send_packet(ip, CHASSIS_STATUS_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
+    _send_packet(ip, CHASSIS_CONTROL_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     /* 
      * It's pointless to retransmit a close-session.  
      *
@@ -589,7 +595,7 @@ _retry_packets(ipmipower_powercmd_t ip)
      * BMC, and they will either respond with an error or ignore the
      * packet.
      *
-     * _send_packet(ip, CLOS_REQ, 1); 
+     * _send_packet(ip, CLOSE_SESSION_REQ, 1); 
      */
     ip->close_timeout++;
 
@@ -624,16 +630,17 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
 
   if (ip->protocol_state == PROTOCOL_STATE_START)
-    _send_packet(ip, AUTH_REQ, 0);
-  else if (ip->protocol_state == PROTOCOL_STATE_AUTH_SENT) 
+    _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+  else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
     {
-      uint64_t auth_type_none, auth_type_md2, auth_type_md5, 
-        auth_type_straight_password_key, auth_status_anonymous_login, 
-        auth_status_null_username, auth_status_non_null_username, 
-        auth_status_per_message_authentication;
-      int authtype_try_higher_priv = 0;
+      uint64_t authentication_type_none, authentication_type_md2, 
+	authentication_type_md5, authentication_type_straight_password_key, 
+	authentication_status_anonymous_login, authentication_status_null_username, 
+	authentication_status_non_null_username, 
+	authentication_status_per_message_authentication;
+      int authentication_type_try_higher_priv = 0;
 
-      if ((rv = _recv_packet(ip, AUTH_RES)) != 1) 
+      if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_RES)) != 1) 
         {
           if (rv < 0) 
             return -1;
@@ -648,42 +655,42 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        * 2) How to authenticate with the remote host.
        */
 
-      Fiid_obj_get(ip->auth_res, 
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_type.none", 
-		   &auth_type_none);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_type_none);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_type.md2", 
-		   &auth_type_md2);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_type_md2);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_type.md5", 
-		   &auth_type_md5);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_type_md5);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_type.straight_password_key", 
-		   &auth_type_straight_password_key);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_type_straight_password_key);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_status.anonymous_login", 
-		   &auth_status_anonymous_login);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_status_anonymous_login);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_status.null_username",
-		   &auth_status_null_username);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_status_null_username);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_status.non_null_username", 
-		   &auth_status_non_null_username);
-      Fiid_obj_get(ip->auth_res, 
+		   &authentication_status_non_null_username);
+      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
                    (uint8_t *)"authentication_status.per_message_authentication",
-		   &auth_status_per_message_authentication);
+		   &authentication_status_per_message_authentication);
 
       /* Does the remote BMC's authentication configuration support
        * our username/password combination 
        */
       if ((!strlen(conf->username) && !strlen(conf->password)
-           && !auth_status_anonymous_login
-           && !auth_type_none)
+           && !authentication_status_anonymous_login
+           && !authentication_type_none)
           || (!strlen(conf->username) 
-              && !auth_status_anonymous_login
-              && !auth_status_null_username)
+              && !authentication_status_anonymous_login
+              && !authentication_status_null_username)
 	  || (strlen(conf->username)
-	      && !auth_status_non_null_username))
+	      && !authentication_status_non_null_username))
 	{
 #ifndef NDEBUG
 	  ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
@@ -694,21 +701,21 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	  return -1;
 	}
 
-      if (conf->authtype == AUTH_TYPE_AUTO)
+      if (conf->authentication_type == AUTHENTICATION_TYPE_AUTO)
 	{
 	  /* Choose the best authentication type available.
 	   * none and null password > md5 > md2 > straight_password_key > none
 	   */
-	  if (!strlen(conf->password) && auth_type_none)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
-	  else if (auth_type_md5)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD5);
-          else if (auth_type_md2)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_MD2);
-          else if (auth_type_straight_password_key)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_STRAIGHT_PASSWORD_KEY);
-          else if (auth_type_none)
-            ip->authtype = ipmipower_ipmi_auth_type(AUTH_TYPE_NONE);
+	  if (!strlen(conf->password) && authentication_type_none)
+            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
+	  else if (authentication_type_md5)
+            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD5);
+          else if (authentication_type_md2)
+            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD2);
+          else if (authentication_type_straight_password_key)
+            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
+          else if (authentication_type_none)
+            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
 	  else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
 	    {
               /* achu: It may not seem possible to get to this point
@@ -729,7 +736,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                   return -1;
                 }
               else
-                authtype_try_higher_priv = 1;
+                authentication_type_try_higher_priv = 1;
             }
           else
             {
@@ -746,25 +753,25 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	  /* Can we authenticate with the user specified
 	   * authentication type?
 	   */
- 	  if ((conf->authtype == AUTH_TYPE_NONE
-               && auth_type_none)
-              || (conf->authtype == AUTH_TYPE_STRAIGHT_PASSWORD_KEY 
-                  && auth_type_straight_password_key)
-              || (conf->authtype == AUTH_TYPE_MD2
-		  && auth_type_md2)
-	      || (conf->authtype == AUTH_TYPE_MD5
-		  && auth_type_md5))
-            ip->authtype = ipmipower_ipmi_auth_type(conf->authtype);
+ 	  if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
+               && authentication_type_none)
+              || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
+                  && authentication_type_straight_password_key)
+              || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
+		  && authentication_type_md2)
+	      || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
+		  && authentication_type_md5))
+            ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
           else
             {
               if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
                 {
                   /* Time to give up */
-                  ipmipower_output(MSG_TYPE_AUTHTYPE, ip->ic->hostname);
+                  ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);
                   return -1;
                 }
               else
-                authtype_try_higher_priv = 1;
+                authentication_type_try_higher_priv = 1;
 	    }
 	}
          
@@ -772,7 +779,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        * privilege level.  But we may able to authenticate at a higher
        * one.  Lets up the privilege level and try again.
        */
-      if (authtype_try_higher_priv)
+      if (authentication_type_try_higher_priv)
         {
           /* Try a higher privilege level */
           if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
@@ -784,13 +791,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                      ip->privilege);
 
           /* Don't consider this a retransmission */
-          _send_packet(ip, AUTH_REQ, 0);
+          _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
           goto done;
         }
 
-      if (!conf->force_permsg_auth)
+      if (!conf->force_permsg_authentication)
         {
-          if (!auth_status_per_message_authentication)
+          if (!authentication_status_per_message_authentication)
             ip->permsgauth_enabled = IPMIPOWER_TRUE;
           else
             ip->permsgauth_enabled = IPMIPOWER_FALSE;
@@ -798,11 +805,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       else
         ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
-      _send_packet(ip, SESS_REQ, 0);
+      _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_SESS_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
     {
-      if ((rv = _recv_packet(ip, SESS_RES)) != 1) 
+      if ((rv = _recv_packet(ip, GET_SESSION_CHALLENGE_RES)) != 1) 
         {
           if (rv < 0) 
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -811,11 +818,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet(ip, ACTV_REQ, 0);
+      _send_packet(ip, ACTIVATE_SESSION_REQ, 0);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_ACTV_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT) 
     {
-      if ((rv = _recv_packet(ip, ACTV_RES)) != 1) 
+      if ((rv = _recv_packet(ip, ACTIVATE_SESSION_RES)) != 1) 
         {
           if (rv < 0) 
             /* XXX Session is not up, is it ok to quit here?  Or
@@ -824,52 +831,52 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* We can skip PRIV_REQ on a power status check, because the
+      /* We can skip SET_SESSION_PRIVILEGE_REQ on a power status check, because the
        * default IPMI session privilege level is the user privilege
        * level
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
-        _send_packet(ip, CHAS_REQ, 0);
+        _send_packet(ip, CHASSIS_STATUS_REQ, 0);
       else
-        _send_packet(ip, PRIV_REQ, 0);
+        _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 0);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_PRIV_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT) 
     {
-      if ((rv = _recv_packet(ip, PRIV_RES)) != 1) 
+      if ((rv = _recv_packet(ip, SET_SESSION_PRIVILEGE_RES)) != 1) 
         {
           if (rv < 0) 
             /* Session is up, so close it */
-            _send_packet(ip, CLOS_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ, 0);
           goto done;
         }
 
       /* Next packet we send depends on the power command and the
        * options set.  The POWER_CMD_POWER_STATUS command shouldn't be
        * possible at this point (see comments above under
-       * protocol_state == PROTOCOL_STATE_ACTV_SENT), but we leave the
-       * code below anyway.
+       * protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT), but
+       * we leave the code below anyway.
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS
           || (conf->on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
-        _send_packet(ip, CHAS_REQ, 0);
+        _send_packet(ip, CHASSIS_STATUS_REQ, 0);
       else
-        _send_packet(ip, CTRL_REQ, 0);
+        _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_CHAS_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT) 
     {
       uint64_t power_state;
 
-      if ((rv = _recv_packet(ip, CHAS_RES)) != 1) 
+      if ((rv = _recv_packet(ip, CHASSIS_STATUS_RES)) != 1) 
         {
           if (rv < 0)  
             /* Session is up, so close it */
-            _send_packet(ip, CLOS_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ, 0);
           goto done;
         }
 
-      Fiid_obj_get(ip->chas_res, 
+      Fiid_obj_get(ip->obj_chassis_status_res, 
                    (uint8_t *)"current_power_state.power_is_on",
                    &power_state);
 
@@ -877,7 +884,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           ipmipower_output((power_state) ? MSG_TYPE_ON : MSG_TYPE_OFF, 
                            ip->ic->hostname); 
-          _send_packet(ip, CLOS_REQ, 0);
+          _send_packet(ip, CLOSE_SESSION_REQ, 0);
         }
       else if (conf->on_if_off && (ip->cmd == POWER_CMD_POWER_CYCLE
                                   || ip->cmd == POWER_CMD_POWER_RESET)) 
@@ -887,18 +894,18 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               /* This is now a power-on operation */
               ip->cmd = POWER_CMD_POWER_ON;
             }
-          _send_packet(ip, CTRL_REQ, 0);
+          _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
         }
       else
         err_exit("_process_ipmi_packets: invalid command state: %d", ip->cmd);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_CTRL_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT) 
     {
-      if ((rv = _recv_packet(ip, CTRL_RES)) != 1) 
+      if ((rv = _recv_packet(ip, CHASSIS_CONTROL_RES)) != 1) 
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet(ip, CLOS_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ, 0);
           goto done;
         }
         
@@ -911,9 +918,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (ip->cmd == POWER_CMD_POWER_RESET)
         goto finish_up;
       else
-        _send_packet(ip, CLOS_REQ, 0);
+        _send_packet(ip, CLOSE_SESSION_REQ, 0);
     }
-  else if (ip->protocol_state == PROTOCOL_STATE_CLOS_SENT) 
+  else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT) 
     {
       /* achu: Note that it's possible we're timing out too early and
        * the close session response will still arrive.  It's no
@@ -929,7 +936,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto finish_up;
         }
 
-      if (!_recv_packet(ip, CLOS_RES)) 
+      if (!_recv_packet(ip, CLOSE_SESSION_RES)) 
         goto done;
  
       /* Regardless of packet error or success, finish up */
