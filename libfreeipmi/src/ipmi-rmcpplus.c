@@ -73,7 +73,7 @@ fiid_template_t tmpl_rmcpplus_session_trlr =
 fiid_template_t tmpl_rmcpplus_payload = 
   {
     {512,    "confidentiality_header", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},  
-    /* 65536 = 2^16 bytes, b/c ipmi_payload_len is 2 bytes */
+    /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     {524288, "payload_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE}, 
     {512,    "confidentiality_trailer", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}

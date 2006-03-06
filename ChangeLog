@@ -6,17 +6,17 @@
 
 	LIBFREEIPMI
 
-	* libfreeipmi/src/ipmi-rmcpplus.h,
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus.h,
 	libfreeipmi/src/ipmi-rmcpplus.c,
-	libfreeipmi/src/ipmi-rmcpplus-crypt.h,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-crypt.h,
 	libfreeipmi/src/ipmi-rmcpplus-crypt.c,
 	libfreeipmi/src/ipmi-rmcpplus-debug.c,
-	libfreeipmi/src/ipmi-rmcpplus-interface.h,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
-	libfreeipmi/src/ipmi-rmcpplus-utils.h
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
 	libfreeipmi/src/ipmi-rmcpplus-utils.c,
-	libfreeipmi/src/ipmi-rmcpplus-status-spec.h,
-	libfreeipmi/src/ipmi-rmcpplus-status-spec.c: New files.
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-status-spec.h: New
+	files.
 
 	* libfreeipmi/include/freeipmi/ipmi-debug.h
 	(ipmi_dump_rmcpplus_packet): New function.
@@ -24,32 +24,42 @@
 	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
 	(rmcpplus_status_strerror_r): New function.
 
-	* libfreeipmi/src/ipmi-interface.h: Added
-	IPMI_SESSION_AUTHENTICATION_TYPE_RMCPPLUS,
-	IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID, and
-	IPMI_1_5_PRIVILEGE_LEVEL_VALID macros.  Adjusted
-	IPMI_SESSION_AUTHENTICATION_TYPE_VALID and
-	IPMI_PRIVILEGE_LEVEL_VALID for ipmi 2.0 appropriately.
-	
-	* libfreeipmi/src/ipmi-sessions.c (fill_hdr_session),
-	libfreeipmi/src/ipmi-msg-support-cmds.c (ipmi-msg-support-cmds.c),
-	libfreeipmi/src/ipmi-lan-interface.c (assemble_ipmi_lan_pkt,
-	ipmi_open_outofband): Use new IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID
-	macro.
+	* libfreeipmi/include/freeipmi/ipmi-authentication-type-spec.h:
+	Added IPMI_AUTHENTICATION_TYPE_RMCPPLUS,
+	IPMI_1_5_AUTHENTICATION_TYPE_VALID, and
+	IPMI_2_0_AUTHENTICATION_TYPE_VALID. Adjusted
+	IPMI_AUTHENTICATION_TYPE_VALID appropriately for ipmi 2.0.
 
-	* libfreeipmi/src/ipmi-msg-support-cmds.c
-	(fill_cmd_get_channel_auth_caps, fill_cmd_activate_session,
-	fill_cmd_set_session_priv_level), libfreeipmi/src/ipmi-interface.c
-	(ipmi_open_outofband): Use new IPMI_1_5_PRIVILEGE_LEVEL_VALID.
+	* libfreeipmi/include/freeipmi/ipmi-privilege-level-spec.h: Added
+	IPMI_1_5_PRIVILEGE_LEVEL_VALID and IPMI_2_0_PRIVILEGE_LEVEL.
+	Adjusted IPMI_PRIVILEGE_LEVEL_VALID appropriately for ipmi 2.0.
 	
-	* libfreeipmi/src/freeipmi.h: Added ipmi-rmcpplus.h,
-	ipmi-rmcpplus-interface.h, ipmi-rmcpplus-utils.h.
+	* libfreeipmi/src/ipmi-lan.c
+	(_ipmi_lan_pkt_rq_min_size,unassemble_ipmi_lan_pkt),
+	libfreeipmi/src/udm/ipmi-udm.c
+	(ipmi_open_outofband): Use new
+	IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID macro.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband):
+	libfreeipmi/src/ipmi-messagging-support-cmds.c
+	(fill_cmd_get_channel_authentication_capabilities,
+	fill_cmd_activate_session, fill_cmd_set_channel_access,
+	fill_cmd_set_session_privilege_level), Use new
+	IPMI_1_5_PRIVILEGE_LEVEL_VALID.
+	
+	* libfreeipmi/include/freeipmi/freeipmi.h: Added ipmi-rmcpplus.h,
+	ipmi-rmcpplus-crypt.h, ipmi-rmcpplus-interface.h,
+	ipmi-rmcpplus-utils.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
 	#define checks for /dev/urandom and /dev/random.
 
 	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
 	(ipmi_get_random): New function.
+
+	* libfreeipmi/src/ipmi-sol-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Support SOL
+	payloads.  Support missing SOL configuration parameters.
 
 	RMCPPING and IPMIPING
 	
@@ -87,6 +97,12 @@
 	* freeipmi.spec.in: Add gcrypt dependencies.
 
 ------------------------------------------------------------
+2006-03-06  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sol-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Support SOL
+	payloads.  Support missing SOL configuration parameters.
+	
 2006-03-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-utils.h,
