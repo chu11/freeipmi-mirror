@@ -36,7 +36,7 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_sol_payload_data_format = 
+fiid_template_t tmpl_sol_payload_data = 
   {
     /* 0h ack only packet */
     {4,      "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -51,8 +51,7 @@ fiid_template_t tmpl_sol_payload_data_format =
     {0, "", 0}
   };
 
-/* XXX Do macros */
-fiid_template_t tmpl_sol_payload_data_format_remote_console_to_bmc = 
+fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc = 
   {
     /* 0h ack only packet */
     {4,      "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -65,7 +64,7 @@ fiid_template_t tmpl_sol_payload_data_format_remote_console_to_bmc =
     {1,      "flush_inbound", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "drop_dcd_dsr", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "cts_pause", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,      "break", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,      "break_condition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "ring_wor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "ack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -74,7 +73,7 @@ fiid_template_t tmpl_sol_payload_data_format_remote_console_to_bmc =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sol_payload_data_format_bmc_to_remote_console = 
+fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console = 
   {
     /* 0h ack only packet */
     {4,      "packet_sequence_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -84,7 +83,7 @@ fiid_template_t tmpl_sol_payload_data_format_bmc_to_remote_console =
     {4,      "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,      "accepted_character_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2,      "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1,      "break", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,      "break_condition", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "transmit_overrun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "sol_deactivating", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "character_transfer_unavailable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -305,6 +304,55 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_port_number_rs
     {8, "port_number_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
+
+int8_t
+fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
+                                             uint8_t packet_ack_nack_sequence_number,
+                                             uint8_t accepted_character_count,
+                                             uint8_t flush_outbound,
+                                             uint8_t flush_inbound,
+                                             uint8_t drop_dcd_dsr,
+                                             uint8_t cts_pause,
+                                             uint8_t break_condition,
+                                             uint8_t ring_wor,
+                                             uint8_t ack,
+                                             uint8_t *character_data,
+                                             uint32_t character_data_len,
+                                             fiid_obj_t obj_sol_payload)
+{
+  ERR_EINVAL (IPMI_SOL_FLUSH_OUTBOUND_VALID(flush_outbound)
+              && IPMI_SOL_FLUSH_INBOUND_VALID(flush_inbound)
+              && IPMI_SOL_ASSERT_DCD_DSR_VALID(drop_dcd_dsr)
+              && IPMI_SOL_ASSERT_CTS_VALID(cts_pause)
+              && IPMI_SOL_BREAK_CONDITION_VALID(break_condition)
+              && IPMI_SOL_ASSERT_RI_VALID(ring_wor)
+              && IPMI_SOL_ACK_VALID(ack)
+	      && fiid_obj_valid(obj_sol_payload));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_sol_payload, tmpl_sol_payload_data_remote_console_to_bmc);
+
+  FIID_OBJ_CLEAR (obj_sol_payload);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"packet_sequence_number", packet_sequence_number);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"reserved1", 0);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"packet_ack_nack_sequence_number", packet_ack_nack_sequence_number);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"accepted_character_count", accepted_character_count);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"flush_outbound", flush_outbound);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"flush_inbound", flush_inbound);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"drop_dcd_dsr", drop_dcd_dsr);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"cts_pause", cts_pause);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"break_condition", break_condition);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"ring_wor", ring_wor);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"ack", ack);
+  FIID_OBJ_SET (obj_sol_payload, (uint8_t *)"reserved3", 0);
+  if (character_data && character_data_len)
+    FIID_OBJ_SET_DATA (obj_sol_payload,
+                       (uint8_t *)"character_data",
+                       character_data,
+                       character_data_len);
+  
+  return 0;
+}
 
 int8_t
 fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,

@@ -52,12 +52,12 @@
         (((__val) == IPMI_SOL_ASSERT_CTS \
           || (__val) == IPMI_SOL_DEASSERT_CTS) ? 1 : 0)
 
-#define IPMI_SOL_BREAK                0x0
-#define IPMI_SOL_NO_BREAK             0x1
+#define IPMI_SOL_BREAK_CONDITION     0x0
+#define IPMI_SOL_NO_BREAK_CONDITION  0x1
 
-#define IPMI_SOL_BREAK_VALID(__val) \
-        (((__val) == IPMI_SOL_BREAK \
-          || (__val) == IPMI_SOL_NO_BREAK) ? 1 : 0)
+#define IPMI_SOL_BREAK_CONDITION_VALID(__val) \
+        (((__val) == IPMI_SOL_BREAK_CONDITION \
+          || (__val) == IPMI_SOL_NO_BREAK_CONDITION) ? 1 : 0)
 
 #define IPMI_SOL_ASSERT_RI       0x0
 #define IPMI_SOL_DEASSERT_RI     0x1
