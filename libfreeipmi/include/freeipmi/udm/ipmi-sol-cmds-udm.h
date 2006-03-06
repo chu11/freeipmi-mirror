@@ -31,7 +31,7 @@ extern "C" {
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_enable (ipmi_device_t *dev, 
 							     uint8_t channel_number, 
-							     uint8_t sol_payload, 
+							     uint8_t sol_enable, 
 							     fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_authentication (ipmi_device_t *dev,

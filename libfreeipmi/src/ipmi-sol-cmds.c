@@ -118,7 +118,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq =
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sol_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {7, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
@@ -220,7 +220,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_enable_rs =
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {1, "sol_payload", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "sol_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {7, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
@@ -387,11 +387,11 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 
 int8_t 
 fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number, 
-                                                      uint8_t sol_payload,
+                                                      uint8_t sol_enable,
                                                       fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_SOL_PAYLOAD_VALID(sol_payload)
+	      && IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
 	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq);
@@ -403,7 +403,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"parameter_selector", IPMI_SOL_PARAM_SOL_ENABLE);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"sol_payload", sol_payload);
+  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"sol_enable", sol_enable);
   FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
 
   return 0;

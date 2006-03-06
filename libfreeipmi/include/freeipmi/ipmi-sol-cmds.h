@@ -82,12 +82,12 @@
 #define IPMI_SOL_CHARACTER_TRANSFER_UNAVAILABLE 0x1
 #define IPMI_SOL_CHARACTER_TRANSFER_AVAILABLE   0x0
 
-#define IPMI_SOL_PAYLOAD_DISABLE    0x0
-#define IPMI_SOL_PAYLOAD_ENABLE     0x1
+#define IPMI_SOL_SOL_DISABLE    0x0
+#define IPMI_SOL_SOL_ENABLE     0x1
 
-#define IPMI_SOL_PAYLOAD_VALID(__val) \
-        (((__val) == IPMI_SOL_PAYLOAD_DISABLE \
-          || (__val) == IPMI_SOL_PAYLOAD_ENABLE) ? 1 : 0)
+#define IPMI_SOL_SOL_ENABLE_VALID(__val) \
+        (((__val) == IPMI_SOL_SOL_DISABLE \
+          || (__val) == IPMI_SOL_SOL_ENABLE) ? 1 : 0)
 
 #define IPMI_SOL_FORCE_SOL_PAYLOAD_AUTHENTICATION             0x1
 #define IPMI_SOL_AUTHENTICATION_CONTROLLED_BY_REMOTE_SOFTWARE 0x0
@@ -103,13 +103,15 @@
         (((__val) == IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION \
           || (__val) == IPMI_SOL_ENCRYPTION_CONTROLLED_BY_REMOTE_SOFTWARE) ? 1 : 0)
 
+#define IPMI_SOL_BIT_RATE_96_KBPS     0x6
 #define IPMI_SOL_BIT_RATE_192_KBPS    0x7
 #define IPMI_SOL_BIT_RATE_384_KBPS    0x8
 #define IPMI_SOL_BIT_RATE_576_KBPS    0x9
 #define IPMI_SOL_BIT_RATE_1152_KBPS   0xA
 
 #define IPMI_SOL_BIT_RATE_VALID(__val) \
-        (((__val) == IPMI_SOL_BIT_RATE_192_KBPS \
+        (((__val) == IPMI_SOL_BIT_RATE_96_KBPS \
+          || (__val) == IPMI_SOL_BIT_RATE_192_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_384_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_576_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_1152_KBPS) ? 1 : 0)
@@ -171,7 +173,7 @@ int8_t fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 						  fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number, 
-                                                             uint8_t sol_payload,
+                                                             uint8_t sol_enable,
                                                              fiid_obj_t obj_data_rq);
 
 int8_t fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_number,
