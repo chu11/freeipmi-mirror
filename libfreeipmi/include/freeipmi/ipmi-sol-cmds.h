@@ -125,6 +125,10 @@
 extern "C" {
 #endif
 
+extern fiid_template_t tmpl_sol_payload_data;
+extern fiid_template_t tmpl_sol_payload_data_remote_console_to_bmc;
+extern fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console;
+
 extern fiid_template_t tmpl_set_sol_configuration_parameters_rq;
 extern fiid_template_t tmpl_set_sol_configuration_parameters_rs;
 extern fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq;
@@ -145,6 +149,20 @@ extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_non_volatile_bi
 extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_volatile_bit_rate_rs;
 extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_channel_rs;
 extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_port_number_rs;
+
+int8_t fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
+                                                    uint8_t packet_ack_nack_sequence_number,
+                                                    uint8_t accepted_character_count,
+                                                    uint8_t flush_outbound,
+                                                    uint8_t flush_inbound,
+                                                    uint8_t drop_dcd_dsr,
+                                                    uint8_t cts_pause,
+                                                    uint8_t break_condition,
+                                                    uint8_t ring_wor,
+                                                    uint8_t ack,
+                                                    uint8_t *character_data,
+                                                    uint32_t character_data_len,
+                                                    fiid_obj_t obj_sol_payload);
 
 int8_t fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 						  uint8_t parameter_selector,

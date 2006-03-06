@@ -102,6 +102,10 @@
 	* libfreeipmi/src/ipmi-sol-cmds.c,
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Support SOL
 	payloads.  Support missing SOL configuration parameters.
+
+	* libfreeipmi/src/udm/ipmi-sol-cmds-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds-udm.h: Support missing
+	SOL configuration parameters.
 	
 2006-03-05  Albert Chu <chu11@llnl.gov>
 
