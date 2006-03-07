@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.14 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.15 2006-03-07 22:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -145,7 +145,7 @@ ipmipower_ping_process_pings(int *timeout)
                                     ics[i].hostname, 
                                     hdr, 
                                     (uint8_t *)buffer, 
-                                    len, 
+                                    (uint32_t)len, 
                                     tmpl_cmd_asf_presence_ping);
             }
 #endif /* NDEBUG */
@@ -185,7 +185,7 @@ ipmipower_ping_process_pings(int *timeout)
                                     ics[i].hostname, 
                                     hdr, 
                                     (uint8_t *)buffer, 
-                                    len, 
+                                    (uint32_t)len, 
                                     tmpl_cmd_asf_presence_pong);
             }
 #endif /* NDEBUG */
@@ -205,9 +205,9 @@ ipmipower_ping_process_pings(int *timeout)
            * ensure the machine is still there.
            */
 
-          Fiid_obj_get(rmcp_pong, (uint8_t *)"message_type", &message_type);
+          Fiid_obj_get(rmcp_pong, "message_type", &message_type);
           Fiid_obj_get(rmcp_pong, 
-		       (uint8_t *)"supported_entities.ipmi_supported", 
+		       "supported_entities.ipmi_supported", 
 		       &ipmi_supported);
                       
           if (message_type == RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG && ipmi_supported) 

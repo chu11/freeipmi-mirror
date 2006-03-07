@@ -426,7 +426,7 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
   memset(sdr_event_only_record->sensor_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "id_string",
-			     sdr_event_only_record->sensor_name,
+			     (uint8_t *)sdr_event_only_record->sensor_name,
 			     17);
 
  cleanup:

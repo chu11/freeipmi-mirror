@@ -167,7 +167,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
   while (!fiid_iterator_end(iter))
     {
       int32_t field_len;
-      uint8_t *key;
+      char *key;
 
       FIID_ITERATOR_KEY_CLEANUP(key, iter);
 
@@ -192,7 +192,7 @@ ipmi_obj_dump_perror (int fd, char *prefix, char *hdr, char *trlr, fiid_obj_t ob
         }
       else
         {
-          char buf[IPMI_DEBUG_MAX_BUF_LEN];
+          uint8_t buf[IPMI_DEBUG_MAX_BUF_LEN];
           int len;
 
           IPMI_DPRINTF_CLEANUP ((fd, "[  BYTE ARRAY ... ] = %s[%2dB]\n", key, BITS_ROUND_BYTES(field_len)));

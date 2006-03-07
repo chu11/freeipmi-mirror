@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.29 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.30 2006-03-07 22:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -656,28 +656,28 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        */
 
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_type.none", 
+                   "authentication_type.none", 
 		   &authentication_type_none);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_type.md2", 
+                   "authentication_type.md2", 
 		   &authentication_type_md2);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_type.md5", 
+                   "authentication_type.md5", 
 		   &authentication_type_md5);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_type.straight_password_key", 
+                   "authentication_type.straight_password_key", 
 		   &authentication_type_straight_password_key);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_status.anonymous_login", 
+                   "authentication_status.anonymous_login", 
 		   &authentication_status_anonymous_login);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_status.null_username",
+                   "authentication_status.null_username",
 		   &authentication_status_null_username);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_status.non_null_username", 
+                   "authentication_status.non_null_username", 
 		   &authentication_status_non_null_username);
       Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   (uint8_t *)"authentication_status.per_message_authentication",
+                   "authentication_status.per_message_authentication",
 		   &authentication_status_per_message_authentication);
 
       /* Does the remote BMC's authentication configuration support
@@ -877,7 +877,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       Fiid_obj_get(ip->obj_chassis_status_res, 
-                   (uint8_t *)"current_power_state.power_is_on",
+                   "current_power_state.power_is_on",
                    &power_state);
 
       if (ip->cmd == POWER_CMD_POWER_STATUS) 

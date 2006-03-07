@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.25 2006-03-07 21:57:15 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.26 2006-03-07 22:11:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -214,7 +214,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                              ip->ic->hostname, 
                              hdr, 
                              (uint8_t *)buffer, 
-                             len,
+                             (uint32_t)len,
                              tmpl_lan_msg_hdr_rq,
                              ipmipower_packet_cmd_template(ip, pkt));
       else
@@ -222,7 +222,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                              ip->ic->hostname,
                              hdr, 
                              (uint8_t *)buffer, 
-                             len,
+                             (uint32_t)len,
                              tmpl_lan_msg_hdr_rs,
                              ipmipower_packet_cmd_template(ip, pkt));
     }
@@ -376,7 +376,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->obj_get_session_challenge_res, 
-		   (uint8_t *)"temp_session_id", 
+		   "temp_session_id", 
 		   &temp_session_id);
       
       if (fill_lan_session_hdr(ip->authentication_type, 
@@ -465,10 +465,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         priv = IPMI_PRIVILEGE_LEVEL_OPERATOR;
 
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"initial_inbound_sequence_number", 
+                   "initial_inbound_sequence_number", 
 		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"session_id", 
+                   "session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
@@ -527,10 +527,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"initial_inbound_sequence_number", 
+                   "initial_inbound_sequence_number", 
 		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"session_id", 
+                   "session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
@@ -588,10 +588,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         password = NULL;
 
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"initial_inbound_sequence_number", 
+                   "initial_inbound_sequence_number", 
 		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"session_id", 
+                   "session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at,
@@ -670,10 +670,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         command = IPMI_CHASSIS_CONTROL_INITIATE_SOFT_SHUTDOWN;
 
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"initial_inbound_sequence_number", 
+                   "initial_inbound_sequence_number", 
 		   &initial_inbound_sequence_number);
       Fiid_obj_get(ip->obj_activate_session_res, 
-                   (uint8_t *)"session_id", 
+                   "session_id", 
 		   &session_id);
       
       if (fill_lan_session_hdr(at, 
@@ -731,22 +731,22 @@ ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
   obj = ipmipower_packet_cmd_obj(ip, pkt);
         
   Fiid_obj_get(ip->obj_lan_session_hdr_res, 
-               (uint8_t *)"session_sequence_number", 
+               "session_sequence_number", 
 	       &sseq);
   Fiid_obj_get(ip->obj_lan_session_hdr_res, 
-               (uint8_t *)"session_id", 
+               "session_id", 
 	       &sid);
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, 
-               (uint8_t *)"net_fn", 
+               "net_fn", 
 	       &netfn);
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, 
-               (uint8_t *)"rq_seq", 
+               "rq_seq", 
 	       &rseq);
   Fiid_obj_get(obj, 
-	       (uint8_t *)"cmd", 
+	       "cmd", 
 	       &cmd);
   Fiid_obj_get(obj, 
-	       (uint8_t *)"comp_code", 
+	       "comp_code", 
 	       &cc);
   
   if (session_sequence_number) 
