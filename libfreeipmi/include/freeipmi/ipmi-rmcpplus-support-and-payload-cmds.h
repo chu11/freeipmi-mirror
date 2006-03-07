@@ -75,6 +75,20 @@
 	  || (__val) == IPMI_RESUME_ENCRYPTION \
 	  || (__val) == IPMI_REGENERATE_INITIALIZATION_VECTOR) ? 1 : 0)
 
+#define IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE  0x00
+#define IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE 0x01
+
+#define IPMI_SET_USER_PAYLOAD_OPERATION_VALID(__val) \
+        (((__val) == IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE \
+	  || (__val) == IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE) ? 1 : 0)
+
+/* achu: See IPMI Spec Set User Payload Access command.  Enable may be
+ * 0 or 1, and Disable may be 0 or 1 as well.
+ */
+#define IPMI_STANDARD_PAYLOAD_VALID(__val) \
+        (((__val) == 0 \
+	  || (__val) == 1) ? 1 : 0)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -87,6 +101,20 @@ extern fiid_template_t tmpl_deactivate_payload_rq;
 extern fiid_template_t tmpl_deactivate_payload_rs;
 extern fiid_template_t tmpl_suspend_resume_payload_encryption_rq;
 extern fiid_template_t tmpl_suspend_resume_payload_encryption_rq;
+extern fiid_template_t tmpl_get_payload_activation_status_rq;
+extern fiid_template_t tmpl_get_payload_activation_status_rs;
+extern fiid_template_t tmpl_get_payload_instance_info_rq;
+extern fiid_template_t tmpl_get_payload_instance_info_rs;
+extern fiid_template_t tmpl_set_user_payload_access_rq;
+extern fiid_template_t tmpl_set_user_payload_access_rs;
+extern fiid_template_t tmpl_get_user_payload_access_rq;
+extern fiid_template_t tmpl_get_user_payload_access_rs;
+extern fiid_template_t tmpl_get_channel_payload_support_rq;
+extern fiid_template_t tmpl_get_channel_payload_support_rs;
+extern fiid_template_t tmpl_get_channel_payload_version_rq;
+extern fiid_template_t tmpl_get_channel_payload_version_rs;
+extern fiid_template_t tmpl_get_channel_oem_payload_info_rq;
+extern fiid_template_t tmpl_get_channel_oem_payload_info_rs;
 
 int8_t fill_cmd_activate_payload (uint8_t payload_type,
 				  uint8_t payload_instance,
@@ -102,6 +130,47 @@ int8_t fill_cmd_activate_payload_sol (uint8_t payload_type,
 				      uint8_t authentication_activation,
 				      uint8_t encryption_activation,
 				      fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_deactivate_payload (uint8_t payload_type,
+                                    uint8_t payload_instance,
+                                    uint32_t payload_auxiliary_data,
+                                    fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
+                                                   uint8_t payload_instance,
+                                                   uint8_t operation,
+                                                   fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_payload_activation_status (uint8_t payload_type,
+                                               fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_payload_instance_info (uint8_t payload_type,
+                                           uint8_t payload_instance,
+                                           fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_user_payload_access (uint8_t channel_number,
+                                         uint8_t user_id,
+                                         uint8_t operation,
+                                         uint8_t standard_payload_1,
+                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_user_payload_access (uint8_t channel_number,
+                                         uint8_t user_id,
+                                         fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_channel_payload_support (uint8_t channel_number,
+                                             fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_channel_payload_version (uint8_t channel_number,
+                                             uint8_t payload_type,
+                                             fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
+                                              uint8_t payload_type,
+                                              uint32_t oem_iana,
+                                              uint16_t oem_payload_id,
+                                              fiid_obj_t obj_cmd_rq);
+
 #ifdef __cplusplus
 }
 #endif

@@ -3,6 +3,7 @@
 	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
 	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Support for more
 	commands under the rmcpplus support and payload commands section.
+	General code cleanup.
 
 	* libfreeipmi/include/freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h,
 	libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: New
