@@ -82,7 +82,8 @@ extern "C" {
 #define IPMI_CMD_SET_USER_PAYLOAD_ACCESS                    0x4C
 #define IPMI_CMD_GET_USER_PAYLOAD_ACCESS                    0x4D
 #define IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT                0x4E
-#define IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO               0x4F
+#define IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION                0x4F
+#define IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO               0x50
 // unassigned                                               0x51 
 #define IPMI_CMD_MASTER_WRITE_READ                          0x52
 // unassigned                                               0x53
