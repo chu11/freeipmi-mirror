@@ -9,7 +9,9 @@
 	libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: New
 	templates and functions to support commands under this chapter of
 	the IPMI spec.
-	
+
+	* libfreeipmi/include/Makefile.am: Fix distcheck bug
+
 2005-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag
