@@ -196,8 +196,8 @@
      same-string-ci?
      "Possible values: 9600/19200/38400/57600/115200")
     ("volatile_bit_rate" 
-     valid-flow-control? 
-     get-flow-control 
+     valid-sol-bit-rate? 
+     get-sol-bit-rate 
      commit-volatile-bit-rate 
      checkout-volatile-bit-rate 
      get-sol-bit-rate-value-string
