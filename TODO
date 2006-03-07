@@ -60,6 +60,14 @@ libfreeipmi:
   * 1_5_privilege_level - not really right, do something else
   * vlan_id_ls/ms -> ls_byte, ms_byte?
     - check bmc and sol, just need consistentcy
+  * ipmi 2.0 
+    ipmiping  
+      test
+    ipmipower
+      support
+      test
+    sol-config
+      test
 
 fish:
 -----
