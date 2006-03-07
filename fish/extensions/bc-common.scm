@@ -127,7 +127,8 @@
 (define (get-serial-bit-rate-value-string value)
   (string-capitalize (assoc-vref serial-bit-rates value)))
 
-(define sol-bit-rates '(("9600"   . 6)
+(define sol-bit-rates '(("Serial" . 0)
+                        ("9600"   . 6)
                         ("19200"  . 7)
                         ("38400"  . 8)
                         ("57600"  . 9)

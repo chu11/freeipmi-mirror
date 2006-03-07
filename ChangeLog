@@ -15,6 +15,11 @@
 
 	* Globally fix gcc 4.0 warnings.
 
+	* libfreeipmi/include/freeipmi/ipmi-sol-cmds.h,
+	fish/extensions/bc-common.scm (sol-bit-rates),
+	fish/extensions/bc-sol-conf-section.scm: Support bit-rate '0'
+	which means "Use Serial Bit rate".
+
 2005-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag

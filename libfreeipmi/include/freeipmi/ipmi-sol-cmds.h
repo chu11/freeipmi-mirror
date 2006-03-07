@@ -103,14 +103,16 @@
         (((__val) == IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION \
           || (__val) == IPMI_SOL_ENCRYPTION_CONTROLLED_BY_REMOTE_SOFTWARE) ? 1 : 0)
 
-#define IPMI_SOL_BIT_RATE_96_KBPS     0x6
-#define IPMI_SOL_BIT_RATE_192_KBPS    0x7
-#define IPMI_SOL_BIT_RATE_384_KBPS    0x8
-#define IPMI_SOL_BIT_RATE_576_KBPS    0x9
-#define IPMI_SOL_BIT_RATE_1152_KBPS   0xA
+#define IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE 0x0
+#define IPMI_SOL_BIT_RATE_96_KBPS         0x6
+#define IPMI_SOL_BIT_RATE_192_KBPS        0x7
+#define IPMI_SOL_BIT_RATE_384_KBPS        0x8
+#define IPMI_SOL_BIT_RATE_576_KBPS        0x9
+#define IPMI_SOL_BIT_RATE_1152_KBPS       0xA
 
 #define IPMI_SOL_BIT_RATE_VALID(__val) \
-        (((__val) == IPMI_SOL_BIT_RATE_96_KBPS \
+        (((__val) == IPMI_SOL_BIT_RATE_SERIAL_BIT_RATE \
+          || (__val) == IPMI_SOL_BIT_RATE_96_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_192_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_384_KBPS \
           || (__val) == IPMI_SOL_BIT_RATE_576_KBPS \

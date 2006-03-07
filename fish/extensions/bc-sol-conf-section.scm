@@ -194,7 +194,7 @@
      checkout-non-volatile-bit-rate 
      get-sol-bit-rate-value-string
      same-string-ci?
-     "Possible values: 9600/19200/38400/57600/115200")
+     "Possible values: Serial/9600/19200/38400/57600/115200")
     ("volatile_bit_rate" 
      valid-sol-bit-rate? 
      get-sol-bit-rate 
@@ -202,7 +202,7 @@
      checkout-volatile-bit-rate 
      get-sol-bit-rate-value-string
      same-string-ci?
-     "Possible values: 9600/19200/38400/57600/115200")
+     "Possible values: Serial/9600/19200/38400/57600/115200")
     ("sol_payload_port_number" 
      valid-integer? 
      get-integer 
