@@ -13,6 +13,8 @@
 	* common/src/Makefile.am, libfreeipmi/include/Makefile.am: Fix
 	distcheck bugs.
 
+	* Globally fix gcc 4.0 warnings.
+
 2005-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag

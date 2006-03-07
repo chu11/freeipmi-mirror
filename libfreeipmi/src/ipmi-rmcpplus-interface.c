@@ -90,7 +90,7 @@ _construct_payload_buf(fiid_obj_t obj_lan_msg_hdr,
 
   checksum = ipmi_checksum (payload_buf + checksum_start_offset, indx - checksum_start_offset);
 
-  FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, (uint8_t *)&checksum, sizeof(checksum));
+  FIID_OBJ_SET_ALL_CLEANUP (obj_lan_msg_trlr, &checksum, sizeof(checksum));
 
   FIID_OBJ_GET_ALL_LEN_CLEANUP (len, obj_lan_msg_trlr, payload_buf + indx, payload_buf_len - indx);
   indx += len;
@@ -406,13 +406,13 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
 
   FIID_OBJ_FIELD_LEN_BYTES(len,
                            obj_rmcpplus_session_trlr,
-                           (uint8_t *)"authentication_code");
+                           "authentication_code");
 
   if (len)
     {
       FIID_OBJ_GET_DATA_LEN(len,
                             obj_rmcpplus_session_trlr,
-                            (uint8_t *)"authentication_code",
+                            "authentication_code",
                             authentication_code_buf,
                             authentication_code_buf_len);
       return (len);
@@ -553,40 +553,40 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    * a ipmi_payload_len is required but may not be set yet.
    */
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"authentication_type");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"authentication_type");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "authentication_type");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "authentication_type");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"reserved");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"reserved");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "reserved");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "reserved");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"payload_type");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "payload_type");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type.authenticated");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"payload_type.authenticated");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type.authenticated");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "payload_type.authenticated");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type.encrypted");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"payload_type.encrypted");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type.encrypted");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "payload_type.encrypted");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"session_id");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"session_id");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "session_id");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "session_id");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"session_sequence_number");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"session_sequence_number");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "session_sequence_number");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "session_sequence_number");
   ERR_EINVAL (len == req_len);
 
   /*
    * Can't use FIID_OBJ_PACKET_VALID() on obj_rmcpplus_session_trlr b/c
    * integrity pad, pad length, and authentication code may not be set.
    */
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_trlr, (uint8_t *)"next_header");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_trlr, (uint8_t *)"next_header");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_trlr, "next_header");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_trlr, "next_header");
   ERR_EINVAL (len == req_len);
 
   FIID_OBJ_GET (obj_rmcpplus_session_hdr, 
@@ -626,15 +626,15 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 	      && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
 		   && payload_encrypted));
 
-  FIID_OBJ_FIELD_LEN(oem_iana_len, obj_rmcpplus_session_hdr, (uint8_t *)"oem_iana");
-  FIID_OBJ_FIELD_LEN(oem_payload_id_len, obj_rmcpplus_session_hdr, (uint8_t *)"oem_payload_id");
+  FIID_OBJ_FIELD_LEN(oem_iana_len, obj_rmcpplus_session_hdr, "oem_iana");
+  FIID_OBJ_FIELD_LEN(oem_payload_id_len, obj_rmcpplus_session_hdr, "oem_payload_id");
   
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
       int32_t oem_iana_req_len, oem_payload_id_req_len;
 
-      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"oem_iana");
-      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, (uint8_t *)"oem_payload_id");
+      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "oem_iana");
+      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "oem_payload_id");
 
       ERR_EINVAL (oem_iana_len == oem_iana_req_len
 		  && oem_payload_id_len != oem_payload_id_req_len);
@@ -658,13 +658,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                    obj_rmcpplus_session_hdr,
-                                   (uint8_t *)"authentication_type",
-                                   (uint8_t *)"session_sequence_number");
+                                   "authentication_type",
+                                   "session_sequence_number");
   ERR_ENOSPC_CLEANUP(!(len > (pkt_len - indx)));
   FIID_OBJ_GET_BLOCK_LEN_CLEANUP(len,
                                  obj_rmcpplus_session_hdr,
-                                 (uint8_t *)"authentication_type",
-                                 (uint8_t *)"session_sequence_number",
+                                 "authentication_type",
+                                 "session_sequence_number",
                                  pkt + indx,
                                  pkt_len - indx);
   indx += len;
@@ -724,13 +724,13 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       FIID_OBJ_BLOCK_LEN_BYTES_CLEANUP(len,
                                        obj_rmcpplus_session_trlr_temp,
-                                       (uint8_t *)"integrity_pad",
-                                       (uint8_t *)"next_header");
+                                       "integrity_pad",
+                                       "next_header");
       ERR_ENOSPC_CLEANUP(!(len > (pkt_len - indx)));
       FIID_OBJ_GET_BLOCK_LEN_CLEANUP(len,
                                      obj_rmcpplus_session_trlr_temp,
-                                     (uint8_t *)"integrity_pad",
-                                     (uint8_t *)"next_header",
+                                     "integrity_pad",
+                                     "next_header",
                                      pkt + indx,
                                      pkt_len - indx);
       indx += len;
@@ -1141,8 +1141,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   FIID_OBJ_CLEAR(obj_rmcpplus_session_hdr);
   FIID_OBJ_SET_BLOCK_LEN(obj_len, 
                          obj_rmcpplus_session_hdr, 
-                         (uint8_t *)"authentication_type",
-                         (uint8_t *)"payload_type.encrypted",
+                         "authentication_type",
+                         "payload_type.encrypted",
                          pkt + indx, 
                          pkt_len - indx);
   indx += obj_len;
@@ -1160,8 +1160,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
     {
       FIID_OBJ_SET_BLOCK_LEN(obj_len,
                              obj_rmcpplus_session_hdr,
-                             (uint8_t *)"oem_iana",
-                             (uint8_t *)"oem_payload_id",
+                             "oem_iana",
+                             "oem_payload_id",
                              pkt + indx,
                              pkt_len - indx);
       indx += obj_len;
@@ -1175,8 +1175,8 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
    */
   FIID_OBJ_SET_BLOCK_LEN(obj_len,
                          obj_rmcpplus_session_hdr,
-                         (uint8_t *)"session_id",
-                         (uint8_t *)"ipmi_payload_len",
+                         "session_id",
+                         "ipmi_payload_len",
                          pkt + indx,
                          pkt_len - indx);
   indx += obj_len;
@@ -1275,7 +1275,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
 
       if (authentication_code_len)
         FIID_OBJ_SET_DATA(obj_rmcpplus_session_trlr,
-                          (uint8_t *)"authentication_code",
+                          "authentication_code",
                           pkt + indx + ((pkt_len - indx) - authentication_code_len),
                           authentication_code_len);
 

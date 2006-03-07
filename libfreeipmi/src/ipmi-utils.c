@@ -83,13 +83,13 @@ ipmi_check_cmd(fiid_obj_t obj_cmd, uint8_t cmd)
 
   ERR_EINVAL (obj_cmd);
 
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"cmd");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, "cmd");
 
   ERR_EINVAL (len);
 
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd_recv);
+  FIID_OBJ_GET(obj_cmd, "cmd", &cmd_recv);
 
   return ((((uint8_t)cmd_recv) == cmd) ? 1 : 0);
 }
@@ -102,13 +102,13 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
 
   ERR_EINVAL (obj_cmd);
 
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"comp_code");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, "comp_code");
 
   ERR_EINVAL (len);
 
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &completion_code_recv);
+  FIID_OBJ_GET(obj_cmd, "comp_code", &completion_code_recv);
 
   return ((((uint8_t)completion_code_recv) == completion_code) ? 1 : 0);
 }

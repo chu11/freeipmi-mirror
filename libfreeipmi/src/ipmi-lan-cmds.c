@@ -464,15 +464,15 @@ fill_cmd_set_lan_configuration_parameters (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_rq);
 
   FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
+		"cmd", 
 		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
   
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
   
   FIID_OBJ_SET_DATA (obj_cmd_rq, 
-                     (uint8_t *)"configuration_parameter_data", 
+                     "configuration_parameter_data", 
                      configuration_parameter_data,
                      configuration_parameter_data_len);
   
@@ -538,120 +538,45 @@ fill_cmd_set_lan_configuration_parameters_authentication_type_enables (uint8_t c
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_authentication_type_enables_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.none",
-                callback_level_none);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.md2",
-                callback_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.md5",
-                callback_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.reserved1",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.straight_password",
-                callback_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.oem_proprietary",
-                callback_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"callback_level.reserved2",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.none",
-                user_level_none);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.md2",
-                user_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.md5",
-                user_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.reserved1",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.straight_password",
-                user_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.oem_proprietary",
-                user_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"user_level.reserved2",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.none",
-                operator_level_none);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.md2",
-                operator_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.md5",
-                operator_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.reserved1",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.straight_password",
-                operator_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.oem_proprietary",
-                operator_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"operator_level.reserved2",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.none",
-                admin_level_none);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.md2",
-                admin_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.md5",
-                admin_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.reserved1",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.straight_password",
-                admin_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.oem_proprietary",
-                admin_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"admin_level.reserved2",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.none",
-                oem_level_none);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.md2",
-                oem_level_md2);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.md5",
-                oem_level_md5);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.reserved1",
-                0);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.straight_password",
-                oem_level_straight_password);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.oem_proprietary",
-                oem_level_oem_proprietary);
-  FIID_OBJ_SET (obj_cmd_rq,
-                (uint8_t *)"oem_level.reserved2",
-                0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.none", callback_level_none);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.md2", callback_level_md2);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.md5", callback_level_md5);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.straight_password", callback_level_straight_password);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.oem_proprietary", callback_level_oem_proprietary);
+  FIID_OBJ_SET (obj_cmd_rq, "callback_level.reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.none", user_level_none);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.md2", user_level_md2);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.md5", user_level_md5);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.straight_password", user_level_straight_password);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.oem_proprietary", user_level_oem_proprietary);
+  FIID_OBJ_SET (obj_cmd_rq, "user_level.reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.none", operator_level_none);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.md2", operator_level_md2);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.md5", operator_level_md5);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.straight_password", operator_level_straight_password);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.oem_proprietary", operator_level_oem_proprietary);
+  FIID_OBJ_SET (obj_cmd_rq, "operator_level.reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.none", admin_level_none);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.md2", admin_level_md2);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.md5", admin_level_md5);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.straight_password", admin_level_straight_password);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.oem_proprietary", admin_level_oem_proprietary);
+  FIID_OBJ_SET (obj_cmd_rq, "admin_level.reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.none", oem_level_none);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.md2", oem_level_md2);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.md5", oem_level_md5);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.straight_password", oem_level_straight_password);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.oem_proprietary", oem_level_oem_proprietary);
+  FIID_OBJ_SET (obj_cmd_rq, "oem_level.reserved2", 0);
   return 0;
 }
 
@@ -667,14 +592,11 @@ _fill_lan_ip(uint8_t parameter_selector,
          && IPMI_CHANNEL_NUMBER_VALID(channel_number)
          && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"ip_address", ip_address);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "ip_address", ip_address);
 
   return (0);
 }
@@ -708,17 +630,12 @@ fill_cmd_set_lan_configuration_parameters_ip_address_source (uint8_t channel_num
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_ip_address_source_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_IP_ADDRESS_SOURCE);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"ip_address_source", ip_address_source);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_IP_ADDRESS_SOURCE);
+  FIID_OBJ_SET (obj_cmd_rq, "ip_address_source", ip_address_source);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -735,14 +652,11 @@ _fill_lan_mac_address(uint8_t parameter_selector,
          && IPMI_CHANNEL_NUMBER_VALID(channel_number)
          && fiid_obj_valid(obj_cmd_rq));
          
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"mac_address", mac_address);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "mac_address", mac_address);
 
   return (0);
 }
@@ -773,16 +687,11 @@ fill_cmd_set_lan_configuration_parameters_subnet_mask (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_subnet_mask_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq,
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_SUBNET_MASK);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"subnet_mask", subnet_mask);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_SUBNET_MASK);
+  FIID_OBJ_SET (obj_cmd_rq, "subnet_mask", subnet_mask);
   
   return 0;
 }
@@ -800,22 +709,13 @@ fill_cmd_set_lan_configuration_parameters_bmc_generated_arp_control (uint8_t cha
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_bmc_generated_arp_control_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"bmc_generated_gratuitous_arps", 
-		bmc_generated_gratuitous_arps);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"bmc_generated_arp_responses", 
-		bmc_generated_arp_responses);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_BMC_GENERATED_ARP_CONTROL);
+  FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_gratuitous_arps", bmc_generated_gratuitous_arps);
+  FIID_OBJ_SET (obj_cmd_rq, "bmc_generated_arp_responses", bmc_generated_arp_responses);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -830,18 +730,11 @@ fill_cmd_set_lan_configuration_parameters_gratuitous_arp_interval (uint8_t chann
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_gratuitous_arp_interval_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-    
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"gratuitous_arp_interval", 
-		gratuitous_arp_interval);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_GRATUITOUS_ARP_INTERVAL);
+  FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_interval", gratuitous_arp_interval);
   
   return 0;
 }
@@ -927,19 +820,14 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_vlan_id_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_VLAN_ID);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"vlan_id_ls", vlan_id_ls);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"vlan_id_ms", vlan_id_ms);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"vlan_id_enable", vlan_id_enable);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_VLAN_ID);
+  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_ls", vlan_id_ls);
+  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_ms", vlan_id_ms);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
 
   return 0;
 }
@@ -954,18 +842,13 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_vlan_priority_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"parameter_selector", 
-		IPMI_LAN_PARAM_VLAN_PRIORITY);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"vlan_priority", vlan_priority);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"unspecified", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_VLAN_PRIORITY);
+  FIID_OBJ_SET (obj_cmd_rq, "vlan_priority", vlan_priority);
+  FIID_OBJ_SET (obj_cmd_rq, "unspecified", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
   return 0;
 }
@@ -986,16 +869,13 @@ fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_lan_configuration_parameters_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"get_parameter", get_parameter);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"parameter_selector", parameter_selector);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"set_selector", set_selector);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"block_selector", block_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "get_parameter", get_parameter);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", parameter_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "set_selector", set_selector);
+  FIID_OBJ_SET (obj_cmd_rq, "block_selector", block_selector);
   
   return 0;
 }
@@ -1013,19 +893,12 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_suspend_bmc_arps_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"cmd", 
-		IPMI_CMD_SUSPEND_BMC_ARPS);
-  
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"gratuitous_arp_suspend", 
-		gratuitous_arp_suspend);
-  FIID_OBJ_SET (obj_cmd_rq, 
-		(uint8_t *)"arp_response_suspend", 
-		arp_response_suspend);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_BMC_ARPS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_suspend", gratuitous_arp_suspend);
+  FIID_OBJ_SET (obj_cmd_rq, "arp_response_suspend", arp_response_suspend);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
 }

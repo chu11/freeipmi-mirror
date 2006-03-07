@@ -69,8 +69,8 @@ _dump_rmcpplus_session_hdr(int fd,
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
   FIID_OBJ_SET_BLOCK_LEN_CLEANUP(obj_len,
 				 obj_rmcpplus_session_hdr,
-				 (uint8_t *)"authentication_type",
-				 (uint8_t *)"payload_type.encrypted",
+				 "authentication_type",
+				 "payload_type.encrypted",
 				 pkt + indx,
 				 pkt_len - indx);
   indx += obj_len;
@@ -87,8 +87,8 @@ _dump_rmcpplus_session_hdr(int fd,
     {
       FIID_OBJ_SET_BLOCK_LEN_CLEANUP(obj_len,
 				     obj_rmcpplus_session_hdr,
-				     (uint8_t *)"oem_iana",
-				     (uint8_t *)"oem_payload_id",
+				     "oem_iana",
+				     "oem_payload_id",
 				     pkt + indx,
 				     pkt_len - indx);
       indx += obj_len;
@@ -102,8 +102,8 @@ _dump_rmcpplus_session_hdr(int fd,
    */
   FIID_OBJ_SET_BLOCK_LEN_CLEANUP(obj_len,
 				 obj_rmcpplus_session_hdr,
-				 (uint8_t *)"session_id",
-				 (uint8_t *)"ipmi_payload_len",
+				 "session_id",
+				 "ipmi_payload_len",
 				 pkt + indx,
 				 pkt_len - indx);
   indx += obj_len;

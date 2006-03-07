@@ -8,7 +8,7 @@
 
    This program is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	 See the GNU
    General Public License for more details.
 
    You should have received a copy of the GNU General Public License
@@ -250,7 +250,7 @@ set_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
-                                    uint8_t ip_address_source)
+				    uint8_t ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -273,7 +273,7 @@ set_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
-                             char *ip_address)
+			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
@@ -300,7 +300,7 @@ set_bmc_lan_conf_ip_address (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
-                              char *mac_address)
+			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
@@ -322,7 +322,7 @@ set_bmc_lan_conf_mac_address (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -354,7 +354,7 @@ set_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
-                                          char *default_gateway_address)
+					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
@@ -376,12 +376,12 @@ set_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
 set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
-                                              char *default_gateway_mac_address)
+					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
@@ -408,7 +408,7 @@ set_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
-                                         char *backup_gateway_address)
+					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint32_t ip_address_val = 0;
@@ -430,12 +430,12 @@ set_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
 set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
-                                             char *backup_gateway_mac_address)
+					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t mac_address_val = 0;
@@ -457,7 +457,7 @@ set_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -493,7 +493,7 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -521,13 +521,13 @@ set_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 
 static int8_t
 _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
-                                           fiid_template_t l_tmpl_set_auth_authentication_type_enables,
-                                           uint8_t channel_number,
-                                           uint8_t callback_level,
-                                           uint8_t user_level,
-                                           uint8_t operator_level,
-                                           uint8_t admin_level,
-                                           uint8_t oem_level)
+					   fiid_template_t l_tmpl_set_auth_authentication_type_enables,
+					   uint8_t channel_number,
+					   uint8_t callback_level,
+					   uint8_t user_level,
+					   uint8_t operator_level,
+					   uint8_t admin_level,
+					   uint8_t oem_level)
 {
   if (!fiid_obj_valid(obj_data_rq)
       || !IPMI_CHANNEL_NUMBER_VALID(channel_number))
@@ -537,73 +537,73 @@ _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
     }
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"cmd",
-                    IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS) < 0)
+		    "cmd",
+		    IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"channel_number",
-                    channel_number) < 0)
+		    "channel_number",
+		    channel_number) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"reserved1",
-                    0) < 0)
+		    "reserved1",
+		    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"parameter_selector",
-                    IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES) < 0)
+		    "parameter_selector",
+		    IPMI_LAN_PARAM_AUTHENTICATION_TYPE_ENABLES) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"callback_level",
-                    callback_level) < 0)
+		    "callback_level",
+		    callback_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"callback_level.reserved2",
-                    0) < 0)
+		    "callback_level.reserved2",
+		    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"user_level",
-                    user_level) < 0)
+		    "user_level",
+		    user_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"user_level.reserved2",
-                    0) < 0)
+		    "user_level.reserved2",
+		    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"operator_level",
-                    operator_level) < 0)
+		    "operator_level",
+		    operator_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"operator_level.reserved2",
-                    0) < 0)
+		    "operator_level.reserved2",
+		    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"admin_level",
-                    admin_level) < 0)
+		    "admin_level",
+		    admin_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"admin_level.reserved2",
-                    0) < 0)
+		    "admin_level.reserved2",
+		    0) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"oem_level",
-                    oem_level) < 0)
+		    "oem_level",
+		    oem_level) < 0)
     return (-1);
 
   if (fiid_obj_set (obj_data_rq,
-                    (uint8_t *)"oem_level.reserved2",
-                    0) < 0)
+		    "oem_level.reserved2",
+		    0) < 0)
     return (-1);
 
   return 0;
@@ -611,7 +611,7 @@ _fill_lan_set_authentication_type_enables (fiid_obj_t obj_data_rq,
 
 int8_t 
 set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                              struct bmc_authentication_level *bmc_authentication_level)
+					      struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rq = NULL;
   fiid_obj_t obj_cmd_rs = NULL;
@@ -702,20 +702,20 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
     goto cleanup;
 
   if (_fill_lan_set_authentication_type_enables (obj_cmd_rq,
-                                                 l_tmpl_set_lan_configuration_parameters_authentication_type_enables_rq,
-                                                 get_lan_channel_number (), 
-                                                 callback_level,
-                                                 user_level,
-                                                 operator_level,
-                                                 admin_level,
-                                                 oem_level) < 0)
+						 l_tmpl_set_lan_configuration_parameters_authentication_type_enables_rq,
+						 get_lan_channel_number (), 
+						 callback_level,
+						 user_level,
+						 operator_level,
+						 admin_level,
+						 oem_level) < 0)
     goto cleanup;
 
   if (ipmi_cmd (dev,
-                IPMI_BMC_IPMB_LUN_BMC,
-                IPMI_NET_FN_TRANSPORT_RQ,
-                obj_cmd_rq,
-                obj_cmd_rs) < 0)
+		IPMI_BMC_IPMB_LUN_BMC,
+		IPMI_NET_FN_TRANSPORT_RQ,
+		obj_cmd_rq,
+		obj_cmd_rs) < 0)
     goto cleanup;
 
   if (ipmi_check_completion_code_success (obj_cmd_rs) != 1)
@@ -732,8 +732,8 @@ set_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                            uint8_t bmc_generated_gratuitous_arps, 
-                                            uint8_t bmc_generated_arp_responses)
+					    uint8_t bmc_generated_gratuitous_arps, 
+					    uint8_t bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -758,7 +758,7 @@ set_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
-                                          uint8_t gratuitous_arp_interval)
+					  uint8_t gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -817,10 +817,10 @@ set_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 set_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
-                                     uint8_t basic_mode,
-                                     uint8_t ppp_mode,
-                                     uint8_t terminal_mode,
-                                     uint8_t connect_mode)
+				     uint8_t basic_mode,
+				     uint8_t ppp_mode,
+				     uint8_t terminal_mode,
+				     uint8_t connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -864,12 +864,12 @@ set_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
 set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
-                                         uint8_t call_retry_interval)
+					 uint8_t call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -887,14 +887,14 @@ set_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
 set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
-                                                  uint8_t dtr_hangup, 
-                                                  uint8_t flow_control, 
-                                                  uint8_t bit_rate)
+						  uint8_t dtr_hangup, 
+						  uint8_t flow_control, 
+						  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -914,7 +914,7 @@ set_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -936,7 +936,7 @@ set_bmc_power_restore_policy (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -964,7 +964,7 @@ set_pef_control (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -996,7 +996,7 @@ set_pef_action_global_control (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -1018,7 +1018,7 @@ set_pef_startup_delay (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
-  return (rv);  
+  return (rv);	
 }
 
 int8_t 
@@ -1045,7 +1045,7 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_enable(ipmi_device_t *dev,
-                   uint8_t sol_enable)
+		   uint8_t sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1054,9 +1054,9 @@ set_sol_sol_enable(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
-                                                            get_lan_channel_number (),
-                                                            sol_enable, 
-                                                            obj_cmd_rs) != 0)
+							    get_lan_channel_number (),
+							    sol_enable, 
+							    obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1068,9 +1068,9 @@ set_sol_sol_enable(ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_authentication(ipmi_device_t *dev,
-                           uint8_t sol_privilege_level,
-                           uint8_t force_sol_payload_authentication,
-                           uint8_t force_sol_payload_encryption)
+			   uint8_t sol_privilege_level,
+			   uint8_t force_sol_payload_authentication,
+			   uint8_t force_sol_payload_encryption)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1079,11 +1079,11 @@ set_sol_sol_authentication(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (dev, 
-                                                                    get_lan_channel_number (),
-                                                                    sol_privilege_level,
-                                                                    force_sol_payload_authentication,
-                                                                    force_sol_payload_encryption,
-                                                                    obj_cmd_rs) != 0)
+								    get_lan_channel_number (),
+								    sol_privilege_level,
+								    force_sol_payload_authentication,
+								    force_sol_payload_encryption,
+								    obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1095,8 +1095,8 @@ set_sol_sol_authentication(ipmi_device_t *dev,
 
 int8_t
 set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
-                                                         uint8_t character_accumulate_interval,
-                                                         uint8_t character_send_threshold)
+							 uint8_t character_accumulate_interval,
+							 uint8_t character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1105,10 +1105,10 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-                                                                                                  get_lan_channel_number (),
-                                                                                                  character_accumulate_interval,
-                                                                                                  character_send_threshold,
-                                                                                                  obj_cmd_rs) != 0)
+												  get_lan_channel_number (),
+												  character_accumulate_interval,
+												  character_send_threshold,
+												  obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1120,8 +1120,8 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_retry(ipmi_device_t *dev,
-                  uint8_t retry_count,
-                  uint8_t retry_interval)
+		  uint8_t retry_count,
+		  uint8_t retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1130,10 +1130,10 @@ set_sol_sol_retry(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (dev, 
-                                                           get_lan_channel_number (),
-                                                           retry_count,
-                                                           retry_interval,
-                                                           obj_cmd_rs) != 0)
+							   get_lan_channel_number (),
+							   retry_count,
+							   retry_interval,
+							   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1145,7 +1145,7 @@ set_sol_sol_retry(ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
-                                  uint8_t bit_rate)
+				  uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1154,9 +1154,9 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-                                                                           get_lan_channel_number (),
-                                                                           bit_rate,
-                                                                           obj_cmd_rs) != 0)
+									   get_lan_channel_number (),
+									   bit_rate,
+									   obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1168,7 +1168,7 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
-                              uint8_t bit_rate)
+			      uint8_t bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1177,9 +1177,9 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-                                                                       get_lan_channel_number (),
-                                                                       bit_rate,
-                                                                       obj_cmd_rs) != 0)
+								       get_lan_channel_number (),
+								       bit_rate,
+								       obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1191,7 +1191,7 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
 
 int8_t
 set_sol_sol_payload_port_number(ipmi_device_t *dev,
-                                uint16_t port_number)
+				uint16_t port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t *ptr, ls_val, ms_val;
@@ -1210,10 +1210,10 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
-                                                                         get_lan_channel_number (),
-                                                                         ls_val,
-                                                                         ms_val,
-                                                                         obj_cmd_rs) != 0)
+									 get_lan_channel_number (),
+									 ls_val,
+									 ms_val,
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
   rv = 0;
@@ -1246,27 +1246,19 @@ get_bmc_user_access (ipmi_device_t *dev,
 				obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_privilege_level_limit", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_privilege_level_limit", &val) < 0)
     goto cleanup;
   *privilege_limit = (uint8_t) val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_ipmi_messaging", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_ipmi_messaging", &val) < 0)
     goto cleanup;
   *user_ipmi_messaging = (uint8_t) val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_link_authentication", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_link_authentication", &val) < 0)
     goto cleanup;
   *user_link_authentication = (uint8_t) val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_restricted_to_callback", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_restricted_to_callback", &val) < 0)
     goto cleanup;
   *user_restricted_to_callback = (uint8_t) val;
   
@@ -1303,33 +1295,23 @@ get_bmc_channel_access (ipmi_device_t *dev,
 				   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"ipmi_messaging_access_mode", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "ipmi_messaging_access_mode", &val) < 0)
     goto cleanup;
   *access_mode = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level_authentication", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level_authentication", &val) < 0)
     goto cleanup;
   *user_level_authentication = (val ? 0 : 1);
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"per_message_authentication", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "per_message_authentication", &val) < 0)
     goto cleanup;
   *per_message_authentication = (val ? 0 : 1);
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_alerting", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_alerting", &val) < 0)
     goto cleanup;
   *pef_alerting = (val ? 0 : 1);
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"channel_privilege_level_limit", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "channel_privilege_level_limit", &val) < 0)
     goto cleanup;
   *privilege_limit = val;
   
@@ -1344,7 +1326,7 @@ int8_t
 get_bmc_username (ipmi_device_t *dev, 
 		  uint8_t userid, 
 		  uint8_t *username,
-                  uint32_t username_len)
+		  uint32_t username_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   int8_t rv = -1;
@@ -1364,7 +1346,7 @@ get_bmc_username (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"user_name", 
+                         "user_name", 
 			 username,
 			 username_len) < 0)
     goto cleanup;
@@ -1452,7 +1434,7 @@ get_bmc_lan_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev, 
-                                    uint8_t *ip_address_source)
+				    uint8_t *ip_address_source)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1469,9 +1451,7 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
 								   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"ip_address_source", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "ip_address_source", &val) < 0)
     goto cleanup;
   *ip_address_source = val;
   
@@ -1484,7 +1464,7 @@ get_bmc_lan_conf_ip_address_source (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_ip_address (ipmi_device_t *dev, 
-                             char *ip_address)
+			     char *ip_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -1502,7 +1482,7 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_address", 
+			 "ip_address", 
 			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
@@ -1522,7 +1502,7 @@ get_bmc_lan_conf_ip_address (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_mac_address (ipmi_device_t *dev, 
-                              char *mac_address)
+			      char *mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -1540,7 +1520,7 @@ get_bmc_lan_conf_mac_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_address", 
+			 "mac_address", 
 			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
@@ -1580,7 +1560,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"subnet_mask", 
+			 "subnet_mask", 
 			 subnet_mask_bytes,
 			 4) < 0)
     goto cleanup;
@@ -1600,7 +1580,7 @@ get_bmc_lan_conf_subnet_mask (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev, 
-                                          char *default_gateway_address)
+					  char *default_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -1618,7 +1598,7 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_address", 
+			 "ip_address", 
 			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
@@ -1638,7 +1618,7 @@ get_bmc_lan_conf_default_gateway_address (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev, 
-                                              char *default_gateway_mac_address)
+					      char *default_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -1656,7 +1636,7 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_address", 
+			 "mac_address", 
 			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
@@ -1678,7 +1658,7 @@ get_bmc_lan_conf_default_gateway_mac_address (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev, 
-                                         char *backup_gateway_address)
+					 char *backup_gateway_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t ip_address_bytes[4];
@@ -1696,7 +1676,7 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"ip_address", 
+			 "ip_address", 
 			 ip_address_bytes,
 			 4) < 0)
     goto cleanup;
@@ -1716,7 +1696,7 @@ get_bmc_lan_conf_backup_gateway_address (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev, 
-                                             char *backup_gateway_mac_address)
+					     char *backup_gateway_mac_address)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint8_t mac_address_bytes[6];
@@ -1734,7 +1714,7 @@ get_bmc_lan_conf_backup_gateway_mac_address (ipmi_device_t *dev,
     goto cleanup;
   
   if (fiid_obj_get_data (obj_cmd_rs, 
-			 (uint8_t *)"mac_address", 
+			 "mac_address", 
 			 mac_address_bytes,
 			 6) < 0)
     goto cleanup;
@@ -1775,14 +1755,10 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 							 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"vlan_id_ls", 
-		    &ls_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ls", &ls_val) < 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"vlan_id_ms", 
-		    &ms_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ms", &ms_val) < 0)
     goto cleanup;
   
   ptr = (uint8_t *)vlan_id;
@@ -1794,9 +1770,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
   ptr[1] = ms_val;
 #endif
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"vlan_id_enable", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id_enable", &val) < 0)
     goto cleanup;
   *vlan_id_enable = val;
   
@@ -1826,9 +1800,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 							       obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"vlan_priority", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_priority", &val) < 0)
     goto cleanup;
   *vlan_priority = val;
   
@@ -1841,7 +1813,7 @@ get_bmc_lan_conf_vlan_priority (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev, 
-                                              struct bmc_authentication_level *bmc_authentication_level)
+					      struct bmc_authentication_level *bmc_authentication_level)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -1858,153 +1830,103 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 									     obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"callback_level.none", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.none", &val) < 0)
     goto cleanup;
   bmc_authentication_level->callback.type_none = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"callback_level.md2", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.md2", &val) < 0)
     goto cleanup;
   bmc_authentication_level->callback.type_md2 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"callback_level.md5", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.md5", &val) < 0)
     goto cleanup;
   bmc_authentication_level->callback.type_md5 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"callback_level.straight_password", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.straight_password", &val) < 0)
     goto cleanup;
   bmc_authentication_level->callback.type_straight_password = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"callback_level.oem_proprietary", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "callback_level.oem_proprietary", &val) < 0)
     goto cleanup;
   bmc_authentication_level->callback.type_oem_proprietary = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level.none", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level.none", &val) < 0)
     goto cleanup;
   bmc_authentication_level->user.type_none = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level.md2", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level.md2", &val) < 0)
     goto cleanup;
   bmc_authentication_level->user.type_md2 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level.md5", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level.md5", &val) < 0)
     goto cleanup;
   bmc_authentication_level->user.type_md5 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level.straight_password", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level.straight_password", &val) < 0)
     goto cleanup;
   bmc_authentication_level->user.type_straight_password = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"user_level.oem_proprietary", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "user_level.oem_proprietary", &val) < 0)
     goto cleanup;
   bmc_authentication_level->user.type_oem_proprietary = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"operator_level.none", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.none", &val) < 0)
     goto cleanup;
   bmc_authentication_level->operator.type_none = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"operator_level.md2", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.md2", &val) < 0)
     goto cleanup;
   bmc_authentication_level->operator.type_md2 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"operator_level.md5", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.md5", &val) < 0)
     goto cleanup;
   bmc_authentication_level->operator.type_md5 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"operator_level.straight_password", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.straight_password", &val) < 0)
     goto cleanup;
   bmc_authentication_level->operator.type_straight_password = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"operator_level.oem_proprietary", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "operator_level.oem_proprietary", &val) < 0)
     goto cleanup;
   bmc_authentication_level->operator.type_oem_proprietary = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"admin_level.none", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.none", &val) < 0)
     goto cleanup;
   bmc_authentication_level->admin.type_none = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"admin_level.md2", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.md2", &val) < 0)
     goto cleanup;
   bmc_authentication_level->admin.type_md2 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"admin_level.md5", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.md5", &val) < 0)
     goto cleanup;
   bmc_authentication_level->admin.type_md5 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"admin_level.straight_password", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.straight_password", &val) < 0)
     goto cleanup;
   bmc_authentication_level->admin.type_straight_password = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"admin_level.oem_proprietary", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "admin_level.oem_proprietary", &val) < 0)
     goto cleanup;
   bmc_authentication_level->admin.type_oem_proprietary = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_level.none", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.none", &val) < 0)
     goto cleanup;
   bmc_authentication_level->oem.type_none = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_level.md2", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.md2", &val) < 0)
     goto cleanup;
   bmc_authentication_level->oem.type_md2 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_level.md5", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.md5", &val) < 0)
     goto cleanup;
   bmc_authentication_level->oem.type_md5 = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_level.straight_password", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.straight_password", &val) < 0)
     goto cleanup;
   bmc_authentication_level->oem.type_straight_password = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_level.oem_proprietary", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_level.oem_proprietary", &val) < 0)
     goto cleanup;
   bmc_authentication_level->oem.type_oem_proprietary = val;
   
@@ -2017,8 +1939,8 @@ get_bmc_lan_conf_authentication_type_enables (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev, 
-                                            uint8_t *bmc_generated_gratuitous_arps, 
-                                            uint8_t *bmc_generated_arp_responses)
+					    uint8_t *bmc_generated_gratuitous_arps, 
+					    uint8_t *bmc_generated_arp_responses)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2035,15 +1957,11 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 									   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bmc_generated_gratuitous_arps", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "bmc_generated_gratuitous_arps", &val) < 0)
     goto cleanup;
   *bmc_generated_gratuitous_arps = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bmc_generated_arp_responses", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "bmc_generated_arp_responses", &val) < 0)
     goto cleanup;
   *bmc_generated_arp_responses = val;
   
@@ -2056,7 +1974,7 @@ get_bmc_lan_conf_bmc_generated_arp_control (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev, 
-                                          uint8_t *gratuitous_arp_interval)
+					  uint8_t *gratuitous_arp_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2073,9 +1991,7 @@ get_bmc_lan_conf_gratuitous_arp_interval (ipmi_device_t *dev,
 									 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"gratuitous_arp_interval", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "gratuitous_arp_interval", &val) < 0)
     goto cleanup;
   *gratuitous_arp_interval = val;
   
@@ -2124,10 +2040,10 @@ get_bmc_serial_channel_non_volatile_access (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_connection_mode (ipmi_device_t *dev, 
-                                     uint8_t *basic_mode, 
-                                     uint8_t *ppp_mode, 
-                                     uint8_t *terminal_mode, 
-                                     uint8_t *connect_mode)
+				     uint8_t *basic_mode, 
+				     uint8_t *ppp_mode, 
+				     uint8_t *terminal_mode, 
+				     uint8_t *connect_mode)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2144,27 +2060,19 @@ get_bmc_serial_conf_connection_mode (ipmi_device_t *dev,
 							       obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"basic_mode", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "basic_mode", &val) < 0)
     goto cleanup;
   *basic_mode = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"ppp_mode", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "ppp_mode", &val) < 0)
     goto cleanup;
   *ppp_mode = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"terminal_mode", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "terminal_mode", &val) < 0)
     goto cleanup;
   *terminal_mode = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"connect_mode", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "connect_mode", &val) < 0)
     goto cleanup;
   *connect_mode = val;
   
@@ -2194,9 +2102,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 								      obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"page_blackout_interval", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "page_blackout_interval", &val) < 0)
     goto cleanup;
   *page_blackout_interval = val;
   
@@ -2209,7 +2115,7 @@ get_bmc_serial_conf_page_blackout_interval (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev, 
-                                         uint8_t *call_retry_interval)
+					 uint8_t *call_retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2226,9 +2132,7 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
 								   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"call_retry_interval", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "call_retry_interval", &val) < 0)
     goto cleanup;
   *call_retry_interval = val;
   
@@ -2241,9 +2145,9 @@ get_bmc_serial_conf_call_retry_interval (ipmi_device_t *dev,
 
 int8_t 
 get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev, 
-                                                  uint8_t *dtr_hangup, 
-                                                  uint8_t *flow_control, 
-                                                  uint8_t *bit_rate)
+						  uint8_t *dtr_hangup, 
+						  uint8_t *flow_control, 
+						  uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2260,21 +2164,15 @@ get_bmc_serial_conf_ipmi_messaging_comm_settings (ipmi_device_t *dev,
 									    obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"dtr_hangup", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "dtr_hangup", &val) < 0)
     goto cleanup;
   *dtr_hangup = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"flow_control", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "flow_control", &val) < 0)
     goto cleanup;
   *flow_control = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bit_rate", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
   
@@ -2299,9 +2197,7 @@ get_bmc_power_restore_policy (ipmi_device_t *dev,
   if (ipmi_cmd_get_chassis_status (dev, obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"current_power_state.power_restore_policy", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "current_power_state.power_restore_policy", &val) < 0)
     goto cleanup;
   *power_restore_policy = val;
   
@@ -2333,27 +2229,19 @@ get_pef_control (ipmi_device_t *dev,
 							     obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef", &val) < 0)
     goto cleanup;
   *pef = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_event_messages", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_event_messages", &val) < 0)
     goto cleanup;
   *pef_event_messages = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_startup_delay", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     goto cleanup;
   *pef_startup_delay = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_alert_startup_delay", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     goto cleanup;
   *pef_alert_startup_delay = val;
   
@@ -2387,39 +2275,27 @@ get_pef_action_global_control (ipmi_device_t *dev,
 									   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"alert_action", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "alert_action", &val) < 0)
     goto cleanup;
   *alert_action = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"power_down_action", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "power_down_action", &val) < 0)
     goto cleanup;
   *power_down_action = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"reset_action", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "reset_action", &val) < 0)
     goto cleanup;
   *reset_action = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"power_cycle_action", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "power_cycle_action", &val) < 0)
     goto cleanup;
   *power_cycle_action = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"oem_action", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "oem_action", &val) < 0)
     goto cleanup;
   *oem_action = val;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"diagnostic_interrupt", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "diagnostic_interrupt", &val) < 0)
     goto cleanup;
   *diagnostic_interrupt = val;
 
@@ -2448,9 +2324,7 @@ get_pef_startup_delay (ipmi_device_t *dev,
 								   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_startup_delay", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_startup_delay", &val) < 0)
     goto cleanup;
   *pef_startup_delay = val;
   
@@ -2479,9 +2353,7 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
 									 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"pef_alert_startup_delay", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "pef_alert_startup_delay", &val) < 0)
     goto cleanup;
   *pef_alert_startup_delay = val;
   
@@ -2494,7 +2366,7 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_enable (ipmi_device_t *dev, 
-                    uint8_t *sol_enable)
+		    uint8_t *sol_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2504,16 +2376,14 @@ get_sol_sol_enable (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (dev, 
-                                                            get_lan_channel_number (), 
-                                                            IPMI_GET_SOL_PARAMETER, 
-                                                            SET_SELECTOR, 
-                                                            BLOCK_SELECTOR, 
-                                                            obj_cmd_rs) != 0)
+							    get_lan_channel_number (), 
+							    IPMI_GET_SOL_PARAMETER, 
+							    SET_SELECTOR, 
+							    BLOCK_SELECTOR, 
+							    obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"sol_enable", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "sol_enable", &val) < 0)
     goto cleanup;
   *sol_enable = val;
   
@@ -2526,9 +2396,9 @@ get_sol_sol_enable (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_authentication (ipmi_device_t *dev, 
-                            uint8_t *sol_privilege_level,
-                            uint8_t *force_sol_payload_authentication,
-                            uint8_t *force_sol_payload_encryption)
+			    uint8_t *sol_privilege_level,
+			    uint8_t *force_sol_payload_authentication,
+			    uint8_t *force_sol_payload_encryption)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2538,28 +2408,22 @@ get_sol_sol_authentication (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (dev, 
-                                                                    get_lan_channel_number (), 
-                                                                    IPMI_GET_SOL_PARAMETER, 
-                                                                    SET_SELECTOR, 
-                                                                    BLOCK_SELECTOR, 
-                                                                    obj_cmd_rs) != 0)
+								    get_lan_channel_number (), 
+								    IPMI_GET_SOL_PARAMETER, 
+								    SET_SELECTOR, 
+								    BLOCK_SELECTOR, 
+								    obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"sol_privilege_level", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "sol_privilege_level", &val) < 0)
     goto cleanup;
   *sol_privilege_level = val;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"force_sol_payload_authentication,", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_authentication,", &val) < 0)
     goto cleanup;
   *force_sol_payload_authentication = val;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"force_sol_payload_encryption,", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_encryption,", &val) < 0)
     goto cleanup;
   *force_sol_payload_encryption = val;
   
@@ -2572,8 +2436,8 @@ get_sol_sol_authentication (ipmi_device_t *dev,
 
 int8_t 
 get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev, 
-                                                          uint8_t *character_accumulate_interval,
-                                                          uint8_t *character_send_threshold)
+							  uint8_t *character_accumulate_interval,
+							  uint8_t *character_send_threshold)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2583,22 +2447,18 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-                                                                                                  get_lan_channel_number (), 
-                                                                                                  IPMI_GET_SOL_PARAMETER, 
-                                                                                                  SET_SELECTOR, 
-                                                                                                  BLOCK_SELECTOR, 
-                                                                                                  obj_cmd_rs) != 0)
+												  get_lan_channel_number (), 
+												  IPMI_GET_SOL_PARAMETER, 
+												  SET_SELECTOR, 
+												  BLOCK_SELECTOR, 
+												  obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"character_accumulate_interval", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "character_accumulate_interval", &val) < 0)
     goto cleanup;
   *character_accumulate_interval = val;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"character_send_threshold", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "character_send_threshold", &val) < 0)
     goto cleanup;
   *character_send_threshold = val;
   
@@ -2611,8 +2471,8 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_retry (ipmi_device_t *dev, 
-                   uint8_t *retry_count,
-                   uint8_t *retry_interval)
+		   uint8_t *retry_count,
+		   uint8_t *retry_interval)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2622,22 +2482,18 @@ get_sol_sol_retry (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (dev, 
-                                                           get_lan_channel_number (), 
-                                                           IPMI_GET_SOL_PARAMETER, 
-                                                           SET_SELECTOR, 
-                                                           BLOCK_SELECTOR, 
-                                                           obj_cmd_rs) != 0)
+							   get_lan_channel_number (), 
+							   IPMI_GET_SOL_PARAMETER, 
+							   SET_SELECTOR, 
+							   BLOCK_SELECTOR, 
+							   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"retry_count", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "retry_count", &val) < 0)
     goto cleanup;
   *retry_count = val;
 
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"retry_interval", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "retry_interval", &val) < 0)
     goto cleanup;
   *retry_interval = val;
   
@@ -2650,7 +2506,7 @@ get_sol_sol_retry (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev, 
-                                   uint8_t *bit_rate)
+				   uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2660,16 +2516,14 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-                                                           get_lan_channel_number (), 
-                                                           IPMI_GET_SOL_PARAMETER, 
-                                                           SET_SELECTOR, 
-                                                           BLOCK_SELECTOR, 
-                                                           obj_cmd_rs) != 0)
+							   get_lan_channel_number (), 
+							   IPMI_GET_SOL_PARAMETER, 
+							   SET_SELECTOR, 
+							   BLOCK_SELECTOR, 
+							   obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bit_rate", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
   
@@ -2682,7 +2536,7 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_volatile_bit_rate (ipmi_device_t *dev, 
-                               uint8_t *bit_rate)
+			       uint8_t *bit_rate)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
@@ -2692,16 +2546,14 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-                                                                       get_lan_channel_number (), 
-                                                                       IPMI_GET_SOL_PARAMETER, 
-                                                                       SET_SELECTOR, 
-                                                                       BLOCK_SELECTOR, 
-                                                                       obj_cmd_rs) != 0)
+								       get_lan_channel_number (), 
+								       IPMI_GET_SOL_PARAMETER, 
+								       SET_SELECTOR, 
+								       BLOCK_SELECTOR, 
+								       obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"bit_rate", 
-		    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "bit_rate", &val) < 0)
     goto cleanup;
   *bit_rate = val;
   
@@ -2714,7 +2566,7 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
 
 int8_t 
 get_sol_sol_payload_port_number (ipmi_device_t *dev, 
-                                 uint16_t *port_number)
+				 uint16_t *port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t ls_val, ms_val;
@@ -2725,21 +2577,17 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (dev, 
-                                                                         get_lan_channel_number (), 
-                                                                         IPMI_GET_SOL_PARAMETER, 
-                                                                         SET_SELECTOR, 
-                                                                         BLOCK_SELECTOR, 
-                                                                         obj_cmd_rs) != 0)
+									 get_lan_channel_number (), 
+									 IPMI_GET_SOL_PARAMETER, 
+									 SET_SELECTOR, 
+									 BLOCK_SELECTOR, 
+									 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"port_number_ls_byte", 
-		    &ls_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "port_number_ls_byte", &ls_val) < 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, 
-		    (uint8_t *)"port_number_ms_byte", 
-		    &ms_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "port_number_ms_byte", &ms_val) < 0)
     goto cleanup;
   
   ptr = (uint8_t *)port_number;
@@ -2779,10 +2627,8 @@ check_bmc_user_password (ipmi_device_t *dev,
     {
       uint64_t comp_code;
 
-      if (fiid_obj_get(obj_cmd_rs,
-                       (uint8_t *)"comp_code",
-                       &comp_code) < 0)
-        goto cleanup;
+      if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
+	goto cleanup;
 
       if (comp_code == IPMI_PASSWORD_OPERATION_TEST_FAILED)
 	rv = 0; /* false */

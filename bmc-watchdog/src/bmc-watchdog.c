@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.51 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.52 2006-03-07 21:33:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -430,7 +430,7 @@ _cmd(char *str,
     }
 #endif
 
-  _FIID_OBJ_GET(cmd_rs, (uint8_t *)"comp_code", &comp_code, str);
+  _FIID_OBJ_GET(cmd_rs, "comp_code", &comp_code, str);
 
   if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
     _bmclog("%s: cmd error: %Xh", str, comp_code);
@@ -619,64 +619,64 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
     goto cleanup;
 
   if (timer_use)
-    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use", 
+    _FIID_OBJ_GET(cmd_rs, "timer_use", 
                   timer_use, "_get_watchdog_timer_cmd");
 
   if (timer_state)
-    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_state", 
+    _FIID_OBJ_GET(cmd_rs, "timer_state", 
                   timer_state, "_get_watchdog_timer_cmd");
 
   if (log)
-    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"log", 
+    _FIID_OBJ_GET(cmd_rs, "log", 
                   log, "_get_watchdog_timer_cmd");
 
   if (timeout_action)
-    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timeout_action", 
+    _FIID_OBJ_GET(cmd_rs, "timeout_action", 
                   timeout_action, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interrupt)
-    _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interrupt", 
+    _FIID_OBJ_GET(cmd_rs, "pre_timeout_interrupt", 
 		  pre_timeout_interrupt, "_get_watchdog_timer_cmd");
 
   if (pre_timeout_interval)
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"pre_timeout_interval", 
+      _FIID_OBJ_GET(cmd_rs, "pre_timeout_interval", 
 		    pre_timeout_interval, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_frb2)
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_frb2", 
+      _FIID_OBJ_GET(cmd_rs, "timer_use_expiration_flag.bios_frb2", 
                     timer_use_expiration_flag_bios_frb2, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_bios_post) 
-     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.bios_post", 
+     _FIID_OBJ_GET(cmd_rs, "timer_use_expiration_flag.bios_post", 
                    timer_use_expiration_flag_bios_post, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_os_load) 
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.os_load", 
+      _FIID_OBJ_GET(cmd_rs, "timer_use_expiration_flag.os_load", 
                     timer_use_expiration_flag_os_load, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_sms_os) 
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.sms_os", 
+      _FIID_OBJ_GET(cmd_rs, "timer_use_expiration_flag.sms_os", 
                     timer_use_expiration_flag_sms_os, "_get_watchdog_timer_cmd");
 
   if (timer_use_expiration_flag_oem) 
-     _FIID_OBJ_GET(cmd_rs, (uint8_t *)"timer_use_expiration_flag.oem", 
+     _FIID_OBJ_GET(cmd_rs, "timer_use_expiration_flag.oem", 
                    timer_use_expiration_flag_oem, "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)
      {
-       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ls_byte", 
+       _FIID_OBJ_GET(cmd_rs, "initial_countdown_value_ls_byte", 
                      &ls_byte, "_get_watchdog_timer_cmd");
        
-       _FIID_OBJ_GET(cmd_rs, (uint8_t *)"initial_countdown_value_ms_byte", 
+       _FIID_OBJ_GET(cmd_rs, "initial_countdown_value_ms_byte", 
                      &ms_byte, "_get_watchdog_timer_cmd");
        *initial_countdown_seconds = _time_seconds(ls_byte, ms_byte);
      }
 
   if (present_countdown_seconds)
     {
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ls_byte", 
+      _FIID_OBJ_GET(cmd_rs, "present_countdown_value_ls_byte", 
                     &ls_byte, "_get_watchdog_timer_cmd");
-      _FIID_OBJ_GET(cmd_rs, (uint8_t *)"present_countdown_value_ms_byte", 
+      _FIID_OBJ_GET(cmd_rs, "present_countdown_value_ms_byte", 
                     &ms_byte, "_get_watchdog_timer_cmd");
       *present_countdown_seconds = _time_seconds(ls_byte, ms_byte);
     }

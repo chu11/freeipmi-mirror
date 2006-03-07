@@ -78,10 +78,10 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
       dev->cmd = val;
       
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
       dev->comp_code = val;
       ipmi_strerror_cmd_r (obj_cmd_rs, 
                            dev->net_fn,
@@ -91,12 +91,12 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
     }
   
   seld->first_record_id = IPMI_SEL_GET_RECORD_ID_FIRST_ENTRY;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"next_record_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
   seld->next_record_id = val;
   
   FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
 				 obj_cmd_rs, 
-				 (uint8_t *)"record_data", 
+				 "record_data", 
 				 record_data,
 				 *record_data_len);
   *record_data_len = len;
@@ -132,10 +132,10 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
 			      IPMI_SEL_READ_ENTIRE_RECORD_BYTES_TO_READ,
 			      obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
       dev->cmd = val;
 
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
       dev->comp_code = val;
 
       ipmi_strerror_cmd_r (obj_cmd_rs, 
@@ -145,12 +145,12 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"next_record_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "next_record_id", &val);
   seld->next_record_id = val;
   
   FIID_OBJ_GET_DATA_LEN_CLEANUP (len,
 				 obj_cmd_rs, 
-				 (uint8_t *)"record_data", 
+				 "record_data", 
 				 record_data,
 				 *record_data_len);
   *record_data_len = len;
@@ -191,46 +191,46 @@ get_sel_system_event_record (uint8_t *record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"record_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
   record_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timestamp", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "timestamp", &val);
   timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"generator_id.id_type", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "generator_id.id_type", &val);
   generator_id_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"generator_id.id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "generator_id.id", &val);
   generator_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"channel_number", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
   channel_number = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_type", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "sensor_type", &val);
   sensor_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"sensor_number", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);
   sensor_number = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_type_code", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_type_code", &val);
   event_type_code = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_dir", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_dir", &val);
   event_dir = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"offset_from_event_reading_type_code", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "offset_from_event_reading_type_code", &val);
   offset_from_event_reading_type_code = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_data2_flag", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_data2_flag", &val);
   event_data2_flag = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_data3_flag", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_data3_flag", &val);
   event_data3_flag = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_data2", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_data2", &val);
   event_data2 = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_data3", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "event_data3", &val);
   event_data3 = val;
   
   sel_record->record_id = record_id;
@@ -427,16 +427,16 @@ get_sel_timestamped_oem_record (uint8_t *record_data,
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"record_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
   record_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timestamp", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "timestamp", &val);
   timestamp = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"manufacturer_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "manufacturer_id", &val);
   manufacturer_id = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"oem_defined", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "oem_defined", &val);
   oem_defined = val;
   
   sel_record->record_id = record_id;
@@ -484,13 +484,13 @@ get_sel_non_timestamped_oem_record (uint8_t *record_data, uint32_t record_data_l
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"record_id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "record_id", &val);
   record_id = val;
   
   memset(buf, '\0', 1024);
   FIID_OBJ_GET_DATA_LEN_CLEANUP (len, 
 				 obj,
-				 (uint8_t *)"oem_defined",
+				 "oem_defined",
 				 buf,
 				 1024);
   
@@ -543,7 +543,7 @@ get_sel_record (uint8_t *record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP(obj, record_data, record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"record_type", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "record_type", &val);
   record_type = val;
 
   switch (ipmi_get_sel_record_type (record_type))
@@ -577,10 +577,10 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
 
   if (ipmi_cmd_get_sel_info (dev, obj_cmd_rs) != 0)
     {
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"cmd", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
       dev->cmd = val;
 
-      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"comp_code", &val);
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
       dev->comp_code = val;
 
       ipmi_strerror_cmd_r (obj_cmd_rs, 
@@ -590,38 +590,38 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
       goto cleanup;
     }
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"sel_version_major", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_major", &val);
   pinfo->version_major = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"sel_version_minor", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "sel_version_minor", &val);
   pinfo->version_minor = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"entries", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "entries", &val);
   pinfo->entry_count = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"free_space", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "free_space", &val);
   pinfo->free_space = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"most_recent_addition_timestamp", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "most_recent_addition_timestamp", &val);
   pinfo->last_add_time = val;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"most_recent_erase_timestamp", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "most_recent_erase_timestamp", &val);
   pinfo->last_erase_time = val;
   
   pinfo->flags = 0;
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"get_sel_allocation_info_command_supported", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "get_sel_allocation_info_command_supported", &val);
   if (val) pinfo->flags |= get_sel_alloc_info_cmd_support;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"reserve_sel_command_supported", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "reserve_sel_command_supported", &val);
   if (val) pinfo->flags |= reserve_sel_cmd_support;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"partial_add_sel_entry_command_supported", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "partial_add_sel_entry_command_supported", &val);
   if (val) pinfo->flags |= partial_add_sel_entry_cmd_support;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"delete_sel_command_supported", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "delete_sel_command_supported", &val);
   if (val) pinfo->flags |= delete_sel_cmd_support;
   
-  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, (uint8_t *)"overflow_flag", &val);
+  FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "overflow_flag", &val);
   if (val) pinfo->flags |= overflow_flag;
   
   rv = 0;

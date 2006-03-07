@@ -135,7 +135,7 @@ fill_cmd_get_chassis_status (fiid_obj_t obj_cmd_rq)
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_chassis_status_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_CHASSIS_STATUS);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHASSIS_STATUS);
   return 0;
 }
 
@@ -148,9 +148,9 @@ fill_cmd_chassis_control (uint8_t chassis_control, fiid_obj_t obj_cmd_rq)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_chassis_control_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_CONTROL);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"chassis_control", chassis_control);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_CONTROL);
+  FIID_OBJ_SET (obj_cmd_rq, "chassis_control", chassis_control);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   return 0;
 }  
 
@@ -167,14 +167,14 @@ fill_cmd_chassis_identify (uint8_t *identify_interval,
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_CHASSIS_IDENTIFY);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CHASSIS_IDENTIFY);
   if (identify_interval)
     {
-      FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"identify_interval", *identify_interval);
+      FIID_OBJ_SET (obj_cmd_rq, "identify_interval", *identify_interval);
       if (force_identify)
 	{
-	  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"force_identify", *force_identify);
-	  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"reserved", 0);
+	  FIID_OBJ_SET (obj_cmd_rq, "force_identify", *force_identify);
+	  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
 	}
     }
 
@@ -192,10 +192,10 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_
   FIID_OBJ_CLEAR (obj_cmd_rq);
 
   FIID_OBJ_SET (obj_cmd_rq,
-		(uint8_t *)"cmd", 
+		"cmd", 
 		IPMI_CMD_SET_POWER_RESTORE_POLICY); 
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"power_restore_policy", power_restore_policy);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"power_restore_policy.reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "power_restore_policy", power_restore_policy);
+  FIID_OBJ_SET (obj_cmd_rq, "power_restore_policy.reserved", 0);
   
   return 0;
 }

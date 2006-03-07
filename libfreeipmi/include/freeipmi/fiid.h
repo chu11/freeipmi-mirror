@@ -149,7 +149,7 @@ int8_t fiid_iterator_reset(fiid_iterator_t iter);
 int8_t fiid_iterator_next(fiid_iterator_t iter);
 int8_t fiid_iterator_end(fiid_iterator_t iter);
 int32_t fiid_iterator_field_len(fiid_iterator_t iter);
-uint8_t *fiid_iterator_key(fiid_iterator_t iter);
+char *fiid_iterator_key(fiid_iterator_t iter);
 int32_t fiid_iterator_get(fiid_iterator_t iter, uint64_t *val);
 int32_t fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len);
 

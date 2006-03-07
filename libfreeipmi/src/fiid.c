@@ -1230,8 +1230,8 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
 int8_t
 fiid_obj_field_lookup (fiid_obj_t obj, char *field)
 {
-  int start = 0;
-  int end = 0; //excluded always
+  uint32_t start = 0;
+  uint32_t end = 0; //excluded always
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     return (-1);
@@ -2290,7 +2290,7 @@ fiid_iterator_field_len(fiid_iterator_t iter)
   return (iter->obj->field_data[iter->current_index].set_field_len);
 }
 
-uint8_t *
+char *
 fiid_iterator_key(fiid_iterator_t iter)
 {
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))

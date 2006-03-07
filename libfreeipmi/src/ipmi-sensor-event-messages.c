@@ -1009,10 +1009,10 @@ _get_12_event_data2_message_offset_03(int offset, uint8_t event_data2, char *buf
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_type", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "log_type", &val);
   log_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"log_entry_action", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "log_entry_action", &val);
   log_entry_action = val;
           
   if (log_type <= ipmi_sensor_type_code_12_event_data2_offset_03_log_entry_action_desc_max)
@@ -1075,22 +1075,22 @@ _get_12_event_data2_message_offset_04(int offset, uint8_t event_data2, char *buf
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"alert", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "alert", &val);
   alert = val;
 	
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_off", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "power_off", &val);
   power_off = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"reset", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "reset", &val);
   reset = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"power_cycle", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "power_cycle", &val);
   power_cycle = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"oem_action", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "oem_action", &val);
   oem_action = val;
 
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"diagnostic_interrupt", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "diagnostic_interrupt", &val);
   diagnostic_interrupt = val;
 
   memset(buf, '0', buflen);
@@ -1135,10 +1135,10 @@ _get_12_event_data2_message_offset_05(int offset, uint8_t event_data2, char *buf
   
   FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timestamp_clock_type", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "timestamp_clock_type", &val);
   timestamp_clock_type = val;
   
-  FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"first_second", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "first_second", &val);
   first_second = val;
   
   if (timestamp_clock_type <= ipmi_sensor_type_code_12_event_data2_offset_05_timestamp_clock_type_desc_max)
@@ -1201,7 +1201,7 @@ get_1D_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
 
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"restart_cause", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "restart_cause", &val);
 
       if (val <= ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_1D_event_data2_offset_07_restart_cause_desc[val]);
@@ -1235,7 +1235,7 @@ get_21_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"slot_connector_type", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "slot_connector_type", &val);
      
       if (val <= ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_21_event_data2_offset_09_slot_connector_type_desc[val]);
@@ -1273,10 +1273,10 @@ get_23_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"timer_at_expiration", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "timer_at_expiration", &val);
       timer_at_expiration = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"interrupt_type", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "interrupt_type", &val);
       interrupt_type = val;
 
       if (timer_at_expiration <= ipmi_sensor_type_code_23_event_data2_offset_08_timer_use_at_expiration_desc_max)
@@ -1328,13 +1328,13 @@ get_28_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"private_bus_id", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "private_bus_id", &val);
       private_bus_id = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"lun", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "lun", &val);
       lun = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"fru_device", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "fru_device", &val);
       fru_device = val;
   
       if (fru_device <= ipmi_sensor_type_code_28_event_data2_offset_05_logical_fru_device_desc_max)
@@ -1372,7 +1372,7 @@ get_2A_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"user_id", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "user_id", &val);
              
       if (val == 0x0)
 	rv = _snprintf(buf, buflen, "User ID for user that activated session = Unspecified");
@@ -1422,10 +1422,10 @@ get_2C_event_data2_message (int offset, uint8_t event_data2, char *buf, unsigned
       
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data2, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"previous_state_offset", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "previous_state_offset", &val);
       previous_state_offset = val;
 
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"cause_os_state_change", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "cause_os_state_change", &val);
       cause_of_state_change = val;
       
       if (cause_of_state_change <= 0x0F)
@@ -1462,7 +1462,7 @@ get_08_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_type", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "event_type", &val);
       
       if (val <= ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc_max)
         rv = _snprintf (buf, buflen, ipmi_sensor_type_code_08_event_data3_offset_06_error_type_desc[val]);
@@ -1516,13 +1516,13 @@ get_10_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
         
         FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
-        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"event_offset", &val);
+        FIID_OBJ_GET_CLEANUP (obj, "event_offset", &val);
 	event_offset = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"assertion_deassertion_e", &val);
+        FIID_OBJ_GET_CLEANUP (obj, "assertion_deassertion_e", &val);
 	assertion_deassertion_event = val;
 
-        FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"logging_disabled_all_ev", &val);
+        FIID_OBJ_GET_CLEANUP (obj, "logging_disabled_all_ev", &val);
 	logging_disabled_all_events = val;
 
         if (assertion_deassertion_event <= ipmi_sensor_type_code_10_event_data3_offset_01_assertion_event_desc_max)
@@ -1614,10 +1614,10 @@ get_2A_event_data3_message (int offset, uint8_t event_data2, uint8_t event_data3
 
       FIID_OBJ_SET_ALL_CLEANUP(obj, &event_data3, sizeof(uint8_t));
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"channel_number", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "channel_number", &val);
       channel_number = val;
       
-      FIID_OBJ_GET_CLEANUP (obj, (uint8_t *)"deactivation_cause", &val);
+      FIID_OBJ_GET_CLEANUP (obj, "deactivation_cause", &val);
       deactivation_cause = val;
       
       if (deactivation_cause <= ipmi_sensor_type_code_2A_event_data3_offset_01_deactivation_cause_desc_max)

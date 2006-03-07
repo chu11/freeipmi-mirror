@@ -254,7 +254,7 @@ fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
 
   if (authentication_code_data && authentication_code_data_len > 0)
     FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
-		       (uint8_t *)"authentication_code",
+		       "authentication_code",
 		       authentication_code_data,
 		       authentication_code_data_len);
 
@@ -403,7 +403,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                              uint32_t user_name_len,
                              fiid_obj_t obj_cmd_rq)
 {
-  char buf[IPMI_MAX_USER_NAME_LENGTH];
+  uint8_t buf[IPMI_MAX_USER_NAME_LENGTH];
 
   ERR_EINVAL (remote_console_random_number
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
@@ -452,7 +452,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
   
   FIID_OBJ_SET_DATA (obj_cmd_rq,
 		     "user_name",
-		     (uint8_t *)buf,
+		     buf,
                      IPMI_MAX_USER_NAME_LENGTH);
 
   return (0);

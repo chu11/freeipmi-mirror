@@ -85,13 +85,12 @@ fill_rmcp_hdr (uint8_t message_class, fiid_obj_t obj_rmcp_hdr)
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcp_hdr, tmpl_rmcp_hdr);
 
   FIID_OBJ_CLEAR (obj_rmcp_hdr);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"version", RMCP_VERSION_1_0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.class", message_class);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.reserved", 0);
-  FIID_OBJ_SET (obj_rmcp_hdr, (uint8_t *)"message_class.ack",
-                RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
+  FIID_OBJ_SET (obj_rmcp_hdr, "version", RMCP_VERSION_1_0);
+  FIID_OBJ_SET (obj_rmcp_hdr, "reserved", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, "sequence_number", RMCP_HDR_SEQ_NUM_NO_RMCP_ACK);
+  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.class", message_class);
+  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.reserved", 0);
+  FIID_OBJ_SET (obj_rmcp_hdr, "message_class.ack", RMCP_HDR_MESSAGE_CLASS_BIT_RMCP_NORMAL);
   return 0;
 }
 
@@ -115,13 +114,11 @@ fill_cmd_asf_presence_ping(uint8_t message_tag, fiid_obj_t obj_cmd)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_cmd_asf_presence_ping);
 
   FIID_OBJ_CLEAR (obj_cmd);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"iana_enterprise_number",
-                htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_type",
-                RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"message_tag", message_tag);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET (obj_cmd, (uint8_t *)"data_length", 0x00);
+  FIID_OBJ_SET (obj_cmd, "iana_enterprise_number", htonl(RMCP_ASF_IANA_ENTERPRISE_NUM));
+  FIID_OBJ_SET (obj_cmd, "message_type", RMCP_ASF_MESSAGE_TYPE_PRESENCE_PING);
+  FIID_OBJ_SET (obj_cmd, "message_tag", message_tag);
+  FIID_OBJ_SET (obj_cmd, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd, "data_length", 0x00);
   return 0;
 }
 

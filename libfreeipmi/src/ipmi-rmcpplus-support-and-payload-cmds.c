@@ -365,13 +365,13 @@ fill_cmd_activate_payload (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_activate_payload_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_instance", payload_instance);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET_DATA(obj_cmd_rq,
-		    (uint8_t *)"auxiliary_request_data",
+		    "auxiliary_request_data",
 		    auxiliary_request_data,
 		    auxiliary_request_data_len);
   
@@ -399,19 +399,19 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_activate_payload_sol_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved3", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"sol_startup_handshake", sol_startup_handshake);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"shared_serial_alert_behavior", shared_serial_alert_behavior);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"test_mode", test_mode);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"authentication_activation", authentication_activation);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"encryption_activation", encryption_activation);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved4", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved5", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_instance", payload_instance);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved3", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "sol_startup_handshake", sol_startup_handshake);
+  FIID_OBJ_SET(obj_cmd_rq, "shared_serial_alert_behavior", shared_serial_alert_behavior);
+  FIID_OBJ_SET(obj_cmd_rq, "test_mode", test_mode);
+  FIID_OBJ_SET(obj_cmd_rq, "authentication_activation", authentication_activation);
+  FIID_OBJ_SET(obj_cmd_rq, "encryption_activation", encryption_activation);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved4", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved5", 0);
   
   return (0);
 }
@@ -428,12 +428,12 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_deactivate_payload_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_DEACTIVATE_PAYLOAD);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_auxiliary_data", payload_auxiliary_data);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_DEACTIVATE_PAYLOAD);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_instance", payload_instance);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_auxiliary_data", payload_auxiliary_data);
   
   return (0);
 }
@@ -451,13 +451,13 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_suspend_resume_payload_encryption_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"operation", operation);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved3", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_instance", payload_instance);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "operation", operation);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved3", 0);
   
   return (0);
 }
@@ -472,8 +472,8 @@ fill_cmd_get_payload_activation_status (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_payload_activation_status_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
   
   return (0);
 }
@@ -489,9 +489,9 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_payload_instance_info_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_PAYLOAD_INSTANCE_INFO);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_INSTANCE_INFO);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_instance", payload_instance);
   
   return (0);
 }
@@ -511,24 +511,24 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_payload_access_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_SET_USER_PAYLOAD_ACCESS);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"user_id", user_id);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"operation", operation);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"standard_payload_1", standard_payload_1);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved3", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved4", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_0", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_2", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_3", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_4", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_5", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_6", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_7", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved5", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PAYLOAD_ACCESS);
+  FIID_OBJ_SET(obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "user_id", user_id);
+  FIID_OBJ_SET(obj_cmd_rq, "operation", operation);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "standard_payload_1", standard_payload_1);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved3", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved4", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_0", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_3", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_4", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_5", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_6", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_7", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved5", 0);
 
   return (0);
 }
@@ -544,11 +544,11 @@ fill_cmd_get_user_payload_access (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_payload_access_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_USER_PAYLOAD_ACCESS);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"user_id", user_id);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_PAYLOAD_ACCESS);
+  FIID_OBJ_SET(obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "user_id", user_id);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved2", 0);
 
   return (0);
 }
@@ -563,9 +563,9 @@ fill_cmd_get_channel_payload_support (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_payload_support_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
+  FIID_OBJ_SET(obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved", 0);
 
   return (0);
 }
@@ -582,10 +582,10 @@ fill_cmd_get_channel_payload_version (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_payload_version_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
+  FIID_OBJ_SET(obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
 
   return (0);
 }
@@ -606,12 +606,12 @@ fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_oem_payload_info_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"channel_number", channel_number);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved", 0);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_type", payload_type);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_iana", oem_iana);
-  FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"oem_payload_id", oem_payload_id);
+  FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO);
+  FIID_OBJ_SET(obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET(obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET(obj_cmd_rq, "payload_type", payload_type);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_iana", oem_iana);
+  FIID_OBJ_SET(obj_cmd_rq, "oem_payload_id", oem_payload_id);
 
   return (0);
 }

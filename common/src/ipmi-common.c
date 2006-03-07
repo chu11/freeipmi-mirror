@@ -61,7 +61,7 @@ ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s)
   if (!fiid_obj_valid(obj_cmd))
     return;
   
-  if ((rv = fiid_obj_field_lookup (obj_cmd, (uint8_t *)"cmd")) < 0)
+  if ((rv = fiid_obj_field_lookup (obj_cmd, "cmd")) < 0)
     return;
 
   if (!rv)
@@ -70,7 +70,7 @@ ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s)
       return;
     }
 
-  if ((len = fiid_obj_field_len (obj_cmd, (uint8_t *)"cmd")) < 0)
+  if ((len = fiid_obj_field_len (obj_cmd, "cmd")) < 0)
     return;
 
   if (!len)
@@ -82,7 +82,7 @@ ipmi_error (fiid_obj_t obj_cmd, uint8_t netfn, const char *s)
   if (ipmi_strerror_cmd_r (obj_cmd, netfn, errmsg, IPMI_ERR_STR_MAX_LEN) < 0)
     return;
   
-  if (fiid_obj_get(obj_cmd, (uint8_t *)"cmd", &cmd) < 0)
+  if (fiid_obj_get(obj_cmd, "cmd", &cmd) < 0)
     return;
 
   fprintf (stderr, 

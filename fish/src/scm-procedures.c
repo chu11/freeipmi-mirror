@@ -483,9 +483,7 @@ ex_sel_delete_entry (SCM scm_record_id)
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, 
-                    (uint8_t *)"reservation_id", 
-                    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
   reservation_id = val;
   
@@ -544,9 +542,7 @@ ex_sel_clear ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, 
-                    (uint8_t *)"reservation_id", 
-                    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
   reservation_id = val;
   
@@ -603,9 +599,7 @@ ex_sel_get_clear_status ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, 
-                    (uint8_t *)"reservation_id", 
-                    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
     goto cleanup;
   reservation_id = val;
   
@@ -631,9 +625,7 @@ ex_sel_get_clear_status ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (obj_cmd_rs, 
-                    (uint8_t *)"erasure_progress", 
-                    &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
     goto cleanup;
   
   fiid_obj_destroy(obj_cmd_rs);
@@ -1735,14 +1727,14 @@ SCM
 ex_get_bmc_username (SCM scm_userid)
 {
   uint8_t userid;
-  char username[IPMI_MAX_USER_NAME_LENGTH+1];
+  uint8_t username[IPMI_MAX_USER_NAME_LENGTH+1];
   int retval;
   SCM return_list = SCM_EOL;
   
   userid = gh_scm2long (scm_userid);
   memset (username, 0, IPMI_MAX_USER_NAME_LENGTH+1);
 
-  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, (uint8_t *)username, IPMI_MAX_USER_NAME_LENGTH+1)) == 0)
+  if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username, IPMI_MAX_USER_NAME_LENGTH+1)) == 0)
     return_list = scm_listify (scm_makfrom0str (username), SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
@@ -3366,22 +3358,17 @@ ex_get_sdr_repository_info ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"comp_code", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "comp_code", &val) < 0)
     goto cleanup;
   if (val != 0)
     return SCM_EOL;
   
   /* appending sdr version */
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"sdr_version_major",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "sdr_version_major", &val) < 0)
     goto cleanup;
   sdr_major_version = val;
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"sdr_version_minor",
-                    &val) < 0)
+
+  if (fiid_obj_get (cmd_rs, "sdr_version_minor", &val) < 0)
     goto cleanup;
   sdr_minor_version = val;
   snprintf (version_string, 17, 
@@ -3391,33 +3378,25 @@ ex_get_sdr_repository_info ()
                                               gh_str02scm ("sdr_version"), 
                                               gh_str02scm (version_string));
   
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"record_count",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "record_count", &val) < 0)
     goto cleanup;
   scm_repository_info_list = scm_assoc_set_x (scm_repository_info_list, 
                                               gh_str02scm ("record_count"), 
                                               gh_long2scm (val));
   
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"free_space",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "free_space", &val) < 0)
     goto cleanup;
   scm_repository_info_list = scm_assoc_set_x (scm_repository_info_list, 
                                               gh_str02scm ("free_space"), 
                                               gh_long2scm (val));
   
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"most_recent_addition_timestamp",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "most_recent_addition_timestamp", &val) < 0)
     goto cleanup;
   scm_repository_info_list = scm_assoc_set_x (scm_repository_info_list, 
                                               gh_str02scm ("recent_addition_timestamp"), 
                                               gh_ulong2scm (val));
   
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"most_recent_erase_timestamp",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "most_recent_erase_timestamp", &val) < 0)
     goto cleanup;
   scm_repository_info_list = scm_assoc_set_x (scm_repository_info_list, 
                                               gh_str02scm ("recent_erase_timestamp"), 
@@ -3451,26 +3430,20 @@ ex_get_bmc_info ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"device_id", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "device_id", &val) < 0)
     goto cleanup;
 
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"device_revision.revision", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "device_revision.revision", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("dev_revision"), 
 				       gh_long2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"device_revision.sdr_support", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "device_revision.sdr_support", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_support"), 
@@ -3480,14 +3453,10 @@ ex_get_bmc_info ()
     char version_string[17];
     uint64_t major, minor;
     
-    if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"firmware_revision1.major_revision", 
-                      &major) < 0)
+    if (fiid_obj_get (cmd_rs, "firmware_revision1.major_revision", &major) < 0)
       goto cleanup;
 
-    if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"firmware_revision2.minor_revision", 
-                      &minor) < 0)
+    if (fiid_obj_get (cmd_rs, "firmware_revision2.minor_revision", &minor) < 0)
       goto cleanup;
 
     snprintf (version_string, 17, 
@@ -3498,9 +3467,7 @@ ex_get_bmc_info ()
 					 gh_str02scm (version_string));
   }
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"firmware_revision1.dev_available", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "firmware_revision1.dev_available", &val) < 0)
     goto cleanup;
 
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
@@ -3510,14 +3477,10 @@ ex_get_bmc_info ()
     char version_string[17];
     uint64_t major, minor;
     
-    if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"ipmi_version.ms_bits", 
-                      &major) < 0)
+    if (fiid_obj_get (cmd_rs, "ipmi_version.ms_bits", &major) < 0)
       goto cleanup;
 
-    if (fiid_obj_get (cmd_rs, 
-                      (uint8_t *)"ipmi_version.ls_bits", 
-                      &minor) < 0)
+    if (fiid_obj_get (cmd_rs, "ipmi_version.ls_bits", &minor) < 0)
       goto cleanup;
 
     snprintf (version_string, 17, 
@@ -3528,89 +3491,67 @@ ex_get_bmc_info ()
 					 gh_str02scm (version_string));
   }
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.sensor_device", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.sensor_device", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sensor_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.sdr_repository_device", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.sdr_repository_device", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sdr_repo_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
 
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.sel_device", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.sel_device", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("sel_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.fru_inventory_device", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.fru_inventory_device", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("fru_inventory_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.ipmb_event_receiver", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.ipmb_event_receiver", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_receiver_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.ipmb_event_generator", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.ipmb_event_generator", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("ipmb_event_generator_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.bridge", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.bridge", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("bridge_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"additional_device_support.chassis_device", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "additional_device_support.chassis_device", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("chassis_dev_support"), 
 				       gh_bool2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"manufacturer_id.id", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "manufacturer_id.id", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("manufacturer_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"product_id", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "product_id", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("product_id"), 
 				       gh_long2scm ((unsigned int) val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"auxiliary_firmware_revision_info", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "auxiliary_firmware_revision_info", &val) < 0)
     goto cleanup;
   scm_bmc_info_list = scm_assoc_set_x (scm_bmc_info_list, 
 				       gh_str02scm ("aux_firmware_rev_info"), 
@@ -3739,14 +3680,10 @@ ex_get_pef_info ()
       goto cleanup;
     }
   
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"pef_version_major",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "pef_version_major", &val) < 0)
     goto cleanup;
   pef_major_version = val;
-  if (fiid_obj_get (cmd_rs,
-                    (uint8_t *)"pef_version_minor",
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "pef_version_minor", &val) < 0)
     goto cleanup;
   pef_minor_version = val;
   snprintf (version_string, 17, 
@@ -3756,58 +3693,44 @@ ex_get_pef_info ()
 				       gh_str02scm ("pef_version"), 
 				       gh_str02scm (version_string));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.alert", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.alert", &val) < 0)
     goto cleanup;
   alert_support = val;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("alert_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.power_down", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.power_down", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powerdown_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.reset", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.reset", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("reset_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.power_cycle", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.power_cycle", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("powercycle_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.oem_action", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.oem_action", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("oem_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"action_support.diagnostic_interrupt", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "action_support.diagnostic_interrupt", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("diag_interrupt_support"), 
 				       gh_bool2scm (val));
   
-  if (fiid_obj_get (cmd_rs, 
-                    (uint8_t *)"number_of_event_filter_table_entries", 
-                    &val) < 0)
+  if (fiid_obj_get (cmd_rs, "number_of_event_filter_table_entries", &val) < 0)
     goto cleanup;
   scm_pef_info_list = scm_assoc_set_x (scm_pef_info_list, 
 				       gh_str02scm ("eft_entries_count"), 
@@ -3833,9 +3756,7 @@ ex_get_pef_info ()
           goto cleanup;
 	}
 
-      if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"number_of_event_filters", 
-                        &val) < 0)
+      if (fiid_obj_get (cmd_rs, "number_of_event_filters", &val) < 0)
         goto cleanup;
 
       fiid_obj_destroy(cmd_rs);
@@ -3866,9 +3787,7 @@ ex_get_pef_info ()
           goto cleanup;
 	}
       
-      if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"number_of_alert_policy_entries", 
-                        &val) < 0)
+      if (fiid_obj_get (cmd_rs, "number_of_alert_policy_entries", &val) < 0)
         goto cleanup;
 
       fiid_obj_destroy(cmd_rs);
@@ -3899,9 +3818,7 @@ ex_get_pef_info ()
           goto cleanup;
 	}
 
-      if (fiid_obj_get (cmd_rs, 
-                        (uint8_t *)"number_of_alert_strings", 
-                        &val) < 0)
+      if (fiid_obj_get (cmd_rs, "number_of_alert_strings", &val) < 0)
         goto cleanup;
 
       fiid_obj_destroy(cmd_rs);

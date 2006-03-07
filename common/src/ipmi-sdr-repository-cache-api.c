@@ -111,7 +111,7 @@ ipmi_sdr_records_write (ipmi_device_t *dev, FILE *fp)
 					    sensor_record_buf,
 					    &sensor_record_len) < 0));
       
-      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"next_record_id", &val);
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, "next_record_id", &val);
       next_record_id = (uint16_t) val;
       
       ERR_CLEANUP (!(fwrite (sensor_record_buf,
@@ -177,7 +177,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
 
   FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs, sdr_repository_cache->cache_start, len);
 
-  FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_count", &val);
+  FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_count", &val);
 
   sdr_repository_cache->total_records = (uint32_t) val;
   
@@ -262,7 +262,7 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
 				sdr_repository_cache->cache_curr,
 				hdr_len);
 
-      FIID_OBJ_GET_CLEANUP (obj_data_rs, (uint8_t *)"record_length", &val);
+      FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_length", &val);
       
       sdr_repository_cache->cache_curr = (sdr_repository_cache->cache_curr + 
 					  hdr_len +

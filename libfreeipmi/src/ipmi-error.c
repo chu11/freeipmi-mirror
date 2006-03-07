@@ -431,17 +431,17 @@ ipmi_strerror_cmd_r (fiid_obj_t obj_cmd,
   /* The netfn need not be valid */
   ERR_EINVAL (fiid_obj_valid(obj_cmd) && errstr);
   
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"cmd");
-  FIID_OBJ_FIELD_LOOKUP (obj_cmd, (uint8_t *)"comp_code");
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "cmd");
+  FIID_OBJ_FIELD_LOOKUP (obj_cmd, "comp_code");
 
-  FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"cmd");
+  FIID_OBJ_FIELD_LEN (_len, obj_cmd, "cmd");
   ERR_EINVAL (_len);
 
-  FIID_OBJ_FIELD_LEN (_len, obj_cmd, (uint8_t *)"comp_code");
+  FIID_OBJ_FIELD_LEN (_len, obj_cmd, "comp_code");
   ERR_EINVAL (_len);
 
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"cmd", &cmd);
-  FIID_OBJ_GET(obj_cmd, (uint8_t *)"comp_code", &comp_code);
+  FIID_OBJ_GET(obj_cmd, "cmd", &cmd);
+  FIID_OBJ_GET(obj_cmd, "comp_code", &comp_code);
   
   return ipmi_strerror_r (cmd, netfn, comp_code, errstr, len); 
 }

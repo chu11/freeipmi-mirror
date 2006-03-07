@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.16 2006-03-07 07:26:00 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.17 2006-03-07 21:33:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -160,7 +160,7 @@ parsepacket(char *buffer,
   if (unassemble_rmcp_pkt(buffer, buflen, obj_rmcp_hdr, obj_rmcp_cmd) < 0)
     ipmi_ping_err_exit("unassemble_rmcp_pkt: %s", strerror(errno));
 
-  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"message_type", (uint64_t *)&message_type);
+  _fiid_obj_get(obj_rmcp_cmd, "message_type", (uint64_t *)&message_type);
 
   if (message_type != RMCP_ASF_MESSAGE_TYPE_PRESENCE_PONG)
     {
@@ -168,7 +168,7 @@ parsepacket(char *buffer,
       goto cleanup;
     }
 
-  _fiid_obj_get(obj_rmcp_cmd, (uint8_t *)"message_tag", (uint64_t *)&message_tag);
+  _fiid_obj_get(obj_rmcp_cmd, "message_tag", (uint64_t *)&message_tag);
   if (message_tag != (sequence_number % (RMCP_ASF_MESSAGE_TAG_MAX + 1)))
     {
       retval = 0;
@@ -179,7 +179,7 @@ parsepacket(char *buffer,
   if (verbose)
     {
       _fiid_obj_get(obj_rmcp_cmd, 
-		    (uint8_t *)"supported_entities.ipmi_supported", 
+		    "supported_entities.ipmi_supported", 
 		    (uint64_t *)&ipmi_supported);
       printf(", ipmi %s", _supported(ipmi_supported));
     }
