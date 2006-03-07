@@ -62,6 +62,7 @@ extern "C" {
 #include <freeipmi/ipmi-lan-cmds.h>
 #include <freeipmi/ipmi-messaging-support-cmds.h>
 #include <freeipmi/ipmi-pef-and-alerting-cmds.h>
+#include <freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h>
 #include <freeipmi/ipmi-sdr-repository-cmds.h>
 #include <freeipmi/ipmi-sel-cmds.h>
 #include <freeipmi/ipmi-sensor-cmds.h>

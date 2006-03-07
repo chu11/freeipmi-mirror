@@ -350,6 +350,31 @@ extern "C" {
 #define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
 "cannot execute command, SEL erase in progress"
 
+/* IPMI_CMD_ACTIVATE_PAYLOAD */
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION 0x80
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR \
+"Payload already active on another session"
+
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED 0x81
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR \
+"Payload type disabled.  Given payload type is not configured " \
+"to be enabled for activation."
+
+#define IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED 0x82
+#define IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED_STR \
+"Payload activation limit reached.  Cannot activate given payload type " \
+"because the maximum number of simultaneous instances of that payload type " \
+"are already running."
+
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION 0x83
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION_STR \
+"Cannot activate payload with encryption."
+
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION 0x84
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION_STR \
+"Cannot activate payload without encryption.  BMC requires encryption " \
+"for all payloads for given privilege level."
+
 #ifdef __cplusplus
 }
 #endif

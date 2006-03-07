@@ -35,6 +35,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan-cmds.c \
 	ipmi-messaging-support-cmds.c \
 	ipmi-pef-and-alerting-cmds.c \
+	ipmi-rmcpplus-support-and-payload-cmds.c \
 	ipmi-sdr-repository-cmds.c \
 	ipmi-sel-cmds.c \
 	ipmi-sensor-cmds.c \

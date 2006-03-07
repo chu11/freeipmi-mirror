@@ -14,6 +14,8 @@
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-interface.h,
 	libfreeipmi/src/ipmi-rmcpplus-interface.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h,
 	libfreeipmi/src/ipmi-rmcpplus-utils.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-status-spec.h: New
 	files.
@@ -49,7 +51,8 @@
 	
 	* libfreeipmi/include/freeipmi/freeipmi.h: Added ipmi-rmcpplus.h,
 	ipmi-rmcpplus-crypt.h, ipmi-rmcpplus-interface.h,
-	ipmi-rmcpplus-utils.h.
+	ipmi-rmcpplus-support-and-payload-cmds.h, ipmi-rmcpplus-utils.h,
+	ipmi-rmcpplus-status-spec.h.
 
 	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
 	#define checks for /dev/urandom and /dev/random.
@@ -65,9 +68,9 @@
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds-udm.h: Support missing
 	SOL configuration parameters.
 
-	* fish/extensions/bmc-config.scm: Support SOL configuration.
-
-	* fish/extensions/bc-sol-conf-section.scm: New file.
+	* libfreeipmi/src/ipmi-error.c,
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Support new
+	completion codes and error strings.
 
 	RMCPPING and IPMIPING
 	
@@ -92,6 +95,12 @@
 
 	* ipmipower/src/ipmipower_utils.c (get_rand): Utilize
 	ipmi_get_random.
+
+	FISH
+	
+	* fish/extensions/bmc-config.scm: Support SOL configuration.
+
+	* fish/extensions/bc-sol-conf-section.scm: New file.
 
 	AUTOCONF/AUTOMAKE
 
@@ -123,6 +132,19 @@
 	* fish/extensions/bmc-config.scm: Support SOL configuration.
 
 	* fish/extensions/bc-sol-conf-section.scm: New file.
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h,
+	libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: New
+	files.
+
+	* libfreeipmi/include/freeipmi/ipmi-cmd-spec.h: Add more cmds from
+	IPMI 2.0.
+	
+	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Add support
+	for activate payload command errors.
+
+	* libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Add support for
+	activate payload command errors.
 	
 2006-03-05  Albert Chu <chu11@llnl.gov>
 

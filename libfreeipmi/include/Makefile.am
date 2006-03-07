@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.7.2.6 2006-03-05 17:44:15 chu11 Exp $
+## $Id: Makefile.am,v 1.7.2.7 2006-03-07 07:13:34 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -43,6 +43,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \
+	freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h \
 	freeipmi/ipmi-sdr-repository-cmds.h \
 	freeipmi/ipmi-sel-cmds.h \
 	freeipmi/ipmi-sensor-cmds.h \
