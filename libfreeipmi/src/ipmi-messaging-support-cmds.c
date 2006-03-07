@@ -429,7 +429,7 @@ fill_cmd_get_session_challenge (uint8_t authentication_type,
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
-    strncpy(buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
+    strncpy((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
   
   FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
   
@@ -662,7 +662,7 @@ fill_cmd_set_user_name (uint8_t user_id,
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
-    strncpy(buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
+    strncpy((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
       
   FIID_OBJ_SET_DATA (obj_cmd_rq, "user_name", buf, IPMI_MAX_USER_NAME_LENGTH);
   
@@ -712,7 +712,7 @@ fill_cmd_set_user_password (uint8_t user_id,
   /* achu: password must be zero extended */
   memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   if (password)
-    strncpy(buf, password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+    strncpy((char *)buf, password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
       
   FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 

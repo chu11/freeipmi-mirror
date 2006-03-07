@@ -342,7 +342,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   memset(sdr_full_record->sensor_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "id_string",
-			     sdr_full_record->sensor_name,
+			     (uint8_t *)sdr_full_record->sensor_name,
 			     17);
 
  cleanup:
@@ -389,7 +389,7 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
   memset(sdr_compact_record->sensor_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "id_string",
-			     sdr_compact_record->sensor_name,
+			     (uint8_t *)sdr_compact_record->sensor_name,
 			     17);
 
  cleanup:
@@ -506,7 +506,7 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
   memset(sdr_generic_device_locator_record->device_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "device_id_string",
-			     sdr_generic_device_locator_record->device_name,
+			     (uint8_t *)sdr_generic_device_locator_record->device_name,
 			     17);
 
  cleanup:
@@ -543,7 +543,7 @@ get_sdr_logical_fru_device_locator_record (uint8_t *sdr_record_data,
   memset(sdr_logical_fru_device_locator_record->device_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "device_string",
-			     sdr_logical_fru_device_locator_record->device_name,
+			     (uint8_t *)sdr_logical_fru_device_locator_record->device_name,
 			     17);
  
  cleanup:
@@ -574,7 +574,7 @@ get_sdr_management_controller_device_locator_record (uint8_t *sdr_record_data,
   memset(sdr_management_controller_device_locator_record->device_name, '\0', 17);
   FIID_OBJ_GET_DATA_CLEANUP (obj,
 			     "device_id_string",
-			     sdr_management_controller_device_locator_record->device_name,
+			     (uint8_t *)sdr_management_controller_device_locator_record->device_name,
 			     17);
   
  cleanup:

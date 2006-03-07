@@ -2303,7 +2303,7 @@ fiid_iterator_key(fiid_iterator_t iter)
 int32_t
 fiid_iterator_get(fiid_iterator_t iter, uint64_t *val)
 {
-  uint8_t *key;
+  char *key;
   int32_t rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))
@@ -2318,7 +2318,7 @@ fiid_iterator_get(fiid_iterator_t iter, uint64_t *val)
 int32_t
 fiid_iterator_get_data(fiid_iterator_t iter, uint8_t *data, uint32_t data_len)
 {
-  uint8_t *key;
+  char *key;
   int32_t rv;
 
   if (!(iter && iter->magic == FIID_ITERATOR_MAGIC))

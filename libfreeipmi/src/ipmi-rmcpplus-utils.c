@@ -1008,7 +1008,7 @@ ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_session_hdr, uint8_t pa
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, (uint8_t *)"payload_type");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type");
   ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_rmcpplus_session_hdr, "payload_type", &val);
@@ -1030,7 +1030,7 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"rmcpplus_status_code");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, "rmcpplus_status_code");
   ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, "rmcpplus_status_code", &val);
@@ -1052,7 +1052,7 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd, uint8_t message_tag)
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
 
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"message_tag");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, "message_tag");
   ERR_EINVAL (len);
 
   FIID_OBJ_GET(obj_cmd, "message_tag", &val);
@@ -1072,7 +1072,7 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remot
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
   
-  FIID_OBJ_FIELD_LEN (len, obj_cmd, (uint8_t *)"remote_console_session_id");
+  FIID_OBJ_FIELD_LEN (len, obj_cmd, "remote_console_session_id");
   ERR_EINVAL (len);
   
   FIID_OBJ_GET(obj_cmd, "remote_console_session_id", &val);

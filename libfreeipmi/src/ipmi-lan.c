@@ -127,7 +127,7 @@ fill_lan_msg_hdr (uint8_t net_fn,
 {
   uint8_t checksum_buf[1024];
   int32_t checksum_len;
-  int8_t checksum;
+  uint8_t checksum;
 
   ERR_EINVAL (IPMI_NET_FN_VALID(net_fn)
 	      && IPMI_BMC_LUN_VALID(rs_lun)
@@ -227,7 +227,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   int32_t len, req_len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
-  int8_t checksum;
+  uint8_t checksum;
   int32_t rv = -1;
 
   ERR_EINVAL (fiid_obj_valid(obj_rmcp_hdr)

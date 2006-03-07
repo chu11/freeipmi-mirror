@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.17 2006-03-07 21:33:05 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.18 2006-03-07 21:57:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -65,7 +65,7 @@ _fiid_obj_destroy(fiid_obj_t obj)
 }
 
 static void
-_fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
+_fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 {
   assert(obj && field && val);
 
@@ -114,8 +114,11 @@ createpacket(char *buffer,
 #ifndef NDEBUG
   if (debug)
     {
-      if (ipmi_dump_rmcp_packet(STDERR_FILENO, "Ping", NULL, 
-                                (uint8_t *)buffer, len, 
+      if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
+                                "Ping", 
+                                NULL, 
+                                (uint8_t *)buffer, 
+                                (uint32_t)len, 
                                 tmpl_cmd_asf_presence_ping) < 0)
         ipmi_ping_err_exit("ipmi_dump_rmcp_packet: %s", strerror(errno));
     }
@@ -151,7 +154,11 @@ parsepacket(char *buffer,
 #ifndef NDEBUG
   if (debug)
     {
-      if (ipmi_dump_rmcp_packet(STDERR_FILENO, "Pong", NULL, buffer, buflen, 
+      if (ipmi_dump_rmcp_packet(STDERR_FILENO, 
+                                "Pong", 
+                                NULL,
+                                (uint8_t *)buffer,
+                                (uint32_t)buflen, 
                                 tmpl_cmd_asf_presence_pong) < 0)
         ipmi_ping_err_exit("ipmi_dump_rmcp_packet: %s", strerror(errno));
     }

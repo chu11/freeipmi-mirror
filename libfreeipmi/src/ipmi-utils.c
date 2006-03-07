@@ -60,7 +60,7 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-int8_t
+uint8_t
 ipmi_checksum (uint8_t *buf, uint64_t len)
 {
   register uint64_t i = 0;

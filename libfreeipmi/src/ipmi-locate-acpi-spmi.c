@@ -884,7 +884,7 @@ ipmi_acpi_get_table (uint64_t table_address, char *signature,
 
   FIID_OBJ_GET_DATA_CLEANUP(obj_acpi_table_hdr, 
 			    "signature", 
-			    table_signature, 
+			    (uint8_t *)table_signature, 
 			    table_signature_length);
 
   ERR_CLEANUP (!(strcmp (table_signature, signature) != 0));

@@ -222,7 +222,7 @@ display_get_device_id (ipmi_device_t *dev)
 	    {
 	      uint64_t bc_maj, bc_min, pia_maj, pia_min;
 	      fiid_obj_t intel_rs;
-	      char buf[1024];
+	      uint8_t buf[1024];
 	      int32_t len;
 
 	      if (!(intel_rs = fiid_obj_create(tmpl_cmd_get_device_id_sr870bn4_rs)))

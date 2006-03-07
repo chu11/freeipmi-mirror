@@ -448,7 +448,7 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
   /* achu: user_name must be zero extended */
   memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
   if (user_name)
-    strncpy(buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
+    strncpy((char *)buf, user_name, IPMI_MAX_USER_NAME_LENGTH);
   
   FIID_OBJ_SET_DATA (obj_cmd_rq,
 		     "user_name",

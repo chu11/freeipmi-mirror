@@ -366,7 +366,7 @@ ex_sel_get_first_entry ()
   uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
-  int32_t record_data_len;
+  uint32_t record_data_len;
 
   record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (), 
@@ -414,7 +414,7 @@ ex_sel_get_next_entry ()
   uint8_t record_data[SEL_RECORD_SIZE];
   sel_record_t sel_rec;
   SCM scm_sel_record = SCM_EOL;
-  int32_t record_data_len;
+  uint32_t record_data_len;
 
   record_data_len = SEL_RECORD_SIZE;
   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (), 
@@ -1735,7 +1735,7 @@ ex_get_bmc_username (SCM scm_userid)
   memset (username, 0, IPMI_MAX_USER_NAME_LENGTH+1);
 
   if ((retval = get_bmc_username (fi_get_ipmi_device (), userid, username, IPMI_MAX_USER_NAME_LENGTH+1)) == 0)
-    return_list = scm_listify (scm_makfrom0str (username), SCM_UNDEFINED);
+    return_list = scm_listify (scm_makfrom0str ((char *)username), SCM_UNDEFINED);
 
   return (retval ? SCM_BOOL_F : return_list);
 }

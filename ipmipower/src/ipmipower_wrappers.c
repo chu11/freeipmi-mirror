@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.9 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.10 2006-03-07 21:57:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -194,7 +194,7 @@ Fiid_obj_destroy(fiid_obj_t obj)
 }
 
 void
-Fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
+Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 {
   int8_t rv;
 

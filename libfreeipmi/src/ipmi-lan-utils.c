@@ -259,7 +259,7 @@ ipmi_lan_check_checksum (uint8_t *pkt, uint64_t pkt_len)
   int32_t authentication_type_start_bytes;
   int32_t checksum1_block_index, checksum1_block_len, 
     checksum2_block_index, checksum2_block_len;
-  int8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
+  uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
 
   ERR_EINVAL (pkt && pkt_len);
   

@@ -106,7 +106,7 @@ fill_cmd_get_device_id (fiid_obj_t obj_cmd_rq)
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_device_id_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
-  FIID_OBJ_SET (obj_cmd_rq, (uint8_t *)"cmd", IPMI_CMD_GET_DEVICE_ID);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_DEVICE_ID);
   return (0);
 }
 

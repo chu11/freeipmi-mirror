@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.25 2006-03-07 21:33:05 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.26 2006-03-07 21:57:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -68,7 +68,7 @@ _fiid_obj_destroy(fiid_obj_t obj)
 }
 
 static void 
-_fiid_obj_get(fiid_obj_t obj, uint8_t *field, uint64_t *val)
+_fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 {
   assert(obj != NULL && field != NULL && val != NULL);
 

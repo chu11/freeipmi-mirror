@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.24 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.25 2006-03-07 21:57:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -396,7 +396,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
       if ((challenge_string_len = fiid_obj_get_data(ip->obj_get_session_challenge_res,
-                                                    (uint8_t *)"challenge_string",
+                                                    "challenge_string",
                                                     challenge_string,
                                                     IPMI_CHALLENGE_STRING_LENGTH)) < 0)
 	err_exit("ipmipower_packet_create(%s: %d): fiid_obj_get_data: %s",
