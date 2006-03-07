@@ -189,15 +189,15 @@
 
 (define sol_conf_s '("SOL_Conf" 
 		     "Enable_SOL" 
-                     "SOL_Privilege_Level",
-                     "Force_SOL_Payload_Authentication",
-                     "Force_SOL_Payload_Encryption",
-                     "Character_Accumulate_Interval",
-                     "Character_Send_Threshold",
-                     "SOL_Retry_Count",
-                     "SOL_Retry_Interval",
-                     "Non_Volatile_Bit_Rate",
-                     "Volatile_Bit_Rate",
+                     "SOL_Privilege_Level"
+                     "Force_SOL_Payload_Authentication"
+                     "Force_SOL_Payload_Encryption"
+                     "Character_Accumulate_Interval"
+                     "Character_Send_Threshold"
+                     "SOL_Retry_Count"
+                     "SOL_Retry_Interval"
+                     "Non_Volatile_Bit_Rate"
+                     "Volatile_Bit_Rate"
                      "SOL_Payload_Port_Number"))
 
 (define misc_s '("Misc" 

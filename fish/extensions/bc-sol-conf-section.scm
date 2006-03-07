@@ -33,6 +33,7 @@
   (let ((param-list (fi-get-sol-sol-authentication)))
     (if (list? param-list) (list (car param-list)) #f)))
 
+
 (define (commit-force-sol-payload-authentication section-name force-sol-payload-authentication)
   (if (list? force-sol-payload-authentication)
       #t 
@@ -66,7 +67,7 @@
       (fi-set-sol-character-accumulate-interval-and-send-threshold 0 character-send-threshold)))
 
 (define (checkout-character-send-threshold section-name)
-  (let ((param-list (fi-get-sol-sol-encryption)))
+  (let ((param-list (fi-get-sol-character-accumulate-interval-and-send-threshold)))
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-sol-retry-count section-name sol-retry-count)
