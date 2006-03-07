@@ -164,28 +164,46 @@ extern "C" {
    command-specific completion codes for commands specified in this
    document. */
 
+  /* 
+   * IPMI Device "Global Commands"
+   */
+
+
+  /* 
+   * BMC Watchdog Timer Commands
+   */
+
+/* IPMI_CMD_RESET_WATCHDOG_TIMER */
+#define IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG            0x80
+#define IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR \
+"Attempt to start un-initialized watchdog."
+
+  /* 
+   * BMC Device and Messaging Commands
+   */
+
 /* IPMI_CMD_GET_SESSION_CHALLENGE */
 
-#define IPMI_COMP_CODE_INVALID_USERNAME                              0x81
+#define IPMI_COMP_CODE_INVALID_USERNAME                                   0x81
 #define IPMI_COMP_CODE_INVALID_USERNAME_STR \
 "Invalid user name"
 
-#define IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED                     0x82
+#define IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED                          0x82
 #define IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED_STR \
 "Null user name (User 1) not enabled"
 
 /* IPMI_CMD_ACTIVATE_SESSION */
 
-#define IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE                     0x81
+#define IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE                          0x81
 #define IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE_STR \
 "No session slot available (BMC cannot accept any more sessions)"
 
-#define IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER              0x82
+#define IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER                   0x82
 #define IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER_STR \
 "No slot available for given user. (Limit of user sessions " \
 "allowed under that name has been reached)"
 
-#define IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER             0x83
+#define IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER                  0x83
 #define IPMI_COMP_CODE_NO_SLOT_AVAILALBE_TO_SUPPORT_USER_STR \
 "No slot available to support user due to maximum privilege " \
 "capability. (An implementation may only be able to support " \
@@ -195,11 +213,11 @@ extern "C" {
 "to allow a larger number of users that are limited to User " \
 "Level privilege, than users that require higher privilege."
 
-#define IPMI_COMP_CODE_SESSION_SEQ_NUM_OUT_OF_RANGE                  0x84
+#define IPMI_COMP_CODE_SESSION_SEQ_NUM_OUT_OF_RANGE                       0x84
 #define IPMI_COMP_CODE_SESSION_SEQ_NUM_OUT_OF_RANGE_STR \
 "Session sequence number out-of-range"
 
-#define IPMI_COMP_CODE_INVALID_SESSION_ID                            0x85
+#define IPMI_COMP_CODE_INVALID_SESSION_ID                                 0x85
 #define IPMI_COMP_CODE_INVALID_SESSION_ID_STR \
 "Invalid session ID in request"
 
@@ -209,7 +227,8 @@ extern "C" {
 "channel privilege limit"
 
 /* IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL */
-#define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER               0x81
+
+#define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER                    0x81
 #define IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER_STR \
 "Requested level not available for this user"
 
@@ -217,191 +236,257 @@ extern "C" {
 #define IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT_STR \
 "Requested level exceeds Channel and/or User Privilege Limit"
 
-#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION                0x83
+#define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION           0x83
 #define IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION_STR \
 "Cannot disable User Level authentication"
 
 /* IPMI_CMD_CLOSE_SESSION */
-#define IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ                      0x87
+
+#define IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ                           0x87
 #define IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR \
 "Invalid session ID in request"
 
-/* IPMI_CMD_RESET_WATCHDOG_TIMER */
-#define IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG      0x80
-#define IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR \
-"Attempt to start un-initialized watchdog."
-
-/* IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-#define IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS              0x81
-#define IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS_STR \
-"attempt to set the 'set in progress' value (in parameter #0) " \
-"when not int the 'set complete' state."
-
-#define IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER            0x82
-#define IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER_STR \
-"attempt to write read-only parameter"
-
-/* IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-/* IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION */
-#define IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-#define IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS              0x81
-#define IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS_STR \
-"attempt to set the 'set in progress' value (in parameter #0) " \
-"when not int the 'set complete' state."
-
-#define IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER            0x82
-#define IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER_STR \
-"attempt to write read-only parameter"
-
-#define IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER            0x83
-#define IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER_STR \
-"attempt to read write-only parameter"
-
-/* IPMI_CMD_GET_SERIAL_MODEM_CONFIGURATION */
-#define IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED           0x80
-#define IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-/* IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-#define IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS              0x81
-#define IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS_STR \
-"attempt to set the 'set in progress' value (in parameter #0) " \
-"when not int the 'set complete' state."
-
-#define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER            0x82
-#define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR \
-"attempt to write read-only parameter"
-
-/* IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-/* IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS              0x81
-#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS_STR \
-"attempt to set the 'set in progress' value (in parameter #0) " \
-"when not int the 'set complete' state."
-
-#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER            0x82
-#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER_STR \
-"attempt to write read-only parameter"
-
-/* IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS */
-
-#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED              0x80
-#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED_STR \
-"parameter not supported."
-
-/* IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID */
-#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS 0x81
-#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
-"cannot execute command, SEL erase in progress"
-
-/* IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID */
-#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS 0x81
-#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
-"cannot execute command, SEL erase in progress"
-
-/* IPMI_CMD_ALERT_IMMEDIATE */
-#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS                    0x81
-#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS_STR \
-"Alert Immediate rejected due to alert already in progress"
-
-#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE                    0x82
-#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
-"Alert Immedate rejected due to IPMI messaging session active on this channel"
-
-/* IPMI_CMD_GET_SEL_ENTRY */
-#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                   0x81
-#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
-"cannot execute command, SEL erase in progress"
-
-/* IPMI_CMD_DELETE_SEL_ENTRY */
-#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED                   0x80
-#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR \
-"Operation not supported for this Record Type"
-
-#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                         0x81
-#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
-"cannot execute command, SEL erase in progress"
-
 /* IPMI_CMD_ACTIVATE_PAYLOAD */
-#define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION 0x80
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION          0x80
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR \
 "Payload already active on another session"
 
-#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED 0x81
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED                           0x81
 #define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR \
 "Payload type disabled.  Given payload type is not configured " \
 "to be enabled for activation."
 
-#define IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED 0x82
+#define IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED                   0x82
 #define IPMI_COMP_CODE_PAYLOAD_ACTIVATION_LIMIT_REACHED_STR \
 "Payload activation limit reached.  Cannot activate given payload type " \
 "because the maximum number of simultaneous instances of that payload type " \
 "are already running."
 
-#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION 0x83
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION            0x83
 #define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITH_ENCRYPTION_STR \
 "Cannot activate payload with encryption."
 
-#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION 0x84
+#define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION         0x84
 #define IPMI_COMP_CODE_CANNOT_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION_STR \
 "Cannot activate payload without encryption.  BMC requires encryption " \
 "for all payloads for given privilege level."
 
 /* IPMI_CMD_DEACTIVATE_PAYLOAD */
-#define IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED 0x80
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED                        0x80
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED_STR \
 "Payload already deactivated"
 
-#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED 0x81
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED                           0x81
 #define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR \
 "Payload type disabled.  Given payload type is not configured " \
 "to be enabled for activation."
 
 /* IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION */
 
-#define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED 0x80
+#define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED                            0x80
 #define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED_STR \
 "Operation not supported for given payload type."
 
-#define IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION 0x81
+#define IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION  0x81
 #define IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR \
 "Operation now allowed under present configuration for given payload type."
 
-#define IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION 0x82
+#define IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION            0x82
 #define IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION_STR \
 "Encryption is not available for session that payload type is active under."
 
-#define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE 0x83
+#define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE              0x83
 #define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR \
 "The payload instance is not presently active."
+
+/* IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION */
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL        0x80
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR \
+"Payload type not available on given channel"
+
+/* IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO */
+#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED       0x80
+#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR \
+"OEM Payload IANA and/or Payload ID not supported"
+
+  /* 
+   * Chassis Device Commands
+   */
+
+  /* 
+   * Event Commands
+   */
+
+  /* 
+   * PEF and Alerting Commands
+   */
+
+/* IPMI_CMD_SET_PEF_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_SET_PEF_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS                    0x81
+#define IPMI_COMP_CODE_SET_PEF_INVALID_SET_IN_PROGRESS_STR \
+"attempt to set the 'set in progress' value (in parameter #0) " \
+"when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER                  0x82
+#define IPMI_COMP_CODE_SET_PEF_WRITE_READ_ONLY_PARAMETER_STR \
+"attempt to write read-only parameter"
+
+/* IPMI_CMD_GET_PEF_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_GET_PEF_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+/* IPMI_CMD_SET_LAST_PROCESSED_EVENT_ID */
+#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS  0x81
+#define IPMI_COMP_CODE_SET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_GET_LAST_PROCESSED_EVENT_ID */
+#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS  0x81
+#define IPMI_COMP_CODE_GET_LAST_PROCESSED_EVENT_ID_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_ALERT_IMMEDIATE */
+#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS                          0x81
+#define IPMI_COMP_CODE_ALERT_ALREADY_IN_PROGRESS_STR \
+"Alert Immediate rejected due to alert already in progress"
+
+#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE                0x82
+#define IPMI_COMP_CODE_ALERT_IPMI_MESSAGING_SESSION_ACTIVE_STR \
+"Alert Immedate rejected due to IPMI messaging session active on this channel"
+
+  /* 
+   * Sensor Device Commands
+   */
+
+  /* 
+   * FRU Device Commands
+   */
+
+  /* 
+   * SDR Device Commands
+   */
+
+  /* 
+   * SEL Device Commands
+   */
+
+/* IPMI_CMD_GET_SEL_ENTRY */
+#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS                0x81
+#define IPMI_COMP_CODE_GET_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+/* IPMI_CMD_DELETE_SEL_ENTRY */
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED       0x80
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_OPERATION_NOT_SUPPORTED_STR \
+"Operation not supported for this Record Type"
+
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS             0x81
+#define IPMI_COMP_CODE_DELETE_SEL_ENTRY_SEL_ERASE_IN_PROGRESS_STR \
+"cannot execute command, SEL erase in progress"
+
+  /* 
+   * LAN Device Commands
+   */
+
+/* IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_SET_LAN_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+#define IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS                    0x81
+#define IPMI_COMP_CODE_SET_LAN_INVALID_SET_IN_PROGRESS_STR \
+"attempt to set the 'set in progress' value (in parameter #0) " \
+"when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER                  0x82
+#define IPMI_COMP_CODE_SET_LAN_WRITE_READ_ONLY_PARAMETER_STR \
+"attempt to write read-only parameter"
+
+/* IPMI_CMD_GET_LAN_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_GET_LAN_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+  /* 
+   * Serial/Modem Device Commands
+   */
+
+/* IPMI_CMD_SET_SERIAL_MODEM_CONFIGURATION */
+#define IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED                 0x80
+#define IPMI_COMP_CODE_SET_SERIAL_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+#define IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS                 0x81
+#define IPMI_COMP_CODE_SET_SERIAL_INVALID_SET_IN_PROGRESS_STR \
+"attempt to set the 'set in progress' value (in parameter #0) " \
+"when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER               0x82
+#define IPMI_COMP_CODE_SET_SERIAL_WRITE_READ_ONLY_PARAMETER_STR \
+"attempt to write read-only parameter"
+
+#define IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER               0x83
+#define IPMI_COMP_CODE_SET_SERIAL_READ_WRITE_ONLY_PARAMETER_STR \
+"attempt to read write-only parameter"
+
+/* IPMI_CMD_GET_SERIAL_MODEM_CONFIGURATION */
+#define IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED                 0x80
+#define IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+/* IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+#define IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS                    0x81
+#define IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS_STR \
+"attempt to set the 'set in progress' value (in parameter #0) " \
+"when not int the 'set complete' state."
+
+#define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER                  0x82
+#define IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR \
+"attempt to write read-only parameter"
+
+/* IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS */
+
+#define IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED                    0x80
+#define IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR \
+"parameter not supported."
+
+  /* 
+   * Bridge Management Commands (ICMB)
+   */
+
+  /* 
+   * Discovery Commands (ICMB)
+   */
+
+  /* 
+   * Bridging Commands (ICMB)
+   */
+
+  /* 
+   * Event Commands (ICMB)
+   */
+
+  /* 
+   * OEM Commands for Bridge NetFN
+   */
+
+  /* 
+   * OEM Bridge Commands
+   */
 
 #ifdef __cplusplus
 }

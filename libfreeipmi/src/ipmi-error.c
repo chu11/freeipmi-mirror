@@ -206,6 +206,13 @@ ipmi_strerror_r (uint8_t cmd,
         case IPMI_NET_FN_APP_RS:
           switch (cmd)
             {
+            case IPMI_CMD_RESET_WATCHDOG_TIMER:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
+                }
+              break;
             case IPMI_CMD_GET_SESSION_CHALLENGE:
               switch (comp_code)
                 {
@@ -250,13 +257,6 @@ ipmi_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR);
                 }
               break;
-            case IPMI_CMD_RESET_WATCHDOG_TIMER:
-              switch (comp_code)
-                {
-                case IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_ATTEMPT_TO_START_UNINITIALIZED_WATCHDOG_STR);
-                }
-              break;
 	    case IPMI_CMD_ACTIVATE_PAYLOAD:
 	      switch (comp_code)
 		{
@@ -292,10 +292,25 @@ ipmi_strerror_r (uint8_t cmd,
 		  SNPRINTF_RETURN (IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION_STR);
 		case IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE:
 		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR);
-		break;
 		}
+              break;
+            case IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR);
+                }
+              break;
+            case IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR);
+                }
+              break;
 	    }
 	  break;
+
         case IPMI_NET_FN_FIRMWARE_RQ:
         case IPMI_NET_FN_FIRMWARE_RS:
           break;
@@ -327,6 +342,24 @@ ipmi_strerror_r (uint8_t cmd,
         case IPMI_NET_FN_TRANSPORT_RS:
           switch (cmd) 
             {
+            case IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS_STR);
+                case IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR);
+                }
+              break;
+            case IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR);
+                }
+              break;
             case IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS:
               switch (comp_code)
                 {
@@ -363,24 +396,6 @@ ipmi_strerror_r (uint8_t cmd,
                 {
                 case IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED:
                   SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SERIAL_PARAMETER_NOT_SUPPORTED_STR);
-                }
-              break;
-            case IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS:
-              switch (comp_code)
-                {
-                case IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_PARAMETER_NOT_SUPPORTED_STR);
-                case IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_INVALID_SET_IN_PROGRESS_STR);
-                case IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_SOL_WRITE_READ_ONLY_PARAMETER_STR);
-                }
-              break;
-            case IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS:
-              switch (comp_code)
-                {
-                case IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_GET_SOL_PARAMETER_NOT_SUPPORTED_STR);
                 }
               break;
             }
