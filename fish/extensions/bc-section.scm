@@ -26,6 +26,7 @@
 			    ("serial_channel" . lan-serial-channel-keys-validator)
 			    ("serial_conf"    . serial-conf-keys-validator)
 			    ("pef_conf"       . pef-conf-keys-validator)
+			    ("sol_conf"       . sol-conf-keys-validator)
 			    ("misc"           . misc-keys-validator)))
 
 (define (read-section-data fd)
