@@ -48,7 +48,7 @@
       (fi-set-sol-sol-authentication 0 0 force-sol-payload-encryption)))
 
 (define (checkout-force-sol-payload-encryption section-name)
-  (let ((param-list (fi-get-sol-sol-encryption)))
+  (let ((param-list (fi-get-sol-sol-authentication)))
     (if (list? param-list) (list (caddr param-list)) #f)))
 
 (define (commit-character-accumulate-interval section-name character-accumulate-interval)
@@ -138,7 +138,7 @@
      get-privilege-level-value-string
      same-string-ci?
      "Possible values: Callback/User/Operator/Administrator/OEM_Proprietary")
-    ("Force_SOL_Payload_Authentication" 
+    ("force_sol_payload_authentication" 
      valid-boolean? 
      get-boolean 
      commit-force-sol-payload-authentication
@@ -146,7 +146,7 @@
      get-boolean-string 
      same-string-ci?
      "Possible values: Yes/No")
-    ("Force_SOL_Payload_Encryption" 
+    ("force_sol_payload_encryption" 
      valid-boolean? 
      get-boolean 
      commit-force-sol-payload-encryption
