@@ -133,13 +133,13 @@
                         ("57600"  . 9)
                         ("115200" . 10)))
 
-(define (get-serial-bit-rate value-string)
+(define (get-sol-bit-rate value-string)
   (assoc-ref sol-bit-rates (string-downcase value-string)))
 
-(define (valid-serial-bit-rate? str)
+(define (valid-sol-bit-rate? str)
   (pair? (assoc (string-downcase str) sol-bit-rates)))
 
-(define (get-serial-bit-rate-value-string value)
+(define (get-sol-bit-rate-value-string value)
   (string-capitalize (assoc-vref sol-bit-rates value)))
 
 (define power-restore-policies '(("off_state_ac_apply"     . 0)
