@@ -60,6 +60,7 @@ libfreeipmi:
   * 1_5_privilege_level - not really right, do something else
   * vlan_id_ls/ms -> ls_byte, ms_byte?
     - check bmc and sol, just need consistentcy
+  * cleanup comp-code-spec.h.  Need to order command error codes in some fashion.
 
 fish:
 -----
