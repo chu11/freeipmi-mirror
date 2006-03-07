@@ -111,7 +111,7 @@
 (define (checkout-payload-port-number section-name) 
   (fi-get-sol-sol-payload-port-number)) 
 
-(define serial-conf-keys-validator 
+(define sol-conf-keys-validator 
   '(
     ;; You can add more in the form of 
     ;; (KEYSTRING 
