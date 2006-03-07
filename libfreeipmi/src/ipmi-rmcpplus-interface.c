@@ -633,11 +633,11 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
     {
       int32_t oem_iana_req_len, oem_payload_id_req_len;
 
-      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "oem_iana");
-      FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "oem_payload_id");
-
+      FIID_TEMPLATE_FIELD_LEN(oem_iana_req_len, tmpl_rmcpplus_session_hdr, "oem_iana");
+      FIID_TEMPLATE_FIELD_LEN(oem_payload_id_req_len, tmpl_rmcpplus_session_hdr, "oem_payload_id");
+      
       ERR_EINVAL (oem_iana_len == oem_iana_req_len
-		  && oem_payload_id_len != oem_payload_id_req_len);
+		  && oem_payload_id_len == oem_payload_id_req_len);
     }
   else
     ERR_EINVAL (!oem_iana_len && !oem_payload_id_len);
