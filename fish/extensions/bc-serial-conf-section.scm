@@ -86,12 +86,12 @@
   (let ((param-list (fi-get-bmc-serial-conf-ipmi-messaging-comm-settings))) 
     (if (list? param-list) (list (cadr param-list)) #f)))
 
-(define (commit-bit-rate section-name bit-rate)
-  (if (list? bit-rate)
+(define (commit-serial-bit-rate section-name serial-bit-rate)
+  (if (list? serial-bit-rate)
       #t 
-      (fi-set-bmc-serial-conf-ipmi-messaging-comm-settings 0 #f bit-rate)))
+      (fi-set-bmc-serial-conf-ipmi-messaging-comm-settings 0 #f serial-bit-rate)))
 
-(define (checkout-bit-rate section-name) 
+(define (checkout-serial-bit-rate section-name) 
   (let ((param-list (fi-get-bmc-serial-conf-ipmi-messaging-comm-settings))) 
     (if (list? param-list) (list (caddr param-list)) #f)))
 
@@ -171,11 +171,11 @@
      same-string-ci?
      "Possible values: No_Flow_Control/RTS_CTS/XON_XOFF")
     ("bit_rate" 
-     valid-bit-rate? 
-     get-bit-rate 
-     commit-bit-rate 
-     checkout-bit-rate 
-     get-bit-rate-value-string
+     valid-serial-bit-rate? 
+     get-serial-bit-rate 
+     commit-serial-bit-rate 
+     checkout-serial-bit-rate 
+     get-serial-bit-rate-value-string
      same-string-ci?
      "Possible values: 9600/19200/38400/57600/115200")
     ;; You can add more in the form of 

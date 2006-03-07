@@ -24,6 +24,7 @@
 (fi-load "bc-lan-conf-auth-section.scm")
 (fi-load "bc-lan-conf-misc-section.scm")
 (fi-load "bc-serial-conf-section.scm")
+(fi-load "bc-sol-conf-section.scm")
 (fi-load "bc-pef-conf-section.scm")
 (fi-load "bc-misc-section.scm")
 (fi-load "bc-section.scm")
@@ -186,6 +187,19 @@
 		     "PEF_Startup_Delay" 
 		     "PEF_Alert_Startup_Delay"))
 
+(define sol_conf_s '("SOL_Conf" 
+		     "Enable_SOL" 
+                     "SOL_Privilege_Level",
+                     "Force_SOL_Payload_Authentication",
+                     "Force_SOL_Payload_Encryption",
+                     "Character_Accumulate_Interval",
+                     "Character_Send_Threshold",
+                     "SOL_Retry_Count",
+                     "SOL_Retry_Interval",
+                     "Non_Volatile_Bit_Rate",
+                     "Volatile_Bit_Rate",
+                     "SOL_Payload_Port_Number"))
+
 (define misc_s '("Misc" 
 		 "Power_Restore_Policy"))
 
@@ -201,6 +215,7 @@
   (checkout-section serial_channel_s (current-output-port))
   (checkout-section serial_conf_s (current-output-port))
   (checkout-section pef_conf_s (current-output-port))
+  (checkout-section sol_conf_s (current-output-port))
   (checkout-section misc_s (current-output-port)))
 
 (define (checkout-conf-to-file filename)
@@ -218,6 +233,7 @@
 	(checkout-section serial_channel_s fp)
 	(checkout-section serial_conf_s fp)
 	(checkout-section pef_conf_s fp)
+	(checkout-section sol_conf_s fp)
 	(checkout-section misc_s fp)
 	(close fp))))
 

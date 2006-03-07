@@ -158,6 +158,20 @@ SCM ex_set_bmc_pef_conf_pef_action_global_control (SCM scm_alert_action,
 SCM ex_set_bmc_pef_conf_pef_startup_delay (SCM scm_pef_startup_delay);
 SCM ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay);
 
+SCM ex_set_sol_sol_enable (SCM scm_sol_enable);
+
+SCM ex_set_sol_sol_authentication (SCM scm_sol_privilege_level,
+                                   SCM scm_force_sol_payload_authentication,
+                                   SCM scm_force_sol_payload_encryption);
+SCM ex_set_sol_character_accumulate_interval_and_send_threshold (SCM scm_character_accumulate_interval,
+                                                                 SCM scm_character_send_threshold);
+SCM ex_set_sol_sol_retry (SCM scm_retry_count,
+                          SCM scm_retry_interval);
+
+SCM ex_set_sol_sol_non_volatile_bit_rate (SCM scm_bit_rate);
+SCM ex_set_sol_sol_volatile_bit_rate (SCM scm_bit_rate);
+SCM ex_set_sol_sol_payload_port_number (SCM scm_port_number);
+
 /*****************/
 SCM ex_get_bmc_username (SCM scm_userid);
 SCM ex_get_bmc_user_lan_channel_access (SCM scm_userid);
@@ -192,8 +206,15 @@ SCM ex_get_bmc_pef_conf_pef_control ();
 SCM ex_get_bmc_pef_conf_pef_action_global_control ();
 SCM ex_get_bmc_pef_conf_pef_startup_delay ();
 SCM ex_get_bmc_pef_conf_pef_alert_startup_delay ();
-
+SCM ex_get_sol_sol_enable ();
+SCM ex_get_sol_sol_authentication ();
+SCM ex_get_sol_character_accumulate_interval_and_send_threshold ();
+SCM ex_get_sol_sol_retry ();
+SCM ex_get_sol_sol_non_volatile_bit_rate ();
+SCM ex_get_sol_sol_volatile_bit_rate ();
+SCM ex_get_sol_sol_payload_port_number ();
 SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
+
 /***********************************************************/
 
 SCM ex_get_sdr_record (SCM scm_record_id);

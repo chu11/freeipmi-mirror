@@ -61,6 +61,14 @@
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Support SOL
 	payloads.  Support missing SOL configuration parameters.
 
+	* libfreeipmi/src/udm/ipmi-sol-cmds-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds-udm.h: Support missing
+	SOL configuration parameters.
+
+	* fish/extensions/bmc-config.scm: Support SOL configuration.
+
+	* fish/extensions/bc-sol-conf-section.scm: New file.
+
 	RMCPPING and IPMIPING
 	
 	* libfreeipmi/src/ipmi-messaging-support-cmds.h,
@@ -106,6 +114,15 @@
 	* libfreeipmi/src/udm/ipmi-sol-cmds-udm.c,
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds-udm.h: Support missing
 	SOL configuration parameters.
+
+	* fish/src/bmc-conf2.c, fish/src/bmc-conf2.h,
+	fish/src/scm-procedures.c, fish/src/scm-procedures.h,
+	fish/src/extension.c: Support missing SOL configuration
+	parameters.
+
+	* fish/extensions/bmc-config.scm: Support SOL configuration.
+
+	* fish/extensions/bc-sol-conf-section.scm: New file.
 	
 2006-03-05  Albert Chu <chu11@llnl.gov>
 
