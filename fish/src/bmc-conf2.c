@@ -1043,6 +1043,186 @@ set_pef_alert_startup_delay (ipmi_device_t *dev,
   return (rv);
 }
 
+int8_t
+set_sol_sol_enable(ipmi_device_t *dev,
+                   uint8_t sol_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
+                                                            get_lan_channel_number (),
+                                                            sol_enable, 
+                                                            obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_sol_authentication(ipmi_device_t *dev,
+                           uint8_t sol_privilege_level,
+                           uint8_t force_sol_payload_authentication,
+                           uint8_t force_sol_payload_encryption)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (dev, 
+                                                                    get_lan_channel_number (),
+                                                                    sol_privilege_level,
+                                                                    force_sol_payload_authentication,
+                                                                    force_sol_payload_encryption,
+                                                                    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
+                                                         uint8_t character_accumulate_interval,
+                                                         uint8_t character_send_threshold)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
+                                                                                                  get_lan_channel_number (),
+                                                                                                  character_accumulate_interval,
+                                                                                                  character_send_threshold,
+                                                                                                  obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_sol_retry(ipmi_device_t *dev,
+                  uint8_t retry_count,
+                  uint8_t retry_interval)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (dev, 
+                                                           get_lan_channel_number (),
+                                                           retry_count,
+                                                           retry_interval,
+                                                           obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
+                                  uint8_t bit_rate)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
+                                                                           get_lan_channel_number (),
+                                                                           bit_rate,
+                                                                           obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
+                              uint8_t bit_rate)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
+                                                                       get_lan_channel_number (),
+                                                                       bit_rate,
+                                                                       obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_sol_sol_payload_port_number(ipmi_device_t *dev,
+                                uint16_t port_number)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t *ptr, ls_val, ms_val;
+  int8_t rv = -1;  
+
+  ptr = (uint8_t *)&port_number;
+#if WORDS_BIGENDIAN
+  ls_val = ptr[1];
+  ms_val = ptr[0];
+#else
+  ls_val = ptr[0];
+  ms_val = ptr[1];
+#endif
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_sol_configuration_parameters_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
+                                                                         get_lan_channel_number (),
+                                                                         ls_val,
+                                                                         ms_val,
+                                                                         obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
 static int8_t 
 get_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t userid, 
@@ -2304,6 +2484,272 @@ get_pef_alert_startup_delay (ipmi_device_t *dev,
 		    &val) < 0)
     goto cleanup;
   *pef_alert_startup_delay = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_enable (ipmi_device_t *dev, 
+                    uint8_t *sol_enable)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_enable_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (dev, 
+                                                            get_lan_channel_number (), 
+                                                            IPMI_GET_SOL_PARAMETER, 
+                                                            SET_SELECTOR, 
+                                                            BLOCK_SELECTOR, 
+                                                            obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"sol_enable", 
+		    &val) < 0)
+    goto cleanup;
+  *sol_enable = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_authentication (ipmi_device_t *dev, 
+                            uint8_t *sol_privilege_level,
+                            uint8_t *force_sol_payload_authentication,
+                            uint8_t *force_sol_payload_encryption)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_authentication_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (dev, 
+                                                                    get_lan_channel_number (), 
+                                                                    IPMI_GET_SOL_PARAMETER, 
+                                                                    SET_SELECTOR, 
+                                                                    BLOCK_SELECTOR, 
+                                                                    obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"sol_privilege_level", 
+		    &val) < 0)
+    goto cleanup;
+  *sol_privilege_level = val;
+
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"force_sol_payload_authentication,", 
+		    &val) < 0)
+    goto cleanup;
+  *force_sol_payload_authentication = val;
+
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"force_sol_payload_encryption,", 
+		    &val) < 0)
+    goto cleanup;
+  *force_sol_payload_encryption = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev, 
+                                                          uint8_t *character_accumulate_interval,
+                                                          uint8_t *character_send_threshold)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
+                                                                                                  get_lan_channel_number (), 
+                                                                                                  IPMI_GET_SOL_PARAMETER, 
+                                                                                                  SET_SELECTOR, 
+                                                                                                  BLOCK_SELECTOR, 
+                                                                                                  obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"character_accumulate_interval", 
+		    &val) < 0)
+    goto cleanup;
+  *character_accumulate_interval = val;
+
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"character_send_threshold", 
+		    &val) < 0)
+    goto cleanup;
+  *character_send_threshold = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_retry (ipmi_device_t *dev, 
+                   uint8_t *retry_count,
+                   uint8_t *retry_interval)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_retry_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (dev, 
+                                                           get_lan_channel_number (), 
+                                                           IPMI_GET_SOL_PARAMETER, 
+                                                           SET_SELECTOR, 
+                                                           BLOCK_SELECTOR, 
+                                                           obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"retry_count", 
+		    &val) < 0)
+    goto cleanup;
+  *retry_count = val;
+
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"retry_interval", 
+		    &val) < 0)
+    goto cleanup;
+  *retry_interval = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev, 
+                                   uint8_t *bit_rate)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
+                                                           get_lan_channel_number (), 
+                                                           IPMI_GET_SOL_PARAMETER, 
+                                                           SET_SELECTOR, 
+                                                           BLOCK_SELECTOR, 
+                                                           obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"bit_rate", 
+		    &val) < 0)
+    goto cleanup;
+  *bit_rate = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_volatile_bit_rate (ipmi_device_t *dev, 
+                               uint8_t *bit_rate)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_volatile_bit_rate_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
+                                                                       get_lan_channel_number (), 
+                                                                       IPMI_GET_SOL_PARAMETER, 
+                                                                       SET_SELECTOR, 
+                                                                       BLOCK_SELECTOR, 
+                                                                       obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"bit_rate", 
+		    &val) < 0)
+    goto cleanup;
+  *bit_rate = val;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+get_sol_sol_payload_port_number (ipmi_device_t *dev, 
+                                 uint16_t *port_number)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t ls_val, ms_val;
+  uint8_t *ptr;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_sol_configuration_parameters_sol_payload_port_number_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (dev, 
+                                                                         get_lan_channel_number (), 
+                                                                         IPMI_GET_SOL_PARAMETER, 
+                                                                         SET_SELECTOR, 
+                                                                         BLOCK_SELECTOR, 
+                                                                         obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"port_number_ls_byte", 
+		    &ls_val) < 0)
+    goto cleanup;
+  
+  if (fiid_obj_get (obj_cmd_rs, 
+		    (uint8_t *)"port_number_ms_byte", 
+		    &ms_val) < 0)
+    goto cleanup;
+  
+  ptr = (uint8_t *)port_number;
+#if WORDS_BIGENDIAN
+  ptr[1] = ls_val;
+  ptr[0] = ms_val;
+#else
+  ptr[0] = ls_val;
+  ptr[1] = ms_val;
+#endif
   
   rv = 0;
  cleanup:

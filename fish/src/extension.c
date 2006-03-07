@@ -371,6 +371,42 @@ install_new_procedures (void)
   gh_new_procedure ("fi-set-bmc-pef-conf-pef-alert-startup-delay", 
 		    ex_set_bmc_pef_conf_pef_alert_startup_delay, 1, 0, 0);
   
+  gh_new_procedure ("fi-set-sol-sol-enable", ex_set_sol_sol_enable, 1, 0, 0);
+  /*
+     syntax in scheme: (fi-set-sol-sol-enable BOOLEAN)
+  */
+
+  gh_new_procedure ("fi-set-sol-sol-authentication", ex_set_sol_sol_authentication, 3, 0, 0);
+  /*
+     syntax in scheme: (fi-set-sol-sol-authentication PRIVILEGE BOOLEN BOOLEAN)
+  */
+  
+  gh_new_procedure ("fi-set-sol-character-accumulate-interval-and-send-threshold", 
+                    ex_set_sol_character_accumulate_interval_and_send_threshold, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-sol-character-accumulate-interval-and-send-threshold INTERVAL THRESHOLD)
+   */
+
+  gh_new_procedure ("fi-set-sol-sol-retry", ex_set_sol_sol_retry, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-sol-sol-retry COUNT INTERVAL)
+   */
+
+  gh_new_procedure ("fi-set-sol-sol-non-volatile-bit-rate", ex_set_sol_sol_non_volatile_bit_rate, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-sol-sol-non-volatile-bit-rate BITRATE)
+   */
+
+  gh_new_procedure ("fi-set-sol-sol-volatile-bit-rate", ex_set_sol_sol_volatile_bit_rate, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-sol-sol-volatile-bit-rate BITRATE)
+   */
+
+  gh_new_procedure ("fi-set-sol-sol-payload-port-number", ex_set_sol_sol_payload_port_number, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-sol-sol-payload-port-number PORTNUMBER)
+   */
+
   gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID)
@@ -525,6 +561,42 @@ install_new_procedures (void)
   gh_new_procedure ("fi-get-bmc-pef-conf-pef-alert-startup-delay", 
 		    ex_get_bmc_pef_conf_pef_alert_startup_delay, 0, 0, 0);
   
+  gh_new_procedure ("fi-get-sol-sol-enable", ex_get_sol_sol_enable, 0, 0, 0);
+  /*
+     syntax in scheme: (fi-get-sol-sol-enable)
+  */
+
+  gh_new_procedure ("fi-get-sol-sol-authentication", ex_get_sol_sol_authentication, 0, 0, 0);
+  /*
+     syntax in scheme: (fi-get-sol-sol-authentication)
+  */
+  
+  gh_new_procedure ("fi-get-sol-character-accumulate-interval-and-send-threshold", 
+                    ex_get_sol_character_accumulate_interval_and_send_threshold, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sol-character-accumulate-interval-and-send-threshold)
+   */
+
+  gh_new_procedure ("fi-get-sol-sol-retry", ex_get_sol_sol_retry, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sol-sol-retry)
+   */
+
+  gh_new_procedure ("fi-get-sol-sol-non-volatile-bit-rate", ex_get_sol_sol_non_volatile_bit_rate, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sol-sol-non-volatile-bit-rate)
+   */
+
+  gh_new_procedure ("fi-get-sol-sol-volatile-bit-rate", ex_get_sol_sol_volatile_bit_rate, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sol-sol-volatile-bit-rate)
+   */
+
+  gh_new_procedure ("fi-get-sol-sol-payload-port-number", ex_get_sol_sol_payload_port_number, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-sol-sol-payload-port-number)
+   */
+
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
   /* 
      syntax in scheme: (fi-check-bmc-user-password USERID PASSWORD)

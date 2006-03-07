@@ -1586,6 +1586,150 @@ ex_set_bmc_pef_conf_pef_alert_startup_delay (SCM scm_pef_alert_startup_delay)
   return SCM_BOOL_T;
 }
 
+SCM 
+ex_set_sol_sol_enable (SCM scm_sol_enable)
+{
+  int sol_enable;
+  int retval;
+  
+  sol_enable = gh_scm2bool (scm_sol_enable);
+  
+  retval = set_sol_sol_enable (fi_get_ipmi_device (), sol_enable);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_sol_authentication (SCM scm_sol_privilege_level, 
+                               SCM scm_force_sol_payload_authentication, 
+                               SCM scm_force_sol_payload_encryption)
+{
+  uint8_t sol_privilege_level;
+  uint8_t force_sol_payload_authentication;
+  uint8_t force_sol_payload_encryption;
+  int retval;
+  
+  retval = get_sol_sol_authentication (fi_get_ipmi_device (), 
+                                       &sol_privilege_level,
+                                       &force_sol_payload_authentication,
+                                       &force_sol_payload_encryption);
+  
+  if (retval)
+    return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+  
+  if (scm_integer_p (scm_sol_privilege_level) == SCM_BOOL_T)
+    sol_privilege_level = gh_scm2long (scm_sol_privilege_level);
+
+  if (scm_boolean_p (scm_force_sol_payload_authentication) == SCM_BOOL_T)
+    force_sol_payload_authentication = gh_scm2bool (scm_force_sol_payload_authentication);
+  
+  if (scm_boolean_p (scm_force_sol_payload_encryption) == SCM_BOOL_T)
+    force_sol_payload_encryption = gh_scm2bool (scm_force_sol_payload_encryption);
+  
+  retval = set_sol_sol_authentication (fi_get_ipmi_device (), 
+                                       sol_privilege_level,
+                                       force_sol_payload_authentication,
+                                       force_sol_payload_encryption);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_character_accumulate_interval_and_send_threshold (SCM scm_character_accumulate_interval, 
+                                                             SCM scm_character_send_threshold)
+{
+  uint8_t character_accumulate_interval;
+  uint8_t character_send_threshold;
+  int retval;
+  
+  retval = get_sol_character_accumulate_interval_and_send_threshold (fi_get_ipmi_device (), 
+                                                                     &character_accumulate_interval,
+                                                                     &character_send_threshold);
+  
+  if (retval)
+    return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+  
+  if (scm_integer_p (scm_character_accumulate_interval) == SCM_BOOL_T)
+    character_accumulate_interval = gh_scm2long (scm_character_accumulate_interval);
+  
+  if (scm_integer_p (scm_character_send_threshold) == SCM_BOOL_T)
+    character_send_threshold = gh_scm2long (scm_character_send_threshold);
+  
+  retval = set_sol_character_accumulate_interval_and_send_threshold (fi_get_ipmi_device (), 
+                                                                     character_accumulate_interval,
+                                                                     character_send_threshold);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_sol_retry (SCM scm_retry_count, 
+                      SCM scm_retry_interval)
+{
+  uint8_t retry_count;
+  uint8_t retry_interval;
+  int retval;
+  
+  retval = get_sol_sol_retry (fi_get_ipmi_device (), 
+                              &retry_count,
+                              &retry_interval);
+  
+  if (retval)
+    return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+  
+  if (scm_integer_p (scm_retry_count) == SCM_BOOL_T)
+    retry_count = gh_scm2long (scm_retry_count);
+  
+  if (scm_integer_p (scm_retry_interval) == SCM_BOOL_T)
+    retry_interval = gh_scm2long (scm_retry_interval);
+  
+  retval = set_sol_sol_retry (fi_get_ipmi_device (), 
+                              retry_count,
+                              retry_interval);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_sol_non_volatile_bit_rate (SCM scm_bit_rate)
+{
+  int bit_rate;
+  int retval;
+  
+  bit_rate = gh_scm2long (scm_bit_rate);
+  
+  retval = set_sol_sol_non_volatile_bit_rate (fi_get_ipmi_device (), bit_rate);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_sol_volatile_bit_rate (SCM scm_bit_rate)
+{
+  int bit_rate;
+  int retval;
+  
+  bit_rate = gh_scm2long (scm_bit_rate);
+  
+  retval = set_sol_sol_volatile_bit_rate (fi_get_ipmi_device (), bit_rate);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
+ex_set_sol_sol_payload_port_number (SCM scm_port_number)
+{
+  int port_number;
+  int retval;
+  
+  port_number = gh_scm2long (scm_port_number);
+  
+  retval = set_sol_sol_payload_port_number (fi_get_ipmi_device (), port_number);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+
 /**** get_XXXX functions *****/
 SCM 
 ex_get_bmc_username (SCM scm_userid)
@@ -2244,6 +2388,140 @@ ex_get_bmc_pef_conf_pef_alert_startup_delay ()
     }
   
   return gh_ulong2scm (pef_alert_startup_delay);
+}
+
+SCM 
+ex_get_sol_sol_enable ()
+{
+  uint8_t sol_enable = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_enable (fi_get_ipmi_device (), 
+                                    &sol_enable)) == 0)
+    {
+      return_list = gh_list (gh_bool2scm (sol_enable), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_sol_authentication ()
+{
+  uint8_t sol_privilege_level = 0;
+  uint8_t force_sol_payload_authentication = 0;
+  uint8_t force_sol_payload_encryption = 0;
+
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_authentication (fi_get_ipmi_device (), 
+                                            &sol_privilege_level,
+                                            &force_sol_payload_authentication,
+                                            &force_sol_payload_encryption)) == 0)
+    {
+      return_list = gh_list (gh_long2scm(sol_privilege_level),
+                             gh_bool2scm (force_sol_payload_authentication), 
+                             gh_bool2scm (force_sol_payload_encryption), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_character_accumulate_interval_and_send_threshold ()
+{
+  uint8_t character_accumulate_interval = 0;
+  uint8_t character_send_threshold = 0;
+
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_character_accumulate_interval_and_send_threshold (fi_get_ipmi_device (), 
+                                                                          &character_accumulate_interval,
+                                                                          &character_send_threshold)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (character_accumulate_interval), 
+                             gh_long2scm (character_send_threshold), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_sol_retry ()
+{
+  uint8_t retry_count = 0;
+  uint8_t retry_interval = 0;
+
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_retry (fi_get_ipmi_device (), 
+                                   &retry_count,
+                                   &retry_interval)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (retry_count), 
+                             gh_long2scm (retry_interval), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_sol_non_volatile_bit_rate ()
+{
+  uint8_t bit_rate = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_non_volatile_bit_rate (fi_get_ipmi_device (), 
+                                                   &bit_rate)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (bit_rate), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_sol_volatile_bit_rate ()
+{
+  uint8_t bit_rate = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_volatile_bit_rate (fi_get_ipmi_device (), 
+                                               &bit_rate)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (bit_rate), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM 
+ex_get_sol_sol_payload_port_number ()
+{
+  uint16_t port_number = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_sol_sol_payload_port_number (fi_get_ipmi_device (), 
+                                                 &port_number)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (port_number), 
+			     SCM_UNDEFINED);
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
 }
 
 /***********************************************************/

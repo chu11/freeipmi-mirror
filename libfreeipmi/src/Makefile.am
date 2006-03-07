@@ -21,6 +21,11 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
+	ipmi-rmcpplus.c \
+	ipmi-rmcpplus-crypt.c \
+	ipmi-rmcpplus-debug.c \
+	ipmi-rmcpplus-interface.c \
+	ipmi-rmcpplus-utils.c \
 	ipmi-smic-interface.c \
 	ipmi-ssif-api.c \
 	ipmi-semaphores.c \
@@ -30,6 +35,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan-cmds.c \
 	ipmi-messaging-support-cmds.c \
 	ipmi-pef-and-alerting-cmds.c \
+	ipmi-rmcpplus-support-and-payload-cmds.c \
 	ipmi-sdr-repository-cmds.c \
 	ipmi-sel-cmds.c \
 	ipmi-sensor-cmds.c \
@@ -40,7 +46,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-event-messages.c \
 	ipmi-sensor-utils.c
 
-libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm
+libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm -lgcrypt
 
 libfreeipmi_la_CFLAGS = \
 	-I$(srcdir)/../include \

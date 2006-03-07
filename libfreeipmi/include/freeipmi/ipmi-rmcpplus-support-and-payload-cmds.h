@@ -1,0 +1,96 @@
+/*
+   ipmi-rmcpplus-support-and-payload-cmds.h - 
+      IPMI RMCPPLUS Support and Payload Commands
+
+   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software Foundation,
+   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+*/
+
+#ifndef _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H
+#define _IPMI_RMCPPLUS_SUPPORT_AND_PAYLOAD_CMDS_H 
+
+#include <stdint.h>
+#include <freeipmi/fiid.h>
+ 
+#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED   0x0
+#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED 0x1
+
+#define IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_VALID(__val) \
+        (((__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_ASSERTED \
+	  || (__val) == IPMI_SOL_STARTUP_HANDSHAKE_CTS_AND_DCD_SDR_DEASSERTED) ? 1 : 0)
+
+#define IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE     0x0
+#define IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE 0x1
+#define IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE  0x2
+#define IPMI_SERIAL_MODEM_ALERTS_RESERVED                  0x3
+
+#define IPMI_SERIAL_MODEM_ALERTS_VALID(__val) \
+        (((__val) == IPMI_SERIAL_MODEM_ALERTS_FAIL_WHILE_SOL_ACTIVE \
+	  || (__val) == IPMI_SERIAL_MODEM_ALERTS_DEFERRED_WHILE_SOL_ACTIVE \
+	  || (__val) == IPMI_SERIAL_MODEM_ALERTS_SUCCEED_WHILE_SOL_ACTIVE) ? 1 : 0)
+
+#define IPMI_TEST_MODE_ACTIVATED   0x1
+#define IPMI_TEST_MODE_DEACTIVATED 0x0
+
+#define IPMI_TEST_MODE_VALID(__val) \
+        (((__val) == IPMI_TEST_MODE_ACTIVATED \
+	  || (__val) == IPMI_TEST_MODE_DEACTIVATED) ? 1 : 0)
+
+#define IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION   0x1
+#define IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION 0x0
+
+#define IPMI_AUTHENTICATION_ACTIVATION_VALID(__val) \
+        (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_AUTHENTICATION \
+	  || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_AUTHENTICATION) ? 1 : 0)
+
+#define IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION   0x1
+#define IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION 0x0
+
+#define IPMI_ENCRYPTION_ACTIVATION_VALID(__val) \
+        (((__val) == IPMI_ACTIVATE_PAYLOAD_WITH_ENCRYPTION \
+	  || (__val) == IPMI_ACTIVATE_PAYLOAD_WITHOUT_ENCRYPTION) ? 1 : 0)
+
+#define IPMI_TEST_MODE_NOT_SUPPORTED 0x0
+#define IPMI_TEST_MODE_ENABLED       0x1
+ 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern fiid_template_t tmpl_activate_payload_rq;
+extern fiid_template_t tmpl_activate_payload_sol_rq;
+extern fiid_template_t tmpl_activate_payload_rs;
+extern fiid_template_t tmpl_activate_payload_sol_rs;
+
+int8_t fill_cmd_activate_payload (uint8_t payload_type,
+				  uint8_t payload_instance,
+				  uint8_t *auxiliary_request_data,
+				  uint32_t auxiliary_request_data_len,
+				  fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_activate_payload_sol (uint8_t payload_type,
+				      uint8_t payload_instance,
+				      uint8_t sol_startup_handshake,
+				      uint8_t shared_serial_alert_behavior,
+				      uint8_t test_mode,
+				      uint8_t authentication_activation,
+				      uint8_t encryption_activation,
+				      fiid_obj_t obj_cmd_rq);
+#ifdef __cplusplus
+}
+#endif
+
+#endif

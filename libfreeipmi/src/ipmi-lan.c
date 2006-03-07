@@ -163,7 +163,7 @@ _ipmi_lan_pkt_rq_min_size(uint8_t authentication_type, fiid_obj_t obj_cmd)
   uint32_t msg_len = 0;
   int32_t len;
 
-  assert(IPMI_AUTHENTICATION_TYPE_VALID(authentication_type) && fiid_obj_valid(obj_cmd));
+  assert(IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type) && fiid_obj_valid(obj_cmd));
 
   FIID_TEMPLATE_LEN_BYTES (len, tmpl_rmcp_hdr);
   msg_len += len;
@@ -510,7 +510,8 @@ unassemble_ipmi_lan_pkt (uint8_t *pkt,
   FIID_OBJ_GET (obj_lan_session_hdr, 
 		(uint8_t *)"authentication_type", 
 		&authentication_type);
-  ERR_EINVAL (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type));
+
+  ERR_EINVAL (IPMI_1_5_AUTHENTICATION_TYPE_VALID(authentication_type));
 
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {

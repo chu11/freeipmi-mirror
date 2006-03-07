@@ -1,3 +1,118 @@
+2005-03-06  Albert Chu <chu11@llnl.gov>
+
+	Collective fixes from branch al_ipmi_2_0_branch at tag
+	al_ipmi_2_0_branch_final.  See ChangeLog in branch for detailed
+	day by day changes.
+	
+	LIBFREEIPMI
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus.h,
+	libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-crypt.h,
+	libfreeipmi/src/ipmi-rmcpplus-crypt.c,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-interface.h,
+	libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h,
+	libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-status-spec.h: New
+	files.
+
+	* libfreeipmi/include/freeipmi/ipmi-debug.h
+	(ipmi_dump_rmcpplus_packet): New function.
+
+	* libfreeipmi/src/ipmi-error.h, libfreeipmi/src/ipmi-error.c
+	(rmcpplus_status_strerror_r): New function.
+
+	* libfreeipmi/include/freeipmi/ipmi-authentication-type-spec.h:
+	Added IPMI_AUTHENTICATION_TYPE_RMCPPLUS,
+	IPMI_1_5_AUTHENTICATION_TYPE_VALID, and
+	IPMI_2_0_AUTHENTICATION_TYPE_VALID. Adjusted
+	IPMI_AUTHENTICATION_TYPE_VALID appropriately for ipmi 2.0.
+
+	* libfreeipmi/include/freeipmi/ipmi-privilege-level-spec.h: Added
+	IPMI_1_5_PRIVILEGE_LEVEL_VALID and IPMI_2_0_PRIVILEGE_LEVEL.
+	Adjusted IPMI_PRIVILEGE_LEVEL_VALID appropriately for ipmi 2.0.
+	
+	* libfreeipmi/src/ipmi-lan.c
+	(_ipmi_lan_pkt_rq_min_size,unassemble_ipmi_lan_pkt),
+	libfreeipmi/src/udm/ipmi-udm.c
+	(ipmi_open_outofband): Use new
+	IPMI_1_5_SESSION_AUTHENTICATION_TYPE_VALID macro.
+
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband):
+	libfreeipmi/src/ipmi-messagging-support-cmds.c
+	(fill_cmd_get_channel_authentication_capabilities,
+	fill_cmd_activate_session, fill_cmd_set_channel_access,
+	fill_cmd_set_session_privilege_level), Use new
+	IPMI_1_5_PRIVILEGE_LEVEL_VALID.
+	
+	* libfreeipmi/include/freeipmi/freeipmi.h: Added ipmi-rmcpplus.h,
+	ipmi-rmcpplus-crypt.h, ipmi-rmcpplus-interface.h,
+	ipmi-rmcpplus-support-and-payload-cmds.h, ipmi-rmcpplus-utils.h,
+	ipmi-rmcpplus-status-spec.h.
+
+	* libfreeipmi/src/ipmi-utils.c (ipmi_get_random_seed): Utilize
+	#define checks for /dev/urandom and /dev/random.
+
+	* libfreeipmi/src/ipmi-utils.h, libfreeipmi/src/ipmi-utils.c
+	(ipmi_get_random): New function.
+
+	* libfreeipmi/src/ipmi-sol-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Support SOL
+	payloads.  Support missing SOL configuration parameters.
+
+	* libfreeipmi/src/udm/ipmi-sol-cmds-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds-udm.h: Support missing
+	SOL configuration parameters.
+
+	* libfreeipmi/src/ipmi-error.c,
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Support new
+	completion codes and error strings.
+
+	RMCPPING and IPMIPING
+	
+	* libfreeipmi/src/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(IPMI_GET_IPMI_V20_EXTENDED_DATA, IPMI_GET_IPMI_V15_DATA,
+	IPMI_GET_IPMI_DATA_VALID, tmpl_cmd_get_channel_auth_caps_v20_rq,
+	tmpl_cmd_get_channel_auth_caps_v20_rs,
+	fill_cmd_get_channel_auth_caps_v20): New templates and functions.
+
+	* ipmiping/src/ipmiping.c, rmcpping/src/rmcpping.c,
+	libfreeipmi/src/ipmi-ping.h, libfreeipmi/src/ipmi-ping.c,
+	rmcpping/rmcpping.8.in, ipmiping/ipmiping.8.in: Added support for
+	ipmi 2.0 ping.
+
+	* libfreeipmi/src/ipmi-ping.c (_get_rand): Removed function.
+
+	* libfreeipmi/src/ipmi-ping.c (_main_loop): Use ipmi_get_random
+	rather than _get_rand.
+
+	IPMIPOWER
+
+	* ipmipower/src/ipmipower_utils.c (get_rand): Utilize
+	ipmi_get_random.
+
+	FISH
+	
+	* fish/extensions/bmc-config.scm: Support SOL configuration.
+
+	* fish/extensions/bc-sol-conf-section.scm: New file.
+
+	AUTOCONF/AUTOMAKE
+
+	* configure.ac: Add libgcrypt check.
+
+	* libfreeipmi/src/Makefile.am, libfreeipmi/include/Makefile.am:
+	Added appropriate new files and libraries.
+	
+	MISC
+	
+	* freeipmi.spec.in: Add gcrypt dependencies.
+
 2006-03-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,

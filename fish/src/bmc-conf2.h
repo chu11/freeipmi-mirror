@@ -144,6 +144,27 @@ int8_t set_pef_alert_startup_delay (ipmi_device_t *dev,
 				    uint8_t pef_alert_startup_delay);
 int8_t set_bmc_power_restore_policy (ipmi_device_t *dev, 
 				     uint8_t power_restore_policy);
+
+int8_t set_sol_sol_enable(ipmi_device_t *dev,
+                          uint8_t sol_enable);
+int8_t set_sol_sol_authentication(ipmi_device_t *dev,
+                                  uint8_t sol_privilege_level,
+                                  uint8_t force_sol_payload_authentication,
+                                  uint8_t force_sol_payload_encryption);
+int8_t set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
+                                                                uint8_t character_accumulate_interval,
+                                                                uint8_t character_send_threshold);
+int8_t set_sol_sol_retry(ipmi_device_t *dev,
+                         uint8_t retry_count,
+                         uint8_t retry_interval);
+int8_t set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
+                                         uint8_t bit_rate);
+int8_t set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
+                                     uint8_t bit_rate);
+int8_t set_sol_sol_payload_port_number(ipmi_device_t *dev,
+                                       uint16_t port_number);
+
+
 /***********************************************************/
 int8_t get_bmc_username (ipmi_device_t *dev, 
 			 uint8_t userid, 
@@ -247,6 +268,25 @@ int8_t get_pef_startup_delay (ipmi_device_t *dev,
 			      uint8_t *pef_startup_delay);
 int8_t get_pef_alert_startup_delay (ipmi_device_t *dev, 
 				    uint8_t *pef_alert_startup_delay);
+int8_t get_sol_sol_enable (ipmi_device_t *dev,
+                           uint8_t *sol_enable);
+int8_t get_sol_sol_authentication (ipmi_device_t *dev,
+                                   uint8_t *sol_privilege_level,
+                                   uint8_t *force_sol_payload_authentication,
+                                   uint8_t *force_sol_payload_encryption);
+int8_t get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
+                                                                 uint8_t *character_accumulate_interval,
+                                                                 uint8_t *character_send_threshold);
+int8_t get_sol_sol_retry (ipmi_device_t *dev,
+                          uint8_t *retry_count,
+                          uint8_t *retry_interval);
+int8_t get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
+                                          uint8_t *bit_rate);
+int8_t get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
+                                      uint8_t *bit_rate);
+int8_t get_sol_sol_payload_port_number (ipmi_device_t *dev,
+                                        uint16_t *port_number);
+
 /***********************************************************/
 int8_t check_bmc_user_password (ipmi_device_t *dev, 
 				uint8_t userid, 

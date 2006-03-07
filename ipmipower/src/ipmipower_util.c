@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.6 2006-02-17 19:34:34 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.7 2006-03-07 07:25:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -67,38 +67,15 @@
 uint32_t
 get_rand(void)
 {
-#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
-  uint32_t randval;
-  int fd, ret = -1;
-#if HAVE_DEVURANDOM
-  char *device = DEVURANDOM;
-#else
-  char *device = DEVRANDOM;
-#endif
+  u_int32_t val;
 
-  if ((fd = open(device, O_RDONLY)) < 0)
+  if (ipmi_get_random((char *)&val, sizeof(val)) < 0)
     {
-      dbg("get_rand: open: %s: %s", device, strerror(errno));
-      goto cleanup;
+      dbg("get_rand: ipmi_get_random: %s", strerror(errno));
+      return (u_int32_t)rand();
     }
 
-  if ((ret = read(fd, (char *)&randval, sizeof(uint32_t))) < 0)
-    {
-      dbg("get_rand: read: %s: %s", device, strerror(errno));
-      goto cleanup;
-    }
-
- cleanup:
-  close(fd);
-  if (ret != sizeof(uint32_t))
-    {
-      dbg("get_rand: read len: %d", ret);
-      return rand();
-    }
-  return randval;
-#else
-  return rand();
-#endif
+  return val;
 }
 
 void

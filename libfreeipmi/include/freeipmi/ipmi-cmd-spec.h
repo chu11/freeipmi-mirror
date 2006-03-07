@@ -75,8 +75,22 @@ extern "C" {
 #define IPMI_CMD_SET_USER_NAME                              0x45
 #define IPMI_CMD_GET_USER_NAME_CMD                          0x46
 #define IPMI_CMD_SET_USER_PASSWORD_CMD                      0x47
-// unassigned                                               0x48 to 0x51
+#define IPMI_CMD_ACTIVATE_PAYLOAD                           0x48
+#define IPMI_CMD_DEACTIVATE_PAYLOAD                         0x49
+#define IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS              0x4A
+#define IPMI_CMD_GET_PAYLOAD_INSTANCE_INFO                  0x4B
+#define IPMI_CMD_SET_USER_PAYLOAD_ACCESS                    0x4C
+#define IPMI_CMD_GET_USER_PAYLOAD_ACCESS                    0x4D
+#define IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT                0x4E
+#define IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO               0x4F
+// unassigned                                               0x51 
 #define IPMI_CMD_MASTER_WRITE_READ                          0x52
+// unassigned                                               0x53
+#define IPMI_CMD_GET_CHANNEL_CIPHER_SUITES                  0x54
+#define IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION          0x53
+#define IPMI_CMD_SET_CHANNEL_SECURITY_KEYS                  0x56
+#define IPMI_CMD_GET_SYSTEM_INTERFACE_CAPABILITIES          0x57
+// unassigned                                               0x58 to 0x5F
 
 // Chassis Device Commands 
 #define IPMI_CMD_GET_CHASSIS_CAPABILITIES                   0x00

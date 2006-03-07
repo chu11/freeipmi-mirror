@@ -20,6 +20,12 @@ libfreeipmi:
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
+  * gcrypt: secure mem-buffers
+  * gcrypt: thread issues
+  * ipmi 2.0 commands
+  * gcc 4.0 warnings test/fix
+  * password 16 vs 20 bytes fix
+    - also see errata
   * gcc 4.0 test/warning
   * int wraparound corner cases - fiid
     - uint32_t for max_field_len, but some funcs return int32_t
@@ -51,9 +57,9 @@ libfreeipmi:
   * allow configuration of the slave addr into lan_msg_hdr??
   * assemble_raw, unassemble_raw
     - then using these, adjust udm-raw
-  * need _recv_pkt in ipmipower to return a CC code so we can detect
-    if we are ipmi 2.0 or ipmi 1.5.
-    - need values returned from "ipmi_check" stuff
+  * 1_5_privilege_level - not really right, do something else
+  * vlan_id_ls/ms -> ls_byte, ms_byte?
+    - check bmc and sol, just need consistentcy
 
 fish:
 -----

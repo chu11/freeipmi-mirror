@@ -44,6 +44,21 @@
 (define (get-privilege-limit-value-string value)
   (string-capitalize (assoc-vref privilege-limit-values value)))
 
+(define privilege-level-values '(("callback"        . 1) 
+				 ("user"            . 2) 
+				 ("operator"        . 3) 
+				 ("administrator"   . 4) 
+				 ("oem_proprietary" . 5)))
+
+(define (get-privilege-level value-string)
+  (assoc-ref privilege-level-values (string-downcase value-string)))
+
+(define (valid-privilege-level? str)
+  (pair? (assoc (string-downcase str) privilege-level-values)))
+
+(define (get-privilege-level-value-string value)
+  (string-capitalize (assoc-vref privilege-level-values value)))
+
 (define channel-access-modes '(("disabled"         . 0)
 			       ("pre_boot_only"    . 1)
 			       ("always_available" . 2)
@@ -97,20 +112,35 @@
 (define (get-flow-control-value-string value)
   (string-capitalize (assoc-vref flow-controls value)))
 
-(define bit-rates '(("9600"   . 6)
-		    ("19200"  . 7)
-		    ("38400"  . 8)
-		    ("57600"  . 9)
-		    ("115200" . 10)))
+(define serial-bit-rates '(("9600"   . 6)
+                           ("19200"  . 7)
+                           ("38400"  . 8)
+                           ("57600"  . 9)
+                           ("115200" . 10)))
 
-(define (get-bit-rate value-string)
-  (assoc-ref bit-rates (string-downcase value-string)))
+(define (get-serial-bit-rate value-string)
+  (assoc-ref serial-bit-rates (string-downcase value-string)))
 
-(define (valid-bit-rate? str)
-  (pair? (assoc (string-downcase str) bit-rates)))
+(define (valid-serial-bit-rate? str)
+  (pair? (assoc (string-downcase str) serial-bit-rates)))
 
-(define (get-bit-rate-value-string value)
-  (string-capitalize (assoc-vref bit-rates value)))
+(define (get-serial-bit-rate-value-string value)
+  (string-capitalize (assoc-vref serial-bit-rates value)))
+
+(define sol-bit-rates '(("9600"   . 6)
+                        ("19200"  . 7)
+                        ("38400"  . 8)
+                        ("57600"  . 9)
+                        ("115200" . 10)))
+
+(define (get-sol-bit-rate value-string)
+  (assoc-ref sol-bit-rates (string-downcase value-string)))
+
+(define (valid-sol-bit-rate? str)
+  (pair? (assoc (string-downcase str) sol-bit-rates)))
+
+(define (get-sol-bit-rate-value-string value)
+  (string-capitalize (assoc-vref sol-bit-rates value)))
 
 (define power-restore-policies '(("off_state_ac_apply"     . 0)
 				 ("restore_state_ac_apply" . 1)

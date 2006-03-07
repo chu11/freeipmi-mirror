@@ -1,5 +1,5 @@
 /* 
-   $Id: fish.c,v 1.20 2006-02-17 19:34:34 chu11 Exp $ 
+   $Id: fish.c,v 1.21 2006-03-07 07:25:59 chu11 Exp $ 
 
    fish - Free IPMI SHell - an extensible console based shell for
    managing large number of IPMI compatible systems.

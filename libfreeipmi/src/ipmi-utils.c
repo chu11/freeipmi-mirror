@@ -38,9 +38,18 @@
 #include <string.h>
 #endif /* STDC_HEADERS */
 #include <errno.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#if HAVE_FCNTL_H
+#include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
 #if defined (IPMI_SYSLOG)
 #include <syslog.h>
 #endif /* IPMI_SYSLOG */
+#include <gcrypt.h>
 
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/fiid.h"
@@ -108,6 +117,39 @@ int8_t
 ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 {
   return ipmi_check_completion_code(obj_cmd, IPMI_COMP_CODE_COMMAND_SUCCESS);
+}
+
+int
+ipmi_get_random(char *buf, unsigned int buflen)
+{
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+  int fd, rv;
+#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
+
+  ERR_EINVAL (buf);
+  
+  if (!buflen)
+    return (0);
+  
+#if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
+#if HAVE_DEVURANDOM
+  if ((fd = open("/dev/urandom", O_RDONLY)) < 0)
+    goto gcrypt_rand;
+#else  /* !HAVE_DEVURANDOM */
+  if ((fd = open ("/dev/random", O_RDONLY)) < 0)
+    goto gcrypt_rand;
+#endif /* !HAVE_DEVURANDOM */
+
+  if ((rv = read(fd, buf, buflen)) < buflen)
+    goto gcrypt_rand;
+
+  close(fd);
+  return rv;
+#endif /* !(HAVE_DEVURANDOM || HAVE_DEVRANDOM) */
+
+ gcrypt_rand:
+  gcry_randomize((unsigned char *)buf, buflen, GCRY_STRONG_RANDOM);
+  return buflen;
 }
 
 int8_t

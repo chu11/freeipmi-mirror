@@ -814,6 +814,9 @@ do {                                                   \
     if (!__ret)                                        \
       {                                                \
 	errno = EINVAL;                                \
+        __FIID_OBJ_SYSLOG((__obj));                    \
+        __FIID_OBJ_TRACE((__obj));                     \
+	__FIID_OBJ_SET_ERRNO((__obj));                 \
 	return (-1);                                   \
       }                                                \
 } while (0)
@@ -853,6 +856,9 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
+         __FIID_OBJ_SYSLOG((__obj));                                 \
+         __FIID_OBJ_TRACE((__obj));                                  \
+         __FIID_OBJ_SET_ERRNO((__obj));                              \
 	return (-1);                                                 \
       }                                                              \
 } while (0)
@@ -870,6 +876,9 @@ do {                                                                 \
     if (!__ret)                                                      \
       {                                                              \
 	errno = EINVAL;                                              \
+         __FIID_OBJ_SYSLOG((__obj));                                 \
+         __FIID_OBJ_TRACE((__obj));                                  \
+         __FIID_OBJ_SET_ERRNO((__obj));                              \
 	goto cleanup;                                                \
       }                                                              \
 } while (0)

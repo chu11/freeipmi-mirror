@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmiping.8.in,v 1.8 2006-02-17 19:34:34 chu11 Exp $
+\."$Id: ipmiping.8.in,v 1.9 2006-03-07 07:25:59 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -67,6 +67,10 @@ Time to wait for a response, in seconds. Default is five seconds.
 .TP
 .I "-v"
 Verbose output.
+.TP
+.I "-r"
+Specify IPMI protocol version.  Available options are "1.5" and "2.0".
+Default is to use "1.5".
 .TP
 .I "-s num"
 Specify an initial starting sequence number.  The default is to use a

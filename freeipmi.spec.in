@@ -19,6 +19,7 @@ Group: Development/System
 Source: %{name}-%{version}.tar.gz
 BuildRoot: %{_localstatedir}/tmp/%{name}-%{version}
 Summary: FreeIPMI
+Requires: gcrypt
 %description
 The FreeIPMI project provides "Remote-Console" (out-of-band) and
 "System Management Software" (in-band) based on Intelligent

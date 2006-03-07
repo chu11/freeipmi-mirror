@@ -1,5 +1,5 @@
 ##*****************************************************************************
-## $Id: Makefile.am,v 1.10 2006-03-05 17:21:14 chu11 Exp $
+## $Id: Makefile.am,v 1.11 2006-03-07 07:25:59 chu11 Exp $
 ##*****************************************************************************
 
 nobase_include_HEADERS = \
@@ -14,6 +14,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-netfn-spec.h \
 	freeipmi/ipmi-pef-param-spec.h \
 	freeipmi/ipmi-privilege-level-spec.h \
+	freeipmi/ipmi-rmcpplus-status-spec.h \
 	freeipmi/ipmi-sensor-types-spec.h \
 	freeipmi/ipmi-sensor-units-spec.h \
 	freeipmi/ipmi-serial-modem-param-spec.h \
@@ -30,6 +31,10 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan.h \
 	freeipmi/ipmi-lan-interface.h \
 	freeipmi/ipmi-lan-utils.h \
+	freeipmi/ipmi-rmcpplus.h \
+	freeipmi/ipmi-rmcpplus-crypt.h \
+	freeipmi/ipmi-rmcpplus-interface.h \
+	freeipmi/ipmi-rmcpplus-utils.h \
 	freeipmi/ipmi-ssif-api.h
 	freeipmi/ipmi-smic-interface.h \
 	freeipmi/ipmi-bmc-watchdog-timer-cmds.h \
@@ -38,6 +43,7 @@ nobase_include_HEADERS = \
 	freeipmi/ipmi-lan-cmds.h \
 	freeipmi/ipmi-messaging-support-cmds.h \
 	freeipmi/ipmi-pef-and-alerting-cmds.h \
+	freeipmi/ipmi-rmcpplus-support-and-payload-cmds.h \
 	freeipmi/ipmi-sdr-repository-cmds.h \
 	freeipmi/ipmi-sel-cmds.h \
 	freeipmi/ipmi-sensor-cmds.h \

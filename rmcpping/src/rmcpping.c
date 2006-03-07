@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: rmcpping.c,v 1.15 2006-02-26 02:10:50 chu11 Exp $
+ *  $Id: rmcpping.c,v 1.16 2006-03-07 07:26:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,6 +77,7 @@ int
 createpacket(char *buffer, 
              int buflen, 
              unsigned int sequence_number, 
+             int version,
              int debug)
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
@@ -131,6 +132,7 @@ parsepacket(char *buffer,
             const char *from, 
             unsigned int sequence_number, 
             int verbose, 
+            int version,
             int debug) 
 {
   fiid_obj_t obj_rmcp_hdr = NULL;
