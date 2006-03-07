@@ -81,7 +81,7 @@ int8_t ipmi_cmd_get_user_access (ipmi_device_t *dev,
 
 int8_t ipmi_cmd_set_user_name (ipmi_device_t *dev, 
 			       uint8_t user_id, 
-			       char *user_name, 
+			       uint8_t *user_name, 
 			       unsigned int user_name_len,
 			       fiid_obj_t obj_cmd_rs);
   

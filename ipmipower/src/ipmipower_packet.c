@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.26 2006-03-07 22:11:19 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.27 2006-03-07 22:16:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -344,7 +344,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         username = NULL;
 
       if (fill_cmd_get_session_challenge(ip->authentication_type, 
-                                         (char *)username, 
+                                         username, 
                                          strlen(conf->username),
                                          ip->obj_get_session_challenge_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "

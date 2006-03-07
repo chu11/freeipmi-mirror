@@ -106,7 +106,7 @@ set_bmc_username (ipmi_device_t *dev,
 
   if (ipmi_cmd_set_user_name (dev, 
 			      userid, 
-			      (char *)username, 
+			      username, 
 			      (username) ? strlen((char *)username) : 0,
 			      obj_cmd_rs) != 0)
     goto cleanup;
