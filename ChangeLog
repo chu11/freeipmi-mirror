@@ -10,7 +10,8 @@
 	templates and functions to support commands under this chapter of
 	the IPMI spec.
 
-	* libfreeipmi/include/Makefile.am: Fix distcheck bug
+	* common/src/Makefile.am, libfreeipmi/include/Makefile.am: Fix
+	distcheck bugs.
 
 2005-03-06  Albert Chu <chu11@llnl.gov>
 

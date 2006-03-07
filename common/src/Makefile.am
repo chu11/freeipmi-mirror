@@ -1,6 +1,8 @@
 noinst_HEADERS = \
 	argp-common.h \
 	bit-ops.h \
+	err-wrappers.h \
+	fiid-wrappers.h \
 	freeipmi-portability.h \
 	ipmi-common.h \
 	ipmi-ping.h \

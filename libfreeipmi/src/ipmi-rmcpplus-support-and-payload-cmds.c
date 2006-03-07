@@ -507,8 +507,6 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
              && IPMI_SET_USER_PAYLOAD_OPERATION_VALID(operation)
              && IPMI_STANDARD_PAYLOAD_VALID(standard_payload_1)
 	     && fiid_obj_valid(obj_cmd_rq));
-
-  
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_payload_access_rq);
 
