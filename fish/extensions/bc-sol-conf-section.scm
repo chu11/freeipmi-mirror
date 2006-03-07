@@ -85,7 +85,7 @@
       (fi-set-sol-sol-retry 0 sol-retry-interval)))
 
 (define (checkout-sol-retry-interval section-name)
-  (let ((param-list (fi-get-sol-sol-encryption)))
+  (let ((param-list (fi-get-sol-sol-retry)))
     (if (list? param-list) (list (cadr param-list)) #f)))
 
 (define (commit-non-volatile-bit-rate section-name non-volatile-bit-rate)
