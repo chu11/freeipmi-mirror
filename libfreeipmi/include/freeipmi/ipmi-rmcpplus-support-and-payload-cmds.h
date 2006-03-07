@@ -66,6 +66,15 @@
 #define IPMI_TEST_MODE_NOT_SUPPORTED 0x0
 #define IPMI_TEST_MODE_ENABLED       0x1
  
+#define IPMI_SUSPEND_ENCRYPTION                0x0
+#define IPMI_RESUME_ENCRYPTION                 0x1
+#define IPMI_REGENERATE_INITIALIZATION_VECTOR  0x2
+
+#define IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(__val) \
+        (((__val) == IPMI_SUSPEND_ENCRYPTION \
+	  || (__val) == IPMI_RESUME_ENCRYPTION \
+	  || (__val) == IPMI_REGENERATE_INITIALIZATION_VECTOR) ? 1 : 0)
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -74,6 +83,10 @@ extern fiid_template_t tmpl_activate_payload_rq;
 extern fiid_template_t tmpl_activate_payload_sol_rq;
 extern fiid_template_t tmpl_activate_payload_rs;
 extern fiid_template_t tmpl_activate_payload_sol_rs;
+extern fiid_template_t tmpl_deactivate_payload_rq;
+extern fiid_template_t tmpl_deactivate_payload_rs;
+extern fiid_template_t tmpl_suspend_resume_payload_encryption_rq;
+extern fiid_template_t tmpl_suspend_resume_payload_encryption_rq;
 
 int8_t fill_cmd_activate_payload (uint8_t payload_type,
 				  uint8_t payload_instance,

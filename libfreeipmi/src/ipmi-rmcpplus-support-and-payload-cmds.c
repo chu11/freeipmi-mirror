@@ -44,12 +44,7 @@ fiid_template_t tmpl_activate_payload_rq =
     {2,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "payload_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* XXX: IPMI Spec says, "Ignored if no auxiliary data is specified
-       for given payload type".  I'm not sure if the ignores means
-       "set to 00h" if the packet is optional.  We'll assume its optional
-       for now.
-    */
-    {32, "auxiliary_request_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {32, "auxiliary_request_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -98,6 +93,48 @@ fiid_template_t tmpl_activate_payload_sol_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_deactivate_payload_rq = 
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "payload_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "payload_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_deactivate_payload_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_suspend_resume_payload_encryption_rq = 
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "payload_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    /* XXX: The IPMI spec says [4:0] for Operation and [7:2] for
+       reserved3.  Needless to say, one is wrong.  Since there are
+       only three operations, we'll assume they meant for operation to
+       be a 2 bit field
+    */
+    {2,  "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_suspend_resume_payload_encryption_rs =
+  {
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 int8_t
 fill_cmd_activate_payload (uint8_t payload_type,
 			   uint8_t payload_instance,
@@ -106,6 +143,8 @@ fill_cmd_activate_payload (uint8_t payload_type,
 			   fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
+	     && auxiliary_request_data
+	     && auxiliary_request_data_len
 	     && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_activate_payload_rq);
@@ -116,11 +155,10 @@ fill_cmd_activate_payload (uint8_t payload_type,
   FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved1", 0);
   FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"payload_instance", payload_instance);
   FIID_OBJ_SET(obj_cmd_rq, (uint8_t *)"reserved2", 0);
-  if (auxiliary_request_data)
-    FIID_OBJ_SET_DATA(obj_cmd_rq,
-		      (uint8_t *)"auxiliary_request_data",
-		      auxiliary_request_data,
-		      auxiliary_request_data_len);
+  FIID_OBJ_SET_DATA(obj_cmd_rq,
+		    (uint8_t *)"auxiliary_request_data",
+		    auxiliary_request_data,
+		    auxiliary_request_data_len);
   
   return (0);
 }
@@ -162,3 +200,4 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
   
   return (0);
 }
+

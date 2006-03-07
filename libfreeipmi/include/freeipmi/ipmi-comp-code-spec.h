@@ -375,6 +375,34 @@ extern "C" {
 "Cannot activate payload without encryption.  BMC requires encryption " \
 "for all payloads for given privilege level."
 
+/* IPMI_CMD_DEACTIVATE_PAYLOAD */
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED 0x80
+#define IPMI_COMP_CODE_PAYLOAD_ALREADY_DEACTIVATED_STR \
+"Payload already deactivated"
+
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED 0x81
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR \
+"Payload type disabled.  Given payload type is not configured " \
+"to be enabled for activation."
+
+/* IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION */
+
+#define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED 0x80
+#define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED_STR \
+"Operation not supported for given payload type."
+
+#define IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION 0x81
+#define IPMI_COMP_CODE_OPERATION_NOT_ALLOWED_UNDER_PRESENT_CONFIGURATION_STR \
+"Operation now allowed under present configuration for given payload type."
+
+#define IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION 0x82
+#define IPMI_COMP_CODE_ENCRYPTION_IS_NOT_AVAILABLE_FOR_SESSION_STR \
+"Encryption is not available for session that payload type is active under."
+
+#define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE 0x83
+#define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR \
+"The payload instance is not presently active."
+
 #ifdef __cplusplus
 }
 #endif
