@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.28 2006-03-08 17:11:13 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.29 2006-03-08 17:53:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -177,27 +177,27 @@ typedef enum
  */
 typedef enum 
   { 
-    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x100, 
-    AUTHENTICATION_CAPABILITIES_V20_RES = 0x200,
-    AUTHENTICATION_CAPABILITIES_REQ     = 0x101, 
-    AUTHENTICATION_CAPABILITIES_RES     = 0x201,
-    GET_SESSION_CHALLENGE_REQ           = 0x102, 
-    GET_SESSION_CHALLENGE_RES           = 0x202,
-    ACTIVATE_SESSION_REQ                = 0x103, 
-    ACTIVATE_SESSION_RES                = 0x203,
-    SET_SESSION_PRIVILEGE_REQ           = 0x104, 
-    SET_SESSION_PRIVILEGE_RES           = 0x204, 
-    CLOSE_SESSION_REQ                   = 0x105, 
-    CLOSE_SESSION_RES                   = 0x205,
-    CHASSIS_STATUS_REQ                  = 0x106, 
-    CHASSIS_STATUS_RES                  = 0x206,
-    CHASSIS_CONTROL_REQ                 = 0x107, 
-    CHASSIS_CONTROL_RES                 = 0x207, 
+    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x101, 
+    AUTHENTICATION_CAPABILITIES_V20_RES = 0x201,
+    AUTHENTICATION_CAPABILITIES_REQ     = 0x102, 
+    AUTHENTICATION_CAPABILITIES_RES     = 0x202,
+    GET_SESSION_CHALLENGE_REQ           = 0x103, 
+    GET_SESSION_CHALLENGE_RES           = 0x204,
+    ACTIVATE_SESSION_REQ                = 0x105, 
+    ACTIVATE_SESSION_RES                = 0x205,
+    SET_SESSION_PRIVILEGE_REQ           = 0x106, 
+    SET_SESSION_PRIVILEGE_RES           = 0x206, 
+    CLOSE_SESSION_REQ                   = 0x107, 
+    CLOSE_SESSION_RES                   = 0x207,
+    CHASSIS_STATUS_REQ                  = 0x108, 
+    CHASSIS_STATUS_RES                  = 0x208,
+    CHASSIS_CONTROL_REQ                 = 0x109, 
+    CHASSIS_CONTROL_RES                 = 0x209, 
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
 #define PACKET_TYPE_RES_MASK           0x200
-#define PACKET_TYPE_PKT_MASK           0x077
+#define PACKET_TYPE_PKT_MASK           0x0FF
 
 #define PACKET_TYPE_VALID_REQ(__p) \
   (((__p) & PACKET_TYPE_REQ_MASK) && \

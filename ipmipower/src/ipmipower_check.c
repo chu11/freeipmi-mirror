@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.23 2006-03-07 22:11:19 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.24 2006-03-08 17:53:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -64,7 +64,8 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
    */
 
   /* Outbound sequence numbers have not started yet */ 
-  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
+      || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES)
     return 1;
 
@@ -175,7 +176,8 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
     
-  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
+      || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES 
       || pkt == ACTIVATE_SESSION_RES)
     return 1;
@@ -266,7 +268,8 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
                "cmd", 
 	       &cmd);
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_RES) 
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+      || pkt == AUTHENTICATION_CAPABILITIES_RES)
     expected_cmd = IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES;
   else if (pkt == GET_SESSION_CHALLENGE_RES) 
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;

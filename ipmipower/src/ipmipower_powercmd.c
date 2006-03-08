@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.32 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.33 2006-03-08 17:53:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -297,8 +297,9 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
    */
   if (oseq_flag && sid_flag && netfn_flag && rseq_flag && cmd_flag && !cc_flag) 
     {
-      ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
-
+      /* Special Case: let _process_ipmi_packets deal with this packet type's output */
+      if (pkt != AUTHENTICATION_CAPABILITIES_V20_RES)
+        ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
       ip->retry_count = 0;  /* important to reset */
       Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
       ip->error_occurred = IPMIPOWER_TRUE; 
@@ -529,7 +530,9 @@ _retry_packets(ipmipower_powercmd_t ip)
   dbg("_retry_packets(%s:%d): Sending retry, retry count=%d",
       ip->ic->hostname, ip->protocol_state, ip->retry_count);
 
-  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
+  if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
+    _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
     _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
     {
@@ -846,20 +849,35 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (rv < 0) 
 	    {
-              if (conf->ipmi_version == IPMI_VERSION_AUTO)
+              if (conf->ipmi_version == IPMI_VERSION_AUTO
+                  || conf->ipmi_version == IPMI_VERSION_2_0)
                 {
                   uint64_t comp_code;
-
+                  
                   Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
                                "comp_code", 
                                &comp_code);
-
+                  
+                  dbg("_process_ipmi_packets(%s:%d): bad comp_code on "
+                      "authentication capabilities 2.0: %x", 
+                      ip->ic->hostname, ip->protocol_state, comp_code);
+                  
                   if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
                     {
-                      /* Try the IPMI 1.5 version of Get Authentication Capabilities */
-                      ip->error_occurred = IPMIPOWER_FALSE; 
-                      _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+                      if (conf->ipmi_version == IPMI_VERSION_AUTO)
+                        {
+                          /* Try the IPMI 1.5 version of Get Authentication Capabilities */
+                          ip->error_occurred = IPMIPOWER_FALSE; 
+                          _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+                          goto done;
+                        }
+                      else
+                        ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
                     }
+                  else
+                    ipmipower_output(ipmipower_packet_errmsg(ip, 
+                                                             AUTHENTICATION_CAPABILITIES_V20_RES), 
+                                     ip->ic->hostname);
                 }
 	      return -1;
 	    }
@@ -894,7 +912,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               int check;
               
               if ((check = _check_authentication_capabilities(ip, 
-                                                              AUTHENTICATION_CAPABILITIES_V20_REQ)) < 0)
+                                                              AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
                 return -1;
               
               if (check)
@@ -942,7 +960,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       if ((check_val = _check_authentication_capabilities(ip, 
-							  AUTHENTICATION_CAPABILITIES_REQ)) < 0)
+							  AUTHENTICATION_CAPABILITIES_RES)) < 0)
 	return -1;
       
       if (check_val)

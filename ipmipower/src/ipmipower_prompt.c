@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.19 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.20 2006-03-08 17:53:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -506,10 +506,10 @@ _cmd_config(void)
       rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Hostnames:                 can't output, overflows "
+        cbuf_printf(ttyout, "Hostnames:                    can't output, overflows "
                     "internal buffer\n");
       if (rv > 0)
-        cbuf_printf(ttyout, "Hostnames:                 %s\n", buffer);
+        cbuf_printf(ttyout, "Hostnames:                    %s\n", buffer);
 
 #ifndef NDEBUG
       if ((discovered = hostlist_create(NULL)) == NULL)
@@ -534,26 +534,26 @@ _cmd_config(void)
       rv = hostlist_ranged_string(discovered, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Discovered:                can't output, overflows "
+        cbuf_printf(ttyout, "Discovered:                   can't output, overflows "
                     "internal buffer\n");
       if (rv > 0)
-        cbuf_printf(ttyout, "Discovered:                %s\n", buffer);
+        cbuf_printf(ttyout, "Discovered:                   %s\n", buffer);
 
       rv = hostlist_ranged_string(undiscovered, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0)
-        cbuf_printf(ttyout, "Undiscovered:              can't output, overflows "
+        cbuf_printf(ttyout, "Undiscovered:                 can't output, overflows "
                     "internal buffer\n");
       if (rv > 0)
-        cbuf_printf(ttyout, "Undiscovered:              %s\n", buffer);
+        cbuf_printf(ttyout, "Undiscovered:                 %s\n", buffer);
 
       rv = hostlist_ranged_string(badconnection, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
       if (rv < 0) 
-        cbuf_printf(ttyout, "BadConnection:             can't output, overflows "
+        cbuf_printf(ttyout, "BadConnection:                can't output, overflows "
                     "internal buffer\n");
       if (rv > 0)
-        cbuf_printf(ttyout, "BadConnection:             %s\n", buffer);
+        cbuf_printf(ttyout, "BadConnection:                %s\n", buffer);
 
     cleanup:
       hostlist_destroy(discovered);
@@ -562,7 +562,7 @@ _cmd_config(void)
 #endif
     }
   else
-    cbuf_printf(ttyout, "Hostnames:                    NONE\n");
+    cbuf_printf(ttyout, "Hostnames:                     NONE\n");
 
   cbuf_printf(ttyout, "Username:                     %s\n", 
               (strlen(conf->username)) ? conf->username : "NULL");
