@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.18 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.19 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,6 +49,7 @@
 #include "ipmipower_ping.h"
 #include "ipmipower_authentication.h"
 #include "ipmipower_connection.h"
+#include "ipmipower_ipmi_version.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
@@ -363,18 +364,18 @@ _cmd_ipmi_version(char **argv)
 
   if (argv[1] != NULL) 
     {
-      if (!strcmp(argv[1], IPMIPOWER_IPMI_VERSION_1_5_STR))
-	conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
-      else if (!strcmp(argv[1], IPMIPOWER_IPMI_VERSION_2_0_STR))
-	conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
-      else
-        cbuf_printf(ttyout, "%s invalid ipmi_version\n", argv[1]);
-      cbuf_printf(ttyout, "ipmi version is not %s\n", argv[1]);
+      ipmi_version_t ipmi_version = ipmipower_ipmi_version_index(argv[1]);
+      if (ipmi_version == IPMI_VERSION_INVALID)
+        cbuf_printf(ttyout, "%s invalid ipmi version\n", argv[1]);
+      else 
+        {
+          conf->ipmi_version = ipmi_version;
+          cbuf_printf(ttyout, "ipmi_version is now %s\n", argv[1]);
+        }
     }
   else
-    cbuf_printf(ttyout, "ipmi_version must be specified: %s,%s\n",
-		IPMIPOWER_IPMI_VERSION_1_5_STR, 
-		IPMIPOWER_IPMI_VERSION_2_0_STR);
+    cbuf_printf(ttyout, "ipmi_version must be specified: %s\n",
+                ipmipower_ipmi_version_list());
 }
 
 static void 
@@ -578,8 +579,7 @@ _cmd_config(void)
   cbuf_printf(ttyout, "Privilege:                    %s\n", 
               ipmipower_privilege_string(conf->privilege));
   cbuf_printf(ttyout, "IPMI_Version:                 %s\n",
-	      (conf->ipmi_version == IPMIPOWER_IPMI_VERSION_1_5)
-	      ? IPMIPOWER_IPMI_VERSION_1_5_STR : IPMIPOWER_IPMI_VERSION_2_0_STR);
+              ipmipower_ipmi_version_string(conf->ipmi_version));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",

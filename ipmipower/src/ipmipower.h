@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.27 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.28 2006-03-08 17:11:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,17 +116,24 @@
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
-#define IPMIPOWER_IPMI_VERSION_1_5_STR   "1.5"
-#define IPMIPOWER_IPMI_VERSION_2_0_STR   "2.0"
-
-/* ipmipower_ipmi_version_t
+/* ipmi_version_t
  * - holds ipmi version type
  */
 typedef enum
   {
-    IPMIPOWER_IPMI_VERSION_1_5 = 0,
-    IPMIPOWER_IPMI_VERSION_2_0 = 1,
-  } ipmipower_ipmi_version_t;
+    IPMI_VERSION_INVALID = 0,
+    IPMI_VERSION_AUTO    = 1,
+    IPMI_VERSION_1_5     = 2,
+    IPMI_VERSION_2_0     = 3,
+  } ipmi_version_t;
+
+#define IPMI_VERSION_VALID(__a) \
+  ((__a) >= IPMI_VERSION_1_5 && \
+   (__a) <= IPMI_VERSION_2_0)
+
+#define IPMI_VERSION_VALID_OR_AUTO(__a) \
+  ((__a) >= IPMI_VERSION_AUTO && \
+   (__a) <= IPMI_VERSION_2_0)
 
 /* ipmipower_bool_t
  * - boolean type
@@ -313,8 +320,9 @@ typedef enum
     MSG_TYPE_BADCONNECTION           = 14,
     MSG_TYPE_UNKNOWNNODE             = 15,
     MSG_TYPE_RESOURCES               = 16,
-    MSG_TYPE_BMCBUSY                 = 17,
-    MSG_TYPE_BMCERROR                = 18,
+    MSG_TYPE_VERSION_NOT_SUPPORTED   = 17,
+    MSG_TYPE_BMCBUSY                 = 18,
+    MSG_TYPE_BMCERROR                = 19,
   } msg_type_t;
 #define MSG_TYPE_VALID(__m) \
   ((__m) >= MSG_TYPE_SUCCESS && \
@@ -418,7 +426,7 @@ struct ipmipower_config
 
   authentication_type_t    authentication_type;
   privilege_type_t         privilege;
-  ipmipower_ipmi_version_t ipmi_version;
+  ipmi_version_t           ipmi_version;
   ipmipower_bool_t         on_if_off;
   output_type_t            outputtype;
   ipmipower_bool_t         force_permsg_authentication;

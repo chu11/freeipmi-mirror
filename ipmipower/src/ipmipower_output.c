@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.12 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.13 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,6 +62,7 @@ static char *ipmipower_outputs[] =
     "bad connection",
     "unknown node name",
     "out of resources",
+    "ipmi version not supported",
     "bmc busy",
     "bmc error"
   };

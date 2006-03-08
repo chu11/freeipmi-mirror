@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.26 2006-03-08 15:33:17 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.27 2006-03-08 17:11:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,8 +115,11 @@ Send power diagnostic interrupt to target hosts.
 Initiate a soft-shutdown of the OS via ACPI.
 .TP
 .I "-R, --ipmi-version"
-Specify IPMI protocol version.  Available options are "1.5" and "2.0".
-Default is to use "1.5".
+Set the IPMI protocol version to use.  The currently available versions
+are "auto", "1.5", and "2.0".  If not specified,
+.B ipmipower
+uses "auto", which will try decreasing IPMI protocol versions until
+one is discovered that works.
 .I "-H, --help"
 Output help menu and exit.
 .TP
@@ -374,7 +377,7 @@ specify a new authentication type, auto, none, straight_password_key, md2, or md
 specify a new privilege type, auto, user, operator or admin.
 .TP
 .I "ipmi_version str"
-specify the ipmi version, 1.5 or 2.0.
+specify the ipmi version, auto, 1.5 or 2.0.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP

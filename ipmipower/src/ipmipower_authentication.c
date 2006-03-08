@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.c,v 1.2 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_authentication.c,v 1.3 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,7 +83,7 @@ ipmipower_authentication_type_string(authentication_type_t at)
       return "md5";
       break;
     default:
-      err_exit("ipmipower_auth_string: Invalid Authentication Type: %d\n", at);
+      err_exit("ipmipower_authentication_type_string: Invalid Authentication Type: %d\n", at);
     }
   
   return NULL;                  /* NOT_REACHED */

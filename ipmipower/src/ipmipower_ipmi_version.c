@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.h,v 1.3 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_ipmi_version.c,v 1.1 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -24,30 +24,63 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
 \*****************************************************************************/
 
+#if HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#ifndef _IPMIPOWER_AUTHENTICATION_H
-#define _IPMIPOWER_AUTHENTICATION_H
+#include <stdio.h>
+#include <stdlib.h>
+#if STDC_HEADERS
+#include <string.h>
+#endif
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+#include <assert.h>
 
-#include "ipmipower.h"
+#include "ipmipower_ipmi_version.h"
+#include "ipmipower_wrappers.h"
 
-/* ipmipower_authentication_type_index
- * - Return the index of the specified authentication_type 
- */
-authentication_type_t ipmipower_authentication_type_index(char *str);
+ipmi_version_t 
+ipmipower_ipmi_version_index(char *str) 
+{
+  assert(str != NULL);
 
-/* ipmipower_authentication_type_string
- * - Return static string description of authentication_type 
- */
-char *ipmipower_authentication_type_string(authentication_type_t at);
+  if (!strcasecmp(str, "auto"))
+    return IPMI_VERSION_AUTO;
+  else if (!strcasecmp(str, "1.5"))
+    return IPMI_VERSION_1_5;
+  else if (!strcasecmp(str, "2.0"))
+    return IPMI_VERSION_2_0;
+  else 
+    return IPMI_VERSION_INVALID;
+}
 
-/* ipmipower_authentication_type_list
- * - Return static string list of all available authentication types
- */
-char *ipmipower_authentication_type_list(void);
+char *
+ipmipower_ipmi_version_string(ipmi_version_t ipmi_version) 
+{
+  assert(IPMI_VERSION_VALID_OR_AUTO(ipmi_version));
 
-/* ipmipower_ipmi_authentication_type
- * - Return IPMI authentication type according to authentication_type_t type
- */
-uint8_t ipmipower_ipmi_authentication_type(authentication_type_t at);
+  switch(ipmi_version) 
+    {
+    case IPMI_VERSION_AUTO:
+      return "auto";
+      break;
+    case IPMI_VERSION_1_5:
+      return "1.5";
+      break;
+    case IPMI_VERSION_2_0:
+      return "2.0";
+      break;
+    default:
+      err_exit("ipmipower_ipmi_version_string: Invalid Ipmi Version Type: %d\n", ipmi_version);
+    }
+  
+  return NULL;                  /* NOT_REACHED */
+}
 
-#endif /* _IPMIPOWER_AUTHENTICATION_H */
+char *
+ipmipower_ipmi_version_list(void) 
+{
+  return "auto, 1.5, 2.0";
+}

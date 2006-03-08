@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.31 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.32 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -778,7 +778,7 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
       else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
 	ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
       else
-	err_exit("_process_ipmi_packets: invalid privilege state: %d", 
+	err_exit("_check_authentication_privileges: invalid privilege state: %d", 
 		 ip->privilege);
 
       return 1;
@@ -826,7 +826,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
   if (ip->protocol_state == PROTOCOL_STATE_START)
     {
-      if (conf->ipmi_version == IPMIPOWER_IPMI_VERSION_2_0)
+      if (conf->ipmi_version == IPMI_VERSION_AUTO
+          || conf->ipmi_version == IPMI_VERSION_2_0)
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
       else
 	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
@@ -845,19 +846,21 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (rv < 0) 
 	    {
-	      uint64_t comp_code;
+              if (conf->ipmi_version == IPMI_VERSION_AUTO)
+                {
+                  uint64_t comp_code;
 
-	      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
-			   "comp_code", 
-			   &comp_code);
+                  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+                               "comp_code", 
+                               &comp_code);
 
-	      if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
-		{
-		  /* Try the IPMI 1.5 version of Get Authentication Capabilities */
-		  ip->error_occurred = IPMIPOWER_FALSE; 
-		  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
-		}
-
+                  if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+                    {
+                      /* Try the IPMI 1.5 version of Get Authentication Capabilities */
+                      ip->error_occurred = IPMIPOWER_FALSE; 
+                      _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+                    }
+                }
 	      return -1;
 	    }
           goto done;
@@ -875,36 +878,56 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       /* If we can't detect IPMI 1.5 with
        * 'channel_supports_ipmi_v15_connections', we assume its a bug,
-       * and try the IPMI 1.5 version of Get Authentication Capabilities 
+       * and try the IPMI 1.5 version of Get Authentication
+       * Capabilities if appropriate.
        */
-      if (ipmi_v20_extended_capabilities_available
-	  && !channel_supports_ipmi_v15_connections
-	  && !channel_supports_ipmi_v20_connections)
-	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
-      else if (!ipmi_v20_extended_capabilities_available
-	       || (channel_supports_ipmi_v15_connections
-		   && !channel_supports_ipmi_v20_connections))
+      if (conf->ipmi_version == IPMI_VERSION_AUTO)
+        {
+          if (ipmi_v20_extended_capabilities_available
+              && !channel_supports_ipmi_v15_connections
+              && !channel_supports_ipmi_v20_connections)
+            _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+          else if (!ipmi_v20_extended_capabilities_available
+                   || (channel_supports_ipmi_v15_connections
+                       && !channel_supports_ipmi_v20_connections))
+            {
+              int check;
+              
+              if ((check = _check_authentication_capabilities(ip, 
+                                                              AUTHENTICATION_CAPABILITIES_V20_REQ)) < 0)
+                return -1;
+              
+              if (check)
+                {
+                  /* Don't consider this a retransmission */
+                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
+                  goto done;
+                }
+              /* else we continue with the IPMI 1.5 protocol */
+              
+              _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
+            }
+          else
+            {
+              /* IPMI 2.0 */
+              fprintf(stderr, "IPMI 2.0 TODO\n");
+              exit(1);
+            }
+        }
+      else if (conf->ipmi_version == IPMI_VERSION_1_5)
+        err_exit("_process_ipmi_packets: invalid ipmi_version: %d", conf->ipmi_version);
+      else if (conf->ipmi_version == IPMI_VERSION_2_0)
 	{
-	  int check_val;
-	  
-	  if ((check_val = _check_authentication_capabilities(ip, 
-							      AUTHENTICATION_CAPABILITIES_V20_REQ)) < 0)
-	    return -1;
-	  
-	  if (check_val)
-	    {
-	      /* Don't consider this a retransmission */
-	      _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
-	      goto done;
-	    }
-	  /* else we continue with the IPMI 1.5 protocol */
-	  
-	  _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
-	}
-      else
-	{
-	  /* Don't know what to do right now */
-	  exit(1);
+          if (!ipmi_v20_extended_capabilities_available
+              || !channel_supports_ipmi_v20_connections)
+            {
+              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              return -1;
+            }
+
+          /* IPMI 2.0 */
+          fprintf(stderr, "IPMI 2.0 TODO\n");
+          exit(1);
 	}
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 

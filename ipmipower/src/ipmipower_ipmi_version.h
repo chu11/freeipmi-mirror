@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_authentication.h,v 1.3 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_ipmi_version.h,v 1.1 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -25,29 +25,24 @@
 \*****************************************************************************/
 
 
-#ifndef _IPMIPOWER_AUTHENTICATION_H
-#define _IPMIPOWER_AUTHENTICATION_H
+#ifndef _IPMIPOWER_IPMI_VERSION_H
+#define _IPMIPOWER_IPMI_VERSION_H
 
 #include "ipmipower.h"
 
-/* ipmipower_authentication_type_index
- * - Return the index of the specified authentication_type 
+/* ipmipower_ipmi_version_index
+ * - Return the index of the specified ipmi_version 
  */
-authentication_type_t ipmipower_authentication_type_index(char *str);
+ipmi_version_t ipmipower_ipmi_version_index(char *str);
 
-/* ipmipower_authentication_type_string
- * - Return static string description of authentication_type 
+/* ipmipower_ipmi_version_string
+ * - Return static string description of ipmi_version 
  */
-char *ipmipower_authentication_type_string(authentication_type_t at);
+char *ipmipower_ipmi_version_string(ipmi_version_t ipmi_version);
 
-/* ipmipower_authentication_type_list
- * - Return static string list of all available authentication types
+/* ipmipower_ipmi_version_list
+ * - Return static string list of all available ipmi versions
  */
-char *ipmipower_authentication_type_list(void);
+char *ipmipower_ipmi_version_list(void);
 
-/* ipmipower_ipmi_authentication_type
- * - Return IPMI authentication type according to authentication_type_t type
- */
-uint8_t ipmipower_ipmi_authentication_type(authentication_type_t at);
-
-#endif /* _IPMIPOWER_AUTHENTICATION_H */
+#endif /* _IPMIPOWER_IPMI_VERSION_H */

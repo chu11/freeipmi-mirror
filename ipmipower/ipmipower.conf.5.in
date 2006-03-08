@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.15 2006-03-08 15:33:17 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.16 2006-03-08 17:11:13 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,13 +93,12 @@ currently supports the following authentication types:
 "auto", "none", "straight_password_key", "md2", and "md5".
 .TP
 .I privilege str
-Specify the default  type to use.  
+Specify the default privilege type to use.  
 .B Ipmipower 
 currently supports the following privilege types: "auto", "user",
 "operator", and "admin".
 .I ipmi_version str
-Specify IPMI protocol version to use.  Ipmipower currently supports
-"1.5" and "2.0".
+Specify the default IPMI protocol version to use: "auto", "1.5", and "2.0"
 .TP
 .I on-if-off enable|disable
 Specify if on-if-off is enabled or disabled by default.

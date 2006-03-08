@@ -2,7 +2,8 @@
 
 	* ipmipower/: Begin support of IPMI 2.0 by adding IPMI 2.0 Get
 	Authentication Capabilities into protocol state machine.  Change
-	-R option to -M option.  Add new -R option.
+	-R option to -M option.  Add new -R option support protocol
+	selection by user.
 
 2005-03-07  Albert Chu <chu11@llnl.gov>
 

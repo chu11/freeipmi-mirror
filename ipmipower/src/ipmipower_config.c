@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.19 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.20 2006-03-08 17:11:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,6 +42,7 @@
 
 #include "ipmipower_config.h"
 #include "ipmipower_authentication.h"
+#include "ipmipower_ipmi_version.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
 #include "ipmipower_util.h"
@@ -81,7 +82,7 @@ ipmipower_config_setup(void)
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
-  conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
+  conf->ipmi_version = IPMI_VERSION_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
@@ -141,6 +142,9 @@ _config_common_checks(char *str)
 
   if (conf->privilege == PRIVILEGE_TYPE_INVALID)
     err_exit("%s: invalid privilege", str);
+
+  if (conf->ipmi_version == IPMI_VERSION_INVALID)
+    err_exit("%s: invalid ipmi version", str);
 
   if (conf->outputtype == OUTPUT_TYPE_INVALID) 
     err_exit("%s: invalid outputtype", str);
@@ -202,7 +206,6 @@ _usage(void)
           "-s --stat             Power Status Query\n"
           "-j --pulse            Pulse Diagnostic Interrupt\n"
           "-k --soft             Soft Shutdown OS via ACPI\n"
-	  "-R --ipmi-version str IPMI Version\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
           "-C --config           Specify Alternate Config File\n"
@@ -227,9 +230,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkRHVC:a:l:go:PSUDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:R:go:PSUDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkRHVC:a:l:go:PSUt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:R:go:PSUt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -245,13 +248,13 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"stat",                        0, NULL, 's'},
       {"pulse",                       0, NULL, 'j'},
       {"soft",                        0, NULL, 'k'},
-      {"ipmi-version",                1, NULL, 'R'},
       {"help",                        0, NULL, 'H'},
       {"version",                     0, NULL, 'V'},
       {"config",                      1, NULL, 'C'}, 
 
       {"authentication-type",         1, NULL, 'a'},  
       {"privilege",                   1, NULL, 'l'},
+      {"ipmi-version",                1, NULL, 'R'},
       {"on-if-off",                   0, NULL, 'g'},
       {"outputtype",                  1, NULL, 'o'},
       {"force-permsg-authentication", 0, NULL, 'P'},
@@ -327,15 +330,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'k':       /* --soft */
           conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
           break;
-	case 'R':	/* --ipmi-version */
-	  if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_1_5_STR))
-            conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
-          else if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_2_0_STR))
-            conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
-          else
-            err_exit("Command Line Error: invalid ipmi version");
-	  conf->ipmi_version_set = IPMIPOWER_TRUE;
-          break;
         case 'H':       /* --help */
           _usage();
           break;
@@ -354,6 +348,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'l':       /* --privilege */
           conf->privilege = ipmipower_privilege_index(optarg);
           conf->privilege_set = IPMIPOWER_TRUE;
+          break;
+	case 'R':	/* --ipmi-version */
+          conf->ipmi_version = ipmipower_ipmi_version_index(optarg);
+	  conf->ipmi_version_set = IPMIPOWER_TRUE;
           break;
         case 'g':       /* --on-if-off */
           conf->on_if_off = !conf->on_if_off;
@@ -522,15 +520,8 @@ _cb_ipmi_version(conffile_t cf, struct conffile_data *data,
   if (conf->ipmi_version_set == IPMIPOWER_TRUE)
     return 0;
 
-  if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_1_5_STR))
-    conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
-  else if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_2_0_STR))
-    conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
-  else
-    err_exit("Config File Error: invalid ipmi version");
-
-  /* Incorrect privilege checked in _config_common_checks */
-  conf->privilege = ipmipower_privilege_index(data->string);
+  /* Incorrect ipmi_versions checked in _config_common_checks */
+  conf->ipmi_version = ipmipower_ipmi_version_index(data->string);
   return 0;
 }
 
