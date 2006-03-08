@@ -10,6 +10,11 @@
 	protocol state machine.  Change -R option to -M option.  Add new
 	-R option support protocol selection by user.
 
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: New file.
+
+	* libfreeipmi/include/Makefile.am,
+	libfreeipmi/include/freeipmi/freeipmi.h: Support new .h file.
+
 2005-03-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,

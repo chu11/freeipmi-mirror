@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.34 2006-03-08 19:05:57 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.35 2006-03-08 19:14:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1055,6 +1055,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             return -1;
           goto done;
         }
+
+      /* XXX IPMI 2.0 TODO
+       *
+       * Check if user input of auth/intg/conf algorithm is legit and supportable
+       */
 
       /* IPMI 2.0 TODO */
       fprintf(stderr, "IPMI 2.0 TODO\n");
