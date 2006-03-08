@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.25 2006-03-07 07:25:59 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.26 2006-03-08 15:33:17 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -114,6 +114,9 @@ Send power diagnostic interrupt to target hosts.
 .I "-k, --soft"
 Initiate a soft-shutdown of the OS via ACPI.
 .TP
+.I "-R, --ipmi-version"
+Specify IPMI protocol version.  Available options are "1.5" and "2.0".
+Default is to use "1.5".
 .I "-H, --help"
 Output help menu and exit.
 .TP
@@ -197,7 +200,7 @@ Turn on debugging output.
 Turn on IPMI packet dump output. Warning, the dump output can get
 extremely long.
 .TP
-.I "-R, --rmcpdump"
+.I "-M, --rmcpdump"
 Turn on RMCP packet dump output.  Warning, the dump output can get 
 extremely long.
 .TP
@@ -369,6 +372,9 @@ specify a new authentication type, auto, none, straight_password_key, md2, or md
 .TP
 .I "privilege str"
 specify a new privilege type, auto, user, operator or admin.
+.TP
+.I "ipmi_version str"
+specify the ipmi version, 1.5 or 2.0.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP

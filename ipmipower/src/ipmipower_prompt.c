@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.17 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.18 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,6 +87,7 @@ _cmd_advanced(void)
   cbuf_printf(ttyout, 
               "authentication_type str              - set a new authentication type\n"
               "privilege str                        - set a new privilege type\n"
+	      "ipmi_version str                     - set a new ipmi version\n"
               "on-if-off [on|off]                   - toggle on-if-off functionality\n"
               "outputtype str                       - set a new output type\n"
               "force-permsg-authentication [on|off] - toggle force-permsg-auth functionality\n"
@@ -356,6 +357,27 @@ _cmd_privilege(char **argv)
 }
 
 static void 
+_cmd_ipmi_version(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      if (!strcmp(argv[1], IPMIPOWER_IPMI_VERSION_1_5_STR))
+	conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
+      else if (!strcmp(argv[1], IPMIPOWER_IPMI_VERSION_2_0_STR))
+	conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
+      else
+        cbuf_printf(ttyout, "%s invalid ipmi_version\n", argv[1]);
+      cbuf_printf(ttyout, "ipmi version is not %s\n", argv[1]);
+    }
+  else
+    cbuf_printf(ttyout, "ipmi_version must be specified: %s,%s\n",
+		IPMIPOWER_IPMI_VERSION_1_5_STR, 
+		IPMIPOWER_IPMI_VERSION_2_0_STR);
+}
+
+static void 
 _cmd_outputtype(char **argv) 
 {
   assert(argv != NULL);
@@ -555,6 +577,9 @@ _cmd_config(void)
               ipmipower_authentication_type_string(conf->authentication_type));
   cbuf_printf(ttyout, "Privilege:                    %s\n", 
               ipmipower_privilege_string(conf->privilege));
+  cbuf_printf(ttyout, "IPMI_Version:                 %s\n",
+	      (conf->ipmi_version == IPMIPOWER_IPMI_VERSION_1_5)
+	      ? IPMIPOWER_IPMI_VERSION_1_5_STR : IPMIPOWER_IPMI_VERSION_2_0_STR);
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",
@@ -725,6 +750,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_authentication_type(argv);
             else if (strcmp(argv[0], "privilege") == 0)
               _cmd_privilege(argv);
+            else if (strcmp(argv[0], "ipmi_version") == 0)
+              _cmd_ipmi_version(argv);
             else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)

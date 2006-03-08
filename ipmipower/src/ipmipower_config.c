@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.18 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.19 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -81,6 +81,7 @@ ipmipower_config_setup(void)
 
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
+  conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
@@ -110,6 +111,7 @@ ipmipower_config_setup(void)
   conf->password_set = IPMIPOWER_FALSE;
   conf->authentication_type_set = IPMIPOWER_FALSE;
   conf->privilege_set = IPMIPOWER_FALSE;
+  conf->ipmi_version_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
@@ -200,6 +202,7 @@ _usage(void)
           "-s --stat             Power Status Query\n"
           "-j --pulse            Pulse Diagnostic Interrupt\n"
           "-k --soft             Soft Shutdown OS via ACPI\n"
+	  "-R --ipmi-version str IPMI Version\n"
           "-H --help             Output help menu\n"
           "-V --version          Output version\n"
           "-C --config           Specify Alternate Config File\n"
@@ -224,9 +227,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSUDIRLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkRHVC:a:l:go:PSUDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:l:go:PSUt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkRHVC:a:l:go:PSUt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -242,6 +245,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"stat",                        0, NULL, 's'},
       {"pulse",                       0, NULL, 'j'},
       {"soft",                        0, NULL, 'k'},
+      {"ipmi-version",                1, NULL, 'R'},
       {"help",                        0, NULL, 'H'},
       {"version",                     0, NULL, 'V'},
       {"config",                      1, NULL, 'C'}, 
@@ -256,7 +260,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 #ifndef NDEBUG
       {"debug",                       0, NULL, 'D'},
       {"ipmidump",                    0, NULL, 'I'},
-      {"rmcpdump",                    0, NULL, 'R'},
+      {"rmcpdump",                    0, NULL, 'M'},
       {"log",                         0, NULL, 'L'},
       {"logfile",                     1, NULL, 'F'},
 #endif
@@ -323,6 +327,15 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'k':       /* --soft */
           conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
           break;
+	case 'R':	/* --ipmi-version */
+	  if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_1_5_STR))
+            conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
+          else if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_2_0_STR))
+            conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
+          else
+            err_exit("Command Line Error: invalid ipmi version");
+	  conf->ipmi_version_set = IPMIPOWER_TRUE;
+          break;
         case 'H':       /* --help */
           _usage();
           break;
@@ -368,7 +381,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'I':       /* --ipmidump */
           conf->ipmidump = !conf->ipmidump;
           break;
-        case 'R':       /* --rmcpdump */
+        case 'M':       /* --rmcpdump */
           conf->rmcpdump = !conf->rmcpdump;
           break;
 	case 'L':       /* --log */
@@ -460,12 +473,12 @@ _cb_hostnames(conffile_t cf, struct conffile_data *data,
     return 0;
   
   if ((conf->hosts = hostlist_create(NULL)) == NULL)
-    err_exit("Conf-> File Error: Hostnames incorrectly formatted");
+    err_exit("Config File Error: Hostnames incorrectly formatted");
   
   for (i = 0; i < data->stringlist_len; i++) 
     {
       if (hostlist_push(conf->hosts, data->stringlist[i]) == 0)
-        err_exit("Conf-> File Error: Hostnames incorrectly formatted");
+        err_exit("Config File Error: Hostnames incorrectly formatted");
     }
   
   hostlist_uniq(conf->hosts);
@@ -494,7 +507,27 @@ _cb_privilege(conffile_t cf, struct conffile_data *data,
               int option_data, void *app_ptr, int app_data) 
 {
   if (conf->privilege_set == IPMIPOWER_TRUE)
-      return 0;
+    return 0;
+
+  /* Incorrect privilege checked in _config_common_checks */
+  conf->privilege = ipmipower_privilege_index(data->string);
+  return 0;
+}
+
+static int 
+_cb_ipmi_version(conffile_t cf, struct conffile_data *data,
+		 char *optionname, int option_type, void *option_ptr, 
+		 int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->ipmi_version_set == IPMIPOWER_TRUE)
+    return 0;
+
+  if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_1_5_STR))
+    conf->ipmi_version = IPMIPOWER_IPMI_VERSION_1_5;
+  else if (!strcmp(optarg, IPMIPOWER_IPMI_VERSION_2_0_STR))
+    conf->ipmi_version = IPMIPOWER_IPMI_VERSION_2_0;
+  else
+    err_exit("Config File Error: invalid ipmi version");
 
   /* Incorrect privilege checked in _config_common_checks */
   conf->privilege = ipmipower_privilege_index(data->string);
@@ -553,7 +586,7 @@ _cb_username(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_USER_NAME_LENGTH)
-    err_exit("Conf-> File Error: username too long");
+    err_exit("Config File Error: username too long");
 
   strcpy(conf->username, data->string);
   return 0;
@@ -568,7 +601,7 @@ _cb_password(conffile_t cf, struct conffile_data *data,
     return 0;
 
   if (strlen(data->string) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
-    err_exit("Conf-> File Error: password too long");
+    err_exit("Config File Error: password too long");
 
   strcpy(conf->password, data->string);
   return 0;
@@ -578,7 +611,7 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, authentication_type_flag, 
-    privilege_flag, on_if_off_flag, outputtype_flag, 
+    privilege_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
     check_unexpected_authcode_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
@@ -597,6 +630,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &authentication_type_flag, NULL, 0},
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
        1, 0, &privilege_flag, NULL, 0},
+      {"ipmi_version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
+       1, 0, &ipmi_version_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 
@@ -639,7 +674,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int num;
 
   if ((cf = conffile_handle_create()) == NULL)
-    err_exit("Conf-> File Error: cannot create conffile handle");
+    err_exit("Config File Error: cannot create conffile handle");
 
   conffile = (strlen(configfile)) ? configfile : IPMIPOWER_CONFIGFILE_DEFAULT;
   num = sizeof(options)/sizeof(struct conffile_option);
@@ -652,12 +687,12 @@ ipmipower_config_conffile_parse(char *configfile)
         goto done;
       
       if (conffile_errmsg(cf, errbuf, CONFFILE_MAX_ERRMSGLEN) < 0)
-        err_exit("Conf-> File Error: Cannot retrieve conffile error message");
+        err_exit("Config File Error: Cannot retrieve conffile error message");
       
-      err_exit("Conf-> File Error: %s", errbuf);
+      err_exit("Config File Error: %s", errbuf);
     }
 
-  _config_common_checks("Conf-> File Error");
+  _config_common_checks("Config File Error");
 
  done:
   (void)conffile_handle_destroy(cf);

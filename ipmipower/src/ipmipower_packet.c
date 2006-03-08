@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.27 2006-03-07 22:16:56 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.28 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,7 +50,11 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+    return &tmpl_cmd_get_channel_authentication_capabilities_v20_rq[0];
+  else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
+    return &tmpl_cmd_get_channel_authentication_capabilities_v20_rs[0];
+  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return &tmpl_cmd_get_channel_authentication_capabilities_rq[0];
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return &tmpl_cmd_get_channel_authentication_capabilities_rs[0];
@@ -91,7 +95,11 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_PKT(pkt));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+    return ip->obj_authentication_capabilities_v20_req;
+  else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
+    return ip->obj_authentication_capabilities_v20_res;
+  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     return ip->obj_authentication_capabilities_req;
   else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
     return ip->obj_authentication_capabilities_res;
@@ -138,76 +146,86 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (conf->ipmidump)
     {
       char *hdr;
-      if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
         hdr = 
-          "============================================\n"
-          "= Get Authentication Capabilities Request  =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Authentication Capabilities V20 Request  =\n"
+          "================================================";
+      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
+        hdr = 
+          "================================================\n"
+          "= Get Authentication Capabilities V20 Response =\n"
+          "================================================";
+      else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+        hdr = 
+          "================================================\n"
+          "= Get Authentication Capabilities Request      =\n"
+          "================================================";
       else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
         hdr = 
-          "============================================\n"
-          "= Get Authentication Capabilities Response =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Authentication Capabilities Response     =\n"
+          "================================================";
       else if (pkt == GET_SESSION_CHALLENGE_REQ)
         hdr = 
-          "============================================\n"
-          "= Get Session Challenge Request            =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Session Challenge Request                =\n"
+          "================================================";
       else if (pkt == GET_SESSION_CHALLENGE_RES)
         hdr = 
-          "============================================\n"
-          "= Get Session Challenge Response           =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Session Challenge Response               =\n"
+          "================================================";
       else if (pkt == ACTIVATE_SESSION_REQ)
         hdr = 
-          "============================================\n"
-          "= Activate Session Request                 =\n"
-          "============================================";
+          "================================================\n"
+          "= Activate Session Request                     =\n"
+          "================================================";
       else if (pkt == ACTIVATE_SESSION_RES)
         hdr = 
-          "============================================\n"
-          "= Activate Session Response                =\n"
-          "============================================";
+          "================================================\n"
+          "= Activate Session Response                    =\n"
+          "================================================";
       else if (pkt == SET_SESSION_PRIVILEGE_REQ)
         hdr = 
-          "============================================\n"
-          "= Set Session Privilege Request            =\n"
-          "============================================";
+          "================================================\n"
+          "= Set Session Privilege Request                =\n"
+          "================================================";
       else if (pkt == SET_SESSION_PRIVILEGE_RES)
         hdr = 
-          "============================================\n"
-          "= Set Session Privilege Response           =\n"
-          "============================================";
+          "================================================\n"
+          "= Set Session Privilege Response               =\n"
+          "================================================";
       else if (pkt == CLOSE_SESSION_REQ)
         hdr = 
-          "============================================\n"
-          "= Close Session Request                    =\n"
-          "============================================";
+          "================================================\n"
+          "= Close Session Request                        =\n"
+          "================================================";
       else if (pkt == CLOSE_SESSION_RES)
         hdr = 
-          "============================================\n"
-          "= Close Session Response                   =\n"
-          "============================================";
+          "================================================\n"
+          "= Close Session Response                       =\n"
+          "================================================";
       else if (pkt == CHASSIS_STATUS_REQ)
         hdr = 
-          "============================================\n"
-          "= Get Chassis Status Request               =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Chassis Status Request                   =\n"
+          "================================================";
       else if (pkt == CHASSIS_STATUS_RES)
         hdr = 
-          "============================================\n"
-          "= Get Chassis Status Response              =\n"
-          "============================================";
+          "================================================\n"
+          "= Get Chassis Status Response                  =\n"
+          "================================================";
       else if (pkt == CHASSIS_CONTROL_REQ)
         hdr = 
-          "============================================\n"
-          "= Chassis Control Request                  =\n"
-          "============================================";
+          "================================================\n"
+          "= Chassis Control Request                      =\n"
+          "================================================";
       else if (pkt == CHASSIS_CONTROL_RES)
         hdr = 
-          "============================================\n"
-          "= Chassis Control Response                 =\n"
-          "============================================";
+          "================================================\n"
+          "= Chassis Control Response                     =\n"
+          "================================================";
       
       if (pkt & PACKET_TYPE_REQ_MASK)
         Ipmi_dump_lan_packet(STDERR_FILENO, 
@@ -281,8 +299,11 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     err_exit("ipmipower_packet_create(%s: %d): fill_rmcp_hdr_ipmi: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ
+      || pkt == AUTHENTICATION_CAPABILITIES_REQ)
     {
+      fiid_obj_t obj_authentication_capabilities_req;
+
       if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE, 
                                0, 
                                0, 
@@ -299,17 +320,32 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-      if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
-                                                           ip->privilege, 
-                                                           ip->obj_authentication_capabilities_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): "
-                 "fill_cmd_get_channel_authentication_capabilities: %s", 
-                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+	{
+	  if (fill_cmd_get_channel_authentication_capabilities_v20(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+								   ip->privilege, 
+								   IPMI_GET_IPMI_V20_EXTENDED_DATA,
+								   ip->obj_authentication_capabilities_v20_req) < 0)
+	    err_exit("ipmipower_packet_create(%s: %d): "
+		     "fill_cmd_get_channel_authentication_capabilities: %s", 
+		     ip->ic->hostname, ip->protocol_state, strerror(errno));
+	  obj_authentication_capabilities_req = ip->obj_authentication_capabilities_v20_req;
+	}
+      else
+	{
+	  if (fill_cmd_get_channel_authentication_capabilities(IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+							       ip->privilege, 
+							       ip->obj_authentication_capabilities_req) < 0)
+	    err_exit("ipmipower_packet_create(%s: %d): "
+		     "fill_cmd_get_channel_authentication_capabilities: %s", 
+		     ip->ic->hostname, ip->protocol_state, strerror(errno));
+	  obj_authentication_capabilities_req = ip->obj_authentication_capabilities_req;
+	}
 
       if ((len = assemble_ipmi_lan_pkt(ip->obj_rmcp_hdr_req, 
 				       ip->obj_lan_session_hdr_req, 
 				       ip->obj_lan_msg_hdr_req, 
-                                       ip->obj_authentication_capabilities_req, 
+				       obj_authentication_capabilities_req,
 				       NULL,
 				       0,
                                        (uint8_t *)buffer, 

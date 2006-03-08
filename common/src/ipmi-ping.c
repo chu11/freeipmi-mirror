@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.10 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.11 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -216,13 +216,13 @@ _cmdline_parse(int argc,
         case 'V':
           _output_version();
         case 'r':
-        if (!strcmp(optarg, IPMI_PING_VERSION_1_5_STR))
-        _version = IPMI_PING_VERSION_1_5;
-        else if (!strcmp(optarg, IPMI_PING_VERSION_2_0_STR))
-          _version = IPMI_PING_VERSION_2_0;
-        else
-          ipmi_ping_err_exit("invalid version");
-        break;
+	  if (!strcmp(optarg, IPMI_PING_VERSION_1_5_STR))
+	    _version = IPMI_PING_VERSION_1_5;
+	  else if (!strcmp(optarg, IPMI_PING_VERSION_2_0_STR))
+	    _version = IPMI_PING_VERSION_2_0;
+	  else
+	    ipmi_ping_err_exit("invalid version");
+	  break;
         case 'c':
           _count = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))

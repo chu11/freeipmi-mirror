@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.30 2006-03-07 22:11:19 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.31 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,6 +78,8 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_lan_msg_hdr_res);
   Fiid_obj_destroy(ip->obj_lan_msg_trlr_res);
 
+  Fiid_obj_destroy(ip->obj_authentication_capabilities_v20_req);
+  Fiid_obj_destroy(ip->obj_authentication_capabilities_v20_res);
   Fiid_obj_destroy(ip->obj_authentication_capabilities_req);
   Fiid_obj_destroy(ip->obj_authentication_capabilities_res);
   Fiid_obj_destroy(ip->obj_get_session_challenge_req);
@@ -148,6 +150,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_lan_msg_hdr_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
   ip->obj_lan_msg_trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
 
+  ip->obj_authentication_capabilities_v20_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rq); 
+  ip->obj_authentication_capabilities_v20_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rs); 
   ip->obj_authentication_capabilities_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
   ip->obj_authentication_capabilities_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rs); 
   ip->obj_get_session_challenge_req = Fiid_obj_create(tmpl_cmd_get_session_challenge_rq); 
@@ -232,8 +236,10 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-                     
-  if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+       
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+    ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
+  else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT;
   else if (pkt == GET_SESSION_CHALLENGE_REQ)
     ip->protocol_state = PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT;
@@ -342,7 +348,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       return 0;
     }
   
-  if (pkt == AUTHENTICATION_CAPABILITIES_RES 
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
+      || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES)
     at = IPMI_AUTHENTICATION_TYPE_NONE;
   else if (pkt == ACTIVATE_SESSION_RES)
@@ -602,6 +609,194 @@ _retry_packets(ipmipower_powercmd_t ip)
   return 1;
 }
 
+/* _check_authentication_capabilities
+ * 
+ * Check the contents of a ipmi 1.5 or 2.0 authentication capabilities
+ * response.
+ *
+ * Returns  1 if authentication capabilities should be retried,
+ * Returns  0 if authentication passed and the protocol should continue
+ * Returns -1 on error
+ */
+static int
+_check_authentication_capabilities(ipmipower_powercmd_t ip,
+				   packet_type_t pkt)
+{
+  uint64_t authentication_type_none, authentication_type_md2, 
+    authentication_type_md5, authentication_type_straight_password_key, 
+    authentication_status_anonymous_login, authentication_status_null_username, 
+    authentication_status_non_null_username, 
+    authentication_status_per_message_authentication;
+  int authentication_type_try_higher_priv = 0;
+  fiid_obj_t obj_authentication_capabilities_res;
+
+  assert(pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+	 || pkt == AUTHENTICATION_CAPABILITIES_RES);
+
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
+    obj_authentication_capabilities_res = ip->obj_authentication_capabilities_v20_res;
+  else
+    obj_authentication_capabilities_res = ip->obj_authentication_capabilities_res;
+
+  /* Using results from Get Authentication Capabilities Response,
+   * determine:
+   *
+   * 1) If we are capable of authenticating with the remote host.
+   *
+   * 2) How to authenticate with the remote host.
+   */
+  
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_type.none", 
+	       &authentication_type_none);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_type.md2", 
+	       &authentication_type_md2);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_type.md5", 
+	       &authentication_type_md5);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_type.straight_password_key", 
+	       &authentication_type_straight_password_key);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_status.anonymous_login", 
+	       &authentication_status_anonymous_login);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_status.null_username",
+	       &authentication_status_null_username);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_status.non_null_username", 
+	       &authentication_status_non_null_username);
+  Fiid_obj_get(obj_authentication_capabilities_res, 
+	       "authentication_status.per_message_authentication",
+	       &authentication_status_per_message_authentication);
+
+  /* Does the remote BMC's authentication configuration support
+   * our username/password combination 
+   */
+  if ((!strlen(conf->username) && !strlen(conf->password)
+       && !authentication_status_anonymous_login
+       && !authentication_type_none)
+      || (!strlen(conf->username) 
+	  && !authentication_status_anonymous_login
+	  && !authentication_status_null_username)
+      || (strlen(conf->username)
+	  && !authentication_status_non_null_username))
+    {
+#ifndef NDEBUG
+      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
+#else
+      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+      ip->error_occurred = IPMIPOWER_TRUE; 
+      return -1;
+    }
+
+  if (conf->authentication_type == AUTHENTICATION_TYPE_AUTO)
+    {
+      /* Choose the best authentication type available.
+       * none and null password > md5 > md2 > straight_password_key > none
+       */
+      if (!strlen(conf->password) && authentication_type_none)
+	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
+      else if (authentication_type_md5)
+	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD5);
+      else if (authentication_type_md2)
+	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD2);
+      else if (authentication_type_straight_password_key)
+	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
+      else if (authentication_type_none)
+	ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
+      else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+	{
+	  /* achu: It may not seem possible to get to this point
+	   * since the check for anonymous_login, null_username,
+	   * or non_null_username has passed, but there's a few
+	   * ways we can fail. That iffy OEM authentication type
+	   * could be enabled (shame on you evil vendor!!) or
+	   * authentication at this privilege level isn't allowed.
+	   */
+	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	    {
+	      /* Time to give up */
+#ifndef NDEBUG	      
+	      ipmipower_output(MSG_TYPE_AUTO, ip->ic->hostname);
+#else
+	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+	      return -1;
+	    }
+	  else
+	    authentication_type_try_higher_priv = 1;
+	}
+      else
+	{
+#ifndef NDEBUG	      
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);
+#else
+	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+	  return -1;
+	}
+    }
+  else
+    {
+      /* Can we authenticate with the user specified
+       * authentication type?
+       */
+      if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
+	   && authentication_type_none)
+	  || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
+	      && authentication_type_straight_password_key)
+	  || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
+	      && authentication_type_md2)
+	  || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
+	      && authentication_type_md5))
+	ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
+      else
+	{
+	  if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	    {
+	      /* Time to give up */
+	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);
+	      return -1;
+	    }
+	  else
+	    authentication_type_try_higher_priv = 1;
+	}
+    }
+         
+  /* We can't authenticate with any mechanism for the current
+   * privilege level.  But we may able to authenticate at a higher
+   * one.  Lets up the privilege level and try again.
+   */
+  if (authentication_type_try_higher_priv)
+    {
+      /* Try a higher privilege level */
+      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
+	ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
+	ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
+      else
+	err_exit("_process_ipmi_packets: invalid privilege state: %d", 
+		 ip->privilege);
+
+      return 1;
+    }
+
+  if (!conf->force_permsg_authentication)
+    {
+      if (!authentication_status_per_message_authentication)
+	ip->permsgauth_enabled = IPMIPOWER_TRUE;
+      else
+	ip->permsgauth_enabled = IPMIPOWER_FALSE;
+    }
+  else
+    ip->permsgauth_enabled = IPMIPOWER_TRUE;
+
+  return 0;
+}
+					    
 /* _process_ipmi_packets
  * - Main function that handles packet sends/receives for
  *   the power control protocol
@@ -630,15 +825,91 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
 
   if (ip->protocol_state == PROTOCOL_STATE_START)
-    _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+    {
+      if (conf->ipmi_version == IPMIPOWER_IPMI_VERSION_2_0)
+	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
+      else
+	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
+    {
+      uint64_t ipmi_v20_extended_capabilities_available, 
+	channel_supports_ipmi_v15_connections,
+	channel_supports_ipmi_v20_connections;
+
+      /* If the remote machine does not support IPMI 2.0, we move onto
+       * IPMI 1.5 protocol respectively appropriately.
+       */
+
+      if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1) 
+        {
+          if (rv < 0) 
+	    {
+	      uint64_t comp_code;
+
+	      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+			   "comp_code", 
+			   &comp_code);
+
+	      if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+		{
+		  /* Try the IPMI 1.5 version of Get Authentication Capabilities */
+		  ip->error_occurred = IPMIPOWER_FALSE; 
+		  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+		}
+
+	      return -1;
+	    }
+          goto done;
+        }
+
+      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+		   "authentication_type.ipmi_v2.0_extended_capabilities_available",
+		   &ipmi_v20_extended_capabilities_available);
+      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+		   "channel_supports_ipmi_v1.5_connections",
+		   &channel_supports_ipmi_v15_connections);
+      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+		   "channel_supports_ipmi_v2.0_connections",
+		   &channel_supports_ipmi_v20_connections);
+
+      /* If we can't detect IPMI 1.5 with
+       * 'channel_supports_ipmi_v15_connections', we assume its a bug,
+       * and try the IPMI 1.5 version of Get Authentication Capabilities 
+       */
+      if (ipmi_v20_extended_capabilities_available
+	  && !channel_supports_ipmi_v15_connections
+	  && !channel_supports_ipmi_v20_connections)
+	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+      else if (!ipmi_v20_extended_capabilities_available
+	       || (channel_supports_ipmi_v15_connections
+		   && !channel_supports_ipmi_v20_connections))
+	{
+	  int check_val;
+	  
+	  if ((check_val = _check_authentication_capabilities(ip, 
+							      AUTHENTICATION_CAPABILITIES_V20_REQ)) < 0)
+	    return -1;
+	  
+	  if (check_val)
+	    {
+	      /* Don't consider this a retransmission */
+	      _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
+	      goto done;
+	    }
+	  /* else we continue with the IPMI 1.5 protocol */
+	  
+	  _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
+	}
+      else
+	{
+	  /* Don't know what to do right now */
+	  exit(1);
+	}
+    }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
     {
-      uint64_t authentication_type_none, authentication_type_md2, 
-	authentication_type_md5, authentication_type_straight_password_key, 
-	authentication_status_anonymous_login, authentication_status_null_username, 
-	authentication_status_non_null_username, 
-	authentication_status_per_message_authentication;
-      int authentication_type_try_higher_priv = 0;
+      int check_val;
 
       if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_RES)) != 1) 
         {
@@ -647,163 +918,17 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* Using results from Get Authentication Capabilities Response,
-       * determine:
-       *
-       * 1) If we are capable of authenticating with the remote host.
-       *
-       * 2) How to authenticate with the remote host.
-       */
-
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_type.none", 
-		   &authentication_type_none);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_type.md2", 
-		   &authentication_type_md2);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_type.md5", 
-		   &authentication_type_md5);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_type.straight_password_key", 
-		   &authentication_type_straight_password_key);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_status.anonymous_login", 
-		   &authentication_status_anonymous_login);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_status.null_username",
-		   &authentication_status_null_username);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_status.non_null_username", 
-		   &authentication_status_non_null_username);
-      Fiid_obj_get(ip->obj_authentication_capabilities_res, 
-                   "authentication_status.per_message_authentication",
-		   &authentication_status_per_message_authentication);
-
-      /* Does the remote BMC's authentication configuration support
-       * our username/password combination 
-       */
-      if ((!strlen(conf->username) && !strlen(conf->password)
-           && !authentication_status_anonymous_login
-           && !authentication_type_none)
-          || (!strlen(conf->username) 
-              && !authentication_status_anonymous_login
-              && !authentication_status_null_username)
-	  || (strlen(conf->username)
-	      && !authentication_status_non_null_username))
+      if ((check_val = _check_authentication_capabilities(ip, 
+							  AUTHENTICATION_CAPABILITIES_REQ)) < 0)
+	return -1;
+      
+      if (check_val)
 	{
-#ifndef NDEBUG
-	  ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
-#else
-	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-	  ip->error_occurred = IPMIPOWER_TRUE; 
-	  return -1;
-	}
-
-      if (conf->authentication_type == AUTHENTICATION_TYPE_AUTO)
-	{
-	  /* Choose the best authentication type available.
-	   * none and null password > md5 > md2 > straight_password_key > none
-	   */
-	  if (!strlen(conf->password) && authentication_type_none)
-            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-	  else if (authentication_type_md5)
-            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD5);
-          else if (authentication_type_md2)
-            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_MD2);
-          else if (authentication_type_straight_password_key)
-            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY);
-          else if (authentication_type_none)
-            ip->authentication_type = ipmipower_ipmi_authentication_type(AUTHENTICATION_TYPE_NONE);
-	  else if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-	    {
-              /* achu: It may not seem possible to get to this point
-               * since the check for anonymous_login, null_username,
-               * or non_null_username has passed, but there's a few
-               * ways we can fail. That iffy OEM authentication type
-               * could be enabled (shame on you evil vendor!!) or
-               * authentication at this privilege level isn't allowed.
-               */
-              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
-                {
-                  /* Time to give up */
-#ifndef NDEBUG	      
-                  ipmipower_output(MSG_TYPE_AUTO, ip->ic->hostname);
-#else
-                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-                  return -1;
-                }
-              else
-                authentication_type_try_higher_priv = 1;
-            }
-          else
-            {
-#ifndef NDEBUG	      
-                  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);
-#else
-                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-                  return -1;
-            }
-        }
-      else
-	{
-	  /* Can we authenticate with the user specified
-	   * authentication type?
-	   */
- 	  if ((conf->authentication_type == AUTHENTICATION_TYPE_NONE
-               && authentication_type_none)
-              || (conf->authentication_type == AUTHENTICATION_TYPE_STRAIGHT_PASSWORD_KEY 
-                  && authentication_type_straight_password_key)
-              || (conf->authentication_type == AUTHENTICATION_TYPE_MD2
-		  && authentication_type_md2)
-	      || (conf->authentication_type == AUTHENTICATION_TYPE_MD5
-		  && authentication_type_md5))
-            ip->authentication_type = ipmipower_ipmi_authentication_type(conf->authentication_type);
-          else
-            {
-              if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN)
-                {
-                  /* Time to give up */
-                  ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);
-                  return -1;
-                }
-              else
-                authentication_type_try_higher_priv = 1;
-	    }
-	}
-         
-      /* We can't authenticate with any mechanism for the current
-       * privilege level.  But we may able to authenticate at a higher
-       * one.  Lets up the privilege level and try again.
-       */
-      if (authentication_type_try_higher_priv)
-        {
-          /* Try a higher privilege level */
-          if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER)
-            ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-          else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR)
-            ip->privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
-          else
-            err_exit("_process_ipmi_packets: invalid privilege state: %d", 
-                     ip->privilege);
-
-          /* Don't consider this a retransmission */
-          _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+	  /* Don't consider this a retransmission */
+	  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
           goto done;
         }
-
-      if (!conf->force_permsg_authentication)
-        {
-          if (!authentication_status_per_message_authentication)
-            ip->permsgauth_enabled = IPMIPOWER_TRUE;
-          else
-            ip->permsgauth_enabled = IPMIPOWER_FALSE;
-        }
-      else
-        ip->permsgauth_enabled = IPMIPOWER_TRUE;
+      /* else we continue with the IPMI 1.5 protocol */
 
       _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.26 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.27 2006-03-08 15:33:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -116,6 +116,18 @@
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
+#define IPMIPOWER_IPMI_VERSION_1_5_STR   "1.5"
+#define IPMIPOWER_IPMI_VERSION_2_0_STR   "2.0"
+
+/* ipmipower_ipmi_version_t
+ * - holds ipmi version type
+ */
+typedef enum
+  {
+    IPMIPOWER_IPMI_VERSION_1_5 = 0,
+    IPMIPOWER_IPMI_VERSION_2_0 = 1,
+  } ipmipower_ipmi_version_t;
+
 /* ipmipower_bool_t
  * - boolean type
  */
@@ -158,20 +170,22 @@ typedef enum
  */
 typedef enum 
   { 
-    AUTHENTICATION_CAPABILITIES_REQ = 0x101, 
-    AUTHENTICATION_CAPABILITIES_RES = 0x201,
-    GET_SESSION_CHALLENGE_REQ       = 0x102, 
-    GET_SESSION_CHALLENGE_RES       = 0x202,
-    ACTIVATE_SESSION_REQ            = 0x103, 
-    ACTIVATE_SESSION_RES            = 0x203,
-    SET_SESSION_PRIVILEGE_REQ       = 0x104, 
-    SET_SESSION_PRIVILEGE_RES       = 0x204, 
-    CLOSE_SESSION_REQ               = 0x105, 
-    CLOSE_SESSION_RES               = 0x205,
-    CHASSIS_STATUS_REQ              = 0x106, 
-    CHASSIS_STATUS_RES              = 0x206,
-    CHASSIS_CONTROL_REQ             = 0x107, 
-    CHASSIS_CONTROL_RES             = 0x207, 
+    AUTHENTICATION_CAPABILITIES_V20_REQ = 0x100, 
+    AUTHENTICATION_CAPABILITIES_V20_RES = 0x200,
+    AUTHENTICATION_CAPABILITIES_REQ     = 0x101, 
+    AUTHENTICATION_CAPABILITIES_RES     = 0x201,
+    GET_SESSION_CHALLENGE_REQ           = 0x102, 
+    GET_SESSION_CHALLENGE_RES           = 0x202,
+    ACTIVATE_SESSION_REQ                = 0x103, 
+    ACTIVATE_SESSION_RES                = 0x203,
+    SET_SESSION_PRIVILEGE_REQ           = 0x104, 
+    SET_SESSION_PRIVILEGE_RES           = 0x204, 
+    CLOSE_SESSION_REQ                   = 0x105, 
+    CLOSE_SESSION_RES                   = 0x205,
+    CHASSIS_STATUS_REQ                  = 0x106, 
+    CHASSIS_STATUS_RES                  = 0x206,
+    CHASSIS_CONTROL_REQ                 = 0x107, 
+    CHASSIS_CONTROL_RES                 = 0x207, 
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -193,15 +207,16 @@ typedef enum
 /* Protocol States */
 typedef enum 
   { 
-    PROTOCOL_STATE_START                            = 0x00,
-    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT = 0x01,
-    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT       = 0x02,
-    PROTOCOL_STATE_ACTIVATE_SESSION_SENT            = 0x03,
-    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT       = 0x04,
-    PROTOCOL_STATE_CHASSIS_STATUS_SENT              = 0x05,
-    PROTOCOL_STATE_CHASSIS_CONTROL_SENT             = 0x06,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT               = 0x07,
-    PROTOCOL_STATE_END                              = 0x08,
+    PROTOCOL_STATE_START                                = 0x00,
+    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT = 0x01,
+    PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT     = 0x02,
+    PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x03,
+    PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x04,
+    PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT           = 0x05,
+    PROTOCOL_STATE_CHASSIS_STATUS_SENT                  = 0x06,
+    PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x07,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x08,
+    PROTOCOL_STATE_END                                  = 0x09,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s) \
@@ -339,6 +354,8 @@ struct ipmipower_powercmd {
     fiid_obj_t obj_lan_msg_hdr_res;
     fiid_obj_t obj_lan_msg_trlr_res;
 
+    fiid_obj_t obj_authentication_capabilities_v20_req;
+    fiid_obj_t obj_authentication_capabilities_v20_res;
     fiid_obj_t obj_authentication_capabilities_req;
     fiid_obj_t obj_authentication_capabilities_res;
     fiid_obj_t obj_get_session_challenge_req;
@@ -392,57 +409,59 @@ struct ipmipower_connection
  */
 struct ipmipower_config 
 {
-  hostlist_t            hosts;
-  int                   hosts_count;
-  char                  username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char                  password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
-  power_cmd_t           powercmd;
-  char                  configfile[MAXPATHLEN+1];
+  hostlist_t               hosts;
+  int                      hosts_count;
+  char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
+  char                     password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
+  power_cmd_t              powercmd;
+  char                     configfile[MAXPATHLEN+1];
 
-  authentication_type_t authentication_type;
-  privilege_type_t      privilege;
-  ipmipower_bool_t      on_if_off;
-  output_type_t         outputtype;
-  ipmipower_bool_t      force_permsg_authentication;
-  ipmipower_bool_t      accept_session_id_zero;
-  ipmipower_bool_t      check_unexpected_authcode;
+  authentication_type_t    authentication_type;
+  privilege_type_t         privilege;
+  ipmipower_ipmi_version_t ipmi_version;
+  ipmipower_bool_t         on_if_off;
+  output_type_t            outputtype;
+  ipmipower_bool_t         force_permsg_authentication;
+  ipmipower_bool_t         accept_session_id_zero;
+  ipmipower_bool_t         check_unexpected_authcode;
   
 #ifndef NDEBUG
-  ipmipower_bool_t      debug;
-  ipmipower_bool_t      ipmidump;
-  ipmipower_bool_t      rmcpdump;
-  ipmipower_bool_t      log;
-  char                  logfile[MAXPATHLEN+1];
-  int                   logfile_fd;
+  ipmipower_bool_t         debug;
+  ipmipower_bool_t         ipmidump;
+  ipmipower_bool_t         rmcpdump;
+  ipmipower_bool_t         log;
+  char                     logfile[MAXPATHLEN+1];
+  int                      logfile_fd;
 #endif
-  int                   timeout_len;
-  int                   retry_timeout_len;
-  int                   retry_backoff_count; 
-  int                   ping_interval_len;
-  int                   ping_timeout_len;
-  int                   ping_packet_count;
-  int                   ping_percent;
-  int                   ping_consec_count;
+  int                      timeout_len;
+  int                      retry_timeout_len;
+  int                      retry_backoff_count; 
+  int                      ping_interval_len;
+  int                      ping_timeout_len;
+  int                      ping_packet_count;
+  int                      ping_percent;
+  int                      ping_consec_count;
 
   /* Flags indicating if option was set on the command line */
-  ipmipower_bool_t      hosts_set;
-  ipmipower_bool_t      username_set;
-  ipmipower_bool_t      password_set;
-  ipmipower_bool_t      authentication_type_set;
-  ipmipower_bool_t      privilege_set;
-  ipmipower_bool_t      on_if_off_set;
-  ipmipower_bool_t      force_permsg_authentication_set;
-  ipmipower_bool_t      accept_session_id_zero_set;
-  ipmipower_bool_t      check_unexpected_authcode_set;
-  ipmipower_bool_t      outputtype_set;
-  ipmipower_bool_t      timeout_len_set;
-  ipmipower_bool_t      retry_timeout_len_set;
-  ipmipower_bool_t      retry_backoff_count_set;
-  ipmipower_bool_t      ping_interval_len_set;
-  ipmipower_bool_t      ping_timeout_len_set; 
-  ipmipower_bool_t      ping_consec_count_set;
-  ipmipower_bool_t      ping_packet_count_set;
-  ipmipower_bool_t      ping_percent_set;
+  ipmipower_bool_t         hosts_set;
+  ipmipower_bool_t         username_set;
+  ipmipower_bool_t         password_set;
+  ipmipower_bool_t         authentication_type_set;
+  ipmipower_bool_t         privilege_set;
+  ipmipower_bool_t         ipmi_version_set;
+  ipmipower_bool_t         on_if_off_set;
+  ipmipower_bool_t         force_permsg_authentication_set;
+  ipmipower_bool_t         accept_session_id_zero_set;
+  ipmipower_bool_t         check_unexpected_authcode_set;
+  ipmipower_bool_t         outputtype_set;
+  ipmipower_bool_t         timeout_len_set;
+  ipmipower_bool_t         retry_timeout_len_set;
+  ipmipower_bool_t         retry_backoff_count_set;
+  ipmipower_bool_t         ping_interval_len_set;
+  ipmipower_bool_t         ping_timeout_len_set; 
+  ipmipower_bool_t         ping_consec_count_set;
+  ipmipower_bool_t         ping_packet_count_set;
+  ipmipower_bool_t         ping_percent_set;
 };
 
 typedef struct ipmipower_powercmd *ipmipower_powercmd_t;
