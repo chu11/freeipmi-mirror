@@ -135,6 +135,46 @@ fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs = 
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "algorithm_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
