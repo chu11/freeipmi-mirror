@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.26 2006-03-07 21:57:15 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.27 2006-03-08 00:51:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -341,7 +341,7 @@ parsepacket(char *buffer,
 			"authentication_type.ipmi_v2.0_extended_capabilities_available", 
 			(u_int64_t *)&ipmi_v20_extended_capabilities_available);
 
-          printf("ipmi_v20_extended capabilities_available: %s ",
+          printf("ipmi_v20_extended capabilities_available=%s ",
                  _setstr(ipmi_v20_extended_capabilities_available));
 
           if (ipmi_v20_extended_capabilities_available)
@@ -353,7 +353,7 @@ parsepacket(char *buffer,
 			    "channel_supports_ipmi_v2.0_connections", 
 			    (u_int64_t *)&ipmi_v20);
 	      
-              printf("ipmi_v1.5: %s ipmi_v2.0: %s ", _setstr(ipmi_v15), _setstr(ipmi_v20));
+              printf("ipmi_v1.5=%s ipmi_v2.0=%s ", _setstr(ipmi_v15), _setstr(ipmi_v20));
             }
         }
     }

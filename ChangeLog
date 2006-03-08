@@ -24,6 +24,9 @@
 	bug with template fields in
 	tmpl_cmd_get_channel_authentication_capabilities_v20_rs.
 
+	* ipmiping/src/ipmiping.c (parsepacket): Fix output to match
+	earlier output.
+
 2005-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag
