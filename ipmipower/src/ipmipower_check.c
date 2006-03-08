@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.24 2006-03-08 17:53:14 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.25 2006-03-08 19:05:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -66,7 +66,8 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Outbound sequence numbers have not started yet */ 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
-      || pkt == GET_SESSION_CHALLENGE_RES)
+      || pkt == GET_SESSION_CHALLENGE_RES
+      || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
     return 1;
 
   Fiid_obj_get(ip->obj_lan_session_hdr_res,
@@ -179,7 +180,8 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES 
-      || pkt == ACTIVATE_SESSION_RES)
+      || pkt == ACTIVATE_SESSION_RES
+      || pkt == GET_CHANNEL_CIPHER_SUITES_RES)      
     return 1;
   else
     {
@@ -279,6 +281,8 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == CLOSE_SESSION_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES) 
+    expected_cmd = IPMI_CMD_GET_CHANNEL_CIPHER_SUITES;
   else if (pkt == CHASSIS_STATUS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CHASSIS_CONTROL_RES) 

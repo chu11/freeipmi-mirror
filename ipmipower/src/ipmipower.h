@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.29 2006-03-08 17:53:14 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.30 2006-03-08 19:05:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -187,12 +187,14 @@ typedef enum
     ACTIVATE_SESSION_RES                = 0x205,
     SET_SESSION_PRIVILEGE_REQ           = 0x106, 
     SET_SESSION_PRIVILEGE_RES           = 0x206, 
-    CLOSE_SESSION_REQ                   = 0x107, 
-    CLOSE_SESSION_RES                   = 0x207,
-    CHASSIS_STATUS_REQ                  = 0x108, 
-    CHASSIS_STATUS_RES                  = 0x208,
-    CHASSIS_CONTROL_REQ                 = 0x109, 
-    CHASSIS_CONTROL_RES                 = 0x209, 
+    GET_CHANNEL_CIPHER_SUITES_REQ       = 0x107,
+    GET_CHANNEL_CIPHER_SUITES_RES       = 0x207,
+    CLOSE_SESSION_REQ                   = 0x108, 
+    CLOSE_SESSION_RES                   = 0x208,
+    CHASSIS_STATUS_REQ                  = 0x109, 
+    CHASSIS_STATUS_RES                  = 0x209,
+    CHASSIS_CONTROL_REQ                 = 0x10A, 
+    CHASSIS_CONTROL_RES                 = 0x20A, 
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -222,8 +224,9 @@ typedef enum
     PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT           = 0x05,
     PROTOCOL_STATE_CHASSIS_STATUS_SENT                  = 0x06,
     PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x07,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x08,
-    PROTOCOL_STATE_END                                  = 0x09,
+    PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT       = 0x08,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x09,
+    PROTOCOL_STATE_END                                  = 0x0A,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s) \
@@ -351,6 +354,7 @@ struct ipmipower_powercmd {
     ipmipower_bool_t permsgauth_enabled;
     uint8_t authentication_type;
     uint8_t privilege;
+    ipmi_version_t ipmi_version;
 
     struct ipmipower_connection *ic;
   
@@ -372,6 +376,8 @@ struct ipmipower_powercmd {
     fiid_obj_t obj_activate_session_res;
     fiid_obj_t obj_set_session_privilege_req;
     fiid_obj_t obj_set_session_privilege_res;
+    fiid_obj_t obj_get_channel_cipher_suites_req;
+    fiid_obj_t obj_get_channel_cipher_suites_res;
     fiid_obj_t obj_close_session_req;
     fiid_obj_t obj_close_session_res;
     fiid_obj_t obj_chassis_status_req;

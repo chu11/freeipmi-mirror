@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.33 2006-03-08 17:53:14 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.34 2006-03-08 19:05:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -88,6 +88,8 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_activate_session_res);
   Fiid_obj_destroy(ip->obj_set_session_privilege_req);
   Fiid_obj_destroy(ip->obj_set_session_privilege_res);
+  Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_req);
+  Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_res);
   Fiid_obj_destroy(ip->obj_close_session_req);
   Fiid_obj_destroy(ip->obj_close_session_res);
   Fiid_obj_destroy(ip->obj_chassis_status_req);
@@ -160,6 +162,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_activate_session_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
   ip->obj_set_session_privilege_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
   ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
+  ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
+  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
   ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
   ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
   ip->obj_chassis_status_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
@@ -182,6 +186,10 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   /* ip->authentication_type is set after Get Authentication Capabilities
    * Response is received 
+   */
+
+  /* ip->ipmi_version is set after Get Authentication Capabilities
+   * Response stage is finished.
    */
 
   if (conf->privilege == PRIVILEGE_TYPE_AUTO)
@@ -264,6 +272,8 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     }
   else if (pkt == SET_SESSION_PRIVILEGE_REQ)
     ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT;
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+    ip->protocol_state = PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT;
   else if (pkt == CLOSE_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
   else if (pkt == CHASSIS_STATUS_REQ)
@@ -271,6 +281,9 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   else if (pkt == CHASSIS_CONTROL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
 
+  /* XXX watch out when you start getting into the grits of the ipmi
+   * 2.0 session 
+   */
   if (pkt == SET_SESSION_PRIVILEGE_REQ 
       || pkt == CLOSE_SESSION_REQ 
       || pkt == CHASSIS_STATUS_REQ 
@@ -588,6 +601,8 @@ _retry_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, ACTIVATE_SESSION_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT)
     _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
+    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT)
     _send_packet(ip, CHASSIS_STATUS_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
@@ -923,13 +938,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                 }
               /* else we continue with the IPMI 1.5 protocol */
               
+              ip->ipmi_version = IPMI_VERSION_1_5;
               _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
             }
           else
             {
-              /* IPMI 2.0 */
-              fprintf(stderr, "IPMI 2.0 TODO\n");
-              exit(1);
+              ip->ipmi_version = IPMI_VERSION_2_0;
+              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
             }
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
@@ -943,9 +958,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               return -1;
             }
 
-          /* IPMI 2.0 */
-          fprintf(stderr, "IPMI 2.0 TODO\n");
-          exit(1);
+          ip->ipmi_version = IPMI_VERSION_2_0;
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
 	}
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
@@ -971,6 +985,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
       /* else we continue with the IPMI 1.5 protocol */
 
+      ip->ipmi_version = IPMI_VERSION_1_5;
       _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
@@ -1029,6 +1044,21 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         _send_packet(ip, CHASSIS_STATUS_REQ, 0);
       else
         _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
+    {
+      if ((rv = _recv_packet(ip, GET_CHANNEL_CIPHER_SUITES_RES)) != 1) 
+        {
+          if (rv < 0) 
+            /* XXX Session is not up, is it ok to quit here?  Or
+             * should we timeout?? */
+            return -1;
+          goto done;
+        }
+
+      /* IPMI 2.0 TODO */
+      fprintf(stderr, "IPMI 2.0 TODO\n");
+      return -1;
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT) 
     {

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.28 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.29 2006-03-08 19:05:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -70,6 +70,10 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
     return &tmpl_cmd_set_session_privilege_level_rq[0];
   else if (pkt == SET_SESSION_PRIVILEGE_RES)
     return &tmpl_cmd_set_session_privilege_level_rs[0];
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+    return &tmpl_cmd_get_channel_cipher_suites_rq[0];
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+    return &tmpl_cmd_get_channel_cipher_suites_rs[0];
   else if (pkt == CLOSE_SESSION_REQ)
     return &tmpl_cmd_close_session_rq[0];
   else if (pkt == CLOSE_SESSION_RES)
@@ -115,6 +119,10 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
     return ip->obj_set_session_privilege_req;
   else if (pkt == SET_SESSION_PRIVILEGE_RES)
     return ip->obj_set_session_privilege_res;
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+    return ip->obj_get_channel_cipher_suites_req;
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+    return ip->obj_get_channel_cipher_suites_res;
   else if (pkt == CLOSE_SESSION_REQ)
     return ip->obj_close_session_req;
   else if (pkt == CLOSE_SESSION_RES)
@@ -195,6 +203,16 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
         hdr = 
           "================================================\n"
           "= Set Session Privilege Response               =\n"
+          "================================================";
+      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+        hdr = 
+          "================================================\n"
+          "= Get Channel Cipher Suites Request            =\n"
+          "================================================";
+      else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+        hdr = 
+          "================================================\n"
+          "= Get Channel Cipher Suites Response           =\n"
           "================================================";
       else if (pkt == CLOSE_SESSION_REQ)
         hdr = 
@@ -535,6 +553,46 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                        ip->obj_set_session_privilege_req,
 				       password,
 				       strlen(conf->password), 
+                                       (uint8_t *)buffer, 
+				       buflen)) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "assemble_ipmi_lan_pkt: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+    {
+      if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE, 
+                               0, 
+                               0, 
+                               NULL, 
+                               0, 
+                               ip->obj_lan_session_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
+      if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+			   IPMI_BMC_IPMB_LUN_BMC, 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
+                           ip->obj_lan_msg_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      /* XXX temporary */
+      if (fill_cmd_get_channel_cipher_suites (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
+                                              IPMI_PAYLOAD_TYPE_IPMI,
+                                              0,
+                                              IPMI_LIST_SUPPORTED_ALGORITHMS,
+                                              ip->obj_get_channel_cipher_suites_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "fill_cmd_get_channel_cipher_suites: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      if ((len = assemble_ipmi_lan_pkt(ip->obj_rmcp_hdr_req, 
+				       ip->obj_lan_session_hdr_req, 
+				       ip->obj_lan_msg_hdr_req, 
+				       ip->obj_get_channel_cipher_suites_req,
+				       NULL,
+				       0,
                                        (uint8_t *)buffer, 
 				       buflen)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
