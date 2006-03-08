@@ -35,6 +35,7 @@
 #include "freeipmi/ipmi-cmd-spec.h"
 #include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
+#include "freeipmi/ipmi-rmcpplus.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
@@ -111,6 +112,28 @@ fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs =
    {8,  "oem_auxiliary_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
    {0, "", 0}
  };
+
+fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq =
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6, "list_index", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1, "list_algorithm_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs = 
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {128, "cipher_suite_record_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
 
 fiid_template_t tmpl_cmd_get_session_challenge_rq =
   {
@@ -401,6 +424,31 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
+  return (0);
+}
+
+int8_t
+fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
+                                    uint8_t payload_type,
+                                    uint8_t list_index,
+                                    uint8_t list_algorithm_type,
+                                    fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && IPMI_PAYLOAD_TYPE_VALID(payload_type)
+              && IPMI_LIST_ALGORITHM_TYPE_VALID(list_algorithm_type)
+	      && fiid_obj_valid(obj_cmd_rq));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_cipher_suites_rq);
+  
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_CIPHER_SUITES);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "payload_type", payload_type); 
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "list_index", list_index); 
+  FIID_OBJ_SET (obj_cmd_rq, "reserved3", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "list_algorithm_type", list_algorithm_type);
   return (0);
 }
 

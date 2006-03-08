@@ -5,6 +5,11 @@
 	-R option to -M option.  Add new -R option support protocol
 	selection by user.
 
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
+	(fill_cmd_get_channel_cipher_suites): Support Get Channel Cipher
+	Suites command.
+
 2005-03-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,

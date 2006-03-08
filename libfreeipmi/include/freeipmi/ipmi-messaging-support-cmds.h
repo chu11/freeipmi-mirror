@@ -41,6 +41,13 @@ extern "C" {
         (((__val) == IPMI_GET_IPMI_V20_EXTENDED_DATA \
 	  || (__val) == IPMI_GET_IPMI_V15_DATA) ? 1 : 0)
 
+#define IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE 0x1
+#define IPMI_LIST_SUPPORTED_ALGORITHMS       0x0
+
+#define IPMI_LIST_ALGORITHM_TYPE_VALID(__val) \
+        (((__val) == IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE \
+          || (__val) == IPMI_LIST_SUPPORTED_ALGORITHMS) ? 1 : 0)
+
 #define IPMI_MESSAGING_ACCESS_MODE_DISABLED            0x0
 #define IPMI_MESSAGING_ACCESS_MODE_PRE_BOOT_ONLY       0x1
 #define IPMI_MESSAGING_ACCESS_MODE_ALWAYS_AVAILABLE    0x2
@@ -146,6 +153,10 @@ extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rs;
+
+extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rq;
+extern fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs;
+
 extern fiid_template_t tmpl_cmd_get_session_challenge_rq;
 extern fiid_template_t tmpl_cmd_get_session_challenge_rs;
 extern fiid_template_t tmpl_cmd_activate_session_rq;
@@ -184,6 +195,12 @@ int8_t fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_num
 							     uint8_t maximum_privilege_level,
 							     uint8_t get_ipmi_v20_extended_data,
 							     fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_get_channel_cipher_suites (uint8_t channel_number,
+                                           uint8_t payload_type,
+                                           uint8_t list_index,
+                                           uint8_t list_algorithm_type,
+                                           fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_session_challenge (uint8_t authentication_type, 
 				       uint8_t *user_name, 
