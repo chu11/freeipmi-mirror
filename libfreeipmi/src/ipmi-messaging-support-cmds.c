@@ -397,7 +397,7 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_AUTHENTICATION_CAPABILITIES);
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number); 
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v20_extended_data,", get_ipmi_v20_extended_data);
+  FIID_OBJ_SET (obj_cmd_rq, "get_ipmi_v2.0_extended_data", get_ipmi_v20_extended_data);
   FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_level", maximum_privilege_level);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
 
