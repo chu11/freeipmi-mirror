@@ -20,6 +20,10 @@
 	fish/extensions/bc-sol-conf-section.scm: Support bit-rate '0'
 	which means "Use Serial Bit rate".
 
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c: Fix out of order
+	bug with template fields in
+	tmpl_cmd_get_channel_authentication_capabilities_v20_rs.
+
 2005-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag
