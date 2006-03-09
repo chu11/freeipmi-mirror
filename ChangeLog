@@ -6,7 +6,20 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Add
 	cipher suite combination validity checks.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c (_calculate_k_rakp_none):
+	Removed function.
 	
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c (ipmi_calculate_sik,
+	_ipmi_calculate_k): Fix parameter checks to return errors for
+	invalid cipher combinations.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.c
+	(ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code,
+	ipmi_calculate_rakp_3_key_exchange_authentication_code): Rename
+	variables to match ipmi spec.
+
 2005-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,

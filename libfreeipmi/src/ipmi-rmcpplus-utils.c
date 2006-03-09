@@ -62,8 +62,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
 
   /* k_g can be NULL, indicating a empty k_g */
-  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	      && !(k_g && !k_g_len)
 	      && remote_console_random_number
@@ -74,13 +73,6 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 	      && !(user_name && !user_name_len)
 	      && sik
 	      && sik_len);
-
-  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
-    {
-      /* SPEC: Not sure what to do */
-      memset(sik, '\0', sik_len);
-      return ((sik_len < IPMI_MAX_SIK_KEY_LENGTH) ? sik_len : IPMI_MAX_SIK_KEY_LENGTH);
-    }
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     {
@@ -148,25 +140,6 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
   ERR (!(computed_digest_len != crypt_digest_len));
 
   return (computed_digest_len);
-}
-
-static int32_t
-_calculate_k_rakp_none(uint8_t *k,
-                       uint32_t k_len,
-                       uint8_t *constant,
-                       uint32_t constant_len)
-{
-  /* SPEC: achu: The spec doesn't give information on what to do if
-   * rakp is none.  So we're just going to say a NULL key.
-   */
-
-  ERR_EINVAL (k
-	      && k_len
-	      && constant
-	      && constant_len);
- 
-  memset(k, '\0', k_len);
-  return ((k_len < IPMI_MAX_K_UID_LENGTH) ? k_len : IPMI_MAX_K_UID_LENGTH);
 }
 
 static int32_t
@@ -275,12 +248,10 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
                   uint8_t *constant,
                   uint32_t constant_len)
 {
-  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
-	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+  ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-	      && !((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
-		    || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
-		   && (!sik_key || !sik_key_len))
+	      && sik_key 
+              && sik_key_len))
 	      && k
 	      && k_len
 	      && constant
@@ -375,9 +346,14 @@ ipmi_calculate_keys(uint8_t payload_type,
   int32_t sik_key_len;
 
   ERR_EINVAL (IPMI_PAYLOAD_TYPE_VALID(payload_type)
+              && (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
+                  || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	      && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
 	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
 		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+              && IPMI_CIPHER_SUITE_COMBINATION_VALID(authentication_algorithm,
+                                                     integrity_algorithm,
+                                                     confidentiality_algorithm)
 	      && integrity_key
 	      && (*integrity_key)
 	      && integrity_key_len
@@ -405,8 +381,7 @@ ipmi_calculate_keys(uint8_t payload_type,
       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
       || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
     {
-      ERR_EINVAL (IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-		  && !(authentication_code_data && !authentication_code_data)
+      ERR_EINVAL (!(authentication_code_data && !authentication_code_data)
 		  && remote_console_random_number
 		  && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 		  && managed_system_random_number
@@ -493,8 +468,8 @@ ipmi_calculate_keys(uint8_t payload_type,
 
 int32_t 
 ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_algorithm, 
-                                                       uint8_t *authentication_key, 
-                                                       uint32_t authentication_key_len, 
+                                                       uint8_t *k_uid, 
+                                                       uint32_t k_uid_len, 
                                                        uint8_t *managed_system_random_number, 
                                                        uint32_t managed_system_random_number_len, 
                                                        uint32_t remote_console_session_id, 
@@ -571,8 +546,8 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
 
   ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,
 				       hash_flags,
-				       authentication_key,
-				       authentication_key_len,
+				       k_uid,
+				       k_uid_len,
 				       buf,
 				       buf_index,
 				       digest,
@@ -665,8 +640,8 @@ ipmi_rmcpplus_check_integrity_pad(fiid_obj_t obj_rmcpplus_session_trlr)
 
 int8_t
 ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authentication_algorithm,
-								    uint8_t *authentication_key,
-								    uint32_t authentication_key_len,
+								    uint8_t *k_uid,
+								    uint32_t k_uid_len,
 								    uint32_t remote_console_session_id,
 								    uint32_t managed_system_session_id,
 								    uint8_t *remote_console_random_number,
@@ -775,8 +750,8 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
 
   ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,
 				       hash_flags,
-				       authentication_key,
-				       authentication_key_len,
+				       k_uid,
+				       k_uid_len,
 				       buf,
 				       buf_index,
 				       digest,
