@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.35 2006-03-08 19:14:47 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.36 2006-03-09 02:08:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,7 +77,11 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_lan_msg_hdr_req);
   Fiid_obj_destroy(ip->obj_lan_msg_hdr_res);
   Fiid_obj_destroy(ip->obj_lan_msg_trlr_res);
-
+  Fiid_obj_destroy(ip->obj_rmcpplus_session_hdr_req);
+  Fiid_obj_destroy(ip->obj_rmcpplus_session_hdr_res);
+  Fiid_obj_destroy(ip->obj_rmcpplus_payload_res);
+  Fiid_obj_destroy(ip->obj_rmcpplus_session_trlr_req);
+  Fiid_obj_destroy(ip->obj_rmcpplus_session_trlr_res);
   Fiid_obj_destroy(ip->obj_authentication_capabilities_v20_req);
   Fiid_obj_destroy(ip->obj_authentication_capabilities_v20_res);
   Fiid_obj_destroy(ip->obj_authentication_capabilities_req);
@@ -90,6 +94,12 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_set_session_privilege_res);
   Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_req);
   Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_res);
+  Fiid_obj_destroy(ip->obj_open_session_req);
+  Fiid_obj_destroy(ip->obj_open_session_res);
+  Fiid_obj_destroy(ip->obj_rakp_message_1_req);
+  Fiid_obj_destroy(ip->obj_rakp_message_2_res);
+  Fiid_obj_destroy(ip->obj_rakp_message_3_req);
+  Fiid_obj_destroy(ip->obj_rakp_message_4_res);
   Fiid_obj_destroy(ip->obj_close_session_req);
   Fiid_obj_destroy(ip->obj_close_session_res);
   Fiid_obj_destroy(ip->obj_chassis_status_req);
@@ -151,7 +161,11 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_lan_msg_hdr_req = Fiid_obj_create(tmpl_lan_msg_hdr_rq); 
   ip->obj_lan_msg_hdr_res = Fiid_obj_create(tmpl_lan_msg_hdr_rs); 
   ip->obj_lan_msg_trlr_res = Fiid_obj_create(tmpl_lan_msg_trlr); 
-
+  ip->obj_rmcpplus_session_hdr_req = Fiid_obj_create(tmpl_rmcpplus_session_hdr);
+  ip->obj_rmcpplus_session_hdr_res = Fiid_obj_create(tmpl_rmcpplus_session_hdr);
+  ip->obj_rmcpplus_payload_res = Fiid_obj_create(tmpl_rmcpplus_payload);
+  ip->obj_rmcpplus_session_trlr_req = Fiid_obj_create(tmpl_rmcpplus_session_trlr);
+  ip->obj_rmcpplus_session_trlr_res = Fiid_obj_create(tmpl_rmcpplus_session_trlr);
   ip->obj_authentication_capabilities_v20_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rq); 
   ip->obj_authentication_capabilities_v20_res = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_v20_rs); 
   ip->obj_authentication_capabilities_req = Fiid_obj_create(tmpl_cmd_get_channel_authentication_capabilities_rq); 
@@ -163,7 +177,13 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_set_session_privilege_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
   ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
-  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
+  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs); 
+  ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_rq); 
+  ip->obj_open_session_res = Fiid_obj_create(tmpl_rmcpplus_open_session_rs); 
+  ip->obj_rakp_message_1_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_1); 
+  ip->obj_rakp_message_2_res = Fiid_obj_create(tmpl_rmcpplus_rakp_message_2); 
+  ip->obj_rakp_message_3_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_3); 
+  ip->obj_rakp_message_4_res = Fiid_obj_create(tmpl_rmcpplus_rakp_message_4); 
   ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
   ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
   ip->obj_chassis_status_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
@@ -274,6 +294,12 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
     ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT;
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
     ip->protocol_state = PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT;
+  else if (pkt == OPEN_SESSION_REQ)
+    ip->protocol_state = PROTOCOL_STATE_OPEN_SESSION_SENT;
+  else if (pkt == RAKP_MESSAGE_1_REQ)
+    ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
+  else if (pkt == RAKP_MESSAGE_3_REQ)
+    ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
   else if (pkt == CLOSE_SESSION_REQ)
     ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
   else if (pkt == CHASSIS_STATUS_REQ)
@@ -283,6 +309,8 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
 
   /* XXX watch out when you start getting into the grits of the ipmi
    * 2.0 session 
+   *
+   * in ipmi 2.0 counts can't be 0, so gotta loop around back to 1 
    */
   if (pkt == SET_SESSION_PRIVILEGE_REQ 
       || pkt == CLOSE_SESSION_REQ 
@@ -351,6 +379,19 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   ipmipower_packet_dump(ip, pkt, buffer, len);
       
+  /* XXX temporary - assume ipmi 2.0 packets are received happily */
+  if (ip->ipmi_version == IPMI_VERSION_2_0
+      && (pkt == OPEN_SESSION_RES
+          || pkt == RAKP_MESSAGE_2_RES
+          || pkt == RAKP_MESSAGE_4_RES
+          || pkt == CHASSIS_STATUS_RES
+          || pkt == CHASSIS_CONTROL_RES
+          || pkt == CLOSE_SESSION_RES))
+    {
+      ipmipower_packet_store(ip, pkt, buffer, len);
+      return 1;
+    }
+
   if ((ret = ipmi_lan_check_checksum((uint8_t *)buffer, len)) < 0)
     err_exit("_recv_packet(%s:%d): ipmi_lan_check_checksum: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -603,6 +644,12 @@ _retry_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
+    _send_packet(ip, OPEN_SESSION_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
+    _send_packet(ip, RAKP_MESSAGE_1_REQ, 1);
+  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+    _send_packet(ip, RAKP_MESSAGE_3_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT)
     _send_packet(ip, CHASSIS_STATUS_REQ, 1);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
@@ -1059,16 +1106,56 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       /* XXX IPMI 2.0 TODO
        *
        * Check if user input of auth/intg/conf algorithm is legit and supportable
+       *
+       * Support multiple iterations
        */
 
-      /* IPMI 2.0 TODO */
-      fprintf(stderr, "IPMI 2.0 TODO\n");
-      return -1;
+      _send_packet(ip, OPEN_SESSION_REQ, 0);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
+    {
+      if ((rv = _recv_packet(ip, OPEN_SESSION_RES)) != 1) 
+        {
+          if (rv < 0) 
+            /* XXX Session is not up, is it ok to quit here?  Or
+             * should we timeout?? */
+            return -1;
+          goto done;
+        }
+
+      _send_packet(ip, RAKP_MESSAGE_1_REQ, 0);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
+    {
+      if ((rv = _recv_packet(ip, RAKP_MESSAGE_2_RES)) != 1) 
+        {
+          if (rv < 0) 
+            /* XXX Session is not up, is it ok to quit here?  Or
+             * should we timeout?? */
+            return -1;
+          goto done;
+        }
+
+      _send_packet(ip, RAKP_MESSAGE_3_REQ, 0);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+    {
+      if ((rv = _recv_packet(ip, RAKP_MESSAGE_4_RES)) != 1) 
+        {
+          if (rv < 0) 
+            /* XXX Session is not up, is it ok to quit here?  Or
+             * should we timeout?? */
+            return -1;
+          goto done;
+        }
+
+      /* XXX - for now close session, I don't know what to do */
+      _send_packet(ip, CLOSE_SESSION_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT) 
     {
       uint64_t power_state;
-
+      
       if ((rv = _recv_packet(ip, CHASSIS_STATUS_RES)) != 1) 
         {
           if (rv < 0)  

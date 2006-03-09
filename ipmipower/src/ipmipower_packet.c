@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.29 2006-03-08 19:05:57 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.30 2006-03-09 02:08:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,19 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
     return &tmpl_cmd_get_channel_cipher_suites_rq[0];
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    return &tmpl_cmd_get_channel_cipher_suites_rs[0];
+    return &tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs[0];
+  else if (pkt == OPEN_SESSION_REQ)
+    return &tmpl_rmcpplus_open_session_rq[0];
+  else if (pkt == OPEN_SESSION_RES)
+    return &tmpl_rmcpplus_open_session_rs[0];
+  else if (pkt == RAKP_MESSAGE_1_REQ)
+    return &tmpl_rmcpplus_rakp_message_1[0];
+  else if (pkt == RAKP_MESSAGE_2_RES)
+    return &tmpl_rmcpplus_rakp_message_2[0];
+  else if (pkt == RAKP_MESSAGE_3_REQ)
+    return &tmpl_rmcpplus_rakp_message_3[0];
+  else if (pkt == RAKP_MESSAGE_4_RES)
+    return &tmpl_rmcpplus_rakp_message_4[0];
   else if (pkt == CLOSE_SESSION_REQ)
     return &tmpl_cmd_close_session_rq[0];
   else if (pkt == CLOSE_SESSION_RES)
@@ -123,6 +135,18 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
     return ip->obj_get_channel_cipher_suites_req;
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
     return ip->obj_get_channel_cipher_suites_res;
+  else if (pkt == OPEN_SESSION_REQ)
+    return ip->obj_open_session_req;
+  else if (pkt == OPEN_SESSION_RES)
+    return ip->obj_open_session_res;
+  else if (pkt == RAKP_MESSAGE_1_REQ)
+    return ip->obj_rakp_message_1_req;
+  else if (pkt == RAKP_MESSAGE_2_RES)
+    return ip->obj_rakp_message_2_res;
+  else if (pkt == RAKP_MESSAGE_3_REQ)
+    return ip->obj_rakp_message_3_req;
+  else if (pkt == RAKP_MESSAGE_4_RES)
+    return ip->obj_rakp_message_4_res;
   else if (pkt == CLOSE_SESSION_REQ)
     return ip->obj_close_session_req;
   else if (pkt == CLOSE_SESSION_RES)
@@ -146,6 +170,8 @@ void
 ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                       char *buffer, int len)
 {
+  fiid_field_t *tmpl_lan_msg_hdr;
+
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_PKT(pkt));
   assert (buffer != NULL);
@@ -214,6 +240,36 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           "================================================\n"
           "= Get Channel Cipher Suites Response           =\n"
           "================================================";
+      else if (pkt == OPEN_SESSION_REQ)
+        hdr = 
+          "================================================\n"
+          "= Open Session Request                         =\n"
+          "================================================";
+      else if (pkt == OPEN_SESSION_RES)
+        hdr = 
+          "================================================\n"
+          "= Open Session Response                        =\n"
+          "================================================";
+      else if (pkt == RAKP_MESSAGE_1_REQ)
+        hdr = 
+          "================================================\n"
+          "= Rakp Message 1 Request                       =\n"
+          "================================================";
+      else if (pkt == RAKP_MESSAGE_2_RES)
+        hdr = 
+          "================================================\n"
+          "= Rakp Message 2 Response                      =\n"
+          "================================================";
+      else if (pkt == RAKP_MESSAGE_3_REQ)
+        hdr = 
+          "================================================\n"
+          "= Rakp Message 3 Request                       =\n"
+          "================================================";
+      else if (pkt == RAKP_MESSAGE_4_RES)
+        hdr = 
+          "================================================\n"
+          "= Rakp Message 4 Response                      =\n"
+          "================================================";
       else if (pkt == CLOSE_SESSION_REQ)
         hdr = 
           "================================================\n"
@@ -246,20 +302,45 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           "================================================";
       
       if (pkt & PACKET_TYPE_REQ_MASK)
+        tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rq[0];
+      else
+        tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
+        
+      if (pkt == OPEN_SESSION_REQ
+          || pkt == OPEN_SESSION_RES
+          || pkt == RAKP_MESSAGE_1_REQ
+          || pkt == RAKP_MESSAGE_2_RES
+          || pkt == RAKP_MESSAGE_3_REQ
+          || pkt == RAKP_MESSAGE_4_RES
+          || (ip->ipmi_version == IPMI_VERSION_2_0
+              && (pkt == CHASSIS_STATUS_REQ
+                  || pkt == CHASSIS_STATUS_RES
+                  || pkt == CHASSIS_CONTROL_REQ
+                  || pkt == CHASSIS_CONTROL_RES
+                  || pkt == CLOSE_SESSION_REQ
+                  || pkt == CLOSE_SESSION_RES)))
+        /* XXX temporary - need to make generic */
+        Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
+                                  ip->ic->hostname,
+                                  hdr,
+                                  IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                  IPMI_INTEGRITY_ALGORITHM_NONE,
+                                  IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                  NULL,
+                                  0,
+                                  NULL,
+                                  0,
+                                  (uint8_t *)buffer,
+                                  (uint32_t)len,
+                                  tmpl_lan_msg_hdr,
+                                  ipmipower_packet_cmd_template(ip, pkt));
+      else
         Ipmi_dump_lan_packet(STDERR_FILENO, 
                              ip->ic->hostname, 
                              hdr, 
                              (uint8_t *)buffer, 
                              (uint32_t)len,
-                             tmpl_lan_msg_hdr_rq,
-                             ipmipower_packet_cmd_template(ip, pkt));
-      else
-        Ipmi_dump_lan_packet(STDERR_FILENO, 
-                             ip->ic->hostname,
-                             hdr, 
-                             (uint8_t *)buffer, 
-                             (uint32_t)len,
-                             tmpl_lan_msg_hdr_rs,
+                             tmpl_lan_msg_hdr,
                              ipmipower_packet_cmd_template(ip, pkt));
     }
 #endif
@@ -282,16 +363,53 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_hdr_res);
   Fiid_obj_clear(ip->obj_lan_msg_trlr_res);
+  if (ip->ipmi_version == IPMI_VERSION_2_0)
+    {
+      Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_req);
+      Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_res);
+      Fiid_obj_clear(ip->obj_rmcpplus_payload_res);
+      Fiid_obj_clear(ip->obj_rmcpplus_session_trlr_res);
+    }
   Fiid_obj_clear(obj);
 
-  if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
-			      len, 
-			      ip->obj_rmcp_hdr_res, 
-			      ip->obj_lan_session_hdr_res, 
-			      ip->obj_lan_msg_hdr_res, 
-			      ipmipower_packet_cmd_obj(ip, pkt), 
-			      ip->obj_lan_msg_trlr_res) < 0)
-    err_exit("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
+  /* XXX tighten this */
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+      || pkt == AUTHENTICATION_CAPABILITIES_RES
+      || pkt == GET_SESSION_CHALLENGE_RES
+      || pkt == ACTIVATE_SESSION_RES
+      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+      || ip->ipmi_version == IPMI_VERSION_1_5)
+    {
+      if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
+                                  len, 
+                                  ip->obj_rmcp_hdr_res, 
+                                  ip->obj_lan_session_hdr_res, 
+                                  ip->obj_lan_msg_hdr_res, 
+                                  obj,
+                                  ip->obj_lan_msg_trlr_res) < 0)
+        err_exit("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
+    }
+  else
+    {
+      /* XXX temporary - need to make generic */
+      if (unassemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                       IPMI_INTEGRITY_ALGORITHM_NONE,
+                                       IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                       NULL,
+                                       0,
+                                       NULL,
+                                       0,
+                                       (uint8_t *)buffer, 
+                                       len, 
+                                       ip->obj_rmcp_hdr_res, 
+                                       ip->obj_rmcpplus_session_hdr_res,
+                                       ip->obj_rmcpplus_payload_res,
+                                       ip->obj_lan_msg_hdr_res, 
+                                       obj,
+                                       ip->obj_lan_msg_trlr_res,
+                                       ip->obj_rmcpplus_session_trlr_res) < 0)
+        err_exit("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
+    }
 }
 
 
@@ -577,7 +695,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-      /* XXX temporary */
+      /* XXX - need to support index, possible multiple iterations */
       if (fill_cmd_get_channel_cipher_suites (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                               IPMI_PAYLOAD_TYPE_IPMI,
                                               0,
@@ -599,66 +717,343 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  "assemble_ipmi_lan_pkt: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
     }
-  else if (pkt == CLOSE_SESSION_REQ)
+  else if (pkt == OPEN_SESSION_REQ)
     {
-      uint64_t initial_inbound_sequence_number;
-      uint64_t session_id;
       uint8_t *password;
 
-      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-        at = IPMI_AUTHENTICATION_TYPE_NONE; 
-      else
-        at = ip->authentication_type;
-
-      if (at != IPMI_AUTHENTICATION_TYPE_NONE)
-        {
-          if (strlen(conf->password))
-            password = (uint8_t *)conf->password;
-          else
-            password = NULL;
-        }
+      if (strlen(conf->password))
+        password = (uint8_t *)conf->password;
       else
         password = NULL;
 
-      Fiid_obj_get(ip->obj_activate_session_res, 
-                   "initial_inbound_sequence_number", 
-		   &initial_inbound_sequence_number);
-      Fiid_obj_get(ip->obj_activate_session_res, 
-                   "session_id", 
-		   &session_id);
-      
-      if (fill_lan_session_hdr(at, 
-                               initial_inbound_sequence_number + ip->session_inbound_count, 
-                               (uint32_t)session_id, 
-                               NULL,
-                               0,
-                               ip->obj_lan_session_hdr_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
+      /* XXX temporary - need to make generic */
+      if (fill_rmcpplus_session_hdr(IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    ip->obj_rmcpplus_session_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
-      
+                 
       if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
 			   IPMI_BMC_IPMB_LUN_BMC, 
                            (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                            ip->obj_lan_msg_hdr_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
-      
-      if (fill_cmd_close_session((uint32_t)session_id, ip->obj_close_session_req) < 0)
-        err_exit("ipmipower_packet_create(%s: %d): "
-                 "fill_cmd_close_session: %s", 
+
+      if (fill_rmcpplus_session_trlr(NULL, 
+                                     0, 
+                                     ip->obj_rmcpplus_session_trlr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       
-      if ((len = assemble_ipmi_lan_pkt(ip->obj_rmcp_hdr_req, 
-				       ip->obj_lan_session_hdr_req, 
-				       ip->obj_lan_msg_hdr_req, 
-                                       ip->obj_close_session_req, 
-				       password,
-				       strlen(conf->password), 
-                                       (uint8_t *)buffer,
-				       buflen)) < 0)
+      if (fill_rmcpplus_open_session (0xAA,
+                                      IPMI_PRIVILEGE_LEVEL_ADMIN,
+                                      0xBBBBBBBB,
+                                      IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                      IPMI_INTEGRITY_ALGORITHM_NONE,
+                                      IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                      ip->obj_open_session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
-                 "assemble_ipmi_lan_pkt: %s", 
+                 "fill_rmcpplus_open_session: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
+      if ((len = assemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                            IPMI_INTEGRITY_ALGORITHM_NONE,
+                                            IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                            NULL,
+                                            0,
+                                            NULL,
+                                            0,
+                                            password,
+                                            strlen(conf->password),
+                                            ip->obj_rmcp_hdr_req, 
+                                            ip->obj_rmcpplus_session_hdr_req,
+                                            ip->obj_lan_msg_hdr_req, 
+                                            ip->obj_open_session_req,
+                                            ip->obj_rmcpplus_session_trlr_req,
+                                            (uint8_t *)buffer, 
+                                            buflen)) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "assemble_ipmi_rmcpplus_pkt: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+  else if (pkt == RAKP_MESSAGE_1_REQ)
+    {
+      uint64_t managed_system_session_id;
+      uint8_t *password;
+      uint8_t *username;
+
+      if (strlen(conf->password))
+        password = (uint8_t *)conf->password;
+      else
+        password = NULL;
+
+      if (strlen(conf->username))
+        username = (uint8_t *)conf->username;
+      else
+        username = NULL;
+
+      /* XXX temporary - need to make generic */
+      if (fill_rmcpplus_session_hdr(IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    ip->obj_rmcpplus_session_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+                 
+      if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+			   IPMI_BMC_IPMB_LUN_BMC, 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
+                           ip->obj_lan_msg_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      if (fill_rmcpplus_session_trlr(NULL, 
+                                     0, 
+                                     ip->obj_rmcpplus_session_trlr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      Fiid_obj_get(ip->obj_open_session_res,
+                   "managed_system_session_id",
+                   &managed_system_session_id);
+
+      if (fill_rmcpplus_rakp_message_1 (0xBB,
+                                        managed_system_session_id,
+                                        "ABCDEFGHIJKLMNOP",
+                                        16,
+                                        IPMI_PRIVILEGE_LEVEL_ADMIN,
+                                        1, /* XXX figure this out later */
+                                        username,
+                                        strlen(conf->username),
+                                        ip->obj_rakp_message_1_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "fill_rmcpplus_rakp_message_1: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
+      if ((len = assemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                            IPMI_INTEGRITY_ALGORITHM_NONE,
+                                            IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                            NULL,
+                                            0,
+                                            NULL,
+                                            0,
+                                            password,
+                                            strlen(conf->password),
+                                            ip->obj_rmcp_hdr_req, 
+                                            ip->obj_rmcpplus_session_hdr_req,
+                                            ip->obj_lan_msg_hdr_req, 
+                                            ip->obj_rakp_message_1_req,
+                                            ip->obj_rmcpplus_session_trlr_req,
+                                            (uint8_t *)buffer, 
+                                            buflen)) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "assemble_ipmi_rmcpplus_pkt: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+  else if (pkt == RAKP_MESSAGE_3_REQ)
+    {
+      uint64_t managed_system_session_id;
+      uint8_t *password;
+
+      if (strlen(conf->password))
+        password = (uint8_t *)conf->password;
+      else
+        password = NULL;
+
+      /* XXX temporary - need to make generic */
+      if (fill_rmcpplus_session_hdr(IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    0,
+                                    ip->obj_rmcpplus_session_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+                 
+      if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+			   IPMI_BMC_IPMB_LUN_BMC, 
+                           (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
+                           ip->obj_lan_msg_hdr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      if (fill_rmcpplus_session_trlr(NULL, 
+                                     0, 
+                                     ip->obj_rmcpplus_session_trlr_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+      Fiid_obj_get(ip->obj_open_session_res,
+                   "managed_system_session_id",
+                   &managed_system_session_id);
+
+      if (fill_rmcpplus_rakp_message_3 (0xCC,
+                                        RMCPPLUS_STATUS_NO_ERRORS,
+                                        managed_system_session_id,
+                                        NULL,
+                                        0,
+                                        ip->obj_rakp_message_3_req) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "fill_rmcpplus_rakp_message_3: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
+      if ((len = assemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                            IPMI_INTEGRITY_ALGORITHM_NONE,
+                                            IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                            NULL,
+                                            0,
+                                            NULL,
+                                            0,
+                                            password,
+                                            strlen(conf->password),
+                                            ip->obj_rmcp_hdr_req, 
+                                            ip->obj_rmcpplus_session_hdr_req,
+                                            ip->obj_lan_msg_hdr_req, 
+                                            ip->obj_rakp_message_3_req,
+                                            ip->obj_rmcpplus_session_trlr_req,
+                                            (uint8_t *)buffer, 
+                                            buflen)) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "assemble_ipmi_rmcpplus_pkt: %s", 
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+  else if (pkt == CLOSE_SESSION_REQ)
+    {
+      uint64_t initial_inbound_sequence_number;
+      uint64_t session_id;
+      uint8_t *password;
+
+      if (ip->ipmi_version == IPMI_VERSION_1_5)
+        {
+          if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+            at = IPMI_AUTHENTICATION_TYPE_NONE; 
+          else
+            at = ip->authentication_type;
+          
+          if (at != IPMI_AUTHENTICATION_TYPE_NONE)
+            {
+              if (strlen(conf->password))
+                password = (uint8_t *)conf->password;
+              else
+                password = NULL;
+            }
+          else
+            password = NULL;
+          
+          Fiid_obj_get(ip->obj_activate_session_res, 
+                       "initial_inbound_sequence_number", 
+                       &initial_inbound_sequence_number);
+          Fiid_obj_get(ip->obj_activate_session_res, 
+                       "session_id", 
+                       &session_id);
+          
+          if (fill_lan_session_hdr(at, 
+                                   initial_inbound_sequence_number + ip->session_inbound_count, 
+                                   (uint32_t)session_id, 
+                                   NULL,
+                                   0,
+                                   ip->obj_lan_session_hdr_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): fill_lan_session_hdr: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+          
+          if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+                               IPMI_BMC_IPMB_LUN_BMC, 
+                               (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
+                               ip->obj_lan_msg_hdr_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+          
+          if (fill_cmd_close_session((uint32_t)session_id, ip->obj_close_session_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): "
+                     "fill_cmd_close_session: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+          
+          if ((len = assemble_ipmi_lan_pkt(ip->obj_rmcp_hdr_req, 
+                                           ip->obj_lan_session_hdr_req, 
+                                           ip->obj_lan_msg_hdr_req, 
+                                           ip->obj_close_session_req, 
+                                           password,
+                                           strlen(conf->password), 
+                                           (uint8_t *)buffer,
+                                           buflen)) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): "
+                     "assemble_ipmi_lan_pkt: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+        }
+      else
+        {
+          if (strlen(conf->password))
+            password = (uint8_t *)conf->password;
+          else
+            password = NULL;
+
+          Fiid_obj_get(ip->obj_open_session_res,
+                       "managed_system_session_id",
+                       &session_id);
+          
+          /* XXX temporary - need to make generic */
+          if (fill_rmcpplus_session_hdr(IPMI_PAYLOAD_TYPE_IPMI,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        session_id,
+                                        0x01,
+                                        ip->obj_rmcpplus_session_hdr_req) < 0)
+            err_exit("ipmipower_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+                 
+          if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+                               IPMI_BMC_IPMB_LUN_BMC, 
+                               (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
+                               ip->obj_lan_msg_hdr_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+          
+          if (fill_rmcpplus_session_trlr(NULL, 
+                                         0, 
+                                         ip->obj_rmcpplus_session_trlr_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+          if (fill_cmd_close_session (session_id,
+                                      ip->obj_close_session_req) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): "
+                     "fill_cmd_close_session: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+          
+          if ((len = assemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                                IPMI_INTEGRITY_ALGORITHM_NONE,
+                                                IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                                NULL,
+                                                0,
+                                                NULL,
+                                                0,
+                                                password,
+                                                strlen(conf->password),
+                                                ip->obj_rmcp_hdr_req, 
+                                                ip->obj_rmcpplus_session_hdr_req,
+                                                ip->obj_lan_msg_hdr_req, 
+                                                ip->obj_close_session_req,
+                                                ip->obj_rmcpplus_session_trlr_req,
+                                                (uint8_t *)buffer, 
+                                                buflen)) < 0)
+            err_exit("ipmipower_packet_create(%s: %d): "
+                     "assemble_ipmi_rmcpplus_pkt: %s", 
+                     ip->ic->hostname, ip->protocol_state, strerror(errno));
+        }
     }
   else if (pkt == CHASSIS_STATUS_REQ)
     {

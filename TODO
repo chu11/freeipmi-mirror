@@ -63,7 +63,7 @@ libfreeipmi:
   * ipmipower version auto stuff
   * ipmi 2.0 
     ipmiping  
-      test
+      test - done 
     ipmipower
       support
       test
@@ -79,6 +79,10 @@ ipmipower
 ---------
   * compile options to make workarounds automatic for ipmipower
   * activate session - check auth-type of return
+  * ipmi 2.0
+    - remove some wrappers? Especially dump functions?  No longer
+      reasonable to assume should pass successfully b/c of wackiness of ipmi
+      2.0 packets?
 
 General:
 --------

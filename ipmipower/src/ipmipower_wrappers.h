@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.13 2006-03-07 21:57:15 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.14 2006-03-09 02:08:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -100,12 +100,17 @@ void Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val);
 /* Ipmi_dump_lan_packet
  * - Dump lan contents
  */
-void Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd);
+void Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd);
 
 /* Ipmi_dump_rmcp_packet
  * - Dump rmcp contents
  */
 void
 Ipmi_dump_rmcp_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_cmd);
+
+/* Ipmi_dump_rmcpplus_packet
+ * - Dump rmcp contents
+ */
+void Ipmi_dump_rmcpplus_packet (int fd, char *prefix, char *hdr, uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd);
 
 #endif /* _IPMIPOWER_WRAPPERS_H */

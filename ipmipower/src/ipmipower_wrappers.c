@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.11 2006-03-08 17:53:14 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.12 2006-03-09 02:08:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -210,10 +210,10 @@ Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
 }
 
 void 
-Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_msg_hdr, fiid_template_t tmpl_cmd) 
+Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd) 
 {
   assert(pkt != NULL 
-	 && tmpl_msg_hdr != NULL 
+	 && tmpl_lan_msg_hdr != NULL 
          && tmpl_cmd != NULL);
 
   if (ipmi_dump_lan_packet(fd, 
@@ -221,7 +221,7 @@ Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt
                            hdr,
                            pkt,
                            pkt_len,
-                           tmpl_msg_hdr,
+                           tmpl_lan_msg_hdr,
                            tmpl_cmd) < 0)
     err_exit("Ipmi_dump_lan_packet: %s", strerror(errno));
 }
@@ -232,5 +232,27 @@ Ipmi_dump_rmcp_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   assert(pkt != NULL && tmpl_cmd != NULL);
 
   if (ipmi_dump_rmcp_packet(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
+    err_exit("Ipmi_dump_rmcp_packet: %s", strerror(errno));
+}
+
+void 
+Ipmi_dump_rmcpplus_packet (int fd, char *prefix, char *hdr, uint8_t authentication_algorithm, uint8_t integrity_algorithm, uint8_t confidentiality_algorithm, uint8_t *integrity_key, uint32_t integrity_key_len, uint8_t *confidentiality_key, uint32_t confidentiality_key_len, uint8_t *pkt, uint32_t pkt_len, fiid_template_t tmpl_lan_msg_hdr, fiid_template_t tmpl_cmd)
+{
+  assert(pkt != NULL && tmpl_lan_msg_hdr != NULL && tmpl_cmd != NULL);
+
+  if (ipmi_dump_rmcpplus_packet(fd, 
+                                prefix, 
+                                hdr,
+                                authentication_algorithm,
+                                integrity_algorithm,
+                                confidentiality_algorithm,
+                                integrity_key,
+                                integrity_key_len,
+                                confidentiality_key,
+                                confidentiality_key_len,
+                                pkt,
+                                pkt_len,
+                                tmpl_lan_msg_hdr,
+                                tmpl_cmd) < 0)
     err_exit("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }

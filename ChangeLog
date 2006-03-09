@@ -5,15 +5,20 @@
 	(fill_cmd_get_channel_cipher_suites): Support Get Channel Cipher
 	Suites command.
 
-	* ipmipower/: Begin support of IPMI 2.0 by adding IPMI 2.0 Get
-	Authentication Capabilities and Get Channel Cipher Suites into
-	protocol state machine.  Change -R option to -M option.  Add new
-	-R option support protocol selection by user.
-
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: New file.
 
 	* libfreeipmi/include/Makefile.am,
 	libfreeipmi/include/freeipmi/freeipmi.h: Support new .h file.
+
+	* ipmipower/: Begin crude intial support of IPMI 2.0 by adding
+	IPMI 2.0 Get Authentication Capabilities, Get Channel Cipher
+	Suites, Open Session, and RAKP protocol into protocol state
+	machine.  Change -R option to -M option.  Add new -R option
+	support protocol selection by user.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(assemble_ipmi_rmcpplus_pkt, unassemble_ipmi_rmcpplus_pkt): Fix
+	session trailer assembly bug.
 
 2005-03-07  Albert Chu <chu11@llnl.gov>
 

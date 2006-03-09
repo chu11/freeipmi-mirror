@@ -709,7 +709,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   FIID_OBJ_GET_ALL_LEN_CLEANUP(obj_len, obj_rmcpplus_payload, pkt + indx, pkt_len - indx);
   indx += obj_len;
 
-  if (session_id)
+  if (session_id && payload_authenticated)
     {
       uint8_t authentication_code_buf[IPMI_MAX_PAYLOAD_LENGTH];
       int32_t authentication_code_len;
@@ -735,29 +735,26 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                                      pkt_len - indx);
       indx += len;
 
-      if (payload_authenticated)
+      /* achu: Note that the integrity code is all data prior to the authentication_code, so this 
+       * call must be done after the pad, pad length, and next header are copied into 
+       * the pkt buffer.
+       */
+      ERR (!((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
+                                                                                    integrity_key,
+                                                                                    integrity_key_len,
+                                                                                    authentication_code_data,
+                                                                                    authentication_code_data_len,
+                                                                                    obj_rmcpplus_session_trlr_temp,
+                                                                                    pkt + obj_rmcp_hdr_len,
+                                                                                    indx - obj_rmcp_hdr_len,
+                                                                                    authentication_code_buf,
+                                                                                    IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+      
+      if (authentication_code_len)
         {
-          /* achu: Note that the integrity code is all data prior to the authentication_code, so this 
-           * call must be done after the pad, pad length, and next header are copied into 
-           * the pkt buffer.
-           */
-          ERR (!((authentication_code_len = _construct_session_trlr_authentication_code(integrity_algorithm,
-                                                                                        integrity_key,
-                                                                                        integrity_key_len,
-                                                                                        authentication_code_data,
-                                                                                        authentication_code_data_len,
-                                                                                        obj_rmcpplus_session_trlr_temp,
-                                                                                        pkt + obj_rmcp_hdr_len,
-                                                                                        indx - obj_rmcp_hdr_len,
-                                                                                        authentication_code_buf,
-                                                                                        IPMI_MAX_PAYLOAD_LENGTH)) < 0));
-          
-          if (authentication_code_len)
-            {
-	      ERR_ENOSPC_CLEANUP(!(authentication_code_len > (pkt_len - indx)));
-              memcpy(pkt + indx, authentication_code_buf, authentication_code_len);
-              indx += authentication_code_len;
-            }
+          ERR_ENOSPC_CLEANUP(!(authentication_code_len > (pkt_len - indx)));
+          memcpy(pkt + indx, authentication_code_buf, authentication_code_len);
+          indx += authentication_code_len;
         }
     }
 
@@ -1246,25 +1243,20 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   
   FIID_OBJ_CLEAR (obj_rmcpplus_session_trlr);
 
-  if (session_id)
+  if (session_id && payload_authenticated)
     {
       int32_t pad_length_field_len, next_header_field_len;
       uint32_t authentication_code_len;
       uint64_t pad_length;
 
-      if (payload_authenticated)
-        {
-          if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
-            authentication_code_len = 0;
-          else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
-            authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
-          else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
-            authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
-          else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
-            authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
-        }
-      else
+      if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_code_len = 0;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+        authentication_code_len = IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH;
+      else if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+        authentication_code_len = IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH;
+      else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
+        authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
 
       ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
       ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.30 2006-03-08 19:05:57 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.31 2006-03-09 02:08:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -189,12 +189,18 @@ typedef enum
     SET_SESSION_PRIVILEGE_RES           = 0x206, 
     GET_CHANNEL_CIPHER_SUITES_REQ       = 0x107,
     GET_CHANNEL_CIPHER_SUITES_RES       = 0x207,
-    CLOSE_SESSION_REQ                   = 0x108, 
-    CLOSE_SESSION_RES                   = 0x208,
-    CHASSIS_STATUS_REQ                  = 0x109, 
-    CHASSIS_STATUS_RES                  = 0x209,
-    CHASSIS_CONTROL_REQ                 = 0x10A, 
-    CHASSIS_CONTROL_RES                 = 0x20A, 
+    OPEN_SESSION_REQ                    = 0x108,
+    OPEN_SESSION_RES                    = 0x208,
+    RAKP_MESSAGE_1_REQ                  = 0x109,
+    RAKP_MESSAGE_2_RES                  = 0x209,
+    RAKP_MESSAGE_3_REQ                  = 0x10A,
+    RAKP_MESSAGE_4_RES                  = 0x20A,
+    CLOSE_SESSION_REQ                   = 0x10B, 
+    CLOSE_SESSION_RES                   = 0x20B,
+    CHASSIS_STATUS_REQ                  = 0x10C, 
+    CHASSIS_STATUS_RES                  = 0x20C,
+    CHASSIS_CONTROL_REQ                 = 0x10D, 
+    CHASSIS_CONTROL_RES                 = 0x20D, 
   } packet_type_t;
 
 #define PACKET_TYPE_REQ_MASK           0x100
@@ -225,8 +231,11 @@ typedef enum
     PROTOCOL_STATE_CHASSIS_STATUS_SENT                  = 0x06,
     PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x07,
     PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT       = 0x08,
-    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x09,
-    PROTOCOL_STATE_END                                  = 0x0A,
+    PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x09,
+    PROTOCOL_STATE_RAKP_MESSAGE_1_SENT                  = 0x0A,
+    PROTOCOL_STATE_RAKP_MESSAGE_3_SENT                  = 0x0B,
+    PROTOCOL_STATE_CLOSE_SESSION_SENT                   = 0x0C,
+    PROTOCOL_STATE_END                                  = 0x0D,
   } protocol_state_t;
 
 #define PROTOCOL_STATE_VALID(__s) \
@@ -365,6 +374,11 @@ struct ipmipower_powercmd {
     fiid_obj_t obj_lan_msg_hdr_req;
     fiid_obj_t obj_lan_msg_hdr_res;
     fiid_obj_t obj_lan_msg_trlr_res;
+    fiid_obj_t obj_rmcpplus_session_hdr_req;
+    fiid_obj_t obj_rmcpplus_session_hdr_res;
+    fiid_obj_t obj_rmcpplus_payload_res;
+    fiid_obj_t obj_rmcpplus_session_trlr_req;
+    fiid_obj_t obj_rmcpplus_session_trlr_res;
 
     fiid_obj_t obj_authentication_capabilities_v20_req;
     fiid_obj_t obj_authentication_capabilities_v20_res;
@@ -378,6 +392,12 @@ struct ipmipower_powercmd {
     fiid_obj_t obj_set_session_privilege_res;
     fiid_obj_t obj_get_channel_cipher_suites_req;
     fiid_obj_t obj_get_channel_cipher_suites_res;
+    fiid_obj_t obj_open_session_req;
+    fiid_obj_t obj_open_session_res;
+    fiid_obj_t obj_rakp_message_1_req;
+    fiid_obj_t obj_rakp_message_2_res;
+    fiid_obj_t obj_rakp_message_3_req;
+    fiid_obj_t obj_rakp_message_4_res;
     fiid_obj_t obj_close_session_req;
     fiid_obj_t obj_close_session_res;
     fiid_obj_t obj_chassis_status_req;

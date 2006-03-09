@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.27 2006-03-08 17:11:13 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.28 2006-03-09 02:08:02 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -119,7 +119,7 @@ Set the IPMI protocol version to use.  The currently available versions
 are "auto", "1.5", and "2.0".  If not specified,
 .B ipmipower
 uses "auto", which will try decreasing IPMI protocol versions until
-one is discovered that works.
+one is discovered.
 .I "-H, --help"
 Output help menu and exit.
 .TP
