@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.36 2006-03-09 02:08:02 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.37 2006-03-09 15:02:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -199,8 +199,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
 
   Gettimeofday(&(ip->time_begin), NULL);
   ip->session_inbound_count = 0;
-  ip->initial_outbound_sequence_number = get_rand();
-  ip->highest_received_sequence_number = ip->initial_outbound_sequence_number;
+  ip->highest_received_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
   ip->previously_received_list = 0xFF;
   ip->permsgauth_enabled = IPMIPOWER_TRUE;
 
@@ -1149,8 +1148,16 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* XXX - for now close session, I don't know what to do */
-      _send_packet(ip, CLOSE_SESSION_REQ, 0);
+      /* Next packet we send depends on the power command and the
+       * options set.
+       */
+      if (ip->cmd == POWER_CMD_POWER_STATUS
+          || (conf->on_if_off 
+              && (ip->cmd == POWER_CMD_POWER_CYCLE
+                  || ip->cmd == POWER_CMD_POWER_RESET)))
+        _send_packet(ip, CHASSIS_STATUS_REQ, 0);
+      else
+        _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_STATUS_SENT) 
     {

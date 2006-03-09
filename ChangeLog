@@ -1,3 +1,12 @@
+2005-03-09  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Remove randomized initial outbound sequence number.
+	Add support of IPMI 2.0 for chassis status and chassis control.
+	Add sequence number support for IPMI 2.0 session packets.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Add
+	cipher suite combination validity checks.
+	
 2005-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,

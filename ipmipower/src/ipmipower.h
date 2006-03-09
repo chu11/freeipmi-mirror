@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.31 2006-03-09 02:08:02 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.32 2006-03-09 15:02:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -106,9 +106,13 @@
 
 /* IPMI allowable sequence number range window
  */
+
 #define IPMIPOWER_SEQUENCE_NUMBER_WINDOW 8
 
+#define IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER  1
+
 /* MISC */
+
 #define IPMI_PACKET_BUFLEN               1024
 #define RMCP_PACKET_BUFLEN               1024
 
@@ -357,7 +361,6 @@ struct ipmipower_powercmd {
 
     /* Protocol Maintenance Variables */
     unsigned int session_inbound_count;
-    uint32_t initial_outbound_sequence_number;
     uint32_t highest_received_sequence_number;
     unsigned int previously_received_list;
     ipmipower_bool_t permsgauth_enabled;
