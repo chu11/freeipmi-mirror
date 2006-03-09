@@ -33,6 +33,7 @@
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-rmcpplus-crypt.h"
+#include "freeipmi/ipmi-cipher-suite-spec.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX  - only for IPMI_MAX_USER_NAME_LENGTH */
 #include "freeipmi/ipmi-privilege-level-spec.h"
@@ -251,15 +252,13 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	      && sik_key 
-              && sik_key_len))
+              && sik_key_len
 	      && k
 	      && k_len
 	      && constant
 	      && constant_len);
 
-  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE)
-    return _calculate_k_rakp_none(k, k_len, constant, constant_len);
-  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
+  if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     return _calculate_k_rakp_hmac_sha1(sik_key, 
                                        sik_key_len, 
                                        k, 

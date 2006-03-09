@@ -135,6 +135,38 @@ fiid_template_t tmpl_cmd_get_channel_cipher_suites_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_algorithms_by_cipher_suite_rs = 
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {6,   "start_of_record_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {2,   "tag_bits_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "cipher_suite_id_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs = 
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

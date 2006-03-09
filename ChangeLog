@@ -20,6 +20,10 @@
 	ipmi_calculate_rakp_3_key_exchange_authentication_code): Rename
 	variables to match ipmi spec.
 
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
+	(tmpl_cmd_get_channel_cipher_suites_rs): New template supported.
+	
 2005-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,

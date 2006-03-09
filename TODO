@@ -69,6 +69,7 @@ libfreeipmi:
       test
     sol-config
       test
+  * rmcpplus - cipher suite configuration in bmc-config
 
 fish:
 -----
