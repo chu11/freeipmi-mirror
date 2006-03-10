@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.46 2006-03-07 07:25:59 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.47 2006-03-10 21:19:46 ab Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -107,6 +107,25 @@ if test "x${enable_fish}" = "x" ; then
    enable_fish=yes
 fi
 
+lesserthan()
+{
+   ver1=$1
+   ver2=$2
+
+   dig1_1=`echo $ver1 | cut -f1 -d'.'`
+   dig2_1=`echo $ver1 | cut -f2 -d'.'`
+   dig3_1=`echo $ver1 | cut -f3 -d'.'`
+
+   dig1_2=`echo $ver2 | cut -f1 -d'.'`
+   dig2_2=`echo $ver2 | cut -f2 -d'.'`
+   dig3_2=`echo $ver2 | cut -f3 -d','`
+
+   num1=`expr \( $dig1_1 \* 10000 \) + \( $dig2_1 \* 100 \) + $dig3_1 \)`
+   num2=`expr \( $dig1_2 \* 10000 \) + \( $dig2_2 \* 100 \) + $dig3_2 \)`
+
+   test $num1 -lt $num2
+}
+
 if test "x${enable_fish}" = "xyes" ; then
    AC_CHECK_LIB([guile], [gh_enter], , AC_MSG_ERROR([GNU Guile development library is not installed on your system. Fish based utilities are dependent on it.]))
    GUILE_PROGS
@@ -114,23 +133,8 @@ if test "x${enable_fish}" = "xyes" ; then
 
    # Check for minimum required Guile version:
    GUILE_REQUIRED_MINIMUM_VERSION="1.6.4"
-   GUILE_VERSION=`guile -c "
-   (define (guile-current-version>=? min-required-version)
-   \"return TRUE if current-version >= VER\"
-   (let
-      ((installed-major (car (string-split (version) #\.)))
-       (installed-minor (cadr (string-split (version) #\.)))
-       (installed-micro (caddr (string-split (version) #\.)))
-       (required-major (car (string-split min-required-version #\.)))
-       (required-minor (cadr (string-split min-required-version #\.)))
-       (required-micro (caddr (string-split min-required-version #\.))))
-       (if (and (string-ci>=? installed-major required-major)
-                (string-ci>=? installed-minor required-minor)
-                (string-ci>=? installed-micro required-micro))
-           (display \"true\")
-           (display \"false\"))))
-   (guile-current-version>=? \"$GUILE_REQUIRED_MINIMUM_VERSION\")"`
-   if test "$GUILE_VERSION" != true; then
+   GUILE_VERSION=`guile-config --version | cut -f5 -d' '`
+   if test lesserthan $GUILE_VERSION $GUILE_REQUIRED_MINIMUM_VERSION ; then
       AC_MSG_ERROR([Installed version of GNU Guile is too old. You need "$GUILE_REQUIRED_MINIMUM_VERSION" or higher])
    fi
 
