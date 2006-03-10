@@ -1,7 +1,8 @@
 2006-03-10  Anand Babu  <ab@zresearch.com>
 
 	* configure.ac: Applied Anand Avati's <avati@zresearch.com>
-	patch to check installed Guile's version. 
+	patch to check installed Guile's version. Replaced gh_enter with
+	scm_boot_guile. gh_* are depricated in Guile 1.8. 
 
 2005-03-10  Albert Chu <chu11@llnl.gov>
 
