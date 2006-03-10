@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.37 2006-03-09 15:02:57 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.38 2006-03-10 01:52:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -154,6 +154,82 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip = (ipmipower_powercmd_t)Malloc(sizeof(struct ipmipower_powercmd));
   memset(ip, '\0', sizeof(struct ipmipower_powercmd));
     
+  ip->cmd = cmd;
+  ip->protocol_state = PROTOCOL_STATE_START;
+
+  /*
+   * Protocol State Machine Variables
+   */
+  Gettimeofday(&(ip->time_begin), NULL);
+  ip->error_occurred = IPMIPOWER_FALSE;
+  ip->retry_count = 0;
+  ip->close_timeout = 0;
+
+  /*
+   * Protocol Maintenance Variables
+   */
+
+  /* ip->ipmi_version is set after Get Authentication Capabilities
+   * Response stage is finished if it is AUTO.
+   */
+
+  ip->session_inbound_count = 0;
+  ip->highest_received_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+  ip->previously_received_list = 0xFF;
+
+  /* IPMI 1.5 */
+
+  if (conf->ipmi_version == IPMI_VERSION_AUTO
+      || conf->ipmi_version == IPMI_VERSION_1_5)
+    {
+      /* ip->permsgauth_enabled is set after Get Authentication Capabilities
+       * Response is received 
+       */
+      
+      /* ip->authentication_type is set after Get Authentication Capabilities
+       * Response is received 
+       */
+      
+      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+        {
+          /* Following are default minimum privileges according to the IPMI
+           * specification 
+           */
+          if (cmd == POWER_CMD_POWER_STATUS)
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
+          else
+            ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+        }
+      else
+        ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+    }
+
+  /* IPMI 2.0 */
+
+  if (conf->ipmi_version == IPMI_VERSION_AUTO
+      || conf->ipmi_version == IPMI_VERSION_2_0)
+    {
+      ip->authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
+      ip->integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
+      ip->confidentiality_algorithm = IPMI_CONFIDENTIALITY_ALGORITHM_NONE;
+      ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
+      ip->initial_message_tag = (uint8_t)get_rand();
+      ip->message_tag_count = 0;
+      ip->session_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+      ip->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
+      ip->remote_console_session_id = get_rand();
+
+      /* Even if this fails, we'll just live with it */
+      if (ipmi_get_random(ip->remote_console_random_number, 
+                          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+        {
+          dbg("ipmipower_powercmd_queue(%s:%d): ipmi_get_random: %s ",
+              strerror(errno));
+        }
+    }
+
+  ip->ic = ic;
+
   ip->obj_rmcp_hdr_req = Fiid_obj_create(tmpl_rmcp_hdr); 
   ip->obj_rmcp_hdr_res = Fiid_obj_create(tmpl_rmcp_hdr); 
   ip->obj_lan_session_hdr_req = Fiid_obj_create(tmpl_lan_session_hdr); 
@@ -190,41 +266,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_chassis_status_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
   ip->obj_chassis_control_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
   ip->obj_chassis_control_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
-
-  ip->cmd = cmd;
-  ip->protocol_state = PROTOCOL_STATE_START;
-  ip->error_occurred = IPMIPOWER_FALSE;
-  ip->retry_count = 0;
-  ip->close_timeout = 0;
-
-  Gettimeofday(&(ip->time_begin), NULL);
-  ip->session_inbound_count = 0;
-  ip->highest_received_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-  ip->previously_received_list = 0xFF;
-  ip->permsgauth_enabled = IPMIPOWER_TRUE;
-
-  /* ip->authentication_type is set after Get Authentication Capabilities
-   * Response is received 
-   */
-
-  /* ip->ipmi_version is set after Get Authentication Capabilities
-   * Response stage is finished.
-   */
-
-  if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-    {
-      /* Following are default minimum privileges according to the IPMI
-       * specification 
-       */
-      if (cmd == POWER_CMD_POWER_STATUS)
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
-      else
-        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-    }
-  else
-    ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
-
-  ip->ic = ic;
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
     err_exit("list_create() error");
@@ -317,6 +358,23 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
       || pkt == CHASSIS_CONTROL_REQ) 
     ip->session_inbound_count++;
 
+  /* XXX - is this the right place for this? */
+  if (pkt == PROTOCOL_STATE_OPEN_SESSION_SENT
+      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT
+      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+    ip->message_tag_count++;
+
+  /* IPMI 2.0 is special, sequence numbers of 0 don't count */
+  if (ip->ipmi_version == IPMI_VERSION_2_0
+      && (pkt == CLOSE_SESSION_REQ
+          || pkt == CHASSIS_STATUS_REQ
+          || pkt == CHASSIS_CONTROL_REQ))
+    {
+      ip->session_sequence_number++;
+      if (!ip->session_sequence_number)
+        ip->session_sequence_number++;
+    }
+
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
 }
 
@@ -361,6 +419,9 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
  * Returns 1 if packet is of correct size and passes checks
  * Returns 0 if no packet received yet or packet should be ignored
  * Returns -1 if packet returned error
+ */
+/* XXX - must check return type on packet store, it is not reasonable
+   for unassembly of packets to fail due to ipmi compliance problems
  */
 static int 
 _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 

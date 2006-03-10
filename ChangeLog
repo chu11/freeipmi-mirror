@@ -23,6 +23,12 @@
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
 	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
 	(tmpl_cmd_get_channel_cipher_suites_rs): New template supported.
+
+	* ipmipower/src/ipmipower_packet.c (_ipmi_1_5_packet_create,
+	_ipmi_2_0_packet_create): New functions.
+	
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_create): Use
+	new functions and cleanup code a lot.
 	
 2005-03-08  Albert Chu <chu11@llnl.gov>
 

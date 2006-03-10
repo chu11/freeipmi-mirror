@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.7 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.8 2006-03-10 01:52:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -67,12 +67,12 @@
 uint32_t
 get_rand(void)
 {
-  u_int32_t val;
+  uint32_t val;
 
   if (ipmi_get_random((char *)&val, sizeof(val)) < 0)
     {
       dbg("get_rand: ipmi_get_random: %s", strerror(errno));
-      return (u_int32_t)rand();
+      return (uint32_t)rand();
     }
 
   return val;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.32 2006-03-09 15:02:57 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.33 2006-03-10 01:52:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -350,65 +350,83 @@ typedef enum
  * - Stores all information needed to execute a power command
  */
 struct ipmipower_powercmd {
-    power_cmd_t cmd;
-    protocol_state_t protocol_state; 
+  power_cmd_t cmd;
+  protocol_state_t protocol_state; 
 
-    /* Protocol State Machine Variables */
-    struct timeval time_begin;
-    ipmipower_bool_t error_occurred;
-    unsigned int retry_count;
-    uint8_t close_timeout;
+  /* 
+   * Protocol State Machine Variables 
+   */
+  struct timeval time_begin;
+  ipmipower_bool_t error_occurred;
+  unsigned int retry_count;
+  uint8_t close_timeout;
 
-    /* Protocol Maintenance Variables */
-    unsigned int session_inbound_count;
-    uint32_t highest_received_sequence_number;
-    unsigned int previously_received_list;
-    ipmipower_bool_t permsgauth_enabled;
-    uint8_t authentication_type;
-    uint8_t privilege;
-    ipmi_version_t ipmi_version;
+  /*
+   * Protocol Maintenance Variables 
+   */
+  ipmi_version_t ipmi_version;
+  unsigned int session_inbound_count;
+  uint32_t highest_received_sequence_number;
+  unsigned int previously_received_list;
 
-    struct ipmipower_connection *ic;
+  /* IPMI 1.5 specific */
+  ipmipower_bool_t permsgauth_enabled;
+  uint8_t authentication_type;
+  uint8_t privilege;
+
+  /* IPMI 2.0 specific */
+  uint8_t authentication_algorithm;
+  uint8_t integrity_algorithm;
+  uint8_t confidentiality_algorithm;
+  uint8_t requested_maximum_privilege;
+  uint8_t initial_message_tag;
+  uint8_t message_tag_count;
+  uint8_t session_sequence_number;
+  uint8_t name_only_lookup;
+  uint32_t remote_console_session_id;  
+  uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
+
+  struct ipmipower_connection *ic;
   
-    fiid_obj_t obj_rmcp_hdr_req;
-    fiid_obj_t obj_rmcp_hdr_res;
-    fiid_obj_t obj_lan_session_hdr_req;
-    fiid_obj_t obj_lan_session_hdr_res;
-    fiid_obj_t obj_lan_msg_hdr_req;
-    fiid_obj_t obj_lan_msg_hdr_res;
-    fiid_obj_t obj_lan_msg_trlr_res;
-    fiid_obj_t obj_rmcpplus_session_hdr_req;
-    fiid_obj_t obj_rmcpplus_session_hdr_res;
-    fiid_obj_t obj_rmcpplus_payload_res;
-    fiid_obj_t obj_rmcpplus_session_trlr_req;
-    fiid_obj_t obj_rmcpplus_session_trlr_res;
+  fiid_obj_t obj_rmcp_hdr_req;
+  fiid_obj_t obj_rmcp_hdr_res;
+  fiid_obj_t obj_lan_session_hdr_req;
+  fiid_obj_t obj_lan_session_hdr_res;
+  fiid_obj_t obj_lan_msg_hdr_req;
+  fiid_obj_t obj_lan_msg_hdr_res;
+  fiid_obj_t obj_lan_msg_trlr_res;
+  fiid_obj_t obj_rmcpplus_session_hdr_req;
+  fiid_obj_t obj_rmcpplus_session_hdr_res;
+  fiid_obj_t obj_rmcpplus_payload_res;
+  fiid_obj_t obj_rmcpplus_session_trlr_req;
+  fiid_obj_t obj_rmcpplus_session_trlr_res;
 
-    fiid_obj_t obj_authentication_capabilities_v20_req;
-    fiid_obj_t obj_authentication_capabilities_v20_res;
-    fiid_obj_t obj_authentication_capabilities_req;
-    fiid_obj_t obj_authentication_capabilities_res;
-    fiid_obj_t obj_get_session_challenge_req;
-    fiid_obj_t obj_get_session_challenge_res;
-    fiid_obj_t obj_activate_session_req;
-    fiid_obj_t obj_activate_session_res;
-    fiid_obj_t obj_set_session_privilege_req;
-    fiid_obj_t obj_set_session_privilege_res;
-    fiid_obj_t obj_get_channel_cipher_suites_req;
-    fiid_obj_t obj_get_channel_cipher_suites_res;
-    fiid_obj_t obj_open_session_req;
-    fiid_obj_t obj_open_session_res;
-    fiid_obj_t obj_rakp_message_1_req;
-    fiid_obj_t obj_rakp_message_2_res;
-    fiid_obj_t obj_rakp_message_3_req;
-    fiid_obj_t obj_rakp_message_4_res;
-    fiid_obj_t obj_close_session_req;
-    fiid_obj_t obj_close_session_res;
-    fiid_obj_t obj_chassis_status_req;
-    fiid_obj_t obj_chassis_status_res;
-    fiid_obj_t obj_chassis_control_req;
-    fiid_obj_t obj_chassis_control_res;
+  fiid_obj_t obj_authentication_capabilities_v20_req;
+  fiid_obj_t obj_authentication_capabilities_v20_res;
+  fiid_obj_t obj_authentication_capabilities_req;
+  fiid_obj_t obj_authentication_capabilities_res;
+  fiid_obj_t obj_get_session_challenge_req;
+  fiid_obj_t obj_get_session_challenge_res;
+  fiid_obj_t obj_activate_session_req;
+  fiid_obj_t obj_activate_session_res;
+  fiid_obj_t obj_set_session_privilege_req;
+  fiid_obj_t obj_set_session_privilege_res;
+  fiid_obj_t obj_get_channel_cipher_suites_req;
+  fiid_obj_t obj_get_channel_cipher_suites_res;
+  fiid_obj_t obj_open_session_req;
+  fiid_obj_t obj_open_session_res;
+  fiid_obj_t obj_rakp_message_1_req;
+  fiid_obj_t obj_rakp_message_2_res;
+  fiid_obj_t obj_rakp_message_3_req;
+  fiid_obj_t obj_rakp_message_4_res;
+  fiid_obj_t obj_close_session_req;
+  fiid_obj_t obj_close_session_res;
+  fiid_obj_t obj_chassis_status_req;
+  fiid_obj_t obj_chassis_status_res;
+  fiid_obj_t obj_chassis_control_req;
+  fiid_obj_t obj_chassis_control_res;
 
-    List sockets_to_close;
+  List sockets_to_close;
 };
 
 /* ipmipower_connection
