@@ -31,6 +31,7 @@
 #include "freeipmi/ipmi-lan-param-spec.h"
 #include "freeipmi/ipmi-channel-spec.h" 
 #include "freeipmi/ipmi-cmd-spec.h"
+#include "freeipmi/ipmi-privilege-level-spec.h"
 
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
@@ -231,6 +232,33 @@ fiid_template_t tmpl_set_lan_configuration_parameters_vlan_priority_rq =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+
+    {8, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "maximum_privilege_for_cipher_suite_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_get_lan_configuration_parameters_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -348,7 +376,7 @@ fiid_template_t tmpl_get_lan_configuration_parameters_bmc_generated_arp_control_
     {1, "bmc_generated_gratuitous_arps", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "bmc_generated_arp_responses", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {0,  "", 0}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs =
@@ -358,7 +386,7 @@ fiid_template_t tmpl_get_lan_configuration_parameters_gratuitous_arp_interval_rs
     {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "gratuitous_arp_interval", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {0,  "", 0}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_configuration_parameters_default_gateway_address_rs =
@@ -411,7 +439,7 @@ fiid_template_t tmpl_get_lan_configuration_parameters_vlan_id_rs =
     {4, "vlan_id_ms", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {0,  "", 0}
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs =
@@ -425,7 +453,72 @@ fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs =
     {2, "unspecified", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     
-    {0,  "", 0}
+    {0, "", 0}
+  };
+
+/* Note: Read-Only field, no 'set' equivalent */
+fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "cipher_suite_entry_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+/* Note: Read-Only field, no 'set' equivalent */
+fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_A", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_B", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_C", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_D", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_E", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_F", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_G", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_H", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_I", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_J", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_K", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_L", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_M", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_N", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_O", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "cipher_suite_id_entry_P", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs = 
+  {
+    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "maximum_privilege_for_cipher_suite_1", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_3", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_4", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_5", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_6", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_7", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_8", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_9", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_10", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_11", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_12", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_13", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_14", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_15", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {4, "maximum_privilege_for_cipher_suite_16", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
   };
 
 fiid_template_t tmpl_cmd_suspend_bmc_arps_rq =
@@ -446,7 +539,7 @@ fiid_template_t tmpl_cmd_suspend_bmc_arps_rs =
     {1, "gratuitous_arp_response_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "arp_response_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {0,  "", 0}
+    {0, "", 0}
   };
 
 int8_t
@@ -853,6 +946,103 @@ fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
   return 0;
 }
 
+int8_t
+fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(uint8_t channel_number,
+											   uint8_t maximum_privilege_for_cipher_suite_1,
+											   uint8_t maximum_privilege_for_cipher_suite_2,
+											   uint8_t maximum_privilege_for_cipher_suite_3,
+											   uint8_t maximum_privilege_for_cipher_suite_4,
+											   uint8_t maximum_privilege_for_cipher_suite_5,
+											   uint8_t maximum_privilege_for_cipher_suite_6,
+											   uint8_t maximum_privilege_for_cipher_suite_7,
+											   uint8_t maximum_privilege_for_cipher_suite_8,
+											   uint8_t maximum_privilege_for_cipher_suite_9,
+											   uint8_t maximum_privilege_for_cipher_suite_10,
+											   uint8_t maximum_privilege_for_cipher_suite_11,
+											   uint8_t maximum_privilege_for_cipher_suite_12,
+											   uint8_t maximum_privilege_for_cipher_suite_13,
+											   uint8_t maximum_privilege_for_cipher_suite_14,
+											   uint8_t maximum_privilege_for_cipher_suite_15,
+											   uint8_t maximum_privilege_for_cipher_suite_16,
+											   fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
+		  || !maximum_privilege_for_cipher_suite_1)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
+		  || !maximum_privilege_for_cipher_suite_2)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
+		  || !maximum_privilege_for_cipher_suite_3)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
+		  || !maximum_privilege_for_cipher_suite_4)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
+		  || !maximum_privilege_for_cipher_suite_5)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
+		  || !maximum_privilege_for_cipher_suite_6)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
+		  || !maximum_privilege_for_cipher_suite_7)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
+		  || !maximum_privilege_for_cipher_suite_8)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
+		  || !maximum_privilege_for_cipher_suite_9)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
+		  || !maximum_privilege_for_cipher_suite_10)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
+		  || !maximum_privilege_for_cipher_suite_11)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
+		  || !maximum_privilege_for_cipher_suite_12)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
+		  || !maximum_privilege_for_cipher_suite_13)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
+		  || !maximum_privilege_for_cipher_suite_14)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
+		  || !maximum_privilege_for_cipher_suite_15)
+	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
+		  || !maximum_privilege_for_cipher_suite_16)
+	      && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq);
+
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_LAN_CONFIGURATION_PARAMETERS);
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_3", maximum_privilege_for_cipher_suite_3); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_4", maximum_privilege_for_cipher_suite_4); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_5", maximum_privilege_for_cipher_suite_5); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_6", maximum_privilege_for_cipher_suite_6); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_7", maximum_privilege_for_cipher_suite_7); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_8", maximum_privilege_for_cipher_suite_8); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_9", maximum_privilege_for_cipher_suite_9); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_10", maximum_privilege_for_cipher_suite_10); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_11", maximum_privilege_for_cipher_suite_11); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_12", maximum_privilege_for_cipher_suite_12); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_13", maximum_privilege_for_cipher_suite_13); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_14", maximum_privilege_for_cipher_suite_14); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15); 
+  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16))
+    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16); 
+
+  return 0;
+}
 
 int8_t 
 fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,

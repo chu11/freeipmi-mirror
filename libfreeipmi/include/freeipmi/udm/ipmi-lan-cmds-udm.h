@@ -117,6 +117,27 @@ int8_t ipmi_cmd_set_lan_configuration_parameters_vlan_priority (ipmi_device_t *d
 								uint32_t vlan_priority,
 								fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(ipmi_device_t *dev,
+												  uint8_t channel_number,
+												  uint8_t maximum_privilege_for_cipher_suite_1,
+												  uint8_t maximum_privilege_for_cipher_suite_2,
+												  uint8_t maximum_privilege_for_cipher_suite_3,
+												  uint8_t maximum_privilege_for_cipher_suite_4,
+												  uint8_t maximum_privilege_for_cipher_suite_5,
+												  uint8_t maximum_privilege_for_cipher_suite_6,
+												  uint8_t maximum_privilege_for_cipher_suite_7,
+												  uint8_t maximum_privilege_for_cipher_suite_8,
+												  uint8_t maximum_privilege_for_cipher_suite_9,
+												  uint8_t maximum_privilege_for_cipher_suite_10,
+												  uint8_t maximum_privilege_for_cipher_suite_11,
+												  uint8_t maximum_privilege_for_cipher_suite_12,
+												  uint8_t maximum_privilege_for_cipher_suite_13,
+												  uint8_t maximum_privilege_for_cipher_suite_14,
+												  uint8_t maximum_privilege_for_cipher_suite_15,
+												  uint8_t maximum_privilege_for_cipher_suite_16,
+												  fiid_obj_t obj_cmd_rs);
+
+
 int8_t ipmi_cmd_get_lan_configuration_parameters_authentication_type_enables (ipmi_device_t *dev, 
 									      uint8_t channel_number, 
 									      uint8_t get_parameter, 
@@ -207,6 +228,28 @@ int8_t ipmi_cmd_get_lan_configuration_parameters_vlan_priority (ipmi_device_t *d
 								uint8_t set_selector, 
 								uint8_t block_selector, 
 								fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (ipmi_device_t *dev,
+												uint8_t channel_number,
+												uint8_t get_parameter,
+												uint8_t set_selector,
+												uint8_t block_selector,
+												fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (ipmi_device_t *dev,
+											  uint8_t channel_number,
+											  uint8_t get_parameter,
+											  uint8_t set_selector,
+											  uint8_t block_selector,
+											  fiid_obj_t obj_cmd_rs);
+
+int8_t ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(ipmi_device_t *dev,
+												  uint8_t channel_number,
+												  uint8_t get_parameter,
+												  uint8_t set_selector,
+												  uint8_t block_selector,
+												  fiid_obj_t obj_cmd_rs);
+
 
 int8_t ipmi_cmd_suspend_bmc_arps (ipmi_device_t *dev, 
 				  uint8_t channel_number, 

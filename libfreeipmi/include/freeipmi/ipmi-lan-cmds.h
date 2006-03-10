@@ -106,6 +106,7 @@ extern fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_addr
 extern fiid_template_t tmpl_set_lan_configuration_parameters_backup_gateway_mac_address_rq;
 extern fiid_template_t tmpl_set_lan_configuration_parameters_vlan_id_rq;
 extern fiid_template_t tmpl_set_lan_configuration_parameters_vlan_priority_rq;
+extern fiid_template_t tmpl_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rq;
 
 extern fiid_template_t tmpl_get_lan_configuration_parameters_rq;
 extern fiid_template_t tmpl_get_lan_configuration_parameters_rs;
@@ -123,6 +124,9 @@ extern fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_addr
 extern fiid_template_t tmpl_get_lan_configuration_parameters_backup_gateway_mac_address_rs;
 extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_id_rs;
 extern fiid_template_t tmpl_get_lan_configuration_parameters_vlan_priority_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs;
+extern fiid_template_t tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs;
 
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rq;
 extern fiid_template_t tmpl_cmd_suspend_bmc_arps_rs;
@@ -211,6 +215,25 @@ int8_t fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_priority (uint8_t channel_number,
                                                                 uint8_t vlan_priority,
                                                                 fiid_obj_t obj_cmd_rq);
+  
+int8_t fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(uint8_t channel_number,
+												  uint8_t maximum_privilege_for_cipher_suite_1,
+												  uint8_t maximum_privilege_for_cipher_suite_2,
+												  uint8_t maximum_privilege_for_cipher_suite_3,
+												  uint8_t maximum_privilege_for_cipher_suite_4,
+												  uint8_t maximum_privilege_for_cipher_suite_5,
+												  uint8_t maximum_privilege_for_cipher_suite_6,
+												  uint8_t maximum_privilege_for_cipher_suite_7,
+												  uint8_t maximum_privilege_for_cipher_suite_8,
+												  uint8_t maximum_privilege_for_cipher_suite_9,
+												  uint8_t maximum_privilege_for_cipher_suite_10,
+												  uint8_t maximum_privilege_for_cipher_suite_11,
+												  uint8_t maximum_privilege_for_cipher_suite_12,
+												  uint8_t maximum_privilege_for_cipher_suite_13,
+												  uint8_t maximum_privilege_for_cipher_suite_14,
+												  uint8_t maximum_privilege_for_cipher_suite_15,
+												  uint8_t maximum_privilege_for_cipher_suite_16,
+												  fiid_obj_t obj_cmd_rq);
   
 int8_t fill_cmd_get_lan_configuration_parameters (uint8_t channel_number,
                                                   uint8_t get_parameter,

@@ -30,6 +30,20 @@
 	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_create): Use
 	new functions and cleanup code a lot.
 	
+	* libfreeipmi/include/freeipmi/ipmi-lan-param-spec.h,
+	libfreeipmi/include/freeipmi/ipmi-lan-cmds.h,
+	libfreeipmi/src/ipmi-lan-cmds.c
+	(fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels):
+	Support rmcpplus lan configuration commands.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-lan-cmds-udm.h,
+	libfreeipmi/src/ipmi-lan-cmds-udm.c
+	(ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels,
+	ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support,
+	ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries,
+	ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels):
+	New functions.
+
 2005-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
