@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.39 2006-03-10 02:32:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.40 2006-03-10 06:15:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -349,29 +349,22 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
   else if (pkt == CHASSIS_CONTROL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
 
-  /* XXX watch out when you start getting into the grits of the ipmi
-   * 2.0 session 
-   *
-   * in ipmi 2.0 counts can't be 0, so gotta loop around back to 1 
-   */
-  if (pkt == SET_SESSION_PRIVILEGE_REQ 
-      || pkt == CLOSE_SESSION_REQ 
-      || pkt == CHASSIS_STATUS_REQ 
-      || pkt == CHASSIS_CONTROL_REQ) 
+  if (ip->ipmi_version == IPMI_VERSION_1_5
+      && (pkt == SET_SESSION_PRIVILEGE_REQ 
+	  || pkt == CLOSE_SESSION_REQ 
+	  || pkt == CHASSIS_STATUS_REQ 
+	  || pkt == CHASSIS_CONTROL_REQ))
     ip->session_inbound_count++;
-
-  /* XXX - is this the right place for this? */
-  if (pkt == PROTOCOL_STATE_OPEN_SESSION_SENT
-      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT
-      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+  else if (pkt == PROTOCOL_STATE_OPEN_SESSION_SENT
+	   || pkt == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT
+	   || pkt == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     ip->message_tag_count++;
-
-  /* IPMI 2.0 is special, sequence numbers of 0 don't count */
-  if (ip->ipmi_version == IPMI_VERSION_2_0
-      && (pkt == CLOSE_SESSION_REQ
-          || pkt == CHASSIS_STATUS_REQ
-          || pkt == CHASSIS_CONTROL_REQ))
+  else if (ip->ipmi_version == IPMI_VERSION_2_0
+	   && (pkt == CLOSE_SESSION_REQ
+	       || pkt == CHASSIS_STATUS_REQ
+	       || pkt == CHASSIS_CONTROL_REQ))
     {
+      /* IPMI 2.0 is special, sequence numbers of 0 don't count */
       ip->session_sequence_number++;
       if (!ip->session_sequence_number)
         ip->session_sequence_number++;
@@ -422,9 +415,6 @@ _bad_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
  * Returns 0 if no packet received yet or packet should be ignored
  * Returns -1 if packet returned error
  */
-/* XXX - must check return type on packet store, it is not reasonable
-   for unassembly of packets to fail due to ipmi compliance problems
- */
 static int 
 _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
@@ -450,7 +440,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           || pkt == CHASSIS_CONTROL_RES
           || pkt == CLOSE_SESSION_RES))
     {
-      ipmipower_packet_store(ip, pkt, buffer, len);
+      if (ipmipower_packet_store(ip, pkt, buffer, len) < 0)
+	return 0;
       return 1;
     }
 
@@ -550,7 +541,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       return 0;
     }
 
-  ipmipower_packet_store(ip, pkt, buffer, len);
+  if (ipmipower_packet_store(ip, pkt, buffer, len) < 0)
+    return 0;
 
   if (ipmipower_check_packet(ip, pkt, &oseq_flag, &sid_flag, &netfn_flag, 
                              &rseq_flag, &cmd_flag, &cc_flag))

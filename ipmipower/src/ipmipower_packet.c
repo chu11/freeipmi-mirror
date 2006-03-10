@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.33 2006-03-10 02:32:05 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.34 2006-03-10 06:15:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -346,11 +346,12 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
 #endif
 }
 
-void 
+int
 ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
                        char *buffer, int len) 
 {
   fiid_obj_t obj;
+  int32_t rv = -1;
   
   assert(ip != NULL);
   assert(buffer != NULL);
@@ -380,40 +381,38 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || ip->ipmi_version == IPMI_VERSION_1_5)
     {
-      if (unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
-                                  len, 
-                                  ip->obj_rmcp_hdr_res, 
-                                  ip->obj_lan_session_hdr_res, 
-                                  ip->obj_lan_msg_hdr_res, 
-                                  obj,
-                                  ip->obj_lan_msg_trlr_res) < 0)
-        err_exit("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
+      if ((rv = unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
+					len, 
+					ip->obj_rmcp_hdr_res, 
+					ip->obj_lan_session_hdr_res, 
+					ip->obj_lan_msg_hdr_res, 
+					obj,
+					ip->obj_lan_msg_trlr_res)) < 0)
+	dbg("ipmipower_packet_store: unassemble_ipmi_lan_pkt: %s", strerror(errno));
     }
   else
     {
       /* XXX temporary - need to make generic */
-      if (unassemble_ipmi_rmcpplus_pkt(ip->authentication_algorithm,
-                                       ip->integrity_algorithm,
-                                       ip->confidentiality_algorithm,
-                                       NULL,
-                                       0,
-                                       NULL,
-                                       0,
-                                       (uint8_t *)buffer, 
-                                       len, 
-                                       ip->obj_rmcp_hdr_res, 
-                                       ip->obj_rmcpplus_session_hdr_res,
-                                       ip->obj_rmcpplus_payload_res,
-                                       ip->obj_lan_msg_hdr_res, 
-                                       obj,
-                                       ip->obj_lan_msg_trlr_res,
-                                       ip->obj_rmcpplus_session_trlr_res) < 0)
-        {
-          dbg("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
-          /* XXX exit for now - but see notes in _recv_packet() */
-          exit(1);
-        }
+      if ((rv = unassemble_ipmi_rmcpplus_pkt(ip->authentication_algorithm,
+					     ip->integrity_algorithm,
+					     ip->confidentiality_algorithm,
+					     NULL,
+					     0,
+					     NULL,
+					     0,
+					     (uint8_t *)buffer, 
+					     len, 
+					     ip->obj_rmcp_hdr_res, 
+					     ip->obj_rmcpplus_session_hdr_res,
+					     ip->obj_rmcpplus_payload_res,
+					     ip->obj_lan_msg_hdr_res, 
+					     obj,
+					     ip->obj_lan_msg_trlr_res,
+					     ip->obj_rmcpplus_session_trlr_res)) < 0)
+	dbg("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
     }
+  
+  return (rv);
 }
 
 static int32_t

@@ -44,6 +44,13 @@
 	ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels):
 	New functions.
 
+	* ipmipower/src/ipmipower_packet.h,
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_store): Return
+	-1 if packet is unparsable.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Return 0 if
+	packet is unparsable and should be ignored.
+
 2005-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
