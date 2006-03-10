@@ -36,6 +36,9 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_TAG_BITS_CONFIDENTIALITY_ALGORITHM  0x2
 #define IPMI_CIPHER_SUITE_TAG_BITS_RECORD                     0x3
 
+#define IPMI_CIPHER_SUITE_ID_MIN                              0
+#define IPMI_CIHPER_SUITE_ID_MAX                              14
+
 #define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c) \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \
      && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
@@ -64,6 +67,16 @@ extern "C" {
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 \
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))) ? 1 : 0)
+
+int8_t ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
+					  uint8_t *authentication_algorithm,
+					  uint8_t *integrity_algorithm,
+					  uint8_t *confidentiality_algorithm);
+
+int8_t ipmi_algorithms_to_cipher_suite_id(uint8_t authentication_algorithm,
+					  uint8_t integrity_algorithm,
+					  uint8_t confidentiality_algorithm,
+					  uint8_t *cipher_suite_id);
 
 #ifdef __cplusplus
 }

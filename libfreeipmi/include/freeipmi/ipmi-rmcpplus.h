@@ -127,6 +127,8 @@
  * IPMI 2.0 Misc Flags and Definitions *                       
  ***************************************/
 
+/* XXX - Al Audit, all this stuff doesn't need to be in a public .h file */
+
 #define IPMI_AUTHENTICATION_PAYLOAD_TYPE                  0x00
 #define IPMI_AUTHENTICATION_PAYLOAD_LENGTH                0x08
 #define IPMI_INTEGRITY_PAYLOAD_TYPE                       0x01

@@ -1,5 +1,5 @@
 /* 
-   ipmi-sensor-types.c - IPMI Sensor Types
+   ipmi-sensor-types-spec.c - IPMI Sensor Types
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -17,6 +17,10 @@
    along with this program; if not, write to the Free Software Foundation,
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  
 */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
