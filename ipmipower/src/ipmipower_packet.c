@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.32 2006-03-10 01:52:13 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.33 2006-03-10 02:32:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -521,7 +521,7 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
     err_exit("_ipmi_2_0_packet_create(%s:%d: fill_rmcpplus_session_hdr: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
   
-  if (fill_lan_msg_hdr(IPMI_NET_FN_APP_RQ, 
+  if (fill_lan_msg_hdr(net_fn, 
                        IPMI_BMC_IPMB_LUN_BMC, 
                        (ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1)), 
                        ip->obj_lan_msg_hdr_req) < 0)
@@ -562,7 +562,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
   uint8_t *username, *password;
-  uint64_t session_id;
+  uint64_t session_id, managed_system_session_id;
   uint32_t sequence_number;
   uint8_t authentication_type, net_fn, payload_authenticated, payload_encrypted,
     payload_type;
@@ -616,12 +616,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
                  &session_id);
-  else if (pkt == RAKP_MESSAGE_1_REQ
-           || pkt == RAKP_MESSAGE_3_REQ
-           || (ip->ipmi_version == IPMI_VERSION_2_0
-               && (pkt == CLOSE_SESSION_REQ
-                   || pkt == CHASSIS_STATUS_REQ
-                   || pkt == CHASSIS_CONTROL_REQ)))
+  else if (ip->ipmi_version == IPMI_VERSION_2_0
+           && (pkt == CLOSE_SESSION_REQ
+               || pkt == CHASSIS_STATUS_REQ
+               || pkt == CHASSIS_CONTROL_REQ))
     Fiid_obj_get(ip->obj_open_session_res,
                  "managed_system_session_id",
                  &session_id);
@@ -698,6 +696,12 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3;
       else
         payload_type = IPMI_PAYLOAD_TYPE_IPMI;
+
+      if (pkt == RAKP_MESSAGE_1_REQ
+          || pkt == RAKP_MESSAGE_3_REQ)
+        Fiid_obj_get(ip->obj_open_session_res,
+                     "managed_system_session_id",
+                     &managed_system_session_id);
     }
 
   /* Calculate/Fill Command Object */
@@ -906,7 +910,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   sequence_number,
                                   (uint32_t)session_id,
                                   password,
-                                  (password) ? strlen(password) : 0,
+                                  (password) ? strlen((char *)password) : 0,
                                   net_fn,
                                   obj_cmd_req,
                                   buffer, 
@@ -926,7 +930,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   (uint32_t)session_id,
                                   sequence_number,
                                   password,
-                                  (password) ? strlen(password) : 0,
+                                  (password) ? strlen((char *)password) : 0,
                                   net_fn, 
                                   obj_cmd_req,
                                   buffer,

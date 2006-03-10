@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.38 2006-03-10 01:52:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.39 2006-03-10 02:32:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -177,8 +177,22 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->highest_received_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
   ip->previously_received_list = 0xFF;
 
+  if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+    {
+      /* Following are default minimum privileges according to the IPMI
+       * specification 
+       */
+      if (cmd == POWER_CMD_POWER_STATUS)
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
+      else
+        ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
+    }
+  else
+    ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+
   /* IPMI 1.5 */
 
+#if 0
   if (conf->ipmi_version == IPMI_VERSION_AUTO
       || conf->ipmi_version == IPMI_VERSION_1_5)
     {
@@ -188,21 +202,9 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       
       /* ip->authentication_type is set after Get Authentication Capabilities
        * Response is received 
-       */
-      
-      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-        {
-          /* Following are default minimum privileges according to the IPMI
-           * specification 
-           */
-          if (cmd == POWER_CMD_POWER_STATUS)
-            ip->privilege = IPMI_PRIVILEGE_LEVEL_USER;
-          else
-            ip->privilege = IPMI_PRIVILEGE_LEVEL_OPERATOR;
-        }
-      else
-        ip->privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+       */      
     }
+#endif 
 
   /* IPMI 2.0 */
 
