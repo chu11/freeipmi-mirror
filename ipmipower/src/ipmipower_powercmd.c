@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.44 2006-03-11 20:15:23 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.45 2006-03-11 20:20:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1137,7 +1137,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         }
 
       Fiid_obj_get(ip->obj_activate_session_res,
-		   "autentication_type",
+		   "authentication_type",
 		   &authentication_type);
 
       if (!conf->force_permsg_authentication)
