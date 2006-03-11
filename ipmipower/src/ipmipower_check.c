@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.26 2006-03-11 20:15:23 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.27 2006-03-11 20:22:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -488,8 +488,8 @@ ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
-	 && pkt != CHASSIS_STATUS_RES
-	 && pkt != CHASSIS_CONTROL_RES);
+	 && pkt != RAKP_MESSAGE_2_RES
+	 && pkt != RAKP_MESSAGE_2_RES);
     
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, "net_fn", &netfn);
 
@@ -516,8 +516,8 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
-	 && pkt != CHASSIS_STATUS_RES
-	 && pkt != CHASSIS_CONTROL_RES);
+	 && pkt != RAKP_MESSAGE_2_RES
+	 && pkt != RAKP_MESSAGE_2_RES);
   
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
 
@@ -559,8 +559,8 @@ ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
-	 && pkt != CHASSIS_STATUS_RES
-	 && pkt != CHASSIS_CONTROL_RES);
+	 && pkt != RAKP_MESSAGE_2_RES
+	 && pkt != RAKP_MESSAGE_2_RES);
     
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -584,8 +584,8 @@ ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
-	 && pkt != CHASSIS_STATUS_RES
-	 && pkt != CHASSIS_CONTROL_RES);
+	 && pkt != RAKP_MESSAGE_2_RES
+	 && pkt != RAKP_MESSAGE_2_RES);
     
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
 
