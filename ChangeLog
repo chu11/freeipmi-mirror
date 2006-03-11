@@ -48,6 +48,8 @@
 	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
 	(ipmi_lan_check_session_authentication_code): New function.
 
+	* libfreeipmi/src/fiid.c (fiid_obj_packet_valid): Fix corner case.
+
 2006-03-10  Anand Babu  <ab@zresearch.com>
 
 	* configure.ac: Applied Anand Avati's <avati@zresearch.com>

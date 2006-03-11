@@ -813,7 +813,10 @@ fiid_obj_packet_valid(fiid_obj_t obj)
           return (0);
         }
       
-      if (length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
+      if ((length_flag == FIID_FIELD_LENGTH_FIXED && max_field_len != set_field_len)
+          && (required_flag == FIID_FIELD_REQUIRED 
+              || (required_flag == FIID_FIELD_OPTIONAL && set_field_len)))
+          
         {
           obj->errnum = FIID_ERR_FIXED_LENGTH_FIELD_INVALID;
           return (0);

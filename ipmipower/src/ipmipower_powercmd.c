@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.42 2006-03-11 01:32:26 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.43 2006-03-11 06:27:38 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -424,13 +424,13 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       if ((ret = ipmi_lan_check_packet_checksum((uint8_t *)buffer, len)) < 0)
         err_exit("_recv_packet(%s:%d): ipmi_lan_check_checksum: %s",
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
-      
+
       if (!ret) 
         {
           dbg("_recv_packet(%s:%d): bad chksum",
               ip->ic->hostname, ip->protocol_state);
           return 0;
-        }
+        }                                                                                                        
 
       if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
           || pkt == AUTHENTICATION_CAPABILITIES_RES 
