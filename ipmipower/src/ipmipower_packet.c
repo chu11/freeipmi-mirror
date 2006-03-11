@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.35 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.36 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -756,7 +756,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 				    ip->privilege, 
 				    challenge_string,
 				    challenge_string_len,
-                                    IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
+                                    IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER,
                                     ip->obj_activate_session_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_activate_session: %s", 
@@ -939,72 +939,31 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   return len;
 }
 
-void 
-ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
-                               uint32_t *session_sequence_number, 
-                               uint32_t *session_id,
-                               uint8_t *network_function, 
-                               uint8_t *requester_sequence_number,
-                               uint8_t *command, 
-                               uint8_t *completion_code) 
-{
-  uint64_t sseq, sid, netfn, rseq, cmd, cc;
-  fiid_obj_t obj;
-
-  assert(ip != NULL);
-  assert(PACKET_TYPE_VALID_RES(pkt));
-
-  obj = ipmipower_packet_cmd_obj(ip, pkt);
-        
-  Fiid_obj_get(ip->obj_lan_session_hdr_res, 
-               "session_sequence_number", 
-	       &sseq);
-  Fiid_obj_get(ip->obj_lan_session_hdr_res, 
-               "session_id", 
-	       &sid);
-  Fiid_obj_get(ip->obj_lan_msg_hdr_res, 
-               "net_fn", 
-	       &netfn);
-  Fiid_obj_get(ip->obj_lan_msg_hdr_res, 
-               "rq_seq", 
-	       &rseq);
-  Fiid_obj_get(obj, 
-	       "cmd", 
-	       &cmd);
-  Fiid_obj_get(obj, 
-	       "comp_code", 
-	       &cc);
-  
-  if (session_sequence_number) 
-    *session_sequence_number = sseq;
-  if (session_id)
-    *session_id = sid;
-  if (network_function) 
-    *network_function = netfn;
-  if (requester_sequence_number)
-    *requester_sequence_number = rseq;
-  if (command)
-    *command = cmd;
-  if (completion_code)
-    *completion_code = cc;
-}
-
 msg_type_t
 ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  uint8_t cc;
-
+  uint64_t comp_code;
+  fiid_obj_t obj_cmd;
+  
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
+  /* Assert this is not an IPMI 2.0 Session Setup Packet */
+  assert(pkt != OPEN_SESSION_RES
+         && pkt != CHASSIS_STATUS_RES
+         && pkt != CHASSIS_CONTROL_RES);
 
-  ipmipower_packet_response_data(ip, pkt, 0, 0, 0, 0, 0, &cc);
+  /* XXX need to fix for ipmi 2.0 */
+
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+  Fiid_obj_get(obj_cmd, "comp_code", &comp_code);
     
-  if (cc == IPMI_COMP_CODE_COMMAND_SUCCESS)
-    err_exit("ipmipower_packet_errmsg(%s:%d:%d): called with cc == SUCCESS",
+  if (comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS)
+    err_exit("ipmipower_packet_errmsg(%s:%d:%d): "
+	     "called with comp_code == SUCCESS",
              ip->ic->hostname, ip->protocol_state, pkt);
   else if (pkt == GET_SESSION_CHALLENGE_RES 
-           && (cc == IPMI_COMP_CODE_INVALID_USERNAME 
-               || cc == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
+           && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
+               || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
     {
 #ifndef NDEBUG
       return MSG_TYPE_USERNAME;
@@ -1013,7 +972,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == ACTIVATE_SESSION_RES 
-           && cc == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
+           && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
     {
 #ifndef NDEBUG
       return MSG_TYPE_PRIVILEGE;
@@ -1022,9 +981,9 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == SET_SESSION_PRIVILEGE_RES 
-           && (cc == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
-               || cc == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
-               || cc == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
+           && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
+               || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
+               || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
     {
 #ifndef NDEBUG
       return MSG_TYPE_PRIVILEGE;
@@ -1033,12 +992,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 #endif
     }
   else if (pkt == ACTIVATE_SESSION_RES 
-           && (cc == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
-               || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
-               || cc == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
+           && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
+               || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
+               || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
     return MSG_TYPE_BMCBUSY;
   else if (pkt == CHASSIS_CONTROL_RES 
-           && cc == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
+           && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
     return MSG_TYPE_OPERATION;
   
   return MSG_TYPE_BMCERROR;

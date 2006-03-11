@@ -116,14 +116,14 @@ int8_t ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentic
 								uint32_t managed_system_guid_len, 
 								fiid_obj_t obj_cmd);
 
-int8_t ipmi_rmcpplus_check_session_trlr(int8_t integrity_algorithm, 
-					uint8_t *pkt, 
-					uint32_t pkt_len, 
-					uint8_t *integrity_key, 
-					uint32_t integrity_key_len, 
-					uint8_t *authentication_code_data, 
-					uint32_t authentication_code_data_len, 
-					fiid_obj_t obj_rmcpplus_session_trlr);
+int8_t ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorithm, 
+							      uint8_t *pkt, 
+							      uint32_t pkt_len, 
+							      uint8_t *integrity_key, 
+							      uint32_t integrity_key_len, 
+							      uint8_t *authentication_code_data, 
+							      uint32_t authentication_code_data_len, 
+							      fiid_obj_t obj_rmcpplus_session_trlr);
 
 int8_t ipmi_rmcpplus_check_payload_type(fiid_obj_t obj_rmcpplus_session_hdr, 
 					uint8_t payload_type);

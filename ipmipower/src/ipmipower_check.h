@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.6 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.7 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,14 +29,113 @@
 
 #include "ipmipower.h"
 
-/* ipmipower_check_packet
- * - Checks a combination of error checks.
- * - Only works with response packet types 
- * Returns 1 if all indicated fields pass, 0 if not.  Individual field
- *  success returned in parameters.
+/* ipmipower_check_checksum
+ * - Check for a valid checksums
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if checksums are valid, 0 if not
  */
-int ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
-                           int *oseq, int *sid, int *netfn, int *rseq, 
-                           int *cmd, int *cc);
+int ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_authentication_code
+ * - Check for valid authentication code
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if authentication code is valid, 0 if not
+ */
+int ipmipower_check_authentication_code(ipmipower_powercmd_t ip, 
+					packet_type_t pkt,
+					uint8_t *buffer,
+					uint32_t buffer_len);
+
+/* ipmipower_check_outbound_sequence_number
+ * - Check for valid outbound sequence number
+ * - Function can be passed all packet types
+ * Returns 1 if outbound sequence number is valid, 0 if not
+ */
+int ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_session_id
+ * - Check for valid session id
+ * - Function can be passed all packet types
+ * Returns 1 if session_id is valid, 0 if not
+ */
+int ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_network_function
+ * - Check for valid network function
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if network function is valid, 0 if not
+ */
+int ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_command
+ * - Check for valid command
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if command is valid, 0 if not
+ */
+int ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_requester_sequence_number
+ * - Check for valid requester sequence number
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if requester sequence number is valid, 0 if not
+ */
+int ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_completion_code
+ * - Check for valid completion code
+ * - Function can be passed IPMI 1.5 packets and IPMI 2.0 session packets
+ * Returns 1 if completion code is valid, 0 if not
+ */
+int ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+
+/* ipmipower_check_payload_type
+ * - Check for valid payload type
+ * - Function can be passed IPMI 2.0 packets
+ * Returns 1 if payload type is valid, 0 if not
+ */
+int ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_message_tag
+ * - Check for valid message tag
+ * - Function can be passed IPMI 2.0 RAKP packets
+ * Returns 1 if message tag is valid, 0 if not
+ */
+int ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_rmcpplus_status_code 
+ * - Check for valid rmcpplus status code
+ * - Function can be passed IPMI 2.0 RAKP packets
+ * Returns 1 if rmcpplus status code is valid, 0 if not
+ */
+int ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_rakp_2_key_exchange_authentication_code
+ * - Check for valid rakp 2 key exchange authentication code
+ * - Function can be passed RAKP MESSAGE 2 packets
+ * Returns 1 if rakp 2 key exchange authentication code is valid, 0 if not
+ */
+int ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_rakp_4_integrity_check_value
+ * - Check for valid rakp 4 integrity check value
+ * - Function can be passed RAKP MESSAGE 4 packets
+ * Returns 1 if rakp 4 integrity check value is valid, 0 if not
+ */
+int ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_payload_pad 
+ * - Check for valid payload pad
+ * - Function can be passed IPMI 2.0 session packets
+ * Returns 1 if payload pad is valid, 0 if not
+ */
+int ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_integrity_pad 
+ * - Check for valid integrity pad
+ * - Function can be passed IPMI 2.0 session packets
+ * Returns 1 if integrity pad is valid, 0 if not
+ */
+int ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt);
 
 #endif /* _IPMIPOWER_CHECKS_H */

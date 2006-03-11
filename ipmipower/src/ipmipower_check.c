@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.25 2006-03-08 19:05:57 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.26 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,6 +33,7 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif
+#include <errno.h>
 #include <assert.h>
 
 #include "ipmipower_check.h"
@@ -41,12 +42,203 @@
 
 extern struct ipmipower_config *conf;
 
-static int 
-_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
+int
+ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  fiid_obj_t obj_cmd;
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+	  || pkt == AUTHENTICATION_CAPABILITIES_RES
+	  || pkt == GET_SESSION_CHALLENGE_RES
+	  || pkt == ACTIVATE_SESSION_RES
+	  || pkt == SET_SESSION_PRIVILEGE_RES
+	  || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+	  || pkt == CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
+	  || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
+
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+  if ((rv = ipmi_lan_check_checksum(ip->obj_lan_msg_hdr_res,
+				    obj_cmd,
+				    ip->obj_lan_msg_trlr_res)) < 0)
+    err_exit("ipmipower_check_checksum(%s:%d): "
+	     "ipmi_lan_check_checksum: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (!rv)
+    dbg("ipmipower_check_checksum(%s:%d): checksum check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+
+int
+ipmipower_check_authentication_code(ipmipower_powercmd_t ip, 
+				    packet_type_t pkt,
+				    uint8_t *buffer,
+				    uint32_t buffer_len)
+{
+  uint8_t *password;
+  int8_t rv = -1;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+	 || pkt == AUTHENTICATION_CAPABILITIES_RES
+	 || pkt == GET_SESSION_CHALLENGE_RES
+	 || pkt == ACTIVATE_SESSION_RES
+	 || pkt == SET_SESSION_PRIVILEGE_RES
+	 || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+	 || pkt == CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
+	 || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
+	 || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
+  assert(buffer && buffer_len);
+
+  if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+      || pkt == AUTHENTICATION_CAPABILITIES_RES
+      || pkt == GET_SESSION_CHALLENGE_RES
+      || pkt == ACTIVATE_SESSION_RES
+      || pkt == SET_SESSION_PRIVILEGE_RES
+      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+      || (ip->ipmi_version == IPMI_VERSION_1_5
+	  && (pkt == CHASSIS_STATUS_RES
+	      || pkt == CHASSIS_CONTROL_RES
+	      || pkt == CLOSE_SESSION_RES)))
+    {
+      uint8_t authentication_type;
+      int check_authcode_retry_flag = 0;
+
+      /* IPMI 1.5 Checks */
+      if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
+          || pkt == AUTHENTICATION_CAPABILITIES_RES
+          || pkt == GET_SESSION_CHALLENGE_RES
+	  || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+	authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+      else if (pkt == ACTIVATE_SESSION_RES)
+	authentication_type = ip->authentication_type;
+      else /* pkt == SET_SESSION_PRIVILEGE_RES
+              || pkt == CHASSIS_STATUS_RES
+              || pkt == CHASSIS_CONTROL_RES
+              || pkt == CLOSE_SESSION_RES
+	   */
+	{
+	  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+	    {
+	      authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+	      check_authcode_retry_flag++;
+	    }
+	  else
+	    authentication_type = ip->authentication_type;
+	}
+      
+      if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
+	{
+	  if (strlen(conf->password))
+	    password = (uint8_t *)conf->password;
+	  else
+	    password = NULL;
+	}
+      else
+	password = NULL;
+      
+      if ((rv = ipmi_lan_check_packet_session_authentication_code(buffer,
+								  buffer_len,
+								  authentication_type,
+								  (uint8_t *)password,
+								  strlen(conf->password))) < 0)
+	err_exit("ipmipower_check_authentication_code(%s:%d): "
+		 "ipmi_lan_check_packet_session_authentication_code: %s",
+		 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on Dell PowerEdge 2850
+       *
+       * When per-message authentication is disabled, and we send a
+       * message to a remote machine with auth-type none, the Dell
+       * motherboard will respond with a message with the auth-type used
+       * in the activate session stage and the appropriate authcode. So
+       * here is our second session-authcode check attempt under these
+       * circumstances.
+       */
+      if (conf->check_unexpected_authcode == IPMIPOWER_TRUE
+	  && !rv
+	  && check_authcode_retry_flag)
+	{
+	  dbg("ipmipower_check_authentication_code(%s:%d): retry authcode check",
+	      ip->ic->hostname, ip->protocol_state, strerror(errno));
+	  
+	  authentication_type = ip->authentication_type;
+	  if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
+	    {
+	      if (strlen(conf->password))
+		password = (uint8_t *)conf->password;
+	      else
+		password = NULL;
+	    }
+	  else
+	    password = NULL;
+	  
+	  if ((rv = ipmi_lan_check_packet_session_authentication_code(buffer,
+								      buffer_len,
+								      authentication_type,
+								      (uint8_t *)password,
+								      strlen(conf->password))) < 0)
+	    err_exit("ipmipower_check_authentication_code(%s:%d): "
+		     "ipmi_lan_check_session_authentication_code: %s",
+		     ip->ic->hostname, ip->protocol_state, strerror(errno));
+	  
+	  if (rv)
+	    dbg("ipmipower_check_authentication_code(%s:%d): "
+		"permsgauth authcode re-check passed",
+		ip->ic->hostname, ip->protocol_state);
+	}
+    }      
+  else	/* 
+	   (ip->ipmi_version == IPMI_VERSION_2_0
+	    && (pkt == CHASSIS_STATUS_RES
+	        || pkt == CHASSIS_CONTROL_RES
+	        || pkt == CLOSE_SESSION_RES))
+	*/
+    {
+      /* IPMI 2.0 Checks */
+
+      if (strlen(conf->password))
+	password = (uint8_t *)conf->password;
+      else
+	password = NULL;
+
+      /* XXX support more algs */
+      if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(ip->integrity_algorithm,
+								       buffer,
+								       buffer_len,
+								       NULL,
+								       0,
+								       password,
+								       (password) ? strlen((char *)password) : 0,
+								       ip->obj_rmcpplus_session_trlr_res)) < 0)
+	err_exit("ipmipower_check_authentication_code(%s:%d): "
+		 "ipmi_rmcpplus_check_session_authentication_code: %s",
+		 ip->ic->hostname, ip->protocol_state, strerror(errno));
+    }
+
+  if (!rv)
+    dbg("ipmipower_check_authentication_code(%s:%d): "
+	"authentication code check failed",
+	ip->ic->hostname, ip->protocol_state);
+  
+  return (int)rv;
+}
+
+int 
+ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint32_t shift_num, wrap_val, max_sequence_number = 0xFFFFFFFF;
-  uint64_t pktoseq = 0;
-  int retval = 0;
+  uint64_t seq_num = 0;
+  int rv = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -67,12 +259,30 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+      || pkt == OPEN_SESSION_RES
+      || pkt == RAKP_MESSAGE_2_RES
+      || pkt == RAKP_MESSAGE_4_RES)
     return 1;
 
-  Fiid_obj_get(ip->obj_lan_session_hdr_res,
-               "session_sequence_number", 
-	       &pktoseq);
+  if (ip->ipmi_version == IPMI_VERSION_2_0
+      && (pkt == CHASSIS_STATUS_RES
+	  || pkt == CHASSIS_CONTROL_RES
+	  || pkt == CLOSE_SESSION_RES))
+    Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res,
+		 "session_sequence_number",
+		 &seq_num);
+  else /* 
+	  pkt == ACTIVATE_SESSION_RES
+	  || pkt == SET_SESSION_PRIVILEGE_RES
+	  || (ip->ipmi_version == IPMI_VERSION_1_5
+	      && (pkt == CHASSIS_STATUS_RES
+	          || pkt == CHASSIS_CONTROL_RES
+		  || pkt == CLOSE_SESSION_RES))
+       */
+    Fiid_obj_get(ip->obj_lan_session_hdr_res,
+		 "session_sequence_number", 
+		 &seq_num);
   
   if (pkt == ACTIVATE_SESSION_RES)
     {
@@ -81,12 +291,16 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
        * whatever sequence number they give us even if it isn't the
        * initial outbound sequence number.
        */
-      ip->highest_received_sequence_number = pktoseq;
+      ip->highest_received_sequence_number = seq_num;
       return 1;
     }
   
   /* Drop duplicate packet */
-  if (pktoseq == ip->highest_received_sequence_number)
+  if (seq_num == ip->highest_received_sequence_number)
+    goto out;
+
+  /* In IPMI 2.0, sequence number 0 is special, and shouldn't happen */
+  if (ip->ipmi_version == IPMI_VERSION_2_0 && seq_num == 0)
     goto out;
 
   /* Check if sequence number is greater than highest received and is
@@ -96,29 +310,33 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
     {
       wrap_val = IPMIPOWER_SEQUENCE_NUMBER_WINDOW - (max_sequence_number - ip->highest_received_sequence_number) - 1;
 
-      if (pktoseq > ip->highest_received_sequence_number || pktoseq <= wrap_val)
+      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
+      if (ip->ipmi_version == IPMI_VERSION_2_0)
+	wrap_val++;
+
+      if (seq_num > ip->highest_received_sequence_number || seq_num <= wrap_val)
         {
-          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
-            shift_num = pktoseq - ip->highest_received_sequence_number;
+          if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
+            shift_num = seq_num - ip->highest_received_sequence_number;
           else
-            shift_num = pktoseq + (max_sequence_number - ip->highest_received_sequence_number) + 1;
+            shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number) + 1;
           
-          ip->highest_received_sequence_number = pktoseq;
+          ip->highest_received_sequence_number = seq_num;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
-          retval++;
+          rv++;
         }
     }
   else
     {
-      if (pktoseq > ip->highest_received_sequence_number
-          && (pktoseq - ip->highest_received_sequence_number) <= IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
+      if (seq_num > ip->highest_received_sequence_number
+          && (seq_num - ip->highest_received_sequence_number) <= IPMIPOWER_SEQUENCE_NUMBER_WINDOW)
         {
-          shift_num = (pktoseq - ip->highest_received_sequence_number);
-          ip->highest_received_sequence_number = pktoseq;
+          shift_num = (seq_num - ip->highest_received_sequence_number);
+          ip->highest_received_sequence_number = seq_num;
           ip->previously_received_list <<= shift_num;
           ip->previously_received_list |= (0x1 << (shift_num - 1));
-          retval++;
+          rv++;
         }
     }
   
@@ -129,50 +347,70 @@ _check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt)
     {
       uint32_t wrap_val = max_sequence_number - (IPMIPOWER_SEQUENCE_NUMBER_WINDOW - ip->highest_received_sequence_number) + 1;
       
-      if (pktoseq < ip->highest_received_sequence_number || pktoseq >= wrap_val)
+      /* In IPMI 2.0, sequence number 0 isn't possible, so adjust wrap_val */
+      if (ip->ipmi_version == IPMI_VERSION_2_0)
+	wrap_val--;
+
+      if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
         {
-          if (pktoseq > ip->highest_received_sequence_number && pktoseq <= max_sequence_number)
-            shift_num = ip->highest_received_sequence_number + (max_sequence_number - pktoseq) + 1;
+          if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
+            shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num) + 1;
           else
-            shift_num = ip->highest_received_sequence_number - pktoseq;
+            shift_num = ip->highest_received_sequence_number - seq_num;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
             goto out;
           
           ip->previously_received_list |= (0x1 << (shift_num - 1));
-          retval++;
+          rv++;
         }
     }
   else
     {
-      if (pktoseq < ip->highest_received_sequence_number
-          && pktoseq >= (ip->highest_received_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
+      if (seq_num < ip->highest_received_sequence_number
+          && seq_num >= (ip->highest_received_sequence_number - IPMIPOWER_SEQUENCE_NUMBER_WINDOW))
         {
-          shift_num = ip->highest_received_sequence_number - pktoseq;
+          shift_num = ip->highest_received_sequence_number - seq_num;
           
           /* Duplicate packet check*/
           if (ip->previously_received_list & (0x1 << (shift_num - 1)))
             goto out;
           
           ip->previously_received_list |= (0x1 << (shift_num - 1));
-          retval++;
+          rv++;
         }
     }
   
+  /* IPMI Workaround (achu)
+   *
+   * Disocvered on Intel SE7520JR2 with National Semiconductor PC87431M mBMC
+   *
+   * Note: Later changes in ipmipower have removed the need for these
+   * workarounds.  I still note them for historical purposes.
+   *
+   * The initial outbound sequence number on activate session response
+   * is off by one.  The activate session response packet is supposed
+   * to contain the initial outbound sequence number passed during the
+   * request.  The outbound sequence number on a close session reponse
+   * may also be incorrect.
+   */
+
+
  out:
-  if (!retval)
-    dbg("_check_outbound_sequence_number(%s:%d): pktoseq: %u, high: %u",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)pktoseq, ip->highest_received_sequence_number);
+  if (!rv)
+    dbg("ipmipower_check_outbound_sequence_number(%s:%d): seq_num: %u, high: %u",
+        ip->ic->hostname, ip->protocol_state, (unsigned int)seq_num, 
+	ip->highest_received_sequence_number);
   
-  return retval;
+  return rv;
 }
 
-static int 
-_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt) 
+int 
+ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t session_id = 0;
-  uint64_t actv_res_session_id = 0;
+  uint64_t expected_session_id = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
@@ -183,20 +421,47 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == ACTIVATE_SESSION_RES
       || pkt == GET_CHANNEL_CIPHER_SUITES_RES)      
     return 1;
-  else
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ
+	   || (ip->ipmi_version == IPMI_VERSION_1_5
+	       && (pkt == CLOSE_SESSION_REQ
+		   || pkt == CHASSIS_STATUS_REQ
+		   || pkt == CHASSIS_CONTROL_REQ)))
     {
       Fiid_obj_get(ip->obj_lan_session_hdr_res, 
                    "session_id", 
 		   &session_id);
       Fiid_obj_get(ip->obj_activate_session_res, 
                    "session_id", 
-		   &actv_res_session_id);
+		   &expected_session_id);
+    }
+  else if (ip->ipmi_version == IPMI_VERSION_2_0
+	   && (pkt == CHASSIS_STATUS_RES
+	       || pkt == CHASSIS_CONTROL_RES
+	       || pkt == CLOSE_SESSION_RES))
+    {
+      Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res, 
+                   "session_id", 
+		   &session_id);
+      expected_session_id = ip->remote_console_session_id;
+    }
+  else if (pkt == OPEN_SESSION_RES
+	   || pkt == RAKP_MESSAGE_2_RES
+	   || pkt == RAKP_MESSAGE_4_RES)
+    {
+      fiid_obj_t obj_cmd;
+
+      obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+      
+      Fiid_obj_get(obj_cmd,
+		   "remote_console_session_id",
+		   &session_id);
+      expected_session_id = ip->remote_console_session_id;
     }
   
-  if (session_id != actv_res_session_id && session_id != 0)
-    dbg("_check_session_id(%s:%d): session id bad: %x expected: %x",
+  if (session_id != expected_session_id)
+    dbg("ipmipower_check_session_id(%s:%d): session id: %x expected: %x",
         ip->ic->hostname, ip->protocol_state, (unsigned int)session_id, 
-        (unsigned int)actv_res_session_id);
+        (unsigned int)expected_session_id);
   
   /* IPMI Workaround (achu)
    *
@@ -210,65 +475,53 @@ _check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
   if (conf->accept_session_id_zero == IPMIPOWER_TRUE && !session_id)
     return (1);
 
-  return (session_id == actv_res_session_id);
+  return ((session_id == expected_session_id) ? 1 : 0);
 }
 
-static int 
-_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt) 
+int 
+ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t netfn = 0;
   uint64_t expected_netfn;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
+  /* Assert this is not an IPMI 2.0 Session Setup Packet */
+  assert(pkt != OPEN_SESSION_RES
+	 && pkt != CHASSIS_STATUS_RES
+	 && pkt != CHASSIS_CONTROL_RES);
     
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, "net_fn", &netfn);
 
-  if (pkt == CHASSIS_STATUS_RES 
-      || pkt == CHASSIS_CONTROL_RES)
+  if (pkt == CHASSIS_STATUS_RES || pkt == CHASSIS_CONTROL_RES)
     expected_netfn = IPMI_NET_FN_CHASSIS_RS;
   else
     expected_netfn = IPMI_NET_FN_APP_RS;
   
   if (netfn != expected_netfn)
-    dbg("_check_network_function(%s:%d): netfn bad: %x, expected: %x", 
+    dbg("ipmipower_check_network_function(%s:%d): netfn: %x, expected: %x", 
         ip->ic->hostname, ip->protocol_state, (unsigned int)netfn, expected_netfn);
 
   return ((netfn == expected_netfn) ? 1 : 0);
 }
 
-static int 
-_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt) 
-{
-  uint64_t pktrseq = 0;
-  uint64_t myrseq = 0;
-
-  assert(ip != NULL);
-  assert(PACKET_TYPE_VALID_RES(pkt));
-    
-  myrseq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
-
-  Fiid_obj_get(ip->obj_lan_msg_hdr_res, "rq_seq", &pktrseq);
-
-  if (pktrseq != myrseq)
-    dbg("_check_requester_sequence_number(%s:%d): rseq: %x, expected: %x",
-        ip->ic->hostname, ip->protocol_state, (unsigned int)pktrseq, (unsigned int)myrseq);
-  
-  return ((pktrseq == myrseq) ? 1 : 0);
-}
-
-static int 
-_check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
+int 
+ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   uint64_t cmd = 0;
   uint64_t expected_cmd = -1;
+  fiid_obj_t obj_cmd;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
+  /* Assert this is not an IPMI 2.0 Session Setup Packet */
+  assert(pkt != OPEN_SESSION_RES
+	 && pkt != CHASSIS_STATUS_RES
+	 && pkt != CHASSIS_CONTROL_RES);
   
-  Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               "cmd", 
-	       &cmd);
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+
+  Fiid_obj_get(obj_cmd, "cmd", &cmd);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
       || pkt == AUTHENTICATION_CAPABILITIES_RES)
@@ -279,67 +532,325 @@ _check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
   else if (pkt == SET_SESSION_PRIVILEGE_RES) 
     expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+    expected_cmd = IPMI_CMD_GET_CHANNEL_CIPHER_SUITES;
   else if (pkt == CLOSE_SESSION_RES) 
     expected_cmd = IPMI_CMD_CLOSE_SESSION;
-  else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES) 
-    expected_cmd = IPMI_CMD_GET_CHANNEL_CIPHER_SUITES;
   else if (pkt == CHASSIS_STATUS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CHASSIS_CONTROL_RES) 
     expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
   
   if (cmd != expected_cmd)
-    dbg("_check_command(%s:%d): cmd bad: %x", 
-        ip->ic->hostname, ip->protocol_state, (unsigned int)cmd);
+    dbg("ipmipower_check_command(%s:%d): cmd: %x, expected: %x", 
+        ip->ic->hostname, ip->protocol_state, 
+	(unsigned int)cmd, (unsigned int)expected_cmd);
   
   return ((cmd == expected_cmd) ? 1 : 0);
 }
 
-static int 
-_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt) 
+int 
+ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  uint64_t cc = 0;
+  uint64_t req_seq = 0;
+  uint64_t expected_req_seq = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
+  /* Assert this is not an IPMI 2.0 Session Setup Packet */
+  assert(pkt != OPEN_SESSION_RES
+	 && pkt != CHASSIS_STATUS_RES
+	 && pkt != CHASSIS_CONTROL_RES);
     
-  Fiid_obj_get(ipmipower_packet_cmd_obj(ip, pkt),
-               "comp_code", 
-	       &cc);
+  expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
+
+  Fiid_obj_get(ip->obj_lan_msg_hdr_res, "rq_seq", &req_seq);
+
+  if (req_seq != expected_req_seq)
+    dbg("ipmipower_check_requester_sequence_number(%s:%d): req_seq: %x, expected: %x",
+        ip->ic->hostname, ip->protocol_state, 
+	(unsigned int)req_seq, (unsigned int)expected_req_seq);
   
-  if (cc != IPMI_COMP_CODE_COMMAND_SUCCESS)
-    dbg("_check_completion_code(%s:%d): cc bad: %x", 
-        ip->ic->hostname, ip->protocol_state, (unsigned int)cc);
-  
-  return ((cc == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
+  return ((req_seq == expected_req_seq) ? 1 : 0);
 }
 
 int 
-ipmipower_check_packet(ipmipower_powercmd_t ip, packet_type_t pkt,
-                       int *oseq, int *sid, int *netfn, int *rseq, 
-                       int *cmd, int *cc)
+ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  int e = 0;
+  uint64_t comp_code = 0;
+  fiid_obj_t obj_cmd;
+  
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  /* Assert this is not an IPMI 2.0 Session Setup Packet */
+  assert(pkt != OPEN_SESSION_RES
+	 && pkt != CHASSIS_STATUS_RES
+	 && pkt != CHASSIS_CONTROL_RES);
+    
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+
+  Fiid_obj_get(obj_cmd, "comp_code", &comp_code);
+  
+  if (comp_code != IPMI_COMP_CODE_COMMAND_SUCCESS)
+    dbg("ipmipower_check_completion_code(%s:%d): comp_code: %x", 
+        ip->ic->hostname, ip->protocol_state, (unsigned int)comp_code);
+  
+  return ((comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS) ? 1 : 0);
+}
+
+int
+ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint64_t payload_type;
+  uint8_t expected_payload_type;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(pkt == OPEN_SESSION_RES
+	 || pkt == RAKP_MESSAGE_2_RES
+	 || pkt == RAKP_MESSAGE_4_RES
+	 || (ip->ipmi_version == IPMI_VERSION_2_0
+	     && (pkt == CHASSIS_STATUS_RES
+		 || pkt == CHASSIS_CONTROL_RES
+		 || pkt == CLOSE_SESSION_RES)));
 
-  if (oseq && !(*oseq = _check_outbound_sequence_number(ip, pkt)))
-    e++;
-  if (sid && !(*sid = _check_session_id(ip, pkt)))
-    e++;
-  if (netfn && !(*netfn = _check_network_function(ip, pkt)))
-    e++;
-  if (rseq && !(*rseq = _check_requester_sequence_number(ip, pkt)))
-    e++;
-  if (cmd && !(*cmd = _check_command(ip, pkt)))
-    e++;
-  if (cc && !(*cc = _check_completion_code(ip, pkt))) 
-    e++;
-  
-  if (e)
-    dbg("ipmipower_check_packet(%s:%d): packet failed checks",
-        ip->ic->hostname, ip->protocol_state);
-  
-  return ((e) ? 0 : 1);
+  Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res, 
+	       "payload_type", 
+	       &payload_type);
+
+  if (pkt == OPEN_SESSION_RES)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE;
+  else if (pkt == RAKP_MESSAGE_2_RES)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2;
+  else if (pkt == RAKP_MESSAGE_4_RES)
+    expected_payload_type = IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4;
+  else
+    expected_payload_type = IPMI_PAYLOAD_TYPE_IPMI;
+
+  if (payload_type != expected_payload_type)
+    dbg("ipmipower_check_payload_type(%s:%d): "
+	"payload_type: %x, expected: %x",
+        ip->ic->hostname, ip->protocol_state, 
+	(unsigned int)payload_type, (unsigned int)expected_payload_type);
+
+  return ((payload_type == expected_payload_type) ? 1 : 0);
 }
+
+int
+ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint64_t message_tag;
+  uint64_t expected_message_tag;
+  fiid_obj_t obj_cmd;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(pkt == OPEN_SESSION_RES
+	 || pkt == RAKP_MESSAGE_2_RES
+	 || pkt == RAKP_MESSAGE_4_RES);
+
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+  
+  Fiid_obj_get(obj_cmd, 
+	       "message_tag", 
+	       &message_tag);
+
+  expected_message_tag = ip->initial_message_tag + ip->message_tag_count;
+
+  if (message_tag != expected_message_tag)
+    dbg("ipmipower_check_message_tag(%s:%d): "
+	"message_tag: %x, expected: %x",
+        ip->ic->hostname, ip->protocol_state, 
+	(unsigned int)message_tag, 
+	(unsigned int)expected_message_tag);
+
+  return ((message_tag == expected_message_tag) ? 1 : 0);
+}
+
+int
+ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint64_t rmcpplus_status_code;
+  fiid_obj_t obj_cmd;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(pkt == OPEN_SESSION_RES
+	 || pkt == RAKP_MESSAGE_2_RES
+	 || pkt == RAKP_MESSAGE_4_RES);
+
+  obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
+  
+  Fiid_obj_get(obj_cmd, 
+	       "rmcpplus_status_code", 
+	       &rmcpplus_status_code);
+
+  if (rmcpplus_status_code != RMCPPLUS_STATUS_NO_ERRORS)
+    dbg("ipmipower_check_rmcpplus_status_code(%s:%d): "
+	"rmcpplus_status_code: %x",
+        ip->ic->hostname, ip->protocol_state, 
+	(unsigned int)rmcpplus_status_code);
+
+  return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
+}
+
+int
+ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
+  int32_t managed_system_random_number_len;
+  uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
+  int32_t managed_system_guid_len;
+  uint8_t *username;
+  uint8_t *password;
+  uint64_t managed_system_session_id;
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(pkt == RAKP_MESSAGE_2_RES);
+
+  if (strlen(conf->username))
+    username = (uint8_t *)conf->username;
+  else
+    username = NULL;
+
+  if (strlen(conf->password))
+    password = (uint8_t *)conf->password;
+  else
+    password = NULL;
+
+  Fiid_obj_get(ip->obj_open_session_res,
+	       "managed_system_session_id",
+	       &managed_system_session_id);
+  
+  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+						       "managed_system_random_number",
+						       managed_system_random_number,
+						       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
+  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+					      "managed_system_guid",
+					      managed_system_guid,
+					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  
+  if ((rv = ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(ip->authentication_algorithm,
+										password,
+										(password) ? strlen((char *)password) : 0,
+										ip->remote_console_session_id,
+										managed_system_session_id,
+										ip->remote_console_random_number,
+										IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+										managed_system_random_number,
+										managed_system_random_number_len,
+										managed_system_guid,
+										managed_system_guid_len,
+										ip->name_only_lookup,
+										ip->requested_maximum_privilege,
+										username,
+										(username) ? strlen((char *)username) : 0,
+										ip->obj_rakp_message_2_res)) < 0)
+    err_exit("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
+	     "ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (!rv)
+    dbg("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
+	"rakp 2 check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+
+int
+ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
+  int32_t managed_system_guid_len;
+  uint64_t managed_system_session_id;
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(pkt == RAKP_MESSAGE_4_RES);
+
+  Fiid_obj_get(ip->obj_open_session_res,
+	       "managed_system_session_id",
+	       &managed_system_session_id);
+
+  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+					      "managed_system_guid",
+					      managed_system_guid,
+					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
+  /* XXX support more algs */
+  if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(ip->authentication_algorithm,
+								     NULL,
+								     0,
+								     ip->remote_console_random_number,
+								     IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+								     (uint32_t)managed_system_session_id,
+								     managed_system_guid,
+								     managed_system_guid_len,
+								     ip->obj_rakp_message_4_res)) < 0)
+    err_exit("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
+	     "ipmipower_check_rakp_4_integrity_check_value: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (!rv)
+    dbg("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
+	"rakp 4 check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+
+int
+ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(ip->ipmi_version == IPMI_VERSION_2_0
+	 && (pkt == CHASSIS_STATUS_RES
+	     || pkt == CHASSIS_CONTROL_RES
+	     || pkt == CLOSE_SESSION_RES));
+
+  if ((rv = ipmi_rmcpplus_check_payload_pad(ip->confidentiality_algorithm,
+					    ip->obj_rmcpplus_payload_res)) < 0)
+    err_exit("ipmipower_check_payload_pad(%s:%d): "
+	     "ipmi_rmcpplus_check_payload_pad: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (!rv)
+    dbg("ipmipower_check_payload_pad(%s:%d): "
+	"payload pad check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+
+int
+ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(PACKET_TYPE_VALID_RES(pkt));
+  assert(ip->ipmi_version == IPMI_VERSION_2_0
+	 && (pkt == CHASSIS_STATUS_RES
+	     || pkt == CHASSIS_CONTROL_RES
+	     || pkt == CLOSE_SESSION_RES));
+
+  if ((rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res)) < 0)
+    err_exit("ipmipower_check_integrity_pad(%s:%d): "
+	     "ipmi_rmcpplus_check_integrity_pad: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (!rv)
+    dbg("ipmipower_check_integrity_pad(%s:%d): "
+	"integrity pad check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+

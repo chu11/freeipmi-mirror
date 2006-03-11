@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.43 2006-03-11 06:27:38 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.44 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -170,11 +170,14 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    */
 
   /* ip->ipmi_version is set after Get Authentication Capabilities
-   * Response stage is finished if it is AUTO.
+   * Response stage.
    */
 
   ip->session_inbound_count = 0;
-  ip->highest_received_sequence_number = IPMIPOWER_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+
+  /* ip->highest_received_sequence_number is determined
+   * after the ipmi_version is determined.
+   */
   ip->previously_received_list = 0xFF;
 
   if (conf->privilege == PRIVILEGE_TYPE_AUTO)
@@ -196,12 +199,13 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   if (conf->ipmi_version == IPMI_VERSION_AUTO
       || conf->ipmi_version == IPMI_VERSION_1_5)
     {
-      /* ip->permsgauth_enabled is set after Get Authentication Capabilities
-       * Response is received 
+      /* ip->permsgauth_enabled is set after the Get Authentication
+       * Capabilities Response and/or Activate Session Response is
+       * received
        */
       
       /* ip->authentication_type is set after Get Authentication Capabilities
-       * Response is received 
+       * Response
        */      
     }
 #endif 
@@ -228,7 +232,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       if (ipmi_get_random(ip->remote_console_random_number, 
                           IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
         {
-          dbg("ipmipower_powercmd_queue(%s:%d): ipmi_get_random: %s ",
+          dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
               strerror(errno));
         }
     }
@@ -372,11 +376,11 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (ip->ipmi_version == IPMI_VERSION_1_5
-      && (pkt == SET_SESSION_PRIVILEGE_REQ 
-	  || pkt == CLOSE_SESSION_REQ 
-	  || pkt == CHASSIS_STATUS_REQ 
-	  || pkt == CHASSIS_CONTROL_REQ))
+  if (pkt == SET_SESSION_PRIVILEGE_REQ 
+      || (ip->ipmi_version == IPMI_VERSION_1_5
+	  && (pkt == CLOSE_SESSION_REQ 
+	      || pkt == CHASSIS_STATUS_REQ 
+	      || pkt == CHASSIS_CONTROL_REQ)))
     ip->session_inbound_count++;
 
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
@@ -391,15 +395,15 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
 static int 
 _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  int ret, len = 0;
-  char buffer[IPMI_PACKET_BUFLEN];
+  char recv_buf[IPMI_PACKET_BUFLEN];
+  int recv_len = 0;
 
   assert(PACKET_TYPE_VALID_RES(pkt));
 
-  if (!(len = Cbuf_peek_and_drop(ip->ic->ipmi_in, buffer, IPMI_PACKET_BUFLEN)))
+  if (!(recv_len = Cbuf_peek_and_drop(ip->ic->ipmi_in, recv_buf, IPMI_PACKET_BUFLEN)))
     return 0;
 
-  ipmipower_packet_dump(ip, pkt, buffer, len);
+  ipmipower_packet_dump(ip, pkt, recv_buf, recv_len);
       
   /* IPMI 1.5 Packet Checks */
 
@@ -414,156 +418,48 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CLOSE_SESSION_RES)))
     {
-      uint8_t authentication_type;
-      uint8_t *password;
-      int check_authcode_retry_flag = 0;
-      int oseq_flag, sid_flag, netfn_flag, rseq_flag, cmd_flag, cc_flag;
-      uint8_t cc, netfn, cmd, rseq;
-      uint32_t sid, oseq;
-
-      if ((ret = ipmi_lan_check_packet_checksum((uint8_t *)buffer, len)) < 0)
-        err_exit("_recv_packet(%s:%d): ipmi_lan_check_checksum: %s",
-                 ip->ic->hostname, ip->protocol_state, strerror(errno));
-
-      if (!ret) 
-        {
-          dbg("_recv_packet(%s:%d): bad chksum",
-              ip->ic->hostname, ip->protocol_state);
-          return 0;
-        }                                                                                                        
-
-      if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES 
-          || pkt == AUTHENTICATION_CAPABILITIES_RES 
-          || pkt == GET_SESSION_CHALLENGE_RES
-          || pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-        authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-      else if (pkt == ACTIVATE_SESSION_RES)
-        authentication_type = ip->authentication_type;
-      else /* pkt == SET_SESSION_PRIVILEGE_RES
-              || pkt == CHASSIS_STATUS_RES
-              || pkt == CHASSIS_CONTROL_RES
-              || pkt == CLOSE_SESSION_RES
-           */
-        {
-          if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-            {
-              authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
-              check_authcode_retry_flag++;
-            }
-          else
-            authentication_type = ip->authentication_type;
-        }
-      
-      if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-        {
-          if (strlen(conf->password))
-            password = (uint8_t *)conf->password;
-          else
-            password = NULL;
-        }
-      else
-        password = NULL;
-
-      if ((ret = ipmi_lan_check_packet_session_authentication_code((uint8_t *)buffer, 
-                                                                   len,
-                                                                   authentication_type,
-                                                                   (uint8_t *)password,
-                                                                   strlen(conf->password))) < 0)
-        err_exit("_recv_packet(%s:%d): ipmi_lan_check_session_authentication_code: %s",
-                 ip->ic->hostname, ip->protocol_state, strerror(errno));
-      
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on Dell PowerEdge 2850
-       *
-       * When per-message authentication is disabled, and we send a
-       * message to a remote machine with auth-type none, the Dell
-       * motherboard will respond with a message with the auth-type used
-       * in the activate session stage and the appropriate authcode. So
-       * here is our second session-authcode check attempt under these
-       * circumstances.
-       */
-      if (conf->check_unexpected_authcode == IPMIPOWER_TRUE 
-          && !ret 
-          && check_authcode_retry_flag)
-        {
-          dbg("_recv_packet(%s:%d): retry authcode check", 
-              ip->ic->hostname, ip->protocol_state, strerror(errno));
-          
-          authentication_type = ip->authentication_type;
-          
-          if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-            {
-              if (strlen(conf->password))
-                password = (uint8_t *)conf->password;
-              else
-                password = NULL;
-            }
-          else
-            password = NULL;
-          
-          if ((ret = ipmi_lan_check_packet_session_authentication_code((uint8_t *)buffer, 
-                                                                       len,
-                                                                       authentication_type,
-                                                                       (uint8_t *)password,
-                                                                       strlen(conf->password))) < 0)
-            err_exit("_recv_packet(%s:%d): ipmi_lan_check_session_authentication_code: %s",
-                     ip->ic->hostname, ip->protocol_state, strerror(errno));
-          
-          if (ret)
-            dbg("_recv_packet(%s:%d): permsgauth authcode re-check passed",
-                ip->ic->hostname, ip->protocol_state);
-        }
-
-      if (!ret)
-        {
-          dbg("_recv_packet(%s:%d): bad authcode",
-              ip->ic->hostname, ip->protocol_state);
-          return 0;
-        }
-
-      if (ipmipower_packet_store(ip, pkt, buffer, len) < 0)
+      /* Return 0 if the packet is unparseable */
+      if (ipmipower_packet_store(ip, pkt, recv_buf, recv_len) < 0)
         return 0;
 
-      if (ipmipower_check_packet(ip, pkt, &oseq_flag, &sid_flag, &netfn_flag, 
-                                 &rseq_flag, &cmd_flag, &cc_flag))
-        {
-          ip->retry_count = 0;  /* important to reset */
-          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          return 1;
-        }
-      
-      /* IPMI Workaround (achu)
-       *
-       * Disocvered on Intel SE7520JR2 with National Semiconductor PC87431M mBMC
-       *
-       * Note: Later changes in ipmipower have removed the need for these
-       * workarounds.  I still note them for historical purposes.
-       *
-       * The initial outbound sequence number on activate session response
-       * is off by one.  The activate session response packet is supposed
-       * to contain the initial outbound sequence number passed during the
-       * request.  The outbound sequence number on a close session reponse
-       * may also be incorrect.
-       */
+      if (!ipmipower_check_checksum(ip, pkt))
+	return 0;
 
-      /* achu: If this is the close session response, go ahead and just
-       * accept the packet under most circumstances.  We'll just close the
-       * session anyways.
-       */
-      if (pkt == CLOSE_SESSION_RES && sid_flag && netfn_flag && cmd_flag)
-        {
-          ip->retry_count = 0;  /* important to reset */
-          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          return 1;
-        }
+      if (!ipmipower_check_authentication_code(ip, 
+					       pkt, 
+					       (uint8_t *)recv_buf, 
+					       (uint32_t)recv_len))
+	return 0;
+
+      if (!ipmipower_check_outbound_sequence_number(ip, pkt))
+	return 0;
       
+      if (!ipmipower_check_session_id(ip, pkt))
+	return 0;
+
+      if (!ipmipower_check_network_function(ip, pkt))
+	return 0;
+
+      if (!ipmipower_check_command(ip, pkt))
+	return 0;
+
+      if (!ipmipower_check_requester_sequence_number(ip, pkt))
+	{
+	  if (pkt == CLOSE_SESSION_RES)
+	    goto close_session_workaround;
+	  return 0;
+	}
+
       /* If everything else is correct besides completion code, packet
        * returned an error.
        */
-      if (oseq_flag && sid_flag && netfn_flag && rseq_flag && cmd_flag && !cc_flag) 
-        {
-          /* Special Case: let _process_ipmi_packets deal with this packet type's output */
+      if (!ipmipower_check_completion_code(ip, pkt))
+	{
+	  if (pkt == CLOSE_SESSION_RES)
+	    goto close_session_workaround;
+
+          /* Special Case: let _process_ipmi_packets deal with this
+	     packet type's output */
           if (pkt != AUTHENTICATION_CAPABILITIES_V20_RES)
             ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
           
@@ -571,15 +467,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
           ip->error_occurred = IPMIPOWER_TRUE; 
           return -1;
-        }
-
-      ipmipower_packet_response_data(ip, pkt, &oseq, &sid, &netfn, &rseq, &cmd, &cc);
-      
-      /* I guess the packet is corrupted or is a retransmission of something we don't need */
-      dbg("_bad_packet(%s:%d): ignoring bad packet: oseq=%x sid=%x "
-          "netfn=%x rseq=%x cmd=%x cc=%x",
-          ip->ic->hostname, ip->protocol_state, oseq, sid, netfn, rseq, cmd, cc);
-      return 0;
+	}
     }
   else /* IPMI 2.0 Packet Checks
           
@@ -592,221 +480,114 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
                    || pkt == CLOSE_SESSION_RES)))
         */
     {
-      /* XXX temporary - assume ipmi 2.0 packets are received happily */
-      if (ipmipower_packet_store(ip, pkt, buffer, len) < 0)
+      if (ipmipower_packet_store(ip, pkt, recv_buf, recv_len) < 0)
 	return 0;
 
-      /* 
-       * RAKP messages are sent in the clear without integrity payloads.  So
-       * there is no need to check:
-       * 
-       * Payload Checksums
-       * Payload Pads
-       * Integrity Pads
-       * Integrity Authentication Codes
-       * Session Ids
-       */
+      if (pkt == OPEN_SESSION_RES
+	  || pkt == RAKP_MESSAGE_2_RES
+	  || pkt == RAKP_MESSAGE_4_RES)
+	{
+	  if (!ipmipower_check_payload_type(ip, pkt))
+	    return 0;
 
-      if (pkt == OPEN_SESSION_RES)
-        {
-          int8_t rv = 0;
+	  if (!ipmipower_check_message_tag(ip, pkt))
+	    return 0;
 
-          rv = ipmi_rmcpplus_check_payload_type(ip->obj_rmcpplus_session_hdr_res,
-                                                IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE);
-          dbg("PAYLOAD_TYPE = %d\n", rv);
+	  /* Unlike IPMI 1.5 completion codes, I don't think there is
+	   * a guarantee the data in the RAKP response will have good
+	   * authentication codes or session ids if there is a status
+	   * code error.  So we check this status code first, then the
+	   * other stuff afterwards.
+	   */
+	  if (!ipmipower_check_rmcpplus_status_code(ip, pkt))
+	    {
+	      /* XXX output error */
+	      return -1;
+	    }
+	  
+	  if (!ipmipower_check_session_id(ip, pkt))
+	    return 0;
 
-          rv = ipmi_rmcpplus_check_status_code(ip->obj_open_session_res,
-                                               RMCPPLUS_STATUS_NO_ERRORS);
-          dbg("STATUS_CODE = %d\n", rv);
-
-          rv = ipmi_rmcpplus_check_message_tag(ip->obj_open_session_res,
-                                               ip->initial_message_tag + ip->message_tag_count);
-          dbg("MESSAGE_TAG = %d\n", rv);
-                                               
-          rv = ipmi_rmcpplus_check_remote_console_session_id(ip->obj_open_session_res,
-                                                             ip->remote_console_session_id);
-          dbg("REMOTE CONSOLE SESSION_ID = %d\n", rv);
-        }
-      else if (pkt == RAKP_MESSAGE_2_RES)
-        {
-          int8_t rv = 0;
-          uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
-          int32_t managed_system_random_number_len;
-          uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-          int32_t managed_system_guid_len;
-          uint8_t *username;
-          uint8_t *password;
-          uint64_t managed_system_session_id;
-
-          if (strlen(conf->username))
-            username = (uint8_t *)conf->username;
-          else
-            username = NULL;
-
-          if (strlen(conf->password))
-            password = (uint8_t *)conf->password;
-          else
-            password = NULL;
-          
-          rv = ipmi_rmcpplus_check_payload_type(ip->obj_rmcpplus_session_hdr_res,
-                                                IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2);
-          dbg("PAYLOAD_TYPE = %d\n", rv);
-          
-          rv = ipmi_rmcpplus_check_status_code(ip->obj_rakp_message_2_res,
-                                               RMCPPLUS_STATUS_NO_ERRORS);
-          dbg("STATUS_CODE = %d\n", rv);
-          
-          rv = ipmi_rmcpplus_check_message_tag(ip->obj_rakp_message_2_res,
-                                               ip->initial_message_tag + ip->message_tag_count);
-          dbg("MESSAGE_TAG = %d\n", rv);
-                                                
-          rv = ipmi_rmcpplus_check_remote_console_session_id(ip->obj_rakp_message_2_res,
-                                                             ip->remote_console_session_id);
-          dbg("REMOTE CONSOLE SESSION_ID = %d\n", rv);
-          
-          fiid_obj_get(ip->obj_open_session_res,
-                       "managed_system_session_id",
-                       &managed_system_session_id);
-
-          managed_system_random_number_len = fiid_obj_get_data(ip->obj_rakp_message_2_res,
-                                                               "managed_system_random_number",
-                                                               managed_system_random_number,
-                                                               IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-
-          managed_system_guid_len = fiid_obj_get_data(ip->obj_rakp_message_2_res,
-                                                      "managed_system_guid",
-                                                      managed_system_guid,
-                                                      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-
-          /* XXX support more algs */
-          rv = ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(ip->authentication_algorithm,
-                                                                                   password,
-                                                                                   (password) ? strlen((char *)password) : 0,
-                                                                                   ip->remote_console_session_id,
-                                                                                   managed_system_session_id,
-                                                                                   
-                                                                                   ip->remote_console_random_number,
-                                                                                   IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                                                                   
-                                                                                   managed_system_random_number,
-                                                                                   managed_system_random_number_len,
-                                                                                   managed_system_guid,
-                                                                                   managed_system_guid_len,
-                                                                                   ip->name_only_lookup,
-                                                                                   ip->requested_maximum_privilege,
-                                                                                   username,
-                                                                                   (username) ? strlen((char *)username) : 0,
-                                                                                   ip->obj_rakp_message_2_res);
-          dbg("RAKP 2 INTEGRITY_CHECK_VALUE: %d\n", rv);
-        }
-      else if (pkt == RAKP_MESSAGE_4_RES)
-        {
-          int8_t rv = 0;
-          uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
-          int32_t managed_system_guid_len;
-          uint64_t managed_system_session_id;
-          
-          rv = ipmi_rmcpplus_check_payload_type(ip->obj_rmcpplus_session_hdr_res,
-                                                IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4);
-          dbg("PAYLOAD_TYPE = %d\n", rv);
-          
-          rv = ipmi_rmcpplus_check_status_code(ip->obj_rakp_message_4_res,
-                                               RMCPPLUS_STATUS_NO_ERRORS);
-          dbg("STATUS_CODE = %d\n", rv);
-          
-          rv = ipmi_rmcpplus_check_message_tag(ip->obj_rakp_message_4_res,
-                                               ip->initial_message_tag + ip->message_tag_count);
-          dbg("MESSAGE_TAG = %d\n", rv);
-                                                
-          rv = ipmi_rmcpplus_check_remote_console_session_id(ip->obj_rakp_message_4_res,
-                                                             ip->remote_console_session_id);
-          dbg("REMOTE CONSOLE SESSION_ID = %d\n", rv);
-          
-          fiid_obj_get(ip->obj_open_session_res,
-                       "managed_system_session_id",
-                       &managed_system_session_id);
-
-          managed_system_guid_len = fiid_obj_get_data(ip->obj_rakp_message_2_res,
-                                                      "managed_system_guid",
-                                                      managed_system_guid,
-                                                      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-          
-          /* XXX support more algs */
-          rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(ip->authentication_algorithm,
-                                                                        NULL,
-                                                                        0,
-                                                                        ip->remote_console_random_number,
-                                                                        IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-                                                                        (uint32_t)managed_system_session_id,
-                                                                        managed_system_guid,
-                                                                        managed_system_guid_len,
-                                                                        ip->obj_rakp_message_4_res);
-          dbg("RAKP 4 INTEGRITY_CHECK_VALUE: %d\n", rv);
-        }
+	  if (pkt == RAKP_MESSAGE_2_RES)
+	    {
+	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
+		return 0;
+	    }
+	  else if (pkt == RAKP_MESSAGE_4_RES)
+	    {
+	      if (!ipmipower_check_rakp_4_integrity_check_value(ip, pkt))
+		return 0;
+	    }
+	}
       else /* (ip->ipmi_version == IPMI_VERSION_2_0
                && (pkt == CHASSIS_STATUS_RES
                    || pkt == CHASSIS_CONTROL_RES
-                   || pkt == CLOSE_SESSION_RES) */
-        {
-          int8_t rv;
-          fiid_obj_t obj;
-          uint8_t *password;
+                   || pkt == CLOSE_SESSION_RES)) */
+	{
+	  if (!ipmipower_check_payload_type(ip, pkt))
+	    return 0;
 
-          /* Need checks for rq_seq, oubound seq num, completion code,
-           * network function, and command
-           */
+	  if (!ipmipower_check_payload_pad(ip, pkt))
+	    return 0;
 
-          if (pkt == CHASSIS_STATUS_RES)
-            obj = ip->obj_chassis_status_res;
-          else if (pkt == CHASSIS_CONTROL_RES)
-            obj = ip->obj_chassis_control_res;
-          else /* CLOSE_SESSION_RES */
-            obj = ip->obj_close_session_res;
+	  if (!ipmipower_check_integrity_pad(ip, pkt))
+	    return 0;
 
-          if (strlen(conf->password))
-            password = (uint8_t *)conf->password;
-          else
-            password = NULL;
+	  if (!ipmipower_check_authentication_code(ip, 
+						   pkt, 
+						   (uint8_t *)recv_buf, 
+						   (uint32_t)recv_len))
+	    return 0;
 
-          rv = ipmi_rmcpplus_check_payload_type(ip->obj_rmcpplus_session_hdr_res,
-                                                IPMI_PAYLOAD_TYPE_IPMI);
-          dbg("PAYLOAD_TYPE = %d\n", rv);
+	  if (!ipmipower_check_checksum(ip, pkt))
+	    return 0;
 
-          rv = ipmi_lan_check_checksum(ip->obj_lan_msg_hdr_res,
-                                       obj,
-                                       ip->obj_lan_msg_trlr_res);
-          dbg("CHECKSUM = %d\n", rv);
-          
-          rv = ipmi_rmcpplus_check_session_id(ip->obj_rmcpplus_session_hdr_res,
-                                              ip->remote_console_session_id);
-          dbg("SESSION_ID = %d\n", rv);
+	  if (!ipmipower_check_outbound_sequence_number(ip, pkt))
+	    return 0;
+      
+	  if (!ipmipower_check_session_id(ip, pkt))
+	    return 0;
+	  
+	  if (!ipmipower_check_network_function(ip, pkt))
+	    return 0;
+	  
+	  if (!ipmipower_check_command(ip, pkt))
+	    return 0;
+	  
+	  if (!ipmipower_check_requester_sequence_number(ip, pkt))
+	    {
+	      if (pkt == CLOSE_SESSION_RES)
+		goto close_session_workaround;
+	      return 0;
+	    }
 
-          rv = ipmi_rmcpplus_check_payload_pad(ip->confidentiality_algorithm,
-                                               ip->obj_rmcpplus_payload_res);
-          dbg("PAYLOAD PAD = %d\n", rv);
-
-          rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res);
-          dbg("INTEGRITY PAD = %d\n", rv);
-          
-          /* XXX support more algs */
-          rv = ipmi_rmcpplus_check_session_trlr(ip->integrity_algorithm,
-                                                (uint8_t *)buffer,
-                                                len,
-                                                NULL,
-                                                0,
-                                                password,
-                                                (password) ? strlen((char *)password) : 0,
-                                                ip->obj_rmcpplus_session_trlr_res);
-          dbg("INTEGRITY AUTHCODE = %d\n", rv);
-        }
-
-      ip->retry_count = 0;  /* important to reset */
-      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-      return 1;
+	  /* If everything else is correct besides completion code, packet
+	   * returned an error.
+	   */
+	  if (!ipmipower_check_completion_code(ip, pkt))
+	    {
+	      if (pkt == CLOSE_SESSION_RES)
+		goto close_session_workaround;
+	      
+	      ip->retry_count = 0;  /* important to reset */
+	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+	      ip->error_occurred = IPMIPOWER_TRUE; 
+	      return -1;
+	    }
+  
+	}
     }
 
-  /* NOT REACHED */
-  return 0;
+  /* Yipee everything passed, the packet is good.  Continue */
+
+  /* achu: If this is the close session response and the packet is
+   * mostly legit, go ahead and just accept the packet.  We'll
+   * close the session anyways.
+   */
+ close_session_workaround:
+  ip->retry_count = 0;  /* important to reset */
+  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+  return 1;
 }
 
 /* _has_timed_out
@@ -973,7 +754,7 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
   uint64_t authentication_type_none, authentication_type_md2, 
     authentication_type_md5, authentication_type_straight_password_key, 
     authentication_status_anonymous_login, authentication_status_null_username, 
-    authentication_status_non_null_username, 
+    authentication_status_non_null_username,
     authentication_status_per_message_authentication;
   int authentication_type_try_higher_priv = 0;
   fiid_obj_t obj_authentication_capabilities_res;
@@ -1015,7 +796,7 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
   Fiid_obj_get(obj_authentication_capabilities_res, 
 	       "authentication_status.non_null_username", 
 	       &authentication_status_non_null_username);
-  Fiid_obj_get(obj_authentication_capabilities_res, 
+  Fiid_obj_get(obj_authentication_capabilities_res,
 	       "authentication_status.per_message_authentication",
 	       &authentication_status_per_message_authentication);
 
@@ -1132,6 +913,13 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
       return 1;
     }
 
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on IBM eServer 325
+   *
+   * The remote BMC ignores if permsg authentiction is enabled
+   * or disabled.  So we need to force it no matter what.
+   */
   if (!conf->force_permsg_authentication)
     {
       if (!authentication_status_per_message_authentication)
@@ -1269,11 +1057,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               /* else we continue with the IPMI 1.5 protocol */
               
               ip->ipmi_version = IPMI_VERSION_1_5;
+	      ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
               _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
             }
           else
             {
               ip->ipmi_version = IPMI_VERSION_2_0;
+	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
               _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
             }
         }
@@ -1289,6 +1079,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             }
 
           ip->ipmi_version = IPMI_VERSION_2_0;
+	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
           _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
 	}
     }
@@ -1316,6 +1107,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       /* else we continue with the IPMI 1.5 protocol */
 
       ip->ipmi_version = IPMI_VERSION_1_5;
+      ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
       _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
@@ -1333,6 +1125,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT) 
     {
+      uint64_t authentication_type;
+
       if ((rv = _recv_packet(ip, ACTIVATE_SESSION_RES)) != 1) 
         {
           if (rv < 0) 
@@ -1342,9 +1136,45 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      /* We can skip SET_SESSION_PRIVILEGE_REQ on a power status check, because the
-       * default IPMI session privilege level is the user privilege
-       * level
+      Fiid_obj_get(ip->obj_activate_session_res,
+		   "autentication_type",
+		   &authentication_type);
+
+      if (!conf->force_permsg_authentication)
+	{
+	  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+	    {
+	      if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
+		{
+		  dbg("_process_ipmi_packets(%s:%d): not none authentcation",
+		      ip->ic->hostname, ip->protocol_state);
+		  ip->retry_count = 0;  /* important to reset */
+		  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+		  ip->error_occurred = IPMIPOWER_TRUE; 
+		  /* XXX Session is not up, is it ok to quit here?  Or
+		   * should we timeout?? */
+		  return -1;
+		}
+	    }
+	  else
+	    {
+	      if (authentication_type != ip->authentication_type)
+		{
+		  dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
+		      ip->ic->hostname, ip->protocol_state);
+		  ip->retry_count = 0;  /* important to reset */
+		  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+		  ip->error_occurred = IPMIPOWER_TRUE; 
+		  /* XXX Session is not up, is it ok to quit here?  Or
+		   * should we timeout?? */
+		  return -1;
+		}
+	    }
+	}
+      
+      /* We can skip SET_SESSION_PRIVILEGE_REQ on a power status
+       * check, because the default IPMI session privilege level is
+       * the user privilege level
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
         _send_packet(ip, CHASSIS_STATUS_REQ, 0);

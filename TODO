@@ -84,6 +84,7 @@ ipmipower
     - remove some wrappers? Especially dump functions?  No longer
       reasonable to assume should pass successfully b/c of wackiness of ipmi
       2.0 packets?
+  * chassis_status -> get_chassis_status
 
 General:
 --------

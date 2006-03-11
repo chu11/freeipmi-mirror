@@ -1,3 +1,32 @@
+2005-03-11  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Add
+	additional checks for authentication_type returned from activate
+	session response.
+
+	* ipmipower/src/ipmipower_packet.h,
+	ipmipower/src/ipmipower_packet.c (ipmipower_packet_response_data):
+	Removed function.
+
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_errmsg):
+	Adjust for function removal.
+
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c (Fiid_obj_get_data): New
+	function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	(ipmi_rmcpplus_check_session_trlr): Renamed to
+	ipmi_rmcpplus_check_packet_session_authentication_code for
+	consistency.
+	
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet),
+	ipmipower/src/ipmipower_check.h, ipmipower/src/ipmipower_check.c:
+	Completely redo packet checking for IPMI 1.5.  Add full checks for
+	IPMI 2.0.
+
+	
 2005-03-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-utils.c,

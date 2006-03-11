@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.15 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.16 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -95,6 +95,11 @@ void Fiid_obj_destroy(fiid_obj_t obj);
  * - Get fiid field data
  */
 void Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val);
+
+/* Fiid_obj_get_data
+ * - Get fiid field data
+ */
+int32_t Fiid_obj_get_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len);
 
 /* Ipmi_dump_lan_packet
  * - Dump lan contents

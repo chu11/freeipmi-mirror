@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.h,v 1.8 2006-03-10 06:15:51 chu11 Exp $
+ *  $Id: ipmipower_packet.h,v 1.9 2006-03-11 20:15:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -63,18 +63,6 @@ void ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
  */
 int ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                              char *buffer, int len);
-
-/* ipmipower_packet_response_data
- * - Get the contents of a packet.
- * - Only works with response packet types
- */
-void ipmipower_packet_response_data(ipmipower_powercmd_t ip, packet_type_t pkt,
-				    uint32_t *session_seq_num, 
-				    uint32_t *session_id,
-				    uint8_t *network_function, 
-				    uint8_t *requester_seq_num,
-				    uint8_t *command, 
-				    uint8_t *completion_code);
 
 /* ipmipower_packet_errmsg
  * - Get error message type
