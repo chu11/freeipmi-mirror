@@ -35,6 +35,19 @@
 
 	* Various gcc compiler warning fixes.
 
+	* libfreeipmi/src/ipmi-lan-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
+	(ipmi_lan_check_session_authentication_code): Renamed to
+	ipmi_lan_check_packet_session_authentication_code.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (_ipmi_lan_cmd_recv),
+	ipmipower/src/ipmipower_powercmd.c (_recv_packet): Adjust for
+	ipmi_lan_check_checksum function name change.
+
+	* libfreeipmi/src/ipmi-lan-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
+	(ipmi_lan_check_session_authentication_code): New function.
+
 2006-03-10  Anand Babu  <ab@zresearch.com>
 
 	* configure.ac: Applied Anand Avati's <avati@zresearch.com>

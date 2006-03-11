@@ -394,14 +394,12 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 					     "session_id",
 					     session_id_buf,
 					     1024);
-	      ERR_EINVAL_CLEANUP (session_id_len);
 	      
 	      FIID_OBJ_GET_DATA_LEN_CLEANUP (session_sequence_number_len,
 					     obj_lan_session_hdr,
 					     "session_sequence_number",
 					     session_sequence_number_buf,
 					     1024);
-	      ERR_EINVAL_CLEANUP (session_sequence_number_len);
 
 	      if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD2)
 		{
