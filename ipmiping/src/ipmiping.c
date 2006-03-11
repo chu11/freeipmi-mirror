@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.28 2006-03-08 00:53:50 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.29 2006-03-11 00:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -227,7 +227,7 @@ parsepacket(char *buffer,
     }
 #endif
 
-  if ((ret = ipmi_lan_check_checksum((uint8_t *)buffer, buflen)) < 0)
+  if ((ret = ipmi_lan_check_packet_checksum((uint8_t *)buffer, buflen)) < 0)
     ipmi_ping_err_exit("ipmi_lan_check_checksum: %s", strerror(errno));
 
   if (!ret)

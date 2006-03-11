@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.34 2006-03-10 06:15:51 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.35 2006-03-11 00:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -655,29 +655,27 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else
     net_fn = IPMI_NET_FN_APP_RQ;
 
-  if (ip->ipmi_version == IPMI_VERSION_1_5)
+  /* Calculate Authentication Type */
+  if (pkt == ACTIVATE_SESSION_REQ)
+    authentication_type = ip->authentication_type;
+  else if (pkt == SET_SESSION_PRIVILEGE_REQ
+           || (ip->ipmi_version == IPMI_VERSION_1_5
+               && (pkt == CLOSE_SESSION_REQ
+                   || pkt == CHASSIS_STATUS_REQ
+                   || pkt == CHASSIS_CONTROL_REQ)))
     {
-      /* Calculate Authentication Type */
-      if (pkt == ACTIVATE_SESSION_REQ)
-        authentication_type = ip->authentication_type;
-      else if (pkt == SET_SESSION_PRIVILEGE_REQ
-               || (ip->ipmi_version == IPMI_VERSION_1_5
-                   && (pkt == CLOSE_SESSION_REQ
-                       || pkt == CHASSIS_STATUS_REQ
-                       || pkt == CHASSIS_CONTROL_REQ)))
-        {
-          if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-            authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
-          else
-            authentication_type = ip->authentication_type;
-          
-          if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
-            password = NULL;
-        }
+      if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+        authentication_type = IPMI_AUTHENTICATION_TYPE_NONE; 
       else
-        authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+        authentication_type = ip->authentication_type;
+      
+      if (authentication_type == IPMI_AUTHENTICATION_TYPE_NONE)
+        password = NULL;
     }
-  else /* IPMI_VERSION_2_0 */
+  else
+    authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+    
+  if (ip->ipmi_version == IPMI_VERSION_2_0)
     {
       /* XXX need to fix */
       /* Calculate Payload Authenticated */
@@ -794,7 +792,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       if (fill_cmd_get_channel_cipher_suites (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                               IPMI_PAYLOAD_TYPE_IPMI,
-                                              0,
+                                              0, /* XXX need legit index mechanism */
                                               IPMI_LIST_SUPPORTED_ALGORITHMS,
                                               ip->obj_get_channel_cipher_suites_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
@@ -819,7 +817,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == RAKP_MESSAGE_1_REQ)
     {
       if (fill_rmcpplus_rakp_message_1 (ip->initial_message_tag + ip->message_tag_count,
-                                        session_id,
+                                        managed_system_session_id,
                                         ip->remote_console_random_number,
                                         IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                         ip->requested_maximum_privilege,
@@ -836,7 +834,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       if (fill_rmcpplus_rakp_message_3 (ip->initial_message_tag + ip->message_tag_count,
                                         RMCPPLUS_STATUS_NO_ERRORS,
-                                        session_id,
+                                        managed_system_session_id,
                                         NULL,
                                         0,
                                         ip->obj_rakp_message_3_req) < 0)

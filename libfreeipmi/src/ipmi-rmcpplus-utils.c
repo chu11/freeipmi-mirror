@@ -445,7 +445,7 @@ ipmi_calculate_keys(uint8_t payload_type,
       *confidentiality_key = NULL;
       *confidentiality_key_len = 0;
     }
-  else if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+  else /* IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128 */
     {
       uint8_t k2[IPMI_MAX_PAYLOAD_LENGTH];
       int32_t k2_len;
@@ -687,7 +687,7 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
       compare_len = IPMI_HMAC_MD5_DIGEST_LENGTH;
       hash_algorithm = IPMI_CRYPT_HASH_MD5;
@@ -780,7 +780,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
   int32_t digest_len;
   int32_t compare_len;
   uint8_t integrity_check_value[IPMI_MAX_PAYLOAD_LENGTH];
-  uint32_t integrity_check_value_len;
+  int32_t integrity_check_value_len;
 
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -802,7 +802,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
       hash_algorithm = IPMI_CRYPT_HASH_SHA1;
       hash_flags = IPMI_CRYPT_HASH_FLAGS_HMAC;
     }
-  else /* IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 */
+  else if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
     {
       ERR_EINVAL (!(!sik_key || sik_key_len < IPMI_HMAC_MD5_DIGEST_LENGTH));
 
@@ -813,7 +813,7 @@ ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(int8_t authentication_a
 
   FIID_OBJ_GET_DATA_LEN(integrity_check_value_len,
                         obj_cmd,
-                        "integrity_check_value_len",
+                        "integrity_check_value",
                         integrity_check_value,
                         IPMI_MAX_PAYLOAD_LENGTH);
   
@@ -1052,4 +1052,22 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remot
   FIID_OBJ_GET(obj_cmd, "remote_console_session_id", &val);
 
   return ((remote_console_session_id == val) ? 1 : 0);
+}
+
+int8_t 
+ipmi_rmcpplus_check_session_id(fiid_obj_t obj_rmcpplus_session_hdr, 
+                               uint32_t session_id)
+{
+  uint64_t val;
+  int32_t len;
+
+  ERR_EINVAL (fiid_obj_valid(obj_rmcpplus_session_hdr));
+
+  FIID_OBJ_TEMPLATE_COMPARE (obj_rmcpplus_session_hdr, tmpl_rmcpplus_session_hdr);
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "session_id");
+  ERR_EINVAL (len);
+  
+  FIID_OBJ_GET(obj_rmcpplus_session_hdr, "session_id", &val);
+
+  return ((session_id == val) ? 1 : 0);
 }

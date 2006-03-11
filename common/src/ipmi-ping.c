@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmi-ping.c,v 1.11 2006-03-08 15:33:17 chu11 Exp $
+ *  $Id: ipmi-ping.c,v 1.12 2006-03-11 00:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -390,7 +390,7 @@ _main_loop(Ipmi_Ping_CreatePacket _create,
     {
       int len;
 
-      if ((len = ipmi_get_random((char *)&_initial_sequence_number,
+      if ((len = ipmi_get_random((uint8_t *)&_initial_sequence_number,
                                  sizeof(_initial_sequence_number))) < 0)
         ipmi_ping_err_exit("ipmi_get_random: %s", strerror(errno));
       if (len != sizeof(_initial_sequence_number))

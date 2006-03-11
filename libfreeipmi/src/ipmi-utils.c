@@ -120,7 +120,7 @@ ipmi_check_completion_code_success (fiid_obj_t obj_cmd)
 }
 
 int
-ipmi_get_random(char *buf, unsigned int buflen)
+ipmi_get_random(uint8_t *buf, uint32_t buflen)
 {
 #if (HAVE_DEVURANDOM || HAVE_DEVRANDOM)
   int fd, rv;
@@ -140,7 +140,7 @@ ipmi_get_random(char *buf, unsigned int buflen)
     goto gcrypt_rand;
 #endif /* !HAVE_DEVURANDOM */
 
-  if ((rv = read(fd, buf, buflen)) < buflen)
+  if ((rv = read(fd, (void *)buf, buflen)) < buflen)
     goto gcrypt_rand;
 
   close(fd);

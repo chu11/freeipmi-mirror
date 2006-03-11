@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.c,v 1.6 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: error.c,v 1.7 2006-03-11 00:27:23 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -41,7 +41,6 @@
 #include "fd.h"
 #include "cbuf.h"
 #include "error.h"
-#include "hprintf.h"
 #include "wrappers.h"
 
 /* achu
@@ -58,7 +57,7 @@
 #define ERR_CBUF_DUMP_FILE_STREAM      0x10
 #define ERR_CBUF_DUMP_FILE_DESCRIPTOR  0x20
 
-#define ERROR_BUFLEN           1024
+#define ERROR_BUFLEN           4096
 
 /* basename of calling program */
 static char  *err_prog = NULL;  
@@ -258,21 +257,20 @@ void *lsd_nomem_error(char *file, int line, char *mesg)
 
 void cbuf_printf(cbuf_t cbuf, const char *fmt, ...)
 {
+    char buf[ERROR_BUFLEN];
     va_list ap;
-    char *str;
     int written, dropped;
+    int len;
+
+    if (err_dest == ERR_NONE)
+        return;
 
     va_start(ap, fmt);
+    len = vsnprintf(buf, ERROR_BUFLEN, fmt, ap);  /* overflow ignored */
 
-    str = hvsprintf(fmt, ap);
-    if (str == NULL)
-        err_exit("cbuf_printf: out of memory");
-
-    written = cbuf_write(cbuf, str, strlen(str), &dropped);
+    written = cbuf_write(cbuf, buf, len, &dropped);
     if (written < 0)
         err_exit("cbuf_printf: cbuf write: %m");
-
-    Free(str);
 
     va_end(ap);
 }

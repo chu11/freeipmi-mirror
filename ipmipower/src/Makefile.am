@@ -6,7 +6,6 @@ ipmipower_SOURCES= \
 	error.c \
 	fd.c \
 	hostlist.c \
-	hprintf.c \
 	ipmipower_authentication.c \
 	ipmipower_check.c \
 	ipmipower_config.c \
@@ -33,7 +32,6 @@ noinst_HEADERS= \
 	error.h \
 	fd.h \
 	hostlist.h \
-	hprintf.h \
 	ipmipower_authentication.h \
 	ipmipower_check.h \
 	ipmipower_config.h \

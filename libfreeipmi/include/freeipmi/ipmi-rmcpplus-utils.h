@@ -137,6 +137,9 @@ int8_t ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd,
 int8_t ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, 
 						     uint32_t remote_console_session_id);
 
+int8_t ipmi_rmcpplus_check_session_id(fiid_obj_t obj_rmcpplus_session_hdr,
+                                      uint32_t session_id);
+
 #ifdef __cplusplus
 }
 #endif

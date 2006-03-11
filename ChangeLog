@@ -1,3 +1,40 @@
+2005-03-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
+	(ipmi_lan_check_checksum): Renamed to
+	ipmi_lan_check_packet_checksum.
+
+	* ipmiping/src/ipmiping.c (parsepacket),
+	ipmipower/src/ipmipower_powercmd.c (_recv_packet): Adjust for
+	ipmi_lan_check_checksum function name change.
+	
+	* libfreeipmi/src/ipmi-lan-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
+	(ipmi_lan_check_checksum): New function.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	(ipmi_rmcpplus_check_session_id): New function.
+
+	* ipmipower/src/ipmipower_powercmd.c (_bad_packet): Removed
+	function.  Put code into _recv_packet().
+
+	* ipmipower/src/ipmipower_packet.c (_recv_packet): Re-worked for
+	IPMI 2.0 checks.
+
+	* ipmipower/src/error.c: Increase ERROR_BUFLEN.  Remove include of
+	hprintf.h.
+
+	* ipmipower/src/error.c (cbuf_printf): Remove use of hvsprintf.
+
+	* ipmipower/src/hprintf.h, ipmipower/src/hprintf.c: Removed files.
+
+	* ipmipower/src/ipmipower_powercmd (_recv_packet): Began work to
+	check IPMI 2.0 response packets for correctness.
+
+	* Various gcc compiler warning fixes.
+
 2006-03-10  Anand Babu  <ab@zresearch.com>
 
 	* configure.ac: Applied Anand Avati's <avati@zresearch.com>

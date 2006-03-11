@@ -37,7 +37,7 @@ int8_t ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code);
 
 int8_t ipmi_check_completion_code_success (fiid_obj_t obj_cmd);
 
-int ipmi_get_random (char *buf, unsigned int buflen);
+int ipmi_get_random (uint8_t *buf, unsigned int buflen);
 
 int8_t ipmi_ipv4_address_string2int(char *src, uint32_t *dest);
 

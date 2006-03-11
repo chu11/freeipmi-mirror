@@ -164,7 +164,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_encrypted,
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LENGTH);
      
-  ERR (!((iv_len = ipmi_get_random((char *)iv, IPMI_AES_CBC_128_IV_LENGTH)) < 0));
+  ERR (!((iv_len = ipmi_get_random(iv, IPMI_AES_CBC_128_IV_LENGTH)) < 0));
   ERR (!(iv_len != IPMI_AES_CBC_128_IV_LENGTH));
     
   ERR (!((payload_len = _construct_payload_buf(obj_lan_msg_hdr, 

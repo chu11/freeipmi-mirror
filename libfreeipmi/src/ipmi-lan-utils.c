@@ -250,8 +250,65 @@ ipmi_lan_check_rq_seq (fiid_obj_t obj_lan_msg_hdr, uint8_t rq_seq)
   return ((((uint8_t)rq_seq_recv) == rq_seq) ? 1 : 0);
 }
 
+int8_t
+ipmi_lan_check_checksum (fiid_obj_t obj_lan_msg_hdr,
+                         fiid_obj_t obj_cmd,
+                         fiid_obj_t obj_lan_msg_trlr)
+{
+  int32_t obj_lan_msg_hdr_len, obj_cmd_len, obj_len, len, req_len;
+  uint8_t checksum1_recv, checksum1_calc, checksum2_recv, checksum2_calc;
+  uint8_t *buf = NULL;
+  uint32_t buflen;
+  uint64_t val;
+  
+  ERR_EINVAL (fiid_obj_valid(obj_lan_msg_hdr)
+              && fiid_obj_valid(obj_cmd)
+              && fiid_obj_valid(obj_lan_msg_trlr));
+  
+  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_hdr, tmpl_lan_msg_hdr_rs);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+
+  FIID_OBJ_FIELD_LEN (len, obj_lan_msg_hdr, "checksum1");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_hdr_rs, "checksum1");
+  ERR_EINVAL (len == req_len);
+
+  FIID_OBJ_FIELD_LEN (len, obj_lan_msg_trlr, "checksum2");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_lan_msg_trlr, "checksum2");
+  ERR_EINVAL (len == req_len);
+
+  FIID_OBJ_LEN_BYTES (obj_lan_msg_hdr_len, obj_lan_msg_hdr);
+  FIID_OBJ_LEN_BYTES (obj_cmd_len, obj_cmd);
+
+  FIID_OBJ_GET (obj_lan_msg_hdr, "checksum1", &val);
+  checksum1_recv = val;
+  ERR ((buf = (uint8_t *)alloca(obj_lan_msg_hdr_len)));
+  FIID_OBJ_GET_BLOCK_LEN(len, obj_lan_msg_hdr, "rq_addr", "net_fn", buf, obj_lan_msg_hdr_len);
+  checksum1_calc = ipmi_checksum(buf, len);
+
+  if (checksum1_recv != checksum1_calc)
+    return (0);
+
+  FIID_OBJ_GET (obj_lan_msg_trlr, "checksum2", &val);
+  checksum2_recv = val;
+
+  buflen = obj_lan_msg_hdr_len + obj_cmd_len;
+  ERR ((buf = (uint8_t *)alloca(buflen)));
+
+  len = 0;
+  FIID_OBJ_GET_BLOCK_LEN(obj_len, obj_lan_msg_hdr, "rs_addr", "rq_seq", buf, buflen - len);
+  len += obj_len;
+  FIID_OBJ_GET_ALL_LEN(obj_len, obj_cmd, buf + len, buflen - len);
+  len += obj_len;
+
+  checksum2_calc = ipmi_checksum(buf, len);
+  if (checksum2_recv != checksum2_calc)
+    return (0);
+
+  return (1);
+}
+
 int8_t 
-ipmi_lan_check_checksum (uint8_t *pkt, uint64_t pkt_len)
+ipmi_lan_check_packet_checksum (uint8_t *pkt, uint64_t pkt_len)
 {
   uint8_t authentication_type;
   uint32_t authentication_type_offset;
