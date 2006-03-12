@@ -135,7 +135,7 @@
 (define (checkout-cipher-id-14 section-name)
   (fi-get-rmcpplus-cipher-suite-id-14))
 
-(define lan-conf-auth-keys-validator 
+(define rmcpplus-conf-privilege-keys-validator
   '(
     ;; You can add more in the form of 
     ;; (KEYSTRING 
