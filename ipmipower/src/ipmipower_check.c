@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.28 2006-03-12 20:36:27 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.29 2006-03-12 20:39:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -489,7 +489,7 @@ ipmipower_check_network_function(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
 	 && pkt != RAKP_MESSAGE_2_RES
-	 && pkt != RAKP_MESSAGE_2_RES);
+	 && pkt != RAKP_MESSAGE_4_RES);
     
   Fiid_obj_get(ip->obj_lan_msg_hdr_res, "net_fn", &netfn);
 
@@ -517,7 +517,7 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
 	 && pkt != RAKP_MESSAGE_2_RES
-	 && pkt != RAKP_MESSAGE_2_RES);
+	 && pkt != RAKP_MESSAGE_4_RES);
   
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
 
@@ -560,7 +560,7 @@ ipmipower_check_requester_sequence_number(ipmipower_powercmd_t ip, packet_type_t
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
 	 && pkt != RAKP_MESSAGE_2_RES
-	 && pkt != RAKP_MESSAGE_2_RES);
+	 && pkt != RAKP_MESSAGE_4_RES);
     
   expected_req_seq = ip->ic->ipmi_requester_sequence_number_counter % (IPMI_LAN_REQUESTER_SEQUENCE_NUMBER_MAX + 1);
 
@@ -585,7 +585,7 @@ ipmipower_check_completion_code(ipmipower_powercmd_t ip, packet_type_t pkt)
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
 	 && pkt != RAKP_MESSAGE_2_RES
-	 && pkt != RAKP_MESSAGE_2_RES);
+	 && pkt != RAKP_MESSAGE_4_RES);
     
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
 
