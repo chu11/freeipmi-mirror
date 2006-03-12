@@ -3,7 +3,16 @@
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.
 
 	* fish/: Add rmcpplus cipher id configuration.
-	
+
+	* ipmipower/: Globally change "chassis_status" ->
+	"get_chassis_status" to match ipmi spec.  General code cleanup.
+
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_errmsg):
+	Support RAKP error messages.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Support RAKP
+	error messages.
+
 2005-03-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Add

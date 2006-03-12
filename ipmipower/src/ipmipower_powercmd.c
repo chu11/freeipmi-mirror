@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.46 2006-03-12 20:36:27 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.47 2006-03-12 21:25:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -493,15 +493,21 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  if (!ipmipower_check_message_tag(ip, pkt))
 	    return 0;
 
-	  /* Unlike IPMI 1.5 completion codes, I don't think there is
-	   * a guarantee the data in the RAKP response will have good
-	   * authentication codes or session ids if there is a status
-	   * code error.  So we check this status code first, then the
+	  /* I don't think there is a guarantee the data
+	   * (i.e. authentication keys, session id's, etc.) in the
+	   * RAKP response will be valid if here is a status code
+	   * error.  So we check this status code first, then the
 	   * other stuff afterwards.
 	   */
 	  if (!ipmipower_check_rmcpplus_status_code(ip, pkt))
 	    {
-	      /* XXX output error */
+	      /* XXX need to support check and auto stuff for ipmi
+	       * 2.0  
+	       */
+	      ipmipower_output(ipmipower_packet_errmsg(ip, pkt), ip->ic->hostname);
+	      ip->retry_count = 0;  /* important to reset */
+	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+	      ip->error_occurred = IPMIPOWER_TRUE; 
 	      return -1;
 	    }
 	  
@@ -849,7 +855,7 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
 	    {
 	      /* Time to give up */
 #ifndef NDEBUG	      
-	      ipmipower_output(MSG_TYPE_AUTO, ip->ic->hostname);
+	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
 #else
 	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif

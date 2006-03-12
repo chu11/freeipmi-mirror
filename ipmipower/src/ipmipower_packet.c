@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.37 2006-03-12 20:36:27 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.38 2006-03-12 21:25:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -942,63 +942,109 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
 msg_type_t
 ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
-  uint64_t comp_code;
   fiid_obj_t obj_cmd;
   
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  /* Assert this is not an IPMI 2.0 Session Setup Packet */
-  assert(pkt != OPEN_SESSION_RES
-         && pkt != GET_CHASSIS_STATUS_RES
-         && pkt != CHASSIS_CONTROL_RES);
-
-  /* XXX need to fix for ipmi 2.0 */
 
   obj_cmd = ipmipower_packet_cmd_obj(ip, pkt);
-  Fiid_obj_get(obj_cmd, "comp_code", &comp_code);
+
+  if (pkt == OPEN_SESSION_RES
+      || pkt == RAKP_MESSAGE_2_RES
+      || pkt == RAKP_MESSAGE_4_RES)
+    {
+      uint64_t rmcpplus_status_code;
+      Fiid_obj_get(obj_cmd, "rmcpplus_status_code", &rmcpplus_status_code);
+      
+      /* achu:
+
+      At this point in time, my belief is that the following RMCPPLUS
+      Status Codes:
+
+      RMCPPLUS_STATUS_INVALID_AUTHENTICATION_ALGORITHM
+      RMCPPLUS_STATUS_INVALID_INTEGRITY_ALGORITHM
+      RMCPPLUS_STATUS_INVALID_CONFIDENTIALITY_ALGORITHM
+      RMCPPLUS_STATUS_INVALID_ROLE
+      RMCPPLUS_STATUS_NO_MATCHING_AUTHENTICATION_PAYLOAD
+      RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD
+
+      Imply that an incorrect algorithm/role/payload value was sent.
+      *NOT* an unsupported algorithm/role/payload.  Unsupported data
+      requires a different error code.
+
+       */
+
+      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
+	err_exit("ipmipower_packet_errmsg(%s:%d:%d): "
+		 "called with rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS",
+		 ip->ic->hostname, ip->protocol_state, pkt);
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION
+	       || rmcpplus_status_code == RMCPPLUS_STATUS_INSUFFICIENT_RESOURCES_TO_CREATE_A_SESSION_AT_THE_REQUESTED_TIME)
+	return MSG_TYPE_BMCBUSY;
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
+#ifndef NDEBUG
+	return MSG_TYPE_PRIVILEGE;
+#else
+        return MSG_TYPE_PERMISSION;
+#endif
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
+#ifndef NDEBUG
+	return MSG_TYPE_USERNAME;
+#else
+        return MSG_TYPE_PERMISSION;
+#endif
+      else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
+	return MSG_TYPE_CIPHER_SUITE;
+    }
+  else
+    {
+      uint64_t comp_code;
+      Fiid_obj_get(obj_cmd, "comp_code", &comp_code);
+
+      if (comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS)
+	err_exit("ipmipower_packet_errmsg(%s:%d:%d): "
+		 "called with comp_code == SUCCESS",
+		 ip->ic->hostname, ip->protocol_state, pkt);
+      else if (pkt == GET_SESSION_CHALLENGE_RES 
+	       && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
+		   || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
+	{
+#ifndef NDEBUG
+	  return MSG_TYPE_USERNAME;
+#else
+	  return MSG_TYPE_PERMISSION;
+#endif
+	}
+      else if (pkt == ACTIVATE_SESSION_RES 
+	       && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
+	{
+#ifndef NDEBUG
+	  return MSG_TYPE_PRIVILEGE;
+#else
+	  return MSG_TYPE_PERMISSION;
+#endif
+	}
+      else if (pkt == SET_SESSION_PRIVILEGE_RES 
+	       && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
+		   || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
+		   || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
+	{
+#ifndef NDEBUG
+	  return MSG_TYPE_PRIVILEGE;
+#else
+	  return MSG_TYPE_PERMISSION;
+#endif
+	}
+      else if (pkt == ACTIVATE_SESSION_RES 
+	       && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
+		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
+		   || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
+	return MSG_TYPE_BMCBUSY;
+      else if (pkt == CHASSIS_CONTROL_RES 
+	       && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
+	return MSG_TYPE_OPERATION;
+    }
     
-  if (comp_code == IPMI_COMP_CODE_COMMAND_SUCCESS)
-    err_exit("ipmipower_packet_errmsg(%s:%d:%d): "
-	     "called with comp_code == SUCCESS",
-             ip->ic->hostname, ip->protocol_state, pkt);
-  else if (pkt == GET_SESSION_CHALLENGE_RES 
-           && (comp_code == IPMI_COMP_CODE_INVALID_USERNAME 
-               || comp_code == IPMI_COMP_CODE_NULL_USERNAME_NOT_ENABLED))
-    {
-#ifndef NDEBUG
-      return MSG_TYPE_USERNAME;
-#else
-      return MSG_TYPE_PERMISSION;
-#endif
-    }
-  else if (pkt == ACTIVATE_SESSION_RES 
-           && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
-    {
-#ifndef NDEBUG
-      return MSG_TYPE_PRIVILEGE;
-#else
-      return MSG_TYPE_PERMISSION;
-#endif
-    }
-  else if (pkt == SET_SESSION_PRIVILEGE_RES 
-           && (comp_code == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER 
-               || comp_code == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIVILEGE_LIMIT 
-               || comp_code == IPMI_COMP_CODE_CANNOT_DISABLE_USER_LEVEL_AUTHENTICATION))
-    {
-#ifndef NDEBUG
-      return MSG_TYPE_PRIVILEGE;
-#else
-      return MSG_TYPE_PERMISSION;
-#endif
-    }
-  else if (pkt == ACTIVATE_SESSION_RES 
-           && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
-               || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER 
-               || comp_code == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER))
-    return MSG_TYPE_BMCBUSY;
-  else if (pkt == CHASSIS_CONTROL_RES 
-           && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
-    return MSG_TYPE_OPERATION;
-  
+ 
   return MSG_TYPE_BMCERROR;
 }

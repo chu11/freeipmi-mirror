@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.36 2006-03-12 20:36:27 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.37 2006-03-12 21:25:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -330,16 +330,17 @@ typedef enum
     MSG_TYPE_PRIVILEGE               =  7,
     MSG_TYPE_OPERATION               =  8,
     MSG_TYPE_AUTHENTICATION_TYPE     =  9,
-    MSG_TYPE_AUTO                    = 10,
+    MSG_TYPE_1_5_AUTO                = 10,
     MSG_TYPE_GIVEN_PRIVILEGE         = 11,
-    MSG_TYPE_TIMEDOUT                = 12,
-    MSG_TYPE_NOTDISCOVERED           = 13,
-    MSG_TYPE_BADCONNECTION           = 14,
-    MSG_TYPE_UNKNOWNNODE             = 15,
-    MSG_TYPE_RESOURCES               = 16,
-    MSG_TYPE_VERSION_NOT_SUPPORTED   = 17,
-    MSG_TYPE_BMCBUSY                 = 18,
-    MSG_TYPE_BMCERROR                = 19,
+    MSG_TYPE_CIPHER_SUITE            = 12,
+    MSG_TYPE_TIMEDOUT                = 13,
+    MSG_TYPE_NOTDISCOVERED           = 14,
+    MSG_TYPE_BADCONNECTION           = 15,
+    MSG_TYPE_UNKNOWNNODE             = 16,
+    MSG_TYPE_RESOURCES               = 17,
+    MSG_TYPE_VERSION_NOT_SUPPORTED   = 18,
+    MSG_TYPE_BMCBUSY                 = 19,
+    MSG_TYPE_BMCERROR                = 20,
   } msg_type_t;
 #define MSG_TYPE_VALID(__m) \
   ((__m) >= MSG_TYPE_SUCCESS && \
