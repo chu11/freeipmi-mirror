@@ -146,7 +146,7 @@
     ;;  VALUE-CONVERSION-PROC 
     ;;  DIFF-PROC 
     ;;  DOC-STRING)
-    ("Maximum_Privilege_Cipher_Suite_Id_0" 
+    ("maximum_privilege_cipher_suite_id_0" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-0
@@ -154,7 +154,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_1" 
+    ("maximum_privilege_cipher_suite_id_1" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-1
@@ -162,7 +162,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_2" 
+    ("maximum_privilege_cipher_suite_id_2" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-2
@@ -170,7 +170,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_3" 
+    ("maximum_privilege_cipher_suite_id_3" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-3
@@ -178,7 +178,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_4" 
+    ("maximum_privilege_cipher_suite_id_4" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-4
@@ -186,7 +186,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_5" 
+    ("maximum_privilege_cipher_suite_id_5" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-5
@@ -194,7 +194,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_6" 
+    ("maximum_privilege_cipher_suite_id_6" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-6
@@ -202,7 +202,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_7" 
+    ("maximum_privilege_cipher_suite_id_7" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-7
@@ -210,7 +210,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_8" 
+    ("maximum_privilege_cipher_suite_id_8" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-8
@@ -218,7 +218,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_9" 
+    ("maximum_privilege_cipher_suite_id_9" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-9
@@ -226,7 +226,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_10" 
+    ("maximum_privilege_cipher_suite_id_10" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-10
@@ -234,7 +234,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_11" 
+    ("maximum_privilege_cipher_suite_id_11" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-11
@@ -242,7 +242,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_12" 
+    ("maximum_privilege_cipher_suite_id_12" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-12
@@ -250,7 +250,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_13" 
+    ("maximum_privilege_cipher_suite_id_13" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-13
@@ -258,7 +258,7 @@
      get-rmcpplus-max-privilege-value-string
      same-string-ci? 
      "Possible values: Unused/User/Operator/Administrator/OEM_Proprietary")
-    ("Maximum_Privilege_Cipher_Suite_Id_14" 
+    ("maximum_privilege_cipher_suite_id_14" 
      valid-rmcpplus-max-privilege?
      get-rmcpplus-max-privilege
      commit-cipher-id-14
