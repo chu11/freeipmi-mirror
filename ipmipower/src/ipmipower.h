@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.35 2006-03-11 20:15:22 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.36 2006-03-12 20:36:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -202,8 +202,8 @@ typedef enum
     RAKP_MESSAGE_4_RES                  = 0x20A,
     CLOSE_SESSION_REQ                   = 0x10B, 
     CLOSE_SESSION_RES                   = 0x20B,
-    CHASSIS_STATUS_REQ                  = 0x10C, 
-    CHASSIS_STATUS_RES                  = 0x20C,
+    GET_CHASSIS_STATUS_REQ              = 0x10C, 
+    GET_CHASSIS_STATUS_RES              = 0x20C,
     CHASSIS_CONTROL_REQ                 = 0x10D, 
     CHASSIS_CONTROL_RES                 = 0x20D, 
   } packet_type_t;
@@ -233,7 +233,7 @@ typedef enum
     PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT           = 0x03,
     PROTOCOL_STATE_ACTIVATE_SESSION_SENT                = 0x04,
     PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT           = 0x05,
-    PROTOCOL_STATE_CHASSIS_STATUS_SENT                  = 0x06,
+    PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT              = 0x06,
     PROTOCOL_STATE_CHASSIS_CONTROL_SENT                 = 0x07,
     PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT       = 0x08,
     PROTOCOL_STATE_OPEN_SESSION_SENT                    = 0x09,
@@ -422,8 +422,8 @@ struct ipmipower_powercmd {
   fiid_obj_t obj_rakp_message_4_res;
   fiid_obj_t obj_close_session_req;
   fiid_obj_t obj_close_session_res;
-  fiid_obj_t obj_chassis_status_req;
-  fiid_obj_t obj_chassis_status_res;
+  fiid_obj_t obj_get_chassis_status_req;
+  fiid_obj_t obj_get_chassis_status_res;
   fiid_obj_t obj_chassis_control_req;
   fiid_obj_t obj_chassis_control_res;
 

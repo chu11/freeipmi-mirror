@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.36 2006-03-11 20:15:23 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.37 2006-03-12 20:36:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,9 +90,9 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
     return &tmpl_cmd_close_session_rq[0];
   else if (pkt == CLOSE_SESSION_RES)
     return &tmpl_cmd_close_session_rs[0];
-  else if (pkt == CHASSIS_STATUS_REQ)
+  else if (pkt == GET_CHASSIS_STATUS_REQ)
     return &tmpl_cmd_get_chassis_status_rq[0];
-  else if (pkt == CHASSIS_STATUS_RES)
+  else if (pkt == GET_CHASSIS_STATUS_RES)
     return &tmpl_cmd_get_chassis_status_rs[0];
   else if (pkt == CHASSIS_CONTROL_REQ)
     return &tmpl_cmd_chassis_control_rq[0];
@@ -151,10 +151,10 @@ ipmipower_packet_cmd_obj(ipmipower_powercmd_t ip, packet_type_t pkt)
     return ip->obj_close_session_req;
   else if (pkt == CLOSE_SESSION_RES)
     return ip->obj_close_session_res;
-  else if (pkt == CHASSIS_STATUS_REQ)
-    return ip->obj_chassis_status_req;
-  else if (pkt == CHASSIS_STATUS_RES)
-    return ip->obj_chassis_status_res;
+  else if (pkt == GET_CHASSIS_STATUS_REQ)
+    return ip->obj_get_chassis_status_req;
+  else if (pkt == GET_CHASSIS_STATUS_RES)
+    return ip->obj_get_chassis_status_res;
   else if (pkt == CHASSIS_CONTROL_REQ)
     return ip->obj_chassis_control_req;
   else if (pkt == CHASSIS_CONTROL_RES)
@@ -280,12 +280,12 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           "================================================\n"
           "= Close Session Response                       =\n"
           "================================================";
-      else if (pkt == CHASSIS_STATUS_REQ)
+      else if (pkt == GET_CHASSIS_STATUS_REQ)
         hdr = 
           "================================================\n"
           "= Get Chassis Status Request                   =\n"
           "================================================";
-      else if (pkt == CHASSIS_STATUS_RES)
+      else if (pkt == GET_CHASSIS_STATUS_RES)
         hdr = 
           "================================================\n"
           "= Get Chassis Status Response                  =\n"
@@ -313,8 +313,8 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           || pkt == RAKP_MESSAGE_3_REQ
           || pkt == RAKP_MESSAGE_4_RES
           || (ip->ipmi_version == IPMI_VERSION_2_0
-              && (pkt == CHASSIS_STATUS_REQ
-                  || pkt == CHASSIS_STATUS_RES
+              && (pkt == GET_CHASSIS_STATUS_REQ
+                  || pkt == GET_CHASSIS_STATUS_RES
                   || pkt == CHASSIS_CONTROL_REQ
                   || pkt == CHASSIS_CONTROL_RES
                   || pkt == CLOSE_SESSION_REQ
@@ -591,7 +591,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == RAKP_MESSAGE_1_REQ
       || pkt == RAKP_MESSAGE_3_REQ
       || pkt == CLOSE_SESSION_REQ
-      || pkt == CHASSIS_STATUS_REQ
+      || pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ)
     {
       if (strlen(conf->password))
@@ -610,14 +610,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == SET_SESSION_PRIVILEGE_REQ
            || (ip->ipmi_version == IPMI_VERSION_1_5
                && (pkt == CLOSE_SESSION_REQ
-                   || pkt == CHASSIS_STATUS_REQ
+                   || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ)))
     Fiid_obj_get(ip->obj_activate_session_res, 
                  "session_id", 
                  &session_id);
   else if (ip->ipmi_version == IPMI_VERSION_2_0
            && (pkt == CLOSE_SESSION_REQ
-               || pkt == CHASSIS_STATUS_REQ
+               || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ))
     Fiid_obj_get(ip->obj_open_session_res,
                  "managed_system_session_id",
@@ -629,7 +629,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (pkt == SET_SESSION_PRIVILEGE_REQ
       || (ip->ipmi_version == IPMI_VERSION_1_5
           && (pkt == CLOSE_SESSION_REQ
-              || pkt == CHASSIS_STATUS_REQ
+              || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ)))
     {
       uint64_t initial_inbound_sequence_number;
@@ -642,14 +642,14 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (ip->ipmi_version == IPMI_VERSION_2_0
            && (pkt == CLOSE_SESSION_REQ
-               || pkt == CHASSIS_STATUS_REQ
+               || pkt == GET_CHASSIS_STATUS_REQ
                || pkt == CHASSIS_CONTROL_REQ))
     sequence_number = ip->session_sequence_number;
   else
     sequence_number = 0;
 
   /* Calculate Network Function */
-  if (pkt == CHASSIS_STATUS_REQ
+  if (pkt == GET_CHASSIS_STATUS_REQ
       || pkt == CHASSIS_CONTROL_REQ)
     net_fn = IPMI_NET_FN_CHASSIS_RQ;
   else
@@ -661,7 +661,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == SET_SESSION_PRIVILEGE_REQ
            || (ip->ipmi_version == IPMI_VERSION_1_5
                && (pkt == CLOSE_SESSION_REQ
-                   || pkt == CHASSIS_STATUS_REQ
+                   || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ)))
     {
       if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
@@ -851,13 +851,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
       obj_cmd_req = ip->obj_close_session_req;
     }
-  else if (pkt == CHASSIS_STATUS_REQ)
+  else if (pkt == GET_CHASSIS_STATUS_REQ)
     {
-      if (fill_cmd_get_chassis_status(ip->obj_chassis_status_req) < 0)
+      if (fill_cmd_get_chassis_status(ip->obj_get_chassis_status_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_chassis_status: %s", 
                  ip->ic->hostname, ip->protocol_state, strerror(errno));
-      obj_cmd_req = ip->obj_chassis_status_req;
+      obj_cmd_req = ip->obj_get_chassis_status_req;
     }
   else if (pkt == CHASSIS_CONTROL_REQ) 
     {
@@ -899,7 +899,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == GET_CHANNEL_CIPHER_SUITES_REQ
       || (ip->ipmi_version == IPMI_VERSION_1_5
           && (pkt == CLOSE_SESSION_REQ
-              || pkt == CHASSIS_STATUS_REQ
+              || pkt == GET_CHASSIS_STATUS_REQ
               || pkt == CHASSIS_CONTROL_REQ)))
     len = _ipmi_1_5_packet_create(ip,
                                   pkt,
@@ -917,7 +917,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
            || pkt == RAKP_MESSAGE_3_REQ
            || (ip->ipmi_version == IPMI_VERSION_2_0
                && (pkt == CLOSE_SESSION_REQ
-                   || pkt == CHASSIS_STATUS_REQ
+                   || pkt == GET_CHASSIS_STATUS_REQ
                    || pkt == CHASSIS_CONTROL_REQ)))
     len = _ipmi_2_0_packet_create(ip,
                                   pkt,
@@ -949,7 +949,7 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(PACKET_TYPE_VALID_RES(pkt));
   /* Assert this is not an IPMI 2.0 Session Setup Packet */
   assert(pkt != OPEN_SESSION_RES
-         && pkt != CHASSIS_STATUS_RES
+         && pkt != GET_CHASSIS_STATUS_RES
          && pkt != CHASSIS_CONTROL_RES);
 
   /* XXX need to fix for ipmi 2.0 */
