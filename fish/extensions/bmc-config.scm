@@ -152,22 +152,22 @@
 			  "Gratuitous_ARP_Interval"))
 
 (define rmcpplus_conf_privilege_s '("Rmcpplus_Conf_Privilege" 
-				    "Maximum_Privilege_Cipher_Suite_Id_0",
-				    "Maximum_Privilege_Cipher_Suite_Id_1",
-				    "Maximum_Privilege_Cipher_Suite_Id_2",
-				    "Maximum_Privilege_Cipher_Suite_Id_3",
-				    "Maximum_Privilege_Cipher_Suite_Id_4",
-				    "Maximum_Privilege_Cipher_Suite_Id_5",
-				    "Maximum_Privilege_Cipher_Suite_Id_6",
-				    "Maximum_Privilege_Cipher_Suite_Id_7",
-				    "Maximum_Privilege_Cipher_Suite_Id_8",
-				    "Maximum_Privilege_Cipher_Suite_Id_9",
-				    "Maximum_Privilege_Cipher_Suite_Id_10",
-				    "Maximum_Privilege_Cipher_Suite_Id_11",
-				    "Maximum_Privilege_Cipher_Suite_Id_12",
-				    "Maximum_Privilege_Cipher_Suite_Id_13",
+				    "Maximum_Privilege_Cipher_Suite_Id_0"
+				    "Maximum_Privilege_Cipher_Suite_Id_1"
+				    "Maximum_Privilege_Cipher_Suite_Id_2"
+				    "Maximum_Privilege_Cipher_Suite_Id_3"
+				    "Maximum_Privilege_Cipher_Suite_Id_4"
+				    "Maximum_Privilege_Cipher_Suite_Id_5"
+				    "Maximum_Privilege_Cipher_Suite_Id_6"
+				    "Maximum_Privilege_Cipher_Suite_Id_7"
+				    "Maximum_Privilege_Cipher_Suite_Id_8"
+				    "Maximum_Privilege_Cipher_Suite_Id_9"
+				    "Maximum_Privilege_Cipher_Suite_Id_10"
+				    "Maximum_Privilege_Cipher_Suite_Id_11"
+				    "Maximum_Privilege_Cipher_Suite_Id_12"
+				    "Maximum_Privilege_Cipher_Suite_Id_13"
 				    "Maximum_Privilege_Cipher_Suite_Id_14"))
-
+  
 (define serial_channel_s '("Serial_Channel" 
 			   "Volatile_Access_Mode" 
 			   "Volatile_Enable_User_Level_Auth" 
