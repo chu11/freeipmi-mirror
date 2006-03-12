@@ -407,6 +407,81 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-sol-sol-payload-port-number PORTNUMBER)
    */
 
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-0", ex_get_rmcpplus_cipher_suite_id_1, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-0 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-1", ex_set_rmcpplus_cipher_suite_id_1, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-1 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-2", ex_set_rmcpplus_cipher_suite_id_2, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-2 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-3", ex_set_rmcpplus_cipher_suite_id_3, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-3 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-4", ex_set_rmcpplus_cipher_suite_id_4, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-4 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-5", ex_set_rmcpplus_cipher_suite_id_5, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-5 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-6", ex_set_rmcpplus_cipher_suite_id_6, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-6 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-7", ex_set_rmcpplus_cipher_suite_id_7, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-7 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-8", ex_set_rmcpplus_cipher_suite_id_8, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-8 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-9", ex_set_rmcpplus_cipher_suite_id_9, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-9 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-10", ex_set_rmcpplus_cipher_suite_id_11, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-10 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-11", ex_set_rmcpplus_cipher_suite_id_11, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-11 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-12", ex_set_rmcpplus_cipher_suite_id_12, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-12 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-13", ex_set_rmcpplus_cipher_suite_id_13, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-13 privilege)
+   */
+
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-14", ex_set_rmcpplus_cipher_suite_id_14, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-14 privilege)
+   */
+
   gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID)
@@ -595,6 +670,81 @@ install_new_procedures (void)
   gh_new_procedure ("fi-get-sol-sol-payload-port-number", ex_get_sol_sol_payload_port_number, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-sol-sol-payload-port-number)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-0", ex_get_rmcpplus_cipher_suite_id_1, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-0)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-1", ex_get_rmcpplus_cipher_suite_id_1, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-1)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-2", ex_get_rmcpplus_cipher_suite_id_2, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-2)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-3", ex_get_rmcpplus_cipher_suite_id_3, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-3)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-4", ex_get_rmcpplus_cipher_suite_id_4, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-4)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-5", ex_get_rmcpplus_cipher_suite_id_5, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-5)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-6", ex_get_rmcpplus_cipher_suite_id_6, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-6)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-7", ex_get_rmcpplus_cipher_suite_id_7, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-7)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-8", ex_get_rmcpplus_cipher_suite_id_8, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-8)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-9", ex_get_rmcpplus_cipher_suite_id_9, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-9)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-10", ex_get_rmcpplus_cipher_suite_id_10, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-10)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-11", ex_get_rmcpplus_cipher_suite_id_11, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-11)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-12", ex_get_rmcpplus_cipher_suite_id_12, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-12)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-13", ex_get_rmcpplus_cipher_suite_id_13, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-13)
+   */
+
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-14", ex_get_rmcpplus_cipher_suite_id_14, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-14)
    */
 
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);

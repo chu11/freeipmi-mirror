@@ -23,6 +23,7 @@
 (fi-load "bc-lan-conf-section.scm")
 (fi-load "bc-lan-conf-auth-section.scm")
 (fi-load "bc-lan-conf-misc-section.scm")
+(fi-load "bc-rmcpplus-conf-privilege-section.scm")
 (fi-load "bc-serial-conf-section.scm")
 (fi-load "bc-sol-conf-section.scm")
 (fi-load "bc-pef-conf-section.scm")
@@ -150,6 +151,23 @@
 			  "Enable_ARP_Response" 
 			  "Gratuitous_ARP_Interval"))
 
+(define rmcpplus_conf_privilege_s '("Rmcpplus_Conf_Privilege" 
+				    "Maximum_Privilege_Cipher_Suite_Id_0",
+				    "Maximum_Privilege_Cipher_Suite_Id_1",
+				    "Maximum_Privilege_Cipher_Suite_Id_2",
+				    "Maximum_Privilege_Cipher_Suite_Id_3",
+				    "Maximum_Privilege_Cipher_Suite_Id_4",
+				    "Maximum_Privilege_Cipher_Suite_Id_5",
+				    "Maximum_Privilege_Cipher_Suite_Id_6",
+				    "Maximum_Privilege_Cipher_Suite_Id_7",
+				    "Maximum_Privilege_Cipher_Suite_Id_8",
+				    "Maximum_Privilege_Cipher_Suite_Id_9",
+				    "Maximum_Privilege_Cipher_Suite_Id_10",
+				    "Maximum_Privilege_Cipher_Suite_Id_11",
+				    "Maximum_Privilege_Cipher_Suite_Id_12",
+				    "Maximum_Privilege_Cipher_Suite_Id_13",
+				    "Maximum_Privilege_Cipher_Suite_Id_14"))
+
 (define serial_channel_s '("Serial_Channel" 
 			   "Volatile_Access_Mode" 
 			   "Volatile_Enable_User_Level_Auth" 
@@ -212,6 +230,7 @@
   (checkout-section lan_conf_s (current-output-port))
   (checkout-section lan_conf_auth_s (current-output-port))
   (checkout-section lan_conf_misc_s (current-output-port))
+  (checkout-section rmcpplus_conf_privilege_s (current-output-port))
   (checkout-section serial_channel_s (current-output-port))
   (checkout-section serial_conf_s (current-output-port))
   (checkout-section pef_conf_s (current-output-port))

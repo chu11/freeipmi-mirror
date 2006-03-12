@@ -1721,6 +1721,110 @@ ex_set_sol_sol_payload_port_number (SCM scm_port_number)
   return (retval ? SCM_BOOL_F : SCM_BOOL_T);
 }
 
+static SCM
+_set_rmcpplus_cipher_suite_id_privilege (uint8_t cipher_suite_id,
+					 SCM scm_privilege)
+{
+  int privilege;
+  int retval;
+  
+  privilege = gh_scm2long (scm_privilege);
+
+  retval = set_rmcpplus_cipher_suite_id_privilege (fi_get_ipmi_device (),
+						   cipher_suite_id,
+						   (uint8_t)privilege);
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_0 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(0, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_1 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(1, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_2 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(2, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_3 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(3, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_4 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(4, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_5 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(5, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_6 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(6, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_7 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(7, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_8 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(8, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_9 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(9, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_10 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(10, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_11 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(11, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_12 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(12, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_13 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(13, scm_privilege);
+}
+
+SCM
+ex_set_rmcpplus_cipher_suite_id_14 (SCM scm_privilege)
+{
+  return _set_rmcpplus_cipher_suite_id_privilege(14, scm_privilege);
+}
 
 /**** get_XXXX functions *****/
 SCM 
@@ -2514,6 +2618,114 @@ ex_get_sol_sol_payload_port_number ()
     }
   
   return (retval ? SCM_BOOL_F : return_list);
+}
+
+static SCM
+_get_rmcpplus_cipher_suite_id_privilege (uint8_t cipher_suite_id)
+{
+  uint8_t privilege = 0;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  if ((retval = get_rmcpplus_cipher_suite_id_privilege (fi_get_ipmi_device (),
+							cipher_suite_id,
+							&privilege)) == 0)
+    {
+      return_list = gh_list (gh_long2scm (privilege), 
+			     SCM_UNDEFINED);
+    }
+
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_0 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(0);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_1 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(1);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_2 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(2);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_3 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(3);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_4 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(4);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_5 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(5);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_6 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(6);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_7 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(7);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_8 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(8);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_9 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(9);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_10 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(10);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_11 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(11);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_12 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(12);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_13 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(13);
+}
+
+SCM
+ex_get_rmcpplus_cipher_suite_id_14 ()
+{
+  return _get_rmcpplus_cipher_suite_id_privilege(14);
 }
 
 /***********************************************************/

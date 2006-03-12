@@ -164,6 +164,9 @@ int8_t set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
 int8_t set_sol_sol_payload_port_number(ipmi_device_t *dev,
                                        uint16_t port_number);
 
+int8_t set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+					       uint8_t cipher_suite_id,
+					       uint8_t privilege);
 
 /***********************************************************/
 int8_t get_bmc_username (ipmi_device_t *dev, 
@@ -286,6 +289,10 @@ int8_t get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
                                       uint8_t *bit_rate);
 int8_t get_sol_sol_payload_port_number (ipmi_device_t *dev,
                                         uint16_t *port_number);
+
+int8_t get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+					       uint8_t cipher_suite_id,
+					       uint8_t *privilege);
 
 /***********************************************************/
 int8_t check_bmc_user_password (ipmi_device_t *dev, 

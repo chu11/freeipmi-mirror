@@ -1,3 +1,9 @@
+2005-03-12  Albert Chu <chu11@llnl.gov>
+
+	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.
+
+	* fish/: Add rmcpplus cipher id configuration.
+	
 2005-03-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Add

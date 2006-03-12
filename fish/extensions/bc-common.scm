@@ -59,6 +59,22 @@
 (define (get-privilege-level-value-string value)
   (string-capitalize (assoc-vref privilege-level-values value)))
 
+(define rmcpplus-max-privilege-values '(("unused"        . 1) 
+					("user"            . 2) 
+					("operator"        . 3) 
+					("administrator"   . 4) 
+					("oem_proprietary" . 5)))
+
+(define (get-rmcpplus-max-privilege value-string)
+  (assoc-ref rmcpplus-max-privilege-values (string-downcase value-string)))
+
+(define (valid-rmcpplus-max-privilege? str)
+  (pair? (assoc (string-downcase str) rmcpplus-max-privilege-values)))
+
+(define (get-rmcpplus-max-privilege-value-string value)
+  (string-capitalize (assoc-vref rmcpplus-max-privilege-values value)))
+
+
 (define channel-access-modes '(("disabled"         . 0)
 			       ("pre_boot_only"    . 1)
 			       ("always_available" . 2)

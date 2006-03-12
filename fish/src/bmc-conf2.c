@@ -20,6 +20,26 @@
 
 #include "bit-ops.h"
 
+static int cipher_suite_entry_count = 0;
+
+static int cipher_suite_id_map[16] =
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+  };
+static int cipher_suite_id_map_set = 0;
+
+static int cipher_suite_priv_map[16] =
+  {
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+  };
+static int cipher_suite_priv_map_set = 0;
+
 static int8_t 
 set_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t channel_number, 
@@ -1217,6 +1237,226 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
     goto cleanup;
   
   rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+static int
+_rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
+{
+  fiid_obj_t obj_cmd_count_rs = NULL;
+  fiid_obj_t obj_cmd_id_rs = NULL;
+  fiid_obj_t obj_cmd_priv_rs = NULL;
+  uint64_t val;
+  int i, rv = -1;
+
+  if (!cipher_suite_entry_count)
+    {
+      if (!(obj_cmd_count_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support_rs)))
+	goto cleanup;
+
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entry_support (dev, 
+												   get_lan_channel_number (), 
+												   IPMI_GET_LAN_PARAMETER, 
+												   SET_SELECTOR, 
+												   BLOCK_SELECTOR, 
+												   obj_cmd_count_rs) != 0)
+	goto cleanup;
+
+      if (fiid_obj_get (obj_cmd_count_rs, "cipher_suite_entry_count", &val) < 0)
+	goto cleanup;
+
+      cipher_suite_entry_count = val;
+
+      /* IPMI spec says 16 is the max */
+      if (cipher_suite_entry_count > 16)
+	cipher_suite_entry_count = 16;
+    }
+
+  if (!cipher_suite_id_map_set)
+    {
+      if (!(obj_cmd_id_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries_rs)))
+	goto cleanup;
+
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_entries (dev, 
+											     get_lan_channel_number (), 
+											     IPMI_GET_LAN_PARAMETER, 
+											     SET_SELECTOR, 
+											     BLOCK_SELECTOR, 
+											     obj_cmd_id_rs) != 0)
+	goto cleanup;
+
+      for (i = 0; i < cipher_suite_entry_count; i++)
+	{
+	  char *field;
+
+	  if (i == 0)
+	    field = "cipher_suite_id_entry_A";
+	  else if (i == 1)
+	    field = "cipher_suite_id_entry_B";
+	  else if (i == 2)
+	    field = "cipher_suite_id_entry_C";
+	  else if (i == 3)
+	    field = "cipher_suite_id_entry_D";
+	  else if (i == 4)
+	    field = "cipher_suite_id_entry_E";
+	  else if (i == 5)
+	    field = "cipher_suite_id_entry_F";
+	  else if (i == 6)
+	    field = "cipher_suite_id_entry_G";
+	  else if (i == 7)
+	    field = "cipher_suite_id_entry_H";
+	  else if (i == 8)
+	    field = "cipher_suite_id_entry_I";
+	  else if (i == 9)
+	    field = "cipher_suite_id_entry_J";
+	  else if (i == 10)
+	    field = "cipher_suite_id_entry_K";
+	  else if (i == 11)
+	    field = "cipher_suite_id_entry_L";
+	  else if (i == 12)
+	    field = "cipher_suite_id_entry_M";
+	  else if (i == 13)
+	    field = "cipher_suite_id_entry_N";
+	  else if (i == 14)
+	    field = "cipher_suite_id_entry_O";
+	  else if (i == 15)
+	    field = "cipher_suite_id_entry_P";
+
+	  if (fiid_obj_get (obj_cmd_id_rs, field, &val) < 0)
+	    goto cleanup;
+	  
+	  cipher_suite_id_map[i] = val;
+	}
+      
+      cipher_suite_id_map_set++;
+    }
+  
+  if (!cipher_suite_priv_map_set)
+    {
+      if (!(obj_cmd_priv_rs = fiid_obj_create(tmpl_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels_rs)))
+	goto cleanup;
+
+      if (ipmi_cmd_get_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels (dev, 
+												      get_lan_channel_number (), 
+												      IPMI_GET_LAN_PARAMETER, 
+												      SET_SELECTOR, 
+												      BLOCK_SELECTOR, 
+												      obj_cmd_priv_rs) != 0)
+	goto cleanup;
+
+      for (i = 0; i < cipher_suite_entry_count; i++)
+	{
+	  char *field;
+
+	  if (i == 0)
+	    field = "maximum_privilege_for_cipher_suite_1";
+	  else if (i == 1)
+	    field = "maximum_privilege_for_cipher_suite_2";
+	  else if (i == 2)
+	    field = "maximum_privilege_for_cipher_suite_3";
+	  else if (i == 3)
+	    field = "maximum_privilege_for_cipher_suite_4";
+	  else if (i == 4)
+	    field = "maximum_privilege_for_cipher_suite_5";
+	  else if (i == 5)
+	    field = "maximum_privilege_for_cipher_suite_6";
+	  else if (i == 6)
+	    field = "maximum_privilege_for_cipher_suite_7";
+	  else if (i == 7)
+	    field = "maximum_privilege_for_cipher_suite_8";
+	  else if (i == 8)
+	    field = "maximum_privilege_for_cipher_suite_9";
+	  else if (i == 9)
+	    field = "maximum_privilege_for_cipher_suite_10";
+	  else if (i == 10)
+	    field = "maximum_privilege_for_cipher_suite_11";
+	  else if (i == 11)
+	    field = "maximum_privilege_for_cipher_suite_12";
+	  else if (i == 12)
+	    field = "maximum_privilege_for_cipher_suite_13";
+	  else if (i == 13)
+	    field = "maximum_privilege_for_cipher_suite_14";
+	  else if (i == 14)
+	    field = "maximum_privilege_for_cipher_suite_15";
+	  else if (i == 15)
+	    field = "maximum_privilege_for_cipher_suite_16";
+
+	  if (fiid_obj_get (obj_cmd_priv_rs, field, &val) < 0)
+	    goto cleanup;
+	  
+	  cipher_suite_priv_map[i] = val;
+	}
+      
+      cipher_suite_priv_map_set++;
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_count_rs)
+    fiid_obj_destroy(obj_cmd_count_rs);
+  if (obj_cmd_id_rs)
+    fiid_obj_destroy(obj_cmd_id_rs);
+  if (obj_cmd_priv_rs)
+    fiid_obj_destroy(obj_cmd_priv_rs);
+  return (rv);
+}
+
+int8_t
+set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+					uint8_t cipher_suite_id,
+					uint8_t privilege)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  int i;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_lan_configuration_parameters_rs)))
+    goto cleanup;
+
+  if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
+    goto cleanup;
+
+  if (cipher_suite_entry_count && cipher_suite_id_map_set && cipher_suite_priv_map_set)
+    {
+      uint8_t privs[16];
+
+      memset(privs, 0, 16);
+
+      for (i = 0; i < cipher_suite_entry_count; i++)
+	{
+	  if (cipher_suite_id_map[i] == cipher_suite_id)
+	    privs[i] = privilege;
+	  else
+	    privs[i] = cipher_suite_priv_map[i];
+	}
+
+      if (ipmi_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privilege_levels(dev,
+												     get_lan_channel_number(),
+												     privs[0],
+												     privs[1],
+												     privs[2],
+												     privs[3],
+												     privs[4],
+												     privs[5],
+												     privs[6],
+												     privs[7],
+												     privs[8],
+												     privs[9],
+												     privs[10],
+												     privs[11],
+												     privs[12],
+												     privs[13],
+												     privs[14],
+												     privs[15],
+												     obj_cmd_rs) < 0)
+	goto cleanup;
+
+      rv = 0;
+    }
+
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
@@ -2603,6 +2843,38 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
+					uint8_t cipher_suite_id,
+					uint8_t *privilege)
+{
+  int8_t rv = -1;
+
+  if (_rmcpplus_cipher_suite_id_privilege_setup(dev) < 0)
+    goto cleanup;
+
+  if (cipher_suite_entry_count && cipher_suite_id_map_set && cipher_suite_priv_map_set)
+    {
+      int i, id_found = 0;
+      
+      for (i = 0; i < cipher_suite_entry_count; i++)
+	{
+	  if (cipher_suite_id_map[i] == cipher_suite_id)
+	    {
+	      *privilege = cipher_suite_priv_map[i];
+	      id_found++;
+	      break;
+	    }
+	}
+
+      if (id_found)
+	rv = 0;
+    }
+  
+ cleanup:
   return (rv);
 }
 

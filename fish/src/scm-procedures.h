@@ -172,6 +172,22 @@ SCM ex_set_sol_sol_non_volatile_bit_rate (SCM scm_bit_rate);
 SCM ex_set_sol_sol_volatile_bit_rate (SCM scm_bit_rate);
 SCM ex_set_sol_sol_payload_port_number (SCM scm_port_number);
 
+SCM ex_set_rmcpplus_cipher_suite_id_0 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_1 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_2 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_3 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_4 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_5 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_6 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_7 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_8 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_9 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_10 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_11 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_12 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_13 (SCM scm_privilege);
+SCM ex_set_rmcpplus_cipher_suite_id_14 (SCM scm_privilege);
+
 /*****************/
 SCM ex_get_bmc_username (SCM scm_userid);
 SCM ex_get_bmc_user_lan_channel_access (SCM scm_userid);
@@ -213,6 +229,21 @@ SCM ex_get_sol_sol_retry ();
 SCM ex_get_sol_sol_non_volatile_bit_rate ();
 SCM ex_get_sol_sol_volatile_bit_rate ();
 SCM ex_get_sol_sol_payload_port_number ();
+SCM ex_get_rmcpplus_cipher_suite_id_0 ();
+SCM ex_get_rmcpplus_cipher_suite_id_1 ();
+SCM ex_get_rmcpplus_cipher_suite_id_2 ();
+SCM ex_get_rmcpplus_cipher_suite_id_3 ();
+SCM ex_get_rmcpplus_cipher_suite_id_4 ();
+SCM ex_get_rmcpplus_cipher_suite_id_5 ();
+SCM ex_get_rmcpplus_cipher_suite_id_6 ();
+SCM ex_get_rmcpplus_cipher_suite_id_7 ();
+SCM ex_get_rmcpplus_cipher_suite_id_8 ();
+SCM ex_get_rmcpplus_cipher_suite_id_9 ();
+SCM ex_get_rmcpplus_cipher_suite_id_10 ();
+SCM ex_get_rmcpplus_cipher_suite_id_11 ();
+SCM ex_get_rmcpplus_cipher_suite_id_12 ();
+SCM ex_get_rmcpplus_cipher_suite_id_13 ();
+SCM ex_get_rmcpplus_cipher_suite_id_14 ();
 SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
 
 /***********************************************************/
