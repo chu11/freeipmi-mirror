@@ -64,6 +64,14 @@ int8_t ipmi_cmd_get_channel_info (ipmi_device_t *dev,
 				  uint8_t channel_number,
 				  fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_channel_security_keys (ipmi_device_t *dev,
+                                           uint8_t channel_number,
+                                           uint8_t operation,
+                                           uint8_t key_id,
+                                           uint8_t *key_value,
+                                           uint32_t key_value_len,
+                                           fiid_obj_t obj_cmd_rq);
+
 int8_t ipmi_cmd_set_user_access (ipmi_device_t *dev, 
 				 uint8_t channel_number,
 				 uint8_t user_ipmi_messaging,

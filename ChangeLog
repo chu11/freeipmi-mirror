@@ -15,8 +15,10 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h,
 	libfreeipmi/src/ipmi-messaging-support-cmds.c
-	(fill_cmd_set_channel_security_keys): Set Channel Security Keys
-	support.
+	(fill_cmd_set_channel_security_keys),
+	libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(ipmi_cmd_set_channel_security_keys): Set Channel Security Keys
+	command support.
 	
 2005-03-12  Albert Chu <chu11@llnl.gov>
 
