@@ -25,7 +25,7 @@
 
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c,
 	libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Support
-	cipher suite record formate templates.
+	cipher suite record format templates.
 
 2006-03-12  Albert Chu <chu11@llnl.gov>
 
