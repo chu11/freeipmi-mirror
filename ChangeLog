@@ -23,6 +23,10 @@
 	(ipmi_cmd_set_channel_security_keys): Set Channel Security Keys
 	command support.
 
+	* libfreeipmi/src/ipmi-cipher-suite-spec.c,
+	libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Support
+	cipher suite record formate templates.
+
 2006-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.

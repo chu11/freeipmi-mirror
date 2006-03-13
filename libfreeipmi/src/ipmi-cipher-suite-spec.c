@@ -29,6 +29,30 @@
 
 #include "err-wrappers.h"
 
+fiid_template_t tmpl_cmd_cipher_suite_record_header =
+  {
+    {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_cipher_suite_record = 
+  {
+    {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2, "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "cipher_suite_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_cmd_oem_cipher_suite_record = 
+  {
+    {6,  "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,  "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "oem_cipher_suite_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {32, "oem_iana", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {0, "", 0}
+  };
+
 int8_t 
 ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
 				   uint8_t *authentication_algorithm,
