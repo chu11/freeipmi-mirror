@@ -1,4 +1,4 @@
-2005-03-13  Albert Chu <chu11@llnl.gov>
+2006-03-13  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
@@ -23,7 +23,7 @@
 	(ipmi_cmd_set_channel_security_keys): Set Channel Security Keys
 	command support.
 
-2005-03-12  Albert Chu <chu11@llnl.gov>
+2006-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.
 
@@ -38,7 +38,7 @@
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Support RAKP
 	error messages.
 
-2005-03-11  Albert Chu <chu11@llnl.gov>
+2006-03-11  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c (_process_ipmi_packets): Add
 	additional checks for authentication_type returned from activate
@@ -67,7 +67,7 @@
 	IPMI 2.0.
 
 	
-2005-03-10  Albert Chu <chu11@llnl.gov>
+2006-03-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-utils.c,
 	libfreeipmi/include/freeipmi/ipmi-lan-utils.h
@@ -125,11 +125,11 @@
 	patch to check installed Guile's version. Replaced gh_enter with
 	scm_boot_guile. gh_* are depricated in Guile 1.8. 
 
-2005-03-10  Albert Chu <chu11@llnl.gov>
+2006-03-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c: New file.
 
-2005-03-09  Albert Chu <chu11@llnl.gov>
+2006-03-09  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Remove randomized initial outbound sequence number.
 	Add support of IPMI 2.0 for chassis status and chassis control.
@@ -182,7 +182,7 @@
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Return 0 if
 	packet is unparsable and should be ignored.
 
-2005-03-08  Albert Chu <chu11@llnl.gov>
+2006-03-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
 	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h
@@ -204,7 +204,7 @@
 	(assemble_ipmi_rmcpplus_pkt, unassemble_ipmi_rmcpplus_pkt): Fix
 	session trailer assembly bug.
 
-2005-03-07  Albert Chu <chu11@llnl.gov>
+2006-03-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
 	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Support for more
@@ -233,7 +233,7 @@
 	* ipmiping/src/ipmiping.c (parsepacket): Fix output to match
 	earlier output.
 
-2005-03-06  Albert Chu <chu11@llnl.gov>
+2006-03-06  Albert Chu <chu11@llnl.gov>
 
 	Collective fixes from branch al_ipmi_2_0_branch at tag
 	al_ipmi_2_0_branch_final.  See ChangeLog in branch for detailed
