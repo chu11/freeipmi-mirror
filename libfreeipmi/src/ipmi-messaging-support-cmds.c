@@ -354,6 +354,28 @@ fiid_template_t tmpl_get_channel_info_rs =
     {0, "", 0}
   };
 
+fiid_template_t tmpl_set_channel_security_keys_rq =
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "key_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {256, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_set_channel_security_keys_rs =
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,   "lock_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {256, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
 fiid_template_t tmpl_set_user_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -689,8 +711,8 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 int8_t 
 fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (fiid_obj_valid(obj_cmd_rq)
-	      && IPMI_CHANNEL_NUMBER_VALID(channel_number));
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_info_rq);
 
@@ -700,6 +722,49 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
   
   return 0;
+}
+
+
+fiid_template_t tmpl_set_channel_security_keys_rq =
+  {
+    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {6,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,   "key_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {256, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
+    {0, "", 0}
+  };
+
+int8_t
+fill_cmd_set_channel_security_keys(uint8_t channel_number,
+                                   uint8_t operation,
+                                   uint8_t key_id,
+                                   uint8_t *key_value,
+                                   uint32_t key_value_len,
+                                   fiid_obj_t obj_cmd_rq)
+{
+  ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
+              && IPMI_CHANNEL_SECURITY_KEYS_OPERATION_VALID(operation)
+              && IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_VALID(key_id)
+              && fiid_obj_valid(obj_cmd_rq));
+
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_channel_security_keys_rq);
+
+  FIID_OBJ_CLEAR (obj_cmd_rq);
+  FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_CMD);  
+  FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "key_id", key_id);
+  if (key_value && key_value_len)
+    FIID_OBJ_SET_DATA (obj_cmd_rq,
+                       "key_value",
+                       key_value,
+                       key_value_len);
+  return (0);
 }
 
 int8_t 

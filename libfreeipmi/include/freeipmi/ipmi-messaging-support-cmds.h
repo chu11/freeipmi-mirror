@@ -136,6 +136,26 @@ extern "C" {
         (((__val) == IPMI_USER_IPMI_MESSAGING_ENABLE \
           || (__val) == IPMI_USER_IPMI_MESSAGING_DISABLE) ? 1 : 0)
 
+#define IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY 0x0
+#define IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY  0x1
+#define IPMI_CHANNEL_SECURITY_KEYS_OPERATION_LOCK_KEY 0x2
+
+#define IPMI_CHANNEL_SECURITY_KEYS_OPERATION_VALID(__val) \
+        (((__val) == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY \
+          || (__val) == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY \
+          || (__val) == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_LOCK_KEY) ? 1 : 0)
+
+#define IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R    0x0
+#define IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G    0x1
+
+#define IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_VALID(__val) \
+        (((__val) == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R \
+          || (__val) == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G) ? 1 : 0)
+
+#define IPMI_CHANNEL_SECURITY_KEYS_LOCK_STATUS_KEY_IS_NOT_LOCKABLE 0x0
+#define IPMI_CHANNEL_SECURITY_KEYS_LOCK_STATUS_KEY_IS_LOCKED       0x1
+#define IPMI_CHANNEL_SECURITY_KEYS_LOCK_STATUS_KEY_IS_UNLOCKED     0x2
+
 #define IPMI_PASSWORD_OPERATION_DISABLE_USER     0x0
 #define IPMI_PASSWORD_OPERATION_ENABLE_USER      0x1
 #define IPMI_PASSWORD_OPERATION_SET_PASSWORD     0x2
@@ -175,6 +195,8 @@ extern fiid_template_t tmpl_get_channel_access_rs;
 extern fiid_template_t tmpl_get_channel_info_rq;
 extern fiid_template_t tmpl_get_channel_info_rs;
 
+extern fiid_template_t tmpl_set_channel_security_keys_rq;
+extern fiid_template_t tmpl_set_channel_security_keys_rs;
 extern fiid_template_t tmpl_set_user_access_rq;
 extern fiid_template_t tmpl_set_user_access_rs;
 extern fiid_template_t tmpl_get_user_access_rq;
@@ -237,6 +259,13 @@ int8_t fill_cmd_get_channel_access (uint8_t channel_number,
                                     fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_channel_security_keys(uint8_t channel_number,
+                                          uint8_t operation,
+                                          uint8_t key_id,
+                                          uint8_t *key_value,
+                                          uint32_t key_value_len,
+                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_user_access (uint8_t channel_number,
                                  uint8_t user_ipmi_messaging,

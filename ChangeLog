@@ -13,7 +13,10 @@
 	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Additional
 	commands supported.  Cleanup.
 
-	
+	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_channel_security_keys): Set Channel Security Keys
+	support.
 	
 2005-03-12  Albert Chu <chu11@llnl.gov>
 
