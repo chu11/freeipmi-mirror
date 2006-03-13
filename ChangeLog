@@ -1,3 +1,14 @@
+2005-03-13  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	(ipmi_calculate_keys): Renamed to
+	ipmi_calculate_rmcpplus_session_keys.
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c
+	(ipmi_calculate_rmcpplus_session_keys): Modified for session keys
+	only, not pre-session/rakp keys.
+	
 2005-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.

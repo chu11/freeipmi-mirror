@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.29 2006-03-12 20:39:57 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.30 2006-03-13 17:38:31 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -395,7 +395,6 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
    * request.  The outbound sequence number on a close session reponse
    * may also be incorrect.
    */
-
 
  out:
   if (!rv)
