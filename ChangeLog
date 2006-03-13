@@ -8,6 +8,12 @@
 	* libfreeipmi/src/ipmi-rmcpplus-utils.c
 	(ipmi_calculate_rmcpplus_session_keys): Modified for session keys
 	only, not pre-session/rakp keys.
+
+	* libfreeipmi/src/ipmi-error.c (ipmi_strerror_r),
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Additional
+	commands supported.  Cleanup.
+
+	
 	
 2005-03-12  Albert Chu <chu11@llnl.gov>
 

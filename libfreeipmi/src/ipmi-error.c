@@ -257,6 +257,22 @@ ipmi_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR);
                 }
               break;
+            case IPMI_CMD_SET_CHANNEL_ACCESS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_SET_NOT_SUPPORTED_ON_SELECTED_CHANNEL:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_SET_NOT_SUPPORTED_ON_SELECTED_CHANNEL_STR);
+                case IPMI_COMP_CODE_ACCESS_MODE_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_ACCESS_MODE_NOT_SUPPORTED_STR);
+                }
+              break;
+            case IPMI_CMD_GET_CHANNEL_ACCESS:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR);
+                }
+              break;
 	    case IPMI_CMD_ACTIVATE_PAYLOAD:
 	      switch (comp_code)
 		{
@@ -281,6 +297,20 @@ ipmi_strerror_r (uint8_t cmd,
 		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_IS_DISABLED_STR);
 		}
 	      break;
+            case IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR);
+                }
+              break;
+            case IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR);
+                }
+              break;
 	    case IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION:
 	      switch (comp_code)
 		{
@@ -294,18 +324,19 @@ ipmi_strerror_r (uint8_t cmd,
 		  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR);
 		}
               break;
-            case IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION:
+            case IPMI_CMD_SET_CHANNEL_SECURITY_KEYS:
               switch (comp_code)
                 {
-                case IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR);
-                }
-              break;
-            case IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO:
-              switch (comp_code)
-                {
-                case IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED:
-                  SNPRINTF_RETURN (IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR);
+                case IPMI_COMP_CODE_CANNOT_PERFORM_SET_CONFIRM_KEY_IS_LOCKED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_CANNOT_PERFORM_SET_CONFIRM_KEY_IS_LOCKED_STR);
+                case IPMI_COMP_CODE_INSUFFICIENT_KEY_BYTES:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_INSUFFICIENT_KEY_BYTES_STR);
+                case IPMI_COMP_CODE_TOO_MANY_KEY_BYTES:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_TOO_MANY_KEY_BYTES_STR);
+                case IPMI_COMP_CODE_KEY_VALUE_DOES_NOT_MEET_CRITERIA:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_KEY_VALUE_DOES_NOT_MEET_CRITERIA_STR);
+                case IPMI_COMP_CODE_KR_IS_NOT_USED:
+                  SNPRINTF_RETURN (IPMI_COMP_CODE_KR_IS_NOT_USED_STR);
                 }
               break;
 	    }

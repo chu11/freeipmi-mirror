@@ -246,6 +246,20 @@ extern "C" {
 #define IPMI_COMP_CODE_INVALID_SESSION_ID_IN_RQ_STR \
 "Invalid session ID in request"
 
+/* IPMI_CMD_SET_CHANNEL_ACCESS */
+#define IPMI_COMP_CODE_SET_NOT_SUPPORTED_ON_SELECTED_CHANNEL              0x82
+#define IPMI_COMP_CODE_SET_NOT_SUPPORTED_ON_SELECTED_CHANNEL_STR \
+"set not supported on selected channel"
+
+#define IPMI_COMP_CODE_ACCESS_MODE_NOT_SUPPORTED                          0x83
+#define IPMI_COMP_CODE_ACCESS_MODE_NOT_SUPPORTED_STR \
+"access mode not supported"
+
+/* IPMI_CMD_GET_CHANNEL_ACCESS */
+#define IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL         0x82
+#define IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR \
+"command not supported for selected channel"
+
 /* IPMI_CMD_ACTIVATE_PAYLOAD */
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION          0x80
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR \
@@ -281,8 +295,17 @@ extern "C" {
 "Payload type disabled.  Given payload type is not configured " \
 "to be enabled for activation."
 
-/* IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION */
+/* IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION */
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL        0x80
+#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR \
+"Payload type not available on given channel"
 
+/* IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO */
+#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED       0x80
+#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR \
+"OEM Payload IANA and/or Payload ID not supported"
+
+/* IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION */
 #define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED                            0x80
 #define IPMI_COMP_CODE_OPERATION_NOT_SUPPORTED_STR \
 "Operation not supported for given payload type."
@@ -299,15 +322,27 @@ extern "C" {
 #define IPMI_COMP_CODE_PAYLOAD_INSTANCE_NOT_PRESENTLY_ACTIVE_STR \
 "The payload instance is not presently active."
 
-/* IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION */
-#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL        0x80
-#define IPMI_COMP_CODE_PAYLOAD_TYPE_NOT_AVAILABLE_ON_GIVEN_CHANNEL_STR \
-"Payload type not available on given channel"
+/* IPMI_CMD_SET_CHANNEL_SECURITY_KEYS */
+#define IPMI_COMP_CODE_CANNOT_PERFORM_SET_CONFIRM_KEY_IS_LOCKED          0x80
+#define IPMI_COMP_CODE_CANNOT_PERFORM_SET_CONFIRM_KEY_IS_LOCKED_STR \
+"Cannot perform set/confirm.  Key is locked"
 
-/* IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO */
-#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED       0x80
-#define IPMI_COMP_CODE_OEM_PAYLOAD_IANA_OR_PAYLOAD_ID_NOT_SUPPORTED_STR \
-"OEM Payload IANA and/or Payload ID not supported"
+#define IPMI_COMP_CODE_INSUFFICIENT_KEY_BYTES                            0x81
+#define IPMI_COMP_CODE_INSUFFICIENT_KEY_BYTES_STR \
+"insufficient key bytes"
+
+#define IPMI_COMP_CODE_TOO_MANY_KEY_BYTES                                0x82
+#define IPMI_COMP_CODE_TOO_MANY_KEY_BYTES_STR \
+"too many key bytes"
+
+#define IPMI_COMP_CODE_KEY_VALUE_DOES_NOT_MEET_CRITERIA                  0x83
+#define IPMI_COMP_CODE_KEY_VALUE_DOES_NOT_MEET_CRITERIA_STR \
+"key value does not meet criteria for specified type of key"
+
+#define IPMI_COMP_CODE_KR_IS_NOT_USED                                    0x84
+#define IPMI_COMP_CODE_KR_IS_NOT_USED_STR \
+"K_R is not used.  BMC uses a random number generation approach " \
+"that does not require a K_R value"
 
   /* 
    * Chassis Device Commands
