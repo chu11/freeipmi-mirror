@@ -33,7 +33,7 @@ extern "C" {
 // IPM Device Global Commands
 #define IPMI_CMD_RESERVED                                   0x00
 #define IPMI_CMD_GET_DEVICE_ID                              0x01
-#define IPMI_CMD_GET_DEVICE_ID_BCST    IPMI_CMD_GET_DEVICE_ID
+#define IPMI_CMD_GET_DEVICE_ID_BCST       IPMI_CMD_GET_DEVICE_ID
 #define IPMI_CMD_COLD_RESET                                 0x02
 #define IPMI_CMD_WARM_RESET                                 0x03
 #define IPMI_CMD_GET_SELF_TEST_RESULTS                      0x04
@@ -125,7 +125,7 @@ extern "C" {
 
 // Sensor Device Commands 
 #define IPMI_CMD_GET_DEV_SDR_INFO                           0x20
-#define IPMI_CMD_GET_DEV_SDR                                0x21 
+#define IPMI_CMD_GET_DEV_SDR                                0x21
 #define IPMI_CMD_RESRVE_DEV_SDR_REPOSITORY                  0x22
 #define IPMI_CMD_GET_SENSOR_READING_FACTORS                 0x23
 #define IPMI_CMD_SET_SENSOR_HYSTERESIS                      0x24
