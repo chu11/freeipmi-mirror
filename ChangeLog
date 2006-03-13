@@ -13,13 +13,16 @@
 	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h: Additional
 	commands supported.  Cleanup.
 
+	* libfreeipmi/src/ipmi-utils.c (ipmi_check_completion_code): Add
+	syslog and trace debugging.
+
 	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h,
 	libfreeipmi/src/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_channel_security_keys),
 	libfreeipmi/src/ipmi-messaging-support-cmds.c
 	(ipmi_cmd_set_channel_security_keys): Set Channel Security Keys
 	command support.
-	
+
 2005-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.
