@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.38 2006-03-12 21:25:40 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.39 2006-03-13 22:46:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -373,7 +373,6 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   Fiid_obj_clear(obj);
 
-  /* XXX tighten this */
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
