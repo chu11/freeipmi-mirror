@@ -724,19 +724,6 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   return 0;
 }
 
-
-fiid_template_t tmpl_set_channel_security_keys_rq =
-  {
-    {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {6,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,   "key_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {256, "key_value", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
-    {0, "", 0}
-  };
-
 int8_t
 fill_cmd_set_channel_security_keys(uint8_t channel_number,
                                    uint8_t operation,
