@@ -1995,10 +1995,10 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 							 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ls", &ls_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ls_byte", &ls_val) < 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ms", &ms_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ms_byte", &ms_val) < 0)
     goto cleanup;
   
   ptr = (uint8_t *)vlan_id;

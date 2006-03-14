@@ -42,6 +42,10 @@
 	multiple times and parsing out all supported cipher suite ids from
 	the remote machine.
 
+	* libfreeipmi/, fish/: Rename vlan_id_ls and vlan_id_ms to
+	vlan_id_ls_byte and vlan_id_ms_byte for consistency with other
+	portions of FreeIPMI.
+
 2006-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.

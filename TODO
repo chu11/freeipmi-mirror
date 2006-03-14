@@ -58,19 +58,25 @@ libfreeipmi:
   * assemble_raw, unassemble_raw
     - then using these, adjust udm-raw
   * 1_5_privilege_level - not really right, do something else
-  * vlan_id_ls/ms -> ls_byte, ms_byte?
-    - check bmc and sol, just need consistentcy
   * ipmipower version auto stuff
   * ipmi 2.0 
     ipmiping  
       test - done 
     ipmipower
-      support
+      test cipher ids 
+          0 - done
+          1
+          2
+          3
+          6
+          7
+          8
+          11
+          12
+    sol config
       test
-    sol-config
+    rmcpplus config
       test
-  * rmcpplus - cipher suite configuration in bmc-config
-
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
