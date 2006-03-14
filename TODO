@@ -18,8 +18,7 @@ Al's TODO list
 ipmi 2.0:
 ---------
   * ipmi 2.0 
-    ipmiping  
-      test - done 
+    ipmiping - done
     ipmipower
       test cipher ids 
           0 - done
