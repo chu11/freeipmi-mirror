@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.21 2006-03-14 17:24:08 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.22 2006-03-14 23:36:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -84,8 +84,7 @@ ipmipower_config_setup(void)
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
   conf->ipmi_version = IPMI_VERSION_AUTO;
-  /* XXX - auto later */
-  conf->cipher_suite_id = CIPHER_SUITE_ID_0;
+  conf->cipher_suite_id = CIPHER_SUITE_ID_AUTO;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;

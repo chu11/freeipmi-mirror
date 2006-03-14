@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.17 2006-03-14 17:24:08 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.18 2006-03-14 23:36:28 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -103,7 +103,7 @@ Specify the default IPMI protocol version to use: "auto", "1.5", and "2.0"
 .TP
 .I cipher_suite_id str
 \."  XXX
-Specify the default Cipher Suite ID to use: "0"
+Specify the default Cipher Suite ID to use: "auto", "0"
 .TP
 .I on-if-off enable|disable
 Specify if on-if-off is enabled or disabled by default.

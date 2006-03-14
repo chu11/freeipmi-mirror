@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.40 2006-03-14 17:24:08 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.41 2006-03-14 23:36:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -324,7 +324,7 @@ typedef enum
 typedef enum 
   { 
     CIPHER_SUITE_ID_INVALID               = 0x00,
-    /* CIPHER_SUITE_ID_AUTO                  = 0x01, */
+    CIPHER_SUITE_ID_AUTO                  = 0x01,
     CIPHER_SUITE_ID_0                     = 0x02,
     /* CIPHER_SUITE_ID_1                     = 0x03, */
     /* CIPHER_SUITE_ID_2                     = 0x04, */
@@ -360,14 +360,9 @@ typedef enum
     /* xRC4 || (__c) == CIPHER_SUITE_ID_13 \ */
     /* xRC4 || (__c) == CIPHER_SUITE_ID_14 \ */
 
-/* XXX */
-#if 0
 #define CIPHER_SUITE_ID_VALID_OR_AUTO(__c) \
   ((__c) == CIPHER_SUITE_ID_AUTO \
    || CIPHER_SUITE_ID_VALID(__c))
-#endif
-#define CIPHER_SUITE_ID_VALID_OR_AUTO(__c) \
-  ((__c) == CIPHER_SUITE_ID_0)
 
 /* Output Types */
 typedef enum { OUTPUT_TYPE_INVALID   = 0,
@@ -395,14 +390,15 @@ typedef enum
     MSG_TYPE_1_5_AUTO                = 10,
     MSG_TYPE_GIVEN_PRIVILEGE         = 11,
     MSG_TYPE_CIPHER_SUITE            = 12,
-    MSG_TYPE_TIMEDOUT                = 13,
-    MSG_TYPE_NOTDISCOVERED           = 14,
-    MSG_TYPE_BADCONNECTION           = 15,
-    MSG_TYPE_UNKNOWNNODE             = 16,
-    MSG_TYPE_RESOURCES               = 17,
-    MSG_TYPE_VERSION_NOT_SUPPORTED   = 18,
-    MSG_TYPE_BMCBUSY                 = 19,
-    MSG_TYPE_BMCERROR                = 20,
+    MSG_TYPE_2_0_AUTO                = 13,
+    MSG_TYPE_TIMEDOUT                = 14,
+    MSG_TYPE_NOTDISCOVERED           = 15,
+    MSG_TYPE_BADCONNECTION           = 16,
+    MSG_TYPE_UNKNOWNNODE             = 17,
+    MSG_TYPE_RESOURCES               = 18,
+    MSG_TYPE_VERSION_NOT_SUPPORTED   = 19,
+    MSG_TYPE_BMCBUSY                 = 20,
+    MSG_TYPE_BMCERROR                = 21,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \
@@ -440,10 +436,11 @@ struct ipmipower_powercmd {
   uint8_t authentication_type;
 
   /* IPMI 2.0 specific */
+  uint8_t cipher_suite_id;
+  unsigned int cipher_suite_id_ranking_index;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
   uint8_t confidentiality_algorithm;
-  uint8_t requested_maximum_privilege;
   uint8_t initial_message_tag;
   uint8_t message_tag_count;
   uint8_t session_sequence_number;

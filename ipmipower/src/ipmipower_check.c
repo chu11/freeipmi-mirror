@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.30 2006-03-13 17:38:31 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.31 2006-03-14 23:36:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -744,7 +744,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
 										managed_system_guid,
 										managed_system_guid_len,
 										ip->name_only_lookup,
-										ip->requested_maximum_privilege,
+										ip->privilege,
 										username,
 										(username) ? strlen((char *)username) : 0,
 										ip->obj_rakp_message_2_res)) < 0)

@@ -7,7 +7,9 @@
 
 	* ipmipower/: Support command line, config file, and prompt
 	configuration of the cipher suite id.
-	
+
+	* ipmipower/: Support auto detection of IPMI cipher suites.
+
 2006-03-13  Albert Chu <chu11@llnl.gov>
 	
 	* libfreeipmi/src/ipmi-rmcpplus-utils.c,

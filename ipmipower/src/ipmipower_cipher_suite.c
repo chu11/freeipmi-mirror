@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite.c,v 1.2 2006-03-14 17:24:08 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite.c,v 1.3 2006-03-14 23:36:28 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -46,14 +46,9 @@ ipmipower_cipher_suite_id_index(char *str)
 {
   assert(str != NULL);
 
-/* XXX */
-#if 0				
   if (!strcasecmp(str, "auto"))
     return CIPHER_SUITE_ID_AUTO;
   else if (!strcasecmp(str, "0"))
-    return CIPHER_SUITE_ID_0;
-#endif
-  if (!strcasecmp(str, "0"))
     return CIPHER_SUITE_ID_0;
 #if 0
   else if (!strcasecmp(str, "1"))
@@ -96,11 +91,9 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
 
   switch(id) 
     {
-#if 0
     case CIPHER_SUITE_ID_AUTO:
       return "auto";
       break;
-#endif
     case CIPHER_SUITE_ID_0:
       return "0";
       break;
@@ -162,11 +155,9 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
 
   switch(id) 
     {
-#if 0
     case CIPHER_SUITE_ID_AUTO:
       return "auto";
       break;
-#endif
     case CIPHER_SUITE_ID_0:
       return "Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
@@ -229,7 +220,7 @@ ipmipower_cipher_suite_id_list(void)
   return "auto, 0, 1, 2, 3, 6, 7, 8, 11, 12";
   return "auto, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14";
 #endif
-  return "0";
+  return "auto, 0";
 }
 
 uint8_t

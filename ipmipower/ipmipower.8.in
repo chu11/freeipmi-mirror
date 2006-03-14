@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.29 2006-03-14 17:24:08 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.30 2006-03-14 23:36:28 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -162,8 +162,13 @@ a set of authentication, integrity, and confidentiality algorithms to
 use for IPMI 2.0 communication.  The authentication algorithm identifies
 the algorithm to use for session setup, the integrity algorithm identifies
 the algorithm to use for session packet signatures, and the confidentiality
-algorithm identifies the algorithm to use for payload encryption.  The
-following cipher suite id's are currently supported:
+algorithm identifies the algorithm to use for payload encryption.  If not specified
+.B ipmipower
+uses the "auto" cipher suite, which will automatically select the most
+secure sipher suite available from the remote machine.  The following
+cipher suite id's are currently supported:
+.sp
+auto - Select the most secure cipher suite available from the remote machine
 .sp
 0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
 \." .sp
@@ -422,7 +427,7 @@ specify the ipmi version, auto, 1.5 or 2.0.
 .TP
 \."  XXX
 .I "cipher_suite_id str"
-specify the cipher suite id, 0.
+specify the cipher suite id, auto, 0.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP
