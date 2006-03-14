@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.39 2006-03-13 22:46:14 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.40 2006-03-14 00:35:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -73,7 +73,7 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
     return &tmpl_cmd_get_channel_cipher_suites_rq[0];
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-    return &tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs[0];
+    return &tmpl_cmd_get_channel_cipher_suites_rs[0];
   else if (pkt == OPEN_SESSION_REQ)
     return &tmpl_rmcpplus_open_session_rq[0];
   else if (pkt == OPEN_SESSION_RES)
@@ -791,8 +791,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     {
       if (fill_cmd_get_channel_cipher_suites (IPMI_CHANNEL_NUMBER_CURRENT_CHANNEL,
                                               IPMI_PAYLOAD_TYPE_IPMI,
-                                              0, /* XXX need legit index mechanism */
-                                              IPMI_LIST_SUPPORTED_ALGORITHMS,
+                                              ip->cipher_suite_list_index,
+                                              IPMI_LIST_ALGORITHMS_BY_CIPHER_SUITE,
                                               ip->obj_get_channel_cipher_suites_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_channel_cipher_suites: %s", 

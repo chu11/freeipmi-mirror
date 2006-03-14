@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.13 2006-03-11 20:15:23 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.14 2006-03-14 00:36:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -201,7 +201,7 @@ Fiid_obj_get(fiid_obj_t obj, char *field, uint64_t *val)
   assert(fiid_obj_valid(obj) && field && val);
 
   if ((rv = fiid_obj_get(obj, field, val)) < 0)
-    err_exit("Fiid_obj_get: field=%s: %s", field, strerror(errno));
+    err_exit("Fiid_obj_get: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
 
   if (!rv)
     err_exit("Fiid_obj_get: field=%s: No data set", field);
@@ -217,7 +217,20 @@ Fiid_obj_get_data(fiid_obj_t obj, char *field, uint8_t *data, uint32_t data_len)
   assert(fiid_obj_valid(obj) && field && data && data_len);
 
   if ((rv = fiid_obj_get_data(obj, field, data, data_len)) < 0)
-    err_exit("Fiid_obj_get_data: field=%s: %s", field, strerror(errno));
+    err_exit("Fiid_obj_get_data: field=%s: %s", field, fiid_strerror(fiid_obj_errnum(obj)));
+
+  return rv;
+}
+
+int32_t 
+Fiid_obj_set_all(fiid_obj_t obj, uint8_t *data, uint32_t data_len)
+{
+  int32_t rv;
+
+  assert(fiid_obj_valid(obj) && data && data_len);
+
+  if ((rv = fiid_obj_set_all(obj, data, data_len)) < 0)
+    err_exit("Fiid_obj_set_all: %s", fiid_strerror(fiid_obj_errnum(obj)));
 
   return rv;
 }

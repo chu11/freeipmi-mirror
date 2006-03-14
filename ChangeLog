@@ -27,6 +27,21 @@
 	libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Support
 	cipher suite record format templates.
 
+	* ipmipower/src/ipmipower_wrappers.h,
+	ipmipower/src/ipmipower_wrappers.c (Fiid_obj_set_all): New
+	function.
+
+	* ipmipower/src/ipmipower_wrappers.c (Fiid_obj_get_data,
+	Fiid_obj_get): Use fiid strerror to output more detailed error
+	message.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Support
+	record format defines.
+
+	* ipmipower/: Support Get Channel Cipher Suites command interating
+	multiple times and parsing out all supported cipher suite ids from
+	the remote machine.
+
 2006-03-12  Albert Chu <chu11@llnl.gov>
 
 	* fish/extension/bc-rmcpplus-conf-privilege-section.scm: New file.

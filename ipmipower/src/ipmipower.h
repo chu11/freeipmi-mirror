@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.37 2006-03-12 21:25:40 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.38 2006-03-14 00:35:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -120,6 +120,19 @@
 #define IPMIPOWER_HOSTLIST_BUFLEN        65536
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
+
+#define IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH 64
+
+/* achu: See IPMI 2.0 spec, Table 22-18 - Cipher Suite Record Format.
+ * The smallest record format is 2 bytes.  So the most records I could
+ * read is the buffer length divided by 2.
+ */
+#define IPMI_CIPHER_SUITE_IDS_LENGTH                (IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH/2)
+
+/* achu: See IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites
+ * Command 
+ */
+#define IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH 16
 
 /* ipmi_version_t
  * - holds ipmi version type
@@ -342,6 +355,7 @@ typedef enum
     MSG_TYPE_BMCBUSY                 = 19,
     MSG_TYPE_BMCERROR                = 20,
   } msg_type_t;
+
 #define MSG_TYPE_VALID(__m) \
   ((__m) >= MSG_TYPE_SUCCESS && \
    (__m) <= MSG_TYPE_BMCERROR)
@@ -387,6 +401,11 @@ struct ipmipower_powercmd {
   uint8_t name_only_lookup;
   uint32_t remote_console_session_id;  
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
+  uint32_t cipher_suite_list_index;
+  uint8_t cipher_suite_record_data[IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH];
+  uint32_t cipher_suite_record_data_bytes;
+  uint8_t cipher_suite_ids[IPMI_CIPHER_SUITE_IDS_LENGTH];
+  uint32_t cipher_suite_ids_num;
 
   struct ipmipower_connection *ic;
   

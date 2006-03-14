@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.10 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: wrappers.c,v 1.11 2006-03-14 00:36:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -243,7 +243,7 @@ Select(int maxfd, fd_set * rset, fd_set * wset, fd_set * eset,
         /*if (n < 0)
             fprintf(stderr, "retrying interrupted select\n");*/
     } while (n < 0);
-    /* XXX main select loop needs this fd_sets cleared on timeout */
+    /* Main select loop needs the fd_sets cleared on timeout */
     if (n == 0)
         _clear_sets(rset, wset, eset);
     return n;

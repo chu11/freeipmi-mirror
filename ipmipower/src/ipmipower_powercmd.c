@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.47 2006-03-12 21:25:40 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.48 2006-03-14 00:36:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -235,6 +235,12 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
           dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
               strerror(errno));
         }
+
+      ip->cipher_suite_list_index = 0;
+      memset(ip->cipher_suite_record_data, '\0', IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH);
+      ip->cipher_suite_record_data_bytes = 0;
+      memset(ip->cipher_suite_ids, '\0', IPMI_CIPHER_SUITE_IDS_LENGTH);
+      ip->cipher_suite_ids_num = 0;
     }
 
   ip->ic = ic;
@@ -262,7 +268,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_set_session_privilege_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
   ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
-  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_list_supported_algorithms_rs); 
+  ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
   ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_rq); 
   ip->obj_open_session_res = Fiid_obj_create(tmpl_rmcpplus_open_session_rs); 
   ip->obj_rakp_message_1_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_1); 
@@ -939,6 +945,114 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
   return 0;
 }
 					    
+/* _calculate_cipher_suite_ids
+ * 
+ * Determine the cipher suite ids the remote machine supports.
+ *
+ * Returns  0 on success
+ * Returns -1 on error
+ */
+static int
+_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
+{
+  fiid_obj_t obj_cipher_suite_record_header = NULL;
+  fiid_obj_t obj_cipher_suite_record = NULL;
+  fiid_obj_t obj_oem_cipher_suite_record = NULL;
+  int bytes_parsed = 0;
+  int rv = -1;
+
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
+
+  if (!ip->cipher_suite_record_data_bytes)
+    {
+      dbg("_check_authentication_capabilities(%s:%d): "
+          "No cipher suite data records retrieved",
+          ip->ic->hostname, ip->protocol_state);
+      goto cleanup;
+    }
+  
+  obj_cipher_suite_record_header = Fiid_obj_create(tmpl_cmd_cipher_suite_record_header);
+  obj_cipher_suite_record = Fiid_obj_create(tmpl_cmd_cipher_suite_record);
+  obj_oem_cipher_suite_record = Fiid_obj_create(tmpl_cmd_oem_cipher_suite_record);
+
+  while (bytes_parsed < ip->cipher_suite_record_data_bytes)
+    {
+      uint64_t record_format, tag_bits;
+      int32_t len;
+      
+      Fiid_obj_clear(obj_cipher_suite_record_header);
+
+      len = Fiid_obj_set_all(obj_cipher_suite_record_header,
+                             ip->cipher_suite_record_data,
+                             ip->cipher_suite_record_data_bytes - bytes_parsed);
+
+      Fiid_obj_get(obj_cipher_suite_record_header,
+                   "tag_bits",
+                   &tag_bits);
+
+      Fiid_obj_get(obj_cipher_suite_record_header,
+                   "record_format",
+                   &record_format);
+      
+      if (tag_bits != IPMI_CIPHER_SUITE_TAG_BITS_RECORD)
+        {
+          dbg("_check_authentication_capabilities(%s:%d): "
+              "invalid tag bits: %x",
+              ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
+          goto cleanup;
+        }
+
+      if (!IPMI_CIHPER_SUITE_RECORD_FORMAT_VALID(record_format))
+        {
+          dbg("_check_authentication_capabilities(%s:%d): "
+              "invalid record format: %x",
+              ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
+          goto cleanup;
+        }
+
+      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD)
+        {
+          uint64_t cipher_suite_id;
+
+          Fiid_obj_clear(obj_cipher_suite_record);
+          len = Fiid_obj_set_all(obj_cipher_suite_record,
+                                 ip->cipher_suite_record_data,
+                                 ip->cipher_suite_record_data_bytes - bytes_parsed);
+
+          Fiid_obj_get(obj_cipher_suite_record,
+                       "cipher_suite_id",
+                       &cipher_suite_id);
+          
+          ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
+          ip->cipher_suite_ids_num++;
+          
+          bytes_parsed += len;
+        }
+      else
+        {
+          /* achu: We currently don't support OEM ciphers.  So we're really
+           * just doing this to move along in the record.
+           */
+          Fiid_obj_clear(obj_oem_cipher_suite_record);
+          len = Fiid_obj_set_all(obj_oem_cipher_suite_record,
+                                 ip->cipher_suite_record_data,
+                                 ip->cipher_suite_record_data_bytes - bytes_parsed);
+          bytes_parsed += len;
+        }
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_cipher_suite_record_header)
+    Fiid_obj_destroy(obj_cipher_suite_record_header);
+  if (obj_cipher_suite_record)
+    Fiid_obj_destroy(obj_cipher_suite_record);
+  if (obj_oem_cipher_suite_record)
+    Fiid_obj_destroy(obj_oem_cipher_suite_record);
+  return (rv);
+}
+
 /* _process_ipmi_packets
  * - Main function that handles packet sends/receives for
  *   the power control protocol
@@ -1213,6 +1327,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     {
+      int32_t len;
+      
       if ((rv = _recv_packet(ip, GET_CHANNEL_CIPHER_SUITES_RES)) != 1) 
         {
           if (rv < 0) 
@@ -1222,11 +1338,30 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
+      len = Fiid_obj_get_data(ip->obj_get_channel_cipher_suites_res,
+                              "cipher_suite_record_data",
+                              ip->cipher_suite_record_data + ip->cipher_suite_record_data_bytes,
+                              IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH - ip->cipher_suite_record_data_bytes);
+      ip->cipher_suite_record_data_bytes += len;
+
+      /* achu: See IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites Command */
+      if (len < IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH
+          && ip->cipher_suite_record_data_bytes < IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH)
+        {
+          ip->cipher_suite_list_index++;
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
+          goto done;
+        }
+
+      /* Convert the buffer into an array of cipher suite ids that are supported */
+      if (_calculate_cipher_suite_ids(ip) < 0)
+        return -1;
+
       /* XXX IPMI 2.0 TODO
        *
        * Check if user input of auth/intg/conf algorithm is legit and supportable
        *
-       * Support multiple iterations
+       * Or continue on if its auto
        */
 
       _send_packet(ip, OPEN_SESSION_REQ, 0);
