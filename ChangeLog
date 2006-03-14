@@ -1,5 +1,12 @@
-2006-03-13  Albert Chu <chu11@llnl.gov>
+2006-03-14  Albert Chu <chu11@llnl.gov>
 
+	* ipmipower/src/ipmipower_cipher_suite.h,
+	ipmipower/src/ipmipower_cipher_suite.c: New files.
+
+	* ipmipower/src/ipmipower.h: New cipher suite id definitions.
+	
+2006-03-13  Albert Chu <chu11@llnl.gov>
+	
 	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
 	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
 	(ipmi_calculate_keys): Renamed to

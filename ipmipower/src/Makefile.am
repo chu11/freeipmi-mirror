@@ -8,6 +8,7 @@ ipmipower_SOURCES= \
 	hostlist.c \
 	ipmipower_authentication.c \
 	ipmipower_check.c \
+	ipmipower_cipher_suite.c \
 	ipmipower_config.c \
 	ipmipower_connection.c \
 	ipmipower.c \
@@ -34,6 +35,7 @@ noinst_HEADERS= \
 	hostlist.h \
 	ipmipower_authentication.h \
 	ipmipower_check.h \
+	ipmipower_cipher_suite.h \
 	ipmipower_config.h \
 	ipmipower_connection.h \
 	ipmipower.h \
