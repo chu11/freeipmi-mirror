@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.48 2006-03-14 00:36:00 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.49 2006-03-14 17:24:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,6 +48,7 @@
 
 #include "ipmipower.h"
 #include "ipmipower_authentication.h"
+#include "ipmipower_cipher_suite.h"
 #include "ipmipower_output.h"
 #include "ipmipower_powercmd.h"
 #include "ipmipower_packet.h"
@@ -215,9 +216,19 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   if (conf->ipmi_version == IPMI_VERSION_AUTO
       || conf->ipmi_version == IPMI_VERSION_2_0)
     {
-      ip->authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
-      ip->integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
-      ip->confidentiality_algorithm = IPMI_CONFIDENTIALITY_ALGORITHM_NONE;
+      /* XXX - add auto */
+      uint8_t cipher_suite_id;
+
+      cipher_suite_id = ipmipower_ipmi_cipher_suite_id(conf->cipher_suite_id);
+
+      if (ipmi_cipher_suite_id_to_algorithms(cipher_suite_id,
+                                             &(ip->authentication_algorithm),
+                                             &(ip->integrity_algorithm),
+                                             &(ip->confidentiality_algorithm)) < 0)
+        err_exit("ipmipower_powercmd_queue: ipmi_cipher_suite_id_to_algorithms: ",
+                 "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
+                 conf->cipher_suite_id, cipher_suite_id, strerror(errno));
+
       ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_ADMIN;
       ip->initial_message_tag = (uint8_t)get_rand();
       ip->message_tag_count = 0;

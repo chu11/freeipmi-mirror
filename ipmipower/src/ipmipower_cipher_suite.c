@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite.c,v 1.1 2006-03-14 14:58:26 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite.c,v 1.2 2006-03-14 17:24:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,50 +168,50 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
       break;
 #endif
     case CIPHER_SUITE_ID_0:
-      return "authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
 #if 0
     case CIPHER_SUITE_ID_1:
-      return "authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
     case CIPHER_SUITE_ID_2:
-      return "authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None";
       break;
     case CIPHER_SUITE_ID_3:
-      return "authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128";
+      return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128";
       break;
     case CIPHER_SUITE_ID_4:
-      return "authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128";
+      return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128";
       break;
     case CIPHER_SUITE_ID_5:
-      return "authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40";
+      return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40";
       break;
     case CIPHER_SUITE_ID_6:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
     case CIPHER_SUITE_ID_7:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None";
       break;
     case CIPHER_SUITE_ID_8:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128";
       break;
     case CIPHER_SUITE_ID_9:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128";
       break;
     case CIPHER_SUITE_ID_10:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40";
       break;
     case CIPHER_SUITE_ID_11:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None";
       break;
     case CIPHER_SUITE_ID_12:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128";
       break;
     case CIPHER_SUITE_ID_13:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128";
       break;
     case CIPHER_SUITE_ID_14:
-      return "authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40";
+      return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-40";
       break;
 #endif
     default:

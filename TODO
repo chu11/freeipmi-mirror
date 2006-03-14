@@ -17,9 +17,8 @@ Al's TODO list
 ==============
 ipmi 2.0:
 ---------
-  * ipmi 2.0 
-    ipmiping - done
-    ipmipower
+  * ipmiping - done
+  * ipmipower
       test cipher ids 
           0 - done
           1
@@ -30,9 +29,9 @@ ipmi 2.0:
           8
           11
           12
-    sol config
+  * sol bmc config
       test
-    rmcpplus config
+  * rmcpplus priv bmc config
       test
 
 libfreeipmi:

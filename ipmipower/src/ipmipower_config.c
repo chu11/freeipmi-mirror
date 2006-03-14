@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.20 2006-03-08 17:11:14 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.21 2006-03-14 17:24:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -42,6 +42,7 @@
 
 #include "ipmipower_config.h"
 #include "ipmipower_authentication.h"
+#include "ipmipower_cipher_suite.h"
 #include "ipmipower_ipmi_version.h"
 #include "ipmipower_output.h"
 #include "ipmipower_privilege.h"
@@ -83,6 +84,8 @@ ipmipower_config_setup(void)
   conf->authentication_type = AUTHENTICATION_TYPE_AUTO;
   conf->privilege = PRIVILEGE_TYPE_AUTO;
   conf->ipmi_version = IPMI_VERSION_AUTO;
+  /* XXX - auto later */
+  conf->cipher_suite_id = CIPHER_SUITE_ID_0;
   conf->on_if_off = IPMIPOWER_FALSE;
   conf->outputtype = OUTPUT_TYPE_NEWLINE;
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
@@ -113,6 +116,7 @@ ipmipower_config_setup(void)
   conf->authentication_type_set = IPMIPOWER_FALSE;
   conf->privilege_set = IPMIPOWER_FALSE;
   conf->ipmi_version_set = IPMIPOWER_FALSE;
+  conf->cipher_suite_id_set = IPMIPOWER_FALSE;
   conf->outputtype_set = IPMIPOWER_FALSE;
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
@@ -145,6 +149,9 @@ _config_common_checks(char *str)
 
   if (conf->ipmi_version == IPMI_VERSION_INVALID)
     err_exit("%s: invalid ipmi version", str);
+
+  if (conf->cipher_suite_id == CIPHER_SUITE_ID_INVALID)
+    err_exit("%s: invalid cipher suite id", str);
 
   if (conf->outputtype == OUTPUT_TYPE_INVALID) 
     err_exit("%s: invalid outputtype", str);
@@ -230,9 +237,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:l:R:go:PSUDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:R:T:go:PSUDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:l:R:go:PSUt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:nfcrsjkHVC:a:l:R:T:go:PSUt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -255,6 +262,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"authentication-type",         1, NULL, 'a'},  
       {"privilege",                   1, NULL, 'l'},
       {"ipmi-version",                1, NULL, 'R'},
+      {"cipher-suite-id",             1, NULL, 'T'},
       {"on-if-off",                   0, NULL, 'g'},
       {"outputtype",                  1, NULL, 'o'},
       {"force-permsg-authentication", 0, NULL, 'P'},
@@ -353,6 +361,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->ipmi_version = ipmipower_ipmi_version_index(optarg);
 	  conf->ipmi_version_set = IPMIPOWER_TRUE;
           break;
+        case 'T':       /* --cipher-suite-id */
+          conf->cipher_suite_id = ipmipower_cipher_suite_id_index(optarg);
+          conf->cipher_suite_id_set = IPMIPOWER_TRUE;
         case 'g':       /* --on-if-off */
           conf->on_if_off = !conf->on_if_off;
           conf->on_if_off_set = IPMIPOWER_TRUE;
@@ -526,6 +537,19 @@ _cb_ipmi_version(conffile_t cf, struct conffile_data *data,
 }
 
 static int 
+_cb_cipher_suite_id(conffile_t cf, struct conffile_data *data,
+                    char *optionname, int option_type, void *option_ptr, 
+                    int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->cipher_suite_id_set == IPMIPOWER_TRUE)
+    return 0;
+
+  /* Incorrect cipher_suite_ids checked in _config_common_checks */
+  conf->cipher_suite_id = ipmipower_cipher_suite_id_index(data->string);
+  return 0;
+}
+
+static int 
 _cb_outputtype(conffile_t cf, struct conffile_data *data,
                char *optionname, int option_type, void *option_ptr, 
                int option_data, void *app_ptr, int app_data) 
@@ -602,7 +626,7 @@ void
 ipmipower_config_conffile_parse(char *configfile) 
 {
   int hostnames_flag, username_flag, password_flag, authentication_type_flag, 
-    privilege_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
+    privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
     check_unexpected_authcode_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
@@ -623,6 +647,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &privilege_flag, NULL, 0},
       {"ipmi_version", CONFFILE_OPTION_STRING, -1, _cb_ipmi_version,
        1, 0, &ipmi_version_flag, NULL, 0},
+      {"cipher_suite_id", CONFFILE_OPTION_STRING, -1, _cb_cipher_suite_id,
+       1, 0, &cipher_suite_id_flag, NULL, 0},
       {"on-if-off", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &on_if_off_flag, &(conf->on_if_off), conf->on_if_off_set},
       {"outputtype", CONFFILE_OPTION_STRING, -1, _cb_outputtype, 

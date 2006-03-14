@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.39 2006-03-14 14:58:26 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.40 2006-03-14 17:24:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -544,6 +544,7 @@ struct ipmipower_config
   authentication_type_t    authentication_type;
   privilege_type_t         privilege;
   ipmi_version_t           ipmi_version;
+  cipher_suite_id_t        cipher_suite_id;
   ipmipower_bool_t         on_if_off;
   output_type_t            outputtype;
   ipmipower_bool_t         force_permsg_authentication;
@@ -574,6 +575,7 @@ struct ipmipower_config
   ipmipower_bool_t         authentication_type_set;
   ipmipower_bool_t         privilege_set;
   ipmipower_bool_t         ipmi_version_set;
+  ipmipower_bool_t         cipher_suite_id_set;
   ipmipower_bool_t         on_if_off_set;
   ipmipower_bool_t         force_permsg_authentication_set;
   ipmipower_bool_t         accept_session_id_zero_set;

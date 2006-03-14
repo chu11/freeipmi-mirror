@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.20 2006-03-08 17:53:14 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.21 2006-03-14 17:24:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -48,6 +48,7 @@
 #include "ipmipower_prompt.h"
 #include "ipmipower_ping.h"
 #include "ipmipower_authentication.h"
+#include "ipmipower_cipher_suite.h"
 #include "ipmipower_connection.h"
 #include "ipmipower_ipmi_version.h"
 #include "ipmipower_powercmd.h"
@@ -89,6 +90,7 @@ _cmd_advanced(void)
               "authentication_type str              - set a new authentication type\n"
               "privilege str                        - set a new privilege type\n"
 	      "ipmi_version str                     - set a new ipmi version\n"
+              "cipher_suite_id str                  - set a new cipher suite id\n"
               "on-if-off [on|off]                   - toggle on-if-off functionality\n"
               "outputtype str                       - set a new output type\n"
               "force-permsg-authentication [on|off] - toggle force-permsg-auth functionality\n"
@@ -323,12 +325,12 @@ _cmd_authentication_type(char **argv)
         cbuf_printf(ttyout, "%s invalid authentication_type\n", argv[1]);
       else if (at == AUTHENTICATION_TYPE_NONE && strlen(conf->password) > 0)
         cbuf_printf(ttyout, 
-		    "password cannot be set for authentication_type \"%s\"\n", 
+		    "password cannot be set for authentication type \"%s\"\n", 
 		    argv[1]);
       else 
         {
           conf->authentication_type = at;
-          cbuf_printf(ttyout, "authentication_type is now %s\n", argv[1]);
+          cbuf_printf(ttyout, "authentication type is now %s\n", argv[1]);
         }
     }
   else
@@ -370,12 +372,33 @@ _cmd_ipmi_version(char **argv)
       else 
         {
           conf->ipmi_version = ipmi_version;
-          cbuf_printf(ttyout, "ipmi_version is now %s\n", argv[1]);
+          cbuf_printf(ttyout, "ipmi version is now %s\n", argv[1]);
         }
     }
   else
     cbuf_printf(ttyout, "ipmi_version must be specified: %s\n",
                 ipmipower_ipmi_version_list());
+}
+
+static void 
+_cmd_cipher_suite_id(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (argv[1] != NULL) 
+    {
+      cipher_suite_id_t cipher_suite_id = ipmipower_cipher_suite_id_index(argv[1]);
+      if (cipher_suite_id == CIPHER_SUITE_ID_INVALID)
+        cbuf_printf(ttyout, "%s invalid cipher suite id\n", argv[1]);
+      else 
+        {
+          conf->cipher_suite_id = cipher_suite_id;
+          cbuf_printf(ttyout, "cipher suite id is now %s\n", argv[1]);
+        }
+    }
+  else
+    cbuf_printf(ttyout, "cipher_suite_id must be specified: %s\n",
+                ipmipower_cipher_suite_id_list());
 }
 
 static void 
@@ -752,6 +775,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_privilege(argv);
             else if (strcmp(argv[0], "ipmi_version") == 0)
               _cmd_ipmi_version(argv);
+            else if (strcmp(argv[0], "cipher_suite_id") == 0)
+              _cmd_cipher_suite_id(argv);
             else if (strcmp(argv[0], "on-if-off") == 0)
               _cmd_set_flag(argv, &conf->on_if_off, "on-if-off");
             else if (strcmp(argv[0], "outputtype") == 0)
