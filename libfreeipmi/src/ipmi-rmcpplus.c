@@ -39,6 +39,11 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
+#define IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH      64
+#define IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH            64
+#define IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH           64
+#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
+
 fiid_template_t tmpl_rmcpplus_session_hdr = 
   {
     {4,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

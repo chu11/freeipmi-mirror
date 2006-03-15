@@ -1,3 +1,10 @@
+2006-03-15  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Minor rmcpplus code cleanup.
+
+	* ipmipower/: Add architectural support for other IPMI 2.0 cipher
+	suites.  Cipher suites other than 0 must still be tested.
+	
 2006-03-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_cipher_suite.h,

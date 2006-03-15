@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.51 2006-03-15 01:42:02 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.52 2006-03-15 19:09:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -95,7 +95,7 @@ static uint8_t cipher_suite_id_ranking[] =
 #endif
     0,                 /* NONE, NONE, NONE */
   };
-/* XXX */
+/* XXX support more later */
 static unsigned int cipher_suite_id_ranking_count = 1;
 
 /* _destroy_ipmipower_powercmd
@@ -281,6 +281,16 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                      "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
         }     
+      memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
+      ip->sik_key_ptr = ip->sik_key;
+      ip->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
+      memset(ip->integrity_key, '\0', IPMI_MAX_INTEGRITY_KEY_LENGTH);
+      ip->integrity_key_ptr = ip->integrity_key;
+      ip->integrity_key_len = IPMI_MAX_INTEGRITY_KEY_LENGTH;
+      memset(ip->confidentiality_key, '\0', IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH);
+      ip->confidentiality_key_ptr = ip->confidentiality_key;
+      ip->confidentiality_key_len = IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH;
+
       ip->initial_message_tag = (uint8_t)get_rand();
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
@@ -1487,6 +1497,63 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   return -1;
 }
 
+/* _calculate_cipher_keys
+ * 
+ * Calculate cipher keys for the remaining IPMI 2.0 protocol
+ *
+ * Returns  0 on success
+ * Returns -1 on ipmi protocol error
+ */
+static int
+_calculate_cipher_keys(ipmipower_powercmd_t ip)
+{
+  uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
+  int32_t managed_system_random_number_len;
+  uint8_t *username;
+  uint8_t *password;
+  
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT);
+  
+  if (strlen(conf->username))
+    username = (uint8_t *)conf->username;
+  else
+    username = NULL;
+  
+  if (strlen(conf->password))
+    password = (uint8_t *)conf->password;
+  else
+    password = NULL;
+  
+  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+                                                       "managed_system_random_number",
+                                                       managed_system_random_number,
+                                                       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  
+  if (ipmi_calculate_rmcpplus_session_keys(ip->authentication_algorithm,
+                                           ip->integrity_algorithm,
+                                           ip->confidentiality_algorithm,
+                                           password,
+                                           (password) ? strlen((char *)password) : 0,
+                                           ip->remote_console_random_number,
+                                           IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                           managed_system_random_number,
+                                           managed_system_random_number_len,
+                                           ip->privilege,
+                                           username,
+                                           (username) ? strlen((char *)username) : 0,
+                                           &(ip->sik_key_ptr),
+                                           &(ip->sik_key_len),
+                                           &(ip->integrity_key_ptr),
+                                           &(ip->integrity_key_len),
+                                           &(ip->confidentiality_key_ptr),
+                                           &(ip->confidentiality_key_len)) < 0)
+    err_exit("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
+             ip->ic->hostname, ip->protocol_state, strerror(errno));
+  
+  return 0;
+}
+
 /* _process_ipmi_packets
  * - Main function that handles packet sends/receives for
  *   the power control protocol
@@ -1745,6 +1812,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             return -1;
           goto done;
         }
+
+      if (_calculate_cipher_keys(ip) < 0)
+        return -1;
 
       _send_packet(ip, RAKP_MESSAGE_3_REQ, 0);
     }

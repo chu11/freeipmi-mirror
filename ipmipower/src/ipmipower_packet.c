@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.42 2006-03-15 01:42:02 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.43 2006-03-15 19:09:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -179,130 +179,64 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
 #ifndef NDEBUG
   if (conf->ipmidump)
     {
-      char *hdr;
-      /* XXX: Yeah yeah yeah, I know I should clean this up.
-       */
-      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
-        hdr = 
-          "================================================\n"
-          "= Get Authentication Capabilities V20 Request  =\n"
-          "================================================";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
-        hdr = 
-          "================================================\n"
-          "= Get Authentication Capabilities V20 Response =\n"
-          "================================================";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
-        hdr = 
-          "================================================\n"
-          "= Get Authentication Capabilities Request      =\n"
-          "================================================";
-      else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
-        hdr = 
-          "================================================\n"
-          "= Get Authentication Capabilities Response     =\n"
-          "================================================";
-      else if (pkt == GET_SESSION_CHALLENGE_REQ)
-        hdr = 
-          "================================================\n"
-          "= Get Session Challenge Request                =\n"
-          "================================================";
-      else if (pkt == GET_SESSION_CHALLENGE_RES)
-        hdr = 
-          "================================================\n"
-          "= Get Session Challenge Response               =\n"
-          "================================================";
-      else if (pkt == ACTIVATE_SESSION_REQ)
-        hdr = 
-          "================================================\n"
-          "= Activate Session Request                     =\n"
-          "================================================";
-      else if (pkt == ACTIVATE_SESSION_RES)
-        hdr = 
-          "================================================\n"
-          "= Activate Session Response                    =\n"
-          "================================================";
-      else if (pkt == SET_SESSION_PRIVILEGE_REQ)
-        hdr = 
-          "================================================\n"
-          "= Set Session Privilege Request                =\n"
-          "================================================";
-      else if (pkt == SET_SESSION_PRIVILEGE_RES)
-        hdr = 
-          "================================================\n"
-          "= Set Session Privilege Response               =\n"
-          "================================================";
-      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
-        hdr = 
-          "================================================\n"
-          "= Get Channel Cipher Suites Request            =\n"
-          "================================================";
-      else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
-        hdr = 
-          "================================================\n"
-          "= Get Channel Cipher Suites Response           =\n"
-          "================================================";
-      else if (pkt == OPEN_SESSION_REQ)
-        hdr = 
-          "================================================\n"
-          "= Open Session Request                         =\n"
-          "================================================";
-      else if (pkt == OPEN_SESSION_RES)
-        hdr = 
-          "================================================\n"
-          "= Open Session Response                        =\n"
-          "================================================";
-      else if (pkt == RAKP_MESSAGE_1_REQ)
-        hdr = 
-          "================================================\n"
-          "= Rakp Message 1 Request                       =\n"
-          "================================================";
-      else if (pkt == RAKP_MESSAGE_2_RES)
-        hdr = 
-          "================================================\n"
-          "= Rakp Message 2 Response                      =\n"
-          "================================================";
-      else if (pkt == RAKP_MESSAGE_3_REQ)
-        hdr = 
-          "================================================\n"
-          "= Rakp Message 3 Request                       =\n"
-          "================================================";
-      else if (pkt == RAKP_MESSAGE_4_RES)
-        hdr = 
-          "================================================\n"
-          "= Rakp Message 4 Response                      =\n"
-          "================================================";
-      else if (pkt == CLOSE_SESSION_REQ)
-        hdr = 
-          "================================================\n"
-          "= Close Session Request                        =\n"
-          "================================================";
-      else if (pkt == CLOSE_SESSION_RES)
-        hdr = 
-          "================================================\n"
-          "= Close Session Response                       =\n"
-          "================================================";
-      else if (pkt == GET_CHASSIS_STATUS_REQ)
-        hdr = 
-          "================================================\n"
-          "= Get Chassis Status Request                   =\n"
-          "================================================";
-      else if (pkt == GET_CHASSIS_STATUS_RES)
-        hdr = 
-          "================================================\n"
-          "= Get Chassis Status Response                  =\n"
-          "================================================";
-      else if (pkt == CHASSIS_CONTROL_REQ)
-        hdr = 
-          "================================================\n"
-          "= Chassis Control Request                      =\n"
-          "================================================";
-      else if (pkt == CHASSIS_CONTROL_RES)
-        hdr = 
-          "================================================\n"
-          "= Chassis Control Response                     =\n"
-          "================================================";
+      char hdrbuf[1024];
+      char *fmt = 
+               "================================================\n"
+               "%s\n"
+               "================================================";
+      char *str;
       
+      if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
+        str = "= Get Authentication Capabilities V20 Request  =";
+      else if (pkt == AUTHENTICATION_CAPABILITIES_V20_RES)
+        str = "= Get Authentication Capabilities V20 Response =";
+      else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
+        str = "= Get Authentication Capabilities Request      =";
+      else if (pkt == AUTHENTICATION_CAPABILITIES_RES)
+        str = "= Get Authentication Capabilities Response     =";
+      else if (pkt == GET_SESSION_CHALLENGE_REQ)
+        str = "= Get Session Challenge Request                =";
+      else if (pkt == GET_SESSION_CHALLENGE_RES)
+        str = "= Get Session Challenge Response               =";
+      else if (pkt == ACTIVATE_SESSION_REQ)
+        str = "= Activate Session Request                     =";
+      else if (pkt == ACTIVATE_SESSION_RES)
+        str = "= Activate Session Response                    =";
+      else if (pkt == SET_SESSION_PRIVILEGE_REQ)
+        str = "= Set Session Privilege Request                =";
+      else if (pkt == SET_SESSION_PRIVILEGE_RES)
+        str = "= Set Session Privilege Response               =";
+      else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
+        str = "= Get Channel Cipher Suites Request            =";
+      else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+        str = "= Get Channel Cipher Suites Response           =";
+      else if (pkt == OPEN_SESSION_REQ)
+        str = "= Open Session Request                         =";
+      else if (pkt == OPEN_SESSION_RES)
+        str = "= Open Session Response                        =";
+      else if (pkt == RAKP_MESSAGE_1_REQ)
+        str = "= Rakp Message 1 Request                       =";
+      else if (pkt == RAKP_MESSAGE_2_RES)
+        str = "= Rakp Message 2 Response                      =";
+      else if (pkt == RAKP_MESSAGE_3_REQ)
+        str = "= Rakp Message 3 Request                       =";
+      else if (pkt == RAKP_MESSAGE_4_RES)
+        str = "= Rakp Message 4 Response                      =";
+      else if (pkt == CLOSE_SESSION_REQ)
+        str = "= Close Session Request                        =";
+      else if (pkt == CLOSE_SESSION_RES)
+        str = "= Close Session Response                       =";
+      else if (pkt == GET_CHASSIS_STATUS_REQ)
+        str = "= Get Chassis Status Request                   =";
+      else if (pkt == GET_CHASSIS_STATUS_RES)
+        str = "= Get Chassis Status Response                  =";
+      else if (pkt == CHASSIS_CONTROL_REQ)
+        str = "= Chassis Control Request                      =";
+      else if (pkt == CHASSIS_CONTROL_RES)
+        str = "= Chassis Control Response                     =";
+      
+      snprintf(hdrbuf, 1024, fmt, str);
+
       if (pkt & PACKET_TYPE_REQ_MASK)
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rq[0];
       else
@@ -313,18 +247,10 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_2_RES
           || pkt == RAKP_MESSAGE_3_REQ
-          || pkt == RAKP_MESSAGE_4_RES
-          || (ip->ipmi_version == IPMI_VERSION_2_0
-              && (pkt == GET_CHASSIS_STATUS_REQ
-                  || pkt == GET_CHASSIS_STATUS_RES
-                  || pkt == CHASSIS_CONTROL_REQ
-                  || pkt == CHASSIS_CONTROL_RES
-                  || pkt == CLOSE_SESSION_REQ
-                  || pkt == CLOSE_SESSION_RES)))
-        /* XXX temporary - need to make generic */
+          || pkt == RAKP_MESSAGE_4_RES)
         Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
                                   ip->ic->hostname,
-                                  hdr,
+                                  hdrbuf,
                                   IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
                                   IPMI_INTEGRITY_ALGORITHM_NONE,
                                   IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
@@ -336,10 +262,31 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   (uint32_t)len,
                                   tmpl_lan_msg_hdr,
                                   ipmipower_packet_cmd_template(ip, pkt));
-      else
+      else if (ip->ipmi_version == IPMI_VERSION_2_0
+               && (pkt == GET_CHASSIS_STATUS_REQ
+                   || pkt == GET_CHASSIS_STATUS_RES
+                   || pkt == CHASSIS_CONTROL_REQ
+                   || pkt == CHASSIS_CONTROL_RES
+                   || pkt == CLOSE_SESSION_REQ
+                   || pkt == CLOSE_SESSION_RES))
+        Ipmi_dump_rmcpplus_packet(STDERR_FILENO,
+                                  ip->ic->hostname,
+                                  hdrbuf,
+                                  ip->authentication_algorithm,
+                                  ip->integrity_algorithm,
+                                  ip->confidentiality_algorithm,
+                                  ip->integrity_key_ptr,
+                                  ip->integrity_key_len,
+                                  ip->confidentiality_key_ptr,
+                                  ip->confidentiality_key_len,
+                                  (uint8_t *)buffer,
+                                  (uint32_t)len,
+                                  tmpl_lan_msg_hdr,
+                                  ipmipower_packet_cmd_template(ip, pkt));
+      else /* IPMI 1.5 pkt */
         Ipmi_dump_lan_packet(STDERR_FILENO, 
                              ip->ic->hostname, 
-                             hdr, 
+                             hdrbuf, 
                              (uint8_t *)buffer, 
                              (uint32_t)len,
                              tmpl_lan_msg_hdr,
@@ -393,24 +340,48 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else
     {
-      /* XXX temporary - need to make generic */
-      if ((rv = unassemble_ipmi_rmcpplus_pkt(ip->authentication_algorithm,
-					     ip->integrity_algorithm,
-					     ip->confidentiality_algorithm,
-					     NULL,
-					     0,
-					     NULL,
-					     0,
-					     (uint8_t *)buffer, 
-					     len, 
-					     ip->obj_rmcp_hdr_res, 
-					     ip->obj_rmcpplus_session_hdr_res,
-					     ip->obj_rmcpplus_payload_res,
-					     ip->obj_lan_msg_hdr_res, 
-					     obj,
-					     ip->obj_lan_msg_trlr_res,
-					     ip->obj_rmcpplus_session_trlr_res)) < 0)
-	dbg("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
+      if (pkt == OPEN_SESSION_RES
+          || pkt == RAKP_MESSAGE_2_RES
+          || pkt == RAKP_MESSAGE_4_RES)
+        {
+          if ((rv = unassemble_ipmi_rmcpplus_pkt(IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE,
+                                                 IPMI_INTEGRITY_ALGORITHM_NONE,
+                                                 IPMI_CONFIDENTIALITY_ALGORITHM_NONE,
+                                                 NULL,
+                                                 0,
+                                                 NULL,
+                                                 0,
+                                                 (uint8_t *)buffer, 
+                                                 len, 
+                                                 ip->obj_rmcp_hdr_res, 
+                                                 ip->obj_rmcpplus_session_hdr_res,
+                                                 ip->obj_rmcpplus_payload_res,
+                                                 ip->obj_lan_msg_hdr_res, 
+                                                 obj,
+                                                 ip->obj_lan_msg_trlr_res,
+                                                 ip->obj_rmcpplus_session_trlr_res)) < 0)
+            dbg("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
+        }
+      else
+        {
+          if ((rv = unassemble_ipmi_rmcpplus_pkt(ip->authentication_algorithm,
+                                                 ip->integrity_algorithm,
+                                                 ip->confidentiality_algorithm,
+                                                 ip->integrity_key_ptr,
+                                                 ip->integrity_key_len,
+                                                 ip->confidentiality_key_ptr,
+                                                 ip->confidentiality_key_len,
+                                                 (uint8_t *)buffer, 
+                                                 len, 
+                                                 ip->obj_rmcp_hdr_res, 
+                                                 ip->obj_rmcpplus_session_hdr_res,
+                                                 ip->obj_rmcpplus_payload_res,
+                                                 ip->obj_lan_msg_hdr_res, 
+                                                 obj,
+                                                 ip->obj_lan_msg_trlr_res,
+                                                 ip->obj_rmcpplus_session_trlr_res)) < 0)
+            dbg("ipmipower_packet_store: unassemble_ipmi_rmcpplus_pkt: %s", strerror(errno));
+        }
     }
   
   return (rv);
@@ -491,6 +462,13 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
                         uint8_t *authentication_code_data,
                         uint32_t authentication_code_data_len,
                         uint8_t net_fn,
+                        uint8_t authentication_algorithm,
+                        uint8_t integrity_algorithm,
+                        uint8_t confidentiality_algorithm,
+                        uint8_t *integrity_key,
+                        uint32_t integrity_key_len,
+                        uint8_t *confidentiality_key,
+                        uint32_t confidentiality_key_len,
                         fiid_obj_t obj_cmd_req,
                         char *buffer, 
                         int buflen)
@@ -513,8 +491,8 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
   if (fill_rmcpplus_session_hdr(payload_type,
                                 payload_authenticated,
                                 payload_encrypted,
-                                0,
-                                0,
+                                0, /* oem_iana */
+                                0, /* oem_payload_id */
                                 session_id,
                                 session_sequence_number,
                                 ip->obj_rmcpplus_session_hdr_req) < 0)
@@ -534,13 +512,13 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
     err_exit("_ipmi_2_0_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
   
-  if ((len = assemble_ipmi_rmcpplus_pkt(ip->authentication_algorithm,
-                                        ip->integrity_algorithm,
-                                        ip->confidentiality_algorithm,
-                                        NULL,
-                                        0,
-                                        NULL,
-                                        0,
+  if ((len = assemble_ipmi_rmcpplus_pkt(authentication_algorithm,
+                                        integrity_algorithm,
+                                        confidentiality_algorithm,
+                                        integrity_key,
+                                        integrity_key_len,
+                                        confidentiality_key,
+                                        confidentiality_key_len,
                                         authentication_code_data,
                                         authentication_code_data_len,
                                         ip->obj_rmcp_hdr_req, 
@@ -561,11 +539,12 @@ int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
-  uint8_t *username, *password;
+  uint8_t *username, *password, *integrity_key, *confidentiality_key;
   uint64_t session_id, managed_system_session_id;
-  uint32_t sequence_number;
+  uint32_t sequence_number, integrity_key_len, confidentiality_key_len;
   uint8_t authentication_type, net_fn, payload_authenticated, payload_encrypted,
-    payload_type;
+    payload_type, authentication_algorithm, integrity_algorithm, 
+    confidentiality_algorithm;
   fiid_obj_t obj_cmd_req;
   int32_t len;
 
@@ -575,7 +554,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   assert(buflen);
 
   if (pkt == GET_SESSION_CHALLENGE_REQ
-      || pkt == RAKP_MESSAGE_1_REQ)
+      || pkt == RAKP_MESSAGE_1_REQ
+      || pkt == RAKP_MESSAGE_3_REQ)
     {
       if (strlen(conf->username))
         username = (uint8_t *)conf->username;
@@ -593,7 +573,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == RAKP_MESSAGE_3_REQ
       || pkt == CLOSE_SESSION_REQ
       || pkt == GET_CHASSIS_STATUS_REQ
-      || pkt == CHASSIS_CONTROL_REQ)
+      || pkt == CHASSIS_CONTROL_REQ
+      || pkt == RAKP_MESSAGE_3_REQ)
     {
       if (strlen(conf->password))
         password = (uint8_t *)conf->password;
@@ -677,14 +658,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
     
   if (ip->ipmi_version == IPMI_VERSION_2_0)
-    {
-      /* XXX need to fix */
-      /* Calculate Payload Authenticated */
-      payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
-      
-      /* Calculate Payload Encrypted */
-      payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
-      
+    {     
       /* Calculate Payload Type */
       if (pkt == OPEN_SESSION_REQ)
         payload_type = IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST;
@@ -700,6 +674,48 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         Fiid_obj_get(ip->obj_open_session_res,
                      "managed_system_session_id",
                      &managed_system_session_id);
+
+      /* Setup authentication/integrity/confidentiality keys */
+      if (pkt == OPEN_SESSION_REQ
+          || pkt == RAKP_MESSAGE_1_REQ
+          || pkt == RAKP_MESSAGE_3_REQ)
+        {
+          authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
+          integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
+          confidentiality_algorithm = IPMI_CONFIDENTIALITY_ALGORITHM_NONE;
+          integrity_key = NULL;
+          integrity_key_len = 0;
+          confidentiality_key = NULL;
+          confidentiality_key_len = 0;
+        }
+      else
+        {
+          authentication_algorithm = ip->authentication_algorithm;
+          integrity_algorithm = ip->integrity_algorithm;
+          confidentiality_algorithm = ip->confidentiality_algorithm;
+          integrity_key = ip->integrity_key_ptr;
+          integrity_key_len = ip->integrity_key_len;
+          confidentiality_key = ip->confidentiality_key_ptr;
+          confidentiality_key_len = ip->confidentiality_key_len;
+        }
+
+      /* Calculate Payload Authenticated */
+      if (pkt == OPEN_SESSION_REQ
+          || pkt == RAKP_MESSAGE_1_REQ
+          || pkt == RAKP_MESSAGE_3_REQ
+          || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+        payload_authenticated = IPMI_PAYLOAD_FLAG_UNAUTHENTICATED;
+      else
+        payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
+      
+      /* Calculate Payload Encrypted */
+      if (pkt == OPEN_SESSION_REQ
+          || pkt == RAKP_MESSAGE_1_REQ
+          || pkt == RAKP_MESSAGE_3_REQ
+          || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
+        payload_encrypted = IPMI_PAYLOAD_FLAG_UNENCRYPTED;
+      else
+        payload_encrypted = IPMI_PAYLOAD_FLAG_ENCRYPTED;
     }
 
   /* Calculate/Fill Command Object */
@@ -824,7 +840,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         ip->privilege,
                                         ip->name_only_lookup,
                                         username,
-                                        strlen(conf->username),
+                                        (username) ? strlen((char *)username) : 0,
                                         ip->obj_rakp_message_1_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_rmcpplus_rakp_message_1: %s", 
@@ -833,11 +849,37 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else if (pkt == RAKP_MESSAGE_3_REQ)
     {
+      uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
+      int32_t managed_system_random_number_len;
+      uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
+      int32_t key_exchange_authentication_code_len;
+
+      managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+                                                           "managed_system_random_number",
+                                                           managed_system_random_number,
+                                                           IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
+      if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(ip->authentication_algorithm,
+                                                                                                         password,
+                                                                                                         (password) ? strlen((char *)password) : 0,
+                                                                                                         managed_system_random_number,
+                                                                                                         managed_system_random_number_len,
+                                                                                                         ip->remote_console_session_id,
+                                                                                                         ip->name_only_lookup,
+                                                                                                         ip->privilege,
+                                                                                                         username,
+                                                                                                         (username) ? strlen((char *)username) : 0,
+                                                                                                         key_exchange_authentication_code,
+                                                                                                         IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
+        err_exit("ipmipower_packet_create(%s: %d): "
+                 "ipmi_calculate_rakp_3_key_exchange_authentication_code: %s",
+                 ip->ic->hostname, ip->protocol_state, strerror(errno));
+      
       if (fill_rmcpplus_rakp_message_3 (ip->initial_message_tag + ip->message_tag_count,
                                         RMCPPLUS_STATUS_NO_ERRORS,
                                         managed_system_session_id,
-                                        NULL,
-                                        0,
+                                        key_exchange_authentication_code,
+                                        key_exchange_authentication_code_len,
                                         ip->obj_rakp_message_3_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_rmcpplus_rakp_message_3: %s", 
@@ -930,6 +972,13 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   password,
                                   (password) ? strlen((char *)password) : 0,
                                   net_fn, 
+                                  authentication_algorithm,
+                                  integrity_algorithm,
+                                  confidentiality_algorithm,
+                                  integrity_key,
+                                  integrity_key_len,
+                                  confidentiality_key,
+                                  confidentiality_key_len,
                                   obj_cmd_req,
                                   buffer,
                                   buflen);

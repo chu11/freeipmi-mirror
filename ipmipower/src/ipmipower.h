@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.41 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.42 2006-03-15 19:09:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -133,6 +133,14 @@
  * Command 
  */
 #define IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH 16
+
+#define IPMI_MAX_SIK_KEY_LENGTH             64
+
+#define IPMI_MAX_INTEGRITY_KEY_LENGTH       64
+
+#define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH 64
+
+#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
 
 /* ipmi_version_t
  * - holds ipmi version type
@@ -441,6 +449,15 @@ struct ipmipower_powercmd {
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
   uint8_t confidentiality_algorithm;
+  uint8_t sik_key[IPMI_MAX_SIK_KEY_LENGTH];
+  uint8_t *sik_key_ptr;
+  uint32_t sik_key_len;
+  uint8_t integrity_key[IPMI_MAX_INTEGRITY_KEY_LENGTH];
+  uint8_t *integrity_key_ptr;
+  uint32_t integrity_key_len;
+  uint8_t confidentiality_key[IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH];
+  uint8_t *confidentiality_key_ptr;
+  uint32_t confidentiality_key_len;
   uint8_t initial_message_tag;
   uint8_t message_tag_count;
   uint8_t session_sequence_number;

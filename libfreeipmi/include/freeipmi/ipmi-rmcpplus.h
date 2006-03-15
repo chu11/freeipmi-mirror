@@ -127,8 +127,6 @@
  * IPMI 2.0 Misc Flags and Definitions *                       
  ***************************************/
 
-/* XXX - Al Audit, all this stuff doesn't need to be in a public .h file */
-
 #define IPMI_AUTHENTICATION_PAYLOAD_TYPE                  0x00
 #define IPMI_AUTHENTICATION_PAYLOAD_LENGTH                0x08
 #define IPMI_INTEGRITY_PAYLOAD_TYPE                       0x01
@@ -149,7 +147,11 @@
 
 #define IPMI_NEXT_HEADER                                  0x07
 
-#define IPMI_KEY_CONSTANT_LENGTH                          20
+#define IPMI_INTEGRITY_PAD_MULTIPLE                       4
+#define IPMI_INTEGRITY_PAD_DATA                           0xFF
+
+#define IPMI_MAX_PAYLOAD_LENGTH                           65536
+/* achu: b/c ipmi_msg_len is 2 bytes */
 
 #define IPMI_HMAC_SHA1_DIGEST_LENGTH                      20
 #define IPMI_HMAC_MD5_DIGEST_LENGTH                       16
@@ -164,22 +166,6 @@
 #define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
 
-#define IPMI_INTEGRITY_PAD_MULTIPLE                       4
-#define IPMI_INTEGRITY_PAD_DATA                           0xFF
-
-#define IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH      64
-#define IPMI_MAX_CONFIDENTIALITY_HEADER_LENGTH            64
-#define IPMI_MAX_PAYLOAD_LENGTH                           65536
-#define IPMI_MAX_CONFIDENTIALITY_TRAILER_LENGTH           64
-#define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH  64
-/* achu: b/c ipmi_msg_len is 2 bytes */
-
-#define IPMI_MAX_K_UID_LENGTH                             20
-#define IPMI_MAX_K_G_LENGTH                               20
-#define IPMI_MAX_SIK_KEY_LENGTH                           20
-
-#define IPMI_MAX_KEY_DATA_LENGTH                          1024
- 
 #ifdef __cplusplus
 extern "C" {
 #endif

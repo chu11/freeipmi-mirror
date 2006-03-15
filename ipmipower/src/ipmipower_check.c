@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.31 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.32 2006-03-15 19:09:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -211,12 +211,11 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       else
 	password = NULL;
 
-      /* XXX support more algs */
       if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(ip->integrity_algorithm,
 								       buffer,
 								       buffer_len,
-								       NULL,
-								       0,
+                                                                       ip->integrity_key_ptr,
+                                                                       ip->integrity_key_len,
 								       password,
 								       (password) ? strlen((char *)password) : 0,
 								       ip->obj_rmcpplus_session_trlr_res)) < 0)
@@ -780,10 +779,9 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
 					      managed_system_guid,
 					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
 
-  /* XXX support more algs */
   if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(ip->authentication_algorithm,
-								     NULL,
-								     0,
+                                                                     ip->sik_key_ptr,
+                                                                     ip->sik_key_len,
 								     ip->remote_console_random_number,
 								     IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
 								     (uint32_t)managed_system_session_id,

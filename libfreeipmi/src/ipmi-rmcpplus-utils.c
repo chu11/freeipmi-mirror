@@ -43,6 +43,12 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
+#define IPMI_KEY_CONSTANT_LENGTH                          20
+#define IPMI_MAX_K_UID_LENGTH                             20
+#define IPMI_MAX_K_G_LENGTH                               20
+#define IPMI_MAX_SIK_KEY_LENGTH                           20
+#define IPMI_MAX_KEY_DATA_LENGTH                          1024
+
 int32_t 
 ipmi_calculate_sik(uint8_t authentication_algorithm,
                    uint8_t *k_g,
