@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.50 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.51 2006-03-15 01:42:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -178,6 +178,25 @@ ipmipower_powercmd_cleanup()
   pending = NULL;
 }
 
+static void
+_init_ipmi_2_0_randomized_data(ipmipower_powercmd_t ip)
+{
+  assert(ip);
+
+  /* In IPMI 2.0, session_ids of 0 are special */
+  do 
+    {
+      ip->remote_console_session_id = get_rand();
+    } while (!ip->remote_console_session_id);
+
+  /* Even if this fails, we'll just live with it */
+  if (ipmi_get_random(ip->remote_console_random_number, 
+                      IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
+    dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
+        strerror(errno));
+}
+
+
 void 
 ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic) 
 { 
@@ -266,16 +285,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
       ip->message_tag_count = 0;
       ip->session_sequence_number = 0;
       ip->name_only_lookup = IPMI_NAME_ONLY_LOOKUP;
-      do 
-        {
-          ip->remote_console_session_id = get_rand();
-        } while (!ip->remote_console_session_id);
-
-      /* Even if this fails, we'll just live with it */
-      if (ipmi_get_random(ip->remote_console_random_number, 
-                          IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-        dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
-            strerror(errno));
+      _init_ipmi_2_0_randomized_data(ip);
 
       ip->cipher_suite_list_index = 0;
       memset(ip->cipher_suite_record_data, '\0', IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH);
@@ -792,18 +802,18 @@ _retry_packets(ipmipower_powercmd_t ip)
   return 1;
 }
 
-/* _check_authentication_capabilities
+/* _check_ipmi_1_5_authentication_capabilities
  * 
  * Check the contents of a ipmi 1.5 or 2.0 authentication capabilities
  * response.
  *
  * Returns  1 if authentication capabilities should be retried,
  * Returns  0 if authentication passed and the protocol should continue
- * Returns -1 on error
+ * Returns -1 on ipmi protocol error or discovery error
  */
 static int
-_check_authentication_capabilities(ipmipower_powercmd_t ip,
-				   packet_type_t pkt)
+_check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
+                                            packet_type_t pkt)
 {
   uint64_t authentication_type_none, authentication_type_md2, 
     authentication_type_md5, authentication_type_straight_password_key, 
@@ -991,12 +1001,154 @@ _check_authentication_capabilities(ipmipower_powercmd_t ip,
   return 0;
 }
 					    
+/* _check_ipmi_2_0_authentication_capabilities_errors
+ * 
+ * Check if there is a legitimate ipmi 2.0 authentication capabilities
+ * response error.
+ *
+ * Returns  0 if IPMI 1.5 authentication capabilities should be retried,
+ * Returns -1 on ipmi protocol error error
+ */
+static int
+_check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
+{
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
+
+  if (conf->ipmi_version == IPMI_VERSION_AUTO
+      || conf->ipmi_version == IPMI_VERSION_2_0)
+    {
+      uint64_t comp_code;
+      
+      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+                   "comp_code", 
+                   &comp_code);
+      
+      dbg("_check_ipmi_2_0_authentication_capabilities_error(%s:%d): "
+          "bad comp_code in authentication capabilities 2.0: %x", 
+          ip->ic->hostname, ip->protocol_state, comp_code);
+      
+      if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
+        {
+          if (conf->ipmi_version == IPMI_VERSION_AUTO)
+            return 0;
+          else
+            {
+              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              return -1;
+            }
+        }
+    }
+  
+  ipmipower_output(ipmipower_packet_errmsg(ip, AUTHENTICATION_CAPABILITIES_V20_RES), 
+                   ip->ic->hostname);
+  return -1;
+}
+
+/* _check_ipmi_version_support
+ * 
+ * Check for IPMI 2.0 support 
+ *
+ * Returns  1 if IPMI 2.0 is supported
+ * Returns  0 if only IPMI 1.5 is supported
+ * Returns -1 if neither is apparently supported
+ */
+static int
+_check_ipmi_version_support(ipmipower_powercmd_t ip)
+{
+  uint64_t ipmi_v20_extended_capabilities_available, 
+    channel_supports_ipmi_v15_connections,
+    channel_supports_ipmi_v20_connections;
+  
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
+
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+               "authentication_type.ipmi_v2.0_extended_capabilities_available",
+               &ipmi_v20_extended_capabilities_available);
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+               "channel_supports_ipmi_v1.5_connections",
+               &channel_supports_ipmi_v15_connections);
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+               "channel_supports_ipmi_v2.0_connections",
+               &channel_supports_ipmi_v20_connections);
+  
+  if (ipmi_v20_extended_capabilities_available
+      && !channel_supports_ipmi_v15_connections
+      && !channel_supports_ipmi_v20_connections)
+    return -1;
+  else if (!ipmi_v20_extended_capabilities_available
+           || (channel_supports_ipmi_v15_connections
+               && !channel_supports_ipmi_v20_connections))
+    return 0;
+  else
+    return 1;
+
+  /* NOT REACHED */
+  return 0;
+}
+
+/* _check_activate_session_authentication_type
+ * 
+ * Check if the activate session response has the appropriate
+ * authentication type.
+ *
+ * Returns  0 if yes
+ * Returns -1 if no, which is an ipmi protocol error
+ */
+static int
+_check_activate_session_authentication_type(ipmipower_powercmd_t ip)
+{
+  uint64_t authentication_type;
+
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT);
+
+  Fiid_obj_get(ip->obj_activate_session_res,
+               "authentication_type",
+               &authentication_type);
+  
+  if (conf->force_permsg_authentication)
+    return 0;
+
+  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
+    {
+      if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
+        {
+          dbg("_process_ipmi_packets(%s:%d): not none authentcation",
+              ip->ic->hostname, ip->protocol_state);
+          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+          
+          ip->retry_count = 0;  /* important to reset */
+          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+          ip->error_occurred = IPMIPOWER_TRUE; 
+          return -1;
+        }
+    }
+  else
+    {
+      if (authentication_type != ip->authentication_type)
+        {
+          dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
+              ip->ic->hostname, ip->protocol_state);
+          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
+
+          ip->retry_count = 0;  /* important to reset */
+          Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
+          ip->error_occurred = IPMIPOWER_TRUE; 
+          return -1;
+        }
+    }
+
+  return 0;
+}
+
 /* _calculate_cipher_suite_ids
  * 
  * Determine the cipher suite ids the remote machine supports.
  *
  * Returns  0 on success
- * Returns -1 on error
+ * Returns -1 on ipmi protocol error
  */
 static int
 _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
@@ -1012,7 +1164,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 
   if (!ip->cipher_suite_record_data_bytes)
     {
-      dbg("_check_authentication_capabilities(%s:%d): "
+      dbg("_calculate_cipher_suite_ids(%s:%d): "
           "No cipher suite data records retrieved",
           ip->ic->hostname, ip->protocol_state);
       goto cleanup;
@@ -1043,17 +1195,19 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
       
       if (tag_bits != IPMI_CIPHER_SUITE_TAG_BITS_RECORD)
         {
-          dbg("_check_authentication_capabilities(%s:%d): "
+          dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid tag bits: %x",
               ip->ic->hostname, ip->protocol_state, (uint8_t)tag_bits);
+          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
           goto cleanup;
         }
 
       if (!IPMI_CIHPER_SUITE_RECORD_FORMAT_VALID(record_format))
         {
-          dbg("_check_authentication_capabilities(%s:%d): "
+          dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid record format: %x",
               ip->ic->hostname, ip->protocol_state, (uint8_t)record_format);
+          ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
           goto cleanup;
         }
 
@@ -1099,6 +1253,240 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
   return (rv);
 }
 
+/* _store_and_calculate_cipher_suite_ids
+ * 
+ * Store data from a get channel cipher suite ids response and calculate
+ * the cipher suite ids.
+ *
+ * Returns  1 if more data should be retrieved
+ * Returns  0 on success and all record data received and cipher ids have been calculated
+ * Returns -1 on ipmi protocol error
+ */
+static int
+_store_and_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
+{
+  int32_t record_len;
+
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
+
+  record_len = Fiid_obj_get_data(ip->obj_get_channel_cipher_suites_res,
+                                 "cipher_suite_record_data",
+                                 ip->cipher_suite_record_data + ip->cipher_suite_record_data_bytes,
+                                 IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH - ip->cipher_suite_record_data_bytes);
+  ip->cipher_suite_record_data_bytes += record_len;
+
+  /* In the IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites
+   * Command, if the record data returned from the BMC is == 16,
+   * then there is more data to retrieve.  So we increment the
+   * list index and get more data.
+   * 
+   * If the return is short, we resend, otherwise we got all the data
+   * we care about.
+   */
+  if (record_len == IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH
+      && ip->cipher_suite_record_data_bytes < IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH)
+    return 1;
+
+  /* Else, we got all the data we care about, so lets convert the
+   * records into usable information.
+   */
+  if (_calculate_cipher_suite_ids(ip) < 0)
+    return -1;
+
+  return 0;
+}
+
+/* _determine_cipher_suite_id_to_use
+ * 
+ * Determine which cipher suite id to use
+ *
+ * Returns  0 if we found something to try
+ * Returns -1 on ipmi protocol error or can't find a cipher id to try
+ */
+static int
+_determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
+{
+  int i, j, cipher_suite_found = 0;
+  
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
+
+  /* Ok, if the cipher suite has been specified by the user, then
+   * lets make sure that the remote machine supports this cipher
+   * suite id.
+   */
+  if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
+    {         
+      for (i = 0; i < ip->cipher_suite_ids_num; i++)
+        {
+          if (ip->cipher_suite_id == ip->cipher_suite_ids[i])
+            {
+              cipher_suite_found++;
+              break;
+            }
+        }
+      
+      if (!cipher_suite_found)
+        {
+          dbg("_determine_cipher_suite_id_to_use(%s:%d): "
+              " cipher suite not found: %x",
+              ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
+#ifndef NDEBUG
+          ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
+#else
+          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+          return -1;
+        }
+    }
+  else
+    {
+      /* If the user wants us to find a cipher suite id, lets find
+       * a cipher suite we can use.  Otherwise, we report to the
+       * user that we're screwed.
+       */
+      
+      for (i = 0; i < cipher_suite_id_ranking_count; i++)
+        {
+          for (j = 0; j < ip->cipher_suite_ids_num; j++)
+            {
+              if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
+                {
+                  cipher_suite_found++;
+                  break;
+                }
+            }
+          
+          if (cipher_suite_found)
+            break;
+        }
+      
+      if (!cipher_suite_found)
+        {
+          dbg("_determine_cipher_suite_id_to_use(%s:%d): "
+              " can't find usable cipher suite",
+              ip->ic->hostname, ip->protocol_state);
+#ifndef NDEBUG
+          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
+#else
+          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+          return -1;
+        }
+      
+      ip->cipher_suite_id = cipher_suite_id_ranking[i];
+      ip->cipher_suite_id_ranking_index = i;
+      if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
+                                                 &(ip->authentication_algorithm),
+                                             &(ip->integrity_algorithm),
+                                             &(ip->confidentiality_algorithm)) < 0)
+        err_exit("_determine_cipher_suite_id_to_use: ipmi_cipher_suite_id_to_algorithms: ",
+                 "cipher_suite_id: %d; %s",
+                 ip->cipher_suite_id, strerror(errno));
+    }
+
+  return 0;
+}
+
+/* _check_open_session_error
+ * 
+ * Determine if a legit error occurred, and if so which new cipher suite id to use
+ *
+ * Returns  0 if we found something to try, so resend
+ * Returns -1 on ipmi protocol error or can't find a cipher id to try
+ */
+static int
+_check_open_session_error(ipmipower_powercmd_t ip)
+{
+  int i, j, cipher_suite_found = 0;
+
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT);
+
+  /* Note: Unlike IPMI 1.5, there is no need to test
+   * additional privileges (i.e. move up from USER to
+   * OPERATOR, or from OPERATOR to ADMINISTRATOR).  In IPMI
+   * 2.0, authentication mechanisms are not attached to
+   * specific privilege levels.  Cipher Suite IDs are assigned
+   * a privilege level limit.  So if we cannot connect at a
+   * lower privilege, there is no need to see if we can
+   * connect at a higher privilege.
+   */
+  
+  if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
+    {
+      uint64_t rmcpplus_status_code;
+      
+      Fiid_obj_get(ip->obj_open_session_res, 
+                   "rmcpplus_status_code", 
+                   &rmcpplus_status_code);
+      
+      dbg("_check_open_session_error(%s:%d): bad rmcpplus_status_code in "
+          "open session response: %x", 
+          ip->ic->hostname, ip->protocol_state, rmcpplus_status_code);
+      
+      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
+        {
+          /* Lets try the next Cipher Suite ID if there is one */
+          if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
+            {
+#ifndef NDEBUG
+              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
+#else
+              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+              return -1;
+            }
+          else
+            {
+              /* Lets find the next cipher suite we can use.  Otherwise,
+               * we report to the user that we're screwed.
+               */
+              for (i = ip->cipher_suite_id_ranking_index + 1; i < cipher_suite_id_ranking_count; i++)
+                {
+                  for (j = 0; j < ip->cipher_suite_ids_num; j++)
+                    {
+                      if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
+                        {
+                          cipher_suite_found++;
+                          break;
+                        }
+                    }
+                  
+                  if (cipher_suite_found)
+                    break;
+                }
+              
+              if (!cipher_suite_found)
+                {
+#ifndef NDEBUG
+                  ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
+#else
+                  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+                  return -1;
+                }
+              
+              ip->cipher_suite_id = cipher_suite_id_ranking[i];
+              ip->cipher_suite_id_ranking_index = i;
+              if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
+                                                     &(ip->authentication_algorithm),
+                                                     &(ip->integrity_algorithm),
+                                                     &(ip->confidentiality_algorithm)) < 0)
+                err_exit("_check_open_session_error: ipmi_cipher_suite_id_to_algorithms: ",
+                         "cipher_suite_id: %d; %s",
+                         ip->cipher_suite_id, strerror(errno));
+              
+              return 0;
+            }
+        }
+    }
+
+  ipmipower_output(ipmipower_packet_errmsg(ip, OPEN_SESSION_RES), ip->ic->hostname);
+  return -1;
+}
+
 /* _process_ipmi_packets
  * - Main function that handles packet sends/receives for
  *   the power control protocol
@@ -1109,7 +1497,7 @@ static int
 _process_ipmi_packets(ipmipower_powercmd_t ip) 
 {
   struct timeval cur_time, end_time;
-  int rv, timeout, i, j; 
+  int rv, timeout; 
 
   assert(ip != NULL);
   assert(PROTOCOL_STATE_VALID(ip->protocol_state));
@@ -1136,91 +1524,43 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
-      uint64_t ipmi_v20_extended_capabilities_available, 
-	channel_supports_ipmi_v15_connections,
-	channel_supports_ipmi_v20_connections;
-
       /* If the remote machine does not support IPMI 2.0, we move onto
-       * IPMI 1.5 protocol respectively appropriately.
+       * IPMI 1.5 protocol appropriately.
        */
-
       if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) != 1) 
         {
           if (rv < 0) 
 	    {
-              /* XXX cleanup if posible */
-              if (conf->ipmi_version == IPMI_VERSION_AUTO
-                  || conf->ipmi_version == IPMI_VERSION_2_0)
+              if (!_check_ipmi_2_0_authentication_capabilities_error(ip))
                 {
-                  uint64_t comp_code;
+                  /* Try the IPMI 1.5 version of Get Authentication Capabilities */
                   
-                  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
-                               "comp_code", 
-                               &comp_code);
-                  
-                  dbg("_process_ipmi_packets(%s:%d): bad comp_code in "
-                      "authentication capabilities 2.0: %x", 
-                      ip->ic->hostname, ip->protocol_state, comp_code);
-                  
-                  if (comp_code == IPMI_COMP_CODE_REQUEST_INVALID_DATA_FIELD)
-                    {
-                      if (conf->ipmi_version == IPMI_VERSION_AUTO)
-                        {
-                          /* Try the IPMI 1.5 version of Get Authentication Capabilities */
-                          ip->error_occurred = IPMIPOWER_FALSE; 
-                          _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
-                          goto done;
-                        }
-                      else
-                        ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
-                    }
-                  else
-                    ipmipower_output(ipmipower_packet_errmsg(ip, 
-                                                             AUTHENTICATION_CAPABILITIES_V20_RES), 
-                                     ip->ic->hostname);
+                  /* Special case, must clear error, see _recv_packet() */
+                  ip->error_occurred = IPMIPOWER_FALSE; 
+                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+                  goto done;
                 }
-              else
-                ipmipower_output(ipmipower_packet_errmsg(ip, 
-                                                         AUTHENTICATION_CAPABILITIES_V20_RES), 
-                                 ip->ic->hostname);
-              
-	      return -1;
+              return -1;
 	    }
           goto done;
         }
 
-      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
-		   "authentication_type.ipmi_v2.0_extended_capabilities_available",
-		   &ipmi_v20_extended_capabilities_available);
-      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
-		   "channel_supports_ipmi_v1.5_connections",
-		   &channel_supports_ipmi_v15_connections);
-      Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
-		   "channel_supports_ipmi_v2.0_connections",
-		   &channel_supports_ipmi_v20_connections);
-
-      /* If we can't detect IPMI 1.5 with
-       * 'channel_supports_ipmi_v15_connections', we assume its a bug,
-       * and try the IPMI 1.5 version of Get Authentication
-       * Capabilities if appropriate.
-       */
+      rv = _check_ipmi_version_support(ip);
+      
       if (conf->ipmi_version == IPMI_VERSION_AUTO)
         {
-          if (ipmi_v20_extended_capabilities_available
-              && !channel_supports_ipmi_v15_connections
-              && !channel_supports_ipmi_v20_connections)
+          /* If we can't detect IPMI 1.5 or IPMI 2.0, assume it's an error
+           * and go with the IPMI 1.5 get authentication capabilities
+           * response.
+           */
+          if (rv < 0)
             _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
-          else if (!ipmi_v20_extended_capabilities_available
-                   || (channel_supports_ipmi_v15_connections
-                       && !channel_supports_ipmi_v20_connections))
+          else if (!rv)
             {
-              int check;
-              
-              if ((check = _check_authentication_capabilities(ip, 
-                                                              AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
+              if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
                 return -1;
               
-              if (check)
+              if (rv)
                 {
                   /* Don't consider this a retransmission */
                   _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
@@ -1239,26 +1579,22 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
             }
         }
-      else if (conf->ipmi_version == IPMI_VERSION_1_5)
-        err_exit("_process_ipmi_packets: invalid ipmi_version: %d", conf->ipmi_version);
-      else if (conf->ipmi_version == IPMI_VERSION_2_0)
-	{
-          if (!ipmi_v20_extended_capabilities_available
-              || !channel_supports_ipmi_v20_connections)
+      else /* conf->ipmi_version == IPMI_VERSION_2_0 */
+        {
+          if (rv != 1)
             {
               ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
               return -1;
             }
+          /* else we continue with the IPMI 2.0 protocol */
 
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
           _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
-	}
+        }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
     {
-      int check_val;
-
       if ((rv = _recv_packet(ip, AUTHENTICATION_CAPABILITIES_RES)) != 1) 
         {
           if (rv < 0) 
@@ -1266,11 +1602,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      if ((check_val = _check_authentication_capabilities(ip, 
-							  AUTHENTICATION_CAPABILITIES_RES)) < 0)
+      if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_RES)) < 0)
 	return -1;
       
-      if (check_val)
+      if (rv)
 	{
 	  /* Don't consider this a retransmission */
 	  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
@@ -1297,8 +1632,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT) 
     {
-      uint64_t authentication_type;
-
       if ((rv = _recv_packet(ip, ACTIVATE_SESSION_RES)) != 1) 
         {
           if (rv < 0) 
@@ -1308,41 +1641,10 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      Fiid_obj_get(ip->obj_activate_session_res,
-		   "authentication_type",
-		   &authentication_type);
-
-      if (!conf->force_permsg_authentication)
-	{
-	  if (ip->permsgauth_enabled == IPMIPOWER_FALSE)
-	    {
-	      if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
-		{
-		  dbg("_process_ipmi_packets(%s:%d): not none authentcation",
-		      ip->ic->hostname, ip->protocol_state);
-		  ip->retry_count = 0;  /* important to reset */
-		  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-		  ip->error_occurred = IPMIPOWER_TRUE; 
-		  /* XXX Session is not up, is it ok to quit here?  Or
-		   * should we timeout?? */
-		  return -1;
-		}
-	    }
-	  else
-	    {
-	      if (authentication_type != ip->authentication_type)
-		{
-		  dbg("_process_ipmi_packets(%s:%d): authentication_type mismatch",
-		      ip->ic->hostname, ip->protocol_state);
-		  ip->retry_count = 0;  /* important to reset */
-		  Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-		  ip->error_occurred = IPMIPOWER_TRUE; 
-		  /* XXX Session is not up, is it ok to quit here?  Or
-		   * should we timeout?? */
-		  return -1;
-		}
-	    }
-	}
+      if (_check_activate_session_authentication_type(ip) < 0)
+        /* XXX Session is not up, is it ok to quit here?  Or
+         * should we timeout?? */
+        return -1;
       
       /* We can skip SET_SESSION_PRIVILEGE_REQ on a power status
        * check, because the default IPMI session privilege level is
@@ -1379,9 +1681,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     {
-      int32_t record_len;
-      int cipher_suite_found = 0;
-
       /* achu: There is probably a lot of confusing code here,
        * hopefully my comments will guide you through it.
        */
@@ -1395,210 +1694,38 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      record_len = Fiid_obj_get_data(ip->obj_get_channel_cipher_suites_res,
-                                     "cipher_suite_record_data",
-                                     ip->cipher_suite_record_data + ip->cipher_suite_record_data_bytes,
-                                     IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH - ip->cipher_suite_record_data_bytes);
-      ip->cipher_suite_record_data_bytes += record_len;
+      if ((rv = _store_and_calculate_cipher_suite_ids(ip)) < 0)
+        return -1;
 
-      /* In the IPMI 2.0 spec, Table 22-17 - Get Channel Cipher Suites
-       * Command, if the record data returned from the BMC is == 16,
-       * then there is more data to retrieve.  So we increment the
-       * list index and get more data.
-       * 
-       * If the return is short, we resend, otherwise we got all the data
-       * we care about.
-       */
-      if (record_len == IPMI_CIPHER_SUITE_RECORD_DATA_LENGTH
-          && ip->cipher_suite_record_data_bytes < IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH)
+      if (rv)
         {
           ip->cipher_suite_list_index++;
           _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
           goto done;
         }
 
-      /* Else, we got all the data we care about, so lets convert the
-       * records into usable information.
-       */
-      if (_calculate_cipher_suite_ids(ip) < 0)
+      if (_determine_cipher_suite_id_to_use(ip) < 0)
         return -1;
      
-      /* Ok, if the cipher suite has been specified by the user, then
-       * lets make sure that the remote machine supports this cipher
-       * suite id.
-       */
-      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO)
-        {         
-          for (i = 0; i < ip->cipher_suite_ids_num; i++)
-            {
-              if (ip->cipher_suite_id == ip->cipher_suite_ids[i])
-                {
-                  cipher_suite_found++;
-                  break;
-                }
-            }
-          
-          if (!cipher_suite_found)
-            {
-#ifndef NDEBUG
-              ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
-#else
-              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-              return -1;
-            }
-        }
-      else
-        {
-          /* If the user wants us to find a cipher suite id, lets find
-           * a cipher suite we can use.  Otherwise, we report to the
-           * user that we're screwed.
-           */
-
-          for (i = 0; i < cipher_suite_id_ranking_count; i++)
-            {
-              for (j = 0; j < ip->cipher_suite_ids_num; j++)
-                {
-                  if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
-                    {
-                      cipher_suite_found++;
-                      break;
-                    }
-                }
-              
-              if (cipher_suite_found)
-                break;
-            }
-
-          if (!cipher_suite_found)
-            {
-#ifndef NDEBUG
-              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
-#else
-              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-              return -1;
-            }
-
-          ip->cipher_suite_id = cipher_suite_id_ranking[i];
-          ip->cipher_suite_id_ranking_index = i;
-          if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                                 &(ip->authentication_algorithm),
-                                                 &(ip->integrity_algorithm),
-                                                 &(ip->confidentiality_algorithm)) < 0)
-            err_exit("_process_ipmi_packets: ipmi_cipher_suite_id_to_algorithms: ",
-                     "cipher_suite_id: %d; %s",
-                     ip->cipher_suite_id, strerror(errno));
-        }
-
       _send_packet(ip, OPEN_SESSION_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
     {
-      int cipher_suite_found = 0;
-
       if ((rv = _recv_packet(ip, OPEN_SESSION_RES)) != 1) 
         {
           if (rv < 0) 
             {
-              /* Note: Unlike IPMI 1.5, there is no need to test
-               * additional privileges (i.e. move up from USER to
-               * OPERATOR, or from OPERATOR to ADMINISTRATOR).  In IPMI
-               * 2.0, authentication mechanisms are not attached to
-               * specific privilege levels.  Cipher Suite IDs are assigned
-               * a privilege level limit.  So if we cannot connect at a
-               * lower privilege, there is no need to see if we can
-               * connect at a higher privilege.
-               */
-              
-              if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
+              if (!_check_open_session_error(ip))
                 {
-                  uint64_t rmcpplus_status_code;
+                  /* achu: Need to re-init */
+                  _init_ipmi_2_0_randomized_data(ip);
                   
-                  Fiid_obj_get(ip->obj_open_session_res, 
-                               "rmcpplus_status_code", 
-                               &rmcpplus_status_code);
-                  
-                  dbg("_process_ipmi_packets(%s:%d): bad rmcpplus_status_code in "
-                      "open session response: %x", 
-                      ip->ic->hostname, ip->protocol_state, rmcpplus_status_code);
-
-                  if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
-                    {
-                      /* Lets try the next Cipher Suite ID if there is one */
-                      if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
-                        {
-#ifndef NDEBUG
-                          ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else
-                          ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-                          return -1;
-                        }
-                      else
-                        {
-                          /* Lets find the next cipher suite we can use.  Otherwise,
-                           * we report to the user that we're screwed.
-                           */
-                          for (i = ip->cipher_suite_id_ranking_index + 1; i < cipher_suite_id_ranking_count; i++)
-                            {
-                              for (j = 0; j < ip->cipher_suite_ids_num; j++)
-                                {
-                                  if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
-                                    {
-                                      cipher_suite_found++;
-                                      break;
-                                    }
-                                }
-                              
-                              if (cipher_suite_found)
-                                break;
-                            }
-                          
-                          if (!cipher_suite_found)
-                            {
-#ifndef NDEBUG
-                              ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else
-                              ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
-                              return -1;
-                            }
-                          
-                          ip->cipher_suite_id = cipher_suite_id_ranking[i];
-                          ip->cipher_suite_id_ranking_index = i;
-                          if (ipmi_cipher_suite_id_to_algorithms(ip->cipher_suite_id,
-                                                                 &(ip->authentication_algorithm),
-                                                                 &(ip->integrity_algorithm),
-                                                                 &(ip->confidentiality_algorithm)) < 0)
-                            err_exit("_process_ipmi_packets: ipmi_cipher_suite_id_to_algorithms: ",
-                                     "cipher_suite_id: %d; %s",
-                                     ip->cipher_suite_id, strerror(errno));
-                          
-                          /* achu: Need to re-init */
-                          /* XXX clean this crap up somehow */
-                          do
-                            {
-                              ip->remote_console_session_id = get_rand();
-                            } while (!ip->remote_console_session_id);
-                          /* Even if this fails, we'll just live with it */
-                          if (ipmi_get_random(ip->remote_console_random_number,
-                                              IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH) < 0)
-                            dbg("_process_ipmi_packets: ipmi_get_random: %s ",
-                                strerror(errno));
-                          
-                          _send_packet(ip, OPEN_SESSION_REQ, 0);
-                          goto done;
-                        }
-                    }
-                  else
-                    ipmipower_output(ipmipower_packet_errmsg(ip, OPEN_SESSION_RES), 
-                                     ip->ic->hostname);
+                  /* Special case, must clear error, see _recv_packet() */
+                  ip->error_occurred = IPMIPOWER_FALSE; 
+                  _send_packet(ip, OPEN_SESSION_REQ, 0);
+                  goto done;
                 }
-              else
-                ipmipower_output(ipmipower_packet_errmsg(ip, OPEN_SESSION_RES), 
-                                 ip->ic->hostname);
-                
+
               /* XXX Session is not up, is it ok to quit here?  Or
                * should we timeout?? */
               return -1;

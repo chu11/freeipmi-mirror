@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.41 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.42 2006-03-15 01:42:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -180,6 +180,8 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
   if (conf->ipmidump)
     {
       char *hdr;
+      /* XXX: Yeah yeah yeah, I know I should clean this up.
+       */
       if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
         hdr = 
           "================================================\n"
