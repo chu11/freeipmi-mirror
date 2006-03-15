@@ -1826,6 +1826,37 @@ ex_set_rmcpplus_cipher_suite_id_14 (SCM scm_privilege)
   return _set_rmcpplus_cipher_suite_id_privilege(14, scm_privilege);
 }
 
+/* XXX support hex */
+SCM
+ex_set_k_r (SCM scm_k_r)
+{
+  uint8_t *k_r = NULL;
+  int retval;
+  
+  k_r = (uint8_t *)gh_scm2newstr (scm_k_r, NULL);
+
+  retval = set_k_r (fi_get_ipmi_device (), k_r, strlen((char *)k_r));
+
+  free (k_r);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM
+ex_set_k_g (SCM scm_k_g)
+{
+  uint8_t *k_g = NULL;
+  int retval;
+  
+  k_g = (uint8_t *)gh_scm2newstr (scm_k_g, NULL);
+
+  retval = set_k_g (fi_get_ipmi_device (), k_g, strlen((char *)k_g));
+
+  free (k_g);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
 /**** get_XXXX functions *****/
 SCM 
 ex_get_bmc_username (SCM scm_userid)
@@ -2727,6 +2758,36 @@ ex_get_rmcpplus_cipher_suite_id_14 ()
 {
   return _get_rmcpplus_cipher_suite_id_privilege(14);
 }
+
+/* XXX support hex */
+SCM
+ex_get_k_r ()
+{
+  uint8_t k_r[64];
+  int32_t retval;
+  SCM return_list = SCM_EOL;
+  
+  memset(k_r, '\0', 64);
+  if ((retval = get_k_r (fi_get_ipmi_device (), k_r, 64)) == 0)
+    return_list = scm_listify (scm_makfrom0str ((char *)k_r), SCM_UNDEFINED);
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
+SCM
+ex_get_k_g ()
+{
+  uint8_t k_g[64];
+  int32_t retval;
+  SCM return_list = SCM_EOL;
+  
+  memset(k_g, '\0', 64);
+  if ((retval = get_k_g (fi_get_ipmi_device (), k_g, 64)) == 0)
+    return_list = scm_listify (scm_makfrom0str ((char *)k_g), SCM_UNDEFINED);
+
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
 
 /***********************************************************/
 SCM 

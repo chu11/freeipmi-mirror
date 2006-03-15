@@ -22,6 +22,7 @@
 (fi-load "bc-lan-serial-channel-section.scm")
 (fi-load "bc-lan-conf-section.scm")
 (fi-load "bc-lan-conf-auth-section.scm")
+(fi-load "bc-lan-conf-security-keys-section.scm")
 (fi-load "bc-lan-conf-misc-section.scm")
 (fi-load "bc-rmcpplus-conf-privilege-section.scm")
 (fi-load "bc-serial-conf-section.scm")
@@ -146,6 +147,10 @@
 			  "OEM_Enable_Auth_Type_Straight_Password" 
 			  "OEM_Enable_Auth_Type_OEM_Proprietary"))
 
+(define lan_conf_security_keys_s '("LAN_Conf_Security_Keys" 
+                                   "K_R" 
+                                   "K_G"))
+
 (define lan_conf_misc_s '("LAN_Conf_Misc" 
 			  "Enable_Gratuitous_ARPs" 
 			  "Enable_ARP_Response" 
@@ -229,6 +234,7 @@
   (checkout-section lan_channel_s (current-output-port))
   (checkout-section lan_conf_s (current-output-port))
   (checkout-section lan_conf_auth_s (current-output-port))
+  (checkout-section lan_conf_security_keys_s (current-output-port))
   (checkout-section lan_conf_misc_s (current-output-port))
   (checkout-section rmcpplus_conf_privilege_s (current-output-port))
   (checkout-section serial_channel_s (current-output-port))
@@ -248,6 +254,7 @@
 	(checkout-section lan_channel_s fp)
 	(checkout-section lan_conf_s fp)
 	(checkout-section lan_conf_auth_s fp)
+	(checkout-section lan_conf_security_keys_s fp)
 	(checkout-section lan_conf_misc_s fp)
 	(checkout-section serial_channel_s fp)
 	(checkout-section serial_conf_s fp)

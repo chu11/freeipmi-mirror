@@ -1463,6 +1463,63 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
   return (rv);
 }
 
+/* XXX handle non-strings */
+int8_t
+set_k_r(ipmi_device_t *dev,
+        uint8_t *k_r,
+        uint32_t k_r_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_channel_security_keys (dev, 
+                                          get_lan_channel_number (), 
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
+                                          IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                                          k_r,
+                                          k_r_len,
+                                          obj_cmd_rs) != 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t
+set_k_g(ipmi_device_t *dev,
+        uint8_t *k_g,
+        uint32_t k_g_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_channel_security_keys (dev, 
+                                          get_lan_channel_number (), 
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
+                                          IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                                          NULL,
+                                          0,
+                                          obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+
+/* get_XXXX functions */
 static int8_t 
 get_bmc_user_access (ipmi_device_t *dev, 
 		     uint8_t userid, 
@@ -2875,6 +2932,65 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
     }
   
  cleanup:
+  return (rv);
+}
+
+/* XXX handle non-strings */
+int32_t
+get_k_r(ipmi_device_t *dev,
+        uint8_t *k_r,
+        uint32_t k_r_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_channel_security_keys (dev, 
+                                          get_lan_channel_number (), 
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
+                                          IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
+                                          NULL,
+                                          0,
+                                          obj_cmd_rs) != 0)
+    goto cleanup;
+
+  if ((rv = fiid_obj_get_data (obj_cmd_rs, "key_value", k_r, k_r_len)) < 0)
+    goto cleanup;
+  
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int32_t
+get_k_g(ipmi_device_t *dev,
+        uint8_t *k_g,
+        uint32_t k_g_len)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_channel_security_keys (dev, 
+                                          get_lan_channel_number (), 
+                                          IPMI_CHANNEL_SECURITY_KEYS_OPERATION_READ_KEY,
+                                          IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
+                                          NULL,
+                                          0,
+                                          obj_cmd_rs) != 0)
+    goto cleanup;
+  
+  if ((rv = fiid_obj_get_data (obj_cmd_rs, "key_value", k_g, k_g_len)) < 0)
+    goto cleanup;
+  
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
   return (rv);
 }
 

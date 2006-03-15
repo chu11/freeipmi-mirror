@@ -188,6 +188,9 @@ SCM ex_set_rmcpplus_cipher_suite_id_12 (SCM scm_privilege);
 SCM ex_set_rmcpplus_cipher_suite_id_13 (SCM scm_privilege);
 SCM ex_set_rmcpplus_cipher_suite_id_14 (SCM scm_privilege);
 
+SCM ex_set_k_r (SCM scm_k_r);
+SCM ex_set_k_g (SCM scm_k_g);
+
 /*****************/
 SCM ex_get_bmc_username (SCM scm_userid);
 SCM ex_get_bmc_user_lan_channel_access (SCM scm_userid);
@@ -245,6 +248,9 @@ SCM ex_get_rmcpplus_cipher_suite_id_12 ();
 SCM ex_get_rmcpplus_cipher_suite_id_13 ();
 SCM ex_get_rmcpplus_cipher_suite_id_14 ();
 SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
+
+SCM ex_get_k_r ();
+SCM ex_get_k_g ();
 
 /***********************************************************/
 

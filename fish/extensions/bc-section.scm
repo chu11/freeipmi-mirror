@@ -22,6 +22,7 @@
 			    ("lan_channel"    . lan-serial-channel-keys-validator)
 			    ("lan_conf"       . lan-conf-keys-validator)
 			    ("lan_conf_auth"  . lan-conf-auth-keys-validator)
+                            ("lan_conf_security_keys" . lan-conf-security-keys-validator)
 			    ("lan_conf_misc"  . lan-conf-misc-keys-validator)
 			    ("rmcpplus_conf_privilege" . rmcpplus-conf-privilege-keys-validator)
 			    ("serial_channel" . lan-serial-channel-keys-validator)

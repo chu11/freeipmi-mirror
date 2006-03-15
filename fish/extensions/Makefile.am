@@ -3,6 +3,7 @@ EXTENSIONS =  init.scm shell.scm utils.scm discovery.scm \
 	bc-common.scm bc-user-section.scm bc-lan-serial-channel-section.scm \
 	bc-lan-conf-section.scm bc-lan-conf-auth-section.scm \
 	bc-lan-conf-misc-section.scm \
+	bc-lan-conf-security-keys-section.scm \
 	bc-rmcpplus-conf-privilege-section.scm \
 	bc-serial-conf-section.scm \
 	bc-sol-conf-section.scm \

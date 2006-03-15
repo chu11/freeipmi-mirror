@@ -249,6 +249,11 @@
       (<= (string-length str) 16)
       #f))
 
+(define (valid-security-key? str)
+  (if (string? str)
+      (<= (string-length str) 32)
+      #f))
+
 (define (valid-boolean? str)
   (if (string? str)
       (or (string-ci=? str "yes") (string-ci=? str "no"))

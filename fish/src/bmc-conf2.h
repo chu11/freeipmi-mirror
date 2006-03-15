@@ -168,6 +168,14 @@ int8_t set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 					       uint8_t cipher_suite_id,
 					       uint8_t privilege);
 
+int8_t set_k_r(ipmi_device_t *dev,
+               uint8_t *k_r,
+               uint32_t k_r_len);
+
+int8_t set_k_g(ipmi_device_t *dev,
+               uint8_t *k_g,
+               uint32_t k_g_len);
+
 /***********************************************************/
 int8_t get_bmc_username (ipmi_device_t *dev, 
 			 uint8_t userid, 
@@ -293,6 +301,14 @@ int8_t get_sol_sol_payload_port_number (ipmi_device_t *dev,
 int8_t get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 					       uint8_t cipher_suite_id,
 					       uint8_t *privilege);
+
+int32_t get_k_r(ipmi_device_t *dev,
+                uint8_t *k_r,
+                uint32_t k_r_len);
+
+int32_t get_k_g(ipmi_device_t *dev,
+                uint8_t *k_g,
+                uint32_t k_g_len);
 
 /***********************************************************/
 int8_t check_bmc_user_password (ipmi_device_t *dev, 

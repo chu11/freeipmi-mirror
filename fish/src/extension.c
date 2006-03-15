@@ -482,6 +482,17 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-14 privilege)
    */
 
+  gh_new_procedure ("fi-set-k-r", ex_set_k_r, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-k-r str)
+   */
+  
+  gh_new_procedure ("fi-set-k-g", ex_set_k_g, 1, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-k-g str)
+   */
+
+
   gh_new_procedure ("fi-get-bmc-username", ex_get_bmc_username, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-username USERID)
@@ -745,6 +756,16 @@ install_new_procedures (void)
   gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-14", ex_get_rmcpplus_cipher_suite_id_14, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-14)
+   */
+
+  gh_new_procedure ("fi-get-k-r", ex_get_k_r, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-k-r)
+   */
+  
+  gh_new_procedure ("fi-get-k-g", ex_get_k_g, 0, 0, 0);
+  /* 
+     syntax in scheme: (fi-get-k-g)
    */
 
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);

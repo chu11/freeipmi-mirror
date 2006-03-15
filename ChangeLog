@@ -4,6 +4,8 @@
 
 	* ipmipower/: Add architectural support for other IPMI 2.0 cipher
 	suites.  Cipher suites other than 0 must still be tested.
+
+	* fish/: Add initial K_R and K_G bmc-config support to bmc-config.
 	
 2006-03-14  Albert Chu <chu11@llnl.gov>
 
