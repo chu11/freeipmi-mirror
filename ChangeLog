@@ -1,3 +1,8 @@
+2006-03-16  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/, fish/: Support SOL_Payload_Access configuration
+	for each user in bmc-config.
+
 2006-03-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Minor rmcpplus code cleanup.

@@ -760,6 +760,51 @@ ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 }
 
 SCM 
+ex_set_bmc_user_sol_payload_access (SCM scm_userid, 
+                                    SCM scm_sol_access)
+{
+  uint8_t userid;
+  uint8_t sol_access;
+  uint8_t operation;
+  int retval;
+  
+  userid = gh_scm2long (scm_userid);
+  sol_access = gh_scm2bool (scm_sol_access);
+  
+  /* achu: There is no need to "get" the old configuration like in
+   * other commands.  '0' can be used to make old settings stay the
+   * same and '1' is used to enable or disable SOL payload access
+   * based on the operation type.
+   */
+  if (sol_access)
+    operation = IPMI_SET_USER_PAYLOAD_OPERATION_ENABLE;
+  else
+    operation = IPMI_SET_USER_PAYLOAD_OPERATION_DISABLE;
+    
+  /* standard_payload_1 is the SOL payload bit */
+  retval = set_bmc_user_payload_access (fi_get_ipmi_device (), 
+                                        userid, 
+                                        1,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0,
+                                        0);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
 ex_set_bmc_user_serial_channel_access (SCM scm_userid, 
 				       SCM scm_serial_user_ipmi_messaging, 
 				       SCM scm_serial_user_link_authentication, 
@@ -1906,6 +1951,42 @@ ex_get_bmc_user_lan_channel_access (SCM scm_userid)
   
   return (retval ? SCM_BOOL_F : return_list);
 }
+
+SCM 
+ex_get_bmc_user_sol_payload_access (SCM scm_userid)
+{
+  uint8_t userid;
+  uint8_t standard_payload_1;
+  int retval;
+  SCM return_list = SCM_EOL;
+  
+  userid = gh_scm2long (scm_userid);
+  
+  /* standard_payload_1 is the SOL payload bit */
+  if ((retval = get_bmc_user_payload_access (fi_get_ipmi_device (), 
+                                             userid, 
+                                             &standard_payload_1,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL,
+                                             NULL)) == 0)
+    {
+      return_list = gh_list(gh_bool2scm (standard_payload_1));
+    }
+  
+  return (retval ? SCM_BOOL_F : return_list);
+}
+
 
 SCM 
 ex_get_bmc_user_serial_channel_access (SCM scm_userid)

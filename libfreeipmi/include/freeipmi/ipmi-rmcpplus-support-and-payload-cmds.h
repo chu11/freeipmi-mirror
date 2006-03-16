@@ -85,7 +85,7 @@
 /* achu: See IPMI Spec Set User Payload Access command.  Enable may be
  * 0 or 1, and Disable may be 0 or 1 as well.
  */
-#define IPMI_STANDARD_PAYLOAD_VALID(__val) \
+#define IPMI_PAYLOAD_ACCESS_VALID(__val) \
         (((__val) == 0 \
 	  || (__val) == 1) ? 1 : 0)
 
@@ -152,6 +152,20 @@ int8_t fill_cmd_set_user_payload_access (uint8_t channel_number,
                                          uint8_t user_id,
                                          uint8_t operation,
                                          uint8_t standard_payload_1,
+                                         uint8_t standard_payload_2,
+                                         uint8_t standard_payload_3,
+                                         uint8_t standard_payload_4,
+                                         uint8_t standard_payload_5,
+                                         uint8_t standard_payload_6,
+                                         uint8_t standard_payload_7,
+                                         uint8_t oem_payload_0,
+                                         uint8_t oem_payload_1,
+                                         uint8_t oem_payload_2,
+                                         uint8_t oem_payload_3,
+                                         uint8_t oem_payload_4,
+                                         uint8_t oem_payload_5,
+                                         uint8_t oem_payload_6,
+                                         uint8_t oem_payload_7,
                                          fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_user_payload_access (uint8_t channel_number,

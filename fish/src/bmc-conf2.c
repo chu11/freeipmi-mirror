@@ -213,6 +213,62 @@ set_bmc_user_lan_channel_access (ipmi_device_t *dev,
 			      lan_session_limit);
 }
 
+int8_t
+set_bmc_user_payload_access (ipmi_device_t *dev,
+                             uint8_t userid,
+                             uint8_t operation,
+                             uint8_t standard_payload_1,
+                             uint8_t standard_payload_2,
+                             uint8_t standard_payload_3,
+                             uint8_t standard_payload_4,
+                             uint8_t standard_payload_5,
+                             uint8_t standard_payload_6,
+                             uint8_t standard_payload_7,
+                             uint8_t oem_payload_0,
+                             uint8_t oem_payload_1,
+                             uint8_t oem_payload_2,
+                             uint8_t oem_payload_3,
+                             uint8_t oem_payload_4,
+                             uint8_t oem_payload_5,
+                             uint8_t oem_payload_6,
+                             uint8_t oem_payload_7)
+{
+
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_payload_access_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_set_user_payload_access (dev, 
+                                        get_lan_channel_number (),
+                                        userid, 
+                                        operation,
+                                        standard_payload_1,
+                                        standard_payload_2,
+                                        standard_payload_3,
+                                        standard_payload_4,
+                                        standard_payload_5,
+                                        standard_payload_6,
+                                        standard_payload_7,
+                                        oem_payload_0,
+                                        oem_payload_1,
+                                        oem_payload_2,
+                                        oem_payload_3,
+                                        oem_payload_4,
+                                        oem_payload_5,
+                                        oem_payload_6,
+                                        oem_payload_7,
+                                        obj_cmd_rs) != 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
 int8_t 
 set_bmc_user_serial_channel_access (ipmi_device_t *dev, 
 				    uint8_t userid, 
@@ -1672,6 +1728,150 @@ get_bmc_user_lan_channel_access (ipmi_device_t *dev,
 			      user_restricted_to_callback, 
 			      privilege_limit, 
 			      session_limit);
+}
+
+int8_t
+get_bmc_user_payload_access (ipmi_device_t *dev,
+                             uint8_t userid,
+                             uint8_t *standard_payload_1,
+                             uint8_t *standard_payload_2,
+                             uint8_t *standard_payload_3,
+                             uint8_t *standard_payload_4,
+                             uint8_t *standard_payload_5,
+                             uint8_t *standard_payload_6,
+                             uint8_t *standard_payload_7,
+                             uint8_t *oem_payload_0,
+                             uint8_t *oem_payload_1,
+                             uint8_t *oem_payload_2,
+                             uint8_t *oem_payload_3,
+                             uint8_t *oem_payload_4,
+                             uint8_t *oem_payload_5,
+                             uint8_t *oem_payload_6,
+                             uint8_t *oem_payload_7)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_get_user_payload_access_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_get_user_payload_access (dev, 
+                                        get_lan_channel_number (),
+                                        userid, 
+                                        obj_cmd_rs) != 0)
+    goto cleanup;
+
+  if (standard_payload_1)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_1", &val) < 0)
+        goto cleanup;
+      *standard_payload_1 = val;
+    }
+  
+  if (standard_payload_2)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_2", &val) < 0)
+        goto cleanup;
+      *standard_payload_2 = val;
+    }
+
+  if (standard_payload_3)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_3", &val) < 0)
+        goto cleanup;
+      *standard_payload_3 = val;
+    }
+
+  if (standard_payload_4)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_4", &val) < 0)
+        goto cleanup;
+      *standard_payload_4 = val;
+    }
+
+  if (standard_payload_5)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_5", &val) < 0)
+        goto cleanup;
+      *standard_payload_5 = val;
+    }
+
+  if (standard_payload_6)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_6", &val) < 0)
+        goto cleanup;
+      *standard_payload_6 = val;
+    }
+
+  if (standard_payload_7)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "standard_payload_7", &val) < 0)
+        goto cleanup;
+      *standard_payload_7 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_0", &val) < 0)
+        goto cleanup;
+      *oem_payload_0 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_1", &val) < 0)
+        goto cleanup;
+      *oem_payload_1 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_2", &val) < 0)
+        goto cleanup;
+      *oem_payload_2 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_3", &val) < 0)
+        goto cleanup;
+      *oem_payload_3 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_4", &val) < 0)
+        goto cleanup;
+      *oem_payload_4 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_5", &val) < 0)
+        goto cleanup;
+      *oem_payload_5 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_6", &val) < 0)
+        goto cleanup;
+      *oem_payload_6 = val;
+    }
+
+  if (oem_payload_0)
+    {
+      if (fiid_obj_get (obj_cmd_rs, "oem_payload_7", &val) < 0)
+        goto cleanup;
+      *oem_payload_7 = val;
+    }
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
 }
 
 int8_t 

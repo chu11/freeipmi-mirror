@@ -119,7 +119,7 @@
 		((string-ci=? section-name "user2") 2)
 		((string-ci=? section-name "user3") 3)
 		((string-ci=? section-name "user4") 4)))
-	 (param-list (fi-get-bmc-user-lan-channel-access userid)))
+         (param-list (fi-get-bmc-user-lan-channel-access userid)))
     (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-lan-enable-link-auth section-name enable-link-auth)
@@ -209,6 +209,29 @@
 		((string-ci=? section-name "user4") 4)))
 	 (param-list (fi-get-bmc-user-lan-channel-access userid)))
     (if (list? param-list) (cddddr param-list) #f)))
+
+
+(define (commit-sol-payload-access section-name sol-payload-access)
+  (if (list? sol-payload-access)
+      #t 
+      (cond 
+       ((string-ci=? section-name "user1")
+	(fi-set-bmc-user-sol-payload-access 1 sol-payload-access))
+       ((string-ci=? section-name "user2")
+	(fi-set-bmc-user-sol-payload-access 2 sol-payload-access))
+       ((string-ci=? section-name "user3")
+	(fi-set-bmc-user-sol-payload-access 3 sol-payload-access))
+       ((string-ci=? section-name "user4")
+	(fi-set-bmc-user-sol-payload-access 4 sol-payload-access)))))
+
+(define (checkout-sol-payload-access section-name)
+  (let* ((userid (cond 
+		((string-ci=? section-name "user1") 1)
+		((string-ci=? section-name "user2") 2)
+		((string-ci=? section-name "user3") 3)
+		((string-ci=? section-name "user4") 4)))
+	 (param-list (fi-get-bmc-user-sol-payload-access userid)))
+    (if (list? param-list) (list (car param-list)) #f)))
 
 (define (commit-serial-enable-ipmi-msgs section-name enable-ipmi-msgs)
   (if (list? enable-ipmi-msgs)
@@ -403,6 +426,14 @@
      any->string 
      same-string-ci?
      "Give valid number")
+    ("sol_payload_access" 
+     valid-boolean? 
+     get-boolean 
+     commit-sol-payload-access
+     checkout-sol-payload-access
+     get-boolean-string 
+     same-string-ci?
+     "Possible values: Yes/No")
     ("serial_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 

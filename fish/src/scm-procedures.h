@@ -68,6 +68,7 @@ SCM ex_set_bmc_user_lan_channel_access (SCM scm_userid,
 					SCM scm_lan_user_restricted_to_callback, 
 					SCM scm_lan_privilege_limit, 
 					SCM scm_lan_session_limit);
+SCM ex_set_bmc_user_sol_payload_access (SCM scm_userid, SCM scm_sol_access);
 SCM ex_set_bmc_user_serial_channel_access (SCM scm_userid, 
 					   SCM scm_serial_user_ipmi_messaging, 
 					   SCM scm_serial_user_link_authentication, 
@@ -194,6 +195,7 @@ SCM ex_set_k_g (SCM scm_k_g);
 /*****************/
 SCM ex_get_bmc_username (SCM scm_userid);
 SCM ex_get_bmc_user_lan_channel_access (SCM scm_userid);
+SCM ex_get_bmc_user_sol_payload_access (SCM scm_userid);
 SCM ex_get_bmc_user_serial_channel_access (SCM scm_userid);
 SCM ex_get_bmc_lan_channel_volatile_access ();
 SCM ex_get_bmc_lan_channel_non_volatile_access ();

@@ -31,6 +31,7 @@
 #include <freeipmi/udm/ipmi-lan-cmds-udm.h>
 #include <freeipmi/udm/ipmi-messaging-support-cmds-udm.h>
 #include <freeipmi/udm/ipmi-pef-and-alerting-cmds-udm.h>
+#include <freeipmi/udm/ipmi-rmcpplus-support-and-payload-cmds-udm.h>
 #include <freeipmi/udm/ipmi-sdr-repository-cmds-udm.h>
 #include <freeipmi/udm/ipmi-sensor-cmds-udm.h>
 #include <freeipmi/udm/ipmi-sel-cmds-udm.h>
