@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.13 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.14 2006-03-16 00:47:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,6 +97,8 @@ _security_initialization(void)
   if (setrlimit(RLIMIT_CORE,&rlim) < 0)
     err_exit("setrlimit: %s", strerror(errno));
 #endif
+  if (ipmi_crypt_init() < 0)
+    err_exit("ipmi_crypt_init");
 }
 
 /* _setup

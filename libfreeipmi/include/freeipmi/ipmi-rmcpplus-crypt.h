@@ -55,6 +55,16 @@ extern "C" {
         (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH \
           || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH) ? 1 : 0)
 
+/* ipmi_crypt_init
+ *
+ * Must be called first before anything else that may use crypt
+ * functions.  In threaded programs, must be called before threads are
+ * created.
+ *
+ * Returns 0 on success, -1 on error.
+ */
+int8_t ipmi_crypt_init(void);
+
 int32_t ipmi_crypt_hash(int hash_algorithm, int hash_flags, uint8_t *key, uint32_t key_len, uint8_t *hash_data, uint32_t hash_data_len, uint8_t *digest, uint32_t digest_len);
 
 int32_t ipmi_crypt_hash_digest_len(int hash_algorithm);

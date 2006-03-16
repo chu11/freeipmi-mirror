@@ -6,6 +6,16 @@
 	suites.  Cipher suites other than 0 must still be tested.
 
 	* fish/: Add initial K_R and K_G bmc-config support to bmc-config.
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus-crypt.h
+	(ipmi_crypt_init): Add prototype.
+
+	* libfreeipmi/src/ipmi-rmcpplus-crypt.c (_ipmi_init_crypt): Rename
+	to ipmi_crypt_init.  Un-static function.  Force user to call
+	before using rmcpplus.
+
+	* libfreeipmi/src/ipmi-rmcpplus-crypt.c,
+	ipmipower/src/ipmipower.c: Adjust for API change.
 	
 2006-03-14  Albert Chu <chu11@llnl.gov>
 

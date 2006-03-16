@@ -41,24 +41,23 @@ GCRY_THREAD_OPTION_PTHREAD_IMPL;
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
-static int8_t
-_ipmi_init_crypt(void)
+static int ipmi_crypt_initialized = 0;
+
+int8_t
+ipmi_crypt_init(void)
 {
   gcry_error_t e;
-
-  /* XXX: achu: This is my lazy approach to thread safety.  All crypt
-   * functions must continually re-init.  I need to come up with a
-   * more creative/better method later.
-   */
 
   ERR (!((e = gcry_control(GCRYCTL_SET_THREAD_CBS, &gcry_threads_pthread)) != GPG_ERR_NO_ERROR));
 
   ERR (gcry_check_version(GCRYPT_VERSION));
 
+  /* XXX Revisit - Do we need?? */
   ERR (!((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR));
-
+  
   ERR (!((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR));
 
+  ipmi_crypt_initialized++;
   return (0);
 }
 
@@ -83,7 +82,7 @@ ipmi_crypt_hash(int hash_algorithm,
 	      && digest
 	      && digest_len);
     
-  ERR (!(_ipmi_init_crypt() < 0));
+  ERR(ipmi_crypt_initialized);
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
     gcry_md_algorithm = GCRY_MD_SHA1;
@@ -127,7 +126,7 @@ ipmi_crypt_hash_digest_len(int hash_algorithm)
 
   ERR_EINVAL (IPMI_CRYPT_HASH_ALGORITHM_VALID(hash_algorithm));
 
-  ERR (!(_ipmi_init_crypt() < 0));
+  ERR(ipmi_crypt_initialized);
 
   if (hash_algorithm == IPMI_CRYPT_HASH_SHA1)
     gcry_md_algorithm = GCRY_MD_SHA1;
@@ -187,7 +186,7 @@ _cipher_crypt(int cipher_algorithm,
   if (key && key_len > expected_cipher_key_len)
     key_len = expected_cipher_key_len;
 
-  ERR (!(_ipmi_init_crypt() < 0));
+  ERR(ipmi_crypt_initialized);
 
   ERR (!((e = gcry_cipher_open(&h,
 			       gcry_cipher_algorithm,
@@ -279,7 +278,7 @@ _ipmi_crypt_cipher_info(int cipher_algorithm, int cipher_info)
   else
     gcry_crypt_cipher_info_what = GCRYCTL_GET_BLKLEN;
 
-  ERR (!(_ipmi_init_crypt() < 0));
+  ERR(ipmi_crypt_initialized);
 
   ERR (!((e = gcry_cipher_algo_info(gcry_cipher_algorithm,
 				    gcry_crypt_cipher_info_what,
