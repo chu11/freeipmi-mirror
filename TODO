@@ -33,6 +33,8 @@ ipmi 2.0:
       test
   * rmcpplus priv bmc config
       test
+  * security keys bmc config
+      test
 
 libfreeipmi:
 ------------
