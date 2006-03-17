@@ -19,6 +19,7 @@
 			    ("user2"          . user-keys-validator)
 			    ("user3"          . user-keys-validator)
 			    ("user4"          . user-keys-validator)
+			    ("user5"          . user-keys-validator)
 			    ("lan_channel"    . lan-serial-channel-keys-validator)
 			    ("lan_conf"       . lan-conf-keys-validator)
 			    ("lan_conf_auth"  . lan-conf-auth-keys-validator)

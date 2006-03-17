@@ -99,6 +99,23 @@
 		  "Serial_Privilege_Limit" 
 		  "Serial_Session_Limit"))
 
+(define user5_s '("User5" 
+		  "Username" 
+ 		  "Enable_User" 
+; 		  "Clear_Password" 
+		  "Password" 
+		  "LAN_Enable_IPMI_Msgs" 
+		  "LAN_Enable_Link_Auth" 
+		  "LAN_Enable_Restrict_To_Callback" 
+		  "LAN_Privilege_Limit" 
+		  "LAN_Session_Limit" 
+                  "SOL_Payload_Access"
+		  "Serial_Enable_IPMI_Msgs" 
+		  "Serial_Enable_Link_Auth" 
+		  "Serial_Enable_Restrict_To_Callback" 
+		  "Serial_Privilege_Limit" 
+		  "Serial_Session_Limit"))
+
 (define lan_channel_s '("LAN_Channel" 
 			"Volatile_Access_Mode" 
 			"Volatile_Enable_User_Level_Auth" 
@@ -235,6 +252,7 @@
   (checkout-section user2_s (current-output-port))
   (checkout-section user3_s (current-output-port))
   (checkout-section user4_s (current-output-port))
+  (checkout-section user5_s (current-output-port))
   (checkout-section lan_channel_s (current-output-port))
   (checkout-section lan_conf_s (current-output-port))
   (checkout-section lan_conf_auth_s (current-output-port))
@@ -255,6 +273,7 @@
 	(checkout-section user2_s fp)
 	(checkout-section user3_s fp)
 	(checkout-section user4_s fp)
+	(checkout-section user5_s fp)
 	(checkout-section lan_channel_s fp)
 	(checkout-section lan_conf_s fp)
 	(checkout-section lan_conf_auth_s fp)

@@ -3,6 +3,10 @@
 	* libfreeipmi/, fish/: Support SOL_Payload_Access configuration
 	for each user in bmc-config.
 
+	* fish/extensions/bmc-config.scm, fish/extensions/bc-section.scm,
+	fish/extensions/bc-user-section.scm: Support a 5th user in
+	bmc-config.
+
 2006-03-15  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Minor rmcpplus code cleanup.
