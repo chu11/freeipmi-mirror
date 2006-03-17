@@ -80,10 +80,6 @@ libfreeipmi:
     - then using these, adjust udm-raw
   * 1_5_privilege_level - not really right, do something else
 
-bmc-config:
------------
-add user #5
-
 fish:
 -----
   * Create makefile wrappers to allow fish to work locally in
