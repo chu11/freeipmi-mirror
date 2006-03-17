@@ -503,32 +503,3 @@ ipmi_dump_rmcp_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t p
   return (rv);
 }
 
-void
-ipmi_debug(const char *fmt, ...)
-{
-#if defined (IPMI_SYSLOG) || defined (IPMI_TRACE)
-  va_list ap;
-#endif
-#if defined (IPMI_SYSLOG)
-  char dbgstr[IPMI_ERR_STR_MAX_LEN];
-  char errstr[IPMI_ERR_STR_MAX_LEN];
-  int dbglen, errlen;
-#endif
-
-#if defined (IPMI_SYSLOG)
-  va_start(ap, fmt);
-  dbglen = snprintf (dbgstr, IPMI_ERR_STR_MAX_LEN, 
-                     "%s: %d: %s: ", __FILE__, __LINE__, __PRETTY_FUNCTION__);
-  errlen = vsnprintf (errstr, IPMI_ERR_STR_MAX_LEN, fmt, ap);
-  strncat(dbgstr, errstr, IPMI_ERR_STR_MAX_LEN - dbglen - 1);
-  syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), dbgstr);
-#endif /* !IPMI_SYSLOG */
-
-#if defined (IPMI_TRACE)
-  fprintf (stderr, 
-           "%s: %d: %s: ", __FILE__, __LINE__, __PRETTY_FUNCTION__);
-  vfprintf (stderr, fmt, ap);
-  fprintf (stderr, "\n");
-  fflush (stderr);
-#endif /* !IPMI_TRACE */ 
-}

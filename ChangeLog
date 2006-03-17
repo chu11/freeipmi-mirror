@@ -1,3 +1,19 @@
+2006-03-17  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-debug.c,
+	libfreeipmi/include/freeipmi/ipmi-debug.h: Remove ipmi_debug.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c: Add SOL payload type
+	support.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/src/ipmi-rmcpplus-debug.c: General cleanup.
+
+	* libfreeipmi/src/ipmi-sol-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h
+	(fill_sol_payload_data): New function.
+	
 2006-03-16  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, fish/: Support SOL_Payload_Access configuration

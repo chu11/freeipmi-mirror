@@ -27,6 +27,7 @@
 #ifdef STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
+#include <assert.h>
 #include <errno.h>
 
 #include "freeipmi/ipmi-rmcpplus.h"
@@ -34,6 +35,7 @@
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan.h"
+#include "freeipmi/ipmi-sol-cmds.h"
 #include "freeipmi/rmcp.h"
 
 #include "err-wrappers.h"
@@ -56,13 +58,14 @@ _dump_rmcpplus_session_hdr(int fd,
   unsigned int indx = 0;
   int32_t obj_len, rv = -1;
 
-  ERR_EINVAL (pkt
-	      && payload_type
-	      && payload_authenticated
-	      && payload_encrypted
-	      && session_id
-	      && ipmi_payload_len);
-  
+  assert(pkt
+         && pkt_len
+         && payload_type
+         && payload_authenticated
+         && payload_encrypted
+         && session_id
+         && ipmi_payload_len);
+
   /*
    * Extract auth_type and payload information
    */
@@ -142,10 +145,11 @@ _dump_rmcpplus_payload_data(int fd,
                             char *msg_hdr,
                             char *cmd_hdr,
                             char *trlr_hdr,
+                            uint8_t payload_type,
                             fiid_template_t tmpl_lan_msg_hdr,
                             fiid_template_t tmpl_cmd,
                             uint8_t *pkt,
-                            uint32_t lan_msg_len)
+                            uint32_t ipmi_payload_len)
 {
   fiid_obj_t obj_lan_msg_hdr = NULL;
   fiid_obj_t obj_cmd = NULL;
@@ -154,38 +158,50 @@ _dump_rmcpplus_payload_data(int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  ERR_EINVAL (tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
-	      && tmpl_cmd
-	      && pkt
-	      && lan_msg_len);
-  
+  assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+           || payload_type == IPMI_PAYLOAD_TYPE_SOL)
+          && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               && !(tmpl_lan_msg_hdr
+                    && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                        || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)))
+          && tmpl_cmd
+          && !(payload_type == IPMI_PAYLOAD_TYPE_SOL
+               && !(fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1))
+          && pkt
+          && ipmi_payload_len);
+
   /* Dump message header */
 
-  FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_hdr, tmpl_lan_msg_hdr);
-  FIID_OBJ_SET_ALL_LEN_CLEANUP(len, 
-			       obj_lan_msg_hdr,
-			       pkt + indx,
-			       lan_msg_len - indx);
-  indx += len;
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, msg_hdr, NULL, obj_lan_msg_hdr) < 0));
+  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
+    {
+      FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_hdr, tmpl_lan_msg_hdr);
+      FIID_OBJ_SET_ALL_LEN_CLEANUP(len, 
+                                   obj_lan_msg_hdr,
+                                   pkt + indx,
+                                   ipmi_payload_len - indx);
+      indx += len;
+      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, msg_hdr, NULL, obj_lan_msg_hdr) < 0));
+      
+      if (ipmi_payload_len <= indx)
+        return 0;
 
-  if (lan_msg_len <= indx)
-    return 0;
-
-  ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
-  
-  if ((lan_msg_len - indx) >= obj_lan_msg_trlr_len)
-    obj_cmd_len = (lan_msg_len - indx) - obj_lan_msg_trlr_len;
-  else
-    obj_cmd_len = 0;
+      ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
+      
+      if ((ipmi_payload_len - indx) >= obj_lan_msg_trlr_len)
+        obj_cmd_len = (ipmi_payload_len - indx) - obj_lan_msg_trlr_len;
+      else
+        obj_cmd_len = 0;
+    }
+  else /* payload_type == IPMI_PAYLOAD_TYPE_SOL */
+    obj_cmd_len = ipmi_payload_len;
 
   /* Dump command data */
   if (obj_cmd_len)
     {
       FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
-
+      
       FIID_OBJ_CLEAR (obj_cmd);
       FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
 				    obj_cmd,
@@ -197,25 +213,27 @@ _dump_rmcpplus_payload_data(int fd,
 					   cmd_hdr, 
 					   NULL, 
 					   obj_cmd) < 0));
-
-      if (lan_msg_len <= indx)
+      
+      if (ipmi_payload_len <= indx)
 	return 0;
     }
+  
+  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
+    {
+      /* Dump trailer */
 
-  /* Dump trailer */
-
-  FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
-  FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
-				obj_lan_msg_trlr,
-				pkt + indx,
-				lan_msg_len - indx);
-  indx += len;
-  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
-				       prefix, 
-				       trlr_hdr, 
-				       NULL, 
-				       obj_lan_msg_trlr) < 0));
-
+      FIID_OBJ_CREATE_CLEANUP(obj_lan_msg_trlr, tmpl_lan_msg_trlr);
+      FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
+                                    obj_lan_msg_trlr,
+                                    pkt + indx,
+                                    ipmi_payload_len - indx);
+      indx += len;
+      ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
+                                           prefix, 
+                                           trlr_hdr, 
+                                           NULL, 
+                                           obj_lan_msg_trlr) < 0));
+    }
 
   rv = 0;
  cleanup:
@@ -232,6 +250,7 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                             char *msg_hdr,
                                             char *cmd_hdr,
                                             char *trlr_hdr,
+                                            uint8_t payload_type,
                                             fiid_template_t tmpl_lan_msg_hdr,
                                             fiid_template_t tmpl_cmd,
                                             uint8_t *pkt,
@@ -240,12 +259,20 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
   fiid_obj_t obj_rmcpplus_payload = NULL;
   int32_t rv = -1;
 
-  ERR_EINVAL (tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
-	      && tmpl_cmd
-	      && pkt
-	      && ipmi_payload_len);
+  assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+           || payload_type == IPMI_PAYLOAD_TYPE_SOL)
+          && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               && !(tmpl_lan_msg_hdr
+                    && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                        || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)))
+          && tmpl_cmd
+          && !(payload_type == IPMI_PAYLOAD_TYPE_SOL
+               && !(fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1))
+                    
+          && pkt
+          && ipmi_payload_len);
 
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
@@ -265,6 +292,7 @@ _dump_rmcpplus_payload_confidentiality_none(int fd,
                                              msg_hdr,
                                              cmd_hdr,
                                              trlr_hdr,
+                                             payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
                                              pkt,
@@ -283,6 +311,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    char *msg_hdr,
                                                    char *cmd_hdr,
                                                    char *trlr_hdr,
+                                                   uint8_t payload_type,
                                                    fiid_template_t tmpl_lan_msg_hdr,
                                                    fiid_template_t tmpl_cmd,
                                                    uint8_t *confidentiality_key,
@@ -301,13 +330,21 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 
   /* Note: Confidentiality Key for AES_CBS_128 is K2 */
 
-  ERR_EINVAL (tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
-	      && tmpl_cmd
-	      && confidentiality_key
-	      && pkt
-	      && ipmi_payload_len);
+  assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+           || payload_type == IPMI_PAYLOAD_TYPE_SOL)
+          && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               && !(tmpl_lan_msg_hdr
+                    && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                        || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)))
+          && tmpl_cmd
+          && !(payload_type == IPMI_PAYLOAD_TYPE_SOL
+               && !(fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1))
+          && confidentiality_key
+          && confidentiality_key_len
+          && pkt
+          && ipmi_payload_len);
   
   ERR_CLEANUP (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
   ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LENGTH));
@@ -370,6 +407,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                              msg_hdr,
                                              cmd_hdr,
                                              trlr_hdr,
+                                             payload_type,
                                              tmpl_lan_msg_hdr,
                                              tmpl_cmd,
                                              payload_buf,
@@ -381,44 +419,40 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
 }
 
 static int32_t
-_dump_rmcpplus_payload_special(int fd,
-                               char *prefix,
-                               char *payload_hdr,
-                               char *cmd_hdr,
-                               uint8_t payload_type,
-                               fiid_template_t tmpl_lan_msg_hdr,
-                               fiid_template_t tmpl_cmd,
-                               uint8_t *pkt,
-                               uint32_t ipmi_payload_len)
+_dump_rmcpplus_payload_rakp(int fd,
+                            char *prefix,
+                            char *payload_hdr,
+                            char *cmd_hdr,
+                            uint8_t payload_type,
+                            fiid_template_t tmpl_cmd,
+                            uint8_t *pkt,
+                            uint32_t ipmi_payload_len)
 {
   fiid_obj_t obj_rmcpplus_payload = NULL;
   fiid_obj_t obj_cmd = NULL;
   int32_t rv = -1;
 
-  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-	      && tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
-	      && tmpl_cmd
-	      /* XXX need to dump regardless of matching? */
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rs) != 1))
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1))
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_2) != 1))
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
-	      && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
-		   && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
-	      && pkt);
+  assert ((payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+           || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+          && tmpl_cmd
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rs) != 1))
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1))
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_2) != 1))
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_3) != 1))
+          && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_4) != 1))
+          && pkt
+          && ipmi_payload_len);
   
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
 
@@ -449,7 +483,7 @@ _dump_rmcpplus_payload_special(int fd,
   FIID_OBJ_SET_ALL_CLEANUP(obj_cmd,
 			   pkt,
 			   ipmi_payload_len);
-
+  
   ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
 				       prefix,
 				       cmd_hdr,
@@ -480,25 +514,35 @@ _dump_rmcpplus_payload(int fd,
                        uint8_t *pkt, 
                        uint32_t ipmi_payload_len)
 {
-  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
-	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-	      && ipmi_payload_len
-	      && tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
-	      && tmpl_cmd
-	      && pkt
-	      && ipmi_payload_len);
+  assert ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+           || payload_type == IPMI_PAYLOAD_TYPE_SOL
+           || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+           || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+           || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+          && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+          && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+              || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+          && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+               && !(confidentiality_key
+                    && confidentiality_key_len))
+          && ipmi_payload_len
+          && !(payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               && !(tmpl_lan_msg_hdr
+                    && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                        || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)))
+          && tmpl_cmd
+          && !(payload_type == IPMI_PAYLOAD_TYPE_SOL
+               && !(fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+                    || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1))
+          && pkt
+          && ipmi_payload_len);
 
-  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
+  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI
+      || payload_type == IPMI_PAYLOAD_TYPE_SOL)
     {
       if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
         return _dump_rmcpplus_payload_confidentiality_none(fd,
@@ -507,6 +551,7 @@ _dump_rmcpplus_payload(int fd,
                                                            msg_hdr,
                                                            cmd_hdr,
                                                            trlr_hdr,
+                                                           payload_type,
                                                            tmpl_lan_msg_hdr,
                                                            tmpl_cmd,
                                                            pkt,
@@ -518,6 +563,7 @@ _dump_rmcpplus_payload(int fd,
                                                                   msg_hdr,
                                                                   cmd_hdr,
                                                                   trlr_hdr,
+                                                                  payload_type,
                                                                   tmpl_lan_msg_hdr,
                                                                   tmpl_cmd,
                                                                   confidentiality_key,
@@ -526,15 +572,14 @@ _dump_rmcpplus_payload(int fd,
                                                                   ipmi_payload_len);
     }
   else
-    return _dump_rmcpplus_payload_special(fd,
-                                          prefix,
-                                          payload_hdr,
-                                          cmd_hdr,
-                                          payload_type,
-                                          tmpl_lan_msg_hdr,
-                                          tmpl_cmd,
-                                          pkt,
-                                          ipmi_payload_len);
+    return _dump_rmcpplus_payload_rakp(fd,
+                                       prefix,
+                                       payload_hdr,
+                                       cmd_hdr,
+                                       payload_type,
+                                       tmpl_cmd,
+                                       pkt,
+                                       ipmi_payload_len);
 
   /* NOT REACHED */
   return (-1);
@@ -555,12 +600,9 @@ _dump_rmcpplus_session_trlr(int fd,
   unsigned int indx = 0;
   int32_t rv = -1;
 
-  ERR_EINVAL ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
-	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
-	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
-	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128));
+  assert (IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm));
 
-  if (!session_id)
+  if (!session_id || payload_authenticated == IPMI_PAYLOAD_FLAG_UNAUTHENTICATED)
     return (0);
 
   if (payload_authenticated)
@@ -693,9 +735,13 @@ ipmi_dump_rmcpplus_packet (int fd,
   int32_t rv = -1;
 
   ERR_EINVAL (pkt
-	      && tmpl_lan_msg_hdr
-	      && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-		  || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1)
+              && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+              && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+                  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+              && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128
+                   && !(confidentiality_key
+                        && confidentiality_key_len))
 	      && tmpl_cmd);
 
   ERR_CLEANUP (!(ipmi_dump_setup(fd, prefix, hdr, prefix_buf, IPMI_MAX_PAYLOAD_LENGTH) < 0));
@@ -730,6 +776,45 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   if (pkt_len <= indx)
     return 0;
+
+  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
+               || payload_type == IPMI_PAYLOAD_TYPE_SOL
+	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+	      && ipmi_payload_len);
+
+  if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
+    {
+      ERR_EINVAL (tmpl_lan_msg_hdr
+                  && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                      || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1));
+      FIID_TEMPLATE_COMPARE(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
+    }
+  else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
+    ERR_EINVAL ((fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+                 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+                 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1));
+
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_rq);
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_rs);
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_1);
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_2);
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_3);
+  else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_4);
 
   /* Dump Payload */
 

@@ -154,6 +154,14 @@ extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_volatile_bit_ra
 extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_channel_rs;
 extern fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_port_number_rs;
 
+int8_t fill_sol_payload_data (uint8_t packet_sequence_number,
+                              uint8_t packet_ack_nack_sequence_number,
+                              uint8_t accepted_character_count,
+                              uint8_t operation_status,
+                              uint8_t *character_data,
+                              uint32_t character_data_len,
+                              fiid_obj_t obj_sol_payload);
+
 int8_t fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
                                                     uint8_t packet_ack_nack_sequence_number,
                                                     uint8_t accepted_character_count,
