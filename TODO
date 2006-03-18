@@ -79,7 +79,6 @@ libfreeipmi:
   * assemble_raw, unassemble_raw
     - then using these, adjust udm-raw
   * 1_5_privilege_level - not really right, do something else
-  * SOL assembly/disassembly
 
 fish:
 -----
