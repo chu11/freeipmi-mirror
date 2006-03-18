@@ -13,6 +13,8 @@
 	* libfreeipmi/src/ipmi-sol-cmds.c,
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h
 	(fill_sol_payload_data): New function.
+
+	* fish/: Add temporary workaround for configuration of K_G and K_R.
 	
 2006-03-16  Albert Chu <chu11@llnl.gov>
 

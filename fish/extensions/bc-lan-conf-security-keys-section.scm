@@ -42,7 +42,6 @@
     ;;  VALUE-CONVERSION-PROC 
     ;;  DIFF-PROC 
     ;;  DOC-STRING)
-    ;; XXX k_r should support hex, not strings
     ("k_r" 
      valid-security-key?
      get-string
@@ -50,7 +49,7 @@
      checkout-k-r
      get-string
      same-string-ci?
-     "String or blank to clear")
+     "Hex String")
     ("k_g" 
      valid-security-key?
      get-string
@@ -58,7 +57,7 @@
      checkout-k-g
      get-string
      same-string-ci?
-     "String or blank to clear")
+     "Hex String")
     ;; You can add more in the form of 
     ;; (KEYSTRING 
     ;;  VALIDATION-PROC 

@@ -1871,7 +1871,6 @@ ex_set_rmcpplus_cipher_suite_id_14 (SCM scm_privilege)
   return _set_rmcpplus_cipher_suite_id_privilege(14, scm_privilege);
 }
 
-/* XXX support hex */
 SCM
 ex_set_k_r (SCM scm_k_r)
 {
@@ -2840,7 +2839,6 @@ ex_get_rmcpplus_cipher_suite_id_14 ()
   return _get_rmcpplus_cipher_suite_id_privilege(14);
 }
 
-/* XXX support hex */
 SCM
 ex_get_k_r ()
 {

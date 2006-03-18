@@ -1519,24 +1519,122 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
   return (rv);
 }
 
-/* XXX handle non-strings */
+static int8_t
+_char_to_val(char c)
+{
+  switch (c)
+    {
+    case '0':
+      return 0x0;
+    case '1':
+      return 0x1;
+    case '2':
+      return 0x2;
+    case '3':
+      return 0x3;
+    case '4':
+      return 0x4;
+    case '5':
+      return 0x5;
+    case '6':
+      return 0x6;
+    case '7':
+      return 0x7;
+    case '8':
+      return 0x8;
+    case '9':
+      return 0x9;
+    case 'a':
+    case 'A':
+      return 0xA;
+    case 'b':
+    case 'B':
+      return 0xB;
+    case 'c':
+    case 'C':
+      return 0xC;
+    case 'd':
+    case 'D':
+      return 0xD;
+    case 'e':
+    case 'E':
+      return 0xE;
+    case 'f':
+    case 'F':
+      return 0xF;
+    default:
+      return -1;
+    }
+
+  /* NOT REACHED */
+  return 0;
+}
+
+static int32_t
+_convert_hex_string_to_bytes(char *str,
+                             unsigned int str_len,
+                             char *buf,
+                             unsigned int buf_len)
+{
+  int i, buf_count = 0;
+
+  /* needs to be even */
+  if (str_len % 2)
+    return -1;
+
+  if (buf_len / 2 <= str_len)
+    return -1;
+
+  /* Skip 0x if its listed */
+  if (!strcmp(str, "0x"))
+    {
+      str += 2;
+      str_len -=  2;
+    }
+
+  for (i = 0; i < str_len; i+=2)
+    {
+      int8_t c1, c2, c;
+
+      if ((c1 = _char_to_val(str[i])) < 0)
+        return -1;
+      if ((c2 = _char_to_val(str[i+1])) < 0)
+        return -1;
+
+      c = (c1 << 4) | c2;
+
+      buf[i/2] = c;
+      buf_count++;
+    }
+
+  return buf_count;
+}
+
 int8_t
 set_k_r(ipmi_device_t *dev,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t buf[1024];
+  uint32_t buf_len = 0;
   int8_t rv = -1;
   
+  if (!k_r)
+    goto cleanup;
+
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
     goto cleanup;
 
+  if ((buf_len = _convert_hex_string_to_bytes((char *)k_r, k_r_len, buf, 1024)) < 0)
+    goto cleanup;
+  
   if (ipmi_cmd_set_channel_security_keys (dev, 
                                           get_lan_channel_number (), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R,
-                                          k_r,
-                                          k_r_len,
+                                          buf,
+                                          buf_len,
                                           obj_cmd_rs) != 0)
     goto cleanup;
 
@@ -1553,17 +1651,22 @@ set_k_g(ipmi_device_t *dev,
         uint32_t k_g_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t buf[1024];
+  uint32_t buf_len = 0;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
+    goto cleanup;
+
+  if ((buf_len = _convert_hex_string_to_bytes((char *)k_g, k_g_len, buf, 1024)) < 0)
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
                                           get_lan_channel_number (), 
                                           IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY,
                                           IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_G,
-                                          NULL,
-                                          0,
+                                          buf,
+                                          buf_len,
                                           obj_cmd_rs) != 0)
     goto cleanup;
   
@@ -3135,13 +3238,87 @@ get_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
   return (rv);
 }
 
-/* XXX handle non-strings */
+static int8_t
+_val_to_char(int8_t hw)
+{
+  switch (hw)
+    {
+    case 0x0:
+      return '0';
+    case 0x1:
+      return '1';
+    case 0x2:
+      return '2';
+    case 0x3:
+      return '3';
+    case 0x4:
+      return '4';
+    case 0x5:
+      return '5';
+    case 0x6:
+      return '6';
+    case 0x7:
+      return '7';
+    case 0x8:
+      return '8';
+    case 0x9:
+      return '9';
+    case 0xA:
+      return 'A';
+    case 0xB:
+      return 'B';
+    case 0xC:
+      return 'C';
+    case 0xD:
+      return 'D';
+    case 0xE:
+      return 'E';
+    case 0xF:
+      return 'F';
+    default:
+      return -1;
+    }
+
+  /* NOT REACHED */
+  return 0;
+}
+
+static int32_t
+_convert_bytes_to_hex_string(char *buf,
+                             unsigned int buf_len,
+                             char *str,
+                             unsigned int str_len)
+{
+  int i, str_count = 0;
+
+  if (str_len <= buf_len * 2)
+    return -1;
+
+  for (i = 0; i < buf_len; i++)
+    {
+      char c1, c2;
+
+      if ((c1 = _val_to_char(buf[i] & 0x0F)) < 0)
+        return -1;
+      if ((c2 = _val_to_char((buf[i+1] & 0xF0) >> 4)) < 0)
+        return -1;
+
+      str[i*2] = c2;
+      str[i*2 + 1] = c1;
+      str_count+=2;
+    }
+
+  return str_count;
+}
+
 int32_t
 get_k_r(ipmi_device_t *dev,
         uint8_t *k_r,
         uint32_t k_r_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t buf[1024];
+  uint32_t buf_len;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
@@ -3156,7 +3333,10 @@ get_k_r(ipmi_device_t *dev,
                                           obj_cmd_rs) != 0)
     goto cleanup;
 
-  if ((rv = fiid_obj_get_data (obj_cmd_rs, "key_value", k_r, k_r_len)) < 0)
+  if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
+    goto cleanup;
+
+  if ((rv = _convert_bytes_to_hex_string(buf, buf_len, k_r, k_r_len)) < 0)
     goto cleanup;
   
  cleanup:
@@ -3171,6 +3351,8 @@ get_k_g(ipmi_device_t *dev,
         uint32_t k_g_len)
 {
   fiid_obj_t obj_cmd_rs = NULL;
+  uint8_t buf[1024];
+  uint32_t buf_len;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
@@ -3185,7 +3367,10 @@ get_k_g(ipmi_device_t *dev,
                                           obj_cmd_rs) != 0)
     goto cleanup;
   
-  if ((rv = fiid_obj_get_data (obj_cmd_rs, "key_value", k_g, k_g_len)) < 0)
+  if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
+    goto cleanup;
+
+  if ((rv = _convert_bytes_to_hex_string(buf, buf_len, k_g, k_g_len)) < 0)
     goto cleanup;
   
  cleanup:
