@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.43 2006-03-15 19:09:11 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.44 2006-03-19 18:14:03 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -411,10 +411,6 @@ _ipmi_1_5_packet_create(ipmipower_powercmd_t ip,
   Fiid_obj_clear(ip->obj_rmcp_hdr_req);
   Fiid_obj_clear(ip->obj_lan_session_hdr_req);
   Fiid_obj_clear(ip->obj_lan_msg_hdr_req);
-
-  if (fill_rmcp_hdr_ipmi(ip->obj_rmcp_hdr_req) < 0)
-    err_exit("_ipmi_1_5_packet_create(%s: %d): fill_rmcp_hdr_ipmi: %s", 
-             ip->ic->hostname, ip->protocol_state, strerror(errno));
 
   if (fill_rmcp_hdr_ipmi(ip->obj_rmcp_hdr_req) < 0)
     err_exit("_ipmi_1_5_packet_create(%s: %d): fill_rmcp_hdr_ipmi: %s", 
