@@ -7,6 +7,8 @@
 	* ipmipower/, libfreeipmi/: Change open_session_rq to
 	open_session_request and open_session_rs to open_session_response
 	to match IPMI spec.
+
+	* libfreeipmi/include/Makefile.am: Add forgotten header file.
 	
 2006-03-17  Albert Chu <chu11@llnl.gov>
 
