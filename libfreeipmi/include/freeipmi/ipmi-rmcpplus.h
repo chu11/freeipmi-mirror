@@ -175,9 +175,8 @@ extern fiid_template_t tmpl_rmcpplus_session_trlr;
 
 extern fiid_template_t tmpl_rmcpplus_payload;
 
-extern fiid_template_t tmpl_rmcpplus_open_session_rq;
-extern fiid_template_t tmpl_rmcpplus_open_session_rs;
-
+extern fiid_template_t tmpl_rmcpplus_open_session_request;
+extern fiid_template_t tmpl_rmcpplus_open_session_response;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_1;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_2;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_3;

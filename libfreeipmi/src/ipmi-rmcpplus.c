@@ -84,7 +84,7 @@ fiid_template_t tmpl_rmcpplus_payload =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_rmcpplus_open_session_rq = 
+fiid_template_t tmpl_rmcpplus_open_session_request = 
   {
     {8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},        
     {4,   "requested_maximum_privilege_level", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -112,7 +112,7 @@ fiid_template_t tmpl_rmcpplus_open_session_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_rmcpplus_open_session_rs = 
+fiid_template_t tmpl_rmcpplus_open_session_response = 
   {
     {8,   "message_tag", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,   "rmcpplus_status_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -320,7 +320,7 @@ fill_rmcpplus_open_session (uint8_t message_tag,
 	      && IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_open_session_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_rmcpplus_open_session_request);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 

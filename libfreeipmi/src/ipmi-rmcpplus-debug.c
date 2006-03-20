@@ -440,9 +440,9 @@ _dump_rmcpplus_payload_rakp(int fd,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
           && tmpl_cmd
           && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rq) != 1))
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_request) != 1))
           && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_rs) != 1))
+               && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_open_session_response) != 1))
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
                && (fiid_template_compare(tmpl_cmd, tmpl_rmcpplus_rakp_message_1) != 1))
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
@@ -468,9 +468,9 @@ _dump_rmcpplus_payload_rakp(int fd,
 				       obj_rmcpplus_payload) < 0));
 
   if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_rq);
+    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_request);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_rs);
+    FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_open_session_response);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_rmcpplus_rakp_message_1);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
@@ -806,9 +806,9 @@ ipmi_dump_rmcpplus_packet (int fd,
                  || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1));
 
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_rq);
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_request);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_rs);
+    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_response);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_1);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)

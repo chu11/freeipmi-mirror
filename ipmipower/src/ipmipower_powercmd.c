@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.52 2006-03-15 19:09:11 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.53 2006-03-20 19:16:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -330,8 +330,8 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
   ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
-  ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_rq); 
-  ip->obj_open_session_res = Fiid_obj_create(tmpl_rmcpplus_open_session_rs); 
+  ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_request); 
+  ip->obj_open_session_res = Fiid_obj_create(tmpl_rmcpplus_open_session_response); 
   ip->obj_rakp_message_1_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_1); 
   ip->obj_rakp_message_2_res = Fiid_obj_create(tmpl_rmcpplus_rakp_message_2); 
   ip->obj_rakp_message_3_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_3); 

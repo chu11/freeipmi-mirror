@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.46 2006-03-20 18:47:33 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.47 2006-03-20 19:16:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -75,9 +75,9 @@ ipmipower_packet_cmd_template(ipmipower_powercmd_t ip, packet_type_t pkt)
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
     return &tmpl_cmd_get_channel_cipher_suites_rs[0];
   else if (pkt == OPEN_SESSION_REQ)
-    return &tmpl_rmcpplus_open_session_rq[0];
+    return &tmpl_rmcpplus_open_session_request[0];
   else if (pkt == OPEN_SESSION_RES)
-    return &tmpl_rmcpplus_open_session_rs[0];
+    return &tmpl_rmcpplus_open_session_response[0];
   else if (pkt == RAKP_MESSAGE_1_REQ)
     return &tmpl_rmcpplus_rakp_message_1[0];
   else if (pkt == RAKP_MESSAGE_2_RES)

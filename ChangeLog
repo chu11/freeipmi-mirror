@@ -3,6 +3,10 @@
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c
 	(ipmi_dump_rmcpplus_packet): Output packet raw data if it cannot
 	be unassembled.
+
+	* ipmipower/, libfreeipmi/: Change open_session_rq to
+	open_session_request and open_session_rs to open_session_response
+	to match IPMI spec.
 	
 2006-03-17  Albert Chu <chu11@llnl.gov>
 

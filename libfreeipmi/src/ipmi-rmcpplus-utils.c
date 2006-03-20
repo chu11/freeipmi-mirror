@@ -1013,7 +1013,7 @@ ipmi_rmcpplus_check_status_code(fiid_obj_t obj_cmd,
 
   ERR_EINVAL (fiid_obj_valid(obj_cmd)
 	      && RMCPPLUS_STATUS_VALID(status_code)
-	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_response) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
@@ -1033,8 +1033,8 @@ ipmi_rmcpplus_check_message_tag(fiid_obj_t obj_cmd, uint8_t message_tag)
   int32_t len;
 
   ERR_EINVAL (fiid_obj_valid(obj_cmd)
-	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) == 1
-		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_request) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_response) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_3) == 1
@@ -1055,8 +1055,8 @@ ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd, uint32_t remot
   int32_t len;
 
   ERR_EINVAL (fiid_obj_valid(obj_cmd)
-	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) == 1
-		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) == 1
+	      && (fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_request) == 1
+		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_response) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) == 1
 		  || fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_4) == 1));
   

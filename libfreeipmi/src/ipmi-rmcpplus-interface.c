@@ -268,7 +268,7 @@ _construct_payload_rakp(uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
           && fiid_obj_valid(obj_cmd)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-               && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rq) != 1)
+               && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_request) != 1)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
                && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_1) != 1)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
@@ -676,7 +676,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
     ERR_EINVAL ((fiid_obj_template_compare(obj_cmd, tmpl_sol_payload_data) == 1
                  || fiid_obj_template_compare(obj_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1));
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_rq);
+    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_request);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
     FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_1);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
@@ -1069,7 +1069,7 @@ _deconstruct_payload_rakp(uint8_t payload_type,
            || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
           && fiid_obj_valid(obj_cmd)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-               && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_rs) != 1)
+               && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_open_session_response) != 1)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
                && fiid_obj_template_compare(obj_cmd, tmpl_rmcpplus_rakp_message_2) != 1)
           && !(payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4
@@ -1323,7 +1323,7 @@ unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                  || fiid_obj_template_compare(obj_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1));
   
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_rs);
+    FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_open_session_response);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
     FIID_OBJ_TEMPLATE_COMPARE(obj_cmd, tmpl_rmcpplus_rakp_message_2);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
