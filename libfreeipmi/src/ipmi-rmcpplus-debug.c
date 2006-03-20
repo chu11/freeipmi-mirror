@@ -776,21 +776,23 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   if (pkt_len <= indx)
     return 0;
-
-  ERR_EINVAL ((payload_type == IPMI_PAYLOAD_TYPE_IPMI
-               || payload_type == IPMI_PAYLOAD_TYPE_SOL
-	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
-	       || payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
-	       || payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
-              && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-	      && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
-		  || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
-	      && ipmi_payload_len);
-
+  
+  /* achu: If the packet is really messed up, dump the packet in raw form */
+  if ((payload_type != IPMI_PAYLOAD_TYPE_IPMI
+       && payload_type != IPMI_PAYLOAD_TYPE_SOL
+       && payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST
+       && payload_type != IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE
+       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1
+       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2
+       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3
+       && payload_type != IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
+      || !IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
+      || !IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+      || !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
+           || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
+      || !ipmi_payload_len)
+    goto dump_extra;
+  
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
     {
       ERR_EINVAL (tmpl_lan_msg_hdr
@@ -854,6 +856,7 @@ ipmi_dump_rmcpplus_packet (int fd,
     return 0;
   
   /* Dump extra stuff if packet is longer than expected */
+ dump_extra:
   if ((pkt_len - indx) > 0)
     {
       FIID_OBJ_CREATE_CLEANUP(obj_unexpected_data, tmpl_unexpected_data);

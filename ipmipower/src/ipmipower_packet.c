@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.45 2006-03-19 18:25:11 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.46 2006-03-20 18:47:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -667,6 +667,10 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         payload_type = IPMI_PAYLOAD_TYPE_IPMI;
 
+      /* achu: "session_id" above is for the session headers.  This is
+       * for the RAKP session setup protocol.  The values will be
+       * different.
+       */
       if (pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ)
         Fiid_obj_get(ip->obj_open_session_res,

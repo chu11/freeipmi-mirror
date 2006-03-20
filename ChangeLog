@@ -1,3 +1,9 @@
+2006-03-20  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c
+	(ipmi_dump_rmcpplus_packet): Output packet raw data if it cannot
+	be unassembled.
+	
 2006-03-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-debug.c,
