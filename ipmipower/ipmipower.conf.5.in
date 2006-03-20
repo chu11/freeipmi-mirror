@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.18 2006-03-14 23:36:28 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.19 2006-03-20 23:23:56 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,6 +122,9 @@ Specify if null session id's should be accepted by default.
 .TP
 .I accept_unexpected_authcode enable|disable
 Specify if unexpected nonnull authcodes should be accepted by default.
+.TP
+.I cipher_suite_records_all_oem enable|disable
+Specify if all cipher suite records should be assumed to have OEM formats.
 .TP
 .I timeout ms
 Specify the timeout in ms.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.21 2006-03-14 17:24:08 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.22 2006-03-20 23:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,25 +87,26 @@ static void
 _cmd_advanced(void) 
 {
   cbuf_printf(ttyout, 
-              "authentication_type str              - set a new authentication type\n"
-              "privilege str                        - set a new privilege type\n"
-	      "ipmi_version str                     - set a new ipmi version\n"
-              "cipher_suite_id str                  - set a new cipher suite id\n"
-              "on-if-off [on|off]                   - toggle on-if-off functionality\n"
-              "outputtype str                       - set a new output type\n"
-              "force-permsg-authentication [on|off] - toggle force-permsg-auth functionality\n"
-              "accept-session-id-zero [on|off]      - toggle accept-session-id-zero functionality\n"
-              "check-unexpected-authcode [on|off]   - toggle check-unexpected-authcode functionality\n");
+              "authentication_type str               - set a new authentication type\n"
+              "privilege str                         - set a new privilege type\n"
+	      "ipmi_version str                      - set a new ipmi version\n"
+              "cipher_suite_id str                   - set a new cipher suite id\n"
+              "on-if-off [on|off]                    - toggle on-if-off functionality\n"
+              "outputtype str                        - set a new output type\n"
+              "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
+              "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
+              "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
+              "cipher-suite-records-all-oem [on|off] - toggle cipher-suite-records-all-oem functionality\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
-              "debug [on|off]                       - toggle debug to stderr\n"
-              "ipmidump [on|off]                    - toggle IPMI dump output\n"
-              "rmcpdump [on|off]                    - toggle RMCP dump output\n"
-	      "log [on|off]                         - toggle logging\n"
-	      "logfile [str]                        - set a new logfile (no str for default)\n");
+              "debug [on|off]                        - toggle debug to stderr\n"
+              "ipmidump [on|off]                     - toggle IPMI dump output\n"
+              "rmcpdump [on|off]                     - toggle RMCP dump output\n"
+	      "log [on|off]                          - toggle logging\n"
+	      "logfile [str]                         - set a new logfile (no str for default)\n");
 #endif /* ifndef NDEBUG */
   cbuf_printf(ttyout,
-              "config                               - output current configuration\n");
+              "config                                - output current configuration\n");
 } 
 
 static void
@@ -613,6 +614,8 @@ _cmd_config(void)
               (conf->accept_session_id_zero) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Check-Unexpected-Authcode:    %s\n",
               (conf->check_unexpected_authcode) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "Cipher-Suite-Records-All-OEM: %s\n",
+              (conf->cipher_suite_records_all_oem) ? "enabled" : "disabled");
               
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
@@ -787,6 +790,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
             else if (strcmp(argv[0], "check-unexpected-authcode") == 0)
               _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
+            else if (strcmp(argv[0], "cipher-suite-records-all-oem") == 0)
+              _cmd_set_flag(argv, &conf->cipher_suite_records_all_oem, "cipher-suite-records-all-oem");
 #ifndef NDEBUG
             else if (strcmp(argv[0], "debug") == 0) 
 	      {

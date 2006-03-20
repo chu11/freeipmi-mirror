@@ -794,12 +794,9 @@ ipmi_dump_rmcpplus_packet (int fd,
     goto dump_extra;
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
-    {
-      ERR_EINVAL (tmpl_lan_msg_hdr
-                  && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-                      || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1));
-      FIID_TEMPLATE_COMPARE(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq);
-    }
+    ERR_EINVAL (tmpl_lan_msg_hdr
+                && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+                    || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1));
   else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
     ERR_EINVAL ((fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
                  || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1

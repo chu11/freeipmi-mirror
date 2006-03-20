@@ -1626,7 +1626,7 @@ set_k_r(ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if ((buf_len = _convert_hex_string_to_bytes((char *)k_r, k_r_len, buf, 1024)) < 0)
+  if ((buf_len = _convert_hex_string_to_bytes((char *)k_r, k_r_len, (char *)buf, 1024)) < 0)
     goto cleanup;
   
   if (ipmi_cmd_set_channel_security_keys (dev, 
@@ -1658,7 +1658,7 @@ set_k_g(ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_channel_security_keys_rs)))
     goto cleanup;
 
-  if ((buf_len = _convert_hex_string_to_bytes((char *)k_g, k_g_len, buf, 1024)) < 0)
+  if ((buf_len = _convert_hex_string_to_bytes((char *)k_g, k_g_len, (char *)buf, 1024)) < 0)
     goto cleanup;
 
   if (ipmi_cmd_set_channel_security_keys (dev, 
@@ -3336,7 +3336,7 @@ get_k_r(ipmi_device_t *dev,
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
 
-  if ((rv = _convert_bytes_to_hex_string(buf, buf_len, k_r, k_r_len)) < 0)
+  if ((rv = _convert_bytes_to_hex_string((char *)buf, buf_len, (char *)k_r, k_r_len)) < 0)
     goto cleanup;
   
  cleanup:
@@ -3370,7 +3370,7 @@ get_k_g(ipmi_device_t *dev,
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
 
-  if ((rv = _convert_bytes_to_hex_string(buf, buf_len, k_g, k_g_len)) < 0)
+  if ((rv = _convert_bytes_to_hex_string((char *)buf, buf_len, (char *)k_g, k_g_len)) < 0)
     goto cleanup;
   
  cleanup:

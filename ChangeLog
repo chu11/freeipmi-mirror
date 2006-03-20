@@ -13,6 +13,18 @@
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c,
 	libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
 	ipmipower/src/ipmipower_powercmd.c: Fix various "CIHPER" typos.
+
+	* ipmipower/src/ipmipower_powercmd.c
+	(_calculate_cipher_suite_ids): Fix parse bugs.
+
+	* libfreeipmi/src/ipmi-rmcpplus.c,
+	libfreeipmi/src/ipmi-cipher-suite-spec.c: Fix oem_iana length
+	error.
+
+	* ipmipower/: Add --cipher-suite-records-all-oem workaround for
+	incorrectly formmatted cipher suite records.
+
+	* fish/, libfreeipmie/: Fix various compiler warnings and bugs.
 	
 2006-03-17  Albert Chu <chu11@llnl.gov>
 

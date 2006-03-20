@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.54 2006-03-20 22:07:39 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.55 2006-03-20 23:23:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1192,7 +1192,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
       Fiid_obj_clear(obj_cipher_suite_record_header);
 
       len = Fiid_obj_set_all(obj_cipher_suite_record_header,
-                             ip->cipher_suite_record_data,
+                             ip->cipher_suite_record_data + bytes_parsed,
                              ip->cipher_suite_record_data_bytes - bytes_parsed);
 
       Fiid_obj_get(obj_cipher_suite_record_header,
@@ -1221,7 +1221,8 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           goto cleanup;
         }
 
-      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD)
+      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD
+          && !conf->cipher_suite_records_all_oem)
         {
           uint64_t cipher_suite_id;
 
@@ -1241,13 +1242,27 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
         }
       else
         {
-          /* achu: We currently don't support OEM ciphers.  So we're really
-           * just doing this to move along in the record.
+          /* achu: We currently don't support OEM ciphers, so don't
+             store any cipher ids unless we're assuming they're
+             actually non-OEM.
            */
           Fiid_obj_clear(obj_oem_cipher_suite_record);
           len = Fiid_obj_set_all(obj_oem_cipher_suite_record,
                                  ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
+          
+          if (conf->cipher_suite_records_all_oem)
+            {
+              uint64_t cipher_suite_id;
+
+              Fiid_obj_get(obj_oem_cipher_suite_record,
+                           "oem_cipher_suite_id",
+                           &cipher_suite_id);
+              
+              ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
+              ip->cipher_suite_ids_num++;
+            }
+
           bytes_parsed += len;
         }
     }

@@ -598,8 +598,8 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "authentication_type");
   ERR_EINVAL (len == req_len);
 
-  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "reserved");
-  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "reserved");
+  FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "reserved1");
+  FIID_TEMPLATE_FIELD_LEN(req_len, tmpl_rmcpplus_session_hdr, "reserved1");
   ERR_EINVAL (len == req_len);
 
   FIID_OBJ_FIELD_LEN (len, obj_rmcpplus_session_hdr, "payload_type");

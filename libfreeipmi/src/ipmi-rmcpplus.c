@@ -47,11 +47,12 @@
 fiid_template_t tmpl_rmcpplus_session_hdr = 
   {
     {4,   "authentication_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4,   "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,   "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6,   "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,   "payload_type.authenticated", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,   "payload_type.encrypted", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {32,  "oem_iana", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {24,  "oem_iana", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
+    {8,   "reserved2", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {16,  "oem_payload_id", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_FIXED},
     {32,  "session_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 0h outside of a session, seperate #'s if authenticated or unauthenticated session */    
@@ -221,13 +222,14 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
   FIID_OBJ_CLEAR (obj_rmcpplus_session_hdr);
 
   FIID_OBJ_SET (obj_rmcpplus_session_hdr, "authentication_type", IPMI_AUTHENTICATION_TYPE_RMCPPLUS);
-  FIID_OBJ_SET (obj_rmcpplus_session_hdr, "reserved", 0);
+  FIID_OBJ_SET (obj_rmcpplus_session_hdr, "reserved1", 0);
   FIID_OBJ_SET (obj_rmcpplus_session_hdr, "payload_type", payload_type);
   FIID_OBJ_SET (obj_rmcpplus_session_hdr, "payload_type.authenticated", payload_authenticated);
   FIID_OBJ_SET (obj_rmcpplus_session_hdr, "payload_type.encrypted", payload_encrypted);
   if (payload_type == IPMI_PAYLOAD_TYPE_OEM_EXPLICIT)
     {
       FIID_OBJ_SET (obj_rmcpplus_session_hdr, "oem_iana", oem_iana);
+      FIID_OBJ_SET (obj_rmcpplus_session_hdr, "reserved2", 0);
       FIID_OBJ_SET (obj_rmcpplus_session_hdr, "oem_payload_id", oem_payload_id);
     }
   FIID_OBJ_SET (obj_rmcpplus_session_hdr, "session_id", session_id);

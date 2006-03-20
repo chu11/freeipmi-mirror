@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.30 2006-03-14 23:36:28 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.31 2006-03-20 23:23:56 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -240,6 +240,13 @@ Forces
 to check packet authcodes even if no authcode should be received.
 This option has been specifically implemented to get around a
 compliance issue.  For more information, see WORKAROUNDS below.
+.TP
+.I "-W, --cipher-suite-records-all-oem"
+Forces
+.B ipmipower
+to assume all cipher suite records are OEM formatted records.
+This option has been specifically implemented to get around a 
+compliance issue.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -439,6 +446,8 @@ toggle force-permsg-authentication functionality.
 toggle accept-session-id-zero functionality.
 .I "check-unexpected-authcode [on|off]"
 toggle check-unexpected-authcode functionality.
+.I "cipher-suite-records-all-oem [on|off]"
+toggle cipher-suite-records-all-oem functionality.
 .TP
 .I "force
 .if @WITH_DEBUG@ \{
@@ -613,6 +622,13 @@ Authentication is disabled, but actually require it for the protocol.
 In order to work around this issue, the -P (--force-permsg-authentication)
 option must be set.  The option will force Per Message Authentication
 to be used no matter what is advertised by the remote BMC.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): The remote BMC formats Cipher Suite Records with the OEM
+record format despite headers that indicate non-OEM records.  In order
+to work around this issue, the -W (--cipher-suite-records-all-oem)
+option must be set.  This option will force OEM record formats to
+always be assumed.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
