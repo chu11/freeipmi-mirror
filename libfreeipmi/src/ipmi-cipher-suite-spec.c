@@ -63,7 +63,7 @@ ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
 
   /* To avoid gcc warnings, add +1 to comparison */
   ERR_EINVAL((cipher_suite_id + 1) >= (IPMI_CIPHER_SUITE_ID_MIN + 1)
-	     && cipher_suite_id <= IPMI_CIHPER_SUITE_ID_MAX);
+	     && cipher_suite_id <= IPMI_CIPHER_SUITE_ID_MAX);
 
   if (cipher_suite_id == 0)
     a = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;

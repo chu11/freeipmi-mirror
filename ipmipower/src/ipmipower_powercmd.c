@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.53 2006-03-20 19:16:34 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.54 2006-03-20 22:07:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1212,7 +1212,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           goto cleanup;
         }
 
-      if (!IPMI_CIHPER_SUITE_RECORD_FORMAT_VALID(record_format))
+      if (!IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(record_format))
         {
           dbg("_calculate_cipher_suite_ids(%s:%d): "
               "invalid record format: %x",
@@ -1227,7 +1227,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
 
           Fiid_obj_clear(obj_cipher_suite_record);
           len = Fiid_obj_set_all(obj_cipher_suite_record,
-                                 ip->cipher_suite_record_data,
+                                 ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
 
           Fiid_obj_get(obj_cipher_suite_record,
@@ -1246,7 +1246,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
            */
           Fiid_obj_clear(obj_oem_cipher_suite_record);
           len = Fiid_obj_set_all(obj_oem_cipher_suite_record,
-                                 ip->cipher_suite_record_data,
+                                 ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
           bytes_parsed += len;
         }

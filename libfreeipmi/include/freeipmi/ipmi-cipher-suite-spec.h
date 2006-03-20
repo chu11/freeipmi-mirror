@@ -38,14 +38,14 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_TAG_BITS_RECORD                     0x3
 
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD              0x00
-#define IPMI_CIHPER_SUITE_RECORD_FORMAT_OEM                   0x01
+#define IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM                   0x01
 
-#define IPMI_CIHPER_SUITE_RECORD_FORMAT_VALID(__val) \
+#define IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(__val) \
   (((__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD \
-    || (__val) == IPMI_CIHPER_SUITE_RECORD_FORMAT_OEM) ? 1 : 0)
+    || (__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM) ? 1 : 0)
 
 #define IPMI_CIPHER_SUITE_ID_MIN                              0
-#define IPMI_CIHPER_SUITE_ID_MAX                              14
+#define IPMI_CIPHER_SUITE_ID_MAX                              14
 
 extern fiid_template_t tmpl_cmd_cipher_suite_record_header;
 extern fiid_template_t tmpl_cmd_cipher_suite_record;

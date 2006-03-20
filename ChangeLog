@@ -9,6 +9,10 @@
 	to match IPMI spec.
 
 	* libfreeipmi/include/Makefile.am: Add forgotten header file.
+
+	* libfreeipmi/src/ipmi-cipher-suite-spec.c,
+	libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h,
+	ipmipower/src/ipmipower_powercmd.c: Fix various "CIHPER" typos.
 	
 2006-03-17  Albert Chu <chu11@llnl.gov>
 
