@@ -24,10 +24,12 @@
 	* fish/extensions/bc-common.scm: Add Rmcpplus Conf Privilege for
 	Callback.
 
-	* ipmipower/: Add --cipher-suite-records-all-oem workaround for
-	incorrectly formmatted cipher suite records.  Additional cipher
-	suite id support.
-
+	* ipmipower/: Add cipher suite id support.  Add
+	--cipher-suite-records-all-oem workaround for incorrectly
+	formmatted cipher suite records.  Add
+	--intel-2-0-session-activation workaround.  Thanks to the ipmitool
+	folks for figuring out how to deal with the RAKP4 issue.
+	
 	* fish/, ipmipower/, libfreeipmi/: Fix various compiler warnings
 	and bugs.
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.33 2006-03-21 00:45:49 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.34 2006-03-21 01:48:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -765,6 +765,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
   uint64_t managed_system_session_id;
+  uint8_t authentication_algorithm;
   int8_t rv;
 
   assert(ip != NULL);
@@ -779,7 +780,43 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
 					      managed_system_guid,
 					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
 
-  if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(ip->authentication_algorithm,
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * For some reason, the intel ipmi 2.0 responds with the integrity
+   * check value based on the integrity algorithm instead of the
+   * authentication algorithm.
+   * 
+   * Thanks to the ipmitool folks (ipmitool.sourceforge.net) for this
+   * one.  I don't know if I would have been able to figure this one
+   * out on my own.
+   *
+   */
+
+  if (conf->intel_2_0_session_activation)
+    {
+      if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
+        authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
+      else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
+        {
+          /* XXX: I still need to figure out how to deal with the SHA1_96 part.*/
+          authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
+          err_exit("ipmipower_check_rakp_4_integrity_check_value: SHA1_96 TODO");
+        }
+      else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
+        authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
+      else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
+        {
+          /* XXX: I still need to figure this out out */
+          err_exit("ipmipower_check_rakp_4_integrity_check_value: MD5_128 TODO");
+        }
+    }
+  else
+    authentication_algorithm = ip->authentication_algorithm;
+
+  if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(authentication_algorithm,
                                                                      ip->sik_key_ptr,
                                                                      ip->sik_key_len,
 								     ip->remote_console_random_number,

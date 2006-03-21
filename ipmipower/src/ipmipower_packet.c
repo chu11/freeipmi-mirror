@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.47 2006-03-20 19:16:34 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.48 2006-03-21 01:48:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -855,11 +855,28 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       int32_t managed_system_random_number_len;
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t key_exchange_authentication_code_len;
+      uint8_t name_only_lookup;
 
       managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
                                                            "managed_system_random_number",
                                                            managed_system_random_number,
                                                            IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition)
+       *
+       * For some reason we have to create this key with the name only
+       * lookup turned off.  I was skeptical about this actually being
+       * a bug until I found out the ipmitool folks implemented the
+       * same workaround.
+       */
+
+      if (conf->intel_2_0_session_activation)
+        name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
+      else
+        name_only_lookup = ip->name_only_lookup;
 
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(ip->authentication_algorithm,
                                                                                                          password,
@@ -867,7 +884,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                                                                                          managed_system_random_number,
                                                                                                          managed_system_random_number_len,
                                                                                                          ip->remote_console_session_id,
-                                                                                                         ip->name_only_lookup,
+                                                                                                         name_only_lookup,
                                                                                                          ip->privilege,
                                                                                                          username,
                                                                                                          (username) ? strlen((char *)username) : 0,

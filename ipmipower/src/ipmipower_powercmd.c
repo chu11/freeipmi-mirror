@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.56 2006-03-21 00:45:49 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.57 2006-03-21 01:48:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1220,6 +1220,19 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           ipmipower_output(MSG_TYPE_BMCERROR, ip->ic->hostname);
           goto cleanup;
         }
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition)
+       *
+       * Despite advertising a standard non-OEM cipher suite record
+       * format (i.e. the tag bits and record_format were legitimate)
+       * and having non-OEM cipher suite ids (i.e. those listed in
+       * table 22-19 of the IPMI 2.0 spec), the cipher suite records
+       * are consistent with OEM cipher suite records and are 5 bytes
+       * long.
+       */
 
       if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD
           && !conf->cipher_suite_records_all_oem)
