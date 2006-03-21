@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.36 2006-03-21 02:51:35 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.37 2006-03-21 05:24:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -759,26 +759,102 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   return (int)rv;
 }
 
+/* _intel_2_0_md5_128_rakp_4_integrity_check_value
+ *
+ * Specifically for intel ipmi 2.0 workaround.
+ *
+ * Returns 1 if rakp 4 integrity check value is valid, 0 if not
+ */
+static int
+_intel_2_0_md5_128_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint8_t buf[IPMI_MAX_PAYLOAD_LENGTH];
+  uint32_t buf_index = 0;
+  uint8_t digest[IPMI_MAX_PAYLOAD_LENGTH];
+  int32_t digest_len;
+  uint8_t integrity_check_value[IPMI_MAX_PAYLOAD_LENGTH];
+  int32_t integrity_check_value_len;
+  uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
+  int32_t managed_system_guid_len;
+  uint64_t managed_system_session_id;
+  uint64_t val;
+  int8_t rv;
+
+  assert(ip != NULL);
+  assert(ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128);
+  assert(pkt == RAKP_MESSAGE_4_RES);
+
+  integrity_check_value_len = Fiid_obj_get_data(ip->obj_rakp_message_4_res,
+						"integrity_check_value",
+						integrity_check_value,
+						IPMI_MAX_PAYLOAD_LENGTH);
+  
+  if (integrity_check_value_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
+    return 0;
+
+  Fiid_obj_get(ip->obj_open_session_res,
+	       "managed_system_session_id",
+	       &val);
+  managed_system_session_id = val;
+  
+  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+					      "managed_system_guid",
+					      managed_system_guid,
+					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
+  memset(buf, '\0', IPMI_MAX_PAYLOAD_LENGTH);
+  memcpy(buf + buf_index, ip->remote_console_random_number, IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH);
+  buf_index += IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH;
+  buf[buf_index] = (managed_system_session_id & 0x000000ff);
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x0000ff00) >> 8;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0x00ff0000) >> 16;
+  buf_index++;
+  buf[buf_index] = (managed_system_session_id & 0xff000000) >> 24;
+  buf_index++;
+  memcpy(buf + buf_index, managed_system_guid, managed_system_guid_len);
+  buf_index += managed_system_guid_len;
+
+  if ((digest_len = ipmi_crypt_hash(IPMI_CRYPT_HASH_MD5,
+				    0, /* No HMAC */
+				    ip->sik_key_ptr,
+				    ip->sik_key_len,
+				    buf,
+				    buf_index,
+				    digest,
+				    IPMI_MAX_PAYLOAD_LENGTH)) < 0)
+    err_exit("_intel_2_0_md5_128_rakp_4_integrity_check_value(%s:%d): "
+	     "ipmi_crypt_hash: %s",
+	     ip->ic->hostname, ip->protocol_state, strerror(errno));
+
+  if (digest_len < IPMI_HMAC_MD5_DIGEST_LENGTH)
+    err_exit("_intel_2_0_md5_128_rakp_4_integrity_check_value(%s:%d): "
+	     "invalid digest_len: %d",
+	     ip->ic->hostname, ip->protocol_state, digest_len);
+  
+  rv = memcmp(digest, integrity_check_value, IPMI_HMAC_MD5_DIGEST_LENGTH) ? 0 : 1;
+  
+  if (!rv)
+    dbg("_intel_2_0_md5_128_rakp_4_integrity_check_value(%s:%d): "
+	"rakp 4 check failed",
+        ip->ic->hostname, ip->protocol_state);
+
+  return (int)rv;
+}
+
 int
 ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
-  uint64_t managed_system_session_id;
+  uint32_t managed_system_session_id;
   uint8_t authentication_algorithm;
+  uint64_t val;
   int8_t rv;
 
   assert(ip != NULL);
   assert(pkt == RAKP_MESSAGE_4_RES);
-
-  Fiid_obj_get(ip->obj_open_session_res,
-	       "managed_system_session_id",
-	       &managed_system_session_id);
-
-  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
-					      "managed_system_guid",
-					      managed_system_guid,
-					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
 
   /* IPMI Workaround (achu)
    *
@@ -803,6 +879,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         {
+	  /* return _intel_2_0_md5_128_rakp_4_integrity_check_value(ip, pkt); */
           /* XXX: I still need to figure this one out */
           err_exit("ipmipower_check_rakp_4_integrity_check_value: MD5_128 TODO");
         }
@@ -810,12 +887,22 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
   else
     authentication_algorithm = ip->authentication_algorithm;
 
+  Fiid_obj_get(ip->obj_open_session_res,
+	       "managed_system_session_id",
+	       &val);
+  managed_system_session_id = val;
+
+  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+					      "managed_system_guid",
+					      managed_system_guid,
+					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+
   if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(authentication_algorithm,
                                                                      ip->sik_key_ptr,
                                                                      ip->sik_key_len,
 								     ip->remote_console_random_number,
 								     IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-								     (uint32_t)managed_system_session_id,
+								     managed_system_session_id,
 								     managed_system_guid,
 								     managed_system_guid_len,
 								     ip->obj_rakp_message_4_res)) < 0)
