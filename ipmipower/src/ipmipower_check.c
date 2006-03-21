@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.35 2006-03-21 02:50:30 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.36 2006-03-21 02:51:35 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -790,9 +790,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
    * authentication algorithm.
    * 
    * Thanks to the ipmitool folks (ipmitool.sourceforge.net) for this
-   * one.  I don't know if I would have been able to figure this one
-   * out on my own.
-   *
+   * one.  Would have taken me awhile to figure this one out :-)
    */
 
   if (conf->intel_2_0_session_activation)
