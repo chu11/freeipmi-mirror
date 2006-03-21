@@ -76,8 +76,9 @@ ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
       || cipher_suite_id == 1
       || cipher_suite_id == 6)
     i = IPMI_INTEGRITY_ALGORITHM_NONE;
-  else if ((cipher_suite_id >= 2 && cipher_suite_id <= 5)
-	   || (cipher_suite_id >= 7 && cipher_suite_id <= 10))
+  else if (cipher_suite_id >= 2 && cipher_suite_id <= 5)
+    i = IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96;
+  else if (cipher_suite_id >= 7 && cipher_suite_id <= 10)
     i = IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128;
   else /* cipher_suite_id >= 11 && cipher_suite_id <= 14 */
     i = IPMI_INTEGRITY_ALGORITHM_MD5_128;

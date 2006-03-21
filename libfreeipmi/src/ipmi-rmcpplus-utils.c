@@ -57,6 +57,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
                    uint32_t remote_console_random_number_len,
                    uint8_t *managed_system_random_number,
                    uint32_t managed_system_random_number_len,
+                   uint8_t name_only_lookup, 
                    uint8_t requested_privilege_level,
                    uint8_t *user_name,
                    uint8_t user_name_len,
@@ -67,6 +68,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
     computed_digest_len;
   unsigned int hash_data_len;
   uint8_t hash_data[IPMI_MAX_KEY_DATA_LENGTH];
+  uint8_t priv_byte = 0;
 
   /* k_g can be NULL, indicating a empty k_g */
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
@@ -76,6 +78,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 	      && managed_system_random_number
 	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+              && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
 	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
 	      && !(user_name && !user_name_len)
 	      && sik
@@ -119,8 +122,13 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
 	 managed_system_random_number_len);
   hash_data_len += managed_system_random_number_len;
 
+  /* This part of the spec is wierd, gotta hack it out */
+  if (name_only_lookup)
+     priv_byte |= 0x10;
+  priv_byte |= (requested_privilege_level & 0xF);
+
   memcpy(hash_data + hash_data_len, 
-	 (void *)&requested_privilege_level, 
+	 (void *)&priv_byte, 
 	 sizeof(uint8_t));
   hash_data_len += sizeof(uint8_t);
 
@@ -334,6 +342,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
                                      uint32_t remote_console_random_number_len, 
                                      uint8_t *managed_system_random_number,
                                      uint32_t managed_system_random_number_len,
+                                     uint8_t name_only_lookup,
                                      uint8_t requested_privilege_level,
                                      uint8_t *user_name, 
                                      uint8_t user_name_len,
@@ -393,6 +402,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
 		  && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 		  && managed_system_random_number
 		  && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
+                  && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
 		  && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
 		  && !(user_name && !user_name_len));
       
@@ -403,6 +413,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
                                                    remote_console_random_number_len,
                                                    managed_system_random_number,
                                                    managed_system_random_number_len,
+                                                   name_only_lookup,
                                                    requested_privilege_level,
                                                    user_name,
                                                    user_name_len,
@@ -487,7 +498,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
                                                        uint32_t managed_system_random_number_len, 
                                                        uint32_t remote_console_session_id, 
                                                        uint8_t name_only_lookup, 
-                                                       uint8_t requested_maximum_privilege_level, 
+                                                       uint8_t requested_privilege_level, 
                                                        uint8_t *user_name, 
                                                        uint8_t user_name_length, 
                                                        uint8_t *key_exchange_authentication_code, 
@@ -505,7 +516,8 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	      && managed_system_random_number
 	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
-	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+              && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
 	      && !(user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
 	      && !(!user_name && user_name_length)
 	      && key_exchange_authentication_code);
@@ -546,7 +558,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   /* This part of the spec is wierd, gotta hack it out */
   if (name_only_lookup)
      priv_byte |= 0x10;
-  priv_byte |= (requested_maximum_privilege_level & 0xF);
+  priv_byte |= (requested_privilege_level & 0xF);
   buf[buf_index] = priv_byte;
   buf_index++;
   buf[buf_index] = user_name_length;
@@ -664,7 +676,7 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
 								    uint8_t *managed_system_guid,
 								    uint32_t managed_system_guid_len,
 								    uint8_t name_only_lookup,
-								    uint8_t requested_maximum_privilege_level,
+								    uint8_t requested_privilege_level,
 								    uint8_t *user_name,
 								    uint8_t user_name_length,
 								    fiid_obj_t obj_cmd)
@@ -688,7 +700,8 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
 	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
 	      && managed_system_guid
 	      && !(managed_system_guid_len < IPMI_MANAGED_SYSTEM_GUID_LENGTH)
-	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+              && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
 	      && !(user_name && user_name_length > IPMI_MAX_USER_NAME_LENGTH)
 	      && !(!user_name && user_name_length)
 	      && fiid_obj_valid(obj_cmd));
@@ -750,7 +763,7 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
   /* This part of the spec is wierd, gotta hack it out */
   if (name_only_lookup)
     priv_byte |= 0x10;
-  priv_byte |= (requested_maximum_privilege_level & 0xF);
+  priv_byte |= (requested_privilege_level & 0xF);
   buf[buf_index] = priv_byte;
   buf_index++;
   buf[buf_index] = user_name_length;

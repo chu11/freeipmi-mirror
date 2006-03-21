@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.57 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.58 2006-03-21 18:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -87,16 +87,16 @@ static uint8_t cipher_suite_id_ranking[] =
     3,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, AES-CBC-128 */
     8,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, AES-CBC-128 */
     12,                /* RAKP-HMAC-MD5, MD5-128, AES-CBC-128 */
+#endif
     2,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, NONE */
     7,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, NONE */
     11,                /* RAKP-HMAC-MD5, MD5-128, NONE */
-#endif
     1,                 /* RAKP-HMAC-SHA1, NONE, NONE */
     6,                 /* RAKP-HMAC-MD5, NONE, NONE */
     0,                 /* NONE, NONE, NONE */
   };
 /* XXX support more later */
-static unsigned int cipher_suite_id_ranking_count = 3;
+static unsigned int cipher_suite_id_ranking_count = 6;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -1567,6 +1567,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
                                            managed_system_random_number_len,
+                                           ip->name_only_lookup,
                                            ip->privilege,
                                            username,
                                            (username) ? strlen((char *)username) : 0,

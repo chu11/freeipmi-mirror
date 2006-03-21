@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.45 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.46 2006-03-21 18:17:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -336,16 +336,16 @@ typedef enum
     CIPHER_SUITE_ID_AUTO                  = 0x01,
     CIPHER_SUITE_ID_0                     = 0x02,
     CIPHER_SUITE_ID_1                     = 0x03,
-    /* CIPHER_SUITE_ID_2                     = 0x04, */
+    CIPHER_SUITE_ID_2                     = 0x04,
     /* CIPHER_SUITE_ID_3                     = 0x05, */
     /* xRC4 CIPHER_SUITE_ID_4                     = 0x06, */
     /* xRC4 CIPHER_SUITE_ID_5                     = 0x07, */
     CIPHER_SUITE_ID_6                     = 0x08,
-    /* CIPHER_SUITE_ID_7                     = 0x09, */
+    CIPHER_SUITE_ID_7                     = 0x09,
     /* CIPHER_SUITE_ID_8                     = 0x0A, */
     /* xRC4 CIPHER_SUITE_ID_9                     = 0x0B, */
     /* xRC4 CIPHER_SUITE_ID_10                    = 0x0C, */
-    /* CIPHER_SUITE_ID_11                    = 0x0D, */
+    CIPHER_SUITE_ID_11                    = 0x0D,
     /* CIPHER_SUITE_ID_12                    = 0x0E, */
     /* xRC4 CIPHER_SUITE_ID_13                    = 0x0F, */
     /* xRC4 CIPHER_SUITE_ID_14                    = 0x10, */
@@ -355,20 +355,24 @@ typedef enum
 #define CIPHER_SUITE_ID_VALID(__c) \
   ((__c) == CIPHER_SUITE_ID_0 \
     || (__c) == CIPHER_SUITE_ID_1 \
-    || (__c) == CIPHER_SUITE_ID_6)
+    || (__c) == CIPHER_SUITE_ID_2 \
+    || (__c) == CIPHER_SUITE_ID_6 \
+    || (__c) == CIPHER_SUITE_ID_7 \
+    || (__c) == CIPHER_SUITE_ID_11)
 
-    /* || (__c) == CIPHER_SUITE_ID_2 \ */
-    /* || (__c) == CIPHER_SUITE_ID_3 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_4 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_5 \ */
-    /* || (__c) == CIPHER_SUITE_ID_7 \ */
-    /* || (__c) == CIPHER_SUITE_ID_8 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_9 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_10 \ */
-    /* || (__c) == CIPHER_SUITE_ID_11 \ */
-    /* || (__c) == CIPHER_SUITE_ID_12 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_13 \ */
-    /* xRC4 || (__c) == CIPHER_SUITE_ID_14 \ */
+#if 0
+
+    || (__c) == CIPHER_SUITE_ID_3 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_4 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_5 \
+    || (__c) == CIPHER_SUITE_ID_8 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_9 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_10 \
+    || (__c) == CIPHER_SUITE_ID_12 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_13 \
+    xRC4 || (__c) == CIPHER_SUITE_ID_14 \
+
+#endif
 
 #define CIPHER_SUITE_ID_VALID_OR_AUTO(__c) \
   ((__c) == CIPHER_SUITE_ID_AUTO \
