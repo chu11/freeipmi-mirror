@@ -7,6 +7,8 @@
 	ipmi_calculate_rmcpplus_session_keys): Handle name only lookup
 	flag in sik calculations.
 
+	* ipmipower/: Support additional cipher algorithms.
+
 2006-03-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c
