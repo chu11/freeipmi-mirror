@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite.c,v 1.5 2006-03-21 18:17:58 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite.c,v 1.6 2006-03-21 19:27:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -55,9 +55,9 @@ ipmipower_cipher_suite_id_index(char *str)
     return CIPHER_SUITE_ID_1;
   else if (!strcasecmp(str, "2"))
     return CIPHER_SUITE_ID_2;
-#if 0
   else if (!strcasecmp(str, "3"))
     return CIPHER_SUITE_ID_3;
+#if 0
   else if (!strcasecmp(str, "4"))
     return CIPHER_SUITE_ID_4;
   else if (!strcasecmp(str, "5"))
@@ -109,10 +109,10 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_2:
       return "2";
       break;
-#if 0
     case CIPHER_SUITE_ID_3:
       return "3";
       break;
+#if 0
     case CIPHER_SUITE_ID_4:
       return "4";
       break;
@@ -178,10 +178,10 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_2:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None";
       break;
-#if 0
     case CIPHER_SUITE_ID_3:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128";
       break;
+#if 0
     case CIPHER_SUITE_ID_4:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128";
       break;
@@ -235,7 +235,7 @@ ipmipower_cipher_suite_id_list(void)
   return "auto, 0, 1, 2, 3, 6, 7, 8, 11, 12";
   return "auto, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14";
 #endif
-  return "auto, 0, 1, 2, 6, 7, 11";
+  return "auto, 0, 1, 2, 3, 6, 7, 11";
 }
 
 uint8_t
@@ -255,10 +255,10 @@ ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_2:
       return 2;
       break;
-#if 0
     case CIPHER_SUITE_ID_3:
       return 3;
       break;
+#if 0
     case CIPHER_SUITE_ID_4:
       return 4;
       break;

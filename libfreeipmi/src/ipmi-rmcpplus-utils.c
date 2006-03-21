@@ -441,7 +441,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
       ERR_EMSGSIZE (!(integrity_key_buf_len < k1_len));
       
       memcpy(integrity_key_buf, k1, k1_len);
-      *integrity_key_len = k1_len;
+      integrity_key_buf_len = k1_len;
     }
   else /* IPMI_INTEGRITY_ALGORITHM_MD5_128 */
     {
@@ -455,8 +455,10 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
 	  memcpy(integrity_key_buf,
 		 authentication_code_data,
 		 authentication_code_data_len);
-	  *integrity_key_len = authentication_code_data_len;
+	  integrity_key_buf_len = authentication_code_data_len;
 	}
+      else
+        integrity_key_buf_len = 0;
     }
   
   if (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
@@ -478,7 +480,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
       ERR_EMSGSIZE (!(confidentiality_key_buf_len < k2_len));
       
       memcpy(confidentiality_key_buf, k2, k2_len);
-      *confidentiality_key_len = k2_len;
+      confidentiality_key_buf_len = k2_len;
     }
   
   *sik_key = sik_key_buf;

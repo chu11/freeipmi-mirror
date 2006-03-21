@@ -454,7 +454,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
 
   ERR (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
 
-  /* Note: Integrity Key for HMAC_SHA1_95 and HMAC_MD5_128 is K1 */
+  /* Note: Integrity Key for HMAC_SHA1_96 and HMAC_MD5_128 is K1 */
            
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
     {

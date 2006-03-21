@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.58 2006-03-21 18:17:58 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.59 2006-03-21 19:27:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,8 +83,8 @@ static List pending = NULL;
 static uint8_t cipher_suite_id_ranking[] =
   {
     /* XXX support more later*/
-#if 0
     3,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, AES-CBC-128 */
+#if 0
     8,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, AES-CBC-128 */
     12,                /* RAKP-HMAC-MD5, MD5-128, AES-CBC-128 */
 #endif
@@ -96,7 +96,7 @@ static uint8_t cipher_suite_id_ranking[] =
     0,                 /* NONE, NONE, NONE */
   };
 /* XXX support more later */
-static unsigned int cipher_suite_id_ranking_count = 6;
+static unsigned int cipher_suite_id_ranking_count = 7;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -1579,7 +1579,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            &(ip->confidentiality_key_len)) < 0)
     err_exit("_calculate_cipher_keys(%s:%d): ipmi_calculate_rmcpplus_session_keys: %s",
              ip->ic->hostname, ip->protocol_state, strerror(errno));
-  
+
   return 0;
 }
 
