@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.34 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.35 2006-03-21 02:50:30 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -800,16 +800,12 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96)
-        {
-          /* XXX: I still need to figure out how to deal with the SHA1_96 part.*/
-          authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
-          err_exit("ipmipower_check_rakp_4_integrity_check_value: SHA1_96 TODO");
-        }
+	authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1;
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5;
       else if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
         {
-          /* XXX: I still need to figure this out out */
+          /* XXX: I still need to figure this one out */
           err_exit("ipmipower_check_rakp_4_integrity_check_value: MD5_128 TODO");
         }
     }
