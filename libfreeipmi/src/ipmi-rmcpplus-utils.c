@@ -554,7 +554,7 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   if (user_name && user_name_length)
     {
       memcpy(buf + buf_index, user_name, user_name_length);
-      buf_index++;
+      buf_index += user_name_length;
     }
 
   ERR (!((digest_len = ipmi_crypt_hash(hash_algorithm,

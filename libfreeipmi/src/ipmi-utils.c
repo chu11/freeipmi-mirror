@@ -123,7 +123,7 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
 #endif /* IPMI_SYSLOG */
 #if defined (IPMI_TRACE)
       fprintf(stderr,
-              "ipmi_check_completion_code: completion code invalid: %x",
+              "ipmi_check_completion_code: completion code invalid: %x\n",
               (uint8_t)completion_code_recv);
       fflush(stderr);
 #endif /* IPMI_TRACE */

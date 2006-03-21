@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.31 2006-03-20 23:23:56 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.32 2006-03-21 00:45:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -171,8 +171,8 @@ cipher suite id's are currently supported:
 auto - Select the most secure cipher suite available from the remote machine
 .sp
 0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
-\." .sp
-\." 1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
 \." .sp
 \." 2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
 \." .sp
@@ -181,8 +181,8 @@ auto - Select the most secure cipher suite available from the remote machine
 \." 4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
 \." .sp
 \." 5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
-\." .sp
-\." 6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
+.sp
+6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
 \." .sp
 \." 7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
 \." .sp
@@ -434,7 +434,7 @@ specify the ipmi version, auto, 1.5 or 2.0.
 .TP
 \."  XXX
 .I "cipher_suite_id str"
-specify the cipher suite id, auto, 0.
+specify the cipher suite id, auto, 0, 1, 6.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP

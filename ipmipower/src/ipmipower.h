@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.43 2006-03-20 23:23:56 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.44 2006-03-21 00:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -329,17 +329,18 @@ typedef enum
    (__p) <= PRIVILEGE_TYPE_ADMIN)
 
 /* Cipher_Suite Ids */
+/* XXX */
 typedef enum 
   { 
     CIPHER_SUITE_ID_INVALID               = 0x00,
     CIPHER_SUITE_ID_AUTO                  = 0x01,
     CIPHER_SUITE_ID_0                     = 0x02,
-    /* CIPHER_SUITE_ID_1                     = 0x03, */
+    CIPHER_SUITE_ID_1                     = 0x03,
     /* CIPHER_SUITE_ID_2                     = 0x04, */
     /* CIPHER_SUITE_ID_3                     = 0x05, */
     /* xRC4 CIPHER_SUITE_ID_4                     = 0x06, */
     /* xRC4 CIPHER_SUITE_ID_5                     = 0x07, */
-    /* CIPHER_SUITE_ID_6                     = 0x08, */
+    CIPHER_SUITE_ID_6                     = 0x08,
     /* CIPHER_SUITE_ID_7                     = 0x09, */
     /* CIPHER_SUITE_ID_8                     = 0x0A, */
     /* xRC4 CIPHER_SUITE_ID_9                     = 0x0B, */
@@ -352,13 +353,14 @@ typedef enum
 
 /* XXX */
 #define CIPHER_SUITE_ID_VALID(__c) \
-  ((__c) == CIPHER_SUITE_ID_0)
-    /* || (__c) == CIPHER_SUITE_ID_1 \ */
+  ((__c) == CIPHER_SUITE_ID_0 \
+    || (__c) == CIPHER_SUITE_ID_1 \
+    || (__c) == CIPHER_SUITE_ID_6)
+
     /* || (__c) == CIPHER_SUITE_ID_2 \ */
     /* || (__c) == CIPHER_SUITE_ID_3 \ */
     /* xRC4 || (__c) == CIPHER_SUITE_ID_4 \ */
     /* xRC4 || (__c) == CIPHER_SUITE_ID_5 \ */
-    /* || (__c) == CIPHER_SUITE_ID_6 \ */
     /* || (__c) == CIPHER_SUITE_ID_7 \ */
     /* || (__c) == CIPHER_SUITE_ID_8 \ */
     /* xRC4 || (__c) == CIPHER_SUITE_ID_9 \ */

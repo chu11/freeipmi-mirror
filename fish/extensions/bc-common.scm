@@ -59,7 +59,8 @@
 (define (get-privilege-level-value-string value)
   (string-capitalize (assoc-vref privilege-level-values value)))
 
-(define rmcpplus-max-privilege-values '(("unused"        . 1) 
+(define rmcpplus-max-privilege-values '(("unused"          . 0) 
+                                        ("callback"        . 1)
 					("user"            . 2) 
 					("operator"        . 3) 
 					("administrator"   . 4) 

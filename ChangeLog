@@ -21,11 +21,16 @@
 	libfreeipmi/src/ipmi-cipher-suite-spec.c: Fix oem_iana length
 	error.
 
-	* ipmipower/: Add --cipher-suite-records-all-oem workaround for
-	incorrectly formmatted cipher suite records.
+	* fish/extensions/bc-common.scm: Add Rmcpplus Conf Privilege for
+	Callback.
 
-	* fish/, libfreeipmie/: Fix various compiler warnings and bugs.
-	
+	* ipmipower/: Add --cipher-suite-records-all-oem workaround for
+	incorrectly formmatted cipher suite records.  Additional cipher
+	suite id support.
+
+	* fish/, ipmipower/, libfreeipmi/: Fix various compiler warnings
+	and bugs.
+
 2006-03-17  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-debug.c,

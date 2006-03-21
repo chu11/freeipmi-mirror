@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.55 2006-03-20 23:23:56 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.56 2006-03-21 00:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -90,13 +90,13 @@ static uint8_t cipher_suite_id_ranking[] =
     2,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, NONE */
     7,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, NONE */
     11,                /* RAKP-HMAC-MD5, MD5-128, NONE */
+#endif
     1,                 /* RAKP-HMAC-SHA1, NONE, NONE */
     6,                 /* RAKP-HMAC-MD5, NONE, NONE */
-#endif
     0,                 /* NONE, NONE, NONE */
   };
 /* XXX support more later */
-static unsigned int cipher_suite_id_ranking_count = 1;
+static unsigned int cipher_suite_id_ranking_count = 3;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -378,9 +378,9 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry)
    */
   ip->ic->ipmi_requester_sequence_number_counter++;
   
-  if (pkt == PROTOCOL_STATE_OPEN_SESSION_SENT
-      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT
-      || pkt == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
+  if (pkt == OPEN_SESSION_REQ
+      || pkt == RAKP_MESSAGE_1_REQ
+      || pkt == RAKP_MESSAGE_3_REQ)
     ip->message_tag_count++;
   else if (ip->ipmi_version == IPMI_VERSION_2_0
 	   && (pkt == CLOSE_SESSION_REQ

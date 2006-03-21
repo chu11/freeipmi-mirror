@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_cipher_suite.c,v 1.3 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower_cipher_suite.c,v 1.4 2006-03-21 00:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -50,9 +50,10 @@ ipmipower_cipher_suite_id_index(char *str)
     return CIPHER_SUITE_ID_AUTO;
   else if (!strcasecmp(str, "0"))
     return CIPHER_SUITE_ID_0;
-#if 0
+  /* XXX */
   else if (!strcasecmp(str, "1"))
     return CIPHER_SUITE_ID_1;
+#if 0
   else if (!strcasecmp(str, "2"))
     return CIPHER_SUITE_ID_2;
   else if (!strcasecmp(str, "3"))
@@ -61,8 +62,10 @@ ipmipower_cipher_suite_id_index(char *str)
     return CIPHER_SUITE_ID_4;
   else if (!strcasecmp(str, "5"))
     return CIPHER_SUITE_ID_5;
+#endif
   else if (!strcasecmp(str, "6"))
     return CIPHER_SUITE_ID_6;
+#if 0
   else if (!strcasecmp(str, "7"))
     return CIPHER_SUITE_ID_7;
   else if (!strcasecmp(str, "8"))
@@ -97,10 +100,11 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_0:
       return "0";
       break;
-#if 0
+      /* XXX */
     case CIPHER_SUITE_ID_1:
       return "1";
       break;
+#if 0
     case CIPHER_SUITE_ID_2:
       return "2";
       break;
@@ -113,9 +117,11 @@ ipmipower_cipher_suite_id_string(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_5:
       return "5";
       break;
+#endif
     case CIPHER_SUITE_ID_6:
       return "6";
       break;
+#if 0
     case CIPHER_SUITE_ID_7:
       return "7";
       break;
@@ -153,6 +159,7 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
 {
   assert(CIPHER_SUITE_ID_VALID_OR_AUTO(id));
 
+      /* XXX */
   switch(id) 
     {
     case CIPHER_SUITE_ID_AUTO:
@@ -161,10 +168,10 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_0:
       return "Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
-#if 0
     case CIPHER_SUITE_ID_1:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
+#if 0
     case CIPHER_SUITE_ID_2:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None";
       break;
@@ -177,9 +184,11 @@ ipmipower_cipher_suite_id_description(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_5:
       return "Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40";
       break;
+#endif
     case CIPHER_SUITE_ID_6:
       return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None";
       break;
+#if 0
     case CIPHER_SUITE_ID_7:
       return "Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None";
       break;
@@ -220,7 +229,7 @@ ipmipower_cipher_suite_id_list(void)
   return "auto, 0, 1, 2, 3, 6, 7, 8, 11, 12";
   return "auto, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14";
 #endif
-  return "auto, 0";
+  return "auto, 0, 1, 6";
 }
 
 uint8_t
@@ -233,10 +242,11 @@ ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_0:
       return 0;
       break;
-#if 0
     case CIPHER_SUITE_ID_1:
       return 1;
       break;
+      /* XXX */
+#if 0
     case CIPHER_SUITE_ID_2:
       return 2;
       break;
@@ -249,9 +259,11 @@ ipmipower_ipmi_cipher_suite_id(cipher_suite_id_t id)
     case CIPHER_SUITE_ID_5:
       return 5;
       break;
+#endif
     case CIPHER_SUITE_ID_6:
       return 6;
       break;
+#if 0
     case CIPHER_SUITE_ID_7:
       return 7;
       break;

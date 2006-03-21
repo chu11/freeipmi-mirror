@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.32 2006-03-15 19:09:11 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.33 2006-03-21 00:45:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -638,7 +638,7 @@ int
 ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint64_t message_tag;
-  uint64_t expected_message_tag;
+  uint8_t expected_message_tag;
   fiid_obj_t obj_cmd;
 
   assert(ip != NULL);
