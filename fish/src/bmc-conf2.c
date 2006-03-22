@@ -1921,49 +1921,49 @@ get_bmc_user_payload_access (ipmi_device_t *dev,
       *oem_payload_0 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_1)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_1", &val) < 0)
         goto cleanup;
       *oem_payload_1 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_2)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_2", &val) < 0)
         goto cleanup;
       *oem_payload_2 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_3)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_3", &val) < 0)
         goto cleanup;
       *oem_payload_3 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_4)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_4", &val) < 0)
         goto cleanup;
       *oem_payload_4 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_5)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_5", &val) < 0)
         goto cleanup;
       *oem_payload_5 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_6)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_6", &val) < 0)
         goto cleanup;
       *oem_payload_6 = val;
     }
 
-  if (oem_payload_0)
+  if (oem_payload_7)
     {
       if (fiid_obj_get (obj_cmd_rs, "oem_payload_7", &val) < 0)
         goto cleanup;

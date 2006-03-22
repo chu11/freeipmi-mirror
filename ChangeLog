@@ -25,6 +25,8 @@
 	* ipmipower/: Support additional cipher algorithms.  Fix several
 	bugs.
 
+	* fish/: Fix various bmc-config bugs.
+
 2006-03-20  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c
