@@ -18,17 +18,7 @@ Al's TODO list
 ipmi 2.0:
 ---------
   * ipmiping - done
-  * ipmipower
-      test cipher ids 
-          0 - done
-          1
-          2
-          3
-          6
-          7
-          8
-          11
-          12
+  * ipmipower - done
   * sol bmc config
       test
   * rmcpplus priv bmc config
@@ -80,6 +70,7 @@ libfreeipmi:
     - then using these, adjust udm-raw
   * 1_5_privilege_level - not really right, do something else
   * obj_cmd -> obj_data, b/c payloads aren't cmds (i.e. sol)
+  * session hdrs (1.5 & 2.0) - handle NULL auth code through different API function
 
 fish:
 -----
