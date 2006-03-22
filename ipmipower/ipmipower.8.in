@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.37 2006-03-22 15:02:33 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.38 2006-03-22 17:01:05 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -93,6 +93,10 @@ status of the machine through --stat.  If not specified, a null
 Sets the password to use when authenticating with the BMC.  If not
 specified, a null password is assumed.
 .TP
+.I "-k, --k-g str"
+Sets the K_g BMC Key to use when authenticating with the BMC for
+ipmi 2.0.  If not specified, a null key is assumed.
+.TP
 .I "-n, --on"
 Power on the target hosts.
 .TP
@@ -111,7 +115,7 @@ Get power status of the target hosts.
 .I "-j, --pulse"
 Send power diagnostic interrupt to target hosts.
 .TP
-.I "-k, --soft"
+.I "-m, --soft"
 Initiate a soft-shutdown of the OS via ACPI.
 .TP
 .I "-H, --help"
@@ -391,6 +395,9 @@ specify a new username, no str for null username
 .TP
 .I "password [str]"
 specify a new password, no str for null password
+.TP
+.I "k_g [str]"
+specify a new K_g BMC Key, no str for null
 .TP
 .I "on [host]"
 turns on all hosts, or only the specified host.

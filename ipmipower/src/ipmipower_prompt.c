@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.23 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.24 2006-03-22 17:01:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -69,6 +69,7 @@ _cmd_help(void)
               "hostnames [str]                 - set a new set of hostnames\n"
               "username [str]                  - set a new username (no str for null)\n"
               "password [str]                  - set a new password (no str for null)\n"
+              "k_g [str]                       - set a new k_g (no str for null)\n"
               "on [node]                       - turn on all nodes, or listed node\n"
               "off [node]                      - turn off all nodes, or listed node\n"
               "cycle [node]                    - power cycle all nodes, or listed node\n"
@@ -292,10 +293,8 @@ _cmd_password(char **argv)
   assert(argv != NULL);
 
   if (argv[1] && conf->authentication_type == AUTHENTICATION_TYPE_NONE)
-    {
-      cbuf_printf(ttyout, "password cannot be set for authentication_type \"%s\"\n",
-                  ipmipower_authentication_type_string(conf->authentication_type));
-    }
+    cbuf_printf(ttyout, "password cannot be set for authentication_type \"%s\"\n",
+                ipmipower_authentication_type_string(conf->authentication_type));
   else if (argv[1] == NULL 
            || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTHENTICATION_CODE_LENGTH)) 
     {
@@ -313,6 +312,33 @@ _cmd_password(char **argv)
     }
   else
     cbuf_printf(ttyout, "password invalid length\n");
+}
+
+static void 
+_cmd_k_g(char **argv) 
+{
+  assert(argv != NULL);
+
+  if (conf->ipmi_version != IPMI_VERSION_AUTO
+      && conf->ipmi_version != IPMI_VERSION_2_0)
+    cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
+  else if (argv[1] == NULL 
+           || (argv[1] && strlen(argv[1]) <= IPMIPOWER_MAX_KEY_G_LENGTH)) 
+    {
+      memset(conf->k_g, '\0', IPMIPOWER_MAX_KEY_G_LENGTH+1);
+
+      if (argv[1])
+        strcpy(conf->k_g, argv[1]);
+
+#ifdef NDEBUG
+      cbuf_printf(ttyout, "k_g changed\n");
+#else
+      cbuf_printf(ttyout, "k_g: %s\n", 
+                  (strlen(conf->k_g)) ? conf->k_g : "NULL");
+#endif
+    }
+  else
+    cbuf_printf(ttyout, "k_g invalid length\n");
 }
 
 static void 
@@ -595,8 +621,11 @@ _cmd_config(void)
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Password:                     %s\n", 
               (strlen(conf->password)) ? conf->password : "NULL");
+  cbuf_printf(ttyout, "K_g:                          %s\n", 
+              (strlen(conf->k_g)) ? conf->k_g : "NULL");
 #else
   cbuf_printf(ttyout, "Password:                     *****\n");
+  cbuf_printf(ttyout, "K_g:                          *****\n");
 #endif
 
   cbuf_printf(ttyout, "Authentication_Type:          %s\n", 
@@ -748,6 +777,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_username(argv); 
             else if (strcmp(argv[0], "password") == 0)
               _cmd_password(argv);
+            else if (strcmp(argv[0], "k_g") == 0)
+              _cmd_k_g(argv);
             else if (strcmp(argv[0], "on") == 0)
               _cmd_power(argv, POWER_CMD_POWER_ON);
             else if (strcmp(argv[0], "off") == 0)

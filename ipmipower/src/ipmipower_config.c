@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.24 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.25 2006-03-22 17:01:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,6 +78,7 @@ ipmipower_config_setup(void)
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
+  memset(conf->k_g, '\0', IPMIPOWER_MAX_KEY_G_LENGTH+1);
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
@@ -209,6 +210,7 @@ _usage(void)
           "-h --hostnames hosts  List of hostnames\n"
           "-u --username name    Username\n"
           "-p --password pw      Password\n" 
+          "-k --k-g str          K_g Key\n"
           "-n --on               Power On\n"
           "-f --off              Power Off\n"
           "-c --cycle            Power Cycle\n"
@@ -240,14 +242,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
   char *ptr;
 
   /* achu: Here's are what options are left and available
-     lower case: demq
+     lower case: deq
      upper case: ABEGJKNOQYZ
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:nfcrsjkHVC:a:l:R:T:go:PSUWXDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUWXDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:nfcrsjkHVC:a:l:R:T:go:PSUWXt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUWXt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -256,13 +258,14 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"hostnames",                    1, NULL, 'h'},
       {"username",                     1, NULL, 'u'},
       {"password",                     1, NULL, 'p'},
+      {"k-g",                          1, NULL, 'k'},
       {"on",                           0, NULL, 'n'},
       {"off",                          0, NULL, 'f'},
       {"cycle",                        0, NULL, 'c'},
       {"reset",                        0, NULL, 'r'},
       {"stat",                         0, NULL, 's'},
       {"pulse",                        0, NULL, 'j'},
-      {"soft",                         0, NULL, 'k'},
+      {"soft",                         0, NULL, 'm'},
       {"help",                         0, NULL, 'H'},
       {"version",                      0, NULL, 'V'},
       {"config",                       1, NULL, 'C'}, 
@@ -327,6 +330,12 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           strcpy(conf->password, optarg);
           conf->password_set = IPMIPOWER_TRUE;
           break;
+        case 'k':       /* --k-g */
+          if (strlen(optarg) > IPMIPOWER_MAX_KEY_G_LENGTH)
+            err_exit("Command Line Error: K_g too long");
+          strcpy(conf->k_g, optarg);
+          conf->k_g_set = IPMIPOWER_TRUE;
+          break;
         case 'n':       /* --on */ 
           conf->powercmd = POWER_CMD_POWER_ON;
           break;
@@ -345,7 +354,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'j':       /* --pulse */
           conf->powercmd = POWER_CMD_PULSE_DIAG_INTR;
           break;
-        case 'k':       /* --soft */
+        case 'm':       /* --soft */
           conf->powercmd = POWER_CMD_SOFT_SHUTDOWN_OS;
           break;
         case 'H':       /* --help */
@@ -641,10 +650,25 @@ _cb_password(conffile_t cf, struct conffile_data *data,
   return 0;
 }
 
+static int 
+_cb_k_g(conffile_t cf, struct conffile_data *data,
+             char *optionname, int option_type, void *option_ptr,
+             int option_data, void *app_ptr, int app_data) 
+{
+  if (conf->k_g_set == IPMIPOWER_TRUE)
+    return 0;
+
+  if (strlen(data->string) > IPMIPOWER_MAX_KEY_G_LENGTH)
+    err_exit("Config File Error: K_g too long");
+
+  strcpy(conf->k_g, data->string);
+  return 0;
+}
+
 void 
 ipmipower_config_conffile_parse(char *configfile) 
 {
-  int hostnames_flag, username_flag, password_flag, authentication_type_flag, 
+  int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
     check_unexpected_authcode_flag, cipher_suite_records_all_oem_flag, 
@@ -661,6 +685,8 @@ ipmipower_config_conffile_parse(char *configfile)
        1, 0, &username_flag, NULL, 0},
       {"password", CONFFILE_OPTION_STRING, -1, _cb_password, 
        1, 0, &password_flag, NULL, 0},
+      {"k_g", CONFFILE_OPTION_STRING, -1, _cb_k_g, 
+       1, 0, &k_g_flag, NULL, 0},
       {"authentication-type", CONFFILE_OPTION_STRING, -1, _cb_authentication_type, 
        1, 0, &authentication_type_flag, NULL, 0},
       {"privilege", CONFFILE_OPTION_STRING, -1, _cb_privilege, 
@@ -762,4 +788,9 @@ ipmipower_config_check_values(void)
       && strlen(conf->password) > 0)
     err_exit("Error: password cannot be set for authentication type \"%s\"",
              ipmipower_authentication_type_string(conf->authentication_type));
+
+  if (conf->ipmi_version != IPMI_VERSION_AUTO
+      && conf->ipmi_version != IPMI_VERSION_2_0
+      && strlen(conf->k_g) > 0)
+    err_exit("Error: k_g is only used for IPMI 2.0");
 }

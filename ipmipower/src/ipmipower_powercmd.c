@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.61 2006-03-22 14:58:51 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.62 2006-03-22 17:01:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1535,7 +1535,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   int32_t managed_system_random_number_len;
   uint8_t *username;
   uint8_t *password;
-  
+  uint8_t *k_g;
+
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT);
   
@@ -1548,6 +1549,11 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
     password = (uint8_t *)conf->password;
   else
     password = NULL;
+
+  if (strlen(conf->k_g))
+    k_g = (uint8_t *)conf->k_g;
+  else
+    k_g = NULL;
   
   managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
                                                        "managed_system_random_number",
@@ -1559,8 +1565,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            ip->confidentiality_algorithm,
                                            password,
                                            (password) ? strlen((char *)password) : 0,
-					   NULL,
-					   0,
+                                           k_g,
+                                           (k_g) ? strlen((char *)k_g) : 0,
                                            ip->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
