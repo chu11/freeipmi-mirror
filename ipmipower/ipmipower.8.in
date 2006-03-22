@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.36 2006-03-22 02:55:18 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.37 2006-03-22 15:02:33 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -606,12 +606,12 @@ work around this issue, the -S (--accept-session-id-zero) option must
 be set.  The option will allow empty session IDs to be accepted by the
 client.  This problem is apparently fixed in later firmware releases.
 
-Dell PowerEdge 2850: When Per-Message Authentication is disabled,
+Dell PowerEdge 2850,SC1425: When Per-Message Authentication is disabled,
 packet responses contain non-null authentication data (when it should
 in fact be null).  In order to work around this issue, the -U
 (--check-unexpected-authcode) option must be set.  The option will
 allow unexpected non-null authcodes to be checked as though they were
-expected. (Bug also discovered on Dell PowerEdge SC1425)
+expected. Fix confirmed on upgraded firmware.
 
 Intel SE7520JR2 with National Semiconductor PC87431M mBMC: The
 activate session response and close session response packets have
