@@ -5,7 +5,8 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus-utils.c (ipmi_calculate_sik,
 	ipmi_calculate_rmcpplus_session_keys): Handle name only lookup
-	flag in sik calculations.  Fix several corner cases.
+	flag in sik calculations.  Fix several corner cases and cleaned up
+	code.
 
 	* ipmipower/: Support additional cipher algorithms.
 

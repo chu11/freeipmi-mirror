@@ -397,6 +397,9 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
           || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
        */
     {
+      uint8_t sik[IPMI_MAX_PAYLOAD_LENGTH];
+      int32_t sik_len;
+
       ERR_EINVAL (!(authentication_code_data && !authentication_code_data)
 		  && remote_console_random_number
 		  && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
@@ -406,19 +409,23 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
 		  && IPMI_PRIVILEGE_LEVEL_VALID(requested_privilege_level)
 		  && !(user_name && !user_name_len));
       
-      ERR (!((sik_key_buf_len = ipmi_calculate_sik(authentication_algorithm,
-                                                   authentication_code_data,
-                                                   authentication_code_data_len,
-                                                   remote_console_random_number,
-                                                   remote_console_random_number_len,
-                                                   managed_system_random_number,
-                                                   managed_system_random_number_len,
-                                                   name_only_lookup,
-                                                   requested_privilege_level,
-                                                   user_name,
-                                                   user_name_len,
-                                                   sik_key_buf,
-                                                   IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+      ERR (!((sik_len = ipmi_calculate_sik(authentication_algorithm,
+                                           authentication_code_data,
+                                           authentication_code_data_len,
+                                           remote_console_random_number,
+                                           remote_console_random_number_len,
+                                           managed_system_random_number,
+                                           managed_system_random_number_len,
+                                           name_only_lookup,
+                                           requested_privilege_level,
+                                           user_name,
+                                           user_name_len,
+                                           sik,
+                                           IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+      ERR_EMSGSIZE (!(sik_key_buf_len < sik_len));
+
+      memcpy(sik_key_buf, sik, sik_len);
+      sik_key_buf_len = sik_len;
     }
 
   if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
