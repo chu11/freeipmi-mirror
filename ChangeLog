@@ -1,3 +1,10 @@
+2006-03-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-rmcpplus-utils.h
+	(ipmi_calculate_rmcpplus_session_keys): Support both k_g and user
+	password.
+
 2006-03-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c

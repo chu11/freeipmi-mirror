@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.60 2006-03-22 02:55:18 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.61 2006-03-22 14:58:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1559,6 +1559,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            ip->confidentiality_algorithm,
                                            password,
                                            (password) ? strlen((char *)password) : 0,
+					   NULL,
+					   0,
                                            ip->remote_console_random_number,
                                            IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
                                            managed_system_random_number,
