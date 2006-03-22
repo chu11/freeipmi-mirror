@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.59 2006-03-21 19:27:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.60 2006-03-22 02:55:18 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -82,12 +82,9 @@ static List pending = NULL;
  */
 static uint8_t cipher_suite_id_ranking[] =
   {
-    /* XXX support more later*/
     3,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, AES-CBC-128 */
-#if 0
     8,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, AES-CBC-128 */
     12,                /* RAKP-HMAC-MD5, MD5-128, AES-CBC-128 */
-#endif
     2,                 /* RAKP-HMAC-SHA1, HMAC-SHA1-96, NONE */
     7,                 /* RAKP-HMAC-MD5, HMAC-MD5-128, NONE */
     11,                /* RAKP-HMAC-MD5, MD5-128, NONE */
@@ -95,8 +92,7 @@ static uint8_t cipher_suite_id_ranking[] =
     6,                 /* RAKP-HMAC-MD5, NONE, NONE */
     0,                 /* NONE, NONE, NONE */
   };
-/* XXX support more later */
-static unsigned int cipher_suite_id_ranking_count = 7;
+static unsigned int cipher_suite_id_ranking_count = 9;
 
 /* _destroy_ipmipower_powercmd
  * - cleanup/destroy an ipmipower_powercmd_t structure stored within a List
@@ -1389,7 +1385,7 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
         {
           for (j = 0; j < ip->cipher_suite_ids_num; j++)
             {
-              if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[i])
+              if (cipher_suite_id_ranking[i] == ip->cipher_suite_ids[j])
                 {
                   cipher_suite_found++;
                   break;

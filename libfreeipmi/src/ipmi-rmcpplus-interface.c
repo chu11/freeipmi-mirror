@@ -419,13 +419,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LENGTH];
   int32_t len, authentication_code_len;
+  uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
           && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
                && authentication_code_data 
-               && authentication_code_data_len > IPMI_MAX_PASSOWRD_LENGTH)
+               && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
           && fiid_obj_valid(obj_rmcpplus_session_trlr)
           && pkt_data
           && pkt_data_len
@@ -490,17 +491,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       && authentication_code_data
       && authentication_code_data_len)
     {
-      /* SPEC: achu: Zero Pad is not specified.  And even if we were
-       * supposed to, we don't know if we should Zero pad to 16 or 20 bytes.
-       *
-       * For now, we'll assume no zero pad.  Therefore, if it is a NULL
-       * password, we won't be be including a password in the hash.
-       */
-
+      /* achu: Password must be zero padded */
+      memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+      memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
+      
       memcpy(hash_data + hash_data_len, 
-             authentication_code_data, 
-             authentication_code_data_len);
-      hash_data_len += authentication_code_data_len;
+             pwbuf, 
+	     IPMI_2_0_MAX_PASSWORD_LENGTH);
+      hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
   memcpy(hash_data + hash_data_len, pkt_data, pkt_data_len);
@@ -511,9 +509,9 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       && authentication_code_data_len)
     {
       memcpy(hash_data + hash_data_len, 
-             authentication_code_data, 
-             authentication_code_data_len);
-      hash_data_len += authentication_code_data_len;
+             pwbuf, 
+	     IPMI_2_0_MAX_PASSWORD_LENGTH);
+      hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
   ERR (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
@@ -571,7 +569,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
   	      && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
               && !(integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
                    && authentication_code_data 
-                   && authentication_code_data_len > IPMI_MAX_PASSOWRD_LENGTH)
+                   && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
               && (confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE
                   || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)
               && !(confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128

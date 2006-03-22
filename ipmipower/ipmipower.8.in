@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.35 2006-03-21 19:27:13 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.36 2006-03-22 02:55:18 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -155,7 +155,6 @@ are "auto", "1.5", and "2.0".  If not specified,
 uses "auto", which will try decreasing IPMI protocol versions until
 one is discovered.
 .TP
-\."  XXX
 .I "-T, --cipher-suite-id id"
 Set the IPMI 2.0 Cipher Suite ID to use.  The Cipher Suite ID identifies
 a set of authentication, integrity, and confidentiality algorithms to 
@@ -173,28 +172,28 @@ auto - Select the most secure cipher suite available from the remote machine
 0 - Authentication Algorithm = None; Integrity Algorithm = None; Confidentiality Algorithm = None
 .sp
 1 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = None; Confidentiality Algorithm = None
-\." .sp
-\." 2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
-\." .sp
-\." 3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
+.sp
+2 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = None
+.sp
+3 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = AES-CBC-128
 \." .sp
 \." 4 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-128
 \." .sp
 \." 5 - Authentication Algorithm = HMAC-SHA1; Integrity Algorithm = HMAC-SHA1-96; Confidentiality Algorithm = xRC4-40
 .sp
 6 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = None; Confidentiality Algorithm = None
-\." .sp
-\." 7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
-\." .sp
-\." 8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
+.sp
+7 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = None
+.sp
+8 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = AES-CBC-128
 \." .sp
 \." 9 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-128
 \." .sp
 \." 10 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = HMAC-MD5-128; Confidentiality Algorithm = xRC4-40
-\." .sp
-\." 11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
-\." .sp
-\." 12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
+.sp
+11 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = None
+.sp
+12 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = AES-CBC-128
 \." .sp
 \." 13 - Authentication Algorithm = HMAC-MD5; Integrity Algorithm = MD5-128; Confidentiality Algorithm = xRC4-128
 \." .sp
@@ -436,9 +435,8 @@ specify a new privilege type, auto, user, operator or admin.
 .I "ipmi_version str"
 specify the ipmi version, auto, 1.5 or 2.0.
 .TP
-\."  XXX
 .I "cipher_suite_id str"
-specify the cipher suite id, auto, 0, 1, 6.
+specify the cipher suite id, auto, 0, 1, 2, 3, 6, 7, 8, 11, 12.
 .I "on-if-off [on|off]"
 toggle on-if-off functionality.
 .TP

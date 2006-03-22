@@ -865,6 +865,8 @@ fill_cmd_set_user_password (uint8_t user_id,
 {
   uint8_t buf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
 
+  /* XXX: Handle 20 byte passwords for IPMI 2.0 */
+
   /* achu: password can be IPMI_MAX_AUTHENTICATION_CODE_LENGTH length.  Null
    * termination in IPMI packet not required
    */

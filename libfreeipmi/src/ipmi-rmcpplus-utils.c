@@ -177,9 +177,9 @@ _calculate_k_rakp_hmac(int hash_algorithm,
 	      && k_len
 	      && constant
 	      && constant_len
+	      && !(sik_key_len < expected_digest_len)
 	      && !(k_len < expected_digest_len)
-	      && !(constant_len < expected_digest_len)
-	      && !(sik_key_len < expected_digest_len));
+	      && !(constant_len < IPMI_KEY_CONSTANT_LENGTH));
 
   ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
   ERR (crypt_digest_len == expected_digest_len);
@@ -195,7 +195,7 @@ _calculate_k_rakp_hmac(int hash_algorithm,
 						 sik_key,
 						 crypt_digest_len,
 						 constant,
-						 crypt_digest_len,
+						 IPMI_KEY_CONSTANT_LENGTH,
 						 k,
 						 k_len)) < 0));
 
@@ -217,7 +217,8 @@ _calculate_k_rakp_hmac_sha1(uint8_t *sik_key,
 	      && k
 	      && k_len
 	      && constant
-	      && constant_len);
+	      && constant_len
+	      && !(constant_len < IPMI_KEY_CONSTANT_LENGTH));
 
   return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_SHA1,
                                 IPMI_HMAC_SHA1_DIGEST_LENGTH,
@@ -242,8 +243,9 @@ _calculate_k_rakp_hmac_md5(uint8_t *sik_key,
 	      && k
 	      && k_len
 	      && constant
-	      && constant_len);
-
+	      && constant_len
+	      && !(constant_len < IPMI_KEY_CONSTANT_LENGTH));
+  
   return _calculate_k_rakp_hmac(IPMI_CRYPT_HASH_MD5,
                                 IPMI_HMAC_MD5_DIGEST_LENGTH,
                                 sik_key,
@@ -270,7 +272,8 @@ _ipmi_calculate_k(uint8_t authentication_algorithm,
 	      && k
 	      && k_len
 	      && constant
-	      && constant_len);
+	      && constant_len
+	      && !(constant_len < IPMI_KEY_CONSTANT_LENGTH));
 
   if (authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1)
     return _calculate_k_rakp_hmac_sha1(sik_key, 
@@ -907,6 +910,7 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
   uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t authentication_code[IPMI_MAX_PAYLOAD_LENGTH];
   uint32_t authentication_code_len;
+  uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
   
   ERR_EINVAL ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE
 	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
@@ -974,10 +978,14 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
       && authentication_code_data 
       && authentication_code_data_len)
     {
+      /* achu: Password must be zero padded */
+      memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+      memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
+
       memcpy(hash_data + hash_data_len,
-             authentication_code_data,
-             authentication_code_data_len);
-      hash_data_len += authentication_code_data_len;
+             pwbuf,
+             IPMI_2_0_MAX_PASSWORD_LENGTH);
+      hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
   memcpy(hash_data + hash_data_len, pkt + rmcp_header_len, pkt_len - rmcp_header_len - compare_digest_len);
@@ -988,9 +996,9 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
       && authentication_code_data_len)
     {
       memcpy(hash_data + hash_data_len,
-             authentication_code_data,
-             authentication_code_data_len);
-      hash_data_len += authentication_code_data_len;
+             pwbuf,
+             IPMI_2_0_MAX_PASSWORD_LENGTH);
+      hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
 
   ERR (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,

@@ -8,7 +8,22 @@
 	flag in sik calculations.  Fix several corner cases and cleaned up
 	code.
 
-	* ipmipower/: Support additional cipher algorithms.
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c (_calculate_k_rakp_hmac):
+	Fix K calculation bug.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h: Fix
+	spelling typo in IPMI_MAX_PASSWORD_LENGTH definition.  Define and
+	use new IPMI_2_0_MAX_PASSWORD_LENGTH definition.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_session_trlr_authentication_code),
+	libfreeipmi/src/ipmi-rmcpplus-utils.c
+	(ipmi_rmcpplus_check_packet_session_authentication_code): Fix
+	MD5_128 authentication code calculation bug.
+
+	* ipmipower/: Support additional cipher algorithms.  Fix several
+	bugs.
 
 2006-03-20  Albert Chu <chu11@llnl.gov>
 
