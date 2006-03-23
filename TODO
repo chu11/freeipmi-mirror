@@ -20,8 +20,7 @@ ipmi 2.0:
   * ipmiping - done
   * ipmipower - done
   * sol bmc config - done
-  * sol payload access bmc config
-      test
+  * sol payload access bmc config - done
   * rmcpplus priv bmc config - done
   * security keys bmc config
       test

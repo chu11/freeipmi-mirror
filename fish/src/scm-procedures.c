@@ -1980,7 +1980,8 @@ ex_get_bmc_user_sol_payload_access (SCM scm_userid)
                                              NULL,
                                              NULL)) == 0)
     {
-      return_list = gh_list(gh_bool2scm (standard_payload_1));
+      return_list = gh_list(gh_bool2scm (standard_payload_1),
+			    SCM_UNDEFINED);
     }
   
   return (retval ? SCM_BOOL_F : return_list);

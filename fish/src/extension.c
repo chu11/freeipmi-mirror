@@ -227,7 +227,7 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-bmc-user-lan-channel-access USERID ENABLE-IPMI-MSGS ENABLE-LINK-AUTH ENABLE-RESTRICT-TO-CALLBACK PRIVILEGE-LIMIT SESSION-LIMIT)
   */
 
-  gh_new_procedure ("fi-set-bmc-user-sol-payload-access", ex_set_bmc_user_lan_channel_access, 2, 0, 0);
+  gh_new_procedure ("fi-set-bmc-user-sol-payload-access", ex_set_bmc_user_sol_payload_access, 2, 0, 0);
   /* 
      syntax in scheme: (fi-set-bmc-user-sol-payload-access USERID BOOL)
   */
@@ -508,9 +508,9 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-bmc-user-lan-channel-access USERID)
   */
   
-  gh_new_procedure ("fi-get-bmc-user-sol-payload-access", ex_get_bmc_user_lan_channel_access, 1, 0, 0);
+  gh_new_procedure ("fi-get-bmc-user-sol-payload-access", ex_get_bmc_user_sol_payload_access, 1, 0, 0);
   /* 
-     syntax in scheme: (fi-get-bmc-user-sol-payload-access USERID BOOL)
+     syntax in scheme: (fi-get-bmc-user-sol-payload-access USERID)
   */
 
   gh_new_procedure ("fi-get-bmc-user-serial-channel-access", ex_get_bmc_user_serial_channel_access, 1, 0, 0);
