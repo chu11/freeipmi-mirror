@@ -454,6 +454,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_AUTHENTICATION);
   FIID_OBJ_SET (obj_cmd_rq, "sol_privilege_level", sol_privilege_level);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_authentication", force_sol_payload_authentication);
   FIID_OBJ_SET (obj_cmd_rq, "force_sol_payload_encryption", force_sol_payload_encryption);
 

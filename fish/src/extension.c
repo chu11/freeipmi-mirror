@@ -412,7 +412,7 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-sol-sol-payload-port-number PORTNUMBER)
    */
 
-  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-0", ex_get_rmcpplus_cipher_suite_id_1, 1, 0, 0);
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-0", ex_set_rmcpplus_cipher_suite_id_0, 1, 0, 0);
   /* 
      syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-0 privilege)
    */
@@ -693,7 +693,7 @@ install_new_procedures (void)
      syntax in scheme: (fi-get-sol-sol-payload-port-number)
    */
 
-  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-0", ex_get_rmcpplus_cipher_suite_id_1, 0, 0, 0);
+  gh_new_procedure ("fi-get-rmcpplus-cipher-suite-id-0", ex_get_rmcpplus_cipher_suite_id_0, 0, 0, 0);
   /* 
      syntax in scheme: (fi-get-rmcpplus-cipher-suite-id-0)
    */

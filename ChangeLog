@@ -8,6 +8,9 @@
 	* ipmipower/: Change -k option -m option.  Add new -k option to
 	support global BMC key k_g.
 
+	* fish/: Various bug fixes for SOL and RMCPPLUS Privilege level
+	configurations.
+
 2006-03-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c

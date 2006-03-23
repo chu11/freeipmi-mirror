@@ -1478,13 +1478,17 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
   if (cipher_suite_entry_count && cipher_suite_id_map_set && cipher_suite_priv_map_set)
     {
       uint8_t privs[16];
+      int index;
 
       memset(privs, 0, 16);
 
       for (i = 0; i < cipher_suite_entry_count; i++)
 	{
 	  if (cipher_suite_id_map[i] == cipher_suite_id)
-	    privs[i] = privilege;
+            {
+              privs[i] = privilege;
+              index = i;
+            }
 	  else
 	    privs[i] = cipher_suite_priv_map[i];
 	}
@@ -1510,6 +1514,7 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
 												     obj_cmd_rs) < 0)
 	goto cleanup;
 
+      cipher_suite_priv_map[index] = privilege;
       rv = 0;
     }
 
@@ -3019,11 +3024,11 @@ get_sol_sol_authentication (ipmi_device_t *dev,
     goto cleanup;
   *sol_privilege_level = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_authentication,", &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_authentication", &val) < 0)
     goto cleanup;
   *force_sol_payload_authentication = val;
 
-  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_encryption,", &val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "force_sol_payload_encryption", &val) < 0)
     goto cleanup;
   *force_sol_payload_encryption = val;
   

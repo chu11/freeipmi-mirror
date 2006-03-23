@@ -37,7 +37,7 @@
 (define (commit-force-sol-payload-authentication section-name force-sol-payload-authentication)
   (if (list? force-sol-payload-authentication)
       #t 
-      (fi-set-sol-sol-authentication 0 force-sol-payload-authentication 0)))
+      (fi-set-sol-sol-authentication #f force-sol-payload-authentication 0)))
 
 (define (checkout-force-sol-payload-authentication section-name)
   (let ((param-list (fi-get-sol-sol-authentication)))
@@ -46,7 +46,7 @@
 (define (commit-force-sol-payload-encryption section-name force-sol-payload-encryption)
   (if (list? force-sol-payload-encryption)
       #t 
-      (fi-set-sol-sol-authentication 0 0 force-sol-payload-encryption)))
+      (fi-set-sol-sol-authentication #f 0 force-sol-payload-encryption)))
 
 (define (checkout-force-sol-payload-encryption section-name)
   (let ((param-list (fi-get-sol-sol-authentication)))
@@ -55,7 +55,7 @@
 (define (commit-character-accumulate-interval section-name character-accumulate-interval)
   (if (list? character-accumulate-interval)
       #t 
-      (fi-set-sol-character-accumulate-interval-and-send-threshold character-accumulate-interval 0)))
+      (fi-set-sol-character-accumulate-interval-and-send-threshold character-accumulate-interval #f)))
 
 (define (checkout-character-accumulate-interval section-name)
   (let ((param-list (fi-get-sol-character-accumulate-interval-and-send-threshold)))
@@ -64,7 +64,7 @@
 (define (commit-character-send-threshold section-name character-send-threshold)
   (if (list? character-send-threshold)
       #t 
-      (fi-set-sol-character-accumulate-interval-and-send-threshold 0 character-send-threshold)))
+      (fi-set-sol-character-accumulate-interval-and-send-threshold #f character-send-threshold)))
 
 (define (checkout-character-send-threshold section-name)
   (let ((param-list (fi-get-sol-character-accumulate-interval-and-send-threshold)))
@@ -73,7 +73,7 @@
 (define (commit-sol-retry-count section-name sol-retry-count)
   (if (list? sol-retry-count)
       #t 
-      (fi-set-sol-sol-retry sol-retry-count 0)))
+      (fi-set-sol-sol-retry sol-retry-count #f)))
 
 (define (checkout-sol-retry-count section-name)
   (let ((param-list (fi-get-sol-sol-retry)))
@@ -82,7 +82,7 @@
 (define (commit-sol-retry-interval section-name sol-retry-interval)
   (if (list? sol-retry-interval)
       #t 
-      (fi-set-sol-sol-retry 0 sol-retry-interval)))
+      (fi-set-sol-sol-retry #f sol-retry-interval)))
 
 (define (checkout-sol-retry-interval section-name)
   (let ((param-list (fi-get-sol-sol-retry)))
