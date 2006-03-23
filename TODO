@@ -19,16 +19,10 @@ ipmi 2.0:
 ---------
   * ipmiping - done
   * ipmipower - done
-  * sol bmc config 
-      test 
-        SOL_Privilege_Level
-        Force_SOL_Payload_Authentication
-        Force_SOL_Payload_Encryption
-        Character_Accumulate_Interval (write)
-        Character_Send_Threshold (write)
-
-  * rmcpplus priv bmc config
+  * sol bmc config - done
+  * sol payload access bmc config
       test
+  * rmcpplus priv bmc config - done
   * security keys bmc config
       test
 
