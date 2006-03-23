@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.25 2006-03-23 05:02:15 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.26 2006-03-23 22:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -296,9 +296,14 @@ _cmd_password(char **argv)
     cbuf_printf(ttyout, "password cannot be set for authentication_type \"%s\"\n",
                 ipmipower_authentication_type_string(conf->authentication_type));
   else if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_AUTHENTICATION_CODE_LENGTH)) 
+           || (argv[1] 
+               && (((conf->ipmi_version == IPMI_VERSION_AUTO
+                     || conf->ipmi_version == IPMI_VERSION_2_0)
+                    && strlen(argv[1]) <= IPMI_2_0_MAX_PASSWORD_LENGTH)
+                   || (conf->ipmi_version == IPMI_VERSION_1_5
+                       && strlen(argv[1]) <= IPMI_1_5_MAX_PASSWORD_LENGTH))))
     {
-      memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
+      memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
 
       if (argv[1])
         strcpy(conf->password, argv[1]);

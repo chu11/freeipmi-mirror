@@ -245,9 +245,14 @@
 (define (get-boolean-string bool)
   (if bool "Yes" "No"))
 
-(define (valid-username-password? str)
+(define (valid-username? str)
   (if (string? str)
       (<= (string-length str) 16)
+      #f))
+
+(define (valid-password? str)
+  (if (string? str)
+      (<= (string-length str) 20)
       #f))
 
 (define (valid-security-key? str)

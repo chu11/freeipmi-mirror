@@ -400,7 +400,7 @@
     ;;  DIFF-PROC 
     ;;  DOC-STRING)
     ("username" 
-     valid-username-password? 
+     valid-username? 
      get-string 
      commit-username 
      checkout-username 
@@ -424,13 +424,13 @@
      same-string?
      "Possible values: Yes/No")
     ("password" 
-     valid-username-password? 
+     valid-password? 
      get-string 
      commit-password 
      checkout-password 
      get-string
      diff-password
-     "Give password or leave it blank to clear password")
+     "Give password or blank to clear.  Max 20 chars for IPMI 2.0. Max 16 chars on IPMI 1.5")
     ("lan_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.62 2006-03-22 17:01:05 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.63 2006-03-23 22:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1670,6 +1670,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               
               ip->ipmi_version = IPMI_VERSION_1_5;
 	      ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+
+              if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+                {
+                  ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+                  return -1;
+                }
+
               _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
             }
           else
@@ -1715,6 +1722,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       ip->ipmi_version = IPMI_VERSION_1_5;
       ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+
+      if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        {
+          ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+          return -1;
+        }
+
       _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 

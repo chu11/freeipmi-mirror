@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_output.c,v 1.15 2006-03-14 23:36:28 chu11 Exp $
+ *  $Id: ipmipower_output.c,v 1.16 2006-03-23 22:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -52,6 +52,7 @@ static char *ipmipower_outputs[] =
     "permission denied",
     "invalid username",
     "invalid password",
+    "invalid password length",
     "cannot obtain proper privilege level",
     "invalid operation",
     "invalid authentication type",

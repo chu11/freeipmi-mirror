@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.26 2006-03-23 05:02:15 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.27 2006-03-23 22:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -77,7 +77,7 @@ ipmipower_config_setup(void)
   conf->hosts = NULL;
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
-  memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
+  memset(conf->password, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH+1);
   memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
@@ -325,7 +325,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->username_set = IPMIPOWER_TRUE;
           break;
         case 'p':       /* --password */
-          if (strlen(optarg) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+          if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
           conf->password_set = IPMIPOWER_TRUE;
@@ -643,7 +643,7 @@ _cb_password(conffile_t cf, struct conffile_data *data,
   if (conf->password_set == IPMIPOWER_TRUE)
     return 0;
 
-  if (strlen(data->string) > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+  if (strlen(data->string) > IPMI_2_0_MAX_PASSWORD_LENGTH)
     err_exit("Config File Error: password too long");
 
   strcpy(conf->password, data->string);
@@ -793,4 +793,8 @@ ipmipower_config_check_values(void)
       && conf->ipmi_version != IPMI_VERSION_2_0
       && strlen(conf->k_g) > 0)
     err_exit("Error: k_g is only used for IPMI 2.0");
+
+  if (conf->ipmi_version == IPMI_VERSION_1_5
+      && strlen(conf->password) >= IPMI_1_5_MAX_PASSWORD_LENGTH)
+    err_exit("Error: password too long");
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.50 2006-03-23 05:02:15 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.51 2006-03-23 22:05:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -385,21 +385,22 @@ typedef enum
     MSG_TYPE_PERMISSION              =  4,
     MSG_TYPE_USERNAME                =  5,
     MSG_TYPE_PASSWORD                =  6,
-    MSG_TYPE_PRIVILEGE               =  7,
-    MSG_TYPE_OPERATION               =  8,
-    MSG_TYPE_AUTHENTICATION_TYPE     =  9,
-    MSG_TYPE_1_5_AUTO                = 10,
-    MSG_TYPE_GIVEN_PRIVILEGE         = 11,
-    MSG_TYPE_CIPHER_SUITE            = 12,
-    MSG_TYPE_2_0_AUTO                = 13,
-    MSG_TYPE_TIMEDOUT                = 14,
-    MSG_TYPE_NOTDISCOVERED           = 15,
-    MSG_TYPE_BADCONNECTION           = 16,
-    MSG_TYPE_UNKNOWNNODE             = 17,
-    MSG_TYPE_RESOURCES               = 18,
-    MSG_TYPE_VERSION_NOT_SUPPORTED   = 19,
-    MSG_TYPE_BMCBUSY                 = 20,
-    MSG_TYPE_BMCERROR                = 21,
+    MSG_TYPE_PASSWORD_LENGTH         =  7,
+    MSG_TYPE_PRIVILEGE               =  8,
+    MSG_TYPE_OPERATION               =  9,
+    MSG_TYPE_AUTHENTICATION_TYPE     = 10,
+    MSG_TYPE_1_5_AUTO                = 11,
+    MSG_TYPE_GIVEN_PRIVILEGE         = 12,
+    MSG_TYPE_CIPHER_SUITE            = 13,
+    MSG_TYPE_2_0_AUTO                = 14,
+    MSG_TYPE_TIMEDOUT                = 15,
+    MSG_TYPE_NOTDISCOVERED           = 16,
+    MSG_TYPE_BADCONNECTION           = 17,
+    MSG_TYPE_UNKNOWNNODE             = 18,
+    MSG_TYPE_RESOURCES               = 19,
+    MSG_TYPE_VERSION_NOT_SUPPORTED   = 20,
+    MSG_TYPE_BMCBUSY                 = 21,
+    MSG_TYPE_BMCERROR                = 22,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \
@@ -544,7 +545,7 @@ struct ipmipower_config
   hostlist_t               hosts;
   int                      hosts_count;
   char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
-  char                     password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
+  char                     password[IPMI_2_0_MAX_PASSWORD_LENGTH+1];
   char                     k_g[IPMI_MAX_K_G_LENGTH+1];
   power_cmd_t              powercmd;
   char                     configfile[MAXPATHLEN+1];

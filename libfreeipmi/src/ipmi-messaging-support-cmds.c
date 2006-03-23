@@ -460,6 +460,10 @@ fiid_template_t tmpl_get_user_name_rs =
     {0,  "", 0}
   };
 
+/* achu: Note that the password is variable length, but it must be
+ * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
+ * in fiid at a later time.
+ */
 fiid_template_t tmpl_set_user_password_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -467,7 +471,7 @@ fiid_template_t tmpl_set_user_password_rq =
     {2,   "user_id.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2,   "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6,   "operation.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {128, "password", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {160, "password", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
     {0, "", 0}
   };
 
@@ -869,17 +873,19 @@ fill_cmd_set_user_password (uint8_t user_id,
                             unsigned int password_len,
                             fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
+  uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
+  uint32_t buf_max_len;
 
-  /* XXX: Handle 20 byte passwords for IPMI 2.0 */
-
-  /* achu: password can be IPMI_MAX_AUTHENTICATION_CODE_LENGTH length.  Null
-   * termination in IPMI packet not required
+  /* achu: password can be the max length.  Null termination in IPMI
+   * packet not required.
+   *
+   * Note that for IPMI 1.5 only machines, > 16 byte passwords will
+   * simply fail and return an error.
    */
   ERR_EINVAL (IPMI_PASSWORD_OPERATION_VALID(operation)
-	      && !(password && password_len > IPMI_MAX_AUTHENTICATION_CODE_LENGTH)
+	      && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
-
+  
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_password_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
@@ -888,13 +894,29 @@ fill_cmd_set_user_password (uint8_t user_id,
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
-  
-  /* achu: password must be zero extended */
-  memset(buf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
-  if (password)
-    strncpy((char *)buf, password, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+
+  if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
+      || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
+    {
+      /* achu: password must be zero extended */
+      memset(buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
+      if (password)
+        {
+          strncpy((char *)buf, password, IPMI_2_0_MAX_PASSWORD_LENGTH);
+          
+          /* Max buffer length depends on the password length.  See IPMI
+           * spec for details. 
+           */
+          if (strlen(password) <= IPMI_MAX_PASSWORD_LENGTH)
+            buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
+          else
+            buf_max_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
+        }
+      else
+        buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
       
-  FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
+    }
 
   return 0;
 }

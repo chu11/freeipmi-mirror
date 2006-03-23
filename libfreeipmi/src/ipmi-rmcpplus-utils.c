@@ -407,6 +407,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
       uint32_t k_g_ptr_len;
 
       ERR_EINVAL (!(authentication_code_data_len && !authentication_code_data)
+                  && !(authentication_code_data && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 		  && !(k_g_len && !k_g)
 		  && !(k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
 		  && remote_console_random_number
@@ -934,6 +935,8 @@ ipmi_rmcpplus_check_packet_session_authentication_code(int8_t integrity_algorith
 	       || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
 	      && pkt
 	      && pkt_len
+              && !(authentication_code_data && !authentication_code_data_len)
+              && !(authentication_code_data && authentication_code_data_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_rmcpplus_session_trlr));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
