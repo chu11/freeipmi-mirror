@@ -11,6 +11,9 @@
 	* fish/: Various bug fixes for SOL and RMCPPLUS Privilege level
 	configurations.
 
+	* libfreeipmi/, fish/: Support max length of 20 bytes for K_R and
+	K_G desribed in IPMI 2.0 errata.
+
 2006-03-21  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-cipher-suite-spec.c

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.24 2006-03-22 17:01:05 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.25 2006-03-23 05:02:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -323,9 +323,9 @@ _cmd_k_g(char **argv)
       && conf->ipmi_version != IPMI_VERSION_2_0)
     cbuf_printf(ttyout, "k_g is only used for IPMI 2.0");
   else if (argv[1] == NULL 
-           || (argv[1] && strlen(argv[1]) <= IPMIPOWER_MAX_KEY_G_LENGTH)) 
+           || (argv[1] && strlen(argv[1]) <= IPMI_MAX_K_G_LENGTH)) 
     {
-      memset(conf->k_g, '\0', IPMIPOWER_MAX_KEY_G_LENGTH+1);
+      memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
 
       if (argv[1])
         strcpy(conf->k_g, argv[1]);

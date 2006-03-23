@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.25 2006-03-22 17:01:05 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.26 2006-03-23 05:02:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,7 +78,7 @@ ipmipower_config_setup(void)
   conf->hosts_count = 0;
   memset(conf->username, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
   memset(conf->password, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1);
-  memset(conf->k_g, '\0', IPMIPOWER_MAX_KEY_G_LENGTH+1);
+  memset(conf->k_g, '\0', IPMI_MAX_K_G_LENGTH+1);
   conf->powercmd = POWER_CMD_NONE;
   memset(conf->configfile, '\0', MAXPATHLEN+1);
 
@@ -331,7 +331,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->password_set = IPMIPOWER_TRUE;
           break;
         case 'k':       /* --k-g */
-          if (strlen(optarg) > IPMIPOWER_MAX_KEY_G_LENGTH)
+          if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
           conf->k_g_set = IPMIPOWER_TRUE;
@@ -658,7 +658,7 @@ _cb_k_g(conffile_t cf, struct conffile_data *data,
   if (conf->k_g_set == IPMIPOWER_TRUE)
     return 0;
 
-  if (strlen(data->string) > IPMIPOWER_MAX_KEY_G_LENGTH)
+  if (strlen(data->string) > IPMI_MAX_K_G_LENGTH)
     err_exit("Config File Error: K_g too long");
 
   strcpy(conf->k_g, data->string);

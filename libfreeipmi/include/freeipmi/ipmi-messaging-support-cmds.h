@@ -33,6 +33,8 @@ extern "C" {
 #define IPMI_MAX_PASSWORD_LENGTH            IPMI_MAX_AUTHENTICATION_CODE_LENGTH 
 #define IPMI_2_0_MAX_PASSWORD_LENGTH        20
 #define IPMI_CHALLENGE_STRING_LENGTH        16
+#define IPMI_MAX_K_R_LENGTH                 20
+#define IPMI_MAX_K_G_LENGTH                 20
 
 #define IPMI_GET_IPMI_V20_EXTENDED_DATA     0x01
 #define IPMI_GET_IPMI_V15_DATA              0x00

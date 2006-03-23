@@ -252,7 +252,7 @@
 
 (define (valid-security-key? str)
   (if (string? str)
-      (<= (string-length str) 32)
+      (<= (string-length str) 20)
       #f))
 
 (define (valid-boolean? str)

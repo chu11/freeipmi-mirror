@@ -35,7 +35,7 @@
 #include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-cipher-suite-spec.h"
 #include "freeipmi/ipmi-debug.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX  - only for IPMI_MAX_USER_NAME_LENGTH */
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/rmcp.h"
 
@@ -44,8 +44,6 @@
 #include "freeipmi-portability.h"
 
 #define IPMI_KEY_CONSTANT_LENGTH                          20
-#define IPMI_MAX_K_UID_LENGTH                             20
-#define IPMI_MAX_K_G_LENGTH                               20
 #define IPMI_MAX_SIK_KEY_LENGTH                           20
 #define IPMI_MAX_KEY_DATA_LENGTH                          1024
 
@@ -74,6 +72,7 @@ ipmi_calculate_sik(uint8_t authentication_algorithm,
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
 	      && !(k_g && !k_g_len)
+	      && !(k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
 	      && remote_console_random_number
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 	      && managed_system_random_number
@@ -409,6 +408,7 @@ ipmi_calculate_rmcpplus_session_keys(uint8_t authentication_algorithm,
 
       ERR_EINVAL (!(authentication_code_data_len && !authentication_code_data)
 		  && !(k_g_len && !k_g)
+		  && !(k_g && k_g_len > IPMI_MAX_K_G_LENGTH)
 		  && remote_console_random_number
 		  && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 		  && managed_system_random_number

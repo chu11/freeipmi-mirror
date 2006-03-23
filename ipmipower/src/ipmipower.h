@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.49 2006-03-22 17:01:05 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.50 2006-03-23 05:02:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -141,8 +141,6 @@
 #define IPMI_MAX_CONFIDENTIALITY_KEY_LENGTH 64
 
 #define IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH 64
-
-#define IPMIPOWER_MAX_KEY_G_LENGTH 64
 
 /* ipmi_version_t
  * - holds ipmi version type
@@ -547,7 +545,7 @@ struct ipmipower_config
   int                      hosts_count;
   char                     username[IPMI_MAX_USER_NAME_LENGTH+1];
   char                     password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH+1];
-  char                     k_g[IPMIPOWER_MAX_KEY_G_LENGTH+1];
+  char                     k_g[IPMI_MAX_K_G_LENGTH+1];
   power_cmd_t              powercmd;
   char                     configfile[MAXPATHLEN+1];
 
