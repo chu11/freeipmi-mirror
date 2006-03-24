@@ -24,6 +24,15 @@
 
 #include <stdint.h>
 
+#define IPMI_ANALOG_DATA_FORMAT_UNSIGNED      0x0
+#define IPMI_ANALOG_DATA_FORMAT_1S_COMPLEMENT 0x1
+#define IPMI_ANALOG_DATA_FORMAT_2S_COMPLEMENT 0x2
+
+#define IPMI_ANALOG_DATA_FORMAT_VALID(__val) \
+   (((__val) == IPMI_ANALOG_DATA_FORMAT_UNSIGNED \
+     || (__val) == IPMI_ANALOG_DATA_FORMAT_1S_COMPLEMENT \
+     || (__val) == IPMI_ANALOG_DATA_FORMAT_2S_COMPLEMENT) ? 1 : 0)
+
 int ipmi_sensor_decode_value (char r_exponent, 
 			      char b_exponent, 
 			      short m, 

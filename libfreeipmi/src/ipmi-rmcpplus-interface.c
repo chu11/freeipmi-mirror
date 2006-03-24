@@ -36,7 +36,7 @@
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-debug.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX  - only for IPMI_MAX_USER_NAME_LENGTH */
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-sol-cmds.h"
@@ -1158,7 +1158,6 @@ _deconstruct_payload(uint8_t payload_type,
   return (0);
 }
 
-/* XXX: Should bother with obj_rmcpplus_payload?  How else do you check the confidentiality pad? */
 int32_t
 unassemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
                               uint8_t integrity_algorithm,

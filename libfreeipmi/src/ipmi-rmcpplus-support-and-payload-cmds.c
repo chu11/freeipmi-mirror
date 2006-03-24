@@ -119,7 +119,7 @@ fiid_template_t tmpl_suspend_resume_payload_encryption_rq =
     {2, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "payload_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    /* XXX: The IPMI spec says [4:0] for Operation and [7:2] for
+    /* achu: The IPMI spec says [4:0] for Operation and [7:2] for
        reserved3.  Needless to say, one is wrong.  Since there are
        only three operations, we'll assume they meant for operation to
        be a 2 bit field

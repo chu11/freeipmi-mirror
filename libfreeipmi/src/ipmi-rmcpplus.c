@@ -31,7 +31,7 @@
 
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
-#include "freeipmi/ipmi-messaging-support-cmds.h" /* XXX  - only for IPMI_MAX_USER_NAME_LENGTH */
+#include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 

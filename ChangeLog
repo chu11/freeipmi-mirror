@@ -1,3 +1,9 @@
+2006-03-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value),
+	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h: Add and use new
+	analog data format definition validator.
+	
 2006-03-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,

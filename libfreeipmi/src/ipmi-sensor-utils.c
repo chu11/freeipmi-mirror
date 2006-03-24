@@ -45,10 +45,8 @@ ipmi_sensor_decode_value (char r_exponent,
 {
   double dval = 0.0;
   
-  /* XXX need to define analog data format somewhere */
-  ERR_EINVAL (value && (analog_data_format == 0x00
-			|| analog_data_format == 0x01
-			|| analog_data_format == 0x02));
+  ERR_EINVAL (value 
+	      && IPMI_ANALOG_DATA_FORMAT_VALID(analog_data_format));
 
   if (analog_data_format == 0x00)
     dval = (double) raw_data;
