@@ -1,5 +1,5 @@
 ;;; sensors-simple-display.scm: sensors simple display procedures
-;;; authors: Balamurugan <bala.a@californiadigital.com>
+;;; authors: Balamurugan <bala@research.com>
 
 ;;; This program is free software; you can redistribute it and/or
 ;;; modify it under the terms of the GNU General Public License as

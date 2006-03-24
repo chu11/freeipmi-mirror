@@ -1,3 +1,8 @@
+2006-03-24  Anand Babu  <ab@zresearch.com>
+
+	* fish/extensions/sensors-common.scm: fixed bug #16093 - 
+	ipmi-sensors help outputs with wrong program name.
+
 2006-03-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value),

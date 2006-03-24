@@ -1,6 +1,6 @@
 ;;; sel.scm: System Event Logger
-;;; authors: M.P.Anand Babu <ab@gnu.org.in> 
-;;; Balamurugan <bala.a@californiadigital.com>
+;;; authors: Anand Babu <ab@zresearch.com> 
+;;; Balamurugan <bala@zresearch.com>
 
 ;;; This program is free software; you can redistribute it and/or
 ;;; modify it under the terms of the GNU General Public License as
