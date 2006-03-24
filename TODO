@@ -25,8 +25,7 @@ ipmi 2.0:
   * security keys bmc config
       test
   * passwords bmc config - done
-  * passwords ipmipower
-      test > 16 bytes && 20 byte passwords
+  * passwords ipmipower - done
 
 libfreeipmi:
 ------------
