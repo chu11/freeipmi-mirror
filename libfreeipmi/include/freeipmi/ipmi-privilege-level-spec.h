@@ -35,22 +35,18 @@ extern "C" {
 #define IPMI_PRIVILEGE_LEVEL_NO_ACCESS     0x0F
 
 #define IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level) \
-        (((__privilege_level) == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL \
-	  || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_CALLBACK \
-          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_USER \
-          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OPERATOR \
-          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_ADMIN \
-          || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OEM) ? 1 : 0)
-
-#define IPMI_1_5_PRIVILEGE_LEVEL_VALID(__privilege_level) \
         (((__privilege_level) == IPMI_PRIVILEGE_LEVEL_CALLBACK \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_USER \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OPERATOR \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_ADMIN \
           || (__privilege_level) == IPMI_PRIVILEGE_LEVEL_OEM) ? 1 : 0)
 
+#define IPMI_1_5_PRIVILEGE_LEVEL_VALID(__privilege_level) \
+        IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level)
+
 #define IPMI_2_0_PRIVILEGE_LEVEL_VALID(__privilege_level) \
-	IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level)
+	(((__privilege_level) == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL \
+	  || IPMI_PRIVILEGE_LEVEL_VALID(__privilege_level)) ? 1 : 0)
 
 #ifdef __cplusplus
 }

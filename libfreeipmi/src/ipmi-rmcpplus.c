@@ -316,7 +316,7 @@ fill_rmcpplus_open_session (uint8_t message_tag,
                             uint8_t confidentiality_algorithm,
                             fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
+  ERR_EINVAL (IPMI_2_0_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
 	      && IPMI_AUTHENTICATION_ALGORITHM_VALID(authentication_algorithm)
 	      && IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
 	      && IPMI_CONFIDENTIALITY_ALGORITHM_VALID(confidentiality_algorithm)

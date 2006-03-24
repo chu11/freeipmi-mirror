@@ -273,7 +273,7 @@ ipmi_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR);
                 }
               break;
-            case IPMI_CMD_SET_USER_PASSWORD:
+            case IPMI_CMD_SET_USER_PASSWORD_CMD:
               switch (comp_code)
                 {
                 case IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT:

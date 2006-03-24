@@ -500,7 +500,7 @@ fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                   fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
 	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_authentication_capabilities_rq);
@@ -521,7 +521,7 @@ fill_cmd_get_channel_authentication_capabilities_v20 (uint8_t channel_number,
                                                       fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
 	      && IPMI_GET_IPMI_DATA_VALID(get_ipmi_v20_extended_data)
 	      && fiid_obj_valid(obj_cmd_rq));
   
@@ -605,7 +605,7 @@ fill_cmd_activate_session (uint8_t authentication_type,
   uint8_t buf[IPMI_CHALLENGE_STRING_LENGTH];
 
   ERR_EINVAL (IPMI_AUTHENTICATION_TYPE_VALID(authentication_type)
-	      && IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_level)
 	      && challenge_string
 	      && !(challenge_string_len > IPMI_CHALLENGE_STRING_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
@@ -639,7 +639,7 @@ int8_t
 fill_cmd_set_session_privilege_level (uint8_t privilege_level, 
                                       fiid_obj_t obj_cmd_rq)
 {
-  ERR_EINVAL (IPMI_1_5_PRIVILEGE_LEVEL_VALID(privilege_level)
+  ERR_EINVAL (IPMI_PRIVILEGE_LEVEL_VALID(privilege_level)
 	      && fiid_obj_valid(obj_cmd_rq));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_session_privilege_level_rq);
@@ -682,7 +682,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 	      && IPMI_PER_MESSAGE_AUTHENTICATION_VALID(per_message_authentication)
 	      && IPMI_PEF_ALERTING_VALID(pef_alerting)
 	      && IPMI_CHANNEL_ACCESS_VALID(channel_access_set)
-	      && IPMI_1_5_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
+	      && IPMI_PRIVILEGE_LEVEL_VALID(channel_privilege_level_limit)
 	      && IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
 	      && fiid_obj_valid(obj_cmd_rq));
 

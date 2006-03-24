@@ -967,37 +967,37 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
 											   fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1)
 		  || !maximum_privilege_for_cipher_suite_1)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2)
 		  || !maximum_privilege_for_cipher_suite_2)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3)
 		  || !maximum_privilege_for_cipher_suite_3)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4)
 		  || !maximum_privilege_for_cipher_suite_4)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5)
 		  || !maximum_privilege_for_cipher_suite_5)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6)
 		  || !maximum_privilege_for_cipher_suite_6)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7)
 		  || !maximum_privilege_for_cipher_suite_7)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8)
 		  || !maximum_privilege_for_cipher_suite_8)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9)
 		  || !maximum_privilege_for_cipher_suite_9)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10)
 		  || !maximum_privilege_for_cipher_suite_10)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11)
 		  || !maximum_privilege_for_cipher_suite_11)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12)
 		  || !maximum_privilege_for_cipher_suite_12)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13)
 		  || !maximum_privilege_for_cipher_suite_13)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14)
 		  || !maximum_privilege_for_cipher_suite_14)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15)
 		  || !maximum_privilege_for_cipher_suite_15)
-	      && (IPMI_1_5_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
+	      && (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16)
 		  || !maximum_privilege_for_cipher_suite_16)
 	      && fiid_obj_valid(obj_cmd_rq));
 
@@ -1008,38 +1008,22 @@ fill_cmd_set_lan_configuration_parameters_rmcpplus_messaging_cipher_suite_privil
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_RMCPPLUS_MESSAGING_CIPHER_SUITE_PRIVILEGE_LEVELS);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_1))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_2))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_3))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_3", maximum_privilege_for_cipher_suite_3); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_4))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_4", maximum_privilege_for_cipher_suite_4); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_5))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_5", maximum_privilege_for_cipher_suite_5); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_6))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_6", maximum_privilege_for_cipher_suite_6); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_7))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_7", maximum_privilege_for_cipher_suite_7); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_8))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_8", maximum_privilege_for_cipher_suite_8); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_9))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_9", maximum_privilege_for_cipher_suite_9); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_10))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_10", maximum_privilege_for_cipher_suite_10); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_11))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_11", maximum_privilege_for_cipher_suite_11); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_12))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_12", maximum_privilege_for_cipher_suite_12); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_13))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_13", maximum_privilege_for_cipher_suite_13); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_14))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_14", maximum_privilege_for_cipher_suite_14); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_15))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15); 
-  if (IPMI_PRIVILEGE_LEVEL_VALID(maximum_privilege_for_cipher_suite_16))
-    FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_1", maximum_privilege_for_cipher_suite_1); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_2", maximum_privilege_for_cipher_suite_2); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_3", maximum_privilege_for_cipher_suite_3); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_4", maximum_privilege_for_cipher_suite_4); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_5", maximum_privilege_for_cipher_suite_5); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_6", maximum_privilege_for_cipher_suite_6); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_7", maximum_privilege_for_cipher_suite_7); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_8", maximum_privilege_for_cipher_suite_8); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_9", maximum_privilege_for_cipher_suite_9); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_10", maximum_privilege_for_cipher_suite_10); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_11", maximum_privilege_for_cipher_suite_11); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_12", maximum_privilege_for_cipher_suite_12); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_13", maximum_privilege_for_cipher_suite_13); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_14", maximum_privilege_for_cipher_suite_14); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_15", maximum_privilege_for_cipher_suite_15); 
+  FIID_OBJ_SET (obj_cmd_rq, "maximum_privilege_for_cipher_suite_16", maximum_privilege_for_cipher_suite_16); 
 
   return 0;
 }

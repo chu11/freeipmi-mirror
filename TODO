@@ -24,8 +24,7 @@ ipmi 2.0:
   * rmcpplus priv bmc config - done
   * security keys bmc config
       test
-  * passwords bmc config 
-      test > 16 bytes && 20 byte passwords
+  * passwords bmc config - done
   * passwords ipmipower
       test > 16 bytes && 20 byte passwords
 
@@ -68,7 +67,6 @@ libfreeipmi:
   * allow configuration of the slave addr into lan_msg_hdr??
   * assemble_raw, unassemble_raw
     - then using these, udm-raw can be adjusted
-  * 1_5_privilege_level - not really right, do something else
   * obj_cmd -> obj_data, b/c payloads aren't cmds (i.e. sol)
   * session hdrs (1.5 & 2.0) - handle NULL auth code through different API function
   * deal with set_user_password_rq variable length problem differently?

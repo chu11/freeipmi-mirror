@@ -260,7 +260,7 @@ extern "C" {
 #define IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR \
 "command not supported for selected channel"
 
-/* IPMI_CMD_SET_USER_PASSWORD */
+/* IPMI_CMD_SET_USER_PASSWORD_CMD */
 #define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT         0x80
 #define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT_STR \
 "password test failed.  Password size correct, but password " \

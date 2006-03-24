@@ -441,7 +441,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
                                                               fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
-              && IPMI_1_5_PRIVILEGE_LEVEL_VALID(sol_privilege_level)
+              && IPMI_PRIVILEGE_LEVEL_VALID(sol_privilege_level)
 	      && IPMI_SOL_FORCE_SOL_PAYLOAD_AUTHENTICATION_VALID(force_sol_payload_authentication)
               && IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID(force_sol_payload_encryption)
 	      && fiid_obj_valid(obj_cmd_rq));
