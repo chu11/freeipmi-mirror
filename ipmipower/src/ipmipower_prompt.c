@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.26 2006-03-23 22:05:45 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.27 2006-03-24 17:42:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -98,7 +98,7 @@ _cmd_advanced(void)
               "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
               "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
               "cipher-suite-records-all-oem [on|off] - toggle cipher-suite-records-all-oem functionality\n"
-              "intel-2-0-session-activation [on|off] - toggle intel-2-0-session-activation functionality\n");
+              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
               "debug [on|off]                        - toggle debug to stderr\n"
@@ -829,8 +829,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
             else if (strcmp(argv[0], "cipher-suite-records-all-oem") == 0)
               _cmd_set_flag(argv, &conf->cipher_suite_records_all_oem, "cipher-suite-records-all-oem");
-            else if (strcmp(argv[0], "intel-2-0-session-activation") == 0)
-              _cmd_set_flag(argv, &conf->intel_2_0_session_activation, "intel-2-0-session-activation");
+            else if (strcmp(argv[0], "intel-2-0-session") == 0)
+              _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
 #ifndef NDEBUG
             else if (strcmp(argv[0], "debug") == 0) 
 	      {

@@ -3,6 +3,10 @@
 	* libfreeipmi/src/ipmi-sensor-utils.c (ipmi_sensor_decode_value),
 	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h: Add and use new
 	analog data format definition validator.
+
+	* ipmipower/: Alter --intel-2-0-session-activation to
+	--intel-2-0-session.  Support additional workarounds with
+	HMAC-MD5-128 authentication on Intel machines.
 	
 2006-03-23  Albert Chu <chu11@llnl.gov>
 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.38 2006-03-21 19:27:13 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.39 2006-03-24 17:42:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -701,6 +701,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   int32_t managed_system_guid_len;
   uint8_t *username;
   uint8_t *password;
+  uint32_t password_len;
   uint64_t managed_system_session_id;
   int8_t rv;
 
@@ -717,23 +718,40 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   else
     password = NULL;
 
+  password_len = (password) ? strlen((char *)password) : 0;
+
   Fiid_obj_get(ip->obj_open_session_res,
-	       "managed_system_session_id",
-	       &managed_system_session_id);
+               "managed_system_session_id",
+               &managed_system_session_id);
   
   managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
 						       "managed_system_random_number",
 						       managed_system_random_number,
 						       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-
+  
   managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
 					      "managed_system_guid",
 					      managed_system_guid,
 					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
   
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * When the authentication algorithm is HMAC-MD5-128 and the
+   * password is greater than 16 bytes, the Intel BMC truncates the
+   * password to 16 bytes when generating keys, hashes, etc.  So we
+   * have to do the same when generating keys, hashes, etc.
+   */
+  if (conf->intel_2_0_session 
+      && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+    password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+
   if ((rv = ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(ip->authentication_algorithm,
 										password,
-										(password) ? strlen((char *)password) : 0,
+                                                                                password_len,
 										ip->remote_console_session_id,
 										managed_system_session_id,
 										ip->remote_console_random_number,
@@ -785,7 +803,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
    * one.  Would have taken me awhile to figure this one out :-)
    */
 
-  if (conf->intel_2_0_session_activation)
+  if (conf->intel_2_0_session)
     {
       if (ip->integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
         authentication_algorithm = IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE;

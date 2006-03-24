@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.27 2006-03-23 22:05:45 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.28 2006-03-24 17:42:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -92,7 +92,7 @@ ipmipower_config_setup(void)
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode = IPMIPOWER_FALSE;
   conf->cipher_suite_records_all_oem = IPMIPOWER_FALSE;
-  conf->intel_2_0_session_activation = IPMIPOWER_FALSE;
+  conf->intel_2_0_session = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -124,7 +124,7 @@ ipmipower_config_setup(void)
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
   conf->cipher_suite_records_all_oem_set = IPMIPOWER_FALSE;
-  conf->intel_2_0_session_activation = IPMIPOWER_FALSE;
+  conf->intel_2_0_session = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -280,7 +280,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"accept-session-id-zero",       0, NULL, 'S'},
       {"check-unexpected-authcode",    0, NULL, 'U'},
       {"cipher-suite-records-all-oem", 0, NULL, 'W'},
-      {"intel-2-0-session-activation", 0, NULL, 'X'},
+      {"intel-2-0-session",            0, NULL, 'X'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
       {"ipmidump",                     0, NULL, 'I'},
@@ -407,9 +407,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
           conf->cipher_suite_records_all_oem = IPMIPOWER_TRUE;
           conf->cipher_suite_records_all_oem_set = IPMIPOWER_TRUE;
           break;
-        case 'X':      /* --intel-2-0-session-activation */
-          conf->intel_2_0_session_activation = IPMIPOWER_TRUE;
-          conf->intel_2_0_session_activation_set = IPMIPOWER_TRUE;
+        case 'X':      /* --intel-2-0-session */
+          conf->intel_2_0_session = IPMIPOWER_TRUE;
+          conf->intel_2_0_session_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -672,7 +672,7 @@ ipmipower_config_conffile_parse(char *configfile)
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
     check_unexpected_authcode_flag, cipher_suite_records_all_oem_flag, 
-    intel_2_0_session_activation_flag, timeout_flag, 
+    intel_2_0_session_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
     ping_consec_count_flag;
@@ -711,9 +711,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"cipher_suite_records_all_oem", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &cipher_suite_records_all_oem_flag, &(conf->cipher_suite_records_all_oem), 
        conf->cipher_suite_records_all_oem_set},
-      {"intel_2_0_session_activation", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &intel_2_0_session_activation_flag, &(conf->intel_2_0_session_activation), 
-       conf->intel_2_0_session_activation_set},
+      {"intel_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &intel_2_0_session_flag, &(conf->intel_2_0_session), 
+       conf->intel_2_0_session_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

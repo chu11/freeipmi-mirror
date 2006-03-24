@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.63 2006-03-23 22:05:45 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.64 2006-03-24 17:42:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1535,6 +1535,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   int32_t managed_system_random_number_len;
   uint8_t *username;
   uint8_t *password;
+  uint32_t password_len;
   uint8_t *k_g;
 
   assert(ip);
@@ -1560,11 +1561,28 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                                        managed_system_random_number,
                                                        IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
   
+  password_len = (password) ? strlen((char *)password) : 0;
+
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * When the authentication algorithm is HMAC-MD5-128 and the
+   * password is greater than 16 bytes, the Intel BMC truncates the
+   * password to 16 bytes when generating keys, hashes, etc.  So we
+   * have to do the same when generating keys, hashes, etc.
+   */
+  if (conf->intel_2_0_session 
+      && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+      && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+    password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+
   if (ipmi_calculate_rmcpplus_session_keys(ip->authentication_algorithm,
                                            ip->integrity_algorithm,
                                            ip->confidentiality_algorithm,
                                            password,
-                                           (password) ? strlen((char *)password) : 0,
+                                           password_len,
                                            k_g,
                                            (k_g) ? strlen((char *)k_g) : 0,
                                            ip->remote_console_random_number,

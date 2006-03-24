@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.49 2006-03-24 06:30:58 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.50 2006-03-24 17:42:56 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -852,6 +852,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
       int32_t key_exchange_authentication_code_len;
       uint8_t name_only_lookup;
+      uint32_t password_len;
 
       managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
                                                            "managed_system_random_number",
@@ -865,18 +866,35 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        *
        * For some reason we have to create this key with the name only
        * lookup turned off.  I was skeptical about this actually being
-       * a bug until I found out the ipmitool folks implemented the
+       * a bug until I saw that the ipmitool folks implemented the
        * same workaround.
        */
 
-      if (conf->intel_2_0_session_activation)
+      if (conf->intel_2_0_session)
         name_only_lookup = IPMI_USER_NAME_PRIVILEGE_LOOKUP;
       else
         name_only_lookup = ip->name_only_lookup;
 
+      password_len = (password) ? strlen((char *)password) : 0;
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition)
+       *
+       * When the authentication algorithm is HMAC-MD5-128 and the
+       * password is greater than 16 bytes, the Intel BMC truncates the
+       * password to 16 bytes when generating keys, hashes, etc.  So we
+       * have to do the same when generating keys, hashes, etc.
+       */
+      if (conf->intel_2_0_session 
+          && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
+          && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
+        password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+      
       if ((key_exchange_authentication_code_len = ipmi_calculate_rakp_3_key_exchange_authentication_code(ip->authentication_algorithm,
                                                                                                          password,
-                                                                                                         (password) ? strlen((char *)password) : 0,
+                                                                                                         password_len,
                                                                                                          managed_system_random_number,
                                                                                                          managed_system_random_number_len,
                                                                                                          ip->remote_console_session_id,
