@@ -110,6 +110,3 @@ Later on:
 =========
   * Host monitoring support: Ganglia integration.
   * Additional libfreeipmi examples.
-  * Code auditing
-    - Templates/API/etc: Some say "username" some have "user_name".
-    - Lots of functions don't check input parameters, i.e. null buffers
