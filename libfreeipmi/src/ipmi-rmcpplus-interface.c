@@ -487,14 +487,14 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       
   hash_data_len = 0;
       
-  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
-      && authentication_code_data
-      && authentication_code_data_len)
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
       /* achu: Password must be zero padded */
       memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-      memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
       
+      if (authentication_code_data && authentication_code_data_len)
+        memcpy(pwbuf, authentication_code_data, authentication_code_data_len);
+
       memcpy(hash_data + hash_data_len, 
              pwbuf, 
 	     IPMI_2_0_MAX_PASSWORD_LENGTH);
@@ -504,9 +504,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   memcpy(hash_data + hash_data_len, pkt_data, pkt_data_len);
   hash_data_len += pkt_data_len;
   
-  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128
-      && authentication_code_data
-      && authentication_code_data_len)
+  if (integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
     {
       memcpy(hash_data + hash_data_len, 
              pwbuf, 

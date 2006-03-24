@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.39 2006-03-24 17:42:56 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.40 2006-03-24 23:15:25 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -749,22 +749,22 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
 
-  if ((rv = ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(ip->authentication_algorithm,
-										password,
-                                                                                password_len,
-										ip->remote_console_session_id,
-										managed_system_session_id,
-										ip->remote_console_random_number,
-										IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-										managed_system_random_number,
-										managed_system_random_number_len,
-										managed_system_guid,
-										managed_system_guid_len,
-										ip->name_only_lookup,
-										ip->privilege,
-										username,
-										(username) ? strlen((char *)username) : 0,
-										ip->obj_rakp_message_2_res)) < 0)
+  if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(ip->authentication_algorithm,
+                                                                        password,
+                                                                        password_len,
+                                                                        ip->remote_console_session_id,
+                                                                        managed_system_session_id,
+                                                                        ip->remote_console_random_number,
+                                                                        IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                                        managed_system_random_number,
+                                                                        managed_system_random_number_len,
+                                                                        managed_system_guid,
+                                                                        managed_system_guid_len,
+                                                                        ip->name_only_lookup,
+                                                                        ip->privilege,
+                                                                        username,
+                                                                        (username) ? strlen((char *)username) : 0,
+                                                                        ip->obj_rakp_message_2_res)) < 0)
     err_exit("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
 	     "ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code: %s",
 	     ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -832,15 +832,15 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
 					      managed_system_guid,
 					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
 
-  if ((rv = ipmi_rmcpplus_check_rakp_message_4_integrity_check_value(authentication_algorithm,
-                                                                     ip->sik_key_ptr,
-                                                                     ip->sik_key_len,
-								     ip->remote_console_random_number,
-								     IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
-								     managed_system_session_id,
-								     managed_system_guid,
-								     managed_system_guid_len,
-								     ip->obj_rakp_message_4_res)) < 0)
+  if ((rv = ipmi_rmcpplus_check_rakp_4_integrity_check_value(authentication_algorithm,
+                                                             ip->sik_key_ptr,
+                                                             ip->sik_key_len,
+                                                             ip->remote_console_random_number,
+                                                             IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH,
+                                                             managed_system_session_id,
+                                                             managed_system_guid,
+                                                             managed_system_guid_len,
+                                                             ip->obj_rakp_message_4_res)) < 0)
     err_exit("ipmipower_check_rakp_4_integrity_check_value(%s:%d): "
 	     "ipmipower_check_rakp_4_integrity_check_value: %s",
 	     ip->ic->hostname, ip->protocol_state, strerror(errno));

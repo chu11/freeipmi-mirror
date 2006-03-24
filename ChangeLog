@@ -1,3 +1,10 @@
+2006-03-24  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Added appropriate fixes for ipmi 2.0 to handle
+	null passwords.
+
+	* freeipmi.spec.in: Fix directory name bug.
+
 2006-03-24  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sensors-common.scm: fixed bug #16093 - 
@@ -12,7 +19,7 @@
 	* ipmipower/: Alter --intel-2-0-session-activation to
 	--intel-2-0-session.  Support additional workarounds with
 	HMAC-MD5-128 authentication on Intel machines.
-	
+
 2006-03-23  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
