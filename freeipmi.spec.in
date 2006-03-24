@@ -166,8 +166,8 @@ fi
 %doc %{_datadir}/doc/%{name}/ipmi-network-layout.fig
 %{_libdir}/*.a
 %{_libdir}/*.la
-%dir %{_libdir}/freeipmi
-%dir %{_libdir}/freeipmi/udm
+%dir %{_includedir}/freeipmi
+%dir %{_includedir}/freeipmi/udm
 %{_includedir}/*
 
 %files fish
