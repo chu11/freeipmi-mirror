@@ -68,8 +68,8 @@ libfreeipmi:
   * assemble_raw, unassemble_raw
     - then using these, udm-raw can be adjusted
   * obj_cmd -> obj_data, b/c payloads aren't cmds (i.e. sol)
-  * session hdrs (1.5 & 2.0) - handle NULL auth code through different API function
   * deal with set_user_password_rq variable length problem differently?
+  * filenames for rmcpplus - make consistent with rest of lbirary
 
 fish:
 -----
