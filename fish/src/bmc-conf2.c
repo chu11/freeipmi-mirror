@@ -179,12 +179,12 @@ set_bmc_user_password (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password (dev, 
-				  userid, 
-				  IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
-				  (char *)password, 
-				  (password) ? strlen((char *)password) : 0,
-				  obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_password_v20 (dev, 
+                                      userid, 
+                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
+                                      (char *)password, 
+                                      (password) ? strlen((char *)password) : 0,
+                                      obj_cmd_rs) != 0)
     goto cleanup;
 
   rv = 0;
@@ -3396,22 +3396,22 @@ check_bmc_user_password (ipmi_device_t *dev,
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
     goto cleanup;
 
-  if (ipmi_cmd_set_user_password (dev, 
-				  userid, 
-				  IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
-				  (char *)password, 
-				  (password) ? strlen((char *)password) : 0,
-				  obj_cmd_rs) != 0)
+  if (ipmi_cmd_set_user_password_v20 (dev, 
+                                      userid, 
+                                      IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
+                                      (char *)password, 
+                                      (password) ? strlen((char *)password) : 0,
+                                      obj_cmd_rs) != 0)
     {
       uint64_t comp_code;
 
       if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
 	goto cleanup;
 
-      if (comp_code == IPMI_PASSWORD_OPERATION_TEST_FAILED)
+      if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
+          || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
 	rv = 0; /* false */
-      else
-	goto cleanup;; /* error */
+      goto cleanup;
     }
   
   rv = 1; /* true */

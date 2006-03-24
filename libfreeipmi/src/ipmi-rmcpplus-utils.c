@@ -543,6 +543,8 @@ ipmi_calculate_rakp_3_key_exchange_authentication_code(int8_t authentication_alg
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && !(k_uid && !k_uid_len)
+	      && !(k_uid && k_uid_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && managed_system_random_number
 	      && !(managed_system_random_number_len < IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH)
               && IPMI_USER_NAME_LOOKUP_VALID(name_only_lookup)
@@ -723,6 +725,8 @@ ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code(int8_t authe
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1
 	       || authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5)
+	      && !(k_uid && !k_uid_len)
+	      && !(k_uid && k_uid_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && remote_console_random_number
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 	      && managed_system_random_number

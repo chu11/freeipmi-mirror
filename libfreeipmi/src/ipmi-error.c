@@ -273,6 +273,15 @@ ipmi_strerror_r (uint8_t cmd,
                   SNPRINTF_RETURN (IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR);
                 }
               break;
+            case IPMI_CMD_SET_USER_PASSWORD:
+              switch (comp_code)
+                {
+                case IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT:
+                  SNPRINTF_RETURN(IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT_STR);
+                case IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT:
+                  SNPRINTF_RETURN(IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT_STR);
+                }
+              break;
 	    case IPMI_CMD_ACTIVATE_PAYLOAD:
 	      switch (comp_code)
 		{

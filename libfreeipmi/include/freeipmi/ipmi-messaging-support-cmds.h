@@ -169,9 +169,10 @@ extern "C" {
 	  || (__operation) == IPMI_PASSWORD_OPERATION_ENABLE_USER \
 	  || (__operation) == IPMI_PASSWORD_OPERATION_SET_PASSWORD \
 	  || (__operation) == IPMI_PASSWORD_OPERATION_TEST_PASSWORD) ? 1 : 0)
-  
-#define IPMI_PASSWORD_OPERATION_TEST_FAILED    0x80
 
+#define IPMI_PASSWORD_SIZE_16_BYTES 0x0
+#define IPMI_PASSWORD_SIZE_20_BYTES 0x1
+  
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_v20_rq;
@@ -212,6 +213,7 @@ extern fiid_template_t tmpl_get_user_name_rq;
 extern fiid_template_t tmpl_get_user_name_rs;
 
 extern fiid_template_t tmpl_set_user_password_rq;
+extern fiid_template_t tmpl_set_user_password_v20_rq;
 extern fiid_template_t tmpl_set_user_password_rs;
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
@@ -295,6 +297,13 @@ int8_t fill_cmd_set_user_password (uint8_t user_id,
                                    char *password,
                                    unsigned int password_len,
                                    fiid_obj_t obj_cmd_rq);
+
+int8_t fill_cmd_set_user_password_v20 (uint8_t user_id,
+                                       uint8_t operation,
+                                       char *password,
+                                       unsigned int password_len,
+                                       fiid_obj_t obj_cmd_rq);
+
       
 #ifdef __cplusplus
 }

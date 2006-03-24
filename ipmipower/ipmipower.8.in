@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.38 2006-03-22 17:01:05 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.39 2006-03-24 01:29:40 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -645,6 +645,14 @@ exchange protocol.  In order to work around these problems, the -X
 (--intel-2-0-session-activation) option must be set.  This workraround
 includes an automatic acceptance of the integrity check value from a
 RAKP 4 response if the integrity algorithm is set to MD5-128.
+
+Intel SE7520AF2 with Intel Server Management Module (Professional
+Edition): When using an integrity algorithm of HMAC-MD5-128 (cipher
+suite ids 7 and 8) or MD5-128 (cipher suite ids 11 and 12) and a
+password greater than 16 bytes in length, the remote BMC truncates
+password characters past the 16th byte when generating hashed
+authentication codes, signatures, or encryption keys.  The workaround
+is to therefore truncate your inputted password to 16 bytes.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

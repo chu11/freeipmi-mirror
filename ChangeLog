@@ -1,7 +1,22 @@
 2006-03-23  Albert Chu <chu11@llnl.gov>
 
-	* fish/, libfreeipmi/, ipmipower/: Support 20 byte ipmi 2.0
-	passwords.
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h:
+	Support 20 byte passwords in ipmi 2.0 version of Set User
+	Password.
+
+	* libfreeipmi/include/freeipmi/udm/, libfreeipmi/src/udm/, fish/,
+	ipmipower/: Support 20 byte ipmi 2.0 passwords.
+
+	* fish/src/bmc-conf2.c (check_bmc_user_password): Fix logic bug.
+
+	* fish/src/bmc-conf2.c (check_bmc_user_password),
+	libfreeipmi/include/freeipmi/ipmi-comp-code-spec.h,
+	libfreeipmi/src/ipmi-error.c (ipmi_strerror_r): Support set user
+	password completion codes.
+
+	* ipmipower/ipmipower.8.in: Add workaround note about long
+	passwords on Intel machines.
 	
 2006-03-22  Albert Chu <chu11@llnl.gov>
 

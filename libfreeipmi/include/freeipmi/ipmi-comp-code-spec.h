@@ -260,6 +260,16 @@ extern "C" {
 #define IPMI_COMP_CODE_COMMAND_NOT_SUPPORTED_FOR_SELECTED_CHANNEL_STR \
 "command not supported for selected channel"
 
+/* IPMI_CMD_SET_USER_PASSWORD */
+#define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT         0x80
+#define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT_STR \
+"password test failed.  Password size correct, but password " \
+"data does not match stored value."
+
+#define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT       0x81
+#define IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT_STR \
+"password test failed.  Wrong password size was used."
+
 /* IPMI_CMD_ACTIVATE_PAYLOAD */
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION          0x80
 #define IPMI_COMP_CODE_PAYLOAD_ALREADY_ACTIVE_ON_ANOTHER_SESSION_STR \

@@ -104,6 +104,13 @@ int8_t ipmi_cmd_set_user_password (ipmi_device_t *dev,
 				   unsigned int password_len,
 				   fiid_obj_t obj_cmd_rs);
 
+int8_t ipmi_cmd_set_user_password_v20 (ipmi_device_t *dev, 
+                                       uint8_t user_id, 
+                                       uint8_t operation, 
+                                       char *password,
+                                       unsigned int password_len,
+                                       fiid_obj_t obj_cmd_rs);
+
 int8_t ipmi_get_channel_number (ipmi_device_t *dev, 
 				uint8_t channel_medium_type);
   
