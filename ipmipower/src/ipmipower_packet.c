@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.48 2006-03-21 01:48:40 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.49 2006-03-24 06:30:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -419,8 +419,6 @@ _ipmi_1_5_packet_create(ipmipower_powercmd_t ip,
   if (fill_lan_session_hdr(authentication_type, 
                            inbound_sequence_number, 
                            session_id,
-                           NULL,
-                           0,
                            ip->obj_lan_session_hdr_req) < 0)
     err_exit("_ipmi_1_5_packet_create(%s: %d): fill_lan_session_hdr: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
@@ -504,9 +502,7 @@ _ipmi_2_0_packet_create(ipmipower_powercmd_t ip,
     err_exit("_ipmi_2_0_packet_create(%s: %d): fill_lan_msg_hdr: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
 
-  if (fill_rmcpplus_session_trlr(NULL, 
-                                 0, 
-                                 ip->obj_rmcpplus_session_trlr_req) < 0)
+  if (fill_rmcpplus_session_trlr(ip->obj_rmcpplus_session_trlr_req) < 0)
     err_exit("_ipmi_2_0_packet_create(%s: %d): fill_rmcpplus_session_trlr: %s", 
              ip->ic->hostname, ip->protocol_state, strerror(errno));
   

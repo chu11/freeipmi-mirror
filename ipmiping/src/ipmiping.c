@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.29 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.30 2006-03-24 06:30:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -115,8 +115,6 @@ createpacket(char *buffer,
   if (fill_lan_session_hdr(IPMI_AUTHENTICATION_TYPE_NONE,
                            0, 
                            0,
-                           NULL, 
-                           0, 
                            obj_lan_session_hdr) < 0)
     ipmi_ping_err_exit("fill_lan_session_hdr: %s", strerror(errno));
 

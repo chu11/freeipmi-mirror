@@ -241,12 +241,9 @@ fill_rmcpplus_session_hdr (uint8_t payload_type,
 }
 
 int8_t
-fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
-                           uint32_t authentication_code_data_len,
-                           fiid_obj_t obj_rmcpplus_session_trlr)
+fill_rmcpplus_session_trlr(fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  ERR_EINVAL (!(authentication_code_data && authentication_code_data_len > IPMI_MAX_RMCPPLUS_AUTHENTICATION_CODE_LENGTH)
-	      && fiid_obj_valid(obj_rmcpplus_session_trlr));
+  ERR_EINVAL (fiid_obj_valid(obj_rmcpplus_session_trlr));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr);
   
@@ -258,12 +255,6 @@ fill_rmcpplus_session_trlr(uint8_t *authentication_code_data,
    */
 
   FIID_OBJ_SET (obj_rmcpplus_session_trlr, "next_header", IPMI_NEXT_HEADER);
-
-  if (authentication_code_data && authentication_code_data_len > 0)
-    FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
-		       "authentication_code",
-		       authentication_code_data,
-		       authentication_code_data_len);
 
   return (0);
 }

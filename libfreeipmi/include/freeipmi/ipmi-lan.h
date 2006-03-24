@@ -40,8 +40,6 @@ extern fiid_template_t tmpl_lan_msg_trlr;
 int8_t fill_lan_session_hdr  (uint8_t authentication_type, 
                               uint32_t inbound_sequence_number, 
                               uint32_t session_id,
-                              uint8_t *authentication_code_data, 
-                              uint32_t authentication_code_data_len, 
                               fiid_obj_t obj_lan_session_hdr);
 
 int8_t fill_lan_msg_hdr (uint8_t net_fn, 

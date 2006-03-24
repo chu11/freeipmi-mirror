@@ -184,7 +184,7 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
 
 int8_t fill_rmcpplus_session_hdr (uint8_t payload_type, uint8_t payload_authenticated, uint8_t payload_encrypted, uint32_t oem_iana, uint16_t oem_payload_id, uint32_t session_id, uint32_t session_sequence_number, fiid_obj_t obj_rmcpplus_session_hdr);
 
-int8_t fill_rmcpplus_session_trlr(uint8_t *authentication_code_data, uint32_t authentication_code_data_len, fiid_obj_t obj_rmcpplus_session_trlr);
+int8_t fill_rmcpplus_session_trlr(fiid_obj_t obj_rmcpplus_session_trlr);
 
 int8_t fill_rmcpplus_payload(uint8_t *confidentiality_header, uint32_t confidentiality_header_len, uint8_t *payload_data, uint32_t payload_data_len, uint8_t *confidentiality_trailer, uint32_t confidentiality_trailer_len, fiid_obj_t obj_cmd_rq);
 

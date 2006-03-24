@@ -17,6 +17,10 @@
 
 	* ipmipower/ipmipower.8.in: Add workaround note about long
 	passwords on Intel machines.
+
+	* libfreeipmi/: Re-work privilege level validation macros.  Re-do
+	parameters of fill_lan_session_hdr() and
+	fill_rmcpplus_session_hdr().
 	
 2006-03-22  Albert Chu <chu11@llnl.gov>
 
