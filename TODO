@@ -1,3 +1,18 @@
+Testing TODO
+============
+* APIs
+  - acpi
+  - ssif
+  - pef config
+
+* ipmi 2.0
+  - ipmipower + libfreeipmi
+      null name + non-null password
+      null name + null password
+      k_g
+  - bmc-config
+      security keys (k_r, k_g)
+
 AB's TODO list
 ==============
 libfreeipmi:
@@ -15,37 +30,14 @@ libfreeipmi:
 
 Al's TODO list
 ==============
-ipmi 2.0:
----------
-  * ipmiping - done
-  * ipmipower - done
-  * sol bmc config - done
-  * sol payload access bmc config - done
-  * rmcpplus priv bmc config - done
-  * security keys bmc config
-      test
-  * passwords bmc config - done
-  * passwords ipmipower
-      test null name + non-null password
-      test null name + null password
-
 libfreeipmi:
 ------------
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
-  * fiid macros - make debugging better, many are useless right now
   * only make those symbols exportable that should be exportable
   * gcrypt: secure mem-buffers
-  * ipmi 2.0 commands
-  * password 16 vs 20 bytes fix
-    - also see errata
   * int wraparound corner cases - fiid
     - uint32_t for max_field_len, but some funcs return int32_t
     - counters, fiid_obj_create
-  * test bad seq nums
-  * need to test
-    - acpi
-    - ssif
-    - pef config
   * missing cmds
     - lan-cmds 
     - msg-support-cmds
@@ -78,11 +70,6 @@ fish:
 ipmipower
 ---------
   * compile options to make workarounds automatic for ipmipower
-  * ipmi 2.0
-    - remove some wrappers? Especially dump functions?  No longer
-      reasonable to assume should pass successfully b/c of wackiness of ipmi
-      2.0 packets?
-  * chassis_status -> get_chassis_status
 
 General:
 --------
