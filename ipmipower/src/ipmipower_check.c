@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.40 2006-03-24 23:15:25 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.41 2006-03-25 00:21:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -690,6 +690,28 @@ ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt)
 	(unsigned int)rmcpplus_status_code);
 
   return ((rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS) ? 1 : 0);
+}
+
+int
+ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_type_t pkt)
+{
+  uint64_t val;
+
+  assert(ip != NULL);
+  assert(pkt == OPEN_SESSION_RES);
+  
+  Fiid_obj_get(ip->obj_open_session_res,
+               "maximum_privilege_level",
+               &val);
+
+  if (val != ip->privilege)
+    dbg("ipmipower_check_open_session_response_privilege(%s:%d): "
+        "invalid privilege: %x, expected: %x",
+        ip->ic->hostname, ip->protocol_state,
+        (unsigned int)val,
+        (unsigned int)ip->privilege);
+  
+  return ((val == ip->privilege) ? 1 : 0);
 }
 
 int

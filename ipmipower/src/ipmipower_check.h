@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.h,v 1.7 2006-03-11 20:15:23 chu11 Exp $
+ *  $Id: ipmipower_check.h,v 1.8 2006-03-25 00:21:39 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -109,6 +109,13 @@ int ipmipower_check_message_tag(ipmipower_powercmd_t ip, packet_type_t pkt);
  * Returns 1 if rmcpplus status code is valid, 0 if not
  */
 int ipmipower_check_rmcpplus_status_code(ipmipower_powercmd_t ip, packet_type_t pkt);
+
+/* ipmipower_check_open_session_response_privilege
+ * - Check for valid open session response data
+ * - Function can be passed OPEN_SESSION_RES packets
+ * Returns 1 if data is correct, 0 if not
+ */
+int ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_type_t pkt);
 
 /* ipmipower_check_rakp_2_key_exchange_authentication_code
  * - Check for valid rakp 2 key exchange authentication code

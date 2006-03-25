@@ -5,6 +5,9 @@
 
 	* freeipmi.spec.in: Fix directory name bug.
 
+	* ipmipower/src: Add privilege check on open session response
+	packet.
+
 2006-03-24  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sensors-common.scm: fixed bug #16093 - 
