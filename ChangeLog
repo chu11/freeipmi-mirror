@@ -1,3 +1,9 @@
+2006-03-27  Albert Chu <chu11@llnl.gov>
+	
+	* ipmipower/src/ipmipower_wrappers.c (Ipmi_dump_lan_packet,
+	Ipmi_dump_rmcp_packet, Ipmi_dump_rmcpplus_packet): Output
+	debugging on error, do not exit.
+
 2006-03-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Added appropriate fixes for ipmi 2.0 to handle

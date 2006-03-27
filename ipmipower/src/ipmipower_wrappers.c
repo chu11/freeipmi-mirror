@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.14 2006-03-14 00:36:00 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.15 2006-03-27 16:43:27 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -249,7 +249,7 @@ Ipmi_dump_lan_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pkt
                            pkt_len,
                            tmpl_lan_msg_hdr,
                            tmpl_cmd) < 0)
-    err_exit("Ipmi_dump_lan_packet: %s", strerror(errno));
+    dbg("Ipmi_dump_lan_packet: %s", strerror(errno));
 }
 
 void 
@@ -258,7 +258,7 @@ Ipmi_dump_rmcp_packet(int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   assert(pkt != NULL && tmpl_cmd != NULL);
 
   if (ipmi_dump_rmcp_packet(fd, prefix, hdr, pkt, pkt_len, tmpl_cmd) < 0)
-    err_exit("Ipmi_dump_rmcp_packet: %s", strerror(errno));
+    dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }
 
 void 
@@ -280,5 +280,5 @@ Ipmi_dump_rmcpplus_packet (int fd, char *prefix, char *hdr, uint8_t authenticati
                                 pkt_len,
                                 tmpl_lan_msg_hdr,
                                 tmpl_cmd) < 0)
-    err_exit("Ipmi_dump_rmcp_packet: %s", strerror(errno));
+    dbg("Ipmi_dump_rmcp_packet: %s", strerror(errno));
 }
