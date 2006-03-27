@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.42 2006-03-27 17:34:47 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.43 2006-03-27 21:08:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -318,7 +318,13 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
           if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
             shift_num = seq_num - ip->highest_received_sequence_number;
           else
-            shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number) + 1;
+            {
+              if (ip->ipmi_version == IPMI_VERSION_1_5)
+                shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number) + 1;
+              else
+                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
+                shift_num = seq_num + (max_sequence_number - ip->highest_received_sequence_number);
+            }
           
           ip->highest_received_sequence_number = seq_num;
           ip->previously_received_list <<= shift_num;
@@ -353,7 +359,13 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
       if (seq_num < ip->highest_received_sequence_number || seq_num >= wrap_val)
         {
           if (seq_num > ip->highest_received_sequence_number && seq_num <= max_sequence_number)
-            shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num) + 1;
+            {
+              if (ip->ipmi_version == IPMI_VERSION_1_5)
+                shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num) + 1;
+              else
+                /* IPMI 2.0 Special Case b/c 0 isn't a legit sequence number */
+                shift_num = ip->highest_received_sequence_number + (max_sequence_number - seq_num);
+            }
           else
             shift_num = ip->highest_received_sequence_number - seq_num;
           

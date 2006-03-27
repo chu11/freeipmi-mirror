@@ -4,6 +4,10 @@
 	Ipmi_dump_rmcp_packet, Ipmi_dump_rmcpplus_packet): Output
 	debugging on error, do not exit.
 
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_outbound_sequence_number): Fix ipmi 2.0 corner
+	cases on wrap around.
+
 2006-03-24  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Added appropriate fixes for ipmi 2.0 to handle
