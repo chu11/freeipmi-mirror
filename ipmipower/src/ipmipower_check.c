@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.41 2006-03-25 00:21:39 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.42 2006-03-27 17:34:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -754,7 +754,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
 					      "managed_system_guid",
 					      managed_system_guid,
-					      IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+					      IPMI_MANAGED_SYSTEM_GUID_LENGTH);
   
   /* IPMI Workaround (achu)
    *
