@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.c,v 1.15 2006-03-27 16:43:27 chu11 Exp $
+ *  $Id: ipmipower_wrappers.c,v 1.16 2006-03-27 16:47:19 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -168,7 +168,7 @@ Fiid_obj_create(fiid_template_t tmpl)
   assert(tmpl != NULL);
 
   if ((obj = fiid_obj_create(tmpl)) == NULL)
-    err_exit("Fiid_obj_calloc: %s", strerror(errno));
+    err_exit("Fiid_obj_create: %s", strerror(errno));
   return obj;
 }
 
