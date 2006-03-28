@@ -30,6 +30,10 @@ libfreeipmi:
 
 Al's TODO list
 ==============
+ipmiping/rcmpping
+-----------------
+note in manpages that you can't ping yourself
+
 libfreeipmi:
 ------------
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
