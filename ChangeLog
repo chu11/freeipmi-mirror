@@ -1,3 +1,8 @@
+2006-03-28  Albert Chu <chu11@llnl.gov>
+
+	* ipmiping/ipmiping.8.in, rmcpping/rmcpping.8.in: Add note about
+	local ping.
+	
 2006-03-27  Albert Chu <chu11@llnl.gov>
 	
 	* ipmipower/src/ipmipower_wrappers.c (Ipmi_dump_lan_packet,
