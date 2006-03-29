@@ -1,3 +1,9 @@
+2006-03-29  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c
+	(ipmipower_powercmd_process_pending): Poll based on the minimum
+	timeout remaining, not the maximum.
+	
 2006-03-28  Albert Chu <chu11@llnl.gov>
 
 	* ipmiping/ipmiping.8.in, rmcpping/rmcpping.8.in: Add note about

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.65 2006-03-25 00:21:39 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.66 2006-03-29 18:10:09 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2014,7 +2014,7 @@ ipmipower_powercmd_process_pending(int *timeout)
 {
   ListIterator itr;
   ipmipower_powercmd_t ip;
-  int max_timeout = 0;
+  int min_timeout = conf->timeout_len;
   int num_pending;
 
   assert(pending != NULL);  /* did not run ipmipower_powercmd_setup() */
@@ -2036,14 +2036,14 @@ ipmipower_powercmd_process_pending(int *timeout)
           continue;
         }
 
-      if (tmp_timeout > max_timeout)
-        max_timeout = tmp_timeout;
+      if (tmp_timeout < min_timeout)
+        min_timeout = tmp_timeout;
     }
   list_iterator_destroy(itr);
 
   if ((num_pending = list_count(pending)) == 0) 
     ipmipower_output_finish();
   
-  *timeout = max_timeout;
+  *timeout = min_timeout;
   return num_pending;
 }
