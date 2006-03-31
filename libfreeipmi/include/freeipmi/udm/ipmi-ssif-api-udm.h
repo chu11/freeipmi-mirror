@@ -31,13 +31,13 @@
 #include <freeipmi/fiid.h>
 #include <freeipmi/udm/ipmi-udm.h>
 
-int ipmi_ssif_cmd (ipmi_device_t *dev, 
+int ipmi_ssif_cmd_udm (ipmi_device_t *dev, 
 		   fiid_obj_t obj_cmd_rq, 
 		   fiid_obj_t obj_cmd_rs);
-int8_t ipmi_ssif_cmd_raw (ipmi_device_t *dev, 
-			  uint8_t *buf_rq, 
-			  size_t buf_rq_len, 
-			  uint8_t *buf_rs, 
-			  size_t *buf_rs_len);
+int8_t ipmi_ssif_cmd_raw_udm (ipmi_device_t *dev, 
+			      uint8_t *buf_rq, 
+			      size_t buf_rq_len, 
+			      uint8_t *buf_rs, 
+			      size_t *buf_rs_len);
 
 #endif /* IPMI_SSIF_API_UDM_H */

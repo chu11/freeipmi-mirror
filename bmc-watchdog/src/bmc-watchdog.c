@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.52 2006-03-07 21:33:04 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.53 2006-03-31 15:34:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -62,7 +62,6 @@
 #endif
 
 #include <freeipmi/freeipmi.h>
-#include <freeipmi/udm/udm.h>
 
 /* Pre Timeout Interval is 1 byte */
 #define IPMI_BMC_WATCHDOG_TIMER_PRE_TIMEOUT_INTERVAL_MIN_SECS  0
@@ -87,7 +86,7 @@
      uint64_t val; \
      if (fiid_obj_get((__obj), (__field), &val) < 0) \
        { \
-         _bmclog("%s: fiid_obj_get: %s", (__func), strerror(errno)); \
+         _bmclog("%s: fiid_obj_get: %s", (__func), fiid_strerror(fiid_obj_errnum((__obj)))); \
          goto cleanup; \
        } \
      *(__val) = val; \
@@ -145,7 +144,7 @@ struct cmdline_info
 /* program name */
 char *err_progname = NULL;
 
-ipmi_device_t ipmi_dev;
+ipmi_kcs_ctx_t kcs_ctx;
 
 int cmdline_parsed = 0;
 struct cmdline_info cinfo;
@@ -260,23 +259,56 @@ _err_exit(char *fmt, ...)
 static int
 _init_ipmi(void)
 {
-  int ret;
+  ipmi_locate_info_t *l;
 
   assert(cmdline_parsed != 0 && err_progname != NULL);
 
-  memset(&ipmi_dev, 0, sizeof (ipmi_dev));
-  if ((ret = ipmi_open_inband(&ipmi_dev, 0, IPMI_DEVICE_KCS, 
-			      cinfo.io_port, cinfo.reg_space_val, 
-			      0, IPMI_MODE_NONBLOCK)) < 0)
+  if (!(l = ipmi_locate(IPMI_INTERFACE_KCS)))
+    {
+      _bmclog("ipmi_locate: %s", strerror(errno));
+      return -1;
+    }
+
+  if (!(kcs_ctx = ipmi_kcs_ctx_create()))
+    {
+      _bmclog("ipmi_kcs_ctx_create: %s", strerror(errno));
+      return -1;
+    }
+
+  if (cinfo.io_port)
+    l->base_address.bmc_iobase_address = cinfo.io_port_val;
+  if (cinfo.reg_space)
+    l->reg_space = cinfo.reg_space_val;
+  
+  if (ipmi_kcs_ctx_set_bmc_iobase_address(kcs_ctx, l->base_address.bmc_iobase_address) < 0)
+    {
+      _bmclog("ipmi_kcs_ctx_set_bmc_iobase_address: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_kcs_ctx_set_register_space(kcs_ctx, l->reg_space) < 0)
+    {
+      _bmclog("ipmi_kcs_ctx_set_register_space: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_kcs_ctx_set_mode(kcs_ctx, IPMI_KCS_MODE_NONBLOCKING) < 0)
+    {
+      _bmclog("ipmi_kcs_ctx_set_mode: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      return -1;
+    }
+  
+  if (ipmi_kcs_ctx_io_init(kcs_ctx) < 0)
     {
       /* glibc bug on older ia64 systems returns EACCES instead of EPERM */
       if (errno == EPERM || errno == EACCES)
         _err_exit("Permission denied, must be root.");
       else
-        _bmclog("ipmi_open_inband: %s", strerror(errno));
+	_bmclog("ipmi_kcs_ctx_io_init: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+      return -1;
     }
-  
-  return ret;
+
+  return 0;
 }
 
 /* Must be called after cmdline parsed */
@@ -386,11 +418,12 @@ _cmd(char *str,
 
   while (1)
     {
-      if (ipmi_cmd (&ipmi_dev, 
-		    IPMI_BMC_IPMB_LUN_BMC, 
-		    netfn, 
-		    cmd_rq, 
-		    cmd_rs) < 0)
+      
+      if (ipmi_kcs_cmd (kcs_ctx,
+			IPMI_BMC_IPMB_LUN_BMC, 
+			netfn, 
+			cmd_rq, 
+			cmd_rs) < 0)
         {
           if (errno != EAGAIN && errno != EBUSY)
             {
@@ -688,6 +721,127 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
 }
 
 static int
+_get_channel_number(int retry_wait_time, int retry_attempt)
+{
+  fiid_obj_t dev_id_cmd_rq = NULL;
+  fiid_obj_t dev_id_cmd_rs = NULL;
+  fiid_obj_t channel_info_cmd_rq = NULL;
+  fiid_obj_t channel_info_cmd_rs = NULL;
+  uint64_t manufacturer_id, product_id;
+  uint64_t val;
+  int i, ret, rv = -1;
+
+  if (!(dev_id_cmd_rq = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
+    {
+      _bmclog("fiid_obj_create: %s", strerror(errno));
+      goto cleanup;
+    }
+
+  if (!(dev_id_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
+    {
+      _bmclog("fiid_obj_create: %s", strerror(errno));
+      goto cleanup;
+    }
+  
+  if (fill_cmd_get_device_id(dev_id_cmd_rq) < 0)
+    {
+      _bmclog("fill_cmd_get_device_id: %s", strerror(errno));
+      goto cleanup;
+    }
+
+  if ((ret = _cmd("Get Device Id Cmd", 
+		  retry_wait_time, 
+		  retry_attempt,
+		  IPMI_NET_FN_APP_RQ,
+		  dev_id_cmd_rq, 
+		  dev_id_cmd_rs)) != 0)
+    _ipmi_err_exit(IPMI_CMD_GET_DEVICE_ID, 
+                   IPMI_NET_FN_APP_RQ,
+                   ret, 
+                   "Get Device Id Error");
+
+  _FIID_OBJ_GET(dev_id_cmd_rs, 
+		"manufacturer_id.id", 
+		&manufacturer_id, 
+		"_get_channel_number");
+  _FIID_OBJ_GET(dev_id_cmd_rs,
+		"product_id",
+		&product_id, 
+		"_get_channel_number");
+
+  switch (manufacturer_id)
+    {
+    case IPMI_MANUFACTURER_ID_INTEL:
+    case 0xB000157: // Intel
+      switch (product_id)
+	{
+	case IPMI_PRODUCT_ID_SE7501WV2:
+	  rv = 7;
+	  goto cleanup;
+	}
+    }
+
+  if (!(channel_info_cmd_rq = fiid_obj_create(tmpl_get_channel_info_rq)))
+    {
+      _bmclog("fiid_obj_create: %s", strerror(errno));
+      goto cleanup;
+    }
+
+  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_get_channel_info_rq)))
+    {
+      _bmclog("fiid_obj_create: %s", strerror(errno));
+      goto cleanup;
+    }
+  
+  /* Channel numbers range from 0 - 7 */
+  for (i = 0; i < 8; i++)
+    {
+      if (fill_cmd_get_channel_info (i, channel_info_cmd_rq) < 0)
+	{
+	  _bmclog("fill_cmd_get_channel_info: %s", strerror(errno));
+	  continue;
+	}
+
+      if ((ret = _cmd("Get Channel Info Cmd", 
+		      retry_wait_time, 
+		      retry_attempt,
+		      IPMI_NET_FN_APP_RQ,
+		      dev_id_cmd_rq, 
+		      dev_id_cmd_rs)) != 0)
+	_ipmi_err_exit(IPMI_CMD_GET_DEVICE_ID, 
+		       IPMI_NET_FN_APP_RQ,
+		       ret, 
+		       "Get Channel Info Error");
+
+      _FIID_OBJ_GET(channel_info_cmd_rs,
+		    "channel_medium_type",
+		    &val, 
+		    "_get_channel_number");
+      
+      if ((uint8_t) val == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+        {
+	  _FIID_OBJ_GET(channel_info_cmd_rs,
+			"actual_channel_number",
+			&val, 
+			"_get_channel_number");
+          rv = (int)val;
+          break;
+        }
+    }
+  
+ cleanup:
+  if (dev_id_cmd_rq)
+    fiid_obj_destroy(dev_id_cmd_rq);
+  if (dev_id_cmd_rs)
+    fiid_obj_destroy(dev_id_cmd_rs);
+  if (channel_info_cmd_rq)
+    fiid_obj_destroy(channel_info_cmd_rq);
+  if (channel_info_cmd_rs)
+    fiid_obj_destroy(channel_info_cmd_rs);
+  return (rv);
+}
+
+static int
 _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
                       uint8_t gratuitous_arp,
                       uint8_t arp_response)
@@ -711,7 +865,7 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  num = ipmi_get_channel_number (&ipmi_dev, IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+  num = _get_channel_number (retry_wait_time, retry_attempt);
   if (num < 0)
     {
       _bmclog("_suspend_bmc_arps: ipmi_get_channel_number2: %s",
@@ -1885,7 +2039,7 @@ main(int argc, char **argv)
   else
     _err_exit("internal error, command not set");
 
-  ipmi_close(&ipmi_dev);
+  ipmi_kcs_ctx_destroy(kcs_ctx);
   close(logfile_fd);
   closelog();
   exit(0);
