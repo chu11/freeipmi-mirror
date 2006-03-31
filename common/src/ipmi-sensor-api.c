@@ -189,7 +189,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
 						    &b_exponent, 
 						    (char *)&linear, 
 						    &b, 
-						    &m)) < 0);
+						    &m) < 0));
   sdr_full_record->b = b;
   sdr_full_record->m = m;
   sdr_full_record->r_exponent = r_exponent;
