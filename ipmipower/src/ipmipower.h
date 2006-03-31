@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.52 2006-03-24 17:42:56 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.53 2006-03-31 05:48:33 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -454,7 +454,7 @@ struct ipmipower_powercmd {
   uint32_t confidentiality_key_len;
   uint8_t initial_message_tag;
   uint8_t message_tag_count;
-  uint8_t session_sequence_number;
+  uint32_t session_sequence_number;
   uint8_t name_only_lookup;
   uint32_t remote_console_session_id;  
   uint8_t remote_console_random_number[IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH];
