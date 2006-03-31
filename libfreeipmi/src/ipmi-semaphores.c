@@ -55,6 +55,8 @@ ipmi_mutex_init (key_t key)
 	  /* Get the orignial semid */
 	  semid = semget (key, 1, IPC_CREAT | 0600);  
 	  ERR (semid != -1);
+	  /* achu: errno may not get reset, so put it back to 0 */
+	  errno = 0;
 	  return (semid);
 	}
       ERR (0); /* FAIL */
