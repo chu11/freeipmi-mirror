@@ -1072,7 +1072,7 @@ fill_cmd_suspend_bmc_arps (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "gratuitous_arp_suspend", gratuitous_arp_suspend);
   FIID_OBJ_SET (obj_cmd_rq, "arp_response_suspend", arp_response_suspend);
-  FIID_OBJ_SET (obj_cmd_rq, "reserved", 0);
+  FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   
   return 0;
 }

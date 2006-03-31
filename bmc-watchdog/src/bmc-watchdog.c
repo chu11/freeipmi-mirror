@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.54 2006-03-31 16:48:02 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.55 2006-03-31 17:29:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -83,13 +83,21 @@
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \
-     uint64_t val; \
-     if (fiid_obj_get((__obj), (__field), &val) < 0) \
+     uint64_t __temp; \
+     if (fiid_obj_get((__obj), (__field), &__temp) < 0) \
        { \
          _bmclog("%s: fiid_obj_get: %s", (__func), fiid_strerror(fiid_obj_errnum((__obj)))); \
+         if (fiid_obj_errnum((__obj)) == FIID_ERR_SUCCESS) \
+           errno = 0; \
+         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OUTMEM)         \
+           errno = ENOMEM; \
+         else if (fiid_obj_errnum((__obj)) == FIID_ERR_OVERFLOW)       \
+           errno = ENOSPC; \
+         else \
+           errno = EINVAL; \
          goto cleanup; \
        } \
-     *(__val) = val; \
+     *(__val) = __temp; \
   } while (0) 
 
 struct cmdline_info
@@ -360,7 +368,7 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
       if (errno == EAGAIN || errno == EBUSY)
         _err_exit("%s: BMC Busy", str);
       else
-        _err_exit("%s: %s", str, strerror(errno));
+	_err_exit("%s: %s", str, strerror(errno));
     }
   else
     {
@@ -369,7 +377,7 @@ _ipmi_err_exit(uint8_t cmd, uint8_t netfn, int comp_code, char *str)
                           comp_code, 
                           buf, 
                           BMC_WATCHDOG_ERR_BUFLEN) < 0)
-        _err_exit("ipmi_strerror_r: %s", strerror(errno));
+        _err_exit("ipmi_strerror_r: %s", strerror(errno));     
       _err_exit("%s: %s", str, buf);
     }
 }
@@ -753,7 +761,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
 
-  if (!(dev_id_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rq)))
+  if (!(dev_id_cmd_rs = fiid_obj_create(tmpl_cmd_get_device_id_rs)))
     {
       _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
@@ -803,7 +811,7 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
       goto cleanup;
     }
 
-  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_get_channel_info_rq)))
+  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
     {
       _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
@@ -817,34 +825,32 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 	  _bmclog("fill_cmd_get_channel_info: %s", strerror(errno));
 	  continue;
 	}
-
-      if ((ret = _cmd("Get Channel Info Cmd", 
-		      retry_wait_time, 
-		      retry_attempt,
-		      IPMI_NET_FN_APP_RQ,
-		      dev_id_cmd_rq, 
-		      dev_id_cmd_rs)) != 0)
-	_ipmi_err_exit(IPMI_CMD_GET_DEVICE_ID, 
-		       IPMI_NET_FN_APP_RQ,
-		       ret, 
-		       "Get Channel Info Error");
-
+      
+      if (_cmd("Get Channel Info Cmd", 
+	       retry_wait_time, 
+	       retry_attempt,
+	       IPMI_NET_FN_APP_RQ,
+	       channel_info_cmd_rq, 
+	       channel_info_cmd_rs) != 0)
+	continue;
+      
       _FIID_OBJ_GET(channel_info_cmd_rs,
 		    "channel_medium_type",
 		    &val, 
 		    "_get_channel_number");
       
-      if ((uint8_t) val == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
+      if ((uint8_t)val == IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3)
         {
 	  _FIID_OBJ_GET(channel_info_cmd_rs,
 			"actual_channel_number",
 			&val, 
 			"_get_channel_number");
           rv = (int)val;
-          break;
+	  goto cleanup;
         }
-    }
-  
+    } 
+
+  errno = EINVAL;
  cleanup:
   if (dev_id_cmd_rq)
     fiid_obj_destroy(dev_id_cmd_rq);
@@ -883,11 +889,7 @@ _suspend_bmc_arps_cmd(int retry_wait_time, int retry_attempt,
 
   num = _get_channel_number (retry_wait_time, retry_attempt);
   if (num < 0)
-    {
-      _bmclog("_suspend_bmc_arps: ipmi_get_channel_number2: %s",
-	      strerror(errno));
-      goto cleanup;
-    }
+    goto cleanup;
 
   if (fill_cmd_suspend_bmc_arps(num,
                                 gratuitous_arp,
@@ -1329,7 +1331,6 @@ _set_cmd(void)
   uint32_t initial_countdown_seconds;
   int ret;
  
-  printf("%s:%d:%d\n", __FUNCTION__, __LINE__, errno);
   if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
                                      &timer_use, &timer_state, &log,
