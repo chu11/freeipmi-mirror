@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.53 2006-03-31 15:34:14 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.54 2006-03-31 16:48:02 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -178,6 +178,7 @@ _bmclog_write(void *buf, size_t count)
 
   ptr = buf;
   left = count;
+
   while (left > 0) 
     {
       if ((ret = write(logfile_fd, ptr, left)) < 0) 
@@ -215,6 +216,7 @@ _bmclog(const char *fmt, ...)
   
   va_start(ap, fmt);
   t = time(NULL);
+
   if ((tm = localtime(&t)) == NULL)
     {
       /* Just use the value from time() */
@@ -228,8 +230,9 @@ _bmclog(const char *fmt, ...)
     }
   
   len = vsnprintf(fbuffer, BMC_WATCHDOG_ERR_BUFLEN, buffer, ap);
+
   _bmclog_write(fbuffer, len);
- 
+
   va_end(ap);
 }
 
@@ -418,17 +421,29 @@ _cmd(char *str,
 
   while (1)
     {
-      
       if (ipmi_kcs_cmd (kcs_ctx,
 			IPMI_BMC_IPMB_LUN_BMC, 
 			netfn, 
 			cmd_rq, 
 			cmd_rs) < 0)
         {
-          if (errno != EAGAIN && errno != EBUSY)
+          if (ipmi_kcs_ctx_errnum(kcs_ctx) != IPMI_KCS_CTX_ERR_BUSY)
             {
               _bmclog("%s: ipmi_kcs_cmd_interruptible: %s", 
-                      str, strerror(errno));
+                      str, ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
+	      if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PARAMETERS)
+		errno = EINVAL;
+	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
+		errno = EPERM;
+	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OUTMEM)
+		errno = ENOMEM;
+	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_PARAMETERS
+		       || ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_IO_INIT)
+		errno = EIO;
+	      else if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_OVERFLOW)
+		errno = ENOSPC;
+	      else
+		errno = EINVAL;
               return -1;
             }
           else
@@ -438,6 +453,7 @@ _cmd(char *str,
                   _bmclog("%s: ipmi_kcs_cmd_interruptible: BMC too busy: "
                           "retry_wait_time=%d, retry_attempt=%d", 
                           str, retry_wait_time, retry_attempt);
+		  errno = EBUSY;
                   return -1;
                 }
 #ifndef NDEBUG
@@ -643,12 +659,12 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
       goto cleanup;
     }
 
-  if ((retval =_cmd("Get Cmd", 
-		    retry_wait_time,
-		    retry_attempt, 
-                    IPMI_NET_FN_APP_RQ,
-                    cmd_rq, 
-                    cmd_rs)) != 0)
+  if ((retval = _cmd("Get Cmd", 
+		     retry_wait_time,
+		     retry_attempt, 
+		     IPMI_NET_FN_APP_RQ,
+		     cmd_rq, 
+		     cmd_rs)) != 0)
     goto cleanup;
 
   if (timer_use)
@@ -1313,6 +1329,7 @@ _set_cmd(void)
   uint32_t initial_countdown_seconds;
   int ret;
  
+  printf("%s:%d:%d\n", __FUNCTION__, __LINE__, errno);
   if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
                                      BMC_WATCHDOG_RETRY_ATTEMPT,
                                      &timer_use, &timer_state, &log,

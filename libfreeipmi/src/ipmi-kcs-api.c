@@ -170,7 +170,6 @@ ipmi_kcs_ctx_create(void)
   ctx->io_init = 0;
 
   ERR_CLEANUP (!((ctx->semid = ipmi_mutex_init (IPMI_INBAND_IPCKEY())) < 0));
-  
   ctx->errnum = IPMI_KCS_CTX_ERR_SUCCESS;
   return ctx;
 
@@ -912,7 +911,7 @@ ipmi_kcs_cmd (ipmi_kcs_ctx_t ctx,
       return (-1); 
     }
 
-  if (fiid_obj_packet_valid(obj_cmd_rq))
+  if (!fiid_obj_packet_valid(obj_cmd_rq))
     {
       ctx->errnum = IPMI_KCS_CTX_ERR_PARAMETERS;
       return (-1); 

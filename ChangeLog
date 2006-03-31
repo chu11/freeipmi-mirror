@@ -4,6 +4,9 @@
 	functions appropriately.
 
 	* bmc-watchdog/: Implement with KCS api.
+
+	* libfreeipmi/src/ipmi-semaphores.c (ipmi_mutex_init): Fix errno
+	setting corner case.
 	
 2006-03-30  Albert Chu <chu11@llnl.gov>
 
