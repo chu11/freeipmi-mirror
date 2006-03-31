@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.66 2006-03-29 18:10:09 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.67 2006-03-31 00:58:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -361,7 +361,7 @@ ipmipower_powercmd_pending()
  *   sequence number.
  */
 static void 
-_send_packet(ipmipower_powercmd_t ip, packet_type_t pkt, int is_retry) 
+_send_packet(ipmipower_powercmd_t ip, packet_type_t pkt) 
 {
   int len = 0;
   char buffer[IPMI_PACKET_BUFLEN];
@@ -724,9 +724,9 @@ _retry_packets(ipmipower_powercmd_t ip)
       ip->ic->hostname, ip->protocol_state, ip->retry_count);
 
   if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
-    _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 1);
+    _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT)
-    _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 1);
+    _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
     {
       /* IPMI Workaround (achu)
@@ -775,24 +775,24 @@ _retry_packets(ipmipower_powercmd_t ip)
 
       ip->ic->ipmi_fd = new_fd;
 
-      _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 1);
+      _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
-    _send_packet(ip, ACTIVATE_SESSION_REQ, 1);
+    _send_packet(ip, ACTIVATE_SESSION_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT)
-    _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 1);
+    _send_packet(ip, SET_SESSION_PRIVILEGE_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
-    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 1);
+    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
-    _send_packet(ip, OPEN_SESSION_REQ, 1);
+    _send_packet(ip, OPEN_SESSION_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
-    _send_packet(ip, RAKP_MESSAGE_1_REQ, 1);
+    _send_packet(ip, RAKP_MESSAGE_1_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
-    _send_packet(ip, RAKP_MESSAGE_3_REQ, 1);
+    _send_packet(ip, RAKP_MESSAGE_3_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
-    _send_packet(ip, GET_CHASSIS_STATUS_REQ, 1);
+    _send_packet(ip, GET_CHASSIS_STATUS_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
-    _send_packet(ip, CHASSIS_CONTROL_REQ, 1);
+    _send_packet(ip, CHASSIS_CONTROL_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT)
     /* 
      * It's pointless to retransmit a close-session.  
@@ -806,7 +806,7 @@ _retry_packets(ipmipower_powercmd_t ip)
      * BMC, and they will either respond with an error or ignore the
      * packet.
      *
-     * _send_packet(ip, CLOSE_SESSION_REQ, 1); 
+     * _send_packet(ip, CLOSE_SESSION_REQ); 
      */
     ip->close_timeout++;
 
@@ -1641,9 +1641,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     {
       if (conf->ipmi_version == IPMI_VERSION_AUTO
           || conf->ipmi_version == IPMI_VERSION_2_0)
-	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
+	_send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
       else
-	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+	_send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
@@ -1660,7 +1660,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                   
                   /* Special case, must clear error, see _recv_packet() */
                   ip->error_occurred = IPMIPOWER_FALSE; 
-                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
                   goto done;
                 }
               return -1;
@@ -1677,7 +1677,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
            * response.
            */
           if (rv < 0)
-            _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+            _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
           else if (!rv)
             {
               if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
@@ -1686,7 +1686,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               if (rv)
                 {
                   /* Don't consider this a retransmission */
-                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ, 0);
+                  _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
                   goto done;
                 }
               /* else we continue with the IPMI 1.5 protocol */
@@ -1700,13 +1700,13 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                   return -1;
                 }
 
-              _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
+              _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
             }
           else
             {
               ip->ipmi_version = IPMI_VERSION_2_0;
 	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
+              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
             }
         }
       else /* conf->ipmi_version == IPMI_VERSION_2_0 */
@@ -1720,7 +1720,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
         }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
@@ -1738,7 +1738,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (rv)
 	{
 	  /* Don't consider this a retransmission */
-	  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ, 0);
+	  _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
           goto done;
         }
       /* else we continue with the IPMI 1.5 protocol */
@@ -1752,7 +1752,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           return -1;
         }
 
-      _send_packet(ip, GET_SESSION_CHALLENGE_REQ, 0);
+      _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_SESSION_CHALLENGE_SENT) 
     {
@@ -1765,7 +1765,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
-      _send_packet(ip, ACTIVATE_SESSION_REQ, 0);
+      _send_packet(ip, ACTIVATE_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT) 
     {
@@ -1788,9 +1788,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
        * the user privilege level
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
-        _send_packet(ip, GET_CHASSIS_STATUS_REQ, 0);
+        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
-        _send_packet(ip, SET_SESSION_PRIVILEGE_REQ, 0);
+        _send_packet(ip, SET_SESSION_PRIVILEGE_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT) 
     {
@@ -1798,7 +1798,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (rv < 0) 
             /* Session is up, so close it */
-            _send_packet(ip, CLOSE_SESSION_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ);
           goto done;
         }
 
@@ -1812,9 +1812,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           || (conf->on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
-        _send_packet(ip, GET_CHASSIS_STATUS_REQ, 0);
+        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
-        _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
+        _send_packet(ip, CHASSIS_CONTROL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     {
@@ -1837,14 +1837,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (rv)
         {
           ip->cipher_suite_list_index++;
-          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ, 0);
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
           goto done;
         }
 
       if (_determine_cipher_suite_id_to_use(ip) < 0)
         return -1;
      
-      _send_packet(ip, OPEN_SESSION_REQ, 0);
+      _send_packet(ip, OPEN_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
     {
@@ -1859,7 +1859,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                   
                   /* Special case, must clear error, see _recv_packet() */
                   ip->error_occurred = IPMIPOWER_FALSE; 
-                  _send_packet(ip, OPEN_SESSION_REQ, 0);
+                  _send_packet(ip, OPEN_SESSION_REQ);
                   goto done;
                 }
 
@@ -1870,7 +1870,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
  
-      _send_packet(ip, RAKP_MESSAGE_1_REQ, 0);
+      _send_packet(ip, RAKP_MESSAGE_1_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
     {
@@ -1886,7 +1886,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (_calculate_cipher_keys(ip) < 0)
         return -1;
 
-      _send_packet(ip, RAKP_MESSAGE_3_REQ, 0);
+      _send_packet(ip, RAKP_MESSAGE_3_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     {
@@ -1906,9 +1906,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           || (conf->on_if_off 
               && (ip->cmd == POWER_CMD_POWER_CYCLE
                   || ip->cmd == POWER_CMD_POWER_RESET)))
-        _send_packet(ip, GET_CHASSIS_STATUS_REQ, 0);
+        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
-        _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
+        _send_packet(ip, CHASSIS_CONTROL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT) 
     {
@@ -1918,7 +1918,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (rv < 0)  
             /* Session is up, so close it */
-            _send_packet(ip, CLOSE_SESSION_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ);
           goto done;
         }
 
@@ -1930,7 +1930,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           ipmipower_output((power_state) ? MSG_TYPE_ON : MSG_TYPE_OFF, 
                            ip->ic->hostname); 
-          _send_packet(ip, CLOSE_SESSION_REQ, 0);
+          _send_packet(ip, CLOSE_SESSION_REQ);
         }
       else if (conf->on_if_off && (ip->cmd == POWER_CMD_POWER_CYCLE
                                   || ip->cmd == POWER_CMD_POWER_RESET)) 
@@ -1940,7 +1940,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               /* This is now a power-on operation */
               ip->cmd = POWER_CMD_POWER_ON;
             }
-          _send_packet(ip, CHASSIS_CONTROL_REQ, 0);
+          _send_packet(ip, CHASSIS_CONTROL_REQ);
         }
       else
         err_exit("_process_ipmi_packets: invalid command state: %d", ip->cmd);
@@ -1951,7 +1951,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         {
           if (rv < 0)
             /* Session is up, so close it */
-            _send_packet(ip, CLOSE_SESSION_REQ, 0);
+            _send_packet(ip, CLOSE_SESSION_REQ);
           goto done;
         }
         
@@ -1964,7 +1964,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
       if (ip->cmd == POWER_CMD_POWER_RESET)
         goto finish_up;
       else
-        _send_packet(ip, CLOSE_SESSION_REQ, 0);
+        _send_packet(ip, CLOSE_SESSION_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_CLOSE_SESSION_SENT) 
     {

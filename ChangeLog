@@ -1,3 +1,9 @@
+2006-03-30  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_powercmd.c (_send_packet): Remove
+	'is_retry' parameter which wasn't used.  Adjusted calls to
+	_send_packet appropriately.
+	
 2006-03-29  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_powercmd.c
