@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.50 2006-03-24 17:42:56 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.51 2006-04-01 05:14:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -315,7 +315,6 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
   Fiid_obj_clear(ip->obj_lan_msg_trlr_res);
   if (ip->ipmi_version == IPMI_VERSION_2_0)
     {
-      Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_req);
       Fiid_obj_clear(ip->obj_rmcpplus_session_hdr_res);
       Fiid_obj_clear(ip->obj_rmcpplus_payload_res);
       Fiid_obj_clear(ip->obj_rmcpplus_session_trlr_res);
