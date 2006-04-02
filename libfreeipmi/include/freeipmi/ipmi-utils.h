@@ -43,6 +43,10 @@ int8_t ipmi_ipv4_address_string2int(char *src, uint32_t *dest);
 
 int8_t ipmi_mac_address_string2int(char *src, uint64_t *dest);
 
+int8_t ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len);
+
+int8_t ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len);
+
 #ifdef __cplusplus
 }
 #endif

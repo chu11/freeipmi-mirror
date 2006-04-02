@@ -53,7 +53,9 @@
 
 #include "freeipmi/ipmi-utils.h"
 #include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-comp-code-spec.h"
+#include "freeipmi/rmcp.h"
 
 #include "bit-ops.h"
 #include "err-wrappers.h"
@@ -218,5 +220,33 @@ ipmi_mac_address_string2int(char *src, uint64_t *dest)
 
   *dest = val;
   return (0);
+}
+
+int8_t
+ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
+{
+  int32_t rmcp_hdr_len;
+  uint8_t auth_type;
+
+  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+
+  ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
+
+  auth_type = *(pkt + rmcp_hdr_len);
+  return ((auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
+}
+
+int8_t
+ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
+{
+  int32_t rmcp_hdr_len;
+  uint8_t auth_type;
+
+  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+
+  ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
+
+  auth_type = *(pkt + rmcp_hdr_len);
+  return ((auth_type == IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }
 

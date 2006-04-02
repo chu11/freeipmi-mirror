@@ -145,6 +145,8 @@ int8_t ipmi_rmcpplus_check_remote_console_session_id(fiid_obj_t obj_cmd,
 int8_t ipmi_rmcpplus_check_session_id(fiid_obj_t obj_rmcpplus_session_hdr,
                                       uint32_t session_id);
 
+int8_t ipmi_rmcpplus_calculate_payload_type(uint8_t *pkt, uint32_t pkt_len);
+
 #ifdef __cplusplus
 }
 #endif

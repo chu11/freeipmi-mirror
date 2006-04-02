@@ -33,6 +33,7 @@
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
 #include "freeipmi/ipmi-rmcpplus-crypt.h"
+#include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-cipher-suite-spec.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
@@ -1175,4 +1176,25 @@ ipmi_rmcpplus_check_session_id(fiid_obj_t obj_rmcpplus_session_hdr,
   FIID_OBJ_GET(obj_rmcpplus_session_hdr, "session_id", &val);
 
   return ((session_id == val) ? 1 : 0);
+}
+
+int8_t
+ipmi_rmcpplus_calculate_payload_type(uint8_t *pkt, uint32_t pkt_len)
+{
+  int32_t rmcp_hdr_len;
+  uint8_t auth_type, payload_type;
+
+  ERR_EINVAL(pkt && pkt_len);
+
+  FIID_TEMPLATE_LEN_BYTES(rmcp_hdr_len, tmpl_rmcp_hdr);
+
+  ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
+
+  auth_type = *(pkt + rmcp_hdr_len);
+  ERR_EINVAL (auth_type == IPMI_AUTHENTICATION_TYPE_RMCPPLUS);
+
+  payload_type = *(pkt + rmcp_hdr_len + 1);
+  ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type));
+
+  return payload_type;
 }
