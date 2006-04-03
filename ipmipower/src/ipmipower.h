@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.53 2006-03-31 05:48:33 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.54 2006-04-03 17:43:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -420,7 +420,6 @@ struct ipmipower_powercmd {
    * Protocol State Machine Variables 
    */
   struct timeval time_begin;
-  ipmipower_bool_t error_occurred;
   unsigned int retry_count;
   uint8_t close_timeout;
 

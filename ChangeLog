@@ -1,3 +1,12 @@
+2006-04-04  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c:
+	Remove all use of "error_occurred" flag.  The flag is no longer
+	necessary.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Fix check
+	ordering bug.
+	
 2006-04-03  Anand Babu  <ab@zresearch.com>
 
 	* doc/freeipmi-faq.texi: Updated x86-64 platform related

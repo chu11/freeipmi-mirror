@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.67 2006-03-31 00:58:41 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.68 2006-04-03 17:43:40 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -212,7 +212,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
    * Protocol State Machine Variables
    */
   Gettimeofday(&(ip->time_begin), NULL);
-  ip->error_occurred = IPMIPOWER_FALSE;
   ip->retry_count = 0;
   ip->close_timeout = 0;
 
@@ -528,7 +527,6 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          ip->error_occurred = IPMIPOWER_TRUE; 
           return -1;
 	}
     }
@@ -571,7 +569,6 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
 	      ip->retry_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-	      ip->error_occurred = IPMIPOWER_TRUE; 
 	      return -1;
 	    }
 	  
@@ -608,13 +605,13 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  if (!ipmipower_check_integrity_pad(ip, pkt))
 	    return 0;
 
+	  if (!ipmipower_check_checksum(ip, pkt))
+	    return 0;
+
 	  if (!ipmipower_check_authentication_code(ip, 
 						   pkt, 
 						   (uint8_t *)recv_buf, 
 						   (uint32_t)recv_len))
-	    return 0;
-
-	  if (!ipmipower_check_checksum(ip, pkt))
 	    return 0;
 
 	  if (!ipmipower_check_outbound_sequence_number(ip, pkt))
@@ -646,7 +643,6 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	      
 	      ip->retry_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-	      ip->error_occurred = IPMIPOWER_TRUE; 
 	      return -1;
 	    }
   
@@ -701,8 +697,7 @@ _retry_packets(ipmipower_powercmd_t ip)
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
-      || conf->retry_timeout_len == 0             /* no retransmissions */
-      || ip->error_occurred == IPMIPOWER_TRUE)   /* we hit an error */
+      || conf->retry_timeout_len == 0)             /* no retransmissions */
     return 0;
 
   /* Did we timeout on this packet? */
@@ -892,7 +887,6 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 #else
       ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
-      ip->error_occurred = IPMIPOWER_TRUE; 
       return -1;
     }
 
@@ -1132,7 +1126,6 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
           
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          ip->error_occurred = IPMIPOWER_TRUE; 
           return -1;
         }
     }
@@ -1146,7 +1139,6 @@ _check_activate_session_authentication_type(ipmipower_powercmd_t ip)
 
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          ip->error_occurred = IPMIPOWER_TRUE; 
           return -1;
         }
     }
@@ -1658,8 +1650,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                 {
                   /* Try the IPMI 1.5 version of Get Authentication Capabilities */
                   
-                  /* Special case, must clear error, see _recv_packet() */
-                  ip->error_occurred = IPMIPOWER_FALSE; 
                   _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
                   goto done;
                 }
@@ -1857,8 +1847,6 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
                   /* achu: Need to re-init */
                   _init_ipmi_2_0_randomized_data(ip);
                   
-                  /* Special case, must clear error, see _recv_packet() */
-                  ip->error_occurred = IPMIPOWER_FALSE; 
                   _send_packet(ip, OPEN_SESSION_REQ);
                   goto done;
                 }
