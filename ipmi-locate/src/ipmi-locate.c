@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-locate.c,v 1.19 2006-04-03 10:22:36 ab Exp $ 
+   $Id: ipmi-locate.c,v 1.20 2006-04-03 20:57:13 ab Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
@@ -112,7 +112,7 @@ display_ipmi_locate_info (ipmi_locate_info_t *info)
       printf ("BMC SMBUS slave address: %lX\n", (unsigned long)info->base_address.bmc_smbus_slave_address);
       break;
     default:
-      printf ("FATAL: error parsing base address\n");
+      printf ("error: Error parsing base address\n");
     }
   
   printf ("Register space: %d\n", info->reg_space);

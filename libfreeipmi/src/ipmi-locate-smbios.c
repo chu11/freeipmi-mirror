@@ -391,7 +391,7 @@ ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
   ERR_ENODEV_CLEANUP (pinfo->interface_type == type);
 
   strobed = address = *(uint64_t*)(bufp+IPMI_SMBIOS_IPMI_DEV_INFO_ADDRESS_OFFSET);
-  if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] > IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
+  if (bufp[IPMI_SMBIOS_DEV_INFO_LEN_OFFSET] >= IPMI_SMBIOS_IPMI_DEV_INFO_MODIFIER_OFFSET)
     {
       uint8_t modifier;
       uint8_t lsb;

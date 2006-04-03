@@ -1,3 +1,7 @@
+2006-04-03  Anand Babu  <ab@zresearch.com>
+	* libfreeipmi/src/ipmi-locate-smbios.c: check if record length >=
+	16. It was > 16 before. Found while running on IBM e325.
+	
 2006-04-04  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower.h, ipmipower/src/ipmipower_powercmd.c:
