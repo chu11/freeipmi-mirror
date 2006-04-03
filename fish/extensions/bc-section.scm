@@ -100,7 +100,7 @@
 			(cadr (string-tokenize line))))) 
 	(if (valid-key? key key-desc-list) 
 	    (if (or (eq? value #f) (valid-value? key value key-desc-list)) 
-		(validate-commit-section-data (cdr section-data) key-desc-list) 
+		(validate-commit-section-data (cdr section-data) key-desc-list)
 		(begin 
 		  (display (string-append "ERROR: invalid value <" 
 					  value 
@@ -209,10 +209,12 @@
 	     (value (checkout-section-value section-name 
 					    key 
 					    key-desc-list)))
+
 	(if (boolean? value)
-	    (display (string-append "This BMC does not support option [" 
-				    key 
-				    "].\n") (current-error-port))
+	    (if (bmc-config-get-verbose-option bmc-config-cmd-args)
+		(display (string-append "This BMC does not support option [" 
+					key 
+					"].\n") (current-error-port)))
 	    (display (string-append "\t## " 
 				    (get-doc-string key key-desc-list)
 				    "\n"
@@ -247,9 +249,10 @@
 						     key-desc-list))
 	     (diff-proc      (get-diff-proc key key-desc-list)))
 	(if (boolean? bmc-value)
-	    (display (string-append "This BMC does not support option [" 
-				    key 
-				    "].\n") (current-error-port))
+	    (if (bmc-config-get-verbose-option bmc-config-cmd-args)
+		(display (string-append "This BMC does not support option [" 
+					key 
+					"].\n") (current-error-port)))
 	    (if (not (diff-proc section-name value bmc-value))
 		(begin 
 		  (display (string-append "USER:" key "=" value "\n"))

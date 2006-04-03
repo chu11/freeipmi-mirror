@@ -17,6 +17,8 @@
 ;;; 
 ;;; bmc-config.scm should be automatically loaded thru init.scm
 
+(define bmc-config-cmd-args 0)
+
 (fi-load "bc-common.scm")
 (fi-load "bc-user-section.scm")
 (fi-load "bc-lan-serial-channel-section.scm")
@@ -347,6 +349,7 @@
 	    #f))))
 
 (define (bmc-config-main cmd-args)
+  (set! bmc-config-cmd-args cmd-args)
   (cond 
    ((bmc-config-get-help-option cmd-args)
     (bmc-config-display-help))
@@ -420,6 +423,6 @@
 	"           [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
 	"           [--priv-level=PRIVILEGE-LEVEL] [--checkout] [--commit]\n"
 	"           [--diff] [--filename=FILENAME] [--key-pair=KEY-PAIR]\n"
-	"           [--help] [--usage] [--version]\n"
+	"           [--help] [-v] [--usage] [--version]\n"
 	"\n"
 	"   Displays information about BMC.")))

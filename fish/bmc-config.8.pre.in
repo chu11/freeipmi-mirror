@@ -6,6 +6,9 @@ IPMI BMC Configurator is used to get and set BMC configurations
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common.man>
 .TP
+\fB\-v\fR, \fB\-\-verbose\fR
+Print detailed information.
+.TP
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from BMC.
 .TP

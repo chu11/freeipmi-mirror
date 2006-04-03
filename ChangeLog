@@ -1,3 +1,15 @@
+2006-04-03  Anand Babu  <ab@zresearch.com>
+
+	* doc/freeipmi-faq.texi: Updated x86-64 platform related
+	questions.
+	* doc/freeipmi.texi: Updated.
+	* fish/bmc-config.8.pre.in: Updated.
+	* freeipmi/fish/extensions/bc-common.scm: verbose flag. Closing
+	bug #16113.
+	* fish/extensions/bmc-config.scm: like wise.
+	* fish/extensions/bc-section.scm: "Not supported" message
+	printed only when verbose.
+
 2006-04-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-utils.h,

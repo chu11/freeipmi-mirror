@@ -326,7 +326,7 @@
     (display "                  [--auth-type=AUTHTYPE]\n")
     (display "                  [--priv-level=PRIVILEGE-LEVEL] [--checkout]\n")
     (display "                  [--commit] [--diff] [--filename=FILENAME]\n")
-    (display "                  [--key-pair=KEY-PAIR] [--help] [--usage] [--version]\n")))
+    (display "                  [--key-pair=KEY-PAIR] [--help] [--verbose] [--usage] [--version]\n")))
 
 (define (bmc-config-display-help)
   (begin 
@@ -358,6 +358,7 @@
     (display "  -k, --key-pair=KEY-PAIR    Use KEY-PAIR in commit or diff.\n")
     (display "  -?, --help                 Give this help list.\n")
     (display "      --usage                Give a short usage message.\n")
+    (display "  -v, --verbose              Print detailed output.\n")
     (display "  -V, --version              Print program version.\n")
     (display "\n")
     (display "Mandatory or optional arguments to long options are also mandatory or optional\n")
@@ -387,6 +388,7 @@
 				 (priv-level     (single-char #\l)   (value #t))
 				 (help           (single-char #\?)   (value #f))
 				 (usage          (single-char #\377) (value #f))
+				 (verbose        (single-char #\v)   (value #f))
 				 (version        (single-char #\V)   (value #f))
 				 (checkout       (single-char #\o)   (value #f))
 				 (commit         (single-char #\i)   (value #f))
@@ -405,6 +407,7 @@
 		  (priv-level     (option-ref options 'priv-level     #f))
 		  (help-wanted    (option-ref options 'help           #f))
 		  (usage-wanted   (option-ref options 'usage          #f))
+		  (verbose-wanted (option-ref options 'verbose        #f))
 		  (version-wanted (option-ref options 'version        #f))
 		  (checkout       (option-ref options 'checkout       #f))
 		  (commit-wanted  (option-ref options 'commit         #f))
@@ -559,15 +562,19 @@
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list usage-wanted))))
-	     ;; --version (11)
+	     ;; --verbose (11)
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
+						   (list verbose-wanted))))
+	     ;; --version (12)
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list version-wanted))))
-	     ;; --checkout (12) bmc-config specific
+	     ;; --checkout (13) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list checkout))))
-	     ;; --commit (13) bmc-config specific
+	     ;; --commit (14) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (begin 
 		   (set! bmc-config-cmd-args (append bmc-config-cmd-args 
@@ -581,7 +588,7 @@
 				  (current-error-port))
 			 (set! bmc-config-exit-status 64)
 			 (set! bmc-config-cmd-args #f)))))
-	     ;; --diff (14) bmc-config specific
+	     ;; --diff (15) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (begin 
 		   (set! bmc-config-cmd-args (append bmc-config-cmd-args 
@@ -595,11 +602,11 @@
 				  (current-error-port))
 			 (set! bmc-config-exit-status 64)
 			 (set! bmc-config-cmd-args #f)))))
-	     ;; --filename (15) bmc-config specific
+	     ;; --filename (16) bmc-config specific
 	     (if (list? bmc-config-cmd-args)
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list filename))))
-	     ;; --key-pair (16) bmc-config specific
+	     ;; --key-pair (17) bmc-config specific
 	     (if (and (string? key-pairs) (list? bmc-config-cmd-args))
 		 (set! key-pairs 
 		       (let ((klist '()))
@@ -661,21 +668,24 @@
 (define (bmc-config-get-usage-option cmd-args)
   (list-ref cmd-args 10))
 
-(define (bmc-config-get-version-option cmd-args)
+(define (bmc-config-get-verbose-option cmd-args)
   (list-ref cmd-args 11))
 
-(define (bmc-config-get-checkout-option cmd-args)
+(define (bmc-config-get-version-option cmd-args)
   (list-ref cmd-args 12))
 
-(define (bmc-config-get-commit-option cmd-args)
+(define (bmc-config-get-checkout-option cmd-args)
   (list-ref cmd-args 13))
 
-(define (bmc-config-get-diff-option cmd-args)
+(define (bmc-config-get-commit-option cmd-args)
   (list-ref cmd-args 14))
 
-(define (bmc-config-get-filename-option cmd-args)
+(define (bmc-config-get-diff-option cmd-args)
   (list-ref cmd-args 15))
 
-(define (bmc-config-get-key-pair-option cmd-args)
+(define (bmc-config-get-filename-option cmd-args)
   (list-ref cmd-args 16))
+
+(define (bmc-config-get-key-pair-option cmd-args)
+  (list-ref cmd-args 17))
 

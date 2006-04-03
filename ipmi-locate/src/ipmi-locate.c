@@ -1,9 +1,9 @@
 /* 
-   $Id: ipmi-locate.c,v 1.18 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: ipmi-locate.c,v 1.19 2006-04-03 10:22:36 ab Exp $ 
 
    ipmi-locate - Probes and displays IPMI devices.
 
-   Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
+   Copyright (C) 2003, 2004, 2005, 2006 FreeIPMI Core Team
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by

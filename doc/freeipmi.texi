@@ -687,6 +687,9 @@ replicate the configuration.
 @item ---usage @*
       Give a short usage message.
 
+@item -v, ---verbose @*
+      Print detailed information.
+
 @item -V, ---version @*
       Print program version.
 @end itemize

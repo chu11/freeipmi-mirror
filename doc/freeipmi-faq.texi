@@ -33,6 +33,7 @@ Copyright @copyright{} 2002-2005 FreeIPMI Core Team
 @include permissions.texi
 @end titlepage
 
+
 @node Top, What is IPMI, (dir), (dir)
 @ifinfo
 Frequently Asked Questions for @strong{GNU FreeIPMI} platform management system.
@@ -49,6 +50,8 @@ release @value{VERSION} of the GNU FreeIPMI.
 * GNU FreeIPMI vs OpenIPMI vs Ipmitool vs Ipmiutil::  
 * What is special about GNU FreeIPMI::  
 * SSIF Driver Configuration::   
+* x86-64 Compilation::          
+* libguile-srfi-srfi dynamic-link error::  
 @end menu
 
 @c Output the table of contents at the beginning.
@@ -189,7 +192,7 @@ to multiple operating systems and architectures is easier.
 By "splitting" various IPMI features into multiple tools, each tool
 is capable of providing the user with more options and features.
 
-@node SSIF Driver Configuration,  , What is special about GNU FreeIPMI, Top
+@node SSIF Driver Configuration, x86-64 Compilation, What is special about GNU FreeIPMI, Top
 @section SSIF Driver Configuration
 
 GNU FreeIPMI's SSIF driver works on top of kernel'2 i2c device
@@ -227,4 +230,47 @@ BMC address Locator:
     Usual values for record 08h -> 0x400
 @end example
 
+@node x86-64 Compilation, libguile-srfi-srfi dynamic-link error, SSIF Driver Configuration, Top
+@section x86-64 Compilation
+
+Under some x86-64 platforms such as SUSE GNU/Linux, native 64 bit
+libraries reside under lib64 and 32 bit libs under lib. Autotools by
+default installs libfreeipmi.so under /usr/lib, instead of /usr/lib64
+causing dynamic linking error. Fix is simple, pass libdir
+appropriately to configure script. 
+
+Example:
+@example
+  # ./configure  --prefix=/usr --libdir=/usr/lib64
+@end example
+
+@node libguile-srfi-srfi dynamic-link error,  , x86-64 Compilation, Top
+@section libguile-srfi-srfi dynamic-link error
+If you see error messages like these under ``RedHat'' x86-64 platform,
+@example
+/usr/share/guile/1.6/srfi/srfi-13.scm:159:1: In procedure dynamic-link
+in 
+expression (load-extension "libguile-srfi-srfi-13-14-v-1" 
+"scm_init_srfi_13"):
+/usr/share/guile/1.6/srfi/srfi-13.scm:159:1: file: 
+"libguile-srfi-srfi-13-14-v-1", message:
+"libguile-srfi-srfi-13-14-v-1.so: 
+cannot open shared object file: No such file or directory"
+@end example
+It may be because 
+@itemize @bullet
+@item Duplicate Installation
+1) you have installed both the 32bit (guile-1.6.4-14.i386.rpm) and
+64bit (guile-1.6.4-14.x86-64.rpm) packages. To verify 
+  # rpm -qf /usr/bin/guile
+     guile-1.6.4-14 
+     guile-1.6.4-14 
+
+Will list guile twice. Fix is, just remove the i386 version.
+  # rpm -e guile-1.6.4-14.i386
+@item LTDL_LIBRARY_PATH
+2) Guile installed in a non standard path. ``ltdl'' guile dynamic
+module loader doesn't use ld.so.conf. Instead set LTDL_LIBRARY_PATH
+path properly.
+@end itemize
 @bye
