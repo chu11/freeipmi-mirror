@@ -1,3 +1,9 @@
+2006-04-04  Albert Chu  <chu11@llnl.gov>
+
+	* configure.ac: Increment libfreeipmi revision due to smbios fix.
+
+	* Tagged Release-0_2_1.
+	
 2006-04-03  Anand Babu  <ab@zresearch.com>
 
 	* fish/extensions/sensors-common.scm: Closes bug# 16093. ipmi-sensors emiting wrong program name.

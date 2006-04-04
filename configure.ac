@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.41.6.1 2006-04-04 15:39:14 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.41.6.2 2006-04-04 21:25:41 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -43,7 +43,7 @@ ISODATE=`date +%Y-%m-%d`
 AC_SUBST([ISODATE])
 
 LIBFREEIPMI_CURRENT=2
-LIBFREEIPMI_REVISION=0
+LIBFREEIPMI_REVISION=1
 LIBFREEIPMI_AGE=0
 
 LIBFREEIPMI_VERSION=$LIBFREEIPMI_CURRENT.$LIBFREEIPMI_REVISION.$LIBFREEIPMI_AGE
