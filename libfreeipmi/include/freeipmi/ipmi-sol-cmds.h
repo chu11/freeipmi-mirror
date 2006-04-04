@@ -24,6 +24,8 @@
 #include <stdint.h>
 #include <freeipmi/fiid.h>
 
+#define IPMI_SOL_PACKET_SEQUENCE_NUMBER_MAX    0xF
+
 #define IPMI_SOL_FLUSH_OUTBOUND        0x1
 #define IPMI_SOL_DO_NOT_FLUSH_OUTBOUND 0x0
 
