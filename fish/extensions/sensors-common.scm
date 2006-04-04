@@ -1,5 +1,5 @@
 ;;; sensors-common.scm: sensors common procedures
-;;; authors: Balamurugan <bala.a@californiadigital.com>
+;;; authors: Balamurugan <bala@zresearch.com>
 
 ;;; This program is free software; you can redistribute it and/or
 ;;; modify it under the terms of the GNU General Public License as
@@ -103,7 +103,7 @@
 (define (sensors-display-version)
   (begin 
     (display (string-append "IPMI Sensors [ipmi-sensors-" (fi-version) "]\n"))
-    (display "Copyright (C) 2003-2005 FreeIPMI Core Team\n")
+    (display "Copyright (C) 2003-2006 FreeIPMI Core Team\n")
     (display "This program is free software; you may redistribute it under the terms of\n")
     (display "the GNU General Public License.  This program has absolutely no warranty.\n")))
 
@@ -179,11 +179,11 @@
 		   (set! driver-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sensors [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sensor-exit-status 64)
 		     (set! sensors-cmd-args #f))))
 		 (set! driver-type 0))
 	     (if (list? sensors-cmd-args)
@@ -195,11 +195,11 @@
 		   (set! driver-address (string->number driver-address))
 		   (if (boolean? driver-address)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sensor-exit-status 64)
 			 (set! sensors-cmd-args #f)))))
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
@@ -217,11 +217,11 @@
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sensor-exit-status 64)
 			 (set! sensors-cmd-args #f)))))
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
@@ -231,11 +231,11 @@
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sensor-exit-status 64)
 			 (set! sensors-cmd-args #f)))))
 	     (if (list? sensors-cmd-args)
 		 (set! sensors-cmd-args (append sensors-cmd-args 
@@ -255,11 +255,11 @@
 		   (set! auth-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sensors [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sensor-exit-status 64)
 		     (set! sensors-cmd-args #f))))
 		 (set! auth-type 0))
 	     (if (list? sensors-cmd-args)
@@ -280,11 +280,11 @@
 		   (set! priv-level 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sensors [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sensor-exit-status 64)
 		     (set! sensors-cmd-args #f))))
 		 (set! priv-level 2))
 	     (if (list? sensors-cmd-args)
