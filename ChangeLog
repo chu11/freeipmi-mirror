@@ -10,6 +10,11 @@
 	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Various code
 	cleanup.
 
+	* bmc-info/doc/Makefile.am, bmc-info/doc/bmc-info.8.pre.in,
+	ipmi-raw/doc/Makefile.am, ipmi-raw/doc/ipmi-raw.8.pre.in: Removed
+	files. Moved Makefile.am info and manpages one directory up to be
+	consistent to rest of library.
+
 2006-04-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-sensor-cmds-udm.c
