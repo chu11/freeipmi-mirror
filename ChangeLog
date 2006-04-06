@@ -1,12 +1,12 @@
-2006-04-06  Albert Chu <chu11@llnl.gov>
+2006-04-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-sensor-cmds-udm.c
 	(ipmi_cmd_get_sensor_thresholds): Fix function call cut and paste
-	type.
+	typo.
 
 	* common/src/ipmi-sel-api.c (_get_event_message): Fix output bug.
 	
-2006-04-05  Albert Chu <chu11@llnl.gov>
+2006-04-04  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Add SOL sequence
 	number max definition.
