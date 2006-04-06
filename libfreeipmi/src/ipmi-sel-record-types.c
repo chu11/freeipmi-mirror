@@ -221,8 +221,19 @@ get_sel_system_event_record (uint8_t *record_data, sel_record_t *sel_record)
   asprintf (&(sel_record->sensor_info), 
 	    "%s #%d", 
 	    ipmi_get_sensor_group (sensor_type), sensor_number);
-  sel_record->event_message = ipmi_get_event_message (sensor_type, 
-						      event_reading_code_offset);
+  switch (ipmi_sensor_classify (event_type_code))
+    {
+    case IPMI_SENSOR_CLASS_THRESHOLD:
+    case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+      sel_record->event_message = ipmi_get_generic_event_message (event_type_code,
+								  event_reading_code_offset);
+    case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+      sel_record->event_message = ipmi_get_event_message (sensor_type, 
+							  event_reading_code_offset);
+      break;
+    case IPMI_SENSOR_CLASS_OEM:
+      break;
+    }
   switch (ipmi_sensor_classify (event_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
