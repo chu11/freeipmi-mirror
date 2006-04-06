@@ -1,5 +1,11 @@
 2006-04-06  Albert Chu  <chu11@llnl.gov>
 
+	* Add workaround notes to in-band tools about IBM e325.
+
+	* tag Release-0_2_1
+	
+2006-04-05  Albert Chu  <chu11@llnl.gov>
+
 	* libfreeipmi/src/ipmi-sel-record-types.c
 	(get_sel_system_event_record): Fix output bug.
 	

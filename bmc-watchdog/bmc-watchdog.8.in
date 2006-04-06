@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: bmc-watchdog.8.in,v 1.6 2005-03-13 04:19:53 ab Exp $
+\."$Id: bmc-watchdog.8.in,v 1.6.8.1 2006-04-06 23:46:54 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2004 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -296,6 +296,15 @@ Setup a bmc-watchdog daemon that resets the machine after 15 minutes
 (900 seconds) if the OS has crashed (see default bmc-watchdog rc
 script /etc/init.d/bmc-watchdog for a more complete example):
         bmc-watchdog -d -u 4 -p 0 -a 1 -i 900
+
+.SH WORKAROUND
+On the IBM e325, the BMC firmware is very buggy and prohibits most
+in-band communication in FreeIPMI.
+
+.B bmc-watchdog
+can be run with some workarounds.
+
+> bmc-watchdog --io-port=3234
 
 .SH "KNOWN ISSUES"
 .B Bmc-watchdog
