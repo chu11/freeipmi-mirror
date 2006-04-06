@@ -75,6 +75,10 @@
         (((__val) == IPMI_SOL_ACK \
           || (__val) == IPMI_SOL_NACK) ? 1 : 0)
 
+#define IPMI_SOL_NACK_VALID(__val) \
+        (((__val) == IPMI_SOL_ACK \
+          || (__val) == IPMI_SOL_NACK) ? 1 : 0)
+
 #define IPMI_SOL_BREAK_CONDITION_DETECTED 0x1 
 #define IPMI_SOL_NO_BREAK_DETECTED        0x0
 

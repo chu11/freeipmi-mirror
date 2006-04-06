@@ -355,7 +355,7 @@ fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_number,
               && IPMI_SOL_ASSERT_CTS_VALID(cts_pause)
               && IPMI_SOL_GENERATE_BREAK_VALID(generate_break)
 	      && IPMI_SOL_ASSERT_RI_VALID(ring_wor)
-              && IPMI_SOL_ACK_VALID(ack)
+              && IPMI_SOL_NACK_VALID(nack)
 	      && fiid_obj_valid(obj_sol_payload));
 
   FIID_OBJ_TEMPLATE_COMPARE(obj_sol_payload, tmpl_sol_payload_data_remote_console_to_bmc);
