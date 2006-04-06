@@ -247,19 +247,38 @@ get_sel_system_event_record (uint8_t *record_data,
   asprintf (&(sel_record->sensor_info), 
 	    "%s #%d", 
 	    ipmi_get_sensor_group (sensor_type), sensor_number);
+
   {
     char buffer[1024];
     int rv;
 
-    rv = ipmi_get_sensor_type_code_message(sensor_type,
-					   offset_from_event_reading_type_code,
-					   buffer,
-					   1024);
+    switch (ipmi_sensor_classify (event_type_code))
+      {
+      case IPMI_SENSOR_CLASS_THRESHOLD:
+      case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
+	rv = ipmi_get_generic_event_message(event_type_code,
+					    offset_from_event_reading_type_code,
+					    buffer, 
+					    1024);
+	break;
+      case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
+	rv = ipmi_get_sensor_type_code_message(sensor_type,
+					       offset_from_event_reading_type_code,
+					       buffer,
+					       1024);
+	break;
+      case IPMI_SENSOR_CLASS_OEM:
+	snprintf(buffer, 1024, "Event Type Code = %02Xh", event_type_code);
+	rv = 0;
+	break;
+      }
+
     if (!rv)
       ERR_CLEANUP ((sel_record->event_message = strdup(buffer)));
     else
       sel_record->event_message = NULL;
   }
+
   switch (ipmi_sensor_classify (event_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:

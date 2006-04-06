@@ -3,6 +3,8 @@
 	* libfreeipmi/src/udm/ipmi-sensor-cmds-udm.c
 	(ipmi_cmd_get_sensor_thresholds): Fix function call cut and paste
 	type.
+
+	* common/src/ipmi-sel-api.c (_get_event_message): Fix output bug.
 	
 2006-04-05  Albert Chu <chu11@llnl.gov>
 
