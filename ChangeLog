@@ -6,6 +6,10 @@
 	* libfreeipmi/src/ipmi-udm.c,
 	libfreeipmi/include/freeipmi/ipmi-udm.h: Remove template pointers.
 	
+	* libfreeipmi/src/ipmi-sol-cmds.c,
+	libfreeipmi/include/freeipmi/ipmi-sol-cmds.h: Various code
+	cleanup.
+
 2006-04-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-sensor-cmds-udm.c

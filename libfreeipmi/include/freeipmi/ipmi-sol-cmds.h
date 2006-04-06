@@ -54,12 +54,12 @@
         (((__val) == IPMI_SOL_ASSERT_CTS \
           || (__val) == IPMI_SOL_DEASSERT_CTS) ? 1 : 0)
 
-#define IPMI_SOL_BREAK_CONDITION     0x0
-#define IPMI_SOL_NO_BREAK_CONDITION  0x1
+#define IPMI_SOL_GENERATE_BREAK        0x1
+#define IPMI_SOL_DO_NOT_GENERATE_BREAK 0x0
 
-#define IPMI_SOL_BREAK_CONDITION_VALID(__val) \
-        (((__val) == IPMI_SOL_BREAK_CONDITION \
-          || (__val) == IPMI_SOL_NO_BREAK_CONDITION) ? 1 : 0)
+#define IPMI_SOL_GENERATE_BREAK_VALID(__val) \
+        (((__val) == IPMI_SOL_GENERATE_BREAK \
+          || (__val) == IPMI_SOL_DO_NOT_GENERATE_BREAK) ? 1 : 0)
 
 #define IPMI_SOL_ASSERT_RI       0x0
 #define IPMI_SOL_DEASSERT_RI     0x1
@@ -74,6 +74,9 @@
 #define IPMI_SOL_ACK_VALID(__val) \
         (((__val) == IPMI_SOL_ACK \
           || (__val) == IPMI_SOL_NACK) ? 1 : 0)
+
+#define IPMI_SOL_BREAK_CONDITION_DETECTED 0x1 
+#define IPMI_SOL_NO_BREAK_DETECTED        0x0
 
 #define IPMI_SOL_TRANSMIT_OVERRUN_CHARACTERS_DROPPED     0x1
 #define IPMI_SOL_TRANSMIT_OVERRUN_NO_CHARACTERS_DROPPED  0x0
@@ -171,9 +174,9 @@ int8_t fill_sol_payload_data_remote_console_to_bmc (uint8_t packet_sequence_numb
                                                     uint8_t flush_inbound,
                                                     uint8_t drop_dcd_dsr,
                                                     uint8_t cts_pause,
-                                                    uint8_t break_condition,
+                                                    uint8_t generate_break,
                                                     uint8_t ring_wor,
-                                                    uint8_t ack,
+                                                    uint8_t nack,
                                                     uint8_t *character_data,
                                                     uint32_t character_data_len,
                                                     fiid_obj_t obj_sol_payload);
