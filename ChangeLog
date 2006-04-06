@@ -2,6 +2,9 @@
 
 	* bmc-watchdog/src/bmc-watchdog.c (_init_ipmi): Check kcs context
 	errnum rather than errno.
+
+	* libfreeipmi/src/ipmi-udm.c,
+	libfreeipmi/include/freeipmi/ipmi-udm.h: Remove template pointers.
 	
 2006-04-05  Albert Chu <chu11@llnl.gov>
 

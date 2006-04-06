@@ -71,13 +71,11 @@ struct ipmi_device
 
       struct 
       {
-	fiid_template_t *tmpl_hdr_ptr;
 	fiid_obj_t      obj_hdr;
       } rq;
       
       struct 
       {
-	fiid_template_t *tmpl_hdr_ptr;
 	fiid_obj_t      obj_hdr;
       } rs;
     } inband;
@@ -100,25 +98,17 @@ struct ipmi_device
       
       struct 
       {
-	fiid_template_t *tmpl_rmcp_hdr_ptr;
 	fiid_obj_t      obj_rmcp_hdr;
-	fiid_template_t *tmpl_lan_session_hdr_ptr;
 	fiid_obj_t      obj_lan_session_hdr;
-	fiid_template_t *tmpl_lan_msg_hdr_ptr;
 	fiid_obj_t      obj_lan_msg_hdr;
-	fiid_template_t *tmpl_lan_msg_trlr_ptr;
 	fiid_obj_t      obj_lan_msg_trlr;
       } rq;
       
       struct 
       {
-	fiid_template_t *tmpl_rmcp_hdr_ptr;
 	fiid_obj_t      obj_rmcp_hdr;
-	fiid_template_t *tmpl_lan_session_hdr_ptr;
 	fiid_obj_t      obj_lan_session_hdr;
-	fiid_template_t *tmpl_lan_msg_hdr_ptr;
 	fiid_obj_t      obj_lan_msg_hdr;
-	fiid_template_t *tmpl_lan_msg_trlr_ptr;
 	fiid_obj_t      obj_lan_msg_trlr;
       } rs;
     } outofband;
