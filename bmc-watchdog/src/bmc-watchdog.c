@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.55 2006-03-31 17:29:04 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.56 2006-04-06 12:54:45 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -311,8 +311,7 @@ _init_ipmi(void)
   
   if (ipmi_kcs_ctx_io_init(kcs_ctx) < 0)
     {
-      /* glibc bug on older ia64 systems returns EACCES instead of EPERM */
-      if (errno == EPERM || errno == EACCES)
+      if (ipmi_kcs_ctx_errnum(kcs_ctx) == IPMI_KCS_CTX_ERR_PERMISSION)
         _err_exit("Permission denied, must be root.");
       else
 	_bmclog("ipmi_kcs_ctx_io_init: %s", ipmi_kcs_ctx_strerror(ipmi_kcs_ctx_errnum(kcs_ctx)));
