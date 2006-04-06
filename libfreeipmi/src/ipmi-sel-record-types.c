@@ -227,7 +227,6 @@ get_sel_system_event_record (uint8_t *record_data, sel_record_t *sel_record)
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
       sel_record->event_message = ipmi_get_generic_event_message (event_type_code,
 								  event_reading_code_offset);
-      break;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
       sel_record->event_message = ipmi_get_event_message (sensor_type, 
 							  event_reading_code_offset);
