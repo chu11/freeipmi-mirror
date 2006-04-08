@@ -1656,12 +1656,17 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
       tv.tv_sec = 0;
       tv.tv_usec = timeout;
       
+      ERR (!(_ipmi_lan_cmd_send2 (dev, 
+                                  obj_cmd_rq, 
+                                  tmpl_cmd_rq) < 0));
+      
       ERR (!((n = select(dev->io.outofband.local_sockfd + 1,
 			 &rds,
 			 NULL,
 			 NULL,
 			 &tv)) < 0));
-      if (n)
+      
+      if (FD_ISSET(dev->io.outofband.local_sockfd, &rds))
 	{
 	  if (_ipmi_lan_cmd_recv2 (dev, 
 				   obj_cmd_rs, 
