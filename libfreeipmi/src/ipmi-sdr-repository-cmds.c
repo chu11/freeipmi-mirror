@@ -107,7 +107,8 @@ fiid_template_t tmpl_get_sdr_rs =
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "next_record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
-    {4096, "record_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
+    /* 2040 = 255 * 8, 255 b/c bytes_to_read field in request is 1 byte long */
+    {2040, "record_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_VARIABLE},
     {0,  "", 0}
   };
 
