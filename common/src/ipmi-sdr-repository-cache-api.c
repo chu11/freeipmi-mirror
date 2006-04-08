@@ -237,9 +237,9 @@ ipmi_sdr_repository_cache_seek (sdr_repository_cache_t *sdr_repository_cache, ui
       return (-1);
     }
 
-  FIID_OBJ_CREATE(obj_data_rs, tmpl_sdr_sensor_record_header);
+  FIID_OBJ_CREATE(obj_data_rs, tmpl_sdr_record_header);
 
-  FIID_TEMPLATE_LEN_BYTES_CLEANUP (hdr_len, tmpl_sdr_sensor_record_header);
+  FIID_TEMPLATE_LEN_BYTES_CLEANUP (hdr_len, tmpl_sdr_record_header);
   
   if (rec_no >= sdr_repository_cache->cache_curr_rec_no)
     {

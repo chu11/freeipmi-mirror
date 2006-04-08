@@ -137,16 +137,18 @@ extern "C" {
 #endif
 
 
-extern fiid_template_t tmpl_sdr_sensor_record_header;
-
+extern fiid_template_t tmpl_sdr_record_header;
 extern fiid_template_t tmpl_sdr_full_sensor_record;
 extern fiid_template_t tmpl_sdr_compact_sensor_record;
-extern fiid_template_t tmpl_sdr_event_only_sensor_record;
-extern fiid_template_t tmpl_sdr_entity_association_sensor_record;
-extern fiid_template_t tmpl_generic_device_locator_sensor_record;
-extern fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record;
-extern fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_sensor_record;
-extern fiid_template_t tmpl_sdr_management_controller_device_locator_sensor_record;
+extern fiid_template_t tmpl_sdr_event_only_record;
+extern fiid_template_t tmpl_sdr_entity_association_record;
+  /* extern fiid_template_t device_relative_entity_association_record */
+extern fiid_template_t tmpl_generic_device_locator_record;
+extern fiid_template_t tmpl_sdr_logical_fru_device_locator_record;
+
+extern fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_record;
+
+extern fiid_template_t tmpl_sdr_management_controller_device_locator_record;
 extern fiid_template_t tmpl_sdr_oem_record;
 
 

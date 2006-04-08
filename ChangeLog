@@ -2,6 +2,11 @@
 
 	* libfreeipmi/src/ipmi-sdr-repository-cmds.c: Adjust get sdr max
 	record data length.
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c,
+	libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h,
+	common/src/ipmi-sensor-api.c,
+	common/src/ipmi-sdr-repository-cache-api.c: Fix up template names.
 	
 2006-04-06  Albert Chu <chu11@llnl.gov>
 

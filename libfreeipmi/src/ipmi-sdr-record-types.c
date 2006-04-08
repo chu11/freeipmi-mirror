@@ -30,9 +30,9 @@
 
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_sdr_sensor_record_header = 
+fiid_template_t tmpl_sdr_record_header = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -44,7 +44,7 @@ fiid_template_t tmpl_sdr_sensor_record_header =
 
 fiid_template_t tmpl_sdr_full_sensor_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -167,7 +167,7 @@ fiid_template_t tmpl_sdr_full_sensor_record =
 
 fiid_template_t tmpl_sdr_compact_sensor_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -247,9 +247,9 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_event_only_sensor_record = 
+fiid_template_t tmpl_sdr_event_only_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -295,9 +295,9 @@ fiid_template_t tmpl_sdr_event_only_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_entity_association_sensor_record = 
+fiid_template_t tmpl_sdr_entity_association_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -334,9 +334,9 @@ fiid_template_t tmpl_sdr_entity_association_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_generic_device_locator_sensor_record = 
+fiid_template_t tmpl_generic_device_locator_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -377,9 +377,9 @@ fiid_template_t tmpl_generic_device_locator_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record = 
+fiid_template_t tmpl_sdr_logical_fru_device_locator_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -417,9 +417,9 @@ fiid_template_t tmpl_sdr_logical_fru_device_locator_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_sensor_record = 
+fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -458,9 +458,9 @@ fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_sensor_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_sdr_management_controller_device_locator_sensor_record = 
+fiid_template_t tmpl_sdr_management_controller_device_locator_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -508,7 +508,7 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_sensor_record =
 
 fiid_template_t tmpl_sdr_oem_record = 
   {
-    // Sensor record header
+    // SDR record header
     // --------------------
     {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
