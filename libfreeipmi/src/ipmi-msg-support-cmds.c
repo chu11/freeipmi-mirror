@@ -1311,8 +1311,10 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
 	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER)
 	errno = EBUSY;
+      else if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_EXCEEDS_PRIV_LEVEL)
+        errno = EACCES;
       else
-	errno = EIO;
+        errno = EIO;
       return -1;
     }
   
