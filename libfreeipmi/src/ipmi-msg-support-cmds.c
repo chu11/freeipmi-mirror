@@ -1264,7 +1264,7 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 		 tmpl_cmd_get_session_challenge_rs) == 0);
   if (ipmi_comp_test (obj_cmd_rs) != 1)
     {
-      errno = EPERM;
+      errno = EACCES;
       return -1;
     }
   
@@ -1344,7 +1344,7 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
     {
       if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
 	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT)
-	errno = EPERM;
+	errno = EACCES;
       else
 	errno = EIO;
       return -1;
