@@ -243,9 +243,11 @@ ipmi_open_outofband (ipmi_device_t *dev,
      -- Anand Babu */
   if ((status = ipmi_lan_open_session2 (dev)) == -1)
     {
+      int save_errno = errno;
       if (dev->io.outofband.local_sockfd)
 	close (dev->io.outofband.local_sockfd);
       ipmi_outofband_free (dev);
+      errno = save_errno;
       return (-1);
     }
   

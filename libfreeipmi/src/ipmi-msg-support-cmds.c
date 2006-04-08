@@ -1262,7 +1262,11 @@ ipmi_cmd_get_session_challenge2 (ipmi_device_t *dev,
 		 tmpl_cmd_get_session_challenge_rq, 
 		 obj_cmd_rs, 
 		 tmpl_cmd_get_session_challenge_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    {
+      errno = EPERM;
+      return -1;
+    }
   
   return (0);
 }
@@ -1273,7 +1277,7 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 {
   uint32_t initial_outbound_seq_num = 0;
   fiid_obj_t obj_cmd_rq = NULL;
-  
+
   ERR (dev != NULL);
   ERR (obj_cmd_rs != NULL);
   
@@ -1300,7 +1304,17 @@ ipmi_cmd_activate_session2 (ipmi_device_t *dev,
 		 tmpl_cmd_activate_session_rq, 
 		 obj_cmd_rs, 
 		 tmpl_cmd_activate_session_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    {
+      if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE
+	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_FOR_GIVEN_USER
+	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_NO_SLOT_AVAILABLE_TO_SUPPORT_USER)
+	errno = EBUSY;
+      else
+	errno = EIO;
+      return -1;
+    }
   
   return (0);
 }
@@ -1326,7 +1340,15 @@ ipmi_cmd_set_session_priv_level2 (ipmi_device_t *dev,
 		 tmpl_cmd_set_session_priv_level_rq, 
 		 obj_cmd_rs, 
 		 tmpl_cmd_set_session_priv_level_rs) == 0);
-  ERR (ipmi_comp_test (obj_cmd_rs) == 1);
+  if (ipmi_comp_test (obj_cmd_rs) != 1)
+    {
+      if (IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_RQ_LEVEL_NOT_AVAILABLE_FOR_USER
+	  || IPMI_COMP_CODE (obj_cmd_rs) == IPMI_COMP_CODE_RQ_LEVEL_EXCEEDS_USER_PRIV_LIMIT)
+	errno = EPERM;
+      else
+	errno = EIO;
+      return -1;
+    }
   
   return (0);
 }

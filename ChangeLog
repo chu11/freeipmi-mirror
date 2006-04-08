@@ -1,3 +1,8 @@
+2006-04-08  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/src/: Support packet retransmissions and correct
+	error codes.
+	
 2006-04-06  Albert Chu  <chu11@llnl.gov>
 
 	* Add workaround notes to in-band tools about IBM e325.
