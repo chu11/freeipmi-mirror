@@ -1,3 +1,8 @@
+2006-04-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/, fish/, common/: Split record_count of sdr info
+	into ls byte and ms byte like IPMI spec.
+	
 2006-04-07  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-repository-cmds.c: Adjust get sdr max

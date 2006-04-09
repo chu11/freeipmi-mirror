@@ -150,6 +150,10 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   fiid_obj_t obj_data_rs = NULL;
   struct stat buf;
   uint64_t val;
+  uint8_t record_count_ls_byte;
+  uint8_t record_count_ms_byte;
+  uint16_t record_count;
+  uint8_t *ptr;
   int32_t len;
   int rv = -1;
 
@@ -177,9 +181,21 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
 
   FIID_OBJ_SET_ALL_CLEANUP (obj_data_rs, sdr_repository_cache->cache_start, len);
 
-  FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_count", &val);
+  FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_count_ls_byte", &val);
+  record_count_ls_byte = val;
+  FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_count_ms_byte", &val);
+  record_count_ms_byte = val;
+  ptr = (uint8_t *)record_count;
+#if WORDS_BIGENDIAN
+  ptr[1] = record_count_ls_byte;
+  ptr[0] = record_count_ms_byte;
+#else
+  ptr[0] = record_count_ls_byte;
+  ptr[1] = record_count_ms_byte;
+#endif
 
-  sdr_repository_cache->total_records = (uint32_t) val;
+
+  sdr_repository_cache->total_records = (uint32_t) record_count;
   
   sdr_repository_cache->cache_curr = sdr_repository_cache->cache_start + len;
   
