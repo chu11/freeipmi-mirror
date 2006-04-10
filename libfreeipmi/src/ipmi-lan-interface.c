@@ -1630,10 +1630,9 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	       fiid_template_t tmpl_cmd_rs)
 {
   fd_set rds;
-  struct timeval tv;
-  unsigned int timeout = 500000;
-  unsigned int total_retry = 0;
+  unsigned int retry_count = 0;
   int n;
+  struct timeval start, session_timeout_len, session_timeout, current;
   int8_t rv = -1;
 
   if (!(dev && 
@@ -1647,18 +1646,34 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
       return (-1);
     }
 
-  errno = ETIMEDOUT;
-  while (total_retry < 5)
+  ERR (!(_ipmi_lan_cmd_send2 (dev, 
+                              obj_cmd_rq, 
+                              tmpl_cmd_rq) < 0));
+  
+  ERR (!(gettimeofday (&start, NULL) < 0));
+
+  session_timeout_len.tv_sec = dev->io.outofband.session_timeout / 1000;
+  session_timeout_len.tv_usec = dev->io.outofband.session_timeout - (session_timeout_len.tv_sec * 1000);
+
+  timeradd(&start, &session_timeout_len, &session_timeout);
+
+  while (1)
     {
+      struct timeval tv;
+
       FD_ZERO(&rds);
       FD_SET(dev->io.outofband.local_sockfd, &rds);
       
+      ERR (!(gettimeofday (&current, NULL) < 0));
+
+      if (timercmp(&current, &session_timeout, >))
+        {
+          errno = ETIMEDOUT;
+          break;
+        }
+
       tv.tv_sec = 0;
-      tv.tv_usec = timeout;
-      
-      ERR (!(_ipmi_lan_cmd_send2 (dev, 
-                                  obj_cmd_rq, 
-                                  tmpl_cmd_rq) < 0));
+      tv.tv_usec = dev->io.outofband.retransmission_timeout * 1000 + dev->io.outofband.retransmission_backoff_timeout * retry_count;
       
       ERR (!((n = select(dev->io.outofband.local_sockfd + 1,
 			 &rds,
@@ -1675,13 +1690,17 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	      ERR (!(_ipmi_lan_cmd_send2 (dev, 
 					  obj_cmd_rq, 
 					  tmpl_cmd_rq) < 0));
-	      total_retry++;
-	      timeout += 250000;
+	      retry_count++;
+              if (retry_count >= dev->io.outofband.max_retry_count)
+                {
+                  errno = ETIMEDOUT;
+                  break;
+                }
+                
 	    }
 	  else
 	    {
 	      rv = 0;
-	      errno = 0;
 	      break;
 	    }
 	}
@@ -1690,11 +1709,15 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	  ERR (!(_ipmi_lan_cmd_send2 (dev, 
 				      obj_cmd_rq, 
 				      tmpl_cmd_rq) < 0));
-	  total_retry++;
-	  timeout += 250000;
+          retry_count++;
+          if (retry_count >= dev->io.outofband.max_retry_count)
+            {
+              errno = ETIMEDOUT;
+              break;
+            }
 	}
     }
-  
+
   return (rv);
 }
 

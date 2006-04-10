@@ -1,7 +1,11 @@
+2006-04-10  Albert Chu  <chu11@llnl.gov>
+
+	* libfreeipmi/: Cleanup packet retransmission hacks.
+	
 2006-04-08  Albert Chu  <chu11@llnl.gov>
 
-	* libfreeipmi/src/: Support packet retransmissions and correct
-	error codes.
+	* libfreeipmi/src/: Support packet retransmissions and fix errno
+	return codes.
 	
 2006-04-06  Albert Chu  <chu11@llnl.gov>
 
