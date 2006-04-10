@@ -232,11 +232,6 @@ ipmi_open_outofband (ipmi_device_t *dev,
       return (-1);
     }
   
-  dev->io.outofband.max_retry_count = IPMI_MAX_RETRY_COUNT;
-  dev->io.outofband.retransmission_timeout = IPMI_RETRANSMISSION_TIMEOUT;
-  dev->io.outofband.retransmission_backoff_timeout = IPMI_RETRANSMISSION_BACKOFF_TIMEOUT;
-  dev->io.outofband.session_timeout = IPMI_SESSION_TIMEOUT;
-
   /* Open client (local) UDP socket */
   if ((dev->io.outofband.local_sockfd = ipmi_open_free_udp_port ()) == -1)
     {

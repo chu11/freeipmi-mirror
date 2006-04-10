@@ -59,11 +59,6 @@
 #define IPMI_MAX_RETRIES  3
 #define IPMI_POLL_INTERVAL_USECS  0x01
 
-#define IPMI_MAX_RETRY_COUNT                 5  
-#define IPMI_RETRANSMISSION_TIMEOUT          500
-#define IPMI_RETRANSMISSION_BACKOFF_TIMEOUT  250
-#define IPMI_SESSION_TIMEOUT                 6000
-
 enum ipmi_mode
   {
     IPMI_MODE_DEFAULT = 0,
@@ -119,11 +114,6 @@ struct ipmi_device
     
     struct 
     {
-      unsigned int      max_retry_count;
-      unsigned int      retransmission_timeout;
-      unsigned int      retransmission_backoff_timeout;
-      unsigned int      session_timeout;
-
       int               local_sockfd;
       struct sockaddr   remote_host;
       unsigned int      remote_host_len;
