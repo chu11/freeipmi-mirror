@@ -919,6 +919,7 @@ fill_cmd_set_user_password (uint8_t user_id,
 
 int8_t 
 fill_cmd_set_user_password_v20 (uint8_t user_id, 
+                                uint8_t password_size,
                                 uint8_t operation, 
                                 char *password,
                                 unsigned int password_len,
@@ -933,7 +934,13 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
    * simply fail and return an error.
    */
   ERR_EINVAL (IPMI_PASSWORD_OPERATION_VALID(operation)
-	      && !(password && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
+              && IPMI_PASSWORD_SIZE_VALID(password_size)
+	      && !(password 
+                   && password_size == IPMI_PASSWORD_SIZE_16_BYTES
+                   && password_len > IPMI_MAX_PASSWORD_LENGTH)
+	      && !(password 
+                   && password_size == IPMI_PASSWORD_SIZE_20_BYTES
+                   && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_password_v20_rq);
@@ -942,19 +949,26 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "password_size", IPMI_PASSWORD_SIZE_20_BYTES);
+  FIID_OBJ_SET (obj_cmd_rq, "password_size", password_size);
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
 
   if (operation == IPMI_PASSWORD_OPERATION_SET_PASSWORD
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
-      /* achu: password must be zero extended */
-      memset(buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
-      if (password)
-        strncpy((char *)buf, password, IPMI_2_0_MAX_PASSWORD_LENGTH);
+      uint32_t buf_max_len;
 
-      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_2_0_MAX_PASSWORD_LENGTH);
+      if (password_size == IPMI_PASSWORD_SIZE_16_BYTES)
+        buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
+      else
+        buf_max_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
+
+      /* achu: password must be zero extended */
+      memset(buf, '\0', buf_max_len);
+      if (password)
+        strncpy((char *)buf, password, buf_max_len);
+
+      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
     }
 
   return 0;

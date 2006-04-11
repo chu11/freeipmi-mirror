@@ -3,12 +3,14 @@
 	* libfreeipmi/src/ipmi-rmcpplus.c (fill_rmcpplus_rakp_message_1):
 	Fix compliance bug.
 
-	* libfreeipmi/src/ipmi-messaging-support-cmds.c
-	(fill_cmd_set_user_password_v20): Fix compliance issue (or is it
-	vendor bug in firmware??).
+	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h,
+	libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_user_password_v20),
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c: Support
+	password size parameter.
 
-	* fish/src/bmc-conf2.c (set_bmc_user_password): Support IPMI 2.0
-	and IPMI 1.5 passwords.
+	* fish/src/bmc-conf2.c: Back to IPMI 1.5 and 16 byte passwords
+	until suitable fix/re-architecture is done.
 
 	* ipmipower/: Remove --cipher-suite-records-all-oem option.
 	Migrate workaround into --intel-2-0-session option.  Implement

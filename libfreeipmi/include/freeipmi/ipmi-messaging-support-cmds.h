@@ -172,6 +172,10 @@ extern "C" {
 
 #define IPMI_PASSWORD_SIZE_16_BYTES 0x0
 #define IPMI_PASSWORD_SIZE_20_BYTES 0x1
+
+#define IPMI_PASSWORD_SIZE_VALID(__password_size) \
+        (((__password_size) == IPMI_PASSWORD_SIZE_16_BYTES \
+          || (__password_size) == IPMI_PASSWORD_SIZE_20_BYTES) ? 1 : 0)
   
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq;
 extern fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rs;
@@ -299,6 +303,7 @@ int8_t fill_cmd_set_user_password (uint8_t user_id,
                                    fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_user_password_v20 (uint8_t user_id,
+                                       uint8_t password_size,
                                        uint8_t operation,
                                        char *password,
                                        unsigned int password_len,

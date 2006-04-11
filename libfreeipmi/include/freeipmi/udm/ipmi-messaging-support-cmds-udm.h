@@ -106,6 +106,7 @@ int8_t ipmi_cmd_set_user_password (ipmi_device_t *dev,
 
 int8_t ipmi_cmd_set_user_password_v20 (ipmi_device_t *dev, 
                                        uint8_t user_id, 
+                                       uint8_t password_size,
                                        uint8_t operation, 
                                        char *password,
                                        unsigned int password_len,
