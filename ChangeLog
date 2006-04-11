@@ -1,3 +1,23 @@
+2006-04-11  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus.c (fill_rmcpplus_rakp_message_1):
+	Fix compliance bug.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_user_password_v20): Fix compliance issue (or is it
+	vendor bug in firmware??).
+
+	* fish/src/bmc-conf2.c (set_bmc_user_password): Support IPMI 2.0
+	and IPMI 1.5 passwords.
+
+	* ipmipower/: Remove --cipher-suite-records-all-oem option.
+	Migrate workaround into --intel-2-0-session option.  Implement
+	additional username padding workaround for Intel.
+
+	* libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_get_session_challenge, ipmi_cmd_activate_session,
+	ipmi_cmd_set_session_privilege_level): Fix errno codes.
+	
 2006-04-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, fish/, common/: Split record_count of sdr info

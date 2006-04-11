@@ -925,7 +925,6 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
                                 fiid_obj_t obj_cmd_rq)
 {
   uint8_t buf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  uint32_t buf_max_len;
 
   /* achu: password can be the max length.  Null termination in IPMI
    * packet not required.
@@ -943,8 +942,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  
   FIID_OBJ_SET (obj_cmd_rq, "user_id", user_id);
   FIID_OBJ_SET (obj_cmd_rq, "user_id.reserved", 0);
-  /* "password_size" field may be changed to 20 later on below */
-  FIID_OBJ_SET (obj_cmd_rq, "password_size", IPMI_PASSWORD_SIZE_16_BYTES);
+  FIID_OBJ_SET (obj_cmd_rq, "password_size", IPMI_PASSWORD_SIZE_20_BYTES);
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   FIID_OBJ_SET (obj_cmd_rq, "operation.reserved", 0);
 
@@ -954,24 +952,9 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       /* achu: password must be zero extended */
       memset(buf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       if (password)
-        {
-          strncpy((char *)buf, password, IPMI_2_0_MAX_PASSWORD_LENGTH);
-          
-          /* Max buffer length depends on the password length.  See IPMI
-           * spec for details. 
-           */
-          if (strlen(password) <= IPMI_MAX_PASSWORD_LENGTH)
-            buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
-          else
-            {
-              buf_max_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
-              FIID_OBJ_SET (obj_cmd_rq, "password_size", IPMI_PASSWORD_SIZE_20_BYTES);
-            }
-        }
-      else
-        buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
-      
-      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, buf_max_len);
+        strncpy((char *)buf, password, IPMI_2_0_MAX_PASSWORD_LENGTH);
+
+      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_2_0_MAX_PASSWORD_LENGTH);
     }
 
   return 0;

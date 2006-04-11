@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.40 2006-03-24 17:42:56 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.41 2006-04-11 20:44:34 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -633,19 +633,13 @@ option must be set.  The option will force Per Message Authentication
 to be used no matter what is advertised by the remote BMC.
 
 Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): The remote BMC formats Cipher Suite Records with the OEM
-record format despite headers that indicate non-OEM records.  In order
-to work around this issue, the -W (--cipher-suite-records-all-oem)
-option must be set.  This option will force OEM record formats to
-always be assumed.
-
-Intel SE7520AF2 with Intel Server Management Module (Professional
-Edition): The session activation and session management protocol has
-several bugs which can be worked around using the the -X
-(--intel-2-0-session) option.  The workrarounds include several
-security modifications including an automatic acceptance of a RAKP 4
-response if the integrity algorithm is MD5-128 and password truncation
-if the authentication algorithm is HMAC-MD5-128.
+Edition): A number of Intel IPMI 2.0 bugs which can be worked around
+using the the -X (--intel-2-0-session) option.  The workrarounds
+include recognition of OEM formatted cipher suite records despite
+non-OEM record headers, padding of usernames, automatic acceptance of
+a RAKP 4 response integrity check when using the integrity algorith
+MD5-128, and password truncation if the authentication algorithm if
+HMAC-MD5-128.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the

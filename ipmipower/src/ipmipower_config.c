@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.28 2006-03-24 17:42:56 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.29 2006-04-11 20:44:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -247,9 +247,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUWXDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUWXt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -279,7 +279,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"force-permsg-authentication",  0, NULL, 'P'},
       {"accept-session-id-zero",       0, NULL, 'S'},
       {"check-unexpected-authcode",    0, NULL, 'U'},
-      {"cipher-suite-records-all-oem", 0, NULL, 'W'},
       {"intel-2-0-session",            0, NULL, 'X'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
@@ -402,10 +401,6 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'U':       /* --check-unexpected-authcode */
           conf->check_unexpected_authcode = IPMIPOWER_TRUE;
           conf->check_unexpected_authcode_set = IPMIPOWER_TRUE;
-          break;
-        case 'W':      /* --cipher-suite-record-oem */
-          conf->cipher_suite_records_all_oem = IPMIPOWER_TRUE;
-          conf->cipher_suite_records_all_oem_set = IPMIPOWER_TRUE;
           break;
         case 'X':      /* --intel-2-0-session */
           conf->intel_2_0_session = IPMIPOWER_TRUE;

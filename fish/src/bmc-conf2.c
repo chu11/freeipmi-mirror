@@ -185,7 +185,16 @@ set_bmc_user_password (ipmi_device_t *dev,
                                       (char *)password, 
                                       (password) ? strlen((char *)password) : 0,
                                       obj_cmd_rs) != 0)
-    goto cleanup;
+    {
+      /* We assume it's a IPMI 1.5 machine, try again */
+      if (ipmi_cmd_set_user_password (dev, 
+                                      userid, 
+                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
+                                      (char *)password, 
+                                      (password) ? strlen((char *)password) : 0,
+                                      obj_cmd_rs) != 0)
+        goto cleanup;
+    }
 
   rv = 0;
  cleanup:

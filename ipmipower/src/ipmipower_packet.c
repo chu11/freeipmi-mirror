@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.51 2006-04-01 05:14:14 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.52 2006-04-11 20:44:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -533,6 +533,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
   uint8_t *username, *password, *integrity_key, *confidentiality_key;
+  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  uint32_t username_len;
   uint64_t session_id, managed_system_session_id;
   uint32_t sequence_number, integrity_key_len, confidentiality_key_len;
   uint8_t authentication_type, net_fn, payload_authenticated, payload_encrypted,
@@ -554,9 +556,32 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         username = (uint8_t *)conf->username;
       else
         username = NULL;
+
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition)
+       *
+       * The username must be padded despite explicitly not being
+       * allowed.  "No Null characters (00h) are allowed in the name".
+       * Table 13-11 in the IPMI 2.0 spec.
+       */
+      if (pkt == RAKP_MESSAGE_1_REQ && conf->intel_2_0_session)
+        {
+          memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+          if (username)
+            strcpy(username_buf, username);
+          username = username_buf;
+          username_len = IPMI_MAX_USER_NAME_LENGTH;
+        }
+      else
+        username_len = (username) ? strlen((char *)username) : 0;
     }
   else
-    username = NULL;
+    {
+      username = NULL;
+      username_len = 0;
+    }
 
   /* Calculate Password */
   if (pkt == ACTIVATE_SESSION_REQ
@@ -743,7 +768,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
        */
       if (fill_cmd_get_session_challenge(ip->authentication_type, 
                                          username, 
-                                         strlen(conf->username),
+                                         username_len,
                                          ip->obj_get_session_challenge_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_cmd_get_session_challenge: %s", 
@@ -837,7 +862,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                         ip->privilege,
                                         ip->name_only_lookup,
                                         username,
-                                        (username) ? strlen((char *)username) : 0,
+                                        username_len,
                                         ip->obj_rakp_message_1_req) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "
                  "fill_rmcpplus_rakp_message_1: %s", 
@@ -900,7 +925,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                                                                                          name_only_lookup,
                                                                                                          ip->privilege,
                                                                                                          username,
-                                                                                                         (username) ? strlen((char *)username) : 0,
+                                                                                                         username_len,
                                                                                                          key_exchange_authentication_code,
                                                                                                          IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH)) < 0)
         err_exit("ipmipower_packet_create(%s: %d): "

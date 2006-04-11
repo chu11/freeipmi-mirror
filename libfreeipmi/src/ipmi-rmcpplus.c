@@ -155,7 +155,7 @@ fiid_template_t tmpl_rmcpplus_rakp_message_1 =
     {3,   "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {16,  "reserved3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,   "user_name_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {128, "user_name", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {128, "user_name", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     {0, "", 0}
   };
 
@@ -401,8 +401,6 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                              uint32_t user_name_len,
                              fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_USER_NAME_LENGTH];
-
   ERR_EINVAL (remote_console_random_number
 	      && !(remote_console_random_number_len < IPMI_REMOTE_CONSOLE_RANDOM_NUMBER_LENGTH)
 	      && IPMI_PRIVILEGE_LEVEL_VALID(requested_maximum_privilege_level)
@@ -443,15 +441,11 @@ fill_rmcpplus_rakp_message_1(uint8_t message_tag,
                 "user_name_length", 
                 user_name_len);
 
-  /* achu: user_name must be zero extended */
-  memset(buf, '\0', IPMI_MAX_USER_NAME_LENGTH);
-  if (user_name)
-    strncpy((char *)buf, (char *)user_name, IPMI_MAX_USER_NAME_LENGTH);
-  
-  FIID_OBJ_SET_DATA (obj_cmd_rq,
-		     "user_name",
-		     buf,
-                     IPMI_MAX_USER_NAME_LENGTH);
+  if (user_name && user_name_len)
+    FIID_OBJ_SET_DATA (obj_cmd_rq,
+                       "user_name",
+                       user_name,
+                       user_name_len);
 
   return (0);
 }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.68 2006-04-03 17:43:40 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.69 2006-04-11 20:44:34 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1228,7 +1228,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
        */
 
       if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD
-          && !conf->cipher_suite_records_all_oem)
+          && !conf->intel_2_0_session)
         {
           uint64_t cipher_suite_id;
 
@@ -1257,7 +1257,15 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
                                  ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
           
-          if (conf->cipher_suite_records_all_oem)
+          /* IPMI Workaround (achu)
+           *
+           * Discovered on SE7520AF2 with Intel Server Management Module
+           * (Professional Edition)
+           *
+           * The cipher suite records are formatted as OEM records despite
+           * headers that indicate non-OEM headers.  
+           */
+          if (conf->intel_2_0_session)
             {
               uint64_t cipher_suite_id;
 
