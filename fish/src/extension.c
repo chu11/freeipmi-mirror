@@ -221,6 +221,11 @@ install_new_procedures (void)
   /* 
      syntax in scheme: (fi-set-bmc-user-password USERID PASSWORD)
   */
+
+  gh_new_procedure ("fi-set-bmc-user-password20", ex_set_bmc_user_password20, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-set-bmc-user-password20 USERID PASSWORD)
+  */
   
   gh_new_procedure ("fi-set-bmc-user-lan-channel-access", ex_set_bmc_user_lan_channel_access, 6, 0, 0);
   /* 
@@ -781,6 +786,11 @@ install_new_procedures (void)
   gh_new_procedure ("fi-check-bmc-user-password", ex_check_bmc_user_password, 2, 0, 0);
   /* 
      syntax in scheme: (fi-check-bmc-user-password USERID PASSWORD)
+  */
+
+  gh_new_procedure ("fi-check-bmc-user-password20", ex_check_bmc_user_password20, 2, 0, 0);
+  /* 
+     syntax in scheme: (fi-check-bmc-user-password20 USERID PASSWORD)
   */
   
   gh_new_procedure ("fi-get-sdr-record", ex_get_sdr_record, 1, 0, 0);

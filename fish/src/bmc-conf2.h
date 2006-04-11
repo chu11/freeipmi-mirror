@@ -46,6 +46,9 @@ int8_t set_bmc_enable_user (ipmi_device_t *dev,
 int8_t set_bmc_user_password (ipmi_device_t *dev, 
 			      uint8_t userid, 
 			      uint8_t *password);
+int8_t set_bmc_user_password20 (ipmi_device_t *dev, 
+                                uint8_t userid, 
+                                uint8_t *password);
 int8_t set_bmc_user_lan_channel_access (ipmi_device_t *dev, 
 					uint8_t userid, 
 					uint8_t lan_user_ipmi_messaging, 
@@ -349,4 +352,7 @@ int32_t get_k_g(ipmi_device_t *dev,
 int8_t check_bmc_user_password (ipmi_device_t *dev, 
 				uint8_t userid, 
 				uint8_t *password);
+int8_t check_bmc_user_password20 (ipmi_device_t *dev, 
+                                  uint8_t userid, 
+                                  uint8_t *password);
 #endif

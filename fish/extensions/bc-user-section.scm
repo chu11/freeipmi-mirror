@@ -97,6 +97,21 @@
    ((string-ci=? section-name "user5")
     (fi-set-bmc-user-password 5 password))))
 
+(define (commit-password20 section-name password)
+  (if (list? password)
+      (set! password ""))
+  (cond 
+   ((string-ci=? section-name "user1")
+    (fi-set-bmc-user-password20 1 password))
+   ((string-ci=? section-name "user2")
+    (fi-set-bmc-user-password20 2 password))
+   ((string-ci=? section-name "user3")
+    (fi-set-bmc-user-password20 3 password))
+   ((string-ci=? section-name "user4")
+    (fi-set-bmc-user-password20 4 password))
+   ((string-ci=? section-name "user5")
+    (fi-set-bmc-user-password20 5 password))))
+
 (define (checkout-password section-name) (list ""))
 
 (define (diff-password section-name user-password bmc-password)
@@ -111,6 +126,19 @@
     (fi-check-bmc-user-password 4 user-password))
    ((string-ci=? section-name "user5")
     (fi-check-bmc-user-password 5 user-password))))
+
+(define (diff-password20 section-name user-password bmc-password)
+  (cond 
+   ((string-ci=? section-name "user1")
+    (fi-check-bmc-user-password20 1 user-password))
+   ((string-ci=? section-name "user2")
+    (fi-check-bmc-user-password20 2 user-password))
+   ((string-ci=? section-name "user3")
+    (fi-check-bmc-user-password20 3 user-password))
+   ((string-ci=? section-name "user4")
+    (fi-check-bmc-user-password20 4 user-password))
+   ((string-ci=? section-name "user5")
+    (fi-check-bmc-user-password20 5 user-password))))
 
 (define (commit-lan-enable-ipmi-msgs section-name enable-ipmi-msgs)
   (if (list? enable-ipmi-msgs)
@@ -430,7 +458,15 @@
      checkout-password 
      get-string
      diff-password
-     "Give password or blank to clear.  Max 20 chars for IPMI 2.0. Max 16 chars on IPMI 1.5")
+     "Give password or blank to clear.  Max 16 bytes.  Use 'Password20' for max 20 bytes in IPMI 2.0.")
+    ("password20" 
+     valid-password20? 
+     get-string 
+     commit-password20 
+     checkout-password 
+     get-string
+     diff-password20
+     "Give password  or blank to clear.  Max 20 chars for IPMI 2.0.")
     ("lan_enable_ipmi_msgs" 
      valid-boolean? 
      get-boolean 

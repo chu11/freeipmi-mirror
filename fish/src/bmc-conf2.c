@@ -195,6 +195,33 @@ set_bmc_user_password (ipmi_device_t *dev,
 }
 
 int8_t 
+set_bmc_user_password20 (ipmi_device_t *dev, 
+                         uint8_t userid, 
+                         uint8_t *password)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_user_password_v20 (dev, 
+                                      userid, 
+                                      IPMI_PASSWORD_SIZE_20_BYTES,
+                                      IPMI_PASSWORD_OPERATION_SET_PASSWORD, 
+                                      (char *)password, 
+                                      (password) ? strlen((char *)password) : 0,
+                                      obj_cmd_rs) != 0)
+    goto cleanup;
+
+  rv = 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
 set_bmc_user_lan_channel_access (ipmi_device_t *dev, 
 				 uint8_t userid, 
 				 uint8_t lan_user_ipmi_messaging, 
@@ -3402,6 +3429,43 @@ check_bmc_user_password (ipmi_device_t *dev,
                                   (char *)password, 
                                   (password) ? strlen((char *)password) : 0,
                                   obj_cmd_rs) != 0)
+    {
+      uint64_t comp_code;
+
+      if (fiid_obj_get(obj_cmd_rs, "comp_code", &comp_code) < 0)
+	goto cleanup;
+
+      if (comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_CORRECT
+          || comp_code == IPMI_COMP_CODE_PASSWORD_TEST_FAILED_PASSWORD_SIZE_INCORRECT)
+	rv = 0; /* false */
+      goto cleanup;
+    }
+  
+  rv = 1; /* true */
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (rv);
+}
+
+int8_t 
+check_bmc_user_password20 (ipmi_device_t *dev, 
+                           uint8_t userid, 
+                           uint8_t *password)
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  int8_t rv = -1;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_set_user_password_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_set_user_password_v20 (dev, 
+                                      userid, 
+                                      IPMI_PASSWORD_SIZE_20_BYTES,
+                                      IPMI_PASSWORD_OPERATION_TEST_PASSWORD, 
+                                      (char *)password, 
+                                      (password) ? strlen((char *)password) : 0,
+                                      obj_cmd_rs) != 0)
     {
       uint64_t comp_code;
 

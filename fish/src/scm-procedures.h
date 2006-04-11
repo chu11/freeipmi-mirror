@@ -62,6 +62,7 @@ SCM ex_get_sensors_errno ();
 SCM ex_set_bmc_username (SCM scm_userid, SCM scm_username);
 SCM ex_set_bmc_enable_user (SCM scm_userid, SCM scm_user_status);
 SCM ex_set_bmc_user_password (SCM scm_userid, SCM scm_password);
+SCM ex_set_bmc_user_password20 (SCM scm_userid, SCM scm_password);
 SCM ex_set_bmc_user_lan_channel_access (SCM scm_userid, 
 					SCM scm_lan_user_ipmi_messaging, 
 					SCM scm_lan_user_link_authentication, 
@@ -250,6 +251,7 @@ SCM ex_get_rmcpplus_cipher_suite_id_12 ();
 SCM ex_get_rmcpplus_cipher_suite_id_13 ();
 SCM ex_get_rmcpplus_cipher_suite_id_14 ();
 SCM ex_check_bmc_user_password (SCM scm_userid, SCM scm_password);
+SCM ex_check_bmc_user_password20 (SCM scm_userid, SCM scm_password);
 
 SCM ex_get_k_r ();
 SCM ex_get_k_g ();

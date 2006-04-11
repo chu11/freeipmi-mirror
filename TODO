@@ -7,8 +7,6 @@ Testing TODO
 
 * ipmi 2.0
   - ipmipower + libfreeipmi
-      null name + non-null password
-      null name + null password
       k_g
   - bmc-config
       security keys (k_r, k_g)
@@ -30,6 +28,11 @@ libfreeipmi:
 
 Al's TODO list
 ==============
+bmc-config
+----------
+  * document password 20 bytes
+  * not output password twice?
+
 libfreeipmi:
 ------------
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)

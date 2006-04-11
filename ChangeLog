@@ -9,8 +9,7 @@
 	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c: Support
 	password size parameter.
 
-	* fish/src/bmc-conf2.c: Back to IPMI 1.5 and 16 byte passwords
-	until suitable fix/re-architecture is done.
+	* fish/: Support 'Password20' bmc-config option.
 
 	* ipmipower/: Remove --cipher-suite-records-all-oem option.
 	Migrate workaround into --intel-2-0-session option.  Implement

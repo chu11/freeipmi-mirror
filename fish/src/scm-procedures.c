@@ -690,6 +690,23 @@ ex_set_bmc_user_password (SCM scm_userid, SCM scm_password)
 }
 
 SCM 
+ex_set_bmc_user_password20 (SCM scm_userid, SCM scm_password)
+{
+  uint8_t userid;
+  uint8_t *password = NULL;
+  int retval;
+  
+  userid = gh_scm2long (scm_userid);
+  password = (uint8_t *)gh_scm2newstr (scm_password, NULL);
+  
+  retval = set_bmc_user_password20 (fi_get_ipmi_device (), userid, password);
+  
+  free (password);
+  
+  return (retval ? SCM_BOOL_F : SCM_BOOL_T);
+}
+
+SCM 
 ex_set_bmc_user_lan_channel_access (SCM scm_userid, 
 				    SCM scm_lan_user_ipmi_messaging, 
 				    SCM scm_lan_user_link_authentication, 
@@ -2881,6 +2898,23 @@ ex_check_bmc_user_password (SCM scm_userid, SCM scm_password)
   password = (uint8_t *)gh_scm2newstr (scm_password, NULL);
   
   retval = check_bmc_user_password (fi_get_ipmi_device (), userid, password);
+  
+  free (password);
+  
+  return (retval ? SCM_BOOL_T : SCM_BOOL_F);
+}
+
+SCM 
+ex_check_bmc_user_password20 (SCM scm_userid, SCM scm_password)
+{
+  uint8_t userid;
+  uint8_t *password = NULL;
+  int retval;
+  
+  userid = gh_scm2long (scm_userid);
+  password = (uint8_t *)gh_scm2newstr (scm_password, NULL);
+  
+  retval = check_bmc_user_password20 (fi_get_ipmi_device (), userid, password);
   
   free (password);
   

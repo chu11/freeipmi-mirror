@@ -252,6 +252,11 @@
 
 (define (valid-password? str)
   (if (string? str)
+      (<= (string-length str) 16)
+      #f))
+
+(define (valid-password20? str)
+  (if (string? str)
       (<= (string-length str) 20)
       #f))
 
