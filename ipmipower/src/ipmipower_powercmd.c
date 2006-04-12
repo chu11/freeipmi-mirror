@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.72 2006-04-12 02:34:29 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.73 2006-04-12 02:53:04 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1579,6 +1579,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   else
     password = NULL;
 
+  password_len = (password) ? strlen((char *)password) : 0;
+
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -1593,8 +1595,6 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
-  else
-    password_len = (password) ? strlen((char *)password) : 0;
 
   if (strlen(conf->k_g))
     k_g = (uint8_t *)conf->k_g;
