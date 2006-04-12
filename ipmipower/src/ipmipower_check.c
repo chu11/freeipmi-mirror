@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.47 2006-04-12 14:01:48 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.48 2006-04-12 16:03:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -747,7 +747,7 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
         (unsigned int)val,
         (unsigned int)ip->requested_maximum_privilege);
   
-  return ((val == ip->privilege) ? 1 : 0);
+  return (rv);
 }
 
 int
