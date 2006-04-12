@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.45 2006-04-12 02:25:09 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.46 2006-04-12 02:34:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -757,7 +757,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
-	strcpy((char *)username_buf, (char *)username);
+	strcpy((char *)username_buf, (char *)conf->username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.71 2006-04-12 02:25:09 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.72 2006-04-12 02:34:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1561,7 +1561,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
     {
       memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
       if (strlen(conf->username))
-	strcpy((char *)username_buf, (char *)username);
+	strcpy((char *)username_buf, (char *)conf->username);
       username = username_buf;
       username_len = IPMI_MAX_USER_NAME_LENGTH;
     }
