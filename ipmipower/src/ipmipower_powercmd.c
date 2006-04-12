@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.79 2006-04-12 16:06:06 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.80 2006-04-12 16:11:10 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1473,7 +1473,8 @@ _check_open_session_error(ipmipower_powercmd_t ip)
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT);
 
-  /* Note: 
+  /* 
+   * IPMI Workaround (achu)
    *
    * Sigh.  There are two interpretations of the IPMI 2.0 Spec.
    *
@@ -1491,9 +1492,11 @@ _check_open_session_error(ipmipower_powercmd_t ip)
    * attached to specific privilege levels.  You can authenticate only
    * at that privilege level.
    *
-   * Either way, the code logic in ipmipower handles both since we
-   * send the open session request with the "request highest
-   * privilege" flag.
+   * In other words, the interpretations are nearly opposite of each other.
+   * 
+   * Well, when the privilege is auto detected, we send the "request
+   * highest privilege" flag in the open session request.  This should
+   * be enough to work around both interpretations.
    *
    * Sigh ... 
    */
