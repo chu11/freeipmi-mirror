@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.31 2006-04-12 18:17:47 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.32 2006-04-12 22:46:58 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -329,25 +329,28 @@ parsepacket(char *buffer,
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.per_message_authentication", 
 		    &per_message_authentication);
-      _fiid_obj_get(obj_cmd, 
-		    "authentication_status.k_g", 
-		    &k_g);
-
-      printf(", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s k_g=%s ",
+      
+      printf(", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
              _setstr(straight_password_key),_setstr(oem), 
              _setstr(anonymous_login), _setstr(null_username), 
              _setstr(non_null_username), _setstr(user_level_authentication), 
-             _setstr(per_message_authentication),
-             _setstr(k_g));
+             _setstr(per_message_authentication));
       
       if (version == IPMI_PING_VERSION_2_0)
         {
           _fiid_obj_get(obj_cmd, 
 			"authentication_type.ipmi_v2.0_extended_capabilities_available", 
-			(u_int64_t *)&ipmi_v20_extended_capabilities_available);
+			&ipmi_v20_extended_capabilities_available);
+	  
+	  _fiid_obj_get(obj_cmd, 
+			"authentication_status.k_g", 
+			&k_g);
 
-          printf("ipmi_v2.0_extended_capabilities_available=%s ",
+             _setstr(k_g);
+
+          printf("k_g=%s ipmi_v2.0_extended_capabilities_available=%s ",
+		 _setstr(k_g),
                  _setstr(ipmi_v20_extended_capabilities_available));
 
           if (ipmi_v20_extended_capabilities_available)
