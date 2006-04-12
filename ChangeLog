@@ -4,6 +4,8 @@
 	"cipher suite id privilege level".
 
 	* ipmipower/: Add one more intel IPMI 2.0 workaround.
+
+	* ipmipower/: Add --no-get-channel-cipher-suites workaround.
 	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 

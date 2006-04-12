@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.28 2006-04-12 02:23:20 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.29 2006-04-12 16:39:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,7 +97,8 @@ _cmd_advanced(void)
               "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
               "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
               "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
-              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n");
+              "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n"
+	      "no-get-channel-cipher-suites [on|off] - toggle no-get-channel-cipher-suites functionality");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
               "debug [on|off]                        - toggle debug to stderr\n"
@@ -650,7 +651,10 @@ _cmd_config(void)
               (conf->accept_session_id_zero) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Check-Unexpected-Authcode:    %s\n",
               (conf->check_unexpected_authcode) ? "enabled" : "disabled");
-              
+  cbuf_printf(ttyout, "Intel-2-0-Session:            %s\n",
+	      (conf->intel_2_0_session) ? "enabled" : "disabled");
+  cbuf_printf(ttyout, "No-Get-Channel-Cipher_Suites: %s\n",
+	      (conf->no_get_channel_cipher_suites) ? "enabled" : "disabled");
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
               (conf->debug) ? "on" : "off");
@@ -828,6 +832,8 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
             else if (strcmp(argv[0], "intel-2-0-session") == 0)
               _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
+            else if (strcmp(argv[0], "no-get-channel-cipher-suites") == 0)
+              _cmd_set_flag(argv, &conf->no_get_channel_cipher_suites, "no-get-channel-cipher-suites");
 #ifndef NDEBUG
             else if (strcmp(argv[0], "debug") == 0) 
 	      {

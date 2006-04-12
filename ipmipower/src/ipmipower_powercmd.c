@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.80 2006-04-12 16:11:10 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.81 2006-04-12 16:39:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1364,6 +1364,38 @@ _store_and_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
   return 0;
 }
 
+/* _no_get_channel_cipher_suites_cipher_ids
+ * 
+ * Populate cipher ids list.
+ *
+ * Returns 0 on success, -1 on error
+ */
+static int
+_no_get_channel_cipher_suites_cipher_ids(ipmipower_powercmd_t ip)
+{
+  int i;
+
+  assert(ip);
+  assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
+  assert(conf->no_get_channel_cipher_suites);
+
+  /* IPMI Workaround (achu)
+   * 
+   *  Discovered on Tyan S4881 w/ m3291 BMC
+   *
+   * If the Get Channel Cipher Suites command isn't supported, then we
+   * assume all of them are supported and let the rest of the code
+   * cycle through them.
+   */
+  for (i = 0; i < cipher_suite_id_ranking_count; i++)
+    {
+      ip->cipher_suite_ids[ip->cipher_suite_ids_num] = cipher_suite_id_ranking[i];
+      ip->cipher_suite_ids_num++;
+    }
+
+  return 0;
+}
+
 /* _determine_cipher_suite_id_to_use
  * 
  * Determine which cipher suite id to use
@@ -1377,7 +1409,8 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
   int i, j, cipher_suite_found = 0;
   
   assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT);
+  assert(ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT
+	 || ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
 
   /* Ok, if the cipher suite has been specified by the user, then
    * lets make sure that the remote machine supports this cipher
@@ -1788,12 +1821,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	    }
           goto done;
         }
-#if 0
- /* Returns  1 if only IPMI 2.0 is supported
- * Returns  0 if IPMI 1.5 is supported
- * Returns -1 if neither is apparently supported
- */
-#endif
+
       if (_check_ipmi_version_support(ip, &ipmi_1_5, &ipmi_2_0) < 0)
 	return -1;
       
@@ -1833,7 +1861,23 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             {
               ip->ipmi_version = IPMI_VERSION_2_0;
 	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
+	      /* IPMI Workaround (achu)
+	       *
+	       *  Discovered on Tyan S4881 w/ m3291 BMC
+	       *
+	       * The Get Channel Cipher Suites command is supported
+	       * outside of a session.  So we have to skip it.
+	       */
+	      if (conf->no_get_channel_cipher_suites)
+		{
+		  if (_no_get_channel_cipher_suites_cipher_ids(ip) < 0)
+		    return -1;
+		  if (_determine_cipher_suite_id_to_use(ip) < 0)
+		    return -1;
+		  _send_packet(ip, OPEN_SESSION_REQ);
+		}
+	      else
+		_send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
             }
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
@@ -1878,7 +1922,24 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
+
+	  /* IPMI Workaround (achu)
+	   *
+	   *  Discovered on Tyan S4881 w/ m3291 BMC
+	   *
+	   * The Get Channel Cipher Suites command is supported
+	   * outside of a session.  So we have to skip it.
+	   */
+	  if (conf->no_get_channel_cipher_suites)
+	    {
+	      if (_no_get_channel_cipher_suites_cipher_ids(ip) < 0)
+		return -1;
+	      if (_determine_cipher_suite_id_to_use(ip) < 0)
+		return -1;
+	      _send_packet(ip, OPEN_SESSION_REQ);
+	    }
+	  else
+	    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
         }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.30 2006-04-12 02:23:20 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.31 2006-04-12 16:39:00 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -92,6 +92,7 @@ ipmipower_config_setup(void)
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode = IPMIPOWER_FALSE;
   conf->intel_2_0_session = IPMIPOWER_FALSE;
+  conf->no_get_channel_cipher_suites = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
   conf->ipmidump = IPMIPOWER_FALSE;
@@ -122,7 +123,8 @@ ipmipower_config_setup(void)
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
-  conf->intel_2_0_session = IPMIPOWER_FALSE;
+  conf->intel_2_0_session_set = IPMIPOWER_FALSE;
+  conf->no_get_channel_cipher_suites_set = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_backoff_count_set = IPMIPOWER_FALSE;
@@ -245,9 +247,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
    */
 
 #ifndef NDEBUG
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXDIMLF:t:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXWDIMLF:t:y:b:i:z:v:w:x:";
 #else
-  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXt:y:b:i:z:v:w:x:";
+  char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXWt:y:b:i:z:v:w:x:";
 #endif
     
 #if HAVE_GETOPT_LONG
@@ -278,6 +280,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"accept-session-id-zero",       0, NULL, 'S'},
       {"check-unexpected-authcode",    0, NULL, 'U'},
       {"intel-2-0-session",            0, NULL, 'X'},
+      {"no-get-channel-cipher-suites", 0, NULL, 'W'},
 #ifndef NDEBUG
       {"debug",                        0, NULL, 'D'},
       {"ipmidump",                     0, NULL, 'I'},
@@ -403,6 +406,10 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
         case 'X':      /* --intel-2-0-session */
           conf->intel_2_0_session = IPMIPOWER_TRUE;
           conf->intel_2_0_session_set = IPMIPOWER_TRUE;
+          break;
+        case 'W':      /* --no-get-channel-cipher-suites */
+          conf->no_get_channel_cipher_suites = IPMIPOWER_TRUE;
+          conf->no_get_channel_cipher_suites_set = IPMIPOWER_TRUE;
           break;
 #ifndef NDEBUG
         case 'D':       /* --debug */
@@ -664,8 +671,8 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
-    check_unexpected_authcode_flag, 
-    intel_2_0_session_flag, timeout_flag, 
+    check_unexpected_authcode_flag, intel_2_0_session_flag, 
+    no_get_channel_cipher_suites_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
     ping_consec_count_flag;
@@ -704,6 +711,9 @@ ipmipower_config_conffile_parse(char *configfile)
       {"intel_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &intel_2_0_session_flag, &(conf->intel_2_0_session), 
        conf->intel_2_0_session_set},
+      {"no_get_channel_cipher_suites", CONFFILE_OPTION_BOOL, -1, _cb_bool,
+       1, 0, &no_get_channel_cipher_suites_flag, &(conf->no_get_channel_cipher_suites), 
+       conf->no_get_channel_cipher_suites_set},
       {"timeout", CONFFILE_OPTION_INT, -1, _cb_int, 
        1, 0, &timeout_flag, &(conf->timeout_len), conf->timeout_len_set},
       {"retry-timeout", CONFFILE_OPTION_INT, -1, _cb_int, 

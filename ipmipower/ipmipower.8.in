@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.8.in,v 1.43 2006-04-12 03:13:15 chu11 Exp $
+\."$Id: ipmipower.8.in,v 1.44 2006-04-12 16:39:00 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -247,6 +247,10 @@ compliance issue.  For more information, see WORKAROUNDS below.
 .I "-X, --intel-2-0-session"
 Modifies the IPMI 2.0 session protocol for non-compliant Intel
 machines.  For more information, see WORKAROUNDS below.
+.TP
+.I "-W, --no-get-channel-cipher-suites"
+Modifies the IPMI 2.0 session protocol to skip the get channel cipher
+suites command.  For more information, see WORKAROUNDS below.
 .if @WITH_DEBUG@ \{
 .TP
 .I "-D, --debug"
@@ -450,6 +454,8 @@ toggle accept-session-id-zero functionality.
 toggle check-unexpected-authcode functionality.
 .I "intel-2-0-session [on|off]"
 toggle intel-2-0-session functionality.
+.I "no-get-channel-cipher-suites"
+toggle no-get-channel-cipher-suites functionality.
 .if @WITH_DEBUG@ \{
 .TP
 .I "debug [on|off]"
@@ -631,6 +637,14 @@ non-OEM record headers, padding of usernames, automatic acceptance of
 a RAKP 4 response integrity check when using the integrity algorith
 MD5-128, and password truncation if the authentication algorithm if
 HMAC-MD5-128.
+
+Tyan S4881 with m3291 BMC: The Get Channel Cipher Suites command is
+not supported outside of a session.  In order to work aroudn this
+issue, the -W (--no-get-channel-cipher-suites) option must be set.
+This option will skip this portion of the protocol.  Note that this
+only affects IPMI 2.0.  If you mostly use auto-detection features for
+the ipmi version, authentication, privilege, etc. this will option
+will most likely not be needed.
 
 .SH "TROUBLESHOOTING"
 Most often, problems with ipmipower involve a misconfiguration of the
