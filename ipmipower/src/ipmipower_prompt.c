@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.27 2006-03-24 17:42:56 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.28 2006-04-12 02:23:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -97,7 +97,6 @@ _cmd_advanced(void)
               "force-permsg-authentication [on|off]  - toggle force-permsg-auth functionality\n"
               "accept-session-id-zero [on|off]       - toggle accept-session-id-zero functionality\n"
               "check-unexpected-authcode [on|off]    - toggle check-unexpected-authcode functionality\n"
-              "cipher-suite-records-all-oem [on|off] - toggle cipher-suite-records-all-oem functionality\n"
               "intel-2-0-session [on|off]            - toggle intel-2-0-session functionality\n");
 #ifndef NDEBUG
   cbuf_printf(ttyout,
@@ -639,6 +638,8 @@ _cmd_config(void)
               ipmipower_privilege_string(conf->privilege));
   cbuf_printf(ttyout, "IPMI_Version:                 %s\n",
               ipmipower_ipmi_version_string(conf->ipmi_version));
+  cbuf_printf(ttyout, "Cipher Suite Id:              %s\n",
+	      ipmipower_cipher_suite_id_string(conf->cipher_suite_id));
   cbuf_printf(ttyout, "On-If-Off:                    %s\n",
               (conf->on_if_off) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "OutputType:                   %s\n",
@@ -649,8 +650,6 @@ _cmd_config(void)
               (conf->accept_session_id_zero) ? "enabled" : "disabled");
   cbuf_printf(ttyout, "Check-Unexpected-Authcode:    %s\n",
               (conf->check_unexpected_authcode) ? "enabled" : "disabled");
-  cbuf_printf(ttyout, "Cipher-Suite-Records-All-OEM: %s\n",
-              (conf->cipher_suite_records_all_oem) ? "enabled" : "disabled");
               
 #ifndef NDEBUG
   cbuf_printf(ttyout, "Debug:                        %s\n", 
@@ -827,8 +826,6 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_set_flag(argv, &conf->accept_session_id_zero, "accept-session-id-zero");
             else if (strcmp(argv[0], "check-unexpected-authcode") == 0)
               _cmd_set_flag(argv, &conf->check_unexpected_authcode, "check-unexpected-authcode");
-            else if (strcmp(argv[0], "cipher-suite-records-all-oem") == 0)
-              _cmd_set_flag(argv, &conf->cipher_suite_records_all_oem, "cipher-suite-records-all-oem");
             else if (strcmp(argv[0], "intel-2-0-session") == 0)
               _cmd_set_flag(argv, &conf->intel_2_0_session, "intel-2-0-session");
 #ifndef NDEBUG

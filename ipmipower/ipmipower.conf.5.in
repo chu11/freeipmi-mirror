@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.24 2006-03-24 17:42:56 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.25 2006-04-12 02:23:20 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -125,8 +125,6 @@ Specify if null session id's should be accepted by default.
 .I accept_unexpected_authcode enable|disable
 Specify if unexpected nonnull authcodes should be accepted by default.
 .TP
-.I cipher_suite_records_all_oem enable|disable
-Specify if all cipher suite records should be assumed to have OEM formats.
 .I intel_2_0_session enable|disable
 Specify if workarounds for an Intel ipmi 2.0 session should be used.
 .TP

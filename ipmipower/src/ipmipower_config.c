@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.29 2006-04-11 20:44:34 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.30 2006-04-12 02:23:20 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -91,7 +91,6 @@ ipmipower_config_setup(void)
   conf->force_permsg_authentication = IPMIPOWER_FALSE;
   conf->accept_session_id_zero = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode = IPMIPOWER_FALSE;
-  conf->cipher_suite_records_all_oem = IPMIPOWER_FALSE;
   conf->intel_2_0_session = IPMIPOWER_FALSE;
 #ifndef NDEBUG
   conf->debug = IPMIPOWER_FALSE;
@@ -123,7 +122,6 @@ ipmipower_config_setup(void)
   conf->force_permsg_authentication_set = IPMIPOWER_FALSE;
   conf->accept_session_id_zero_set = IPMIPOWER_FALSE;
   conf->check_unexpected_authcode_set = IPMIPOWER_FALSE;
-  conf->cipher_suite_records_all_oem_set = IPMIPOWER_FALSE;
   conf->intel_2_0_session = IPMIPOWER_FALSE;
   conf->timeout_len_set = IPMIPOWER_FALSE;
   conf->retry_timeout_len_set = IPMIPOWER_FALSE;
@@ -666,7 +664,7 @@ ipmipower_config_conffile_parse(char *configfile)
   int hostnames_flag, username_flag, password_flag, k_g_flag, authentication_type_flag, 
     privilege_flag, cipher_suite_id_flag, ipmi_version_flag, on_if_off_flag, outputtype_flag, 
     force_permsg_authentication_flag, accept_session_id_zero_flag, 
-    check_unexpected_authcode_flag, cipher_suite_records_all_oem_flag, 
+    check_unexpected_authcode_flag, 
     intel_2_0_session_flag, timeout_flag, 
     retry_timeout_flag, retry_backoff_count_flag, ping_interval_flag, 
     ping_timeout_flag, ping_packet_count_flag, ping_percent_flag, 
@@ -703,9 +701,6 @@ ipmipower_config_conffile_parse(char *configfile)
       {"check_unexpected_authcode", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &check_unexpected_authcode_flag, &(conf->check_unexpected_authcode), 
        conf->check_unexpected_authcode_set},
-      {"cipher_suite_records_all_oem", CONFFILE_OPTION_BOOL, -1, _cb_bool,
-       1, 0, &cipher_suite_records_all_oem_flag, &(conf->cipher_suite_records_all_oem), 
-       conf->cipher_suite_records_all_oem_set},
       {"intel_2_0_session", CONFFILE_OPTION_BOOL, -1, _cb_bool,
        1, 0, &intel_2_0_session_flag, &(conf->intel_2_0_session), 
        conf->intel_2_0_session_set},
