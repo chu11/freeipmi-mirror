@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.77 2006-04-12 16:03:48 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.78 2006-04-12 16:04:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1830,15 +1830,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             {
               ip->ipmi_version = IPMI_VERSION_2_0;
 	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-#if 0
               _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
-#else
-#if 0
-	      if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
-		err_exit("cipher suite cannot be auto\n");
-#endif
-	      _send_packet(ip, OPEN_SESSION_REQ);
-#endif
             }
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
@@ -1883,15 +1875,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-#if 0
-              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
-#else
-#if 0
-	      if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
-		err_exit("cipher suite cannot be auto\n");
-#endif
-	      _send_packet(ip, OPEN_SESSION_REQ);
-#endif
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
         }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 
