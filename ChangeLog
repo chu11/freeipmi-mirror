@@ -13,6 +13,8 @@
 
 	* ipmipower/: Check k_g status during authentication capabilities
 	stage.
+
+	* ipmiping/: Support k_g output on verbose.
 	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 

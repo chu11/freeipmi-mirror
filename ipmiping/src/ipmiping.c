@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.30 2006-03-24 06:30:58 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.31 2006-04-12 18:17:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -187,7 +187,7 @@ parsepacket(char *buffer,
   uint64_t req_seq, none, md2, md5, straight_password_key, oem, 
     anonymous_login, null_username, non_null_username,
     user_level_authentication, per_message_authentication,
-    ipmi_v20_extended_capabilities_available, ipmi_v15, ipmi_v20;
+    k_g, ipmi_v20_extended_capabilities_available, ipmi_v15, ipmi_v20;
   fiid_field_t *tmpl_cmd_get_channel_authentication_capabilities_ptr = NULL;
   int ret, retval = -1;
 
@@ -298,40 +298,48 @@ parsepacket(char *buffer,
     {
       _fiid_obj_get(obj_cmd, 
 		    "authentication_type.none", 
-		    (uint64_t *)&none);
+		    &none);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_type.md2", 
-		    (uint64_t *)&md2);
+		    &md2);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_type.md5", 
-		    (uint64_t *)&md5);
+		    &md5);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_type.straight_password_key", 
-		    (uint64_t *)&straight_password_key);
+		    &straight_password_key);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_type.oem_prop", 
-		    (uint64_t *)&oem);
+		    &oem);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.anonymous_login", 
-		    (uint64_t *)&anonymous_login);
+		    &anonymous_login);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.null_username", 
-		    (uint64_t *)&null_username);
+		    &null_username);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.non_null_username", 
-		    (uint64_t *)&non_null_username);
+		    &non_null_username);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.user_level_authentication", 
-		    (uint64_t *)&user_level_authentication);
+		    &user_level_authentication);
       _fiid_obj_get(obj_cmd, 
 		    "authentication_status.per_message_authentication", 
-		    (uint64_t *)&per_message_authentication);
-      printf(", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s ",
+		    &per_message_authentication);
+      _fiid_obj_get(obj_cmd, 
+		    "authentication_status.per_message_authentication", 
+		    &per_message_authentication);
+      _fiid_obj_get(obj_cmd, 
+		    "authentication_status.k_g", 
+		    &k_g);
+
+      printf(", auth: none=%s md2=%s md5=%s password=%s oem=%s anon=%s null=%s non-null=%s user=%s permsg=%s k_g=%s ",
              _setstr(none), _setstr(md2), _setstr(md5), 
              _setstr(straight_password_key),_setstr(oem), 
              _setstr(anonymous_login), _setstr(null_username), 
              _setstr(non_null_username), _setstr(user_level_authentication), 
-             _setstr(per_message_authentication));
+             _setstr(per_message_authentication),
+             _setstr(k_g));
       
       if (version == IPMI_PING_VERSION_2_0)
         {
