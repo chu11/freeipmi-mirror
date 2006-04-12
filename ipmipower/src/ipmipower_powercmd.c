@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.82 2006-04-12 18:04:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.83 2006-04-12 21:18:11 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -603,12 +603,26 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  else if (pkt == RAKP_MESSAGE_2_RES)
 	    {
 	      if (!ipmipower_check_rakp_2_key_exchange_authentication_code(ip, pkt))
-		return 0;
+		{
+#ifndef NDEBUG
+		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname);
+#else
+		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+		  return -1;
+		}
 	    }
 	  else if (pkt == RAKP_MESSAGE_4_RES)
 	    {
 	      if (!ipmipower_check_rakp_4_integrity_check_value(ip, pkt))
-		return 0;
+		{
+#ifndef NDEBUG
+		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
+#else
+		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+		  return -1;
+		}
 	    }
 	}
       else /* (ip->ipmi_version == IPMI_VERSION_2_0

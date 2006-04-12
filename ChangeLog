@@ -15,6 +15,9 @@
 	stage.
 
 	* ipmiping/: Support k_g output on verbose.
+
+	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Return error
+	on rakp2 or rakp4 hash errors.
 	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 
