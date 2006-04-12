@@ -20,7 +20,14 @@
 	ipmi_cmd_set_session_privilege_level): Fix errno codes.
 
 	* ipmipower/: Version auto picks ipmi 1.5 over ipmi 2.0.
-	
+
+	* common/src/Makefile.am,
+	common/src/ipmi-sdr-repository-cache-api.h,
+	common/src/ipmi-sdr-repository-cache-api.c: Remove sdr repository
+	cache api.
+
+	* fish/src/bmc-conf2.c (get_k_g, get_k_r): Fix return code bug.
+
 2006-04-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/, fish/, common/: Split record_count of sdr info

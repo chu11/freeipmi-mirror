@@ -3371,6 +3371,7 @@ get_k_r(ipmi_device_t *dev,
   if ((rv = _convert_bytes_to_hex_string((char *)buf, buf_len, (char *)k_r, k_r_len)) < 0)
     goto cleanup;
   
+  rv = 0;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
@@ -3405,6 +3406,7 @@ get_k_g(ipmi_device_t *dev,
   if ((rv = _convert_bytes_to_hex_string((char *)buf, buf_len, (char *)k_g, k_g_len)) < 0)
     goto cleanup;
   
+  rv = 0;
  cleanup:
   if (obj_cmd_rs)
     fiid_obj_destroy(obj_cmd_rs);
