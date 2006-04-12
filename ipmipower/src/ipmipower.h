@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.56 2006-04-12 16:39:00 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.57 2006-04-12 18:04:12 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -386,21 +386,22 @@ typedef enum
     MSG_TYPE_USERNAME                =  5,
     MSG_TYPE_PASSWORD                =  6,
     MSG_TYPE_PASSWORD_LENGTH         =  7,
-    MSG_TYPE_PRIVILEGE               =  8,
-    MSG_TYPE_OPERATION               =  9,
-    MSG_TYPE_AUTHENTICATION_TYPE     = 10,
-    MSG_TYPE_1_5_AUTO                = 11,
-    MSG_TYPE_GIVEN_PRIVILEGE         = 12,
-    MSG_TYPE_CIPHER_SUITE            = 13,
-    MSG_TYPE_2_0_AUTO                = 14,
-    MSG_TYPE_TIMEDOUT                = 15,
-    MSG_TYPE_NOTDISCOVERED           = 16,
-    MSG_TYPE_BADCONNECTION           = 17,
-    MSG_TYPE_UNKNOWNNODE             = 18,
-    MSG_TYPE_RESOURCES               = 19,
-    MSG_TYPE_VERSION_NOT_SUPPORTED   = 20,
-    MSG_TYPE_BMCBUSY                 = 21,
-    MSG_TYPE_BMCERROR                = 22,
+    MSG_TYPE_K_G                     =  8,
+    MSG_TYPE_PRIVILEGE               =  9,
+    MSG_TYPE_OPERATION               = 10,
+    MSG_TYPE_AUTHENTICATION_TYPE     = 11,
+    MSG_TYPE_1_5_AUTO                = 12,
+    MSG_TYPE_GIVEN_PRIVILEGE         = 13,
+    MSG_TYPE_CIPHER_SUITE            = 14,
+    MSG_TYPE_2_0_AUTO                = 15,
+    MSG_TYPE_TIMEDOUT                = 16,
+    MSG_TYPE_NOTDISCOVERED           = 17,
+    MSG_TYPE_BADCONNECTION           = 18,
+    MSG_TYPE_UNKNOWNNODE             = 19,
+    MSG_TYPE_RESOURCES               = 20,
+    MSG_TYPE_VERSION_NOT_SUPPORTED   = 21,
+    MSG_TYPE_BMCBUSY                 = 22,
+    MSG_TYPE_BMCERROR                = 23,
   } msg_type_t;
 
 #define MSG_TYPE_VALID(__m) \

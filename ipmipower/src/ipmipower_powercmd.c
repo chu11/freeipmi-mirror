@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.81 2006-04-12 16:39:00 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.82 2006-04-12 18:04:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1026,6 +1026,73 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
   return 0;
 }
 					    
+/* _check_ipmi_2_0_authentication_capabilities
+ * 
+ * Check the contents of a ipmi 2.0 authentication capabilities response.
+ *
+ * Returns  0 if authentication passed
+ * Returns -1 on ipmi protocol error
+ */
+static int
+_check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
+{
+  uint64_t authentication_status_anonymous_login, authentication_status_null_username, 
+    authentication_status_non_null_username, authentication_status_k_g;
+
+  /* Using results from Get Authentication Capabilities Response,
+   * determine:
+   *
+   * 1) If we are capable of authenticating with the remote host.
+   *
+   * 2) How to authenticate with the remote host.
+   */
+  
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+	       "authentication_status.anonymous_login", 
+	       &authentication_status_anonymous_login);
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+	       "authentication_status.null_username",
+	       &authentication_status_null_username);
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res, 
+	       "authentication_status.non_null_username", 
+	       &authentication_status_non_null_username);
+  Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
+	       "authentication_status.k_g",
+	       &authentication_status_k_g);
+
+  /* Does the remote BMC's authentication configuration support
+   * our username/password combination 
+   */
+  if ((!strlen(conf->username) && !strlen(conf->password)
+       && !authentication_status_anonymous_login)
+      || (!strlen(conf->username) 
+	  && !authentication_status_anonymous_login
+	  && !authentication_status_null_username)
+      || (strlen(conf->username)
+	  && !authentication_status_non_null_username))
+    {
+#ifndef NDEBUG
+      ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
+#else
+      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+      return -1;
+    }
+
+  if ((!strlen(conf->k_g) && authentication_status_k_g)
+      || strlen(conf->k_g) && !authentication_status_k_g)
+    {
+#ifndef NDEBUG
+      ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
+#else
+      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+      return -1;
+    }
+
+  return 0;
+}
+
 /* _check_ipmi_2_0_authentication_capabilities_errors
  * 
  * Check if there is a legitimate ipmi 2.0 authentication capabilities
@@ -1859,6 +1926,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             }
           else
             {
+	      if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
+		return -1;
+
               ip->ipmi_version = IPMI_VERSION_2_0;
 	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
 	      /* IPMI Workaround (achu)
@@ -1919,6 +1989,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               return -1;
             }
           /* else we continue with the IPMI 2.0 protocol */
+
+	  if (_check_ipmi_2_0_authentication_capabilities(ip) < 0)
+	    return -1;
 
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
