@@ -13,7 +13,7 @@
 
 	* ipmipower/: Remove --cipher-suite-records-all-oem option.
 	Migrate workaround into --intel-2-0-session option.  Implement
-	additional username padding workaround for Intel.
+	additional username padding workarounds for Intel.
 
 	* libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
 	(ipmi_cmd_get_session_challenge, ipmi_cmd_activate_session,

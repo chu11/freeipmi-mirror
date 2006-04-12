@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.69 2006-04-11 20:44:34 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.70 2006-04-12 02:20:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1539,6 +1539,8 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   uint8_t managed_system_random_number[IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH];
   int32_t managed_system_random_number_len;
   uint8_t *username;
+  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
+  uint32_t username_len;
   uint8_t *password;
   uint32_t password_len;
   uint8_t *k_g;
@@ -1546,27 +1548,36 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT);
   
-  if (strlen(conf->username))
-    username = (uint8_t *)conf->username;
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * The username must be padded despite explicitly not being
+   * allowed.  "No Null characters (00h) are allowed in the name".
+   * Table 13-11 in the IPMI 2.0 spec.
+   */
+  if (conf->intel_2_0_session)
+    {
+      memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+      if (username)
+	strcpy((char *)username_buf, (char *)username);
+      username = username_buf;
+      username_len = IPMI_MAX_USER_NAME_LENGTH;
+    }
   else
-    username = NULL;
+    {
+      if (strlen(conf->username))
+	username = (uint8_t *)conf->username;
+      else
+	username = NULL;
+      username_len = (username) ? strlen((char *)username) : 0;
+    }
   
   if (strlen(conf->password))
     password = (uint8_t *)conf->password;
   else
     password = NULL;
-
-  if (strlen(conf->k_g))
-    k_g = (uint8_t *)conf->k_g;
-  else
-    k_g = NULL;
-  
-  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
-                                                       "managed_system_random_number",
-                                                       managed_system_random_number,
-                                                       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-  
-  password_len = (password) ? strlen((char *)password) : 0;
 
   /* IPMI Workaround (achu)
    *
@@ -1582,6 +1593,18 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+  else
+    password_len = (password) ? strlen((char *)password) : 0;
+
+  if (strlen(conf->k_g))
+    k_g = (uint8_t *)conf->k_g;
+  else
+    k_g = NULL;
+  
+  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+                                                       "managed_system_random_number",
+                                                       managed_system_random_number,
+                                                       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
 
   if (ipmi_calculate_rmcpplus_session_keys(ip->authentication_algorithm,
                                            ip->integrity_algorithm,
@@ -1597,7 +1620,7 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
                                            ip->name_only_lookup,
                                            ip->privilege,
                                            username,
-                                           (username) ? strlen((char *)username) : 0,
+                                           username_len,
                                            &(ip->sik_key_ptr),
                                            &(ip->sik_key_len),
                                            &(ip->integrity_key_ptr),

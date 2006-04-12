@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.43 2006-03-27 21:08:51 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.44 2006-04-12 02:20:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -734,40 +734,47 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
   uint8_t *username;
+  uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   uint8_t *password;
-  uint32_t password_len;
+  uint32_t username_len, password_len;
   uint64_t managed_system_session_id;
   int8_t rv;
 
   assert(ip != NULL);
   assert(pkt == RAKP_MESSAGE_2_RES);
 
-  if (strlen(conf->username))
-    username = (uint8_t *)conf->username;
-  else
-    username = NULL;
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * The username must be padded despite explicitly not being
+   * allowed.  "No Null characters (00h) are allowed in the name".
+   * Table 13-11 in the IPMI 2.0 spec.
+   */
 
+  if (conf->intel_2_0_session)
+    {
+      memset(username_buf, '\0', IPMI_MAX_USER_NAME_LENGTH+1);
+      if (username)
+	strcpy((char *)username_buf, (char *)username);
+      username = username_buf;
+      username_len = IPMI_MAX_USER_NAME_LENGTH;
+    }
+  else
+    {
+      if (strlen(conf->username))
+	username = (uint8_t *)conf->username;
+      else
+	username = NULL;
+      username_len = (username) ? strlen((char *)username) : 0;
+    }
+  
   if (strlen(conf->password))
     password = (uint8_t *)conf->password;
   else
     password = NULL;
 
-  password_len = (password) ? strlen((char *)password) : 0;
-
-  Fiid_obj_get(ip->obj_open_session_res,
-               "managed_system_session_id",
-               &managed_system_session_id);
-  
-  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
-						       "managed_system_random_number",
-						       managed_system_random_number,
-						       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
-  
-  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
-					      "managed_system_guid",
-					      managed_system_guid,
-					      IPMI_MANAGED_SYSTEM_GUID_LENGTH);
-  
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -782,6 +789,22 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
+  else
+    password_len = (password) ? strlen((char *)password) : 0;
+
+  Fiid_obj_get(ip->obj_open_session_res,
+               "managed_system_session_id",
+               &managed_system_session_id);
+  
+  managed_system_random_number_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+						       "managed_system_random_number",
+						       managed_system_random_number,
+						       IPMI_MANAGED_SYSTEM_RANDOM_NUMBER_LENGTH);
+  
+  managed_system_guid_len = Fiid_obj_get_data(ip->obj_rakp_message_2_res,
+					      "managed_system_guid",
+					      managed_system_guid,
+					      IPMI_MANAGED_SYSTEM_GUID_LENGTH); 
 
   if ((rv = ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(ip->authentication_algorithm,
                                                                         password,
@@ -797,7 +820,7 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
                                                                         ip->name_only_lookup,
                                                                         ip->privilege,
                                                                         username,
-                                                                        (username) ? strlen((char *)username) : 0,
+                                                                        username_len,
                                                                         ip->obj_rakp_message_2_res)) < 0)
     err_exit("ipmipower_check_rakp_2_key_exchange_authentication_code(%s:%d): "
 	     "ipmi_rmcpplus_check_rakp_message_2_key_exchange_authentication_code: %s",
