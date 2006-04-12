@@ -185,7 +185,7 @@ ipmi_sdr_repository_cache_load (sdr_repository_cache_t *sdr_repository_cache, ch
   record_count_ls_byte = val;
   FIID_OBJ_GET_CLEANUP (obj_data_rs, "record_count_ms_byte", &val);
   record_count_ms_byte = val;
-  ptr = (uint8_t *)record_count;
+  ptr = (uint8_t *)&record_count;
 #if WORDS_BIGENDIAN
   ptr[1] = record_count_ls_byte;
   ptr[0] = record_count_ms_byte;
