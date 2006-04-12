@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.46 2006-04-12 02:34:29 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.47 2006-04-12 14:01:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -708,6 +708,7 @@ int
 ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
   uint64_t val;
+  int rv;
 
   assert(ip != NULL);
   assert(pkt == OPEN_SESSION_RES);
@@ -716,12 +717,35 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
                "maximum_privilege_level",
                &val);
 
-  if (val != ip->privilege)
+  if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL)
+    {
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
+	{
+	  if (val == IPMI_PRIVILEGE_LEVEL_USER
+	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
+	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	    rv = 1;
+	  else
+	    rv = 0;
+	}
+      else
+	{
+	  if (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
+	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	    rv = 1;
+	  else
+	    rv = 0;
+	}
+    }
+  else
+    rv = (val == ip->requested_maximum_privilege) ? 1 : 0;
+
+  if (!rv)
     dbg("ipmipower_check_open_session_response_privilege(%s:%d): "
         "invalid privilege: %x, expected: %x",
         ip->ic->hostname, ip->protocol_state,
         (unsigned int)val,
-        (unsigned int)ip->privilege);
+        (unsigned int)ip->requested_maximum_privilege);
   
   return ((val == ip->privilege) ? 1 : 0);
 }

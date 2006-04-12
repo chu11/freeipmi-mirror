@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.74 2006-04-12 03:13:15 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.75 2006-04-12 14:01:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -276,6 +276,10 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                      "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
         }     
+      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
+      else
+	ip->requested_maximum_privilege = ipmipower_ipmi_privilege_type(conf->privilege);
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
       ip->sik_key_ptr = ip->sik_key;
       ip->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
@@ -577,8 +581,11 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
           if (pkt == OPEN_SESSION_RES)
             {
+	      /* achu: In this case, we need to return an error and
+	       * let the state machine use it's retry logic.
+	       */
               if (!ipmipower_check_open_session_response_privilege(ip, pkt))
-                return 0;
+                return -1;
             }
 	  else if (pkt == RAKP_MESSAGE_2_RES)
 	    {
@@ -1446,34 +1453,101 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
 static int
 _check_open_session_error(ipmipower_powercmd_t ip)
 {
-  int i, j, cipher_suite_found = 0;
+  uint64_t rmcpplus_status_code;
+  uint64_t maximum_privilege_level;
+  int priv_check;
 
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT);
 
-  /* Note: Unlike IPMI 1.5, there is no need to test
-   * additional privileges (i.e. move up from USER to
-   * OPERATOR, or from OPERATOR to ADMINISTRATOR).  In IPMI
-   * 2.0, authentication mechanisms are not attached to
-   * specific privilege levels.  Cipher Suite IDs are assigned
-   * a privilege level limit.  So if we cannot connect at a
-   * lower privilege, there is no need to see if we can
-   * connect at a higher privilege.
+  /* Note: 
+   *
+   * Sigh.  There are two interpretations of the IPMI 2.0 Spec.
+   *
+   * Interpretation #1:
+   *
+   * Cipher Suite IDs (and thus authentication mechanisms) are not
+   * attached to specific privilege levels.  Cipher Suite IDs are
+   * assigned a privilege level limit.  So if we cannot connect at a
+   * lower privilege, there is no need to see if we can connect at a
+   * higher privilege.
+   *
+   * Interpretation #2:
+   *
+   * Cipher Suite Ids (and thus authentication algorithms) are
+   * attached to specific privilege levels.  You can authenticate only
+   * at that privilege level.
+   *
+   * Either way, the code logic in ipmipower handles both since we
+   * send the open session request with the "request highest
+   * privilege" flag.
+   *
+   * Sigh ... 
    */
   
+  Fiid_obj_get(ip->obj_open_session_res, 
+	       "rmcpplus_status_code", 
+	       &rmcpplus_status_code);
+  
+  Fiid_obj_get(ip->obj_open_session_res,
+	       "maximum_privilege_level",
+	       &maximum_privilege_level);
+
+  /* A rmcpplus status error takes precedence over a privilege error */
+  if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
+    {
+      if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL)
+	{
+	  if (ip->cmd == POWER_CMD_POWER_STATUS)
+	    {
+	      if (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_USER
+		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+		priv_check = 1;
+	      else
+		priv_check = 0;
+	    }
+	  else
+	    {
+	      if (maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_OPERATOR
+		  || maximum_privilege_level == IPMI_PRIVILEGE_LEVEL_ADMIN)
+		priv_check = 1;
+	      else
+		priv_check = 0;
+	    }
+	}
+      else
+	priv_check = (maximum_privilege_level == ip->requested_maximum_privilege) ? 1 : 0;
+
+      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
+	  && conf->privilege != PRIVILEGE_TYPE_AUTO 
+	  && !priv_check)
+	{
+#ifndef NDEBUG
+	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname); 
+#else
+	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+	}
+      
+      if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
+	  && conf->privilege == PRIVILEGE_TYPE_AUTO 
+	  && !priv_check)
+	{
+#ifndef NDEBUG
+	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
+#else
+	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
+#endif
+	}
+    }
+
   if (conf->cipher_suite_id == CIPHER_SUITE_ID_AUTO)
     {
-      uint64_t rmcpplus_status_code;
-      
-      Fiid_obj_get(ip->obj_open_session_res, 
-                   "rmcpplus_status_code", 
-                   &rmcpplus_status_code);
-      
-      dbg("_check_open_session_error(%s:%d): bad rmcpplus_status_code in "
-          "open session response: %x", 
-          ip->ic->hostname, ip->protocol_state, rmcpplus_status_code);
-      
-      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
+      int i, j, cipher_suite_found = 0;
+    
+      if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS
+	  || !priv_check)
         {
           /* Lets try the next Cipher Suite ID if there is one */
           if (ip->cipher_suite_id_ranking_index == (cipher_suite_id_ranking_count - 1))
@@ -1935,7 +2009,16 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             }
           goto done;
         }
- 
+
+      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
+	{
+	  uint8_t maximum_privilege_level;
+	  Fiid_obj_get(ip->obj_open_session_res,
+		       "maximum_privilege_level",
+		       &maximum_privilege_level);
+	  ip->privilege = maximum_privilege_level;
+	}
+      
       _send_packet(ip, RAKP_MESSAGE_1_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)

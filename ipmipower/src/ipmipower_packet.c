@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.53 2006-04-12 02:20:06 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.54 2006-04-12 14:01:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -842,7 +842,7 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
   else if (pkt == OPEN_SESSION_REQ)
     {
       if (fill_rmcpplus_open_session (ip->initial_message_tag + ip->message_tag_count,
-                                      ip->privilege,
+                                      ip->requested_maximum_privilege,
                                       ip->remote_console_session_id,
                                       ip->authentication_algorithm,
                                       ip->integrity_algorithm,

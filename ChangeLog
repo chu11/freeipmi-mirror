@@ -1,3 +1,8 @@
+2006-04-12  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Add work to support both interpretations of the
+	"cipher suite id privilege level".
+	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus.c (fill_rmcpplus_rakp_message_1):

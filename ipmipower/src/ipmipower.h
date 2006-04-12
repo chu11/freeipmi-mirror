@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.54 2006-04-03 17:43:40 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.55 2006-04-12 14:01:48 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -439,6 +439,7 @@ struct ipmipower_powercmd {
   /* IPMI 2.0 specific */
   uint8_t cipher_suite_id;
   unsigned int cipher_suite_id_ranking_index;
+  uint8_t requested_maximum_privilege;
   uint8_t authentication_algorithm;
   uint8_t integrity_algorithm;
   uint8_t confidentiality_algorithm;
