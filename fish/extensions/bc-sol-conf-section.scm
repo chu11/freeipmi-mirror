@@ -186,7 +186,7 @@
      checkout-sol-retry-interval 
      any->string
      same-string-ci?
-     "Give valid number")
+     "Give valid number.  Intervals are in 10ms.")
     ("non_volatile_bit_rate" 
      valid-sol-bit-rate? 
      get-sol-bit-rate 
