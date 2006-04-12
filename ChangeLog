@@ -6,6 +6,10 @@
 	* ipmipower/: Add one more intel IPMI 2.0 workaround.
 
 	* ipmipower/: Add --no-get-channel-cipher-suites workaround.
+
+	* libfreeipmi/src/ipmi-message-support-cmds.c
+	(fill_cmd_set_channel_security_keys), fish/: Fixes added to
+	support K-R and K-G checkout and configuration.
 	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 

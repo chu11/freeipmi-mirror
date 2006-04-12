@@ -43,21 +43,21 @@
     ;;  DIFF-PROC 
     ;;  DOC-STRING)
     ("k_r" 
-     valid-security-key?
+     valid-password20?
      get-string
      commit-k-r
      checkout-k-r
      get-string
      same-string-ci?
-     "Hex String")
+     "Give string or blank to clear.  Max 20 chars.")
     ("k_g" 
-     valid-security-key?
+     valid-password20?
      get-string
      commit-k-g
      checkout-k-g
      get-string
      same-string-ci?
-     "Hex String")
+     "Give string or blank to clear.  Max 20 chars.")
     ;; You can add more in the form of 
     ;; (KEYSTRING 
     ;;  VALIDATION-PROC 

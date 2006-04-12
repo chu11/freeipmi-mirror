@@ -41,6 +41,8 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
+#define IPMI_MAX_K_LENGTH 64
+
 fiid_template_t tmpl_cmd_get_channel_authentication_capabilities_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -768,11 +770,26 @@ fill_cmd_set_channel_security_keys(uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "operation", operation);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "key_id", key_id);
-  if (key_value && key_value_len)
-    FIID_OBJ_SET_DATA (obj_cmd_rq,
-                       "key_value",
-                       key_value,
-                       key_value_len);
+  if (operation == IPMI_CHANNEL_SECURITY_KEYS_OPERATION_SET_KEY)
+    {
+      uint8_t buf[IPMI_MAX_K_LENGTH];
+      uint32_t buf_len;
+      
+      memset(buf, '\0', IPMI_MAX_K_LENGTH);
+      
+      if (key_value && key_value_len)
+	memcpy(buf, key_value, key_value_len);
+      
+      if (key_id == IPMI_CHANNEL_SECURITY_KEYS_KEY_ID_K_R)
+	buf_len = IPMI_MAX_K_R_LENGTH;
+      else
+	buf_len = IPMI_MAX_K_G_LENGTH;
+      
+      FIID_OBJ_SET_DATA (obj_cmd_rq,
+			 "key_value",
+			 buf,
+			 buf_len);
+    }
   return (0);
 }
 
