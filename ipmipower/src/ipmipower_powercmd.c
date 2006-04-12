@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.75 2006-04-12 14:01:48 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.76 2006-04-12 15:54:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -277,7 +277,20 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
         }     
       if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
+        {
+          /* IPMI Workaround (achu)
+           *
+           * Discovered on SE7520AF2 with Intel Server Management Module
+           * (Professional Edition)
+           *
+           * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
+           * of an actual privilege.
+           */
+          if (conf->intel_2_0_session)
+            ip->requested_maximum_privilege = ip->privilege;
+          else
+            ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
+        }
       else
 	ip->requested_maximum_privilege = ipmipower_ipmi_privilege_type(conf->privilege);
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
