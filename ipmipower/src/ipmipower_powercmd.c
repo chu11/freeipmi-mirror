@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.78 2006-04-12 16:04:59 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.79 2006-04-12 16:06:06 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -2025,11 +2025,11 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
       if (conf->privilege == PRIVILEGE_TYPE_AUTO)
 	{
-	  uint8_t maximum_privilege_level;
+	  uint64_t maximum_privilege_level;
 	  Fiid_obj_get(ip->obj_open_session_res,
 		       "maximum_privilege_level",
 		       &maximum_privilege_level);
-	  ip->privilege = maximum_privilege_level;
+	  ip->privilege = (uint8_t)maximum_privilege_level;
 	}
       
       _send_packet(ip, RAKP_MESSAGE_1_REQ);
