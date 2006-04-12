@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.13 2006-03-07 07:25:59 chu11 Exp $ 
+   $Id: common.h,v 1.14 2006-04-12 04:18:37 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -61,7 +61,6 @@
 
 #include "argp-common.h"
 #include "ipmi-common.h"
-#include "ipmi-sdr-repository-cache-api.h"
 #include "ipmi-sel-api.h"
 #include "ipmi-sensor-api.h"
 
