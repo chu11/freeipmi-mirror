@@ -18,6 +18,8 @@
 	* libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
 	(ipmi_cmd_get_session_challenge, ipmi_cmd_activate_session,
 	ipmi_cmd_set_session_privilege_level): Fix errno codes.
+
+	* ipmipower/: Version auto picks ipmi 1.5 over ipmi 2.0.
 	
 2006-04-09  Albert Chu <chu11@llnl.gov>
 

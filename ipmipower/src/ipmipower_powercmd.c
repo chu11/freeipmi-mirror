@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.73 2006-04-12 02:53:04 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.74 2006-04-12 03:13:15 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1054,12 +1054,11 @@ _check_ipmi_2_0_authentication_capabilities_error(ipmipower_powercmd_t ip)
  * 
  * Check for IPMI 2.0 support 
  *
- * Returns  1 if IPMI 2.0 is supported
- * Returns  0 if only IPMI 1.5 is supported
- * Returns -1 if neither is apparently supported
+ * Returns 0 on success and flags set in ipmi_1_5 and ipmi_2_0
+ * Returns -1 on error
  */
 static int
-_check_ipmi_version_support(ipmipower_powercmd_t ip)
+_check_ipmi_version_support(ipmipower_powercmd_t ip, int *ipmi_1_5, int *ipmi_2_0)
 {
   uint64_t ipmi_v20_extended_capabilities_available, 
     channel_supports_ipmi_v15_connections,
@@ -1067,6 +1066,8 @@ _check_ipmi_version_support(ipmipower_powercmd_t ip)
   
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
+  assert(ipmi_1_5);
+  assert(ipmi_2_0);
 
   Fiid_obj_get(ip->obj_authentication_capabilities_v20_res,
                "authentication_type.ipmi_v2.0_extended_capabilities_available",
@@ -1078,18 +1079,25 @@ _check_ipmi_version_support(ipmipower_powercmd_t ip)
                "channel_supports_ipmi_v2.0_connections",
                &channel_supports_ipmi_v20_connections);
   
-  if (ipmi_v20_extended_capabilities_available
-      && !channel_supports_ipmi_v15_connections
-      && !channel_supports_ipmi_v20_connections)
-    return -1;
-  else if (!ipmi_v20_extended_capabilities_available
-           || (channel_supports_ipmi_v15_connections
-               && !channel_supports_ipmi_v20_connections))
-    return 0;
-  else
-    return 1;
 
-  /* NOT REACHED */
+  if (!ipmi_v20_extended_capabilities_available)
+    {
+      *ipmi_1_5 = 1;
+      *ipmi_2_0 = 0;
+    }
+  else
+    {
+      if (channel_supports_ipmi_v15_connections)
+	*ipmi_1_5 = 1;
+      else
+	*ipmi_1_5 = 0;
+      
+      if (channel_supports_ipmi_v20_connections)
+	*ipmi_2_0 = 1;
+      else
+	*ipmi_2_0 = 0;
+    }
+
   return 0;
 }
 
@@ -1670,6 +1678,8 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT)
     {
+      int ipmi_1_5, ipmi_2_0;
+
       /* If the remote machine does not support IPMI 2.0, we move onto
        * IPMI 1.5 protocol appropriately.
        */
@@ -1688,8 +1698,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 	    }
           goto done;
         }
-
-      rv = _check_ipmi_version_support(ip);
+#if 0
+ /* Returns  1 if only IPMI 2.0 is supported
+ * Returns  0 if IPMI 1.5 is supported
+ * Returns -1 if neither is apparently supported
+ */
+#endif
+      if (_check_ipmi_version_support(ip, &ipmi_1_5, &ipmi_2_0) < 0)
+	return -1;
       
       if (conf->ipmi_version == IPMI_VERSION_AUTO)
         {
@@ -1697,9 +1713,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
            * and go with the IPMI 1.5 get authentication capabilities
            * response.
            */
-          if (rv < 0)
+          if (!ipmi_1_5 && !ipmi_2_0)
             _send_packet(ip, AUTHENTICATION_CAPABILITIES_REQ);
-          else if (!rv)
+          else if (ipmi_1_5)
             {
               if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
                 return -1;
@@ -1730,9 +1746,40 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
               _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
             }
         }
+      else if (conf->ipmi_version == IPMI_VERSION_1_5)
+	{
+          if (!ipmi_1_5)
+            {
+              ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
+              return -1;
+            }
+          /* else we continue with the IPMI 1.5 protocol */
+	  
+	  if ((rv = _check_ipmi_1_5_authentication_capabilities(ip, AUTHENTICATION_CAPABILITIES_V20_RES)) < 0)
+	    return -1;
+	  
+	  if (rv)
+	    {
+	      /* Don't consider this a retransmission */
+	      _send_packet(ip, AUTHENTICATION_CAPABILITIES_V20_REQ);
+	      goto done;
+	    }
+	  /* else we continue with the IPMI 1.5 protocol */
+              
+	  ip->ipmi_version = IPMI_VERSION_1_5;
+	  ip->highest_received_sequence_number = IPMIPOWER_LAN_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
+	  
+	  if (strlen(conf->password) > IPMI_1_5_MAX_PASSWORD_LENGTH)
+	    {
+	      ipmipower_output(MSG_TYPE_PASSWORD_LENGTH, ip->ic->hostname);
+	      return -1;
+	    }
+	  
+	  _send_packet(ip, GET_SESSION_CHALLENGE_REQ);
+	}
       else /* conf->ipmi_version == IPMI_VERSION_2_0 */
         {
-          if (rv != 1)
+          if (!ipmi_2_0)
             {
               ipmipower_output(MSG_TYPE_VERSION_NOT_SUPPORTED, ip->ic->hostname); 
               return -1;
