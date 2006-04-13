@@ -121,7 +121,6 @@ ipmi_check_completion_code(fiid_obj_t obj_cmd, uint8_t completion_code)
                 "ipmi_check_completion_code: completion code invalid: %x",
                 (uint8_t)completion_code_recv);
       syslog (LOG_MAKEPRI (LOG_FAC (LOG_LOCAL1), LOG_ERR), errstr);
-    }
 #endif /* IPMI_SYSLOG */
 #if defined (IPMI_TRACE)
       fprintf(stderr,
