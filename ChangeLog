@@ -18,6 +18,9 @@
 
 	* ipmipower/src/ipmipower_powercmd.c (_recv_packet): Return error
 	on rakp2 or rakp4 hash errors.
+
+	* fish/src/scm-procedures.c (ex_set_bmc_user_sol_payload_access):
+	Fix enable/disable bug.
 	
 2006-04-11  Albert Chu <chu11@llnl.gov>
 
