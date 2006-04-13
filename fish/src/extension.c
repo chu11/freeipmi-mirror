@@ -467,7 +467,7 @@ install_new_procedures (void)
      syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-9 privilege)
    */
 
-  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-10", ex_set_rmcpplus_cipher_suite_id_11, 1, 0, 0);
+  gh_new_procedure ("fi-set-rmcpplus-cipher-suite-id-10", ex_set_rmcpplus_cipher_suite_id_10, 1, 0, 0);
   /* 
      syntax in scheme: (fi-set-rmcpplus-cipher-suite-id-10 privilege)
    */
