@@ -7,6 +7,9 @@
 	compile bug.
 
 	* freeipmi.spec.in: Fix package requirement gcrypt -> libgcrypt.
+
+	* libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: Add
+	forgotten reserved fields to tmpl_get_channel_payload_support_rs.
 	
 2006-04-12  Albert Chu <chu11@llnl.gov>
 

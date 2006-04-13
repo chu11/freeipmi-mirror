@@ -316,6 +316,7 @@ fiid_template_t tmpl_get_channel_payload_support_rs =
     {1, "payload_type_2Dh_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "payload_type_2Eh_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "payload_type_2Fh_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
