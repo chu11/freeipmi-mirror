@@ -10,6 +10,9 @@
 
 	* libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: Add
 	forgotten reserved fields to tmpl_get_channel_payload_support_rs.
+
+	* ipmipower/src/ipmipower_packet.c (ipmipower_packet_dump): Fix
+	compiler warning.
 	
 2006-04-12  Albert Chu <chu11@llnl.gov>
 
