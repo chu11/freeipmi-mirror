@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.83 2006-04-12 21:18:11 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.84 2006-04-13 22:04:29 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1094,7 +1094,7 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
     }
 
   if ((!strlen(conf->k_g) && authentication_status_k_g)
-      || strlen(conf->k_g) && !authentication_status_k_g)
+      || (strlen(conf->k_g) && !authentication_status_k_g))
     {
 #ifndef NDEBUG
       ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
