@@ -3,6 +3,9 @@
 	* fish/src/extension.c (install_new_procedures): Fix function name
 	typo.
 
+	* libfreeipmi/src/ipmi-utils.c (ipmi_check_completion_code): Fix
+	compile bug.
+
 	* freeipmi.spec.in: Fix package requirement gcrypt -> libgcrypt.
 	
 2006-04-12  Albert Chu <chu11@llnl.gov>
