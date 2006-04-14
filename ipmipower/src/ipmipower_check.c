@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.49 2006-04-12 16:11:10 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.50 2006-04-14 00:18:46 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -54,8 +54,8 @@ ipmipower_check_checksum(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  || pkt == AUTHENTICATION_CAPABILITIES_RES
 	  || pkt == GET_SESSION_CHALLENGE_RES
 	  || pkt == ACTIVATE_SESSION_RES
-	  || pkt == SET_SESSION_PRIVILEGE_RES
 	  || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+	  || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
 	  || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
@@ -90,8 +90,8 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	 || pkt == AUTHENTICATION_CAPABILITIES_RES
 	 || pkt == GET_SESSION_CHALLENGE_RES
 	 || pkt == ACTIVATE_SESSION_RES
-	 || pkt == SET_SESSION_PRIVILEGE_RES
 	 || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+	 || pkt == SET_SESSION_PRIVILEGE_LEVEL_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == GET_CHASSIS_STATUS_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == CHASSIS_CONTROL_RES /* IPMI 1.5 or 2.0 */
 	 || pkt == CLOSE_SESSION_RES); /* IPMI 1.5 or 2.0 */
@@ -101,10 +101,10 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || pkt == SET_SESSION_PRIVILEGE_RES
       || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || (ip->ipmi_version == IPMI_VERSION_1_5
-	  && (pkt == GET_CHASSIS_STATUS_RES
+	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	      || pkt == GET_CHASSIS_STATUS_RES
 	      || pkt == CHASSIS_CONTROL_RES
 	      || pkt == CLOSE_SESSION_RES)))
     {
@@ -119,7 +119,7 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
       else if (pkt == ACTIVATE_SESSION_RES)
 	authentication_type = ip->authentication_type;
-      else /* pkt == SET_SESSION_PRIVILEGE_RES
+      else /* pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
               || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CLOSE_SESSION_RES
@@ -199,7 +199,8 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
     }      
   else	/* 
 	   (ip->ipmi_version == IPMI_VERSION_2_0
-	    && (pkt == GET_CHASSIS_STATUS_RES
+	    && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	        || pkt == GET_CHASSIS_STATUS_RES
 	        || pkt == CHASSIS_CONTROL_RES
 	        || pkt == CLOSE_SESSION_RES))
 	*/
@@ -265,19 +266,20 @@ ipmipower_check_outbound_sequence_number(ipmipower_powercmd_t ip, packet_type_t 
     return 1;
 
   if (ip->ipmi_version == IPMI_VERSION_2_0
-      && (pkt == GET_CHASSIS_STATUS_RES
+      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	  || pkt == GET_CHASSIS_STATUS_RES
 	  || pkt == CHASSIS_CONTROL_RES
 	  || pkt == CLOSE_SESSION_RES))
     Fiid_obj_get(ip->obj_rmcpplus_session_hdr_res,
 		 "session_sequence_number",
 		 &seq_num);
   else /* 
-	  pkt == ACTIVATE_SESSION_RES
-	  || pkt == SET_SESSION_PRIVILEGE_RES
+	  pkt == ACTIVATE_SESSION_RES  
 	  || (ip->ipmi_version == IPMI_VERSION_1_5
-	      && (pkt == GET_CHASSIS_STATUS_RES
-	          || pkt == CHASSIS_CONTROL_RES
-		  || pkt == CLOSE_SESSION_RES))
+	      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	      || pkt == GET_CHASSIS_STATUS_RES
+	      || pkt == CHASSIS_CONTROL_RES
+	      || pkt == CLOSE_SESSION_RES))
        */
     Fiid_obj_get(ip->obj_lan_session_hdr_res,
 		 "session_sequence_number", 
@@ -431,11 +433,11 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == ACTIVATE_SESSION_RES
       || pkt == GET_CHANNEL_CIPHER_SUITES_RES)      
     return 1;
-  else if (pkt == SET_SESSION_PRIVILEGE_REQ
-	   || (ip->ipmi_version == IPMI_VERSION_1_5
-	       && (pkt == CLOSE_SESSION_REQ
-		   || pkt == GET_CHASSIS_STATUS_REQ
-		   || pkt == CHASSIS_CONTROL_REQ)))
+  else if (ip->ipmi_version == IPMI_VERSION_1_5
+	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	       || pkt == GET_CHASSIS_STATUS_RES
+	       || pkt == CHASSIS_CONTROL_RES
+	       || pkt == CLOSE_SESSION_RES))
     {
       Fiid_obj_get(ip->obj_lan_session_hdr_res, 
                    "session_id", 
@@ -445,7 +447,8 @@ ipmipower_check_session_id(ipmipower_powercmd_t ip, packet_type_t pkt)
 		   &expected_session_id);
     }
   else if (ip->ipmi_version == IPMI_VERSION_2_0
-	   && (pkt == GET_CHASSIS_STATUS_RES
+	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	       || pkt == GET_CHASSIS_STATUS_RES
 	       || pkt == CHASSIS_CONTROL_RES
 	       || pkt == CLOSE_SESSION_RES))
     {
@@ -540,16 +543,16 @@ ipmipower_check_command(ipmipower_powercmd_t ip, packet_type_t pkt)
     expected_cmd = IPMI_CMD_GET_SESSION_CHALLENGE;
   else if (pkt == ACTIVATE_SESSION_RES) 
     expected_cmd = IPMI_CMD_ACTIVATE_SESSION;
-  else if (pkt == SET_SESSION_PRIVILEGE_RES) 
-    expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
     expected_cmd = IPMI_CMD_GET_CHANNEL_CIPHER_SUITES;
-  else if (pkt == CLOSE_SESSION_RES) 
-    expected_cmd = IPMI_CMD_CLOSE_SESSION;
+  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES) 
+    expected_cmd = IPMI_CMD_SET_SESSION_PRIVILEGE_LEVEL;
   else if (pkt == GET_CHASSIS_STATUS_RES) 
     expected_cmd = IPMI_CMD_GET_CHASSIS_STATUS;
   else if (pkt == CHASSIS_CONTROL_RES) 
     expected_cmd = IPMI_CMD_CHASSIS_CONTROL;
+  else if (pkt == CLOSE_SESSION_RES) 
+    expected_cmd = IPMI_CMD_CLOSE_SESSION;
   
   if (cmd != expected_cmd)
     dbg("ipmipower_check_command(%s:%d): cmd: %x, expected: %x", 
@@ -620,7 +623,8 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
 	 || pkt == RAKP_MESSAGE_2_RES
 	 || pkt == RAKP_MESSAGE_4_RES
 	 || (ip->ipmi_version == IPMI_VERSION_2_0
-	     && (pkt == GET_CHASSIS_STATUS_RES
+	     && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+		 || pkt == GET_CHASSIS_STATUS_RES
 		 || pkt == CHASSIS_CONTROL_RES
 		 || pkt == CLOSE_SESSION_RES)));
 
@@ -723,28 +727,33 @@ ipmipower_check_open_session_response_privilege(ipmipower_powercmd_t ip, packet_
                "maximum_privilege_level",
                &val);
 
-  if (ip->requested_maximum_privilege == IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL)
-    {
-      if (ip->cmd == POWER_CMD_POWER_STATUS)
-	{
-	  if (val == IPMI_PRIVILEGE_LEVEL_USER
-	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN)
-	    rv = 1;
-	  else
-	    rv = 0;
-	}
-      else
-	{
-	  if (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
-	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN)
-	    rv = 1;
-	  else
-	    rv = 0;
-	}
-    }
-  else
+  /* IPMI Workaround (achu)
+   *
+   * Discovered on SE7520AF2 with Intel Server Management Module
+   * (Professional Edition)
+   *
+   * The Intel's don't work with IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL.
+   * So check that we get back what we sent.
+   */
+  if (conf->intel_2_0_session)
     rv = (val == ip->requested_maximum_privilege) ? 1 : 0;
+  else
+    {
+      if (ip->privilege == IPMI_PRIVILEGE_LEVEL_USER
+	  && (val == IPMI_PRIVILEGE_LEVEL_USER
+	      || val == IPMI_PRIVILEGE_LEVEL_OPERATOR
+	      || val == IPMI_PRIVILEGE_LEVEL_ADMIN))
+	rv = 1;
+      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_OPERATOR
+	       && (val == IPMI_PRIVILEGE_LEVEL_OPERATOR
+		   || val == IPMI_PRIVILEGE_LEVEL_ADMIN))
+	rv = 1;
+      else if (ip->privilege == IPMI_PRIVILEGE_LEVEL_ADMIN
+	       && val == IPMI_PRIVILEGE_LEVEL_ADMIN)
+	rv = 1;
+      else
+	rv = 0;
+    }
 
   if (!rv)
     dbg("ipmipower_check_open_session_response_privilege(%s:%d): "
@@ -948,7 +957,8 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(ip->ipmi_version == IPMI_VERSION_2_0
-	 && (pkt == GET_CHASSIS_STATUS_RES
+	 && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	     || pkt == GET_CHASSIS_STATUS_RES
 	     || pkt == CHASSIS_CONTROL_RES
 	     || pkt == CLOSE_SESSION_RES));
 
@@ -974,7 +984,8 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(ip->ipmi_version == IPMI_VERSION_2_0
-	 && (pkt == GET_CHASSIS_STATUS_RES
+	 && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	     || pkt == GET_CHASSIS_STATUS_RES
 	     || pkt == CHASSIS_CONTROL_RES
 	     || pkt == CLOSE_SESSION_RES));
 

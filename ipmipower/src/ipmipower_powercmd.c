@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.84 2006-04-13 22:04:29 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.85 2006-04-14 00:18:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -122,8 +122,6 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_get_session_challenge_res);
   Fiid_obj_destroy(ip->obj_activate_session_req);
   Fiid_obj_destroy(ip->obj_activate_session_res);
-  Fiid_obj_destroy(ip->obj_set_session_privilege_req);
-  Fiid_obj_destroy(ip->obj_set_session_privilege_res);
   Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_req);
   Fiid_obj_destroy(ip->obj_get_channel_cipher_suites_res);
   Fiid_obj_destroy(ip->obj_open_session_req);
@@ -132,12 +130,14 @@ _destroy_ipmipower_powercmd(ipmipower_powercmd_t ip)
   Fiid_obj_destroy(ip->obj_rakp_message_2_res);
   Fiid_obj_destroy(ip->obj_rakp_message_3_req);
   Fiid_obj_destroy(ip->obj_rakp_message_4_res);
-  Fiid_obj_destroy(ip->obj_close_session_req);
-  Fiid_obj_destroy(ip->obj_close_session_res);
+  Fiid_obj_destroy(ip->obj_set_session_privilege_level_req);
+  Fiid_obj_destroy(ip->obj_set_session_privilege_level_res);
   Fiid_obj_destroy(ip->obj_get_chassis_status_req);
   Fiid_obj_destroy(ip->obj_get_chassis_status_res);
   Fiid_obj_destroy(ip->obj_chassis_control_req);
   Fiid_obj_destroy(ip->obj_chassis_control_res);
+  Fiid_obj_destroy(ip->obj_close_session_req);
+  Fiid_obj_destroy(ip->obj_close_session_res);
 
   /* Close all sockets that were saved during the Get Session
    * Challenge phase of the IPMI protocol.
@@ -276,23 +276,18 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
                      "conf->cipher_suite_id: %d; cipher_suite_id: %d; %s",
                      conf->cipher_suite_id, ip->cipher_suite_id, strerror(errno));
         }     
-      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-        {
-          /* IPMI Workaround (achu)
-           *
-           * Discovered on SE7520AF2 with Intel Server Management Module
-           * (Professional Edition)
-           *
-           * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
-           * of an actual privilege.
-           */
-          if (conf->intel_2_0_session)
-            ip->requested_maximum_privilege = ip->privilege;
-          else
-            ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
-        }
+      /* IPMI Workaround (achu)
+       *
+       * Discovered on SE7520AF2 with Intel Server Management Module
+       * (Professional Edition)
+       *
+       * The Intel's return IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL instead
+       * of an actual privilege.
+       */
+      if (conf->intel_2_0_session)
+	ip->requested_maximum_privilege = ip->privilege;
       else
-	ip->requested_maximum_privilege = ipmipower_ipmi_privilege_type(conf->privilege);
+	ip->requested_maximum_privilege = IPMI_PRIVILEGE_LEVEL_HIGHEST_LEVEL;
       memset(ip->sik_key, '\0', IPMI_MAX_SIK_KEY_LENGTH);
       ip->sik_key_ptr = ip->sik_key;
       ip->sik_key_len = IPMI_MAX_SIK_KEY_LENGTH;
@@ -338,8 +333,6 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_get_session_challenge_res = Fiid_obj_create(tmpl_cmd_get_session_challenge_rs); 
   ip->obj_activate_session_req = Fiid_obj_create(tmpl_cmd_activate_session_rq); 
   ip->obj_activate_session_res = Fiid_obj_create(tmpl_cmd_activate_session_rs); 
-  ip->obj_set_session_privilege_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
-  ip->obj_set_session_privilege_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->obj_get_channel_cipher_suites_req = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rq); 
   ip->obj_get_channel_cipher_suites_res = Fiid_obj_create(tmpl_cmd_get_channel_cipher_suites_rs); 
   ip->obj_open_session_req = Fiid_obj_create(tmpl_rmcpplus_open_session_request); 
@@ -348,12 +341,14 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
   ip->obj_rakp_message_2_res = Fiid_obj_create(tmpl_rmcpplus_rakp_message_2); 
   ip->obj_rakp_message_3_req = Fiid_obj_create(tmpl_rmcpplus_rakp_message_3); 
   ip->obj_rakp_message_4_res = Fiid_obj_create(tmpl_rmcpplus_rakp_message_4); 
-  ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
-  ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
+  ip->obj_set_session_privilege_level_req = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rq); 
+  ip->obj_set_session_privilege_level_res = Fiid_obj_create(tmpl_cmd_set_session_privilege_level_rs); 
   ip->obj_get_chassis_status_req = Fiid_obj_create(tmpl_cmd_get_chassis_status_rq); 
   ip->obj_get_chassis_status_res = Fiid_obj_create(tmpl_cmd_get_chassis_status_rs); 
   ip->obj_chassis_control_req = Fiid_obj_create(tmpl_cmd_chassis_control_rq); 
   ip->obj_chassis_control_res = Fiid_obj_create(tmpl_cmd_chassis_control_rs); 
+  ip->obj_close_session_req = Fiid_obj_create(tmpl_cmd_close_session_rq); 
+  ip->obj_close_session_res = Fiid_obj_create(tmpl_cmd_close_session_rs); 
 
   if ((ip->sockets_to_close = list_create(NULL)) == NULL)
     err_exit("list_create() error");
@@ -395,9 +390,10 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == RAKP_MESSAGE_3_REQ)
     ip->message_tag_count++;
   else if (ip->ipmi_version == IPMI_VERSION_2_0
-	   && (pkt == CLOSE_SESSION_REQ
+	   && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
 	       || pkt == GET_CHASSIS_STATUS_REQ
-	       || pkt == CHASSIS_CONTROL_REQ))
+	       || pkt == CHASSIS_CONTROL_REQ
+	       || pkt == CLOSE_SESSION_REQ))
     {
       /* IPMI 2.0 is special, sequence numbers of 0 don't count */
       ip->session_sequence_number++;
@@ -434,8 +430,6 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	  }
       }
     }
-  else if (pkt == SET_SESSION_PRIVILEGE_REQ)
-    ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT;
   else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ)
     ip->protocol_state = PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT;
   else if (pkt == OPEN_SESSION_REQ)
@@ -444,22 +438,24 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_1_SENT;
   else if (pkt == RAKP_MESSAGE_3_REQ)
     ip->protocol_state = PROTOCOL_STATE_RAKP_MESSAGE_3_SENT;
-  else if (pkt == CLOSE_SESSION_REQ)
-    ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
+  else if (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ)
+    ip->protocol_state = PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT;
   else if (pkt == GET_CHASSIS_STATUS_REQ)
     ip->protocol_state = PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT;
   else if (pkt == CHASSIS_CONTROL_REQ)
     ip->protocol_state = PROTOCOL_STATE_CHASSIS_CONTROL_SENT;
+  else if (pkt == CLOSE_SESSION_REQ)
+    ip->protocol_state = PROTOCOL_STATE_CLOSE_SESSION_SENT;
 
   /* Session inbound count is incremented after the packet is sent,
    * since the first inbound sequence number is specified by the
    * activate session command.
    */
-  if (pkt == SET_SESSION_PRIVILEGE_REQ 
-      || (ip->ipmi_version == IPMI_VERSION_1_5
-	  && (pkt == CLOSE_SESSION_REQ 
-	      || pkt == GET_CHASSIS_STATUS_REQ 
-	      || pkt == CHASSIS_CONTROL_REQ)))
+  if (ip->ipmi_version == IPMI_VERSION_1_5
+      && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ 
+	  || pkt == GET_CHASSIS_STATUS_REQ 
+	  || pkt == CHASSIS_CONTROL_REQ
+	  || pkt == CLOSE_SESSION_REQ))
     ip->session_inbound_count++;
 
   Gettimeofday(&(ip->ic->last_ipmi_send), NULL);
@@ -490,10 +486,10 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || pkt == SET_SESSION_PRIVILEGE_RES
       || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || (ip->ipmi_version == IPMI_VERSION_1_5
-          && (pkt == GET_CHASSIS_STATUS_RES
+          && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	      || pkt == GET_CHASSIS_STATUS_RES
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CLOSE_SESSION_RES)))
     {
@@ -553,7 +549,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
            || pkt == RAKP_MESSAGE_2_RES
            || pkt == RAKP_MESSAGE_4_RES
            || (ip->ipmi_version == IPMI_VERSION_2_0
-               && (pkt == GET_CHASSIS_STATUS_RES
+               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	           || pkt == GET_CHASSIS_STATUS_RES
                    || pkt == CHASSIS_CONTROL_RES
                    || pkt == CLOSE_SESSION_RES)))
         */
@@ -626,7 +623,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	    }
 	}
       else /* (ip->ipmi_version == IPMI_VERSION_2_0
-               && (pkt == GET_CHASSIS_STATUS_RES
+               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	           || pkt == GET_CHASSIS_STATUS_RES
                    || pkt == CHASSIS_CONTROL_RES
                    || pkt == CLOSE_SESSION_RES)) */
 	{
@@ -808,8 +806,6 @@ _retry_packets(ipmipower_powercmd_t ip)
     }
   else if (ip->protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT)
     _send_packet(ip, ACTIVATE_SESSION_REQ);
-  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT)
-    _send_packet(ip, SET_SESSION_PRIVILEGE_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT)
@@ -818,6 +814,8 @@ _retry_packets(ipmipower_powercmd_t ip)
     _send_packet(ip, RAKP_MESSAGE_1_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_3_SENT)
     _send_packet(ip, RAKP_MESSAGE_3_REQ);
+  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT)
+    _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHASSIS_STATUS_SENT)
     _send_packet(ip, GET_CHASSIS_STATUS_REQ);
   else if (ip->protocol_state == PROTOCOL_STATE_CHASSIS_CONTROL_SENT)
@@ -2089,38 +2087,14 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
          * should we timeout?? */
         return -1;
       
-      /* We can skip SET_SESSION_PRIVILEGE_REQ on a power status
+      /* We can skip SET_SESSION_PRIVILEGE_LEVEL_REQ on a power status
        * check, because the default IPMI session privilege level is
        * the user privilege level
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS)
 	_send_packet(ip, GET_CHASSIS_STATUS_REQ);
       else
-        _send_packet(ip, SET_SESSION_PRIVILEGE_REQ);
-    }
-  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_SENT) 
-    {
-      if ((rv = _recv_packet(ip, SET_SESSION_PRIVILEGE_RES)) != 1) 
-        {
-          if (rv < 0) 
-            /* Session is up, so close it */
-            _send_packet(ip, CLOSE_SESSION_REQ);
-          goto done;
-        }
-
-      /* Next packet we send depends on the power command and the
-       * options set.  The POWER_CMD_POWER_STATUS command shouldn't be
-       * possible at this point (see comments above under
-       * protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT), but
-       * we leave the code below anyway.
-       */
-      if (ip->cmd == POWER_CMD_POWER_STATUS
-          || (conf->on_if_off 
-              && (ip->cmd == POWER_CMD_POWER_CYCLE
-                  || ip->cmd == POWER_CMD_POWER_RESET)))
-        _send_packet(ip, GET_CHASSIS_STATUS_REQ);
-      else
-        _send_packet(ip, CHASSIS_CONTROL_REQ);
+        _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_GET_CHANNEL_CIPHER_SUITES_SENT)
     {
@@ -2173,16 +2147,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
             }
           goto done;
         }
-
-      if (conf->privilege == PRIVILEGE_TYPE_AUTO)
-	{
-	  uint64_t maximum_privilege_level;
-	  Fiid_obj_get(ip->obj_open_session_res,
-		       "maximum_privilege_level",
-		       &maximum_privilege_level);
-	  ip->privilege = (uint8_t)maximum_privilege_level;
-	}
-      
+     
       _send_packet(ip, RAKP_MESSAGE_1_REQ);
     }
   else if (ip->protocol_state == PROTOCOL_STATE_RAKP_MESSAGE_1_SENT)
@@ -2212,8 +2177,30 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           goto done;
         }
 
+      /* We can skip SET_SESSION_PRIVILEGE_LEVEL_REQ on a power status
+       * check, because the default IPMI session privilege level is
+       * the user privilege level
+       */
+      if (ip->cmd == POWER_CMD_POWER_STATUS)
+	_send_packet(ip, GET_CHASSIS_STATUS_REQ);
+      else
+        _send_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_REQ);
+    }
+  else if (ip->protocol_state == PROTOCOL_STATE_SET_SESSION_PRIVILEGE_LEVEL_SENT) 
+    {
+      if ((rv = _recv_packet(ip, SET_SESSION_PRIVILEGE_LEVEL_RES)) != 1) 
+        {
+          if (rv < 0) 
+            /* Session is up, so close it */
+            _send_packet(ip, CLOSE_SESSION_REQ);
+          goto done;
+        }
+
       /* Next packet we send depends on the power command and the
-       * options set.
+       * options set.  The POWER_CMD_POWER_STATUS command shouldn't be
+       * possible at this point (see comments above under
+       * protocol_state == PROTOCOL_STATE_ACTIVATE_SESSION_SENT), but
+       * we leave the code below anyway.
        */
       if (ip->cmd == POWER_CMD_POWER_STATUS
           || (conf->on_if_off 
