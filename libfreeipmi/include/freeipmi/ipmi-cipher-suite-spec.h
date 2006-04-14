@@ -47,9 +47,9 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_ID_MIN                              0
 #define IPMI_CIPHER_SUITE_ID_MAX                              14
 
-extern fiid_template_t tmpl_cmd_cipher_suite_record_header;
-extern fiid_template_t tmpl_cmd_cipher_suite_record;
-extern fiid_template_t tmpl_cmd_oem_cipher_suite_record;
+extern fiid_template_t tmpl_cipher_suite_record_header;
+extern fiid_template_t tmpl_cipher_suite_record;
+extern fiid_template_t tmpl_oem_cipher_suite_record;
 
 #define IPMI_CIPHER_SUITE_COMBINATION_VALID(__a, __i, __c) \
   ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \

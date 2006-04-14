@@ -282,7 +282,7 @@ get_channel_info_list (ipmi_device_t *dev)
   uint8_t ci;
   uint64_t val;
   
-  if (!(data_rs = fiid_obj_create (tmpl_get_channel_info_rs)))
+  if (!(data_rs = fiid_obj_create (tmpl_cmd_get_channel_info_rs)))
     {
       perror ("fiid_obj_create");
       exit (EXIT_FAILURE);

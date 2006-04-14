@@ -196,29 +196,29 @@ extern fiid_template_t tmpl_cmd_set_session_privilege_level_rs;
 extern fiid_template_t tmpl_cmd_close_session_rq;
 extern fiid_template_t tmpl_cmd_close_session_rs;
 
-extern fiid_template_t tmpl_set_channel_access_rq;
-extern fiid_template_t tmpl_set_channel_access_rs;
-extern fiid_template_t tmpl_get_channel_access_rq;
-extern fiid_template_t tmpl_get_channel_access_rs;
-extern fiid_template_t tmpl_get_channel_info_rq;
-extern fiid_template_t tmpl_get_channel_info_rs;
+extern fiid_template_t tmpl_cmd_set_channel_access_rq;
+extern fiid_template_t tmpl_cmd_set_channel_access_rs;
+extern fiid_template_t tmpl_cmd_get_channel_access_rq;
+extern fiid_template_t tmpl_cmd_get_channel_access_rs;
+extern fiid_template_t tmpl_cmd_get_channel_info_rq;
+extern fiid_template_t tmpl_cmd_get_channel_info_rs;
 
-extern fiid_template_t tmpl_set_channel_security_keys_rq;
-extern fiid_template_t tmpl_set_channel_security_keys_rs;
-extern fiid_template_t tmpl_set_user_access_rq;
-extern fiid_template_t tmpl_set_user_access_rs;
-extern fiid_template_t tmpl_get_user_access_rq;
-extern fiid_template_t tmpl_get_user_access_rs;
+extern fiid_template_t tmpl_cmd_set_channel_security_keys_rq;
+extern fiid_template_t tmpl_cmd_set_channel_security_keys_rs;
+extern fiid_template_t tmpl_cmd_set_user_access_rq;
+extern fiid_template_t tmpl_cmd_set_user_access_rs;
+extern fiid_template_t tmpl_cmd_get_user_access_rq;
+extern fiid_template_t tmpl_cmd_get_user_access_rs;
 
-extern fiid_template_t tmpl_set_user_name_rq;
-extern fiid_template_t tmpl_set_user_name_rs;
+extern fiid_template_t tmpl_cmd_set_user_name_rq;
+extern fiid_template_t tmpl_cmd_set_user_name_rs;
 
-extern fiid_template_t tmpl_get_user_name_rq;
-extern fiid_template_t tmpl_get_user_name_rs;
+extern fiid_template_t tmpl_cmd_get_user_name_rq;
+extern fiid_template_t tmpl_cmd_get_user_name_rs;
 
-extern fiid_template_t tmpl_set_user_password_rq;
-extern fiid_template_t tmpl_set_user_password_v20_rq;
-extern fiid_template_t tmpl_set_user_password_rs;
+extern fiid_template_t tmpl_cmd_set_user_password_rq;
+extern fiid_template_t tmpl_cmd_set_user_password_v20_rq;
+extern fiid_template_t tmpl_cmd_set_user_password_rs;
 
 int8_t fill_cmd_get_channel_authentication_capabilities (uint8_t channel_number,
                                                          uint8_t maximum_privilege_level, 

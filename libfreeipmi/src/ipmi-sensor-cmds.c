@@ -33,7 +33,7 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_get_device_sdr_info_rq =
+fiid_template_t tmpl_cmd_get_device_sdr_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "operation", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -41,7 +41,7 @@ fiid_template_t tmpl_get_device_sdr_info_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_device_sdr_info_rs =
+fiid_template_t tmpl_cmd_get_device_sdr_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -56,7 +56,7 @@ fiid_template_t tmpl_get_device_sdr_info_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_device_sdr_rq =
+fiid_template_t tmpl_cmd_get_device_sdr_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -66,7 +66,7 @@ fiid_template_t tmpl_get_device_sdr_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_device_sdr_rs =
+fiid_template_t tmpl_cmd_get_device_sdr_rs =
   {
     {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -75,7 +75,7 @@ fiid_template_t tmpl_get_device_sdr_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_factors_rq =
+fiid_template_t tmpl_cmd_get_sensor_reading_factors_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -83,7 +83,7 @@ fiid_template_t tmpl_get_sensor_reading_factors_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_factors_rs =
+fiid_template_t tmpl_cmd_get_sensor_reading_factors_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -102,7 +102,7 @@ fiid_template_t tmpl_get_sensor_reading_factors_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_hysteresis_rq =
+fiid_template_t tmpl_cmd_set_sensor_hysteresis_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -112,14 +112,14 @@ fiid_template_t tmpl_set_sensor_hysteresis_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_hysteresis_rs =
+fiid_template_t tmpl_cmd_set_sensor_hysteresis_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_hysteresis_rq =
+fiid_template_t tmpl_cmd_get_sensor_hysteresis_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -127,7 +127,7 @@ fiid_template_t tmpl_get_sensor_hysteresis_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_hysteresis_rs =
+fiid_template_t tmpl_cmd_get_sensor_hysteresis_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -136,7 +136,7 @@ fiid_template_t tmpl_get_sensor_hysteresis_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_thresholds_rq =
+fiid_template_t tmpl_cmd_set_sensor_thresholds_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -156,21 +156,21 @@ fiid_template_t tmpl_set_sensor_thresholds_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_thresholds_rs =
+fiid_template_t tmpl_cmd_set_sensor_thresholds_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_thresholds_rq =
+fiid_template_t tmpl_cmd_get_sensor_thresholds_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_thresholds_rs =
+fiid_template_t tmpl_cmd_get_sensor_thresholds_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -190,14 +190,14 @@ fiid_template_t tmpl_get_sensor_thresholds_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_event_enable_rs =
+fiid_template_t tmpl_cmd_set_sensor_event_enable_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_event_enable_rq =
+fiid_template_t tmpl_cmd_set_sensor_event_enable_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -210,7 +210,7 @@ fiid_template_t tmpl_set_sensor_event_enable_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_event_enable_threshold_rq =
+fiid_template_t tmpl_cmd_set_sensor_event_enable_threshold_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -253,7 +253,7 @@ fiid_template_t tmpl_set_sensor_event_enable_threshold_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_event_enable_discrete_rq =
+fiid_template_t tmpl_cmd_set_sensor_event_enable_discrete_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -302,14 +302,14 @@ fiid_template_t tmpl_set_sensor_event_enable_discrete_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_enable_rq =
+fiid_template_t tmpl_cmd_get_sensor_event_enable_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_enable_rs =
+fiid_template_t tmpl_cmd_get_sensor_event_enable_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -321,14 +321,14 @@ fiid_template_t tmpl_get_sensor_event_enable_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_enable_threshold_rq =
+fiid_template_t tmpl_cmd_get_sensor_event_enable_threshold_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_enable_threshold_rs =
+fiid_template_t tmpl_cmd_get_sensor_event_enable_threshold_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -369,7 +369,7 @@ fiid_template_t tmpl_get_sensor_event_enable_threshold_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_enable_discrete_rs =
+fiid_template_t tmpl_cmd_get_sensor_event_enable_discrete_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -417,7 +417,7 @@ fiid_template_t tmpl_get_sensor_event_enable_discrete_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_re_arm_sensor_events_rq =
+fiid_template_t tmpl_cmd_re_arm_sensor_events_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -428,14 +428,14 @@ fiid_template_t tmpl_re_arm_sensor_events_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_re_arm_sensor_events_rs =
+fiid_template_t tmpl_cmd_re_arm_sensor_events_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_re_arm_sensor_events_threshold_rq =
+fiid_template_t tmpl_cmd_re_arm_sensor_events_threshold_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -470,7 +470,7 @@ fiid_template_t tmpl_re_arm_sensor_events_threshold_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_re_arm_sensor_events_discrete_rq =
+fiid_template_t tmpl_cmd_re_arm_sensor_events_discrete_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -511,14 +511,14 @@ fiid_template_t tmpl_re_arm_sensor_events_discrete_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_status_rq =
+fiid_template_t tmpl_cmd_get_sensor_event_status_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_status_rs =
+fiid_template_t tmpl_cmd_get_sensor_event_status_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -531,7 +531,7 @@ fiid_template_t tmpl_get_sensor_event_status_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_event_status_threshold_rs =
+fiid_template_t tmpl_cmd_get_sensor_event_status_threshold_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -574,7 +574,7 @@ fiid_template_t tmpl_get_sensor_event_status_threshold_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_discrete_event_status_threshold_rs =
+fiid_template_t tmpl_cmd_get_sensor_discrete_event_status_threshold_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -617,14 +617,14 @@ fiid_template_t tmpl_get_sensor_discrete_event_status_threshold_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_rq =
+fiid_template_t tmpl_cmd_get_sensor_reading_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_rs =
+fiid_template_t tmpl_cmd_get_sensor_reading_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -637,7 +637,7 @@ fiid_template_t tmpl_get_sensor_reading_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_threshold_rs =
+fiid_template_t tmpl_cmd_get_sensor_reading_threshold_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -657,7 +657,7 @@ fiid_template_t tmpl_get_sensor_reading_threshold_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_reading_discrete_rs =
+fiid_template_t tmpl_cmd_get_sensor_reading_discrete_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -685,7 +685,7 @@ fiid_template_t tmpl_get_sensor_reading_discrete_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_type_rq =
+fiid_template_t tmpl_cmd_set_sensor_type_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -695,21 +695,21 @@ fiid_template_t tmpl_set_sensor_type_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_sensor_type_rs =
+fiid_template_t tmpl_cmd_set_sensor_type_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_type_rq =
+fiid_template_t tmpl_cmd_get_sensor_type_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "sensor_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sensor_type_rs =
+fiid_template_t tmpl_cmd_get_sensor_type_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -724,7 +724,7 @@ fill_cmd_get_sensor_reading (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sensor_reading_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_reading_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_READING);   
@@ -738,7 +738,7 @@ fill_cmd_get_sensor_thresholds (uint8_t sensor_number, fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sensor_thresholds_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sensor_thresholds_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SENSOR_THRESHOLDS);   

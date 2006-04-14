@@ -640,7 +640,7 @@ get_sdr_sensor_record (ipmi_device_t *dev,
 	      && sensor_record
 	      && sensor_record_len);
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_get_sdr_rs);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rs, tmpl_cmd_get_sdr_rs);
 
   FIID_OBJ_CREATE_CLEANUP(record_header, tmpl_sdr_record_header);
     
@@ -673,7 +673,7 @@ get_sdr_sensor_record (ipmi_device_t *dev,
   /* achu: where does the 16 come from? */
   if (record_length > 16)
     {
-      FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_reserve_sdr_repository_rs);
+      FIID_OBJ_CREATE_CLEANUP(local_obj_cmd_rs, tmpl_cmd_reserve_sdr_repository_rs);
       
       ERR_CLEANUP (!(ipmi_cmd_reserve_sdr_repository (dev, local_obj_cmd_rs) < 0));
       
@@ -733,7 +733,7 @@ get_sdr_record (ipmi_device_t *dev,
 	      && next_record_id
 	      && sdr_record);
 
-  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_get_sdr_rs);
+  FIID_OBJ_CREATE_CLEANUP (obj_cmd_rs, tmpl_cmd_get_sdr_rs);
   FIID_OBJ_CREATE_CLEANUP (obj_sdr_record, tmpl_sdr_record_header);
 
   sensor_record_len = 1024;
@@ -781,7 +781,7 @@ get_sdr_record (ipmi_device_t *dev,
 	  break;
 	}
       
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_thresholds_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_thresholds_rs);
 
       if (ipmi_cmd_get_sensor_thresholds (dev, 
 					  sdr_record->record.sdr_full_record.sensor_number, 
@@ -889,7 +889,7 @@ get_sensor_reading (ipmi_device_t *dev,
 		    sdr_record_t *sdr_record, 
 		    sensor_reading_t *sensor_reading)
 {
-  fiid_template_t l_tmpl_get_sensor_reading_threshold_rs =
+  fiid_template_t l_tmpl_cmd_get_sensor_reading_threshold_rs =
     {
       {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -910,7 +910,7 @@ get_sensor_reading (ipmi_device_t *dev,
       {0,  "", 0}
     };
   
-  fiid_template_t l_tmpl_get_sensor_reading_discrete_rs =
+  fiid_template_t l_tmpl_cmd_get_sensor_reading_discrete_rs =
     {
       {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
       {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -982,8 +982,8 @@ get_sensor_reading (ipmi_device_t *dev,
   switch (ipmi_sensor_classify (event_reading_type_code))
     {
     case IPMI_SENSOR_CLASS_THRESHOLD:
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_threshold_rs);
-      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_threshold_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_threshold_rs);
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_threshold_rs);
 
       if (ipmi_cmd_get_sensor_reading_threshold (dev, 
 						 sensor_number, 
@@ -1048,9 +1048,9 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_GENERIC_DISCRETE:
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 
@@ -1115,9 +1115,9 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_SENSOR_SPECIFIC_DISCRETE:
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 
@@ -1182,9 +1182,9 @@ get_sensor_reading (ipmi_device_t *dev,
       rv = 0;
       break;
     case IPMI_SENSOR_CLASS_OEM:
-      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(obj_cmd_rs, tmpl_cmd_get_sensor_reading_discrete_rs);
 
-      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_get_sensor_reading_discrete_rs);
+      FIID_OBJ_CREATE_CLEANUP(l_obj_cmd_rs, l_tmpl_cmd_get_sensor_reading_discrete_rs);
 
       if (ipmi_cmd_get_sensor_reading_discrete (dev, 
 						sensor_number, 

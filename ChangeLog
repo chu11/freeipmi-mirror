@@ -16,6 +16,9 @@
 
 	* ipmipower/: Re-architect to include set session privilege
 	command in ipmi 2.0 stream.  Cleanup code in general.
+
+	* Globally cleanup template variable names to maintain consistency
+	with "tmpl_cmd" vs "tmpl" prefixed variable names.
 	
 2006-04-12  Albert Chu <chu11@llnl.gov>
 

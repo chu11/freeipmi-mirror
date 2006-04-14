@@ -209,7 +209,7 @@ get_channel_info_list ()
   if (channel_info_list_initialized)
     return (channel_info_list);
   
-  if (!(data_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
+  if (!(data_rs = fiid_obj_create(tmpl_cmd_get_channel_info_rs)))
     goto cleanup;
 
   for (i = 0, ci = 0; i < 8; i++)

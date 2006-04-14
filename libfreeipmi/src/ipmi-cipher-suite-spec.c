@@ -29,14 +29,14 @@
 
 #include "err-wrappers.h"
 
-fiid_template_t tmpl_cmd_cipher_suite_record_header =
+fiid_template_t tmpl_cipher_suite_record_header =
   {
     {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_cipher_suite_record = 
+fiid_template_t tmpl_cipher_suite_record = 
   {
     {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -44,7 +44,7 @@ fiid_template_t tmpl_cmd_cipher_suite_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_cmd_oem_cipher_suite_record = 
+fiid_template_t tmpl_oem_cipher_suite_record = 
   {
     {6,  "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2,  "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},

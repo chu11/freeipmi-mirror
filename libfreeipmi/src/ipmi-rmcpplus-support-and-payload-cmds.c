@@ -38,7 +38,7 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_activate_payload_rq =
+fiid_template_t tmpl_cmd_activate_payload_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -49,7 +49,7 @@ fiid_template_t tmpl_activate_payload_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_activate_payload_sol_rq =
+fiid_template_t tmpl_cmd_activate_payload_sol_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -67,7 +67,7 @@ fiid_template_t tmpl_activate_payload_sol_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_activate_payload_rs =
+fiid_template_t tmpl_cmd_activate_payload_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -80,7 +80,7 @@ fiid_template_t tmpl_activate_payload_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_activate_payload_sol_rs =
+fiid_template_t tmpl_cmd_activate_payload_sol_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -94,7 +94,7 @@ fiid_template_t tmpl_activate_payload_sol_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_deactivate_payload_rq = 
+fiid_template_t tmpl_cmd_deactivate_payload_rq = 
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6,  "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -105,14 +105,14 @@ fiid_template_t tmpl_deactivate_payload_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_deactivate_payload_rs =
+fiid_template_t tmpl_cmd_deactivate_payload_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_suspend_resume_payload_encryption_rq = 
+fiid_template_t tmpl_cmd_suspend_resume_payload_encryption_rq = 
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {6, "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -129,21 +129,21 @@ fiid_template_t tmpl_suspend_resume_payload_encryption_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_suspend_resume_payload_encryption_rs =
+fiid_template_t tmpl_cmd_suspend_resume_payload_encryption_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_payload_activation_status_rq =
+fiid_template_t tmpl_cmd_get_payload_activation_status_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_payload_activation_status_rs =
+fiid_template_t tmpl_cmd_get_payload_activation_status_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -168,7 +168,7 @@ fiid_template_t tmpl_get_payload_activation_status_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_payload_instance_info_rq =
+fiid_template_t tmpl_cmd_get_payload_instance_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "payload_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -176,7 +176,7 @@ fiid_template_t tmpl_get_payload_instance_info_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_payload_instance_info_rs =
+fiid_template_t tmpl_cmd_get_payload_instance_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -186,7 +186,7 @@ fiid_template_t tmpl_get_payload_instance_info_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_payload_access_rq =
+fiid_template_t tmpl_cmd_set_user_payload_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -214,14 +214,14 @@ fiid_template_t tmpl_set_user_payload_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_payload_access_rs =
+fiid_template_t tmpl_cmd_set_user_payload_access_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_user_payload_access_rq =
+fiid_template_t tmpl_cmd_get_user_payload_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -231,7 +231,7 @@ fiid_template_t tmpl_get_user_payload_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_user_payload_access_rs =
+fiid_template_t tmpl_cmd_get_user_payload_access_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -256,7 +256,7 @@ fiid_template_t tmpl_get_user_payload_access_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_payload_support_rq =
+fiid_template_t tmpl_cmd_get_channel_payload_support_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -264,7 +264,7 @@ fiid_template_t tmpl_get_channel_payload_support_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_payload_support_rs =
+fiid_template_t tmpl_cmd_get_channel_payload_support_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -320,7 +320,7 @@ fiid_template_t tmpl_get_channel_payload_support_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_payload_version_rq =
+fiid_template_t tmpl_cmd_get_channel_payload_version_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -329,7 +329,7 @@ fiid_template_t tmpl_get_channel_payload_version_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_payload_version_rs =
+fiid_template_t tmpl_cmd_get_channel_payload_version_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -338,7 +338,7 @@ fiid_template_t tmpl_get_channel_payload_version_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_oem_payload_info_rq =
+fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -349,7 +349,7 @@ fiid_template_t tmpl_get_channel_oem_payload_info_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_oem_payload_info_rs =
+fiid_template_t tmpl_cmd_get_channel_oem_payload_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -373,7 +373,7 @@ fill_cmd_activate_payload (uint8_t payload_type,
 	     && auxiliary_request_data_len
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_activate_payload_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
@@ -407,7 +407,7 @@ fill_cmd_activate_payload_sol (uint8_t payload_type,
 	     && IPMI_ENCRYPTION_ACTIVATION_VALID(encryption_activation)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_activate_payload_sol_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_activate_payload_sol_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_ACTIVATE_PAYLOAD);
@@ -436,7 +436,7 @@ fill_cmd_deactivate_payload (uint8_t payload_type,
   ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_deactivate_payload_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_deactivate_payload_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_DEACTIVATE_PAYLOAD);
@@ -459,7 +459,7 @@ fill_cmd_suspend_resume_payload_encryption (uint8_t payload_type,
              && IPMI_SUSPEND_RESUME_PAYLOAD_ENCRYPTION_OPERATION_VALID(operation)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_suspend_resume_payload_encryption_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_suspend_resume_payload_encryption_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SUSPEND_RESUME_PAYLOAD_ENCRYPTION);
@@ -480,7 +480,7 @@ fill_cmd_get_payload_activation_status (uint8_t payload_type,
   ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_payload_activation_status_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_activation_status_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_ACTIVATION_STATUS);
@@ -497,7 +497,7 @@ fill_cmd_get_payload_instance_info (uint8_t payload_type,
   ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_payload_instance_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_payload_instance_info_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_PAYLOAD_INSTANCE_INFO);
@@ -547,7 +547,7 @@ fill_cmd_set_user_payload_access (uint8_t channel_number,
              && IPMI_PAYLOAD_ACCESS_VALID(oem_payload_7)
 	     && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_payload_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_payload_access_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PAYLOAD_ACCESS);
@@ -586,7 +586,7 @@ fill_cmd_get_user_payload_access (uint8_t channel_number,
   ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_payload_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_payload_access_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_PAYLOAD_ACCESS);
@@ -605,7 +605,7 @@ fill_cmd_get_channel_payload_support (uint8_t channel_number,
   ERR_EINVAL(IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_payload_support_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_support_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_SUPPORT);
@@ -624,7 +624,7 @@ fill_cmd_get_channel_payload_version (uint8_t channel_number,
              && IPMI_PAYLOAD_TYPE_VALID(payload_type)
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_payload_version_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_payload_version_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_PAYLOAD_VERSION);
@@ -648,7 +648,7 @@ fill_cmd_get_channel_oem_payload_info (uint8_t channel_number,
                   && (oem_iana || oem_payload_id))
 	     && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_oem_payload_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_oem_payload_info_rq);
 
   FIID_OBJ_CLEAR(obj_cmd_rq);
   FIID_OBJ_SET(obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_OEM_PAYLOAD_INFO);

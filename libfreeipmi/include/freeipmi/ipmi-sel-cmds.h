@@ -43,23 +43,23 @@
 extern "C" {
 #endif
 
-extern fiid_template_t tmpl_get_sel_info_rq;
-extern fiid_template_t tmpl_get_sel_info_rs;
+extern fiid_template_t tmpl_cmd_get_sel_info_rq;
+extern fiid_template_t tmpl_cmd_get_sel_info_rs;
 
-extern fiid_template_t tmpl_get_sel_allocation_info_rq;
-extern fiid_template_t tmpl_get_sel_allocation_info_rs;
+extern fiid_template_t tmpl_cmd_get_sel_allocation_info_rq;
+extern fiid_template_t tmpl_cmd_get_sel_allocation_info_rs;
 
-extern fiid_template_t tmpl_reserve_sel_rq;
-extern fiid_template_t tmpl_reserve_sel_rs;
+extern fiid_template_t tmpl_cmd_reserve_sel_rq;
+extern fiid_template_t tmpl_cmd_reserve_sel_rs;
 
-extern fiid_template_t tmpl_get_sel_entry_rq;
-extern fiid_template_t tmpl_get_sel_entry_rs;
+extern fiid_template_t tmpl_cmd_get_sel_entry_rq;
+extern fiid_template_t tmpl_cmd_get_sel_entry_rs;
 
-extern fiid_template_t tmpl_delete_sel_entry_rq;
-extern fiid_template_t tmpl_delete_sel_entry_rs;
+extern fiid_template_t tmpl_cmd_delete_sel_entry_rq;
+extern fiid_template_t tmpl_cmd_delete_sel_entry_rs;
 
-extern fiid_template_t tmpl_clear_sel_rq;
-extern fiid_template_t tmpl_clear_sel_rs;
+extern fiid_template_t tmpl_cmd_clear_sel_rq;
+extern fiid_template_t tmpl_cmd_clear_sel_rs;
 
 int8_t fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq);
 

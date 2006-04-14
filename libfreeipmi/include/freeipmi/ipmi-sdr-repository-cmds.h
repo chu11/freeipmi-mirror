@@ -39,17 +39,17 @@
 extern "C" {
 #endif
 
-extern fiid_template_t tmpl_get_sdr_repository_info_rq;
-extern fiid_template_t tmpl_get_sdr_repository_info_rs;
+extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rq;
+extern fiid_template_t tmpl_cmd_get_sdr_repository_info_rs;
 
-extern fiid_template_t tmpl_get_sdr_repository_allocation_info_rq;
-extern fiid_template_t tmpl_get_sdr_repository_allocation_info_rs;
+extern fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rq;
+extern fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rs;
 
-extern fiid_template_t tmpl_reserve_sdr_repository_rq;
-extern fiid_template_t tmpl_reserve_sdr_repository_rs;
+extern fiid_template_t tmpl_cmd_reserve_sdr_repository_rq;
+extern fiid_template_t tmpl_cmd_reserve_sdr_repository_rs;
 
-extern fiid_template_t tmpl_get_sdr_rq;
-extern fiid_template_t tmpl_get_sdr_rs;
+extern fiid_template_t tmpl_cmd_get_sdr_rq;
+extern fiid_template_t tmpl_cmd_get_sdr_rs;
 
 int8_t fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq);
 int8_t fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq);

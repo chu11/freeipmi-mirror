@@ -34,13 +34,13 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_get_sdr_repository_info_rq =
+fiid_template_t tmpl_cmd_get_sdr_repository_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sdr_repository_info_rs =
+fiid_template_t tmpl_cmd_get_sdr_repository_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -61,13 +61,13 @@ fiid_template_t tmpl_get_sdr_repository_info_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sdr_repository_allocation_info_rq =
+fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sdr_repository_allocation_info_rs =
+fiid_template_t tmpl_cmd_get_sdr_repository_allocation_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -79,13 +79,13 @@ fiid_template_t tmpl_get_sdr_repository_allocation_info_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_reserve_sdr_repository_rq =
+fiid_template_t tmpl_cmd_reserve_sdr_repository_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_reserve_sdr_repository_rs =
+fiid_template_t tmpl_cmd_reserve_sdr_repository_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -93,7 +93,7 @@ fiid_template_t tmpl_reserve_sdr_repository_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sdr_rq =
+fiid_template_t tmpl_cmd_get_sdr_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
@@ -103,7 +103,7 @@ fiid_template_t tmpl_get_sdr_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sdr_rs =
+fiid_template_t tmpl_cmd_get_sdr_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -118,7 +118,7 @@ fill_cmd_get_repository_info (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sdr_repository_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_INFO);
@@ -130,7 +130,7 @@ fill_cmd_get_repository_allocation_info (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sdr_repository_allocation_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_repository_allocation_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR_REPOSITORY_ALLOCATION_INFO);
@@ -142,7 +142,7 @@ fill_cmd_reserve_sdr_repository (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_reserve_sdr_repository_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reserve_sdr_repository_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SDR_REPOSITORY);
@@ -158,7 +158,7 @@ fill_cmd_get_sdr (uint16_t reservation_id,
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sdr_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sdr_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SDR);

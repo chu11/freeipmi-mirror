@@ -33,13 +33,13 @@
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
 
-fiid_template_t tmpl_get_sel_info_rq =
+fiid_template_t tmpl_cmd_get_sel_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sel_info_rs =
+fiid_template_t tmpl_cmd_get_sel_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -58,13 +58,13 @@ fiid_template_t tmpl_get_sel_info_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sel_allocation_info_rq =
+fiid_template_t tmpl_cmd_get_sel_allocation_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sel_allocation_info_rs =
+fiid_template_t tmpl_cmd_get_sel_allocation_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -76,13 +76,13 @@ fiid_template_t tmpl_get_sel_allocation_info_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_reserve_sel_rq =
+fiid_template_t tmpl_cmd_reserve_sel_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_reserve_sel_rs =
+fiid_template_t tmpl_cmd_reserve_sel_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -91,7 +91,7 @@ fiid_template_t tmpl_reserve_sel_rs =
   };
 
 
-fiid_template_t tmpl_get_sel_entry_rq =
+fiid_template_t tmpl_cmd_get_sel_entry_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
@@ -101,7 +101,7 @@ fiid_template_t tmpl_get_sel_entry_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sel_entry_rs =
+fiid_template_t tmpl_cmd_get_sel_entry_rs =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -111,7 +111,7 @@ fiid_template_t tmpl_get_sel_entry_rs =
   };
 
 
-fiid_template_t tmpl_delete_sel_entry_rq =
+fiid_template_t tmpl_cmd_delete_sel_entry_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
@@ -120,7 +120,7 @@ fiid_template_t tmpl_delete_sel_entry_rq =
   };
 
 
-fiid_template_t tmpl_delete_sel_entry_rs =
+fiid_template_t tmpl_cmd_delete_sel_entry_rs =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -129,7 +129,7 @@ fiid_template_t tmpl_delete_sel_entry_rs =
   };
 
 
-fiid_template_t tmpl_clear_sel_rq =
+fiid_template_t tmpl_cmd_clear_sel_rq =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "reservation_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
@@ -140,7 +140,7 @@ fiid_template_t tmpl_clear_sel_rq =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_clear_sel_rs =
+fiid_template_t tmpl_cmd_clear_sel_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -154,7 +154,7 @@ fill_cmd_get_sel_info (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SEL_DEV_CMDS_GET_SEL_INFO);
@@ -166,7 +166,7 @@ fill_cmd_get_sel_allocation_info (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_allocation_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_allocation_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ALLOCATION_INFO);
@@ -178,7 +178,7 @@ fill_cmd_reserve_sel (fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_reserve_sel_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_reserve_sel_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_RESERVE_SEL);
@@ -194,7 +194,7 @@ fill_cmd_get_sel_entry (uint16_t reservation_id,
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sel_entry_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sel_entry_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SEL_ENTRY);
@@ -213,7 +213,7 @@ fill_cmd_delete_sel_entry (uint16_t reservation_id,
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_delete_sel_entry_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_delete_sel_entry_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_DELETE_SEL_ENTRY); 
@@ -231,7 +231,7 @@ fill_cmd_clear_sel (uint16_t reservation_id,
   ERR_EINVAL (IPMI_SEL_CLEAR_OPERATION_VALID(operation)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_clear_sel_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_clear_sel_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_CLEAR_SEL);  

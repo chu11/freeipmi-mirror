@@ -69,7 +69,7 @@ ipmi_sel_get_first_entry (ipmi_device_t *dev,
 
   ERR_EINVAL (dev && seld && record_data && record_data_len);
 
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_entry_rs);
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
   if (ipmi_cmd_get_sel_entry (dev, 
 			      0,
@@ -123,7 +123,7 @@ ipmi_sel_get_next_entry (ipmi_device_t *dev,
   if (seld->next_record_id == IPMI_SEL_GET_RECORD_ID_LAST_ENTRY)
     return (-1);
 
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_entry_rs);
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_entry_rs);
 
   if (ipmi_cmd_get_sel_entry (dev, 
 			      0,
@@ -592,7 +592,7 @@ get_sel_info (ipmi_device_t *dev, sel_info_t *pinfo)
   
   ERR_EINVAL (dev && pinfo);
 
-  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_get_sel_info_rs);
+  FIID_OBJ_CREATE (obj_cmd_rs, tmpl_cmd_get_sel_info_rs);
 
   if (ipmi_cmd_get_sel_info (dev, obj_cmd_rs) != 0)
     {

@@ -95,7 +95,7 @@ fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rq =
   {
     {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,    "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -105,14 +105,14 @@ fiid_template_t tmpl_set_sol_configuration_parameters_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_rs =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -123,7 +123,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_enable_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_authentication_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -136,7 +136,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_authentication_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -147,7 +147,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_character_accumulate_inter
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_retry_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -159,7 +159,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_retry_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -170,7 +170,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_non_volatile_bit_rate_
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_volatile_bit_rate_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -181,7 +181,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_volatile_bit_rate_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_sol_configuration_parameters_sol_payload_port_number_rq =
+fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -192,7 +192,7 @@ fiid_template_t tmpl_set_sol_configuration_parameters_sol_payload_port_number_rq
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_rq =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -204,7 +204,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_rs =
   {
     {8,    "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,    "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -214,7 +214,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_enable_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_enable_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -225,7 +225,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_enable_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_authentication_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_authentication_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -238,7 +238,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_authentication_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -249,7 +249,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_character_accumulate_inter
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_retry_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_retry_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -261,7 +261,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_retry_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -272,7 +272,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_non_volatile_bit_rate_
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_volatile_bit_rate_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -284,7 +284,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_volatile_bit_rate_rs =
   };
 
 /* Note: Read-Only field, no 'set' equivalent */
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_channel_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -294,7 +294,7 @@ fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_channel_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_sol_configuration_parameters_sol_payload_port_number_rs =
+fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -395,7 +395,7 @@ fill_cmd_set_sol_configuration_parameters (uint8_t channel_number,
 	      && configuration_parameter_data_len
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);
@@ -420,7 +420,7 @@ fill_cmd_set_sol_configuration_parameters_sol_enable (uint8_t channel_number,
 	      && IPMI_SOL_SOL_ENABLE_VALID(sol_enable)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_enable_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_enable_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -446,7 +446,7 @@ fill_cmd_set_sol_configuration_parameters_sol_authentication (uint8_t channel_nu
               && IPMI_SOL_FORCE_SOL_PAYLOAD_ENCRYPTION_VALID(force_sol_payload_encryption)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_authentication_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_authentication_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -470,7 +470,7 @@ fill_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -492,7 +492,7 @@ fill_cmd_set_sol_configuration_parameters_sol_retry (uint8_t channel_number,
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_retry_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_retry_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -515,7 +515,7 @@ fill_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (uint8_t cha
               && IPMI_SOL_BIT_RATE_VALID(bit_rate)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -537,7 +537,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
               && IPMI_SOL_BIT_RATE_VALID(bit_rate)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -559,7 +559,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_sol_configuration_parameters_sol_payload_port_number_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq);
   
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_SOL_CONFIGURATION_PARAMETERS);  
@@ -585,7 +585,7 @@ fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,
 	      && IPMI_GET_SOL_PARAMETER_VALID(get_parameter)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_sol_configuration_parameters_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_sol_configuration_parameters_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_SOL_CONFIGURATION_PARAMETERS);  

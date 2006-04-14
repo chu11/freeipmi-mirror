@@ -285,7 +285,7 @@ fiid_template_t tmpl_cmd_close_session_rs =
   };
 
 
-fiid_template_t tmpl_set_channel_access_rq =
+fiid_template_t tmpl_cmd_set_channel_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -301,14 +301,14 @@ fiid_template_t tmpl_set_channel_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_channel_access_rs =
+fiid_template_t tmpl_cmd_set_channel_access_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_channel_access_rq =
+fiid_template_t tmpl_cmd_get_channel_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -318,7 +318,7 @@ fiid_template_t tmpl_get_channel_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_access_rs =
+fiid_template_t tmpl_cmd_get_channel_access_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -332,7 +332,7 @@ fiid_template_t tmpl_get_channel_access_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_info_rq =
+fiid_template_t tmpl_cmd_get_channel_info_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -340,7 +340,7 @@ fiid_template_t tmpl_get_channel_info_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_channel_info_rs =
+fiid_template_t tmpl_cmd_get_channel_info_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -357,7 +357,7 @@ fiid_template_t tmpl_get_channel_info_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_channel_security_keys_rq =
+fiid_template_t tmpl_cmd_set_channel_security_keys_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4,   "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -369,7 +369,7 @@ fiid_template_t tmpl_set_channel_security_keys_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_channel_security_keys_rs =
+fiid_template_t tmpl_cmd_set_channel_security_keys_rs =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -379,7 +379,7 @@ fiid_template_t tmpl_set_channel_security_keys_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_access_rq =
+fiid_template_t tmpl_cmd_set_user_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -396,14 +396,14 @@ fiid_template_t tmpl_set_user_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_access_rs =
+fiid_template_t tmpl_cmd_set_user_access_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_get_user_access_rq =
+fiid_template_t tmpl_cmd_get_user_access_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -413,7 +413,7 @@ fiid_template_t tmpl_get_user_access_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_user_access_rs =
+fiid_template_t tmpl_cmd_get_user_access_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
@@ -431,7 +431,7 @@ fiid_template_t tmpl_get_user_access_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_name_rq =
+fiid_template_t tmpl_cmd_set_user_name_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -440,14 +440,14 @@ fiid_template_t tmpl_set_user_name_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_name_rs =
+fiid_template_t tmpl_cmd_set_user_name_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_user_name_rq =
+fiid_template_t tmpl_cmd_get_user_name_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6, "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -455,7 +455,7 @@ fiid_template_t tmpl_get_user_name_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_get_user_name_rs =
+fiid_template_t tmpl_cmd_get_user_name_rs =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,   "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -463,7 +463,7 @@ fiid_template_t tmpl_get_user_name_rs =
     {0,  "", 0}
   };
 
-fiid_template_t tmpl_set_user_password_rq =
+fiid_template_t tmpl_cmd_set_user_password_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -478,7 +478,7 @@ fiid_template_t tmpl_set_user_password_rq =
  * fixed to 0, 16, or 20 bytes.  We may try and amend this situation
  * in fiid at a later time.
  */
-fiid_template_t tmpl_set_user_password_v20_rq =
+fiid_template_t tmpl_cmd_set_user_password_v20_rq =
   {
     {8,   "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {6,   "user_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -490,7 +490,7 @@ fiid_template_t tmpl_set_user_password_v20_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_user_password_rs =
+fiid_template_t tmpl_cmd_set_user_password_rs =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -689,7 +689,7 @@ fill_cmd_set_channel_access (uint8_t channel_number,
 	      && IPMI_PRIVILEGE_LEVEL_LIMIT_SET_VALID(channel_privilege_level_limit_set)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_channel_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_channel_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_ACCESS);
@@ -715,7 +715,7 @@ fill_cmd_get_channel_access (uint8_t channel_number,
 	      && IPMI_CHANNEL_ACCESS_GET_VALID(channel_access_get)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_ACCESS);  
@@ -733,7 +733,7 @@ fill_cmd_get_channel_info (uint8_t channel_number, fiid_obj_t obj_cmd_rq)
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
               && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_channel_info_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_channel_info_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_CHANNEL_INFO_CMD);  
@@ -762,7 +762,7 @@ fill_cmd_set_channel_security_keys(uint8_t channel_number,
 		   && key_value_len > IPMI_MAX_K_G_LENGTH)
               && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_channel_security_keys_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_channel_security_keys_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_CHANNEL_SECURITY_KEYS);  
@@ -811,7 +811,7 @@ fill_cmd_set_user_access (uint8_t channel_number,
 	      && IPMI_PRIVILEGE_LEVEL_LIMIT_VALID(user_privilege_level_limit)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_ACCESS_CMD);  
@@ -838,7 +838,7 @@ fill_cmd_get_user_access (uint8_t channel_number,
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_access_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_access_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_ACCESS_CMD);  
@@ -864,7 +864,7 @@ fill_cmd_set_user_name (uint8_t user_id,
   ERR_EINVAL (!(user_name && user_name_len > IPMI_MAX_USER_NAME_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
 
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_name_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_name_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_NAME);  
@@ -886,7 +886,7 @@ fill_cmd_get_user_name (uint8_t user_id, fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_get_user_name_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_get_user_name_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_GET_USER_NAME_CMD);
@@ -912,7 +912,7 @@ fill_cmd_set_user_password (uint8_t user_id,
 	      && !(password && password_len > IPMI_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_password_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  
@@ -961,7 +961,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
                    && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_user_password_v20_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_password_v20_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
   FIID_OBJ_SET (obj_cmd_rq, "cmd", IPMI_CMD_SET_USER_PASSWORD_CMD);  

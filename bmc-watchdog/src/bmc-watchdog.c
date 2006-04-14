@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.56 2006-04-06 12:54:45 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.57 2006-04-14 04:20:05 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -804,13 +804,13 @@ _get_channel_number(int retry_wait_time, int retry_attempt)
 	}
     }
 
-  if (!(channel_info_cmd_rq = fiid_obj_create(tmpl_get_channel_info_rq)))
+  if (!(channel_info_cmd_rq = fiid_obj_create(tmpl_cmd_get_channel_info_rq)))
     {
       _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;
     }
 
-  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_get_channel_info_rs)))
+  if (!(channel_info_cmd_rs = fiid_obj_create(tmpl_cmd_get_channel_info_rs)))
     {
       _bmclog("fiid_obj_create: %s", strerror(errno));
       goto cleanup;

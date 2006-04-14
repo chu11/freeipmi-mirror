@@ -109,7 +109,7 @@ fiid_template_t tmpl_cmd_chassis_identify_rs =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_power_restore_policy_rq =
+fiid_template_t tmpl_cmd_set_power_restore_policy_rq =
   {
     {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {3, "power_restore_policy", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -117,7 +117,7 @@ fiid_template_t tmpl_set_power_restore_policy_rq =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_set_power_restore_policy_rs =
+fiid_template_t tmpl_cmd_set_power_restore_policy_rs =
   {
     {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -187,7 +187,7 @@ fill_cmd_set_power_restore_policy (uint8_t power_restore_policy, fiid_obj_t obj_
   ERR_EINVAL (IPMI_POWER_RESTORE_POLICY_VALID(power_restore_policy)
 	      && fiid_obj_valid(obj_cmd_rq));
   
-  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_set_power_restore_policy_rq);
+  FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_power_restore_policy_rq);
 
   FIID_OBJ_CLEAR (obj_cmd_rq);
 

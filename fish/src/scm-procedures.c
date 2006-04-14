@@ -466,7 +466,7 @@ ex_sel_delete_entry (SCM scm_record_id)
   
   record_id = gh_scm2long (scm_record_id);
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
@@ -490,7 +490,7 @@ ex_sel_delete_entry (SCM scm_record_id)
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_delete_sel_entry_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
     goto cleanup;
 
   if (ipmi_cmd_delete_sel_entry (fi_get_ipmi_device (), 
@@ -525,7 +525,7 @@ ex_sel_clear ()
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
@@ -549,7 +549,7 @@ ex_sel_clear ()
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
     goto cleanup;
 
   if (ipmi_cmd_clear_sel (fi_get_ipmi_device (), 
@@ -582,7 +582,7 @@ ex_sel_get_clear_status ()
   uint16_t reservation_id;
   uint64_t val;
   
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_reserve_sel_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
     goto cleanup;
 
   if (ipmi_cmd_reserve_sel (fi_get_ipmi_device (), 
@@ -606,7 +606,7 @@ ex_sel_get_clear_status ()
   fiid_obj_destroy(obj_cmd_rs);
   obj_cmd_rs = NULL;
 
-  if (!(obj_cmd_rs = fiid_obj_create(tmpl_clear_sel_rs)))
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
     goto cleanup;
 
   if (ipmi_cmd_clear_sel (fi_get_ipmi_device (), 
@@ -3737,7 +3737,7 @@ ex_get_sdr_repository_info ()
   uint64_t val;
   
   /* get_repository_info */
-  if (!(cmd_rs = fiid_obj_create(tmpl_get_sdr_repository_info_rs)))
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_sdr_repository_info_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_sdr_repository_info (fi_get_ipmi_device (), cmd_rs) != 0)
@@ -4072,7 +4072,7 @@ ex_get_pef_info ()
   uint64_t val;
   uint8_t alert_support = 0;
   
-  if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_capabilities_rs)))
+  if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_capabilities_rs)))
     goto cleanup;
 
   if (ipmi_cmd_get_pef_capabilities (fi_get_ipmi_device (), cmd_rs) != 0)
@@ -4144,7 +4144,7 @@ ex_get_pef_info ()
 
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_event_filters_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_event_filters_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_event_filters (fi_get_ipmi_device (), 
@@ -4175,7 +4175,7 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_policy_entries (fi_get_ipmi_device (), 
@@ -4206,7 +4206,7 @@ ex_get_pef_info ()
   
   if (alert_support)
     {
-      if (!(cmd_rs = fiid_obj_create(tmpl_get_pef_configuration_parameters_number_of_alert_strings_rs)))
+      if (!(cmd_rs = fiid_obj_create(tmpl_cmd_get_pef_configuration_parameters_number_of_alert_strings_rs)))
         goto cleanup;
 
       if (ipmi_cmd_get_pef_configuration_parameters_number_of_alert_strings (fi_get_ipmi_device (), 
