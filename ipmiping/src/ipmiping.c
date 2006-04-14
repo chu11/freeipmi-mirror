@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmiping.c,v 1.32 2006-04-12 22:46:58 chu11 Exp $
+ *  $Id: ipmiping.c,v 1.33 2006-04-14 18:35:47 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -346,8 +346,6 @@ parsepacket(char *buffer,
 	  _fiid_obj_get(obj_cmd, 
 			"authentication_status.k_g", 
 			&k_g);
-
-             _setstr(k_g);
 
           printf("k_g=%s ipmi_v2.0_extended_capabilities_available=%s ",
 		 _setstr(k_g),

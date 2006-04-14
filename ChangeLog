@@ -1,3 +1,7 @@
+2006-04-14  Albert Chu <chu11@llnl.gov>
+
+	* ipmiping/src/ipmiping.c (parsepacket): Fix warning.
+	
 2006-04-13  Albert Chu <chu11@llnl.gov>
 
 	* fish/src/extension.c (install_new_procedures): Fix function name
