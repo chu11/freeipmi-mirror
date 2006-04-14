@@ -35,6 +35,7 @@ bmc-config
 
 libfreeipmi:
 ------------
+  * tmpl_cmd -> tmpl ? - consistency
   * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * only make those symbols exportable that should be exportable
   * gcrypt: secure mem-buffers
