@@ -1157,7 +1157,7 @@ set_sol_sol_enable(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_enable (dev, 
-							    get_lan_channel_number (),
+							    get_sol_channel_number (),
 							    sol_enable, 
 							    obj_cmd_rs) != 0)
     goto cleanup;
@@ -1182,7 +1182,7 @@ set_sol_sol_authentication(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_sol_authentication (dev, 
-								    get_lan_channel_number (),
+								    get_sol_channel_number (),
 								    sol_privilege_level,
 								    force_sol_payload_authentication,
 								    force_sol_payload_encryption,
@@ -1208,7 +1208,7 @@ set_sol_character_accumulate_interval_and_send_threshold(ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_set_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_lan_channel_number (),
+												  get_sol_channel_number (),
 												  character_accumulate_interval,
 												  character_send_threshold,
 												  obj_cmd_rs) != 0)
@@ -1233,7 +1233,7 @@ set_sol_sol_retry(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_retry (dev, 
-							   get_lan_channel_number (),
+							   get_sol_channel_number (),
 							   retry_count,
 							   retry_interval,
 							   obj_cmd_rs) != 0)
@@ -1257,7 +1257,7 @@ set_sol_sol_non_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-									   get_lan_channel_number (),
+									   get_sol_channel_number (),
 									   bit_rate,
 									   obj_cmd_rs) != 0)
     goto cleanup;
@@ -1280,7 +1280,7 @@ set_sol_sol_volatile_bit_rate(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_lan_channel_number (),
+								       get_sol_channel_number (),
 								       bit_rate,
 								       obj_cmd_rs) != 0)
     goto cleanup;
@@ -1313,7 +1313,7 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_lan_channel_number (),
+									 get_sol_channel_number (),
 									 ls_val,
 									 ms_val,
 									 obj_cmd_rs) != 0)
@@ -2907,7 +2907,7 @@ get_sol_sol_enable (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_enable (dev, 
-							    get_lan_channel_number (), 
+							    get_sol_channel_number (), 
 							    IPMI_GET_SOL_PARAMETER, 
 							    SET_SELECTOR, 
 							    BLOCK_SELECTOR, 
@@ -2939,7 +2939,7 @@ get_sol_sol_authentication (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_authentication (dev, 
-								    get_lan_channel_number (), 
+								    get_sol_channel_number (), 
 								    IPMI_GET_SOL_PARAMETER, 
 								    SET_SELECTOR, 
 								    BLOCK_SELECTOR, 
@@ -2978,7 +2978,7 @@ get_sol_character_accumulate_interval_and_send_threshold (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_character_accumulate_interval_and_send_threshold (dev, 
-												  get_lan_channel_number (), 
+												  get_sol_channel_number (), 
 												  IPMI_GET_SOL_PARAMETER, 
 												  SET_SELECTOR, 
 												  BLOCK_SELECTOR, 
@@ -3013,7 +3013,7 @@ get_sol_sol_retry (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_retry (dev, 
-							   get_lan_channel_number (), 
+							   get_sol_channel_number (), 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3047,7 +3047,7 @@ get_sol_sol_non_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_non_volatile_bit_rate (dev, 
-							   get_lan_channel_number (), 
+							   get_sol_channel_number (), 
 							   IPMI_GET_SOL_PARAMETER, 
 							   SET_SELECTOR, 
 							   BLOCK_SELECTOR, 
@@ -3077,7 +3077,7 @@ get_sol_sol_volatile_bit_rate (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_volatile_bit_rate (dev, 
-								       get_lan_channel_number (), 
+								       get_sol_channel_number (), 
 								       IPMI_GET_SOL_PARAMETER, 
 								       SET_SELECTOR, 
 								       BLOCK_SELECTOR, 
@@ -3108,7 +3108,7 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
     goto cleanup;
 
   if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_port_number (dev, 
-									 get_lan_channel_number (), 
+									 get_sol_channel_number (), 
 									 IPMI_GET_SOL_PARAMETER, 
 									 SET_SELECTOR, 
 									 BLOCK_SELECTOR, 

@@ -30,6 +30,8 @@ static uint8_t lan_channel_number_initialized = false;
 static int8_t lan_channel_number;
 static uint8_t serial_channel_number_initialized = false;
 static int8_t serial_channel_number;
+static uint8_t sol_channel_number_initialized = false;
+static int8_t sol_channel_number;
 
 static unsigned int rmcp_message_tag = 0;
 
@@ -253,6 +255,7 @@ get_lan_channel_number ()
   
   lan_channel_number = ipmi_get_channel_number (fi_get_ipmi_device (), 
 						IPMI_CHANNEL_MEDIUM_TYPE_LAN_802_3);
+
   if (!(lan_channel_number < 0))
     lan_channel_number_initialized = true;
   return lan_channel_number;
@@ -269,6 +272,48 @@ get_serial_channel_number ()
   if (!(serial_channel_number < 0))
     serial_channel_number_initialized = true;
   return serial_channel_number;
+}
+
+int8_t 
+get_sol_channel_number ()
+{
+  fiid_obj_t obj_cmd_rs = NULL;
+  uint64_t val;
+  int8_t rv = -1;
+
+  if (sol_channel_number_initialized)
+    return sol_channel_number;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_get_sol_configuration_parameters_sol_payload_channel (fi_get_ipmi_device (),
+								     get_lan_channel_number (),
+								     IPMI_GET_SOL_PARAMETER,
+								     SET_SELECTOR,
+								     BLOCK_SELECTOR,
+								     obj_cmd_rs) != 0)
+    {
+      sol_channel_number = get_lan_channel_number ();
+      sol_channel_number_initialized = true;
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get(obj_cmd_rs,
+		   "payload_channel",
+		   &val) < 0)
+    {
+      sol_channel_number = get_lan_channel_number ();
+      sol_channel_number_initialized = true;
+      goto cleanup;
+    }
+  sol_channel_number = val;
+  sol_channel_number_initialized = true;
+
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return sol_channel_number;
 }
 
 uint8_t 

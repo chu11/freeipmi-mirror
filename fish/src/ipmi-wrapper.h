@@ -38,6 +38,7 @@ char *get_sdr_cache_filename ();
 channel_info *get_channel_info_list ();
 int8_t get_lan_channel_number ();
 int8_t get_serial_channel_number ();
+int8_t get_sol_channel_number ();
 uint8_t get_lan_channel_number_known ();
 uint8_t get_serial_channel_number_known ();
 

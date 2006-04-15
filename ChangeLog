@@ -1,6 +1,8 @@
 2006-04-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmiping/src/ipmiping.c (parsepacket): Fix warning.
+
+	* fish/: Attempt to configure based on SOL Payload Channel.
 	
 2006-04-13  Albert Chu <chu11@llnl.gov>
 
