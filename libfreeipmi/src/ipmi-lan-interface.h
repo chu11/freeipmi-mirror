@@ -139,18 +139,18 @@ int8_t unassemble_ipmi_lan_pkt (uint8_t *pkt,
 				fiid_obj_t obj_msg_trlr);
 
 ssize_t ipmi_lan_sendto (int sockfd, 
-			 const void *pkt, 
-			 size_t pkt_len, 
+			 const void *buffer, 
+			 size_t buffer_size, 
 			 int flags, 
-			 const struct sockaddr *to, 
-			 unsigned int tolen);
+			 const struct sockaddr *server_addr, 
+			 socklen_t server_addr_len);
 
 ssize_t ipmi_lan_recvfrom (int sockfd, 
-			   void *pkt, 
-			   size_t pkt_len, 
+			   void *buffer, 
+			   size_t buffer_size, 
 			   int flags, 
-			   struct sockaddr *from, 
-			   unsigned int *fromlen);
+			   struct sockaddr *server_addr, 
+			   socklen_t *server_addr_len);
 
 int8_t ipmi_lan_cmd (uint32_t sockfd, 
 		     struct sockaddr *hostaddr, 

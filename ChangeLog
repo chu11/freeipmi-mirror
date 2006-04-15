@@ -1,3 +1,20 @@
+2006-04-14  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-interface.h: added packet_retry_max and
+	retry_timeout to ipmi_device_t.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_sendto,
+	ipmi_lan_recvfrom): given meaningful variable names.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_send,
+	ipmi_lan_cmd_receive): added new static functions.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd2): rewritten
+	with packet retransmission.
+
+	* libfreeipmi/src/ipmi-msg-support-cmds.c
+	(ipmi_lan_open_session2): reinit session_seq_num to 0.
+
 2006-04-10  Albert Chu  <chu11@llnl.gov>
 
 	* Revert retransmission changes.  Re-architecture will be required.

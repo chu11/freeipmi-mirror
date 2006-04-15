@@ -128,6 +128,9 @@ struct ipmi_device
       uint8_t           password[IPMI_SESSION_MAX_AUTH_CODE_LEN];
       uint8_t           priv_level;
       
+      int               packet_retry_max;
+      int               retry_timeout;
+      
       struct 
       {
 	fiid_template_t *tmpl_hdr_rmcp_ptr;

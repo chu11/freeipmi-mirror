@@ -1422,6 +1422,7 @@ ipmi_lan_open_session2 (ipmi_device_t *dev)
 	  IPMI_SESSION_CHALLENGE_STR_LEN);
 
   FIID_OBJ_ALLOCA (obj_cmd_rs, tmpl_cmd_activate_session_rs);
+  dev->io.outofband.session_seq_num = 0;
   ERR (ipmi_cmd_activate_session2 (dev, obj_cmd_rs) == 0);
   FIID_OBJ_GET (obj_cmd_rs, tmpl_cmd_activate_session_rs, 
 		(uint8_t *)"session_id", &temp_session_id);

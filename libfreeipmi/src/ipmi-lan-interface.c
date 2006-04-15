@@ -1217,23 +1217,22 @@ ipmi_lan_validate_checksum (ipmi_device_t *dev,
 
 ssize_t 
 ipmi_lan_sendto (int sockfd, 
-		 const void *pkt, 
-		 size_t pkt_len, 
+		 const void *buffer, 
+		 size_t buffer_size, 
 		 int flags, 
-		 const struct sockaddr *to, 
-		 unsigned int tolen)
+		 const struct sockaddr *server_addr, 
+		 socklen_t server_addr_len)
 {
-  void *_pkt;
-  ssize_t bytes_sent;
-  size_t _pkt_len;
-  size_t pad_len = 0;
-
-  if (pkt == NULL || pkt_len < 0)
+  void *packet = NULL;
+  size_t packet_length = 0;
+  ssize_t bytes_sent = 0;
+  
+  if (buffer == NULL || buffer_size == 0 || server_addr == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
-
+  
   /*
     Note from Table 12-8, RMCP Packet for IPMI via Ethernet footnote
     Some LAN adapter chips may have a problem where packets of overall
@@ -1243,78 +1242,94 @@ ipmi_lan_sendto (int sockfd,
     formatting packets to any 10/100 Ethernet device that accepts RMCP
     packets. -- Anand Babu
   */
-  _pkt_len = pkt_len;
-  if (_pkt_len == 56  ||
-      _pkt_len == 84  ||
-      _pkt_len == 112 ||
-      _pkt_len == 128 ||
-      _pkt_len == 156)
-    {
-      pad_len += IPMI_LAN_PKT_PAD_SIZE;
-    }
-
-  _pkt_len += pad_len;
-  _pkt = alloca (_pkt_len);         
-  memset (_pkt, 0, _pkt_len);
-  memcpy (_pkt, pkt, pkt_len);
   
-  bytes_sent = sendto (sockfd, _pkt, _pkt_len, flags, to, tolen);
-
+  if (buffer_size == 56  ||
+      buffer_size == 84  ||
+      buffer_size == 112 ||
+      buffer_size == 128 ||
+      buffer_size == 156)
+    {
+      packet_length = buffer_size + IPMI_LAN_PKT_PAD_SIZE;
+    }
+  
+  packet = alloca (packet_length);
+  memset (packet, 0, packet_length);
+  memcpy (packet, buffer, buffer_size);
+  
+  bytes_sent = sendto (sockfd, 
+		       packet, 
+		       packet_length, 
+		       flags, 
+		       server_addr, 
+		       server_addr_len);
+  
   if (bytes_sent == -1)
-    return -1;
-  else
-    return (bytes_sent - pad_len);
+    return (-1);
+  
+  if (bytes_sent == packet_length)
+    return (bytes_sent - IPMI_LAN_PKT_PAD_SIZE);
+  
+  return bytes_sent;
 }
 
 ssize_t 
 ipmi_lan_recvfrom (int sockfd, 
-		   void *pkt, 
-		   size_t pkt_len, 
+		   void *buffer, 
+		   size_t buffer_size, 
 		   int flags, 
-		   struct sockaddr *from, 
-		   unsigned int *fromlen)
+		   struct sockaddr *server_addr, 
+		   socklen_t *server_addr_len)
 {
-  ssize_t bytes_recvd = 0;
-  void *recv_buf;
-  size_t recv_buf_len;
-  size_t pad_len = 0;
-
-  if (pkt == NULL || pkt_len < 0)
+  void *packet = NULL;
+  size_t packet_length = 0;
+  ssize_t bytes_received = 0;
+  
+  if (buffer == NULL || buffer_size == 0 || 
+      server_addr == NULL || server_addr_len == NULL)
     {
       errno = EINVAL;
-      return -1;
+      return (-1);
     }
-
-  if (pkt_len < 1024)
-    recv_buf_len = 1024;
-  else
-    recv_buf_len = pkt_len;
+  
+  if (buffer_size < 1024)
+    packet_length = 1024;
+  else 
+    packet_length = buffer_size;
   
   /* See comment in ipmi_lan_sendto */
   /* WILL LET THIS CHECK GO SOON --ab@gnu.org.in */
-  if (recv_buf_len == 56  ||
-      recv_buf_len == 84  ||
-      recv_buf_len == 112 ||
-      recv_buf_len == 128 ||
-      recv_buf_len == 156)
-    {
-      pad_len = IPMI_LAN_PKT_PAD_SIZE;
-    }
-
-  recv_buf_len += pad_len;
-  recv_buf = alloca (recv_buf_len);
+  /*   if (buffer_size == 56  || */
+  /*       buffer_size == 84  || */
+  /*       buffer_size == 112 || */
+  /*       buffer_size == 128 || */
+  /*       buffer_size == 156) */
+  /*     { */
+  /*       packet_length = buffer_size + IPMI_LAN_PKT_PAD_SIZE; */
+  /*     } */
   
-  bytes_recvd = recvfrom (sockfd, recv_buf, recv_buf_len, flags, from, fromlen);
-  if (bytes_recvd == -1)
+  packet = alloca (packet_length);
+  memset (packet, 0, packet_length);
+  
+  bytes_received = recvfrom (sockfd, 
+			     packet, 
+			     packet_length, 
+			     flags, 
+			     server_addr, 
+			     server_addr_len);
+  
+  if (bytes_received == -1)
+    return (-1);
+  
+  if (bytes_received > buffer_size)
     {
-     /*  if (recv_buf) free (recv_buf); */
-      return -1;
+      fprintf (stderr, 
+	       "%s(): oversized packet received.  received size:%d, expected size: %d\n", 
+	       __PRETTY_FUNCTION__, bytes_received, buffer_size);
     }
   
-  recv_buf_len = pad_len ? (bytes_recvd - pad_len) : bytes_recvd;
-  memcpy (pkt, recv_buf, recv_buf_len);
-  /* if (recv_buf) free (recv_buf); */
-  return (recv_buf_len);
+  memcpy (buffer, packet, buffer_size);
+  
+  return bytes_received;
 }
 
 int8_t 
@@ -1427,6 +1442,278 @@ ipmi_lan_cmd (uint32_t sockfd,
   return (0);
 }
 
+static int8_t 
+ipmi_lan_cmd_send (ipmi_device_t *dev, 
+		   fiid_obj_t obj_cmd_rq, 
+		   fiid_template_t tmpl_cmd_rq)
+{
+  uint8_t *send_pkt;
+  uint32_t send_pkt_len;
+  int status = 0;
+  
+  if (!(dev && 
+	dev->io.outofband.local_sockfd && 
+	tmpl_cmd_rq && 
+	obj_cmd_rq))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  send_pkt_len = _ipmi_lan_pkt_rq_size2 (dev, tmpl_cmd_rq);
+  send_pkt = alloca (send_pkt_len);
+  ERR (send_pkt);
+  memset (send_pkt, 0, send_pkt_len);
+  
+  memset (dev->io.outofband.rq.obj_hdr_rmcp,
+	  0,
+	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
+  memset (dev->io.outofband.rq.obj_hdr_session,
+	  0,
+	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr)));
+  memset (dev->io.outofband.rq.obj_msg_hdr,
+	  0,
+	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
+  memset (dev->io.outofband.rq.obj_msg_trlr,
+	  0,
+	  fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
+  
+  memset (send_pkt, 0, send_pkt_len);
+  
+  ERR (fill_hdr_rmcp_ipmi (dev->io.outofband.rq.obj_hdr_rmcp) != -1);
+  ERR (fill_lan_msg_hdr2 (dev) != -1);
+  ERR (fill_lan_msg_trlr2 (dev,
+			   obj_cmd_rq,
+			   tmpl_cmd_rq) != -1);
+  ERR (fill_hdr_session2 (dev,
+			  obj_cmd_rq,
+			  tmpl_cmd_rq) != -1);
+  ERR (assemble_ipmi_lan_pkt2 (dev,
+			       obj_cmd_rq,
+			       tmpl_cmd_rq,
+			       send_pkt,
+			       send_pkt_len) != -1);
+  
+#if 0
+  printf("DEBUGGING:\n");
+  
+  fiid_obj_dump_lan (STDERR_FILENO,
+		     NULL,
+		     NULL,
+		     send_pkt,
+		     send_pkt_len,
+		     *(dev->io.outofband.rs.tmpl_hdr_session_ptr),
+		     *(dev->io.outofband.rs.tmpl_msg_hdr_ptr),
+		     tmpl_cmd_rq);
+#endif
+  
+  status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, 
+			    send_pkt, send_pkt_len, 0,
+			    &(dev->io.outofband.remote_host),
+			    dev->io.outofband.remote_host_len);
+  
+  if ((status == -1) || (status != send_pkt_len))
+    {
+      return (-1);
+    }
+  
+  return (0);
+}
+
+static int8_t 
+ipmi_lan_cmd_receive (ipmi_device_t *dev, 
+		      fiid_obj_t obj_cmd_rs, 
+		      fiid_template_t tmpl_cmd_rs)
+{
+  uint8_t *receive_pkt;
+  uint32_t receive_pkt_len;
+  const uint32_t pkt_max_size = 1024;
+  int32_t bytes_received = 0;
+  
+  struct sockaddr_in server_addr;
+  const socklen_t server_addr_len = sizeof (struct sockaddr_in);
+  uint64_t val;
+  
+  fd_set fd_set;
+  struct timeval timeout;
+  int status = 0;
+  
+  int retry = 0;
+  
+  if (!(dev && 
+	dev->io.outofband.local_sockfd && 
+	tmpl_cmd_rs && 
+	obj_cmd_rs))
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  receive_pkt_len = _ipmi_lan_pkt_rs_size2 (dev, tmpl_cmd_rs);
+  ERR (receive_pkt_len <= pkt_max_size);
+  receive_pkt = alloca (pkt_max_size);
+  ERR (receive_pkt);
+  memset (receive_pkt, 0, pkt_max_size);
+  
+  for (retry = 0; retry < dev->io.outofband.packet_retry_max; retry++)
+    {
+      memset (dev->io.outofband.rs.obj_hdr_rmcp,
+	      0,
+	      fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)));
+      memset (dev->io.outofband.rs.obj_hdr_session,
+	      0,
+	      fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)));
+      memset (dev->io.outofband.rs.obj_msg_hdr,
+	      0,
+	      fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)));
+      memset (dev->io.outofband.rs.obj_msg_trlr,
+	      0,
+	      fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
+      
+      memset (obj_cmd_rs,
+	      0,
+	      fiid_obj_len_bytes (tmpl_cmd_rs));
+      
+      if (dev->io.outofband.retry_timeout != 0) 
+	{
+	  timeout.tv_sec = 0;
+	  timeout.tv_usec = dev->io.outofband.retry_timeout;
+	  FD_ZERO (&fd_set);
+	  FD_SET (dev->io.outofband.local_sockfd, &fd_set);
+	  status = select (FD_SETSIZE, &fd_set, NULL, NULL, &timeout);
+	  
+	  if (status == -1)
+	    {
+	      return (-1);
+	    }
+	  
+	  if (status == 0)
+	    {
+	      return (0); // resend the request
+	    }
+	}
+      
+      memset (receive_pkt, 0, pkt_max_size);
+      bytes_received = recvfrom (dev->io.outofband.local_sockfd, 
+				 receive_pkt, 
+				 pkt_max_size, 
+				 0, 
+				 (struct sockaddr *) &server_addr,
+				 &server_addr_len);
+      
+      if (bytes_received > receive_pkt_len)
+	{
+	  int i;
+	  
+	  fprintf (stderr, 
+		   "%s(): received packet is too big.  "
+		   "expected size = %d, received size = %d\n", 
+		   __PRETTY_FUNCTION__, 
+		   bytes_received,
+		   receive_pkt_len);
+	  fprintf (stderr, "packet data:\n");
+	  for (i = 0; i < bytes_received; i++)
+	    fprintf (stderr, "%02X ", receive_pkt[i]);
+	  fprintf (stderr, "\n");
+	  
+	  fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
+	  
+	  return (-1);
+	}
+  
+      if (bytes_received < receive_pkt_len)
+	{
+	  int min_len = 0;
+	  
+	  min_len = (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) +
+		     fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) +
+		     fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) +
+		     2 + /* This means, CMD + COMP_CODE */
+		     fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
+	  
+	  if (bytes_received < min_len)
+	    {
+	      int i;
+	      
+	      fprintf (stderr, 
+		       "%s(): received packet is too small.  "
+		       "expected size = %d, received size = %d, minimum size = %d\n", 
+		       __PRETTY_FUNCTION__,
+		       bytes_received,
+		       receive_pkt_len,
+		       min_len);
+	      fprintf (stderr, "packet data:\n");
+	      for (i = 0; i < bytes_received; i++)
+		fprintf (stderr, "%02X ", receive_pkt[i]);
+	      fprintf (stderr, "\n");
+	      
+	      fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
+	      
+	      return (-1);
+	    }
+	  
+	  {
+	    int i;
+	    int trlr_len = 0;
+	    int fill_len = 0;
+	    int trlr_start = 0;
+	    uint8_t *tmp_buf = NULL;
+	    
+	    trlr_len = fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
+	    trlr_start = bytes_received - trlr_len;
+	    tmp_buf = alloca (trlr_len);
+	    memcpy (tmp_buf, &receive_pkt[trlr_start], trlr_len);
+	    
+	    fill_len = (receive_pkt_len - bytes_received);
+	    for (i = 0; i < fill_len; i++)
+	      receive_pkt[trlr_start + i] = 0;
+	    
+	    memcpy (&receive_pkt[trlr_start + fill_len],
+		    tmp_buf,
+		    trlr_len);
+	    
+	    bytes_received += fill_len;
+	  }
+	}
+      
+      ERR (unassemble_ipmi_lan_pkt2 (dev,
+				     receive_pkt,
+				     receive_pkt_len,
+				     obj_cmd_rs,
+				     tmpl_cmd_rs) != -1);
+      
+      val = 0;
+      fiid_obj_get (dev->io.outofband.rs.obj_msg_hdr,
+		    *(dev->io.outofband.rs.tmpl_msg_hdr_ptr), 
+		    (uint8_t *)"rq_seq", 
+		    &val);
+      
+      if (val == dev->io.outofband.rq_seq)
+	{
+	  ERR (ipmi_lan_validate_checksum (dev,
+					   obj_cmd_rs,
+					   tmpl_cmd_rs) == 0);
+	  return (bytes_received);
+	}
+      else 
+	{
+	  syslog (LOG_MAKEPRI (LOG_LOCAL1, LOG_NOTICE), 
+		  "%s(): received packet has mismatched rq_seq.  "
+		  "packet rq_seq = %d, expected rq_seq = %d\n", 
+		  __PRETTY_FUNCTION__, 
+		  (int) val, 
+		  (int) dev->io.outofband.rq_seq);
+	  
+	  if (dev->io.outofband.retry_timeout != 0) 
+	    {
+	      return (-1);
+	    }
+	}
+    }
+  
+  return (0); // not yet received response.  Resend the request
+}
+
 int8_t 
 ipmi_lan_cmd2 (ipmi_device_t *dev, 
 	       fiid_obj_t obj_cmd_rq, 
@@ -1434,6 +1721,10 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	       fiid_obj_t obj_cmd_rs, 
 	       fiid_template_t tmpl_cmd_rs)
 {
+  int status = 0;
+  int retry = 0;
+  int retval = 0;
+  
   if (!(dev && 
 	dev->io.outofband.local_sockfd && 
 	tmpl_cmd_rq && 
@@ -1444,187 +1735,40 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
       errno = EINVAL;
       return (-1);
     }
-
-  memset (dev->io.outofband.rq.obj_hdr_rmcp,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_rmcp_ptr)));
-  memset (dev->io.outofband.rq.obj_hdr_session,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_hdr_session_ptr)));
-  memset (dev->io.outofband.rq.obj_msg_hdr,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_hdr_ptr)));
-  memset (dev->io.outofband.rq.obj_msg_trlr,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rq.tmpl_msg_trlr_ptr)));
-
-  memset (dev->io.outofband.rs.obj_hdr_rmcp,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)));
-  memset (dev->io.outofband.rs.obj_hdr_session,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)));
-  memset (dev->io.outofband.rs.obj_msg_hdr,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)));
-  memset (dev->io.outofband.rs.obj_msg_trlr,
-          0,
-          fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
-
- {
-    uint8_t *pkt;
-    uint32_t pkt_len;
-    int status = 0;
-
-    pkt_len = _ipmi_lan_pkt_rq_size2 (dev, tmpl_cmd_rq);
-    pkt = alloca (pkt_len);
-    ERR (pkt);
-    memset (pkt, 0, pkt_len);
-
-    ERR (fill_hdr_rmcp_ipmi (dev->io.outofband.rq.obj_hdr_rmcp) != -1);
-    ERR (fill_lan_msg_hdr2 (dev) != -1);
-    ERR (fill_lan_msg_trlr2 (dev,
-                             obj_cmd_rq,
-                             tmpl_cmd_rq) != -1);
-    ERR (fill_hdr_session2 (dev,
-                            obj_cmd_rq,
-                            tmpl_cmd_rq) != -1);
-    ERR (assemble_ipmi_lan_pkt2 (dev,
-                                 obj_cmd_rq,
-                                 tmpl_cmd_rq,
-                                 pkt,
-                                 pkt_len) != -1);
-
-#if 0
-    printf("DEBUGGING:\n");
-
-    fiid_obj_dump_lan(STDERR_FILENO,
-                      NULL,
-                      NULL,
-                      pkt,
-                      pkt_len,
-                      *(dev->io.outofband.rs.tmpl_hdr_session_ptr),
-                      *(dev->io.outofband.rs.tmpl_msg_hdr_ptr),
-                      tmpl_cmd_rq);
-#endif
-
-    dev->io.outofband.session_seq_num++;
-    IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
-
-    status = ipmi_lan_sendto (dev->io.outofband.local_sockfd, pkt, pkt_len, 0,
-                              &(dev->io.outofband.remote_host),
-                              dev->io.outofband.remote_host_len);
-    ERR (status != -1);
- }
-
-  {
-    struct sockaddr_in from;
-    socklen_t fromlen = 0;
-
-    uint8_t *pkt = NULL;
-    uint32_t pkt_max_size = 1024;
-    int32_t bytes_received = 0;
-    int32_t pkt_len;
-
-    pkt_len = _ipmi_lan_pkt_rs_size2 (dev, tmpl_cmd_rs);
-    ERR (pkt_len <= pkt_max_size);
-
-    pkt = alloca (pkt_max_size);
-    ERR (pkt);
-    memset (pkt, 0, pkt_max_size);
-    bytes_received = ipmi_lan_recvfrom (dev->io.outofband.local_sockfd,
-                                        pkt,
-                                        pkt_max_size,
-                                        0,
-                                        (struct sockaddr *) &from,
-                                        &fromlen);
-
-    if (bytes_received > pkt_len)
-      {
-#if 0
-        /* DEBUGGING */
-        int i;
-
-        fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
-        fprintf (stderr,
-                 "received packet size: %d\n"
-                 "expected packet size: %d\n",
-                 bytes_received,
-                 pkt_len);
-        fprintf (stderr, "packet data:\n");
-        for (i = 0; i < bytes_received; i++)
-          fprintf (stderr, "%02X ", pkt[i]);
-        fprintf (stderr, "\n");
-#endif
-        return (-1);
-      }
-
-    if (bytes_received < pkt_len)
-      {
-        int min_len = 0;
-
-        min_len = (fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_rmcp_ptr)) +
-                   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_hdr_session_ptr)) +
-                   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_hdr_ptr)) +
-                   2 + /* This means, CMD + COMP_CODE */
-                   fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr)));
-
-        if (bytes_received < min_len)
-          {
-            int i;
-
-            fprintf (stderr, "%s(): received invalid packet.\n", __PRETTY_FUNCTION__);
-            fprintf (stderr,
-                     "received packet size: %d\n"
-                     "expected packet size: %d\n"
-                     "minimum packet size: %d\n",
-                     bytes_received,
-                     pkt_len,
-                     min_len);
-            fprintf (stderr, "packet data:\n");
-            for (i = 0; i < bytes_received; i++)
-              fprintf (stderr, "%02X ", pkt[i]);
-            fprintf (stderr, "\n");
-
-            return (-1);
-          }
-
-        {
-          int i;
-          int trlr_len = 0;
-          int fill_len = 0;
-          int trlr_start = 0;
-          uint8_t *tmp_buf = NULL;
-
-          trlr_len = fiid_obj_len_bytes (*(dev->io.outofband.rs.tmpl_msg_trlr_ptr));
-          trlr_start = bytes_received - trlr_len;
-          tmp_buf = alloca (trlr_len);
-          memcpy (tmp_buf, &pkt[trlr_start], trlr_len);
-
-          fill_len = (pkt_len - bytes_received);
-          for (i = 0; i < fill_len; i++)
-            pkt[trlr_start + i] = 0;
-
-          memcpy (&pkt[trlr_start + fill_len],
-                  tmp_buf,
-                  trlr_len);
-
-          bytes_received += fill_len;
-        }
-      }
-    
-    ERR (unassemble_ipmi_lan_pkt2 (dev,
-                                   pkt,
-                                   pkt_len,
-                                   obj_cmd_rs,
-                                   tmpl_cmd_rs) != -1);
-    
-    ERR (ipmi_lan_validate_checksum (dev,
-                                     obj_cmd_rs,
-                                     tmpl_cmd_rs) == 0);
-  }
- 
- return (0);
+  
+  for (retry = 0; retry < dev->io.outofband.packet_retry_max; retry++)
+    {
+      if (ipmi_lan_cmd_send (dev, 
+			     obj_cmd_rq, 
+			     tmpl_cmd_rq) == -1)
+	{
+	  retval = -1;
+	  break;
+	}
+      
+      status = ipmi_lan_cmd_receive (dev, 
+				     obj_cmd_rs, 
+				     tmpl_cmd_rs);
+      
+      if (status == -1)
+	{
+	  retval = -1;
+	  break;
+	}
+      
+      if (status != 0)
+	{
+	  retval = 0;
+	  break;
+	}
+      
+      IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
+      retval = -1;
+    }
+  
+  dev->io.outofband.session_seq_num++;
+  IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
+  return (retval);
 }
 
 static int8_t 
