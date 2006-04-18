@@ -89,7 +89,6 @@ fiid_template_t tmpl_sol_payload_data_bmc_to_remote_console =
     {1,      "character_transfer_unavailable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "nack", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1,      "reserved4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,      "operation_status", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     /* 524288 = 65536 * 8 = 2^16 * 8, b/c ipmi_payload_len is 2 bytes */
     {524288, "character_data", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE},
     {0, "", 0}

@@ -1,3 +1,8 @@
+2006-04-18  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sol-cmds.c: Fix critical BMC to Remote
+	Console SOL parsing bug.
+	
 2006-04-14  Albert Chu <chu11@llnl.gov>
 
 	* ipmiping/src/ipmiping.c (parsepacket): Fix warning.
