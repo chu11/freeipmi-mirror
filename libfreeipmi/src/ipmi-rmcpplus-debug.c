@@ -131,7 +131,7 @@ _dump_rmcpplus_session_hdr(int fd,
 			ipmi_payload_len);
   
  output:
-  ERR (!(ipmi_obj_dump_perror (fd, prefix, session_hdr, NULL, obj_rmcpplus_session_hdr) < 0));
+  ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, session_hdr, NULL, obj_rmcpplus_session_hdr) < 0));
   
   rv = indx;
  cleanup:
@@ -185,7 +185,10 @@ _dump_rmcpplus_payload_data(int fd,
       ERR_CLEANUP (!(ipmi_obj_dump_perror (fd, prefix, msg_hdr, NULL, obj_lan_msg_hdr) < 0));
       
       if (ipmi_payload_len <= indx)
-        return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       ERR_EXIT (!((obj_lan_msg_trlr_len = fiid_template_len_bytes (tmpl_lan_msg_trlr)) < 0));
       
@@ -202,7 +205,7 @@ _dump_rmcpplus_payload_data(int fd,
     {
       FIID_OBJ_CREATE_CLEANUP(obj_cmd, tmpl_cmd);
       
-      FIID_OBJ_CLEAR (obj_cmd);
+      FIID_OBJ_CLEAR_CLEANUP (obj_cmd);
       FIID_OBJ_SET_ALL_LEN_CLEANUP (len,
 				    obj_cmd,
 				    pkt + indx,
@@ -215,7 +218,10 @@ _dump_rmcpplus_payload_data(int fd,
 					   obj_cmd) < 0));
       
       if (ipmi_payload_len <= indx)
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
     }
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
@@ -386,15 +392,15 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   cmd_data_len = payload_data_len - pad_len - 1;
   ERR_EINVAL_CLEANUP (!(cmd_data_len <= 0));
   
-  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
-		    "payload_data",
-		    payload_buf,
-		    cmd_data_len);
+  FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
+			    "payload_data",
+			    payload_buf,
+			    cmd_data_len);
   
-  FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
-		    "confidentiality_trailer",
-		    payload_buf + cmd_data_len,
-		    pad_len + 1);
+  FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
+			    "confidentiality_trailer",
+			    payload_buf + cmd_data_len,
+			    pad_len + 1);
 
   ERR_CLEANUP (!(ipmi_obj_dump_perror (fd,
 				       prefix,
@@ -748,7 +754,7 @@ ipmi_dump_rmcpplus_packet (int fd,
 
   /* Dump rmcp header */
 
-  FIID_OBJ_CREATE(obj_rmcp_hdr, tmpl_rmcp_hdr);
+  FIID_OBJ_CREATE_CLEANUP(obj_rmcp_hdr, tmpl_rmcp_hdr);
   FIID_OBJ_SET_ALL_LEN_CLEANUP(obj_rmcp_hdr_len,
                                obj_rmcp_hdr,
                                pkt + indx,

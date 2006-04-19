@@ -17,8 +17,7 @@
 	* libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: Fix
 	activate payload response bit shit bug.
 
-	* libfreeipmi/src/ipmi-rmcpplus-debug.c
-	(ipmi_console_packet_dump): Fix mem-leaks.
+	* libfreeipmi/src/ipmi-rmcpplus-debug.c: Fix various mem-leak possibilities.
 	
 2006-04-18  Albert Chu <chu11@llnl.gov>
 
