@@ -29,6 +29,7 @@
     (display "                [-d REC-LIST] [-x [FILE]] [--no-probing]\n")
     (display "                [--driver-type=IPMIDRIVER]\n")
     (display "                [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n")
+    (display "                [--packet-retry-timeout=TIMEOUT] [--packet-retry-max=COUNT]\n")
     (display "                [--hostname=IPMIHOST] [--username=USERNAME]\n")
     (display "                [--password=PASSWORD] [--auth-type=AUTHTYPE]\n")
     (display "                [--priv-level=PRIVILEGE-LEVEL] [--info]\n")
@@ -47,6 +48,10 @@
     (display "                             Use this DRIVERADDR address instead of probed\n")
     (display "                             one.\n")
     (display "      --driver-device=DEVICE Use this DEVICE for IPMI driver\n")
+    (display "  --packet-retry-timeout=TIMEOUT\n")
+    (display "                         Use TIMEOUT when reading LAN packets in UDM.\n")
+    (display "  --packet-retry-max=COUNT   Use COUNT retries when reading LAN packets get\n")
+    (display "                         timed out in UDM.\n")
     (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
     (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
     (display "                             length is 16.\n")
@@ -86,6 +91,8 @@
 				 (driver-type    (single-char #\D)   (value #t))
 				 (driver-address (single-char #\203) (value #t))
 				 (driver-device  (single-char #\204) (value #t))
+				 (packet-retry-timeout  (single-char #\205) (value #t))
+				 (packet-retry-max      (single-char #\206) (value #t))
 				 (host           (single-char #\h)   (value #t))
 				 (username       (single-char #\u)   (value #t))
 				 (password       (single-char #\p)   (value #t))
@@ -105,6 +112,8 @@
 		  (driver-type    (option-ref options 'driver-type    #f))
 		  (driver-address (option-ref options 'driver-address #f))
 		  (driver-device  (option-ref options 'driver-device  #f))
+		  (retry-timeout  (option-ref options 'packet-retry-timeout #f))
+		  (retry-max      (option-ref options 'packet-retry-max     #f))
 		  (host           (option-ref options 'host           #f))
 		  (username       (option-ref options 'username       #f))
 		  (password       (option-ref options 'password       #f))
@@ -158,7 +167,7 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list driver-type))))
-	     ;; driver-address (2)
+	     ;; --driver-address (2)
 	     (if (and (string? driver-address) (list? sel-cmd-args))
 		 (begin 
 		   (set! driver-address (string->number driver-address))
@@ -177,11 +186,41 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list driver-device))))
-	     ;; --host (4)
+	     ;; --packet-retry-timeout (4)
+	     (if (and (string? retry-timeout) (list? sensors-cmd-args))
+		 (begin 
+		   (set! retry-timeout (string->number retry-timeout))
+		   (if (boolean? retry-timeout)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensor-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list retry-timeout))))
+	     ;; --packet-retry-max (5)
+	     (if (and (string? retry-max) (list? sensors-cmd-args))
+		 (begin 
+		   (set! retry-max (string->number retry-max))
+		   (if (boolean? retry-max)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensor-exit-status 64)
+			 (set! sensors-cmd-args #f)))))
+	     (if (list? sensors-cmd-args)
+		 (set! sensors-cmd-args (append sensors-cmd-args 
+						(list retry-max))))
+	     ;; --host (6)
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list host))))
-	     ;; --username (5)
+	     ;; --username (7)
 	     (if (and (string? username) (list? sel-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
@@ -195,7 +234,7 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list username))))
-	     ;; --password (6)
+	     ;; --password (8)
 	     (if (and (string? password) (list? sel-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
@@ -209,7 +248,7 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list password))))
-	     ;; --auth-type (7)
+	     ;; --auth-type (9)
 	     (if (and (string? auth-type) (list? sel-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
@@ -234,7 +273,7 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list auth-type))))
-	     ;; --priv-level (8)
+	     ;; --priv-level (10)
 	     (if (and (string? priv-level) (list? sel-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
@@ -259,23 +298,23 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list priv-level))))
-	     ;; --help (9)
+	     ;; --help (11)
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list help-wanted))))
-	     ;; --usage (10)
+	     ;; --usage (12)
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list usage-wanted))))
-	     ;; --version (11)
+	     ;; --version (13)
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list version-wanted))))
-	     ;; --info (12) SEL specific
+	     ;; --info (14) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list info-wanted))))
-	     ;; --delete-list (13) SEL specific
+	     ;; --delete-list (15) SEL specific
 	     (if (and (string? delete-list) (list? sel-cmd-args))
 		 (begin 
 		   (set! delete-list (sentence->tokens (string-replace 
@@ -293,16 +332,16 @@
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-list))))
-	     ;; --delete-all (14) SEL specific
+	     ;; --delete-all (16) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-all))))
-	     ;; --hex-dump-name (15) SEL specific
+	     ;; --hex-dump-name (17) SEL specific
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list hex-dump-name))))
 
-	     ;; --delete-range (16) SEL specific
+	     ;; --delete-range (18) SEL specific
 	     (if (and (string? delete-range) (list? sel-cmd-args))
 		 (begin 
 		   (set! delete-range (sentence->tokens (string-replace 
@@ -323,7 +362,7 @@
 		 (set! sel-cmd-args (append sel-cmd-args 
 					    (list delete-range))))
 
-	     ; --delete-event-id ID (17) SEL specific
+	     ; --delete-event-id (19) SEL specific
 	     (if (and (string? delete-event-id)
 		      (list? sel-cmd-args)
 		      (not (string->number delete-event-id)))
@@ -355,31 +394,31 @@
 	   #f)))
 
 (define (sel-get-help-option cmd-args)
-  (list-ref cmd-args 9))
-
-(define (sel-get-usage-option cmd-args)
-  (list-ref cmd-args 10))
-
-(define (sel-get-version-option cmd-args)
   (list-ref cmd-args 11))
 
-(define (sel-get-info-option cmd-args)
+(define (sel-get-usage-option cmd-args)
   (list-ref cmd-args 12))
 
-(define (sel-get-delete-list-option cmd-args)
+(define (sel-get-version-option cmd-args)
   (list-ref cmd-args 13))
 
-(define (sel-get-delete-all-option cmd-args)
+(define (sel-get-info-option cmd-args)
   (list-ref cmd-args 14))
 
-(define (sel-get-hex-dump-option cmd-args)
+(define (sel-get-delete-list-option cmd-args)
   (list-ref cmd-args 15))
 
-(define (sel-get-delete-range-option cmd-args)
+(define (sel-get-delete-all-option cmd-args)
   (list-ref cmd-args 16))
 
-(define (sel-get-delete-event-id-option cmd-args)
+(define (sel-get-hex-dump-option cmd-args)
   (list-ref cmd-args 17))
+
+(define (sel-get-delete-range-option cmd-args)
+  (list-ref cmd-args 18))
+
+(define (sel-get-delete-event-id-option cmd-args)
+  (list-ref cmd-args 19))
 
 (define (sel-display-entry sel)
   (display (list-ref sel 0)) (display ":")
@@ -533,6 +572,7 @@
        (string-append 
 	"sel [--no-probing] [--driver-type=IPMIDRIVER]\n"
 	"    [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"    [--packet-retry-timeout=TIMEOUT] [--packet-retry-max=COUNT]\n"
 	"    [--hostname=IPMIHOST] [--username=USERNAME] [--password=PASSWORD]\n"
 	"    [--auth-type=AUTHTYPE] [--priv-level=PRIVILEGE-LEVEL] [--info]\n"
 	"    [--delete=REC-LIST] [--delete-all] [--hex-dump=[FILE]] [--help]\n"

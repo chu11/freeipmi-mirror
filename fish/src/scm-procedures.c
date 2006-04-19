@@ -3278,29 +3278,41 @@ ex_ipmi_open (SCM scm_arg_list)
   
   scm_value = scm_list_ref (scm_arg_list, gh_long2scm (4));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    args.common.packet_retry_timeout = 0;
+  else 
+    args.common.packet_retry_timeout = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
+    args.common.packet_retry_max = 0;
+  else 
+    args.common.packet_retry_max = gh_scm2int (scm_value);
+  
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
+  if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.host = NULL;
   else 
     args.common.host = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (5));
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (7));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.username = NULL;
   else 
     args.common.username = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (6));
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (8));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.password = NULL;
   else 
     args.common.password = gh_scm2newstr (scm_value, NULL);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (7));
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (9));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.auth_type = IPMI_SESSION_AUTH_TYPE_NONE;
   else 
     args.common.auth_type = gh_scm2int (scm_value);
   
-  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (8));
+  scm_value = scm_list_ref (scm_arg_list, gh_long2scm (10));
   if (scm_boolean_p (scm_value) == SCM_BOOL_T)
     args.common.priv_level = IPMI_PRIV_LEVEL_USER;
   else 

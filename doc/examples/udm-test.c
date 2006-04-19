@@ -63,6 +63,8 @@ main (int argc, char **argv)
       if (ipmi_open_outofband (&dev, 
 			       IPMI_DEVICE_LAN, 
 			       IPMI_MODE_DEFAULT, 
+			       1, 
+			       0, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
 			       auth_type, 

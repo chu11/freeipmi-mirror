@@ -1,3 +1,36 @@
+2006-04-18  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-interface.[ch]: added support to
+	packet_retry_max and retry_timeout.
+	
+	* common/src/argp-common.[ch]: like wise.
+	
+	* bmc-info/src/bmc-info.c: like wise.
+	
+	* fish/extensions/bc-common.scm: like wise.
+	
+	* fish/extensions/bmc-info.scm: like wise.
+	
+	* fish/extensions/pef.scm: like wise.
+	
+	* fish/extensions/sel.scm: like wise.
+	
+	* fish/extensions/sensors-common.scm: like wise.
+	
+	* fish/extensions/sensors.scm: like wise.
+	
+	* fish/src/ipmi-wrapper.c (fi_ipmi_open): like wise.
+	
+	* fish/src/scm-procedures.c (ex_ipmi_open): like wise.
+	
+	* ipmi-raw/src/ipmi-raw-argp.c: like wise.
+	
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+	
+	* common/doc/argp-common.man: updated.
+	
+	* doc/examples/udm-test.c: updated.
+
 2006-04-14  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.h: added packet_retry_max and

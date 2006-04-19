@@ -9,8 +9,16 @@ Allowed values are KCS, SMIC, SSIF and LAN.
 \fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
 Use this DRIVERADDR address instead of probed
 one.
-.HP
-\fB\-\-driver\-device\fR=\fIDEVICE\fR Use this DEVICE for IPMI driver.
+.TP
+\fB\-\-driver\-device\fR=\fIDEVICE\fR
+Use this DEVICE for IPMI driver.
+.TP
+\fB\-\-packet\-retry\-timeout\fR=\fITIMEOUT\fR
+Use TIMEOUT when reading LAN packets in UDM.
+.TP
+\fB\-\-packet\-retry\-max\fR=\fICOUNT\fR
+Use COUNT retries when reading LAN packets get
+timed out in UDM.
 .TP
 \fB\-h\fR, \fB\-\-hostname\fR=\fIIPMIHOST\fR
 Connect to IPMIHOST.
