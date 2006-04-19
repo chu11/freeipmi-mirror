@@ -22,8 +22,8 @@ libfreeipmi_la_SOURCES = \
 	ipmi-lan.c \
 	ipmi-lan-interface.c \
 	ipmi-lan-utils.c \
+	ipmi-crypt.c \
 	ipmi-rmcpplus.c \
-	ipmi-rmcpplus-crypt.c \
 	ipmi-rmcpplus-debug.c \
 	ipmi-rmcpplus-interface.c \
 	ipmi-rmcpplus-utils.c \

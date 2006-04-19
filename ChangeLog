@@ -1,3 +1,19 @@
+2006-04-19  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-rmcpplus-utils.c
+	(ipmi_rmcpplus_calculate_payload_type),
+	libfreeipmi/src/ipmi-utils.c (ipmi_is_ipmi_1_5_packet,
+	ipmi_is_ipmi_2_0_packet): Fix parse bugs.
+
+	* libfreeipmi/include/freeipmi/ipmi-rmcpplus.h,
+	libfreeipmi/src/ipmi-rmcpplus.c (ipmi_rmcpplus_init): New
+	function.
+
+	* libfreeipmi/: Rename ipmi-rmcpplus-crypt.c to ipmi-crypt.c and
+	ipmi-rmcpplus-crypt.h to ipmi-crypt.h.
+	
+	* libfreeipmi/, ipmipower/: Adjust for modifications.
+	
 2006-04-18  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sol-cmds.c: Fix critical BMC to Remote

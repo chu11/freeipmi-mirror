@@ -1,5 +1,5 @@
 /*
-   ipmi-rmcpplus-crypt.h - IPMI RMCPPLUS Crypt Utils
+   ipmi-crypt.h - IPMI Crypt Utils
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -18,8 +18,8 @@
    Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef _IPMI_RMCPPLUS_CRYPT_H
-#define _IPMI_RMCPPLUS_CRYPT_H
+#ifndef _IPMI_CRYPT_H
+#define _IPMI_CRYPT_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,6 +54,10 @@ extern "C" {
 #define IPMI_CRYPT_CIPHER_INFO_VALID(__cipher_info) \
         (((__cipher_info) == IPMI_CRYPT_CIPHER_INFO_KEY_LENGTH \
           || (__cipher_info) == IPMI_CRYPT_CIPHER_INFO_BLOCK_LENGTH) ? 1 : 0)
+
+#define IPMI_CRYPT_AES_CBC_128_IV_LENGTH         16
+#define IPMI_CRYPT_AES_CBC_128_KEY_LENGTH        16
+#define IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH      16
 
 /* ipmi_crypt_init
  *

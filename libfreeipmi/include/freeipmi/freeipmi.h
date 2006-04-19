@@ -52,8 +52,8 @@ extern "C" {
 #include <freeipmi/ipmi-lan.h>
 #include <freeipmi/ipmi-lan-interface.h>
 #include <freeipmi/ipmi-lan-utils.h>
+#include <freeipmi/ipmi-crypt.h>
 #include <freeipmi/ipmi-rmcpplus.h>
-#include <freeipmi/ipmi-rmcpplus-crypt.h>
 #include <freeipmi/ipmi-rmcpplus-interface.h>
 #include <freeipmi/ipmi-rmcpplus-utils.h>
 #include <freeipmi/ipmi-ssif-api.h>

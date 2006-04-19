@@ -232,6 +232,7 @@ ipmi_is_ipmi_1_5_packet(uint8_t *pkt, uint32_t pkt_len)
   ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
 
   auth_type = *(pkt + rmcp_hdr_len);
+  auth_type &= 0x0F;
   return ((auth_type != IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }
 
@@ -246,6 +247,7 @@ ipmi_is_ipmi_2_0_packet(uint8_t *pkt, uint32_t pkt_len)
   ERR_EINVAL (!(pkt_len <= rmcp_hdr_len));
 
   auth_type = *(pkt + rmcp_hdr_len);
+  auth_type &= 0x0F;
   return ((auth_type == IPMI_AUTHENTICATION_TYPE_RMCPPLUS) ? 1 : 0);
 }
 

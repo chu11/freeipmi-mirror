@@ -31,8 +31,8 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-rmcpplus.h"
-#include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
+#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-lan.h"
 #include "freeipmi/ipmi-sol-cmds.h"
@@ -319,7 +319,7 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
                                                    uint8_t *pkt,
                                                    int32_t ipmi_payload_len)
 {
-  uint8_t iv[IPMI_AES_CBC_128_IV_LENGTH];
+  uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
   int cipher_keylen, cipher_blocklen;
@@ -347,20 +347,20 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
           && ipmi_payload_len);
   
   ERR_CLEANUP (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LENGTH));
+  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
   
-  ERR_EINVAL_CLEANUP (!(confidentiality_key_len < IPMI_AES_CBC_128_KEY_LENGTH));
-  confidentiality_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
+  ERR_EINVAL_CLEANUP (!(confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
   
   ERR_CLEANUP (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LENGTH);
-  ERR_EINVAL_CLEANUP (!(ipmi_payload_len < IPMI_AES_CBC_128_BLOCK_LENGTH));
+  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  ERR_EINVAL_CLEANUP (!(ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
 
-  payload_data_len = ipmi_payload_len - IPMI_AES_CBC_128_BLOCK_LENGTH;
+  payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   ERR_EINVAL_CLEANUP (!(payload_data_len <= 0));
 
-  memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LENGTH);
-  indx += IPMI_AES_CBC_128_BLOCK_LENGTH;
+  memcpy(iv, pkt, IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  indx += IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   memcpy(payload_buf, pkt + indx, payload_data_len);
 
   FIID_OBJ_CREATE_CLEANUP(obj_rmcpplus_payload, tmpl_rmcpplus_payload);
@@ -368,20 +368,20 @@ _dump_rmcpplus_payload_confidentiality_aes_cbc_128(int fd,
   FIID_OBJ_SET_DATA_CLEANUP(obj_rmcpplus_payload,
                             "confidentiality_header",
                             iv,
-                            IPMI_AES_CBC_128_BLOCK_LENGTH);
+                            IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
   ERR_CLEANUP (!((decrypt_len = ipmi_crypt_cipher_decrypt(IPMI_CRYPT_CIPHER_AES,
                                                           IPMI_CRYPT_CIPHER_MODE_CBC,
                                                           confidentiality_key,
                                                           confidentiality_key_len,
                                                           iv,
-                                                          IPMI_AES_CBC_128_BLOCK_LENGTH,
+                                                          IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
                                                           payload_buf,
                                                           payload_data_len)) < 0));
   ERR_CLEANUP (!(decrypt_len != payload_data_len));
   
   pad_len = payload_buf[payload_data_len - 1];
-  ERR_EINVAL_CLEANUP (!(pad_len > IPMI_AES_CBC_128_BLOCK_LENGTH));
+  ERR_EINVAL_CLEANUP (!(pad_len > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
   
   cmd_data_len = payload_data_len - pad_len - 1;
   ERR_EINVAL_CLEANUP (!(cmd_data_len <= 0));

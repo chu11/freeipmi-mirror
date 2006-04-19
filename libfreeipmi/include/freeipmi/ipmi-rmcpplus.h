@@ -158,10 +158,6 @@
 #define IPMI_MD5_DIGEST_LENGTH                            16
 #define IPMI_HMAC_SHA1_96_DIGEST_LENGTH                   12
 
-#define IPMI_AES_CBC_128_IV_LENGTH                        16
-#define IPMI_AES_CBC_128_KEY_LENGTH                       16
-#define IPMI_AES_CBC_128_BLOCK_LENGTH                     16
-
 #define IPMI_HMAC_SHA1_96_AUTHENTICATION_CODE_LENGTH      12
 #define IPMI_HMAC_MD5_128_AUTHENTICATION_CODE_LENGTH      16
 #define IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH           16
@@ -181,6 +177,15 @@ extern fiid_template_t tmpl_rmcpplus_rakp_message_1;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_2;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_3;
 extern fiid_template_t tmpl_rmcpplus_rakp_message_4;
+
+/* ipmi_rmcpplus_init
+ *
+ * Must be called first to initialize crypt libs.  In threaded
+ * programs, must be called before threads are created.
+ *
+ * Returns 0 on success, -1 on error.
+ */
+int8_t ipmi_rmcpplus_init(void);
 
 int8_t fill_rmcpplus_session_hdr (uint8_t payload_type, uint8_t payload_authenticated, uint8_t payload_encrypted, uint32_t oem_iana, uint16_t oem_payload_id, uint32_t session_id, uint32_t session_sequence_number, fiid_obj_t obj_rmcpplus_session_hdr);
 

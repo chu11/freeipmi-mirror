@@ -1,5 +1,5 @@
 /* 
-   ipmi-rmcpplus-util.c - IPMI RMCPPLUS Utils
+   ipmi-crypt.c - IPMI Crypt Utils
 
    Copyright (C) 2003, 2004, 2005 FreeIPMI Core Team
 
@@ -34,8 +34,7 @@
 #include <gcrypt.h>
 GCRY_THREAD_OPTION_PTHREAD_IMPL;
 
-#include "freeipmi/ipmi-rmcpplus-crypt.h"
-#include "freeipmi/ipmi-rmcpplus.h"
+#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 
 #include "err-wrappers.h"
@@ -161,8 +160,8 @@ _cipher_crypt(int cipher_algorithm,
 	      && data_len);
 
   gcry_cipher_algorithm = GCRY_CIPHER_AES;
-  expected_cipher_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
-  expected_cipher_block_len = IPMI_AES_CBC_128_BLOCK_LENGTH;
+  expected_cipher_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
+  expected_cipher_block_len = IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
 
   if (cipher_mode == IPMI_CRYPT_CIPHER_MODE_NONE)
     gcry_cipher_mode = GCRY_CIPHER_MODE_NONE;

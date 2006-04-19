@@ -196,6 +196,13 @@ fiid_template_t tmpl_rmcpplus_rakp_message_4 =
     {0, "", 0}
   };
 
+int8_t 
+ipmi_rmcpplus_init(void)
+{
+  if (ipmi_crypt_init())
+    return -1;
+  return 0;
+}
 
 int8_t
 fill_rmcpplus_session_hdr (uint8_t payload_type, 

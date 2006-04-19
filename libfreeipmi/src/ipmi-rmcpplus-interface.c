@@ -32,9 +32,9 @@
 
 #include "freeipmi/ipmi-rmcpplus-interface.h"
 #include "freeipmi/ipmi-rmcpplus.h"
-#include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
+#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
@@ -168,7 +168,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
                                                uint32_t confidentiality_key_len,
                                                fiid_obj_t obj_rmcpplus_payload)
 {
-  uint8_t iv[IPMI_AES_CBC_128_IV_LENGTH];
+  uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   int32_t iv_len;
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_len;
@@ -193,15 +193,15 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
           && fiid_obj_template_compare(obj_rmcpplus_payload, tmpl_rmcpplus_payload) == 1);
   
   ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LENGTH));
-  ERR_EINVAL (!(confidentiality_key_len < IPMI_AES_CBC_128_KEY_LENGTH));
-  confidentiality_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
+  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  ERR_EINVAL (!(confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
 
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LENGTH);
+  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
      
-  ERR (!((iv_len = ipmi_get_random(iv, IPMI_AES_CBC_128_IV_LENGTH)) < 0));
-  ERR (!(iv_len != IPMI_AES_CBC_128_IV_LENGTH));
+  ERR (!((iv_len = ipmi_get_random(iv, IPMI_CRYPT_AES_CBC_128_IV_LENGTH)) < 0));
+  ERR (!(iv_len != IPMI_CRYPT_AES_CBC_128_IV_LENGTH));
     
   ERR (!((payload_len = _construct_payload_buf(payload_type,
                                                obj_lan_msg_hdr, 
@@ -212,7 +212,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   /* Pad the data appropriately */
 
   /* +1 is for the pad length field */
-  pad_len = IPMI_AES_CBC_128_BLOCK_LENGTH - ((payload_len + 1) % IPMI_AES_CBC_128_BLOCK_LENGTH);
+  pad_len = IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH - ((payload_len + 1) % IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
       
   ERR_ENOSPC (!((payload_len + pad_len + 1) > IPMI_MAX_PAYLOAD_LENGTH));
   
@@ -240,7 +240,7 @@ _construct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
   FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                      "confidentiality_header",
                      iv,
-                     IPMI_AES_CBC_128_IV_LENGTH);
+                     IPMI_CRYPT_AES_CBC_128_IV_LENGTH);
       
   FIID_OBJ_SET_DATA (obj_rmcpplus_payload,
                      "payload_data",
@@ -967,7 +967,7 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
                                                  uint8_t *pkt,
                                                  uint32_t ipmi_payload_len)
 {
-  uint8_t iv[IPMI_AES_CBC_128_IV_LENGTH];
+  uint8_t iv[IPMI_CRYPT_AES_CBC_128_IV_LENGTH];
   uint8_t payload_buf[IPMI_MAX_PAYLOAD_LENGTH];
   uint8_t pad_length;
   int cipher_keylen, cipher_blocklen;
@@ -994,39 +994,39 @@ _deconstruct_payload_confidentiality_aes_cbc_128(uint8_t payload_type,
           && ipmi_payload_len);
 
   ERR (!((cipher_keylen = ipmi_crypt_cipher_key_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (!(cipher_keylen < IPMI_AES_CBC_128_KEY_LENGTH));
-  ERR_EINVAL (!(confidentiality_key_len < IPMI_AES_CBC_128_KEY_LENGTH));
-  confidentiality_key_len = IPMI_AES_CBC_128_KEY_LENGTH;
+  ERR_EXIT (!(cipher_keylen < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  ERR_EINVAL (!(confidentiality_key_len < IPMI_CRYPT_AES_CBC_128_KEY_LENGTH));
+  confidentiality_key_len = IPMI_CRYPT_AES_CBC_128_KEY_LENGTH;
 
   ERR (!((cipher_blocklen = ipmi_crypt_cipher_block_len(IPMI_CRYPT_CIPHER_AES)) < 0));
-  ERR_EXIT (cipher_blocklen == IPMI_AES_CBC_128_BLOCK_LENGTH);
-  ERR_EINVAL (!(ipmi_payload_len < IPMI_AES_CBC_128_BLOCK_LENGTH));
+  ERR_EXIT (cipher_blocklen == IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  ERR_EINVAL (!(ipmi_payload_len < IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
 
-  payload_data_len = ipmi_payload_len - IPMI_AES_CBC_128_BLOCK_LENGTH;
+  payload_data_len = ipmi_payload_len - IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   ERR_EINVAL (!(payload_data_len <= 0));
 
-  memcpy(iv, pkt, IPMI_AES_CBC_128_BLOCK_LENGTH);
-  indx += IPMI_AES_CBC_128_BLOCK_LENGTH;
+  memcpy(iv, pkt, IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
+  indx += IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH;
   memcpy(payload_buf, pkt + indx, payload_data_len);
 
   FIID_OBJ_CLEAR (obj_rmcpplus_payload);
   FIID_OBJ_SET_DATA(obj_rmcpplus_payload,
                     "confidentiality_header",
                     iv,
-                    IPMI_AES_CBC_128_BLOCK_LENGTH);
+                    IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH);
 
   ERR (!((decrypt_len = ipmi_crypt_cipher_decrypt(IPMI_CRYPT_CIPHER_AES,
                                                   IPMI_CRYPT_CIPHER_MODE_CBC,
                                                   confidentiality_key,
                                                   confidentiality_key_len,
                                                   iv,
-                                                  IPMI_AES_CBC_128_BLOCK_LENGTH,
+                                                  IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH,
                                                   payload_buf,
                                                   payload_data_len)) < 0));
   ERR (!((decrypt_len != payload_data_len)));
 
   pad_length = payload_buf[payload_data_len - 1];
-  ERR_EINVAL (!(pad_length > IPMI_AES_CBC_128_BLOCK_LENGTH));
+  ERR_EINVAL (!(pad_length > IPMI_CRYPT_AES_CBC_128_BLOCK_LENGTH));
 
   cmd_data_len = payload_data_len - pad_length - 1;
   ERR_EINVAL (!(cmd_data_len <= 0));

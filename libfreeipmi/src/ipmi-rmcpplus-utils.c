@@ -32,9 +32,9 @@
 #include "freeipmi/ipmi-rmcpplus-utils.h"
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-rmcpplus-status-spec.h"
-#include "freeipmi/ipmi-rmcpplus-crypt.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-cipher-suite-spec.h"
+#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-debug.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"
 #include "freeipmi/ipmi-privilege-level-spec.h"
@@ -1194,6 +1194,7 @@ ipmi_rmcpplus_calculate_payload_type(uint8_t *pkt, uint32_t pkt_len)
   ERR_EINVAL (auth_type == IPMI_AUTHENTICATION_TYPE_RMCPPLUS);
 
   payload_type = *(pkt + rmcp_hdr_len + 1);
+  payload_type &= 0x3F;
   ERR_EINVAL(IPMI_PAYLOAD_TYPE_VALID(payload_type));
 
   return payload_type;
