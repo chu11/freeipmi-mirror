@@ -758,7 +758,10 @@ ipmi_dump_rmcpplus_packet (int fd,
   ERR_CLEANUP(!(ipmi_obj_dump_perror (fd, prefix_buf, rmcp_hdr, NULL, obj_rmcp_hdr) < 0));
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
   
   /* Dump rmcpplus session header */
 
@@ -775,7 +778,10 @@ ipmi_dump_rmcpplus_packet (int fd,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
   
   /* achu: If the packet is really messed up, dump the packet in raw form */
   if ((payload_type != IPMI_PAYLOAD_TYPE_IPMI
@@ -794,26 +800,26 @@ ipmi_dump_rmcpplus_packet (int fd,
     goto dump_extra;
   
   if (payload_type == IPMI_PAYLOAD_TYPE_IPMI)
-    ERR_EINVAL (tmpl_lan_msg_hdr
-                && (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
-                    || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1));
+    ERR_EINVAL_CLEANUP (tmpl_lan_msg_hdr
+			&& (fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rq) == 1
+			    || fiid_template_compare(tmpl_lan_msg_hdr, tmpl_lan_msg_hdr_rs) == 1));
   else if (payload_type == IPMI_PAYLOAD_TYPE_SOL)
-    ERR_EINVAL ((fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
-                 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
-                 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1));
+    ERR_EINVAL_CLEANUP ((fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data) == 1
+			 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_remote_console_to_bmc) == 1
+			 || fiid_template_compare(tmpl_cmd, tmpl_sol_payload_data_bmc_to_remote_console) == 1));
 
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_REQUEST)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_request);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_open_session_request);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RMCPPLUS_OPEN_SESSION_RESPONSE)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_open_session_response);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_open_session_response);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_1)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_1);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_1);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_2)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_2);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_2);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_3)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_3);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_3);
   else if (payload_type == IPMI_PAYLOAD_TYPE_RAKP_MESSAGE_4)
-    FIID_TEMPLATE_COMPARE(tmpl_cmd, tmpl_rmcpplus_rakp_message_4);
+    FIID_TEMPLATE_COMPARE_CLEANUP(tmpl_cmd, tmpl_rmcpplus_rakp_message_4);
 
   /* Dump Payload */
 
@@ -835,7 +841,10 @@ ipmi_dump_rmcpplus_packet (int fd,
   indx += ipmi_payload_len;
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
 
   /* Dump trailer */
 
@@ -850,7 +859,10 @@ ipmi_dump_rmcpplus_packet (int fd,
   indx += obj_len;
 
   if (pkt_len <= indx)
-    return 0;
+    {
+      rv = 0;
+      goto cleanup;
+    }
   
   /* Dump extra stuff if packet is longer than expected */
  dump_extra:
