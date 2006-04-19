@@ -18,6 +18,9 @@
 	activate payload response bit shit bug.
 
 	* libfreeipmi/src/ipmi-rmcpplus-debug.c: Fix various mem-leak possibilities.
+
+	* libfreeipmi/src/ipmi-rmcpplus-interface.c
+	(_construct_session_trlr_pad): Fix padding corner case.
 	
 2006-04-18  Albert Chu <chu11@llnl.gov>
 

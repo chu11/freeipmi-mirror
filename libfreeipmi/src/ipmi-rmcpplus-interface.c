@@ -342,6 +342,45 @@ _construct_payload(uint8_t payload_type,
   return (0);
 }
 
+static int8_t
+_construct_session_trlr_pad(uint8_t integrity_algorithm,
+                            uint32_t ipmi_msg_len,
+                            fiid_obj_t obj_rmcpplus_session_trlr)
+{
+  int8_t pad_length, pad_length_field_len, next_header_field_len;
+  uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
+                                                    IPMI_INTEGRITY_PAD_DATA,
+                                                    IPMI_INTEGRITY_PAD_DATA,
+                                                    IPMI_INTEGRITY_PAD_DATA};
+
+  assert (IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
+          && fiid_obj_valid(obj_rmcpplus_session_trlr)
+          && fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr));
+
+  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
+  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
+  
+  ipmi_msg_len += pad_length_field_len;
+  ipmi_msg_len += next_header_field_len;
+
+  if (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE)
+    pad_length = IPMI_INTEGRITY_PAD_MULTIPLE - (ipmi_msg_len % IPMI_INTEGRITY_PAD_MULTIPLE);
+  
+  FIID_OBJ_CLEAR_FIELD (obj_rmcpplus_session_trlr, "integrity_pad");
+
+  if (pad_length)
+    FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
+                       "integrity_pad",
+                       pad_bytes,
+                       pad_length);
+
+  FIID_OBJ_SET (obj_rmcpplus_session_trlr,
+		"pad_length",
+		pad_length);
+  
+  return (0);
+}
+
 static int32_t
 _calculate_authentication_code_len(uint8_t integrity_algorithm)
 {
@@ -362,44 +401,6 @@ _calculate_authentication_code_len(uint8_t integrity_algorithm)
     authentication_code_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
   
   return (authentication_code_len);
-}
-
-static int8_t
-_construct_session_trlr_pad(uint8_t integrity_algorithm,
-                            uint32_t ipmi_msg_len,
-                            fiid_obj_t obj_rmcpplus_session_trlr)
-{
-  int32_t authentication_code_len;
-  int8_t pad_length, pad_length_field_len, next_header_field_len;
-  uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
-                                                    IPMI_INTEGRITY_PAD_DATA,
-                                                    IPMI_INTEGRITY_PAD_DATA,
-                                                    IPMI_INTEGRITY_PAD_DATA};
-
-  assert (IPMI_INTEGRITY_ALGORITHM_VALID(integrity_algorithm)
-          && fiid_obj_valid(obj_rmcpplus_session_trlr)
-          && fiid_obj_template_compare(obj_rmcpplus_session_trlr, tmpl_rmcpplus_session_trlr));
-
-  ERR (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
-  
-  ERR_EXIT (!((pad_length_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "pad_length")) < 0)); 
-  ERR_EXIT (!((next_header_field_len = fiid_template_field_len_bytes (tmpl_rmcpplus_session_trlr, "next_header")) < 0));
-  
-  pad_length = IPMI_INTEGRITY_PAD_MULTIPLE - ((ipmi_msg_len + pad_length_field_len + next_header_field_len + authentication_code_len) % IPMI_INTEGRITY_PAD_MULTIPLE);
-
-  FIID_OBJ_CLEAR_FIELD (obj_rmcpplus_session_trlr, "integrity_pad");
-
-  if (pad_length)
-    FIID_OBJ_SET_DATA (obj_rmcpplus_session_trlr,
-                       "integrity_pad",
-                       pad_bytes,
-                       pad_length);
-
-  FIID_OBJ_SET (obj_rmcpplus_session_trlr,
-		"pad_length",
-		pad_length);
-  
-  return (0);
 }
 
 static int32_t
