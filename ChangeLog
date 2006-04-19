@@ -11,8 +11,11 @@
 
 	* libfreeipmi/: Rename ipmi-rmcpplus-crypt.c to ipmi-crypt.c and
 	ipmi-rmcpplus-crypt.h to ipmi-crypt.h.
-	
+
 	* libfreeipmi/, ipmipower/: Adjust for modifications.
+
+	* libfreeipmi/src/ipmi-rmcpplus-support-and-payload-cmds.c: Fix
+	activate payload response bit shit bug.
 	
 2006-04-18  Albert Chu <chu11@llnl.gov>
 
