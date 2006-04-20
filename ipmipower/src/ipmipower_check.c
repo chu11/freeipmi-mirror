@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.50 2006-04-14 00:18:46 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.51 2006-04-20 20:35:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -101,7 +101,6 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || (ip->ipmi_version == IPMI_VERSION_1_5
 	  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
@@ -198,11 +197,12 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
     }      
   else	/* 
-	   (ip->ipmi_version == IPMI_VERSION_2_0
-	    && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	        || pkt == GET_CHASSIS_STATUS_RES
-	        || pkt == CHASSIS_CONTROL_RES
-	        || pkt == CLOSE_SESSION_RES))
+           (pkt == GET_CHANNEL_CIPHER_SUITES_RES
+	    || (ip->ipmi_version == IPMI_VERSION_2_0
+	        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+	            || pkt == GET_CHASSIS_STATUS_RES
+	            || pkt == CHASSIS_CONTROL_RES
+	            || pkt == CLOSE_SESSION_RES)))
 	*/
     {
       /* IPMI 2.0 Checks */
@@ -619,7 +619,8 @@ ipmipower_check_payload_type(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(pkt == OPEN_SESSION_RES
+  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
+         || pkt == OPEN_SESSION_RES
 	 || pkt == RAKP_MESSAGE_2_RES
 	 || pkt == RAKP_MESSAGE_4_RES
 	 || (ip->ipmi_version == IPMI_VERSION_2_0
@@ -956,11 +957,12 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(ip->ipmi_version == IPMI_VERSION_2_0
-	 && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	     || pkt == GET_CHASSIS_STATUS_RES
-	     || pkt == CHASSIS_CONTROL_RES
-	     || pkt == CLOSE_SESSION_RES));
+  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
+         || (ip->ipmi_version == IPMI_VERSION_2_0
+             && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+                 || pkt == GET_CHASSIS_STATUS_RES
+                 || pkt == CHASSIS_CONTROL_RES
+                 || pkt == CLOSE_SESSION_RES)));
 
   if ((rv = ipmi_rmcpplus_check_payload_pad(ip->confidentiality_algorithm,
 					    ip->obj_rmcpplus_payload_res)) < 0)
@@ -983,11 +985,12 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
-  assert(ip->ipmi_version == IPMI_VERSION_2_0
-	 && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	     || pkt == GET_CHASSIS_STATUS_RES
-	     || pkt == CHASSIS_CONTROL_RES
-	     || pkt == CLOSE_SESSION_RES));
+  assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
+         && (ip->ipmi_version == IPMI_VERSION_2_0
+             && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+                 || pkt == GET_CHASSIS_STATUS_RES
+                 || pkt == CHASSIS_CONTROL_RES
+                 || pkt == CLOSE_SESSION_RES)));
 
   if ((rv = ipmi_rmcpplus_check_integrity_pad(ip->obj_rmcpplus_session_trlr_res)) < 0)
     err_exit("ipmipower_check_integrity_pad(%s:%d): "

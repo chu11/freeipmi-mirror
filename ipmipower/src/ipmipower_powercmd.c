@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.86 2006-04-14 04:20:06 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.87 2006-04-20 20:35:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -486,7 +486,6 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
       || pkt == AUTHENTICATION_CAPABILITIES_RES 
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || (ip->ipmi_version == IPMI_VERSION_1_5
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
 	      || pkt == GET_CHASSIS_STATUS_RES
@@ -545,7 +544,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
     }
   else /* IPMI 2.0 Packet Checks
           
-          (pkt == OPEN_SESSION_RES
+          (pkt == GET_CHANNEL_CIPHER_SUITES_RES
+           || pkt == OPEN_SESSION_RES
            || pkt == RAKP_MESSAGE_2_RES
            || pkt == RAKP_MESSAGE_4_RES
            || (ip->ipmi_version == IPMI_VERSION_2_0
@@ -622,11 +622,12 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 		}
 	    }
 	}
-      else /* (ip->ipmi_version == IPMI_VERSION_2_0
-               && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	           || pkt == GET_CHASSIS_STATUS_RES
-                   || pkt == CHASSIS_CONTROL_RES
-                   || pkt == CLOSE_SESSION_RES)) */
+      else /* (pkt == pkt == GET_CHANNEL_CIPHER_SUITES_RES
+              || (ip->ipmi_version == IPMI_VERSION_2_0
+                  && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
+                      || pkt == GET_CHASSIS_STATUS_RES
+                      || pkt == CHASSIS_CONTROL_RES
+                      || pkt == CLOSE_SESSION_RES))) */
 	{
 	  if (!ipmipower_check_payload_type(ip, pkt))
 	    return 0;
@@ -1443,38 +1444,6 @@ _store_and_calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
   return 0;
 }
 
-/* _no_get_channel_cipher_suites_cipher_ids
- * 
- * Populate cipher ids list.
- *
- * Returns 0 on success, -1 on error
- */
-static int
-_no_get_channel_cipher_suites_cipher_ids(ipmipower_powercmd_t ip)
-{
-  int i;
-
-  assert(ip);
-  assert(ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT);
-  assert(conf->no_get_channel_cipher_suites);
-
-  /* IPMI Workaround (achu)
-   * 
-   *  Discovered on Tyan S4881 w/ m3291 BMC
-   *
-   * If the Get Channel Cipher Suites command isn't supported, then we
-   * assume all of them are supported and let the rest of the code
-   * cycle through them.
-   */
-  for (i = 0; i < cipher_suite_id_ranking_count; i++)
-    {
-      ip->cipher_suite_ids[ip->cipher_suite_ids_num] = cipher_suite_id_ranking[i];
-      ip->cipher_suite_ids_num++;
-    }
-
-  return 0;
-}
-
 /* _determine_cipher_suite_id_to_use
  * 
  * Determine which cipher suite id to use
@@ -1943,23 +1912,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
               ip->ipmi_version = IPMI_VERSION_2_0;
 	      ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
-	      /* IPMI Workaround (achu)
-	       *
-	       *  Discovered on Tyan S4881 w/ m3291 BMC
-	       *
-	       * The Get Channel Cipher Suites command is supported
-	       * outside of a session.  So we have to skip it.
-	       */
-	      if (conf->no_get_channel_cipher_suites)
-		{
-		  if (_no_get_channel_cipher_suites_cipher_ids(ip) < 0)
-		    return -1;
-		  if (_determine_cipher_suite_id_to_use(ip) < 0)
-		    return -1;
-		  _send_packet(ip, OPEN_SESSION_REQ);
-		}
-	      else
-		_send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
+              _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
             }
         }
       else if (conf->ipmi_version == IPMI_VERSION_1_5)
@@ -2008,23 +1961,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
           ip->ipmi_version = IPMI_VERSION_2_0;
 	  ip->highest_received_sequence_number = IPMIPOWER_RMCPPLUS_INITIAL_OUTBOUND_SEQUENCE_NUMBER;
 
-	  /* IPMI Workaround (achu)
-	   *
-	   *  Discovered on Tyan S4881 w/ m3291 BMC
-	   *
-	   * The Get Channel Cipher Suites command is supported
-	   * outside of a session.  So we have to skip it.
-	   */
-	  if (conf->no_get_channel_cipher_suites)
-	    {
-	      if (_no_get_channel_cipher_suites_cipher_ids(ip) < 0)
-		return -1;
-	      if (_determine_cipher_suite_id_to_use(ip) < 0)
-		return -1;
-	      _send_packet(ip, OPEN_SESSION_REQ);
-	    }
-	  else
-	    _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
+          _send_packet(ip, GET_CHANNEL_CIPHER_SUITES_REQ);
         }
     }
   else if (ip->protocol_state == PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_SENT) 

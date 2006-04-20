@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.56 2006-04-14 00:18:47 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.57 2006-04-20 20:35:50 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -241,7 +241,9 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
       else
         tmpl_lan_msg_hdr = &tmpl_lan_msg_hdr_rs[0];
         
-      if (pkt == OPEN_SESSION_REQ
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+          || pkt == GET_CHANNEL_CIPHER_SUITES_RES
+          || pkt == OPEN_SESSION_REQ
           || pkt == OPEN_SESSION_RES
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_2_RES
@@ -326,7 +328,6 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_RES
       || pkt == GET_SESSION_CHALLENGE_RES
       || pkt == ACTIVATE_SESSION_RES
-      || pkt == GET_CHANNEL_CIPHER_SUITES_RES
       || ip->ipmi_version == IPMI_VERSION_1_5)
     {
       if ((rv = unassemble_ipmi_lan_pkt((uint8_t *)buffer, 
@@ -340,7 +341,8 @@ ipmipower_packet_store(ipmipower_powercmd_t ip, packet_type_t pkt,
     }
   else
     {
-      if (pkt == OPEN_SESSION_RES
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_RES
+          || pkt == OPEN_SESSION_RES
           || pkt == RAKP_MESSAGE_2_RES
           || pkt == RAKP_MESSAGE_4_RES)
         {
@@ -700,7 +702,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                      &managed_system_session_id);
 
       /* Setup authentication/integrity/confidentiality keys */
-      if (pkt == OPEN_SESSION_REQ
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+          || pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ)
         {
@@ -724,7 +727,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         }
 
       /* Calculate Payload Authenticated */
-      if (pkt == OPEN_SESSION_REQ
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+          || pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ
           || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_NONE)
@@ -733,7 +737,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
         payload_authenticated = IPMI_PAYLOAD_FLAG_AUTHENTICATED;
       
       /* Calculate Payload Encrypted */
-      if (pkt == OPEN_SESSION_REQ
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+          || pkt == OPEN_SESSION_REQ
           || pkt == RAKP_MESSAGE_1_REQ
           || pkt == RAKP_MESSAGE_3_REQ
           || confidentiality_algorithm == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)
@@ -998,7 +1003,6 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
       || pkt == AUTHENTICATION_CAPABILITIES_REQ
       || pkt == GET_SESSION_CHALLENGE_REQ
       || pkt == ACTIVATE_SESSION_REQ
-      || pkt == GET_CHANNEL_CIPHER_SUITES_REQ
       || (ip->ipmi_version == IPMI_VERSION_1_5
           && (pkt == SET_SESSION_PRIVILEGE_LEVEL_REQ
               || pkt == GET_CHASSIS_STATUS_REQ
@@ -1015,7 +1019,8 @@ ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                                   obj_cmd_req,
                                   buffer, 
                                   buflen);
-  else if (pkt == OPEN_SESSION_REQ
+  else if (pkt == GET_CHANNEL_CIPHER_SUITES_REQ
+           || pkt == OPEN_SESSION_REQ
            || pkt == RAKP_MESSAGE_1_REQ
            || pkt == RAKP_MESSAGE_3_REQ
            || (ip->ipmi_version == IPMI_VERSION_2_0
@@ -1080,10 +1085,12 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       RMCPPLUS_STATUS_NO_MATCHING_INTEGRITY_PAYLOAD
 
       Imply that an incorrect algorithm/role/payload value was sent.
-      *NOT* an unsupported algorithm/role/payload.  Unsupported data
-      requires a different error code.
+      *NOT* an unsupported algorithm/role/payload.  I assume unsupported algorithm/role/payloads
+      will get different error codes. 
 
-       */
+      If my assumption is later proven incorrect, then I need to redo some of this.
+
+      */
 
       if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_ERRORS)
 	err_exit("ipmipower_packet_errmsg(%s:%d:%d): "

@@ -1,5 +1,5 @@
 \."#############################################################################
-\."$Id: ipmipower.conf.5.in,v 1.26 2006-04-12 16:39:00 chu11 Exp $
+\."$Id: ipmipower.conf.5.in,v 1.27 2006-04-20 20:35:49 chu11 Exp $
 \."#############################################################################
 \."  Copyright (C) 2003 The Regents of the University of California.
 \."  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -127,8 +127,6 @@ Specify if unexpected nonnull authcodes should be accepted by default.
 .TP
 .I intel_2_0_session enable|disable
 Specify if workarounds for an Intel ipmi 2.0 session should be used.
-.I no_get_channel_cipher_suites
-Specify if the get channel cipher suites command should be skipped.
 .TP
 .I timeout ms
 Specify the timeout in ms.
