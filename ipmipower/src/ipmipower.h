@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.59 2006-04-20 20:35:49 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.60 2006-04-20 21:27:41 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -121,7 +121,7 @@
 
 #define IPMIPOWER_DEFAULT_LOGFILE        "/tmp/ipmipower.%d"
 
-#define IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH 64
+#define IPMI_CIPHER_SUITE_RECORD_DATA_BUFFER_LENGTH 128
 
 /* achu: See IPMI 2.0 spec, Table 22-18 - Cipher Suite Record Format.
  * The smallest record format is 2 bytes.  So the most records I could
