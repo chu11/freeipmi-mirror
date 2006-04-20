@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.51 2006-04-20 20:35:50 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.52 2006-04-20 20:46:51 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -986,7 +986,7 @@ ipmipower_check_integrity_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_RES(pkt));
   assert(pkt == GET_CHANNEL_CIPHER_SUITES_RES
-         && (ip->ipmi_version == IPMI_VERSION_2_0
+         || (ip->ipmi_version == IPMI_VERSION_2_0
              && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
                  || pkt == GET_CHASSIS_STATUS_RES
                  || pkt == CHASSIS_CONTROL_RES
