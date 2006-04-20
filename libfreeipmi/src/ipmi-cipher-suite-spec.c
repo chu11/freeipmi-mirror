@@ -41,6 +41,12 @@ fiid_template_t tmpl_cipher_suite_record =
     {6, "record_format", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {2, "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8, "cipher_suite_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "authentication_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "authentication_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "integrity_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "integrity_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "confidentiality_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "confidentiality_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -50,6 +56,12 @@ fiid_template_t tmpl_oem_cipher_suite_record =
     {2,  "tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {8,  "oem_cipher_suite_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {24, "oem_iana", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "authentication_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "authentication_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "integrity_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "integrity_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "confidentiality_algorithm_tag_bits", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8, "confidentiality_algorithm", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 

@@ -4,6 +4,8 @@
 
 	* ipmipower/: Send Get Channel Cipher command with IPMI 2.0
 	headers rather than IPMI 1.5 headers.
+
+	* libfreeipmi/, ipmipower/: Fix cipher suite record parsing.
 	
 2006-04-19  Albert Chu <chu11@llnl.gov>
 

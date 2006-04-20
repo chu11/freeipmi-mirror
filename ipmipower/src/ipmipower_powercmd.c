@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.87 2006-04-20 20:35:50 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.88 2006-04-20 21:20:13 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1303,7 +1303,7 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
       Fiid_obj_get(obj_cipher_suite_record_header,
                    "record_format",
                    &record_format);
-      
+
       if (tag_bits != IPMI_CIPHER_SUITE_TAG_BITS_RECORD)
         {
           dbg("_calculate_cipher_suite_ids(%s:%d): "
@@ -1322,35 +1322,26 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           goto cleanup;
         }
 
-      /* IPMI Workaround (achu)
-       *
-       * Discovered on SE7520AF2 with Intel Server Management Module
-       * (Professional Edition)
-       *
-       * Despite advertising a standard non-OEM cipher suite record
-       * format (i.e. the tag bits and record_format were legitimate)
-       * and having non-OEM cipher suite ids (i.e. those listed in
-       * table 22-19 of the IPMI 2.0 spec), the cipher suite records
-       * are consistent with OEM cipher suite records and are 5 bytes
-       * long.
-       */
-
-      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD
-          && !conf->intel_2_0_session)
+      if (record_format == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD)
         {
           uint64_t cipher_suite_id;
-
+          
           Fiid_obj_clear(obj_cipher_suite_record);
           len = Fiid_obj_set_all(obj_cipher_suite_record,
                                  ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
-
-          Fiid_obj_get(obj_cipher_suite_record,
-                       "cipher_suite_id",
-                       &cipher_suite_id);
           
-          ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
-          ip->cipher_suite_ids_num++;
+          /* If the record is short (and we're likely at the end of
+           * the buffer), this could fail, so we can't use a wrapper
+           * function
+           */
+          if (!(fiid_obj_get(obj_cipher_suite_record,
+                             "cipher_suite_id",
+                             &cipher_suite_id) < 0))
+            {
+              ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
+              ip->cipher_suite_ids_num++;
+            }
           
           bytes_parsed += len;
         }
@@ -1359,32 +1350,11 @@ _calculate_cipher_suite_ids(ipmipower_powercmd_t ip)
           /* achu: We currently don't support OEM ciphers, so don't
              store any cipher ids unless we're assuming they're
              actually non-OEM.
-           */
+          */
           Fiid_obj_clear(obj_oem_cipher_suite_record);
           len = Fiid_obj_set_all(obj_oem_cipher_suite_record,
                                  ip->cipher_suite_record_data + bytes_parsed,
                                  ip->cipher_suite_record_data_bytes - bytes_parsed);
-          
-          /* IPMI Workaround (achu)
-           *
-           * Discovered on SE7520AF2 with Intel Server Management Module
-           * (Professional Edition)
-           *
-           * The cipher suite records are formatted as OEM records despite
-           * headers that indicate non-OEM headers.  
-           */
-          if (conf->intel_2_0_session)
-            {
-              uint64_t cipher_suite_id;
-
-              Fiid_obj_get(obj_oem_cipher_suite_record,
-                           "oem_cipher_suite_id",
-                           &cipher_suite_id);
-              
-              ip->cipher_suite_ids[ip->cipher_suite_ids_num] = (uint8_t)cipher_suite_id;
-              ip->cipher_suite_ids_num++;
-            }
-
           bytes_parsed += len;
         }
     }
