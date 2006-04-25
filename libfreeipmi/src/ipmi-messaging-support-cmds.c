@@ -903,13 +903,13 @@ fill_cmd_set_user_password (uint8_t user_id,
                             unsigned int password_len,
                             fiid_obj_t obj_cmd_rq)
 {
-  uint8_t buf[IPMI_MAX_PASSWORD_LENGTH];
+  uint8_t buf[IPMI_1_5_MAX_PASSWORD_LENGTH];
 
   /* achu: password can be the max length.  Null termination in IPMI
    * packet not required.
    */
   ERR_EINVAL (IPMI_PASSWORD_OPERATION_VALID(operation)
-	      && !(password && password_len > IPMI_MAX_PASSWORD_LENGTH)
+	      && !(password && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	      && fiid_obj_valid(obj_cmd_rq));
   
   FIID_OBJ_TEMPLATE_COMPARE(obj_cmd_rq, tmpl_cmd_set_user_password_rq);
@@ -925,11 +925,11 @@ fill_cmd_set_user_password (uint8_t user_id,
       || operation == IPMI_PASSWORD_OPERATION_TEST_PASSWORD)
     {
       /* achu: password must be zero extended */
-      memset(buf, '\0', IPMI_MAX_PASSWORD_LENGTH);
+      memset(buf, '\0', IPMI_1_5_MAX_PASSWORD_LENGTH);
       if (password)
-        strncpy((char *)buf, password, IPMI_MAX_PASSWORD_LENGTH);
+        strncpy((char *)buf, password, IPMI_1_5_MAX_PASSWORD_LENGTH);
       
-      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_MAX_PASSWORD_LENGTH);
+      FIID_OBJ_SET_DATA (obj_cmd_rq, "password", buf, IPMI_1_5_MAX_PASSWORD_LENGTH);
     }
 
   return 0;
@@ -955,7 +955,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
               && IPMI_PASSWORD_SIZE_VALID(password_size)
 	      && !(password 
                    && password_size == IPMI_PASSWORD_SIZE_16_BYTES
-                   && password_len > IPMI_MAX_PASSWORD_LENGTH)
+                   && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
 	      && !(password 
                    && password_size == IPMI_PASSWORD_SIZE_20_BYTES
                    && password_len > IPMI_2_0_MAX_PASSWORD_LENGTH)
@@ -977,7 +977,7 @@ fill_cmd_set_user_password_v20 (uint8_t user_id,
       uint32_t buf_max_len;
 
       if (password_size == IPMI_PASSWORD_SIZE_16_BYTES)
-        buf_max_len = IPMI_MAX_PASSWORD_LENGTH;
+        buf_max_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
       else
         buf_max_len = IPMI_2_0_MAX_PASSWORD_LENGTH;
 

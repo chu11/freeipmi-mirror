@@ -86,6 +86,34 @@ extern fiid_template_t tmpl_oem_cipher_suite_record;
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_128 \
 		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_XRC4_40)))) ? 1 : 0)
 
+#define IPMI_CIPHER_SUITE_COMBINATION_SUPPORTED(__a, __i, __c) \
+  ((((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE \
+     && (__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
+     && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE) \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
+	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
+	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_SHA1 \
+	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96 \
+	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
+		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
+	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_NONE \
+	    && (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE)) \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
+	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128 \
+	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
+		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128))) \
+    || ((__a) == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5 \
+	&& ((__i) == IPMI_INTEGRITY_ALGORITHM_MD5_128 \
+	    && ((__c) == IPMI_CONFIDENTIALITY_ALGORITHM_NONE \
+		|| (__c) == IPMI_CONFIDENTIALITY_ALGORITHM_AES_CBC_128)))) ? 1 : 0)
+
+#define IPMI_CIHPER_SUITE_ID_SUPPORTED(__id) \
+   ((((__id) >= 0 && (__id) <= 3) \
+     || ((__id) >= 6 && (__id) <= 8) \
+     || ((__id) >= 11 && (__id) <= 12)) ? 1 : 0)
+
 int8_t ipmi_cipher_suite_id_to_algorithms(uint8_t cipher_suite_id,
 					  uint8_t *authentication_algorithm,
 					  uint8_t *integrity_algorithm,

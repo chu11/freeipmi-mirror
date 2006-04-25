@@ -1,3 +1,11 @@
+2006-04-25  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h: Fix
+	password length macros.
+
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Add
+	macros to check for cipher support in libfreeipmi.
+	
 2006-04-20  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/: Remove support of --no-get-channel-cipher-suites.
