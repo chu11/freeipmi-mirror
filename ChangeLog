@@ -7,6 +7,9 @@
 	macros to check for cipher support in libfreeipmi.  Remove max &
 	min macro.
 
+	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.c
+	(ipmi_cipher_suite_id_to_algorithms): Adjust due to macro change.
+	
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_user_password, fill_cmd_set_user_password_v20),
 	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
