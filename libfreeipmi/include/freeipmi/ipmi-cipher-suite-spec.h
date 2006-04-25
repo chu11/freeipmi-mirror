@@ -50,9 +50,6 @@ extern "C" {
     || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_CONFIDENTIALITY_ALGORITHM \
     || (__val) == IPMI_CIPHER_SUITE_TAG_BITS_RECORD) ? 1 : 0)
 
-#define IPMI_CIPHER_SUITE_ID_MIN                              0
-#define IPMI_CIPHER_SUITE_ID_MAX                              14
-
 extern fiid_template_t tmpl_cipher_suite_record_header;
 extern fiid_template_t tmpl_cipher_suite_record;
 extern fiid_template_t tmpl_oem_cipher_suite_record;

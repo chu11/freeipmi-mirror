@@ -1,10 +1,11 @@
 2006-04-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h: Fix
-	password length macros.
+	password length macros.  
 
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Add
-	macros to check for cipher support in libfreeipmi.
+	macros to check for cipher support in libfreeipmi.  Remove max &
+	min macro.
 
 	* libfreeipmi/src/ipmi-messaging-support-cmds.c
 	(fill_cmd_set_user_password, fill_cmd_set_user_password_v20),
