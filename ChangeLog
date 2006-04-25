@@ -5,6 +5,12 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-cipher-suite-spec.h: Add
 	macros to check for cipher support in libfreeipmi.
+
+	* libfreeipmi/src/ipmi-messaging-support-cmds.c
+	(fill_cmd_set_user_password, fill_cmd_set_user_password_v20),
+	libfreeipmi/src/udm/ipmi-messaging-support-cmds-udm.c
+	(ipmi_cmd_set_user_password): Fix up use of password length
+	macros.
 	
 2006-04-20  Albert Chu <chu11@llnl.gov>
 
