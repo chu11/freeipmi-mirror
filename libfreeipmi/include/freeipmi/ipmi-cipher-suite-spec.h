@@ -40,6 +40,9 @@ extern "C" {
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD              0x00
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM                   0x01
 
+#define IPMI_CIPHER_SUITE_ID_MIN                              0
+#define IPMI_CIPHER_SUITE_ID_MAX                              14
+
 #define IPMI_CIPHER_SUITE_RECORD_FORMAT_VALID(__val) \
   (((__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_STANDARD \
     || (__val) == IPMI_CIPHER_SUITE_RECORD_FORMAT_OEM) ? 1 : 0)
