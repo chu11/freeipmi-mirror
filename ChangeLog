@@ -1,3 +1,9 @@
+2006-04-26  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_authentication_code,
+	ipmipower_check_payload_pad): Fix check bugs.
+	
 2006-04-25  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-messaging-support-cmds.h: Fix

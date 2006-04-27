@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.52 2006-04-20 20:46:51 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.53 2006-04-27 16:48:08 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -197,26 +197,32 @@ ipmipower_check_authentication_code(ipmipower_powercmd_t ip,
 	}
     }      
   else	/* 
-           (pkt == GET_CHANNEL_CIPHER_SUITES_RES
+           (pkt == GET_CHANNEL_CIPHER_SUITES_RES 
 	    || (ip->ipmi_version == IPMI_VERSION_2_0
 	        && (pkt == SET_SESSION_PRIVILEGE_LEVEL_RES
-	            || pkt == GET_CHASSIS_STATUS_RES
-	            || pkt == CHASSIS_CONTROL_RES
-	            || pkt == CLOSE_SESSION_RES)))
+		    || pkt == GET_CHASSIS_STATUS_RES
+		    || pkt == CHASSIS_CONTROL_RES
+		    || pkt == CLOSE_SESSION_RES)))
 	*/
     {
       /* IPMI 2.0 Checks */
+      uint8_t integrity_algorithm;
+
+      if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+	integrity_algorithm = IPMI_INTEGRITY_ALGORITHM_NONE;
+      else
+	integrity_algorithm = ip->integrity_algorithm;
 
       if (strlen(conf->password))
 	password = (uint8_t *)conf->password;
       else
 	password = NULL;
-
-      if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(ip->integrity_algorithm,
+	  
+      if ((rv = ipmi_rmcpplus_check_packet_session_authentication_code(integrity_algorithm,
 								       buffer,
 								       buffer_len,
-                                                                       ip->integrity_key_ptr,
-                                                                       ip->integrity_key_len,
+								       ip->integrity_key_ptr,
+								       ip->integrity_key_len,
 								       password,
 								       (password) ? strlen((char *)password) : 0,
 								       ip->obj_rmcpplus_session_trlr_res)) < 0)
@@ -953,6 +959,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
 int
 ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
 {
+  uint8_t confidentiality_algorithm;
   int8_t rv;
 
   assert(ip != NULL);
@@ -964,7 +971,12 @@ ipmipower_check_payload_pad(ipmipower_powercmd_t ip, packet_type_t pkt)
                  || pkt == CHASSIS_CONTROL_RES
                  || pkt == CLOSE_SESSION_RES)));
 
-  if ((rv = ipmi_rmcpplus_check_payload_pad(ip->confidentiality_algorithm,
+  if (pkt == GET_CHANNEL_CIPHER_SUITES_RES)
+    confidentiality_algorithm = IPMI_CONFIDENTIALITY_ALGORITHM_NONE;
+  else
+    confidentiality_algorithm = ip->confidentiality_algorithm;
+
+  if ((rv = ipmi_rmcpplus_check_payload_pad(confidentiality_algorithm,
 					    ip->obj_rmcpplus_payload_res)) < 0)
     err_exit("ipmipower_check_payload_pad(%s:%d): "
 	     "ipmi_rmcpplus_check_payload_pad: %s",
