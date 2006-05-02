@@ -1,3 +1,8 @@
+2006-05-02  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_receive):
+	properly set nfds in select().
+
 2006-04-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-interface.[ch]: added support to

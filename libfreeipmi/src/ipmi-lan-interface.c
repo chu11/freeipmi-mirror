@@ -1580,7 +1580,8 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
 	  timeout.tv_usec = dev->io.outofband.retry_timeout;
 	  FD_ZERO (&fd_set);
 	  FD_SET (dev->io.outofband.local_sockfd, &fd_set);
-	  status = select (FD_SETSIZE, &fd_set, NULL, NULL, &timeout);
+	  status = select ((dev->io.outofband.local_sockfd + 1), 
+			   &fd_set, NULL, NULL, &timeout);
 	  
 	  if (status == -1)
 	    {
