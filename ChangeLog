@@ -1,3 +1,9 @@
+2006-05-01  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_check.c
+	(ipmipower_check_rakp_2_key_exchange_authentication_code): Fix
+	code consistency issue.
+	
 2006-04-26  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_check.c
