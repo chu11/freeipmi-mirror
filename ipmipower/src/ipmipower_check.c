@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.53 2006-04-27 16:48:08 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.54 2006-05-02 00:10:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -821,6 +821,8 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
   else
     password = NULL;
 
+  password_len = (password) ? strlen((char *)password) : 0;
+
   /* IPMI Workaround (achu)
    *
    * Discovered on SE7520AF2 with Intel Server Management Module
@@ -835,8 +837,6 @@ ipmipower_check_rakp_2_key_exchange_authentication_code(ipmipower_powercmd_t ip,
       && ip->authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_HMAC_MD5
       && password_len > IPMI_1_5_MAX_PASSWORD_LENGTH)
     password_len = IPMI_1_5_MAX_PASSWORD_LENGTH;
-  else
-    password_len = (password) ? strlen((char *)password) : 0;
 
   Fiid_obj_get(ip->obj_open_session_res,
                "managed_system_session_id",
