@@ -1,3 +1,8 @@
+2006-05-03  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-event-messages.c: Fix message string
+	typo.
+	
 2006-05-01  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_check.c

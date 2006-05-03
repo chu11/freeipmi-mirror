@@ -388,7 +388,7 @@ int ipmi_sensor_type_code_19_desc_max = 0x00;
 static char * ipmi_sensor_type_code_1B_desc[] =
   {
     "Cable/Interconnect is connected",
-    "Configuration Error - Incorrect cable connected / Incorrect inerconnection",
+    "Configuration Error - Incorrect cable connected / Incorrect interconnection",
     NULL
   };
 int ipmi_sensor_type_code_1B_desc_max = 0x01;
