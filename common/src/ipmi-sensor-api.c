@@ -968,10 +968,8 @@ get_sensor_reading (ipmi_device_t *dev,
       break;
     case IPMI_SDR_FORMAT_COMPACT_RECORD:
       slave_sys_soft_id = sdr_record->record.sdr_compact_record.sensor_owner_id;
-#if 0
       if (get_system_software_type (slave_sys_soft_id) == IPMI_SYS_SOFT_ID_RESERVED)
 	return -1;
-#endif
       
       event_reading_type_code = sdr_record->record.sdr_compact_record.event_reading_type_code;
       sensor_number = sdr_record->record.sdr_compact_record.sensor_number;
