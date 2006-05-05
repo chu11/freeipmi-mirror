@@ -1,3 +1,8 @@
+2006-05-05  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-repository-cmds.c: Fix error in
+	tmpl_cmd_get_sdr_repository_info_rs template.
+	
 2006-05-03  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-event-messages.c: Fix message string
