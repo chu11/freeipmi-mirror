@@ -1,7 +1,9 @@
 2006-05-05  Albert Chu <chu11@llnl.gov>
 
-	* libfreeipmi/src/ipmi-sdr-repository-cmds.c: Fix error in
-	tmpl_cmd_get_sdr_repository_info_rs template.
+	* libfreeipmi/: Change all templates and use of "ls_byte" and
+	"ms_byte" to a single template variable.
+
+	* fish/, bmc-watchdog/: Adjust appropriately. 
 	
 2006-05-03  Albert Chu <chu11@llnl.gov>
 

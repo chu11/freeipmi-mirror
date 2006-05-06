@@ -208,14 +208,13 @@ fiid_template_t tmpl_cmd_set_lan_configuration_parameters_backup_gateway_mac_add
 
 fiid_template_t tmpl_cmd_set_lan_configuration_parameters_vlan_id_rq =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "vlan_id_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "vlan_id_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {3, "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {12, "vlan_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
+    {3,  "reserved2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -431,14 +430,13 @@ fiid_template_t tmpl_cmd_get_lan_configuration_parameters_backup_gateway_mac_add
 
 fiid_template_t tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "vlan_id_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {4, "vlan_id_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {3, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {1, "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "present_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "oldest_revision_parameter", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {12, "vlan_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
+    {3,  "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {1,  "vlan_id_enable", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -902,8 +900,7 @@ fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uint8_t ch
 
 int8_t 
 fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number, 
-                                                   uint8_t vlan_id_ls_byte,
-                                                   uint8_t vlan_id_ms_byte,
+                                                   uint16_t vlan_id,
                                                    uint8_t vlan_id_enable,
                                                    fiid_obj_t obj_cmd_rq)
 {
@@ -917,8 +914,7 @@ fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_LAN_PARAM_VLAN_ID);
-  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_ls_byte", vlan_id_ls_byte);
-  FIID_OBJ_SET (obj_cmd_rq, "vlan_id_ms_byte", vlan_id_ms_byte);
+  FIID_OBJ_SET (obj_cmd_rq, "vlan_id", vlan_id);
   FIID_OBJ_SET (obj_cmd_rq, "reserved2", 0);
   FIID_OBJ_SET (obj_cmd_rq, "vlan_id_enable", vlan_id_enable);
 

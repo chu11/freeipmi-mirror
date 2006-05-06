@@ -46,8 +46,7 @@ fiid_template_t tmpl_cmd_get_sdr_repository_info_rs =
     {8,  "comp_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8,  "record_count_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "record_count_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "record_count", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
     {16, "free_space", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
     {32, "most_recent_addition_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, //LS byte first
     {32, "most_recent_erase_timestamp", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 

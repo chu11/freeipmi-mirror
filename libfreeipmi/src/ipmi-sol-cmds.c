@@ -182,12 +182,11 @@ fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate_
 
 fiid_template_t tmpl_cmd_set_sol_configuration_parameters_sol_payload_port_number_rq =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "port_number_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "port_number_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
@@ -295,12 +294,11 @@ fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_channel_rs
 
 fiid_template_t tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs =
   {
-    {8, "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {4, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "port_number_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8, "port_number_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "cmd", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "parameter_selector", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 
@@ -551,8 +549,7 @@ fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t channel
 
 int8_t 
 fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t channel_number, 
-                                                                   uint8_t port_number_ls_byte,
-                                                                   uint8_t port_number_ms_byte,
+                                                                   uint16_t port_number,
                                                                    fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (IPMI_CHANNEL_NUMBER_VALID(channel_number)
@@ -565,8 +562,7 @@ fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t chann
   FIID_OBJ_SET (obj_cmd_rq, "channel_number", channel_number);
   FIID_OBJ_SET (obj_cmd_rq, "reserved1", 0);
   FIID_OBJ_SET (obj_cmd_rq, "parameter_selector", IPMI_SOL_PARAM_SOL_PAYLOAD_PORT_NUMBER);
-  FIID_OBJ_SET (obj_cmd_rq, "port_number_ls_byte", port_number_ls_byte);
-  FIID_OBJ_SET (obj_cmd_rq, "port_number_ms_byte", port_number_ms_byte);
+  FIID_OBJ_SET (obj_cmd_rq, "port_number", port_number);
 
   return 0;
 }

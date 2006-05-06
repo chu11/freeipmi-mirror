@@ -569,25 +569,14 @@ set_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 			  uint8_t vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t *ptr, ls_val, ms_val;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_lan_configuration_parameters_rs)))
     goto cleanup;
-  
-  ptr = (uint8_t *)&vlan_id;
-#if WORDS_BIGENDIAN
-  ls_val = ptr[3];
-  ms_val = ptr[2];
-#else
-  ls_val = ptr[0];
-  ms_val = ptr[1];
-#endif
 
   if (ipmi_cmd_set_lan_configuration_parameters_vlan_id (dev, 
 							 get_lan_channel_number (), 
-							 ls_val,
-							 ms_val,
+                                                         vlan_id,
 							 vlan_id_enable, 
 							 obj_cmd_rs) != 0)
     goto cleanup;
@@ -1297,25 +1286,14 @@ set_sol_sol_payload_port_number(ipmi_device_t *dev,
 				uint16_t port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint8_t *ptr, ls_val, ms_val;
   int8_t rv = -1;  
-
-  ptr = (uint8_t *)&port_number;
-#if WORDS_BIGENDIAN
-  ls_val = ptr[1];
-  ms_val = ptr[0];
-#else
-  ls_val = ptr[0];
-  ms_val = ptr[1];
-#endif
 
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_set_sol_configuration_parameters_rs)))
     goto cleanup;
   
   if (ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (dev, 
 									 get_sol_channel_number (),
-									 ls_val,
-									 ms_val,
+                                                                         port_number,
 									 obj_cmd_rs) != 0)
     goto cleanup;
   
@@ -2271,8 +2249,7 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 			  uint8_t *vlan_id_enable)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t ls_val, ms_val, val;
-  uint8_t *ptr;
+  uint64_t val;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_lan_configuration_parameters_vlan_id_rs)))
@@ -2286,21 +2263,10 @@ get_bmc_lan_conf_vlan_id (ipmi_device_t *dev,
 							 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ls_byte", &ls_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "vlan_id", &val) < 0)
     goto cleanup;
-  
-  if (fiid_obj_get (obj_cmd_rs, "vlan_id_ms_byte", &ms_val) < 0)
-    goto cleanup;
-  
-  ptr = (uint8_t *)vlan_id;
-#if WORDS_BIGENDIAN
-  ptr[3] = ls_val;
-  ptr[2] = ms_val;
-#else
-  ptr[0] = ls_val;
-  ptr[1] = ms_val;
-#endif
-  
+  *vlan_id = val;
+
   if (fiid_obj_get (obj_cmd_rs, "vlan_id_enable", &val) < 0)
     goto cleanup;
   *vlan_id_enable = val;
@@ -3100,8 +3066,7 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
 				 uint16_t *port_number)
 {
   fiid_obj_t obj_cmd_rs = NULL;
-  uint64_t ls_val, ms_val;
-  uint8_t *ptr;
+  uint64_t val;
   int8_t rv = -1;
   
   if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_get_sol_configuration_parameters_sol_payload_port_number_rs)))
@@ -3115,21 +3080,10 @@ get_sol_sol_payload_port_number (ipmi_device_t *dev,
 									 obj_cmd_rs) != 0)
     goto cleanup;
   
-  if (fiid_obj_get (obj_cmd_rs, "port_number_ls_byte", &ls_val) < 0)
+  if (fiid_obj_get (obj_cmd_rs, "port_number", &val) < 0)
     goto cleanup;
-  
-  if (fiid_obj_get (obj_cmd_rs, "port_number_ms_byte", &ms_val) < 0)
-    goto cleanup;
-  
-  ptr = (uint8_t *)port_number;
-#if WORDS_BIGENDIAN
-  ptr[1] = ls_val;
-  ptr[0] = ms_val;
-#else
-  ptr[0] = ls_val;
-  ptr[1] = ms_val;
-#endif
-  
+  *port_number = val;
+
   rv = 0;
  cleanup:
   if (obj_cmd_rs)

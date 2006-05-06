@@ -3730,10 +3730,7 @@ ex_get_sdr_repository_info ()
   char version_string[17];
   uint8_t sdr_major_version;
   uint8_t sdr_minor_version;
-  uint8_t record_count_ls_byte;
-  uint8_t record_count_ms_byte;
   uint16_t record_count;
-  uint8_t *ptr;
   uint64_t val;
   
   /* get_repository_info */
@@ -3768,20 +3765,9 @@ ex_get_sdr_repository_info ()
                                               gh_str02scm ("sdr_version"), 
                                               gh_str02scm (version_string));
   
-  if (fiid_obj_get (cmd_rs, "record_count_ls_byte", &val) < 0)
+  if (fiid_obj_get (cmd_rs, "record_count", &val) < 0)
     goto cleanup;
-  record_count_ls_byte = val;
-  if (fiid_obj_get (cmd_rs, "record_count_ms_byte", &val) < 0)
-    goto cleanup;
-  record_count_ms_byte = val;
-  ptr = (uint8_t *)&record_count;
-#if WORDS_BIGENDIAN
-  ptr[1] = record_count_ls_byte;
-  ptr[0] = record_count_ms_byte;
-#else
-  ptr[0] = record_count_ls_byte;
-  ptr[1] = record_count_ms_byte;
-#endif
+  record_count = val;
 
   scm_repository_info_list = scm_assoc_set_x (scm_repository_info_list, 
                                               gh_str02scm ("record_count"), 

@@ -75,8 +75,7 @@ fiid_template_t tmpl_cmd_activate_payload_rs =
     {32, "auxiliary_response_data", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {16, "inbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {16, "outbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "payload_udp_port_number_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8,  "payload_udp_port_number_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "payload_udp_port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "payload_vlan_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
@@ -89,8 +88,7 @@ fiid_template_t tmpl_cmd_activate_payload_sol_rs =
     {31, "reserved1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {16, "inbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {16, "outbound_payload_size", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8,  "payload_udp_port_number_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {8,  "payload_udp_port_number_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "payload_udp_port_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {16, "payload_vlan_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };

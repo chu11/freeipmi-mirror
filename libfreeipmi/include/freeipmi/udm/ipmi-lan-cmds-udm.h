@@ -107,8 +107,7 @@ int8_t ipmi_lan_set_lan_configuration_parameters_gratuitous_arp_interval (ipmi_d
 
 int8_t ipmi_cmd_set_lan_configuration_parameters_vlan_id (ipmi_device_t *dev, 
 							  uint8_t channel_number, 
-							  uint8_t vlan_id_ls,
-							  uint8_t vlan_id_ms,
+							  uint16_t vlan_id,
 							  uint8_t vlan_id_enable, 
 							  fiid_obj_t obj_cmd_rs);
 

@@ -107,8 +107,7 @@ int8_t fill_cmd_set_watchdog_timer (uint8_t timer_use,
                                     uint8_t timer_use_expiration_flag_os_load, 
                                     uint8_t timer_use_expiration_flag_sms_os, 
                                     uint8_t timer_use_expiration_flag_oem, 
-                                    uint8_t initial_countdown_value_ls_byte, 
-                                    uint8_t initial_countdown_value_ms_byte, 
+                                    uint16_t initial_countdown_value, 
                                     fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_watchdog_timer (fiid_obj_t obj_cmd_rq);

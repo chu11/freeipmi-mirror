@@ -220,8 +220,7 @@ int8_t fill_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (uint8_t 
                                                                         fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_sol_configuration_parameters_sol_payload_port_number (uint8_t channel_number,
-                                                                          uint8_t port_number_ls_byte,
-                                                                          uint8_t port_number_ms_byte,
+                                                                          uint16_t port_number,
                                                                           fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_get_sol_configuration_parameters (uint8_t channel_number,

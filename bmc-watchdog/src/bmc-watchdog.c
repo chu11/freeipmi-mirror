@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.57 2006-04-14 04:20:05 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.58 2006-05-06 00:15:24 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -133,7 +133,7 @@ struct cmdline_info
   int clear_sms_os;
   int clear_oem;
   int initial_countdown_seconds;
-  uint32_t initial_countdown_seconds_val;
+  uint16_t initial_countdown_seconds_val;
   int start_after_set;
   int reset_after_set;
   int start_if_stopped;
@@ -548,24 +548,15 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                         uint8_t timer_use_expiration_flag_os_load, 
                         uint8_t timer_use_expiration_flag_sms_os, 
                         uint8_t timer_use_expiration_flag_oem, 
-			uint32_t initial_countdown_seconds)
+			uint16_t initial_countdown_seconds)
 {
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
-  uint32_t initial_countdown_chunks;
-  uint8_t *ptr, ls_byte, ms_byte;
+  uint16_t initial_countdown_chunks;
   int retval = -1;
   
   /* IPMI specifies timeout in 100 millisecond chunks */
   initial_countdown_chunks = initial_countdown_seconds * 10;
-  ptr = (uint8_t *)&initial_countdown_chunks;
-#ifdef WORDS_BIGENDIAN
-  ls_byte = ptr[3];
-  ms_byte = ptr[2];
-#else
-  ls_byte = ptr[0];
-  ms_byte = ptr[1];
-#endif
 
   if ((cmd_rq = fiid_obj_create(tmpl_cmd_set_watchdog_timer_rq)) == NULL)
     {
@@ -589,7 +580,7 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                                   timer_use_expiration_flag_os_load,
                                   timer_use_expiration_flag_sms_os,
                                   timer_use_expiration_flag_oem,
-                                  ls_byte, ms_byte, cmd_rq) < 0)
+                                  initial_countdown_chunks, cmd_rq) < 0)
     {
       _bmclog("_set_watchdog_timer_cmd: "
               "fill_cmd_set_watchdog_timer: %s", strerror(errno));
@@ -609,24 +600,6 @@ _set_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
   return retval;
 }
 
-static uint32_t
-_time_seconds(uint8_t ls_byte, uint32_t ms_byte)
-{
-  uint32_t time = 0;
-  uint8_t *ptr;
-
-  ptr = (uint8_t *)&time;
-#if WORDS_BIGENDIAN
-  ptr[3] = ls_byte;
-  ptr[2] = ms_byte;
-#else
-  ptr[0] = ls_byte;
-  ptr[1] = ms_byte;
-#endif
-
-  return (time/10);
-}
-
 static int
 _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                         uint8_t *timer_use, uint8_t *timer_state, uint8_t *log, 
@@ -637,12 +610,12 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                         uint8_t *timer_use_expiration_flag_os_load, 
                         uint8_t *timer_use_expiration_flag_sms_os, 
                         uint8_t *timer_use_expiration_flag_oem, 
-			uint32_t *initial_countdown_seconds,
-			uint32_t *present_countdown_seconds)
+			uint16_t *initial_countdown_seconds,
+			uint16_t *present_countdown_seconds)
 {
   fiid_obj_t cmd_rq = NULL;
   fiid_obj_t cmd_rs = NULL;
-  uint8_t ls_byte, ms_byte;
+  uint64_t val, *valptr;
   int retval = -1;
 
   if ((cmd_rq = fiid_obj_create(tmpl_cmd_get_watchdog_timer_rq)) == NULL)
@@ -719,24 +692,21 @@ _get_watchdog_timer_cmd(int retry_wait_time, int retry_attempt,
                    timer_use_expiration_flag_oem, "_get_watchdog_timer_cmd");
 
   if (initial_countdown_seconds)
-     {
-       _FIID_OBJ_GET(cmd_rs, "initial_countdown_value_ls_byte", 
-                     &ls_byte, "_get_watchdog_timer_cmd");
-       
-       _FIID_OBJ_GET(cmd_rs, "initial_countdown_value_ms_byte", 
-                     &ms_byte, "_get_watchdog_timer_cmd");
-       *initial_countdown_seconds = _time_seconds(ls_byte, ms_byte);
-     }
+    {
+      valptr = &val;
+      _FIID_OBJ_GET(cmd_rs, "initial_countdown_value", 
+                    valptr, "_get_watchdog_timer_cmd");
+      *initial_countdown_seconds = val / 10;
+    }
 
   if (present_countdown_seconds)
     {
-      _FIID_OBJ_GET(cmd_rs, "present_countdown_value_ls_byte", 
-                    &ls_byte, "_get_watchdog_timer_cmd");
-      _FIID_OBJ_GET(cmd_rs, "present_countdown_value_ms_byte", 
-                    &ms_byte, "_get_watchdog_timer_cmd");
-      *present_countdown_seconds = _time_seconds(ls_byte, ms_byte);
+      valptr = &val;
+      _FIID_OBJ_GET(cmd_rs, "present_countdown_value", 
+                    valptr, "_get_watchdog_timer_cmd");
+      *present_countdown_seconds = val / 10;
     }
-
+  
  cleanup:
   fiid_obj_destroy(cmd_rq);
   fiid_obj_destroy(cmd_rs);
@@ -1327,7 +1297,7 @@ _set_cmd(void)
 {
   uint8_t timer_use, stop_timer, timer_state, log, timeout_action, 
     pre_timeout_interrupt, pre_timeout_interval;
-  uint32_t initial_countdown_seconds;
+  uint16_t initial_countdown_seconds;
   int ret;
  
   if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
@@ -1498,7 +1468,7 @@ _get_cmd(void)
     pre_timeout_interval, timer_use_expiration_flag_bios_frb2, 
     timer_use_expiration_flag_bios_post, timer_use_expiration_flag_os_load, 
     timer_use_expiration_flag_sms_os, timer_use_expiration_flag_oem;
-  uint32_t initial_countdown_seconds, present_countdown_seconds;
+  uint16_t initial_countdown_seconds, present_countdown_seconds;
   int ret;
 
   if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
@@ -1610,7 +1580,7 @@ _stop_cmd(void)
 {
   uint8_t timer_use, log, timeout_action, pre_timeout_interrupt,
     pre_timeout_interval;
-  uint32_t initial_countdown_seconds;
+  uint16_t initial_countdown_seconds;
   int ret;
    
   if ((ret = _get_watchdog_timer_cmd(BMC_WATCHDOG_RETRY_WAIT_TIME,
@@ -1747,7 +1717,7 @@ _daemon_setup(void)
   uint8_t timer_use, timer_state, log, timeout_action, pre_timeout_interrupt, 
     pre_timeout_interval;
   uint32_t reset_period = BMC_WATCHDOG_RESET_PERIOD_DEFAULT;
-  uint32_t initial_countdown_seconds;
+  uint16_t initial_countdown_seconds;
   int ret;
 
   while (1)
@@ -1886,7 +1856,7 @@ _daemon_cmd(void)
   uint32_t reset_period = BMC_WATCHDOG_RESET_PERIOD_DEFAULT;
   uint8_t timer_use, timer_state, log, timeout_action, pre_timeout_interrupt,
     pre_timeout_interval;
-  uint32_t initial_countdown_seconds;
+  uint16_t initial_countdown_seconds;
   int retry_wait_time, retry_attempt;
   int ret;
 

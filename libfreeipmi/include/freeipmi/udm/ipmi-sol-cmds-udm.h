@@ -65,8 +65,7 @@ int8_t ipmi_cmd_set_sol_configuration_parameters_sol_volatile_bit_rate (ipmi_dev
 
 int8_t ipmi_cmd_set_sol_configuration_parameters_sol_payload_port_number (ipmi_device_t *dev,
                                                                           uint8_t channel_number,
-                                                                          uint8_t port_number_ls_byte,
-                                                                          uint8_t port_number_ms_byte,
+                                                                          uint16_t port_number,
                                                                           fiid_obj_t obj_cmd_rs);
 
 int8_t ipmi_cmd_get_sol_configuration_parameters_sol_enable (ipmi_device_t *dev, 

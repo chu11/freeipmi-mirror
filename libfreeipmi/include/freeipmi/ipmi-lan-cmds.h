@@ -207,8 +207,7 @@ int8_t fill_cmd_set_lan_configuration_parameters_backup_gateway_mac_address (uin
                                                                              fiid_obj_t obj_cmd_rq);
 
 int8_t fill_cmd_set_lan_configuration_parameters_vlan_id (uint8_t channel_number,
-                                                          uint8_t vlan_id_ls_byte,
-                                                          uint8_t vlan_id_ms_byte,
+                                                          uint16_t vlan_id,
                                                           uint8_t vlan_id_enable,
                                                           fiid_obj_t obj_cmd_rq);
 

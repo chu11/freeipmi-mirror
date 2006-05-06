@@ -66,8 +66,7 @@ fiid_template_t tmpl_cmd_set_watchdog_timer_rq =
     {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "initial_countdown_value_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "initial_countdown_value_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -105,10 +104,8 @@ fiid_template_t tmpl_cmd_get_watchdog_timer_rs =
     {1, "timer_use_expiration_flag.oem", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved5", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {1, "reserved6", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "initial_countdown_value_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "initial_countdown_value_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "present_countdown_value_ls_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
-    {8, "present_countdown_value_ms_byte", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "initial_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
+    {16, "present_countdown_value", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED},
     {0, "", 0}
   };
 
@@ -136,8 +133,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
                              uint8_t timer_use_expiration_flag_os_load, 
                              uint8_t timer_use_expiration_flag_sms_os, 
                              uint8_t timer_use_expiration_flag_oem, 
-                             uint8_t initial_countdown_value_ls_byte, 
-                             uint8_t initial_countdown_value_ms_byte, 
+                             uint16_t initial_countdown_value, 
                              fiid_obj_t obj_cmd_rq)
 {
   ERR_EINVAL (fiid_obj_valid(obj_cmd_rq)
@@ -173,8 +169,7 @@ fill_cmd_set_watchdog_timer (uint8_t timer_use,
   FIID_OBJ_SET (obj_cmd_rq, "timer_use_expiration_flag.oem", timer_use_expiration_flag_oem);
   FIID_OBJ_SET (obj_cmd_rq, "reserved5", 0);
   FIID_OBJ_SET (obj_cmd_rq, "reserved6", 0);
-  FIID_OBJ_SET (obj_cmd_rq, "initial_countdown_value_ls_byte", initial_countdown_value_ls_byte);
-  FIID_OBJ_SET (obj_cmd_rq, "initial_countdown_value_ms_byte", initial_countdown_value_ms_byte);
+  FIID_OBJ_SET (obj_cmd_rq, "initial_countdown_value", initial_countdown_value);
 
   return (0);
 }
