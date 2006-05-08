@@ -1,3 +1,8 @@
+2006-05-08  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-sdr-repository-cmds.h: Add
+	first and last record id defines.
+	
 2006-05-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Change all templates and use of "ls_byte" and
