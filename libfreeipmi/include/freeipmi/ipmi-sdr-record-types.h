@@ -24,17 +24,17 @@
 
 #include <freeipmi/fiid.h>
 
-#define IPMI_SDR_FORMAT_FULL_RECORD                        0x01
-#define IPMI_SDR_FORMAT_COMPACT_RECORD                     0x02
-#define IPMI_SDR_FORMAT_EVENT_ONLY_RECORD                  0x03
-#define IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD                 0x08
-#define IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD             0x09
-#define IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD             0x10
-#define IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD             0x11
-#define IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD     0x12
-#define IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD    0x13
-#define IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD        0x14
-#define IPMI_SDR_FORMAT_OEM_RECORD                         0xC0
+#define IPMI_SDR_FORMAT_FULL_RECORD                                 0x01
+#define IPMI_SDR_FORMAT_COMPACT_RECORD                              0x02
+#define IPMI_SDR_FORMAT_EVENT_ONLY_RECORD                           0x03
+#define IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD                   0x08
+#define IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD   0x09
+#define IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD               0x10
+#define IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD                   0x11
+#define IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD 0x12
+#define IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD   0x13
+#define IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD             0x14
+#define IPMI_SDR_FORMAT_OEM_RECORD                                  0xC0
 
 #define IPMI_SDR_SENSOR_OWNER_ID_TYPE_IPMB_SLAVE_ADDRESS   0x0
 #define IPMI_SDR_SENSOR_OWNER_ID_TYPE_SYSTEM_SOFTWARE_ID   0x1
@@ -136,21 +136,19 @@
 extern "C" {
 #endif
 
-
 extern fiid_template_t tmpl_sdr_record_header;
 extern fiid_template_t tmpl_sdr_full_sensor_record;
 extern fiid_template_t tmpl_sdr_compact_sensor_record;
 extern fiid_template_t tmpl_sdr_event_only_record;
 extern fiid_template_t tmpl_sdr_entity_association_record;
-  /* extern fiid_template_t tmpl_sdr_device_relative_entity_association_record */
-extern fiid_template_t tmpl_generic_device_locator_record;
+extern fiid_template_t tmpl_sdr_device_relative_entity_association_record;
+extern fiid_template_t tmpl_sdr_generic_device_locator_record;
 extern fiid_template_t tmpl_sdr_logical_fru_device_locator_record;
 extern fiid_template_t tmpl_sdr_non_intelligent_fru_device_locator_record;
 extern fiid_template_t tmpl_sdr_management_controller_device_locator_record;
-  /* extern fiid_template_t tmpl_sdr_management_controller_confirmation_record */
-  /* extern fiid_template_t tmpl_sdr_bmc_message_channel_info_record */
+extern fiid_template_t tmpl_sdr_management_controller_confirmation_record;
+extern fiid_template_t tmpl_sdr_bmc_message_channel_info_record;
 extern fiid_template_t tmpl_sdr_oem_record;
-
 
 #ifdef __cplusplus
 }

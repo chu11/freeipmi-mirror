@@ -469,7 +469,7 @@ get_sdr_generic_device_locator_record (uint8_t *sdr_record_data,
 
   ERR_EINVAL_VOID_RETURN(sdr_record_data && sdr_generic_device_locator_record);
 
-  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_generic_device_locator_record);
+  FIID_OBJ_CREATE_CLEANUP(obj, tmpl_sdr_generic_device_locator_record);
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
    
@@ -836,22 +836,22 @@ get_sdr_record (ipmi_device_t *dev,
 				 sensor_record_len,
 				 &(sdr_record->record.sdr_event_only_record));
       break;
-    case IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD:
+    case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
       get_sdr_entity_association_record (sensor_record,
 					 sensor_record_len,
 					 &(sdr_record->record.sdr_entity_association_record));
       break;
-    case IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       get_sdr_generic_device_locator_record (sensor_record,
 					     sensor_record_len,
 					     &(sdr_record->record.sdr_generic_device_locator_record));
       break;
-    case IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
       get_sdr_logical_fru_device_locator_record (sensor_record,
 						 sensor_record_len,
 						 &(sdr_record->record.sdr_logical_fru_device_locator_record));
       break;
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       get_sdr_management_controller_device_locator_record (sensor_record,
 							   sensor_record_len,
 							   &(sdr_record->record.sdr_management_controller_device_locator_record));
@@ -861,9 +861,9 @@ get_sdr_record (ipmi_device_t *dev,
 			  sensor_record_len,
 			  &(sdr_record->record.sdr_oem_record));
       break;
-    case IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD:
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD:
-    case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
     default:
       {
 #if defined (IPMI_SYSLOG)

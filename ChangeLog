@@ -1,8 +1,17 @@
+2006-05-09  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c,
+	libfreeipni/include/freeipmi/ipmi-sdr-record-types.h: Updated
+	#defines for consistency with rest ot the library, added missing
+	record types.
+
+	* common/src/: Updated with name changes appropriately.
+	
 2006-05-08  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/include/freeipmi/ipmi-sdr-repository-cmds.h: Add
 	first and last record id defines.
-	
+
 2006-05-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/: Change all templates and use of "ls_byte" and

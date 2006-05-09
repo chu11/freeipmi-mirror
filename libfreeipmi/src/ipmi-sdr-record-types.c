@@ -334,7 +334,61 @@ fiid_template_t tmpl_sdr_entity_association_record =
     {0, "", 0}
   };
 
-fiid_template_t tmpl_generic_device_locator_record = 
+fiid_template_t tmpl_sdr_device_relative_entity_association_record = 
+  {
+    // SDR record header
+    // --------------------
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record Key bytes
+    // ----------------
+    {8, "container_entity_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "container_entity_instance", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "container_entity_device_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "container_entity_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "container_entity_device_channel.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "container_entity_device_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Flags
+    {5, "flags.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "flags.sensor_presence", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "flags.record_link", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "flags.contained_entities", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Contained Entity 1/Range 1
+    {1, "contained_entity_1_device_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "contained_entity_1_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_1_device_channel.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_1_device_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_id_contained_entity_range_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_instance_contained_entity_range_1", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Contained Entity 2/Range 2
+    {1, "contained_entity_2_device_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "contained_entity_2_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_2_device_channel.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_2_device_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_id_contained_entity_range_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_instance_contained_entity_range_2", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Contained Entity 3/Range 3
+    {1, "contained_entity_3_device_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "contained_entity_3_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_3_device_channel.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_3_device_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_id_contained_entity_range_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_instance_contained_entity_range_3", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Contained Entity 4/Range 4
+    {1, "contained_entity_4_device_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "contained_entity_4_device_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_4_device_channel.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "contained_entity_4_device_channel", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_id_contained_entity_range_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "entity_instance_contained_entity_range_4", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {48, "reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sdr_generic_device_locator_record = 
   {
     // SDR record header
     // --------------------
@@ -503,6 +557,73 @@ fiid_template_t tmpl_sdr_management_controller_device_locator_record =
     {8, "id_string_type_length_code", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // ID String bytes
     {128, "device_id_string", FIID_FIELD_OPTIONAL | FIID_FIELD_LENGTH_VARIABLE}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sdr_management_controller_confirmation_record =
+  {
+    // SDR record header
+    // --------------------
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record Key bytes
+    // ----------------
+    // Device Slave Address
+    {1, "device_slave_address.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "device_slave_address", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "device_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "device_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_number", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record body bytes
+    // -----------------
+    {7, "major_firmware_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "major_firmware_revision.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "minor_firmware_revision", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8, "ipmi_version", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {24, "manufacturer_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {16, "product_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {128, "device_guid", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {0, "", 0}
+  };
+
+fiid_template_t tmpl_sdr_bmc_message_channel_info_record =
+  {
+    // SDR record header
+    // --------------------
+    {16, "record_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_major", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4,  "sdr_version_minor", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {8,  "record_length", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    // Record Key bytes
+    // ----------------
+    {4, "channel_0_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_0_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_0_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_1_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_1_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_1_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_2_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_2_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_2_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_3_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_3_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_3_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_4_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_4_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_4_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_5_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_5_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_5_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_6_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_6_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_6_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {4, "channel_7_protocol", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {3, "channel_7_message_receive_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {1, "channel_7_transmit_supported", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {0, "", 0}
   };
 

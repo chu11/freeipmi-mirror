@@ -3272,24 +3272,24 @@ ex_get_sdr_record (SCM scm_record_id)
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
       scm_sdr_record = get_scm_sdr_event_only_record (&(sdr_record.record.sdr_event_only_record), scm_sdr_record);
       break;
-    case IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD:
+    case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
       scm_sdr_record = get_scm_sdr_entity_association_record (&(sdr_record.record.sdr_entity_association_record), scm_sdr_record);
       break;
-    case IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       scm_sdr_record = get_scm_sdr_generic_device_locator_record (&(sdr_record.record.sdr_generic_device_locator_record), scm_sdr_record);
       break;
-    case IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
       scm_sdr_record = get_scm_sdr_logical_fru_device_locator_record (&(sdr_record.record.sdr_logical_fru_device_locator_record), scm_sdr_record);
       break;
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       scm_sdr_record = get_scm_sdr_management_controller_device_locator_record (&(sdr_record.record.sdr_management_controller_device_locator_record), scm_sdr_record);
       break;
     case IPMI_SDR_FORMAT_OEM_RECORD:
       scm_sdr_record = get_scm_sdr_oem_record (&(sdr_record.record.sdr_oem_record), scm_sdr_record);
       break;
-    case IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD:
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD:
-    case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
     default:
       {
 	fprintf (stderr, 
@@ -3625,24 +3625,24 @@ scm2sdr_record (SCM scm_sdr_record, sdr_record_t *sdr_record)
     case IPMI_SDR_FORMAT_EVENT_ONLY_RECORD:
       scm2sdr_event_only_record (scm_sdr_record, &(sdr_record->record.sdr_event_only_record));
       break;
-    case IPMI_SDR_FORMAT_ENTITY_ASSO_RECORD:
+    case IPMI_SDR_FORMAT_ENTITY_ASSOCIATION_RECORD:
       scm2sdr_entity_association_record (scm_sdr_record, &(sdr_record->record.sdr_entity_association_record));
       break;
-    case IPMI_SDR_FORMAT_GEN_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_GENERIC_DEVICE_LOCATOR_RECORD:
       scm2sdr_generic_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_generic_device_locator_record));
       break;
-    case IPMI_SDR_FORMAT_FRU_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_FRU_DEVICE_LOCATOR_RECORD:
       scm2sdr_logical_fru_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_logical_fru_device_locator_record));
       break;
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_DEV_LOCATOR_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_DEVICE_LOCATOR_RECORD:
       scm2sdr_management_controller_device_locator_record (scm_sdr_record, &(sdr_record->record.sdr_management_controller_device_locator_record));
       break;
     case IPMI_SDR_FORMAT_OEM_RECORD:
       scm2sdr_oem_record (scm_sdr_record, &(sdr_record->record.sdr_oem_record));
       break;
-    case IPMI_SDR_FORMAT_DEV_ENTITY_ASSO_RECORD:
-    case IPMI_SDR_FORMAT_MGMT_CNTRLR_CONFIRMATION_RECORD:
-    case IPMI_SDR_FORMAT_BMC_MSG_CHANNEL_INFO_RECORD:
+    case IPMI_SDR_FORMAT_DEVICE_RELATIVE_ENTITY_ASSOCIATION_RECORD:
+    case IPMI_SDR_FORMAT_MANAGEMENT_CONTROLLER_CONFIRMATION_RECORD:
+    case IPMI_SDR_FORMAT_BMC_MESAAGE_CHANNEL_INFO_RECORD:
     default:
       {
 	fprintf (stderr, 
