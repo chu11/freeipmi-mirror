@@ -104,7 +104,7 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     {8, "sensor_unit3.modifier_unit", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
 
     // Linearization
-    {7, "linearization.enum", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "linearization", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {1, "linearization.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // M (2s complement, signed)
     {8, "m_ls", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
