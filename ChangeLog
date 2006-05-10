@@ -11,6 +11,9 @@
 
 	* libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h: Add analog
 	data format, lineraization, and modifier unit defines.
+
+	* common/src/ipmi-sensors-api.c
+	(ipmi_sensor_get_decode_parameters): Fix linearization bug.
 	
 2006-05-09  Albert Chu <chu11@llnl.gov>
 

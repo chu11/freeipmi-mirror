@@ -71,9 +71,14 @@
 #define IPMI_SDR_LINEARIZATION_CUBERT  11
 
 /* To avoid gcc warnings, added +1 and -1 in comparison */
-#define IPMI_SDR_LINEARIZATION_VALID(__sensor_linearization) \
+#define IPMI_SDR_LINEARIZATION_LINEAR(__sensor_linearization) \
    ((((__sensor_linearization) + 1) >= IPMI_SDR_LINEARIZATION_LN \
      && ((__sensor_linearization) - 1) <= IPMI_SDR_LINEARIZATION_SQRT) ? 1 : 0)
+
+/* To avoid gcc warnings, added +1 and -1 in comparison */
+#define IPMI_SDR_LINEARIZATION_NON_LINEAR(__sensor_linearization) \
+   (((__sensor_linearization) >= 0x70 \
+     && (__sensor_linearization) <= 0x7F) ? 1 : 0)
 
 #define IPMI_SDR_PERCENTAGE_NO  0
 #define IPMI_SDR_PERCENTAGE_YES 1
