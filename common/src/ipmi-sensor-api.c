@@ -154,6 +154,9 @@ ipmi_sensor_get_decode_parameters (uint8_t *sensor_record,
   FIID_OBJ_GET_CLEANUP (obj, "sensor_unit1.analog_data_format", &val);
   *analog_data_format = (uint8_t) val;
 
+  FIID_OBJ_GET_CLEANUP (obj, "linearization", &val);
+  *linear = (char)val;
+
   return (0);
 
  cleanup:
