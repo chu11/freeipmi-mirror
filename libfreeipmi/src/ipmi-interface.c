@@ -379,7 +379,7 @@ ipmi_open_inband (ipmi_device_t *dev,
 	}
       dev->io.inband.driver_device = dev->io.inband.locate_info.bmc_i2c_dev_name;
       dev->io.inband.driver_address = dev->io.inband.locate_info.base_addr.bmc_smbus_slave_addr;
-      /* dev->io.inband.driver_address = 0x341A; */
+      /* dev->io.inband.driver_address = 0x42; */
       dev->type = driver_type;
       dev->mode = mode;
       ERR (ipmi_ssif_io_init (dev->io.inband.driver_device, 
@@ -578,7 +578,7 @@ ipmi_inband_close (ipmi_device_t *dev)
     case IPMI_DEVICE_BT:
       break;
     case IPMI_DEVICE_SSIF:
-      ipmi_ssif_exit (dev->io.inband.dev_fd);
+      ipmi_ssif_close (dev->io.inband.dev_fd);
       break;
     default:
       errno = EINVAL;

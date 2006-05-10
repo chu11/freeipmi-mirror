@@ -1609,9 +1609,9 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
 	  fprintf (stderr, 
 		   "%s(): received packet is too big.  "
 		   "expected size = %d, received size = %d\n", 
-		   __PRETTY_FUNCTION__, 
-		   bytes_received,
-		   receive_pkt_len);
+		   __PRETTY_FUNCTION__,
+		   receive_pkt_len, 
+		   bytes_received);
 	  fprintf (stderr, "packet data:\n");
 	  for (i = 0; i < bytes_received; i++)
 	    fprintf (stderr, "%02X ", receive_pkt[i]);
@@ -1640,8 +1640,8 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
 		       "%s(): received packet is too small.  "
 		       "expected size = %d, received size = %d, minimum size = %d\n", 
 		       __PRETTY_FUNCTION__,
-		       bytes_received,
 		       receive_pkt_len,
+		       bytes_received,
 		       min_len);
 	      fprintf (stderr, "packet data:\n");
 	      for (i = 0; i < bytes_received; i++)

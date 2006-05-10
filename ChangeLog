@@ -1,3 +1,20 @@
+2006-05-10  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-ssif-interface.c
+	(ipmi_ssif_single_part_write, ipmi_ssif_multi_part_write): new
+	functions.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_write,
+	ipmi_ssif_read): rewritten.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_i2c_smbus_access,
+	ipmi_ssif_cmd2, ipmi_ssif_cmd_raw2): improved.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_close): renamed
+	ipmi_ssif_exit().
+
+	* libfreeipmi/src/ipmi-ssif-interface.h: major cleanups.
+
 2006-05-02  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_receive):

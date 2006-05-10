@@ -46,7 +46,7 @@ defaults_get_dev_info (ipmi_interface_type_t type, ipmi_locate_info_t* pinfo)
     pinfo->ipmi_ver_minor = 5;
     pinfo->interface_type = IPMI_INTERFACE_SSIF;
     pinfo->addr_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-    pinfo->base_addr.bmc_smbus_slave_addr = IPMI_SSIF_SMBUS_SLAVE_ADDR;
+    pinfo->base_addr.bmc_smbus_slave_addr = IPMI_DEFAULT_SSIF_IPMB_ADDR;
     pinfo->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
     pinfo->reg_space = 1;
     return (pinfo);
