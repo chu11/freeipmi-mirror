@@ -123,8 +123,21 @@ extern "C" {
         (((__sensor_unit) >= IPMI_SENSOR_UNIT_UNSPECIFIED \
           && (__sensor_unit) <= IPMI_SENSOR_UNIT_GRAMS) ? 1 : 0)
 
+#define IPMI_SENSOR_RATE_UNIT_NONE               0
+#define IPMI_SENSOR_RATE_UNIT_PER_US             1
+#define IPMI_SENSOR_RATE_UNIT_PER_MS             2
+#define IPMI_SENSOR_RATE_UNIT_PER_S              3
+#define IPMI_SENSOR_RATE_UNIT_PER_MINUTE         4
+#define IPMI_SENSOR_RATE_UNIT_PER_HOUR           5 
+#define IPMI_SENSOR_RATE_UNIT_PER_DAY            6
+
+#define IPMI_SENSOR_RATE_UNIT_VALID(__sensor_rate_unit) \
+        (((__sensor_rate_unit) >= IPMI_SENSOR_RATE_UNIT_NONE \
+          && (__sensor_rate_unit) <= IPMI_SENSOR_RATE_UNIT_PER_DAY) ? 1 : 0)
+
 extern const char *const ipmi_sensor_units[];
 extern const char *const ipmi_sensor_units_abbreviated[];
+extern const char *const ipmi_sensor_rate_units[];
 
 #ifdef __cplusplus
 }

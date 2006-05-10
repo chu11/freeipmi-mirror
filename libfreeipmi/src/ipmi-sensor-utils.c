@@ -28,17 +28,18 @@
 #include <errno.h>
 
 #include "freeipmi/ipmi-sensor-utils.h"
-#include "freeipmi/fiid.h"
+#include "freeipmi/ipmi-sdr-record-types.h"
+#include "freeipmi/ipmi-sensor-units-spec.h"
 
 #include "err-wrappers.h"
 #include "freeipmi-portability.h"
 
 int
-ipmi_sensor_decode_value (char r_exponent, 
-			  char b_exponent, 
-			  short m, 
-			  short b, 
-			  char linear, 
+ipmi_sensor_decode_value (int8_t r_exponent, 
+			  int8_t b_exponent, 
+			  int16_t m, 
+			  int16_t b, 
+			  uint8_t linearization, 
 			  uint8_t analog_data_format, 
 			  uint8_t raw_data,
 			  double *value)
@@ -46,25 +47,50 @@ ipmi_sensor_decode_value (char r_exponent,
   double dval = 0.0;
   
   ERR_EINVAL (value 
-	      && IPMI_ANALOG_DATA_FORMAT_VALID(analog_data_format));
-
-  if (analog_data_format == 0x00)
+	      && IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
+              && IPMI_SDR_LINEARIZATION_VALID(linearization));
+    
+  if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
     dval = (double) raw_data;
-  else if (analog_data_format == 0x01)
+  else if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_1S_COMPLEMENT)
     {
       if (raw_data & 0x80)
         raw_data++;
       dval = (double) ((char) raw_data);
     }
-  else
+  else /* analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_2S_COMPLEMENT */
     dval = (double) ((char) raw_data);
     
   dval *= (double) m;
   dval += (b * pow (10, b_exponent));
   dval *= pow (10, r_exponent);
 
+  if (linearization == IPMI_SDR_LINEARIZATION_LN)
+    dval = log(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_LOG10)
+    dval = log10(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_LOG2)
+    dval = log2(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_E)
+    dval = exp(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_EXP10)
+    dval = exp10(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_EXP2)
+    dval = exp2(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_INVERSE)
+    {
+      if (dval != 0.0)
+        dval = 1.0 / dval;
+    }
+  else if (linearization == IPMI_SDR_LINEARIZATION_SQR)
+    dval = pow(dval, 2.0);
+  else if (linearization == IPMI_SDR_LINEARIZATION_CUBE)
+    dval = pow(dval, 3.0);
+  else if (linearization == IPMI_SDR_LINEARIZATION_SQRT)
+    dval = sqrt(dval);
+  else if (linearization == IPMI_SDR_LINEARIZATION_CUBERT)
+    dval = cbrt(dval);
+  
   *value = dval;
   return (0);
 }
-
-

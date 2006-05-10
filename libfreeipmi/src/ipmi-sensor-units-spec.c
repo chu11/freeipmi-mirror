@@ -223,3 +223,15 @@ const char *const ipmi_sensor_units_abbreviated[] =
     NULL
   };
 
+const char *const ipmi_sensor_rate_units[] = 
+  {
+    "none",
+    "per uS",
+    "per ms",
+    "per s",
+    "per minute",
+    "per hour",
+    "per day",
+    NULL,
+  };
+

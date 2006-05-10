@@ -1,3 +1,17 @@
+2006-05-10  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sensor-utils.c,
+	libfreeipmi/include/freeipmi/ipmi-sensor-utils.h
+	(ipmi_sensor_decode_value): Adjust parameter types for consistency
+	across the library.  Add linearization function decoding.
+
+	* libfreeipmi/src/ipmi-sensor-units-spec.c,
+	libfreeipmi/include/freeipmi/ipmi-sensor-units-spec.h: Added rate
+	units.
+
+	* libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h: Add analog
+	data format, lineraization, and modifier unit defines.
+	
 2006-05-09  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-record-types.c,
