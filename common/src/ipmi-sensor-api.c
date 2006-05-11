@@ -200,7 +200,7 @@ get_sdr_full_record (uint8_t *sdr_record_data,
   sdr_full_record->linear = linear;
   sdr_full_record->analog_data_format = analog_data_format;
   
-  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id.id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_full_record->sensor_owner_id = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);
@@ -368,7 +368,7 @@ get_sdr_compact_record (uint8_t *sdr_record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
 
-  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id.id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_compact_record->sensor_owner_id = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);
@@ -414,7 +414,7 @@ get_sdr_event_only_record (uint8_t *sdr_record_data,
 
   FIID_OBJ_SET_ALL_CLEANUP (obj, sdr_record_data, sdr_record_data_len);
   
-  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id.id", &val);
+  FIID_OBJ_GET_CLEANUP (obj, "sensor_owner_id", &val);
   sdr_event_only_record->sensor_owner_id = val;
   
   FIID_OBJ_GET_CLEANUP (obj, "sensor_number", &val);

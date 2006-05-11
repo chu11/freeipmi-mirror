@@ -55,7 +55,7 @@ fiid_template_t tmpl_sdr_full_sensor_record =
     // ----------------
     // Sensor owner ID
     {1, "sensor_owner_id.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {7, "sensor_owner_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_owner_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // Sensor owner LUN
     {2, "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "sensor_owner_lun.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -178,7 +178,7 @@ fiid_template_t tmpl_sdr_compact_sensor_record =
     // ----------------
     // Sensor owner ID
     {1, "sensor_owner_id.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {7, "sensor_owner_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_owner_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // Sensor owner LUN
     {2, "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "sensor_owner_lun.reserved", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
@@ -260,7 +260,7 @@ fiid_template_t tmpl_sdr_event_only_record =
     // ----------------
     // Sensor owner ID
     {1, "sensor_owner_id.type", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
-    {7, "sensor_owner_id.id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
+    {7, "sensor_owner_id", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     // Sensor owner LUN
     {2, "sensor_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 
     {2, "fru_inventory_device_owner_lun", FIID_FIELD_REQUIRED | FIID_FIELD_LENGTH_FIXED}, 

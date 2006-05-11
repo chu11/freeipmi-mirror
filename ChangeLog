@@ -1,3 +1,9 @@
+2006-05-11  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-sdr-record-types.c,
+	common/src/ipmi-sensor-api.c: Change "sensor_owner_id.id" to
+	"sensor_owner_id".
+	
 2006-05-10  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sensor-utils.c,
