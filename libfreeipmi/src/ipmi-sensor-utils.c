@@ -48,7 +48,7 @@ ipmi_sensor_decode_value (int8_t r_exponent,
   
   ERR_EINVAL (value 
 	      && IPMI_SDR_ANALOG_DATA_FORMAT_VALID(analog_data_format)
-              && IPMI_SDR_LINEARIZATION_LINEAR(linearization));
+              && IPMI_SDR_LINEARIZATION_IS_LINEAR(linearization));
     
   if (analog_data_format == IPMI_SDR_ANALOG_DATA_FORMAT_UNSIGNED)
     dval = (double) raw_data;

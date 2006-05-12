@@ -1,3 +1,10 @@
+2006-05-12  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/include/freeipmi/ipmi-sensor-types-spec.h: Correct #defines.
+
+	* libfreeipmi/include/freeipmi/ipmi-sdr-record-types.h: Fix
+	redefine bug.
+	
 2006-05-11  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-sdr-record-types.c,
