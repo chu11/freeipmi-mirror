@@ -76,10 +76,6 @@ CFLAGS="$RPM_OPT_FLAGS" make %{?_smp_mflags}
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT
 DESTDIR="$RPM_BUILD_ROOT" make install
-# fix coherance problems with associated script filenames
-mkdir -p $RPM_BUILD_ROOT/%{_initrddir}/
-mv $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/bmc-watchdog $RPM_BUILD_ROOT/%{_initrddir}/freeipmi-bmc-watchdog
-mv $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/{bmc-watchdog.logrotate,freeipmi-bmc-watchdog}
 rm -f %{buildroot}%{_infodir}/dir
 # kludge to get around rpmlint complaining about 0 length semephore file
 echo freeipmi > %{buildroot}/var/lib/freeipmi/ipckey
