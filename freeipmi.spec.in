@@ -210,6 +210,6 @@ fi
 %config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
-/var/log/*
+%dir /var/log/freeipmi
 
 %changelog
