@@ -56,6 +56,7 @@ Summary: FreeIPMI BMC watchdog
 Group: Applications/System
 Requires: freeipmi = %{version}-%{release}
 Requires: chkconfig
+Requires: logrotate
 %description bmc-watchdog
 Provides a watchdog daemon for OS monitoring and recovery.
 
