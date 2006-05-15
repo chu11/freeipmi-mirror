@@ -6,12 +6,7 @@
 	* freeipmi.spec.in: Cleaned up some english and updated with
 	changes since 0.2.0.
 
-	* bmc-watchdog/bmc-watchdog.logrotate: New file.
-
-	* bmc-watchdog/bmc-watchdog: Renamed to freeipmi-bmc-watchdog.
-	Adjust paths in file appropriately.
-
-	* bmc-watchdog/Makefile.am: Adjust appropriately.
+	* bmc-watchdog/: Various follow on adjustments.
 	
 2006-05-12  Albert Chu <chu11@llnl.gov>
 
