@@ -9,5 +9,10 @@ DISTCLEANFILES = .deps/*.P
 #  following and add `chk' to the EXTRA_DIST list
 #TESTS=chk
 
+BMCWATCHDOGLOGdir = /var/log/$(PACKAGE)
+
 EXTRA_DIST = freeipmi-bmc-watchdog.init freeipmi-bmc-watchdog.logrotate
+
+install-data-hook:
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)$(BMCWATCHDOGLOGdir)
 
