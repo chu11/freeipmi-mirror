@@ -1,0 +1,16 @@
+##
+# $Id: bmc-watchdog.logrotate,v 1.1 2006-05-15 17:48:22 chu11 Exp $
+##
+
+/var/log/freeipmi/bmc-watchdog.log {
+  rotate 21
+  daily
+  compress
+  missingok
+  nocreate
+  nomail
+  notifempty
+  postrotate
+      /etc/init.d/freeipmi-bmc-watchdog condrestart
+  endscript
+}

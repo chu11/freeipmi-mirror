@@ -1,9 +1,10 @@
 #!/bin/sh
 #
-# chkconfig: 2345 99 01
+# chkconfig: - 99 01
 # description: bmc-watchdog startup script
 #
 DAEMON=/usr/sbin/bmc-watchdog
+LOCKFILE=/var/lock/subsys/freeipmi-bmc-watchdog
 
 . /etc/rc.d/init.d/functions
 
@@ -26,7 +27,7 @@ case "$1" in
       daemon -20 $DAEMON -d -u 4 -p 0 -a 1 -F -P -L -S -O -i 900 -e 60 
       RETVAL=$?
       echo
-      [ $RETVAL -eq 0 ] && touch /var/lock/subsys/bmc-watchdog
+      [ $RETVAL -eq 0 ] && touch /var/lock/subsys/freeipmi-bmc-watchdog
 	;;
 
   stop)
@@ -34,7 +35,7 @@ case "$1" in
       killproc bmc-watchdog 
       RETVAL=$?
       echo
-      [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/bmc-watchdog
+      [ $RETVAL -eq 0 ] && rm -f /var/lock/subsys/freeipmi-bmc-watchdog
 	;;
 
   restart|reload)
@@ -47,7 +48,7 @@ case "$1" in
    	RETVAL=$?
 	;;
   condrestart)
-        if test -e /var/lock/subsys/bmc-watchdog; then \
+        if test -e /var/lock/subsys/freeipmi-bmc-watchdog; then \
             $0 stop; \
             $0 start; \
             RETVAL=$?; \
