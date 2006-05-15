@@ -103,17 +103,17 @@ fi
 
 %post bmc-watchdog
 if [ "$1" = 1 ]; then
-   if [ -x {_initrddir}/bmc-watchdog ]; then
+   if [ -x {_initrddir}/freeipmi-bmc-watchdog ]; then
       /sbin/chkconfig --add bmc-watchdog
       /sbin/chkconfig bmc-watchdog off
    fi
 fi
 if [ $1 -ge 1 ]; then
-   if [ -x {_initrddir}/bmc-watchdog ]; then
-      if {_initrddir}/bmc-watchdog status | grep -q running; then
-         {_initrddir}/bmc-watchdog restart
+   if [ -x {_initrddir}/freeipmi-bmc-watchdog ]; then
+      if {_initrddir}/freeipmi-bmc-watchdog status | grep -q running; then
+         {_initrddir}/freeipmi-bmc-watchdog restart
       else
-         {_initrddir}/bmc-watchdog condrestart
+         {_initrddir}/freeipmi-bmc-watchdog condrestart
       fi
    fi
 fi
@@ -123,9 +123,9 @@ fi
 # Stop bmc-watchdog if it is running 
 #
 if [ "$1" = 0 ]; then
-    if [ -x {_initrddir}/bmc-watchdog ]; then
-       if {_initrddir}/bmc-watchdog status | grep -q running; then
-          {_initrddir}/bmc-watchdog stop
+    if [ -x {_initrddir}/freeipmi-bmc-watchdog ]; then
+       if {_initrddir}/freeipmi-bmc-watchdog status | grep -q running; then
+          {_initrddir}/freeipmi-bmc-watchdog stop
        fi
        /sbin/chkconfig --del bmc-watchdog
     fi
