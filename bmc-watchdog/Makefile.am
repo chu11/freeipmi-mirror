@@ -13,6 +13,13 @@ BMCWATCHDOGLOGdir = /var/log/$(PACKAGE)
 
 EXTRA_DIST = freeipmi-bmc-watchdog.init freeipmi-bmc-watchdog.logrotate
 
+install-data-local:
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(sysconfdir)/init.d
+        $(top_srcdir)/install-sh -m 755 $(srcdir)/freeipmi-bmc-watchdog.init $(DESTDIR)$(sysconfdir)/init.d/freeipmi-bmc-watchdog
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(sysconfdir)/logrotate.d
+        $(top_srcdir)/install-sh -m 444 $(srcdir)/freeipmi-bmc-watchdog.logrotate $(DESTDIR)$(sysconfdir)/logrotate.d/freeipmi-bmc-watchdog
+
 install-data-hook:
-	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)$(BMCWATCHDOGLOGdir)
+	chmod 444 $(DESTDIR)/$(BMCWATCHDOGLOGROTATEdir)/$(BMCWATCHDOGLOGROTATE)
+	$(top_srcdir)/install-sh -m 755 -d $(DESTDIR)/$(BMCWATCHDOGLOGdir)
 
