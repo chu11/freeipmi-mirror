@@ -213,5 +213,5 @@ fi
 %dir /var/log/freeipmi
 
 %changelog
-* Mon May 15 2006 Albert Chu <chu11@llnl.gov>
+* Mon May 15 2006 Albert Chu <chu11@llnl.gov> 0.3.beta0
 - Fixed up spec file to pass rpmlint

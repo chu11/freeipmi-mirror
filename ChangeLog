@@ -1,3 +1,7 @@
+2006-05-16  Albert Chu <chu11@llnl.gov>
+
+	* freeipmi.spec.in: Add version to changelog.
+	
 2006-05-15  Albert Chu <chu11@llnl.gov>
 
 	* freeipmi.spec.in: Updated with changes from Ben Woodard (woodard
