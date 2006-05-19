@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.58 2006-05-06 00:15:24 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.59 2006-05-19 17:58:54 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -78,8 +78,6 @@
 
 #define BMC_WATCHDOG_RETRY_WAIT_TIME         1
 #define BMC_WATCHDOG_RETRY_ATTEMPT           5
-
-#define BMC_WATCHDOG_LOGFILE                 "/var/log/freeipmi/bmc-watchdog.log"
 
 #define _FIID_OBJ_GET(__obj, __field, __val, __func) \
   do { \

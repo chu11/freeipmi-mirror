@@ -1,3 +1,8 @@
+2006-05-19  Albert Chu <chu11@llnl.gov>
+
+	* bmc-watchdog/src/Makefile.am, bmc-watchdog/src/bmc-watchdog.c:
+	Adjust for changes from 05-18-06.
+	
 2006-05-18  A Balamurugan  <bala@zresearch.com>
 
 	* bmc-watchdog/Makefile.am, fish/src/Makefile.am,
