@@ -26,6 +26,8 @@ libfreeipmi:
   * FRU Commands (SDR Repo does a similar job).
   * Command to Switch MUX between BMC and ttyS1
 
+forward port 0.2.X in-band IBM e325 notes.
+
 Al's TODO list
 ==============
 bmc-config
@@ -93,6 +95,8 @@ Bala's TODO List:
   * dual fiid for ipmi_kcs_lan_set_auth_type_enables
   * convert ipmi-sensors, ipmi-sel, bmc-config to C based tools rather
     than Scheme based tools
+  * forward port SSIF 0.2.X changes
+  * forward port udm-lan 0.2.X changes
 
 Ian's TODO List:
 ================
