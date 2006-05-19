@@ -15,9 +15,11 @@ noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 	fi-commands.h bmc-conf2.h fish-argp.h common.h  \
 	../../common/src/argp-common.h
 
-AM_CFLAGS = -Wall  -I$(srcdir)/../../common/src \
-	-I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" $(GUILE_CFLAGS)
+AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
+	-I$(srcdir)/../../libfreeipmi/include -DFREEIPMI_BUILD \
+	-D_GNU_SOURCE $(GUILE_CFLAGS) \
+	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
+	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\"
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
