@@ -186,7 +186,8 @@ ipmi_smbios_reg_space (uint8_t reg_space_boundary, uint8_t *reg_space)
       return (0);
     case IPMI_SMBIOS_REG_SPACE_RESERVED:
     default:
-      ERR_EXIT(0);
+      *reg_space = 0;
+      ERR_EINVAL(0);
     }
 }
 

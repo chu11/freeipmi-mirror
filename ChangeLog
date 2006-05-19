@@ -2,6 +2,9 @@
 
 	* bmc-watchdog/src/Makefile.am, bmc-watchdog/src/bmc-watchdog.c:
 	Adjust for changes from 05-18-06.
+
+	* libfreeipmi/src/ipmi-locate-smbios.c (ipmi_smbios_reg_space):
+	EINVAL return rather than exit.
 	
 2006-05-18  A Balamurugan  <bala@zresearch.com>
 
