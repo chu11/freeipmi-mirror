@@ -1116,7 +1116,6 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   uint32_t table_data_length = 0;
   uint32_t copy_length;
   int instance;
-  fiid_obj_t obj_acpi_table_hdr2 = NULL;
   int32_t acpi_spmi_table_descriptor_len;
   int rv = -1;
 
@@ -1129,7 +1128,7 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
   for (instance = 0; instance <= IPMI_INTERFACE_MAX; instance++)
     {
       if (ipmi_acpi_get_firmware_table (IPMI_ACPI_SPMI_SIG, instance, 
-					obj_acpi_table_hdr2,
+					obj_acpi_table_hdr,
 					&table_data, 
 					&table_data_length) != 0)
 	continue;
@@ -1169,7 +1168,6 @@ ipmi_acpi_get_spmi_table (uint8_t interface_type,
  cleanup:
   if (table_data)
     free(table_data);
-  FIID_OBJ_DESTROY_NO_RETURN(obj_acpi_table_hdr2);
   return (rv);
 }
 

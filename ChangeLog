@@ -1,3 +1,8 @@
+2006-05-22  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.c
+	(ipmi_acpi_get_spmi_table): Fix logic bug.
+	
 2006-05-19  Albert Chu <chu11@llnl.gov>
 
 	* bmc-watchdog/src/Makefile.am, bmc-watchdog/src/bmc-watchdog.c:
