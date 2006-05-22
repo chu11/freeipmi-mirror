@@ -2,6 +2,9 @@
 
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.c
 	(ipmi_acpi_get_spmi_table): Fix logic bug.
+
+	* libfreeipmi/src/fiid.c (fiid_obj_clear, fiid_obj_clear_field):
+	Implement with guaranteed memset.
 	
 2006-05-19  Albert Chu <chu11@llnl.gov>
 
