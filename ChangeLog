@@ -9,6 +9,8 @@
 	* libfreeipmi/src/freeipmi.map: New file.
 
 	* libfreeipmi/src/Makefile.am, configure.ac: Hide non-API symbols.
+
+	* common/src/Makefile.am: Fix build as necessary.
 	
 2006-05-19  Albert Chu <chu11@llnl.gov>
 

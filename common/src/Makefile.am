@@ -50,6 +50,7 @@ libsel_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include
 
 libsensor_la_SOURCES = ipmi-sensor-api.c
 libsensor_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include
+libsensor_la_LIBADD = ./libbitops.la
 
 libxmalloc_la_SOURCES = xmalloc.c
 libxmalloc_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include 
