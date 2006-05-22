@@ -1,5 +1,10 @@
 SUBDIRS = udm
 
+if WITH_GNU_LD
+VERSION_SCRIPT = $(srcdir)/freeipmi.map
+VERSION_FLAGS = -Wl,--version-script=$(VERSION_SCRIPT)
+endif
+
 lib_LTLIBRARIES = libfreeipmi.la
 
 libfreeipmi_la_SOURCES = \
@@ -47,7 +52,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-event-messages.c \
 	ipmi-sensor-utils.c
 
-libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ -lm -lgcrypt
+libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
 libfreeipmi_la_CPPFLAGS = -DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\"
 
 libfreeipmi_la_CFLAGS = \
@@ -91,4 +96,6 @@ udm/libudm.la: force-dependency-check
 ../../common/src/libxmalloc.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)
  
+EXTRA_DIST = freeipmi.map
+
 force-dependency-check:

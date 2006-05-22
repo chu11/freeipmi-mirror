@@ -5,6 +5,10 @@
 
 	* libfreeipmi/src/fiid.c (fiid_obj_clear, fiid_obj_clear_field):
 	Implement with guaranteed memset.
+
+	* libfreeipmi/src/freeipmi.map: New file.
+
+	* libfreeipmi/src/Makefile.am, configure.ac: Hide non-API symbols.
 	
 2006-05-19  Albert Chu <chu11@llnl.gov>
 
