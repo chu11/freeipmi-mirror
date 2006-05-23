@@ -37,6 +37,7 @@
 #include "freeipmi-portability.h"
 
 #include "bit-ops.h"
+#include "ipmi-common.h"
 #include "xmalloc.h"
 
 #define FIID_OBJ_MAGIC 0xf00fd00d
@@ -1150,19 +1151,12 @@ fiid_obj_block_len_bytes(fiid_obj_t obj, char *field_start, char *field_end)
 int8_t
 fiid_obj_clear (fiid_obj_t obj)
 {
-  volatile char *p;
-  unsigned int n;
   int i;
   
   if (!(obj && obj->magic == FIID_OBJ_MAGIC))
     return (-1);
 
-  /* From David Wheeler's Secure Programming Guide */
-  p = obj->data;
-  n = obj->data_len;
-  while (n--)
-    *p++ = '\0';
- 
+  guaranteed_memset(obj->data, '\0', obj->data_len);
   for (i =0; i < obj->field_data_len; i++)
     obj->field_data[i].set_field_len = 0;
 
@@ -1205,8 +1199,6 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
     {
       int32_t field_start, field_offset;
       int32_t bytes_len;
-      volatile char *p;
-      unsigned int n;
 
       /* achu: We assume the field must start on a byte boundary and end
        * on a byte boundary.
@@ -1230,12 +1222,7 @@ fiid_obj_clear_field (fiid_obj_t obj, char *field)
 	}
 
       field_offset = BITS_ROUND_BYTES(field_start);
-
-      /* From David Wheeler's Secure Programming Guide */
-      p = obj->data + field_offset;
-      n = bytes_len;
-      while (n--)
-        *p++ = '\0';
+      guaranteed_memset(obj->data + field_offset, '\0', bytes_len);
     }
 
   obj->field_data[key_index].set_field_len = 0;

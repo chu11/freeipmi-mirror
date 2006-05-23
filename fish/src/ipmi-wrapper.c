@@ -279,7 +279,6 @@ get_sol_channel_number ()
 {
   fiid_obj_t obj_cmd_rs = NULL;
   uint64_t val;
-  int8_t rv = -1;
 
   if (sol_channel_number_initialized)
     return sol_channel_number;

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_check.c,v 1.54 2006-05-02 00:10:14 chu11 Exp $
+ *  $Id: ipmipower_check.c,v 1.55 2006-05-23 23:54:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -886,7 +886,7 @@ ipmipower_check_rakp_4_integrity_check_value(ipmipower_powercmd_t ip, packet_typ
   uint8_t managed_system_guid[IPMI_MANAGED_SYSTEM_GUID_LENGTH];
   int32_t managed_system_guid_len;
   uint32_t managed_system_session_id;
-  uint8_t authentication_algorithm;
+  uint8_t authentication_algorithm = 0;
   uint64_t val;
   int8_t rv;
 

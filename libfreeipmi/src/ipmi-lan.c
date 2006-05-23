@@ -42,6 +42,7 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
+#include "ipmi-common.h"
 #include "md2.h"
 #include "md5.h"
 
@@ -218,6 +219,7 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   int32_t len, req_len;
   uint8_t ipmi_msg_len;
   fiid_obj_t obj_lan_msg_trlr = NULL;
+  uint8_t pwbuf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
   uint8_t checksum;
   int32_t rv = -1;
 
@@ -341,7 +343,6 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
    */
   if (authentication_type != IPMI_AUTHENTICATION_TYPE_NONE)
     {     
-      uint8_t pwbuf[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
       int32_t authentication_len;
       
       memset(pwbuf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
@@ -406,8 +407,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md2_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md2_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		  md2_finish(&ctx, digest, MD2_DIGEST_LENGTH);
+		  md2_init(&ctx);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  guaranteed_memset(digest, '\0', MD2_DIGEST_LENGTH);
 		}
 	      else if (authentication_type == IPMI_AUTHENTICATION_TYPE_MD5)
 		{
@@ -423,8 +426,10 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
 		  md5_update_data(&ctx, session_sequence_number_buf, session_sequence_number_len);
 		  md5_update_data(&ctx, pwbuf, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
 		  md5_finish(&ctx, digest, MD5_DIGEST_LENGTH);
+		  md5_init(&ctx);
 		  
 		  memcpy (authentication_code_field_ptr, digest, IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
+		  guaranteed_memset(digest, '\0', MD5_DIGEST_LENGTH);
 		}
 	    }
 	}
@@ -433,8 +438,9 @@ assemble_ipmi_lan_pkt (fiid_obj_t obj_rmcp_hdr,
   rv = indx;
  cleanup:
   if (rv < 0)
-    memset(pkt, '\0', pkt_len);
+    guaranteed_memset(pkt, '\0', pkt_len);
   FIID_OBJ_DESTROY_NO_RETURN(obj_lan_msg_trlr);
+  guaranteed_memset(pwbuf, '\0', IPMI_MAX_AUTHENTICATION_CODE_LENGTH);
   return rv;
 }
 

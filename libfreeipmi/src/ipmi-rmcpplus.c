@@ -29,6 +29,7 @@
 #endif /* STDC_HEADERS */
 #include <errno.h>
 
+#include "freeipmi/ipmi-crypt.h"
 #include "freeipmi/ipmi-rmcpplus.h"
 #include "freeipmi/ipmi-authentication-type-spec.h"
 #include "freeipmi/ipmi-messaging-support-cmds.h"

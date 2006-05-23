@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.59 2006-05-19 17:58:54 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.60 2006-05-23 23:54:59 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1210,8 +1210,12 @@ _cmdline_parse(int argc, char **argv)
           cinfo.initial_countdown_seconds_val = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))
             _err_exit("initial countdown value invalid");
-          if (cinfo.initial_countdown_seconds_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS
-              || cinfo.initial_countdown_seconds_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
+	  /* 
+	   * To avoid gcc warning
+	   *
+	   * cinfo.initial_countdown_seconds_val < IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MIN_SECS 
+	   */
+          if (cinfo.initial_countdown_seconds_val > IPMI_BMC_WATCHDOG_TIMER_INITIAL_COUNTDOWN_MAX_SECS)
             _err_exit("initial countdown value out of range");
           break;
         case 'w':

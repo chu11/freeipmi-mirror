@@ -176,3 +176,17 @@ ipmi_open_free_udp_port (void)
   errno = EBUSY;
   return (-1);
 }
+
+/* From David Wheeler's Secure Programming Guide */
+void *guaranteed_memset(void *s, int c, size_t n)
+{
+  volatile char *p = s;
+
+  if (!s || !n)
+    return NULL;
+
+  while (n--)
+    *p++=c;
+
+  return s;
+}

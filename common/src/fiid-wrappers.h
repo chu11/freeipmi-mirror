@@ -207,6 +207,16 @@ do {                                                                         \
     }                                                                        \
 } while (0)
 
+#define FIID_TEMPLATE_FIELD_START_BYTES_CLEANUP(__len, __tmpl, __field)      \
+do {                                                                         \
+  if (((__len) = fiid_template_field_start_bytes ((__tmpl), (__field))) < 0) \
+    {                                                                        \
+      __FIID_SYSLOG;                                                         \
+      __FIID_TRACE;                                                          \
+      goto cleanup;                                                          \
+    }                                                                        \
+} while (0)
+
 #define FIID_TEMPLATE_FIELD_LEN(__len, __tmpl, __field)                    \
 do {                                                                       \
   if (((__len) = fiid_template_field_len ((__tmpl), (__field))) < 0)       \
