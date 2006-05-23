@@ -1,3 +1,7 @@
+2006-05-24  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/: Several security modifications added.
+	
 2006-05-22  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-locate-acpi-spmi.c

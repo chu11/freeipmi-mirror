@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.c,v 1.9 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: ipmipower_util.c,v 1.10 2006-05-23 20:09:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -143,6 +143,21 @@ millisec_gt(struct timeval *time1, struct timeval *time2)
   return 0;
 }
 
+void *
+Secure_memset(void *s, int c, size_t n)
+{ 
+  volatile char *p;
+  
+  assert(s != NULL);
+  assert(n > 0);
+  
+  p = s;
+  while (n--)
+    *p++=c;
+  
+  return s;
+}
+
 #if HAVE_MMAP && HAVE_MLOCK
 void *
 Secure_malloc(size_t len)
@@ -183,7 +198,7 @@ Secure_free(void *ptr, size_t len)
   assert(len > 0);
 
   /* Clear out any important stuff */
-  memset(ptr, '\0', len);
+  Secure_memset(ptr, '\0', len);
 
   /* No need to munlock, munmap is sufficient */
   if (munmap(ptr, len) < 0)
@@ -208,6 +223,8 @@ Secure_free(void *ptr, size_t len)
 {
   assert(ptr != NULL);
   assert(len > 0);
+  memset(ptr, '\0', len);
   free(ptr);
 }
 #endif /* HAVE_MMAP && HAVE_MLOCK */
+

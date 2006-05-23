@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.6 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.7 2006-05-23 20:09:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -49,6 +49,12 @@ int millisec_diff(struct timeval *after, struct timeval *before);
  * Return 1 if time1 is greater than time2
  */
 int millisec_gt(struct timeval *time1, struct timeval *time2);
+
+/* Secure_memset 
+ * - From David Wheeler's Secure Programming Guide
+ * - Un-optimize-outable compiler memset 
+ */
+void *Secure_memset(void *s, int c, size_t n);
 
 /* Secure_malloc
  * "Malloc" non-swappable memory space.

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.88 2006-04-20 21:20:13 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.89 2006-05-23 20:09:22 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -404,7 +404,8 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-       
+  Secure_memset(buffer, '\0', IPMI_PACKET_BUFLEN);
+
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
   else if (pkt == AUTHENTICATION_CAPABILITIES_REQ)
@@ -492,36 +493,58 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
               || pkt == CHASSIS_CONTROL_RES
               || pkt == CLOSE_SESSION_RES)))
     {
-      /* Return 0 if the packet is unparseable */
+      /* rv = 0 if the packet is unparseable */
       if (ipmipower_packet_store(ip, pkt, recv_buf, recv_len) < 0)
-        return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_checksum(ip, pkt))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_authentication_code(ip, 
 					       pkt, 
 					       (uint8_t *)recv_buf, 
 					       (uint32_t)recv_len))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_outbound_sequence_number(ip, pkt))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
       
       if (!ipmipower_check_session_id(ip, pkt))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_network_function(ip, pkt))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_command(ip, pkt))
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (!ipmipower_check_requester_sequence_number(ip, pkt))
 	{
 	  if (pkt == CLOSE_SESSION_RES)
 	    goto close_session_workaround;
-	  return 0;
+	  rv = 0;
+	  goto cleanup;
 	}
 
       /* If everything else is correct besides completion code, packet
@@ -539,7 +562,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
           
           ip->retry_count = 0;  /* important to reset */
           Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-          return -1;
+	  goto cleanup;
 	}
     }
   else /* IPMI 2.0 Packet Checks
@@ -556,17 +579,26 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
         */
     {
       if (ipmipower_packet_store(ip, pkt, recv_buf, recv_len) < 0)
-	return 0;
+	{
+	  rv = 0;
+	  goto cleanup;
+	}
 
       if (pkt == OPEN_SESSION_RES
 	  || pkt == RAKP_MESSAGE_2_RES
 	  || pkt == RAKP_MESSAGE_4_RES)
 	{
 	  if (!ipmipower_check_payload_type(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_message_tag(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  /* I don't think there is a guarantee the data
 	   * (i.e. authentication keys, session id's, etc.) in the
@@ -583,11 +615,14 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
 	      ip->retry_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-	      return -1;
+	      goto cleanup;
 	    }
 	  
 	  if (!ipmipower_check_session_id(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
           if (pkt == OPEN_SESSION_RES)
             {
@@ -595,7 +630,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	       * let the state machine use it's retry logic.
 	       */
               if (!ipmipower_check_open_session_response_privilege(ip, pkt))
-                return -1;
+		goto cleanup;
             }
 	  else if (pkt == RAKP_MESSAGE_2_RES)
 	    {
@@ -606,7 +641,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 #else
 		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
-		  return -1;
+		  goto cleanup;
 		}
 	    }
 	  else if (pkt == RAKP_MESSAGE_4_RES)
@@ -618,7 +653,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 #else
 		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
 #endif
-		  return -1;
+		  goto cleanup;
 		}
 	    }
 	}
@@ -630,40 +665,68 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
                       || pkt == CLOSE_SESSION_RES))) */
 	{
 	  if (!ipmipower_check_payload_type(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_payload_pad(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_integrity_pad(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_checksum(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_authentication_code(ip, 
 						   pkt, 
 						   (uint8_t *)recv_buf, 
 						   (uint32_t)recv_len))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 
 	  if (!ipmipower_check_outbound_sequence_number(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
       
 	  if (!ipmipower_check_session_id(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 	  
 	  if (!ipmipower_check_network_function(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 	  
 	  if (!ipmipower_check_command(ip, pkt))
-	    return 0;
+	    {
+	      rv = 0;
+	      goto cleanup;
+	    }
 	  
 	  if (!ipmipower_check_requester_sequence_number(ip, pkt))
 	    {
 	      if (pkt == CLOSE_SESSION_RES)
 		goto close_session_workaround;
-	      return 0;
+	      rv = 0;
+	      goto cleanup;
 	    }
 
 	  /* If everything else is correct besides completion code, packet
@@ -676,9 +739,8 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 	      
 	      ip->retry_count = 0;  /* important to reset */
 	      Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-	      return -1;
+	      goto cleanup;
 	    }
-  
 	}
     }
 
@@ -691,7 +753,14 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
  close_session_workaround:
   ip->retry_count = 0;  /* important to reset */
   Gettimeofday(&ip->ic->last_ipmi_recv, NULL);
-  return 1;
+  rv = 1;
+
+ cleanup:
+  /* Clear out data */
+  Secure_memset(recv_buf, '\0', IPMI_PACKET_BUFLEN);
+  Fiid_obj_clear(ip->obj_lan_session_hdr_res);
+  Fiid_obj_clear(ip->obj_rmcpplus_session_trlr_res);
+  return rv;
 }
 
 /* _has_timed_out
