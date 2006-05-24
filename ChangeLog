@@ -2,6 +2,9 @@
 
 	* ipmipower/, libfreeipmi/: Several security modifications added.
 
+	* libfreeipmi/src/ipmi-locate-acpi-spmi.c
+	(ipmi_acpi_get_firmware_table): Fix double free bug. 
+
 	* Fix gcc warnings.
 	
 2006-05-22  Albert Chu <chu11@llnl.gov>

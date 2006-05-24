@@ -1067,7 +1067,8 @@ ipmi_acpi_get_firmware_table (char *signature, int table_instance,
     }
   
   free (rsdt_xsdt_table);
-  
+  rsdt_xsdt_table = NULL;
+
   ERR_CLEANUP (acpi_table != NULL);
   
   memcpy (obj_acpi_table_hdr, acpi_table, acpi_table_hdr_length);
