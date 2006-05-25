@@ -242,6 +242,17 @@ do {                                                                    \
     }                                                                   \
 } while (0)
 
+#define ERR_EMSGSIZE_CLEANUP(expr)                                      \
+do {                                                                    \
+  if (!(expr))                                                          \
+    {                                                                   \
+      errno = EMSGSIZE;                                                 \
+      __IPMI_SYSLOG;                                                    \
+      __IPMI_TRACE;                                                     \
+      goto cleanup;                                                     \
+    }                                                                   \
+} while (0)
+
 #define ERR_IPMI_CMD_CLEANUP(__dev, __lun, __netfn, __rq, __rs)         \
 do {                                                                    \
   ERR_CLEANUP (!(ipmi_cmd ((__dev),                                     \
