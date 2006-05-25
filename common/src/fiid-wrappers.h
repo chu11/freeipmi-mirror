@@ -495,6 +495,12 @@ do {                                                     \
       }                                                  \
 } while (0)
 
+#define FIID_OBJ_CLEAR_NO_RETURN(__obj)                  \
+do {                                                     \
+    if ((__obj))                                         \
+      fiid_obj_clear ((__obj));                          \
+} while (0)
+
 #define FIID_OBJ_CLEAR_CLEANUP(__obj)                    \
 do {                                                     \
     if (fiid_obj_clear ((__obj)) < 0)                    \

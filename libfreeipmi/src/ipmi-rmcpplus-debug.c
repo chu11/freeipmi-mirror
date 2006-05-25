@@ -41,6 +41,7 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
+#include "ipmi-common.h"
 
 static int32_t
 _dump_rmcpplus_session_hdr(int fd, 
@@ -685,6 +686,8 @@ _dump_rmcpplus_session_trlr(int fd,
                                        session_trlr_hdr, 
                                        NULL, 
                                        obj_rmcpplus_session_trlr) < 0));
+  /* Clear out data */
+  FIID_OBJ_CLEAR_CLEANUP(obj_rmcpplus_session_trlr);
 
   rv = indx;
  cleanup:

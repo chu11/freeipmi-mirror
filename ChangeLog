@@ -1,3 +1,7 @@
+2006-05-25  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/: Security modifications added.
+	
 2006-05-24  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/, libfreeipmi/: Several security modifications added.

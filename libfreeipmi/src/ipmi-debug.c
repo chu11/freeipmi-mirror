@@ -358,7 +358,10 @@ ipmi_dump_lan_packet (int fd, char *prefix, char *hdr, uint8_t *pkt, uint32_t pk
   indx += len;
   
   ERR_CLEANUP (!(ipmi_obj_dump_perror(fd, prefix_buf, msg_hdr, NULL, obj_lan_msg_hdr) < 0));
-  
+
+  /* Clear out data */
+  FIID_OBJ_CLEAR_CLEANUP(obj_lan_msg_hdr);
+
   if (pkt_len <= indx)
     {
       rv = 0;

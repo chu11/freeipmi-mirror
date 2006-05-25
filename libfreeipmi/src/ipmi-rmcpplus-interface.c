@@ -45,7 +45,10 @@
 #include "err-wrappers.h"
 #include "fiid-wrappers.h"
 #include "freeipmi-portability.h"
+#include "ipmi-common.h"
 #include "md5.h"
+
+#define IPMI_MAX_INTEGRITY_DATA_LENGTH 32
 
 static int32_t
 _construct_payload_buf(uint8_t payload_type,
@@ -418,10 +421,11 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
   int hash_algorithm, hash_flags, crypt_digest_len;
   unsigned int expected_digest_len, copy_digest_len, hash_data_len, integrity_digest_len;
   uint8_t hash_data[IPMI_MAX_PAYLOAD_LENGTH];
-  uint8_t integrity_digest[IPMI_MAX_PAYLOAD_LENGTH];
+  uint8_t integrity_digest[IPMI_MAX_INTEGRITY_DATA_LENGTH];
   int32_t len, authentication_code_len;
   uint8_t pwbuf[IPMI_2_0_MAX_PASSWORD_LENGTH];
-  
+  int32_t rv = -1;
+
   assert ((integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_SHA1_96
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_HMAC_MD5_128
            || integrity_algorithm == IPMI_INTEGRITY_ALGORITHM_MD5_128)
@@ -454,7 +458,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       return (len);
     }
 
-  ERR (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
+  ERR_CLEANUP (!((authentication_code_len = _calculate_authentication_code_len(integrity_algorithm)) < 0));
 
   /* Note: Integrity Key for HMAC_SHA1_96 and HMAC_MD5_128 is K1 */
            
@@ -480,7 +484,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       copy_digest_len = IPMI_MD5_128_AUTHENTICATION_CODE_LENGTH;
     }
       
-  ERR (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
+  ERR_CLEANUP (!((crypt_digest_len = ipmi_crypt_hash_digest_len(hash_algorithm)) < 0));
       
   ERR_EXIT (crypt_digest_len == expected_digest_len);
       
@@ -499,6 +503,7 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       memcpy(hash_data + hash_data_len, 
              pwbuf, 
 	     IPMI_2_0_MAX_PASSWORD_LENGTH);
+      guaranteed_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
@@ -510,25 +515,29 @@ _construct_session_trlr_authentication_code(uint8_t integrity_algorithm,
       memcpy(hash_data + hash_data_len, 
              pwbuf, 
 	     IPMI_2_0_MAX_PASSWORD_LENGTH);
+      guaranteed_memset(pwbuf, '\0', IPMI_2_0_MAX_PASSWORD_LENGTH);
       hash_data_len += IPMI_2_0_MAX_PASSWORD_LENGTH;
     }
   
-  ERR (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
-						 hash_flags,
-						 integrity_key,
-						 integrity_key_len,
-						 hash_data,
-						 hash_data_len,
-						 integrity_digest,
-						 IPMI_MAX_PAYLOAD_LENGTH)) < 0));
+  ERR_CLEANUP (!((integrity_digest_len = ipmi_crypt_hash(hash_algorithm,
+                                                         hash_flags,
+                                                         integrity_key,
+                                                         integrity_key_len,
+                                                         hash_data,
+                                                         hash_data_len,
+                                                         integrity_digest,
+                                                         IPMI_MAX_INTEGRITY_DATA_LENGTH)) < 0));
   
-  ERR (integrity_digest_len == crypt_digest_len);
+  ERR_CLEANUP (integrity_digest_len == crypt_digest_len);
   
-  ERR_ENOSPC (!(integrity_digest_len > authentication_code_buf_len));
+  ERR_ENOSPC_CLEANUP (!(integrity_digest_len > authentication_code_buf_len));
   
   memcpy(authentication_code_buf, integrity_digest, copy_digest_len);
       
-  return (copy_digest_len);
+  rv = copy_digest_len;
+ cleanup:
+  guaranteed_memset(integrity_digest, '\0', IPMI_MAX_INTEGRITY_DATA_LENGTH);
+  return (rv);
 }
 
 int32_t
@@ -830,6 +839,7 @@ assemble_ipmi_rmcpplus_pkt (uint8_t authentication_algorithm,
  cleanup:
   FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_payload);
   FIID_OBJ_DESTROY_NO_RETURN(obj_session_hdr_temp);
+  FIID_OBJ_CLEAR_NO_RETURN(obj_rmcpplus_session_trlr_temp);
   FIID_OBJ_DESTROY_NO_RETURN(obj_rmcpplus_session_trlr_temp);
   return (rv);
 }
