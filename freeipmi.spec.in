@@ -206,7 +206,7 @@ fi
 %defattr(-,root,root)
 %doc %{_datadir}/doc/%{name}/COPYING.bmc-watchdog
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.bmc-watchdog
-%{_initrddir}/freeipmi-bmc-watchdog
+%config(noreplace) %{_initrddir}/freeipmi-bmc-watchdog
 %config(noreplace) %{_sysconfdir}/logrotate.d/freeipmi-bmc-watchdog
 %{_sbindir}/bmc-watchdog
 %{_mandir}/man8/bmc-watchdog.8*
