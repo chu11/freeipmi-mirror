@@ -1,6 +1,6 @@
 2006-05-26  Albert Chu <chu11@llnl.gov>
 
-	* freeipmi.spec.in: Make bmc-watchdog init.d non-replaceable is
+	* freeipmi.spec.in: Make bmc-watchdog init.d non-replaceable if
 	modified.
 	
 2006-05-25  Albert Chu <chu11@llnl.gov>
