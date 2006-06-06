@@ -41,8 +41,6 @@ libfreeipmi:
     - sdr-record-types
     - sel record-types
     - sensor-cmds
-  * template raw for all raw functions
-    - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
   * assemble_raw, unassemble_raw
     - then using these, udm-raw can be adjusted
