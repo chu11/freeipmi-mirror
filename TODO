@@ -44,6 +44,7 @@ libfreeipmi:
   * get event messages function that is passed fiids
   * assemble_raw, unassemble_raw
     - then using these, udm-raw can be adjusted
+  * inband OpenIPMI support
 
 ipmipower
 ---------
