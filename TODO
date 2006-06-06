@@ -20,8 +20,6 @@ libfreeipmi:
   * FRU Commands (SDR Repo does a similar job).
   * Command to Switch MUX between BMC and ttyS1
 
-forward port 0.2.X in-band IBM e325 notes.
-
 Al's TODO list
 ==============
 bmc-config

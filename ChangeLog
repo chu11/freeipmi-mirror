@@ -1,3 +1,7 @@
+2006-06-06  Albert Chu <chu11@llnl.gov>
+
+	* Document workaround notes to in-band tools about IBM e325.
+	
 2006-06-05  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-rmcpplus-interface.c
