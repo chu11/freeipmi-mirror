@@ -30,12 +30,7 @@ bmc-config
 
 libfreeipmi:
 ------------
-  * Different slave address than BMC as default (i.e. in fill_lan_msg_hdr)
   * how to support xRC4
-  * gcrypt: secure mem-buffers
-  * int wraparound corner cases - fiid
-    - uint32_t for max_field_len, but some funcs return int32_t
-    - counters, fiid_obj_create
   * missing cmds
     - lan-cmds 
     - msg-support-cmds
@@ -51,18 +46,8 @@ libfreeipmi:
   * template raw for all raw functions
     - begininning with tmpl_lan_raw
   * get event messages function that is passed fiids
-  * lan ctx interface?
-  * len -> length
-    - fiid?
-  * template "tagging" mechanism to make template compares faster
-  * allow configuration of the slave addr into lan_msg_hdr??
   * assemble_raw, unassemble_raw
     - then using these, udm-raw can be adjusted
-
-fish:
------
-  * Create makefile wrappers to allow fish to work locally in
-    build directory rather that requiring installation.
 
 ipmipower
 ---------

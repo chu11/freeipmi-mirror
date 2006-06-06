@@ -51,7 +51,6 @@ ipmi_crypt_init(void)
 
   ERR (gcry_check_version(GCRYPT_VERSION));
 
-  /* XXX Revisit - Do we need?? */
   ERR (!((e = gcry_control(GCRYCTL_DISABLE_SECMEM, 0)) != GPG_ERR_NO_ERROR));
   
   ERR (!((e = gcry_control(GCRYCTL_INITIALIZATION_FINISHED, 0)) != GPG_ERR_NO_ERROR));
