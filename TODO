@@ -58,7 +58,6 @@ Autoconf/Portability
 --------------------
   * socklet_t, doesn't exist on all OSes.
   * stdarg.h, other OSes use varargs.h
-  * bittypes.h and inttypes.h for u_int32_t, etc.
          
 Bala's TODO List:
 =================
