@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.32 2006-04-20 20:35:50 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.33 2006-06-16 21:12:14 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -320,18 +320,21 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
             err_exit("Command Line Error: username too long");
           strcpy(conf->username, optarg);
           conf->username_set = IPMIPOWER_TRUE;
+	  /* Args will be cleared out in main() */
           break;
         case 'p':       /* --password */
           if (strlen(optarg) > IPMI_2_0_MAX_PASSWORD_LENGTH)
             err_exit("Command Line Error: password too long");
           strcpy(conf->password, optarg);
           conf->password_set = IPMIPOWER_TRUE;
+	  /* Args will be cleared out in main() */
           break;
         case 'k':       /* --k-g */
           if (strlen(optarg) > IPMI_MAX_K_G_LENGTH)
             err_exit("Command Line Error: K_g too long");
           strcpy(conf->k_g, optarg);
           conf->k_g_set = IPMIPOWER_TRUE;
+	  /* Args will be cleared out in main() */
           break;
         case 'n':       /* --on */ 
           conf->powercmd = POWER_CMD_POWER_ON;

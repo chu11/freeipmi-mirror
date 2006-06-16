@@ -1,3 +1,8 @@
+2006-06-16  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/ipmipower_config.c
+	(ipmipower_config_cmdline_parse): Add comments about arg clearing.
+	
 2006-06-06  Albert Chu <chu11@llnl.gov>
 
 	* Document workaround notes to in-band tools about IBM e325.
