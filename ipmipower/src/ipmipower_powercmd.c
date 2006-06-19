@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.90 2006-05-23 20:40:24 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.91 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -191,7 +191,6 @@ _init_ipmi_2_0_randomized_data(ipmipower_powercmd_t ip)
     dbg("ipmipower_powercmd_queue: ipmi_get_random: %s ",
         strerror(errno));
 }
-
 
 void 
 ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic) 
@@ -404,7 +403,7 @@ _send_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
   len = ipmipower_packet_create(ip, pkt, buffer, IPMI_PACKET_BUFLEN);
   ipmipower_packet_dump(ip, pkt, buffer, len);
   Cbuf_write(ip->ic->ipmi_out, buffer, len);
-  Secure_memset(buffer, '\0', IPMI_PACKET_BUFLEN);
+  secure_memset(buffer, '\0', IPMI_PACKET_BUFLEN);
 
   if (pkt == AUTHENTICATION_CAPABILITIES_V20_REQ)
     ip->protocol_state = PROTOCOL_STATE_AUTHENTICATION_CAPABILITIES_V20_SENT;
@@ -758,7 +757,7 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 
  cleanup:
   /* Clear out data */
-  Secure_memset(recv_buf, '\0', IPMI_PACKET_BUFLEN);
+  secure_memset(recv_buf, '\0', IPMI_PACKET_BUFLEN);
   Fiid_obj_clear(ip->obj_lan_session_hdr_res);
   Fiid_obj_clear(ip->obj_rmcpplus_session_trlr_res);
   return rv;
@@ -771,12 +770,15 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 static int 
 _has_timed_out(ipmipower_powercmd_t ip) 
 {
-  struct timeval cur_time;
+  struct timeval cur_time, result;
+  unsigned int timeout_len;
     
   Gettimeofday(&cur_time, NULL);
+  timeval_sub(&cur_time, &(ip->time_begin), &result);
+  timeval_millisecond_calc(&result, &timeout_len);
 
   /* Must use >=, otherwise we could potentially spin */
-  if (millisec_diff(&cur_time, &(ip->time_begin)) >= conf->timeout_len) 
+  if (timeout_len >= conf->timeout_len) 
     {
       /* Don't bother outputting timeout if we have finished the power control operation */
       if (ip->protocol_state != PROTOCOL_STATE_CLOSE_SESSION_SENT)
@@ -794,9 +796,10 @@ _has_timed_out(ipmipower_powercmd_t ip)
 static int 
 _retry_packets(ipmipower_powercmd_t ip) 
 {
-  struct timeval cur_time, end_time;
-  int time_left;
-  int retry_timeout_len;
+  struct timeval cur_time, end_time, result;
+  unsigned int time_since_last_ipmi_send;
+  unsigned int time_left;
+  unsigned int retry_timeout_len;
 
   /* Don't retransmit if any of the following are true */
   if (ip->protocol_state == PROTOCOL_STATE_START /* we haven't started yet */
@@ -804,16 +807,20 @@ _retry_packets(ipmipower_powercmd_t ip)
     return 0;
 
   /* Did we timeout on this packet? */
-  Gettimeofday(&cur_time, NULL);
-    
+  
   retry_timeout_len = (conf->retry_backoff_count) ? (conf->retry_timeout_len * (1 + (ip->retry_count/conf->retry_backoff_count))) : conf->retry_timeout_len;
 
-  if (millisec_diff(&cur_time, &(ip->ic->last_ipmi_send)) < retry_timeout_len)
+  Gettimeofday(&cur_time, NULL);
+  timeval_sub(&cur_time, &(ip->ic->last_ipmi_send), &result);
+  timeval_millisecond_calc(&result, &time_since_last_ipmi_send);
+
+  if (time_since_last_ipmi_send < retry_timeout_len)
     return 0;
 
   /* Do we have enough time to retransmit? */
-  millisec_add(&cur_time, &end_time, conf->timeout_len);
-  time_left = millisec_diff(&end_time, &cur_time);
+  timeval_add_ms(&cur_time, conf->timeout_len, &end_time);
+  timeval_sub(&end_time, &cur_time, &result);
+  timeval_millisecond_calc(&result, &time_left);
   if (time_left < retry_timeout_len)
     return 0;
 
@@ -1861,8 +1868,9 @@ _calculate_cipher_keys(ipmipower_powercmd_t ip)
 static int 
 _process_ipmi_packets(ipmipower_powercmd_t ip) 
 {
-  struct timeval cur_time, end_time;
-  int rv, timeout; 
+  struct timeval cur_time, end_time, result;
+  unsigned int timeout;
+  int rv;
 
   assert(ip != NULL);
   assert(PROTOCOL_STATE_VALID(ip->protocol_state));
@@ -2272,8 +2280,9 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
 
  done:
   Gettimeofday(&cur_time, NULL);
-  millisec_add(&(ip->time_begin), &end_time, conf->timeout_len);
-  timeout = millisec_diff(&end_time, &cur_time);
+  timeval_add_ms(&(ip->time_begin), conf->timeout_len, &end_time);
+  timeval_sub(&end_time, &cur_time, &result);
+  timeval_millisecond_calc(&result, &timeout);
 
   /* shorter timeout b/c of retransmission timeout */
   if (conf->retry_timeout_len) 
@@ -2283,7 +2292,7 @@ _process_ipmi_packets(ipmipower_powercmd_t ip)
         timeout = retry_timeout_len;
     }
 
-  return timeout;
+  return (int)timeout;
 }
 
 int 

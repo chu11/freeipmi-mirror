@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_wrappers.h,v 1.17 2006-03-14 00:36:00 chu11 Exp $
+ *  $Id: ipmipower_wrappers.h,v 1.18 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,6 +32,8 @@
 #include "list.h"
 #include "cbuf.h"
 #include "hostlist.h"
+#include "secure.h"
+#include "timeval.h"
 #include "wrappers.h"
 #include "error.h"
 #include "conffile.h"

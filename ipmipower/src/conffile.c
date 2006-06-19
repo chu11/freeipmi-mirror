@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: conffile.c,v 1.8 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: conffile.c,v 1.9 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -21,7 +21,7 @@
  *  
  *  You should have received a copy of the GNU General Public License along
  *  with Whatsup; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
 \*****************************************************************************/
 
 #if HAVE_CONFIG_H
@@ -30,12 +30,18 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+#if STDC_HEADERS
 #include <ctype.h>
-#include <stdint.h>
-#include <sys/stat.h>
+#include <string.h>
+#endif /* STDC_HEADERS */
+#if HAVE_UNISTD_H
+#include <unistd.h>
+#endif /* HAVE_UNISTD_H */
+#if HAVE_FCNTL_H
 #include <fcntl.h>
+#endif /* HAVE_FCNTL_H */
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "conffile.h"
 #include "fd.h"
@@ -195,7 +201,7 @@ conffile_seterrnum(conffile_t cf, int errnum)
 
 static int
 _setup(conffile_t cf,
-       char *filename,
+       const char *filename,
        struct conffile_option *options,
        int options_len,
        void *app_ptr,
@@ -204,7 +210,10 @@ _setup(conffile_t cf,
 {
     int i;
     
-    if (access(filename, F_OK) < 0) {
+    /* If it doesn't exist for real or can't be read, we consider it
+     * non-existant 
+     */
+    if (access(filename, R_OK) < 0) {
         cf->errnum = CONFFILE_ERR_EXIST;
         return -1;
     }
@@ -216,9 +225,10 @@ _setup(conffile_t cf,
 
     cf->options = options;
     cf->options_len = options_len;
-    for (i = 0; i < options_len; i++)
-        *cf->options[i].count_ptr = 0;
-
+    for (i = 0; i < options_len; i++) {
+        if (cf->options[i].count_ptr)
+            *cf->options[i].count_ptr = 0;
+    }
     cf->app_ptr = app_ptr;
     cf->app_data = app_data;
     cf->flags = flags;
@@ -499,6 +509,8 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
     }
 
     if (option == NULL) {
+        if (cf->flags & CONFFILE_FLAG_OPTION_IGNORE_UNKNOWN)
+	    return 0;
         cf->errnum = CONFFILE_ERR_PARSE_OPTION_UNKNOWN;
         return -1;
     }
@@ -662,14 +674,14 @@ _parseline(conffile_t cf, char *linebuf, int linebuflen)
 
 int
 conffile_parse(conffile_t cf,
-               char *filename,
+               const char *filename,
                struct conffile_option *options,
                int options_len,
                void *app_ptr,
                int app_data,
                int flags)
 {
-    int i, j, len = -1, retval = -1;
+    int i, j, temp, len = 0, retval = -1;
     char linebuf[CONFFILE_MAX_LINELEN];
 
     if (cf == NULL || cf->magic != CONFFILE_MAGIC)
@@ -695,7 +707,8 @@ conffile_parse(conffile_t cf,
                 && ((int)options[i].option_type_arg) == 0)
             || options[i].max_count < 0
             || options[i].required_count < 0
-            || options[i].count_ptr == NULL) {
+            || (options[i].option_type != CONFFILE_OPTION_IGNORE
+                && options[i].count_ptr == NULL)) {
             cf->errnum = CONFFILE_ERR_PARAMETERS;
             return -1;
         }
@@ -704,11 +717,23 @@ conffile_parse(conffile_t cf,
     /* count_ptr cannot be identical to any other count_ptr */
     for (i = 0; i < options_len; i++) {
         for (j = 0; j < options_len; j++) {
-            if (i != j && options[i].count_ptr == options[j].count_ptr) {
+            if (i != j 
+                && options[i].option_type != CONFFILE_OPTION_IGNORE
+                && options[j].option_type != CONFFILE_OPTION_IGNORE
+                && options[i].count_ptr == options[j].count_ptr) {
                 cf->errnum = CONFFILE_ERR_PARAMETERS;
                 return -1;
             }
         }
+    }
+
+    /* Ensure flags are appropriate */
+    temp = flags;
+    temp &= ~CONFFILE_FLAG_OPTION_CASESENSITIVE;
+    temp &= ~CONFFILE_FLAG_OPTION_IGNORE_UNKNOWN;
+    if (temp) {
+        cf->errnum = CONFFILE_ERR_PARAMETERS;
+        return -1;
     }
 
     if (_setup(cf, filename, options, options_len, app_ptr, app_data, flags) < 0)
@@ -727,6 +752,8 @@ conffile_parse(conffile_t cf,
     cf->line_num = 0;
     /* Check required counts */
     for (i = 0; i < cf->options_len; i++) {
+        if (cf->options[i].count_ptr == NULL)
+            continue;
         if ((*cf->options[i].count_ptr) < cf->options[i].required_count) {
             strcpy(cf->optionname, cf->options[i].optionname);
             cf->errnum = CONFFILE_ERR_PARSE_OPTION_TOOFEW;

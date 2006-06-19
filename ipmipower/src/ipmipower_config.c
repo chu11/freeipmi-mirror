@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.33 2006-06-16 21:12:14 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.34 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -30,7 +30,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#if STDC_HEADERS
 #include <string.h>
+#endif
 #include <assert.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
@@ -39,6 +41,7 @@
 #if HAVE_GETOPT_H
 #include <getopt.h>
 #endif
+#include <errno.h>
 
 #include "ipmipower_config.h"
 #include "ipmipower_authentication.h"
@@ -72,7 +75,8 @@ ipmipower_config_setup(void)
 {
   assert(conf == NULL);         /* Already initialized */
 
-  conf = (struct ipmipower_config *)Secure_malloc(sizeof(struct ipmipower_config));
+  if (!(conf = (struct ipmipower_config *)secure_malloc(sizeof(struct ipmipower_config))))
+    err_exit("secure_malloc: %s", strerror(errno));
 
   conf->hosts = NULL;
   conf->hosts_count = 0;

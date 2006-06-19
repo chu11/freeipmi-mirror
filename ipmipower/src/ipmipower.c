@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.15 2006-04-19 16:39:00 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.16 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -201,7 +201,7 @@ _cleanup(void)
   close(conf->logfile_fd);
 #endif
 
-  Secure_free(conf, sizeof(struct ipmipower_config));
+  secure_free(conf, sizeof(struct ipmipower_config));
 }
 
 static void 

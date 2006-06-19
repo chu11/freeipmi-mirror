@@ -1,3 +1,23 @@
+2006-06-19  Albert Chu <chu11@llnl.gov>
+
+	* ipmipower/src/secure.h, ipmipower/src/secure.c,
+	ipmipower/src/timeval.h, ipmipower/src/timeval.c: New files.
+
+	* ipmipower/src/hostlist.h, ipmipower/src/hostlist.c,
+	ipmipower/src/conffile.h, ipmipower/src/conffile.c: Update to
+	latest library version.
+
+	* ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c
+	(Secure_memset, Secure_malloc, Secure_free, millisec_add,
+	millisec_diff, millisec_gt): Removed functions.
+
+	* ipmipower/src/ipmipower_powercmd.c,
+	ipmipower/src/ipmipower_ping.c, ipmipower/src/ipmipower_config.c,
+	ipmipower/src/ipmipower.c: Adjust to use new functions in
+	secure.[ch] and timeval.[ch].
+
+	* ipmipower/src/Makefile.am: Add new files.
+	
 2006-06-16  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/ipmipower_config.c

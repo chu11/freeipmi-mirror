@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.7 2006-05-23 20:09:22 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.8 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,37 +33,5 @@
  * 
  */
 unsigned int get_rand(void);
-
-/* millisec_add
- * - Add ms milliseconds to old, store new result in new
- */
-void millisec_add(struct timeval *old, struct timeval *new, unsigned int ms);
-
-/* millisec_diff
- * Return the difference in terms of milliseconds.  Returns 0
- * if after is less than before.
- */
-int millisec_diff(struct timeval *after, struct timeval *before);
-
-/* millisec_gt
- * Return 1 if time1 is greater than time2
- */
-int millisec_gt(struct timeval *time1, struct timeval *time2);
-
-/* Secure_memset 
- * - From David Wheeler's Secure Programming Guide
- * - Un-optimize-outable compiler memset 
- */
-void *Secure_memset(void *s, int c, size_t n);
-
-/* Secure_malloc
- * "Malloc" non-swappable memory space.
- */
-void *Secure_malloc(size_t len);
-
-/* Secure_free
- * "Free" non-swappable memory space.
- */
-void Secure_free(void *ptr, size_t len);
 
 #endif /* _IPMIPOWER_UTIL_H */

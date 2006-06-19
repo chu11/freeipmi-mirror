@@ -22,6 +22,8 @@ ipmipower_SOURCES= \
 	ipmipower_util.c \
 	ipmipower_wrappers.c \
 	list.c \
+	secure.c \
+	timeval.c \
 	wrappers.c
  
 ipmipower_LDADD = ../../libfreeipmi/src/libfreeipmi.la
@@ -49,6 +51,8 @@ noinst_HEADERS= \
 	ipmipower_util.h \
 	ipmipower_wrappers.h \
 	list.h \
+	secure.h \
+	timeval.h \
 	wrappers.h
  
 AM_CFLAGS = -Wall -I$(srcdir)/../../libfreeipmi/include -D_GNU_SOURCE \

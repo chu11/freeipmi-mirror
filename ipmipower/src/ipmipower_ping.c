@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_ping.c,v 1.15 2006-03-07 22:11:19 chu11 Exp $
+ *  $Id: ipmipower_ping.c,v 1.16 2006-06-19 19:32:36 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -59,7 +59,8 @@ void
 ipmipower_ping_process_pings(int *timeout) 
 {
   int i, send_pings_flag = 0;
-  struct timeval cur_time;
+  struct timeval cur_time, result;
+  unsigned int ms_time;
     
   assert(timeout != NULL);
 
@@ -70,10 +71,10 @@ ipmipower_ping_process_pings(int *timeout)
     return;
 
   Gettimeofday(&cur_time, NULL);
-  if (millisec_gt(&cur_time, &next_ping_sends_time) || force_discovery_sweep) 
+  if (timeval_gt(&cur_time, &next_ping_sends_time) || force_discovery_sweep) 
     {
       force_discovery_sweep = 0;
-      millisec_add(&cur_time, &next_ping_sends_time, conf->ping_interval_len);
+      timeval_add_ms(&cur_time, conf->ping_interval_len, &next_ping_sends_time);
       send_pings_flag++;
     }
 
@@ -253,9 +254,13 @@ ipmipower_ping_process_pings(int *timeout)
         }
       
       /* Is the node gone?? */
-      if (millisec_diff(&cur_time, &ics[i].last_ping_recv) >= conf->ping_timeout_len)
+      timeval_sub(&cur_time, &ics[i].last_ping_recv, &result);
+      timeval_millisecond_calc(&result, &ms_time);
+      if (ms_time >= conf->ping_timeout_len)
         ics[i].discover_state = STATE_UNDISCOVERED;
     }
 
-  *timeout = millisec_diff(&next_ping_sends_time, &cur_time);
+  timeval_sub(&next_ping_sends_time, &cur_time, &result);
+  timeval_millisecond_calc(&result, &ms_time);
+  *timeout = (int)ms_time;
 }
