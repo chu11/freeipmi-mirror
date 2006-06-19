@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.57 2006-04-20 20:35:50 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.58 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,13 +26,13 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <errno.h>
 #include <assert.h>
 #include <stdint.h>
@@ -295,7 +295,7 @@ ipmipower_packet_dump(ipmipower_powercmd_t ip, packet_type_t pkt,
                              tmpl_lan_msg_hdr,
                              ipmipower_packet_cmd_template(ip, pkt));
     }
-#endif
+#endif /* NDEBUG */
 }
 
 int
@@ -1102,15 +1102,15 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_ROLE_OR_PRIVILEGE_LEVEL_REQUESTED)
 #ifndef NDEBUG
 	return MSG_TYPE_PRIVILEGE;
-#else
+#else  /* !NDEBUG */
         return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_UNAUTHORIZED_NAME)
 #ifndef NDEBUG
 	return MSG_TYPE_USERNAME;
-#else
+#else  /* !NDEBUG */
         return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
       else if (rmcpplus_status_code == RMCPPLUS_STATUS_NO_CIPHER_SUITE_MATCH_WITH_PROPOSED_SECURITY_ALGORITHMS)
 	return MSG_TYPE_CIPHER_SUITE;
     }
@@ -1129,18 +1129,18 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	{
 #ifndef NDEBUG
 	  return MSG_TYPE_USERNAME;
-#else
+#else /* !NDEBUG */
 	  return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
 	}
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && comp_code == IPMI_COMP_CODE_EXCEEDS_PRIVILEGE_LEVEL)
 	{
 #ifndef NDEBUG
 	  return MSG_TYPE_PRIVILEGE;
-#else
+#else /* !NDEBUG */
 	  return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
 	}
       else if (pkt == ACTIVATE_SESSION_RES 
 	       && (comp_code == IPMI_COMP_CODE_NO_SESSION_SLOT_AVAILABLE 
@@ -1154,17 +1154,17 @@ ipmipower_packet_errmsg(ipmipower_powercmd_t ip, packet_type_t pkt)
 	{
 #ifndef NDEBUG
 	  return MSG_TYPE_PRIVILEGE;
-#else
+#else /* !NDEBUG */
 	  return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
 	}
       else if (pkt == CHASSIS_CONTROL_RES
 	       && comp_code == IPMI_COMP_CODE_INSUFFICIENT_PRIVILEGE_LEVEL)
 #ifndef NDEBUG
 	return MSG_TYPE_PRIVILEGE;
-#else
+#else /* !NDEBUG */
         return MSG_TYPE_PERMISSION;
-#endif
+#endif /* !NDEBUG */
       else if (pkt == CHASSIS_CONTROL_RES 
 	       && comp_code == IPMI_COMP_CODE_REQUEST_PARAMETER_NOT_SUPPORTED)
 	return MSG_TYPE_OPERATION;

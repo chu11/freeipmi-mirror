@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_config.c,v 1.35 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: ipmipower_config.c,v 1.36 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -104,7 +104,7 @@ ipmipower_config_setup(void)
   memset(conf->logfile, '\0', MAXPATHLEN+1);
   ipmipower_config_default_logfile(conf->logfile, MAXPATHLEN);
   conf->logfile_fd = -1;
-#endif
+#endif /* NDEBUG */
   conf->timeout_len = 20000;     /* 20 seconds */
   conf->retry_timeout_len = 400; /* .4 seconds  */
   conf->retry_backoff_count = 8;
@@ -250,9 +250,9 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 
 #ifndef NDEBUG
   char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXDIMLF:t:y:b:i:z:v:w:x:";
-#else
+#else  /* !NDEBUG */
   char *options = "h:u:p:k:nfcrsjmHVC:a:l:R:T:go:PSUXt:y:b:i:z:v:w:x:";
-#endif
+#endif /* !NDEBUG */
     
 #if HAVE_GETOPT_LONG
   struct option long_options[] = 
@@ -288,7 +288,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"rmcpdump",                     0, NULL, 'M'},
       {"log",                          0, NULL, 'L'},
       {"logfile",                      1, NULL, 'F'},
-#endif
+#endif /* NDEBUG */
       {"timeout" ,                     1, NULL, 't'},
       {"retry-timeout",                1, NULL, 'y'},
       {"retry-backoff-count",          1, NULL, 'b'},
@@ -299,16 +299,16 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
       {"ping-consec-count",            1, NULL, 'x'},
       {0, 0, 0, 0},
     };
-#endif
+#endif /* HAVE_GETOPT_LONG */
 
   /* turn off output messages */
   opterr = 0;
 
 #if HAVE_GETOPT_LONG
   while ((c = getopt_long(argc, argv, options, long_options, NULL)) != -1)
-#else
+#else  /* !HAVE_GETOPT_LONG */
   while ((c = getopt(argc, argv, options)) != -1)
-#endif
+#endif /* !HAVE_GETOPT_LONG */
     {  
       switch (c) 
         {
@@ -430,7 +430,7 @@ ipmipower_config_cmdline_parse(int argc, char **argv)
 	  memset(conf->logfile, '\0', MAXPATHLEN+1);
           strcpy(conf->logfile, optarg);
 	  break;
-#endif
+#endif /* !NDEBUG */
         case 't':       /* --timeout */
           conf->timeout_len = strtol(optarg, &ptr, 10);
           if (ptr != (optarg + strlen(optarg)))

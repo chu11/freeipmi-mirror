@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.91 2006-06-19 19:32:36 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.92 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,25 +26,25 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 
 #include "ipmipower.h"
 #include "ipmipower_authentication.h"
@@ -257,7 +257,7 @@ ipmipower_powercmd_queue(power_cmd_t cmd, struct ipmipower_connection *ic)
        * Response
        */      
     }
-#endif 
+#endif /* 0 */
 
   /* IPMI 2.0 */
 
@@ -638,9 +638,9 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 		{
 #ifndef NDEBUG
 		  ipmipower_output(MSG_TYPE_PASSWORD, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
 		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 		  goto cleanup;
 		}
 	    }
@@ -650,9 +650,9 @@ _recv_packet(ipmipower_powercmd_t ip, packet_type_t pkt)
 		{
 #ifndef NDEBUG
 		  ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
 		  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 		  goto cleanup;
 		}
 	    }
@@ -994,9 +994,9 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
     {
 #ifndef NDEBUG
       ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
       ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
       return -1;
     }
 
@@ -1029,9 +1029,9 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	      /* Time to give up */
 #ifndef NDEBUG	      
 	      ipmipower_output(MSG_TYPE_1_5_AUTO, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
 	      ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 	      return -1;
 	    }
 	  else
@@ -1041,9 +1041,9 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	{
 #ifndef NDEBUG	      
 	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
 	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 	  return -1;
 	}
     }
@@ -1068,9 +1068,9 @@ _check_ipmi_1_5_authentication_capabilities(ipmipower_powercmd_t ip,
 	      /* Time to give up */
 #ifndef NDEBUG
 	      ipmipower_output(MSG_TYPE_AUTHENTICATION_TYPE, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
               ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 	      return -1;
 	    }
 	  else
@@ -1163,9 +1163,9 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
     {
 #ifndef NDEBUG
       ipmipower_output(MSG_TYPE_USERNAME, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
       ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
       return -1;
     }
 
@@ -1174,9 +1174,9 @@ _check_ipmi_2_0_authentication_capabilities(ipmipower_powercmd_t ip)
     {
 #ifndef NDEBUG
       ipmipower_output(MSG_TYPE_K_G, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
       ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
       return -1;
     }
 
@@ -1529,9 +1529,9 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
               ip->ic->hostname, ip->protocol_state, ip->cipher_suite_id);
 #ifndef NDEBUG
           ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
-#else
+#else  /* !NDEBUG */
           ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
           return -1;
         }
     }
@@ -1564,9 +1564,9 @@ _determine_cipher_suite_id_to_use(ipmipower_powercmd_t ip)
               ip->ic->hostname, ip->protocol_state);
 #ifndef NDEBUG
           ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname);
-#else
+#else  /* !NDEBUG */
           ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
           return -1;
         }
       
@@ -1669,9 +1669,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	{
 #ifndef NDEBUG
 	  ipmipower_output(MSG_TYPE_GIVEN_PRIVILEGE, ip->ic->hostname); 
-#else
+#else  /* !NDEBUG */
 	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 	}
       
       if (conf->cipher_suite_id != CIPHER_SUITE_ID_AUTO 
@@ -1680,9 +1680,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 	{
 #ifndef NDEBUG
 	  ipmipower_output(MSG_TYPE_CIPHER_SUITE, ip->ic->hostname); 
-#else
+#else  /* !NDEBUG */
 	  ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
 	}
     }
 
@@ -1698,9 +1698,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
             {
 #ifndef NDEBUG
               ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else
+#else  /* !NDEBUG */
               ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
               return -1;
             }
           else
@@ -1727,9 +1727,9 @@ _check_open_session_error(ipmipower_powercmd_t ip)
                 {
 #ifndef NDEBUG
                   ipmipower_output(MSG_TYPE_2_0_AUTO, ip->ic->hostname); 
-#else
+#else  /* !NDEBUG */
                   ipmipower_output(MSG_TYPE_PERMISSION, ip->ic->hostname);
-#endif
+#endif /* !NDEBUG */
                   return -1;
                 }
               

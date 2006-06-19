@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.h,v 1.60 2006-04-20 21:27:41 chu11 Exp $
+ *  $Id: ipmipower.h,v 1.61 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -29,18 +29,18 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
+#include <sys/time.h>
+#include <time.h>
+#else  /* !TIME_WITH_SYS_TIME */
+#if HAVE_SYS_TIME_H
+#include <sys/time.h>
+#else /* !HAVE_SYS_TIME_H */
+#include <time.h>
+#endif  /* !HAVE_SYS_TIME_H */
+#endif /* !TIME_WITH_SYS_TIME */
 #include <sys/param.h>
 #include <netinet/in.h>
 
@@ -52,11 +52,11 @@
 
 #ifndef MAXHOSTNAMELEN
 #define MAXHOSTNAMELEN 64
-#endif
+#endif /* MAXHOSTNAMELEN */
 
 #ifndef MAXPATHLEN
 #define MAXPATHLEN 4096
-#endif
+#endif /* MAXPATHLEN */
 
 /*
  * ipmipower config default
@@ -569,7 +569,7 @@ struct ipmipower_config
   ipmipower_bool_t         log;
   char                     logfile[MAXPATHLEN+1];
   int                      logfile_fd;
-#endif
+#endif /* NDEBUG */
   int                      timeout_len;
   int                      retry_timeout_len;
   int                      retry_backoff_count; 

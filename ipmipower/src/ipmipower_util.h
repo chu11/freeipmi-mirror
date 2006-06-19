@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_util.h,v 1.8 2006-06-19 19:32:36 chu11 Exp $
+ *  $Id: ipmipower_util.h,v 1.9 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,6 +26,8 @@
 
 #ifndef _IPMIPOWER_UTIL_H
 #define _IPMIPOWER_UTIL_H
+
+#include "ipmipower.h"
 
 /* 
  * get_rand

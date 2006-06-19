@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_prompt.c,v 1.30 2006-04-20 20:35:50 chu11 Exp $
+ *  $Id: ipmipower_prompt.c,v 1.31 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,22 +26,22 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #include <stdio.h>
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <stdint.h>
 #include <sys/stat.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+#endif /* HAVE_FCNTL_H */
 #include <assert.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include <errno.h> 
 
 #include "ipmipower_config.h"
@@ -105,7 +105,7 @@ _cmd_advanced(void)
               "rmcpdump [on|off]                     - toggle RMCP dump output\n"
 	      "log [on|off]                          - toggle logging\n"
 	      "logfile [str]                         - set a new logfile (no str for default)\n");
-#endif /* ifndef NDEBUG */
+#endif /* NDEBUG */
   cbuf_printf(ttyout,
               "config                                - output current configuration\n");
 } 
@@ -309,10 +309,10 @@ _cmd_password(char **argv)
 
 #ifdef NDEBUG
       cbuf_printf(ttyout, "password changed\n");
-#else
+#else  /* !NDEBUG */
       cbuf_printf(ttyout, "password: %s\n", 
                   (strlen(conf->password)) ? conf->password : "NULL");
-#endif
+#endif /* !NDEBUG */
     }
   else
     cbuf_printf(ttyout, "password invalid length\n");
@@ -336,10 +336,10 @@ _cmd_k_g(char **argv)
 
 #ifdef NDEBUG
       cbuf_printf(ttyout, "k_g changed\n");
-#else
+#else  /* !NDEBUG */
       cbuf_printf(ttyout, "k_g: %s\n", 
                   (strlen(conf->k_g)) ? conf->k_g : "NULL");
-#endif
+#endif /* !NDEBUG */
     }
   else
     cbuf_printf(ttyout, "k_g invalid length\n");
@@ -542,7 +542,7 @@ _cmd_logfile(char **argv)
   
   cbuf_printf(ttyout, "log file set to %s\n", conf->logfile);
 }
-#endif
+#endif /* NDEBUG */
 
 static void 
 _cmd_config(void) 
@@ -556,7 +556,7 @@ _cmd_config(void)
       hostlist_t discovered = NULL;
       hostlist_t undiscovered = NULL;
       hostlist_t badconnection = NULL;
-#endif
+#endif /* NDEBUG */
 
       rv = hostlist_ranged_string(conf->hosts, IPMIPOWER_HOSTLIST_BUFLEN, 
                                   buffer);
@@ -614,7 +614,7 @@ _cmd_config(void)
       hostlist_destroy(discovered);
       hostlist_destroy(undiscovered);
       hostlist_destroy(badconnection);
-#endif
+#endif /* NDEBUG */
     }
   else
     cbuf_printf(ttyout, "Hostnames:                     NONE\n");
@@ -627,10 +627,10 @@ _cmd_config(void)
               (strlen(conf->password)) ? conf->password : "NULL");
   cbuf_printf(ttyout, "K_g:                          %s\n", 
               (strlen(conf->k_g)) ? conf->k_g : "NULL");
-#else
+#else  /* !NDEBUG */
   cbuf_printf(ttyout, "Password:                     *****\n");
   cbuf_printf(ttyout, "K_g:                          *****\n");
-#endif
+#endif /* !NDEBUG */
 
   cbuf_printf(ttyout, "Authentication_Type:          %s\n", 
               ipmipower_authentication_type_string(conf->authentication_type));
@@ -663,7 +663,7 @@ _cmd_config(void)
 	      (conf->log) ? "on" : "off");
   if (conf->log)
     cbuf_printf(ttyout, "Logfile:                      %s\n", conf->logfile);
-#endif
+#endif /* NDEBUG */
   cbuf_printf(ttyout, "Timeout:                      %d ms\n", conf->timeout_len);
   cbuf_printf(ttyout, "Retry Timeout:                %d ms\n", conf->retry_timeout_len);
   cbuf_printf(ttyout, "Retry Backoff Count:          %d\n", conf->retry_backoff_count);
@@ -844,7 +844,7 @@ ipmipower_prompt_process_cmdline(void)
               _cmd_log(argv);
 	    else if (strcmp(argv[0], "logfile") == 0)
 	      _cmd_logfile(argv);
-#endif /* ifndef NDEBUG */
+#endif /* NDEBUG */
             else if (strcmp(argv[0], "happyeaster") == 0)
               cbuf_printf(ttyout, "Ipmipower by Albert Chu <chu11@llnl.gov>\n");
             else if (strcmp(argv[0], "config") == 0)

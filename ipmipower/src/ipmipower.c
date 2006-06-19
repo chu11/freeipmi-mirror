@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower.c,v 1.17 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: ipmipower.c,v 1.18 2006-06-19 20:10:37 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -96,7 +96,7 @@ _security_initialization(void)
   rlim.rlim_cur = 0;
   if (setrlimit(RLIMIT_CORE,&rlim) < 0)
     err_exit("setrlimit: %s", strerror(errno));
-#endif
+#endif /* NDEBUG */
   if (ipmi_rmcpplus_init() < 0)
     err_exit("ipmi_rmcpplus_init");
 }
@@ -159,9 +159,9 @@ _setup(void)
   err_cbuf_dump_file_stream(conf->debug, stderr);
   err_cbuf_dump_file_descriptor(conf->log, conf->logfile_fd);
 
-#else
+#else  /* !NDEBUG */
   err_cbuf(0, 0);
-#endif
+#endif /* !NDEBUG */
 
   err_file_descriptor(0, 0); /* now errors are done through the ttyerr */
 }
@@ -180,13 +180,13 @@ _cleanup(void)
 #ifndef NDEBUG
   if (conf->log)
     cbuf_peek_to_fd(ttyout, conf->logfile_fd, -1);
-#endif
+#endif /* NDEBUG */
   cbuf_read_to_fd(ttyout, STDOUT_FILENO, -1);
   cbuf_destroy(ttyout);
 #ifndef NDEBUG
   if (conf->log)
     cbuf_peek_to_fd(ttyerr, conf->logfile_fd, -1);
-#endif
+#endif /* NDEBUG */
   cbuf_read_to_fd(ttyerr, STDERR_FILENO, -1);
   cbuf_destroy(ttyerr);
 
@@ -199,7 +199,7 @@ _cleanup(void)
 
 #ifndef NDEBUG
   close(conf->logfile_fd);
-#endif
+#endif /* NDEBUG */
 
   secure_free(conf, sizeof(struct ipmipower_config));
 }
@@ -385,14 +385,14 @@ _poll_loop(int non_interactive)
 #ifndef NDEBUG
           if (conf->log)
             Cbuf_peek_to_fd(ttyin, conf->logfile_fd, -1);
-#endif
+#endif /* NDEBUG */
         }
       if (!cbuf_is_empty(ttyout) && (pfds[nfds-2].revents & POLLOUT))
         {
 #ifndef NDEBUG
           if (conf->log)
             Cbuf_peek_to_fd(ttyout, conf->logfile_fd, -1);
-#endif
+#endif /* NDEBUG */
           Cbuf_read_to_fd(ttyout, STDOUT_FILENO);
         }
       if (!cbuf_is_empty(ttyerr) && (pfds[nfds-1].revents & POLLOUT))
@@ -400,7 +400,7 @@ _poll_loop(int non_interactive)
 #ifndef NDEBUG
           if (conf->log)
             Cbuf_peek_to_fd(ttyerr, conf->logfile_fd, -1);
-#endif
+#endif /* NDEBUG */
           Cbuf_read_to_fd(ttyerr, STDERR_FILENO);
         }
     }
@@ -413,7 +413,7 @@ main(int argc, char *argv[])
 {
 #ifdef NDEBUG
   int i;
-#endif
+#endif /* NDEBUG */
 
   /* Call before anything else */
   err_init(argv[0]);
@@ -439,7 +439,7 @@ main(int argc, char *argv[])
    */
   for (i = 1; i < argc; i++)
     memset(argv[i], '\0', strlen(argv[i]));
-#endif
+#endif /* NDEBUG */
 
   ipmipower_config_conffile_parse(conf->configfile);
   ipmipower_config_check_values();
