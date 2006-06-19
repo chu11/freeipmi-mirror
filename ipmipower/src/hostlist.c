@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: hostlist.c,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: hostlist.c,v 1.6 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,14 +38,14 @@
 #if STDC_HEADERS
 #include <string.h>
 #include <stdarg.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #include <ctype.h>
 #include <sys/param.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 
 #include "hostlist.h"
 

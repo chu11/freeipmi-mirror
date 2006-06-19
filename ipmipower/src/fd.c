@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: fd.c,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: fd.c,v 1.6 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -35,14 +35,14 @@
 #include <errno.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+#endif /* HAVE_FCNTL_H
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include "fd.h"
 
 

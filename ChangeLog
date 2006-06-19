@@ -4,8 +4,9 @@
 	ipmipower/src/timeval.h, ipmipower/src/timeval.c: New files.
 
 	* ipmipower/src/hostlist.h, ipmipower/src/hostlist.c,
-	ipmipower/src/conffile.h, ipmipower/src/conffile.c: Update to
-	latest library version.
+	ipmipower/src/conffile.h, ipmipower/src/conffile.c,
+	ipmipower/src/cbuf.h, ipmipower/src/cbuf.c: Update to latest
+	library version.
 
 	* ipmipower/src/ipmipower_util.h, ipmipower/src/ipmipower_util.c
 	(Secure_memset, Secure_malloc, Secure_free, millisec_add,
@@ -17,6 +18,8 @@
 	secure.[ch] and timeval.[ch].
 
 	* ipmipower/src/Makefile.am: Add new files.
+
+	* ipmipower/src: General code cleanup.
 	
 2006-06-16  Albert Chu <chu11@llnl.gov>
 

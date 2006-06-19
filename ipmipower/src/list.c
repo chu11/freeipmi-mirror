@@ -1,5 +1,5 @@
 /*****************************************************************************
- *  $Id: list.c,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: list.c,v 1.6 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -38,7 +38,7 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include "list.h"
 
 

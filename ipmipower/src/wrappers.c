@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: wrappers.c,v 1.11 2006-03-14 00:36:00 chu11 Exp $
+ *  $Id: wrappers.c,v 1.12 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -32,22 +32,22 @@
 #include <stdlib.h>
 #if STDC_HEADERS
 #include <string.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <errno.h>
 #include <assert.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
+#endif /* HAVE_UNISTD_H */
 #include <signal.h>
 #if HAVE_FCNTL_H
 #include <fcntl.h>
-#endif
+#endif /* HAVE_FCNTL_H */
 #include <stdint.h>
 #include <sys/socket.h>
 #include <stdint.h>
 #if HAVE_SYS_WAIT_H
 #include <sys/wait.h>
-#endif
+#endif /* HAVE_SYS_WAIT_H */
 #include <sys/poll.h>
 
 #ifdef __FreeBSD__

@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: error.c,v 1.7 2006-03-11 00:27:23 chu11 Exp $
+ *  $Id: error.c,v 1.8 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2001-2002 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,12 +26,12 @@
 
 #if HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #if STDC_HEADERS
 #include <string.h>
 #include <stdarg.h>
-#endif
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include <errno.h>
 #include <stdlib.h>

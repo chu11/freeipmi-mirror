@@ -1,7 +1,7 @@
 /*****************************************************************************
- *  $Id: cbuf.h,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: cbuf.h,v 1.6 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
- *  Copyright (C) 2002 The Regents of the University of California.
+ *  Copyright (C) 2002-2005 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
  *  Written by Chris Dunlap <cdunlap@llnl.gov>.
  *
@@ -19,7 +19,7 @@
  *
  *  You should have received a copy of the GNU General Public License along
  *  with LSD-Tools; if not, write to the Free Software Foundation, Inc.,
- *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA.
+ *  59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  *****************************************************************************/
 
 
@@ -27,9 +27,9 @@
 #define LSD_CBUF_H
 
 
-/***********
- *  Notes  *
- ***********/
+/*****************************************************************************
+ *  Notes
+ *****************************************************************************/
 /*
  *  Cbuf is a circular-buffer capable of dynamically resizing itself.
  *  Unread data in the buffer will be overwritten once the cbuf has
@@ -61,9 +61,9 @@
  */
 
 
-/****************
- *  Data Types  *
- ****************/
+/*****************************************************************************
+ *  Data Types
+ *****************************************************************************/
 
 typedef struct cbuf * cbuf_t;           /* circular-buffer opaque data type  */
 
@@ -78,9 +78,9 @@ typedef enum {                          /* CBUF_OPT_OVERWRITE values:        */
 } cbuf_overwrite_t;
 
 
-/***************
- *  Functions  *
- ***************/
+/*****************************************************************************
+ *  Functions
+ *****************************************************************************/
 
 cbuf_t cbuf_create (int minsize, int maxsize);
 /*
@@ -104,14 +104,14 @@ void cbuf_flush (cbuf_t cb);
 
 int cbuf_size (cbuf_t cb);
 /*
- *  Returns the current size of the buffer allocated to [cb]
- *    (ie, the number of bytes in can currently hold).
+ *  Returns the maximum size of the buffer allocated to [cb]
+ *    (ie, the number of bytes it can currently hold).
  */
 
 int cbuf_free (cbuf_t cb);
 /*
- *  Returns the number of bytes in [cb] available for writing before
- *    unread data is overwritten (unless the cbuf is able to resize itself).
+ *  Returns the number of bytes in [cb] available for writing before unread
+ *    data is overwritten (assuming the cbuf can resize itself if needed).
  */
 
 int cbuf_used (cbuf_t cb);

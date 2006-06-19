@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: argv.c,v 1.5 2006-03-07 07:25:59 chu11 Exp $
+ *  $Id: argv.c,v 1.6 2006-06-19 19:51:17 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -26,12 +26,12 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
+#endif /* HAVE_CONFIG_H */
 
 #if STDC_HEADERS
 #include <string.h>
-#endif
 #include <ctype.h>
+#endif /* STDC_HEADERS */
 #include <assert.h>
 #include "wrappers.h"
 #include "argv.h"
