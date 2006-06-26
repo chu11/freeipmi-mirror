@@ -4162,8 +4162,7 @@ debian-ia64:~#
 @item CVS:           @uref{https://savannah.gnu.org/cvs/?group=freeipmi}
 @end itemize
 
-@subsection For everything else...
-Contact Anand Babu @email{ab@@gnu.org.in}
+For everything else, contact Anand Babu @email{ab@@gnu.org.in}
 
 @node Authors, Copying, Contact us, Top
 @chapter Authors
