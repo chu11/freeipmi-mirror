@@ -384,7 +384,7 @@ ipmi_open_inband (ipmi_device_t *dev,
       dev->mode = mode;
       ERR (ipmi_ssif_io_init (dev->io.inband.driver_device, 
 			      dev->io.inband.driver_address, 
-			      &(dev->io.inband.dev_fd)) != 0);
+			      &(dev->io.inband.dev_fd)) != -1);
       break;
     default:
       errno = EINVAL;

@@ -422,7 +422,7 @@
 		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						   (list driver-device))))
 	     ;; --packet-retry-timeout (4)
-	     (if (and (string? retry-timeout) (list? sensors-cmd-args))
+	     (if (and (string? retry-timeout) (list? bmc-config-cmd-args))
 		 (begin 
 		   (set! retry-timeout (string->number retry-timeout))
 		   (if (boolean? retry-timeout)
@@ -432,12 +432,12 @@
 			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 				  (current-error-port))
 			 (set! sensor-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						(list retry-timeout))))
 	     ;; --packet-retry-max (5)
-	     (if (and (string? retry-max) (list? sensors-cmd-args))
+	     (if (and (string? retry-max) (list? bmc-config-cmd-args))
 		 (begin 
 		   (set! retry-max (string->number retry-max))
 		   (if (boolean? retry-max)
@@ -447,9 +447,9 @@
 			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
 				  (current-error-port))
 			 (set! sensor-exit-status 64)
-			 (set! sensors-cmd-args #f)))))
-	     (if (list? sensors-cmd-args)
-		 (set! sensors-cmd-args (append sensors-cmd-args 
+			 (set! bmc-config-cmd-args #f)))))
+	     (if (list? bmc-config-cmd-args)
+		 (set! bmc-config-cmd-args (append bmc-config-cmd-args 
 						(list retry-max))))
 	     ;; --host (6)
 	     (if (list? bmc-config-cmd-args)

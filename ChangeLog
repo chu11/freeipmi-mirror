@@ -1,3 +1,17 @@
+2006-06-26  A Balamurugan  <bala@zresearch.com>
+
+	* fish/extensions/bc-common.scm (bmc-config-argp): cmd-args typo
+	bug fix.
+	
+	* fish/extensions/bmc-info.scm (bmc-info-argp): like wise.
+	
+	* fish/extensions/pef.scm (pef-argp): like wise.
+	
+	* fish/extensions/sel.scm (sel-argp): like wise.
+	
+	* libfreeipmi/src/ipmi-interface.c (ipmi_open_inband): fix for
+	improper return value check of ipmi_ssif_io_init().
+
 2006-06-26  Anand Babu  <ab@zresearch.com>
 
 	* garpd: will be forked into a new project. Not relevant here.
