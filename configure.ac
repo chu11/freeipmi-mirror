@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.55 2006-06-26 21:34:57 chu11 Exp $])
+AC_REVISION([$Id: configure.ac,v 1.56 2006-06-26 23:07:47 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -183,11 +183,10 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
 
 dnl Macro definitions
-if test "$prefix" = "NONE"; then
-   IPCKEY_DIR=${ac_default_prefix}/var/lib/${PACKAGE_NAME}
-else
-   IPCKEY_DIR=${prefix}/var/lib/${PACKAGE_NAME}
-fi
+# Workaround lack of nested unquoting (from Conman, Chris Dunlap, dunlap 6 at llnl dot gov)
+IPCKEY_DIR_TMP1="`eval echo ${localstatedir}/lib/${PACKAGE_NAME}`"
+IPCKEY_DIR_TMP2="`echo $IPCKEY_DIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+IPCKEY_DIR="`eval echo $IPCKEY_DIR_TMP2`"
 IPCKEY_FILE=ipckey
 AC_SUBST([IPCKEY_DIR])
 AC_SUBST([IPCKEY_FILE])
