@@ -180,12 +180,6 @@ ex_get_script_command_line ()
 }
 
 SCM 
-ex_get_default_sdr_repo_cache_filename (void)
-{
-  return (gh_str02scm (FI_DEFAULT_SDR_REPO_CACHE_FILENAME));
-}
-
-SCM 
 ex_sensors_get_group_list ()
 {
   SCM scm_group_list;

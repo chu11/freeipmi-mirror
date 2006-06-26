@@ -1531,7 +1531,7 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
   int32_t bytes_received = 0;
   
   struct sockaddr_in server_addr;
-  const socklen_t server_addr_len = sizeof (struct sockaddr_in);
+  socklen_t server_addr_len = sizeof (struct sockaddr_in);
   uint64_t val;
   
   fd_set fd_set;

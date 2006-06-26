@@ -189,7 +189,6 @@ ipmi_ssif_read (int dev_fd,
   int bytes_copied = 0;
   int length;
   int block_number;
-  int index;
   int sindex;
   int multi_read_start = 0;
   int i;
@@ -315,7 +314,6 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     uint8_t *pkt;
     size_t pkt_max_size = 1024;
     uint32_t pkt_len;
-    size_t read_len;
     size_t bytes_read = 0;
     
     pkt_len = fiid_obj_len_bytes (*(dev->io.inband.rs.tmpl_hdr_ptr)) + 
@@ -372,7 +370,7 @@ ipmi_ssif_cmd_raw2 (ipmi_device_t *dev,
   
   { 
     /* Request Block */
-    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (char *)buf_rq, buf_rq_len) != -1);
+    ERR (ipmi_ssif_write (dev->io.inband.dev_fd, (uint8_t *) buf_rq, buf_rq_len) != -1);
   }
   
   { 
@@ -380,14 +378,14 @@ ipmi_ssif_cmd_raw2 (ipmi_device_t *dev,
     uint32_t bytes_read = 0;
     
     ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.dev_fd, 
-				       (char *)buf_rs, *buf_rs_len)) != -1);
+				       (uint8_t *) buf_rs, *buf_rs_len)) != -1);
     if (bytes_read > *buf_rs_len)
       {
 	fprintf (stderr, 
 		 "%s(): received packet is too big.  "
-		 "expected size = %d, received size = %d\n", 
+		 "expected size = %zd, received size = %d\n", 
 		 __PRETTY_FUNCTION__, 
-		 buf_rs_len, 
+		 *buf_rs_len, 
 		 bytes_read);
 	fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
       }

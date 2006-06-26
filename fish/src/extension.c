@@ -148,12 +148,6 @@ install_new_procedures (void)
      (display (fi-command-line))
   */
   
-  gh_new_procedure ("fi-sensors-get-default-cache-filename", 
-		    ex_get_default_sdr_repo_cache_filename, 0, 0, 0);
-  /* example scheme expression
-     (display (fi-sensors-get-default-cache-filename))
-  */
-  
   gh_new_procedure ("fi-sensors-get-group-list", ex_sensors_get_group_list, 0, 0, 0);
   /* example scheme expression
      (display (fi-sensors-get-group-list))

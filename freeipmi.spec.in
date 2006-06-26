@@ -195,7 +195,6 @@ fi
 %doc %{_datadir}/doc/%{name}/COPYING.rmcpping
 %doc %{_datadir}/doc/%{name}/DISCLAIMER.rmcpping
 %config(noreplace) %{_sysconfdir}/init.d/bmc-watchdog
-%config(noreplace) %{_sysconfdir}/garpd/garpd.conf
 %{_sbindir}/bmc-info
 %{_sbindir}/bmc-watchdog
 %{_sbindir}/ipmi-locate
@@ -203,10 +202,8 @@ fi
 %{_sbindir}/ipmiping
 %{_sbindir}/ipmipower
 %{_sbindir}/rmcpping
-%{_sbindir}/garpd
 %{_mandir}/man8/bmc-info.8*
 %{_mandir}/man8/bmc-watchdog.8*
-%{_mandir}/man8/garpd.8*
 %{_mandir}/man8/ipmi-locate.8*
 %{_mandir}/man8/ipmi-raw.8*
 %{_mandir}/man8/ipmiping.8*

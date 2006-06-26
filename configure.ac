@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_INIT([freeipmi],[0.2.1],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.41.6.2 2006-04-04 21:25:41 chu11 Exp $])
+AC_INIT([freeipmi],[0.2.2],[freeipmi-devel@gnu.org])
+AC_REVISION([$Id: configure.ac,v 1.41.6.3 2006-06-26 12:07:22 ab Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -34,7 +34,6 @@ AC_CONFIG_FILES([
 	bmc-info/doc/Makefile bmc-info/doc/bmc-info.8.pre
         ipmiping/Makefile ipmiping/src/Makefile
         rmcpping/Makefile rmcpping/src/Makefile
-	garpd/Makefile garpd/src/Makefile garpd/garpd.8
         bmc-watchdog/bmc-watchdog.8 ipmipower/ipmipower.8 ipmipower/ipmipower.conf.5
         ipmiping/ipmiping.8 rmcpping/rmcpping.8
         freeipmi.spec])
@@ -175,5 +174,12 @@ AC_CHECK_HEADERS([unistd.h fcntl.h])
 dnl Check for random number paths
 AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))
 AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
+
+dnl Macro definitions
+IPCKEY_DIR=${prefix}/var/lib/${PACKAGE_NAME}
+IPCKEY_FILE=ipckey
+AC_SUBST([IPCKEY_DIR])
+AC_SUBST([IPCKEY_FILE])
+AC_DEFINE_UNQUOTED([IPMI_IPCKEY], ["${IPCKEY_DIR}/${IPCKEY_FILE}"], [IPMI ipckey lock file])
 
 AC_OUTPUT

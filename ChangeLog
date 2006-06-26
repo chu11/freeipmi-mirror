@@ -1,3 +1,27 @@
+2006-06-26  Anand Babu  <ab@zresearch.com>
+
+	* garpd: will be forked into a new project. Not relevant here.
+
+	* configure.ac: bumped version to 0.2.2. Moved "ipckey"
+	definitions to configure.ac. 
+
+	* libfreeipmi/Makefile.am: removed hardcoded /var/../ipckey
+	path. Uses definition from configure.ac.
+
+	* fish/src/extension.c: removed binding for
+	fi-sensors-get-default-cache-filename. It is no longer
+	used. Now created under user's home dir or /tmp. Also its
+	definition had hardcoded reference to /var/..
+	
+	* fish/src/fish.h: like wise.
+
+	* fish/src/scm-procedures.c: like wise.
+
+	* libfreeipmi/src/ipmi-ssif-interface.c: Removed unused index,
+	read_len. ipmi_ssif_write/read type casting fix. printf bug, pass
+	value instead of ptr.
+
+
 2006-05-10  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-ssif-interface.c
