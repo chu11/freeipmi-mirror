@@ -1324,7 +1324,7 @@ ipmi_lan_recvfrom (int sockfd,
     {
       fprintf (stderr, 
 	       "%s(): oversized packet received.  received size:%d, expected size: %d\n", 
-	       __PRETTY_FUNCTION__, bytes_received, buffer_size);
+	       __PRETTY_FUNCTION__, (int)bytes_received, (int)buffer_size);
     }
   
   memcpy (buffer, packet, buffer_size);
@@ -1534,7 +1534,7 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
   socklen_t server_addr_len = sizeof (struct sockaddr_in);
   uint64_t val;
   
-  fd_set fd_set;
+  fd_set read_set;
   struct timeval timeout;
   int status = 0;
   
@@ -1578,10 +1578,10 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
 	{
 	  timeout.tv_sec = 0;
 	  timeout.tv_usec = dev->io.outofband.retry_timeout;
-	  FD_ZERO (&fd_set);
-	  FD_SET (dev->io.outofband.local_sockfd, &fd_set);
+	  FD_ZERO (&read_set);
+	  FD_SET (dev->io.outofband.local_sockfd, &read_set);
 	  status = select ((dev->io.outofband.local_sockfd + 1), 
-			   &fd_set, NULL, NULL, &timeout);
+			   &read_set, NULL, NULL, &timeout);
 	  
 	  if (status == -1)
 	    {

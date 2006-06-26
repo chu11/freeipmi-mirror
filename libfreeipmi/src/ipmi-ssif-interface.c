@@ -334,7 +334,7 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
 		 "expected size = %d, received size = %d\n", 
 		 __PRETTY_FUNCTION__, 
 		 pkt_len, 
-		 bytes_read);
+		 (int)bytes_read);
 	fprintf (stderr, "packet data:\n");
 	for (i = 0; i < bytes_read; i++)
 	  fprintf (stderr, "%02X ", pkt[i]);
