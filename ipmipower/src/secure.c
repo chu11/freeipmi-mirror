@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: secure.c,v 1.1 2006-06-19 19:51:17 chu11 Exp $
+ *  $Id: secure.c,v 1.2 2006-06-26 21:34:57 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2006 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -33,9 +33,9 @@
 #if STDC_HEADERS
 #include <string.h>
 #endif /* STDC_HEADERS */
-#if defined(MAP_ANONYMOUS) && defined(MAP_LOCK) && HAVE_MMAP
+#if HAVE_MMAP
 #include <sys/mman.h>
-#endif /* !(defined(MAP_ANONYMOUS) && defined(MAP_LOCK) && HAVE_MMAP) */
+#endif /* HAVE_MMAP */
 #include <assert.h>
 #include <errno.h>
 
@@ -60,9 +60,6 @@ void *
 secure_malloc(size_t len)
 {
   void *ptr;
-#if !defined(MAP_ANONYMOUS) && !defined(MAP_LOCK)
-  int fd;
-#endif /* !defined(MAP_ANONYMOUS) && !defined(MAP_LOCK) */
 
   assert(len);
 

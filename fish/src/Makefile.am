@@ -18,8 +18,7 @@ noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
 	-I$(srcdir)/../../libfreeipmi/include -DFREEIPMI_BUILD \
 	-D_GNU_SOURCE $(GUILE_CFLAGS) \
-	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\" \
-	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\"
+	-DPATH_CFG=\"$(sysconfdir)\" -DDATADIR=\"$(datadir)\"
 
 ../../libfreeipmi/src/libfreeipmi.la: force-dependency-check
 	$(MAKE) -C $(dir $@) $(notdir $@)

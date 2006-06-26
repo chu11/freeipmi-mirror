@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.54 2006-06-26 13:37:03 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.55 2006-06-26 21:34:57 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -183,7 +183,11 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
 
 dnl Macro definitions
-IPCKEY_DIR=${prefix}/var/lib/${PACKAGE_NAME}
+if test "$prefix" = "NONE"; then
+   IPCKEY_DIR=${ac_default_prefix}/var/lib/${PACKAGE_NAME}
+else
+   IPCKEY_DIR=${prefix}/var/lib/${PACKAGE_NAME}
+fi
 IPCKEY_FILE=ipckey
 AC_SUBST([IPCKEY_DIR])
 AC_SUBST([IPCKEY_FILE])
