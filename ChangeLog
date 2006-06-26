@@ -1,5 +1,6 @@
 2006-06-26  Anand Babu  <ab@zresearch.com>
 
+	* garpd: forked as a separate project. Not relevant here. 
 	* configure.ac: ipckey definition move here. removed garpd
 	references.
 	libfreeipmi/src/Makefile.am: removed CPP defn of IPCKEY.
