@@ -74,110 +74,201 @@
 /* Response Packet Offsets */
 #define IPMI_SSIF_RSP_OFFSET_COMPCODE 0x03
 
-/* SMBus */
-#define IPMI_SSIF_SMB_IPMI_REQUEST    2
-#define IPMI_SSIF_SMB_IPMI_RESPONSE   3
-
-/* this is for i2c-dev.c	*/
-#define IPMI_I2C_SLAVE       0x0703  /* Change slave address                 */
-			             /* Attn.: Slave address is 7 or 10 bits */
-#define IPMI_I2C_SLAVE_FORCE 0x0706  /* Change slave address                 */
-                                     /* Attn.: Slave address is 7 or 10 bits */
-				     /* This changes the address, even if it */
-				     /* is already taken!                    */
-
-#define IPMI_I2C_SMBUS       0x0720  /* SMBus-level access */
-
-/* SMBus transaction types (size parameter in the above functions) 
-   Note: these no longer correspond to the (arbitrary) PIIX4 internal codes! */
-#define IPMI_I2C_SMBUS_QUICK                0
-#define IPMI_I2C_SMBUS_BYTE                 1
-#define IPMI_I2C_SMBUS_BYTE_DATA            2 
-#define IPMI_I2C_SMBUS_WORD_DATA            3
-#define IPMI_I2C_SMBUS_PROC_CALL            4
-#define IPMI_I2C_SMBUS_BLOCK_DATA           5
-#define IPMI_I2C_SMBUS_I2C_BLOCK_DATA       6
-#define IPMI_I2C_SMBUS_BLOCK_PROC_CALL      7     /* SMBus 2.0 */
-#define IPMI_I2C_SMBUS_BLOCK_DATA_PEC       8     /* SMBus 2.0 */
-#define IPMI_I2C_SMBUS_PROC_CALL_PEC        9     /* SMBus 2.0 */
-#define IPMI_I2C_SMBUS_BLOCK_PROC_CALL_PEC  10    /* SMBus 2.0 */
-#define IPMI_I2C_SMBUS_WORD_DATA_PEC        11    /* SMBus 2.0 */
-
-/* 
- * Data for SMBus Messages 
- */
-#define IPMI_I2C_SMBUS_BLOCK_MAX	32	/* As specified in SMBus standard */	
-#define IPMI_I2C_SMBUS_I2C_BLOCK_MAX	32	/* Not specified but we use same structure */
-
-/* smbus_access read or write markers */
-#define IPMI_I2C_SMBUS_READ	1
-#define IPMI_I2C_SMBUS_WRITE	0
-
-
-union ipmi_i2c_smbus_data {
-  uint8_t byte;
-  uint16_t word;
-  uint8_t block[IPMI_I2C_SMBUS_BLOCK_MAX + 3]; /* block[0] is used for length */
-                          /* one more for read length in block process call */
-	                                            /* and one more for PEC */
-};
-
-/* Note: 10-bit addresses are NOT supported! */
-/* This is the structure as used in the I2C_SMBUS ioctl call */
-struct ipmi_i2c_smbus_ioctl_data {
-	char read_write;
-	uint8_t command;
-	int size;
-	union ipmi_i2c_smbus_data *data;
-};
-
-static inline int32_t
-ipmi_i2c_smbus_access (int file, char read_write, uint8_t command, int size, 
+static inline int 
+ipmi_i2c_smbus_access (int dev_fd, 
+		       char read_write, 
+		       uint8_t command, 
 		       union ipmi_i2c_smbus_data *data)
 {
-	struct ipmi_i2c_smbus_ioctl_data args;
-
-	args.read_write = read_write;
-	args.command = command;
-	args.size = size;
-	args.data = data;
-	return ioctl (file, IPMI_I2C_SMBUS, &args);
+  struct ipmi_i2c_smbus_ioctl_data args;
+  
+  args.read_write = read_write;
+  args.command = command;
+  args.size = IPMI_I2C_SMBUS_BLOCK_DATA;
+  args.data = data;
+  
+  return (ioctl (dev_fd, IPMI_I2C_SMBUS, &args));
 }
 
-/* ipmi_i2c_smbus_read_block_data is based on
-linux/i2c-dev.h:i2c_smbus_read_block_data. It is duplicated here to
-reduce dependencies. -- Anand Babu */
-
-static inline int32_t
-ipmi_i2c_smbus_read_block_data (int file, uint8_t command, uint8_t *values)
+static inline ssize_t 
+ipmi_ssif_single_part_write (int dev_fd, 
+			     uint8_t *buf, 
+			     size_t buf_len)
 {
-	union ipmi_i2c_smbus_data data;
-	int i;
-	if (ipmi_i2c_smbus_access (file, IPMI_I2C_SMBUS_READ, command,
-				   IPMI_I2C_SMBUS_BLOCK_DATA, &data))
-		return -1;
-	else {
-		for (i = 1; i <= data.block[0]; i++)
-			values[i-1] = data.block[i];
-		return data.block[0];
+
+  union ipmi_i2c_smbus_data data;
+  int i;
+  
+  data.block[0] = buf_len;
+  for (i = 0; i < buf_len; i++)
+    {
+      data.block[i + 1] = buf[i];
+    }
+  
+  return (ipmi_i2c_smbus_access (dev_fd, 
+				 IPMI_I2C_SMBUS_WRITE, 
+				 IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD, 
+				 &data));
+}
+
+static inline ssize_t 
+ipmi_ssif_multi_part_write (int dev_fd, 
+			    uint8_t *buf, 
+			    size_t buf_len)
+{
+  union ipmi_i2c_smbus_data data;
+  int middle_parts;
+  int i;
+  int mpart;
+  int index;
+  
+  if (buf_len % IPMI_I2C_SMBUS_BLOCK_MAX == 0)
+    {
+      fprintf (stderr, "%s:%s(): "
+	       "PECULIAR IPMI COMMAND: As of this writing, "
+	       "there are no standard IPMI messages to the "
+	       "BMC that are exact multiples of %d.  This "
+	       "command can be OEM/group network functions "
+	       "(network function codes 2Ch:3Fh) in your "
+	       "BMC implementation.  Please report to "
+	       "FreeIPMI mailing list <freeipmi-devel@gnu.org>\n", 
+	       __FILE__, __PRETTY_FUNCTION__, 
+	       IPMI_I2C_SMBUS_BLOCK_MAX);
+      return (-1);
+    }
+  
+  middle_parts = (buf_len / IPMI_I2C_SMBUS_BLOCK_MAX) - 1;
+  
+  data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
+  for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
+    {
+      data.block[i + 1] = buf[i];
+    }
+  if (ipmi_i2c_smbus_access (dev_fd, 
+			     IPMI_I2C_SMBUS_WRITE, 
+			     IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD, 
+			     &data) == -1)
+    {
+      return (-1);
+    }
+  
+  for (mpart = 1; mpart <= middle_parts; mpart++)
+    {
+      index = mpart * IPMI_I2C_SMBUS_BLOCK_MAX;
+      data.block[0] = IPMI_I2C_SMBUS_BLOCK_MAX;
+      for (i = 0; i < IPMI_I2C_SMBUS_BLOCK_MAX; i++)
+	{
+	  data.block[i + 1] = buf[index + i];
 	}
+      if (ipmi_i2c_smbus_access (dev_fd, 
+				 IPMI_I2C_SMBUS_WRITE, 
+				 IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD, 
+				 &data) == -1)
+	{
+	  return (-1);
+	}
+    }
+  
+  index = (middle_parts + 1) * IPMI_I2C_SMBUS_BLOCK_MAX;
+  data.block[0] = buf_len % IPMI_I2C_SMBUS_BLOCK_MAX;
+  for (i = 0; i < data.block[0]; i++)
+    {
+      data.block[i + 1] = buf[index + i];
+    }
+  return (ipmi_i2c_smbus_access (dev_fd, 
+				 IPMI_I2C_SMBUS_WRITE, 
+				 IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD, 
+				 &data));
 }
 
-/* ipmi_i2c_smbus_write_block_data is based on
-linux/i2c-dev.h:i2c_smbus_write_block_data. It is duplicated here to
-reduce dependencies. -- Anand Babu */
-static inline int32_t
-ipmi_i2c_smbus_write_block_data (int file, uint8_t command, uint8_t length, uint8_t *values)
+static inline ssize_t 
+_ipmi_ssif_read (int dev_fd, 
+		 uint8_t *buf, 
+		 size_t buf_len)
 {
-	union ipmi_i2c_smbus_data data;
-	int i;
-	if (length > 32)
-		length = 32;
-	for (i = 1; i <= length; i++)
-		data.block[i] = values[i-1];
-	data.block[0] = length;
-	return ipmi_i2c_smbus_access (file, IPMI_I2C_SMBUS_WRITE, command,
-				      IPMI_I2C_SMBUS_BLOCK_DATA, &data);
+  union ipmi_i2c_smbus_data data;
+  int bytes_read = 0;
+  int bytes_copied = 0;
+  int length;
+  int block_number;
+  int sindex;
+  int multi_read_start = 0;
+  int i;
+  
+  if (buf == NULL || buf_len <= 0)
+    {
+      errno = EINVAL;
+      return (-1);
+    }
+  
+  if (ipmi_i2c_smbus_access (dev_fd, 
+			     IPMI_I2C_SMBUS_READ, 
+			     IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD, 
+			     &data) == -1)
+    {
+      return (-1);
+    }
+  
+  if (data.block[0] == IPMI_SSIF_MULTI_PART_READ_START_SIZE && 
+      data.block[1] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN1 && 
+      data.block[2] == IPMI_SSIF_MULTI_PART_READ_START_PATTERN2)
+    {
+      sindex = 3;
+      multi_read_start = 1;
+    }
+  else
+    {
+      sindex = 1;
+    }
+  
+  length = data.block[0];
+  bytes_read = length;
+  
+  if (bytes_read > buf_len)
+    {
+      length = buf_len;
+    }
+  
+  for (i = 0; i < length; i++)
+    {
+      buf[i] = data.block[sindex + i];
+    }
+  
+  bytes_copied = length;
+  
+  while (multi_read_start)
+    {
+      if (ipmi_i2c_smbus_access (dev_fd, 
+				 IPMI_I2C_SMBUS_READ, 
+				 IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD, 
+				 &data) == -1)
+	{
+	  return (-1);
+	}
+      
+      length = data.block[0];
+      block_number = data.block[1];
+      bytes_read += length;
+      
+      if ((bytes_copied + length) > buf_len)
+	{
+	  length = buf_len - bytes_copied;
+	}
+      
+      for (i = 0; i < length; i++)
+	{
+	  buf[bytes_copied + i] = data.block[i + 2];
+	}
+      
+      bytes_copied += length;
+      
+      if (block_number == IPMI_SSIF_MULTI_PART_READ_END_PATTERN)
+	{
+	  break;
+	}
+    }
+  
+  return bytes_read;
 }
 
 #define IPMI_SSIF_CTX_MAGIC 0xaddaabba
@@ -218,7 +309,7 @@ ipmi_ssif_ctx_create(void)
 
   ctx->magic = IPMI_SSIF_CTX_MAGIC;
   ERR_CLEANUP ((ctx->i2c_device = strdup(IPMI_DEFAULT_I2C_DEVICE)));
-  ctx->ipmb_address = IPMI_DEFAULT_IPMB_ADDRESS;
+  ctx->ipmb_address = IPMI_DEFAULT_SSIF_IPMB_ADDR;
   ctx->mode = IPMI_SSIF_MODE_DEFAULT;
   ctx->i2c_fd = -1;
   ctx->io_init = 0;
@@ -380,7 +471,13 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
 {
   if (!(ctx && ctx->magic == IPMI_SSIF_CTX_MAGIC))
     return (-1);
-
+  
+  if (!(ctx->i2c_device && ctx->i2c_fd))
+    {
+      ctx->errnum = EINVAL;
+      return (-1);
+    }
+  
   if ((ctx->i2c_fd = open (ctx->i2c_device, O_RDWR)) < 0)
     {
       if (errno == EACCES || errno == EPERM)
@@ -394,7 +491,6 @@ ipmi_ssif_ctx_io_init(ipmi_ssif_ctx_t ctx)
       return (-1);
     }
 
-  /* zresearch webserver ipmb_address: 0x341A */
   if (ioctl (ctx->i2c_fd, IPMI_I2C_SLAVE, ctx->ipmb_address) < 0)
     {
       if (errno == EACCES || errno == EPERM)
@@ -446,8 +542,21 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
           goto cleanup;
         }
     }
-
-  if ((count = ipmi_i2c_smbus_write_block_data (ctx->i2c_fd, IPMI_SSIF_SMB_IPMI_REQUEST, buf_len, (uint8_t *)buf)) < 0)
+  
+  if (buf_len <= IPMI_I2C_SMBUS_BLOCK_MAX)
+    {
+      count = ipmi_ssif_single_part_write (ctx->i2c_fd, 
+					   buf, 
+					   buf_len);
+    }
+  else 
+    {
+      count = ipmi_ssif_multi_part_write (ctx->i2c_fd, 
+					  buf, 
+					  buf_len);
+    }
+  
+  if (count < 0)
     {
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;
@@ -467,8 +576,8 @@ ipmi_ssif_write (ipmi_ssif_ctx_t ctx,
 
 int32_t
 ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
-               uint8_t* buf,
-               uint32_t buf_len)
+		uint8_t* buf,
+		uint32_t buf_len)
 {
   int32_t count = 0;
   int32_t rv = -1;
@@ -487,11 +596,13 @@ ipmi_ssif_read (ipmi_ssif_ctx_t ctx,
       ctx->errnum = IPMI_SSIF_CTX_ERR_IO_INIT;
       goto cleanup_unlock;
     }
-
+  
   if (buf_len > IPMI_I2C_SMBUS_BLOCK_MAX)
     buf_len = IPMI_I2C_SMBUS_BLOCK_MAX;
-    
-  if ((count = ipmi_i2c_smbus_read_block_data (ctx->i2c_fd, IPMI_SSIF_SMB_IPMI_RESPONSE, (uint8_t *)buf)) < 0)
+  
+  if ((count = _ipmi_ssif_read (ctx->i2c_fd, 
+				buf, 
+				buf_len)) < 0)
     {
       if (errno == EACCES || errno == EPERM)
 	ctx->errnum = IPMI_SSIF_CTX_ERR_PERMISSION;

@@ -1,5 +1,19 @@
 2006-06-26  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h: cleanup.
+
+	* libfreeipmi/src/ipmi-ssif-api.c (ipmi_i2c_smbus_access):
+	cleanup.
+
+	* libfreeipmi/src/ipmi-ssif-api.c (ipmi_ssif_single_part_write,
+	ipmi_ssif_multi_part_write, _ipmi_ssif_read): new static
+	functions.
+
+	* libfreeipmi/src/ipmi-ssif-api.c (ipmi_ssif_ctx_io_init,
+	ipmi_ssif_write, ipmi_ssif_read): uses new static functions.
+
+2006-06-26  A Balamurugan  <bala@zresearch.com>
+
 	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
 	libfreeipmi/src/udm/ipmi-udm.c: added support to packet_retry_max
 	and retry_timeout.

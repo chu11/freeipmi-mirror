@@ -29,8 +29,50 @@
 
 #include <stdint.h>
 
-#define IPMI_DEFAULT_I2C_DEVICE    "/dev/i2c-0"
-#define IPMI_DEFAULT_IPMB_ADDRESS  0x42
+#define IPMI_DEFAULT_I2C_DEVICE        "/dev/i2c-0"
+#define IPMI_DEFAULT_SSIF_IPMB_ADDR    0x42
+
+#define IPMI_SSIF_SINGLE_PART_WRITE_SMBUS_CMD          0x02
+#define IPMI_SSIF_MULTI_PART_WRITE_START_SMBUS_CMD     0x06
+#define IPMI_SSIF_MULTI_PART_WRITE_MIDDLE_SMBUS_CMD    0x07
+#define IPMI_SSIF_MULTI_PART_WRITE_END_SMBUS_CMD       0x07
+
+#define IPMI_SSIF_SINGLE_PART_READ_SMBUS_CMD           0x03
+#define IPMI_SSIF_MULTI_PART_READ_START_SMBUS_CMD      0x03
+#define IPMI_SSIF_MULTI_PART_READ_MIDDLE_SMBUS_CMD     0x09
+#define IPMI_SSIF_MULTI_PART_READ_END_SMBUS_CMD        0x09
+#define IPMI_SSIF_MULTI_PART_READ_RETRY_SMBUS_CMD      0x0A
+
+#define IPMI_SSIF_MULTI_PART_READ_START_SIZE        30
+#define IPMI_SSIF_MULTI_PART_READ_START_PATTERN1    0x0
+#define IPMI_SSIF_MULTI_PART_READ_START_PATTERN2    0x1
+#define IPMI_SSIF_MULTI_PART_READ_END_PATTERN       0xFF
+
+/* START: copied from <linux/i2c.h> and <linux/i2c-dev.h>, */
+/*        and prefixed IPMI.                               */
+#define IPMI_I2C_SLAVE               0x0703
+#define IPMI_I2C_SMBUS               0x0720
+#define IPMI_I2C_SMBUS_BLOCK_DATA    5
+#define IPMI_I2C_SMBUS_BLOCK_MAX     32
+#define IPMI_I2C_SMBUS_READ          1
+#define IPMI_I2C_SMBUS_WRITE         0
+
+union ipmi_i2c_smbus_data
+{
+  uint8_t  byte;
+  uint16_t word;
+  uint8_t  block[IPMI_I2C_SMBUS_BLOCK_MAX + 3];
+};
+
+struct ipmi_i2c_smbus_ioctl_data
+{
+  uint8_t  read_write;
+  uint8_t  command;
+  uint32_t size;
+  union ipmi_i2c_smbus_data *data;
+};
+/* END: copied from <linux/i2c.h> and <linux/i2c-dev.h>, */
+/*      and prefixed IPMI.                               */
 
 #define IPMI_SSIF_CTX_ERR_SUCCESS         0
 #define IPMI_SSIF_CTX_ERR_NULL            1
