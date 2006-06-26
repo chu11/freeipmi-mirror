@@ -21,6 +21,9 @@
 	read_len. ipmi_ssif_write/read type casting fix. printf bug, pass
 	value instead of ptr.
 
+	* fish/extensions/sensors-common.scm: removed unused default sdr
+	cache file variable.
+
 	* doc/freeipmi.texi: Removing subsection without section, fixes
 	pdf conversion bug.
 
