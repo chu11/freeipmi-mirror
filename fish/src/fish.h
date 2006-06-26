@@ -39,7 +39,6 @@
 #define FI_INIT_FILE                   "init.scm"
 #define FI_GLOBAL_INIT_FILE            FI_GLOBAL_EXTENSIONS_DIRECTORY "/" FI_INIT_FILE
 
-#define FI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME    "/var/lib/freeipmi/sdr-repository-cache"
 #define FI_SDR_CACHE_DIR                "sdr-cache"
 #define FI_SDR_CACHE_FILENAME_PREFIX    "sdr-cache"
 

@@ -32,7 +32,6 @@
 (define FI-SDR-BMC-MSG-CHANNEL-INFO-RECORD        #x14)
 (define FI-SDR-OEM-RECORD                         #xC0)
 
-(define sensors-sdr-cache-file     (fi-sensors-get-default-cache-filename))
 (define sensors-program-short-name "ipmi-sensors")
 (define sensors-exit-status        0)
 (define sensors-ignored-list       '())

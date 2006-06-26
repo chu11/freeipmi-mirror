@@ -37,8 +37,6 @@ SCM ex_ipmi_ping (SCM scm_host, SCM scm_timeout);
 
 SCM ex_get_script_command_line ();
 
-SCM ex_get_default_sdr_repository_cache_filename (void);
-
 SCM ex_sensors_cache_get_current_group ();
 SCM ex_sensors_get_group_list ();
 

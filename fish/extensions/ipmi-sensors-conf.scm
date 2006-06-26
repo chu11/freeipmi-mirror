@@ -1,8 +1,5 @@
 ;; ipmi-sensors-conf.scm: IPMI sensros configuration file
 
-;; Sensors cache filename
-; (set! sensors-sdr-cache-file "/path/to/cache-filename")
-
 ;; Example: Ignore these sensors
 ; (sensors-ignore! '(54 55 88))
 

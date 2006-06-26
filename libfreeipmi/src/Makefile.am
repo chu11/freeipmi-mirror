@@ -53,7 +53,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-sensor-utils.c
 
 libfreeipmi_la_LDFLAGS = -module -version-info @LIBFREEIPMI_VERSION_INFO@ $(VERSION_FLAGS) -lm -lgcrypt
-libfreeipmi_la_CPPFLAGS = -DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\"
+# libfreeipmi_la_CPPFLAGS = 
 
 libfreeipmi_la_CFLAGS = \
 	-I$(srcdir)/../include \

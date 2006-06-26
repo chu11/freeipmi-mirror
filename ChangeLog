@@ -1,3 +1,19 @@
+2006-06-26  Anand Babu  <ab@zresearch.com>
+
+	* configure.ac: ipckey definition move here. removed garpd
+	references.
+	libfreeipmi/src/Makefile.am: removed CPP defn of IPCKEY.
+	* Makefile.am: removed garpd references.
+	* src/Makefile.am: uses configure.ac defns of IPCKEY.
+	* doc/freeipmi.tex: likewise.
+	* freeipmi.spec.in: likewise.
+	* fish/extensions/sensors-common.scm:
+	fi-sensors-get-default-cache-filename no longer used. Removed.
+	* fish/src/extension.c: likewise.
+	* fish/src/scm-procedures.c,h: likewise.
+	* fish/src/fish.h: FI_DEFAULT_SDR_REPOSITORY_CACHE_FILENAME
+	definition removed.
+
 2006-06-19  Albert Chu <chu11@llnl.gov>
 
 	* ipmipower/src/secure.h, ipmipower/src/secure.c,
