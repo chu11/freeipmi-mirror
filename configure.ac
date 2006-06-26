@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.2.2],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.41.6.3 2006-06-26 12:07:22 ab Exp $])
+AC_REVISION([$Id: configure.ac,v 1.41.6.4 2006-06-26 23:08:11 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -176,10 +176,15 @@ AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you
 AC_CHECK_FILE([/dev/random], AC_DEFINE([HAVE_DEVRANDOM], [1], [Define that you found /dev/urandom]))
 
 dnl Macro definitions
-IPCKEY_DIR=${prefix}/var/lib/${PACKAGE_NAME}
+# Workaround lack of nested unquoting (from Conman, Chris Dunlap, dunlap 6 at llnl dot gov)
+IPCKEY_DIR_TMP1="`eval echo ${localstatedir}/lib/${PACKAGE_NAME}`"
+IPCKEY_DIR_TMP2="`echo $IPCKEY_DIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
+IPCKEY_DIR="`eval echo $IPCKEY_DIR_TMP2`"
 IPCKEY_FILE=ipckey
 AC_SUBST([IPCKEY_DIR])
 AC_SUBST([IPCKEY_FILE])
+IPCKEY_PATH=$IPCKEY_DIR/$IPCKEY_FILE
 AC_DEFINE_UNQUOTED([IPMI_IPCKEY], ["${IPCKEY_DIR}/${IPCKEY_FILE}"], [IPMI ipckey lock file])
+AC_DEFINE_UNQUOTED([IPMI_IPCKEY2], ["$IPCKEY_PATH"], [FOO])
 
 AC_OUTPUT
