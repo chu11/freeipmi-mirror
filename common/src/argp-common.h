@@ -29,6 +29,8 @@ enum argp_common_option_keys
     NO_PROBING_KEY = 130, 
     DRIVER_ADDRESS_KEY = 131, 
     DRIVER_DEVICE_KEY = 132, 
+    PACKET_RETRY_TIMEOUT_KEY = 133, 
+    PACKET_RETRY_MAX_KEY = 134, 
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
@@ -46,18 +48,22 @@ enum argp_common_option_keys
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
+    {"packet-retry-timeout", PACKET_RETRY_TIMEOUT_KEY, "TIMEOUT", 0,       \
+     "Use TIMEOUT when reading LAN packets in UDM.", 4}, 	           \
+    {"packet-retry-max", PACKET_RETRY_MAX_KEY, "COUNT", 0,                 \
+     "Use COUNT retries when reading LAN packets get timed out in UDM.", 5},  \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			   \
-     "Connect to IPMIHOST.", 4},					   \
+     "Connect to IPMIHOST.", 6},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
-     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 5},  \
+     "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 7},  \
     {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 6},  \
+     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8},  \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 			   \
      "Use AUTHTYPE instead of NONE.  "				           \
-     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 7},	           \
+     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 9},	           \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 8}      
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10}      
 
 struct common_cmd_args 
 {
@@ -65,6 +71,8 @@ struct common_cmd_args
   ipmi_driver_type_t driver_type;
   unsigned int driver_address;
   char *driver_device;
+  int packet_retry_timeout;
+  int packet_retry_max;
   char *host;
   char *username;
   char *password;

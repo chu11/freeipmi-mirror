@@ -426,6 +426,8 @@ main (int argc, char **argv)
       if (ipmi_open_outofband (&dev, 
 			       IPMI_DEVICE_LAN, 
 			       IPMI_MODE_DEFAULT, 
+			       args->common.packet_retry_timeout, 
+			       args->common.packet_retry_max, 
 			       (struct sockaddr *) &host, 
 			       sizeof (struct sockaddr), 
 			       args->common.authentication_type, 

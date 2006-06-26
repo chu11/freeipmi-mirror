@@ -86,6 +86,12 @@ common_parse_opt (int key,
 	free (cmd_args->driver_device);
       cmd_args->driver_device = strdup (arg);
       break;
+    case PACKET_RETRY_TIMEOUT_KEY:
+      cmd_args->packet_retry_timeout = atol (arg);
+      break;
+    case PACKET_RETRY_MAX_KEY:
+      cmd_args->packet_retry_max = atol (arg);
+      break;
     case HOSTNAME_KEY:
       if (cmd_args->host != NULL)
 	free (cmd_args->host);
@@ -185,6 +191,8 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
   cmd_args->driver_address = 0;
   cmd_args->driver_device = NULL;
+  cmd_args->packet_retry_timeout = 0;
+  cmd_args->packet_retry_max = 0;
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;

@@ -28,6 +28,7 @@
     (display "                [-p PASSWORD] [-a AUTHTYPE] [-l PRIVILEGE-LEVEL]\n")
     (display "                [--no-probing] [--driver-type=IPMIDRIVER]\n")
     (display "                [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n")
+    (display "                [--packet-retry-timeout=TIMEOUT] [--packet-retry-max=COUNT]\n")
     (display "                [--hostname=IPMIHOST] [--username=USERNAME]\n")
     (display "                [--password=PASSWORD] [--auth-type=AUTHTYPE]\n")
     (display "                [--priv-level=PRIVILEGE-LEVEL] [--help] [--usage]\n")
@@ -45,6 +46,10 @@
     (display "                             Use this DRIVERADDR address instead of probed\n")
     (display "                             one.\n")
     (display "      --driver-device=DEVICE Use this DEVICE for IPMI driver\n")
+    (display "  --packet-retry-timeout=TIMEOUT\n")
+    (display "                         Use TIMEOUT when reading LAN packets in UDM.\n")
+    (display "  --packet-retry-max=COUNT   Use COUNT retries when reading LAN packets get\n")
+    (display "                         timed out in UDM.\n")
     (display "  -h, --host=IPMIHOST        Connect to IPMIHOST.\n")
     (display "  -u, --username=USERNAME    Use USERNAME instead of NULL.  Maximum USERNAME\n")
     (display "                             length is 16.\n")
@@ -80,6 +85,8 @@
 				 (driver-type    (single-char #\D)   (value #t))
 				 (driver-address (single-char #\203) (value #t))
 				 (driver-device  (single-char #\204) (value #t))
+				 (packet-retry-timeout  (single-char #\205) (value #t))
+				 (packet-retry-max      (single-char #\206) (value #t))
 				 (host           (single-char #\h)   (value #t))
 				 (username       (single-char #\u)   (value #t))
 				 (password       (single-char #\p)   (value #t))
@@ -93,6 +100,8 @@
 		  (driver-type    (option-ref options 'driver-type    #f))
 		  (driver-address (option-ref options 'driver-address #f))
 		  (driver-device  (option-ref options 'driver-device  #f))
+		  (retry-timeout  (option-ref options 'packet-retry-timeout #f))
+		  (retry-max      (option-ref options 'packet-retry-max     #f))
 		  (host           (option-ref options 'host           #f))
 		  (username       (option-ref options 'username       #f))
 		  (password       (option-ref options 'password       #f))
@@ -159,11 +168,41 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list driver-device))))
-	     ;; --host (4)
+	     ;; --packet-retry-timeout (4)
+	     (if (and (string? retry-timeout) (list? bmc-info-cmd-args))
+		 (begin 
+		   (set! retry-timeout (string->number retry-timeout))
+		   (if (boolean? retry-timeout)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensor-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list retry-timeout))))
+	     ;; --packet-retry-max (5)
+	     (if (and (string? retry-max) (list? bmc-info-cmd-args))
+		 (begin 
+		   (set! retry-max (string->number retry-max))
+		   (if (boolean? retry-max)
+		       (begin 
+			 (display "Usage: ipmi-sensors [OPTION...] \n"
+				  (current-error-port))
+			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+				  (current-error-port))
+			 (set! sensor-exit-status 64)
+			 (set! bmc-info-cmd-args #f)))))
+	     (if (list? bmc-info-cmd-args)
+		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
+						 (list retry-max))))
+	     ;; --host (6)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list host))))
-	     ;; --username (5)
+	     ;; --username (7)
 	     (if (and (string? username) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length username) 16)
@@ -177,7 +216,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list username))))
-	     ;; --password (6)
+	     ;; --password (8)
 	     (if (and (string? password) (list? bmc-info-cmd-args))
 		 (begin 
 		   (if (> (string-length password) 16)
@@ -191,7 +230,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list password))))
-	     ;; --auth-type (7)
+	     ;; --auth-type (9)
 	     (if (and (string? auth-type) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? auth-type "none")
@@ -216,7 +255,7 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list auth-type))))
-	     ;; --priv-level (8)
+	     ;; --priv-level (10)
 	     (if (and (string? priv-level) (list? bmc-info-cmd-args))
 		 (cond 
 		  ((string-ci=? priv-level "callback")
@@ -241,15 +280,15 @@
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list priv-level))))
-	     ;; --help (9)
+	     ;; --help (11)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list help-wanted))))
-	     ;; --usage (10)
+	     ;; --usage (12)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list usage-wanted))))
-	     ;; --version (11)
+	     ;; --version (13)
 	     (if (list? bmc-info-cmd-args)
 		 (set! bmc-info-cmd-args (append bmc-info-cmd-args 
 						 (list version-wanted))))
@@ -266,13 +305,13 @@
 	   #f)))
 
 (define (bmc-info-get-help-option cmd-args)
-  (list-ref cmd-args 9))
+  (list-ref cmd-args 11))
 
 (define (bmc-info-get-usage-option cmd-args)
-  (list-ref cmd-args 10))
+  (list-ref cmd-args 12))
 
 (define (bmc-info-get-version-option cmd-args)
-  (list-ref cmd-args 11))
+  (list-ref cmd-args 13))
 
 (define (bmc-info-main cmd-args)
   (cond 
@@ -299,6 +338,7 @@
        (string-append 
 	"bmc-info [--no-probing] [--driver-type=IPMIDRIVER]\n"
 	"         [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+        "         [--packet-retry-timeout=TIMEOUT] [--packet-retry-max=COUNT]\n"
 	"         [--hostname=IPMIHOST] [--username=USERNAME]\n"
 	"         [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
 	"         [--priv-level=PRIVILEGE-LEVEL] [--help] [--usage] [--version]\n"

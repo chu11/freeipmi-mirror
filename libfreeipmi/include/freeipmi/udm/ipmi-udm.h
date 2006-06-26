@@ -96,6 +96,9 @@ struct ipmi_device
       uint8_t           password[IPMI_MAX_AUTHENTICATION_CODE_LENGTH];
       uint8_t           privilege_level;
       
+      int               packet_retry_max;
+      int               retry_timeout;
+      
       struct 
       {
 	fiid_obj_t      obj_rmcp_hdr;
@@ -126,6 +129,8 @@ int ipmi_open_inband (ipmi_device_t *dev,
 int ipmi_open_outofband (ipmi_device_t *dev, 
 			 ipmi_driver_type_t driver_type, 
 			 ipmi_mode_t mode, 
+			 int retry_timeout, 
+			 int packet_retry_max, 
 			 struct sockaddr *remote_host, 
 			 size_t remote_host_len, 
 			 uint8_t authentication_type, 

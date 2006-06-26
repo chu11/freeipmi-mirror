@@ -1,3 +1,41 @@
+2006-06-26  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c: added support to packet_retry_max
+	and retry_timeout.
+	
+	* common/src/argp-common.[ch]: like wise.
+	
+	* bmc-info/src/bmc-info.c: like wise.
+	
+	* fish/extensions/bc-common.scm: like wise.
+	
+	* fish/extensions/bmc-info.scm: like wise.
+	
+	* fish/extensions/pef.scm: like wise.
+	
+	* fish/extensions/sel.scm: like wise.
+	
+	* fish/extensions/sensors-common.scm: like wise.
+	
+	* fish/extensions/sensors.scm: like wise.
+	
+	* fish/src/ipmi-wrapper.c (fi_ipmi_open): like wise.
+	
+	* fish/src/scm-procedures.c (ex_ipmi_open): like wise.
+	
+	* ipmi-raw/src/ipmi-raw-argp.c: like wise.
+	
+	* ipmi-raw/src/ipmi-raw.c: like wise.
+	
+	* common/doc/argp-common.man: updated.
+	
+	* doc/examples/udm-test.c: updated.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_send, _ipmi_lan_cmd_recv, ipmi_lan_cmd): added
+	packet retransmission support.
+
 2006-06-26  Anand Babu  <ab@zresearch.com>
 
 	* garpd: forked as a separate project. Not relevant here. 

@@ -130,6 +130,7 @@
        (string-append 
 	"sensors [--no-probing] [--driver-type=IPMIDRIVER]\n"
 	"        [--driver-address=DRIVERADDR] [--driver-device=DEVICE]\n"
+	"        [--packet-retry-timeout=TIMEOUT] [--packet-retry-max=COUNT]\n"
 	"        [--hostname=IPMIHOST] [--username=USERNAME]\n"
 	"        [--password=PASSWORD] [--auth-type=AUTHTYPE]\n"
 	"        [--priv-level=PRIVILEGE-LEVEL] [--verbose] [--sdr-info]\n"
