@@ -1,3 +1,10 @@
+2006-06-27  Albert Chu <chu11@llnl.gov>
+
+	* libfreeipmi/src/ipmi-lan-interface.c,
+	libfreeipmi/src/ipmi-lan-interface.h (ipmi_lan_sendto,
+	ipmi_lan_recvfrom): Fix parameters to match sendto and recvfrom
+	syscalls.
+	
 2006-06-26  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c

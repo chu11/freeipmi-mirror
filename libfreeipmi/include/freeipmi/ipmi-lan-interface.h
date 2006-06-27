@@ -30,16 +30,16 @@ extern "C" {
 
 #define IPMI_LAN_PKT_PAD_SIZE   1
 
-ssize_t ipmi_lan_sendto (int sockfd, 
-			 const void *pkt, 
-			 size_t pkt_len, 
+ssize_t ipmi_lan_sendto (int s, 
+			 const void *buf, 
+			 size_t len, 
 			 int flags, 
 			 const struct sockaddr *to, 
 			 unsigned int tolen);
 
-ssize_t ipmi_lan_recvfrom (int sockfd, 
-			   void *pkt, 
-			   size_t pkt_len, 
+ssize_t ipmi_lan_recvfrom (int s, 
+			   void *buf, 
+			   size_t len, 
 			   int flags, 
 			   struct sockaddr *from, 
 			   unsigned int *fromlen);
