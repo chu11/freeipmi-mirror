@@ -1,43 +1,17 @@
-Release 0.2.0 (End of March 2005)
----------------------------------
-AB:
-  * Done:
-    - SMBus/SSIF Driver.
-  * Work in progress:
-    - Unified Driver Model: Single API set for all in-band and
-      out-of-band drivers.
-Bala:
-  * Done:
-    - Sensors rewrite.
-    - bmc-config code cleanup.
-    - old bmc-config code removal.
-  * Work in progress:
-    - bmc-config --auto and --expert modes.
-    - Adopt the the unified driver model for all APIs. This will make
-      all GNU FreeIPMI tools work for both in-band and out-of-band
-      interfaces.
-    - bmc-fence daemon.
+Release 0.3.0
+-------------
+Zresearch team:
+   Scheme -> C ipmi-sel
+   Scheme -> C ipmi-sensors
+   Scheme -> C bmc-config
 
-Release 0.3.0 (End of June 2005)
---------------------------------
-AB:
-   * Yet to start:
-     - Raw command interface and utility.
-     - Debug and dump support.
-     - libfreeipmi APIs revisit.
-     - Scheme primitives revisit.
-Bala:
-   * Yet to start:
-     - Fish PEF primitives and PEF utility.
 Al:
-   * Yet to start:
-     - SOL daemon (sold) for IPMI-2.0.
-     - LAN session sequencing and re-transmission.
-ITZ:
-   * Done:
-     - PEF APIs
-   * Yet to start:
-     - Convert possible gh_ APIs to scm_.
+   * libfreeipmi audit/cleanup
+   * libfreeipmi ipmi 2.0 support
+   * libfreeipmi kcs/ssif api
+   * ipmipower ipmi 2.0 support
+   * rmcpping ipmi 2.0 support
+   * bmc-config ipmi 2.0 support  
 
 Release 0.4.0
 -------------
@@ -48,12 +22,26 @@ Bala:
    * Yet to start:
      - FRU sub system
      - SDR utility to checkout, manipulate and commit.
+     - bmc-fence daemon.
+     - SOL daemon (sold) for IPMI-2.0.
+     - PEF primitives and PEF utility.
 
 Release 0.1.0
 -------------
 AB:
    Hackers Guide.
 
-Al:
-   Web Interface: Ganglia ad-don???
-
+Release 0.2.0
+-------------
+AB:
+    - SMBus/SSIF Driver.
+    - Unified Driver Model: Single API set for all in-band and
+      out-of-band drivers.
+Bala:
+    - Sensors rewrite.
+    - bmc-config code cleanup.
+    - old bmc-config code removal.
+    - bmc-config --auto and --expert modes.
+    - Adopt the the unified driver model for all APIs. This will make
+      all GNU FreeIPMI tools work for both in-band and out-of-band
+      interfaces.
