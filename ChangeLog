@@ -4,6 +4,10 @@
 	libfreeipmi/src/ipmi-lan-interface.h (ipmi_lan_sendto,
 	ipmi_lan_recvfrom): Fix parameters to match sendto and recvfrom
 	syscalls.
+
+	* libfreeipmi/include/freeipmi/ipmi-ssif-api.h,
+	libfreeipmi/src/ipmi-ssif-api.c: Move definitions from .h file to
+	.c file.
 	
 2006-06-26  Albert Chu <chu11@llnl.gov>
 
