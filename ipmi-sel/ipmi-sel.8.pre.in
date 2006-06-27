@@ -23,7 +23,7 @@ Delete records from START to END in SEL
 .TP
 \fB\-\-delete-event-id=ID\fR
 Delete all records having event-id = ID
-.TP
+.LP
 .SH "EXAMPLES"
 .B # ipmi-sel 
 .PP
