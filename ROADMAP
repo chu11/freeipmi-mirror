@@ -22,7 +22,6 @@ Bala:
    * Yet to start:
      - FRU sub system
      - SDR utility to checkout, manipulate and commit.
-     - bmc-fence daemon.
      - SOL daemon (sold) for IPMI-2.0.
      - PEF primitives and PEF utility.
 
