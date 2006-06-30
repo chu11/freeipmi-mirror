@@ -205,6 +205,81 @@ hex_display_sel_records (ipmi_device_t *dev, FILE *stream)
 }
 
 int 
+run_cmd_args (ipmi_device_t *dev, struct arguments *args)
+{
+  int retval = 0;
+  
+  if (args == NULL)
+    return (-1);
+  
+  if (args->info_wanted)
+    {
+      retval = display_sel_info (dev);
+      return retval;
+    }
+  
+  if (args->hex_dump_wanted)
+    {
+      if (args->hex_dump_filename)
+	{
+	  FILE *stream = NULL;
+	  
+	  stream = fopen (args->hex_dump_filename, "a+");
+	  if (stream != NULL)
+	    {
+	      retval = hex_display_sel_records (dev, stream);
+	      fclose (stream);
+	    }
+	  else 
+	    {
+	      fprintf (stderr, "%s: unable to open hex dump file [%s]\n", 
+		       program_invocation_short_name, 
+		       args->hex_dump_filename);
+	    }
+	}
+      else 
+	{
+	  retval = hex_display_sel_records (dev, stdout);
+	}
+      
+      return retval;
+    }
+  
+  if (args->delete_wanted)
+    {
+      int i;
+      
+      for (i = 0; i < args->delete_record_list_length; i++)
+	{
+	  int rval;
+	  
+	  rval = delete_local_sel_entry (dev, 
+					 args->delete_record_list[i]);
+	  if (rval != 0)
+	    {
+	      fprintf (stderr, "deletion of record ID %d failed\n", 
+		       args->delete_record_list[i]);
+	    }
+	  
+	  if (!retval)
+	    retval = rval;
+	}
+      
+      return retval;
+    }
+  
+  if (args->delete_all_wanted)
+    {
+      retval = clear_sel_entries (dev);
+      return retval;
+    }
+  
+  retval = display_sel_records (dev);
+  
+  return retval;
+}
+
+int 
 main (int argc, char **argv)
 {
   struct arguments *args = NULL;
@@ -297,42 +372,6 @@ main (int argc, char **argv)
 	      perror ("ipmi_open_inband()");
 	      return (-1);
 	    }
-	}
-    }
-  
-  if (args->info_wanted)
-    {
-      display_sel_info (&dev);
-    }
-  else 
-    {
-      if (args->hex_dump_wanted)
-	{
-	  if (args->hex_dump_filename)
-	    {
-	      FILE *stream = NULL;
-	      
-	      stream = fopen (args->hex_dump_filename, "a+");
-	      if (stream != NULL)
-		{
-		  hex_display_sel_records (&dev, stream);
-		  fclose (stream);
-		}
-	      else 
-		{
-		  fprintf (stderr, "%s: unable to open hex dump file [%s]\n", 
-			   program_invocation_short_name, 
-			   args->hex_dump_filename);
-		}
-	    }
-	  else 
-	    {
-	      hex_display_sel_records (&dev, stdout);
-	    }
-	}
-      else 
-	{
-	  display_sel_records (&dev);
 	}
     }
   

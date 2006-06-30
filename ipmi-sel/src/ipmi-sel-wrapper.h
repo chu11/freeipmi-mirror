@@ -28,5 +28,8 @@ int get_local_sel_record_raw (ipmi_device_t *dev,
 			      uint8_t *record_data, 
 			      uint32_t record_data_len, 
 			      uint16_t *next_record_id);
+int delete_local_sel_entry (ipmi_device_t *dev, uint16_t record_id);
+int clear_sel_entries (ipmi_device_t *dev);
+int get_sel_clear_status (ipmi_device_t *dev, int *status);
 
 #endif

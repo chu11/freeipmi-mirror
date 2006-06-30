@@ -1,3 +1,15 @@
+2006-06-30  A Balamurugan  <bala@zresearch.com>
+
+	* ipmi-sel/src/Makefile.am: updated
+
+	* ipmi-sel/src/ipmi-sel-argp.c (stripwhite, get_token,
+	validate_delete_list_string, get_delete_record_count,
+	get_delete_record_list): new static functions
+
+	* ipmi-sel/src/ipmi-sel-argp.c, ipmi-sel/src/ipmi-sel-wrapper.c,
+	ipmi-sel/src/ipmi-sel.c: added --delete and --delete-all option
+	support
+
 2006-06-27  Albert Chu <chu11@llnl.gov>
 
 	* ipmi-sel/ipmi-sel.8.pre.in: Fix output typo.

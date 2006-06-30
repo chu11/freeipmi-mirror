@@ -218,284 +218,184 @@ get_local_sel_record_raw (ipmi_device_t *dev,
   return (rv);
 }
 
-/* SCM */
-/* ex_sel_get_next_entry_raw () */
-/* { */
-/*   uint8_t record_data[SEL_RECORD_SIZE]; */
-/*   SCM scm_sel_record = SCM_EOL; */
+int 
+delete_local_sel_entry (ipmi_device_t *dev, uint16_t record_id)
+{
+  fiid_obj_t obj_cmd_rs;
+  uint16_t reservation_id;
+  uint64_t val;
   
-/*   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (),  */
-/* 			       fi_get_seld (),  */
-/* 			       record_data, SEL_RECORD_SIZE) == 0) */
-
-/*     { */
-/*       int i; */
-/*       for (i = SEL_RECORD_SIZE - 1; i >= 0; i--) */
-/*         scm_sel_record = gh_cons (gh_ulong2scm (record_data[i]), scm_sel_record); */
-/*     } */
-/*   return scm_sel_record; */
-/* } */
-
-/* SCM */
-/* ex_sel_get_first_entry_hex () */
-/* { */
-/*   uint8_t record_data [SEL_RECORD_SIZE]; */
-/*   uint8_t hex_data [SEL_HEX_RECORD_SIZE]; */
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
+    goto cleanup;
   
-/*   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (),  */
-/* 				fi_get_seld (),  */
-/* 				record_data, SEL_RECORD_SIZE) == 0) */
-/*     { */
-/*       snprintf (hex_data, SEL_HEX_RECORD_SIZE, */
-/*                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] " */
-/*                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] " */
-/*                 "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n", */
-/*                 record_data[0], record_data[1], record_data[2], record_data[3],  */
-/*                 record_data[4], record_data[5], record_data[6], record_data[7],  */
-/*                 record_data[8], record_data[9], record_data[10], record_data[11],  */
-/*                 record_data[12], record_data[13], record_data[14], record_data[15]); */
-/*       return gh_str02scm (hex_data); */
-/*     } */
-/*   else return SCM_BOOL_F; */
-/* } */
-
-/* SCM */
-/* ex_sel_get_next_entry_hex () */
-/* { */
-/*   uint8_t record_data [SEL_RECORD_SIZE]; */
-/*   uint8_t hex_data [SEL_HEX_RECORD_SIZE]; */
-  
-/*   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (),  */
-/* 			       fi_get_seld (),  */
-/* 			       record_data, SEL_RECORD_SIZE) == 0) */
-/*     { */
-/*       snprintf (hex_data, SEL_HEX_RECORD_SIZE, */
-/*                 "RID:[%02X][%02X] RT:[%02X] TS:[%02X][%02X][%02X][%02X] " */
-/*                 "GID:[%02X][%02X] ER:[%02X] ST:[%02X] SN:[%02X] EDIR:[%02X] " */
-/*                 "ED1: [%02X] ED2: [%02X] ED3: [%02X]\n", */
-/*                 record_data[0], record_data[1], record_data[2], record_data[3],  */
-/*                 record_data[4], record_data[5], record_data[6], record_data[7],  */
-/*                 record_data[8], record_data[9], record_data[10], record_data[11],  */
-/*                 record_data[12], record_data[13], record_data[14], record_data[15]); */
-/*       return gh_str02scm (hex_data); */
-/*     } */
-/*   else return SCM_BOOL_F; */
-/* } */
-
-/* SCM  */
-/* ex_sel_get_info_binary () */
-/* { */
-/*   local_sel_info_t info; */
-  
-/*   if (get_sel_info (fi_get_ipmi_device (), &info) == 0) */
-/*     { */
-/*       SCM tail = SCM_EOL; */
+  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
       
-/*       tail = gh_cons (info.flags & get_sel_alloc_info_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail); */
-/*       tail = gh_cons (info.flags & reserve_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail); */
-/*       tail = gh_cons (info.flags & partial_add_sel_entry_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail); */
-/*       tail = gh_cons (info.flags & delete_sel_cmd_support ? SCM_BOOL_T : SCM_BOOL_F, tail); */
-/*       tail = gh_cons (info.flags & overflow_flag ? SCM_BOOL_T : SCM_BOOL_F, tail); */
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
+    goto cleanup;
+  reservation_id = val;
+  
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
+  
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_delete_sel_entry_rs)))
+    goto cleanup;
+  
+  if (ipmi_cmd_delete_sel_entry (dev, 
+				 reservation_id, 
+				 record_id, 
+				 obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
       
-/*       return gh_cons (gh_ulong2scm (info.version_major), */
-/*                       gh_cons (gh_ulong2scm (info.version_minor), */
-/*                                gh_cons (gh_ulong2scm (info.entry_count), */
-/*                                         gh_cons (gh_ulong2scm (info.last_add_time), */
-/*                                                  gh_cons (gh_ulong2scm (info.last_erase_time), */
-/*                                                           gh_cons (gh_ulong2scm (info.free_space), */
-/*                                                                    tail)))))); */
-/*     } */
-/*   else return SCM_BOOL_F; */
-/* } */
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
+  
+  fiid_obj_destroy(obj_cmd_rs);
+  return 0;
+  
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (-1);
+}
 
-/* SCM  */
-/* ex_sel_get_first_entry () */
-/* { */
-/*   uint8_t record_data[SEL_RECORD_SIZE]; */
-/*   sel_record_t sel_rec; */
-/*   SCM scm_sel_record = SCM_EOL; */
+int 
+clear_sel_entries (ipmi_device_t *dev)
+{
+  fiid_obj_t obj_cmd_rs;
+  uint16_t reservation_id;
+  uint64_t val;
   
-/*   if (ipmi_sel_get_first_entry (fi_get_ipmi_device (),  */
-/* 				fi_get_seld (),  */
-/* 				record_data, SEL_RECORD_SIZE) != 0) */
-/*     return SCM_EOL; */
-  
-/*   if (get_sel_record (record_data, &sel_rec) != 0) */
-/*     return SCM_EOL; */
-  
-/*   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.timestamp),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.sensor_info),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_message),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_data2_message),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_data3_message),  */
-/* 					SCM_UNDEFINED)); */
-  
-/*   if (sel_rec.timestamp) free (sel_rec.timestamp); */
-/*   if (sel_rec.sensor_info) free (sel_rec.sensor_info); */
-/*   if (sel_rec.event_message) free (sel_rec.event_message); */
-/*   if (sel_rec.event_data2_message) free (sel_rec.event_data2_message); */
-/*   if (sel_rec.event_data3_message) free (sel_rec.event_data3_message); */
-  
-/*   return scm_sel_record; */
-/* } */
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
+    goto cleanup;
 
-/* SCM  */
-/* ex_sel_get_next_entry () */
-/* { */
-/*   uint8_t record_data[SEL_RECORD_SIZE]; */
-/*   sel_record_t sel_rec; */
-/*   SCM scm_sel_record = SCM_EOL; */
+  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
+      
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
   
-/*   if (ipmi_sel_get_next_entry (fi_get_ipmi_device (),  */
-/* 			       fi_get_seld (),  */
-/* 			       record_data, SEL_RECORD_SIZE) != 0) */
-/*     return SCM_EOL; */
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
+    goto cleanup;
+  reservation_id = val;
   
-/*   if (get_sel_record (record_data, &sel_rec) != 0) */
-/*     return SCM_EOL; */
-  
-/*   scm_sel_record = gh_list (gh_long2scm (sel_rec.record_id), SCM_UNDEFINED); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.timestamp),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.sensor_info),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_message),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_data2_message),  */
-/* 					SCM_UNDEFINED)); */
-/*   scm_sel_record = gh_append2 (scm_sel_record,  */
-/* 			       gh_list (gh_str02scm (sel_rec.event_data3_message),  */
-/* 					SCM_UNDEFINED)); */
-  
-/*   if (sel_rec.timestamp) free (sel_rec.timestamp); */
-/*   if (sel_rec.sensor_info) free (sel_rec.sensor_info); */
-/*   if (sel_rec.event_message) free (sel_rec.event_message); */
-/*   if (sel_rec.event_data2_message) free (sel_rec.event_data2_message); */
-/*   if (sel_rec.event_data3_message) free (sel_rec.event_data3_message); */
-  
-/*   return scm_sel_record; */
-/* } */
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
 
-/* SCM  */
-/* ex_sel_delete_entry (SCM scm_record_id) */
-/* { */
-/*   uint16_t record_id; */
-/*   fiid_obj_t obj_cmd_rs; */
-/*   uint16_t reservation_id; */
-/*   uint64_t val; */
-  
-/*   record_id = gh_scm2long (scm_record_id); */
-  
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs); */
-/*   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (),  */
-/* 			     obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   fiid_obj_get (obj_cmd_rs,  */
-/* 		tmpl_reserve_sel_rs,  */
-/* 		"reservation_id",  */
-/* 		&val); */
-/*   reservation_id = val; */
-  
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_delete_sel_entry_rs); */
-/*   if (ipmi_cmd_delete_sel_entry2 (fi_get_ipmi_device (),  */
-/* 				  reservation_id,  */
-/* 				  record_id,  */
-/* 				  obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_delete_sel_entry2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   return SCM_BOOL_T; */
-/* } */
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
+    goto cleanup;
 
-/* SCM  */
-/* ex_sel_clear () */
-/* { */
-/*   fiid_obj_t obj_cmd_rs; */
-/*   uint16_t reservation_id; */
-/*   uint64_t val; */
+  if (ipmi_cmd_clear_sel (dev, 
+			  reservation_id, 
+			  IPMI_SEL_CLEAR_OPERATION_INITIATE_ERASE, 
+			  obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
+      
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
   
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs); */
-/*   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (),  */
-/* 			     obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   fiid_obj_get (obj_cmd_rs,  */
-/* 		tmpl_reserve_sel_rs,  */
-/* 		"reservation_id",  */
-/* 		&val); */
-/*   reservation_id = val; */
-  
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs); */
-/*   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (),  */
-/* 			   reservation_id,  */
-/* 			   IPMI_SEL_INITIATE_ERASE,  */
-/* 			   obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   return SCM_BOOL_T; */
-/* } */
+  return 0;
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (-1);
+}
 
-/* SCM  */
-/* ex_sel_get_clear_status () */
-/* { */
-/*   fiid_obj_t obj_cmd_rs; */
-/*   uint16_t reservation_id; */
-/*   uint64_t val; */
+int 
+get_sel_clear_status (ipmi_device_t *dev, int *status)
+{
+  fiid_obj_t obj_cmd_rs;
+  uint16_t reservation_id;
+  uint64_t val;
   
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_reserve_sel_rs); */
-/*   if (ipmi_cmd_reserve_sel2 (fi_get_ipmi_device (),  */
-/* 			     obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_reserve_sel2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   fiid_obj_get (obj_cmd_rs,  */
-/* 		tmpl_reserve_sel_rs,  */
-/* 		"reservation_id",  */
-/* 		&val); */
-/*   reservation_id = val; */
-  
-/*   fiid_obj_alloca (obj_cmd_rs, tmpl_clear_sel_rs); */
-/*   if (ipmi_cmd_clear_sel2 (fi_get_ipmi_device (),  */
-/* 			   reservation_id,  */
-/* 			   IPMI_SEL_GET_ERASURE_STATUS,  */
-/* 			   obj_cmd_rs) != 0) */
-/*     { */
-/*       ipmi_error (obj_cmd_rs, "ipmi_cmd_clear_sel2()"); */
-/*       return SCM_BOOL_F; */
-/*     } */
-  
-/*   fiid_obj_get (obj_cmd_rs,  */
-/* 		tmpl_clear_sel_rs,  */
-/* 		"erasure_progress",  */
-/* 		&val); */
-/*   return (gh_long2scm (val)); */
-/* } */
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_reserve_sel_rs)))
+    goto cleanup;
 
+  if (ipmi_cmd_reserve_sel (dev, obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
+      
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "reservation_id", &val) < 0)
+    goto cleanup;
+  reservation_id = val;
+  
+  fiid_obj_destroy(obj_cmd_rs);
+  obj_cmd_rs = NULL;
+
+  if (!(obj_cmd_rs = fiid_obj_create(tmpl_cmd_clear_sel_rs)))
+    goto cleanup;
+
+  if (ipmi_cmd_clear_sel (dev, 
+			  reservation_id, 
+			  IPMI_SEL_CLEAR_OPERATION_GET_ERASURE_STATUS, 
+			  obj_cmd_rs) != 0)
+    {
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "cmd", &val);
+      dev->cmd = val;
+      
+      FIID_OBJ_GET_CLEANUP (obj_cmd_rs, "comp_code", &val);
+      dev->comp_code = val;
+      ipmi_strerror_cmd_r (obj_cmd_rs, 
+                           dev->net_fn,
+			   dev->errmsg, 
+			   IPMI_ERR_STR_MAX_LEN);
+      goto cleanup;
+    }
+  
+  if (fiid_obj_get (obj_cmd_rs, "erasure_progress", &val) < 0)
+    goto cleanup;
+  
+  fiid_obj_destroy(obj_cmd_rs);
+  *status = val;
+  return 0;
+
+ cleanup:
+  if (obj_cmd_rs)
+    fiid_obj_destroy(obj_cmd_rs);
+  return (-1);
+}
