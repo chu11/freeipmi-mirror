@@ -20,9 +20,6 @@ Delete REC-LIST in SEL
 .TP
 \fB\-\-delete-range=START-END\fR
 Delete records from START to END in SEL
-.TP
-\fB\-\-delete-event-id=ID\fR
-Delete all records having event-id = ID
 .LP
 .SH "EXAMPLES"
 .B # ipmi-sel 
@@ -42,10 +39,6 @@ Delete all entries in SEL.
 Delete range of entries 12 to 42.
 .PP
 .B # ipmi-sel --delete-range 12-42
-.PP
-Delete records of type 3.
-.PP
-.B # ipmi-sel --delete-event-id 3
 .PP
 Show SEL version and general information.
 .PP

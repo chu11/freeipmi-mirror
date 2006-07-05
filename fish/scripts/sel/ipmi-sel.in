@@ -1,7 +1,0 @@
-#! @prefix@/sbin/fish -s
-!#
-(let ((cmd-args (sel-argp (fi-command-line))))
-  (if (list? cmd-args)
-      (sel-main cmd-args)))
-(fi-exit sel-exit-status)
-

@@ -1,6 +1,6 @@
 SUBDIRS = src extensions scripts
 
-MANS_CPP = bmc-config.8 fish.8 ipmi-sel.8 ipmi-sensors.8
+MANS_CPP = bmc-config.8 fish.8 ipmi-sensors.8
 
 $(MANS_CPP): $(MANS_CPP:%=%.pre)
 	cpp -P -I. -x c $@.pre -o $@

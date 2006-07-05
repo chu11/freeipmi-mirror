@@ -1,5 +1,4 @@
-#sbin_PROGRAMS=ipmi-sel
-noinst_PROGRAMS=ipmi-sel
+sbin_PROGRAMS=ipmi-sel
 ipmi_sel_SOURCES=ipmi-sel-argp.c ipmi-sel-wrapper.c ipmi-sel.c 
  
 ipmi_sel_LDADD = ../../common/src/libargpcommon.la \

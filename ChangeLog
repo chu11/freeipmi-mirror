@@ -1,5 +1,14 @@
 2006-07-05  A Balamurugan  <bala@zresearch.com>
 
+	* fish/scripts/sel/Makefile.am, fish/scripts/sel/ipmi-sel.in:
+	removed
+
+	* configure.ac, fish/Makefile.am, fish/scripts/Makefile.am,
+	ipmi-sel/ipmi-sel.8.pre.in, ipmi-sel/src/Makefile.am: updated for
+	ipmi-sel C version.
+
+2006-07-05  A Balamurugan  <bala@zresearch.com>
+
 	* ipmi-sel/src/ipmi-sel-argp.[ch]: added --delete-range option.
 
 	* ipmi-sel/src/ipmi-sel.c: like wise.

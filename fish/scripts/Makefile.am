@@ -1,1 +1,1 @@
-SUBDIRS = sensors bmc-config bmc-autoconfig sel pef
+SUBDIRS = sensors bmc-config bmc-autoconfig pef
