@@ -1251,6 +1251,8 @@ ipmi_lan_sendto (int sockfd,
     {
       packet_length = buffer_size + IPMI_LAN_PKT_PAD_SIZE;
     }
+  else
+    packet_length = buffer_size;
   
   packet = alloca (packet_length);
   memset (packet, 0, packet_length);
@@ -1266,7 +1268,7 @@ ipmi_lan_sendto (int sockfd,
   if (bytes_sent == -1)
     return (-1);
   
-  if (bytes_sent == packet_length)
+  if (bytes_sent == (buffer_size + IPMI_LAN_PKT_PAD_SIZE))
     return (bytes_sent - IPMI_LAN_PKT_PAD_SIZE);
   
   return bytes_sent;
