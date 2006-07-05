@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.2 2006-06-30 09:28:25 balamurugan Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.3 2006-07-05 12:37:29 balamurugan Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -61,6 +61,8 @@ static struct argp_option options[] =
      "Delete given SEL records entry."},
     {"delete-all", DELETE_ALL_KEY, 0, 0, 
      "Delete all SEL entries."},
+    {"delete-range", DELETE_RANGE_KEY, "START-END", 0, 
+     "Delete records from START to END in SEL."},
     {"hex-dump",   HEX_DUMP_KEY,   "FILE", OPTION_ARG_OPTIONAL, 
      "Hex-dump SEL entries optionally to FILE."},
     { 0 }
@@ -236,6 +238,93 @@ parse_opt (int key, char *arg, struct argp_state *state)
     case DELETE_ALL_KEY:
       cmd_args->delete_all_wanted = 1;
       break;
+    case DELETE_RANGE_KEY:
+      cmd_args->delete_range_wanted = 1;
+      {
+	char *range_str = NULL;
+	char *start_ptr = NULL;
+	char *range1_str = NULL;
+	char *range2_str = NULL;
+	int value = 0;
+	int errnum = 0;
+	char *tail = NULL;
+	
+	range_str = strdupa (arg);
+	start_ptr = strchr (range_str, '-');
+	range2_str = strdupa (start_ptr + 1);
+	*start_ptr = '\0';
+	range1_str = range_str;
+	
+	value = strtol (range1_str, &tail, 10);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	cmd_args->delete_range1 = value;
+	
+	value = 0;
+	errnum = 0;
+	tail = NULL;
+	
+	value = strtol (range2_str, &tail, 10);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid delete range\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	cmd_args->delete_range2 = value;
+	
+	if (cmd_args->delete_range2 < cmd_args->delete_range1)
+	  {
+	    fprintf (stderr, "invalid END range\n");
+	    argp_usage (state);
+	    break;
+	  }
+      }
+      break;
     case HEX_DUMP_KEY:
       cmd_args->hex_dump_wanted = 1;
       if (arg)
@@ -268,6 +357,9 @@ ipmi_sel_argp_parse (int argc, char **argv)
   cmd_args.delete_record_list = NULL;
   cmd_args.delete_record_list_length = 0;
   cmd_args.delete_all_wanted = 0;
+  cmd_args.delete_range_wanted = 0;
+  cmd_args.delete_range1 = 0;
+  cmd_args.delete_range2 = 0;
   cmd_args.hex_dump_wanted = 0;
   cmd_args.hex_dump_filename = NULL;
   

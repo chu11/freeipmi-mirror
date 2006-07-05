@@ -274,6 +274,18 @@ run_cmd_args (ipmi_device_t *dev, struct arguments *args)
       return retval;
     }
   
+  if (args->delete_range_wanted)
+    {
+      int i = 0;
+      
+      for (i = args->delete_range1; i <= args->delete_range2; i++)
+	{
+	  delete_local_sel_entry (dev, i);
+	}
+      
+      return retval;
+    }
+  
   retval = display_sel_records (dev);
   
   return retval;
@@ -287,6 +299,8 @@ main (int argc, char **argv)
   
   struct hostent *hostinfo;
   struct sockaddr_in host;
+  
+  int retval = 0;
   
   {
     struct rlimit resource_limit;
@@ -375,11 +389,13 @@ main (int argc, char **argv)
 	}
     }
   
+  retval = run_cmd_args (&dev, args);
+  
   if (ipmi_close (&dev) != 0)
     {
       perror ("ipmi_close()");
       exit (EXIT_FAILURE);
     }
   
-  return (0);
+  return (retval);
 }
