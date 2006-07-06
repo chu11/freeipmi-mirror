@@ -1,3 +1,33 @@
+2006-07-06  A Balamurugan  <bala@zresearch.com>
+
+	* fish/scripts/bmc-config/Makefile.am,
+	fish/scripts/bmc-config/bmc-config.in: removed.
+	
+	* Makefile.am, configure.ac, fish/Makefile.am,
+	fish/scripts/Makefile.am: updated.
+
+	* bmc-config/Makefile.am, bmc-config/bmc-config.8.pre.in,
+	bmc-config/bmc-config.conf.5.in, bmc-config/src/Makefile.am,
+	bmc-config/src/bmc-argp.c, bmc-config/src/bmc-checkout.c,
+	bmc-config/src/bmc-commit.c, bmc-config/src/bmc-common.h,
+	bmc-config/src/bmc-config-api.[ch],
+	bmc-config/src/bmc-config.[ch], bmc-config/src/bmc-diff.c,
+	bmc-config/src/bmc-ipmi-wrapper.[ch],
+	bmc-config/src/bmc-lan-channel-section.c,
+	bmc-config/src/bmc-lan-conf-auth-section.c,
+	bmc-config/src/bmc-lan-conf-misc-section.c,
+	bmc-config/src/bmc-lan-conf-section.c,
+	bmc-config/src/bmc-lan-conf-security-keys-section.c,
+	bmc-config/src/bmc-misc-section.c, bmc-config/src/bmc-parser.c,
+	bmc-config/src/bmc-pef-conf-section.c,
+	bmc-config/src/bmc-rmcpplus-conf-privilege-section.c,
+	bmc-config/src/bmc-sections.[ch],
+	bmc-config/src/bmc-serial-channel-section.c,
+	bmc-config/src/bmc-serial-conf-section.c,
+	bmc-config/src/bmc-sol-conf-section.c, bmc-config/src/bmc-types.h,
+	bmc-config/src/bmc-user-sections.c, bmc-config/src/bmc-util.c: new
+	files.  now bmc-config is in C.
+
 2006-07-05  A Balamurugan  <bala@zresearch.com>
 
 	* fish/scripts/sel/Makefile.am, fish/scripts/sel/ipmi-sel.in:
