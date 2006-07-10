@@ -1,3 +1,12 @@
+2006-07-10  A Balamurugan  <bala@zresearch.com>
+
+	* configure.ac, libfreeipmi/Makefile.am: reverted back ipckey
+	changes.
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_sendto,
+	ipmi_lan_recvfrom): reverted back 2006-07-06 and 2006-04-14
+	changes.
+
 2006-07-06  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_sendto): bug fix
