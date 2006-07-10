@@ -32,6 +32,8 @@
 extern "C" {
 #endif
 
+#define IPMI_IPCKEY  "/var/lib/" PACKAGE_NAME "/ipckey"
+
 #define IPMI_OUTOFBAND_PROJ_ID    0x01
 #define IPMI_INBAND_PROJ_ID       0x02
 
