@@ -22,6 +22,14 @@ libfreeipmi:
 
 Al's TODO list
 ==============
+rpm
+---
+Redo packages once re-org is complete
+  * freeipmi - lib + most utils
+  * freeipmi-devel - devel libs
+  * freeipmi-bmcwatchdog
+  * freeipmi-ipmiconsole
+
 bmc-config
 ----------
   * not output password option twice
