@@ -1,5 +1,7 @@
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
+	* Fix lan retransmission issues.
+
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
 	(_ipmi_lan_cmd_send_orig, _ipmi_lan_cmd_recv_orig,
 	ipmi_lan_cmd_orig): Removed functions.
