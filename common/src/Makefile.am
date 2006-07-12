@@ -25,7 +25,7 @@ noinst_LTLIBRARIES = \
 	libxmalloc.la
 
 libargpcommon_la_SOURCES = argp-common.c
-libargpcommon_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include 
+libargpcommon_la_CFLAGS = -D_GNU_SOURCE -I$(srcdir)/../../libfreeipmi/include 
 
 libbitops_la_SOURCES = bit-ops.c
 libbitops_la_CFLAGS = -I$(srcdir)/../../libfreeipmi/include 
