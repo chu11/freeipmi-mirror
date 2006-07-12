@@ -1,3 +1,11 @@
+2006-07-12  A Balamurugan  <bala@zresearch.com>
+
+	* common/src/argp-common.c: --driver-address,
+	--packet-retry-timeout and --packet-retry-max options accept arg
+	value in decimal, octal and hex.  fixed bug #16291.
+
+	* common/src/Makefile.am: updated.
+
 2006-07-11  A Balamurugan  <bala@zresearch.com>
 
 	* configure.ac, libfreeipmi/src/ipmi-semaphores.h: reverted back

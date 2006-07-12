@@ -77,7 +77,41 @@ common_parse_opt (int key,
 		}
       break;
     case DRIVER_ADDRESS_KEY:
-      cmd_args->driver_address = atol (arg);
+      {
+	int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid driver address\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid driver address\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid driver address\n");
+	    argp_usage (state);
+	    break;
+	  }
+	cmd_args->driver_address = value;
+      }
       break;
     case DRIVER_DEVICE_KEY:
       if (cmd_args->driver_device != NULL)
@@ -85,10 +119,86 @@ common_parse_opt (int key,
       cmd_args->driver_device = strdup (arg);
       break;
     case PACKET_RETRY_TIMEOUT_KEY:
-      cmd_args->packet_retry_timeout = atol (arg);
+      {
+	int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid packet retry timeout value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	cmd_args->packet_retry_timeout = value;
+      }
       break;
     case PACKET_RETRY_MAX_KEY:
-      cmd_args->packet_retry_max = atol (arg);
+      {
+	int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid packet retry max value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid packet retry max value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid packet retry max value\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value == 0)
+	  {
+	    fprintf (stderr, "packet retry max value should not be zero\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	cmd_args->packet_retry_max = value;
+      }
       break;
     case HOSTNAME_KEY:
       if (cmd_args->host != NULL)
