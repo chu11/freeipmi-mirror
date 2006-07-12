@@ -1216,22 +1216,22 @@ ipmi_lan_validate_checksum (ipmi_device_t *dev,
 }
 
 ssize_t 
-ipmi_lan_sendto (int s, 
-		 const void *buf, 
-		 size_t len, 
+ipmi_lan_sendto (int sockfd, 
+		 const void *pkt, 
+		 size_t pkt_len, 
 		 int flags, 
 		 const struct sockaddr *to, 
 		 unsigned int tolen)
 {
-  void *_buf;
+  void *_pkt;
   ssize_t bytes_sent;
-  size_t _len;
+  size_t _pkt_len;
   size_t pad_len = 0;
 
-  if (buf == NULL || len == 0 || to == NULL)
+  if (pkt == NULL || pkt_len < 0)
     {
       errno = EINVAL;
-      return (-1);
+      return -1;
     }
 
   /*
@@ -1243,20 +1243,22 @@ ipmi_lan_sendto (int s,
     formatting packets to any 10/100 Ethernet device that accepts RMCP
     packets. -- Anand Babu
   */
-  _len = len;
-  if (_len == 56  ||
-      _len == 84  ||
-      _len == 112 ||
-      _len == 128 ||
-      _len == 156)
-    pad_len += IPMI_LAN_PKT_PAD_SIZE;
+  _pkt_len = pkt_len;
+  if (_pkt_len == 56  ||
+      _pkt_len == 84  ||
+      _pkt_len == 112 ||
+      _pkt_len == 128 ||
+      _pkt_len == 156)
+    {
+      pad_len += IPMI_LAN_PKT_PAD_SIZE;
+    }
 
-  _len += pad_len;
-  _buf = alloca (_len);         
-  memset (_buf, 0, _len);
-  memcpy (_buf, buf, len);
+  _pkt_len += pad_len;
+  _pkt = alloca (_pkt_len);         
+  memset (_pkt, 0, _pkt_len);
+  memcpy (_pkt, pkt, pkt_len);
   
-  bytes_sent = sendto (s, _buf, _len, flags, to, tolen);
+  bytes_sent = sendto (sockfd, _pkt, _pkt_len, flags, to, tolen);
 
   if (bytes_sent == -1)
     return -1;
@@ -1265,9 +1267,9 @@ ipmi_lan_sendto (int s,
 }
 
 ssize_t 
-ipmi_lan_recvfrom (int s, 
-		   void *buf, 
-		   size_t len, 
+ipmi_lan_recvfrom (int sockfd, 
+		   void *pkt, 
+		   size_t pkt_len, 
 		   int flags, 
 		   struct sockaddr *from, 
 		   unsigned int *fromlen)
@@ -1277,16 +1279,16 @@ ipmi_lan_recvfrom (int s,
   size_t recv_buf_len;
   size_t pad_len = 0;
 
-  if (buf == NULL || len == 0 || from == NULL)
+  if (pkt == NULL || pkt_len < 0)
     {
       errno = EINVAL;
-      return (-1);
+      return -1;
     }
 
-  if (len < 1024)
+  if (pkt_len < 1024)
     recv_buf_len = 1024;
   else
-    recv_buf_len = len;
+    recv_buf_len = pkt_len;
   
   /* See comment in ipmi_lan_sendto */
   /* WILL LET THIS CHECK GO SOON --ab@gnu.org.in */
@@ -1295,20 +1297,22 @@ ipmi_lan_recvfrom (int s,
       recv_buf_len == 112 ||
       recv_buf_len == 128 ||
       recv_buf_len == 156)
-    pad_len = IPMI_LAN_PKT_PAD_SIZE;
+    {
+      pad_len = IPMI_LAN_PKT_PAD_SIZE;
+    }
 
   recv_buf_len += pad_len;
   recv_buf = alloca (recv_buf_len);
   
-  bytes_recvd = recvfrom (s, recv_buf, recv_buf_len, flags, from, fromlen);
+  bytes_recvd = recvfrom (sockfd, recv_buf, recv_buf_len, flags, from, fromlen);
   if (bytes_recvd == -1)
     {
-      /*  if (recv_buf) free (recv_buf); */
+     /*  if (recv_buf) free (recv_buf); */
       return -1;
     }
   
   recv_buf_len = pad_len ? (bytes_recvd - pad_len) : bytes_recvd;
-  memcpy (buf, recv_buf, recv_buf_len);
+  memcpy (pkt, recv_buf, recv_buf_len);
   /* if (recv_buf) free (recv_buf); */
   return (recv_buf_len);
 }
