@@ -6,6 +6,22 @@
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c (ipmi_lan_cmd): Fix
 	sequence numbering bug.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_raw_create_cmd, ipmi_lan_cmd_raw): Support packet
+	retransmissions.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_raw_send, _ipmi_lan_cmd_raw_recv): Removed
+	functions.
+
+	* common/src/argp-common.h: Adjust output of command line help.
+
+	* common/src/argp-common.c (init_common_cmd_args): Give legit
+	default values for lan timeout and retransmission.
+
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_recv, ipmi_lan_cmd): Fix lan retransmission bugs.
 	
 2006-07-12  A Balamurugan  <bala@zresearch.com>
 

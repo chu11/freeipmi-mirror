@@ -49,9 +49,9 @@ enum argp_common_option_keys
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
      "Use this DEVICE for IPMI driver.", 3},                               \
     {"packet-retry-timeout", PACKET_RETRY_TIMEOUT_KEY, "TIMEOUT", 0,       \
-     "Use TIMEOUT when reading LAN packets in UDM.", 4}, 	           \
+     "Use TIMEOUT milliseconds when reading LAN packets.", 4}, 	           \
     {"packet-retry-max", PACKET_RETRY_MAX_KEY, "COUNT", 0,                 \
-     "Use COUNT retries when reading LAN packets get timed out in UDM.", 5},  \
+     "Use COUNT retries when reading LAN packets.", 5},  \
     {"hostname",       HOSTNAME_KEY, "IPMIHOST", 0, 			   \
      "Connect to IPMIHOST.", 6},					   \
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
