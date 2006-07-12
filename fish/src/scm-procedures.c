@@ -3524,6 +3524,7 @@ ex_string2number (SCM scm_string)
   int errnum = 0;
   
   str = gh_scm2newstr (scm_string, NULL);
+  errno = 0;
   value = strtol (str, &tail, 0);
   errnum = errno;
   

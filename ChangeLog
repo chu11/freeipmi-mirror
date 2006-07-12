@@ -1,5 +1,12 @@
 2006-07-12  A Balamurugan  <bala@zresearch.com>
 
+	* common/src/argp-common.c: initialize errno before calling
+	strtol().
+
+	* fish/src/scm-procedures.c (ex_string2number): like wise.
+
+2006-07-12  A Balamurugan  <bala@zresearch.com>
+
 	* fish/src/scm-procedures.c (ex_string2number): new function.
 
 	* fish/src/extension.c: added fi-string->number primitive
