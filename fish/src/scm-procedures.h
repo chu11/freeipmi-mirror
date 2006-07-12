@@ -210,4 +210,6 @@ SCM ex_cmd_get_dev_id_display (void);
 /* pef exports */
 SCM ex_get_pef_info ();
 
+SCM ex_string2number (SCM scm_string);
+
 #endif

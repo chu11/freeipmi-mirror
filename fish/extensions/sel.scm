@@ -157,11 +157,11 @@
 		   (set! driver-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sel [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sel-exit-status 64)
 		     (set! sel-cmd-args #f))))
 		 (set! driver-type 0))
 	     (if (list? sel-cmd-args)
@@ -170,14 +170,14 @@
 	     ;; --driver-address (2)
 	     (if (and (string? driver-address) (list? sel-cmd-args))
 		 (begin 
-		   (set! driver-address (string->number driver-address))
+		   (set! driver-address (fi-string->number driver-address))
 		   (if (boolean? driver-address)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sel [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sel-exit-status 64)
 			 (set! sel-cmd-args #f)))))
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
@@ -189,12 +189,12 @@
 	     ;; --packet-retry-timeout (4)
 	     (if (and (string? retry-timeout) (list? sel-cmd-args))
 		 (begin 
-		   (set! retry-timeout (string->number retry-timeout))
+		   (set! retry-timeout (fi-string->number retry-timeout))
 		   (if (boolean? retry-timeout)
 		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
+			 (display "Usage: ipmi-sel [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 				  (current-error-port))
 			 (set! sensor-exit-status 64)
 			 (set! sel-cmd-args #f)))))
@@ -204,12 +204,12 @@
 	     ;; --packet-retry-max (5)
 	     (if (and (string? retry-max) (list? sel-cmd-args))
 		 (begin 
-		   (set! retry-max (string->number retry-max))
+		   (set! retry-max (fi-string->number retry-max))
 		   (if (boolean? retry-max)
 		       (begin 
-			 (display "Usage: ipmi-sensors [OPTION...] \n"
+			 (display "Usage: ipmi-sel [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `ipmi-sensors --help' or `ipmi-sensors --usage' for more information.\n"
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 				  (current-error-port))
 			 (set! sensor-exit-status 64)
 			 (set! sel-cmd-args #f)))))
@@ -225,11 +225,11 @@
 		 (begin 
 		   (if (> (string-length username) 16)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sel [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sel-exit-status 64)
 			 (set! sel-cmd-args #f)))))
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
@@ -239,11 +239,11 @@
 		 (begin 
 		   (if (> (string-length password) 16)
 		       (begin 
-			 (display "Usage: bmc-info [OPTION...] \n"
+			 (display "Usage: ipmi-sel [OPTION...] \n"
 				  (current-error-port))
-			 (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+			 (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 				  (current-error-port))
-			 (set! bmc-info-exit-status 64)
+			 (set! sel-exit-status 64)
 			 (set! sel-cmd-args #f)))))
 	     (if (list? sel-cmd-args)
 		 (set! sel-cmd-args (append sel-cmd-args 
@@ -263,11 +263,11 @@
 		   (set! auth-type 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sel [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sel-exit-status 64)
 		     (set! sel-cmd-args #f))))
 		 (set! auth-type 0))
 	     (if (list? sel-cmd-args)
@@ -288,11 +288,11 @@
 		   (set! priv-level 5))
 		  (else 
 		   (begin 
-		     (display "Usage: bmc-info [OPTION...] \n"
+		     (display "Usage: ipmi-sel [OPTION...] \n"
 			      (current-error-port))
-		     (display "Try `bmc-info --help' or `bmc-info --usage' for more information.\n"
+		     (display "Try `ipmi-sel --help' or `ipmi-sel --usage' for more information.\n"
 			      (current-error-port))
-		     (set! bmc-info-exit-status 64)
+		     (set! sel-exit-status 64)
 		     (set! sel-cmd-args #f))))
 		 (set! priv-level 2))
 	     (if (list? sel-cmd-args)
@@ -365,7 +365,7 @@
 	     ; --delete-event-id (19) SEL specific
 	     (if (and (string? delete-event-id)
 		      (list? sel-cmd-args)
-		      (not (string->number delete-event-id)))
+		      (not (fi-string->number delete-event-id)))
 		 (begin
 		   (display "Usage: ipmi-sel [OPTION...] \n"
 			    (current-error-port))
@@ -376,7 +376,7 @@
 	     (if (list? sel-cmd-args)
 		 (begin
 		   (and (string? delete-event-id)
-			(set! delete-event-id (string->number
+			(set! delete-event-id (fi-string->number
 					       delete-event-id)))
 		   (set! sel-cmd-args (append sel-cmd-args
 					    (list delete-event-id)))))
