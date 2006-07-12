@@ -1,5 +1,10 @@
 2006-07-12  A Balamurugan  <bala@zresearch.com>
 
+	* libfreeipmi/src/ipmi-ssif-interface.c (ipmi_ssif_cmd2): handles
+	smaller and oversized packets.
+
+2006-07-12  A Balamurugan  <bala@zresearch.com>
+
 	* common/src/argp-common.c: initialize errno before calling
 	strtol().
 

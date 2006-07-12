@@ -325,24 +325,56 @@ ipmi_ssif_cmd2 (ipmi_device_t *dev,
     ERR (pkt);
     
     ERR ((bytes_read = ipmi_ssif_read (dev->io.inband.dev_fd, pkt, pkt_max_size)) != -1);
-    if (bytes_read != pkt_len)
+    
+    if (bytes_read < pkt_len)
       {
-	int i;
-	
-	fprintf (stderr, 
-		 "%s(): received invalid packet.  "
-		 "expected size = %d, received size = %d\n", 
-		 __PRETTY_FUNCTION__, 
-		 pkt_len, 
-		 (int)bytes_read);
-	fprintf (stderr, "packet data:\n");
-	for (i = 0; i < bytes_read; i++)
-	  fprintf (stderr, "%02X ", pkt[i]);
-	fprintf (stderr, "\n");
-	
-	fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
-	
-	return (-1);
+	if (bytes_read < 3) // 3 = LUN/NET_FN + COMMAND + COMP_CODE
+	  {
+	    int i;
+	    
+	    fprintf (stderr, 
+		     "%s(): received invalid packet.  "
+		     "expected size = %d, received size = %d\n", 
+		     __PRETTY_FUNCTION__, 
+		     pkt_len, 
+		     (int)bytes_read);
+	    fprintf (stderr, "packet data:\n");
+	    for (i = 0; i < bytes_read; i++)
+	      fprintf (stderr, "%02X ", pkt[i]);
+	    fprintf (stderr, "\n");
+	    
+	    fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
+	    
+	    return (-1);
+	  }
+	else 
+	  {
+	    memset (pkt + bytes_read, 0, pkt_len - bytes_read);
+	    bytes_read = pkt_len;
+	  }
+      }
+    else
+      {
+	if (bytes_read > pkt_len)
+	  {
+	    int i;
+	    
+	    fprintf (stderr, 
+		     "%s(): received invalid packet.  "
+		     "expected size = %d, received size = %d\n", 
+		     __PRETTY_FUNCTION__, 
+		     pkt_len, 
+		     (int)bytes_read);
+	    fprintf (stderr, "packet data:\n");
+	    for (i = 0; i < bytes_read; i++)
+	      fprintf (stderr, "%02X ", pkt[i]);
+	    fprintf (stderr, "\n");
+	    
+	    fprintf (stderr, "please report to <freeipmi-devel@gnu.org>\n");
+	    fprintf (stderr, "anyway, skipping extra bytes and continuing\n");
+	    
+	    bytes_read = pkt_len;
+	  }
       }
     ERR (unassemble_ipmi_kcs_pkt (pkt, 
 				  bytes_read, 
