@@ -152,6 +152,12 @@ main (int argc, char **argv)
   ipmi_raw_argp_parse (argc, argv);
   args = ipmi_raw_get_arguments ();
   
+#ifdef NDEBUG
+  /* Clear out argv data for security purposes on ps(1). */
+  for (i = 1; i < argc; i++)
+    memset(argv[i], '\0', strlen(argv[i]));
+#endif /* NDEBUG */
+
   if (args->common.host != NULL)
     {
       host.sin_family = AF_INET;

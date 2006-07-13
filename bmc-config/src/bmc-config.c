@@ -187,6 +187,12 @@ main (int argc, char *argv[])
   if (bmc_argp (argc, argv,  &arguments) != 0)
     return (1);
 
+#ifdef NDEBUG
+  /* Clear out argv data for security purposes on ps(1). */
+  for (i = 1; i < argc; i++)
+    memset(argv[i], '\0', strlen(argv[i]));
+#endif /* NDEBUG */
+
   ipmi_core_init (&arguments);
 
   /* this should be after ipmi_core_init since

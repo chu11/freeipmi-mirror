@@ -23,7 +23,9 @@
 	* common/doc/Makefile.am: Update for new files.
 
 	* bmc-config/bmc-config.8.pre.in, bmc-info/bmc-info.8.pre.in,
-	ipmi-raw/ipmi-raw.8.pre.in, ipmi-sel/ipmi-sel.8.pre.in: Adjust for
+	ipmi-raw/ipmi-raw.8.pre.in, ipmi-sel/ipmi-sel.8.pre.in,
+	fish/fish.8.pre.in, fish/bmc-config.8.pre.in,
+	fish/ipmi-sel.8.pre.in, fish/ipmi-sensors.8.pre.in: Adjust for
 	change to new argp common manpage files.  Use non-default manpage
 	for priv level on bmc-config.8.
 
@@ -34,6 +36,12 @@
 	* bmc-config/src/bmc-argp.c: Use new defines.  Make priv-level default ADMIN.
 
 	* bmc-config/src/bmc-config.c (main): Set appropriate default values.
+
+	Clear out command line options
+
+	* bmc-config/src/bmc-config.c (main), bmc-info/src/bmc-info.c
+	(main), ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c
+	(main): Clear out command line options after they are parsed.
 
 2006-07-12  Albert Chu <chu11@llnl.gov>
 

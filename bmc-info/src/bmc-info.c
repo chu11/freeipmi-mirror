@@ -409,6 +409,12 @@ main (int argc, char **argv)
   
   bmc_info_argp_parse (argc, argv);
   args = bmc_info_get_arguments ();
+
+#ifdef NDEBUG
+  /* Clear out argv data for security purposes on ps(1). */
+  for (i = 1; i < argc; i++)
+    memset(argv[i], '\0', strlen(argv[i]));
+#endif /* NDEBUG */
   
   if (args->common.host != NULL)
     {
