@@ -10,7 +10,16 @@ out-of-band.  Although connecting via a user with ADMIN privileges is
 not required for out-of-band use, the vast majority of configuration
 options will not be retrieved or set.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+\."Default priv level is ADMIN for bmc-config
+.TP
+\fB\-l\fR, \fB\-\-priv\-level\fR=\fIPRIVILEGE\-LEVEL\fR
+Use this PRIVILEGE\-LEVEL instead of ADMIN.  Allowed
+values are CALLBACK, USER, OPERATOR, ADMIN and
+OEM.
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-o\fR, \fB\-\-checkout\fR
 Fetch configuration information from BMC.
@@ -55,8 +64,6 @@ Commit key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
 Commit all configuration values from bmc-data-updt.conf and key 'gratuitous_arp_interval' of value '4' to BMC.
 .PP
-.SH "KNOWN ISSUES"
-bmc-config checkout in out-of-band may fail to retrieve some BMC configuration options, because of default USER privilege level.  For such cases, use ADMIN privilege level.
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

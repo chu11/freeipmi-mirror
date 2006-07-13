@@ -4,7 +4,11 @@ bmc-info \- manual page for bmc-info.  BMC Info @PACKAGE_VERSION@
 .SH DESCRIPTION
 Displays BMC Information.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .SH "REPORTING BUGS"
 Report bugs to <@PACKAGE_BUGREPORT@>.
 .SH COPYRIGHT

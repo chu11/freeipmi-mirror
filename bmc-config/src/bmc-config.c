@@ -172,6 +172,17 @@ main (int argc, char *argv[])
 
   /* Default values. */
   memset (&arguments, 0, sizeof (arguments));
+  arguments.common.disable_auto_probe = 0;
+  arguments.common.driver_type = IPMI_DEVICE_UNKNOWN;
+  arguments.common.driver_address = 0;
+  arguments.common.driver_device = NULL;
+  arguments.common.packet_retry_timeout = 1000;
+  arguments.common.packet_retry_max = 10;
+  arguments.common.host = NULL;
+  arguments.common.username = NULL;
+  arguments.common.password = NULL;
+  arguments.common.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+  arguments.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
   if (bmc_argp (argc, argv,  &arguments) != 0)
     return (1);

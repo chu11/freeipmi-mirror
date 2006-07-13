@@ -7,7 +7,11 @@ FreeIPMI \- manual page for FreeIPMI Raw [ipmi-raw-0.2.0]
 .SH DESCRIPTION
 IPMI Raw \- executes IPMI commands by hex values.
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fICMD\-FILE\fR
 Read command requests from CMD\-FILE.

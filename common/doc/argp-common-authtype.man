@@ -1,0 +1,4 @@
+.TP
+\fB\-a\fR, \fB\-\-auth\-type\fR=\fIAUTHTYPE\fR
+Use AUTHTYPE instead of NONE.  Allowed values are
+NONE, MD2, MD5, PLAIN and OEM.

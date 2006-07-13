@@ -38,7 +38,7 @@ enum argp_common_option_keys
     PRIVILEGE_LEVEL_KEY = 'l'
   };
 
-#define ARGP_COMMON_OPTIONS                                                \
+#define ARGP_COMMON_OPTIONS_INBAND                                         \
     {"no-probing",     NO_PROBING_KEY, 0, 0, 	                           \
      "Do not probe IPMI devices.", 0},		                           \
     {"driver-type",    DRIVER_TYPE_KEY, "IPMIDRIVER", 0, 	           \
@@ -47,7 +47,9 @@ enum argp_common_option_keys
     {"driver-address", DRIVER_ADDRESS_KEY, "DRIVERADDR", 0,                \
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
-     "Use this DEVICE for IPMI driver.", 3},                               \
+     "Use this DEVICE for IPMI driver.", 3}                                \
+
+#define ARGP_COMMON_OPTIONS_OUTOFBAND                                      \
     {"packet-retry-timeout", PACKET_RETRY_TIMEOUT_KEY, "TIMEOUT", 0,       \
      "Use TIMEOUT milliseconds when reading LAN packets.", 4}, 	           \
     {"packet-retry-max", PACKET_RETRY_MAX_KEY, "COUNT", 0,                 \
@@ -57,13 +59,23 @@ enum argp_common_option_keys
     {"username",       USERNAME_KEY, "USERNAME", 0, 			   \
      "Use USERNAME instead of NULL.  Maximum USERNAME length is 16.", 7},  \
     {"password",       PASSWORD_KEY, "PASSWORD", 0, 			   \
-     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8},  \
+     "Use PASSWORD instead of NULL.  Maximum PASSWORD length is 16.", 8}   \
+
+#define ARGP_COMMON_OPTIONS_AUTHTYPE                                       \
     {"auth-type",      AUTHENTICATION_TYPE_KEY, "AUTHTYPE", 0, 			   \
      "Use AUTHTYPE instead of NONE.  "				           \
-     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 9},	           \
+     "Allowed values are NONE, MD2, MD5, PLAIN and OEM.", 9}	           \
+
+#define ARGP_COMMON_OPTIONS_PRIVLEVEL                                      \
     {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0, 		   \
      "Use this PRIVILEGE-LEVEL instead of USER.  "		           \
-     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10}      
+     "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10}     
+
+#define ARGP_COMMON_OPTIONS                                                \
+       ARGP_COMMON_OPTIONS_INBAND,                                         \
+       ARGP_COMMON_OPTIONS_OUTOFBAND,                                      \
+       ARGP_COMMON_OPTIONS_AUTHTYPE,                                       \
+       ARGP_COMMON_OPTIONS_PRIVLEVEL 
 
 struct common_cmd_args 
 {

@@ -1,0 +1,13 @@
+.TP
+\fB\-\-no\-probing\fR
+Do not probe IPMI devices.
+.TP
+\fB\-D\fR, \fB\-\-driver\-type\fR=\fIIPMIDRIVER\fR
+Use this IPMIDRIVER instead of auto selection.
+Allowed values are KCS, SMIC, SSIF and LAN.
+.TP
+\fB\-\-driver\-address\fR=\fIDRIVERADDR\fR
+Use this DRIVERADDR address instead of probed
+one.
+.HP
+\fB\-\-driver\-device\fR=\fIDEVICE\fR Use this DEVICE for IPMI driver.

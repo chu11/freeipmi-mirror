@@ -5,7 +5,33 @@
 
 	* bmc-config/bmc-config.8.pre.in: Add note about required ADMIN
 	privleges.
+
+	Re-architect to allow ADMIN to be the default privilege for
+	bmc-config.
+
+	* common/doc/argp-common.man: Removed file.
+
+	* common/doc/argp-common-inband.man,
+	 common/doc/argp-common-outofband.man,
+	 common/doc/argp-common-authtype.man,
+	 common/doc/argp-common-privlevel.man,
+	 common/doc/argp-common-misc.man: New files.
+
+	* common/doc/Makefile.am: Update for new files.
+
+	* bmc-config/bmc-config.8.pre.in, bmc-info/bmc-info.8.pre.in,
+	ipmi-raw/ipmi-raw.8.pre.in, ipmi-sel/ipmi-sel.8.pre.in: Adjust for
+	change to new argp common manpage files.  Use non-default manpage
+	for priv level on bmc-config.8.
+
+	* argp-common.h (ARGP_COMMON_OPTIONS): Split into 4 new defines
+	ARGP_COMMON_OPTIONS_INBAND, ARGP_COMMON_OPTIONS_OUTOFBAND,
+	ARGP_COMMON_OPTIONS_AUTHTYPE, and ARGP_COMMON_OPTIONS_PRIVLEVEL.
 	
+	* bmc-config/src/bmc-argp.c: Use new defines.  Make priv-level default ADMIN.
+
+	* bmc-config/src/bmc-config.c (main): Set appropriate default values.
+
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
 	* Rework udm raw functions to take lun and netfn parameters and

@@ -102,7 +102,15 @@ static struct argp_option options[] = {
   {"quiet",     'q', 0, 0,  "Do not produce any output" },
   {"silent",    's', 0, OPTION_ALIAS },
 
-  ARGP_COMMON_OPTIONS,
+  /* bmc-config should have a default privilege of ADMIN 
+   * so we cannot use ARGP_COMMON_OPTIONS
+   */
+  ARGP_COMMON_OPTIONS_INBAND,
+  ARGP_COMMON_OPTIONS_OUTOFBAND,
+  ARGP_COMMON_OPTIONS_AUTHTYPE,
+  {"priv-level",     PRIVILEGE_LEVEL_KEY, "PRIVILEGE-LEVEL", 0,
+   "Use this PRIVILEGE-LEVEL instead of ADMIN.  "
+   "Allowed values are CALLBACK, USER, OPERATOR, ADMIN and OEM.", 10},
 
   {"checkout", 'o', 0, 0, 
    "Action is to GET the BMC configuration"},
