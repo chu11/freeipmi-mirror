@@ -44,13 +44,13 @@
 
 	* bmc-config/src/bmc-config.c (main): Set appropriate default values.
 
-	Clear out command line options
+	Clear out command line options (bug #16856)
 
 	* bmc-config/src/bmc-config.c (main), bmc-info/src/bmc-info.c
 	(main), ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c
 	(main): Clear out command line options after they are parsed.
 
-	Support register spacing commandline arguments.
+	Support register spacing commandline arguments (bug #16294)
 
 	* common/src/argp-common.h: Add option and support for value.
 
