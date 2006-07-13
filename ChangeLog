@@ -2,6 +2,9 @@
 
 	* configure.ac, libfreeipmi/src/Makefile.am: Move IPMI_IPCKEY out
 	of autoconf and into libfreeipmi CFLAG definition.
+
+	* bmc-config/bmc-config.8.pre.in: Add note about required ADMIN
+	privleges.
 	
 2006-07-12  Albert Chu <chu11@llnl.gov>
 

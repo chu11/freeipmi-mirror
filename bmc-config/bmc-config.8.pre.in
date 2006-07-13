@@ -2,7 +2,13 @@
 .SH NAME
 bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAGE_VERSION@
 .SH DESCRIPTION
-IPMI BMC Configurator is used to get and set BMC configurations
+IPMI BMC Configurator is used to get and set BMC configurations.  The
+majority of configuration operations require ADMIN privilege when
+using
+.B bmc-config
+out-of-band.  Although connecting via a user with ADMIN privileges is
+not required for out-of-band use, the vast majority of configuration
+options will not be retrieved or set.
 .SH OPTIONS
 #include <@top_srcdir@/common/doc/argp-common.man>
 .TP
