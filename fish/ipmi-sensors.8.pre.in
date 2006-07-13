@@ -4,7 +4,11 @@ ipmi-sensors \- manual page for sensors.  IPMI Sensors version @PACKAGE_VERSION@
 .SH DESCRIPTION
 IPMI Sensors displays current readings of sensors chips through BMC
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Verbose sensor output

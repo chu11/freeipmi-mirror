@@ -4,7 +4,11 @@ bmc-config \- manual page for bmc-config.  IPMI BMC Configurator version @PACKAG
 .SH DESCRIPTION
 IPMI BMC Configurator is used to get and set BMC configurations
 .SH OPTIONS
-#include <@top_srcdir@/common/doc/argp-common.man>
+#include <@top_srcdir@/common/doc/argp-common-inband.man>
+#include <@top_srcdir@/common/doc/argp-common-outofband.man>
+#include <@top_srcdir@/common/doc/argp-common-authtype.man>
+#include <@top_srcdir@/common/doc/argp-common-privlevel.man>
+#include <@top_srcdir@/common/doc/argp-common-misc.man>
 .TP
 \fB\-v\fR, \fB\-\-verbose\fR
 Print detailed information.
