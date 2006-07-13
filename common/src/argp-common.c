@@ -75,7 +75,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-		  argp_usage (state);
+                  fprintf(stderr, "Invalid driver type specified\n");
+                  exit(1);
 		}
       break;
     case DRIVER_ADDRESS_KEY:
@@ -254,7 +255,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-		  argp_usage (state);
+                  fprintf(stderr, "Invalid authentication type specified\n");
+                  exit(1);
 		}
       break;
     case PRIVILEGE_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
@@ -284,7 +286,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-		  argp_usage (state);
+                  fprintf(stderr, "Invalid privilege level specified\n");
+                  exit(1);
 		}
       break;
     default:

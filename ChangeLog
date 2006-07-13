@@ -6,8 +6,11 @@
 	* bmc-config/bmc-config.8.pre.in: Add note about required ADMIN
 	privleges.
 
+	* common/src/argp-common.c (common_parse_opt): Fix error output
+	messages. (bug #17091)
+
 	Re-architect to allow ADMIN to be the default privilege for
-	bmc-config.
+	bmc-config (bug #17098).
 
 	* common/doc/argp-common.man: Removed file.
 
@@ -34,8 +37,8 @@
 
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
-	* Rework udm raw functions to take lun and netfn parameters and
-	had API similar to rest of FreeIPMI.
+	Rework udm raw functions to take lun and netfn parameters and
+	had API similar to rest of FreeIPMI (bug #16283).
 
 	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
 	libfreeipmi/src/udm/ipmi-udm.c (ipmi_cmd_raw): Add lun and netfn
@@ -60,7 +63,7 @@
 
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
-	* Fix lan retransmission issues.
+	Fix lan retransmission issues.
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
 	(_ipmi_lan_cmd_send_orig, _ipmi_lan_cmd_recv_orig,
