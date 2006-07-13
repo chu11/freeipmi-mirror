@@ -122,14 +122,14 @@ ipmi_core_init (struct arguments *args)
 			    args->common.disable_auto_probe,
 			    IPMI_DEVICE_KCS,
 			    args->common.driver_address,
-			    0,
+			    args->common.register_spacing,
 			    args->common.driver_device,
 			    IPMI_MODE_DEFAULT) != 0) {
 	if (ipmi_open_inband (&args->dev,
 			      args->common.disable_auto_probe,
 			      IPMI_DEVICE_SSIF,
 			      args->common.driver_address,
-			      0,
+			      args->common.register_spacing,
 			      args->common.driver_device,
 			      IPMI_MODE_DEFAULT) != 0) {
 	  perror ("ipmi_open_inband()");
@@ -141,7 +141,7 @@ ipmi_core_init (struct arguments *args)
 			    args->common.disable_auto_probe,
 			    args->common.driver_type,
 			    args->common.driver_address,
-			    0,
+			    args->common.register_spacing,
 			    args->common.driver_device,
 			    IPMI_MODE_DEFAULT) != 0) {
 	perror ("ipmi_open_inband()");
@@ -172,16 +172,7 @@ main (int argc, char *argv[])
 
   /* Default values. */
   memset (&arguments, 0, sizeof (arguments));
-  arguments.common.disable_auto_probe = 0;
-  arguments.common.driver_type = IPMI_DEVICE_UNKNOWN;
-  arguments.common.driver_address = 0;
-  arguments.common.driver_device = NULL;
-  arguments.common.packet_retry_timeout = 1000;
-  arguments.common.packet_retry_max = 10;
-  arguments.common.host = NULL;
-  arguments.common.username = NULL;
-  arguments.common.password = NULL;
-  arguments.common.authentication_type = IPMI_AUTHENTICATION_TYPE_NONE;
+  init_common_cmd_args (&(arguments.common));
   arguments.common.privilege_level = IPMI_PRIVILEGE_LEVEL_ADMIN;
 
   if (bmc_argp (argc, argv,  &arguments) != 0)

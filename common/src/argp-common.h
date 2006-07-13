@@ -31,6 +31,7 @@ enum argp_common_option_keys
     DRIVER_DEVICE_KEY = 132, 
     PACKET_RETRY_TIMEOUT_KEY = 133, 
     PACKET_RETRY_MAX_KEY = 134, 
+    REGISTER_SPACING_KEY = 'r',
     HOSTNAME_KEY = 'h', 
     USERNAME_KEY = 'u', 
     PASSWORD_KEY = 'p', 
@@ -47,7 +48,9 @@ enum argp_common_option_keys
     {"driver-address", DRIVER_ADDRESS_KEY, "DRIVERADDR", 0,                \
      "Use this DRIVERADDR address instead of probed one.", 2}, 	           \
     {"driver-device",  DRIVER_DEVICE_KEY, "DEVICE", 0,                     \
-     "Use this DEVICE for IPMI driver.", 3}                                \
+     "Use this DEVICE for IPMI driver.", 3},                               \
+    {"register-spacing", REGISTER_SPACING_KEY, "REGISTERSPACING", 0,              \
+     "Use this REGISTERSPACING instead of probed one"}
 
 #define ARGP_COMMON_OPTIONS_OUTOFBAND                                      \
     {"packet-retry-timeout", PACKET_RETRY_TIMEOUT_KEY, "TIMEOUT", 0,       \
@@ -83,6 +86,7 @@ struct common_cmd_args
   ipmi_driver_type_t driver_type;
   unsigned int driver_address;
   char *driver_device;
+  unsigned int register_spacing;
   int packet_retry_timeout;
   int packet_retry_max;
   char *host;

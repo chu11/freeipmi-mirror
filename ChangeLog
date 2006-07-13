@@ -9,6 +9,13 @@
 	* common/src/argp-common.c (common_parse_opt): Fix error output
 	messages. (bug #17091)
 
+	* common/src/argp-common.c (init_common_cmd_args): Set packet
+	retry and timeout to 0 as default.
+	
+	* libfreeipmi/src/udm/ipmi-udm.c (ipmi_open_outofband): If packet
+	retry and timeout are 0, set to default of 10 retries and 1000
+	milliseconds.
+
 	Re-architect to allow ADMIN to be the default privilege for
 	bmc-config (bug #17098).
 
@@ -42,6 +49,18 @@
 	* bmc-config/src/bmc-config.c (main), bmc-info/src/bmc-info.c
 	(main), ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c
 	(main): Clear out command line options after they are parsed.
+
+	Support register spacing commandline arguments.
+
+	* common/src/argp-common.h: Add option and support for value.
+
+	* common/src/argp-common.c (common_parse_opt): Support parsing.
+
+	* common/src/argp-common.c (init_common_cmd_args): Support default value.
+
+	* ipmi-sel/src/ipmi-sel.c (main), ipmi-raw/src/ipmi-raw.c (main),
+	bmc-info/src/bmc-info.c (main), bmc-config/src/bmc-config.c
+	(ipmi_core_init): Support register spacing argument.
 
 2006-07-12  Albert Chu <chu11@llnl.gov>
 

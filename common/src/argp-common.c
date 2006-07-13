@@ -75,8 +75,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-                  fprintf(stderr, "Invalid driver type specified\n");
-                  exit(1);
+                  fprintf(stderr, "invalid driver type specified\n");
+                  argp_usage (state);
 		}
       break;
     case DRIVER_ADDRESS_KEY:
@@ -120,6 +120,43 @@ common_parse_opt (int key,
       if (cmd_args->driver_device != NULL)
 	free (cmd_args->driver_device);
       cmd_args->driver_device = strdup (arg);
+      break;
+    case REGISTER_SPACING_KEY:
+      {
+        int value = 0;
+	char *str = NULL;
+	char *tail = NULL;
+	int errnum = 0;
+	
+	str = strdupa (arg);
+	value = strtol (str, &tail, 0);
+	errnum = errno;
+	
+	if (errnum)
+	  {
+	    // overflow
+	    fprintf (stderr, "invalid register spacing\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (tail[0] != '\0')
+	  {
+	    // invalid integer format
+	    fprintf (stderr, "invalid register spacing\n");
+	    argp_usage (state);
+	    break;
+	  }
+	
+	if (value < 0)
+	  {
+	    // negative number
+	    fprintf (stderr, "invalid register spacing\n");
+	    argp_usage (state);
+	    break;
+	  }
+	cmd_args->register_spacing = value;
+      }
       break;
     case PACKET_RETRY_TIMEOUT_KEY:
       {
@@ -255,8 +292,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-                  fprintf(stderr, "Invalid authentication type specified\n");
-                  exit(1);
+                  fprintf(stderr, "invalid authentication type specified\n");
+                  argp_usage (state);
 		}
       break;
     case PRIVILEGE_LEVEL_KEY: /* range 1 to 5 = callback,user,operator,admin,oem */
@@ -286,8 +323,8 @@ common_parse_opt (int key,
 		}
 	      else 
 		{
-                  fprintf(stderr, "Invalid privilege level specified\n");
-                  exit(1);
+                  fprintf(stderr, "invalid privilege level specified\n");
+                  argp_usage (state);
 		}
       break;
     default:
@@ -304,8 +341,9 @@ init_common_cmd_args (struct common_cmd_args *cmd_args)
   cmd_args->driver_type = IPMI_DEVICE_UNKNOWN;
   cmd_args->driver_address = 0;
   cmd_args->driver_device = NULL;
-  cmd_args->packet_retry_timeout = 1000;
-  cmd_args->packet_retry_max = 10;
+  cmd_args->register_spacing = 0;
+  cmd_args->packet_retry_timeout = 0;
+  cmd_args->packet_retry_max = 0;
   cmd_args->host = NULL;
   cmd_args->username = NULL;
   cmd_args->password = NULL;
