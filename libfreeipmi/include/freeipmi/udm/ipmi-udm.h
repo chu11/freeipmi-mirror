@@ -144,9 +144,11 @@ int ipmi_cmd (ipmi_device_t *dev,
 	      fiid_obj_t obj_cmd_rq, 
 	      fiid_obj_t obj_cmd_rs);
 int ipmi_cmd_raw (ipmi_device_t *dev, 
+                  uint8_t lun, 
+                  uint8_t net_fn, 
 		  uint8_t *in, 
 		  size_t in_len, 
 		  uint8_t *out, 
-		  size_t *out_len);
+		  size_t out_len);
 
 #endif /* _IPMI_UDM_H */

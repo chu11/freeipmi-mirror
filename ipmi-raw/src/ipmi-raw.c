@@ -129,14 +129,15 @@ main (int argc, char **argv)
   struct sockaddr_in host;
   
   char *line = NULL;
+  unsigned int line_count = 0;
   size_t n = 0;
   
   uint8_t *bytes_rq = NULL;
   int send_len;
   
   uint8_t bytes_rs[ARG_MAX];
-  size_t rcvd_len;
-  
+  int32_t rs_len;
+
   struct rlimit resource_limit;
   
   /* generate core dump on seg-fault */
@@ -226,17 +227,29 @@ main (int argc, char **argv)
     {
       bytes_rq = args->cmd;
       send_len = args->cmd_length;
-      rcvd_len = ARG_MAX;
-      if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) == 0)
+
+      if (send_len <= 2)
+        {
+          fprintf(stderr, "Invalid number of hex bytes\n");
+          return (-1);
+        }
+
+      if ((rs_len = ipmi_cmd_raw (&dev, 
+				  bytes_rq[0],
+				  bytes_rq[1],
+				  &bytes_rq[2],
+				  send_len - 2, 
+				  bytes_rs, 
+				  ARG_MAX)) >= 0)
 	{
 	  printf ("rcvd: ");
-	  for (i = 0; i < rcvd_len; i++)
+	  for (i = 0; i < rs_len; i++)
 	    printf ("%02X ", bytes_rs[i]);
 	  printf ("\n");
 	}
       else 
         {
-          perror (program_invocation_short_name);
+          perror ("ipmi_cmd_raw()");
         }
       bytes_rq = NULL;
       send_len = 0;
@@ -247,7 +260,7 @@ main (int argc, char **argv)
       infile = fopen (args->cmd_file, "r");
       if (infile == NULL)
 	{
-          perror (program_invocation_short_name);
+          perror ("fopen()");
 	  if (ipmi_close (&dev) != 0)
 	    {
 	      perror ("ipmi_close()");
@@ -275,25 +288,37 @@ main (int argc, char **argv)
 	  bytes_rq = NULL;
 	}
       send_len = 0;
-      rcvd_len = ARG_MAX;
       
       if (getline (&line, &n, infile) == -1)
 	{
 	  /* perror ("getline()"); */
 	  break;
 	}
+      line_count++;
       
       if (string2bytes (line, &bytes_rq, &send_len) != 0)
 	break;
       
-      if (ipmi_cmd_raw (&dev, bytes_rq, send_len, bytes_rs, &rcvd_len) < 0)
+      if (send_len <= 2)
         {
-          perror (program_invocation_short_name);
+          fprintf(stderr, "Invalid number of hex bytes on line %d\n", line_count);
+          continue;
+        }
+
+      if ((rs_len = ipmi_cmd_raw (&dev, 
+				  bytes_rq[0], 
+				  bytes_rq[1], 
+				  &bytes_rq[2], 
+				  send_len - 2, 
+				  bytes_rs, 
+				  ARG_MAX)) < 0)
+        {
+          perror ("ipmi_cmd_raw()");
           continue;
         }
       
       printf ("rcvd: ");
-      for (i = 0; i < rcvd_len; i++)
+      for (i = 0; i < rs_len; i++)
 	printf ("%02X ", bytes_rs[i]);
       printf ("\n");
     }

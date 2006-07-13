@@ -1,5 +1,31 @@
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
+	* Rework udm raw functions to take lun and netfn parameters and
+	had API similar to rest of FreeIPMI.
+
+	* libfreeipmi/include/freeipmi/udm/ipmi-udm.h,
+	libfreeipmi/src/udm/ipmi-udm.c (ipmi_cmd_raw): Add lun and netfn
+	parameters.  Adjust parameter checks appropriately.  Adjust
+	function call style.
+
+	* libfreeipmi/src/udm/ipmi-kcs-api-udm.c (ipmi_kcs_cmd_raw_udm),
+	libfreeipmi/src/udm/ipmi-ssif-api-udm.c (ipmi_ssif_cmd_raw_udm),
+	libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(ipmi_lan_cmd_raw_udm): Adjust appropriately for changes.  Adjust
+	function call style.
+	
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_raw_send_parse, _ipmi_lan_raw_create_cmd,
+	_ipmi_lan_raw_recv_parse): Remove functions.
+
+	* ipmi-raw/ipmi-raw.8.pre.in: Update for lun and netfn input.
+
+	* ipmi-raw/src/ipmi-raw.c (main): Check for hex byte lengths.
+	Adjust to read and pass in lun and netfn.  Adjust for function
+	call change.  Cleanup error output calls.
+
+2006-07-12  Albert Chu <chu11@llnl.gov>
+
 	* Fix lan retransmission issues.
 
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
