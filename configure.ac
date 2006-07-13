@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT([freeipmi],[0.3.beta0],[freeipmi-devel@gnu.org])
-AC_REVISION([$Id: configure.ac,v 1.59 2006-07-06 17:44:23 balamurugan Exp $])
+AC_REVISION([$Id: configure.ac,v 1.60 2006-07-13 16:08:58 chu11 Exp $])
 AM_INIT_AUTOMAKE([1.8])
 
 dnl We require a modern autoconf and automake
@@ -185,14 +185,6 @@ AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([unistd.h fcntl.h getopt.h pthread.h])
 
 dnl Macro definitions
-# Workaround lack of nested unquoting (from Conman, Chris Dunlap, dunlap 6 at llnl dot gov)
-IPCKEY_DIR_TMP1="`eval echo ${localstatedir}/lib/${PACKAGE_NAME}`"
-IPCKEY_DIR_TMP2="`echo $IPCKEY_DIR_TMP1 | sed 's/^NONE/$ac_default_prefix/'`"
-IPCKEY_DIR="`eval echo $IPCKEY_DIR_TMP2`"
-IPCKEY_FILE=ipckey
-AC_SUBST([IPCKEY_DIR])
-AC_SUBST([IPCKEY_FILE])
-AC_DEFINE_UNQUOTED([IPMI_IPCKEY], ["${IPCKEY_DIR}/${IPCKEY_FILE}"], [IPMI ipckey lock file])
 
 dnl Check for random number paths
 AC_CHECK_FILE([/dev/urandom], AC_DEFINE([HAVE_DEVURANDOM], [1], [Define that you found /dev/urandom]))

@@ -1,3 +1,8 @@
+2006-07-13  Albert Chu <chu11@llnl.gov>
+
+	* configure.ac, libfreeipmi/src/Makefile.am: Move IPMI_IPCKEY out
+	of autoconf and into libfreeipmi CFLAG definition.
+	
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
 	* Rework udm raw functions to take lun and netfn parameters and

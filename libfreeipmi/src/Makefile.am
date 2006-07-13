@@ -59,6 +59,7 @@ libfreeipmi_la_CFLAGS = \
 	-I$(srcdir)/../include \
 	-I$(srcdir)/../../common/src \
 	-Wall \
+	-DIPMI_IPCKEY=\"$(localstatedir)/lib/$(PACKAGE_NAME)/ipckey\" \
 	-D_GNU_SOURCE \
 	-D_REENTRANT
 
