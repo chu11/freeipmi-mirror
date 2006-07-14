@@ -1,6 +1,7 @@
 2006-07-14  Albert Chu <chu11@llnl.gov>
 
-	* bmc-config/src/bmc-lan-channel-section.c: Globally replace
+	* bmc-config/src/bmc-lan-channel-section.c,
+	bmc-config/src/bmc-serial-channel-section.c: Globally replace
 	"available always" with "always available" to match IPMI spec.
 
 	* bmc-config/src/bmc-lan-conf-auth-section.c: Globally replace
@@ -19,7 +20,10 @@
 
 	* bmc-config/src/bmc-serial-conf-section.c (serial_conf_commit):
 	Fix seg-fault.
- 	
+
+	* bmc-watchdog/src/bmc-watchdog.c (_cmdline_parse): Use base '0'
+	on strtol.
+	
 2006-07-14  A Balamurugan  <bala@zresearch.com>
 
 	* common/src/argp-common.c: initialize errno before calling
