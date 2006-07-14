@@ -87,6 +87,7 @@ common_parse_opt (int key,
 	int errnum = 0;
 	
 	str = strdupa (arg);
+	errno = 0;
 	value = strtol (str, &tail, 0);
 	errnum = errno;
 	
@@ -166,6 +167,7 @@ common_parse_opt (int key,
 	int errnum = 0;
 	
 	str = strdupa (arg);
+	errno = 0;
 	value = strtol (str, &tail, 0);
 	errnum = errno;
 	
@@ -203,6 +205,7 @@ common_parse_opt (int key,
 	int errnum = 0;
 	
 	str = strdupa (arg);
+	errno = 0;
 	value = strtol (str, &tail, 0);
 	errnum = errno;
 	

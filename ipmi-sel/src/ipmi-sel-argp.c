@@ -1,5 +1,5 @@
 /* 
-   $Id: ipmi-sel-argp.c,v 1.3 2006-07-05 12:37:29 balamurugan Exp $ 
+   $Id: ipmi-sel-argp.c,v 1.4 2006-07-14 05:41:11 balamurugan Exp $ 
    
    ipmi-sel-argp.c - System Event Logger utility.
    
@@ -131,6 +131,7 @@ validate_delete_list_string (char *delete_list_string)
       str = strdupa (token);
       free (token);
       
+      errno = 0;
       value = strtol (str, &tail, 10);
       errnum = errno;
       
@@ -255,6 +256,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	*start_ptr = '\0';
 	range1_str = range_str;
 	
+	errno = 0;
 	value = strtol (range1_str, &tail, 10);
 	errnum = errno;
 	
@@ -288,6 +290,7 @@ parse_opt (int key, char *arg, struct argp_state *state)
 	errnum = 0;
 	tail = NULL;
 	
+	errno = 0;
 	value = strtol (range2_str, &tail, 10);
 	errnum = errno;
 	

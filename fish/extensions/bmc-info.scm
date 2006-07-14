@@ -152,7 +152,7 @@
 	     ;; driver-address (2)
 	     (if (and (string? driver-address) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! driver-address (string->number driver-address))
+		   (set! driver-address (fi-string->number driver-address))
 		   (if (boolean? driver-address)
 		       (begin 
 			 (display "Usage: bmc-info [OPTION...] \n"
@@ -171,7 +171,7 @@
 	     ;; --packet-retry-timeout (4)
 	     (if (and (string? retry-timeout) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! retry-timeout (string->number retry-timeout))
+		   (set! retry-timeout (fi-string->number retry-timeout))
 		   (if (boolean? retry-timeout)
 		       (begin 
 			 (display "Usage: ipmi-sensors [OPTION...] \n"
@@ -186,7 +186,7 @@
 	     ;; --packet-retry-max (5)
 	     (if (and (string? retry-max) (list? bmc-info-cmd-args))
 		 (begin 
-		   (set! retry-max (string->number retry-max))
+		   (set! retry-max (fi-string->number retry-max))
 		   (if (boolean? retry-max)
 		       (begin 
 			 (display "Usage: ipmi-sensors [OPTION...] \n"

@@ -1,3 +1,30 @@
+2006-07-14  A Balamurugan  <bala@zresearch.com>
+
+	* common/src/argp-common.c: initialize errno before calling
+	strtol().
+
+	* ipmi-sel/src/ipmi-sel-argp.c: like wise.
+
+	* fish/src/scm-procedures.c (ex_string2number): new function.
+
+	* fish/src/extension.c: added fi-string->number primitive
+	procedure.
+
+	* fish/extensions/bc-common.scm, fish/extensions/bmc-info.scm,
+	fish/extensions/pef.scm, fish/extensions/sensors-common.scm: uses
+	fi-string->number.
+
+	* fish/extensions/sel.scm: uses fi-string->number and fixes of
+	error messages.
+
+	* libfreeipmi/src/ipmi-locate-dmidecode.c: new file.
+
+	* libfreeipmi/src/ipmi-locate.c: uses dmidecode probing.
+
+	* libfreeipmi/include/freeipmi/ipmi-locate.h: like wise.
+
+	* libfreeipmi/src/Makefile.am: updated.
+
 2006-07-13  Albert Chu <chu11@llnl.gov>
 
 	* configure.ac, libfreeipmi/src/Makefile.am: Move IPMI_IPCKEY out

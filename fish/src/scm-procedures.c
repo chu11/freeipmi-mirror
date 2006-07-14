@@ -4236,3 +4236,33 @@ ex_get_pef_info ()
   return (SCM_BOOL_F);
 }
 
+SCM 
+ex_string2number (SCM scm_string)
+{
+  char *str = NULL;
+  int value = 0;
+  char *tail = NULL;
+  int errnum = 0;
+  
+  str = gh_scm2newstr (scm_string, NULL);
+  errno = 0;
+  value = strtol (str, &tail, 0);
+  errnum = errno;
+  
+  if (errnum)
+    {
+      // overflow
+      free (str);
+      return SCM_BOOL_F;
+    }
+  
+  if (tail[0] != '\0')
+    {
+      // invalid integer format
+      free (str);
+      return SCM_BOOL_F;
+    }
+  
+  free (str);
+  return (gh_long2scm (value));
+}

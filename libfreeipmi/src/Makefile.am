@@ -18,6 +18,7 @@ libfreeipmi_la_SOURCES = \
 	ipmi-error.c \
 	ipmi-utils.c \
 	ipmi-locate.c \
+	ipmi-locate-dmidecode.c \
 	ipmi-locate-acpi-spmi.c \
 	ipmi-locate-defaults.c \
 	ipmi-locate-pci.c \

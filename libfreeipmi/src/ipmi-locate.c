@@ -40,6 +40,7 @@ ipmi_locate (ipmi_interface_type_t type)
 {
   static ipmi_locate_func things_to_try[] =
     {
+      ipmi_locate_dmidecode_get_dev_info, 
       ipmi_locate_smbios_get_dev_info,
       ipmi_locate_acpi_spmi_get_dev_info,
       ipmi_locate_pci_get_dev_info,

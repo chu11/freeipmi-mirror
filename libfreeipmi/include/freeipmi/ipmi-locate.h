@@ -38,6 +38,7 @@ enum ipmi_locate_driver_type
   IPMI_LOCATE_DRIVER_SMBIOS = 2,
   IPMI_LOCATE_DRIVER_ACPI = 3,
   IPMI_LOCATE_DRIVER_PCI = 4,
+  IPMI_LOCATE_DRIVER_DMIDECODE = 5
 };
 typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
 
@@ -46,7 +47,8 @@ typedef enum ipmi_locate_driver_type ipmi_locate_driver_type_t;
 	  || (__val) == IPMI_LOCATE_DRIVER_DEFAULTS \
 	  || (__val) == IPMI_LOCATE_DRIVER_SMBIOS \
 	  || (__val) == IPMI_LOCATE_DRIVER_ACPI \
-	  || (__val) == IPMI_LOCATE_DRIVER_PCI) ? 1 : 0)
+	  || (__val) == IPMI_LOCATE_DRIVER_PCI \
+	  || (__val) == IPMI_LOCATE_DRIVER_DMIDECODE) ? 1 : 0)
 
 enum ipmi_interface_type
 {
@@ -96,6 +98,8 @@ ipmi_locate_info_t* ipmi_locate_pci_get_dev_info (ipmi_interface_type_t type);
 ipmi_locate_info_t *ipmi_locate_acpi_spmi_get_dev_info (ipmi_interface_type_t interface_type);
 
 ipmi_locate_info_t* ipmi_locate_defaults_get_dev_info (ipmi_interface_type_t type);
+
+ipmi_locate_info_t *ipmi_locate_dmidecode_get_dev_info (ipmi_interface_type_t type);
 
 void ipmi_locate_destroy (ipmi_locate_info_t* pinfo);
 

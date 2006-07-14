@@ -812,6 +812,7 @@ install_new_procedures (void)
   gh_new_procedure ("fi-cmd-get-device-id-display", ex_cmd_get_device_id_display, 0, 0, 0);
   gh_new_procedure ("fi-get-pef-info", ex_get_pef_info, 0, 0, 0);
   
+  gh_new_procedure ("fi-string->number", ex_string2number, 1, 0, 0);
 }
 
 // guile initialization area
