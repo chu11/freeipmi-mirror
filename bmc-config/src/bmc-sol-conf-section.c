@@ -246,7 +246,7 @@ sol_privilege_level_validate (const struct arguments *args,
 {
   int num = privilege_level_number (value);
 
-  return (num == -1) ? 0 : 1;
+  return (num == -1) ? 1 : 0;
 }
 
 

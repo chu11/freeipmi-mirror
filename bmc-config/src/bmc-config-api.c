@@ -3177,7 +3177,7 @@ get_k_r(ipmi_device_t *dev,
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
 
-  if (k_r_len < (buf_len + 1))
+  if (k_r_len < buf_len)
     goto cleanup;
   memcpy(k_r, buf, buf_len);
  
@@ -3213,7 +3213,7 @@ get_k_g(ipmi_device_t *dev,
   if ((buf_len = fiid_obj_get_data (obj_cmd_rs, "key_value", buf, 1024)) < 0)
     goto cleanup;
 
-  if (k_g_len < (buf_len + 1))
+  if (k_g_len < buf_len)
     goto cleanup;
   memcpy(k_g, buf, buf_len);
 

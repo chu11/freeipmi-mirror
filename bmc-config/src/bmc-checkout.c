@@ -104,14 +104,15 @@ bmc_checkout_file (struct arguments *arguments,
       int this_ret = 0;
       ret = ((this_ret = kv->checkout (arguments, sect, kv)) || ret);
 
-      fprintf (fp, "\t## %s\n", kv->desc);
-
       if (this_ret != 0) {
-	fprintf (fp, "\t## FATAL: Unable to checkout %s:%s (comp_code=%d)\n",
-		 sect->section,
-		 kv->key,
-		 arguments->dev.comp_code);
+	if (arguments->verbose)
+	  fprintf (fp, "\t## FATAL: Unable to checkout %s:%s (comp_code=%d)\n",
+		   sect->section,
+		   kv->key,
+		   arguments->dev.comp_code);
       } else {
+	fprintf (fp, "\t## %s\n", kv->desc);
+
 	/* beauty comes at a cost */
 	int key_len = 0;
 	key_len = fprintf (fp, "\t%s",

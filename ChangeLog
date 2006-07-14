@@ -23,6 +23,16 @@
 
 	* bmc-watchdog/src/bmc-watchdog.c (_cmdline_parse): Use base '0'
 	on strtol.
+
+	* bmc-config/src/bmc-sol-conf-section.c
+	(sol_privilege_level_validate): Fix comparison bug.
+
+	* bmc-config/src/bmc-checkout.c (bmc_checkout_file): Only output
+	description if checkout is successful.  Do not output FATAL
+	message unless verbose turned on.
+
+	* bmc-config/src/bmc-config-api.c (get_k_r, get_k_g): Fix memcpy
+	bugs.
 	
 2006-07-14  A Balamurugan  <bala@zresearch.com>
 
