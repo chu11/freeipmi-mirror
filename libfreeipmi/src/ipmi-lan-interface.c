@@ -1540,7 +1540,7 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
   ERR (receive_pkt);
   memset (receive_pkt, 0, pkt_max_size);
   
-  for (retry = 0; retry < dev->io.outofband.packet_retry_max; retry++)
+  while (1)
     {
       memset (dev->io.outofband.rs.obj_hdr_rmcp,
 	      0,
@@ -1562,7 +1562,7 @@ ipmi_lan_cmd_receive (ipmi_device_t *dev,
       if (dev->io.outofband.retry_timeout != 0) 
 	{
 	  timeout.tv_sec = 0;
-	  timeout.tv_usec = dev->io.outofband.retry_timeout;
+	  timeout.tv_usec = dev->io.outofband.retry_timeout * 1000;
 	  FD_ZERO (&read_set);
 	  FD_SET (dev->io.outofband.local_sockfd, &read_set);
 	  status = select ((dev->io.outofband.local_sockfd + 1), 
@@ -1709,7 +1709,7 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 {
   int status = 0;
   int retry = 0;
-  int retval = 0;
+  int retval = -1;
   
   if (!(dev && 
 	dev->io.outofband.local_sockfd && 
@@ -1748,7 +1748,13 @@ ipmi_lan_cmd2 (ipmi_device_t *dev,
 	  break;
 	}
       
+      dev->io.outofband.session_seq_num++;
       IPMI_LAN_RQ_SEQ_INC (dev->io.outofband.rq_seq);
+    }
+  
+  if (retry >= dev->io.outofband.packet_retry_max)
+    {
+      errno = ETIMEDOUT;
       retval = -1;
     }
   

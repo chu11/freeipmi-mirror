@@ -1,3 +1,8 @@
+2006-07-14  A Balamurugan  <bala@zresearch.com>
+
+	* libfreeipmi/src/ipmi-lan-interface.c (ipmi_lan_cmd_receive,
+	ipmi_lan_cmd2): backported bugfixes from main branch.
+
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
 	* libfreeipmi/src/ipmi-lan-interface.h,
