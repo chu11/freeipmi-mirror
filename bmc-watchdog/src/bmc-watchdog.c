@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: bmc-watchdog.c,v 1.60 2006-05-23 23:54:59 chu11 Exp $
+ *  $Id: bmc-watchdog.c,v 1.61 2006-07-14 21:48:49 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2004 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1036,7 +1036,7 @@ _cmdline_default(void)
 static void
 _cmdline_parse(int argc, char **argv)
 {
-  int c, count, base = 10;
+  int c, count;
   char options[100];
   char *ptr;
   int help_opt = 0;
@@ -1127,9 +1127,7 @@ _cmdline_parse(int argc, char **argv)
           break;
         case 'o':
           cinfo.io_port++;
-          if (strstr(optarg, "0x") == optarg)
-            base = 16;
-          cinfo.io_port_val = strtol(optarg, &ptr, base);
+          cinfo.io_port_val = strtol(optarg, &ptr, 0);
           if (ptr != (optarg + strlen(optarg))
               || cinfo.io_port_val <= 0)
             _err_exit("io-port value invalid");
