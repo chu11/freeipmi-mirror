@@ -17,6 +17,7 @@
 */
 
 #include "bmc-config-api.h"
+#include "bmc-ipmi-wrapper.h"
 
 #include "bit-ops.h"
 

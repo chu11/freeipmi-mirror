@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include "bmc-diff.h"
 #include "bmc-sections.h"
 #include "bmc-config-api.h"
 

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "bmc-diff.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
 
@@ -129,7 +130,7 @@ username_diff (const struct arguments *args,
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,
-		 userid);
+		 username);
   return ret;
 }
 
@@ -1659,7 +1660,7 @@ get_user_section (int num, struct arguments *args)
 		lan_session_limit_commit,
 		lan_session_limit_diff,
 		lan_session_limit_validate);
-  /*
+
   add_keyvalue (this_section,
 		"SOL_Payload_Access",
 		"Possible values: Yes/No",
@@ -1667,7 +1668,7 @@ get_user_section (int num, struct arguments *args)
 		sol_payload_access_commit,
 		sol_payload_access_diff,
 		sol_payload_access_validate);
-  */
+
   add_keyvalue (this_section,
 		"Serial_Enable_IPMI_Msgs",
 		"Possible values: Yes/No",

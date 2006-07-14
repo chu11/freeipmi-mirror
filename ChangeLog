@@ -62,6 +62,35 @@
 	bmc-info/src/bmc-info.c (main), bmc-config/src/bmc-config.c
 	(ipmi_core_init): Support register spacing argument.
 
+	Fix compile warnings
+
+	* bmc-config/src/bmc-diff.h: New file
+
+	* bmc-config/src/Makefile.am: Add bmc-diff.h.
+
+	* bmc-config/src/bmc-config-api.c: Include bmc-ipmi-wrapper.h.
+
+	* bmc-config/src/bmc-user-sections.c,
+	bmc-config/src/bmc-lan-channel-section.c,
+	bmc-config/src/bmc-serial-channel-section.c,
+	bmc-config/src/bmc-lan-conf-section.c,
+	bmc-config/src/bmc-lan-conf-auth-section.c,
+	bmc-config/src/bmc-lan-conf-security-keys-section.c,
+	bmc-config/src/bmc-rmcpplus-conf-privilege-section.c,
+	bmc-config/src/bmc-serial-conf-section.c,
+	bmc-config/src/bmc-serial-channel-section.c,
+	bmc-config/src/bmc-sol-conf-section.c,
+	bmc-config/src/bmc-misc-section.c: Include bmc-diff.h
+
+	* bmc-config/src/bmc-user-sections.c (username_diff): Fix segfault
+	bug.
+
+	* bmc-config/src/bmc-user-sections.c (get_user_section): Include
+	SOL Payload Access config.
+
+	* bmc-config/src/bmc-lan-conf-section.c (vlan_id_validate): Fix
+	range issue on compre.
+
 2006-07-12  Albert Chu <chu11@llnl.gov>
 
 	Rework udm raw functions to take lun and netfn parameters and

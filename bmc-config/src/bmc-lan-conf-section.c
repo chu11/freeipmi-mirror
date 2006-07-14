@@ -1,3 +1,4 @@
+#include "bmc-diff.h"
 #include "bmc-sections.h"
 #include "bmc-types.h"
 #include "bmc-config-api.h"
@@ -644,7 +645,7 @@ vlan_id_validate (const struct arguments *args,
 
   if (*endptr)
     return -1;
-  if (num == LONG_MAX || num == LONG_MIN)
+  if (num == UINT_MAX || num == (uint32_t)(INT_MIN))
     return 1;
   return 0;
 }

@@ -29,6 +29,7 @@ AM_CFLAGS = -Wall -I$(srcdir)/../../common/src -D_GNU_SOURCE \
 noinst_HEADERS = bmc-common.h \
 		bmc-config-api.h \
 		bmc-config.h \
+		bmc-diff.h \
 		bmc-ipmi-wrapper.h \
 		bmc-sections.h \
 		bmc-types.h

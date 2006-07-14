@@ -1,3 +1,4 @@
+#include "bmc-diff.h"
 #include "bmc-common.h"
 #include "bmc-config-api.h"
 #include "bmc-sections.h"
