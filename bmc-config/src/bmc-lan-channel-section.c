@@ -13,7 +13,7 @@ channel_access_mode_string (uint8_t mode)
   case 1:
     return "Pre_Boot_Only";
   case 2:
-    return "Available_Always";
+    return "Always_Available";
   case 3:
     return "Shared";
   }
@@ -27,7 +27,7 @@ channel_access_mode (const char *string)
     return 0;
   if (same (string, "pre_boot_only"))
     return 1;
-  if (same (string, "available_always"))
+  if (same (string, "always_available"))
     return 2;
   if (same (string, "shared"))
     return 3;

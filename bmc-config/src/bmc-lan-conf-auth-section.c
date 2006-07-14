@@ -2050,7 +2050,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		callback_md5_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Callback_Enable_Auth_Straight_Password",
+		"Callback_Enable_Auth_Type_Straight_Password",
 		"Possible values: Yes/No",
 		callback_straight_password_checkout,
 		callback_straight_password_commit,
@@ -2058,7 +2058,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		callback_straight_password_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Callback_Enable_Auth_OEM_Proprietary",
+		"Callback_Enable_Auth_Type_OEM_Proprietary",
 		"Possible values: Yes/No",
 		callback_oem_proprietary_checkout,
 		callback_oem_proprietary_commit,
@@ -2091,7 +2091,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		user_md5_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"User_Enable_Auth_Straight_Password",
+		"User_Enable_Auth_Type_Straight_Password",
 		"Possible values: Yes/No",
 		user_straight_password_checkout,
 		user_straight_password_commit,
@@ -2099,7 +2099,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		user_straight_password_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"User_Enable_Auth_OEM_Proprietary",
+		"User_Enable_Auth_Type_OEM_Proprietary",
 		"Possible values: Yes/No",
 		user_oem_proprietary_checkout,
 		user_oem_proprietary_commit,
@@ -2132,7 +2132,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		operator_md5_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Operator_Enable_Auth_Straight_Password",
+		"Operator_Enable_Auth_Type_Straight_Password",
 		"Possible values: Yes/No",
 		operator_straight_password_checkout,
 		operator_straight_password_commit,
@@ -2140,7 +2140,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		operator_straight_password_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Operator_Enable_Auth_OEM_Proprietary",
+		"Operator_Enable_Auth_Type_OEM_Proprietary",
 		"Possible values: Yes/No",
 		operator_oem_proprietary_checkout,
 		operator_oem_proprietary_commit,
@@ -2173,7 +2173,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		admin_md5_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Admin_Enable_Auth_Straight_Password",
+		"Admin_Enable_Auth_Type_Straight_Password",
 		"Possible values: Yes/No",
 		admin_straight_password_checkout,
 		admin_straight_password_commit,
@@ -2181,7 +2181,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		admin_straight_password_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"Admin_Enable_Auth_OEM_Proprietary",
+		"Admin_Enable_Auth_Type_OEM_Proprietary",
 		"Possible values: Yes/No",
 		admin_oem_proprietary_checkout,
 		admin_oem_proprietary_commit,
@@ -2214,7 +2214,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		oem_md5_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"OEM_Enable_Auth_Straight_Password",
+		"OEM_Enable_Auth_Type_Straight_Password",
 		"Possible values: Yes/No",
 		oem_straight_password_checkout,
 		oem_straight_password_commit,
@@ -2222,7 +2222,7 @@ bmc_lan_conf_auth_section_get (struct arguments *args)
 		oem_straight_password_validate);
 
   add_keyvalue (lan_conf_auth_section,
-		"OEM_Enable_Auth_OEM_Proprietary",
+		"OEM_Enable_Auth_Type_OEM_Proprietary",
 		"Possible values: Yes/No",
 		oem_oem_proprietary_checkout,
 		oem_oem_proprietary_commit,

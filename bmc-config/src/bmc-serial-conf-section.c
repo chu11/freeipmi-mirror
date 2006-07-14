@@ -96,7 +96,7 @@ serial_conf_commit (ipmi_device_t *dev,
   if (terminal_mode)
     tmp_terminal_mode = *terminal_mode;
 
-  if (tmp_connect_mode)
+  if (connect_mode)
     tmp_connect_mode = *connect_mode;
 
   ret = set_bmc_serial_conf_connection_mode (dev,

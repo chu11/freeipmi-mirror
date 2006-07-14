@@ -1,3 +1,25 @@
+2006-07-14  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-lan-channel-section.c: Globally replace
+	"available always" with "always available" to match IPMI spec.
+
+	* bmc-config/src/bmc-lan-conf-auth-section.c: Globally replace
+	"Auth_Straight" with "Auth_Type_Straight" and "Auth_OEM" with
+	"Auth_Type_OEM" for consistency.
+
+	* bmc-config/src/bmc-misc-section.c (bmc_misc_section_get): Rename
+	section "Misc" for consistency and backwards compatability.
+
+	* bmc-config/src/bmc-user-section.c (username_validate,
+	username_diff): Accept username "Anonymous" for userid 1 for
+	backwards compatability.
+
+	* bmc-config/src/bmc-user-sections.c (password_diff,
+	password20_diff): Fix diff reporting bug.
+
+	* bmc-config/src/bmc-serial-conf-section.c (serial_conf_commit):
+	Fix seg-fault.
+ 	
 2006-07-14  A Balamurugan  <bala@zresearch.com>
 
 	* common/src/argp-common.c: initialize errno before calling

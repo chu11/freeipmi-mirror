@@ -113,7 +113,7 @@ username_diff (const struct arguments *args,
     return -1;
 
   if (userid == 1) {
-    if (! kv->value || same (kv->value, "null")) {
+    if (! kv->value || same (kv->value, "null") || same (kv->value, "anonymous")) {
       ret = 0;
     } else {
       ret = 1;
@@ -143,7 +143,7 @@ username_validate (const struct arguments *args,
   userid = atoi (sect->section + strlen ("User"));
 
   if (userid == 1) {
-    if (!value || same (value, "null")) {
+    if (!value || same (value, "null") || same (value, "anonymous")) {
       return 0;
     } else {
       return -1;
@@ -276,7 +276,7 @@ password_diff (const struct arguments *args,
   ret = check_bmc_user_password ((ipmi_device_t *)&args->dev,
 				 userid,
 				 kv->value);
-  if (ret)
+  if (!ret)
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,
@@ -327,7 +327,7 @@ password20_diff (const struct arguments *args,
 				       userid,
 				       kv->value);
 
-  if (ret)
+  if (!ret)
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,

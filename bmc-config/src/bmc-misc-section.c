@@ -104,7 +104,7 @@ bmc_misc_section_get (struct arguments *args)
   struct section *misc_section = NULL;
 
   misc_section = (void *) calloc (1, sizeof (struct section));
-  misc_section->section = strdup ("Misc_Section");
+  misc_section->section = strdup ("Misc");
 
   add_keyvalue (misc_section,
 		"Power_Restore_Policy",
