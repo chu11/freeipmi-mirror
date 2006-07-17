@@ -77,7 +77,7 @@ username_checkout (const struct arguments *args,
 		    
   if (kv->value)
     free (kv->value);
-  kv->value = strdup (username);
+  kv->value = strdup ((char *)username);
   return 0;
 }
 
@@ -93,7 +93,7 @@ username_commit (const struct arguments *args,
     return -1;
   return set_bmc_username ((ipmi_device_t *)&args->dev,
 			   userid,
-			   kv->value);
+			   (uint8_t *)kv->value);
 }
 
 static int
@@ -119,7 +119,7 @@ username_diff (const struct arguments *args,
       ret = 1;
     }
   } else {
-    if (!kv->value || !same (kv->value, username)) {
+    if (!kv->value || !same (kv->value, (char *)username)) {
       ret = 1;
     } else {
       ret = 0;
@@ -130,7 +130,7 @@ username_diff (const struct arguments *args,
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,
-		 username);
+		 (char *)username);
   return ret;
 }
 
@@ -263,7 +263,7 @@ password_commit (const struct arguments *args,
 {
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return set_bmc_user_password ((ipmi_device_t *)&args->dev,
-				userid, kv->value);
+				userid, (uint8_t *)kv->value);
 }
 
 static int
@@ -275,7 +275,7 @@ password_diff (const struct arguments *args,
   int ret;
   ret = check_bmc_user_password ((ipmi_device_t *)&args->dev,
 				 userid,
-				 kv->value);
+				 (uint8_t *)kv->value);
   if (!ret)
     report_diff (sect->section,
 		 kv->key,
@@ -314,7 +314,7 @@ password20_commit (const struct arguments *args,
   uint8_t userid = atoi (sect->section + strlen ("User"));
   return set_bmc_user_password20 ((ipmi_device_t *)&args->dev,
 				  userid,
-				  kv->value);
+				  (uint8_t *)kv->value);
 }
 
 static int
@@ -325,7 +325,7 @@ password20_diff (const struct arguments *args,
   uint8_t userid = atoi (sect->section + strlen ("User"));
   int ret = check_bmc_user_password20 ((ipmi_device_t *)&args->dev,
 				       userid,
-				       kv->value);
+				       (uint8_t *)kv->value);
 
   if (!ret)
     report_diff (sect->section,

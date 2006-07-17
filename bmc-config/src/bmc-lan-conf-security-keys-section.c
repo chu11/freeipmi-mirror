@@ -10,11 +10,11 @@ k_r_checkout (const struct arguments *args,
 	      struct keyvalue *kv)
 {
   int ret;
-  char k_r[21];
+  uint8_t k_r[21];
 
   memset (k_r, 0, 21);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
-		 k_r, 20);
+		 (uint8_t *)k_r, 20);
 
   if (ret != 0)
     return -1;
@@ -23,7 +23,7 @@ k_r_checkout (const struct arguments *args,
     free (kv->value);
 
   k_r[21] = 0;
-  kv->value = strdup (k_r);
+  kv->value = strdup ((char *)k_r);
 
   return 0;
 }
@@ -34,7 +34,7 @@ k_r_commit (const struct arguments *args,
 	    const struct keyvalue *kv)
 {
   return set_k_r ((ipmi_device_t *) &args->dev,
-		  kv->value, 
+		  (uint8_t *)kv->value, 
 		  kv->value ? strlen (kv->value): 0);
 }
 
@@ -44,7 +44,7 @@ k_r_diff (const struct arguments *args,
 	  const struct keyvalue *kv)
 {
   int ret;
-  char k_r[21];
+  uint8_t k_r[21];
 
   memset (k_r, 0, 21);
   ret = get_k_r ((ipmi_device_t *) &args->dev,
@@ -53,12 +53,12 @@ k_r_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (strcmp (kv->value?kv->value:"", k_r)) {
+  if (strcmp (kv->value?kv->value:"", (char *)k_r)) {
     ret = 1;
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,
-		 k_r);
+		 (char *)k_r);
   } else {
     ret = 0;
   }
@@ -82,7 +82,7 @@ k_g_checkout (const struct arguments *args,
 	      struct keyvalue *kv)
 {
   int ret;
-  char k_g[21];
+  uint8_t k_g[21];
 
   memset (k_g, 0, 21);
   ret = get_k_g ((ipmi_device_t *) &args->dev,
@@ -95,7 +95,7 @@ k_g_checkout (const struct arguments *args,
     free (kv->value);
 
   k_g[21] = 0;
-  kv->value = strdup (k_g);
+  kv->value = strdup ((char *)k_g);
 
   return 0;
 }
@@ -106,7 +106,7 @@ k_g_commit (const struct arguments *args,
 	    const struct keyvalue *kv)
 {
   return set_k_g ((ipmi_device_t *) &args->dev,
-		  kv->value, 
+		  (uint8_t *)kv->value, 
 		  kv->value ? strlen (kv->value): 0);
 }
 
@@ -116,7 +116,7 @@ k_g_diff (const struct arguments *args,
 	  const struct keyvalue *kv)
 {
   int ret;
-  char k_g[21];
+  uint8_t k_g[21];
 
   memset (k_g, 0, 21);
   ret = get_k_g ((ipmi_device_t *) &args->dev,
@@ -125,12 +125,12 @@ k_g_diff (const struct arguments *args,
   if (ret != 0)
     return -1;
 
-  if (strcmp (kv->value?kv->value:"", k_g)) {
+  if (strcmp (kv->value?kv->value:"", (char *)k_g)) {
     ret = 1;
     report_diff (sect->section,
 		 kv->key,
 		 kv->value,
-		 k_g);
+		 (char *)k_g);
   } else {
     ret = 0;
   }

@@ -1,3 +1,9 @@
+2006-07-17  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-user-sections.c,
+	bmc-lan-conf-security-keys-section.c: Fix various gcc 4.0
+	warnings.
+	
 2006-07-14  Albert Chu <chu11@llnl.gov>
 
 	* bmc-config/src/bmc-lan-channel-section.c,
@@ -33,7 +39,7 @@
 
 	* bmc-config/src/bmc-config-api.c (get_k_r, get_k_g): Fix memcpy
 	bugs.
-	
+
 2006-07-14  A Balamurugan  <bala@zresearch.com>
 
 	* common/src/argp-common.c: initialize errno before calling
