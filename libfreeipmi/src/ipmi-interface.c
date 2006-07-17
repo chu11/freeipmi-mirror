@@ -128,8 +128,8 @@ ipmi_open_outofband (ipmi_device_t *dev,
   dev->mode = mode;
   dev->io.outofband.remote_host = *remote_host;
   dev->io.outofband.remote_host_len = remote_host_len;
-  dev->io.outofband.retry_timeout = retry_timeout;
-  dev->io.outofband.packet_retry_max = (packet_retry_max ? packet_retry_max : 1);
+  dev->io.outofband.retry_timeout = (retry_timeout ? retry_timeout : 1000);
+  dev->io.outofband.packet_retry_max = (packet_retry_max ? packet_retry_max : 10);
   dev->io.outofband.auth_type = auth_type;
   memset(dev->io.outofband.username, '\0', IPMI_SESSION_MAX_USERNAME_LEN);
   if (username != NULL)
