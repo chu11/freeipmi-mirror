@@ -33,8 +33,8 @@
 	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
 	(_ipmi_lan_cmd_recv): Fix retransmission timing bug (#17103).
 
-	* fish/ipmi-sel.8.pre.in, fish/src/bmc-conf2.h,
-	fish/src/bmc-conf2.c: Removed files.
+	* fish/bmc-config.8.pre.in, fish/ipmi-sel.8.pre.in,
+	fish/src/bmc-conf2.h, fish/src/bmc-conf2.c: Removed files.
 
 	* fish/src/scm-procedures.c, fish/src/extension.c,
 	fish/src/common.h, fish/Makefile.am: Adjust appropriately.
