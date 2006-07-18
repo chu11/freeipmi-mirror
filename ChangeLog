@@ -30,6 +30,9 @@
 	ipmipower/src/ipmipower_powercmd.c, fish/src/bmc-conf2.c,
 	bmc-config/src/bmc-config-api.c: Fix compile warnings.
 
+	* libfreeipmi/src/udm/ipmi-lan-interface-udm.c
+	(_ipmi_lan_cmd_recv): Fix retransmission timing bug (#17103).
+
 2006-07-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate-dmidecode.c (dmi_table): initialize
