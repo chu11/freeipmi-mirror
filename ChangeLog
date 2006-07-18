@@ -35,7 +35,8 @@
 
 	* fish/src/bmc-conf2.h, fish/src/bmc-conf2.c: Removed files.
 
-	* fish/src/common.h, fish/Makefile.am: Adjust appropriately.
+	* fish/src/scm-procedures.c, fish/src/extension.c,
+	fish/src/common.h, fish/Makefile.am: Adjust appropriately.
 
 2006-07-18  A Balamurugan  <bala@zresearch.com>
 
