@@ -1,7 +1,7 @@
 sbin_PROGRAMS=fish
 fish_SOURCES=fish.c xmalloc.c fi-utils.c interpreter.c \
 	extension.c scm-procedures.c guile-wrapper.c ipmi-wrapper.c \
-	fi-commands.c bmc-conf2.c fish-argp.c ../../common/src/argp-common.c
+	fi-commands.c fish-argp.c ../../common/src/argp-common.c
 
 fish_LDADD = ../../common/src/libbitops.la \
 	     ../../common/src/libipmicommon.la \
@@ -12,7 +12,7 @@ fish_LDADD = ../../common/src/libbitops.la \
 
 noinst_HEADERS=fish.h fi-utils.h interpreter.h xmalloc.h \
 	extension.h scm-procedures.h guile-wrapper.h ipmi-wrapper.h \
-	fi-commands.h bmc-conf2.h fish-argp.h common.h  \
+	fi-commands.h fish-argp.h common.h  \
 	../../common/src/argp-common.h
 
 AM_CFLAGS = -Wall -I$(srcdir)/../../common/src \
