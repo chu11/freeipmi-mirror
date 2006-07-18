@@ -1,3 +1,27 @@
+2006-07-18  Albert Chu <chu11@llnl.gov>
+
+	* bmc-config/src/bmc-config.c (_disable_coredump),
+	bmc-info/src/bmc-info.c
+	(_disable_coredump), ipmi-raw/src/ipmi-raw.c (_disable_coredump),
+	ipmi-sel/src/ipmi-sel.c
+	(_disable_coredump): New function.
+
+	* bmc-config/src/bmc-config.c (main), bmc-info/src/bmc-info.c
+	(main), ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c
+	(main): Fix bug #17104, do not core dump by default.
+
+	* bmc-config/src/bmc-config.c (main), bmc-info/src/bmc-info.c
+	(main), ipmi-sel/src/ipmi-sel.c
+	(main): Fix non-debug compile bugs.
+
+	* bmc-config/src/bmc-config.c (ipmi_core_init): Exit on inband
+	errors, don't return -1.
+
+	* bmc-config/src/bmc-config.c (ipmi_core_init, main),
+	bmc-info/src/bmc-info.c
+	(main), ipmi-raw/src/ipmi-raw.c (main), ipmi-sel/src/ipmi-sel.c
+	(main): Fix bug #17143, bad output for inband permission denied.
+
 2006-07-18  A Balamurugan  <bala@zresearch.com>
 
 	* libfreeipmi/src/ipmi-locate-dmidecode.c (dmi_table): initialize

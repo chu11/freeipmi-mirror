@@ -85,7 +85,7 @@
 extern ipmi_device_t *global_dev;
 
 static int
-ipmi_core_init (struct arguments *args)
+ipmi_core_init (char *progname, struct arguments *args)
 {
   struct sockaddr_in host;
   struct hostent *hostinfo;
@@ -116,6 +116,13 @@ ipmi_core_init (struct arguments *args)
           exit (EXIT_FAILURE);
         }
   } else {
+
+    if (!ipmi_is_root())
+      {
+        fprintf(stderr, "%s: Permission Denied\n", progname);
+        exit(EXIT_FAILURE);
+      }
+
     memset (&args->dev, 0, sizeof (ipmi_device_t));
     if (args->common.driver_type == IPMI_DEVICE_UNKNOWN) {
       if (ipmi_open_inband (&args->dev,
@@ -133,7 +140,7 @@ ipmi_core_init (struct arguments *args)
 			      args->common.driver_device,
 			      IPMI_MODE_DEFAULT) != 0) {
 	  perror ("ipmi_open_inband()");
-	  return (-1);
+          exit (EXIT_FAILURE);
 	}
       }
     } else {
@@ -145,7 +152,7 @@ ipmi_core_init (struct arguments *args)
 			    args->common.driver_device,
 			    IPMI_MODE_DEFAULT) != 0) {
 	perror ("ipmi_open_inband()");
-	return (-1);
+        exit (EXIT_FAILURE);
       }
     }
   }
@@ -154,21 +161,35 @@ ipmi_core_init (struct arguments *args)
   return 0;
 }
 
+void
+_disable_coredump(void)
+{
+  /* Disable core dumping when not-debugging.  Do not want username,
+   * password or other important stuff to core dump.
+   */
+#ifdef NDEBUG
+  struct rlimit resource_limit;
+  
+  if (!getrlimit(RLIMIT_CORE, &resource_limit))
+    {
+      resource_limit.rlim_cur = 0;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+        perror ("warning: setrlimit()");
+    }
+#endif /* NDEBUG */
+}
+
 int
 main (int argc, char *argv[])
 {
   struct arguments arguments;
   struct section *sections;
-  struct rlimit resource_limit;
   int ret = 0;
+#ifdef NDEBUG
+  int i;
+#endif /* NDEBUG */
 
-  /* generate core dump on seg-fault */
-  if (ipmi_is_root ()) {
-      resource_limit.rlim_cur =
-        resource_limit.rlim_max = RLIM_INFINITY;
-      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
-        perror ("warning: setrlimit()");
-  }
+  _disable_coredump();
 
   /* Default values. */
   memset (&arguments, 0, sizeof (arguments));
@@ -184,7 +205,7 @@ main (int argc, char *argv[])
     memset(argv[i], '\0', strlen(argv[i]));
 #endif /* NDEBUG */
 
-  ipmi_core_init (&arguments);
+  ipmi_core_init (argv[0], &arguments);
 
   /* this should be after ipmi_core_init since
      user section refers to ipmi calls to get

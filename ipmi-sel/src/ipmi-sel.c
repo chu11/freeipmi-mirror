@@ -291,6 +291,24 @@ run_cmd_args (ipmi_device_t *dev, struct arguments *args)
   return retval;
 }
 
+void
+_disable_coredump(void)
+{
+  /* Disable core dumping when not-debugging.  Do not want username,
+   * password or other important stuff to core dump.
+   */
+#ifdef NDEBUG
+  struct rlimit resource_limit;
+
+  if (!getrlimit(RLIMIT_CORE, &resource_limit))
+    {
+      resource_limit.rlim_cur = 0;
+      if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
+        perror ("warning: setrlimit()");
+    }
+#endif /* NDEBUG */
+}
+
 int 
 main (int argc, char **argv)
 {
@@ -301,20 +319,12 @@ main (int argc, char **argv)
   struct sockaddr_in host;
   
   int retval = 0;
+#ifdef NDEBUG
+  int i;
+#endif /* NDEBUG */
   
-  {
-    struct rlimit resource_limit;
-    
-    /* generate core dump on seg-fault */
-    if (ipmi_is_root ())
-      {
-	resource_limit.rlim_cur =
-	  resource_limit.rlim_max = RLIM_INFINITY;
-	if (setrlimit (RLIMIT_CORE, &resource_limit) != 0)
-	  perror ("warning: setrlimit()");
-      }
-  }
-  
+  _disable_coredump();
+
   ipmi_sel_argp_parse (argc, argv);
   args = ipmi_sel_get_arguments ();
 
@@ -355,6 +365,12 @@ main (int argc, char **argv)
     }
   else
     {
+      if (!ipmi_is_root())
+        {
+          fprintf(stderr, "%s: Permission Denied\n", argv[0]);
+          exit(EXIT_FAILURE);
+        }
+
       memset (&dev, 0, sizeof (ipmi_device_t));
       if (args->common.driver_type == IPMI_DEVICE_UNKNOWN)
 	{
