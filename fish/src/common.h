@@ -1,5 +1,5 @@
 /* 
-   $Id: common.h,v 1.14 2006-04-12 04:18:37 chu11 Exp $ 
+   $Id: common.h,v 1.15 2006-07-18 18:15:12 chu11 Exp $ 
 
    common.h - Common header definitions.
 
@@ -71,7 +71,6 @@
 #include "extension.h"
 #include "interpreter.h"
 #include "ipmi-wrapper.h"
-#include "bmc-conf2.h"
 #include "scm-procedures.h"
 #include "fi-commands.h"
 #include "fish.h"
