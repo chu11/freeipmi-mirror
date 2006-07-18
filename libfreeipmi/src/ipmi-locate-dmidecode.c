@@ -276,7 +276,8 @@ dmi_table (u32 base, u16 len, u16 num, u16 ver, const char *devmem, ipmi_interfa
 	    {
 	      locate_info->base_address.bmc_smbus_slave_address = data[0x06] >> 1;
 	      locate_info->address_space_id = IPMI_ADDRESS_SPACE_ID_SMBUS;
-	      locate_info->reg_space = 0;
+	      locate_info->reg_space = 0x01;
+	      locate_info->bmc_i2c_dev_name = strdup (IPMI_DEFAULT_I2C_DEVICE);
 	    }
 	  else 
 	    {
