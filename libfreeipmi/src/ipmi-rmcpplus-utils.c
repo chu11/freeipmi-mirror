@@ -767,11 +767,12 @@ ipmi_rmcpplus_check_rakp_2_key_exchange_authentication_code(int8_t authenticatio
   uint8_t buf[IPMI_MAX_KEY_DATA_LENGTH];
   uint32_t buf_index = 0;
   uint8_t digest[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-  uint8_t hash_algorithm, hash_flags;
-  int32_t digest_len;
+  uint8_t hash_algorithm = 0;
+  uint8_t hash_flags = 0;
+  int32_t digest_len = 0;
   uint8_t key_exchange_authentication_code[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
   uint32_t key_exchange_authentication_code_len;
-  int32_t compare_len;
+  int32_t compare_len = 0;
   int8_t rv = -1;
 
   ERR_EINVAL ((authentication_algorithm == IPMI_AUTHENTICATION_ALGORITHM_RAKP_NONE
@@ -914,9 +915,10 @@ ipmi_rmcpplus_check_rakp_4_integrity_check_value(int8_t authentication_algorithm
   uint8_t buf[IPMI_MAX_KEY_DATA_LENGTH];
   uint32_t buf_index = 0;
   uint8_t digest[IPMI_MAX_KEY_EXCHANGE_AUTHENTICATION_CODE_LENGTH];
-  uint8_t hash_algorithm, hash_flags;
-  int32_t digest_len;
-  int32_t compare_len;
+  uint8_t hash_algorithm = 0;
+  uint8_t hash_flags = 0;
+  int32_t digest_len = 0;
+  int32_t compare_len = 0;
   uint8_t integrity_check_value[IPMI_MAX_INTEGRITY_CHECK_VALUE_LENGTH];
   int32_t integrity_check_value_len;
   int8_t rv = -1;

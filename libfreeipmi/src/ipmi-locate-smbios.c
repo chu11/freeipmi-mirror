@@ -366,7 +366,7 @@ copy_impi_dev_info (ipmi_interface_type_t type)
 ipmi_locate_info_t*
 ipmi_locate_smbios_get_dev_info (ipmi_interface_type_t type)
 {
-  uint8_t* bufp;
+  uint8_t* bufp = NULL;
   uint8_t version;
   uint64_t address;
   uint64_t strobed;

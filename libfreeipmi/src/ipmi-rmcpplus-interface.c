@@ -350,7 +350,7 @@ _construct_session_trlr_pad(uint8_t integrity_algorithm,
                             uint32_t ipmi_msg_len,
                             fiid_obj_t obj_rmcpplus_session_trlr)
 {
-  int8_t pad_length, pad_length_field_len, next_header_field_len;
+  int8_t pad_length_field_len, next_header_field_len, pad_length = 0;
   uint8_t pad_bytes[IPMI_INTEGRITY_PAD_MULTIPLE] = {IPMI_INTEGRITY_PAD_DATA,
                                                     IPMI_INTEGRITY_PAD_DATA,
                                                     IPMI_INTEGRITY_PAD_DATA,

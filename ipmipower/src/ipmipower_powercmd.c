@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_powercmd.c,v 1.92 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_powercmd.c,v 1.93 2006-07-18 16:59:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -1596,7 +1596,7 @@ _check_open_session_error(ipmipower_powercmd_t ip)
 {
   uint64_t rmcpplus_status_code;
   uint64_t maximum_privilege_level;
-  int priv_check;
+  int priv_check = 0;
 
   assert(ip);
   assert(ip->protocol_state == PROTOCOL_STATE_OPEN_SESSION_SENT);

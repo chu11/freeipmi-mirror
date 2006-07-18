@@ -47,7 +47,7 @@ ipmi_locate (ipmi_interface_type_t type)
       ipmi_locate_defaults_get_dev_info,
       NULL
     };
-  ipmi_locate_info_t* pinfo;
+  ipmi_locate_info_t* pinfo = NULL;
   int i;
 
   ERR_EINVAL_NULL_RETURN (IPMI_INTERFACE_TYPE_VALID(type));

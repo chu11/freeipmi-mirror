@@ -1351,7 +1351,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 
       for (i = 0; i < cipher_suite_entry_count; i++)
 	{
-	  char *field;
+	  char *field = NULL;
 
 	  if (i == 0)
 	    field = "cipher_suite_id_entry_A";
@@ -1410,7 +1410,7 @@ _rmcpplus_cipher_suite_id_privilege_setup(ipmi_device_t *dev)
 
       for (i = 0; i < cipher_suite_entry_count; i++)
 	{
-	  char *field;
+	  char *field = NULL;
 
 	  if (i == 0)
 	    field = "maximum_privilege_for_cipher_suite_1";
@@ -1483,7 +1483,7 @@ set_rmcpplus_cipher_suite_id_privilege (ipmi_device_t *dev,
   if (cipher_suite_entry_count && cipher_suite_id_map_set && cipher_suite_priv_map_set)
     {
       uint8_t privs[16];
-      int index;
+      int index = 0;
 
       memset(privs, 0, 16);
 

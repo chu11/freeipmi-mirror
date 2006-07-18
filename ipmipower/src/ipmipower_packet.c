@@ -1,5 +1,5 @@
 /*****************************************************************************\
- *  $Id: ipmipower_packet.c,v 1.58 2006-06-19 20:10:37 chu11 Exp $
+ *  $Id: ipmipower_packet.c,v 1.59 2006-07-18 16:59:01 chu11 Exp $
  *****************************************************************************
  *  Copyright (C) 2003 The Regents of the University of California.
  *  Produced at Lawrence Livermore National Laboratory (cf, DISCLAIMER).
@@ -535,16 +535,26 @@ int
 ipmipower_packet_create(ipmipower_powercmd_t ip, packet_type_t pkt,
                         char *buffer, int buflen) 
 {
-  uint8_t *username, *password, *integrity_key, *confidentiality_key;
+  uint8_t *username = NULL;
+  uint8_t *password = NULL;
+  uint8_t *integrity_key = NULL;
+  uint8_t *confidentiality_key = NULL;
   uint8_t username_buf[IPMI_MAX_USER_NAME_LENGTH+1];
   uint32_t username_len;
   uint64_t session_id, managed_system_session_id;
-  uint32_t sequence_number, integrity_key_len, confidentiality_key_len;
-  uint8_t authentication_type, net_fn, payload_authenticated, payload_encrypted,
-    payload_type, authentication_algorithm, integrity_algorithm, 
-    confidentiality_algorithm;
-  fiid_obj_t obj_cmd_req;
-  int32_t len;
+  uint32_t sequence_number = 0;
+  uint32_t integrity_key_len = 0;
+  uint32_t confidentiality_key_len = 0;
+  uint8_t authentication_type = 0;
+  uint8_t net_fn = 0;
+  uint8_t payload_authenticated = 0;
+  uint8_t payload_encrypted = 0;
+  uint8_t payload_type = 0;
+  uint8_t authentication_algorithm = 0;
+  uint8_t integrity_algorithm = 0; 
+  uint8_t confidentiality_algorithm = 0;
+  fiid_obj_t obj_cmd_req = NULL;
+  int32_t len = 0;
 
   assert(ip != NULL);
   assert(PACKET_TYPE_VALID_REQ(pkt));
